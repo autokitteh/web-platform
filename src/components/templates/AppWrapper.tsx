@@ -1,18 +1,21 @@
 import React, { ReactNode } from 'react';
-import clsx from 'clsx';
+
+import { Topbar, Sidebar } from '@components/organisms';
 
 type Props = {
   children: ReactNode;
-  classes?: string[];
 };
 
-export default function AppWrapper({ children, classes }: Props) {
-  const baseClass = ['bg-white'];
-  const wrapperClass = clsx(baseClass, classes);
-
+export default function AppWrapper({ children }: Props) {
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <div className={wrapperClass}>{children}</div>
+    <div className="w-screen h-screen pr-5">
+      <div className="flex h-full">
+        <Sidebar />
+        <div className="flex-1">
+          <Topbar />
+          {children}
+        </div>
+      </div>
     </div>
   );
 }
