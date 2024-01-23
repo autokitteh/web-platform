@@ -1,32 +1,46 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 
-import { Icon } from '@components/atoms';
+import { IMenuItem } from '@components/molecules/menu/menu.interface';
 
-interface IMenuItem {
-  icon: string;
-  name: string;
-  isOpen: boolean;
-}
+import { Icon, Badge } from '@components/atoms';
 
-export default function MenuItem({ icon, name, isOpen = false }: IMenuItem) {
+export default function MenuItem({
+  icon,
+  name,
+  className,
+  iconClasses,
+  badgeText,
+  isOpen = false,
+  isHoverEffect = true,
+  isActive = false,
+}: IMenuItem) {
   const [isHovered, setIsHovered] = useState(false);
 
-  const containerClasses = clsx('flex items-center gap-2.5 p-2 rounded-3xl transition duration-300', {
-    'bg-greenLight ': isHovered,
-    'bg-white': !isHovered,
-  });
+  const containerClasses = clsx(
+    'flex items-center gap-2.5 p-2 rounded-3xl transition duration-300',
+    {
+      'bg-greenLight ': isHovered || isActive,
+      'bg-transparent': !isHovered && !isActive,
+    },
+    className,
+  );
 
   const textClasses = clsx('overflow-hidden text-gray-700 text-sm', {
-    'font-bold ': isHovered,
+    'font-bold ': isHovered || isActive,
     'w-auto opacity-100': isOpen,
-    'w-0 h-0 opacity-0': !isOpen,
+    'hidden opacity-0': !isOpen,
   });
 
   return (
-    <div className={containerClasses} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-      <div className="w-8 h-8 p-1 flex items-center justify-center">
-        <Icon src={icon} alt={name} classes="!w-auto !h-auto" />
+    <div
+      className={containerClasses}
+      onMouseEnter={() => isHoverEffect && setIsHovered(true)}
+      onMouseLeave={() => isHoverEffect && setIsHovered(false)}
+    >
+      <div className={clsx('w-8 h-8 p-1 flex items-center justify-center relative', iconClasses, { hidden: !icon })}>
+        <Icon src={icon || ''} alt={name} className="!w-auto !h-auto" />
+        {badgeText && <Badge text={badgeText} className="absolute top-0 right-0" />}
       </div>
       <div className={textClasses}>{name}</div>
     </div>

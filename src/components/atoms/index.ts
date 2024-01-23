@@ -1,2 +1,3 @@
 import Icon from "./Icon";
-export { Icon }
+import Badge from "./Badge";
+export { Icon, Badge }

@@ -2,21 +2,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 
-import MenuItem from './MenuItem';
+import { IMenu } from '@components/molecules/menu/menu.interface';
+
+import MenuItem from '@components/molecules/menu/MenuItem';
 import { menuItems } from '@utils/constants/menuItems';
 
-interface IMenu {
-  classes?: string;
-  isOpen: boolean;
-}
-
-export default function Menu({ classes, isOpen = false }: IMenu) {
+export default function Menu({ className, isOpen = false, onSubmenu }: IMenu) {
   return (
-    <div className={clsx(classes, 'grid gap-4')}>
-      {menuItems.map(({ icon, name, href }) => (
-        <Link to={href}>
-          <MenuItem icon={icon} name={name} isOpen={isOpen} />
-        </Link>
+    <div className={clsx(className, 'grid gap-4')}>
+      {menuItems.map(({ icon, name, href, submenu }, index) => (
+        <div
+          key={index}
+          onMouseEnter={(e) => {
+            onSubmenu?.({ submenu: submenu || null, top: e.currentTarget.getBoundingClientRect().top + 5 });
+          }}
+        >
+          <Link to={href}>
+            <MenuItem icon={icon} name={name} isOpen={isOpen} />
+          </Link>
+        </div>
       ))}
     </div>
   );

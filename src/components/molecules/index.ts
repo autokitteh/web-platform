@@ -1,2 +1,3 @@
 import Menu from "./menu/Menu";
-export { Menu }
+import MenuItem from "./menu/MenuItem";
+export { Menu, MenuItem }

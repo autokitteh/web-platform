@@ -22,8 +22,8 @@
     "baseUrl": ".",
     "paths": {
       "@assets/*": ["./src/assets/*"],
-      "@api/*": ["./src/api/*"],
       "@components/*": ["./src/components/*"],
+      "@api/*": ["./src/api/*"],
       "@routing/*": ["./src/routing/*"],
       "@utils/*": ["./src/utils/*"],
       "@validations/*": ["./src/validations/*"],

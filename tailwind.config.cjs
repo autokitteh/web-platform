@@ -11,6 +11,7 @@ module.exports = {
       greenLight: '#E8FFCA',
       gray: {
         DEFAULT: '#D9D9D9',
+        200: '#f1f1f1',
         300: '#d2d2d7',
         400: '#818181',
         500: '#535353',
