@@ -1,4 +1,2 @@
-import Topbar from "./topbar/Topbar";
-import Sidebar from "./sidebar/Sidebar";
-
-export { Topbar, Sidebar }
+export { Topbar } from "@components/organisms/topbar/Topbar";
+export { Sidebar } from "@components/organisms/sidebar/Sidebar";

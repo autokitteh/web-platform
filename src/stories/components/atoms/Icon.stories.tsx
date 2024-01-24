@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Icon } from '@components/atoms';
-import Icon1 from '/assets/sidebar/icon1.svg';
+import NewProject from '@assets/sidebar/NewProject.svg';
 
 const meta: Meta<typeof Icon> = {
   title: 'Core/Icon',
@@ -9,7 +9,7 @@ const meta: Meta<typeof Icon> = {
     className: { control: 'none' },
     alt: { control: 'text' },
     src: { control: { type: 'file', accept: '.png, .jpg, .jpeg, .svg' } },
-    isOpen: { control: 'boolean' },
+    isVisible: { control: 'boolean' },
   },
 };
 export default meta;
@@ -20,8 +20,8 @@ export const Default: Story = {
   args: {
     className: '',
     alt: 'icon',
-    src: Icon1,
-    isOpen: true,
+    src: NewProject,
+    isVisible: true,
   },
   argTypes: {
     src: { control: 'none' },
@@ -31,7 +31,7 @@ export const Default: Story = {
 export const Hidden: Story = {
   args: {
     ...Default.args,
-    isOpen: false,
+    isVisible: false,
   },
   argTypes: {
     src: { control: 'none' },

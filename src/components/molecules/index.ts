@@ -1,3 +1,1 @@
-import Menu from "./menu/Menu";
-import MenuItem from "./menu/MenuItem";
-export { Menu, MenuItem }
+export { Menu } from "@components/molecules/menu/Menu";

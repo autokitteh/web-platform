@@ -1,3 +1,2 @@
-import Icon from "./Icon";
-import Badge from "./Badge";
-export { Icon, Badge }
+export { Icon } from "@components/atoms/Icon";
+export { Badge } from "@components/atoms/Badge";

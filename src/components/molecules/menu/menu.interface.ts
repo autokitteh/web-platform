@@ -3,6 +3,11 @@ export interface ISubmenuInfo {
     top: number;
 }
 
+export interface ISubmenu {
+    isOpen: boolean;
+    submenuInfo: ISubmenuInfo
+}
+
 export interface IMenu {
     className?: string;
     isOpen: boolean;

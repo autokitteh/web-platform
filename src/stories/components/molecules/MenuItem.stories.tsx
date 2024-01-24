@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { MenuItem } from '@components/molecules';
-import Icon1 from '/assets/sidebar/icon1.svg';
+import { MenuItem } from '@components/molecules/menu';
+import NewProject from '@assets/sidebar/NewProject.svg';
 
 const meta: Meta<typeof MenuItem> = {
   title: 'Buttons/MenuItem',
@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    icon: Icon1,
+    icon: NewProject,
     name: 'Menu Item',
     iconClasses: '',
     badgeText: '',
@@ -36,7 +36,7 @@ export const Default: Story = {
 export const CustomIcon: Story = {
   args: {
     ...Default.args,
-    icon: Icon1,
+    icon: NewProject,
     badgeText: '',
   },
   argTypes: {

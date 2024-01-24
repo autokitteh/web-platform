@@ -1,18 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import clsx from 'clsx';
+import { cn } from '@utils/index';
 
-import { IMenu } from '@components/molecules/menu/menu.interface';
+import { MenuItem, IMenu } from '@components/molecules/menu';
+import { menuItems } from '@utils/index';
 
-import MenuItem from '@components/molecules/menu/MenuItem';
-import { menuItems } from '@utils/constants/menuItems';
-
-export default function Menu({ className, isOpen = false, onSubmenu }: IMenu) {
+export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
   return (
-    <div className={clsx(className, 'grid gap-4')}>
-      {menuItems.map(({ icon, name, href, submenu }, index) => (
+    <div className={cn(className, 'grid gap-4')}>
+      {menuItems.map(({ icon, name, href, submenu, id }) => (
         <div
-          key={index}
+          key={id}
           onMouseEnter={(e) => {
             onSubmenu?.({ submenu: submenu || null, top: e.currentTarget.getBoundingClientRect().top + 5 });
           }}
@@ -24,4 +22,4 @@ export default function Menu({ className, isOpen = false, onSubmenu }: IMenu) {
       ))}
     </div>
   );
-}
+};

@@ -1,17 +1,15 @@
 import React from 'react';
-import clsx from 'clsx';
+import { cn } from '@utils/index';
 
 interface IIcon {
   className?: string;
   alt?: string;
   src: string;
-  isOpen?: boolean;
+  isVisible?: boolean;
 }
 
-export default function Icon({ className, alt = 'icon', src, isOpen = true }: IIcon) {
-  const iconClasses = clsx(className, {
-    'hidden opacity-0': !isOpen,
-  });
+export const Icon = ({ className, alt = 'icon', src, isVisible = true }: IIcon) => {
+  const iconClasses = cn({ 'hidden opacity-0': !isVisible }, className);
 
   return <img className={iconClasses} src={src} alt={alt} />;
-}
+};
