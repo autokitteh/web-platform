@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-import { MenuItem, ISubmenu } from '@components/molecules/menu';
+import { Button } from '@components/atoms';
+import { ISubmenu } from '@components/molecules/menu';
 
-export const Submenu = ({ submenuInfo, isOpen }: ISubmenu) => {
+export const Submenu = ({ submenuInfo }: ISubmenu) => {
   const submenuVariants = {
     hidden: { opacity: 0, x: -100 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.25, ease: 'easeOut' } },
@@ -21,7 +22,7 @@ export const Submenu = ({ submenuInfo, isOpen }: ISubmenu) => {
     >
       {submenuInfo.submenu?.map(({ name, href, id }) => (
         <Link key={id} to={href} className="block px-3">
-          <MenuItem name={name} isOpen={isOpen} className="px-4" />
+          <Button className="px-4 hover:bg-green-light">{name}</Button>
         </Link>
       ))}
     </motion.div>

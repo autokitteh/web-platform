@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@utils/index';
 
-import { MenuItem, IMenu } from '@components/molecules/menu';
+import { Button, Icon } from '@components/atoms';
+import { IMenu } from '@components/molecules/menu';
 import { menuItems } from '@utils/index';
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
@@ -16,7 +17,10 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
           }}
         >
           <Link to={href}>
-            <MenuItem icon={icon} name={name} isOpen={isOpen} />
+            <Button className="hover:bg-green-light">
+              <Icon className="w-8 h-8 p-1 " src={icon} alt={name} />
+              {isOpen && name}
+            </Button>
           </Link>
         </div>
       ))}

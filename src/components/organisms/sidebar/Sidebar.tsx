@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Icon } from '@components/atoms';
-import { ISubmenuInfo, Submenu, Menu, MenuItem } from '@components/molecules/menu';
+import { Icon, Badge, Button } from '@components/atoms';
+import { ISubmenuInfo, Submenu, Menu } from '@components/molecules/menu';
 
 import IconLogo from '@assets/Logo.svg';
 import IconLogoName from '@assets/LogoName.svg';
@@ -32,26 +32,23 @@ export const Sidebar = () => {
         </div>
         <div className="grid gap-5">
           <Link to="#">
-            <MenuItem
-              icon={IconNotification}
-              name="Notifications"
-              badgeText="2"
-              isOpen={isOpen}
-              isHoverEffect={false}
-            />
+            <Button variant="transparent">
+              <div className="w-8 h-8 p-1 relative">
+                <Icon src={IconNotification} alt="Notifications" />
+                <Badge text="2" className="absolute top-0 right-0" />
+              </div>
+              {isOpen && 'Notifications'}
+            </Button>
           </Link>
           <Link to="#">
-            <MenuItem
-              iconClasses="w-9 h-9 p-0"
-              icon={PictureAvatar}
-              name="James L."
-              isOpen={isOpen}
-              isHoverEffect={false}
-            />
+            <Button variant="transparent">
+              <Icon src={PictureAvatar} alt="Notifications" className="w-9 h-9" />
+              {isOpen && 'James L.'}
+            </Button>
           </Link>
         </div>
       </div>
-      {submenuInfo.submenu && <Submenu submenuInfo={submenuInfo} isOpen={isOpen} />}
+      {submenuInfo.submenu && <Submenu submenuInfo={submenuInfo} />}
     </div>
   );
 };

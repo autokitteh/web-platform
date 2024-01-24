@@ -4,7 +4,6 @@ export interface ISubmenuInfo {
 }
 
 export interface ISubmenu {
-    isOpen: boolean;
     submenuInfo: ISubmenuInfo
 }
 
@@ -12,15 +11,4 @@ export interface IMenu {
     className?: string;
     isOpen: boolean;
     onSubmenu?: (submenuInfo: ISubmenuInfo) => void;
-}
-
-export interface IMenuItem {
-    icon?: string;
-    name: string;
-    iconClasses?: string;
-    className?: string;
-    badgeText?: string;
-    isOpen: boolean;
-    isActive?: boolean;
-    isHoverEffect?: boolean;
 }
