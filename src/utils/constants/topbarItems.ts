@@ -1,7 +1,6 @@
 import Build from '@assets/topbar/Build.svg?react';
 import Deploy from '@assets/topbar/Deploy.svg?react';
 import Stats from '@assets/topbar/Stats.svg?react';
-import More from '@assets/topbar/More.svg?react';
 
 export const topbarItems = [
     {
@@ -24,12 +23,5 @@ export const topbarItems = [
         name: 'Stats',
         href: '/app/stats',
         disabled: true,
-    },
-    {
-        id: 3,
-        icon: More,
-        name: 'More',
-        href: '/app/more',
-        disabled: false,
     },
 ];
