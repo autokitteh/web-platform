@@ -1,6 +1,6 @@
 import React, { MouseEventHandler } from 'react';
 
-import { cn } from '@utils/index';
+import { cn } from '@utils';
 
 export enum EButtonVariant {
   default = 'default',

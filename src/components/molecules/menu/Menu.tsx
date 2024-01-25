@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { Button, Icon } from '@components/atoms';
 import { IMenu } from '@components/molecules/menu';
-import { cn, menuItems } from '@utils/index';
+import { cn, menuItems } from '@utils';
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
   const handleMouseEnter = (

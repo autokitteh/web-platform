@@ -26,6 +26,7 @@
       "@api/*": ["./src/api/*"],
       "@routing/*": ["./src/routing/*"],
       "@utils/*": ["./src/utils/*"],
+      "@utils": ["./src/utils/index"],
       "@validations/*": ["./src/validations/*"],
     },
   },
