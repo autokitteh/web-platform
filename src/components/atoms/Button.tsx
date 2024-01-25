@@ -29,7 +29,7 @@ interface IButton
 
 export const Button = ({ children, className, variant, color, ...rest }: IButton) => {
   const buttonClass = cn(
-    'w-full flex items-center gap-2.5 p-2 rounded-3xl transition duration-300 text-sm text-gray-700 hover:bg-gray-200 hover:text-gray-700',
+    'w-full flex items-center gap-2.5 p-2 rounded-3xl transition duration-300 text-sm text-gray-700 text-center hover:bg-gray-200 hover:text-gray-700',
     {
       'hover:bg-transparent': variant === EButtonVariant.transparent,
       'bg-black text-white': variant === EButtonVariant.filled,

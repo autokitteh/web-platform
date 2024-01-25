@@ -1,1 +1,1 @@
-export { Menu } from "@components/molecules/menu/Menu";
+export { Menu } from "@components/molecules/menu";

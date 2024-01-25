@@ -6,7 +6,7 @@ interface IAppWrapper {
   children: ReactNode;
 }
 
-export default function AppWrapper({ children }: IAppWrapper) {
+export function AppWrapper({ children }: IAppWrapper) {
   return (
     <div className="w-screen h-screen pr-5">
       <div className="flex h-full">

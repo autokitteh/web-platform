@@ -1,2 +1,1 @@
-import { Home } from '@components/pages/Home';
-export { Home };
+export { Home } from '@components/pages/Home';
