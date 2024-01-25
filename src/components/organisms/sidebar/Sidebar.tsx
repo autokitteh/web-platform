@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import { Icon, Badge, Button } from '@components/atoms';
 import { ISubmenuInfo, Submenu, Menu } from '@components/molecules/menu';
@@ -31,21 +30,17 @@ export const Sidebar = () => {
           <Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
         </div>
         <div className="grid gap-5">
-          <Link to="#">
-            <Button variant="transparent">
-              <div className="w-8 h-8 p-1 relative">
-                <Icon src={IconNotification} alt="Notifications" />
-                <Badge text="2" className="absolute top-0 right-0" />
-              </div>
-              {isOpen && 'Notifications'}
-            </Button>
-          </Link>
-          <Link to="#">
-            <Button variant="transparent">
-              <Icon src={PictureAvatar} alt="Notifications" className="w-9 h-9" />
-              {isOpen && 'James L.'}
-            </Button>
-          </Link>
+          <Button href="#" variant="transparent">
+            <div className="w-8 h-8 p-1 relative">
+              <Icon src={IconNotification} alt="Notifications" />
+              <Badge text="2" className="absolute top-0 right-0" />
+            </div>
+            {isOpen && 'Notifications'}
+          </Button>
+          <Button href="#" variant="transparent">
+            <Icon src={PictureAvatar} alt="Notifications" className="w-9 h-9" />
+            {isOpen && 'James L.'}
+          </Button>
         </div>
       </div>
       {submenuInfo.submenu && <Submenu submenuInfo={submenuInfo} />}

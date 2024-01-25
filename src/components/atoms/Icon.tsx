@@ -1,15 +1,25 @@
 import React from 'react';
 import { cn } from '@utils';
 
-interface IIcon {
+interface ISVG {
   className?: string;
   alt?: string;
-  src: string;
-  isVisible?: boolean;
 }
 
-export const Icon = ({ className, alt = 'icon', src, isVisible = true }: IIcon) => {
-  const iconClasses = cn({ 'hidden opacity-0': !isVisible }, className);
+interface IIcon extends ISVG {
+  src: string | React.FC<React.SVGProps<SVGSVGElement>>;
+  isVisible?: boolean;
+  disabled?: boolean;
+}
 
-  return <img className={iconClasses} src={src} alt={alt} />;
+export const Icon = ({ className, alt = 'icon', src, disabled, isVisible = true }: IIcon) => {
+  const iconClasses = cn({ 'hidden opacity-0': !isVisible, 'opacity-40': disabled }, className);
+  const isSvgComponent = typeof src === 'function';
+
+  if (isSvgComponent) {
+    const SvgComponent = src as React.FC<React.SVGProps<SVGSVGElement>>;
+    return <SvgComponent className={iconClasses} aria-label={alt} />;
+  }
+
+  return <img className={iconClasses} src={src as string} alt={alt} />;
 };
