@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
 
 import { IButton } from '@components/atoms/buttons';
 import { Button, Icon } from '@components/atoms';
@@ -12,23 +11,10 @@ interface IDropdownButton extends Partial<IButton> {
 
 export const DropdownButton = ({ iconLeft, name, children, disabled, ...rest }: IDropdownButton) => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useEffect(() => setIsOpen(false), [location.pathname]);
-
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  const handleMouseEnter = () => setIsOpen(true);
+  const handleMouseLeave = () => setIsOpen(false);
 
   const dropdownVariants = {
     opened: {
@@ -44,8 +30,10 @@ export const DropdownButton = ({ iconLeft, name, children, disabled, ...rest }: 
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <Button onClick={toggleDropdown} {...rest} disabled={disabled}>
+    <div className="relative" ref={dropdownRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div className="absolute w-full left-0 h-2 -bottom-2"></div>
+
+      <Button {...rest} disabled={disabled}>
         {iconLeft && <Icon disabled={disabled} src={iconLeft} />}
         {name}
       </Button>
@@ -56,7 +44,7 @@ export const DropdownButton = ({ iconLeft, name, children, disabled, ...rest }: 
             animate="opened"
             exit="closed"
             variants={dropdownVariants}
-            className="absolute left-1/2 !transform -translate-x-1/2 mt-2 p-2 bg-gray-600 text-black rounded-md shadow-xl z-50"
+            className="absolute left-1/2 !transform -translate-x-1/2 mt-2 p-2 bg-gray-600 text-white rounded-md shadow-xl z-50"
           >
             {children}
           </motion.div>
