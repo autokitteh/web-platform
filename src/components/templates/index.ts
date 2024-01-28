@@ -1,1 +1,1 @@
-export { AppWrapper } from '@components/templates/AppWrapper';
+export { AppWrapper } from "@components/templates/AppWrapper";

@@ -1,14 +1,15 @@
 export interface ISubmenuInfo {
-    submenu: any[] | null;
-    top: number;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	submenu: any[] | null;
+	top: number;
 }
 
 export interface ISubmenu {
-    submenuInfo: ISubmenuInfo
+	submenuInfo: ISubmenuInfo;
 }
 
 export interface IMenu {
-    className?: string;
-    isOpen: boolean;
-    onSubmenu?: (submenuInfo: ISubmenuInfo) => void;
+	className?: string;
+	isOpen: boolean;
+	onSubmenu?: (submenuInfo: ISubmenuInfo) => void;
 }

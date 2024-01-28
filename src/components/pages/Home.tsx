@@ -1,8 +1,6 @@
-import React from 'react';
-import { AppWrapper } from '@components/templates';
+import React from "react";
+import { AppWrapper } from "@components/templates";
 
-export function Home() {
-  return (
-    <AppWrapper>Home</AppWrapper>
-  )
-}
+export const Home = () => {
+	return <AppWrapper>Home</AppWrapper>;
+};
