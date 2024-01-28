@@ -58,6 +58,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.33",
+    "rollup": "^4.9.6",
     "storybook": "^7.6.10",
     "tailwind-config-viewer": "^1.7.3",
     "tailwindcss": "^3.4.1",
