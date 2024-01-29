@@ -1,36 +1,35 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
+	"compilerOptions": {
+		"target": "ES2020",
+		"useDefineForClassFields": true,
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react",
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react",
 
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "paths": {
-      "@assets/*": ["./public/assets/*"],
-      "@components/*": ["./src/components/*"],
-      "@api/*": ["./src/api/*"],
-      "@routing/*": ["./src/routing/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@utils": ["./src/utils/index"],
-      "@validations/*": ["./src/validations/*"],
-    },
-  },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "setupTests.ts", "tests/**/*.tsx"],
-  "exclude": ["node_modules"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+		/* Linting */
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"baseUrl": ".",
+		"paths": {
+			"@assets/*": ["./src/assets/*"],
+			"@components/*": ["./src/components/*"],
+			"@api/*": ["./src/api/*"],
+			"@routing/*": ["./src/routing/*"],
+			"@utils/*": ["./src/utils/*"],
+			"@utils": ["./src/utils/index"],
+			"@validations/*": ["./src/validations/*"],
+		},
+	},
+	"exclude": ["node_modules"],
+	"references": [{ "path": "./tsconfig.node.json" }],
 }

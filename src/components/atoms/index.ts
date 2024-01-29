@@ -1,6 +1,6 @@
-export { Icon } from "@components/atoms/Icon";
-export { Badge } from "@components/atoms/Badge";
-export { Link } from "@components/atoms/Link";
-export { DropdownMenu } from "@components/atoms/DropdownMenu";
+export { Icon } from "@components/atoms/icon";
+export { Badge } from "@components/atoms/badge";
+export { Link } from "@components/atoms/link";
+export { DropdownMenu } from "@components/atoms/dropdownMenu";
 export { Button, IconButton } from "@components/atoms/buttons";
 export { Tabs, Tab, TabList, TabPanel } from "@components/atoms/tabs";

@@ -1,4 +1,4 @@
-export { Tabs } from "@components/atoms/tabs/Tabs";
-export { Tab } from "@components/atoms/tabs/Tab";
-export { TabList } from "@components/atoms/tabs/TabList";
-export { TabPanel } from "@components/atoms/tabs/TabPanel";
+export { Tabs } from "@components/atoms/tabs/tabs";
+export { Tab } from "@components/atoms/tabs/tab";
+export { TabList } from "@components/atoms/tabs/tabList";
+export { TabPanel } from "@components/atoms/tabs/tabPanel";

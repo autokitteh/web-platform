@@ -1,0 +1,3 @@
+#!/bin/sh
+
+npx husky add .husky/pre-push 'npx --no-install jest'
