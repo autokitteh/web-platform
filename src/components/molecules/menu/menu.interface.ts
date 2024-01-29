@@ -1,14 +1,14 @@
 export interface ISubmenuInfo {
-    submenu: any[] | null;
-    top: number;
+	submenu: { name: string; href: string; id: number }[] | null;
+	top: number;
 }
 
 export interface ISubmenu {
-    submenuInfo: ISubmenuInfo
+	submenuInfo: ISubmenuInfo;
 }
 
 export interface IMenu {
-    className?: string;
-    isOpen: boolean;
-    onSubmenu?: (submenuInfo: ISubmenuInfo) => void;
+	className?: string;
+	isOpen: boolean;
+	onSubmenu?: (submenuInfo: ISubmenuInfo) => void;
 }
