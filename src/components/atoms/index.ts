@@ -1,3 +1,5 @@
 export { Icon } from "@components/atoms/Icon";
 export { Badge } from "@components/atoms/Badge";
-export { Button, EButtonVariant, EButtonColor } from "@components/atoms/Button";
+export { Link } from "@components/atoms/Link";
+export { DropdownMenu } from "@components/atoms/DropdownMenu";
+export { Button, IconButton } from "@components/atoms/buttons";
