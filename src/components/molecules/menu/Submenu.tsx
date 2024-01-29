@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import { Button } from '@components/atoms';
@@ -21,9 +20,9 @@ export const Submenu = ({ submenuInfo }: ISubmenu) => {
       exit="hidden"
     >
       {submenuInfo.submenu?.map(({ name, href, id }) => (
-        <Link key={id} to={href} className="block px-3">
-          <Button className="px-4 hover:bg-green-light">{name}</Button>
-        </Link>
+        <Button key={id} href={href} className="px-4 hover:bg-green-light">
+          {name}
+        </Button>
       ))}
     </motion.div>
   );

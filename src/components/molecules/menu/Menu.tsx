@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { Button, Icon } from '@components/atoms';
 import { IMenu } from '@components/molecules/menu';
@@ -23,12 +22,10 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
     <div className={cn(className, 'grid gap-4')}>
       {menuItems.map(({ icon, name, href, submenu, id }) => (
         <div key={id} onMouseEnter={(e) => handleMouseEnter(submenu, e)}>
-          <Link to={href}>
-            <Button className="hover:bg-green-light">
-              <Icon className="w-8 h-8 p-1 " src={icon} alt={name} />
-              {isOpen && name}
-            </Button>
-          </Link>
+          <Button href={href} className="hover:bg-green-light">
+            <Icon className="w-8 h-8 p-1 " src={icon} alt={name} />
+            {isOpen && name}
+          </Button>
         </div>
       ))}
     </div>
