@@ -27,9 +27,9 @@
 			"@routing/*": ["./src/routing/*"],
 			"@utils/*": ["./src/utils/*"],
 			"@utils": ["./src/utils/index"],
-			"@validations/*": ["./src/validations/*"],
-		},
+			"@validations/*": ["./src/validations/*"]
+		}
 	},
 	"exclude": ["node_modules"],
-	"references": [{ "path": "./tsconfig.node.json" }],
+	"references": [{ "path": "./tsconfig.node.json" }]
 }
