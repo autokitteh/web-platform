@@ -8,7 +8,7 @@ interface IDropdownButton extends Partial<IButton> {
   name: string;
 }
 
-export const DropdownButton = ({ iconLeft, name, children, disabled, ...rest }: IDropdownButton) => {
+export const DropdownButton = ({ iconLeft, name, children, disabled }: IDropdownButton) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -18,7 +18,7 @@ export const DropdownButton = ({ iconLeft, name, children, disabled, ...rest }: 
   return (
     <div className="relative" ref={dropdownRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <div className="absolute w-full left-0 h-2 -bottom-2"></div>
-      <Button {...rest} disabled={disabled}>
+      <Button disabled={disabled}>
         {iconLeft && <Icon disabled={disabled} src={iconLeft} />}
         {name}
       </Button>

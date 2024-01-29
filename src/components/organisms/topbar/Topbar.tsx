@@ -1,6 +1,9 @@
 import React from 'react';
+
 import { topbarItems } from '@utils';
-import { Button, IconButton, DropdownButton, Icon } from '@components/atoms';
+import { Button, IconButton, Icon } from '@components/atoms';
+import { DropdownButton } from '@components/molecules';
+
 import FullScreenI from '@assets/topbar/FullScreen.svg?react';
 import More from '@assets/topbar/More.svg?react';
 
@@ -10,10 +13,6 @@ interface ITopbar {
 }
 
 export const Topbar = ({ name, version }: ITopbar) => {
-  const handleFullScreen = () => {
-    document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
-  };
-
   return (
     <div className="flex justify-between items-center bg-gray-700 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
       <div className="flex items-end gap-3">
@@ -60,7 +59,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
             ))}
           </div>
         </DropdownButton>
-        <IconButton variant="outline" icon={FullScreenI} onClick={handleFullScreen} />
+        <IconButton variant="outline" icon={FullScreenI} />
       </div>
     </div>
   );

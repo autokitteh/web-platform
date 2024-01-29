@@ -21,5 +21,5 @@ export const Icon = ({ className, alt = 'icon', src, disabled, isVisible = true 
     return <SvgComponent className={iconClasses} aria-label={alt} />;
   }
 
-  return <img className={iconClasses} src={src as string} alt={alt} />;
+  return <img className={iconClasses} src={src} alt={alt} />;
 };

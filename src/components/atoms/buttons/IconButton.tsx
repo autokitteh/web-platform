@@ -8,7 +8,7 @@ interface IIconButtonProps extends Partial<IButton> {
   icon: string | React.FC<React.SVGProps<SVGSVGElement>>;
 }
 
-export const IconButton = ({ icon, className, variant, fontWeight, href, disabled, ...rest }: IIconButtonProps) => {
+export const IconButton = ({ icon, className, variant, href, disabled }: IIconButtonProps) => {
   const iconButtonClass = cn(
     'p-2 rounded-full transition duration-300 hover:bg-gray-800',
     {
@@ -24,11 +24,11 @@ export const IconButton = ({ icon, className, variant, fontWeight, href, disable
   );
 
   return !href ? (
-    <button {...rest} disabled={disabled} className={iconButtonClass}>
+    <button disabled={disabled} className={iconButtonClass}>
       <Icon src={icon} disabled={disabled} />
     </button>
   ) : (
-    <Link to={href} {...rest} disabled={disabled} className={iconButtonClass}>
+    <Link to={href} disabled={disabled} className={iconButtonClass}>
       <Icon src={icon} disabled={disabled} />
     </Link>
   );
