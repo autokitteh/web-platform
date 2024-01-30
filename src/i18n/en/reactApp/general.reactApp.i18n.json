@@ -1,0 +1,13 @@
+{
+	"build": "Build",
+	"deploy": "Deploy",
+	"loading": "Loading...",
+	"outOf": "out of",
+	"totalOf": "Total of",
+	"run": "Run",
+	"showLess": "Show less",
+	"showMore": "Show more",
+	"sessions": "sessions",
+	"deployments": "deployments",
+	"unknown": "Unknown"
+}

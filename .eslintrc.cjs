@@ -43,6 +43,7 @@ module.exports = {
 	parser: "@typescript-eslint/parser",
 	plugins: ["react-refresh", "prettier", "unicorn", "import", "@typescript-eslint"],
 	rules: {
+		"@typescript-eslint/no-explicit-any": "off",
 		"prettier/prettier": [
 			"error",
 			{
@@ -111,7 +112,6 @@ module.exports = {
 				format: ["PascalCase"],
 			},
 		],
-		"no-console": ["error", { allow: ["warn", "error"] }],
 		"max-len": [
 			"error",
 			{

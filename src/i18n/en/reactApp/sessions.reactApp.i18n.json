@@ -1,0 +1,16 @@
+{
+	"tableTitle": "Sessions",
+	"time": "Activated",
+	"status": "Status",
+	"sessionId": "Session ID",
+	"actions": "Actions",
+	"pickDeploymentToShowSessions": "Pick a deployment to show its sessions",
+	"noSessionsFound": "No sessions found",
+	"statuses": {
+		"created": "Created",
+		"running": "Running",
+		"unspecified": "Unspecified",
+		"error": "Error",
+		"completed": "Completed"
+	}
+}

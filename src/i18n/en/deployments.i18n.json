@@ -1,0 +1,6 @@
+{
+	"activationSucceed": "Deployment activation succeed - id: {{id}}",
+	"activationFailed": "Deployment activation failed - id: {{id}} \nReason: {{error}}",
+	"deactivationSucceed": "Deployment deactivation succeed - id: {{id}}",
+	"deactivationFailed": "Deployment deactivation failed - id: {{id}} \nReason: {{error}}"
+}
