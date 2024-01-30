@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
-import { FrameNavigation } from "@components/organisms";
+import { SplitFrame } from "@components/organisms";
 import { AppWrapper } from "@components/templates";
 import { ProjectsService } from "@services";
-import { tabsMainValue } from "@utils";
+import { tabsMainFrame } from "@utils";
 
 export const Home = () => {
 	const handleFetchData = async () => {
@@ -17,20 +17,20 @@ export const Home = () => {
 
 	return (
 		<AppWrapper>
-			<FrameNavigation>
+			<SplitFrame>
 				<Tabs defaultValue={1}>
 					<TabList className="uppercase">
-						{tabsMainValue.map(({ id, title, count }) => (
+						{tabsMainFrame.map(({ id, title, count }) => (
 							<Tab key={id} value={id}>{`${title} (${count})`}</Tab>
 						))}
 					</TabList>
-					{tabsMainValue.map(({ id, content }) => (
+					{tabsMainFrame.map(({ id, content }) => (
 						<TabPanel key={id} value={id}>
 							{content}
 						</TabPanel>
 					))}
 				</Tabs>
-			</FrameNavigation>
+			</SplitFrame>
 		</AppWrapper>
 	);
 };
