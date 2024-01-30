@@ -1,20 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
+
 import { TabsContext } from "@components/atoms/tabs/tabsContext";
 import { cn } from "@utils";
 
 interface ITabPanel {
 	className?: string;
 	value: string | number;
-	children: React.ReactNode | (() => JSX.Element);
+	children: React.ReactNode;
 }
 
 export const TabPanel = ({ className, value, children }: ITabPanel) => {
 	const { activeTab } = useContext(TabsContext);
-	const tabPanelStyle = cn("h-full", className);
+	const tabPanelStyle = useMemo(() => cn("h-full", className), [className]);
 
 	if (value !== activeTab) return null;
 
-	const content = typeof children === "function" ? React.createElement(children) : children;
-
-	return <div className={tabPanelStyle}>{content}</div>;
+	return <div className={tabPanelStyle}>{children}</div>;
 };

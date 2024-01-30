@@ -1,3 +1,3 @@
 export { Menu } from "@components/molecules/menu";
 export { DropdownButton } from "@components/molecules/dropdownButton";
-export { AddCodeAssetsTab } from "@components/molecules/tabsContent";
+export { AddCodeAssetsTab, ConnectionsContent, TriggersContent, VariablesContent } from "@components/molecules/tabsContent";
