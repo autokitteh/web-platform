@@ -10,9 +10,9 @@ export const AppWrapper = ({ children }: IAppWrapper) => {
 		<div className="w-screen h-screen pr-5">
 			<div className="flex h-full">
 				<Sidebar />
-				<div className="flex-1">
+				<div className="flex-1 flex flex-col">
 					<Topbar name="Slack Monitor" version="Version 454462" />
-					{children}
+					<div className="py-2.5 flex-1">{children}</div>
 				</div>
 			</div>
 		</div>

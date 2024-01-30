@@ -17,7 +17,7 @@ export const DropdownButton = ({ iconLeft, name, children, disabled }: IDropdown
 	return (
 		<div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} ref={dropdownRef}>
 			<div className="absolute w-full left-0 h-2 -bottom-2" />
-			<Button disabled={disabled}>
+			<Button disabled={disabled} className="px-4 py-2.5" fontWeight={600} variant="outline" color="white">
 				{iconLeft ? <Icon disabled={disabled} src={iconLeft} /> : null}
 				{name}
 			</Button>

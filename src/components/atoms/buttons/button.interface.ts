@@ -5,6 +5,7 @@ export enum EButtonVariant {
 	transparent = "transparent",
 	filled = "filled",
 	outline = "outline",
+	subtle = "subtle",
 }
 export enum EButtonColor {
 	black = "black",

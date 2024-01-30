@@ -15,6 +15,9 @@ module.exports = {
 			"green-light": {
 				DEFAULT: "#E8FFCA",
 			},
+			"green-accent": {
+				DEFAULT: "#BCF870",
+			},
 			"gray": {
 				DEFAULT: "#D9D9D9",
 				200: "#f1f1f1",

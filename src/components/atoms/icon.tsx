@@ -13,7 +13,7 @@ interface IIcon extends Partial<ISVG> {
 }
 
 export const Icon = ({ className, alt = "icon", src, disabled, isVisible = true }: Partial<IIcon>) => {
-	const iconClasses = cn({ "hidden opacity-0": !isVisible, "opacity-40": disabled }, className);
+	const iconClasses = cn("transition", { "hidden opacity-0": !isVisible, "opacity-40": disabled }, className);
 	const isSvgComponent = typeof src === "function";
 
 	if (isSvgComponent) {
