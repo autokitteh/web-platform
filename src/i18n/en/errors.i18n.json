@@ -1,19 +1,6 @@
 {
 	"unexpectedError": "We're sorry, but an unexpected error has occurred and the application is currently unavailable. Please try again later.",
 	"projectNotFound": "Couldn't fetch the project details",
-	"showProjectDetails": "Click on a project to show its details",
-	"environmentsNotDefinedForProject": "Environments not defined for this project",
-	"deploymentsNotDefinedForProject": "Deployments not defined for this project",
-	"walkthrough.badBaseURL": "It seems that the host address in the configuration is wrong.\nRe-enter the host again or go to Settings->autokitteh and set the BaseURL in the following format: http://URL:PORT",
-	"badHostURL": "It seems that the host address in the configuration is wrong.\nGo to Settings->autokitteh and set the BaseURL in the following format: http://URL:PORT",
-	"noProjectsCheckHost": "No projects found, please check host configuration and manifest existance",
-	"serverNotRespond": "No connection found, re-connecting. Please check host configuration and manifest existance",
-	"notConnected": "No connection found. Please check host configuration and manifest existance",
-	"defaultEnvironmentNotFound": "Default environment not found",
-	"buildFailed": "Build failed",
-	"deploymentFailed": "Deployment failed",
-	"projectEnvironmentsNotFound": "Project environments not found",
 	"unexpectedSessionStateType": "Unexpected session state type",
-	"missingSessionStateType": "Missing session state type",
-	"missingStarlarkLSPPort": "Starlark LSP port is not set"
+	"missingSessionStateType": "Missing session state type"
 }
