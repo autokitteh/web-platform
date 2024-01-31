@@ -1,0 +1,3 @@
+[submodule "src/autokitteh"]
+	path = src/autokitteh
+	url = https://github.com/autokitteh/autokitteh
