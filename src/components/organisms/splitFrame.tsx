@@ -4,8 +4,7 @@ import { cn } from "@utils";
 import { Frame, Tabs, Tab, TabList, TabPanel } from "@components/atoms";
 import { Icon, IconButton } from "@components/atoms";
 
-import LogoFrame from "@assets/LogoFrame.svg?react";
-import Minimize from "@assets/icons/Minimize.svg?react";
+import { Minimize, LogoFrame } from "@assets/image";
 
 interface ISplitFrame {
 	children?: React.ReactNode;

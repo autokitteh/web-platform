@@ -1,9 +1,10 @@
 import React from "react";
-import FullScreenI from "@assets/topbar/FullScreen.svg?react";
-import More from "@assets/topbar/More.svg?react";
+
 import { Button, IconButton, Icon } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { topbarItems } from "@utils";
+
+import { FullScreen, More } from "@assets/image";
 
 interface ITopbar {
 	name: string;
@@ -20,10 +21,9 @@ export const Topbar = ({ name, version }: ITopbar) => {
 			<div className="flex items-center gap-3">
 				{topbarItems.map(({ id, name, href, icon, disabled }) => (
 					<Button
-						className="px-4 py-2.5"
+						className="px-4 py-2.5 font-semibold"
 						color="white"
 						disabled={disabled}
-						fontWeight={600}
 						href={href}
 						key={id}
 						variant="outline"
@@ -33,9 +33,8 @@ export const Topbar = ({ name, version }: ITopbar) => {
 					</Button>
 				))}
 				<DropdownButton
-					className="px-4 py-2.5"
+					className="px-4 py-2.5 font-semibold"
 					color="white"
-					fontWeight={600}
 					iconLeft={More}
 					name="More"
 					variant="outline"
@@ -43,10 +42,9 @@ export const Topbar = ({ name, version }: ITopbar) => {
 					<div className="grid gap-2">
 						{topbarItems.map(({ id, name, href, icon, disabled }) => (
 							<Button
-								className="px-4 py-1.5"
+								className="px-4 py-1.5 font-semibold"
 								color="white"
 								disabled={disabled}
-								fontWeight={600}
 								href={href}
 								key={id}
 								variant="outline"
@@ -57,7 +55,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 						))}
 					</div>
 				</DropdownButton>
-				<IconButton icon={FullScreenI} variant="outline" />
+				<IconButton icon={FullScreen} variant="outline" />
 			</div>
 		</div>
 	);

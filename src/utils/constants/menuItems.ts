@@ -1,9 +1,4 @@
-import Connections from "@assets/sidebar/Connections.svg";
-import Dashboard from "@assets/sidebar/Dashboard.svg";
-import NewProject from "@assets/sidebar/NewProject.svg";
-import Projects from "@assets/sidebar/Projects.svg";
-import Settings from "@assets/sidebar/Settings.svg";
-import Stats from "@assets/sidebar/Stats.svg";
+import { Connections, Dashboard, NewProject, Projects, Settings, StatsBlack } from "@assets/image";
 
 export const menuItems = [
 	{
@@ -116,7 +111,7 @@ export const menuItems = [
 	},
 	{
 		id: 4,
-		icon: Stats,
+		icon: StatsBlack,
 		name: "Stats",
 		href: "/app/stats",
 	},

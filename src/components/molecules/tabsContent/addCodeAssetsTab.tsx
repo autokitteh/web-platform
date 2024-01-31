@@ -2,7 +2,7 @@ import React from "react";
 
 import { Icon } from "@components/atoms";
 
-import PlusCircle from "@assets/icons/PlusCircle.svg?react";
+import { PlusCircle } from "@assets/image";
 
 export const AddCodeAssetsTab = () => {
 	return (
