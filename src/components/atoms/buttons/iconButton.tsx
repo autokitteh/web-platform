@@ -15,6 +15,7 @@ export const IconButton = ({
 	disabled,
 	onMouseEnter,
 	onMouseLeave,
+	onClick,
 }: IIconButtonProps) => {
 	const iconButtonClass = cn(
 		"p-2 flex items-center justify-center rounded-full transition duration-300 hover:bg-gray-800 shrink-0 outline-0",
@@ -35,7 +36,13 @@ export const IconButton = ({
 		typeof icon === "string" || typeof icon === "function" ? <Icon disabled={disabled} src={icon} /> : icon;
 
 	return !href ? (
-		<button className={iconButtonClass} disabled={disabled} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+		<button
+			className={iconButtonClass}
+			disabled={disabled}
+			onClick={onClick}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
+		>
 			{iconComponent}
 		</button>
 	) : (

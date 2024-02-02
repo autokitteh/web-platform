@@ -30,13 +30,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 						{name}
 					</Button>
 				))}
-				<DropdownButton
-					className="px-4 py-2.5 font-semibold"
-					color="white"
-					iconLeft={More}
-					name="More"
-					variant="outline"
-				>
+				<DropdownButton className="font-semibold" color="white" iconLeft={More} name="More" variant="outline">
 					<div className="grid gap-2">
 						{topbarItems.map(({ id, name, href, icon, disabled }) => (
 							<Button

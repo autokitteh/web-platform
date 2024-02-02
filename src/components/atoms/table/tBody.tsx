@@ -7,7 +7,7 @@ interface ITBody {
 }
 
 export const TBody = ({ className, children }: ITBody) => {
-	const bodyStyle = cn("border-t border-gray-600 bg-gray-700", className);
+	const bodyStyle = cn("border-t border-gray-600", className);
 
 	return (
 		<div className={bodyStyle} role="rowgroup">
