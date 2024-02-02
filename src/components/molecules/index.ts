@@ -6,3 +6,4 @@ export {
 	TriggersContent,
 	VariablesContent,
 } from "@components/molecules/tabsContent";
+export { TableConnectionsContent } from "@components/molecules/tableContent";

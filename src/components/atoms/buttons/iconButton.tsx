@@ -9,7 +9,7 @@ interface IIconButtonProps extends Partial<IButton> {
 
 export const IconButton = ({ icon, className, variant, href, disabled, onClick }: IIconButtonProps) => {
 	const iconButtonClass = cn(
-		"p-2 rounded-full transition duration-300 hover:bg-gray-800",
+		"p-2 rounded-full transition duration-300 hover:bg-gray-800 shrink-0",
 		{
 			"hover:bg-transparent": variant === EButtonVariant.transparent,
 			"bg-black": variant === EButtonVariant.filled,

@@ -1,10 +1,8 @@
 import React from "react";
-
+import { FullScreen, More } from "@assets/image";
 import { Button, IconButton, Icon } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { topbarItems } from "@utils";
-
-import { FullScreen, More } from "@assets/image";
 
 interface ITopbar {
 	name: string;
@@ -18,7 +16,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 				<span className="font-semibold text-2xl leading-6">{name}</span>
 				<span className="font-semibold text-sm text-gray-300 leading-none">{version}</span>
 			</div>
-			<div className="flex items-center gap-3">
+			<div className="flex items-stretch gap-3">
 				{topbarItems.map(({ id, name, href, icon, disabled }) => (
 					<Button
 						className="px-4 py-2.5 font-semibold"
@@ -28,7 +26,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 						key={id}
 						variant="outline"
 					>
-						<Icon disabled={disabled} src={icon} />
+						<Icon className="max-w-5" disabled={disabled} src={icon} />
 						{name}
 					</Button>
 				))}
@@ -49,7 +47,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 								key={id}
 								variant="outline"
 							>
-								<Icon disabled={disabled} src={icon} />
+								<Icon className="w-4" disabled={disabled} src={icon} />
 								{name}
 							</Button>
 						))}

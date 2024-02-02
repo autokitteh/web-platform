@@ -2,13 +2,22 @@ import React from "react";
 import { cn } from "@utils";
 import { motion, AnimatePresence } from "framer-motion";
 
+enum EDropdownMenuPlacement {
+	default = "default",
+	left = "left",
+	right = "right",
+}
+
+type TDropdownMenuVariant = keyof typeof EDropdownMenuPlacement;
+
 interface IDropdownMenu {
+	placement?: TDropdownMenuVariant;
 	isOpen: boolean;
 	className?: string;
 	children: React.ReactNode;
 }
 
-export const DropdownMenu = ({ isOpen, className, children }: IDropdownMenu) => {
+export const DropdownMenu = ({ isOpen, className, placement = "default", children }: IDropdownMenu) => {
 	const dropdownVariants = {
 		opened: {
 			opacity: 1,
@@ -23,8 +32,11 @@ export const DropdownMenu = ({ isOpen, className, children }: IDropdownMenu) => 
 	};
 
 	const menuStyle = cn(
-		"absolute left-1/2 !transform -translate-x-1/2 mt-2 p-2.5" +
-			" bg-black rounded-lg border border-gray-500 shadow-xl z-50",
+		"absolute mt-2 p-2.5 bg-black rounded-lg border border-gray-500 shadow-xl z-50",
+		{
+			"left-1/2 !transform -translate-x-1/2": placement === EDropdownMenuPlacement.default,
+			"right-0": placement === EDropdownMenuPlacement.left,
+		},
 		className
 	);
 
