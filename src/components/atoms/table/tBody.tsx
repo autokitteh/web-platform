@@ -1,5 +1,4 @@
 import React from "react";
-
 import { cn } from "@utils";
 
 interface ITBody {
@@ -8,10 +7,10 @@ interface ITBody {
 }
 
 export const TBody = ({ className, children }: ITBody) => {
-	const bodyStyle = cn("border-t border-gray-600", className);
+	const bodyStyle = cn("border-t border-gray-600 bg-gray-700", className);
 
 	return (
-		<div role="rowgroup" className={bodyStyle}>
+		<div className={bodyStyle} role="rowgroup">
 			{children}
 		</div>
 	);

@@ -1,5 +1,4 @@
 import React from "react";
-
 import { cn } from "@utils";
 
 interface ITD {
@@ -7,12 +6,15 @@ interface ITD {
 	children?: React.ReactNode;
 }
 
-export const TD = ({ className, children }: ITD) => {
-	const tdStyle = cn("w-full flex items-center p-2.5 text-base border-r border-gray-600 last:border-r-0", className);
+export const Td = ({ className, children }: ITD) => {
+	const tdStyle = cn(
+		"w-full overflow-hidden flex items-center p-2.5 border-r border-gray-600 last:border-r-0",
+		className
+	);
 
 	return (
-		<div role="cell" className={tdStyle}>
-			{children}
+		<div className={tdStyle} role="cell">
+			<div className="truncate">{children}</div>
 		</div>
 	);
 };

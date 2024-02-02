@@ -1,5 +1,4 @@
 import React from "react";
-
 import { cn } from "@utils";
 
 interface IThead {
@@ -8,10 +7,10 @@ interface IThead {
 }
 
 export const THead = ({ className, children }: IThead) => {
-	const headStyle = cn("bg-black text-gray-300", className);
+	const headStyle = cn("sticky z-10 top-0 bg-black text-gray-300 rounded-t", className);
 
 	return (
-		<div role="rowgroup" className={headStyle}>
+		<div className={headStyle} role="rowgroup">
 			{children}
 		</div>
 	);

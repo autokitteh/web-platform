@@ -24,4 +24,6 @@ export interface IButton extends React.HTMLAttributes<HTMLButtonElement | HTMLAn
 	disabled: boolean;
 	children: React.ReactNode;
 	onClick: MouseEventHandler<HTMLButtonElement> | undefined;
+	onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }

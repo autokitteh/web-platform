@@ -1,5 +1,4 @@
 import React from "react";
-
 import { cn } from "@utils";
 
 interface ITable {
@@ -8,10 +7,10 @@ interface ITable {
 }
 
 export const Table = ({ className, children }: ITable) => {
-	const tableStyle = cn("rounded-md border border-gray-600 text-sm", className);
+	const tableStyle = cn("overflow-y-auto rounded-md border border-gray-600 scrollbar-table", className);
 
 	return (
-		<div role="table" className={tableStyle}>
+		<div className={tableStyle} role="table">
 			{children}
 		</div>
 	);
