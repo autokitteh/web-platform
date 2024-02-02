@@ -1,6 +1,4 @@
-import Build from "@assets/topbar/Build.svg?react";
-import Deploy from "@assets/topbar/Deploy.svg?react";
-import Stats from "@assets/topbar/Stats.svg?react";
+import { Build, Deploy, Stats } from "@assets/image";
 
 export const topbarItems = [
 	{

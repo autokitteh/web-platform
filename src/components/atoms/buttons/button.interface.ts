@@ -5,6 +5,7 @@ export enum EButtonVariant {
 	transparent = "transparent",
 	filled = "filled",
 	outline = "outline",
+	subtle = "subtle",
 }
 export enum EButtonColor {
 	black = "black",
@@ -14,13 +15,11 @@ export enum EButtonColor {
 
 type TButtonVariant = keyof typeof EButtonVariant;
 type TButtonColor = keyof typeof EButtonColor;
-type TButtonFontWeight = 500 | 600 | 700 | 800;
 
 export interface IButton extends React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, React.AriaAttributes {
 	className: string;
 	variant: TButtonVariant;
 	color: TButtonColor;
-	fontWeight: TButtonFontWeight;
 	href: string;
 	disabled: boolean;
 	children: React.ReactNode;

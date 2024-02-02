@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import PictureAvatar from "@assets/avatar.png";
-import IconLogo from "@assets/Logo.svg";
-import IconLogoName from "@assets/LogoName.svg";
-import IconNotification from "@assets/sidebar/Notification.svg";
+
 import { Icon, Badge, Button } from "@components/atoms";
 import { ISubmenuInfo, Submenu, Menu } from "@components/molecules/menu";
+
+import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets/image";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +35,7 @@ export const Sidebar = () => {
 						{isOpen ? "Notifications" : null}
 					</Button>
 					<Button href="#" variant="transparent">
-						<Icon alt="Notifications" className="w-9 h-9" src={PictureAvatar} />
+						<Icon alt="Notifications" className="w-9 h-9" src={DefaultAvatar} />
 						{isOpen ? "James L." : null}
 					</Button>
 				</div>
