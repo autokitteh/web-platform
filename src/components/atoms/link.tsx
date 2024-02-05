@@ -1,7 +1,6 @@
 import React from "react";
-import { Link as LinkReact } from "react-router-dom";
-
 import { cn } from "@utils";
+import { Link as LinkReact } from "react-router-dom";
 
 interface ILinkProps {
 	to: string;

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-
+import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets/image";
 import { Icon, Badge, Button } from "@components/atoms";
 import { ISubmenuInfo, Submenu, Menu } from "@components/molecules/menu";
-
-import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets/image";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +19,7 @@ export const Sidebar = () => {
 			<div className="h-full p-4 pt-6 pb-10 flex flex-col justify-between bg-white z-10">
 				<div>
 					<div className="flex items-center gap-2.5 ml-1">
-						<Icon alt="logo" src={IconLogo} className="w-8 h-8" />
+						<Icon alt="logo" className="w-8 h-8" src={IconLogo} />
 						<Icon alt="autokitteh" className="w-20 h-3" isVisible={isOpen} src={IconLogoName} />
 					</div>
 					<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />

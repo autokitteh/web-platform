@@ -24,10 +24,10 @@
 }
 
 .scrollbar-table::-webkit-scrollbar-thumb {
-	background-color: theme('colors.gray.300');
+	background-color: theme("colors.gray.300");
 	border-radius: 10px;
 }
 
 .scrollbar-table::-webkit-scrollbar-thumb:hover {
-	background-color: theme('colors.gray.400');
+	background-color: theme("colors.gray.400");
 }

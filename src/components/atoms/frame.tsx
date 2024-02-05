@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@utils";
 
-export enum EFrameColor {
+enum EFrameColor {
 	default = "default",
 	darkGray = "darkGray",
 }

@@ -22,8 +22,8 @@ export const Tab = ({ className, value, children }: ITab) => {
 	const handleActive = () => setActiveTab(value);
 
 	return (
-		<div className={tabStyle} onClick={handleActive} onKeyDown={handleActive} role="button">
+		<button className={tabStyle} onClick={handleActive} onKeyDown={handleActive} role="tab">
 			{children}
-		</div>
+		</button>
 	);
 };
