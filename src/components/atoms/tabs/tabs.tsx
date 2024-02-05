@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { TabsContext } from "@components/atoms/tabs/tabsContext";
-import { cn } from "@utils";
-
-interface ITabs {
-	defaultValue?: string | number;
-	className?: string;
-	children: React.ReactNode;
-}
+import { ITabs } from "@interfaces";
+import { cn } from "@utilities";
 
 export const Tabs = ({ defaultValue, className, children }: ITabs) => {
 	const [activeTab, setActiveTab] = useState<string | number>(defaultValue || 0);

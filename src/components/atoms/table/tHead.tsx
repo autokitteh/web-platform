@@ -1,12 +1,8 @@
 import React from "react";
-import { cn } from "@utils";
+import { ITable } from "@interfaces";
+import { cn } from "@utilities";
 
-interface IThead {
-	className?: string;
-	children: React.ReactNode;
-}
-
-export const THead = ({ className, children }: IThead) => {
+export const THead = ({ className, children }: ITable) => {
 	const headStyle = cn("sticky z-10 top-0 bg-black text-gray-300 rounded-t", className);
 
 	return (

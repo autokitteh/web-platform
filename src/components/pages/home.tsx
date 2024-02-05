@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
 import { AppWrapper } from "@components/templates";
+import { tabsMainFrame } from "@constants";
 import { ProjectsService } from "@services";
-import { tabsMainFrame } from "@utils";
 
 export const Home = () => {
 	const handleFetchData = async () => {
@@ -26,7 +26,7 @@ export const Home = () => {
 					</TabList>
 					{tabsMainFrame.map(({ id, content }) => (
 						<TabPanel key={id} value={id}>
-							{content}
+							{content()}
 						</TabPanel>
 					))}
 				</Tabs>

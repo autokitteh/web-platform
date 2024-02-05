@@ -1,12 +1,8 @@
 import React from "react";
-import { cn } from "@utils";
+import { ITable } from "@interfaces";
+import { cn } from "@utilities";
 
-interface ITH {
-	className?: string;
-	children?: React.ReactNode;
-}
-
-export const Th = ({ className, children }: ITH) => {
+export const Th = ({ className, children }: ITable) => {
 	const thStyle = cn(
 		"w-full truncate flex items-center gap-1 p-2.5 text-base border-r border-gray-600 last:border-r-0",
 		className

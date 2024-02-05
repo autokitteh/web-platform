@@ -1,12 +1,8 @@
 import React from "react";
-import { cn } from "@utils";
+import { ITable } from "@interfaces";
+import { cn } from "@utilities";
 
-interface ITBody {
-	className?: string;
-	children: React.ReactNode;
-}
-
-export const TBody = ({ className, children }: ITBody) => {
+export const TBody = ({ className, children }: ITable) => {
 	const bodyStyle = cn("border-t border-gray-600", className);
 
 	return (

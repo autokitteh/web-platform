@@ -1,12 +1,7 @@
 import React, { useContext } from "react";
 import { TabsContext } from "@components/atoms/tabs/tabsContext";
-import { cn } from "@utils";
-
-interface ITab {
-	className?: string;
-	value: string | number;
-	children: React.ReactNode;
-}
+import { ITab } from "@interfaces";
+import { cn } from "@utilities";
 
 export const Tab = ({ className, value, children }: ITab) => {
 	const { activeTab, setActiveTab } = useContext(TabsContext);

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Icon } from "@components/atoms";
-import NewProject from "@assets/sidebar/NewProject.svg";
+import { DefaultAvatar } from "@assets/image";
 
 const meta: Meta<typeof Icon> = {
 	title: "Core/Icon",
@@ -20,7 +20,7 @@ export const Default: Story = {
 	args: {
 		className: "",
 		alt: "icon",
-		src: NewProject,
+		src: DefaultAvatar,
 		isVisible: true,
 	},
 	argTypes: {
