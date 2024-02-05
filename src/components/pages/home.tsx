@@ -18,7 +18,7 @@ export const Home = () => {
 	return (
 		<AppWrapper>
 			<SplitFrame>
-				<Tabs defaultValue={1}>
+				<Tabs defaultValue={2}>
 					<TabList className="uppercase">
 						{tabsMainFrame.map(({ id, title, count }) => (
 							<Tab key={id} value={id}>{`${title} (${count})`}</Tab>

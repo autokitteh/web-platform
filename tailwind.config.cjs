@@ -1,9 +1,15 @@
-const colors = require("tailwindcss/colors");
+import colors from "tailwindcss/colors";
+import plugin from "tailwindcss/plugin";
 
+// eslint-disable-next-line no-undef
 module.exports = {
 	content: ["./src/**/*.{js,jsx,ts,tsx}"],
 	theme: {
-		extend: {},
+		extend: {
+			maxWidth: {
+				650: "650px",
+			},
+		},
 		colors: {
 			...colors,
 			"white": {
@@ -30,5 +36,14 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [
+		plugin(function ({ addBase }) {
+			addBase({
+				body: {
+					fontSize: "14px",
+					lineHeight: "20px",
+				},
+			});
+		}),
+	],
 };

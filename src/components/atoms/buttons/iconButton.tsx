@@ -1,15 +1,24 @@
 import React from "react";
-import { Link, Icon } from "@components/atoms";
+import { Link } from "@components/atoms";
 import { IButton, EButtonVariant } from "@components/atoms/buttons";
 import { cn } from "@utils";
 
 interface IIconButtonProps extends Partial<IButton> {
-	icon: string | React.FC<React.SVGProps<SVGSVGElement>>;
+	children: React.ReactNode;
 }
 
-export const IconButton = ({ icon, className, variant, href, disabled, onClick }: IIconButtonProps) => {
+export const IconButton = ({
+	children,
+	className,
+	variant,
+	href,
+	disabled,
+	onMouseEnter,
+	onMouseLeave,
+	onClick,
+}: IIconButtonProps) => {
 	const iconButtonClass = cn(
-		"p-2 rounded-full transition duration-300 hover:bg-gray-800",
+		"p-2 flex items-center justify-center rounded-full transition duration-300 hover:bg-gray-800 shrink-0 outline-0",
 		{
 			"hover:bg-transparent": variant === EButtonVariant.transparent,
 			"bg-black": variant === EButtonVariant.filled,
@@ -24,12 +33,18 @@ export const IconButton = ({ icon, className, variant, href, disabled, onClick }
 	);
 
 	return !href ? (
-		<button className={iconButtonClass} disabled={disabled} onClick={onClick}>
-			<Icon disabled={disabled} src={icon} />
+		<button
+			className={iconButtonClass}
+			disabled={disabled}
+			onClick={onClick}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
+		>
+			{children}
 		</button>
 	) : (
 		<Link className={iconButtonClass} disabled={disabled} to={href}>
-			<Icon disabled={disabled} src={icon} />
+			{children}
 		</Link>
 	);
 };

@@ -18,3 +18,16 @@
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
 }
+
+.scrollbar-table::-webkit-scrollbar {
+	width: 6px;
+}
+
+.scrollbar-table::-webkit-scrollbar-thumb {
+	background-color: theme('colors.gray.300');
+	border-radius: 10px;
+}
+
+.scrollbar-table::-webkit-scrollbar-thumb:hover {
+	background-color: theme('colors.gray.400');
+}

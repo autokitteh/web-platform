@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { cn } from "@utils";
-
+import { Minimize, LogoFrame } from "@assets/image";
 import { Frame, Tabs, Tab, TabList, TabPanel } from "@components/atoms";
 import { Icon, IconButton } from "@components/atoms";
-
-import { Minimize, LogoFrame } from "@assets/image";
+import { cn } from "@utils";
 
 interface ISplitFrame {
 	children?: React.ReactNode;
@@ -16,7 +14,7 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 	const mainFrameStyle = cn(
 		"rounded-l-none transition-all duration-300",
 		{ "rounded-2xl": !children },
-		{ "max-w-full": isFullScreen, "max-w-[550px]": !isFullScreen }
+		{ "max-w-full": isFullScreen, "max-w-650": !isFullScreen }
 	);
 
 	const handleFullScreenToggle = () => setIsFullScreen(!isFullScreen);
@@ -26,11 +24,12 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 			{children ? (
 				<Frame className="rounded-r-none max-w-[680px] border-r border-gray-600" color="darkGray">
 					<IconButton
-						icon={Minimize}
-						variant="filled"
 						className="hover:scale-125 absolute -left-5 top-1/2 -translate-y-1/2 z-50"
 						onClick={handleFullScreenToggle}
-					/>
+						variant="filled"
+					>
+						<Minimize />
+					</IconButton>
 					{children}
 				</Frame>
 			) : null}
@@ -40,9 +39,9 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 						<Tab value="MANIFEST">MANIFEST</Tab>
 						<Tab value="CODE">CODE</Tab>
 					</TabList>
-					<TabPanel value="MANIFEST">"MANIFEST"</TabPanel>
+					<TabPanel value="MANIFEST">MANIFEST</TabPanel>
 				</Tabs>
-				<Icon src={LogoFrame} className="absolute bottom-7 right-7" />
+				<Icon className="absolute bottom-7 right-7" src={LogoFrame} />
 			</Frame>
 		</div>
 	);
