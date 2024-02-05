@@ -4,7 +4,7 @@ import { IButton, EButtonVariant } from "@components/atoms/buttons";
 import { cn } from "@utils";
 
 interface IIconButtonProps extends Partial<IButton> {
-	icon: string | React.ReactNode | React.FC<React.SVGProps<SVGSVGElement>>;
+	icon: string | React.ReactNode;
 }
 
 export const IconButton = ({
@@ -32,8 +32,7 @@ export const IconButton = ({
 		className
 	);
 
-	const iconComponent =
-		typeof icon === "string" || typeof icon === "function" ? <Icon disabled={disabled} src={icon} /> : icon;
+	const iconComponent = typeof icon === "string" ? <Icon disabled={disabled} src={icon} /> : icon;
 
 	return !href ? (
 		<button

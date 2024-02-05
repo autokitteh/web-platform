@@ -14,7 +14,7 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 	const mainFrameStyle = cn(
 		"rounded-l-none transition-all duration-300",
 		{ "rounded-2xl": !children },
-		{ "max-w-full": isFullScreen, "max-w-[650px]": !isFullScreen }
+		{ "max-w-full": isFullScreen, "max-w-650": !isFullScreen }
 	);
 
 	const handleFullScreenToggle = () => setIsFullScreen(!isFullScreen);
@@ -25,7 +25,7 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 				<Frame className="rounded-r-none max-w-[680px] border-r border-gray-600" color="darkGray">
 					<IconButton
 						className="hover:scale-125 absolute -left-5 top-1/2 -translate-y-1/2 z-50"
-						icon={Minimize}
+						icon={<Minimize />}
 						onClick={handleFullScreenToggle}
 						variant="filled"
 					/>

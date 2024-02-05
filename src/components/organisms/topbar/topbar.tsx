@@ -19,7 +19,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 			<div className="flex items-stretch gap-3">
 				{topbarItems.map(({ id, name, href, icon, disabled }) => (
 					<Button
-						className="px-4 py-2.5 font-semibold"
+						className="px-4 py-2 font-semibold"
 						color="white"
 						disabled={disabled}
 						href={href}
@@ -47,7 +47,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 						))}
 					</div>
 				</DropdownButton>
-				<IconButton icon={FullScreen} variant="outline" />
+				<IconButton icon={<FullScreen />} variant="outline" />
 			</div>
 		</div>
 	);
