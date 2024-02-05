@@ -47,7 +47,9 @@ export const Topbar = ({ name, version }: ITopbar) => {
 						))}
 					</div>
 				</DropdownButton>
-				<IconButton icon={<FullScreen />} variant="outline" />
+				<IconButton variant="outline">
+					<FullScreen />
+				</IconButton>
 			</div>
 		</div>
 	);

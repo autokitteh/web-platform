@@ -1,14 +1,14 @@
 import React from "react";
-import { Link, Icon } from "@components/atoms";
+import { Link } from "@components/atoms";
 import { IButton, EButtonVariant } from "@components/atoms/buttons";
 import { cn } from "@utils";
 
 interface IIconButtonProps extends Partial<IButton> {
-	icon: string | React.ReactNode;
+	children: React.ReactNode;
 }
 
 export const IconButton = ({
-	icon,
+	children,
 	className,
 	variant,
 	href,
@@ -32,8 +32,6 @@ export const IconButton = ({
 		className
 	);
 
-	const iconComponent = typeof icon === "string" ? <Icon disabled={disabled} src={icon} /> : icon;
-
 	return !href ? (
 		<button
 			className={iconButtonClass}
@@ -42,11 +40,11 @@ export const IconButton = ({
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 		>
-			{iconComponent}
+			{children}
 		</button>
 	) : (
 		<Link className={iconButtonClass} disabled={disabled} to={href}>
-			{iconComponent}
+			{children}
 		</Link>
 	);
 };

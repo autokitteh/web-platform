@@ -35,15 +35,18 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 					<Tr className="group">
 						<Th className="border-r-0">
 							Name
-							<IconButton className="w-auto p-1 hover:bg-gray-700" icon={<SmallArrowDown className="w-2 h-1.5" />} />
+							<IconButton className="w-auto p-1 hover:bg-gray-700">
+								<SmallArrowDown className="w-2 h-1.5" />
+							</IconButton>
 						</Th>
 						<Th className="max-w-8 p-0">
 							<IconButton
 								className="w-6 h-6 p-1 hover:bg-gray-700"
-								icon={<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />}
 								onMouseEnter={handleHoverIcon}
 								onMouseLeave={handleLeaveDropdown}
-							/>
+							>
+								<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
+							</IconButton>
 						</Th>
 						<Th>App</Th>
 						<Th>User</Th>
@@ -58,28 +61,29 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 						<Td className="p-0 max-w-8">
 							<IconButton
 								className="w-6 h-6 p-1"
-								icon={<Info className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />}
 								onMouseEnter={handleHoverIcon}
 								onMouseLeave={handleLeaveDropdown}
 								variant="transparent"
-							/>
+							>
+								<Info className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
+							</IconButton>
 						</Td>
 						<Td>Slack</Td>
 						<Td>Jeff@autokitteh.</Td>
 						<Td className="relative text-xs border-r-0">2 days ago</Td>
 						<Td className="max-w-10 border-0 p-0">
-							<IconButton
-								className="w-6 h-6 p-1 hover:bg-gray-700"
-								icon={<TestS className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />}
-							/>
+							<IconButton className="w-6 h-6 p-1 hover:bg-gray-700">
+								<TestS className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
+							</IconButton>
 						</Td>
 						<Td className="max-w-10 border-0 pr-1 justify-end">
 							<IconButton
 								className="w-6 h-6 p-1  hover:bg-gray-700"
-								icon={<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />}
 								onMouseEnter={handleHoverIcon}
 								onMouseLeave={handleLeaveDropdown}
-							/>
+							>
+								<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
+							</IconButton>
 						</Td>
 					</Tr>
 				</TBody>
