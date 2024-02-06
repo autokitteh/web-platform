@@ -1,11 +1,7 @@
 import React from "react";
-
-interface ITabsContext {
-	activeTab: string | number;
-	setActiveTab: (value: string | number) => void;
-}
+import { ITabsContext } from "@interfaces/components";
 
 export const TabsContext = React.createContext<ITabsContext>({
 	activeTab: 0,
-	setActiveTab: () => {},
+	setActiveTab: () => null,
 });

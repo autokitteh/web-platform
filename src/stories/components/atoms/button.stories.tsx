@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button, EButtonVariant, EButtonColor } from "@components/atoms/buttons";
+import { Button } from "@components/atoms/buttons";
+import { EButtonVariant } from "@enums/components";
 
 const meta: Meta<typeof Button> = {
 	title: "Buttons/Button",
@@ -12,7 +13,6 @@ const meta: Meta<typeof Button> = {
 		},
 		color: {
 			control: "select",
-			options: Object.values(EButtonColor),
 		},
 		children: { control: "text" },
 		onClick: { action: "clicked" },
@@ -27,7 +27,6 @@ export const Default: Story = {
 		children: "Click Me",
 		className: "",
 		variant: EButtonVariant.default,
-		color: EButtonColor.gray,
 	},
 };
 
@@ -35,7 +34,6 @@ export const Filled: Story = {
 	args: {
 		...Default.args,
 		variant: EButtonVariant.filled,
-		color: EButtonColor.white,
 		children: "Filled Button",
 	},
 };
@@ -51,7 +49,6 @@ export const Outline: Story = {
 export const Transparent: Story = {
 	args: {
 		...Default.args,
-		variant: EButtonVariant.transparent,
 		children: "Transparent Button",
 	},
 };

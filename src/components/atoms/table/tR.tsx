@@ -1,12 +1,8 @@
-import React, { ReactNode } from "react";
-import { cn } from "@utils";
+import React from "react";
+import { ITable } from "@interfaces/components";
+import { cn } from "@utilities";
 
-interface ITR {
-	className?: string;
-	children: ReactNode;
-}
-
-export const Tr = ({ className, children }: ITR) => {
+export const Tr = ({ className, children }: ITable) => {
 	const tRStyle = cn("flex border-b border-gray-600 last:border-b-0 transition hover:bg-black", className);
 
 	return (

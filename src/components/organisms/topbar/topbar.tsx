@@ -1,13 +1,9 @@
 import React from "react";
 import { FullScreen, More } from "@assets/image";
-import { Button, IconButton, Icon } from "@components/atoms";
+import { Button, IconButton, IconSvg } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
-import { topbarItems } from "@utils";
-
-interface ITopbar {
-	name: string;
-	version: string;
-}
+import { topbarItems } from "@constants";
+import { ITopbar } from "@interfaces/components";
 
 export const Topbar = ({ name, version }: ITopbar) => {
 	return (
@@ -19,33 +15,39 @@ export const Topbar = ({ name, version }: ITopbar) => {
 			<div className="flex items-stretch gap-3">
 				{topbarItems.map(({ id, name, href, icon, disabled }) => (
 					<Button
-						className="px-4 py-2 font-semibold"
-						color="white"
+						className="px-4 py-2 font-semibold text-white"
 						disabled={disabled}
 						href={href}
 						key={id}
 						variant="outline"
 					>
-						<Icon className="max-w-5" disabled={disabled} src={icon} />
+						<IconSvg className="max-w-5" disabled={disabled} src={icon} />
 						{name}
 					</Button>
 				))}
-				<DropdownButton className="font-semibold" color="white" iconLeft={More} name="More" variant="outline">
-					<div className="grid gap-2">
-						{topbarItems.map(({ id, name, href, icon, disabled }) => (
-							<Button
-								className="px-4 py-1.5 font-semibold"
-								color="white"
-								disabled={disabled}
-								href={href}
-								key={id}
-								variant="outline"
-							>
-								<Icon className="w-4" disabled={disabled} src={icon} />
-								{name}
-							</Button>
-						))}
-					</div>
+				<DropdownButton
+					className="font-semibold text-white"
+					contentMenu={
+						<div className="grid gap-2">
+							{topbarItems.map(({ id, name, href, icon, disabled }) => (
+								<Button
+									className="px-4 py-1.5 font-semibold text-white"
+									disabled={disabled}
+									href={href}
+									key={id}
+									variant="outline"
+								>
+									<IconSvg className="w-4" disabled={disabled} src={icon} />
+									{name}
+								</Button>
+							))}
+						</div>
+					}
+				>
+					<Button className="h-full text-white" variant="outline">
+						<More />
+						More
+					</Button>
 				</DropdownButton>
 				<IconButton variant="outline">
 					<FullScreen />

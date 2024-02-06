@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { PlusCircle, ArrowDown, ArrowUp, Info, SmallArrowDown, TestS, ThreeDots } from "@assets/image";
-import { Table, THead, TBody, Tr, Th, Td, IconButton, Button, DropdownMenu, Icon } from "@components/atoms";
-import { cn } from "@utils";
-
-interface IConnectionsContent {
-	className?: string;
-}
+import { Table, THead, TBody, Tr, Th, Td, IconButton, Button, DropdownMenu } from "@components/atoms";
+import { IConnectionsContent } from "@interfaces/components";
+import { cn } from "@utilities";
 
 export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 	const baseStyle = cn("pt-14", className);
@@ -26,7 +23,7 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 			<div className="flex items-center justify-between text-gray-300">
 				<p className="text-base">Available connections</p>
 				<p className="capitalize font-semibold cursor-pointer group hover:text-white flex items-center gap-1">
-					<Icon className="stroke-gray-300 group-hover:stroke-white w-5 h-5" src={PlusCircle} />
+					<PlusCircle className="transtion stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 					add new
 				</p>
 			</div>
@@ -60,10 +57,9 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 						<Td className="font-semibold border-r-0">JeffOnSlack</Td>
 						<Td className="p-0 max-w-8">
 							<IconButton
-								className="w-6 h-6 p-1"
+								className="w-6 h-6 p-1 hover:bg-transparent"
 								onMouseEnter={handleHoverIcon}
 								onMouseLeave={handleLeaveDropdown}
-								variant="transparent"
 							>
 								<Info className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
 							</IconButton>
@@ -98,14 +94,14 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 					left: `${dropdownPosition.left}px`,
 				}}
 			>
-				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md" color="white" href="#">
+				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white" href="#">
 					<ArrowUp /> Sort ascending
 				</Button>
-				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md" color="white" href="#">
+				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white" href="#">
 					<ArrowDown />
 					Sort descending
 				</Button>
-				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md" color="white" href="#">
+				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white" href="#">
 					Delete
 				</Button>
 			</DropdownMenu>

@@ -1,5 +1,5 @@
 export interface ISubmenuInfo {
-	submenu: { name: string; href: string; id: number }[] | null;
+	submenu: { name: string; href: string; id: number }[] | undefined;
 	top: number;
 }
 

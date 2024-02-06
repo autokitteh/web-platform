@@ -1,2 +1,3 @@
 export { namespaces } from "@constants/namespaces.logger.constants";
-export { BASE_URL } from "@constants/api.constants";
+export { baseUrl } from "@constants/api.constants";
+export { menuItems, tabsMainFrame, topbarItems } from "@constants/lists";

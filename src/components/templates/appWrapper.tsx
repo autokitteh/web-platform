@@ -1,11 +1,7 @@
-import React, { ReactNode } from "react";
+import React, { PropsWithChildren } from "react";
 import { Topbar, Sidebar } from "@components/organisms";
 
-interface IAppWrapper {
-	children: ReactNode;
-}
-
-export const AppWrapper = ({ children }: IAppWrapper) => {
+export const AppWrapper = ({ children }: PropsWithChildren) => {
 	return (
 		<div className="w-screen h-screen pr-5">
 			<div className="flex h-full">

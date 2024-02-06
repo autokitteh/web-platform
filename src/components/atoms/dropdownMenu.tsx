@@ -1,15 +1,7 @@
 import React from "react";
-import { cn } from "@utils";
+import { IDropdownMenu } from "@interfaces/components";
+import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
-
-interface IDropdownMenu {
-	isOpen: boolean;
-	className?: string;
-	children: React.ReactNode;
-	style?: React.CSSProperties;
-	onMouseEnter?: () => void;
-	onMouseLeave?: () => void;
-}
 
 export const DropdownMenu = ({ isOpen, className, children, style, onMouseEnter, onMouseLeave }: IDropdownMenu) => {
 	const dropdownVariants = {

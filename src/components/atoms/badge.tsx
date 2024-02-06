@@ -1,15 +1,11 @@
 import React from "react";
-import { cn } from "@utils";
-
-interface IBadge {
-	text: string;
-	className?: string;
-}
+import { IBadge } from "@interfaces/components";
+import { cn } from "@utilities";
 
 export const Badge = ({ text, className }: IBadge) => {
 	const badgeClasses = cn(
-		"inline-block px-1 py-0.5 text-xs font-bold bg-red-500 text-black" +
-			" leading-none text-center align-baseline whitespace-nowrap rounded-full",
+		"inline-block px-1 py-0.5 text-xs font-bold bg-red-500 text-black",
+		"leading-none text-center align-baseline whitespace-nowrap rounded-full",
 		className
 	);
 

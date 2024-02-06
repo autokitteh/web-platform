@@ -1,12 +1,8 @@
 import React from "react";
-import { cn } from "@utils";
+import { ITable } from "@interfaces/components";
+import { cn } from "@utilities";
 
-interface ITD {
-	className?: string;
-	children?: React.ReactNode;
-}
-
-export const Td = ({ className, children }: ITD) => {
+export const Td = ({ className, children }: ITable) => {
 	const tdStyle = cn(
 		"w-full overflow-hidden flex items-center p-2.5 border-r border-gray-600 last:border-r-0",
 		className

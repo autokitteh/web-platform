@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@components/atoms";
-import { ISubmenu } from "@components/molecules/menu";
+import { ISubmenu } from "@interfaces/components";
 import { motion } from "framer-motion";
 
 export const Submenu = ({ submenuInfo }: ISubmenu) => {
