@@ -1,5 +1,5 @@
 import React from "react";
-import { ITable } from "@interfaces";
+import { ITable } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Td = ({ className, children }: ITable) => {

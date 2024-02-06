@@ -3,7 +3,7 @@ import { FullScreen, More } from "@assets/image";
 import { Button, IconButton, IconSvg } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { topbarItems } from "@constants";
-import { ITopbar } from "@interfaces";
+import { ITopbar } from "@interfaces/components";
 
 export const Topbar = ({ name, version }: ITopbar) => {
 	return (

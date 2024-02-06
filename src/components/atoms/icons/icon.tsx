@@ -1,5 +1,5 @@
 import React from "react";
-import { IIcon } from "@interfaces";
+import { IIcon } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Icon = ({ className, alt = "icon", src, disabled, isVisible = true }: Partial<IIcon>) => {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets/image";
 import { Icon, Badge, Button } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
-import { ISubmenuInfo } from "@interfaces";
+import { ISubmenuInfo } from "@interfaces/components";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@components/atoms";
-import { EButtonVariant } from "@enums";
-import { IIconButton } from "@interfaces";
+import { EButtonVariant } from "@enums/components";
+import { IIconButton } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const IconButton = ({

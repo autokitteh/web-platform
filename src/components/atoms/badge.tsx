@@ -1,5 +1,5 @@
 import React from "react";
-import { IBadge } from "@interfaces";
+import { IBadge } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Badge = ({ text, className }: IBadge) => {

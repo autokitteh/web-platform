@@ -1,5 +1,5 @@
 import React from "react";
-import { ILink } from "@interfaces";
+import { ILink } from "@interfaces/components";
 import { cn } from "@utilities";
 import { Link as LinkReact } from "react-router-dom";
 

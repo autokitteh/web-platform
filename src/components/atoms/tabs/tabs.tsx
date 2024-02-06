@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TabsContext } from "@components/atoms/tabs/tabsContext";
-import { ITabs } from "@interfaces";
+import { ITabs } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Tabs = ({ defaultValue, className, children }: ITabs) => {

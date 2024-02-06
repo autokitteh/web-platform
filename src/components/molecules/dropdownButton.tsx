@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DropdownMenu } from "@components/atoms";
-import { IDropdownButton } from "@interfaces";
+import { IDropdownButton } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const DropdownButton = ({ contentMenu, className, children }: IDropdownButton) => {

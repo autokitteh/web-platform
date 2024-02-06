@@ -1,5 +1,5 @@
 import React from "react";
-import { IFrame } from "@interfaces";
+import { IFrame } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Frame = ({ className, children }: IFrame) => {

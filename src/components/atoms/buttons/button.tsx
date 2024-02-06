@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@components/atoms";
-import { EButtonVariant } from "@enums";
-import { IButton } from "@interfaces";
+import { EButtonVariant } from "@enums/components";
+import { IButton } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Button = ({ children, className, variant, href, disabled }: Partial<IButton>) => {

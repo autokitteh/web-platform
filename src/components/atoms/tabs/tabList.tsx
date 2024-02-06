@@ -1,5 +1,5 @@
 import React from "react";
-import { ITabList } from "@interfaces";
+import { ITabList } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const TabList = ({ className, children }: ITabList) => {

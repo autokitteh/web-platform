@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, IconSvg } from "@components/atoms";
 import { menuItems } from "@constants";
-import { IMenu, ISubmenuInfo } from "@interfaces";
+import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {

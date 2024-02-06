@@ -1,5 +1,5 @@
 import React, { MouseEventHandler } from "react";
-import { TButtonVariant } from "@type";
+import { TButtonVariant } from "@type/components";
 
 export interface IButton extends React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, React.AriaAttributes {
 	className: string;

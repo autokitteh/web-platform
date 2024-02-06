@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PlusCircle, ArrowDown, ArrowUp, Info, SmallArrowDown, TestS, ThreeDots } from "@assets/image";
 import { Table, THead, TBody, Tr, Th, Td, IconButton, Button, DropdownMenu } from "@components/atoms";
-import { IConnectionsContent } from "@interfaces";
+import { IConnectionsContent } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const ConnectionsContent = ({ className }: IConnectionsContent) => {

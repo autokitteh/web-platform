@@ -1,5 +1,5 @@
 import React from "react";
-import { IDropdownMenu } from "@interfaces";
+import { IDropdownMenu } from "@interfaces/components";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
 
