@@ -44,7 +44,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 						</div>
 					}
 				>
-					<Button className="h-full text-white" variant="outline">
+					<Button className="h-full text-white px-4" variant="outline">
 						<More />
 						More
 					</Button>

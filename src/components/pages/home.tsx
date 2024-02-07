@@ -39,8 +39,11 @@ export const Home = () => {
 						{tabsMainFrame.map(({ id, title, count }) => (
 							<Tab key={id} value={id}>{`${title} (${count})`}</Tab>
 						))}
-						<IconButton className="bg-black hover:bg-black group ml-auto" onClick={() => toggleModal("firstModal")}>
-							<Close className="transition fill-gray-400 group-hover:fill-white group-hover:scale-110" />
+						<IconButton
+							className="bg-black p-0 w-6.5 h-6.5 hover:bg-black group ml-auto"
+							onClick={() => toggleModal("firstModal")}
+						>
+							<Close className="transition w-3 h-3 fill-gray-400 group-hover:fill-white" />
 						</IconButton>
 					</TabList>
 					{tabsMainFrame.map(({ id, content }) => (

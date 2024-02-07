@@ -11,6 +11,10 @@ module.exports = {
 			},
 			width: {
 				500: "500px",
+				6.5: "1.625rem",
+			},
+			height: {
+				6.5: "1.625rem",
 			},
 		},
 		colors: {

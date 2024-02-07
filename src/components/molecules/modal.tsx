@@ -41,8 +41,8 @@ export const Modal = ({ className, isOpen, children, onClose }: IModal) => {
 						initial="hidden"
 						variants={modalVariants}
 					>
-						<IconButton className="bg-gray-200 group ml-auto" onClick={onClose}>
-							<Close className="transition fill-black group-hover:fill-white" />
+						<IconButton className="bg-gray-200 p-0 w-6.5 h-6.5 group ml-auto" onClick={onClose}>
+							<Close className="transition fill-black w-3 h-3 group-hover:fill-white" />
 						</IconButton>
 						{children}
 					</motion.div>

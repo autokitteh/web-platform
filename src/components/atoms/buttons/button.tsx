@@ -6,7 +6,7 @@ import { cn } from "@utilities";
 
 export const Button = ({ children, className, variant, href, disabled, onClick }: Partial<IButton>) => {
 	const buttonClass = cn(
-		"w-full flex items-center justify-center gap-2.5 p-2 rounded-3xl transition",
+		"w-full flex items-center gap-2.5 p-2 rounded-3xl transition",
 		"duration-300 text-gray-700 text-center hover:bg-gray-800",
 		{
 			"bg-black text-white": variant === EButtonVariant.filled,
