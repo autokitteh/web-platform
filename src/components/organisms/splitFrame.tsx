@@ -1,14 +1,15 @@
 import React, { useState, PropsWithChildren } from "react";
 import { Minimize, LogoFrame } from "@assets/image";
-import { Frame, Tabs, Tab, TabList, TabPanel } from "@components/atoms";
+import { Frame } from "@components/atoms";
 import { IconButton } from "@components/atoms";
+import { EditorTabs } from "@components/organisms";
 import { cn } from "@utilities";
 
 export const SplitFrame = ({ children }: PropsWithChildren) => {
 	const [isFullScreen, setIsFullScreen] = useState(false);
 
 	const mainFrameStyle = cn(
-		"rounded-l-none transition-all duration-300",
+		"rounded-l-none transition-all duration-300 pb-0",
 		{ "rounded-2xl": !children },
 		{ "max-w-full": isFullScreen, "max-w-650": !isFullScreen }
 	);
@@ -29,13 +30,7 @@ export const SplitFrame = ({ children }: PropsWithChildren) => {
 				</Frame>
 			) : null}
 			<Frame className={mainFrameStyle}>
-				<Tabs defaultValue="MANIFEST">
-					<TabList className="uppercase">
-						<Tab value="MANIFEST">MANIFEST</Tab>
-						<Tab value="CODE">CODE</Tab>
-					</TabList>
-					<TabPanel value="MANIFEST">MANIFEST</TabPanel>
-				</Tabs>
+				<EditorTabs />
 				<LogoFrame className="absolute bottom-7 right-7" />
 			</Frame>
 		</div>

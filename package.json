@@ -19,6 +19,8 @@
 		"check-format:staged": "prettier . --check"
 	},
 	"dependencies": {
+		"@bufbuild/protobuf": "^1.7.2",
+		"@monaco-editor/react": "^4.6.0",
 		"@types/lodash": "^4.14.202",
 		"axios": "^1.6.5",
 		"clsx": "^2.1.0",
