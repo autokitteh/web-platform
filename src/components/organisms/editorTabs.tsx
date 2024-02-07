@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
-import Editor from "@monaco-editor/react";
+import Editor, { Monaco } from "@monaco-editor/react";
 
 export const EditorTabs = () => {
 	const [editorKey, setEditorKey] = useState(0);
+	const [manifestCode, setManifestCode] = useState("// Code A: Initialize your code here...");
+	const [codeContent, setCodeContent] = useState("// Code B: Initialize your code here...");
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
@@ -13,17 +15,48 @@ export const EditorTabs = () => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
+	const handleEditorWillMount = (monaco: Monaco) => {
+		monaco.editor.defineTheme("myCustomTheme", {
+			base: "vs-dark",
+			inherit: true,
+			rules: [],
+			colors: {
+				"editor.background": "#000000",
+			},
+		});
+	};
+
+	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
+		monaco.editor.setTheme("myCustomTheme");
+	};
+
 	return (
 		<Tabs defaultValue="manifest">
 			<TabList className="uppercase">
 				<Tab value="manifest">MANIFEST</Tab>
 				<Tab value="code">CODE</Tab>
 			</TabList>
-			<TabPanel className="pt-10" value="manifest">
-				<Editor defaultValue="// Code A:" key={editorKey} language="python" theme="vs-dark" />
+			<TabPanel className="pt-10 -ml-7" value="manifest">
+				<Editor
+					beforeMount={handleEditorWillMount}
+					defaultValue={manifestCode}
+					key={editorKey}
+					language="python"
+					onChange={(value) => setManifestCode(value || "")}
+					onMount={handleEditorDidMount}
+					theme="vs-dark"
+				/>
 			</TabPanel>
-			<TabPanel className="pt-10" value="code">
-				<Editor defaultValue="// Code B:" key={editorKey} language="python" theme="vs-dark" />
+			<TabPanel className="pt-10 -ml-7" value="code">
+				<Editor
+					beforeMount={handleEditorWillMount}
+					defaultValue={codeContent}
+					key={editorKey}
+					language="python"
+					onChange={(value) => setCodeContent(value || "")}
+					onMount={handleEditorDidMount}
+					theme="vs-dark"
+				/>
 			</TabPanel>
 		</Tabs>
 	);
