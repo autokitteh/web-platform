@@ -7,7 +7,7 @@ export const Tab = ({ className, value, children }: ITab) => {
 	const { activeTab, setActiveTab } = useContext(TabsContext);
 
 	const tabStyle = cn(
-		"border-b-2 cursor-pointer hover:font-bold border-transparent pb-1.5 tracking-tight",
+		"border-b-2 cursor-pointer hover:font-bold border-transparent pb-1.5 tracking-tight uppercase",
 		{
 			"border-white font-bold": activeTab === value,
 		},

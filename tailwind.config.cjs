@@ -9,6 +9,9 @@ module.exports = {
 			maxWidth: {
 				650: "650px",
 			},
+			width: {
+				500: "500px",
+			},
 		},
 		colors: {
 			...colors,
@@ -23,6 +26,9 @@ module.exports = {
 			},
 			"green-accent": {
 				DEFAULT: "#BCF870",
+			},
+			"gray-black": {
+				DEFAULT: "#898989",
 			},
 			"gray": {
 				DEFAULT: "#D9D9D9",

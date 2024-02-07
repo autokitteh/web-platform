@@ -6,3 +6,4 @@ export { default as Info } from "@assets/image/icons/Info.svg?react";
 export { default as SmallArrowDown } from "@assets/image/icons/SmallArrowDown.svg?react";
 export { default as TestS } from "@assets/image/icons/TestS.svg?react";
 export { default as ThreeDots } from "@assets/image/icons/ThreeDots.svg?react";
+export { default as Close } from "@assets/image/icons/Close.svg?react";
