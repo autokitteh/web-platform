@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Close } from "@assets/image/icons";
-import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
-import { IconButton } from "@components/atoms";
-import { Button } from "@components/atoms";
+import { Tabs, Tab, TabList, TabPanel, IconButton, Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { SplitFrame } from "@components/organisms";
 import { AppWrapper } from "@components/templates";
