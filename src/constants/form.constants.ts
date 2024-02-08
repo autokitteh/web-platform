@@ -29,6 +29,20 @@ export const selectStyles: StylesConfig<ISelectOption, false> = {
 		padding: "4px 10px 13px 10px",
 		border: "0.5px solid #535353",
 	}),
+	menuList: (provided) => ({
+		...provided,
+		"::-webkit-scrollbar": {
+			width: 6,
+			height: 6,
+		},
+		"::-webkit-scrollbar-thumb": {
+			background: "#D2D2D7",
+			borderRadius: 10,
+		},
+		"::-webkit-scrollbar-thumb:hover": {
+			background: "#818181",
+		},
+	}),
 	option: (provided, state) => ({
 		...provided,
 		"backgroundColor": state.isSelected ? "#fff" : "#000",
