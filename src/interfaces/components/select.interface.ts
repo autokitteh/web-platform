@@ -1,7 +1,9 @@
+import { SingleValue } from "react-select";
+
 export interface ISelect {
 	placeholder?: string;
-	value?: ISelectOption | null;
-	onChange?: (value: ISelectOption | null) => void;
+	value?: ISelectOption | undefined;
+	onChange?: (value: SingleValue<ISelectOption>) => void;
 	onBlur?: () => void;
 }
 
