@@ -17,6 +17,8 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
+
+	--transition-placeholder: opacity 0.25s ease-in-out;
 }
 
 .scrollbar::-webkit-scrollbar {
@@ -31,4 +33,23 @@
 
 .scrollbar::-webkit-scrollbar-thumb:hover {
 	background-color: theme("colors.gray.400");
+}
+
+textarea {
+	resize: none;
+}
+
+input:focus,
+textarea:focus {
+	outline: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+	transition: var(--transition-placeholder);
+}
+
+input:focus::placeholder,
+textarea:focus::placeholder {
+	opacity: 0;
 }

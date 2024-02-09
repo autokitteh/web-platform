@@ -24,6 +24,7 @@ module.exports = {
 			},
 			"black": {
 				DEFAULT: "#000000",
+				900: "#101010",
 			},
 			"green-light": {
 				DEFAULT: "#E8FFCA",
@@ -43,6 +44,9 @@ module.exports = {
 				600: "#454343",
 				700: "#2D2D2D",
 				800: "#1B1B1B",
+			},
+			"error": {
+				DEFAULT: "#FF6B61",
 			},
 		},
 	},
