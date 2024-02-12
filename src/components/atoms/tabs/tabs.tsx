@@ -5,7 +5,7 @@ import { cn } from "@utilities";
 
 export const Tabs = ({ defaultValue, className, children }: ITabs) => {
 	const [activeTab, setActiveTab] = useState<string | number>(defaultValue || 0);
-	const tabsStyle = cn("flex flex-col h-full", className);
+	const tabsStyle = cn("flex flex-col flex-1", className);
 
 	return (
 		<TabsContext.Provider value={{ activeTab, setActiveTab }}>

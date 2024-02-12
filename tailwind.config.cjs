@@ -47,6 +47,7 @@ module.exports = {
 			},
 			"error": {
 				DEFAULT: "#FF6B61",
+				200: "#FF7438",
 			},
 		},
 	},
