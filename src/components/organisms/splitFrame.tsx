@@ -2,7 +2,7 @@ import React, { useState, PropsWithChildren } from "react";
 import { Minimize, LogoFrame } from "@assets/image";
 import { Frame } from "@components/atoms";
 import { IconButton } from "@components/atoms";
-import { EditorTabs } from "@components/organisms";
+import { EditorTabs, OutputTabs } from "@components/organisms";
 import { cn } from "@utilities";
 
 export const SplitFrame = ({ children }: PropsWithChildren) => {
@@ -31,6 +31,9 @@ export const SplitFrame = ({ children }: PropsWithChildren) => {
 			) : null}
 			<Frame className={mainFrameStyle}>
 				<EditorTabs />
+				<div className="-mx-8 px-8 pt-7 border-0 border-t border-t-gray-600">
+					<OutputTabs />
+				</div>
 				<LogoFrame className="absolute bottom-7 right-7" />
 			</Frame>
 		</div>
