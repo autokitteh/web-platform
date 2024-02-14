@@ -9,3 +9,4 @@ export { Table, THead, TBody, Td, Th, Tr } from "@components/atoms/table";
 export { Select } from "@components/atoms/select";
 export { Input } from "@components/atoms/input";
 export { Textarea } from "@components/atoms/textarea";
+export { Toast } from "@components/atoms/toast";

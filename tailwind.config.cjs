@@ -8,6 +8,7 @@ module.exports = {
 		extend: {
 			maxWidth: {
 				650: "650px",
+				420: "420px",
 			},
 			width: {
 				500: "500px",
@@ -15,6 +16,9 @@ module.exports = {
 			},
 			height: {
 				6.5: "1.625rem",
+			},
+			borderRadius: {
+				"4xl": "40px",
 			},
 		},
 		colors: {
