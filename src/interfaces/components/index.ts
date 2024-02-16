@@ -14,3 +14,4 @@ export type { ISelectOption, ISelect } from "@interfaces/components/select.inter
 export type { IInput } from "@interfaces/components/input.interface";
 export type { ITextArea } from "@interfaces/components/textarea.interface";
 export type { IToast } from "@interfaces/components/toast.interface";
+export type { IErrorMessage } from "@interfaces/components/error.interface";

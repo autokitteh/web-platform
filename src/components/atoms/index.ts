@@ -10,3 +10,4 @@ export { Select } from "@components/atoms/select";
 export { Input } from "@components/atoms/input";
 export { Textarea } from "@components/atoms/textarea";
 export { Toast } from "@components/atoms/toast";
+export { ErrorMessage } from "@components/atoms/errorMessage";

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { ITextArea } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Textarea = ({ placeholder = "Enter text", className, error, disabled, ...rest }: Partial<ITextArea>) => {
+export const Textarea = forwardRef<HTMLTextAreaElement, Partial<ITextArea>>((props, ref) => {
+	const { placeholder = "Enter text", className, error, disabled, ...rest } = props;
+
 	const baseStyle = cn(
 		"text-base bg-black-900 border border-gray-500",
 		"w-full pt-3.5 pb-2 pl-4 pr-1.5",
@@ -14,5 +16,7 @@ export const Textarea = ({ placeholder = "Enter text", className, error, disable
 		className
 	);
 
-	return <textarea className={baseStyle} disabled={disabled} placeholder={placeholder} {...rest} />;
-};
+	return <textarea className={baseStyle} disabled={disabled} placeholder={placeholder} ref={ref} {...rest} />;
+});
+
+Textarea.displayName = "Textarea";

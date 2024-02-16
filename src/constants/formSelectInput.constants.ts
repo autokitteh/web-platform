@@ -1,13 +1,13 @@
 import { ISelectOption } from "@interfaces/components";
 import { StylesConfig } from "react-select";
 
-export const selectStyles: StylesConfig<ISelectOption, false> = {
+export const getSelectStyles = (isError: boolean): StylesConfig<ISelectOption, false> => ({
 	control: (provided, state) => ({
 		...provided,
 		"fontSize": 16,
 		"padding": "9px 11px 9px 17px",
 		"borderRadius": 8,
-		"border": "0.5px solid #535353",
+		"border": `0.5px solid ${isError ? "#FF6B61" : "#535353"}`,
 		"backgroundColor": "#000",
 		"boxShadow": "none",
 		"fontWeight": state.isFocused ? 500 : 400,
@@ -87,4 +87,4 @@ export const selectStyles: StylesConfig<ISelectOption, false> = {
 		transition: ".25s",
 		color: state.isFocused ? "transparent" : "#fff",
 	}),
-};
+});
