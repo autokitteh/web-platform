@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Button } from "@components/atoms";
-import { Modal } from "@components/molecules";
+import { Modal, MapMenu } from "@components/molecules";
 import { SplitFrame } from "@components/organisms";
 import { AppWrapper } from "@components/templates";
 import { tabsMainFrame } from "@constants";
@@ -31,26 +31,31 @@ export const Home = () => {
 
 	return (
 		<AppWrapper>
-			<SplitFrame>
-				<Tabs defaultValue={2}>
-					<TabList>
-						{tabsMainFrame.map(({ id, title, count }) => (
-							<Tab key={id} value={id}>{`${title} (${count})`}</Tab>
+			<div className="flex justify-between items-center gap-20 h-full">
+				<div className="max-w-485 ml-10">
+					<MapMenu />
+				</div>
+				<SplitFrame>
+					<Tabs defaultValue={2}>
+						<TabList>
+							{tabsMainFrame.map(({ id, title, count }) => (
+								<Tab key={id} value={id}>{`${title} (${count})`}</Tab>
+							))}
+							<IconButton
+								className="bg-black p-0 w-6.5 h-6.5 hover:bg-black group ml-auto"
+								onClick={() => toggleModal("firstModal")}
+							>
+								<Close className="transition w-3 h-3 fill-gray-400 group-hover:fill-white" />
+							</IconButton>
+						</TabList>
+						{tabsMainFrame.map(({ id, content }) => (
+							<TabPanel key={id} value={id}>
+								{content()}
+							</TabPanel>
 						))}
-						<IconButton
-							className="bg-black p-0 w-6.5 h-6.5 hover:bg-black group ml-auto"
-							onClick={() => toggleModal("firstModal")}
-						>
-							<Close className="transition w-3 h-3 fill-gray-400 group-hover:fill-white" />
-						</IconButton>
-					</TabList>
-					{tabsMainFrame.map(({ id, content }) => (
-						<TabPanel key={id} value={id}>
-							{content()}
-						</TabPanel>
-					))}
-				</Tabs>
-			</SplitFrame>
+					</Tabs>
+				</SplitFrame>
+			</div>
 			<Modal isOpen={modals.firstModal} onClose={() => toggleModal("firstModal")}>
 				<div className="mx-6">
 					<h3 className="text-xl font-bold mb-5">Delete Connection</h3>

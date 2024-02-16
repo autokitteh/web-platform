@@ -24,7 +24,7 @@ export default defineConfig({
 			"@ak-proto-ts": path.resolve(__dirname, "./src/autokitteh/proto/gen/ts/autokitteh"),
 		},
 	},
-	plugins: [react(), svgr()],
+	plugins: [react(), svgr({ svgrOptions: { ref: true } })],
 	test: {
 		globals: true,
 		environment: "jsdom",

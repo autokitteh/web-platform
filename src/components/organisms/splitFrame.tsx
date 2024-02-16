@@ -18,7 +18,7 @@ export const SplitFrame = ({ children }: PropsWithChildren) => {
 	const handleCloseToast = () => setIsOpenToast(false);
 
 	return (
-		<div className="flex justify-end h-full">
+		<div className="flex justify-end h-full w-full">
 			{children ? (
 				<Frame className="rounded-r-none max-w-[680px] border-r border-gray-600 bg-gray-800">
 					<IconButton
