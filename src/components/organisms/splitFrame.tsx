@@ -1,12 +1,12 @@
 import React, { useState, PropsWithChildren } from "react";
 import { Minimize, LogoFrame } from "@assets/image";
-import { Frame } from "@components/atoms";
-import { IconButton } from "@components/atoms";
+import { Frame, IconButton, Toast } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
 import { cn } from "@utilities";
 
 export const SplitFrame = ({ children }: PropsWithChildren) => {
 	const [isFullScreen, setIsFullScreen] = useState(false);
+	const [isOpenToast, setIsOpenToast] = useState(true);
 
 	const mainFrameStyle = cn(
 		"rounded-l-none transition-all duration-300 pb-0",
@@ -15,6 +15,7 @@ export const SplitFrame = ({ children }: PropsWithChildren) => {
 	);
 
 	const handleFullScreenToggle = () => setIsFullScreen(!isFullScreen);
+	const handleCloseToast = () => setIsOpenToast(false);
 
 	return (
 		<div className="flex justify-end h-full">
@@ -36,6 +37,10 @@ export const SplitFrame = ({ children }: PropsWithChildren) => {
 				</div>
 				<LogoFrame className="absolute bottom-7 right-7" />
 			</Frame>
+			<Toast className="border-error" duration={15} isOpen={isOpenToast} onClose={handleCloseToast}>
+				<h5 className="text-error font-semibold">Error Headline</h5>
+				<p className="mt-1 text-xs">the state or condition of being wrong conduct.</p>
+			</Toast>
 		</div>
 	);
 };
