@@ -10,7 +10,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	};
 
 	return (
-		<div className={cn(className, "grid gap-4")}>
+		<div className={cn(className, "flex flex-col gap-4")}>
 			{menuItems.map(({ icon, name, href, submenu, id }) => (
 				<div key={id} onMouseEnter={(e) => handleMouseEnter(submenu, e)}>
 					<Button className="hover:bg-green-light" href={href}>

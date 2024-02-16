@@ -1,4 +1,3 @@
-import colors from "tailwindcss/colors";
 import plugin from "tailwindcss/plugin";
 
 // eslint-disable-next-line no-undef

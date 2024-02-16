@@ -46,7 +46,7 @@ export const AddConnectionForm = () => {
 				</div>
 			</div>
 			<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
-				<div className="grid gap-6 w-full">
+				<div className="flex flex-col gap-6 w-full">
 					<div className="relative">
 						<Controller
 							control={control}

@@ -85,7 +85,7 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 				</TBody>
 			</Table>
 			<DropdownMenu
-				className="grid gap-1 fixed"
+				className="flex flex-col gap-1 fixed"
 				isOpen={isDropdownOpen}
 				onMouseEnter={handleHoverMenu}
 				onMouseLeave={handleLeaveDropdown}
