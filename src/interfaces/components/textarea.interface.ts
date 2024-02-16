@@ -1,5 +1,5 @@
 export interface ITextArea extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-	error: boolean;
+	isError: boolean;
 	disabled: boolean;
 	placeholder: string;
 	className: string;

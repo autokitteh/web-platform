@@ -7,7 +7,7 @@ const selectSchema = z.object({
 });
 
 export const newConnectionSchema = z.object({
-	connectionType: selectSchema.array().min(1, "Select application").default([]),
+	connectionApp: selectSchema.array().min(1, "Select application").default([]),
 	userName: z.string().min(1, "User Name is required"),
 	password: z.string().min(1, "Password is required"),
 	connectionName: z.string().min(1, "Connection name is required"),

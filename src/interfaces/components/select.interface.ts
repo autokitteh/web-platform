@@ -14,3 +14,8 @@ export interface ISelectOption {
 	label: string;
 	disabled?: boolean;
 }
+
+export interface ISelectAppChangeForm {
+	name: string;
+	value: string;
+}

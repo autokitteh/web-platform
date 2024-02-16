@@ -9,3 +9,4 @@ export { default as ThreeDots } from "@assets/image/icons/ThreeDots.svg?react";
 export { default as Close } from "@assets/image/icons/Close.svg?react";
 export { default as Eye } from "@assets/image/icons/Eye.svg?react";
 export { default as EyeClose } from "@assets/image/icons/EyeClose.svg?react";
+export { default as ArrowLeft } from "@assets/image/icons/ArrowLeft.svg?react";

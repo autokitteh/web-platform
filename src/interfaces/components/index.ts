@@ -10,7 +10,7 @@ export type { ITab, ITabList, ITabs, ITabsContext } from "@interfaces/components
 export type { ITable } from "@interfaces/components/table.interface";
 export type { IIcon, IIconSvg } from "@interfaces/components/icon.interface";
 export type { IModal } from "@interfaces/components/modal.interface";
-export type { ISelectOption, ISelect } from "@interfaces/components/select.interface";
+export type { ISelectOption, ISelect, ISelectAppChangeForm } from "@interfaces/components/select.interface";
 export type { IInput } from "@interfaces/components/input.interface";
 export type { ITextArea } from "@interfaces/components/textarea.interface";
 export type { IToast } from "@interfaces/components/toast.interface";
