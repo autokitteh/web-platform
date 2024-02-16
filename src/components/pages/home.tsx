@@ -12,6 +12,7 @@ export const Home = () => {
 		firstModal: false,
 		secondModal: false,
 	});
+	const [isFullScreen, setIsFullScreen] = useState(false);
 
 	const toggleModal = (modalName: string) => {
 		setModals((prevModals: any) => ({
@@ -31,11 +32,11 @@ export const Home = () => {
 
 	return (
 		<AppWrapper>
-			<div className="flex justify-between items-center gap-20 h-full">
-				<div className="max-w-485 ml-10">
+			<div className="flex justify-between items-center h-full">
+				<div className="max-w-485 m-auto" hidden={isFullScreen}>
 					<MapMenu />
 				</div>
-				<SplitFrame>
+				<SplitFrame isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen}>
 					<Tabs defaultValue={2}>
 						<TabList>
 							{tabsMainFrame.map(({ id, title, count }) => (

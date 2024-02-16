@@ -1,15 +1,15 @@
-import React, { useState, PropsWithChildren } from "react";
+import React from "react";
 import { Minimize, LogoFrame } from "@assets/image";
 import { Frame, IconButton, Toast } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
+import { ISplitFrame } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const SplitFrame = ({ children }: PropsWithChildren) => {
-	const [isFullScreen, setIsFullScreen] = useState(false);
+export const SplitFrame = ({ children, isFullScreen, setIsFullScreen }: ISplitFrame) => {
 	const [isOpenToast, setIsOpenToast] = useState(true);
-
+	const baseStyle = cn("flex justify-end h-full", { "w-full": isFullScreen });
 	const mainFrameStyle = cn(
-		"rounded-l-none transition-all duration-300 pb-0",
+		"rounded-l-none pb-0 min-w-550",
 		{ "rounded-2xl": !children },
 		{ "max-w-full": isFullScreen, "max-w-650": !isFullScreen }
 	);
@@ -18,9 +18,9 @@ export const SplitFrame = ({ children }: PropsWithChildren) => {
 	const handleCloseToast = () => setIsOpenToast(false);
 
 	return (
-		<div className="flex justify-end h-full w-full">
+		<div className={baseStyle}>
 			{children ? (
-				<Frame className="rounded-r-none max-w-[680px] border-r border-gray-600 bg-gray-800">
+				<Frame className="rounded-r-none min-w-650 max-w-680 border-r border-gray-600 bg-gray-800">
 					<IconButton
 						className="hover:scale-125 absolute -left-5 top-1/2 -translate-y-1/2 z-50 bg-black"
 						onClick={handleFullScreenToggle}

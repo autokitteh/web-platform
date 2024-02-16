@@ -21,6 +21,10 @@
 	--transition-placeholder: opacity 0.25s ease-in-out;
 }
 
+body {
+	overflow-x: hidden;
+}
+
 .scrollbar::-webkit-scrollbar {
 	width: 6px;
 	height: 6px;
