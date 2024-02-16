@@ -22,7 +22,6 @@ module.exports = {
 			},
 		},
 		colors: {
-			...colors,
 			"white": {
 				DEFAULT: "#ffffff",
 			},
