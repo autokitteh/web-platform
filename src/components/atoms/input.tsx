@@ -1,19 +1,14 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { IInput } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Input = ({
-	icon,
-	type = "text",
-	placeholder = "Enter text",
-	className,
-	error,
-	disabled,
-}: Partial<IInput>) => {
+export const Input = forwardRef<HTMLInputElement, IInput>((props, ref) => {
+	const { icon, isError, className, disabled, type = "text", ...rest } = props;
+
 	const baseStyle = cn(
-		"flex items-center pr-2.5 text-base bg-black-900 border border-gray-500",
+		"flex items-center pr-2.5 text-base bg-black border border-gray-500",
 		"rounded-lg overflow-hidden transition focus:border-white hover:border-white",
-		{ "border-error": error },
+		{ "border-error": isError },
 		{ "pointer-events-none select-none": disabled },
 		className
 	);
@@ -26,8 +21,10 @@ export const Input = ({
 
 	return (
 		<div className={baseStyle}>
-			<input className={inputStyle} disabled={disabled} placeholder={placeholder} type={type} />
+			<input {...rest} className={inputStyle} disabled={disabled} ref={ref} type={type} />
 			{icon}
 		</div>
 	);
-};
+});
+
+Input.displayName = "Input";

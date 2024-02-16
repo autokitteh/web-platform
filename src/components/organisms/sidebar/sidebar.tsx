@@ -25,7 +25,7 @@ export const Sidebar = () => {
 					</div>
 					<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 				</div>
-				<div className="grid gap-5">
+				<div className="flex flex-col gap-5">
 					<Button className="hover:bg-transparent" href="#">
 						<div className="w-8 h-8 p-1 relative">
 							<IconNotification />

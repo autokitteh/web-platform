@@ -1,33 +1,34 @@
+import { formColors } from "@constants/forms/formColors.constants";
 import { ISelectOption } from "@interfaces/components";
 import { StylesConfig } from "react-select";
 
-export const selectStyles: StylesConfig<ISelectOption, false> = {
+export const getSelectStyles = (isError: boolean): StylesConfig<ISelectOption, false> => ({
 	control: (provided, state) => ({
 		...provided,
 		"fontSize": 16,
 		"padding": "9px 11px 9px 17px",
 		"borderRadius": 8,
-		"border": "0.5px solid #535353",
-		"backgroundColor": "#000",
+		"border": `0.5px solid ${isError ? formColors.error : formColors["gray-500"]}`,
+		"backgroundColor": formColors.black,
 		"boxShadow": "none",
 		"fontWeight": state.isFocused ? 500 : 400,
 		"cursor": "pointer",
 		"color": "red",
 		"&:hover": {
 			fontWeight: 500,
-			borderColor: "#fff",
+			borderColor: formColors.white,
 		},
 	}),
 	singleValue: (provided) => ({
 		...provided,
-		color: "#fff",
+		color: formColors.white,
 	}),
 	menu: (provided) => ({
 		...provided,
-		backgroundColor: "#000",
+		backgroundColor: formColors.black,
 		borderRadius: 8,
 		padding: "4px 10px 13px 10px",
-		border: "0.5px solid #535353",
+		border: `0.5px solid ${formColors["gray-500"]}`,
 	}),
 	menuList: (provided) => ({
 		...provided,
@@ -36,25 +37,25 @@ export const selectStyles: StylesConfig<ISelectOption, false> = {
 			height: 6,
 		},
 		"::-webkit-scrollbar-thumb": {
-			background: "#D2D2D7",
+			background: formColors["gray-300"],
 			borderRadius: 10,
 		},
 		"::-webkit-scrollbar-thumb:hover": {
-			background: "#818181",
+			background: formColors["gray-400"],
 		},
 	}),
 	option: (provided, state) => ({
 		...provided,
-		"backgroundColor": state.isSelected ? "#fff" : "#000",
-		"color": state.isSelected ? "#000" : state.isDisabled ? "#818181" : "#fff",
+		"backgroundColor": state.isSelected ? formColors.white : formColors.black,
+		"color": state.isSelected ? formColors.black : state.isDisabled ? formColors["gray-400"] : formColors.white,
 		"borderRadius": 8,
 		"transition": ".25s",
 		"marginTop": 7,
 		"fontSize": 16,
 		"cursor": state.isDisabled ? "not-allowed" : "pointer",
 		"&:hover": !state.isDisabled && {
-			backgroundColor: "#1B1B1B",
-			color: "#fff",
+			backgroundColor: formColors["gray-800"],
+			color: formColors.white,
 		},
 	}),
 	indicatorSeparator: () => ({
@@ -69,22 +70,22 @@ export const selectStyles: StylesConfig<ISelectOption, false> = {
 		"padding": 0,
 		"transform": state.selectProps.menuIsOpen ? "matrix(1,0,0,-1,0,0)" : "none",
 		"transition": ".25s",
-		"color": "#fff",
+		"color": formColors.white,
 		"svg": {
 			width: "24px",
 			height: "24px",
 		},
 		"&:hover": {
-			color: "#fff",
+			color: formColors.white,
 		},
 	}),
 	input: (provided) => ({
 		...provided,
-		color: "#fff",
+		color: formColors.white,
 	}),
 	placeholder: (provided, state) => ({
 		...provided,
 		transition: ".25s",
-		color: state.isFocused ? "transparent" : "#fff",
+		color: state.isFocused ? "transparent" : formColors.white,
 	}),
-};
+});

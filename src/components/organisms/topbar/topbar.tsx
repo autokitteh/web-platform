@@ -28,7 +28,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 				<DropdownButton
 					className="font-semibold text-white"
 					contentMenu={
-						<div className="grid gap-2">
+						<div className="flex flex-col gap-2">
 							{topbarItems.map(({ id, name, href, icon, disabled }) => (
 								<Button
 									className="px-4 py-1.5 font-semibold text-white"

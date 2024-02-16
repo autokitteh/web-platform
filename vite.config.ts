@@ -4,6 +4,9 @@ import svgr from "vite-plugin-svgr";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+	optimizeDeps: {
+		include: ["tailwind-config"],
+	},
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
@@ -22,6 +25,7 @@ export default defineConfig({
 			"@type": path.resolve(__dirname, "./src/types"),
 			"@interfaces": path.resolve(__dirname, "./src/interfaces"),
 			"@ak-proto-ts": path.resolve(__dirname, "./src/autokitteh/proto/gen/ts/autokitteh"),
+			"tailwind-config": path.resolve(__dirname, "./tailwind.config.cjs"),
 		},
 	},
 	plugins: [react(), svgr({ svgrOptions: { ref: true } })],

@@ -28,6 +28,7 @@
 			"@utils/*": ["./src/utils/*"],
 			"@utils": ["./src/utils/index"],
 			"@validations/*": ["./src/validations/*"],
+			"@validations": ["./src/validations/index"],
 			"@services/*": ["./src/services/*"],
 			"@services": ["./src/services/index"],
 			"@enums/*": ["./src/enums/*"],
