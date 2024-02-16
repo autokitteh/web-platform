@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Minimize, LogoFrame } from "@assets/image";
 import { Frame, IconButton, Toast } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
@@ -7,6 +7,7 @@ import { cn } from "@utilities";
 
 export const SplitFrame = ({ children, isFullScreen, setIsFullScreen }: ISplitFrame) => {
 	const [isOpenToast, setIsOpenToast] = useState(true);
+
 	const baseStyle = cn("flex justify-end h-full", { "w-full": isFullScreen });
 	const mainFrameStyle = cn(
 		"rounded-l-none pb-0 min-w-550",
