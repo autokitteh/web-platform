@@ -1,4 +1,3 @@
-import colors from "tailwindcss/colors";
 import plugin from "tailwindcss/plugin";
 
 // eslint-disable-next-line no-undef
@@ -9,6 +8,12 @@ module.exports = {
 			maxWidth: {
 				650: "650px",
 				420: "420px",
+				680: "680px",
+				485: "485px",
+			},
+			minWidth: {
+				650: "650px",
+				550: "550px",
 			},
 			width: {
 				500: "500px",

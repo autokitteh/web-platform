@@ -7,3 +7,4 @@ export {
 	VariablesContent,
 } from "@components/molecules/tabsContent";
 export { Modal } from "@components/molecules/modal";
+export { MapMenu } from "@components/molecules/mapMenu";
