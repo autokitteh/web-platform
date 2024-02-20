@@ -1,4 +1,5 @@
 export { default as IconLogo } from "@assets/image/Logo.svg?react";
+export { default as IconLogoAuth } from "@assets/image/LogoAuth.svg?react";
 export { default as LogoFrame } from "@assets/image/LogoFrame.svg?react";
 export { default as IconLogoName } from "@assets/image/LogoName.svg?react";
 export { default as DefaultAvatar } from "@assets/image/avatar.png";

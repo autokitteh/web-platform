@@ -29,7 +29,7 @@ export const Sidebar = () => {
 					<Button className="hover:bg-transparent" href="#">
 						<div className="w-8 h-8 p-1 relative">
 							<IconNotification />
-							<Badge className="absolute top-0 right-0" text="2" />
+							<Badge className="absolute top-0 right-0">2</Badge>
 						</div>
 						{isOpen ? "Notifications" : null}
 					</Button>

@@ -30,6 +30,9 @@ module.exports = {
 			"transparent": {
 				DEFAULT: "transparent",
 			},
+			"red": {
+				DEFAULT: "red",
+			},
 			"white": {
 				DEFAULT: "#ffffff",
 			},
@@ -45,6 +48,7 @@ module.exports = {
 			},
 			"gray-black": {
 				DEFAULT: "#898989",
+				100: "#F6F6F6",
 			},
 			"gray": {
 				DEFAULT: "#D9D9D9",

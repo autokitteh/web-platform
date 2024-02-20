@@ -6,4 +6,5 @@ export interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
 	disabled?: boolean;
 	placeholder?: string;
 	className?: string;
+	classInput?: string;
 }

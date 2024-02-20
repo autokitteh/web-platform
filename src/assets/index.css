@@ -18,7 +18,8 @@
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
 
-	--transition-placeholder: opacity 0.25s ease-in-out;
+	--transition-placeholder: all 0.25s ease-in-out;
+	--transition: all 0.25s ease-in-out;
 }
 
 body {
@@ -56,4 +57,8 @@ textarea::placeholder {
 input:focus::placeholder,
 textarea:focus::placeholder {
 	opacity: 0;
+}
+
+a {
+	transition: var(--transition);
 }

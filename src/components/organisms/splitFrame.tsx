@@ -36,7 +36,7 @@ export const SplitFrame = ({ children, isFullScreen, setIsFullScreen }: ISplitFr
 				<div className="-mx-8 px-8 pt-7 border-0 border-t border-t-gray-600">
 					<OutputTabs />
 				</div>
-				<LogoFrame className="absolute bottom-7 right-7" />
+				<LogoFrame className="absolute bottom-7 right-7 fill-white opacity-10 pointer-events-none" />
 			</Frame>
 			<Toast className="border-error" duration={15} isOpen={isOpenToast} onClose={handleCloseToast}>
 				<h5 className="text-error font-semibold">Error Headline</h5>
