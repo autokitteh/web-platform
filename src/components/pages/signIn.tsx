@@ -5,6 +5,7 @@ import { Frame, Badge, Button, Icon } from "@components/atoms";
 import { SignInForm } from "@components/organisms";
 import { AuthWrapper } from "@components/templates";
 import { autokittehBenefits } from "@constants/lists";
+import { cn } from "@utilities";
 import { Link } from "react-router-dom";
 
 export const SignIn = () => {
@@ -16,17 +17,17 @@ export const SignIn = () => {
 						Welcome to <br /> autokitteh
 					</h1>
 					<Button
-						className={
-							`justify-center hover:bg-green-light text-base font-semibold` + ` py-3.5 rounded-full mt-14 border-black`
-						}
+						className={cn(
+							"justify-center hover:bg-green-light text-base font-semibold py-3.5 rounded-full mt-14 border-black"
+						)}
 						variant="outline"
 					>
 						<Icon alt="Github" className="w-7 h-7" src={IconGithub} /> Sign up with Github
 					</Button>
 					<Button
-						className={
-							`justify-center hover:bg-green-light text-base font-semibold` + ` py-3.5 rounded-full mt-4 border-black`
-						}
+						className={cn(
+							"justify-center hover:bg-green-light text-base font-semibold py-3.5 rounded-full mt-4 border-black"
+						)}
 						variant="outline"
 					>
 						<Icon alt="Google" className="w-7 h-7" src={IconGoogle} /> Sign up with Google
@@ -56,8 +57,8 @@ export const SignIn = () => {
 						</Link>
 					</p>
 				</div>
-				<Frame className="w-1/2 relative flex flex-col items-center bg-gray-black-100 text-black h-full pt-52">
-					<h2 className="font-bold text-3xl z-10">Why developers love autokitteh</h2>
+				<Frame className="w-1/2 relative flex flex-col items-center bg-gray-black-100 h-full pt-52 ov">
+					<h2 className="font-bold text-3xl z-10 text-black">Why developers love autokitteh</h2>
 					<div className="flex flex-wrap gap-3.5 mt-8 max-w-485">
 						{autokittehBenefits.map((name, idx) => (
 							<Badge className="bg-white px-4 py-2 font-normal text-base z-10" key={idx}>
