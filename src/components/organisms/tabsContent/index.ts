@@ -2,4 +2,3 @@ export { AddCodeAssetsTab } from "@components/organisms/tabsContent/addCodeAsset
 export { ConnectionsContent } from "@components/organisms/tabsContent/connectionsContent";
 export { TriggersContent } from "@components/organisms/tabsContent/triggersContent";
 export { VariablesContent } from "@components/organisms/tabsContent/variablesContent";
-export { ConnectionRow } from "@components/organisms/tabsContent/tabsInnerContent";
