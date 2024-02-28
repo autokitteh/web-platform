@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PlusCircle, ArrowDown, ArrowUp, SmallArrowDown, ThreeDots } from "@assets/image";
 import { Table, THead, TBody, Tr, Th, IconButton, Button, DropdownMenu } from "@components/atoms";
-import { ConnectionRow } from "@components/molecules";
+import { ConnectionRow } from "@components/organisms/tabsContent";
 import { connectionsData } from "@constants/lists";
 import { ESortDirection } from "@enums/components";
 import { IConnectionsContent } from "@interfaces/components";
