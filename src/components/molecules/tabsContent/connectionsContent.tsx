@@ -1,13 +1,22 @@
 import React, { useState } from "react";
-import { PlusCircle, ArrowDown, ArrowUp, Info, SmallArrowDown, TestS, ThreeDots } from "@assets/image";
-import { Table, THead, TBody, Tr, Th, Td, IconButton, Button, DropdownMenu } from "@components/atoms";
+import { PlusCircle, ArrowDown, ArrowUp, SmallArrowDown, ThreeDots } from "@assets/image";
+import { Table, THead, TBody, Tr, Th, IconButton, Button, DropdownMenu } from "@components/atoms";
+import { ConnectionRow } from "@components/molecules";
+import { connectionsData } from "@constants/lists";
+import { ESortDirection } from "@enums/components";
 import { IConnectionsContent } from "@interfaces/components";
-import { cn } from "@utilities";
+import { TSortDirection } from "@type/components";
+import { cn, getSortDirection } from "@utilities";
+import { orderBy } from "lodash";
 
 export const ConnectionsContent = ({ className }: IConnectionsContent) => {
-	const baseStyle = cn("pt-14", className);
 	const [isDropdownOpen, setDropdownOpen] = useState(false);
 	const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+	const [sortDirection, setSortDirection] = useState<TSortDirection>("none");
+	const [connections, setConnections] = useState(connectionsData);
+
+	const baseStyle = cn("pt-14", className);
+	const arrowDownNameStyle = cn("w-2 h-1.5", { "rotate-180": sortDirection === "ascending" });
 
 	const handleHoverIcon = (event: React.MouseEvent<HTMLButtonElement>) => {
 		const { top, left, height } = event.currentTarget.getBoundingClientRect();
@@ -17,6 +26,17 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 
 	const handleHoverMenu = () => setDropdownOpen(true);
 	const handleLeaveDropdown = () => setDropdownOpen(false);
+
+	const toggleSortConnections = (direction?: TSortDirection) => {
+		const newDirection = direction || getSortDirection(sortDirection);
+		const sortedConnections = orderBy(
+			connections,
+			["name"],
+			[newDirection === ESortDirection.Ascending ? "asc" : "desc"]
+		);
+		setConnections(sortedConnections);
+		setSortDirection(newDirection);
+	};
 
 	return (
 		<div className={baseStyle}>
@@ -32,8 +52,8 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 					<Tr className="group">
 						<Th className="border-r-0">
 							Name
-							<IconButton className="w-auto p-1 hover:bg-gray-700">
-								<SmallArrowDown className="w-2 h-1.5" />
+							<IconButton className="w-auto p-1 hover:bg-gray-700" onClick={() => toggleSortConnections()}>
+								<SmallArrowDown className={arrowDownNameStyle} />
 							</IconButton>
 						</Th>
 						<Th className="max-w-8 p-0">
@@ -53,35 +73,14 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 					</Tr>
 				</THead>
 				<TBody>
-					<Tr className="group">
-						<Td className="font-semibold border-r-0">JeffOnSlack</Td>
-						<Td className="p-0 max-w-8">
-							<IconButton
-								className="w-6 h-6 p-1 hover:bg-transparent"
-								onMouseEnter={handleHoverIcon}
-								onMouseLeave={handleLeaveDropdown}
-							>
-								<Info className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
-							</IconButton>
-						</Td>
-						<Td>Slack</Td>
-						<Td>Jeff@autokitteh.</Td>
-						<Td className="relative text-xs border-r-0">2 days ago</Td>
-						<Td className="max-w-10 border-0 p-0">
-							<IconButton className="w-6 h-6 p-1 hover:bg-gray-700">
-								<TestS className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
-							</IconButton>
-						</Td>
-						<Td className="max-w-10 border-0 pr-1 justify-end">
-							<IconButton
-								className="w-6 h-6 p-1  hover:bg-gray-700"
-								onMouseEnter={handleHoverIcon}
-								onMouseLeave={handleLeaveDropdown}
-							>
-								<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
-							</IconButton>
-						</Td>
-					</Tr>
+					{connections.map((connection) => (
+						<ConnectionRow
+							connection={connection}
+							handleHoverIcon={handleHoverIcon}
+							handleLeaveDropdown={handleLeaveDropdown}
+							key={connection.id}
+						/>
+					))}
 				</TBody>
 			</Table>
 			<DropdownMenu
@@ -94,15 +93,17 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 					left: `${dropdownPosition.left}px`,
 				}}
 			>
-				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white" href="#">
+				<Button
+					className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
+					onClick={() => toggleSortConnections("ascending")}
+				>
 					<ArrowUp /> Sort ascending
 				</Button>
-				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white" href="#">
-					<ArrowDown />
-					Sort descending
-				</Button>
-				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white" href="#">
-					Delete
+				<Button
+					className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
+					onClick={() => toggleSortConnections("descending")}
+				>
+					<ArrowDown /> Sort descending
 				</Button>
 			</DropdownMenu>
 		</div>
