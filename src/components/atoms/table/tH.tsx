@@ -8,9 +8,5 @@ export const Th = ({ className, children }: ITable) => {
 		className
 	);
 
-	return (
-		<div className={thStyle} role="columnheader">
-			{children}
-		</div>
-	);
+	return <th className={thStyle}>{children}</th>;
 };

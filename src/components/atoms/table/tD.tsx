@@ -9,8 +9,8 @@ export const Td = ({ className, children }: ITable) => {
 	);
 
 	return (
-		<div className={tdStyle} role="cell">
+		<td className={tdStyle}>
 			<div className="truncate">{children}</div>
-		</div>
+		</td>
 	);
 };

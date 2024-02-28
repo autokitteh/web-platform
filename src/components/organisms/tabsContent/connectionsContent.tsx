@@ -84,8 +84,8 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 								sortDirection={sort.direction}
 							/>
 						</Th>
-						<Th className="max-w-10 border-0 p-0" />
-						<Th className="max-w-10 border-0 p-0" />
+						<Th className="max-w-10 border-0 p-0 -ml-6 pointer-events-none" />
+						<Th className="max-w-9 border-0 p-0" />
 					</Tr>
 				</THead>
 				<TBody>
@@ -104,12 +104,12 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 							<Td>{platform}</Td>
 							<Td>{user}</Td>
 							<Td className="text-xs border-r-0 pr-6">{moment(lastTested).fromNow()}</Td>
-							<Td className="max-w-10 border-0 p-0">
+							<Td className="max-w-10 border-0 p-0 -ml-6">
 								<IconButton className="w-6 h-6 p-1 hover:bg-gray-700">
 									<TestS className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
 								</IconButton>
 							</Td>
-							<Td className="max-w-10 border-0 pr-1 justify-end">
+							<Td className="max-w-9 border-0 pr-1 justify-end">
 								<IconButton
 									className="w-6 h-6 p-1  hover:bg-gray-700"
 									onMouseEnter={handleHoverIcon}
