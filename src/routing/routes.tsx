@@ -4,7 +4,7 @@ import { createBrowserRouter, RouteObject } from "react-router-dom";
 
 export const router = createBrowserRouter([
 	{
-		path: "app",
+		path: "/",
 		element: <Home />,
 	},
 	{
