@@ -41,12 +41,12 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 
 	return (
 		<div className={baseStyle}>
-			<div className="flex items-center justify-between text-gray-300">
-				<p className="text-base">Available connections</p>
-				<p className="capitalize font-semibold cursor-pointer group hover:text-white flex items-center gap-1">
-					<PlusCircle className="transtion stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					add new
-				</p>
+			<div className="flex items-center justify-between">
+				<p className="text-base text-gray-300">Available connections</p>
+				<Button className="w-auto group flex items-center gap-1 p-0">
+					<PlusCircle className="transtion-all stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+					<p className="capitalize font-semibold text-gray-300 group-hover:text-white">Add new</p>
+				</Button>
 			</div>
 			<Table className="mt-5">
 				<THead>
