@@ -17,6 +17,11 @@ export interface IDropdownButton extends Partial<IButton> {
 	contentMenu: React.ReactNode;
 }
 
+export interface IDropdownState {
+	isOpen: boolean;
+	style: React.CSSProperties;
+}
+
 export interface IIconButton extends Partial<IButton> {
 	children: React.ReactNode;
 	variant?: TButtonVariant;
