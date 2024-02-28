@@ -1,4 +1,4 @@
-export type { IButton, IDropdownButton, IIconButton } from "@interfaces/components/button.interface";
+export type { IButton, IDropdownButton, IIconButton, ISortButton } from "@interfaces/components/button.interface";
 export type { IBadge } from "@interfaces/components/badge.interface";
 export type { IDropdownMenu } from "@interfaces/components/dropdownMenu.interface";
 export type { IFrame, ISplitFrame } from "@interfaces/components/frame.interface";

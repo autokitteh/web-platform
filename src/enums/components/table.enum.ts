@@ -1,4 +1,4 @@
 export enum ESortDirection {
-	Ascending = "ascending",
-	Descending = "descending",
+	ASC = "asc",
+	DESC = "desc",
 }
