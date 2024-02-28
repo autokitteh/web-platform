@@ -1,9 +1,9 @@
 export type {
-    IButton,
-    IDropdownButton,
-    IIconButton,
-    ISortButton,
-    IDropdownState,
+	IButton,
+	IDropdownButton,
+	IIconButton,
+	ISortButton,
+	IDropdownState,
 } from "@interfaces/components/button.interface";
 export type { IBadge } from "@interfaces/components/badge.interface";
 export type { IFrame, ISplitFrame } from "@interfaces/components/frame.interface";

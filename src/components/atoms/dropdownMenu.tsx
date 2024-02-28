@@ -27,7 +27,7 @@ export const DropdownMenu = ({
 	};
 
 	const menuStyle = cn(
-		"absolute mt-1 p-2.5 bg-black rounded-lg border border-gray-500 shadow-xl z-50",
+		"absolute mt-1 p-2.5 bg-black rounded-lg border border-gray-500 shadow-xl z-40",
 		"left-1/2 !transform -translate-x-1/2",
 		className
 	);
