@@ -23,7 +23,7 @@ export interface IIconButton extends Partial<IButton> {
 }
 
 export interface ISortButton {
+	className?: string;
 	isActive: boolean;
 	sortDirection: TSortDirection | undefined;
-	onClick: () => void;
 }

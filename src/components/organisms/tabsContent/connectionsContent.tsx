@@ -12,9 +12,9 @@ import moment from "moment";
 
 export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 	const [sort, setSort] = useState<{
-		direction: TSortDirection | undefined;
-		column: Exclude<keyof ITabConnection, "id"> | undefined;
-	}>({ direction: undefined, column: undefined });
+		direction: TSortDirection;
+		column: Exclude<keyof ITabConnection, "id">;
+	}>({ direction: ESortDirection.ASC, column: "lastTested" });
 	const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
 	const [isDropdownOpen, setDropdownOpen] = useState(false);
 	const [connections, setConnections] = useState(connectionsData);
@@ -50,41 +50,44 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 			</div>
 			<Table className="mt-5">
 				<THead>
-					<Tr className="group">
-						<Th className="border-r-0">
+					<Tr>
+						<Th className="border-r-0 cursor-pointer group" onClick={() => toggleSortConnections("name")}>
 							Name
 							<SortButton
+								className="opacity-0 group-hover:opacity-100"
 								isActive={"name" === sort.column}
-								onClick={() => toggleSortConnections("name")}
 								sortDirection={sort.direction}
 							/>
 						</Th>
 						<Th className="max-w-8 p-0" />
-						<Th>
+						<Th className="cursor-pointer group" onClick={() => toggleSortConnections("platform")}>
 							App
 							<SortButton
+								className="opacity-0 group-hover:opacity-100"
 								isActive={"platform" === sort.column}
-								onClick={() => toggleSortConnections("platform")}
 								sortDirection={sort.direction}
 							/>
 						</Th>
-						<Th>
+						<Th className="cursor-pointer group" onClick={() => toggleSortConnections("user")}>
 							User
 							<SortButton
+								className="opacity-0 group-hover:opacity-100"
 								isActive={"user" === sort.column}
-								onClick={() => toggleSortConnections("user")}
 								sortDirection={sort.direction}
 							/>
 						</Th>
-						<Th className="border-r-0 pr-6">
+						<Th className="border-r-0 pr-6 cursor-pointer group" onClick={() => toggleSortConnections("lastTested")}>
 							Last tested
 							<SortButton
+								className="opacity-0 group-hover:opacity-100"
 								isActive={"lastTested" === sort.column}
-								onClick={() => toggleSortConnections("lastTested")}
 								sortDirection={sort.direction}
 							/>
 						</Th>
-						<Th className="max-w-10 border-0 p-0 -ml-6 pointer-events-none" />
+						<Th
+							className="max-w-10 border-0 p-0 -ml-6 cursor-pointer group"
+							onClick={() => toggleSortConnections("lastTested")}
+						/>
 						<Th className="max-w-9 border-0 p-0" />
 					</Tr>
 				</THead>

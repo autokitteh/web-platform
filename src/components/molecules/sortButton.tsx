@@ -5,13 +5,13 @@ import { ESortDirection } from "@enums/components";
 import { ISortButton } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const SortButton = ({ isActive, sortDirection, onClick }: ISortButton) => {
+export const SortButton = ({ isActive, sortDirection, className }: ISortButton) => {
 	const iconClass = isActive && sortDirection === ESortDirection.DESC ? "rotate-180" : "";
 
-	const buttonClass = cn("w-auto p-1 hover:bg-gray-700", { "bg-gray-700": isActive });
+	const buttonClass = cn("w-auto p-1 hover:bg-gray-700", className, { "bg-gray-700 opacity-100": isActive });
 
 	return (
-		<IconButton className={buttonClass} onClick={onClick}>
+		<IconButton className={buttonClass}>
 			<SmallArrowDown className={iconClass} />
 		</IconButton>
 	);
