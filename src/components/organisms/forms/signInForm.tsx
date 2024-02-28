@@ -20,6 +20,7 @@ export const SignInForm = () => {
 						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="bg-white border-gray-400 hover:border-gray-700"
 						isError={!!errors.email}
+						isRequired
 						placeholder="Enter Email"
 					/>
 					<ErrorMessage>{errors.email?.message as string}</ErrorMessage>
@@ -30,6 +31,7 @@ export const SignInForm = () => {
 						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="bg-white border-gray-400 hover:border-gray-700"
 						isError={!!errors.password}
+						isRequired
 						placeholder="Choose Password"
 					/>
 					<ErrorMessage>{errors.password?.message as string}</ErrorMessage>

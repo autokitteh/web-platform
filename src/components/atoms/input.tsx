@@ -3,7 +3,9 @@ import { IInput } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Input = forwardRef<HTMLInputElement, IInput>((props, ref) => {
-	const { icon, isError, className, classInput, disabled, type = "text", ...rest } = props;
+	const { icon, isError, className, classInput, disabled, type = "text", placeholder, isRequired, ...rest } = props;
+
+	const placeholderModif = isRequired ? `* ${placeholder}` : placeholder;
 
 	const baseStyle = cn(
 		"flex items-center pr-2.5 text-base bg-black border border-gray-500",
@@ -22,7 +24,14 @@ export const Input = forwardRef<HTMLInputElement, IInput>((props, ref) => {
 
 	return (
 		<div className={baseStyle}>
-			<input {...rest} className={inputStyle} disabled={disabled} ref={ref} type={type} />
+			<input
+				{...rest}
+				className={inputStyle}
+				disabled={disabled}
+				placeholder={placeholderModif}
+				ref={ref}
+				type={type}
+			/>
 			{icon}
 		</div>
 	);
