@@ -32,7 +32,7 @@ export const Home = () => {
 
 	return (
 		<AppWrapper>
-			<div className="flex justify-between items-center h-full">
+			<div className="flex justify-between gap-5 items-center h-full">
 				<div className="max-w-485 m-auto" hidden={isFullScreen}>
 					<MapMenu />
 				</div>
