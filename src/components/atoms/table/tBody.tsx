@@ -5,9 +5,5 @@ import { cn } from "@utilities";
 export const TBody = ({ className, children }: ITable) => {
 	const bodyStyle = cn("border-t border-gray-600", className);
 
-	return (
-		<div className={bodyStyle} role="rowgroup">
-			{children}
-		</div>
-	);
+	return <tbody className={bodyStyle}>{children}</tbody>;
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { AddCodeAssetsTab, ConnectionsContent, TriggersContent, VariablesContent } from "@components/molecules";
+import { AddCodeAssetsTab, ConnectionsContent, TriggersContent, VariablesContent } from "@components/organisms";
 
 export const tabsMainFrame = [
 	{ id: 1, title: "Code & Assets", count: 2, content: () => <AddCodeAssetsTab /> },
