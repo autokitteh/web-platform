@@ -1,4 +1,4 @@
 export interface IBadge {
-	text: string;
+	children: React.ReactNode;
 	className?: string;
 }

@@ -5,7 +5,7 @@ const meta: Meta<typeof Badge> = {
 	title: "Core/Badge",
 	component: Badge,
 	argTypes: {
-		text: { control: "text" },
+		children: { control: "text" },
 		className: { control: "text" },
 	},
 };
@@ -15,14 +15,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	args: {
-		text: "Default Badge",
+		children: "Default Badge",
 		className: "",
 	},
 };
 
 export const Custom: Story = {
 	args: {
-		text: "Custom Badge",
+		children: "Custom Badge",
 		className: "bg-blue-500 text-white",
 	},
 };

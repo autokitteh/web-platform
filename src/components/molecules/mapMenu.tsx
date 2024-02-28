@@ -27,5 +27,5 @@ export const MapMenu = () => {
 		return () => map?.removeEventListener("click", handleClick);
 	}, [refMap]);
 
-	return <Map ref={refMap} />;
+	return <Map className="w-full" ref={refMap} />;
 };
