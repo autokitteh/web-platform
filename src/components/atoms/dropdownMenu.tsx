@@ -2,8 +2,17 @@ import React from "react";
 import { IDropdownMenu } from "@interfaces/components";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 
-export const DropdownMenu = ({ isOpen, className, children, style, onMouseEnter, onMouseLeave }: IDropdownMenu) => {
+export const DropdownMenu = ({
+	isOpen,
+	className,
+	children,
+	style,
+	container = document.body,
+	onMouseEnter,
+	onMouseLeave,
+}: IDropdownMenu) => {
 	const dropdownVariants = {
 		opened: {
 			opacity: 1,
@@ -23,7 +32,7 @@ export const DropdownMenu = ({ isOpen, className, children, style, onMouseEnter,
 		className
 	);
 
-	return (
+	return createPortal(
 		<AnimatePresence>
 			{isOpen ? (
 				<motion.div
@@ -41,6 +50,7 @@ export const DropdownMenu = ({ isOpen, className, children, style, onMouseEnter,
 					{children}
 				</motion.div>
 			) : null}
-		</AnimatePresence>
+		</AnimatePresence>,
+		container
 	);
 };

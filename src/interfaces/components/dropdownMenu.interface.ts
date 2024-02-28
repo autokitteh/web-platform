@@ -3,6 +3,7 @@ export interface IDropdownMenu {
 	className?: string;
 	children: React.ReactNode;
 	style?: React.CSSProperties;
+	container?: Element | DocumentFragment;
 	onMouseEnter?: () => void;
 	onMouseLeave?: () => void;
 }
