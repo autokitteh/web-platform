@@ -42,7 +42,7 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 	return (
 		<div className={baseStyle}>
 			<div className="flex items-center justify-between">
-				<p className="text-base text-gray-300">Available connections</p>
+				<div className="text-base text-gray-300">Available connections</div>
 				<Button className="w-auto group flex items-center gap-1 p-0">
 					<PlusCircle className="transtion-all stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 					<p className="capitalize font-semibold text-gray-300 group-hover:text-white">Add new</p>
