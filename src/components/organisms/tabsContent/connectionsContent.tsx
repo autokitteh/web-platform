@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PlusCircle, ThreeDots, Info, TestS } from "@assets/image";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, DropdownMenu } from "@components/atoms";
-import { SortButton } from "@components/molecules";
+import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
+import { SortButton, Modal, DropdownButton, TableConnectionInfo, TableConnectionAction } from "@components/molecules";
 import { connectionsData } from "@constants/lists";
 import { ESortDirection } from "@enums/components";
 import { IConnectionsContent, ITabConnection } from "@interfaces/components";
@@ -11,24 +11,16 @@ import { orderBy } from "lodash";
 import moment from "moment";
 
 export const ConnectionsContent = ({ className }: IConnectionsContent) => {
+	const [isModal, setIsModal] = useState(false);
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
 		column: Exclude<keyof ITabConnection, "id">;
 	}>({ direction: ESortDirection.ASC, column: "lastTested" });
-	const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-	const [isDropdownOpen, setDropdownOpen] = useState(false);
 	const [connections, setConnections] = useState(connectionsData);
 
 	const baseStyle = cn("pt-14", className);
 
-	const handleHoverIcon = (event: React.MouseEvent<HTMLButtonElement>) => {
-		const { top, left, height } = event.currentTarget.getBoundingClientRect();
-		setDropdownPosition({ top: top + height, left });
-		setDropdownOpen(true);
-	};
-
-	const handleHoverMenu = () => setDropdownOpen(true);
-	const handleLeaveDropdown = () => setDropdownOpen(false);
+	const toggleModal = () => setIsModal(!isModal);
 
 	const toggleSortConnections = (key: Exclude<keyof ITabConnection, "id">) => {
 		const newDirection =
@@ -43,7 +35,10 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 		<div className={baseStyle}>
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">Available connections</div>
-				<Button className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white">
+				<Button
+					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
+					href="/app/new-connection"
+				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 					Add new
 				</Button>
@@ -51,7 +46,7 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 			<Table className="mt-5">
 				<THead>
 					<Tr>
-						<Th className="border-r-0 cursor-pointer group" onClick={() => toggleSortConnections("name")}>
+						<Th className="border-r-0 cursor-pointer group font-normal" onClick={() => toggleSortConnections("name")}>
 							Name
 							<SortButton
 								className="opacity-0 group-hover:opacity-100"
@@ -60,7 +55,7 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 							/>
 						</Th>
 						<Th className="max-w-8 p-0" />
-						<Th className="cursor-pointer group" onClick={() => toggleSortConnections("platform")}>
+						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("platform")}>
 							App
 							<SortButton
 								className="opacity-0 group-hover:opacity-100"
@@ -68,7 +63,7 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 								sortDirection={sort.direction}
 							/>
 						</Th>
-						<Th className="cursor-pointer group" onClick={() => toggleSortConnections("user")}>
+						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("user")}>
 							User
 							<SortButton
 								className="opacity-0 group-hover:opacity-100"
@@ -76,7 +71,10 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 								sortDirection={sort.direction}
 							/>
 						</Th>
-						<Th className="border-r-0 pr-6 cursor-pointer group" onClick={() => toggleSortConnections("lastTested")}>
+						<Th
+							className="border-r-0 pr-6 cursor-pointer group font-normal"
+							onClick={() => toggleSortConnections("lastTested")}
+						>
 							Last tested
 							<SortButton
 								className="opacity-0 group-hover:opacity-100"
@@ -96,13 +94,11 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 						<Tr className="group" key={id}>
 							<Td className="font-semibold border-r-0">{name}</Td>
 							<Td className="p-0 max-w-8">
-								<IconButton
-									className="w-6 h-6 p-1 hover:bg-transparent"
-									onMouseEnter={handleHoverIcon}
-									onMouseLeave={handleLeaveDropdown}
-								>
-									<Info className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
-								</IconButton>
+								<DropdownButton className="flex-col gap-1" contentMenu={<TableConnectionInfo />}>
+									<IconButton className="w-6 h-6 p-1 hover:bg-transparent">
+										<Info className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
+									</IconButton>
+								</DropdownButton>
 							</Td>
 							<Td>{platform}</Td>
 							<Td>{user}</Td>
@@ -113,30 +109,41 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 								</IconButton>
 							</Td>
 							<Td className="max-w-9 border-0 pr-1 justify-end">
-								<IconButton
-									className="w-6 h-6 p-1  hover:bg-gray-700"
-									onMouseEnter={handleHoverIcon}
-									onMouseLeave={handleLeaveDropdown}
+								<DropdownButton
+									className="flex-col gap-1"
+									contentMenu={<TableConnectionAction onDelete={toggleModal} />}
 								>
-									<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
-								</IconButton>
+									<IconButton className="w-6 h-6 p-1  hover:bg-gray-700">
+										<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
+									</IconButton>
+								</DropdownButton>
 							</Td>
 						</Tr>
 					))}
 				</TBody>
 			</Table>
-			<DropdownMenu
-				className="flex flex-col gap-1 fixed"
-				isOpen={isDropdownOpen}
-				onMouseEnter={handleHoverMenu}
-				onMouseLeave={handleLeaveDropdown}
-				style={{
-					top: `${dropdownPosition.top}px`,
-					left: `${dropdownPosition.left}px`,
-				}}
-			>
-				<Button className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white">Delete</Button>
-			</DropdownMenu>
+			<Modal isOpen={isModal} onClose={toggleModal}>
+				<div className="mx-6">
+					<h3 className="text-xl font-bold mb-5">Delete Connection</h3>
+					<p>
+						This connection you are about to delete is used in <br />
+						<strong>3 projects, 2 of them are currently running.</strong>
+					</p>
+					<br />
+					<p>
+						Deleting the connection may cause failure of projects. <br /> Are you sure you want to delete this
+						connection?
+					</p>
+				</div>
+				<div className="flex justify-end gap-1 mt-14">
+					<Button className="font-semibold py-3 px-4 hover:text-white w-auto" onClick={toggleModal}>
+						Cancel
+					</Button>
+					<Button className="font-semibold py-3 px-4 bg-gray-700 w-auto" onClick={toggleModal} variant="filled">
+						Yes, delete
+					</Button>
+				</div>
+			</Modal>
 		</div>
 	);
 };

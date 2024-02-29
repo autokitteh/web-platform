@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Minimize, LogoFrame } from "@assets/image";
-import { Frame, IconButton, Toast } from "@components/atoms";
+import { Frame, IconButton } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
 import { ISplitFrame } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const SplitFrame = ({ children, isFullScreen, setIsFullScreen }: ISplitFrame) => {
-	const [isOpenToast, setIsOpenToast] = useState(true);
-
 	const baseStyle = cn("flex justify-end h-full w-2/3", { "w-full": isFullScreen });
 	const mainFrameStyle = cn("rounded-l-none pb-0 min-w-1/2", { "rounded-2xl": !children });
 
 	const handleFullScreenToggle = () => setIsFullScreen(!isFullScreen);
-	const handleCloseToast = () => setIsOpenToast(false);
 
 	return (
 		<div className={baseStyle}>
@@ -34,10 +31,6 @@ export const SplitFrame = ({ children, isFullScreen, setIsFullScreen }: ISplitFr
 				</div>
 				<LogoFrame className="absolute bottom-7 right-7 fill-white opacity-10 pointer-events-none" />
 			</Frame>
-			<Toast className="border-error" duration={15} isOpen={isOpenToast} onClose={handleCloseToast}>
-				<h5 className="text-error font-semibold">Error Headline</h5>
-				<p className="mt-1 text-xs">the state or condition of being wrong conduct.</p>
-			</Toast>
 		</div>
 	);
 };

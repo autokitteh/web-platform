@@ -1,9 +1,18 @@
 import React from "react";
-import { IDropdownMenu } from "@interfaces/components";
+import { IDropdownMenu } from "@interfaces/components/dropdown";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 
-export const DropdownMenu = ({ isOpen, className, children, style, onMouseEnter, onMouseLeave }: IDropdownMenu) => {
+export const DropdownMenu = ({
+	isOpen,
+	className,
+	children,
+	style,
+	container = document.body,
+	onMouseEnter,
+	onMouseLeave,
+}: IDropdownMenu) => {
 	const dropdownVariants = {
 		opened: {
 			opacity: 1,
@@ -18,12 +27,12 @@ export const DropdownMenu = ({ isOpen, className, children, style, onMouseEnter,
 	};
 
 	const menuStyle = cn(
-		"absolute mt-1 p-2.5 bg-black rounded-lg border border-gray-500 shadow-xl z-50",
+		"absolute mt-1 p-2.5 bg-black rounded-lg border border-gray-500 shadow-xl z-40",
 		"left-1/2 !transform -translate-x-1/2",
 		className
 	);
 
-	return (
+	return createPortal(
 		<AnimatePresence>
 			{isOpen ? (
 				<motion.div
@@ -41,6 +50,7 @@ export const DropdownMenu = ({ isOpen, className, children, style, onMouseEnter,
 					{children}
 				</motion.div>
 			) : null}
-		</AnimatePresence>
+		</AnimatePresence>,
+		container
 	);
 };

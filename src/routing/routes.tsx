@@ -1,15 +1,19 @@
 import React, { ReactElement } from "react";
-import { Home, SignIn } from "@components/pages";
+import { Home, SignIn, NewConnection } from "@components/pages";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 
 export const router = createBrowserRouter([
 	{
-		path: "app",
+		path: "/",
 		element: <Home />,
 	},
 	{
 		path: "signin",
 		element: <SignIn />,
+	},
+	{
+		path: "app/new-connection",
+		element: <NewConnection />,
 	},
 	{
 		path: "*",

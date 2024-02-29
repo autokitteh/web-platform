@@ -1,6 +1,11 @@
-export type { IButton, IDropdownButton, IIconButton, ISortButton } from "@interfaces/components/button.interface";
+export type {
+	IButton,
+	IDropdownButton,
+	IIconButton,
+	ISortButton,
+	IDropdownState,
+} from "@interfaces/components/button.interface";
 export type { IBadge } from "@interfaces/components/badge.interface";
-export type { IDropdownMenu } from "@interfaces/components/dropdownMenu.interface";
 export type { IFrame, ISplitFrame } from "@interfaces/components/frame.interface";
 export type { ILink } from "@interfaces/components/link.interface";
 export type { ISubmenuInfo, ISubmenu, IMenu } from "@interfaces/components/menu.interface";
