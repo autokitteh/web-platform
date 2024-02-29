@@ -1,8 +1,8 @@
-import { IGlobalStore } from "@interfaces/store";
+import { IUIGlobalStore } from "@interfaces/store";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const store: StateCreator<IGlobalStore> = (set) => ({
+const store: StateCreator<IUIGlobalStore> = (set) => ({
 	isFullScreen: false,
 	toggleFullScreen: () =>
 		set((state) => ({
@@ -11,4 +11,4 @@ const store: StateCreator<IGlobalStore> = (set) => ({
 		})),
 });
 
-export const useGlobalStore = create(persist(store, { name: "GlobalStore" }));
+export const useUIGlobalStore = create(persist(store, { name: "UIGlobalStore" }));

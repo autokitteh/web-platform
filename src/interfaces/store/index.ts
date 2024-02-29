@@ -1,1 +1,1 @@
-export type { IGlobalStore } from "@interfaces/store/globalStore.interface";
+export type { IUIGlobalStore } from "@interfaces/store/uiGlobalStore.interface";

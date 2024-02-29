@@ -1,4 +1,4 @@
-export interface IGlobalStore {
+export interface IUIGlobalStore {
 	isFullScreen: boolean;
 	toggleFullScreen: () => void;
 }

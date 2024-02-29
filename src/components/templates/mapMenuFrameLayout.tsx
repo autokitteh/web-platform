@@ -1,10 +1,10 @@
 import React, { PropsWithChildren } from "react";
 import { MapMenu } from "@components/molecules";
 import { SplitFrame } from "@components/organisms";
-import { useGlobalStore } from "@store";
+import { useUIGlobalStore } from "@store";
 
 export const MapMenuFrameLayout = ({ children }: PropsWithChildren) => {
-	const { isFullScreen } = useGlobalStore();
+	const { isFullScreen } = useUIGlobalStore();
 
 	return (
 		<div className="flex justify-between items-center h-full">

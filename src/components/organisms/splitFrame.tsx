@@ -3,11 +3,11 @@ import { Minimize, LogoFrame } from "@assets/image";
 import { Frame, IconButton } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
 import { ISplitFrame } from "@interfaces/components";
-import { useGlobalStore } from "@store";
+import { useUIGlobalStore } from "@store";
 import { cn } from "@utilities";
 
 export const SplitFrame = ({ children }: ISplitFrame) => {
-	const { isFullScreen, toggleFullScreen } = useGlobalStore();
+	const { isFullScreen, toggleFullScreen } = useUIGlobalStore();
 	const baseStyle = cn("flex justify-end h-full w-2/3", { "w-full": isFullScreen });
 	const mainFrameStyle = cn("rounded-l-none pb-0 min-w-1/2", { "rounded-2xl": !children });
 
