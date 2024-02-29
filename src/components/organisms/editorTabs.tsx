@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
 import Editor, { Monaco } from "@monaco-editor/react";
+import { useGlobalStore } from "@store";
 
 export const EditorTabs = () => {
 	const [editorKey, setEditorKey] = useState(0);
 	const [manifestCode, setManifestCode] = useState("// Code A: Initialize your code here...");
 	const [codeContent, setCodeContent] = useState("// Code B: Initialize your code here...");
+	const { isFullScreen } = useGlobalStore();
+
+	useEffect(() => setEditorKey((prevKey) => prevKey + 1), [isFullScreen]);
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);

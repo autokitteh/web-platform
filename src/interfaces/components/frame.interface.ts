@@ -5,6 +5,4 @@ export interface IFrame {
 
 export interface ISplitFrame {
 	children: React.ReactNode;
-	isFullScreen: boolean;
-	setIsFullScreen: (value: boolean) => void;
 }

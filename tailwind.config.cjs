@@ -12,10 +12,7 @@ export default {
 				485: "485px",
 			},
 			minWidth: {
-				650: "650px",
 				550: "550px",
-			},
-			minWidth: {
 				650: "650px",
 			},
 			width: {

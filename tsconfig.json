@@ -46,6 +46,7 @@
 			"@type/*": ["./src/types/*"],
 			"@type": ["./src/types/index"],
 			"@api": ["./src/api/index"],
+			"@store": ["./src/store/index"],
 			"@ak-proto-ts/*": ["./src/autokitteh/proto/gen/ts/autokitteh/*"]
 		}
 	},
