@@ -45,7 +45,7 @@ export const AddConnectionForm = () => {
 	};
 
 	return (
-		<>
+		<div className="min-w-550">
 			<div className="flex justify-between mb-11">
 				<div className="flex items-center gap-1">
 					<IconButton className="hover:bg-black p-0 w-8 h-8" onClick={() => navigate(-1)}>
@@ -124,6 +124,6 @@ export const AddConnectionForm = () => {
 				</div>
 				<p className="mt-1 text-xs">Success</p>
 			</Toast>
-		</>
+		</div>
 	);
 };

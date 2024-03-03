@@ -4,8 +4,13 @@ import { Button, IconButton, IconSvg } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { topbarItems } from "@constants";
 import { ITopbar } from "@interfaces/components";
+import { useUIGlobalStore } from "@store";
+import { cn } from "@utilities";
 
 export const Topbar = ({ name, version }: ITopbar) => {
+	const { isFullScreen, toggleFullScreen } = useUIGlobalStore();
+	const styleIconSreen = cn({ "border-transparent bg-black": isFullScreen });
+
 	return (
 		<div className="flex justify-between items-center bg-gray-700 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
 			<div className="flex items-end gap-3">
@@ -49,7 +54,7 @@ export const Topbar = ({ name, version }: ITopbar) => {
 						More
 					</Button>
 				</DropdownButton>
-				<IconButton variant="outline">
+				<IconButton className={styleIconSreen} onClick={toggleFullScreen} variant="outline">
 					<FullScreen />
 				</IconButton>
 			</div>
