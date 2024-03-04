@@ -1,10 +1,11 @@
+//i18n login
 export const autokittehBenefits = [
-	"Lower development costs",
-	"Reliability",
-	"Long-running",
-	"Flexibility",
-	"versatility",
-	"Fast deployment",
-	"Easy to maintain",
-	"Efficient management tools",
+	"benefits.lowerDevelopmentCosts",
+	"benefits.reliability",
+	"benefits.longRunning",
+	"benefits.flexibility",
+	"benefits.versatility",
+	"benefits.fastDeployment",
+	"benefits.easyToMaintain",
+	"benefits.efficientManagementTools",
 ];

@@ -1,6 +1,6 @@
 import { SessionStateType } from "@enums";
-import { translate } from "@i18n/index";
 import { ProtoSessionHistoryState } from "@type/models";
+import i18n from "i18next";
 import { get } from "lodash";
 
 class CreatedState {}
@@ -53,7 +53,7 @@ export class SessionState {
 					this.state = new RunningState(prints, call);
 					break;
 				case SessionStateType.error: {
-					const errorMessage = get(state, "states.value.error.message", translate().t("errors.unexpectedError"));
+					const errorMessage = get(state, "states.value.error.message", i18n.t("errors.unexpectedError"));
 					this.state = new ErrorState(errorMessage);
 					break;
 				}
@@ -64,18 +64,18 @@ export class SessionState {
 					this.state = new CompletedState(prints, exports, returnValue);
 					break;
 				default:
-					this.state = new ErrorState(translate().t("errors.unexpectedSessionStateType"));
+					this.state = new ErrorState(i18n.t("errors.unexpectedSessionStateType"));
 			}
 			return;
 		}
-		this.state = new ErrorState(translate().t("errors.missingSessionStateType"));
+		this.state = new ErrorState(i18n.t("errors.missingSessionStateType"));
 	}
 
 	getError(): string {
 		if (this.state instanceof ErrorState) {
 			return this.state.error;
 		}
-		return translate().t("errors.unexpectedError");
+		return i18n.t("errors.unexpectedError");
 	}
 
 	isError(): this is { state: ErrorState } {

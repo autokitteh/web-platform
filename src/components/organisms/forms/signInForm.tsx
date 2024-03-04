@@ -1,6 +1,7 @@
 import React from "react";
 import { Input, Button, ErrorMessage } from "@components/atoms";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 export const SignInForm = () => {
 	const {
@@ -8,6 +9,7 @@ export const SignInForm = () => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
+	const { t } = useTranslation("login");
 
 	const onSubmit = () => {};
 
@@ -16,23 +18,26 @@ export const SignInForm = () => {
 			<div className="flex flex-col gap-6 w-full">
 				<div className="relative">
 					<Input
-						{...register("email")}
+						{...register("email", { required: t("form.emailError") })}
 						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="bg-white border-gray-400 hover:border-gray-700"
 						isError={!!errors.email}
 						isRequired
-						placeholder="Enter Email"
+						placeholder={t("form.placoholderEmail")}
 					/>
 					<ErrorMessage>{errors.email?.message as string}</ErrorMessage>
 				</div>
 				<div className="relative">
 					<Input
-						{...register("password")}
+						{...register("password", {
+							required: t("form.passwordError"),
+							minLength: { value: 8, message: t("form.passwordError") },
+						})}
 						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="bg-white border-gray-400 hover:border-gray-700"
 						isError={!!errors.password}
 						isRequired
-						placeholder="Choose Password"
+						placeholder={t("form.placoholderPassword")}
 					/>
 					<ErrorMessage>{errors.password?.message as string}</ErrorMessage>
 				</div>
@@ -43,7 +48,7 @@ export const SignInForm = () => {
 				type="submit"
 				variant="outline"
 			>
-				Continue with email
+				{t("form.continueEmail")}
 			</Button>
 		</form>
 	);

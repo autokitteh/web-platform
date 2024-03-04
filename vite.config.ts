@@ -25,6 +25,7 @@ export default defineConfig({
 			"@type": path.resolve(__dirname, "./src/types"),
 			"@interfaces": path.resolve(__dirname, "./src/interfaces"),
 			"@store": path.resolve(__dirname, "./src/store"),
+			"@locales": path.resolve(__dirname, "./src/locales"),
 			"@ak-proto-ts": path.resolve(__dirname, "./src/autokitteh/proto/gen/ts/autokitteh"),
 			"tailwind-config": path.resolve(__dirname, "./tailwind.config.cjs"),
 		},
