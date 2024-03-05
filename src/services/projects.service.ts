@@ -1,19 +1,19 @@
 import { projectsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
-import { translate } from "@i18n";
 import { convertProjectProtoToModel } from "@models";
 import { DeploymentsService, EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Project } from "@type/models";
+import i18n from "i18next";
 
 export class ProjectsService {
 	static async get(projectId: string): Promise<ServiceResponse<Project>> {
 		try {
 			const { project } = await projectsClient.get({ projectId });
 			if (!project) {
-				LoggerService.error(namespaces.projectService, translate().t("errors.projectNotFound"));
+				LoggerService.error(namespaces.projectService, i18n.t("errors.projectNotFound"));
 
-				return { data: undefined, error: translate().t("errors.projectNotFound") };
+				return { data: undefined, error: i18n.t("errors.projectNotFound") };
 			}
 			return { data: project, error: undefined };
 		} catch (error) {

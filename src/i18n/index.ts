@@ -1,1 +1,17 @@
-export { translate } from "@i18n/translation.i18n";
+import english from "@locales/en";
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+
+const resources = {
+	en: english,
+};
+
+i18n.use(initReactI18next).init({
+	resources,
+	fallbackLng: "en",
+	interpolation: {
+		escapeValue: false,
+	},
+});
+
+export default i18n;
