@@ -34,8 +34,8 @@ export class SessionsService {
 
 	static async getHistoryBySessionId(sessionId: string): Promise<ServiceResponse<Array<SessionState>>> {
 		try {
-			const response = await sessionsClient.getHistory({ sessionId });
-			const sessionHistory = response.history?.states.map((state: ProtoSessionHistoryState) => new SessionState(state));
+			const response = await sessionsClient.getLog({ sessionId });
+			const sessionHistory = response.log?.records.map((state: ProtoSessionHistoryState) => new SessionState(state));
 			return { data: sessionHistory, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);

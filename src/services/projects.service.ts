@@ -1,3 +1,4 @@
+import { SetResourcesResponse } from "@ak-proto-ts/projects/v1/svc_pb";
 import { projectsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertProjectProtoToModel } from "@models";
@@ -7,6 +8,25 @@ import { Project } from "@type/models";
 import i18n from "i18next";
 
 export class ProjectsService {
+	static async create(projectName: string): Promise<ServiceResponse<string>> {
+		try {
+			const { projectId } = await projectsClient.create({
+				project: {
+					name: projectName,
+				},
+			});
+			if (!projectId) {
+				LoggerService.error(namespaces.projectService, i18n.t("errors.projectNotCreated"));
+
+				return { data: undefined, error: i18n.t("errors.projectNotCreated") };
+			}
+			return { data: projectId, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.projectService, (error as Error).message);
+			return { data: undefined, error };
+		}
+	}
+
 	static async get(projectId: string): Promise<ServiceResponse<Project>> {
 		try {
 			const { project } = await projectsClient.get({ projectId });
@@ -32,39 +52,40 @@ export class ProjectsService {
 		}
 	}
 
-	static async build(projectId: string): Promise<ServiceResponse<string>> {
+	static async build(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
+		const { error: resourcesError } = await this.setResources(projectId, resources);
+		if (resourcesError) {
+			LoggerService.error(`${namespaces.projectService} - Upload resources`, (resourcesError as Error).message);
+
+			return { data: undefined, error: resourcesError };
+		}
+
 		const { buildId, error } = await projectsClient.build({ projectId });
 		if (error) {
-			LoggerService.error(namespaces.projectService, error.message);
+			LoggerService.error(`${namespaces.projectService} - Build`, error.message);
+
 			return { data: undefined, error };
 		}
 		return { data: buildId, error: undefined };
 	}
 
-	static async deploy(projectId: string): Promise<ServiceResponse<string>> {
-		const { data: buildId, error: buildError } = await this.build(projectId);
-		if (buildError) {
-			LoggerService.error(namespaces.projectService, (buildError as Error).message);
-			return { data: undefined, error: buildError };
-		}
-
+	static async deploy(projectId: string, buildId: string): Promise<ServiceResponse<string>> {
 		const { data: environments, error: envError } = await EnvironmentsService.listByProjectId(projectId);
 		if (envError) {
-			LoggerService.error(namespaces.projectService, (envError as Error).message);
 			return { data: undefined, error: envError };
 		}
 
-		let environment;
-		try {
-			environment = environments![0];
-		} catch (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
-			return { data: undefined, error };
+		if (!environments?.length) {
+			const errorMessage = i18n.t("errors.defaultEnvironmentNotFound");
+			LoggerService.error(namespaces.projectService, errorMessage);
+			return { data: undefined, error: new Error(errorMessage) };
 		}
+
+		const environment = environments[0];
 
 		const { data: deploymentId, error } = await DeploymentsService.create({
 			buildId: buildId!,
-			envId: environment!.envId,
+			envId: environment.envId,
 		});
 
 		if (error) {
@@ -75,10 +96,14 @@ export class ProjectsService {
 		return { data: deploymentId, error: undefined };
 	}
 
-	static async run(projectId: string): Promise<ServiceResponse<string>> {
-		const { data: deploymentId, error } = await this.deploy(projectId);
+	static async run(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
+		const { data: buildId, error: buildError } = await this.build(projectId, resources);
+		if (buildError) {
+			return { data: undefined, error: buildError };
+		}
+		const { data: deploymentId, error } = await this.deploy(projectId, buildId!);
 		if (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
+			LoggerService.error(`${namespaces.projectService} - Deploy`, (error as Error).message);
 
 			return {
 				data: undefined,
@@ -88,9 +113,25 @@ export class ProjectsService {
 
 		const { error: activateError } = await DeploymentsService.activate(deploymentId!);
 		if (activateError) {
-			LoggerService.error(namespaces.projectService, (activateError as Error).message);
+			LoggerService.error(`${namespaces.projectService} - Activate`, (activateError as Error).message);
 			return { data: undefined, error: activateError };
 		}
 		return { data: deploymentId, error: undefined };
+	}
+
+	static async setResources(
+		projectId: string,
+		resources: Record<string, Uint8Array>
+	): Promise<ServiceResponse<SetResourcesResponse>> {
+		try {
+			await projectsClient.setResources({
+				projectId,
+				resources,
+			});
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.resourcesService, (error as Error).message);
+			return { data: undefined, error };
+		}
 	}
 }
