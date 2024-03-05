@@ -11,4 +11,4 @@ const store: StateCreator<IUIGlobalStore> = (set) => ({
 		})),
 });
 
-export const useUIGlobalStore = create(persist(store, { name: "UIGlobalStore" }));
+export const useUiGlobalStore = create(persist(store, { name: "UIGlobalStore" }));

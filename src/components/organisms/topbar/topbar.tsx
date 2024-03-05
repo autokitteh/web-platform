@@ -4,11 +4,11 @@ import { Button, IconButton, IconSvg } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { topbarItems } from "@constants";
 import { ITopbar } from "@interfaces/components";
-import { useUIGlobalStore } from "@store";
+import { useUiGlobalStore } from "@store";
 import { cn } from "@utilities";
 
 export const Topbar = ({ name, version }: ITopbar) => {
-	const { isFullScreen, toggleFullScreen } = useUIGlobalStore();
+	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
 	const styleIconSreen = cn({ "border-transparent bg-black": isFullScreen });
 
 	return (

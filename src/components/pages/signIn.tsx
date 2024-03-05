@@ -4,13 +4,13 @@ import { IconGithub, IconGoogle } from "@assets/image/icons";
 import { Frame, Badge, Button, Icon } from "@components/atoms";
 import { SignInForm } from "@components/organisms";
 import { AuthWrapper } from "@components/templates";
-import { autokittehBenefits } from "@constants/lists";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export const SignIn = () => {
 	const { t } = useTranslation("login");
+	const benefits = Object.values(t("benefits", { returnObjects: true }));
 
 	return (
 		<AuthWrapper>
@@ -61,7 +61,7 @@ export const SignIn = () => {
 				<Frame className="w-1/2 relative flex flex-col items-center bg-gray-black-100 h-full pt-52">
 					<h2 className="font-bold text-3xl z-10 text-black">{t("whyDevelopersLove")}</h2>
 					<div className="flex flex-wrap gap-3.5 mt-8 max-w-485">
-						{autokittehBenefits.map((name, idx) => (
+						{benefits.map((name, idx) => (
 							<Badge className="bg-white px-4 py-2 font-normal text-base z-10" key={idx}>
 								{t(name)}
 							</Badge>
