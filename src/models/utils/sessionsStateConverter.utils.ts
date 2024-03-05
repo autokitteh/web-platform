@@ -2,7 +2,6 @@ import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions
 import { namespaces } from "@constants";
 import { SessionStateType } from "@enums";
 import { LoggerService } from "@services";
-import i18n from "i18next";
 
 export const sessionStateConverter = (sessionState: number): SessionStateType => {
 	if (!ProtoSessionStateType[sessionState]) {
@@ -13,7 +12,7 @@ export const sessionStateConverter = (sessionState: number): SessionStateType =>
 		const sessionStateType = ProtoSessionStateType[sessionState].toLowerCase();
 		return SessionStateType[sessionStateType as keyof typeof SessionStateType];
 	} catch (error) {
-		LoggerService.error(namespaces.sessionsHistory, `${i18n.t("errors.unexpectedError")}: ${error}`);
+		LoggerService.error(namespaces.sessionsHistory, (error as Error).message);
 		return SessionStateType.unknown;
 	}
 };
