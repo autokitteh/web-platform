@@ -16,7 +16,8 @@
 		"prepare": "husky install",
 		"tsc": "tsc",
 		"check-types": "tsc --pretty --noEmit",
-		"check-format:staged": "prettier . --check"
+		"check-format:staged": "prettier . --check",
+		"fixed-format:staged": "prettier . --write"
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.7.2",
