@@ -14,21 +14,24 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 	const mainFrameStyle = cn("rounded-l-none pb-0", { "rounded-2xl": !children });
 
 	useEffect(() => {
+		const minWidthPercent = 35;
+		const maxWidthPercent = 65;
+
 		const onKeyDown = (e: KeyboardEvent) => {
 			const adjustment = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
 			if (!adjustment) return;
 
-			setLeftWidth((prevWidth) => Math.max(20, Math.min(80, prevWidth + adjustment)));
+			setLeftWidth((prevWidth) => Math.max(minWidthPercent, Math.min(maxWidthPercent, prevWidth + adjustment)));
 		};
 
-		const startResizing = (downEvent: MouseEvent) => {
-			const startX = downEvent.clientX;
-			const startWidth = window.innerWidth * (leftWidth / 100);
+		const onResizeMouseDown = (event: MouseEvent) => {
+			if (!(event.target instanceof HTMLElement) || !event.target.classList.contains("resize-handle")) return;
 
 			const doResize = (moveEvent: MouseEvent) => {
-				const currentX = moveEvent.clientX;
-				const newWidth = Math.max(300, Math.min(startWidth + (currentX - startX), window.innerWidth - 300));
-				setLeftWidth((newWidth / window.innerWidth) * 100);
+				const deltaX = moveEvent.clientX - event.clientX;
+				const newWidthPercent = (deltaX / window.innerWidth) * 100 + leftWidth;
+
+				setLeftWidth(Math.max(minWidthPercent, Math.min(maxWidthPercent, newWidthPercent)));
 			};
 
 			const stopResizing = () => {
@@ -41,15 +44,11 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 		};
 
 		document.addEventListener("keydown", onKeyDown);
-
-		document.addEventListener("mousedown", (event) => {
-			const target = event.target as HTMLElement;
-			if (!target.classList.contains("resize-handle")) return;
-			startResizing(event);
-		});
+		document.addEventListener("mousedown", onResizeMouseDown);
 
 		return () => {
 			document.removeEventListener("keydown", onKeyDown);
+			document.removeEventListener("mousedown", onResizeMouseDown);
 		};
 	}, [leftWidth]);
 
