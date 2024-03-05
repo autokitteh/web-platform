@@ -8,14 +8,14 @@ import { cn } from "@utilities";
 
 export const SplitFrame = ({ children }: ISplitFrame) => {
 	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
-	const [leftWidth, setLeftWidth] = useState(50);
+	const [leftWidth, setLeftWidth] = useState(55);
 
 	const baseStyle = cn("flex justify-end h-full w-2/3", { "w-full": isFullScreen });
 	const mainFrameStyle = cn("rounded-l-none pb-0", { "rounded-2xl": !children });
 
 	useEffect(() => {
-		const minWidthPercent = 35;
-		const maxWidthPercent = 65;
+		const minWidthPercent = 25;
+		const maxWidthPercent = 70;
 
 		const onKeyDown = (e: KeyboardEvent) => {
 			const adjustment = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
@@ -45,7 +45,6 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 
 		document.addEventListener("keydown", onKeyDown);
 		document.addEventListener("mousedown", onResizeMouseDown);
-
 		return () => {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("mousedown", onResizeMouseDown);
@@ -68,6 +67,7 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 				) : null}
 			</div>
 			<div className="resize-handle cursor-ew-resize z-10 w-2 -ml-2" />
+			<div className="resize-handle cursor-ew-resize z-10 w-2 -mr-2" />
 			<div className="flex" style={{ width: `calc(100% - ${leftWidth}%)` }}>
 				<Frame className={mainFrameStyle}>
 					<EditorTabs />

@@ -1,6 +1,5 @@
 import React, { ReactElement } from "react";
 import { Home, SignIn, NewConnection } from "@components/pages";
-import { Home, SignIn } from "@components/pages";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 
 export const router = createBrowserRouter([

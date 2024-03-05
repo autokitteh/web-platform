@@ -7,7 +7,7 @@ export const MapMenuFrameLayout = ({ children }: PropsWithChildren) => {
 	const { isFullScreen } = useUiGlobalStore();
 
 	return (
-		<div className="flex justify-between items-center h-full">
+		<div className="flex justify-between items-center h-full gap-6">
 			<div className="max-w-485 m-auto" hidden={isFullScreen}>
 				<MapMenu />
 			</div>
