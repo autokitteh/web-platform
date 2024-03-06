@@ -23,7 +23,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		const fetchMenu = async () => {
 			const { data, error } = await ProjectsService.list();
 			if (error) {
-				setToast({ ...toast, message: (error as Error).message || "Something wrong!" });
+				setToast({ ...toast, message: (error as Error)?.message || "Something wrong!" });
 				return;
 			}
 
