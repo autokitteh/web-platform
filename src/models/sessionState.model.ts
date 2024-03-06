@@ -1,97 +1,149 @@
+import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
+import { Value } from "@ak-proto-ts/values/v1/values_pb";
 import { SessionStateType } from "@enums";
-import { ProtoSessionHistoryState } from "@type/models";
+import { LoggerService } from "@services";
+import { Callstack } from "@type/models";
+import { convertTimestampToDate } from "@utilities";
 import i18n from "i18next";
-import { get } from "lodash";
-
-class CreatedState {}
-
-class RunningState {
-	logs: string[];
-	call?: object;
-
-	constructor(prints: string[], call?: object) {
-		this.logs = prints;
-		this.call = call;
-	}
-}
-
-class ErrorState {
-	error: string;
-
-	constructor(error: string) {
-		this.error = error;
-	}
-}
-
-class CompletedState {
-	logs: string[];
-	exports: Map<string, object>;
-	returnValue: object;
-
-	constructor(prints: string[], exports: Map<string, object>, returnValue: object) {
-		this.logs = prints;
-		this.exports = exports;
-		this.returnValue = returnValue;
-	}
-}
 
 export class SessionState {
-	state: CreatedState | RunningState | ErrorState | CompletedState | undefined;
+	type: SessionStateType = SessionStateType.unknown;
+	callstackTrace: Callstack[] = [];
+	logs?: string[];
+	error?: string;
+	call?: object;
+	dateTime?: Date;
 
-	constructor(state: ProtoSessionHistoryState) {
-		const stateCase = get(state, "states.case");
-		let prints, call, exports, returnValue;
+	constructor(session: ProtoSessionLogRecord) {
+		const stateTypeMapping: Record<string, SessionStateType> = {
+			callSpec: SessionStateType.callSpec,
+			callAttemptComplete: SessionStateType.callAttemptComplete,
+			callAttemptStart: SessionStateType.callAttemptStart,
+			error: SessionStateType.error,
+			print: SessionStateType.print,
+		};
 
-		if (stateCase) {
-			switch (stateCase) {
-				case SessionStateType.created:
-					this.state = new CreatedState();
-					break;
-				case SessionStateType.running:
-					prints = get(state, "states.prints", []);
-					call = get(state, "states.call", {});
-					this.state = new RunningState(prints, call);
-					break;
-				case SessionStateType.error: {
-					const errorMessage = get(state, "states.value.error.message", i18n.t("errors.unexpectedError"));
-					this.state = new ErrorState(errorMessage);
-					break;
-				}
-				case SessionStateType.completed:
-					prints = get(state, "states.value.prints", []);
-					exports = get(state, "states.value.exports", new Map());
-					returnValue = get(state, "states.value.returnValue", {});
-					this.state = new CompletedState(prints, exports, returnValue);
-					break;
-				default:
-					this.state = new ErrorState(i18n.t("errors.unexpectedSessionStateType"));
-			}
+		const state = session.state ?? session;
+
+		if (!session) {
+			LoggerService.error(
+				"SessionState",
+				i18n.t("errors.unexpectedSessionStateType", { error: "Session doesn't exist" })
+			);
 			return;
 		}
-		this.state = new ErrorState(i18n.t("errors.missingSessionStateType"));
+
+		const sessionState = Object.keys(stateTypeMapping).find((key) => key in state) ?? Object.keys(state)[0];
+
+		const unhandledSessionStates = ["created", "running", "error", "completed"];
+
+		switch (sessionState) {
+			case SessionStateType.callAttemptStart:
+				this.type = SessionStateType.callAttemptStart;
+				this.dateTime = convertTimestampToDate(session[SessionStateType.callAttemptStart]?.startedAt);
+				break;
+			case SessionStateType.callAttemptComplete:
+				this.handleCallAttemptComplete(session);
+				break;
+			case SessionStateType.callSpec:
+				this.handleFuncCall(session);
+				break;
+			case SessionStateType.print:
+				this.type = SessionStateType.print;
+				this.logs = [`${i18n.t("sessions.historyPrint")}: ${session.print}`];
+				break;
+			default:
+				if (!unhandledSessionStates.includes(sessionState)) {
+					throw new Error(
+						i18n.t("errors.unexpectedSessionStateType", { error: "Session history state type doesn't exist" })
+					);
+				}
+				this.handleDefaultCase(session);
+		}
+
+		if (this.dateTime === undefined) {
+			this.setDateTime(session);
+		}
+		this.setErrorAndCallstack(session);
+	}
+
+	private handleDefaultCase(session: ProtoSessionLogRecord) {
+		const stateCase = Object.keys(session.state || {})[0] as SessionStateType;
+		if (!stateCase || !(stateCase in SessionStateType)) {
+			this.type = SessionStateType.unknown;
+		} else if (stateCase) {
+			this.type = stateCase as SessionStateType;
+			this.logs = session.print ? [session.print] : [];
+		}
+	}
+
+	private handleCallAttemptComplete(session: ProtoSessionLogRecord) {
+		this.type = SessionStateType.callAttemptComplete;
+		let functionResponse = session[this.type]?.result?.value?.struct?.fields?.body?.string?.v || "";
+		const functionName = session[this.type]?.result?.value?.struct?.ctor?.string?.v || "";
+		if (functionName === "time") {
+			functionResponse = convertTimestampToDate(functionResponse).toISOString();
+		}
+		if (functionName === "" && functionResponse === "") {
+			this.logs = [];
+			return;
+		}
+		this.logs = [`${i18n.t("sessions.historyResult")}: ${functionName} - ${functionResponse}`];
+	}
+
+	private handleFuncCall(session: ProtoSessionLogRecord) {
+		this.type = SessionStateType.callSpec;
+
+		const functionName = session[this.type]?.function?.function?.name || "";
+		const args = (session[this.type]?.args || [])
+			.map((arg: Value) => arg.string?.v)
+			.join(", ")
+			.replace(/, ([^,]*)$/, "");
+		this.logs = [`${i18n.t("sessions.historyFunction")}: ${functionName}(${args})`];
+	}
+
+	private setDateTime(session: ProtoSessionLogRecord) {
+		try {
+			this.dateTime = convertTimestampToDate(session.t);
+		} catch (error) {
+			LoggerService.error("SessionState", (error as Error).message);
+		}
+	}
+
+	private setErrorAndCallstack(session: ProtoSessionLogRecord) {
+		this.error = session?.state?.error?.error?.message || i18n.t("errors.sessionLogMissingOnErrorType");
+		this.callstackTrace = (session?.state?.error?.error?.callstack || []) as Callstack[];
 	}
 
 	getError(): string {
-		if (this.state instanceof ErrorState) {
-			return this.state.error;
-		}
-		return i18n.t("errors.unexpectedError");
+		return this.error!;
 	}
 
-	isError(): this is { state: ErrorState } {
-		return this.state instanceof ErrorState;
+	getCallstack(): Callstack[] {
+		return this.callstackTrace;
+	}
+
+	isError(): boolean {
+		return this.type === SessionStateType.error;
+	}
+
+	isRunning(): boolean {
+		return this.type === SessionStateType.running;
+	}
+
+	isPrint(): boolean {
+		return this.type === SessionStateType.print;
+	}
+
+	isFinished(): boolean {
+		return this.type === SessionStateType.error || this.type === SessionStateType.completed;
 	}
 
 	containLogs(): boolean {
-		return (this.state instanceof RunningState || this.state instanceof CompletedState) && this.state.logs.length > 0;
+		return !!(this.logs && this.logs.length);
 	}
 
 	getLogs(): string[] {
-		if (this.containLogs()) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			//@ts-expect-error
-			return this.state.logs;
-		}
-		return [];
+		return this.logs || [];
 	}
 }
