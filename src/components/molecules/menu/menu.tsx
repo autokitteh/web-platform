@@ -9,8 +9,10 @@ import { ProjectsService } from "@services";
 import { useMenuStore } from "@store";
 import { cn } from "@utilities";
 import { isEqual } from "lodash";
+import { useTranslation } from "react-i18next";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
+	const { t } = useTranslation("errors");
 	const { lastMenuUpdate } = useMenuStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
@@ -23,10 +25,9 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		const fetchMenu = async () => {
 			const { data, error } = await ProjectsService.list();
 			if (error) {
-				setToast({ ...toast, message: (error as Error)?.message || "Something wrong!" });
+				setToast({ ...toast, message: (error as Error).message || t("somethingWrong") });
 				return;
 			}
-
 			const updatedSubmenu = data?.map(({ projectId, name }) => ({
 				id: projectId,
 				name,
