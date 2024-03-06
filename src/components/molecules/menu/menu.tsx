@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { NewProject } from "@assets/image";
-import { Button, Icon, Toast, Input } from "@components/atoms";
+import { Button, IconSvg, Toast, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { menuItems } from "@constants";
 import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { IMenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
-import { useUiGlobalStore } from "@store";
+import { useMenuStore } from "@store";
 import { cn } from "@utilities";
 import { isEqual } from "lodash";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
-	const { lastMenuUpdate } = useUiGlobalStore();
+	const { lastMenuUpdate } = useMenuStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -22,7 +22,10 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	useEffect(() => {
 		const fetchMenu = async () => {
 			const { data, error } = await ProjectsService.list();
-			if (error) return setToast({ ...toast, message: (error as Error).message || "Something wrong!" });
+			if (error) {
+				setToast({ ...toast, message: (error as Error).message || "Something wrong!" });
+				return;
+			}
 
 			const updatedSubmenu = data?.map(({ projectId, name }) => ({
 				id: projectId,
@@ -51,14 +54,14 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 			<div className={cn(className, "flex flex-col gap-4")}>
 				<div onMouseEnter={(e) => handleMouseEnter(undefined, e)}>
 					<Button className="hover:bg-green-light" onClick={toggleModal}>
-						<Icon alt="New Project" className="w-8 h-8 p-1 " src={NewProject} />
+						<IconSvg alt="New Project" className="w-8 h-8 p-1 " src={NewProject} />
 						{isOpen ? "New Project" : null}
 					</Button>
 				</div>
 				{menu.map(({ icon, name, href, submenu, id }) => (
 					<div key={id} onMouseEnter={(e) => handleMouseEnter(submenu, e)}>
 						<Button className="hover:bg-green-light" href={href}>
-							{icon ? <Icon alt={name} className="w-8 h-8 p-1 " src={icon} /> : null}
+							{icon ? <IconSvg alt={name} className="w-8 h-8 p-1 " src={icon} /> : null}
 							{isOpen ? name : null}
 						</Button>
 					</div>
