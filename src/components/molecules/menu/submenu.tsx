@@ -12,7 +12,7 @@ export const Submenu = ({ submenuInfo }: ISubmenu) => {
 	return (
 		<motion.div
 			animate="visible"
-			className="w-auto h-screen bg-gray-200 border-l border-r border-gray-300 mr-2.5 z-1"
+			className="w-auto h-screen overflow-auto px-2 bg-gray-200 border-l border-r border-gray-300 mr-2.5 z-1 scrollbar"
 			exit="hidden"
 			initial="hidden"
 			style={{ paddingTop: submenuInfo.top }}
