@@ -4,6 +4,7 @@ import { IconButton } from "@components/atoms";
 import { IModal } from "@interfaces/components";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 
 const backdropVariants = {
 	hidden: { opacity: 0, transition: { duration: 0.2 } },
@@ -22,7 +23,7 @@ export const Modal = ({ className, isOpen, children, onClose }: IModal) => {
 
 	const bgClass = cn("absolute w-full h-full top-0 left-0 bg-gray-black/50 -z-10");
 
-	return (
+	return createPortal(
 		<AnimatePresence>
 			{isOpen ? (
 				<div className={wrapperClass}>
@@ -48,6 +49,7 @@ export const Modal = ({ className, isOpen, children, onClose }: IModal) => {
 					</motion.div>
 				</div>
 			) : null}
-		</AnimatePresence>
+		</AnimatePresence>,
+		document.body
 	);
 };

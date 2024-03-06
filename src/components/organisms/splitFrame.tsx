@@ -16,7 +16,7 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 			{children ? (
 				<Frame className="rounded-r-none w-1/2 border-r border-gray-600 bg-gray-800">
 					<IconButton
-						className="hover:scale-125 absolute -left-5 top-1/2 -translate-y-1/2 z-50 bg-black"
+						className="hover:scale-125 absolute -left-5 top-1/2 -translate-y-1/2 z-10 bg-black"
 						onClick={toggleFullScreen}
 					>
 						<Minimize />
