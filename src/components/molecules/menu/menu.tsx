@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NewProject } from "@assets/image";
-import { Button, IconSvg, Toast, Input } from "@components/atoms";
-import { Modal } from "@components/molecules";
+import { Button, IconSvg, Toast } from "@components/atoms";
 import { menuItems } from "@constants";
 import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { IMenuItem } from "@interfaces/components";
@@ -19,7 +18,6 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		isOpen: false,
 		message: "",
 	});
-	const [isModal, setIsModal] = useState(false);
 
 	useEffect(() => {
 		const fetchMenu = async () => {
@@ -48,13 +46,12 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		onSubmenu?.({ submenu: submenu || undefined, top: e.currentTarget.getBoundingClientRect().top + 5 });
 	};
 	const handleCloseToast = () => setToast({ ...toast, isOpen: false });
-	const toggleModal = () => setIsModal(!isModal);
 
 	return (
 		<>
 			<div className={cn(className, "flex flex-col gap-4")}>
 				<div onMouseEnter={(e) => handleMouseEnter(undefined, e)}>
-					<Button className="hover:bg-green-light" onClick={toggleModal}>
+					<Button className="hover:bg-green-light">
 						<IconSvg alt="New Project" className="w-8 h-8 p-1 " src={NewProject} />
 						{isOpen ? "New Project" : null}
 					</Button>
@@ -68,22 +65,6 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 					</div>
 				))}
 			</div>
-			<Modal isOpen={isModal} onClose={toggleModal}>
-				<div className="mx-6">
-					<h3 className="text-xl font-bold mb-5">Add New</h3>
-					<form>
-						<Input
-							classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
-							className="bg-white border-gray-400 hover:border-gray-700"
-							isRequired
-							placeholder="Name"
-						/>
-						<Button className="font-bold justify-center mt-2 rounded-lg py-2.5" variant="filled">
-							Create
-						</Button>
-					</form>
-				</div>
-			</Modal>
 			<Toast className="border-error" duration={10} isOpen={toast.isOpen} onClose={handleCloseToast}>
 				<h5 className="font-semibold">Error</h5>
 				<p className="mt-1 text-xs">{toast.message}</p>

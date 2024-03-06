@@ -37,7 +37,7 @@ export const Sidebar = () => {
 					</Button>
 				</div>
 			</div>
-			{submenuInfo.submenu ? <Submenu submenuInfo={submenuInfo} /> : null}
+			{submenuInfo.submenu && submenuInfo.submenu.length > 0 ? <Submenu submenuInfo={submenuInfo} /> : null}
 		</div>
 	);
 };

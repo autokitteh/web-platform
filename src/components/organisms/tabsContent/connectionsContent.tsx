@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { PlusCircle, ThreeDots, Info, TestS } from "@assets/image";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
-import { SortButton, Modal, DropdownButton, TableConnectionInfo, TableConnectionAction } from "@components/molecules";
+import { SortButton, DropdownButton, TableConnectionInfo, TableConnectionAction } from "@components/molecules";
+import { ModalDeleteConnection } from "@components/organisms/modals";
 import { connectionsData } from "@constants/lists";
 import { ESortDirection } from "@enums/components";
 import { IConnectionsContent, ITabConnection } from "@interfaces/components";
+import { useModalStore } from "@store";
 import { TSortDirection } from "@type/components";
 import { cn } from "@utilities";
 import { orderBy } from "lodash";
 import moment from "moment";
 
 export const ConnectionsContent = ({ className }: IConnectionsContent) => {
-	const [isModal, setIsModal] = useState(false);
+	const { openModal } = useModalStore();
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
 		column: Exclude<keyof ITabConnection, "id">;
@@ -19,8 +21,6 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 	const [connections, setConnections] = useState(connectionsData);
 
 	const baseStyle = cn("pt-14", className);
-
-	const toggleModal = () => setIsModal(!isModal);
 
 	const toggleSortConnections = (key: Exclude<keyof ITabConnection, "id">) => {
 		const newDirection =
@@ -111,7 +111,7 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 							<Td className="max-w-9 border-0 pr-1 justify-end">
 								<DropdownButton
 									className="flex-col gap-1"
-									contentMenu={<TableConnectionAction onDelete={toggleModal} />}
+									contentMenu={<TableConnectionAction onDelete={() => openModal("deleteConnection")} />}
 								>
 									<IconButton className="w-6 h-6 p-1  hover:bg-gray-700">
 										<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
@@ -122,28 +122,7 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 					))}
 				</TBody>
 			</Table>
-			<Modal isOpen={isModal} onClose={toggleModal}>
-				<div className="mx-6">
-					<h3 className="text-xl font-bold mb-5">Delete Connection</h3>
-					<p>
-						This connection you are about to delete is used in <br />
-						<strong>3 projects, 2 of them are currently running.</strong>
-					</p>
-					<br />
-					<p>
-						Deleting the connection may cause failure of projects. <br /> Are you sure you want to delete this
-						connection?
-					</p>
-				</div>
-				<div className="flex justify-end gap-1 mt-14">
-					<Button className="font-semibold py-3 px-4 hover:text-white w-auto" onClick={toggleModal}>
-						Cancel
-					</Button>
-					<Button className="font-semibold py-3 px-4 bg-gray-700 w-auto" onClick={toggleModal} variant="filled">
-						Yes, delete
-					</Button>
-				</div>
-			</Modal>
+			<ModalDeleteConnection />
 		</div>
 	);
 };
