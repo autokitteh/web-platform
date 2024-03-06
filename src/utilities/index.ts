@@ -4,3 +4,4 @@ export { ValidateURL } from "@utilities/validateUrl.utils";
 export { convertTimestampToDate } from "@utilities/convertTimestampToDate.utils";
 export { sortArray } from "@utilities/sortArray.utils";
 export { cn } from "@utilities/cn.utils";
+export { shouldUpdateCache } from "@utilities/shouldUpdateCache.utils";
