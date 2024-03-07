@@ -15,7 +15,7 @@ export interface IMenu {
 
 export interface IMenuItem {
 	id: number;
-	icon: string;
+	icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 	name: string;
 	href?: string;
 	submenu?: ISubmenuInfo["submenu"];
