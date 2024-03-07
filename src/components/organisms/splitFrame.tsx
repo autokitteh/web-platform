@@ -8,7 +8,7 @@ import { cn } from "@utilities";
 
 export const SplitFrame = ({ children }: ISplitFrame) => {
 	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
-	const [leftWidth, setLeftWidth] = useState(55);
+	const [leftWidth, setLeftWidth] = useState(50);
 
 	const baseStyle = cn("flex justify-end h-full w-2/3", { "w-full": isFullScreen });
 	const mainFrameStyle = cn("rounded-l-none pb-0", { "rounded-2xl": !children });

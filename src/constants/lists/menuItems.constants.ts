@@ -1,13 +1,7 @@
-import { Connections, Dashboard, NewProject, Projects, Settings, StatsBlack } from "@assets/image";
+import { Connections, Dashboard, Projects, Settings, StatsBlack } from "@assets/image";
 import { IMenuItem } from "@interfaces/components";
 
 export const menuItems: IMenuItem[] = [
-	{
-		id: 0,
-		icon: NewProject,
-		name: "New Project",
-		href: "/app/new",
-	},
 	{
 		id: 1,
 		icon: Projects,
