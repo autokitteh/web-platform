@@ -8,7 +8,7 @@ export type {
 export type { IBadge } from "@interfaces/components/badge.interface";
 export type { IFrame, ISplitFrame } from "@interfaces/components/frame.interface";
 export type { ILink } from "@interfaces/components/link.interface";
-export type { ISubmenuInfo, ISubmenu, IMenu } from "@interfaces/components/menu.interface";
+export type { ISubmenuInfo, ISubmenu, IMenu, IMenuItem } from "@interfaces/components/menu.interface";
 export type { IConnectionsContent, ITabConnection } from "@interfaces/components/tabsContent.interface";
 export type { ITopbar } from "@interfaces/components/topbar.interface";
 export type { ITab, ITabList, ITabs, ITabsContext } from "@interfaces/components/tabs.interface";
