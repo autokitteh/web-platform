@@ -51,7 +51,7 @@ export const EditorTabs = () => {
 					theme="vs-dark"
 				/>
 			</TabPanel>
-			<TabPanel className="pt-10 -ml-7" value="code">
+			<TabPanel className="pt-10  -ml-7" value="code">
 				<Editor
 					beforeMount={handleEditorWillMount}
 					defaultValue={codeContent}
