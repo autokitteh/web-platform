@@ -1,0 +1,11 @@
+{
+	"connection": {
+		"title": "Delete Connection",
+		"desc": "This connection you are about to delete is used in",
+		"desc2": "{{projects}} projects, {{running}} of them are currently running.",
+		"desc3": "Deleting the connection may cause failure of projects.",
+		"desc4": "Are you sure you want to delete this connection?",
+		"cancel": "Cancel",
+		"delete": "Yes, delete"
+	}
+}

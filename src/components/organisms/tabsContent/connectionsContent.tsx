@@ -4,7 +4,7 @@ import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components
 import { SortButton, DropdownButton, TableConnectionInfo, TableConnectionAction } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
 import { connectionsData } from "@constants/lists";
-import { ESortDirection } from "@enums/components";
+import { EModalName, ESortDirection } from "@enums/components";
 import { IConnectionsContent, ITabConnection } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { TSortDirection } from "@type/components";
@@ -111,7 +111,7 @@ export const ConnectionsContent = ({ className }: IConnectionsContent) => {
 							<Td className="max-w-10 border-0 pr-1.5 justify-end">
 								<DropdownButton
 									className="flex-col gap-1"
-									contentMenu={<TableConnectionAction onDelete={() => openModal("deleteConnection")} />}
+									contentMenu={<TableConnectionAction onDelete={() => openModal(EModalName.deleteConnection)} />}
 								>
 									<IconButton className="w-6 h-6 p-1  hover:bg-gray-700">
 										<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />

@@ -31,11 +31,6 @@ export const menuItems: IMenuItem[] = [
 				href: "/app",
 			},
 			{
-				id: 2,
-				name: "New Project",
-				href: "/app",
-			},
-			{
 				id: 3,
 				name: "AK Pagerduty",
 				href: "/app",

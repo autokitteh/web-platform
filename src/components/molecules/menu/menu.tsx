@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NewProject } from "@assets/image";
 import { Button, IconSvg, Toast } from "@components/atoms";
-import { menuItems } from "@constants";
+import { menuItems, fetchMenuInterval } from "@constants";
 import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { IMenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
@@ -11,7 +11,7 @@ import { isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
-	const { t } = useTranslation("errors");
+	const { t } = useTranslation("menu");
 	const { lastMenuUpdate } = useMenuStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
@@ -23,7 +23,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		const fetchMenu = async () => {
 			const { data, error } = await ProjectsService.list();
 			if (error) {
-				setToast({ ...toast, message: (error as Error).message || t("somethingWrong") });
+				setToast({ ...toast, message: (error as Error).message });
 				return;
 			}
 			const updatedSubmenu = data?.map(({ projectId, name }) => ({
@@ -38,26 +38,26 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 
 		fetchMenu();
 
-		const intervalMenu = setInterval(fetchMenu, 60000);
+		const intervalMenu = setInterval(fetchMenu, fetchMenuInterval);
 		return () => clearInterval(intervalMenu);
 	}, [lastMenuUpdate]);
 
-	const handleMouseEnter = (submenu: ISubmenuInfo["submenu"], e: React.MouseEvent) => {
-		onSubmenu?.({ submenu: submenu || undefined, top: e.currentTarget.getBoundingClientRect().top + 5 });
+	const handleMouseEnter = (e: React.MouseEvent, submenu?: ISubmenuInfo["submenu"]) => {
+		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
 	};
 	const handleCloseToast = () => setToast({ ...toast, isOpen: false });
 
 	return (
 		<>
 			<div className={cn(className, "flex flex-col gap-4")}>
-				<div onMouseEnter={(e) => handleMouseEnter(undefined, e)}>
+				<div onMouseEnter={(e) => handleMouseEnter(e)}>
 					<Button className="hover:bg-green-light">
-						<IconSvg alt="New Project" className="w-8 h-8 p-1 " src={NewProject} />
-						{isOpen ? "New Project" : null}
+						<IconSvg alt={t("newProject")} className="w-8 h-8 p-1 " src={NewProject} />
+						{isOpen ? t("newProject") : null}
 					</Button>
 				</div>
 				{menu.map(({ icon, name, href, submenu, id }) => (
-					<div key={id} onMouseEnter={(e) => handleMouseEnter(submenu, e)}>
+					<div key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
 						<Button className="hover:bg-green-light" href={href}>
 							{icon ? <IconSvg alt={name} className="w-8 h-8 p-1 " src={icon} /> : null}
 							{isOpen ? name : null}

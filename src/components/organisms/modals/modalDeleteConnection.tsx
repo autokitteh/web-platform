@@ -1,31 +1,35 @@
 import React from "react";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
+import { EModalName } from "@enums/components";
 import { useModalStore } from "@store";
+import { useTranslation } from "react-i18next";
 
 export const ModalDeleteConnection = () => {
+	const { t } = useTranslation("modals", { keyPrefix: "connection" });
 	const { closeModal } = useModalStore();
-	const handleCloseModal = () => closeModal("deleteConnection");
+	const handleCloseModal = () => closeModal(EModalName.deleteConnection);
 
 	return (
-		<Modal name="deleteConnection">
+		<Modal name={EModalName.deleteConnection}>
 			<div className="mx-6">
-				<h3 className="text-xl font-bold mb-5">Delete Connection</h3>
+				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
 				<p>
-					This connection you are about to delete is used in <br />
-					<strong>3 projects, 2 of them are currently running.</strong>
+					{t("desc")}
+					<br />
+					<strong> {t("desc2", { projects: 3, running: 2 })}</strong>
 				</p>
 				<br />
 				<p>
-					Deleting the connection may cause failure of projects. <br /> Are you sure you want to delete this connection?
+					{t("desc3")} <br /> {t("desc4")}
 				</p>
 			</div>
 			<div className="flex justify-end gap-1 mt-14">
 				<Button className="font-semibold py-3 px-4 hover:text-white w-auto" onClick={handleCloseModal}>
-					Cancel
+					{t("cancel")}
 				</Button>
 				<Button className="font-semibold py-3 px-4 bg-gray-700 w-auto" onClick={handleCloseModal} variant="filled">
-					Yes, delete
+					{t("delete")}
 				</Button>
 			</div>
 		</Modal>
