@@ -1,21 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FullScreen, More } from "@assets/image";
 import { Button, IconButton, IconSvg } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { topbarItems } from "@constants";
-import { ITopbar } from "@interfaces/components";
-import { useUiGlobalStore } from "@store";
+import { ProjectsService } from "@services";
+import { useUiGlobalStore, useMenuStore } from "@store";
+import { Project } from "@type/models";
 import { cn } from "@utilities";
 
-export const Topbar = ({ name, version }: ITopbar) => {
+export const Topbar = () => {
+	const { newProjectId } = useMenuStore();
 	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
+	const [project, setProject] = useState<Project>({
+		name: "Slack Monitor",
+		projectId: "Version 454462",
+	});
+
 	const styleIconSreen = cn({ "border-transparent bg-black": isFullScreen });
+
+	useEffect(() => {
+		if (!newProjectId) return;
+		const fetchProject = async () => {
+			const { data } = await ProjectsService.get(newProjectId);
+			data && setProject(data);
+		};
+		fetchProject();
+	}, [newProjectId]);
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.target instanceof HTMLInputElement) {
+			setProject({ ...project, name: e.target.value });
+		}
+
+		if (e.type === "blur") return;
+
+		if (e.type === "keydown" && (e as React.KeyboardEvent<HTMLInputElement>).key === "Enter") {
+			(e.target as HTMLInputElement).blur();
+		}
+	};
 
 	return (
 		<div className="flex justify-between items-center bg-gray-700 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
 			<div className="flex items-end gap-3">
-				<span className="font-semibold text-2xl leading-6">{name}</span>
-				<span className="font-semibold text-gray-300 leading-none">{version}</span>
+				<input
+					className="font-semibold p-0 text-2xl leading-6 bg-transparent"
+					onBlur={handleInputChange}
+					onChange={handleInputChange}
+					onKeyDown={handleInputChange}
+					title="Rename"
+					type="text"
+					value={project.name}
+				/>
+
+				<span className="font-semibold text-gray-300 leading-none">{project.projectId}</span>
 			</div>
 			<div className="flex items-stretch gap-3">
 				{topbarItems.map(({ id, name, href, icon, disabled }) => (

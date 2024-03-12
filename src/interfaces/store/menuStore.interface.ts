@@ -1,4 +1,4 @@
 export interface IMenuStore {
-	lastMenuUpdate?: number;
-	updateLastMenuTime: (newTime: number) => void;
+	newProjectId: string | undefined;
+	updateNewProjectId: (id: string) => void;
 }
