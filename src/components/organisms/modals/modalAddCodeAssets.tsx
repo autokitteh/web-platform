@@ -1,38 +1,32 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useModalStore, useCodeAssetsStore } from "@store";
+import { IModalAddCodeAssets } from "@interfaces/components";
+import { ProjectsService } from "@services";
+import { useModalStore } from "@store";
 import { codeAssetsSchema } from "@validations";
 import { useForm, FieldValues } from "react-hook-form";
 
-interface IModalAddCodeAssets {
-	file: File | undefined;
-}
-
-export const ModalAddCodeAssets = ({ file }: IModalAddCodeAssets) => {
+export const ModalAddCodeAssets = ({ onError, projectId }: IModalAddCodeAssets) => {
 	const { closeModal } = useModalStore();
-	const { setCodeAsset } = useCodeAssetsStore();
 
 	const {
 		register,
 		handleSubmit,
-		setValue,
 		formState: { errors },
 	} = useForm({
 		resolver: zodResolver(codeAssetsSchema),
 	});
 
-	const onSubmit = (data: FieldValues) => {
-		if (!file) return;
-
-		const newName = `${data.name}.${file?.name.split(".").pop()}`;
-		const updatedFile = new File([file], newName, { type: file.type });
-		setCodeAsset(updatedFile);
+	const onSubmit = async (data: FieldValues) => {
+		const { error } = await ProjectsService.setResources(projectId, { [data.name]: new Uint8Array() });
 		closeModal("addCodeAssets");
+		if (error) {
+			onError?.((error as Error).message);
+			return;
+		}
 	};
-
-	useEffect(() => setValue("name", file?.name.split(".").slice(0, -1).join(".")), [file]);
 
 	return (
 		<Modal name="addCodeAssets">
