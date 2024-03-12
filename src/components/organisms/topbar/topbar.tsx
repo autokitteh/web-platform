@@ -43,8 +43,8 @@ export const Topbar = () => {
 
 		if ((e as React.KeyboardEvent<HTMLSpanElement>).key === "Enter") {
 			(e.target as HTMLSpanElement).blur();
+			setIsNameValid(validateName(newName));
 		}
-		setIsNameValid(validateName(newName));
 
 		if (e.type === "blur") {
 			setIsNameValid(validateName(newName));
