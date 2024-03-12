@@ -10,9 +10,9 @@ export const Input = forwardRef<HTMLInputElement, IInput>((props, ref) => {
 	const baseStyle = cn(
 		"flex items-center pr-2.5 text-base bg-black border border-gray-500",
 		"rounded-lg overflow-hidden transition focus:border-white hover:border-white",
-		{ "border-error": isError },
 		{ "pointer-events-none select-none": disabled },
-		className
+		className,
+		{ "border-error": isError }
 	);
 
 	const inputStyle = cn(
