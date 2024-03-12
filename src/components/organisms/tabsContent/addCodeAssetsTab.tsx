@@ -20,15 +20,6 @@ export const AddCodeAssetsTab = () => {
 		"stroke-green-accent": isDragOver,
 	});
 
-	const checkFileExtension = (file?: File): boolean => {
-		if (!file) return false;
-
-		const isValid = file.name.toLowerCase().endsWith(".py");
-		if (!isValid) alert("Please select a file with the .py extension");
-
-		return isValid;
-	};
-
 	const handleDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
 		setIsDragOver(true);
@@ -48,8 +39,6 @@ export const AddCodeAssetsTab = () => {
 	};
 
 	const handleFileUpload = async (file: File) => {
-		if (!checkFileExtension(file)) return;
-
 		const fileContent = await readFileAsUint8Array(file);
 		const { error } = await ProjectsService.setResources(projectId as string, {
 			[file.name]: fileContent,
@@ -92,7 +81,7 @@ export const AddCodeAssetsTab = () => {
 			>
 				<div className="flex flex-col items-center gap-2.5">
 					<label className="group flex flex-col items-center gap-2.5 cursor-pointer">
-						<input accept=".py" className="hidden" onChange={handleFileSelect} type="file" />
+						<input accept=".py" className="hidden" multiple onChange={handleFileSelect} type="file" />
 						<PlusCircle className={styleCircle} />
 						<p className="text-center text-lg font-bold uppercase text-white">Add Code & Assets</p>
 					</label>
