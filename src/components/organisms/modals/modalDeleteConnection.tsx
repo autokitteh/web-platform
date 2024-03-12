@@ -6,7 +6,7 @@ import { useModalStore } from "@store";
 import { useTranslation } from "react-i18next";
 
 export const ModalDeleteConnection = () => {
-	const { t } = useTranslation("modals", { keyPrefix: "connection" });
+	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });
 	const { closeModal } = useModalStore();
 	const handleCloseModal = () => closeModal(EModalName.deleteConnection);
 
@@ -15,21 +15,21 @@ export const ModalDeleteConnection = () => {
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
 				<p>
-					{t("desc")}
+					{t("line")}
 					<br />
-					<strong> {t("desc2", { projects: 3, running: 2 })}</strong>
+					<strong> {t("line2", { projects: 3, running: 2 })}</strong>
 				</p>
 				<br />
 				<p>
-					{t("desc3")} <br /> {t("desc4")}
+					{t("line3")} <br /> {t("line4")}
 				</p>
 			</div>
 			<div className="flex justify-end gap-1 mt-14">
 				<Button className="font-semibold py-3 px-4 hover:text-white w-auto" onClick={handleCloseModal}>
-					{t("cancel")}
+					{t("cancelButton")}
 				</Button>
 				<Button className="font-semibold py-3 px-4 bg-gray-700 w-auto" onClick={handleCloseModal} variant="filled">
-					{t("delete")}
+					{t("deleteButton")}
 				</Button>
 			</div>
 		</Modal>
