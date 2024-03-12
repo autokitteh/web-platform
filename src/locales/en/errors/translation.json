@@ -3,5 +3,5 @@
 	"projectNotFound": "Couldn't fetch the project details",
 	"unexpectedSessionStateType": "Unexpected session state type",
 	"missingSessionStateType": "Missing session state type",
-	"somethingWrong": "Something wrong!"
+	"nameRequired": "Name is required"
 }

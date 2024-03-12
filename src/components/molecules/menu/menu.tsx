@@ -8,11 +8,8 @@ import { ProjectsService } from "@services";
 import { useMenuStore } from "@store";
 import { cn } from "@utilities";
 import { isEqual } from "lodash";
-import moment from "moment";
-import { useTranslation } from "react-i18next";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
-	const { t } = useTranslation("errors");
 	const { newProjectId, updateNewProjectId } = useMenuStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
@@ -21,11 +18,10 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	});
 
 	const createProject = async () => {
-		const currentDate = moment().utc().format("YYYY-MM-DD-HHmmss");
-		const { data, error } = await ProjectsService.create(currentDate);
+		const { data, error } = await ProjectsService.create("");
 
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message || t("somethingWrong") });
+			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
 		if (data) updateNewProjectId(data);
@@ -35,7 +31,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		const fetchMenu = async () => {
 			const { data, error } = await ProjectsService.list();
 			if (error) {
-				setToast({ isOpen: true, message: (error as Error).message || t("somethingWrong") });
+				setToast({ isOpen: true, message: (error as Error).message });
 				return;
 			}
 			const updatedSubmenu = data?.map(({ projectId, name }) => ({

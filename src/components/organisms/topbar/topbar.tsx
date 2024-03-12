@@ -7,8 +7,10 @@ import { ProjectsService } from "@services";
 import { useUiGlobalStore, useMenuStore } from "@store";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
+import { useTranslation } from "react-i18next";
 
 export const Topbar = () => {
+	const { t } = useTranslation(["shared", "errors"]);
 	const { newProjectId } = useMenuStore();
 	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
 	const [project, setProject] = useState<Project>({
@@ -32,20 +34,27 @@ export const Topbar = () => {
 		fetchProject();
 	}, [newProjectId]);
 
+	const validateName = (name: string): boolean => {
+		const nameLength = name.trim().length;
+		return nameLength > 0;
+	};
+
 	const handleInputChange = (e: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => {
-		const nameLength = (e.target as HTMLSpanElement).textContent?.trim().length || 0;
+		const newName = (e.target as HTMLSpanElement).textContent?.trim() || "";
+
 		if ((e as React.KeyboardEvent<HTMLSpanElement>).key === "Enter") {
 			(e.target as HTMLSpanElement).blur();
 		}
+		setIsNameValid(validateName(newName));
 
-		if (e.type === "blur" && nameLength > 0) {
-			setIsNameValid(true);
+		if (e.type === "blur") {
+			setIsNameValid(validateName(newName));
 		}
 	};
 
 	const handleInput = (e: React.ChangeEvent<HTMLSpanElement>) => {
-		const nameLength = e.target.textContent?.trim().length || 0;
-		setIsNameValid(nameLength > 0);
+		const newName = e.target.textContent?.trim() || "";
+		setIsNameValid(validateName(newName));
 	};
 
 	return (
@@ -61,11 +70,13 @@ export const Topbar = () => {
 					role="textbox"
 					suppressContentEditableWarning={true}
 					tabIndex={0}
-					title="Rename"
+					title={t("rename")}
 				>
 					{project.name}
 				</span>
-				<ErrorMessage className="-bottom-5 text-xs">{!isNameValid ? "Name is required" : null}</ErrorMessage>
+				<ErrorMessage className="-bottom-5 text-xs">
+					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
+				</ErrorMessage>
 				<span className="font-semibold text-gray-300 leading-none">{project.projectId}</span>
 			</div>
 			<div className="flex items-stretch gap-3">
@@ -102,7 +113,7 @@ export const Topbar = () => {
 				>
 					<Button className="h-full text-white px-4" variant="outline">
 						<More />
-						More
+						{t("more")}
 					</Button>
 				</DropdownButton>
 				<IconButton className={styleIconSreen} onClick={toggleFullScreen} variant="outline">
