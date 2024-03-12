@@ -1,4 +1,5 @@
 export interface IMenuStore {
-	newProjectId: string | undefined;
-	updateNewProjectId: (id: string) => void;
+	projectId?: string;
+	projectUpdateCount: number;
+	updateProject: (id: string) => void;
 }

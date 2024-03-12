@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FullScreen, More } from "@assets/image";
-import { Button, ErrorMessage, IconButton, IconSvg } from "@components/atoms";
+import { Button, ErrorMessage, IconButton, IconSvg, Toast } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { topbarItems } from "@constants";
 import { ProjectsService } from "@services";
@@ -11,13 +11,17 @@ import { useTranslation } from "react-i18next";
 
 export const Topbar = () => {
 	const { t } = useTranslation(["shared", "errors"]);
-	const { newProjectId } = useMenuStore();
+	const { projectId, updateProject } = useMenuStore();
 	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
 	const [project, setProject] = useState<Project>({
 		name: "Slack Monitor",
 		projectId: "Version 454462",
 	});
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
+	const [toast, setToast] = useState({
+		isOpen: false,
+		message: "",
+	});
 
 	const styleIconSreen = cn({ "border-transparent bg-black": isFullScreen });
 	const styleInput = cn("font-semibold p-0 text-2xl leading-6 bg-transparent min-w-3 outline outline-0 rounded", {
@@ -25,29 +29,36 @@ export const Topbar = () => {
 	});
 
 	useEffect(() => {
-		if (!newProjectId) return;
+		if (!projectId) return;
 		const fetchProject = async () => {
-			const { data } = await ProjectsService.get(newProjectId);
+			const { data } = await ProjectsService.get(projectId);
 			data && setProject(data);
 		};
 		fetchProject();
-	}, [newProjectId]);
+	}, [projectId]);
 
 	const validateName = (name: string): boolean => {
 		const nameLength = name.trim().length;
 		return nameLength > 0;
 	};
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => {
+	const handleInputChange = async (e: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => {
 		const newName = (e.target as HTMLSpanElement).textContent?.trim() || "";
+		const isValidName = validateName(newName);
+		const isEnterKey = (e as React.KeyboardEvent<HTMLSpanElement>).key === "Enter";
+		const isBlur = e.type === "blur";
 
-		if ((e as React.KeyboardEvent<HTMLSpanElement>).key === "Enter") {
+		if (isEnterKey) e.preventDefault();
+
+		if ((isEnterKey || isBlur) && isValidName && projectId) {
+			const { error } = await ProjectsService.update(projectId, newName);
+			if (error) {
+				setToast({ isOpen: true, message: (error as Error).message });
+				return;
+			}
 			(e.target as HTMLSpanElement).blur();
-			setIsNameValid(validateName(newName));
-		}
-
-		if (e.type === "blur") {
-			setIsNameValid(validateName(newName));
+			setIsNameValid(isValidName);
+			updateProject(projectId);
 		}
 	};
 
@@ -118,6 +129,15 @@ export const Topbar = () => {
 					<FullScreen />
 				</IconButton>
 			</div>
+			<Toast
+				className="border-error"
+				duration={5}
+				isOpen={toast.isOpen}
+				onClose={() => setToast({ ...toast, isOpen: false })}
+			>
+				<h5 className="font-semibold text-error">Error</h5>
+				<p className="mt-1 text-xs">{toast.message}</p>
+			</Toast>
 		</div>
 	);
 };

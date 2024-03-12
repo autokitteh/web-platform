@@ -2,10 +2,13 @@ import { IMenuStore } from "@interfaces/store";
 import { StateCreator, create } from "zustand";
 
 const store: StateCreator<IMenuStore> = (set) => ({
-	newProjectId: undefined,
-	updateNewProjectId: (id: string) =>
-		set(() => ({
-			newProjectId: id,
+	projectId: undefined,
+	projectUpdateCount: 0,
+	updateProject: (id: string) =>
+		set((state) => ({
+			...state,
+			projectId: id,
+			projectUpdateCount: state.projectUpdateCount + 1,
 		})),
 });
 

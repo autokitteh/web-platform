@@ -10,7 +10,7 @@ import { cn } from "@utilities";
 import { isEqual } from "lodash";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
-	const { newProjectId, updateNewProjectId } = useMenuStore();
+	const { projectUpdateCount, updateProject } = useMenuStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -24,7 +24,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
-		if (data) updateNewProjectId(data);
+		if (data) updateProject(data);
 	};
 
 	useEffect(() => {
@@ -48,7 +48,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 
 		const intervalMenu = setInterval(fetchMenu, fetchMenuInterval);
 		return () => clearInterval(intervalMenu);
-	}, [newProjectId]);
+	}, [projectUpdateCount]);
 
 	const handleMouseEnter = (e: React.MouseEvent, submenu?: ISubmenuInfo["submenu"]) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
