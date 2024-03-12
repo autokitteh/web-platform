@@ -1,20 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useModalStore, useCodeAssetsStore } from "@store";
 import { codeAssetsSchema } from "@validations";
-import { useForm } from "react-hook-form";
+import { useForm, FieldValues } from "react-hook-form";
 
-export const ModalAddCodeAssets = () => {
+interface IModalAddCodeAssets {
+	file: File | undefined;
+}
+
+export const ModalAddCodeAssets = ({ file }: IModalAddCodeAssets) => {
+	const { closeModal } = useModalStore();
+	const { setCodeAsset } = useCodeAssetsStore();
+
 	const {
 		register,
 		handleSubmit,
+		setValue,
 		formState: { errors },
 	} = useForm({
 		resolver: zodResolver(codeAssetsSchema),
 	});
 
-	const onSubmit = () => {};
+	const onSubmit = (data: FieldValues) => {
+		if (!file) return;
+
+		const newName = `${data.name}.${file?.name.split(".").pop()}`;
+		const updatedFile = new File([file], newName, { type: file.type });
+		setCodeAsset(updatedFile);
+		closeModal("addCodeAssets");
+	};
+
+	useEffect(() => setValue("name", file?.name.split(".").slice(0, -1).join(".")), [file]);
 
 	return (
 		<Modal name="addCodeAssets">
