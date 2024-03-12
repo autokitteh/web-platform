@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FullScreen, More } from "@assets/image";
 import { Button, ErrorMessage, IconButton, IconSvg } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -18,7 +18,6 @@ export const Topbar = () => {
 		projectId: "Version 454462",
 	});
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
-	const spanRef = useRef<HTMLSpanElement>(null);
 
 	const styleIconSreen = cn({ "border-transparent bg-black": isFullScreen });
 	const styleInput = cn("font-semibold p-0 text-2xl leading-6 bg-transparent min-w-3 outline outline-0 rounded", {
@@ -66,7 +65,6 @@ export const Topbar = () => {
 					onBlur={handleInputChange}
 					onInput={handleInput}
 					onKeyDown={handleInputChange}
-					ref={spanRef}
 					role="textbox"
 					suppressContentEditableWarning={true}
 					tabIndex={0}
