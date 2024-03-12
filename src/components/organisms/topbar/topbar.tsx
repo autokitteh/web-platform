@@ -15,7 +15,6 @@ export const Topbar = () => {
 		name: "Slack Monitor",
 		projectId: "Version 454462",
 	});
-
 	const styleIconSreen = cn({ "border-transparent bg-black": isFullScreen });
 
 	useEffect(() => {
@@ -27,30 +26,29 @@ export const Topbar = () => {
 		fetchProject();
 	}, [newProjectId]);
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.target instanceof HTMLInputElement) {
-			setProject({ ...project, name: e.target.value });
-		}
+	const handleInputChange = (e: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => {
+		const name = (e.target as HTMLSpanElement).textContent || "";
 
-		if (e.type === "blur") return;
-
-		if (e.type === "keydown" && (e as React.KeyboardEvent<HTMLInputElement>).key === "Enter") {
-			(e.target as HTMLInputElement).blur();
+		if ((e as React.KeyboardEvent<HTMLSpanElement>).key === "Enter") {
+			(e.target as HTMLSpanElement).blur();
 		}
+		if (e.type === "blur") console.log(name);
 	};
 
 	return (
 		<div className="flex justify-between items-center bg-gray-700 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
 			<div className="flex items-end gap-3">
-				<input
-					className="font-semibold p-0 text-2xl leading-6 bg-transparent"
+				<span
+					className="font-semibold p-0 text-2xl leading-6 bg-transparent min-w-3"
+					contentEditable
 					onBlur={handleInputChange}
-					onChange={handleInputChange}
 					onKeyDown={handleInputChange}
+					role="textbox"
+					tabIndex={0}
 					title="Rename"
-					type="text"
-					value={project.name}
-				/>
+				>
+					{project.name}
+				</span>
 
 				<span className="font-semibold text-gray-300 leading-none">{project.projectId}</span>
 			</div>
