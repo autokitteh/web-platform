@@ -1,14 +1,15 @@
 import { IMenuStore } from "@interfaces/store";
 import { StateCreator, create } from "zustand";
-import { persist } from "zustand/middleware";
 
 const store: StateCreator<IMenuStore> = (set) => ({
-	lastMenuUpdate: Date.now(),
-	updateLastMenuTime: (newTime: number) =>
+	projectId: undefined,
+	projectUpdateCount: 0,
+	updateProject: (id: string) =>
 		set((state) => ({
 			...state,
-			lastMenuUpdate: newTime,
+			projectId: id,
+			projectUpdateCount: state.projectUpdateCount + 1,
 		})),
 });
 
-export const useMenuStore = create(persist(store, { name: "MenuStore" }));
+export const useMenuStore = create(store);

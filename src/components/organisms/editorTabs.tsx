@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
 import Editor, { Monaco } from "@monaco-editor/react";
-import { useUiGlobalStore } from "@store";
+import { useCodeAssetsStore, useUiGlobalStore } from "@store";
 
 export const EditorTabs = () => {
+	const { content, setCodeAsset } = useCodeAssetsStore();
 	const [editorKey, setEditorKey] = useState(0);
-	const [manifestCode, setManifestCode] = useState("// Code A: Initialize your code here...");
-	const [codeContent, setCodeContent] = useState("// Code B: Initialize your code here...");
+	const [manifestCode, setManifestCode] = useState("// Code B: Initialize your code here...");
 	const { isFullScreen } = useUiGlobalStore();
 
 	useEffect(() => setEditorKey((prevKey) => prevKey + 1), [isFullScreen]);
@@ -35,31 +35,31 @@ export const EditorTabs = () => {
 	};
 
 	return (
-		<Tabs defaultValue="manifest">
+		<Tabs defaultValue="code">
 			<TabList className="uppercase">
-				<Tab value="manifest">MANIFEST</Tab>
 				<Tab value="code">CODE</Tab>
+				<Tab value="manifest">MANIFEST</Tab>
 			</TabList>
+			<TabPanel className="pt-10  -ml-7" value="code">
+				<Editor
+					beforeMount={handleEditorWillMount}
+					key={editorKey}
+					language="python"
+					onChange={(value) => setCodeAsset(value || "")}
+					onMount={handleEditorDidMount}
+					theme="vs-dark"
+					value={content}
+				/>
+			</TabPanel>
 			<TabPanel className="pt-10 -ml-7" value="manifest">
 				<Editor
 					beforeMount={handleEditorWillMount}
-					defaultValue={manifestCode}
 					key={editorKey}
 					language="python"
 					onChange={(value) => setManifestCode(value || "")}
 					onMount={handleEditorDidMount}
 					theme="vs-dark"
-				/>
-			</TabPanel>
-			<TabPanel className="pt-10  -ml-7" value="code">
-				<Editor
-					beforeMount={handleEditorWillMount}
-					defaultValue={codeContent}
-					key={editorKey}
-					language="python"
-					onChange={(value) => setCodeContent(value || "")}
-					onMount={handleEditorDidMount}
-					theme="vs-dark"
+					value={manifestCode}
 				/>
 			</TabPanel>
 		</Tabs>
