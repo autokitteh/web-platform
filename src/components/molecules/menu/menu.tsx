@@ -8,22 +8,30 @@ import { ProjectsService } from "@services";
 import { useMenuStore } from "@store";
 import { cn } from "@utilities";
 import { isEqual } from "lodash";
-import { useTranslation } from "react-i18next";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
-	const { t } = useTranslation("menu");
-	const { lastMenuUpdate } = useMenuStore();
+	const { projectUpdateCount, updateProject } = useMenuStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
 
+	const createProject = async () => {
+		const { data, error } = await ProjectsService.create("");
+
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
+		if (data) updateProject(data);
+	};
+
 	useEffect(() => {
 		const fetchMenu = async () => {
 			const { data, error } = await ProjectsService.list();
 			if (error) {
-				setToast({ ...toast, message: (error as Error).message });
+				setToast({ isOpen: true, message: (error as Error).message });
 				return;
 			}
 			const updatedSubmenu = data?.map(({ projectId, name }) => ({
@@ -40,7 +48,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 
 		const intervalMenu = setInterval(fetchMenu, fetchMenuInterval);
 		return () => clearInterval(intervalMenu);
-	}, [lastMenuUpdate]);
+	}, [projectUpdateCount]);
 
 	const handleMouseEnter = (e: React.MouseEvent, submenu?: ISubmenuInfo["submenu"]) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
@@ -51,9 +59,9 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		<>
 			<div className={cn(className, "flex flex-col gap-4")}>
 				<div onMouseEnter={(e) => handleMouseEnter(e)}>
-					<Button className="hover:bg-green-light">
-						<IconSvg alt={t("newProject")} className="w-8 h-8 p-1 " src={NewProject} />
-						{isOpen ? t("newProject") : null}
+					<Button className="hover:bg-green-light" onClick={createProject}>
+						<IconSvg alt="New Project" className="w-8 h-8 p-1 " src={NewProject} />
+						{isOpen ? "New Project" : null}
 					</Button>
 				</div>
 				{menu.map(({ icon, name, href, submenu, id }) => (
@@ -65,8 +73,8 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 					</div>
 				))}
 			</div>
-			<Toast className="border-error" duration={10} isOpen={toast.isOpen} onClose={handleCloseToast}>
-				<h5 className="font-semibold">Error</h5>
+			<Toast className="border-error" duration={5} isOpen={toast.isOpen} onClose={handleCloseToast}>
+				<h5 className="font-semibold text-error">Error</h5>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</>

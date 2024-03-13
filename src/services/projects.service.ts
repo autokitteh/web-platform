@@ -42,6 +42,20 @@ export class ProjectsService {
 		}
 	}
 
+	static async update(projectId: string, name: string): Promise<ServiceResponse<void>> {
+		try {
+			const project = await projectsClient.update({ project: { projectId, name } });
+			if (!project) {
+				LoggerService.error(namespaces.projectService, i18n.t("errors.projectNotFound"));
+				return { data: undefined, error: i18n.t("errors.projectNotFound") };
+			}
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.projectService, (error as Error).message);
+			return { data: undefined, error };
+		}
+	}
+
 	static async list(): Promise<ServiceResponse<Project[]>> {
 		try {
 			const projects = (await projectsClient.listForOwner({ ownerId: "" })).projects.map(convertProjectProtoToModel);
