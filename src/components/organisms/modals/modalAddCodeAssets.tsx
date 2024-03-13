@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
+import { EModalName } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IModalAddCodeAssets } from "@interfaces/components";
 import { ProjectsService } from "@services";
@@ -21,7 +22,7 @@ export const ModalAddCodeAssets = ({ onError, projectId }: IModalAddCodeAssets) 
 
 	const onSubmit = async (data: FieldValues) => {
 		const { error } = await ProjectsService.setResources(projectId, { [data.name]: new Uint8Array() });
-		closeModal("addCodeAssets");
+		closeModal(EModalName.addCodeAssets);
 		if (error) {
 			onError?.((error as Error).message);
 			return;
@@ -29,7 +30,7 @@ export const ModalAddCodeAssets = ({ onError, projectId }: IModalAddCodeAssets) 
 	};
 
 	return (
-		<Modal name="addCodeAssets">
+		<Modal name={EModalName.addCodeAssets}>
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">Add New</h3>
 				<form onSubmit={handleSubmit(onSubmit)}>

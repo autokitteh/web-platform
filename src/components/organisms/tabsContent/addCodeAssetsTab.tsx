@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PlusCircle } from "@assets/image";
 import { Button, Toast } from "@components/atoms";
 import { ModalAddCodeAssets } from "@components/organisms/modals";
+import { EModalName } from "@enums/components";
 import { ProjectsService } from "@services";
 import { useModalStore, useCodeAssetsStore } from "@store";
 import { cn } from "@utilities";
@@ -67,7 +68,7 @@ export const AddCodeAssetsTab = () => {
 		<div className="flex flex-col h-full">
 			<Button
 				className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white mt-14 ml-auto"
-				onClick={() => openModal("addCodeAssets")}
+				onClick={() => openModal(EModalName.addCodeAssets)}
 			>
 				<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 				Add new
