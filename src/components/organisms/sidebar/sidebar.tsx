@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets/image";
 import { Icon, Badge, Button } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { ISubmenuInfo } from "@interfaces/components";
-import { useUiGlobalStore } from "@store";
-
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<ISubmenuInfo>({ submenu: undefined, top: 0 });
-	const { refreshMenu } = useUiGlobalStore();
 	const handleMouseEnter = () => setIsOpen(true);
 
 	const handleMouseLeave = () => {
 		setIsOpen(false);
 		setSubmenuInfo({ submenu: undefined, top: 0 });
 	};
-
-	useEffect(() => {
-		const loadMenu = async () => await refreshMenu();
-		loadMenu();
-	}, []);
 
 	return (
 		<div className="flex items-start" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
