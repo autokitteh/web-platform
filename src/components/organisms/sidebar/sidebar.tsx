@@ -3,10 +3,11 @@ import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets
 import { Icon, Badge, Button } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { ISubmenuInfo } from "@interfaces/components";
+import { Link } from "react-router-dom";
+
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<ISubmenuInfo>({ submenu: undefined, top: 0 });
-	const handleMouseEnter = () => setIsOpen(true);
 
 	const handleMouseLeave = () => {
 		setIsOpen(false);
@@ -14,13 +15,13 @@ export const Sidebar = () => {
 	};
 
 	return (
-		<div className="flex items-start" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+		<div className="flex items-start" onMouseEnter={() => setIsOpen(true)} onMouseLeave={handleMouseLeave}>
 			<div className="h-full p-4 pt-6 pb-10 flex flex-col justify-between bg-white z-10">
 				<div>
-					<div className="flex items-center gap-2.5 ml-1">
+					<Link className="flex items-center gap-2.5 ml-1" to="/">
 						<IconLogo className="w-8 h-8" />
 						{isOpen ? <IconLogoName className="w-20 h-3" /> : null}
-					</div>
+					</Link>
 					<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 				</div>
 				<div className="flex flex-col gap-5">

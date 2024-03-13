@@ -2,12 +2,14 @@ import { ICodeAssetsStore } from "@interfaces/store";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
+const initialContent = "// Code A: Initialize your code here...";
+
 const store: StateCreator<ICodeAssetsStore> = (set) => ({
-	content: "// Code A: Initialize your code here...",
+	content: initialContent,
 	name: undefined,
 	setCodeAsset: (content) => {
 		if (typeof content === "string") {
-			set({ content });
+			set({ content: content.trim() === "" ? initialContent : content });
 		} else {
 			const reader = new FileReader();
 			reader.readAsText(content);

@@ -5,12 +5,15 @@ import { menuItems, fetchMenuInterval } from "@constants";
 import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { IMenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
-import { useMenuStore } from "@store";
+import { useMenuStore, useCodeAssetsStore } from "@store";
 import { cn } from "@utilities";
 import { isEqual } from "lodash";
+import { useNavigate } from "react-router-dom";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
+	const navigate = useNavigate();
 	const { projectUpdateCount, updateProject } = useMenuStore();
+	const { setCodeAsset } = useCodeAssetsStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -24,7 +27,11 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
-		if (data) updateProject(data);
+		if (data) {
+			updateProject();
+			setCodeAsset("");
+			navigate(`/${data}`);
+		}
 	};
 
 	useEffect(() => {
@@ -35,6 +42,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 				return;
 			}
 			const updatedSubmenu = data?.map(({ projectId, name }) => ({
+				href: `/${projectId}`,
 				id: projectId,
 				name,
 			}));
