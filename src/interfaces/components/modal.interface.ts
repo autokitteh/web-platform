@@ -3,3 +3,8 @@ export interface IModal {
 	children: React.ReactNode;
 	name: string;
 }
+
+export interface IModalAddCodeAssets {
+	projectId: string;
+	onError?: (message: string) => void;
+}

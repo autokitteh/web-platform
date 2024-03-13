@@ -13,7 +13,7 @@ export type { IConnectionsContent, ITabConnection } from "@interfaces/components
 export type { ITab, ITabList, ITabs, ITabsContext } from "@interfaces/components/tabs.interface";
 export type { ITable } from "@interfaces/components/table.interface";
 export type { IIcon, IIconSvg } from "@interfaces/components/icon.interface";
-export type { IModal } from "@interfaces/components/modal.interface";
+export type { IModal, IModalAddCodeAssets } from "@interfaces/components/modal.interface";
 export type { IToast } from "@interfaces/components/toast.interface";
 export type { ISelectOption, ISelect, ISelectAppChangeForm, IInput, ITextArea } from "@interfaces/components/forms";
 export type { IErrorMessage } from "@interfaces/components/error.interface";
