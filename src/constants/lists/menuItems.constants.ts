@@ -1,79 +1,12 @@
-import { Connections, Dashboard, NewProject, Projects, Settings, StatsBlack } from "@assets/image";
+import { Connections, Dashboard, Projects, Settings, StatsBlack } from "@assets/image";
+import { IMenuItem } from "@interfaces/components";
 
-export const menuItems = [
-	{
-		id: 0,
-		icon: NewProject,
-		name: "New Project",
-		href: "/app/new",
-	},
+export const menuItems: IMenuItem[] = [
 	{
 		id: 1,
 		icon: Projects,
 		name: "My Projects",
 		href: "/app/my",
-		submenu: [
-			{
-				id: 0,
-				name: "AK Pagerduty",
-				href: "/app",
-			},
-			{
-				id: 1,
-				name: "Google signup",
-				href: "/app",
-			},
-			{
-				id: 2,
-				name: "New Project",
-				href: "/app",
-			},
-			{
-				id: 3,
-				name: "Project name",
-				href: "/app",
-			},
-			{
-				id: 4,
-				name: "New Project",
-				href: "/app",
-			},
-			{
-				id: 5,
-				name: "Slack notification",
-				href: "/app",
-			},
-			{
-				id: 6,
-				name: "AWS monitor",
-				href: "/app",
-			},
-			{
-				id: 7,
-				name: "New Project",
-				href: "/app",
-			},
-			{
-				id: 8,
-				name: "Github monitor",
-				href: "/app",
-			},
-			{
-				id: 9,
-				name: "New Project",
-				href: "/app",
-			},
-			{
-				id: 10,
-				name: "Pagerduty monitor",
-				href: "/app",
-			},
-			{
-				id: 11,
-				name: "AWS monitor",
-				href: "/app",
-			},
-		],
 	},
 	{
 		id: 2,
@@ -95,11 +28,6 @@ export const menuItems = [
 			{
 				id: 1,
 				name: "AWS monitor",
-				href: "/app",
-			},
-			{
-				id: 2,
-				name: "New Project",
 				href: "/app",
 			},
 			{

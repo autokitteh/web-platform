@@ -73,7 +73,7 @@ export class SessionState {
 			this.type = SessionStateType.unknown;
 		} else if (stateCase) {
 			this.type = stateCase as SessionStateType;
-			this.logs = session.print ? [session.print] : [];
+			this.logs = session.print ? [session.print.text] : [];
 		}
 	}
 

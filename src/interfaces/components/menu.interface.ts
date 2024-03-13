@@ -1,5 +1,5 @@
 export interface ISubmenuInfo {
-	submenu: { name: string; href: string; id: number }[] | undefined;
+	submenu: { id: number | string; name: string; href?: string }[] | undefined;
 	top: number;
 }
 
@@ -11,4 +11,12 @@ export interface IMenu {
 	className?: string;
 	isOpen: boolean;
 	onSubmenu?: (submenuInfo: ISubmenuInfo) => void;
+}
+
+export interface IMenuItem {
+	id: number;
+	icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+	name: string;
+	href?: string;
+	submenu?: ISubmenuInfo["submenu"];
 }

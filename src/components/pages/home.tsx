@@ -1,20 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
 import { tabsMainFrame } from "@constants";
-import { ProjectsService } from "@services";
 
 export const Home = () => {
-	const handleFetchData = async () => {
-		const projects = await ProjectsService.list();
-		console.log("projects", projects);
-	};
-
-	useEffect(() => {
-		handleFetchData();
-	}, []);
-
 	return (
 		<AppWrapper>
 			<MapMenuFrameLayout>

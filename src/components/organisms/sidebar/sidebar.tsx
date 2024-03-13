@@ -3,11 +3,9 @@ import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets
 import { Icon, Badge, Button } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { ISubmenuInfo } from "@interfaces/components";
-
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<ISubmenuInfo>({ submenu: undefined, top: 0 });
-
 	const handleMouseEnter = () => setIsOpen(true);
 
 	const handleMouseLeave = () => {
@@ -39,7 +37,7 @@ export const Sidebar = () => {
 					</Button>
 				</div>
 			</div>
-			{submenuInfo.submenu ? <Submenu submenuInfo={submenuInfo} /> : null}
+			{submenuInfo.submenu && submenuInfo.submenu.length > 0 ? <Submenu submenuInfo={submenuInfo} /> : null}
 		</div>
 	);
 };
