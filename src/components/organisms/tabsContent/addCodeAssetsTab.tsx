@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { PlusCircle } from "@assets/image";
-import { Button, Toast } from "@components/atoms";
+import { Button, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { ModalAddCodeAssets } from "@components/organisms/modals";
 import { EModalName } from "@enums/components";
-import { ProjectsService } from "@services";
-import { useModalStore, useCodeAssetsStore } from "@store";
+import { useModalStore, useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { useParams } from "react-router-dom";
 
 export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
 	const { openModal } = useModalStore();
-	const { setCodeAsset } = useCodeAssetsStore();
+	const { resources, setProjectResources } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -26,42 +25,26 @@ export const AddCodeAssetsTab = () => {
 		setIsDragOver(true);
 	};
 
-	const handleDrop = async (event: React.DragEvent<HTMLInputElement>) => {
+	const handleDrop = (event: React.DragEvent<HTMLInputElement>) => {
 		event.preventDefault();
 		setIsDragOver(false);
 
 		const droppedFile = event.dataTransfer.files[0];
-		if (droppedFile) await handleFileUpload(droppedFile);
+		if (droppedFile) fileUpload(droppedFile);
 	};
 
-	const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFile = event.target.files?.[0];
-		if (selectedFile) await handleFileUpload(selectedFile);
+		if (selectedFile) fileUpload(selectedFile);
 	};
 
-	const handleFileUpload = async (file: File) => {
-		const fileContent = await readFileAsUint8Array(file);
-		const { error } = await ProjectsService.setResources(projectId as string, {
-			[file.name]: fileContent,
-		});
+	const fileUpload = async (file: File) => {
+		const { error } = await setProjectResources(file, projectId as string);
 
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
-
-		setCodeAsset(file);
-	};
-
-	const readFileAsUint8Array = (file: File): Promise<Uint8Array> => {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader();
-
-			reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer));
-			reader.onerror = () => reject(reader.error);
-
-			reader.readAsArrayBuffer(file);
-		});
 	};
 
 	return (
@@ -73,8 +56,24 @@ export const AddCodeAssetsTab = () => {
 				<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 				Add new
 			</Button>
+			<Table className="mt-5 max-h-80">
+				<THead>
+					<Tr>
+						<Th className="border-r-0 cursor-pointer group font-normal">Name</Th>
+						<Th className="border-r-0 max-8" />
+					</Tr>
+				</THead>
+				<TBody>
+					{Object.entries(resources || {}).map(([name], idx) => (
+						<Tr className="group" key={idx}>
+							<Td className="font-semibold border-r-0">{name}</Td>
+							<Th className="border-r-0 max-8" />
+						</Tr>
+					))}
+				</TBody>
+			</Table>
 			<div
-				className="h-full flex justify-center items-center"
+				className="mt-auto mb-auto flex justify-center items-center"
 				onDragEnter={handleDragOver}
 				onDragLeave={() => setIsDragOver(false)}
 				onDragOver={handleDragOver}

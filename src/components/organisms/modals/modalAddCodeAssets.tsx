@@ -4,13 +4,13 @@ import { Modal } from "@components/molecules";
 import { EModalName } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IModalAddCodeAssets } from "@interfaces/components";
-import { ProjectsService } from "@services";
-import { useModalStore } from "@store";
+import { useModalStore, useProjectStore } from "@store";
 import { codeAssetsSchema } from "@validations";
 import { useForm, FieldValues } from "react-hook-form";
 
 export const ModalAddCodeAssets = ({ onError, projectId }: IModalAddCodeAssets) => {
 	const { closeModal } = useModalStore();
+	const { setProjectResources } = useProjectStore();
 
 	const {
 		register,
@@ -21,7 +21,7 @@ export const ModalAddCodeAssets = ({ onError, projectId }: IModalAddCodeAssets) 
 	});
 
 	const onSubmit = async (data: FieldValues) => {
-		const { error } = await ProjectsService.setResources(projectId, { [data.name]: new Uint8Array() });
+		const { error } = await setProjectResources(data.name, projectId as string);
 		closeModal(EModalName.addCodeAssets);
 		if (error) {
 			onError?.((error as Error).message);

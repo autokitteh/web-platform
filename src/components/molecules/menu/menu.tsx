@@ -5,15 +5,14 @@ import { menuItems, fetchMenuInterval } from "@constants";
 import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { IMenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
-import { useMenuStore, useCodeAssetsStore } from "@store";
+import { useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { isEqual } from "lodash";
 import { useNavigate } from "react-router-dom";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	const navigate = useNavigate();
-	const { projectUpdateCount, updateProject } = useMenuStore();
-	const { setCodeAsset } = useCodeAssetsStore();
+	const { projectUpdateCount, resetContent } = useProjectStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -28,8 +27,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 			return;
 		}
 		if (data) {
-			updateProject();
-			setCodeAsset("");
+			resetContent();
 			navigate(`/${data}`);
 		}
 	};

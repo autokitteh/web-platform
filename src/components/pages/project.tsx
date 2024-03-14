@@ -8,7 +8,7 @@ export const Project = () => {
 	return (
 		<AppWrapper>
 			<MapMenuFrameLayout>
-				<Tabs defaultValue={2}>
+				<Tabs defaultValue={1}>
 					<TabList>
 						{tabsMainFrame.map(({ id, title, count }) => (
 							<Tab className="text-xs 3xl:text-sm" key={id} value={id}>

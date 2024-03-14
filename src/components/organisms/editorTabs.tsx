@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
 import Editor, { Monaco } from "@monaco-editor/react";
-import { useCodeAssetsStore, useUiGlobalStore } from "@store";
+import { useUiGlobalStore, useProjectStore } from "@store";
+import { get } from "lodash";
 
 export const EditorTabs = () => {
-	const { content, setCodeAsset } = useCodeAssetsStore();
+	const { resources, activeFile, setUpdateContent } = useProjectStore();
+	const { isFullScreen } = useUiGlobalStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const [manifestCode, setManifestCode] = useState("// Code B: Initialize your code here...");
-	const { isFullScreen } = useUiGlobalStore();
+	const initialContent = "// Code A: Initialize your code here...";
+
+	const byteArray = Object.values(get(resources, [activeFile || ""], new Uint8Array()));
+	const content = String.fromCharCode.apply(null, byteArray) || initialContent;
 
 	useEffect(() => setEditorKey((prevKey) => prevKey + 1), [isFullScreen]);
 
@@ -45,7 +50,7 @@ export const EditorTabs = () => {
 					beforeMount={handleEditorWillMount}
 					key={editorKey}
 					language="python"
-					onChange={(value) => setCodeAsset(value || "")}
+					onChange={(value) => setUpdateContent(value)}
 					onMount={handleEditorDidMount}
 					theme="vs-dark"
 					value={content}
