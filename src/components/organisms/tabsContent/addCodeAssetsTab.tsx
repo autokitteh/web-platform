@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
 import { Button, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { ModalAddCodeAssets } from "@components/organisms/modals";
 import { EModalName } from "@enums/components";
 import { useModalStore, useProjectStore } from "@store";
 import { cn } from "@utilities";
+import { isEmpty } from "lodash";
 import { useParams } from "react-router-dom";
 
 export const AddCodeAssetsTab = () => {
@@ -19,6 +20,7 @@ export const AddCodeAssetsTab = () => {
 	const styleCircle = cn("transition stroke-gray-400 group-hover:stroke-green-accent", {
 		"stroke-green-accent": isDragOver,
 	});
+	const resourcesEntries = Object.entries(resources || {});
 
 	const handleDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
@@ -47,6 +49,8 @@ export const AddCodeAssetsTab = () => {
 		}
 	};
 
+	useEffect(() => {}, [projectId]);
+
 	return (
 		<div className="flex flex-col h-full">
 			<Button
@@ -56,7 +60,7 @@ export const AddCodeAssetsTab = () => {
 				<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 				Add new
 			</Button>
-			<Table className="mt-5 max-h-80">
+			<Table className="mt-5 max-h-80" isHidden={isEmpty(resourcesEntries)}>
 				<THead>
 					<Tr>
 						<Th className="border-r-0 cursor-pointer group font-normal">Name</Th>
@@ -64,7 +68,7 @@ export const AddCodeAssetsTab = () => {
 					</Tr>
 				</THead>
 				<TBody>
-					{Object.entries(resources || {}).map(([name], idx) => (
+					{resourcesEntries.map(([name], idx) => (
 						<Tr className="group" key={idx}>
 							<Td className="font-semibold border-r-0">{name}</Td>
 							<Th className="border-r-0 max-8" />

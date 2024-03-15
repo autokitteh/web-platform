@@ -148,4 +148,15 @@ export class ProjectsService {
 			return { data: undefined, error };
 		}
 	}
+	static async getResources(projectId: string): Promise<ServiceResponse<{ [key: string]: Uint8Array }>> {
+		try {
+			const { resources } = await projectsClient.downloadResources({
+				projectId,
+			});
+			return { data: resources, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.resourcesService, (error as Error).message);
+			return { data: undefined, error };
+		}
+	}
 }
