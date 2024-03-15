@@ -9,5 +9,5 @@ export interface IProjectStore {
 	projectUpdateCount: number;
 	setUpdateContent: (content?: string) => void;
 	setProjectResources: (fileOrName: File | string, projectId: string) => Promise<IProjectStoreResponse>;
-	resetContent: () => void;
+	getProjectResources: (projectId: string) => Promise<IProjectStoreResponse>;
 }

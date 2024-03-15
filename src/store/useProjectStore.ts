@@ -27,9 +27,9 @@ const debouncedUpdateContent = debounce((set, activeFile, content) => {
 	}));
 }, 1000);
 
-const defaultState: Omit<IProjectStore, "setUpdateContent" | "setProjectResources" | "resetContent"> = {
-	resources: undefined,
+const defaultState: Omit<IProjectStore, "setUpdateContent" | "setProjectResources" | "getProjectResources"> = {
 	projectId: undefined,
+	resources: undefined,
 	activeFile: undefined,
 	projectUpdateCount: 0,
 };
@@ -51,6 +51,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		const name = typeof file === "string" ? file : file.name;
 
 		const { error } = await ProjectsService.setResources(projectId, {
+			...get().resources,
 			[name]: fileContent,
 		});
 
@@ -66,7 +67,19 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 
 		return { error };
 	},
-	resetContent: async () => set(() => defaultState),
+	getProjectResources: async (projectId) => {
+		if (get().projectId === projectId) return { error: undefined };
+
+		const { data, error } = await ProjectsService.getResources(projectId);
+
+		set(() => ({
+			projectId,
+			activeFile: Object.keys(data || {})[0],
+			resources: data,
+		}));
+
+		return { error };
+	},
 });
 
 export const useProjectStore = create(persist(store, { name: "ProjectStore" }));

@@ -5,13 +5,13 @@ import { ModalAddCodeAssets } from "@components/organisms/modals";
 import { EModalName } from "@enums/components";
 import { useModalStore, useProjectStore } from "@store";
 import { cn } from "@utilities";
-import { isEmpty } from "lodash";
+import { isEmpty, orderBy } from "lodash";
 import { useParams } from "react-router-dom";
 
 export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
 	const { openModal } = useModalStore();
-	const { resources, setProjectResources } = useProjectStore();
+	const { resources, setProjectResources, getProjectResources } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -20,7 +20,7 @@ export const AddCodeAssetsTab = () => {
 	const styleCircle = cn("transition stroke-gray-400 group-hover:stroke-green-accent", {
 		"stroke-green-accent": isDragOver,
 	});
-	const resourcesEntries = Object.entries(resources || {});
+	const resourcesEntries = orderBy(Object.entries(resources || {}), ([name]) => name, "asc");
 
 	const handleDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
@@ -49,7 +49,19 @@ export const AddCodeAssetsTab = () => {
 		}
 	};
 
-	useEffect(() => {}, [projectId]);
+	useEffect(() => {
+		if (!projectId) return;
+
+		const fetchProject = async () => {
+			const { error } = await getProjectResources(projectId);
+			if (error) {
+				setToast({ isOpen: true, message: (error as Error).message });
+				return;
+			}
+		};
+
+		fetchProject();
+	}, [projectId]);
 
 	return (
 		<div className="flex flex-col h-full">
