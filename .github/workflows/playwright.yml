@@ -21,14 +21,6 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Run Playwright tests
-        run: npx playwright test
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
 
       # Checkout Go backend repository
       - name: Checkout Backend Repo
@@ -53,6 +45,12 @@ jobs:
       - name: Wait for Backend to Start
         run: sleep 10
 
-      # Run Playwright tests
-      - name: Run Playwright Tests
+      # Run Playwright tests=
+      - name: Run Playwright tests
         run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
