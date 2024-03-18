@@ -35,7 +35,7 @@ jobs:
       # Run backend executable
       - name: Run Backend
         run: |
-          ./ak
+          ./ak up --mode=dev
         # Ensure the backend server has enough time to start
       - name: Wait for Backend to Start
         run: sleep 10
