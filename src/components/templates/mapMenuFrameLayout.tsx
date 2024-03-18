@@ -12,7 +12,7 @@ export const MapMenuFrameLayout = ({ children }: PropsWithChildren) => {
 
 	return (
 		<div className={baseStyle}>
-			<div className="max-w-485 m-auto" hidden={isFullScreen || !children}>
+			<div className="max-w-485 m-auto" hidden={isFullScreen}>
 				<MapMenu />
 			</div>
 			<SplitFrame>{children}</SplitFrame>

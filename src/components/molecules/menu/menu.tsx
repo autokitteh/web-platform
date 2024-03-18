@@ -20,14 +20,14 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	});
 
 	const createProject = async () => {
-		const { data, error } = await ProjectsService.create("");
+		const { data: projectId, error } = await ProjectsService.create("");
 
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
-		if (data) {
-			navigate(`/${data}`);
+		if (projectId) {
+			navigate(`/${projectId}`);
 		}
 	};
 

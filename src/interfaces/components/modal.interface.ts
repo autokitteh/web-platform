@@ -5,6 +5,5 @@ export interface IModal {
 }
 
 export interface IModalAddCodeAssets {
-	projectId: string;
 	onError?: (message: string) => void;
 }

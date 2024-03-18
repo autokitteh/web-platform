@@ -13,11 +13,11 @@ import { useParams } from "react-router-dom";
 export const Topbar = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["shared", "errors"]);
-	const { setUpdateContent } = useProjectStore();
+	const { setUpdateCount } = useProjectStore();
 	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
 	const [project, setProject] = useState<Project>({
-		name: projectId ? "" : "Slack Monitor",
-		projectId: projectId ? "" : "Version 454462",
+		name: "",
+		projectId: "",
 	});
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [toast, setToast] = useState({
@@ -60,7 +60,7 @@ export const Topbar = () => {
 			}
 			(e.target as HTMLSpanElement).blur();
 			setIsNameValid(isValidName);
-			setUpdateContent();
+			setUpdateCount();
 		}
 	};
 

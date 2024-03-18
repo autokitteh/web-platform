@@ -1,82 +1,108 @@
 import { IProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
-import { debounce } from "lodash";
+import { readFileAsUint8Array } from "@utilities";
+import i18n from "i18next";
+import { debounce, isEmpty } from "lodash";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const readFileAsUint8Array = (file: File): Promise<Uint8Array> => {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-
-		reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer));
-		reader.onerror = () => reject(reader.error);
-
-		reader.readAsArrayBuffer(file);
-	});
+const defaultState: Omit<
+	IProjectStore,
+	| "loadProject"
+	| "setUpdateFileContent"
+	| "setProjectResources"
+	| "getProjectResources"
+	| "setProjectEmptyResources"
+	| "setUpdateCount"
+> = {
+	projectId: undefined,
+	resources: {},
+	fileName: "",
+	projectUpdateCount: 0,
 };
 
-const debouncedUpdateContent = debounce((set, activeFile, content) => {
+const debouncedUpdateContent = debounce((set, fileName, content) => {
 	const contentUintArray = new TextEncoder().encode(content);
 
 	set((state: IProjectStore) => ({
 		...state,
 		resources: {
 			...state.resources,
-			[activeFile as string]: contentUintArray,
+			[fileName]: contentUintArray,
 		},
 	}));
 }, 1000);
 
-const defaultState: Omit<IProjectStore, "setUpdateContent" | "setProjectResources" | "getProjectResources"> = {
-	projectId: undefined,
-	resources: undefined,
-	activeFile: undefined,
-	projectUpdateCount: 0,
-};
-
 const store: StateCreator<IProjectStore> = (set, get) => ({
 	...defaultState,
-	setUpdateContent: (content) => {
-		if (!content) {
-			set((state) => ({ ...state, projectUpdateCount: state.projectUpdateCount + 1 }));
-			return;
-		}
+	loadProject: async (projectId) => {
+		set(() => ({
+			...defaultState,
+			projectId,
+			resources: {},
+		}));
 
-		if (!get().activeFile) return;
+		const { error } = await get().getProjectResources();
 
-		debouncedUpdateContent(set, get().activeFile, content);
+		return { error };
 	},
-	setProjectResources: async (file, projectId) => {
-		const fileContent = typeof file === "string" ? new Uint8Array() : await readFileAsUint8Array(file);
-		const name = typeof file === "string" ? file : file.name;
 
-		const { error } = await ProjectsService.setResources(projectId, {
+	setUpdateCount: () => set((state) => ({ ...state, projectUpdateCount: state.projectUpdateCount + 1 })),
+
+	setUpdateFileContent: (content) => {
+		if (!get().fileName) return;
+
+		debouncedUpdateContent(set, get().fileName, content);
+	},
+
+	setProjectResources: async (file) => {
+		const fileContent = await readFileAsUint8Array(file);
+
+		if (isEmpty(get().projectId)) return { error: { message: i18n.t("errors.projectIdNotFound") } };
+
+		const { error } = await ProjectsService.setResources(get().projectId as string, {
 			...get().resources,
-			[name]: fileContent,
+			[file.name]: fileContent,
 		});
 
 		set((state) => ({
 			...state,
-			projectId,
-			activeFile: name,
+			fileName: file.name,
 			resources: {
-				...(state.projectId !== projectId ? {} : state.resources),
-				[name]: fileContent,
+				...state.resources,
+				[file.name]: fileContent,
 			},
 		}));
 
 		return { error };
 	},
-	getProjectResources: async (projectId) => {
-		if (get().projectId === projectId) return { error: undefined };
 
-		const { data, error } = await ProjectsService.getResources(projectId);
+	setProjectEmptyResources: async (name) => {
+		if (isEmpty(get().projectId)) return { error: { message: i18n.t("errors.projectIdNotFound") } };
 
-		set(() => ({
-			projectId,
-			activeFile: Object.keys(data || {})[0],
-			resources: data,
+		const { error } = await ProjectsService.setResources(get().projectId as string, {
+			...get().resources,
+			[name]: new Uint8Array(),
+		});
+
+		set((state) => ({
+			...state,
+			fileName: name,
+			resources: {
+				...state.resources,
+				[name]: new Uint8Array(),
+			},
 		}));
+
+		return { error };
+	},
+
+	getProjectResources: async () => {
+		if (isEmpty(get().projectId)) return { error: { message: i18n.t("errors.projectIdNotFound") } };
+
+		const { data, error } = await ProjectsService.getResources(get().projectId as string);
+
+		set(() => ({ resources: data }));
 
 		return { error };
 	},

@@ -1,7 +1,9 @@
 {
 	"unexpectedError": "We're sorry, but an unexpected error has occurred and the application is currently unavailable. Please try again later.",
 	"projectNotFound": "Couldn't fetch the project details",
+	"projectIdNotFound": "Project ID not found",
 	"unexpectedSessionStateType": "Unexpected session state type",
 	"missingSessionStateType": "Missing session state type",
-	"nameRequired": "Name is required"
+	"nameRequired": "Name is required",
+	"projectAddFailed": "Project code add failed"
 }

@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { PlusCircle } from "@assets/image";
 import { Button, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { ModalAddCodeAssets } from "@components/organisms/modals";
 import { EModalName } from "@enums/components";
 import { useModalStore, useProjectStore } from "@store";
 import { cn } from "@utilities";
-import { isEmpty, orderBy } from "lodash";
+import { orderBy, isEmpty } from "lodash";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
+	const { t } = useTranslation("errors");
 	const { openModal } = useModalStore();
-	const { resources, setProjectResources, getProjectResources } = useProjectStore();
+	const { resources, setProjectResources } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
+
 	const styleCircle = cn("transition stroke-gray-400 group-hover:stroke-green-accent", {
 		"stroke-green-accent": isDragOver,
 	});
-	const resourcesEntries = orderBy(Object.entries(resources || {}), ([name]) => name, "asc");
+
+	const entriesArray = Object.entries(resources);
+	const sortedResources = orderBy(entriesArray, ([name]) => name, "asc");
 
 	const handleDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
@@ -41,27 +46,13 @@ export const AddCodeAssetsTab = () => {
 	};
 
 	const fileUpload = async (file: File) => {
-		const { error } = await setProjectResources(file, projectId as string);
+		const { error } = await setProjectResources(file);
 
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			setToast({ isOpen: true, message: `${t("projectAddFailed")}, ${projectId}: ${(error as Error).message}` });
 			return;
 		}
 	};
-
-	useEffect(() => {
-		if (!projectId) return;
-
-		const fetchProject = async () => {
-			const { error } = await getProjectResources(projectId);
-			if (error) {
-				setToast({ isOpen: true, message: (error as Error).message });
-				return;
-			}
-		};
-
-		fetchProject();
-	}, [projectId]);
 
 	return (
 		<div className="flex flex-col h-full">
@@ -72,7 +63,7 @@ export const AddCodeAssetsTab = () => {
 				<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 				Add new
 			</Button>
-			<Table className="mt-5 max-h-80" isHidden={isEmpty(resourcesEntries)}>
+			<Table className="mt-5 max-h-80" isHidden={isEmpty(sortedResources)}>
 				<THead>
 					<Tr>
 						<Th className="border-r-0 cursor-pointer group font-normal">Name</Th>
@@ -80,7 +71,7 @@ export const AddCodeAssetsTab = () => {
 					</Tr>
 				</THead>
 				<TBody>
-					{resourcesEntries.map(([name], idx) => (
+					{sortedResources.map(([name], idx) => (
 						<Tr className="group" key={idx}>
 							<Td className="font-semibold border-r-0">{name}</Td>
 							<Th className="border-r-0 max-8" />
@@ -102,10 +93,7 @@ export const AddCodeAssetsTab = () => {
 						<p className="text-center text-lg font-bold uppercase text-white">Add Code & Assets</p>
 					</label>
 				</div>
-				<ModalAddCodeAssets
-					onError={(message) => setToast({ isOpen: true, message })}
-					projectId={projectId as string}
-				/>
+				<ModalAddCodeAssets onError={(message) => setToast({ isOpen: true, message })} />
 				<Toast
 					className="border-error"
 					duration={10}

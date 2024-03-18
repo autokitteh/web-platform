@@ -5,13 +5,14 @@ import { useUiGlobalStore, useProjectStore } from "@store";
 import { get } from "lodash";
 
 export const EditorTabs = () => {
-	const { resources, activeFile, setUpdateContent } = useProjectStore();
+	const { resources, fileName, setUpdateFileContent } = useProjectStore();
 	const { isFullScreen } = useUiGlobalStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const [manifestCode, setManifestCode] = useState("// Code B: Initialize your code here...");
 	const initialContent = "// Code A: Initialize your code here...";
 
-	const byteArray = Object.values(get(resources, [activeFile || ""], new Uint8Array()));
+	const resource = get(resources, [fileName], new Uint8Array());
+	const byteArray = Object.values(resource);
 	const content = String.fromCharCode.apply(null, byteArray) || initialContent;
 
 	useEffect(() => setEditorKey((prevKey) => prevKey + 1), [isFullScreen]);
@@ -50,7 +51,7 @@ export const EditorTabs = () => {
 					beforeMount={handleEditorWillMount}
 					key={editorKey}
 					language="python"
-					onChange={(value) => setUpdateContent(value)}
+					onChange={(value) => setUpdateFileContent(value || "")}
 					onMount={handleEditorDidMount}
 					theme="vs-dark"
 					value={content}

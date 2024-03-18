@@ -8,9 +8,9 @@ import { useModalStore, useProjectStore } from "@store";
 import { codeAssetsSchema } from "@validations";
 import { useForm, FieldValues } from "react-hook-form";
 
-export const ModalAddCodeAssets = ({ onError, projectId }: IModalAddCodeAssets) => {
+export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 	const { closeModal } = useModalStore();
-	const { setProjectResources } = useProjectStore();
+	const { setProjectEmptyResources } = useProjectStore();
 
 	const {
 		register,
@@ -20,8 +20,8 @@ export const ModalAddCodeAssets = ({ onError, projectId }: IModalAddCodeAssets) 
 		resolver: zodResolver(codeAssetsSchema),
 	});
 
-	const onSubmit = async (data: FieldValues) => {
-		const { error } = await setProjectResources(data.name, projectId as string);
+	const onSubmit = async ({ name }: FieldValues) => {
+		const { error } = await setProjectEmptyResources(name);
 		closeModal(EModalName.addCodeAssets);
 		if (error) {
 			onError?.((error as Error).message);
