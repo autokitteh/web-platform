@@ -8,11 +8,11 @@ jobs:
     steps:
       # Checkout React (Vite) frontend repository
       - name: Checkout Frontend Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Setup Node.js for React (Vite) project
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: "14"
 
