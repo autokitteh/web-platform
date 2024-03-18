@@ -30,11 +30,12 @@ jobs:
       - name: Extract Backend
         run: |
           tar -xzf backend.tar.gz
+          chmod +x ak
 
       # Run backend executable
       - name: Run Backend
         run: |
-          ./backend/ak
+          ./ak
         # Ensure the backend server has enough time to start
       - name: Wait for Backend to Start
         run: sleep 10
