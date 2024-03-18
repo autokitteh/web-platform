@@ -1,18 +1,22 @@
-name: Playwright Tests
-on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+name: End-to-End Tests
+
+on: [push]
+
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # Checkout React (Vite) frontend repository
+      - name: Checkout Frontend Repo
+        uses: actions/checkout@v2
+
+      # Setup Node.js for React (Vite) project
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: lts/*
+          node-version: "14"
+
+      # Install dependencies for React (Vite) project
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers
@@ -25,3 +29,30 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+      # Checkout Go backend repository
+      - name: Checkout Backend Repo
+        uses: actions/checkout@v2
+        with:
+          repository: "https://github.com/autokitteh/autokitteh.git"
+          path: "backend"
+
+      # Setup Go environment
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.16"
+
+      # Build and run Go backend
+      - name: Build and Run Backend
+        run: |
+          cd backend
+          go build -o backend .
+          ./backend &
+        # Ensure the backend server has enough time to start
+      - name: Wait for Backend to Start
+        run: sleep 10
+
+      # Run Playwright tests
+      - name: Run Playwright Tests
+        run: npm run test:e2e
