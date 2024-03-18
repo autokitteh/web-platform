@@ -44,7 +44,7 @@ jobs:
       - name: Run Playwright tests
         run: |
           npm run build && npm run preview
-          git submodule --init
+          git submodule update --init
           npx playwright test
       - uses: actions/upload-artifact@v4
         if: always()
