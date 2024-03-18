@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useUiGlobalStore, useProjectStore } from "@store";
-import { get } from "lodash";
+import { debounce, get } from "lodash";
 
 export const EditorTabs = () => {
-	const { resources, fileName, setUpdateFileContent } = useProjectStore();
+	const { resources, activeEditorFileName, setUpdateFileContent } = useProjectStore();
 	const { isFullScreen } = useUiGlobalStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const [manifestCode, setManifestCode] = useState("// Code B: Initialize your code here...");
 	const initialContent = "// Code A: Initialize your code here...";
 
-	const resource = get(resources, [fileName], new Uint8Array());
+	const resource = get(resources, [activeEditorFileName], new Uint8Array());
 	const byteArray = Object.values(resource);
 	const content = String.fromCharCode.apply(null, byteArray) || initialContent;
 
@@ -40,6 +40,11 @@ export const EditorTabs = () => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
+	const handleUpdateContent = debounce((content?: string) => {
+		const contentUintArray = new TextEncoder().encode(content);
+		setUpdateFileContent(contentUintArray);
+	}, 1000);
+
 	return (
 		<Tabs defaultValue="code">
 			<TabList className="uppercase">
@@ -51,7 +56,7 @@ export const EditorTabs = () => {
 					beforeMount={handleEditorWillMount}
 					key={editorKey}
 					language="python"
-					onChange={(value) => setUpdateFileContent(value || "")}
+					onChange={handleUpdateContent}
 					onMount={handleEditorDidMount}
 					theme="vs-dark"
 					value={content}

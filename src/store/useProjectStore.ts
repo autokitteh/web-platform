@@ -2,7 +2,7 @@ import { IProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
 import i18n from "i18next";
-import { debounce, isEmpty } from "lodash";
+import { isEmpty } from "lodash";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -17,21 +17,9 @@ const defaultState: Omit<
 > = {
 	projectId: undefined,
 	resources: {},
-	fileName: "",
+	activeEditorFileName: "",
 	projectUpdateCount: 0,
 };
-
-const debouncedUpdateContent = debounce((set, fileName, content) => {
-	const contentUintArray = new TextEncoder().encode(content);
-
-	set((state: IProjectStore) => ({
-		...state,
-		resources: {
-			...state.resources,
-			[fileName]: contentUintArray,
-		},
-	}));
-}, 1000);
 
 const store: StateCreator<IProjectStore> = (set, get) => ({
 	...defaultState,
@@ -50,9 +38,17 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	setUpdateCount: () => set((state) => ({ ...state, projectUpdateCount: state.projectUpdateCount + 1 })),
 
 	setUpdateFileContent: (content) => {
-		if (!get().fileName) return;
+		const fileName = get().activeEditorFileName;
 
-		debouncedUpdateContent(set, get().fileName, content);
+		if (!fileName) return;
+
+		set((state: IProjectStore) => ({
+			...state,
+			resources: {
+				...state.resources,
+				[fileName]: content,
+			},
+		}));
 	},
 
 	setProjectResources: async (file) => {

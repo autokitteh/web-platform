@@ -4,12 +4,12 @@ interface IProjectStoreResponse {
 
 export interface IProjectStore {
 	projectId?: string;
-	fileName: string;
+	activeEditorFileName: string;
 	projectUpdateCount: number;
 	resources: Record<string, Uint8Array>;
 	loadProject: (projectId: string) => Promise<IProjectStoreResponse>;
 	setUpdateCount: () => void;
-	setUpdateFileContent: (content: string) => void;
+	setUpdateFileContent: (content: Uint8Array) => void;
 	setProjectResources: (file: File) => Promise<IProjectStoreResponse>;
 	setProjectEmptyResources: (name: string) => Promise<IProjectStoreResponse>;
 	getProjectResources: () => Promise<IProjectStoreResponse>;

@@ -63,22 +63,25 @@ export const AddCodeAssetsTab = () => {
 				<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 				Add new
 			</Button>
-			<Table className="mt-5 max-h-80" isHidden={isEmpty(sortedResources)}>
-				<THead>
-					<Tr>
-						<Th className="border-r-0 cursor-pointer group font-normal">Name</Th>
-						<Th className="border-r-0 max-8" />
-					</Tr>
-				</THead>
-				<TBody>
-					{sortedResources.map(([name], idx) => (
-						<Tr className="group" key={idx}>
-							<Td className="font-semibold border-r-0">{name}</Td>
+			{!isEmpty(sortedResources) ? (
+				<Table className="mt-5 max-h-80">
+					<THead>
+						<Tr>
+							<Th className="border-r-0 cursor-pointer group font-normal">Name</Th>
 							<Th className="border-r-0 max-8" />
 						</Tr>
-					))}
-				</TBody>
-			</Table>
+					</THead>
+					<TBody>
+						{sortedResources.map(([name], idx) => (
+							<Tr className="group" key={idx}>
+								<Td className="font-semibold border-r-0">{name}</Td>
+								<Th className="border-r-0 max-8" />
+							</Tr>
+						))}
+					</TBody>
+				</Table>
+			) : null}
+
 			<div
 				className="mt-auto mb-auto flex justify-center items-center"
 				onDragEnter={handleDragOver}
