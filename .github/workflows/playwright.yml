@@ -24,12 +24,12 @@ jobs:
 
       - name: Download Backend Executable
         run: |
-          curl -L -o backend https://github.com/autokitteh/autokitteh/releases/download/v0.3.1/autokitteh_Linux_x86_64.tar.gz
+          curl -L -o backend.tar.gz  https://github.com/autokitteh/autokitteh/releases/download/v0.3.1/autokitteh_Linux_x86_64.tar.gz
           chmod +x backend
       # Extract the backend executable
       - name: Extract Backend
         run: |
-          tar -xzf autokitteh_Linux_x86_64.tar.gz
+          tar -xzf backend.tar.gz
 
       # Run backend executable
       - name: Run Backend
