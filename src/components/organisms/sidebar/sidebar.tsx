@@ -3,6 +3,7 @@ import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets
 import { Icon, Badge, Button } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { ISubmenuInfo } from "@interfaces/components";
+import { AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 
 export const Sidebar = () => {
@@ -38,7 +39,9 @@ export const Sidebar = () => {
 					</Button>
 				</div>
 			</div>
-			{submenuInfo.submenu && submenuInfo.submenu.length > 0 ? <Submenu submenuInfo={submenuInfo} /> : null}
+			<AnimatePresence>
+				{submenuInfo.submenu && submenuInfo.submenu.length > 0 ? <Submenu submenuInfo={submenuInfo} /> : null}
+			</AnimatePresence>
 		</div>
 	);
 };

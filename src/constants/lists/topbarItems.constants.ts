@@ -18,7 +18,7 @@ export const topbarItems = [
 	{
 		id: 2,
 		icon: Stats,
-		name: "Stats",
+		name: "View Stats",
 		href: "/app/stats",
 		disabled: true,
 	},

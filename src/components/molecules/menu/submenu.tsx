@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 export const Submenu = ({ submenuInfo }: ISubmenu) => {
 	const submenuVariants = {
 		hidden: { opacity: 0, x: -100 },
-		visible: { opacity: 1, x: 0, transition: { duration: 0.25, ease: "easeOut" } },
+		visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: "easeOut" } },
 	};
 
 	return (
@@ -19,7 +19,7 @@ export const Submenu = ({ submenuInfo }: ISubmenu) => {
 			variants={submenuVariants}
 		>
 			{submenuInfo.submenu?.map(({ name, href, id }) => (
-				<Button className="px-4 hover:bg-green-light" href={href} key={id}>
+				<Button className="px-4 hover:bg-green-light text-fira-code text-gray-700" href={href} key={id}>
 					{name}
 				</Button>
 			))}
