@@ -4,7 +4,8 @@ import { cn } from "@utilities";
 
 export const TabList = ({ className, children }: ITabList) => {
 	const tablistSlyle = cn(
-		"flex items-center gap-5 overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar",
+		"flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5",
+		"overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar",
 		className
 	);
 

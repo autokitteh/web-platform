@@ -8,12 +8,12 @@ import { cn } from "@utilities";
 
 export const SplitFrame = ({ children }: ISplitFrame) => {
 	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
-	const [leftWidth, setLeftWidth] = useState(50);
+	const [leftWidth, setLeftWidth] = useState(55);
 
-	const baseStyle = cn("flex justify-end h-full w-2/3", { "w-full": isFullScreen });
-	const mainFrameStyle = cn("rounded-l-none pb-0", { "rounded-2xl": !children });
+	const baseStyle = cn("flex justify-end h-full w-2/3", { "w-full": isFullScreen || !children });
+	const mainFrameStyle = cn("rounded-l-none pb-0 overflow-hidden", { "rounded-2xl": !children });
 
-	const minWidthPercent = 25;
+	const minWidthPercent = children ? 25 : 0;
 	const maxWidthPercent = 70;
 
 	const onKeyDown = (e: KeyboardEvent) => {
@@ -73,7 +73,12 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 					<div className="-mx-8 px-8 pt-7 border-0 border-t border-t-gray-600">
 						<OutputTabs />
 					</div>
-					<LogoFrame className="absolute bottom-7 right-7 fill-white opacity-10 pointer-events-none" />
+					<LogoFrame
+						className={cn(
+							"absolute fill-white opacity-10 pointer-events-none",
+							"max-w-72 2xl:max-w-80 3xl:max-w-420 -bottom-10 2xl:bottom-7 right-2 2xl:right-7"
+						)}
+					/>
 				</Frame>
 			</div>
 		</div>

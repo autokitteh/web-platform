@@ -8,14 +8,16 @@ import { useUiGlobalStore, useMenuStore } from "@store";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 export const Topbar = () => {
+	const { projectId } = useParams();
 	const { t } = useTranslation(["shared", "errors"]);
-	const { projectId, updateProject } = useMenuStore();
+	const { updateProject } = useMenuStore();
 	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
 	const [project, setProject] = useState<Project>({
-		name: "Slack Monitor",
-		projectId: "Version 454462",
+		name: projectId ? "" : "Slack Monitor",
+		projectId: projectId ? "" : "Version 454462",
 	});
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [toast, setToast] = useState({
@@ -58,7 +60,7 @@ export const Topbar = () => {
 			}
 			(e.target as HTMLSpanElement).blur();
 			setIsNameValid(isValidName);
-			updateProject(projectId);
+			updateProject();
 		}
 	};
 

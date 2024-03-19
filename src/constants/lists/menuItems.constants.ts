@@ -6,19 +6,19 @@ export const menuItems: IMenuItem[] = [
 		id: 1,
 		icon: Projects,
 		name: "My Projects",
-		href: "/app/my",
+		href: "my",
 	},
 	{
 		id: 2,
 		icon: Dashboard,
 		name: "Dashboard",
-		href: "/app/dashboard",
+		href: "dashboard",
 	},
 	{
 		id: 3,
 		icon: Connections,
 		name: "Connections",
-		href: "/app/connections",
+		href: "connections",
 		submenu: [
 			{
 				id: 0,
@@ -41,12 +41,12 @@ export const menuItems: IMenuItem[] = [
 		id: 4,
 		icon: StatsBlack,
 		name: "Stats",
-		href: "/app/stats",
+		href: "stats",
 	},
 	{
 		id: 5,
 		icon: Settings,
 		name: "Settings",
-		href: "/app/settings",
+		href: "settings",
 	},
 ];
