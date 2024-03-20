@@ -5,6 +5,7 @@ import i18n from "i18next";
 import { isEmpty } from "lodash";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 
 const defaultState: Omit<
 	IProjectStore,
@@ -13,12 +14,16 @@ const defaultState: Omit<
 	| "setProjectResources"
 	| "getProjectResources"
 	| "setProjectEmptyResources"
-	| "setUpdateCount"
+	| "setActiveTab"
+	| "getProjectsList"
 > = {
-	projectId: undefined,
-	resources: {},
-	activeEditorFileName: "",
-	projectUpdateCount: 0,
+	list: [],
+	currentProject: {
+		projectId: undefined,
+		activeEditorFileName: "",
+		resources: {},
+	},
+	activeTab: 1,
 };
 
 const store: StateCreator<IProjectStore> = (set, get) => ({
@@ -26,8 +31,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	loadProject: async (projectId) => {
 		set(() => ({
 			...defaultState,
-			projectId,
-			resources: {},
+			currentProject: { ...defaultState.currentProject, projectId },
 		}));
 
 		const { error } = await get().getProjectResources();
@@ -35,73 +39,83 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		return { error };
 	},
 
-	setUpdateCount: () => set((state) => ({ ...state, projectUpdateCount: state.projectUpdateCount + 1 })),
+	getProjectsList: async () => {
+		const { data, error } = await ProjectsService.list();
 
-	setUpdateFileContent: (content) => {
-		const fileName = get().activeEditorFileName;
-
-		if (!fileName) return;
-
-		set((state: IProjectStore) => ({
-			...state,
-			resources: {
-				...state.resources,
-				[fileName]: content,
-			},
+		const updatedList = data?.map(({ projectId, name }) => ({
+			id: projectId,
+			name,
+			href: `/${projectId}`,
 		}));
+
+		set((state) => ({ ...state, list: updatedList }));
+
+		return { error, list: updatedList || [] };
 	},
+
+	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
+
+	setUpdateFileContent: (content) =>
+		set((state) => {
+			const fileName = state.currentProject.activeEditorFileName;
+
+			if (!fileName) return state;
+
+			state.currentProject.resources[fileName] = content;
+
+			return state;
+		}),
 
 	setProjectResources: async (file) => {
 		const fileContent = await readFileAsUint8Array(file);
 
-		const { error } = await ProjectsService.setResources(get().projectId as string, {
-			...get().resources,
+		const { error } = await ProjectsService.setResources(get().currentProject.projectId as string, {
+			...get().currentProject.resources,
 			[file.name]: fileContent,
 		});
 
 		if (error) return { error: { message: i18n.t("errors.projectIdNotFound") } };
 
-		set((state) => ({
-			...state,
-			fileName: file.name,
-			resources: {
-				...state.resources,
-				[file.name]: fileContent,
-			},
-		}));
+		set((state) => {
+			state.currentProject.activeEditorFileName = file.name;
+			state.currentProject.resources[file.name] = fileContent;
+			return state;
+		});
 
 		return { error };
 	},
 
 	setProjectEmptyResources: async (name) => {
-		const { error } = await ProjectsService.setResources(get().projectId as string, {
-			...get().resources,
+		const { error } = await ProjectsService.setResources(get().currentProject.projectId as string, {
+			...get().currentProject.resources,
 			[name]: new Uint8Array(),
 		});
 
 		if (error) return { error: { message: i18n.t("errors.projectIdNotFound") } };
 
-		set((state) => ({
-			...state,
-			fileName: name,
-			resources: {
-				...state.resources,
-				[name]: new Uint8Array(),
-			},
-		}));
+		set((state) => {
+			state.currentProject.activeEditorFileName = name;
+			state.currentProject.resources[name] = new Uint8Array();
+			return state;
+		});
 
 		return { error };
 	},
 
 	getProjectResources: async () => {
-		if (isEmpty(get().projectId)) return { error: { message: i18n.t("errors.projectIdNotFound") } };
+		if (isEmpty(get().currentProject.projectId)) return { error: { message: i18n.t("errors.projectIdNotFound") } };
 
-		const { data, error } = await ProjectsService.getResources(get().projectId as string);
+		const { data, error } = await ProjectsService.getResources(get().currentProject.projectId as string);
 
-		set(() => ({ resources: data }));
+		if (data) {
+			set((state) => {
+				state.currentProject.resources = data;
+				return state;
+			});
+		}
 
 		return { error };
 	},
 });
 
-export const useProjectStore = create(persist(store, { name: "ProjectStore" }));
+export const useProjectStore = create(persist(immer(store), { name: "ProjectStore" }));

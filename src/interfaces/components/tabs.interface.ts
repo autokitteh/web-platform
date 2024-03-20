@@ -2,6 +2,7 @@ export interface ITabs {
 	defaultValue?: string | number;
 	className?: string;
 	children: React.ReactNode;
+	onChange?: (value: string | number) => void;
 }
 
 export interface ITab {

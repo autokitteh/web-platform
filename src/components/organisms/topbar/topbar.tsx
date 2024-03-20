@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 export const Topbar = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["shared", "errors"]);
-	const { setUpdateCount } = useProjectStore();
+	const { getProjectsList } = useProjectStore();
 	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
 	const [project, setProject] = useState<Project>({
 		name: "",
@@ -60,7 +60,7 @@ export const Topbar = () => {
 			}
 			(e.target as HTMLSpanElement).blur();
 			setIsNameValid(isValidName);
-			setUpdateCount();
+			getProjectsList();
 		}
 	};
 

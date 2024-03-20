@@ -5,13 +5,13 @@ import { useUiGlobalStore, useProjectStore } from "@store";
 import { debounce, get } from "lodash";
 
 export const EditorTabs = () => {
-	const { resources, activeEditorFileName, setUpdateFileContent } = useProjectStore();
+	const { currentProject, setUpdateFileContent } = useProjectStore();
 	const { isFullScreen } = useUiGlobalStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const [manifestCode, setManifestCode] = useState("// Code B: Initialize your code here...");
 	const initialContent = "// Code A: Initialize your code here...";
 
-	const resource = get(resources, [activeEditorFileName], new Uint8Array());
+	const resource = get(currentProject.resources, [currentProject.activeEditorFileName], new Uint8Array());
 	const byteArray = Object.values(resource);
 	const content = String.fromCharCode.apply(null, byteArray) || initialContent;
 

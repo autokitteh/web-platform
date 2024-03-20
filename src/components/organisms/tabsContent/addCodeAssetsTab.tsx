@@ -13,7 +13,7 @@ export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("errors");
 	const { openModal } = useModalStore();
-	const { resources, setProjectResources } = useProjectStore();
+	const { currentProject, setProjectResources } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -24,7 +24,7 @@ export const AddCodeAssetsTab = () => {
 		"stroke-green-accent": isDragOver,
 	});
 
-	const entriesArray = Object.entries(resources);
+	const entriesArray = Object.entries(currentProject.resources);
 	const sortedResources = orderBy(entriesArray, ([name]) => name, "asc");
 
 	const handleDragOver = (event: React.DragEvent) => {

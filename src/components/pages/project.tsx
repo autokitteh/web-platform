@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 export const Project = () => {
 	const { projectId } = useParams();
-	const { loadProject } = useProjectStore();
+	const { activeTab, loadProject, setActiveTab } = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -31,7 +31,7 @@ export const Project = () => {
 	return (
 		<AppWrapper>
 			<MapMenuFrameLayout>
-				<Tabs defaultValue={1}>
+				<Tabs defaultValue={activeTab} onChange={setActiveTab}>
 					<TabList>
 						{tabsMainFrame.map(({ id, title, count }) => (
 							<Tab className="text-xs 3xl:text-sm" key={id} value={id}>
