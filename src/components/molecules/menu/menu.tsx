@@ -26,9 +26,8 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
-		if (projectId) {
-			navigate(`/${projectId}`);
-		}
+
+		navigate(`/${projectId}`);
 	};
 
 	useEffect(() => {
