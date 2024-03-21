@@ -1,8 +1,10 @@
 import { Trigger } from "@ak-proto-ts/triggers/v1/trigger_pb";
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
+import { convertTriggerProtoToModel } from "@models";
 import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
+import { Trigger as TriggerModel } from "@type/models";
 import i18n from "i18next";
 
 export class TriggersService {
@@ -50,9 +52,9 @@ export class TriggersService {
 		}
 	}
 
-	static async list(): Promise<ServiceResponse<Trigger[]>> {
+	static async list(): Promise<ServiceResponse<TriggerModel[]>> {
 		try {
-			const { triggers } = await triggersClient.list({});
+			const triggers = (await triggersClient.list({})).triggers.map(convertTriggerProtoToModel);
 			return { data: triggers, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.triggerService, (error as Error).message);
