@@ -7,3 +7,7 @@ export interface IModal {
 export interface IModalAddCodeAssets {
 	onError?: (message: string) => void;
 }
+
+export interface IModalDeleteTrigger {
+	onDelete?: () => void;
+}

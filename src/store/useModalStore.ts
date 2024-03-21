@@ -3,13 +3,16 @@ import { StateCreator, create } from "zustand";
 
 const store: StateCreator<IModalStore> = (set) => ({
 	modals: {},
-	openModal: (name: string) =>
+	itemId: undefined,
+	openModal: (name: string, itemId?: string) =>
 		set((state) => ({
 			modals: { ...state.modals, [name]: true },
+			itemId,
 		})),
 	closeModal: (name: string) =>
 		set((state) => ({
 			modals: { ...state.modals, [name]: false },
+			itemId: undefined,
 		})),
 });
 
