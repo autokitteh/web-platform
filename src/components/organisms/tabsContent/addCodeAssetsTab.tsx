@@ -24,8 +24,8 @@ export const AddCodeAssetsTab = () => {
 		"stroke-green-accent": isDragOver,
 	});
 
-	const entriesArray = Object.entries(currentProject.resources);
-	const sortedResources = orderBy(entriesArray, ([name]) => name, "asc");
+	const resourcesEntries = Object.entries(currentProject.resources);
+	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
 
 	const handleDragOver = (event: React.DragEvent) => {
 		event.preventDefault();

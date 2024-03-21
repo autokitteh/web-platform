@@ -1,6 +1,6 @@
-export enum ESedebarMenu {
-	newproject,
-	myprojects,
+export enum ESidebarMenu {
+	newProject,
+	myProjects,
 	dashboard,
 	connections,
 	stats,
