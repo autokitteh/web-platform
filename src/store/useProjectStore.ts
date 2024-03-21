@@ -1,3 +1,4 @@
+import { EStoreName } from "@enums";
 import { IProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
@@ -118,4 +119,4 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 });
 
-export const useProjectStore = create(persist(immer(store), { name: "ProjectStore" }));
+export const useProjectStore = create(persist(immer(store), { name: EStoreName.project }));
