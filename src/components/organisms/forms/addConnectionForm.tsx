@@ -18,21 +18,25 @@ export const AddConnectionForm = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, dirtyFields },
 		control,
 		reset,
 	} = useForm({
 		resolver: zodResolver(newConnectionSchema),
+		defaultValues: {
+			connectionApp: { value: "", label: "" },
+			userName: "",
+			password: "",
+			connectionName: "",
+			specificField: "",
+		},
 	});
-
 	const handleSelectChange = ({ name, value }: ISelectAppChangeForm) => {
 		setSelectedApp((prevState) => ({
 			...prevState,
 			[name]: value,
 		}));
 	};
-
-	const handleCloseToast = () => setIsOpenToast(false);
 
 	const onSubmit = () => {
 		setIsLoading(true);
@@ -43,6 +47,8 @@ export const AddConnectionForm = () => {
 			reset();
 		}, 3000);
 	};
+
+	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
 	return (
 		<div className="min-w-550">
@@ -85,16 +91,27 @@ export const AddConnectionForm = () => {
 						<ErrorMessage>{errors.connectionApp?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
-						<Input {...register("userName")} isError={!!errors.userName} placeholder="User Name" />
+						<Input
+							{...register("userName")}
+							className={inputClass("userName")}
+							isError={!!errors.userName}
+							placeholder="User Name"
+						/>
 						<ErrorMessage>{errors.userName?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
-						<Input {...register("password")} isError={!!errors.password} placeholder="Password" />
+						<Input
+							{...register("password")}
+							className={inputClass("password")}
+							isError={!!errors.password}
+							placeholder="Password"
+						/>
 						<ErrorMessage>{errors.password?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
 						<Input
 							{...register("connectionName")}
+							className={inputClass("connectionName")}
 							isError={!!errors.connectionName}
 							placeholder="Name new connection"
 						/>
@@ -102,7 +119,12 @@ export const AddConnectionForm = () => {
 					</div>
 					{selectedApp.connectionApp === "temporal" ? (
 						<div className="relative">
-							<Textarea {...register("specificField")} isError={!!errors.specificField} rows={4} />
+							<Textarea
+								{...register("specificField")}
+								className={inputClass("specificField")}
+								isError={!!errors.specificField}
+								rows={4}
+							/>
 							<ErrorMessage>{errors.specificField?.message as string}</ErrorMessage>
 						</div>
 					) : null}
@@ -117,7 +139,7 @@ export const AddConnectionForm = () => {
 					<TestS className="w-5 h-4 transition fill-white" /> {isLoading ? "Loading..." : "Test Connection"}
 				</Button>
 			</form>
-			<Toast className="border-green-accent" duration={10} isOpen={isOpenToast} onClose={handleCloseToast}>
+			<Toast className="border-green-accent" duration={10} isOpen={isOpenToast} onClose={() => setIsOpenToast(false)}>
 				<div className="flex">
 					<h5 className="font-semibold">JeffOnSlack</h5>
 					<h5 className="border-l-2 border-gray-400 ml-2 pl-2 font-light">Slack</h5>

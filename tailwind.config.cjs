@@ -4,6 +4,10 @@ import plugin from "tailwindcss/plugin";
 export default {
 	content: ["./src/**/*.{js,jsx,ts,tsx}"],
 	theme: {
+		fontFamily: {
+			"fira-sans": ["Fira Sans", "sans-serif"],
+			"fira-code": ["Fira Code", "sans-serif"],
+		},
 		extend: {
 			maxWidth: {
 				650: "650px",

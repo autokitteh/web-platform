@@ -67,15 +67,21 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		<>
 			<div className={cn(className, "flex flex-col gap-4")}>
 				<div onMouseEnter={(e) => handleMouseEnter(e)}>
-					<Button className="hover:bg-green-light" onClick={createProject}>
-						<IconSvg alt="New Project" className="w-8 h-8 p-1 " src={NewProject} />
+					<Button className="hover:bg-green-light gap-1.5 p-0.5 pl-1" onClick={createProject}>
+						<div className="w-9 h-9 flex items-center justify-center">
+							<IconSvg alt="New Project" className="w-8 h-8 p-1" src={NewProject} />
+						</div>
 						{isOpen ? "New Project" : null}
 					</Button>
 				</div>
 				{menu.map(({ icon, name, href, submenu, id }) => (
 					<div key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
-						<Button className="hover:bg-green-light" href={href}>
-							{icon ? <IconSvg alt={name} className="w-8 h-8 p-1 " src={icon} /> : null}
+						<Button className="hover:bg-green-light gap-1.5 p-0.5 pl-1" href={href}>
+							{icon ? (
+								<div className="w-9 h-9 flex items-center justify-center">
+									<IconSvg alt={name} src={icon} />
+								</div>
+							) : null}
 							{isOpen ? name : null}
 						</Button>
 					</div>

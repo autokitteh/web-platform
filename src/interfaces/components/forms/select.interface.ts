@@ -2,7 +2,7 @@ import { SingleValue } from "react-select";
 
 export interface ISelect {
 	placeholder?: string;
-	value?: ISelectOption | undefined;
+	value?: ISelectOption;
 	options: ISelectOption[];
 	isError?: boolean;
 	onChange: (value: SingleValue<ISelectOption>[]) => void;
