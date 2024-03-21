@@ -1,3 +1,4 @@
+import { EStoreName } from "@enums";
 import { IUIGlobalStore } from "@interfaces/store";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -11,4 +12,4 @@ const store: StateCreator<IUIGlobalStore> = (set) => ({
 		})),
 });
 
-export const useUiGlobalStore = create(persist(store, { name: "UIGlobalStore" }));
+export const useUiGlobalStore = create(persist(store, { name: EStoreName.uiGlobal }));

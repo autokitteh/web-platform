@@ -6,4 +6,5 @@ export const namespaces = {
 	resourcesService: "Resources Service",
 	sessionsService: "Sessions Service",
 	sessionsHistory: "Sessions History",
+	projectUI: "Project UI",
 };

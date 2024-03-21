@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
 		path: ":projectId",
 		children: [
 			{
-				path: "new-connection",
+				path: "add-new-connection",
 				element: <NewConnection />,
 			},
 			{
