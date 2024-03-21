@@ -70,7 +70,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	setProjectResources: async (file) => {
 		const fileContent = await readFileAsUint8Array(file);
 
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId as string, {
+		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
 			...get().currentProject.resources,
 			[file.name]: fileContent,
 		});
@@ -87,7 +87,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 
 	setProjectEmptyResources: async (name) => {
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId as string, {
+		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
 			...get().currentProject.resources,
 			[name]: new Uint8Array(),
 		});
@@ -106,7 +106,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	getProjectResources: async () => {
 		if (isEmpty(get().currentProject.projectId)) return { error: { message: i18n.t("errors.projectIdNotFound") } };
 
-		const { data, error } = await ProjectsService.getResources(get().currentProject.projectId as string);
+		const { data, error } = await ProjectsService.getResources(get().currentProject.projectId!);
 
 		if (data) {
 			set((state) => {

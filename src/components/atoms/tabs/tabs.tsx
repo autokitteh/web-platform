@@ -3,8 +3,8 @@ import { TabsContext } from "@components/atoms/tabs/tabsContext";
 import { ITabs } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Tabs = ({ defaultValue, className, children, onChange }: ITabs) => {
-	const [activeTab, setActiveTab] = useState<string | number>(defaultValue || 0);
+export const Tabs = ({ defaultValue = 0, className, children, onChange }: ITabs) => {
+	const [activeTab, setActiveTab] = useState<number>(defaultValue);
 	const tabsStyle = cn("flex flex-col flex-1 h-full", className);
 
 	useEffect(() => onChange?.(activeTab), [activeTab]);

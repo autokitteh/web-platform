@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
+import { EEditorTabs } from "@enums/components";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useUiGlobalStore, useProjectStore } from "@store";
 import { debounce, get } from "lodash";
@@ -46,12 +47,12 @@ export const EditorTabs = () => {
 	}, 1000);
 
 	return (
-		<Tabs defaultValue="code">
+		<Tabs defaultValue={EEditorTabs.code}>
 			<TabList className="uppercase">
-				<Tab value="code">CODE</Tab>
-				<Tab value="manifest">MANIFEST</Tab>
+				<Tab value={EEditorTabs.code}>CODE</Tab>
+				<Tab value={EEditorTabs.manifest}>MANIFEST</Tab>
 			</TabList>
-			<TabPanel className="pt-10  -ml-7" value="code">
+			<TabPanel className="pt-10  -ml-7" value={EEditorTabs.code}>
 				<Editor
 					beforeMount={handleEditorWillMount}
 					key={editorKey}
@@ -62,7 +63,7 @@ export const EditorTabs = () => {
 					value={content}
 				/>
 			</TabPanel>
-			<TabPanel className="pt-10 -ml-7" value="manifest">
+			<TabPanel className="pt-10 -ml-7" value={EEditorTabs.manifest}>
 				<Editor
 					beforeMount={handleEditorWillMount}
 					key={editorKey}

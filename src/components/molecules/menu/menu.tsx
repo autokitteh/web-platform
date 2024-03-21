@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { NewProject } from "@assets/image";
 import { Button, IconSvg, Toast } from "@components/atoms";
 import { menuItems, fetchMenuInterval } from "@constants";
+import { ESedebarMenu } from "@enums/components";
 import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { IMenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
@@ -43,10 +44,10 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	useEffect(() => {
 		const sortedList = orderBy(list, "name", "asc");
 
-		const currentSubmenu = menu.find(({ id }) => id === 1)?.submenu;
+		const currentSubmenu = menu.find(({ id }) => id === ESedebarMenu.myprojects)?.submenu;
 		if (isEqual(currentSubmenu, sortedList)) return;
 
-		setMenu(menuItems.map((item) => (item.id === 1 ? { ...item, submenu: sortedList } : item)));
+		setMenu(menuItems.map((item) => (item.id === ESedebarMenu.myprojects ? { ...item, submenu: sortedList } : item)));
 	}, [list]);
 
 	const handleMouseEnter = (e: React.MouseEvent, submenu?: ISubmenuInfo["submenu"]) => {
