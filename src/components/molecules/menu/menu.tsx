@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { NewProject } from "@assets/image";
 import { Button, IconSvg, Toast } from "@components/atoms";
 import { menuItems, fetchMenuInterval } from "@constants";
+import { ESidebarMenu } from "@enums/components";
 import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { IMenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
-import { useMenuStore, useCodeAssetsStore } from "@store";
+import { useProjectStore } from "@store";
 import { cn } from "@utilities";
-import { isEqual } from "lodash";
+import { isEqual, orderBy } from "lodash";
 import { useNavigate } from "react-router-dom";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	const navigate = useNavigate();
-	const { projectUpdateCount, updateProject } = useMenuStore();
-	const { setCodeAsset } = useCodeAssetsStore();
+	const { list, getProjectsList } = useProjectStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -21,42 +21,38 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	});
 
 	const createProject = async () => {
-		const { data, error } = await ProjectsService.create("");
+		const { data: projectId, error } = await ProjectsService.create("");
 
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
-		if (data) {
-			updateProject();
-			setCodeAsset("");
-			navigate(`/${data}`);
-		}
+
+		navigate(`/${projectId}`);
+
+		await getProjectsList();
 	};
 
-	useEffect(() => {
-		const fetchMenu = async () => {
-			const { data, error } = await ProjectsService.list();
-			if (error) {
-				setToast({ isOpen: true, message: (error as Error).message });
-				return;
-			}
-			const updatedSubmenu = data?.map(({ projectId, name }) => ({
-				href: `/${projectId}`,
-				id: projectId,
-				name,
-			}));
-			const currentSubmenu = menu.find(({ id }) => id === 1)?.submenu;
-
-			if (isEqual(currentSubmenu, updatedSubmenu)) return;
-			setMenu(menuItems.map((item) => (item.id === 1 ? { ...item, submenu: updatedSubmenu } : item)));
-		};
-
+	useLayoutEffect(() => {
+		const fetchMenu = async () => await getProjectsList();
 		fetchMenu();
 
 		const intervalMenu = setInterval(fetchMenu, fetchMenuInterval);
 		return () => clearInterval(intervalMenu);
-	}, [projectUpdateCount]);
+	}, []);
+
+	useEffect(() => {
+		const sortedList = orderBy(list, "name", "asc");
+
+		const currentSubmenu = menu.find(({ id }) => id === ESidebarMenu.myProjects)?.submenu;
+		if (isEqual(currentSubmenu, sortedList)) return;
+
+		const updatedMenuItems = menuItems.map((item) =>
+			item.id === ESidebarMenu.myProjects ? { ...item, submenu: sortedList } : item
+		);
+
+		setMenu(updatedMenuItems);
+	}, [list]);
 
 	const handleMouseEnter = (e: React.MouseEvent, submenu?: ISubmenuInfo["submenu"]) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
