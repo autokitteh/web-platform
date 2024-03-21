@@ -3,6 +3,7 @@ import { PlusCircle, ThreeDots } from "@assets/image";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton, DropdownButton } from "@components/molecules";
 import { ModalDeleteTrigger } from "@components/organisms/modals";
+import { fetchMenuInterval } from "@constants";
 import { EModalName, ESortDirection } from "@enums/components";
 import { TriggersService } from "@services";
 import { useModalStore } from "@store";
@@ -31,6 +32,9 @@ export const TriggersContent = () => {
 
 	useEffect(() => {
 		fetchTriggers();
+
+		const intervalMenu = setInterval(fetchTriggers, fetchMenuInterval);
+		return () => clearInterval(intervalMenu);
 	}, []);
 
 	const toggleSortTriggers = (key: keyof Trigger) => {
@@ -60,7 +64,7 @@ export const TriggersContent = () => {
 				<div className="text-base text-gray-300">Available triggers</div>
 				<Button
 					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
-					href="new-connection"
+					href="new-trigger"
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 					Add new
