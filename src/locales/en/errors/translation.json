@@ -3,6 +3,7 @@
 	"projectNotFound": "Couldn't fetch the project details",
 	"projectIdNotFound": "Project ID not found",
 	"triggerNotFound": "Couldn't fetch the trigger details",
+	"connectionNotFound": "Couldn't fetch the connection details - id: {{connectionId}}",
 	"projectNotCreated": "There was an issue creating the project",
 	"triggerNotCreated": "There was an issue creating the trigger",
 	"unexpectedSessionStateType": "Unexpected session state type",

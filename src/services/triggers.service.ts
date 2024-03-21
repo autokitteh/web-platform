@@ -1,11 +1,13 @@
-import { Trigger } from "@ak-proto-ts/triggers/v1/trigger_pb";
+import { ConnectionService } from "./connection.service";
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";
 import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
-import { Trigger as TriggerModel } from "@type/models";
+import { Trigger } from "@type/models";
+import { flattenArray } from "@utilities/index";
 import i18n from "i18next";
+import { get } from "lodash";
 
 export class TriggersService {
 	static async create(trigger: Trigger): Promise<ServiceResponse<string>> {
@@ -31,7 +33,13 @@ export class TriggersService {
 
 				return { data: undefined, error: i18n.t("errors.triggerNotFound") };
 			}
-			return { data: trigger, error: undefined };
+			const convertedTrigger = convertTriggerProtoToModel(trigger);
+			const { data: connection } = await ConnectionService.get(convertedTrigger.connectionId);
+			const triggerData = {
+				...convertedTrigger,
+				connectionName: connection?.name,
+			} as Trigger;
+			return { data: triggerData, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.projectService, (error as Error).message);
 			return { data: undefined, error };
@@ -52,10 +60,29 @@ export class TriggersService {
 		}
 	}
 
-	static async list(): Promise<ServiceResponse<TriggerModel[]>> {
+	static async list(): Promise<ServiceResponse<Trigger[]>> {
 		try {
-			const triggers = (await triggersClient.list({})).triggers.map(convertTriggerProtoToModel);
-			return { data: triggers, error: undefined };
+			const { triggers } = await triggersClient.list({});
+			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
+			const triggerPromises = (convertedTriggers || []).map(async (trigger) => {
+				const { data: connection } = await ConnectionService.get(trigger.connectionId);
+				return {
+					...trigger,
+					connectionName: connection!.name,
+				};
+			});
+
+			const triggerResponses = await Promise.allSettled(triggerPromises);
+
+			const triggerResult = flattenArray<Trigger>(
+				triggerResponses
+					.filter((response) => response.status === "fulfilled")
+					.map((response) => get(response, "value", []))
+			);
+
+			console.log("triggerResult", triggerResult);
+
+			return { data: triggerResult, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.triggerService, (error as Error).message);
 			return { data: undefined, error };
