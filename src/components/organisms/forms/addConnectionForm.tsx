@@ -48,7 +48,7 @@ export const AddConnectionForm = () => {
 		}, 3000);
 	};
 
-	const getBorderClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
+	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
 	return (
 		<div className="min-w-550">
@@ -93,7 +93,7 @@ export const AddConnectionForm = () => {
 					<div className="relative">
 						<Input
 							{...register("userName")}
-							className={getBorderClass("userName")}
+							className={inputClass("userName")}
 							isError={!!errors.userName}
 							placeholder="User Name"
 						/>
@@ -102,7 +102,7 @@ export const AddConnectionForm = () => {
 					<div className="relative">
 						<Input
 							{...register("password")}
-							className={getBorderClass("password")}
+							className={inputClass("password")}
 							isError={!!errors.password}
 							placeholder="Password"
 						/>
@@ -111,7 +111,7 @@ export const AddConnectionForm = () => {
 					<div className="relative">
 						<Input
 							{...register("connectionName")}
-							className={getBorderClass("connectionName")}
+							className={inputClass("connectionName")}
 							isError={!!errors.connectionName}
 							placeholder="Name new connection"
 						/>
@@ -121,7 +121,7 @@ export const AddConnectionForm = () => {
 						<div className="relative">
 							<Textarea
 								{...register("specificField")}
-								className={getBorderClass("specificField")}
+								className={inputClass("specificField")}
 								isError={!!errors.specificField}
 								rows={4}
 							/>
