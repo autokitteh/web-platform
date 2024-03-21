@@ -17,6 +17,7 @@ const defaultState: Omit<
 	| "setProjectEmptyResources"
 	| "setActiveTab"
 	| "getProjectsList"
+	| "updateActiveEditorFileName"
 > = {
 	list: [],
 	currentProject: {
@@ -116,6 +117,13 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		}
 
 		return { error };
+	},
+
+	updateActiveEditorFileName: (fileName: string) => {
+		set((state) => {
+			state.currentProject.activeEditorFileName = fileName;
+			return state;
+		});
 	},
 });
 

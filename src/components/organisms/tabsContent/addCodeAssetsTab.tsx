@@ -15,7 +15,7 @@ export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("errors");
 	const { openModal } = useModalStore();
-	const { currentProject, setProjectResources } = useProjectStore();
+	const { currentProject, setProjectResources, updateActiveEditorFileName } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -25,6 +25,8 @@ export const AddCodeAssetsTab = () => {
 	const styleCircle = cn("transition stroke-gray-400 group-hover:stroke-green-accent", {
 		"stroke-green-accent": isDragOver,
 	});
+
+	const bodyRowClass = (name: string) => cn({ "bg-black": name === currentProject.activeEditorFileName });
 
 	const resourcesEntries = Object.entries(currentProject.resources);
 	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
@@ -79,9 +81,14 @@ export const AddCodeAssetsTab = () => {
 					</THead>
 					<TBody>
 						{sortedResources.map(([name], idx) => (
-							<Tr className="group" key={idx}>
-								<Td className="font-semibold border-r-0">{name}</Td>
-								<Th className="border-r-0 max-8" />
+							<Tr className={bodyRowClass(name)} key={idx}>
+								<Td
+									className="font-semibold border-r-0 cursor-pointer"
+									onClick={() => updateActiveEditorFileName(name)}
+								>
+									{name}
+								</Td>
+								<Th className="border-r-0 max-w-8" />
 							</Tr>
 						))}
 					</TBody>
