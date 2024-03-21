@@ -11,9 +11,9 @@ export class ConnectionService {
 		try {
 			const { connection } = await connectionsClient.get({ connectionId });
 			if (!connection) {
-				LoggerService.error(namespaces.triggerService, i18n.t("errors.connectionNotFound", { connectionId }));
+				LoggerService.error(namespaces.triggerService, i18n.t("errors.connectionNotFound"));
 
-				return { data: undefined, error: i18n.t("errors.connectionNotFound", { connectionId }) };
+				return { data: undefined, error: i18n.t("errors.connectionNotFound") };
 			}
 			return { data: convertConnectionProtoToModel(connection), error: undefined };
 		} catch (error) {
