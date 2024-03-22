@@ -4,7 +4,7 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
 const store: StateCreator<IUIGlobalStore> = (set) => ({
-	isFullScreen: false,
+	isFullScreen: true,
 	toggleFullScreen: () =>
 		set((state) => ({
 			...state,

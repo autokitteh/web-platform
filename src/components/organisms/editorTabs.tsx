@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
 import { EEditorTabs } from "@enums/components";
 import Editor, { Monaco } from "@monaco-editor/react";
-import { useUiGlobalStore, useProjectStore } from "@store";
+import { useProjectStore } from "@store";
 import { debounce, get } from "lodash";
 
 export const EditorTabs = () => {
 	const { currentProject, setUpdateFileContent } = useProjectStore();
-	const { isFullScreen } = useUiGlobalStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const [manifestCode, setManifestCode] = useState("// Code B: Initialize your code here...");
 	const initialContent = "// Code A: Initialize your code here...";
@@ -15,8 +14,6 @@ export const EditorTabs = () => {
 	const resource = get(currentProject.resources, [currentProject.activeEditorFileName], new Uint8Array());
 	const byteArray = Object.values(resource);
 	const content = String.fromCharCode.apply(null, byteArray) || initialContent;
-
-	useEffect(() => setEditorKey((prevKey) => prevKey + 1), [isFullScreen]);
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
