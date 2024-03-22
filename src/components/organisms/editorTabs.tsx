@@ -52,7 +52,7 @@ export const EditorTabs = () => {
 				<Tab value={EEditorTabs.code}>CODE</Tab>
 				<Tab value={EEditorTabs.manifest}>MANIFEST</Tab>
 			</TabList>
-			<TabPanel className="pt-10  -ml-7" value={EEditorTabs.code}>
+			<TabPanel className="pt-10 -ml-7" value={EEditorTabs.code}>
 				<Editor
 					beforeMount={handleEditorWillMount}
 					key={editorKey}
