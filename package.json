@@ -5,6 +5,7 @@
 	"version": "0.0.0",
 	"scripts": {
 		"test:e2e": "playwright test",
+		"test:e2e:ui": "npx playwright test --ui",
 		"test:e2e:report": "npx playwright show-report",
 		"dev": "vite",
 		"build": "tsc && vite build",
