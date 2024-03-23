@@ -36,6 +36,7 @@ export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Input
 						{...register("name")}
+						aria-label="new file name"
 						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="bg-white hover:border-gray-700"
 						isError={!!errors.name}

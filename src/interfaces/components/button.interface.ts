@@ -3,6 +3,7 @@ import { TButtonVariant, TSortDirection } from "@type/components";
 
 export interface IButton extends React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, React.AriaAttributes {
 	className: string;
+	ariaLabel: string;
 	variant: TButtonVariant;
 	href: string;
 	disabled: boolean;

@@ -4,7 +4,16 @@ import { EButtonVariant } from "@enums/components";
 import { IButton } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Button = ({ children, className, variant, href, disabled, type, onClick }: Partial<IButton>) => {
+export const Button = ({
+	children,
+	className,
+	variant,
+	href,
+	disabled,
+	type,
+	onClick,
+	ariaLabel,
+}: Partial<IButton>) => {
 	const buttonClass = cn(
 		"w-full flex items-center gap-2.5 p-2 rounded-3xl transition",
 		"duration-300 text-gray-700 text-center hover:bg-gray-800 hover:text-current",
@@ -19,7 +28,7 @@ export const Button = ({ children, className, variant, href, disabled, type, onC
 	);
 
 	return !href ? (
-		<button className={buttonClass} disabled={disabled} onClick={onClick} type={type}>
+		<button aria-label={ariaLabel} className={buttonClass} disabled={disabled} onClick={onClick} type={type}>
 			{children}
 		</button>
 	) : (
