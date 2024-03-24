@@ -43,9 +43,10 @@ jobs:
       - name: Run Backend
         run: |
           ./ak up --mode=dev &
-        # Ensure the backend server has enough time to start
+
+      # Ensure the backend server has enough time to start
       - name: Wait for Backend to Start
-        run: sleep 10
+        run: sleep 5
 
       # Run Playwright tests=
       - name: Run Playwright tests
