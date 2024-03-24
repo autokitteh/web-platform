@@ -1,6 +1,7 @@
+import { namespaces } from "@constants";
 import { EStoreName } from "@enums";
 import { IProjectStore } from "@interfaces/store";
-import { ProjectsService } from "@services";
+import { LoggerService, ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
 import i18n from "i18next";
 import { isEmpty } from "lodash";
@@ -56,16 +57,26 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 
 	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
 
-	setUpdateFileContent: (content) =>
+	setUpdateFileContent: async (content) => {
+		const fileName = get().currentProject.activeEditorFileName;
+
+		if (!fileName) return;
+
+		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
+			...get().currentProject.resources,
+			[fileName]: content,
+		});
+
+		if (error) {
+			LoggerService.error(namespaces.projectService, (error as Error).message);
+			return;
+		}
+
 		set((state) => {
-			const fileName = state.currentProject.activeEditorFileName;
-
-			if (!fileName) return state;
-
 			state.currentProject.resources[fileName] = content;
-
 			return state;
-		}),
+		});
+	},
 
 	setProjectResources: async (file) => {
 		const fileContent = await readFileAsUint8Array(file);

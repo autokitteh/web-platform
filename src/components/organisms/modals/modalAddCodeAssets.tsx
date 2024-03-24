@@ -1,16 +1,20 @@
 import React from "react";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
+import { namespaces } from "@constants";
 import { EModalName } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IModalAddCodeAssets } from "@interfaces/components";
+import { LoggerService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
 import { codeAssetsSchema } from "@validations";
 import { useForm, FieldValues } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
+	const { t } = useTranslation("errors");
 	const { closeModal } = useModalStore();
-	const { setProjectEmptyResources } = useProjectStore();
+	const { currentProject, setProjectEmptyResources } = useProjectStore();
 
 	const {
 		register,
@@ -24,7 +28,11 @@ export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 		const { error } = await setProjectEmptyResources(name);
 		closeModal(EModalName.addCodeAssets);
 		if (error) {
-			onError?.((error as Error).message);
+			onError?.(t("projectAddFailed"));
+			LoggerService.error(
+				namespaces.projectUI,
+				t("projectAddFailedExtended", { projectId: currentProject.projectId, error: (error as Error).message })
+			);
 			return;
 		}
 	};
