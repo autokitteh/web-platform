@@ -24,7 +24,14 @@ jobs:
 
       - name: Download Backend Executable
         run: |
-          curl -L -o backend.tar.gz  https://github.com/autokitteh/autokitteh/releases/download/v0.3.1/autokitteh_Linux_x86_64.tar.gz
+          # Fetch the latest release data from GitHub API
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/autokitteh/autokitteh/releases/latest)
+
+          # Extract the asset URL for the Linux executable
+          ASSET_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | test("autokitteh_Linux_x86_64.tar.gz")) | .browser_download_url')
+
+          # Download the asset
+          curl -L -o backend.tar.gz $ASSET_URL
           chmod +x backend.tar.gz
       # Extract the backend executable
       - name: Extract Backend
