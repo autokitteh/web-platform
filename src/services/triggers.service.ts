@@ -5,9 +5,7 @@ import { convertTriggerProtoToModel } from "@models";
 import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Trigger } from "@type/models";
-import { flattenArray } from "@utilities/index";
 import i18n from "i18next";
-import { get } from "lodash";
 
 export class TriggersService {
 	static async create(trigger: Trigger): Promise<ServiceResponse<string>> {
@@ -64,25 +62,20 @@ export class TriggersService {
 		try {
 			const { triggers } = await triggersClient.list({});
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
-			const triggerPromises = (convertedTriggers || []).map(async (trigger) => {
-				const { data: connection } = await ConnectionService.get(trigger.connectionId);
+			const { data: connectionsList, error } = await ConnectionService.list();
+			if (error) {
+				LoggerService.error(namespaces.triggerService, (error as Error).message);
+				return { data: undefined, error };
+			}
+			const enrhichedTriggers = convertedTriggers.map((trigger) => {
+				const connection = connectionsList?.find((connection) => connection.connectionId === trigger.connectionId);
 				return {
 					...trigger,
-					connectionName: connection!.name,
+					connectionName: connection?.name || i18n.t("errors.connectionNotFound"),
 				};
 			});
 
-			const triggerResponses = await Promise.allSettled(triggerPromises);
-
-			const triggerResult = flattenArray<Trigger>(
-				triggerResponses
-					.filter((response) => response.status === "fulfilled")
-					.map((response) => get(response, "value", []))
-			);
-
-			console.log("triggerResult", triggerResult);
-
-			return { data: triggerResult, error: undefined };
+			return { data: enrhichedTriggers, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.triggerService, (error as Error).message);
 			return { data: undefined, error };
