@@ -8,7 +8,10 @@ import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export const AddTriggerForm = () => {
-	const [isOpenToast, setIsOpenToast] = useState(false);
+	const [toast, setToast] = useState({
+		isOpen: false,
+		message: "",
+	});
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
@@ -16,7 +19,6 @@ export const AddTriggerForm = () => {
 		handleSubmit,
 		formState: { errors },
 		control,
-		reset,
 	} = useForm({
 		resolver: zodResolver(newConnectionSchema),
 	});
@@ -25,7 +27,6 @@ export const AddTriggerForm = () => {
 		setIsLoading(true);
 		setIsLoading(false);
 		navigate(-1);
-		reset();
 	};
 
 	return (
@@ -88,12 +89,14 @@ export const AddTriggerForm = () => {
 					</div>
 				</div>
 			</form>
-			<Toast className="border-green-accent" duration={10} isOpen={isOpenToast} onClose={() => setIsOpenToast(false)}>
-				<div className="flex">
-					<h5 className="font-semibold">JeffOnSlack</h5>
-					<h5 className="border-l-2 border-gray-400 ml-2 pl-2 font-light">Slack</h5>
-				</div>
-				<p className="mt-1 text-xs">Success</p>
+			<Toast
+				className="border-error"
+				duration={5}
+				isOpen={toast.isOpen}
+				onClose={() => setToast({ ...toast, isOpen: false })}
+			>
+				<h5 className="font-semibold text-error">Error</h5>
+				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>
 	);
