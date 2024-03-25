@@ -23,4 +23,5 @@ export interface IProjectStore {
 	setProjectResources: (file: File) => Promise<IProjectStoreResponse>;
 	setProjectEmptyResources: (name: string) => Promise<IProjectStoreResponse>;
 	getProjectResources: () => Promise<IProjectStoreResponse>;
+	updateActiveEditorFileName: (fileName: string) => void;
 }

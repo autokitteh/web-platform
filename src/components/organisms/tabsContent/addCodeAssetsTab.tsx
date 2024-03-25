@@ -15,7 +15,7 @@ export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("errors");
 	const { openModal } = useModalStore();
-	const { currentProject, setProjectResources } = useProjectStore();
+	const { currentProject, setProjectResources, updateActiveEditorFileName } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -79,9 +79,14 @@ export const AddCodeAssetsTab = () => {
 					</THead>
 					<TBody>
 						{sortedResources.map(([name], idx) => (
-							<Tr className="group" key={idx}>
-								<Td className="font-semibold border-r-0">{name}</Td>
-								<Th className="border-r-0 max-8" />
+							<Tr className={cn({ "bg-black": name === currentProject.activeEditorFileName })} key={idx}>
+								<Td
+									className="font-semibold border-r-0 cursor-pointer"
+									onClick={() => updateActiveEditorFileName(name)}
+								>
+									{name}
+								</Td>
+								<Th className="border-r-0 max-w-8" />
 							</Tr>
 						))}
 					</TBody>
