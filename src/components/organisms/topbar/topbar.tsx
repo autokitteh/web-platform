@@ -4,7 +4,7 @@ import { Button, ErrorMessage, IconButton, IconSvg, Toast } from "@components/at
 import { DropdownButton } from "@components/molecules";
 import { topbarItems } from "@constants";
 import { ProjectsService } from "@services";
-import { useUiGlobalStore, useProjectStore } from "@store";
+import { useProjectStore } from "@store";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,6 @@ export const Topbar = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["shared", "errors"]);
 	const { getProjectsList } = useProjectStore();
-	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
 	const [project, setProject] = useState<Project>({
 		name: "",
 		projectId: "",
@@ -25,7 +24,6 @@ export const Topbar = () => {
 		message: "",
 	});
 
-	const styleIconSreen = cn({ "border-transparent bg-black": isFullScreen });
 	const styleInput = cn(
 		"font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight",
 		{
@@ -130,7 +128,7 @@ export const Topbar = () => {
 						{t("more")}
 					</Button>
 				</DropdownButton>
-				<IconButton className={styleIconSreen} onClick={toggleFullScreen} variant="outline">
+				<IconButton disabled variant="outline">
 					<FullScreen />
 				</IconButton>
 			</div>

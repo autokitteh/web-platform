@@ -102,7 +102,7 @@ export const AddCodeAssetsTab = () => {
 			>
 				<div className="flex flex-col items-center gap-2.5">
 					<label className="group flex flex-col items-center gap-2.5 cursor-pointer">
-						<input accept=".py" className="hidden" multiple onChange={handleFileSelect} type="file" />
+						<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
 						<PlusCircle className={styleCircle} />
 						<p className="text-center text-lg font-bold uppercase text-white">Add Code & Assets</p>
 					</label>

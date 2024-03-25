@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Minimize, LogoFrame } from "@assets/image";
-import { Frame, IconButton } from "@components/atoms";
+import { LogoFrame } from "@assets/image";
+import { Frame } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
 import { ISplitFrame } from "@interfaces/components";
-import { useUiGlobalStore } from "@store";
 import { cn } from "@utilities";
 
 export const SplitFrame = ({ children }: ISplitFrame) => {
-	const { isFullScreen, toggleFullScreen } = useUiGlobalStore();
-	const [leftWidth, setLeftWidth] = useState(55);
+	const [leftWidth, setLeftWidth] = useState(50);
 
-	const baseStyle = cn("flex justify-end h-full w-2/3", { "w-full": isFullScreen });
+	const baseStyle = cn("flex justify-end h-full w-full");
 	const mainFrameStyle = cn("rounded-l-none pb-0 overflow-hidden", { "rounded-2xl": !children });
 
-	const minWidthPercent = 25;
+	const minWidthPercent = 35;
 	const maxWidthPercent = 70;
 
 	const onKeyDown = (e: KeyboardEvent) => {
@@ -54,15 +52,7 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 		<div className={baseStyle}>
 			<div className="flex" style={{ width: `${leftWidth}%` }}>
 				{children ? (
-					<Frame className="rounded-r-none border-r border-gray-600 bg-gray-800 flex-auto">
-						<IconButton
-							className="hover:scale-125 absolute -left-5 top-1/2 -translate-y-1/2 z-50 bg-black"
-							onClick={toggleFullScreen}
-						>
-							<Minimize />
-						</IconButton>
-						{children}
-					</Frame>
+					<Frame className="rounded-r-none border-r border-gray-600 bg-gray-800 flex-auto">{children}</Frame>
 				) : null}
 			</div>
 			<div className="resize-handle cursor-ew-resize z-10 w-2 -ml-2" />
