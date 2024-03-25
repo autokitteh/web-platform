@@ -6,13 +6,12 @@ import { IModalDeleteTrigger } from "@interfaces/components";
 import { TriggersService } from "@services";
 import { useModalStore } from "@store";
 import { Trigger } from "@type/models";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 
 export const ModalDeleteTrigger = ({ onDelete }: IModalDeleteTrigger) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
 	const { closeModal, itemId } = useModalStore();
 	const [trigger, setTrigger] = useState<Trigger>();
-
 	useEffect(() => {
 		if (itemId) {
 			const fetchTrigger = async () => {
@@ -30,12 +29,14 @@ export const ModalDeleteTrigger = ({ onDelete }: IModalDeleteTrigger) => {
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
 				<p>This trigger you are about to delete uses:</p>
-				<p className="font-semibold">
-					{t("line", {
-						connection: trigger?.connectionName,
-						entrypoint: `${trigger?.path}:${trigger?.name}`,
-						eventType: trigger?.eventType,
-					})}
+				<p className="font-medium">
+					<Trans>
+						{t("line", {
+							connection: `<strong>${trigger?.connectionName}</strong><br/>`,
+							entrypoint: `<strong>${trigger?.path}:${trigger?.name}</strong><br/>`,
+							eventType: `<strong>${trigger?.eventType}</strong><br/>`,
+						})}
+					</Trans>
 				</p>
 				<p className="mt-1">{t("line2")}</p>
 				<p className="mt-1">{t("line3")}</p>

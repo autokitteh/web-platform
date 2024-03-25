@@ -10,7 +10,7 @@
 	},
 	"deleteTrigger": {
 		"title": "Delete Trigger",
-		"line": "{{connection}} - {{entrypoint}} - {{eventType}} ",
+		"line": "Connection - {{connection}} Entry Point - {{entrypoint}} Event Type - {{eventType}}",
 		"line2": "Deleting the trigger may cause failure of project.",
 		"line3": "Are you sure you want to delete this trigger?",
 		"cancelButton": "Cancel",
