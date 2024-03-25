@@ -3,15 +3,17 @@ import { PlusCircle, ThreeDots } from "@assets/image";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton, DropdownButton } from "@components/molecules";
 import { ModalDeleteTrigger } from "@components/organisms/modals";
-import { fetchMenuInterval } from "@constants";
+import { fetchMenuInterval, namespaces } from "@constants";
 import { EModalName, ESortDirection } from "@enums/components";
-import { TriggersService } from "@services";
+import { LoggerService, TriggersService } from "@services";
 import { useModalStore } from "@store";
 import { TSortDirection } from "@type/components";
 import { Trigger } from "@type/models";
 import { orderBy } from "lodash";
+import { useTranslation } from "react-i18next";
 
 export const TriggersContent = () => {
+	const { t } = useTranslation("errors");
 	const { itemId, openModal, closeModal } = useModalStore();
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
@@ -52,7 +54,11 @@ export const TriggersContent = () => {
 		const { error } = await TriggersService.delete(itemId);
 		closeModal(EModalName.deleteTrigger);
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			setToast({ isOpen: true, message: t("triggerRemoveFailed") });
+			LoggerService.error(
+				namespaces.projectUI,
+				t("triggerFailedExtended", { triggerId: itemId, error: (error as Error).message })
+			);
 			return;
 		}
 		fetchTriggers();

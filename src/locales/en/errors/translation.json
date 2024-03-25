@@ -10,5 +10,7 @@
 	"missingSessionStateType": "Missing session state type",
 	"nameRequired": "Name is required",
 	"projectAddFailed": "Project code add failed",
-	"projectAddFailedExtended": "Project code add failed, ID: {{projectId}}, error message: {{error}}"
+	"projectAddFailedExtended": "Project code add failed, ID: {{projectId}}, error message: {{error}}",
+	"triggerRemoveFailed": "Trigger remove failed",
+	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}"
 }
