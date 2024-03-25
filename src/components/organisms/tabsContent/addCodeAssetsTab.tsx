@@ -26,8 +26,6 @@ export const AddCodeAssetsTab = () => {
 		"stroke-green-accent": isDragOver,
 	});
 
-	const bodyRowClass = (name: string) => cn({ "bg-black": name === currentProject.activeEditorFileName });
-
 	const resourcesEntries = Object.entries(currentProject.resources);
 	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
 
@@ -81,7 +79,7 @@ export const AddCodeAssetsTab = () => {
 					</THead>
 					<TBody>
 						{sortedResources.map(([name], idx) => (
-							<Tr className={bodyRowClass(name)} key={idx}>
+							<Tr className={cn({ "bg-black": name === currentProject.activeEditorFileName })} key={idx}>
 								<Td
 									className="font-semibold border-r-0 cursor-pointer"
 									onClick={() => updateActiveEditorFileName(name)}
