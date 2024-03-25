@@ -21,4 +21,21 @@ export class ConnectionService {
 			return { data: undefined, error };
 		}
 	}
+
+	static async list(): Promise<ServiceResponse<Connection[]>> {
+		try {
+			const { connections } = await connectionsClient.list({});
+			if (!connections) {
+				LoggerService.error(namespaces.triggerService, i18n.t("errors.connectionNotFound"));
+
+				return { data: undefined, error: i18n.t("errors.connectionNotFound") };
+			}
+
+			const convertedConnections = connections.map((connection) => convertConnectionProtoToModel(connection));
+			return { data: convertedConnections, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.projectService, (error as Error).message);
+			return { data: undefined, error };
+		}
+	}
 }
