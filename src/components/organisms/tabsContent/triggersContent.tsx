@@ -140,7 +140,9 @@ export const TriggersContent = () => {
 						))}
 					</TBody>
 				</Table>
-			) : null}
+			) : (
+				<div className="mt-10 text-gray-300 font-semibold text-xl text-center">No triggers available.</div>
+			)}
 
 			<Toast
 				className="border-error"

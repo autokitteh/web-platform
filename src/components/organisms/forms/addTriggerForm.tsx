@@ -21,16 +21,11 @@ export const AddTriggerForm = () => {
 		resolver: zodResolver(newConnectionSchema),
 	});
 
-	const handleCloseToast = () => setIsOpenToast(false);
-
 	const onSubmit = () => {
 		setIsLoading(true);
-		setIsOpenToast(true);
-		setTimeout(() => {
-			setIsLoading(false);
-			navigate(-1);
-			reset();
-		}, 3000);
+		setIsLoading(false);
+		navigate(-1);
+		reset();
 	};
 
 	return (
@@ -93,7 +88,7 @@ export const AddTriggerForm = () => {
 					</div>
 				</div>
 			</form>
-			<Toast className="border-green-accent" duration={10} isOpen={isOpenToast} onClose={handleCloseToast}>
+			<Toast className="border-green-accent" duration={10} isOpen={isOpenToast} onClose={() => setIsOpenToast(false)}>
 				<div className="flex">
 					<h5 className="font-semibold">JeffOnSlack</h5>
 					<h5 className="border-l-2 border-gray-400 ml-2 pl-2 font-light">Slack</h5>
