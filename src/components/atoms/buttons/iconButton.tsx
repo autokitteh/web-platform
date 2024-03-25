@@ -22,6 +22,7 @@ export const IconButton = ({
 		},
 		{
 			"opacity-40 cursor-not-allowed": disabled,
+			"hover:border-gray-400": disabled && variant === EButtonVariant.outline,
 		},
 		className
 	);
