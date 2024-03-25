@@ -28,18 +28,18 @@ export const ModalDeleteTrigger = ({ onDelete }: IModalDeleteTrigger) => {
 		<Modal name={EModalName.deleteTrigger}>
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
-				<p>This trigger you are about to delete uses:</p>
+				<p>{t("line")}</p>
 				<p className="font-medium">
 					<Trans>
-						{t("line", {
+						{t("line2", {
 							connection: `<strong>${trigger?.connectionName}</strong><br/>`,
 							entrypoint: `<strong>${trigger?.path}:${trigger?.name}</strong><br/>`,
 							eventType: `<strong>${trigger?.eventType}</strong><br/>`,
 						})}
 					</Trans>
 				</p>
-				<p className="mt-1">{t("line2")}</p>
 				<p className="mt-1">{t("line3")}</p>
+				<p className="mt-1">{t("line4")}</p>
 			</div>
 			<div className="flex justify-end gap-1 mt-14">
 				<Button
