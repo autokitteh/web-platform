@@ -4,9 +4,5 @@ services:
     build: .
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
-      - /app/node_modules
     environment:
       - NODE_ENV=development
-    command: npm run dev
