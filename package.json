@@ -91,5 +91,10 @@
 		"vite": "^5.1.3",
 		"vite-plugin-svgr": "^4.2.0",
 		"vitest": "^1.2.2"
+	},
+	"overrides": {
+		"vite": {
+			"rollup": "npm:@rollup/wasm-node"
+		}
 	}
 }
