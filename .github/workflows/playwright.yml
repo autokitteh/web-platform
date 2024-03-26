@@ -29,10 +29,7 @@ jobs:
 
           # Download the asset
           curl -L -o backend.tar.gz $ASSET_URL
-          chmod +x backend.tar.gz
 
-      - name: Extract Backend
-        run: |
           tar -xzf backend.tar.gz
           chmod +x ak
 
@@ -41,7 +38,14 @@ jobs:
           ./ak up --mode=dev &
 
       - name: Wait for Backend to Start
-        run: sleep 5
+        run: |
+          URL=http://localhost:9980
+          echo "Waiting for backend to start..."
+          until $(curl --output /dev/null --silent --head --fail -X POST $URL); do
+            printf '.'
+            sleep 5
+          done
+          echo "Backend is up!"
 
       - name: Run Playwright tests
         run: |
