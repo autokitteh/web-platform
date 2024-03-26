@@ -32,8 +32,11 @@ const defaultState: Omit<
 const store: StateCreator<IProjectStore> = (set, get) => ({
 	...defaultState,
 	loadProject: async (projectId) => {
+		const currentTab = get().currentProject.projectId === projectId ? get().activeTab : 1;
+
 		set(() => ({
 			...defaultState,
+			activeTab: currentTab,
 			currentProject: { ...defaultState.currentProject, projectId },
 		}));
 

@@ -2,9 +2,15 @@
 	"unexpectedError": "We're sorry, but an unexpected error has occurred and the application is currently unavailable. Please try again later.",
 	"projectNotFound": "Couldn't fetch the project details",
 	"projectIdNotFound": "Project ID not found",
+	"triggerNotFound": "Couldn't fetch the trigger details",
+	"connectionNotFound": "Couldn't fetch the connection details",
+	"projectNotCreated": "There was an issue creating the project",
+	"triggerNotCreated": "There was an issue creating the trigger",
 	"unexpectedSessionStateType": "Unexpected session state type",
 	"missingSessionStateType": "Missing session state type",
 	"nameRequired": "Name is required",
 	"projectAddFailed": "Project code add failed",
-	"projectAddFailedExtended": "Project code add failed, ID: {{projectId}}, error message: {{error}}"
+	"projectAddFailedExtended": "Project code add failed, ID: {{projectId}}, error message: {{error}}",
+	"triggerRemoveFailed": "Trigger remove failed",
+	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}"
 }

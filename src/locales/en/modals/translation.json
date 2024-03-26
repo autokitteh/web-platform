@@ -7,5 +7,14 @@
 		"line4": "Are you sure you want to delete this connection?",
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete"
+	},
+	"deleteTrigger": {
+		"title": "Delete Trigger",
+		"line": "This trigger you are about to delete uses:",
+		"line2": "Connection - {{connection}} Entry Point - {{entrypoint}} Event Type - {{eventType}}",
+		"line3": "Deleting the trigger may cause failure of project.",
+		"line4": "Are you sure you want to delete this trigger?",
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete"
 	}
 }

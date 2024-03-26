@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { Home, SignIn, NewConnection, Project } from "@components/pages";
+import { Home, SignIn, NewConnection, NewTrigger, Project } from "@components/pages";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -17,6 +17,10 @@ export const router = createBrowserRouter([
 			{
 				path: "add-new-connection",
 				element: <NewConnection />,
+			},
+			{
+				path: "new-trigger",
+				element: <NewTrigger />,
 			},
 			{
 				path: "",

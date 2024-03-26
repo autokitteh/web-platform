@@ -4,3 +4,4 @@ export { ProjectsService } from "@services/projects.service";
 export { SessionsService } from "@services/sessions.service";
 export { ManifestService } from "@services/manifest.service";
 export { LoggerService } from "@services/logger.service";
+export { TriggersService } from "@services/triggers.service";

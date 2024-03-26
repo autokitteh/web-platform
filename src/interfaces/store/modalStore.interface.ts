@@ -2,6 +2,7 @@ export interface IModalStore {
 	modals: {
 		[key: string]: boolean;
 	};
-	openModal: (name: string) => void;
+	itemId?: string;
+	openModal: (name: string, id?: string) => void;
 	closeModal: (name: string) => void;
 }
