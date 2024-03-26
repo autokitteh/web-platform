@@ -6,17 +6,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      # Checkout React (Vite) frontend repository
       - name: Checkout Frontend Repo
         uses: actions/checkout@v4
 
-      # Setup Node.js for React (Vite) project
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
-      # Install dependencies for React (Vite) project
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers
@@ -33,22 +30,19 @@ jobs:
           # Download the asset
           curl -L -o backend.tar.gz $ASSET_URL
           chmod +x backend.tar.gz
-      # Extract the backend executable
+
       - name: Extract Backend
         run: |
           tar -xzf backend.tar.gz
           chmod +x ak
 
-      # Run backend executable
       - name: Run Backend
         run: |
           ./ak up --mode=dev &
 
-      # Ensure the backend server has enough time to start
       - name: Wait for Backend to Start
         run: sleep 5
 
-      # Run Playwright tests=
       - name: Run Playwright tests
         run: |
           git submodule update --init
