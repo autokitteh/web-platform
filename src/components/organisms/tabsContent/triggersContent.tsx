@@ -76,7 +76,7 @@ export const TriggersContent = () => {
 					Add new
 				</Button>
 			</div>
-			{triggers.length > 0 ? (
+			{triggers.length ? (
 				<Table className="mt-5">
 					<THead>
 						<Tr>
@@ -119,7 +119,7 @@ export const TriggersContent = () => {
 						</Tr>
 					</THead>
 					<TBody>
-						{triggers?.map(({ triggerId, eventType, name, path, connectionName }) => (
+						{triggers.map(({ triggerId, eventType, name, path, connectionName }) => (
 							<Tr className="group" key={triggerId}>
 								<Td className="font-semibold">{connectionName}</Td>
 								<Td>{path}</Td>
