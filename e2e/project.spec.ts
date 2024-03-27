@@ -5,8 +5,9 @@ test.describe("Project Suite", () => {
 		await page.goto("");
 
 		const button = page.getByRole("button", { name: "New Project" });
+		await button.hover();
 		await button.click();
-		await page.waitForTimeout(500);
+		await page.waitForURL(/http:\/\/localhost:4173\/(prj_[a-zA-Z0-9]+)/);
 
 		const projectURL = page.url();
 		const projectId = projectURL.split("/").pop();
