@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Project Suite", () => {
-	test("Create a project", async ({ page }) => {
+	test.beforeEach(async ({ page }) => {
 		await page.goto("");
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
