@@ -27,7 +27,7 @@ test.describe("Project Suite", () => {
 	test("Add new file to project", async ({ page }) => {
 		const addNewCodeButton = page.getByRole("button", { name: "Add new code file" });
 		await addNewCodeButton.click();
-		await page.waitForTimeout(300);
+		await page.waitForTimeout(500);
 
 		const newFileInput = page.getByRole("textbox", { name: "new file name" });
 		await expect(newFileInput).toBeVisible();
