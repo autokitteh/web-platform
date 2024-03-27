@@ -94,7 +94,7 @@ export const Topbar = () => {
 			<div className="flex items-stretch gap-3">
 				{topbarItems.map(({ id, name, href, icon, disabled }) => (
 					<Button
-						className="px-4 py-2 font-semibold text-white whitespace-nowrap"
+						className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
 						disabled={disabled}
 						href={href}
 						key={id}
@@ -123,7 +123,7 @@ export const Topbar = () => {
 						</div>
 					}
 				>
-					<Button className="h-full text-white px-4" variant="outline">
+					<Button className="h-full text-white px-4 hover:bg-gray-700" variant="outline">
 						<More />
 						{t("more")}
 					</Button>
