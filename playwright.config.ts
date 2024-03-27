@@ -65,8 +65,8 @@ export default defineConfig({
 	],
 	webServer: {
 		command: "npm run build && npm run preview",
-		port: 4173,
-		timeout: 6000,
+		url: "http://localhost:4173",
+		timeout: 3000,
 		reuseExistingServer: !process.env.CI,
 	},
 });
