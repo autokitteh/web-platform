@@ -4,10 +4,10 @@ test.describe("Project Suite", () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto("");
 
-		const button = await page.getByRole("button", { name: "New Project" });
+		const button = page.getByRole("button", { name: "New Project" });
 		await button.click();
-
-		const projectURL = await page.url();
+		await page.waitForURL(/http:\/\/localhost:4173\/(prj_[a-zA-Z0-9]+)/);
+		const projectURL = page.url();
 		const projectId = projectURL.split("/").pop();
 
 		if (!projectId) {
