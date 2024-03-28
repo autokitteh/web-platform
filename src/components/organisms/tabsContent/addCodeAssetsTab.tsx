@@ -63,6 +63,7 @@ export const AddCodeAssetsTab = () => {
 	return (
 		<div className="flex flex-col h-full">
 			<Button
+				ariaLabel="Add new code file"
 				className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white mt-14 ml-auto"
 				onClick={() => openModal(EModalName.addCodeAssets)}
 			>

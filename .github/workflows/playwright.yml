@@ -1,0 +1,59 @@
+name: End-to-End Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Frontend Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Download Backend Executable
+        run: |
+          # Fetch the latest release data from GitHub API
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/autokitteh/autokitteh/releases/latest)
+
+          # Extract the asset URL for the Linux executable
+          ASSET_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | test("autokitteh_Linux_x86_64.tar.gz")) | .browser_download_url')
+
+          # Download the asset
+          curl -L -o backend.tar.gz $ASSET_URL
+
+          tar -xzf backend.tar.gz
+          chmod +x ak
+
+      - name: Run Backend
+        run: |
+          ./ak up --mode=dev &
+
+      - name: Wait for Backend to Start
+        run: |
+          URL=http://localhost:9980
+          echo "Waiting for backend to start..."
+          until $(curl --output /dev/null --silent --head --fail -X POST $URL); do
+            printf '.'
+            sleep 5
+          done
+          echo "Backend is up!"
+
+      - name: Run Playwright tests
+        run: |
+          git submodule update --init
+          npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
