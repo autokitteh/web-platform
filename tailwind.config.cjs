@@ -22,6 +22,7 @@ export default {
 			width: {
 				500: "500px",
 				6.5: "1.625rem",
+				sidebar: "85px",
 			},
 			height: {
 				6.5: "1.625rem",

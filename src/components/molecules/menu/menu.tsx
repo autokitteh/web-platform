@@ -8,6 +8,7 @@ import { IMenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
+import { AnimatePresence, motion } from "framer-motion";
 import { isEqual, orderBy } from "lodash";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +20,11 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		isOpen: false,
 		message: "",
 	});
+
+	const animateVariant = {
+		hidden: { opacity: 0, width: 0 },
+		visible: { opacity: 1, width: "auto", transition: { duration: 0.35, ease: "easeOut" } },
+	};
 
 	const createProject = async () => {
 		const { data: projectId, error } = await ProjectsService.create("");
@@ -57,7 +63,6 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	const handleMouseEnter = (e: React.MouseEvent, submenu?: ISubmenuInfo["submenu"]) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
 	};
-	const handleCloseToast = () => setToast({ ...toast, isOpen: false });
 
 	return (
 		<>
@@ -67,23 +72,50 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 						<div className="w-9 h-9 flex items-center justify-center">
 							<IconSvg alt="New Project" className="w-8 h-8 p-1" src={NewProject} />
 						</div>
-						{isOpen ? "New Project" : null}
+						<AnimatePresence>
+							{isOpen ? (
+								<motion.span
+									animate="visible"
+									className="whitespace-nowrap overflow-hidden"
+									exit="hidden"
+									initial="hidden"
+									variants={animateVariant}
+								>
+									New Project
+								</motion.span>
+							) : null}
+						</AnimatePresence>
 					</Button>
 				</div>
 				{menu.map(({ icon, name, href, submenu, id }) => (
 					<div key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
 						<Button ariaLabel={name} className="hover:bg-green-light gap-1.5 p-0.5 pl-1" href={href}>
-							{icon ? (
-								<div className="w-9 h-9 flex items-center justify-center">
-									<IconSvg alt={name} src={icon} />
-								</div>
-							) : null}
-							{isOpen ? name : null}
+							<div className="w-9 h-9 flex items-center justify-center">
+								<IconSvg alt={name} src={icon} />
+							</div>
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="whitespace-nowrap overflow-hidden"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										{name}
+									</motion.span>
+								) : null}
+							</AnimatePresence>
 						</Button>
 					</div>
 				))}
 			</div>
-			<Toast className="border-error" duration={5} isOpen={toast.isOpen} onClose={handleCloseToast}>
+			<Toast
+				className="border-error"
+				duration={5}
+				isOpen={toast.isOpen}
+				onClose={() => setToast({ ...toast, isOpen: false })}
+			>
 				<h5 className="font-semibold text-error">Error</h5>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
