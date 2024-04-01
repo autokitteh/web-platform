@@ -21,7 +21,7 @@ export const Sidebar = () => {
 	};
 
 	return (
-		<div className="w-sidebar relative">
+		<div className="w-main-nav-sidebar relative">
 			<div
 				className="absolute flex items-start h-full top-0 left-0 z-50"
 				onMouseEnter={() => setIsOpen(true)}

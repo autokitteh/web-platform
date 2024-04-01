@@ -34,7 +34,7 @@ export const Toast = ({ duration = 5, className, isOpen, children, onClose }: IT
 				>
 					<div className="flex justify-between items-center gap-2.5">
 						<div>{children}</div>
-						<IconButton className="bg-gray-600 p-0 w-6.5 h-6.5 group ml-auto" onClick={onClose}>
+						<IconButton className="bg-gray-600 p-0 w-default-icon h-default-icon group ml-auto" onClick={onClose}>
 							<Close className="transition fill-white w-3 h-3" />
 						</IconButton>
 					</div>

@@ -38,7 +38,7 @@ export const Project = () => {
 								{`${title} (${count})`}
 							</Tab>
 						))}
-						<IconButton className="bg-black p-0 w-6.5 h-6.5 hover:bg-black group ml-auto ">
+						<IconButton className="bg-black p-0 w-default-icon h-default-icon hover:bg-black group ml-auto ">
 							<Close className="transition w-3 h-3 fill-gray-400 group-hover:fill-white" />
 						</IconButton>
 					</TabList>

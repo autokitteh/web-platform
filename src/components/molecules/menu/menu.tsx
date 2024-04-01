@@ -10,9 +10,11 @@ import { useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
 import { isEqual, orderBy } from "lodash";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
+	const { t } = useTranslation(["menu"]);
 	const navigate = useNavigate();
 	const { list, getProjectsList } = useProjectStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
@@ -81,7 +83,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 									initial="hidden"
 									variants={animateVariant}
 								>
-									New Project
+									{t("newProject")}
 								</motion.span>
 							) : null}
 						</AnimatePresence>
