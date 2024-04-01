@@ -3,13 +3,22 @@ export type Session = {
 	deploymentId: string;
 	state: number;
 	createdAt: Date;
+	inputs: object;
+	entrypoint: EntrypointTrigger;
+};
+
+export type EntrypointTrigger = {
+	symbol: string;
+	location: SessionEntrypoint;
+};
+
+export type SessionEntrypoint = {
+	col: number;
+	row: number;
+	name: string;
+	path: string;
 };
 
 export type Callstack = {
-	location: {
-		col: number;
-		row: number;
-		name: string;
-		path: string;
-	};
+	location: SessionEntrypoint;
 };

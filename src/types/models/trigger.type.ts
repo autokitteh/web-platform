@@ -6,3 +6,5 @@ export type Trigger = {
 	path: string;
 	name: string;
 };
+
+export type TriggerObj = Record<string, string[]>;
