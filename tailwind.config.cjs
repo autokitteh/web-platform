@@ -20,11 +20,12 @@ export default {
 				650: "650px",
 			},
 			width: {
-				500: "500px",
-				6.5: "1.625rem",
+				"500": "500px",
+				"default-icon": "1.625rem",
+				"main-nav-sidebar": "85px",
 			},
 			height: {
-				6.5: "1.625rem",
+				"default-icon": "1.625rem",
 			},
 			borderRadius: {
 				"4xl": "40px",
