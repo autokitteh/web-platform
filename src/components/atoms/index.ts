@@ -11,3 +11,4 @@ export { Input } from "@components/atoms/input";
 export { Textarea } from "@components/atoms/textarea";
 export { Toast } from "@components/atoms/toast";
 export { ErrorMessage } from "@components/atoms/errorMessage";
+export { Spinner } from "@components/atoms/spinner";
