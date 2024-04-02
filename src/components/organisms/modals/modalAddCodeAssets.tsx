@@ -29,7 +29,7 @@ export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 		const { error } = await setProjectEmptyResources(name);
 		closeModal(EModalName.addCodeAssets);
 
-		if (error) onError?.(t("fileAddFailedExtended", { projectId, fileName: name }));
+		if (error) onError(t("fileAddFailedExtended", { projectId, fileName: name }));
 		reset();
 	};
 
