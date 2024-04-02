@@ -12,7 +12,7 @@ import { useForm, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
-	const { t } = useTranslation("errors");
+	const { t } = useTranslation(["errors", "buttons", "modals", "forms"]);
 	const { closeModal } = useModalStore();
 	const { currentProject, setProjectEmptyResources } = useProjectStore();
 
@@ -42,20 +42,20 @@ export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 	return (
 		<Modal name={EModalName.addCodeAssets}>
 			<div className="mx-6">
-				<h3 className="text-xl font-bold mb-5">Create new</h3>
+				<h3 className="text-xl font-bold mb-5">{t("addCodeAssets.title", { ns: "modals" })}</h3>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Input
 						{...register("name")}
-						aria-label="new file name"
+						aria-label={t("inputAriaLabelNewFile", { ns: "forms" })}
 						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="bg-white hover:border-gray-700"
 						isError={!!errors.name}
 						isRequired
-						placeholder="Name"
+						placeholder={t("inputPlaceholderName", { ns: "forms" })}
 					/>
 					<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
 					<Button className="font-bold justify-center mt-2 rounded-lg py-2.5" type="submit" variant="filled">
-						Create
+						{t("create", { ns: "buttons" })}
 					</Button>
 				</form>
 			</div>

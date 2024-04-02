@@ -1,6 +1,7 @@
 {
-	"AddNewFile": "Add new file",
-	"CreateNewFile": "Create new file",
-	"AddCodeAndAssets": "Add Code & Assets",
-	"more": "More"
+	"addNewFile": "Add new file",
+	"createNewFile": "Create new file",
+	"addCodeAndAssets": "Add Code & Assets",
+	"more": "More",
+	"create": "Create"
 }

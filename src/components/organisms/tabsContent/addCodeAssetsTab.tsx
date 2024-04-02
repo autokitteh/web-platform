@@ -32,7 +32,7 @@ export const AddCodeAssetsTab = () => {
 		"mt-auto mb-auto flex justify-center items-center": isEmpty(sortedResources),
 	});
 	const styleFrame = cn(
-		"absolute transition top-0 h-full w-full rounded-lg z-50 flex justify-center items-center",
+		"absolute transition top-0 h-full w-full rounded-lg z-10 flex justify-center items-center",
 		"opacity-0 select-none pointer-events-none",
 		{
 			"bg-white/40 border-2 opacity-1": isDragOver,
@@ -78,17 +78,17 @@ export const AddCodeAssetsTab = () => {
 					<label className="group flex gap-1 p-0 font-semibold text-gray-300 hover:text-white cursor-pointer">
 						<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
 						<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-						{t("AddNewFile", { ns: "buttons" })}
+						{t("addNewFile", { ns: "buttons" })}
 					</label>
 				) : null}
 
 				<Button
-					ariaLabel="Add new code file"
+					ariaLabel={t("createNewFile", { ns: "buttons" })}
 					className="w-auto group gap-1 p-0 font-semibold text-gray-300 hover:text-white"
 					onClick={() => openModal(EModalName.addCodeAssets)}
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					{t("CreateNewFile", { ns: "buttons" })}
+					{t("createNewFile", { ns: "buttons" })}
 				</Button>
 			</div>
 			<div
@@ -131,7 +131,7 @@ export const AddCodeAssetsTab = () => {
 						>
 							<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
 							<PlusCircle className={styleCircle} />
-							{t("AddCodeAndAssets", { ns: "buttons" })}
+							{t("addCodeAndAssets", { ns: "buttons" })}
 						</label>
 					</div>
 				</div>

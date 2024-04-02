@@ -113,7 +113,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 			[name]: new Uint8Array(),
 		});
 
-		if (error) return { error: { message: i18n.t("errors.projectIdNotFound") } };
+		if (error) return { error };
 
 		set((state) => {
 			state.currentProject.activeEditorFileName = name;
@@ -121,7 +121,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 			return state;
 		});
 
-		return { error };
+		return { error: undefined };
 	},
 
 	getProjectResources: async () => {

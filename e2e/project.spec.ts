@@ -24,10 +24,10 @@ test.describe("Project Suite", () => {
 		expect(page.getByText("Grankie_0121")).toBeTruthy();
 	});
 
-	test("Add new file to project", async ({ page }) => {
-		const addNewCodeButton = page.getByRole("button", { name: "Add new code file" });
-		if (await addNewCodeButton.isVisible()) {
-			await addNewCodeButton.click();
+	test("Create new file to project", async ({ page }) => {
+		const createNewFileButton = page.getByRole("button", { name: "Create new file" });
+		if (await createNewFileButton.isVisible()) {
+			await createNewFileButton.click();
 			await page.waitForTimeout(500);
 		} else {
 			test.fail();
