@@ -91,7 +91,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 				[file.name]: fileContent,
 			});
 
-			if (error) return { error: { message: i18n.t("errors.projectIdNotFound") } };
+			if (error) return { error };
 
 			set((state) => {
 				state.currentProject.activeEditorFileName = file.name;
