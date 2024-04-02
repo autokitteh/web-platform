@@ -82,23 +82,29 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		});
 	},
 
-	setProjectResources: async (file) => {
-		const fileContent = await readFileAsUint8Array(file);
+	setProjectResources: async (files) => {
+		const uploadFile = async (file: File) => {
+			const fileContent = await readFileAsUint8Array(file);
 
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
-			...get().currentProject.resources,
-			[file.name]: fileContent,
-		});
+			const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
+				...get().currentProject.resources,
+				[file.name]: fileContent,
+			});
 
-		if (error) return { error: { message: i18n.t("errors.projectIdNotFound") } };
+			if (error) return { error: { message: i18n.t("errors.projectIdNotFound") } };
 
-		set((state) => {
-			state.currentProject.activeEditorFileName = file.name;
-			state.currentProject.resources[file.name] = fileContent;
-			return state;
-		});
+			set((state) => {
+				state.currentProject.activeEditorFileName = file.name;
+				state.currentProject.resources[file.name] = fileContent;
+				return state;
+			});
+		};
 
-		return { error };
+		for (const file of files) {
+			await uploadFile(file);
+		}
+
+		return { error: undefined };
 	},
 
 	setProjectEmptyResources: async (name) => {

@@ -20,7 +20,7 @@ export interface IProjectStore {
 	getProjectsList: () => Promise<IProjectStoreResponse & { list: TProjectList[] }>;
 	setActiveTab: (value: number) => void;
 	setUpdateFileContent: (content: Uint8Array) => void;
-	setProjectResources: (file: File) => Promise<IProjectStoreResponse>;
+	setProjectResources: (files: File[]) => Promise<IProjectStoreResponse>;
 	setProjectEmptyResources: (name: string) => Promise<IProjectStoreResponse>;
 	getProjectResources: () => Promise<IProjectStoreResponse>;
 	updateActiveEditorFileName: (fileName: string) => void;

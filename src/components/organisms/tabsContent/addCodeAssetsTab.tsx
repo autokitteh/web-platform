@@ -49,17 +49,17 @@ export const AddCodeAssetsTab = () => {
 		event.preventDefault();
 		setIsDragOver(false);
 
-		const droppedFile = event.dataTransfer.files[0];
-		if (droppedFile) fileUpload(droppedFile);
+		const droppedFiles = Array.from(event.dataTransfer.files);
+		if (droppedFiles) fileUpload(droppedFiles);
 	};
 
 	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const selectedFile = event.target.files?.[0];
+		const selectedFile = Array.from(event.target.files || []);
 		if (selectedFile) fileUpload(selectedFile);
 	};
 
-	const fileUpload = async (file: File) => {
-		const { error } = await setProjectResources(file);
+	const fileUpload = async (files: File[]) => {
+		const { error } = await setProjectResources(files);
 
 		if (error) {
 			setToast({ isOpen: true, message: t("projectAddFailed") });
@@ -73,14 +73,24 @@ export const AddCodeAssetsTab = () => {
 
 	return (
 		<div className="flex flex-col h-full">
-			<Button
-				ariaLabel="Add new code file"
-				className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white mt-14 ml-auto"
-				onClick={() => openModal(EModalName.addCodeAssets)}
-			>
-				<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-				Add new
-			</Button>
+			<div className="mb-5 mt-14 flex justify-end gap-6">
+				{!isEmpty(sortedResources) ? (
+					<label className="group flex gap-1 p-0 font-semibold text-gray-300 hover:text-white cursor-pointer">
+						<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
+						<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+						Add new file
+					</label>
+				) : null}
+
+				<Button
+					ariaLabel="Add new code file"
+					className="w-auto group gap-1 p-0 font-semibold text-gray-300 hover:text-white"
+					onClick={() => openModal(EModalName.addCodeAssets)}
+				>
+					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+					Create new file
+				</Button>
+			</div>
 			<div
 				className={styleBase}
 				onDragEnter={handleDragOver}
@@ -113,10 +123,15 @@ export const AddCodeAssetsTab = () => {
 				) : null}
 				<div className={styleFrame}>
 					<div className="flex flex-col items-center gap-2.5">
-						<label className="group flex flex-col items-center gap-2.5 cursor-pointer">
+						<label
+							className={cn(
+								"group flex flex-col items-center gap-2.5 cursor-pointer",
+								"text-center text-lg font-bold uppercase text-white"
+							)}
+						>
 							<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
 							<PlusCircle className={styleCircle} />
-							<p className="text-center text-lg font-bold uppercase text-white">Add Code & Assets</p>
+							Add Code & Assets
 						</label>
 					</div>
 				</div>

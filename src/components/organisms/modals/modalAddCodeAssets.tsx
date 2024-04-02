@@ -20,6 +20,7 @@ export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm({
 		resolver: zodResolver(codeAssetsSchema),
 	});
@@ -35,12 +36,13 @@ export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 			);
 			return;
 		}
+		reset();
 	};
 
 	return (
 		<Modal name={EModalName.addCodeAssets}>
 			<div className="mx-6">
-				<h3 className="text-xl font-bold mb-5">Add New</h3>
+				<h3 className="text-xl font-bold mb-5">Create new</h3>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Input
 						{...register("name")}
