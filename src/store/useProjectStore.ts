@@ -3,8 +3,6 @@ import { EStoreName } from "@enums";
 import { IProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
-import i18n from "i18next";
-import { isEmpty } from "lodash";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -125,8 +123,6 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 
 	getProjectResources: async () => {
-		if (isEmpty(get().currentProject.projectId)) return { error: { message: i18n.t("errors.projectIdNotFound") } };
-
 		const { data, error } = await ProjectsService.getResources(get().currentProject.projectId!);
 
 		if (data) {
