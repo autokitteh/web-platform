@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 
 export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
-	const { t } = useTranslation("errors");
+	const { t } = useTranslation(["errors", "buttons", "tables"]);
 	const { openModal } = useModalStore();
 	const { currentProject, setProjectResources, updateActiveEditorFileName } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
@@ -78,7 +78,7 @@ export const AddCodeAssetsTab = () => {
 					<label className="group flex gap-1 p-0 font-semibold text-gray-300 hover:text-white cursor-pointer">
 						<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
 						<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-						Add new file
+						{t("AddNewFile", { ns: "buttons" })}
 					</label>
 				) : null}
 
@@ -88,7 +88,7 @@ export const AddCodeAssetsTab = () => {
 					onClick={() => openModal(EModalName.addCodeAssets)}
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					Create new file
+					{t("CreateNewFile", { ns: "buttons" })}
 				</Button>
 			</div>
 			<div
@@ -102,7 +102,7 @@ export const AddCodeAssetsTab = () => {
 					<Table className="max-h-96">
 						<THead>
 							<Tr>
-								<Th className="border-r-0 cursor-pointer group font-normal">Name</Th>
+								<Th className="border-r-0 cursor-pointer group font-normal">{t("name", { ns: "tables" })}</Th>
 								<Th className="border-r-0 max-8" />
 							</Tr>
 						</THead>
@@ -131,7 +131,7 @@ export const AddCodeAssetsTab = () => {
 						>
 							<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
 							<PlusCircle className={styleCircle} />
-							Add Code & Assets
+							{t("AddCodeAndAssets", { ns: "buttons" })}
 						</label>
 					</div>
 				</div>

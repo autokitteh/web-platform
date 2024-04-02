@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 
 export const Topbar = () => {
 	const { projectId } = useParams();
-	const { t } = useTranslation(["shared", "errors"]);
+	const { t } = useTranslation(["shared", "errors", "buttons"]);
 	const { getProjectsList } = useProjectStore();
 	const [project, setProject] = useState<Project>({
 		name: "",
@@ -125,7 +125,7 @@ export const Topbar = () => {
 				>
 					<Button className="h-full text-white px-4 hover:bg-gray-700" variant="outline">
 						<More />
-						{t("more")}
+						{t("more", { ns: "buttons" })}
 					</Button>
 				</DropdownButton>
 				<IconButton disabled variant="outline">
