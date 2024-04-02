@@ -3,8 +3,6 @@ import { EStoreName } from "@enums";
 import { IProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
-import i18n from "i18next";
-import { isEmpty } from "lodash";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -82,23 +80,27 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		});
 	},
 
-	setProjectResources: async (file) => {
-		const fileContent = await readFileAsUint8Array(file);
+	setProjectResources: async (files) => {
+		for (const file of files) {
+			const fileContent = await readFileAsUint8Array(file);
 
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
-			...get().currentProject.resources,
-			[file.name]: fileContent,
-		});
+			const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
+				...get().currentProject.resources,
+				[file.name]: fileContent,
+			});
 
-		if (error) return { error: { message: i18n.t("errors.projectIdNotFound") } };
+			if (error) {
+				return { error, fileName: file.name };
+			}
 
-		set((state) => {
-			state.currentProject.activeEditorFileName = file.name;
-			state.currentProject.resources[file.name] = fileContent;
-			return state;
-		});
+			set((state) => {
+				state.currentProject.activeEditorFileName = file.name;
+				state.currentProject.resources[file.name] = fileContent;
+				return state;
+			});
+		}
 
-		return { error };
+		return { error: undefined };
 	},
 
 	setProjectEmptyResources: async (name) => {
@@ -107,7 +109,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 			[name]: new Uint8Array(),
 		});
 
-		if (error) return { error: { message: i18n.t("errors.projectIdNotFound") } };
+		if (error) return { error };
 
 		set((state) => {
 			state.currentProject.activeEditorFileName = name;
@@ -115,12 +117,10 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 			return state;
 		});
 
-		return { error };
+		return { error: undefined };
 	},
 
 	getProjectResources: async () => {
-		if (isEmpty(get().currentProject.projectId)) return { error: { message: i18n.t("errors.projectIdNotFound") } };
-
 		const { data, error } = await ProjectsService.getResources(get().currentProject.projectId!);
 
 		if (data) {

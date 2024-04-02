@@ -1,4 +1,5 @@
 {
+	"error": "Error",
 	"unexpectedError": "We're sorry, but an unexpected error has occurred and the application is currently unavailable. Please try again later.",
 	"projectNotFound": "Couldn't fetch the project details",
 	"projectIdNotFound": "Project ID not found",
@@ -12,5 +13,6 @@
 	"projectAddFailed": "Project code add failed",
 	"projectAddFailedExtended": "Project code add failed, ID: {{projectId}}, error message: {{error}}",
 	"triggerRemoveFailed": "Trigger remove failed",
-	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}"
+	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}",
+	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}"
 }

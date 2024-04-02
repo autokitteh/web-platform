@@ -5,9 +5,11 @@ import { optionsSelectApp } from "@constants/lists";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newConnectionSchema } from "@validations";
 import { useForm, Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export const AddTriggerForm = () => {
+	const { t } = useTranslation("errors");
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -95,7 +97,7 @@ export const AddTriggerForm = () => {
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<h5 className="font-semibold text-error">Error</h5>
+				<p className="font-semibold text-error">{t("error")}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>

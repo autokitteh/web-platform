@@ -4,9 +4,11 @@ import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/ato
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
 import { tabsMainFrame } from "@constants";
 import { useProjectStore } from "@store";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 export const Project = () => {
+	const { t } = useTranslation("errors");
 	const { projectId } = useParams();
 	const { activeTab, loadProject, setActiveTab } = useProjectStore();
 	const [toast, setToast] = useState({
@@ -55,7 +57,7 @@ export const Project = () => {
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<h5 className="font-semibold">Error</h5>
+				<p className="font-semibold text-error">{t("error")}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</AppWrapper>
