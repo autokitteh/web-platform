@@ -1,20 +1,20 @@
 import React from "react";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
-import { namespaces } from "@constants";
 import { EModalName } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IModalAddCodeAssets } from "@interfaces/components";
-import { LoggerService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
 import { codeAssetsSchema } from "@validations";
 import { useForm, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
+	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals", "forms"]);
 	const { closeModal } = useModalStore();
-	const { currentProject, setProjectEmptyResources } = useProjectStore();
+	const { setProjectEmptyResources } = useProjectStore();
 
 	const {
 		register,
@@ -28,14 +28,8 @@ export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 	const onSubmit = async ({ name }: FieldValues) => {
 		const { error } = await setProjectEmptyResources(name);
 		closeModal(EModalName.addCodeAssets);
-		if (error) {
-			onError?.(t("projectAddFailed"));
-			LoggerService.error(
-				namespaces.projectUI,
-				t("projectAddFailedExtended", { projectId: currentProject.projectId, error: (error as Error).message })
-			);
-			return;
-		}
+
+		if (error) onError?.(t("fileAddFailedExtended", { projectId, fileName: name }));
 		reset();
 	};
 

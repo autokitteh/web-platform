@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
-	const { t } = useTranslation(["menu"]);
+	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const { list, getProjectsList } = useProjectStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
@@ -118,7 +118,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<h5 className="font-semibold text-error">Error</h5>
+				<p className="font-semibold text-error">{t("error", { ns: "errors" })}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</>

@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { PlusCircle } from "@assets/image";
 import { Button, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { ModalAddCodeAssets } from "@components/organisms/modals";
-import { namespaces } from "@constants";
 import { EModalName } from "@enums/components";
-import { LoggerService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { orderBy, isEmpty } from "lodash";
@@ -59,14 +57,10 @@ export const AddCodeAssetsTab = () => {
 	};
 
 	const fileUpload = async (files: File[]) => {
-		const { error } = await setProjectResources(files);
+		const { error, fileName } = await setProjectResources(files);
 
 		if (error) {
-			setToast({ isOpen: true, message: t("projectAddFailed") });
-			LoggerService.error(
-				namespaces.projectUI,
-				t("projectAddFailedExtended", { projectId: projectId, error: (error as Error).message })
-			);
+			setToast({ isOpen: true, message: t("fileAddFailedExtended", { projectId, fileName }) });
 			return;
 		}
 	};
@@ -143,7 +137,7 @@ export const AddCodeAssetsTab = () => {
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<h5 className="font-semibold">Error</h5>
+				<p className="font-semibold text-error">{t("error")}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>

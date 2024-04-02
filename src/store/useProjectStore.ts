@@ -81,7 +81,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 
 	setProjectResources: async (files) => {
-		const uploadFile = async (file: File) => {
+		for (const file of files) {
 			const fileContent = await readFileAsUint8Array(file);
 
 			const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
@@ -89,17 +89,15 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 				[file.name]: fileContent,
 			});
 
-			if (error) return { error };
+			if (error) {
+				return { error, fileName: file.name };
+			}
 
 			set((state) => {
 				state.currentProject.activeEditorFileName = file.name;
 				state.currentProject.resources[file.name] = fileContent;
 				return state;
 			});
-		};
-
-		for (const file of files) {
-			await uploadFile(file);
 		}
 
 		return { error: undefined };

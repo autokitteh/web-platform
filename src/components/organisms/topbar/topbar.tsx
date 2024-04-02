@@ -138,7 +138,7 @@ export const Topbar = () => {
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<h5 className="font-semibold text-error">Error</h5>
+				<p className="font-semibold text-error">{t("error", { ns: "errors" })}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>
