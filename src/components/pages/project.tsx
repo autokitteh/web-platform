@@ -33,7 +33,7 @@ export const Project = () => {
 	return (
 		<AppWrapper>
 			<MapMenuFrameLayout>
-				<Tabs defaultValue={activeTab} onChange={setActiveTab}>
+				<Tabs onChange={(value) => setActiveTab(value)} value={activeTab}>
 					<TabList>
 						{tabsMainFrame.map(({ id, title, count }) => (
 							<Tab className="text-xs 3xl:text-sm" key={id} value={id}>

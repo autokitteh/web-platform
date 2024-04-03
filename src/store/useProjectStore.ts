@@ -31,11 +31,12 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	...defaultState,
 	loadProject: async (projectId) => {
 		const currentTab = get().currentProject.projectId === projectId ? get().activeTab : 1;
+		const currentFileName = get().currentProject.activeEditorFileName;
 
 		set(() => ({
 			...defaultState,
 			activeTab: currentTab,
-			currentProject: { ...defaultState.currentProject, projectId },
+			currentProject: { ...defaultState.currentProject, projectId, activeEditorFileName: currentFileName },
 		}));
 
 		const { error } = await get().getProjectResources();
@@ -133,7 +134,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		return { error };
 	},
 
-	updateActiveEditorFileName: (fileName: string) => {
+	updateActiveEditorFileName: (fileName) => {
 		set((state) => {
 			state.currentProject.activeEditorFileName = fileName;
 			return state;
