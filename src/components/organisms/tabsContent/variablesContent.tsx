@@ -49,7 +49,7 @@ export const VariablesContent = () => {
 					<THead>
 						<Tr>
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("name")}>
-								{t("name")}
+								{t("table.name")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sort.column}
@@ -57,7 +57,7 @@ export const VariablesContent = () => {
 								/>
 							</Th>
 							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => toggleSortTriggers("value")}>
-								{t("value")}
+								{t("table.value")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"value" === sort.column}
@@ -80,7 +80,7 @@ export const VariablesContent = () => {
 												className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
 												onClick={() => openModal(EModalName.deleteVariable, idx + "")}
 											>
-												{t("buttonDelete")}
+												{t("table.buttonDelete")}
 											</Button>
 										}
 									>
