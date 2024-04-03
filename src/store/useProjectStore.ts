@@ -143,8 +143,6 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 
 	getProjectEnvironments: async () => {
-		if (isEmpty(get().currentProject.projectId)) return { error: { message: i18n.t("errors.environmentsNotFound") } };
-
 		const { data: envs, error } = await EnvironmentsService.listByProjectId(get().currentProject.projectId!);
 
 		if (envs) {
@@ -158,10 +156,6 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 
 	getProjectVariables: async () => {
-		const projectId = get().currentProject.projectId;
-
-		if (isEmpty(projectId)) return { error: { message: i18n.t("errors.variblesNotFound") } };
-
 		const { data: envs } = await get().getProjectEnvironments();
 
 		if (isEmpty(envs)) {

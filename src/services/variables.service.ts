@@ -6,9 +6,9 @@ import { TVariable } from "@type/models";
 import i18n from "i18next";
 
 export class VariablesService {
-	static async create(singleVar: TVariable): Promise<ServiceResponse<string>> {
+	static async create(singleVariable: TVariable): Promise<ServiceResponse<string>> {
 		try {
-			const variable = await environmentsClient.setVar({ var: singleVar });
+			const variable = await environmentsClient.setVar({ var: singleVariable });
 			if (!variable) {
 				LoggerService.error(namespaces.projectService, i18n.t("errors.variableNotCreated"));
 
