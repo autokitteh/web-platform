@@ -19,23 +19,13 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Download Backend Executable
+      - name: Download autokitteh executable
         run: |
-          # Fetch the latest release data from GitHub API
-          LATEST_RELEASE=$(curl -s https://api.github.com/repos/autokitteh/autokitteh/releases/latest)
+          curl -sSL https://get.autokitteh.sh | bash
 
-          # Extract the asset URL for the Linux executable
-          ASSET_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | test("autokitteh_linux_x86_64.tar.gz")) | .browser_download_url')
-
-          # Download the asset
-          curl -L -o backend.tar.gz $ASSET_URL
-
-          tar -xzf backend.tar.gz
-          chmod +x ak
-
-      - name: Run Backend
+      - name: Run autokitteh
         run: |
-          ./ak up --mode=dev &
+          ak up --mode=dev &
 
       - name: Wait for Backend to Start
         run: |
