@@ -17,5 +17,6 @@
 	"triggerRemoveFailed": "Trigger remove failed",
 	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}",
 	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}",
-	"variableNotCreated": "There was an issue creating the variable"
+	"variableNotCreated": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
+	"variablesNotFound": "Couldn't fetch the variables details, Environments ID: {{id}}"
 }
