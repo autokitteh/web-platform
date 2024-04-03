@@ -4,17 +4,19 @@ import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@com
 import { SortButton, DropdownButton } from "@components/molecules";
 import { ModalDeleteVariable } from "@components/organisms/modals";
 import { EModalName, ESortDirection } from "@enums/components";
-import { useModalStore } from "@store";
+import { useModalStore, useProjectStore } from "@store";
 import { TSortDirection } from "@type/components";
+import { TVariable } from "@type/models";
 import { orderBy } from "lodash";
 
 export const VariablesContent = () => {
 	const { openModal } = useModalStore();
+	const { currentProject } = useProjectStore();
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
 		column: keyof any;
 	}>({ direction: ESortDirection.ASC, column: "name" });
-	const [variables, setVariables] = useState<any[]>([]);
+	const [variables, setVariables] = useState<TVariable[]>(currentProject.variables);
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -35,15 +37,12 @@ export const VariablesContent = () => {
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">Available Variables</div>
-				<Button
-					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
-					href="new-trigger"
-				>
+				<Button className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white">
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 					Add new
 				</Button>
 			</div>
-			{variables.length > 0 ? (
+			{variables.length ? (
 				<Table className="mt-5">
 					<THead>
 						<Tr>
@@ -67,27 +66,29 @@ export const VariablesContent = () => {
 						</Tr>
 					</THead>
 					<TBody>
-						<Tr className="group">
-							<Td className="font-semibold">Name</Td>
-							<Td className="border-r-0">Value</Td>
-							<Td className="max-w-10 border-0 pr-1.5 justify-end">
-								<DropdownButton
-									className="flex-col gap-1"
-									contentMenu={
-										<Button
-											className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-											onClick={() => openModal(EModalName.deleteVariable)}
-										>
-											Delete
-										</Button>
-									}
-								>
-									<IconButton className="w-6 h-6 p-1  hover:bg-gray-700">
-										<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
-									</IconButton>
-								</DropdownButton>
-							</Td>
-						</Tr>
+						{variables.map(({ name, value }, idx) => (
+							<Tr className="group" key={idx}>
+								<Td className="font-semibold">{name}</Td>
+								<Td className="border-r-0">{value}</Td>
+								<Td className="max-w-10 border-0 pr-1.5 justify-end">
+									<DropdownButton
+										className="flex-col gap-1"
+										contentMenu={
+											<Button
+												className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
+												onClick={() => openModal(EModalName.deleteVariable)}
+											>
+												Delete
+											</Button>
+										}
+									>
+										<IconButton className="w-6 h-6 p-1 hover:bg-gray-700">
+											<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
+										</IconButton>
+									</DropdownButton>
+								</Td>
+							</Tr>
+						))}
 					</TBody>
 				</Table>
 			) : (

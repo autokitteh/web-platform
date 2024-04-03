@@ -1,5 +1,9 @@
+import { TEnvironment } from "@type/models";
+import { TVariable } from "@type/models";
+
 interface IProjectStoreResponse {
 	error?: unknown;
+	data?: unknown;
 }
 interface IFilesResponse {
 	error?: unknown;
@@ -19,6 +23,8 @@ export interface IProjectStore {
 		projectId?: string;
 		activeEditorFileName: string;
 		resources: Record<string, Uint8Array>;
+		environments: TEnvironment[];
+		variables: TVariable[];
 	};
 	loadProject: (projectId: string) => Promise<IProjectStoreResponse>;
 	getProjectsList: () => Promise<IProjectStoreResponse & { list: TProjectList[] }>;
@@ -28,4 +34,6 @@ export interface IProjectStore {
 	setProjectEmptyResources: (name: string) => Promise<IProjectStoreResponse>;
 	getProjectResources: () => Promise<IProjectStoreResponse>;
 	updateActiveEditorFileName: (fileName: string) => void;
+	getProjectEnvironments: () => Promise<IProjectStoreResponse>;
+	getProjectVariables: () => Promise<IProjectStoreResponse>;
 }

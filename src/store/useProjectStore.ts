@@ -1,7 +1,8 @@
 import { namespaces } from "@constants";
 import { EStoreName } from "@enums";
 import { IProjectStore } from "@interfaces/store";
-import { LoggerService, ProjectsService } from "@services";
+import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
+import { TEnvironment } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -17,12 +18,16 @@ const defaultState: Omit<
 	| "setActiveTab"
 	| "getProjectsList"
 	| "updateActiveEditorFileName"
+	| "getProjectEnvironments"
+	| "getProjectVariables"
 > = {
 	list: [],
 	currentProject: {
 		projectId: undefined,
 		activeEditorFileName: "",
 		resources: {},
+		environments: [],
+		variables: [],
 	},
 	activeTab: 1,
 };
@@ -38,9 +43,13 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 			currentProject: { ...defaultState.currentProject, projectId },
 		}));
 
-		const { error } = await get().getProjectResources();
+		try {
+			await Promise.all([get().getProjectResources(), get().getProjectEnvironments(), get().getProjectVariables()]);
 
-		return { error };
+			return { error: undefined };
+		} catch (error) {
+			return { error };
+		}
 	},
 
 	getProjectsList: async () => {
@@ -121,11 +130,51 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 
 	getProjectResources: async () => {
-		const { data, error } = await ProjectsService.getResources(get().currentProject.projectId!);
+		const { data: resources, error } = await ProjectsService.getResources(get().currentProject.projectId!);
 
-		if (data) {
+		if (resources) {
 			set((state) => {
-				state.currentProject.resources = data;
+				state.currentProject.resources = resources;
+				return state;
+			});
+		}
+
+		return { error };
+	},
+
+	getProjectEnvironments: async () => {
+		if (isEmpty(get().currentProject.projectId)) return { error: { message: i18n.t("errors.environmentsNotFound") } };
+
+		const { data: envs, error } = await EnvironmentsService.listByProjectId(get().currentProject.projectId!);
+
+		if (envs) {
+			set((state) => {
+				state.currentProject.environments = envs;
+				return state;
+			});
+		}
+
+		return { data: envs, error };
+	},
+
+	getProjectVariables: async () => {
+		const projectId = get().currentProject.projectId;
+
+		if (isEmpty(projectId)) return { error: { message: i18n.t("errors.variblesNotFound") } };
+
+		const { data: envs } = await get().getProjectEnvironments();
+
+		if (isEmpty(envs)) {
+			return { error: { message: i18n.t("errors.environmentsNotFound") } };
+		}
+
+		const envId = (envs as TEnvironment[])[0].envId;
+
+		const { data: vars, error } = await VariablesService.list(envId);
+
+		if (vars) {
+			set((state) => {
+				state.currentProject.variables = vars;
 				return state;
 			});
 		}
