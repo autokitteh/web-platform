@@ -4,7 +4,6 @@ import { IProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
 import { TEnvironment } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
-import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
