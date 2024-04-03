@@ -10,7 +10,10 @@
 			},
 			"buttons": {
 				"edit": "Edit",
-				"delete": "Delete"
+				"delete": "Delete",
+				"ariaDeleteVariable": "Delete variable",
+				"ariaSortByName": "Sort by name",
+				"ariaSortByValue": "Sort by value"
 			}
 		}
 	}

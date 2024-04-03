@@ -8,21 +8,14 @@ import i18n from "i18next";
 export class VariablesService {
 	static async create(singleVariable: TVariable): Promise<ServiceResponse<string>> {
 		try {
-			const variable = await environmentsClient.setVar({ var: singleVariable });
-			if (!variable) {
-				LoggerService.error(
-					namespaces.projectService,
-					i18n.t("errors.variableNotCreated", { name: singleVariable.name, value: singleVariable.value })
-				);
+			await environmentsClient.setVar({ var: singleVariable });
 
-				return {
-					data: undefined,
-					error: i18n.t("errors.variableNotCreated", { name: singleVariable.name, value: singleVariable.value }),
-				};
-			}
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
+			LoggerService.error(
+				namespaces.projectService,
+				i18n.t("errors.variableNotCreated", { name: singleVariable.name, value: singleVariable.value })
+			);
 			return { data: undefined, error };
 		}
 	}
@@ -30,11 +23,7 @@ export class VariablesService {
 	static async list(envId: string): Promise<ServiceResponse<TVariable[]>> {
 		try {
 			const { vars } = await environmentsClient.getVars({ envId });
-			if (!vars) {
-				LoggerService.error(namespaces.projectService, i18n.t("errors.variablesNotFound", { id: envId }));
 
-				return { data: undefined, error: i18n.t("errors.variablesNotFound", { id: envId }) };
-			}
 			return { data: vars, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.projectService, i18n.t("errors.variablesNotFound", { id: envId }));

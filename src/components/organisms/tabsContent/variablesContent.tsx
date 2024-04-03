@@ -16,7 +16,7 @@ export const VariablesContent = () => {
 	const { currentProject } = useProjectStore();
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
-		column: keyof any;
+		column: keyof TVariable;
 	}>({ direction: ESortDirection.ASC, column: "name" });
 	const [variables, setVariables] = useState<TVariable[]>(currentProject.variables);
 	const [toast, setToast] = useState({
@@ -24,7 +24,7 @@ export const VariablesContent = () => {
 		message: "",
 	});
 
-	const toggleSortTriggers = (key: keyof any) => {
+	const toggleSortTriggers = (key: keyof TVariable) => {
 		const newDirection =
 			sort.column === key && sort.direction === ESortDirection.ASC ? ESortDirection.DESC : ESortDirection.ASC;
 
@@ -51,6 +51,7 @@ export const VariablesContent = () => {
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("name")}>
 								{t("table.columns.name")}
 								<SortButton
+									ariaLabel={t("table.buttons.ariaSortByName")}
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sort.column}
 									sortDirection={sort.direction}
@@ -59,6 +60,7 @@ export const VariablesContent = () => {
 							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => toggleSortTriggers("value")}>
 								{t("table.columns.value")}
 								<SortButton
+									ariaLabel={t("table.buttons.ariaSortByValue")}
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"value" === sort.column}
 									sortDirection={sort.direction}
@@ -77,6 +79,7 @@ export const VariablesContent = () => {
 										className="flex-col gap-1"
 										contentMenu={
 											<Button
+												ariaLabel={t("table.buttons.ariaDeleteVariable")}
 												className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
 												onClick={() => openModal(EModalName.deleteVariable, idx + "")}
 											>
@@ -103,7 +106,7 @@ export const VariablesContent = () => {
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<h5 className="font-semibold text-error">Error</h5>
+				<p className="font-semibold text-error">Error</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 
