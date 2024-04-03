@@ -3,6 +3,7 @@
 	"unexpectedError": "We're sorry, but an unexpected error has occurred and the application is currently unavailable. Please try again later.",
 	"projectNotFound": "Couldn't fetch the project details",
 	"environmentsNotFound": "Couldn't fetch the environments details",
+	"environmentsNotFoundExtended": "Couldn't fetch the environments details, by project ID: {{projectId}}",
 	"variblesNotFound": "Couldn't fetch the varibles details",
 	"projectIdNotFound": "Project ID not found",
 	"triggerNotFound": "Couldn't fetch the trigger details",
@@ -18,5 +19,7 @@
 	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}",
 	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}",
 	"variableNotCreated": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
-	"variablesNotFound": "Couldn't fetch the variables details, Environments ID: {{id}}"
+	"variablesNotFound": "Couldn't fetch the variables details, Environments ID: {{id}}",
+	"variableNotCreatedExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
+	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}"
 }

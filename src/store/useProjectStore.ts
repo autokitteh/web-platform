@@ -4,6 +4,7 @@ import { IProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
 import { TEnvironment } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
+import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -156,14 +157,11 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 
 	getProjectVariables: async () => {
-		const { data: envs } = await get().getProjectEnvironments();
+		const { data: environments, error: errorEnvs } = await get().getProjectEnvironments();
 
-		if (isEmpty(envs)) {
-			return { error: { message: i18n.t("errors.environmentsNotFound") } };
-		}
+		if (errorEnvs) return { error: errorEnvs };
 
-		const envId = (envs as TEnvironment[])[0].envId;
-
+		const envId = (environments as TEnvironment[])[0].envId;
 		const { data: vars, error } = await VariablesService.list(envId);
 
 		if (vars) {
