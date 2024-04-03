@@ -1,12 +1,17 @@
 {
 	"variables": {
-		"title": "Available Variables",
-		"noVarsAvailable": "No variables available.",
+		"titleAvailable": "Available Variables",
+		"titleNoAvailable": "No variables available.",
 		"buttonAddNew": "Add new",
 		"table": {
-			"name": "Name",
-			"value": "Value",
-			"buttonDelete": "Delete"
+			"columns": {
+				"name": "Name",
+				"value": "Value"
+			},
+			"buttons": {
+				"edit": "Edit",
+				"delete": "Delete"
+			}
 		}
 	}
 }

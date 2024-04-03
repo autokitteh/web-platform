@@ -38,7 +38,7 @@ export const VariablesContent = () => {
 	return (
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
-				<div className="text-base text-gray-300">{t("title")}</div>
+				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white">
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 					{t("buttonAddNew")}
@@ -49,7 +49,7 @@ export const VariablesContent = () => {
 					<THead>
 						<Tr>
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("name")}>
-								{t("table.name")}
+								{t("table.columns.name")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sort.column}
@@ -57,7 +57,7 @@ export const VariablesContent = () => {
 								/>
 							</Th>
 							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => toggleSortTriggers("value")}>
-								{t("table.value")}
+								{t("table.columns.value")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"value" === sort.column}
@@ -80,7 +80,7 @@ export const VariablesContent = () => {
 												className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
 												onClick={() => openModal(EModalName.deleteVariable, idx + "")}
 											>
-												{t("table.buttonDelete")}
+												{t("table.buttons.delete")}
 											</Button>
 										}
 									>
@@ -94,7 +94,7 @@ export const VariablesContent = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-gray-300 font-semibold text-xl text-center"> {t("noVarsAvailable")}</div>
+				<div className="mt-10 text-gray-300 font-semibold text-xl text-center"> {t("titleNoAvailable")}</div>
 			)}
 
 			<Toast
