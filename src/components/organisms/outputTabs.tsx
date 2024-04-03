@@ -4,7 +4,7 @@ import { EOutputTabs } from "@enums/components";
 
 export const OutputTabs = () => {
 	return (
-		<Tabs value={EOutputTabs.output}>
+		<Tabs defaultValue={EOutputTabs.output}>
 			<TabList className="uppercase">
 				<Tab value={EOutputTabs.output}>OUTPUT</Tab>
 				<Tab value={EOutputTabs.tab}>TAB</Tab>

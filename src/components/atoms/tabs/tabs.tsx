@@ -3,13 +3,13 @@ import { TabsContext } from "@components/atoms/tabs/tabsContext";
 import { ITabs } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Tabs = ({ value = "", className, children, onChange }: ITabs) => {
-	const [activeTab, setActiveTab] = useState<string>(value);
+export const Tabs = ({ defaultValue, className, children, onChange }: ITabs) => {
+	const [activeTab, setActiveTab] = useState(defaultValue);
 	const tabsStyle = cn("flex flex-col flex-1 h-full", className);
 
-	useEffect(() => onChange?.(activeTab), [activeTab]);
-
-	useEffect(() => setActiveTab(value), [value]);
+	useEffect(() => {
+		if (activeTab) onChange?.(activeTab);
+	}, [activeTab]);
 
 	return (
 		<TabsContext.Provider value={{ activeTab, setActiveTab }}>

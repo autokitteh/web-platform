@@ -1,5 +1,5 @@
 export interface ITabs {
-	value?: string;
+	defaultValue?: string;
 	className?: string;
 	children: React.ReactNode;
 	onChange?: (value: string) => void;

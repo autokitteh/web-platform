@@ -1,5 +1,6 @@
 import { namespaces } from "@constants";
 import { EStoreName } from "@enums";
+import { EProjectTabs } from "@enums/components";
 import { IProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
@@ -24,19 +25,19 @@ const defaultState: Omit<
 		activeEditorFileName: "",
 		resources: {},
 	},
-	activeTab: "1",
+	activeTab: EProjectTabs.codeAndAssets,
 };
 
 const store: StateCreator<IProjectStore> = (set, get) => ({
 	...defaultState,
 	loadProject: async (projectId) => {
-		const currentTab = get().currentProject.projectId === projectId ? get().activeTab : "1";
-		const currentFileName = get().currentProject.activeEditorFileName;
+		const activeTab = get().currentProject.projectId === projectId ? get().activeTab : EProjectTabs.codeAndAssets;
+		const activeEditorFileName = get().currentProject.activeEditorFileName;
 
 		set(() => ({
 			...defaultState,
-			activeTab: currentTab,
-			currentProject: { ...defaultState.currentProject, projectId, activeEditorFileName: currentFileName },
+			activeTab,
+			currentProject: { ...defaultState.currentProject, projectId, activeEditorFileName },
 		}));
 
 		const { error } = await get().getProjectResources();

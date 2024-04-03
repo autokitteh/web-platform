@@ -42,7 +42,11 @@ export const EditorTabs = () => {
 	}, 1000);
 
 	return (
-		<Tabs onChange={updateActiveEditorFileName} value={currentProject.activeEditorFileName}>
+		<Tabs
+			defaultValue={currentProject.activeEditorFileName}
+			key={currentProject.activeEditorFileName}
+			onChange={updateActiveEditorFileName}
+		>
 			<TabList className="uppercase">
 				{Object.keys(currentProject.resources).map((fileName) => (
 					<Tab key={fileName} value={fileName}>
