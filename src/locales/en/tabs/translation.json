@@ -1,0 +1,12 @@
+{
+	"variables": {
+		"title": "Available Variables",
+		"noVarsAvailable": "No variables available.",
+		"buttonAddNew": "Add new",
+		"table": {
+			"name": "Name",
+			"value": "Value",
+			"buttonDelete": "Delete"
+		}
+	}
+}

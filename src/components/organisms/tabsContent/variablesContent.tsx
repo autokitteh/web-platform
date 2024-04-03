@@ -8,8 +8,10 @@ import { useModalStore, useProjectStore } from "@store";
 import { TSortDirection } from "@type/components";
 import { TVariable } from "@type/models";
 import { orderBy } from "lodash";
+import { useTranslation } from "react-i18next";
 
 export const VariablesContent = () => {
+	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { openModal } = useModalStore();
 	const { currentProject } = useProjectStore();
 	const [sort, setSort] = useState<{
@@ -36,10 +38,10 @@ export const VariablesContent = () => {
 	return (
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
-				<div className="text-base text-gray-300">Available Variables</div>
+				<div className="text-base text-gray-300">{t("title")}</div>
 				<Button className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white">
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					Add new
+					{t("buttonAddNew")}
 				</Button>
 			</div>
 			{variables.length ? (
@@ -47,7 +49,7 @@ export const VariablesContent = () => {
 					<THead>
 						<Tr>
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("name")}>
-								Key
+								{t("name")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sort.column}
@@ -55,7 +57,7 @@ export const VariablesContent = () => {
 								/>
 							</Th>
 							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => toggleSortTriggers("value")}>
-								Value
+								{t("value")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"value" === sort.column}
@@ -76,9 +78,9 @@ export const VariablesContent = () => {
 										contentMenu={
 											<Button
 												className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-												onClick={() => openModal(EModalName.deleteVariable)}
+												onClick={() => openModal(EModalName.deleteVariable, idx + "")}
 											>
-												Delete
+												{t("buttonDelete")}
 											</Button>
 										}
 									>
@@ -92,7 +94,7 @@ export const VariablesContent = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-gray-300 font-semibold text-xl text-center">No variables available.</div>
+				<div className="mt-10 text-gray-300 font-semibold text-xl text-center"> {t("noVarsAvailable")}</div>
 			)}
 
 			<Toast

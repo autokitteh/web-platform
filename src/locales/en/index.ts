@@ -6,6 +6,7 @@ import menu from "@locales/en/menu/translation.json";
 import modals from "@locales/en/modals/translation.json";
 import shared from "@locales/en/shared/translation.json";
 import tables from "@locales/en/tables/translation.json";
+import tabs from "@locales/en/tabs/translation.json";
 
 export default {
 	login,
@@ -16,4 +17,5 @@ export default {
 	buttons,
 	tables,
 	forms,
+	tabs,
 };
