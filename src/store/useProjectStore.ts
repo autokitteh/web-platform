@@ -24,13 +24,13 @@ const defaultState: Omit<
 		activeEditorFileName: "",
 		resources: {},
 	},
-	activeTab: 1,
+	activeTab: "1",
 };
 
 const store: StateCreator<IProjectStore> = (set, get) => ({
 	...defaultState,
 	loadProject: async (projectId) => {
-		const currentTab = get().currentProject.projectId === projectId ? get().activeTab : 1;
+		const currentTab = get().currentProject.projectId === projectId ? get().activeTab : "1";
 		const currentFileName = get().currentProject.activeEditorFileName;
 
 		set(() => ({

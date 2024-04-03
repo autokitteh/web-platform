@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
-import { TabValueType } from "@type/components";
 import { debounce, get } from "lodash";
 
 export const EditorTabs = () => {
@@ -43,10 +42,7 @@ export const EditorTabs = () => {
 	}, 1000);
 
 	return (
-		<Tabs
-			onChange={(value: TabValueType) => updateActiveEditorFileName(value as string)}
-			value={currentProject.activeEditorFileName}
-		>
+		<Tabs onChange={updateActiveEditorFileName} value={currentProject.activeEditorFileName}>
 			<TabList className="uppercase">
 				{Object.keys(currentProject.resources).map((fileName) => (
 					<Tab key={fileName} value={fileName}>

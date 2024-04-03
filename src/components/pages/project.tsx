@@ -33,10 +33,10 @@ export const Project = () => {
 	return (
 		<AppWrapper>
 			<MapMenuFrameLayout>
-				<Tabs onChange={(value) => setActiveTab(value)} value={activeTab}>
+				<Tabs onChange={setActiveTab} value={activeTab}>
 					<TabList>
 						{tabsMainFrame.map(({ id, title, count }) => (
-							<Tab className="text-xs 3xl:text-sm" key={id} value={id}>
+							<Tab className="text-xs 3xl:text-sm" key={id} value={id.toString()}>
 								{`${title} (${count})`}
 							</Tab>
 						))}
@@ -45,7 +45,7 @@ export const Project = () => {
 						</IconButton>
 					</TabList>
 					{tabsMainFrame.map(({ id, content }) => (
-						<TabPanel key={id} value={id}>
+						<TabPanel key={id} value={id.toString()}>
 							{content()}
 						</TabPanel>
 					))}

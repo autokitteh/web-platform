@@ -1,4 +1,4 @@
 export enum EOutputTabs {
-	output,
-	tab,
+	output = "output",
+	tab = "tab",
 }

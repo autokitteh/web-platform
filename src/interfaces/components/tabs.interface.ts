@@ -1,15 +1,13 @@
-import { TabValueType } from "@type/components";
-
 export interface ITabs {
-	value?: TabValueType;
+	value?: string;
 	className?: string;
 	children: React.ReactNode;
-	onChange?: (value: TabValueType) => void;
+	onChange?: (value: string) => void;
 }
 
 export interface ITab {
 	className?: string;
-	value: TabValueType;
+	value: string;
 	children: React.ReactNode;
 }
 
@@ -19,6 +17,6 @@ export interface ITabList {
 }
 
 export interface ITabsContext {
-	activeTab?: TabValueType;
-	setActiveTab: (value: TabValueType) => void;
+	activeTab?: string;
+	setActiveTab: (value: string) => void;
 }

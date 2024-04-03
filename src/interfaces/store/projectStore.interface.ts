@@ -14,7 +14,7 @@ type TProjectList = {
 
 export interface IProjectStore {
 	list: TProjectList[];
-	activeTab?: number;
+	activeTab?: string;
 	currentProject: {
 		projectId?: string;
 		activeEditorFileName: string;
@@ -22,7 +22,7 @@ export interface IProjectStore {
 	};
 	loadProject: (projectId: string) => Promise<IProjectStoreResponse>;
 	getProjectsList: () => Promise<IProjectStoreResponse & { list: TProjectList[] }>;
-	setActiveTab: (value: number) => void;
+	setActiveTab: (value: string) => void;
 	setUpdateFileContent: (content: Uint8Array) => void;
 	setProjectResources: (files: File[]) => Promise<IFilesResponse>;
 	setProjectEmptyResources: (name: string) => Promise<IProjectStoreResponse>;
