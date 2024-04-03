@@ -11,3 +11,7 @@ export interface IModalAddCodeAssets {
 export interface IModalDeleteTrigger {
 	onDelete?: () => void;
 }
+
+export interface IModalDeleteVariable {
+	onDelete?: () => void;
+}

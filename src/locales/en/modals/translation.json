@@ -17,7 +17,13 @@
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete"
 	},
-	"addCodeAssets": {
-		"title": "Create new"
+	"deleteVariable": {
+		"title": "Delete Variable",
+		"line": "This variable you are about to delete uses:",
+		"line2": "Name - {{name}} Value - {{value}}",
+		"line3": "Deleting the variable may cause failure of projects.",
+		"line4": "Are you sure you want to delete this variable?",
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete"
 	}
 }
