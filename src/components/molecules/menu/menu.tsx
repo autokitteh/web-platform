@@ -96,12 +96,13 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 						<Button
 							ariaLabel={name}
 							className={cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
-								"bg-gray-700 hover:bg-gray-700 text-white": location.pathname.startsWith(href!) && isOpen,
+								"hover:bg-gray-700 text-white": location.pathname.startsWith(href!),
+								"bg-gray-700": location.pathname.startsWith(href!) && isOpen,
 							})}
 							href={href}
 						>
 							<div
-								className={cn("w-9 h-9 flex items-center justify-center rounded-full", {
+								className={cn("w-9 h-9 flex items-center justify-center rounded-full duration-500", {
 									"bg-gray-700 hover:bg-gray-700": location.pathname.startsWith(href!) && !isOpen,
 								})}
 							>
