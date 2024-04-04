@@ -4,7 +4,7 @@ import { Select, Button, ErrorMessage, IconButton, Toast, Input } from "@compone
 import { namespaces } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISelectOption } from "@interfaces/components";
-import { ConnectionService, ProjectsService, TriggersService, LoggerService } from "@services";
+import { ConnectionService, TriggersService, LoggerService } from "@services";
 import { useProjectStore } from "@store";
 import { newTriggerSchema } from "@validations";
 import { useForm, Controller, FieldValues } from "react-hook-form";
@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 export const AddTriggerForm = () => {
 	const navigate = useNavigate();
 	const {
-		currentProject: { projectId },
+		currentProject: { projectId, resources },
 	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -27,28 +27,27 @@ export const AddTriggerForm = () => {
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {
-			try {
-				const { data: connections } = await ConnectionService.list();
-				const formattedConnections = connections?.map((item) => ({
-					value: item.connectionId,
-					label: item.name,
-				}));
-				setConnections(formattedConnections || []);
+			const { data: connections, error } = await ConnectionService.list();
+			const formattedConnections = connections?.map((item) => ({
+				value: item.connectionId,
+				label: item.name,
+			}));
+			setConnections(formattedConnections || []);
 
-				const { data: resources } = await ProjectsService.getResources(projectId!);
-				const resourceNames = Object.keys(resources || []);
-				const formattedResources = resourceNames?.map((name) => ({
-					value: name,
-					label: name,
-				}));
-				setFilesName(formattedResources || []);
-			} catch (error) {
-				setToast({ isOpen: true, message: t("dataFetchError") });
+			if (error) {
+				setToast({ isOpen: true, message: t("connectionsNotFound") });
 				LoggerService.error(
 					namespaces.projectUI,
-					t("dataFetchErrorExtended", { projectId: projectId, error: (error as Error).message })
+					t("connectionsNotFoundExtended", { projectId: projectId, error: (error as Error).message })
 				);
 			}
+
+			const resourceNames = Object.keys(resources || []);
+			const formattedResources = resourceNames?.map((name) => ({
+				value: name,
+				label: name,
+			}));
+			setFilesName(formattedResources || []);
 		};
 		fetchData();
 	}, []);
