@@ -1,5 +1,6 @@
 import { namespaces } from "@constants";
 import { EStoreName } from "@enums";
+import { EProjectTabs } from "@enums/components";
 import { IProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
 import { TEnvironment } from "@type/models";
@@ -29,18 +30,19 @@ const defaultState: Omit<
 		environments: [],
 		variables: [],
 	},
-	activeTab: 1,
+	activeTab: EProjectTabs.codeAndAssets,
 };
 
 const store: StateCreator<IProjectStore> = (set, get) => ({
 	...defaultState,
 	loadProject: async (projectId) => {
-		const currentTab = get().currentProject.projectId === projectId ? get().activeTab : 1;
+		const activeTab = get().currentProject.projectId === projectId ? get().activeTab : EProjectTabs.codeAndAssets;
+		const activeEditorFileName = get().currentProject.activeEditorFileName;
 
 		set(() => ({
 			...defaultState,
-			activeTab: currentTab,
-			currentProject: { ...defaultState.currentProject, projectId },
+			activeTab,
+			currentProject: { ...defaultState.currentProject, projectId, activeEditorFileName },
 		}));
 
 		try {
@@ -173,7 +175,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		return { error };
 	},
 
-	updateActiveEditorFileName: (fileName: string) => {
+	updateActiveEditorFileName: (fileName) => {
 		set((state) => {
 			state.currentProject.activeEditorFileName = fileName;
 			return state;

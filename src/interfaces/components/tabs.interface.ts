@@ -1,13 +1,13 @@
 export interface ITabs {
-	defaultValue?: number;
+	defaultValue?: string;
 	className?: string;
 	children: React.ReactNode;
-	onChange?: (value: number) => void;
+	onChange?: (value: string) => void;
 }
 
 export interface ITab {
 	className?: string;
-	value: number;
+	value: string;
 	children: React.ReactNode;
 }
 
@@ -17,6 +17,6 @@ export interface ITabList {
 }
 
 export interface ITabsContext {
-	activeTab: number;
-	setActiveTab: (value: number) => void;
+	activeTab?: string;
+	setActiveTab: (value: string) => void;
 }

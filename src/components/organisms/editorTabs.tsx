@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "@components/atoms";
-import { EEditorTabs } from "@enums/components";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
 import { debounce, get } from "lodash";
 
 export const EditorTabs = () => {
-	const { currentProject, setUpdateFileContent } = useProjectStore();
+	const { currentProject, setUpdateFileContent, updateActiveEditorFileName } = useProjectStore();
 	const [editorKey, setEditorKey] = useState(0);
-	const [manifestCode, setManifestCode] = useState("// Code B: Initialize your code here...");
 	const initialContent = "// Code A: Initialize your code here...";
 
 	const resource = get(currentProject.resources, [currentProject.activeEditorFileName], new Uint8Array());
@@ -44,33 +42,31 @@ export const EditorTabs = () => {
 	}, 1000);
 
 	return (
-		<Tabs defaultValue={EEditorTabs.code}>
+		<Tabs
+			defaultValue={currentProject.activeEditorFileName}
+			key={currentProject.activeEditorFileName}
+			onChange={updateActiveEditorFileName}
+		>
 			<TabList className="uppercase">
-				<Tab value={EEditorTabs.code}>CODE</Tab>
-				<Tab value={EEditorTabs.manifest}>MANIFEST</Tab>
+				{Object.keys(currentProject.resources).map((fileName) => (
+					<Tab key={fileName} value={fileName}>
+						{fileName}
+					</Tab>
+				))}
 			</TabList>
-			<TabPanel className="pt-10 -ml-7" value={EEditorTabs.code}>
-				<Editor
-					beforeMount={handleEditorWillMount}
-					key={editorKey}
-					language="python"
-					onChange={handleUpdateContent}
-					onMount={handleEditorDidMount}
-					theme="vs-dark"
-					value={content}
-				/>
-			</TabPanel>
-			<TabPanel className="pt-10 -ml-7" value={EEditorTabs.manifest}>
-				<Editor
-					beforeMount={handleEditorWillMount}
-					key={editorKey}
-					language="python"
-					onChange={(value) => setManifestCode(value || "")}
-					onMount={handleEditorDidMount}
-					theme="vs-dark"
-					value={manifestCode}
-				/>
-			</TabPanel>
+			{Object.entries(currentProject.resources).map(([fileName]) => (
+				<TabPanel className="pt-10 -ml-7" key={fileName} value={fileName}>
+					<Editor
+						beforeMount={handleEditorWillMount}
+						key={editorKey}
+						language="python"
+						onChange={handleUpdateContent}
+						onMount={handleEditorDidMount}
+						theme="vs-dark"
+						value={content}
+					/>
+				</TabPanel>
+			))}
 		</Tabs>
 	);
 };
