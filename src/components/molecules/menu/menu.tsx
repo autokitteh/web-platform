@@ -12,11 +12,12 @@ import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
 import { isEqual, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { list, getProjectsList } = useProjectStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
@@ -92,9 +93,25 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 				</div>
 				{menu.map(({ icon, name, href, submenu, id }) => (
 					<div key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
-						<Button ariaLabel={name} className="hover:bg-green-light gap-1.5 p-0.5 pl-1" href={href}>
-							<div className="w-9 h-9 flex items-center justify-center">
-								<IconSvg alt={name} src={icon} />
+						<Button
+							ariaLabel={name}
+							className={cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
+								"bg-gray-700 hover:bg-gray-700 text-white": location.pathname.startsWith(href!) && isOpen,
+							})}
+							href={href}
+						>
+							<div
+								className={cn("w-9 h-9 flex items-center justify-center rounded-full", {
+									"bg-gray-700 hover:bg-gray-700": location.pathname.startsWith(href!) && !isOpen,
+								})}
+							>
+								<IconSvg
+									alt={name}
+									className={cn("fill-gray-700", {
+										"fill-white p-0.5": location.pathname.startsWith(href!),
+									})}
+									src={icon}
+								/>
 							</div>
 							<AnimatePresence>
 								{isOpen ? (
