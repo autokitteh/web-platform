@@ -8,7 +8,7 @@ import { Trigger } from "@type/models";
 import i18n from "i18next";
 
 export class TriggersService {
-	static async create(projectId: string, trigger: Omit<Trigger, "connectionName">): Promise<ServiceResponse<string>> {
+	static async create(projectId: string, trigger: Trigger): Promise<ServiceResponse<string>> {
 		try {
 			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
 
