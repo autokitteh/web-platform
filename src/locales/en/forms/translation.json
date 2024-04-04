@@ -1,5 +1,13 @@
 {
-	"inputPlaceholderName": "Name",
-	"inputAriaLabelNewFile": "new file name",
-	"addNewTrigger": "Add new trigger"
+	"triggers": {
+		"addNewTrigger": "Add new trigger",
+		"ariaSelectFile": "Select file",
+		"ariaSelectConnection": "Select connection",
+		"entrypoint": "Entrypoint",
+		"eventType": "Event type",
+		"placeholderSelectConnection": "Select connection",
+		"placeholderSelectFile": "Select file",
+		"placeholderEntrypoint": "Entrypoint",
+		"placeholderEventType": "Event type"
+	}
 }

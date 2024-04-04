@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 
 export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 	const { projectId } = useParams();
-	const { t } = useTranslation(["errors", "buttons", "modals", "forms"]);
+	const { t } = useTranslation(["errors", "buttons", "modals"]);
 	const { closeModal } = useModalStore();
 	const { setProjectEmptyResources } = useProjectStore();
 
@@ -40,12 +40,12 @@ export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<Input
 						{...register("name")}
-						aria-label={t("inputAriaLabelNewFile", { ns: "forms" })}
+						aria-label={t("ariaLabelNewFile", { ns: "modals" })}
 						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="bg-white hover:border-gray-700"
 						isError={!!errors.name}
 						isRequired
-						placeholder={t("inputPlaceholderName", { ns: "forms" })}
+						placeholder={t("placeholderName", { ns: "modals" })}
 					/>
 					<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
 					<Button className="font-bold justify-center mt-2 rounded-lg py-2.5" type="submit" variant="filled">

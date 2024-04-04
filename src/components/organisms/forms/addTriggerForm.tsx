@@ -70,7 +70,6 @@ export const AddTriggerForm = () => {
 		const { error } = await TriggersService.create(projectId!, {
 			triggerId: undefined,
 			connectionId: connection.value,
-			connectionName: connection.label,
 			eventType,
 			path: filePath.label,
 			name: entryPoint,
@@ -94,7 +93,7 @@ export const AddTriggerForm = () => {
 					<IconButton className="hover:bg-black p-0 w-8 h-8" onClick={() => navigate(-1)}>
 						<ArrowLeft />
 					</IconButton>
-					<p className="text-gray-300 text-base">{t("addNewTrigger", { ns: "forms" })}</p>
+					<p className="text-gray-300 text-base">{t("triggers.addNewTrigger", { ns: "forms" })}</p>
 				</div>
 				<div className="flex items-center gap-6">
 					<Button className="text-gray-300 hover:text-white p-0 font-semibold" onClick={() => navigate(-1)}>
@@ -120,11 +119,11 @@ export const AddTriggerForm = () => {
 							render={({ field }) => (
 								<Select
 									{...field}
-									aria-label="Select connection"
+									aria-label={t("triggers.ariaSelectConnection", { ns: "forms" })}
 									isError={!!errors.connection}
 									onChange={(selected) => field.onChange(selected)}
 									options={connections}
-									placeholder="Select connection"
+									placeholder={t("triggers.placeholderSelectConnection", { ns: "forms" })}
 									value={field.value}
 								/>
 							)}
@@ -138,11 +137,11 @@ export const AddTriggerForm = () => {
 							render={({ field }) => (
 								<Select
 									{...field}
-									aria-label="Select file"
+									aria-label={t("triggers.ariaSelectFile", { ns: "forms" })}
 									isError={!!errors.filePath}
 									onChange={(selected) => field.onChange(selected)}
 									options={filesName}
-									placeholder="Select file"
+									placeholder={t("triggers.placeholderSelectFile", { ns: "forms" })}
 									value={field.value}
 								/>
 							)}
@@ -152,20 +151,20 @@ export const AddTriggerForm = () => {
 					<div className="relative">
 						<Input
 							{...register("entryPoint")}
-							aria-label="Entrypoint"
+							aria-label={t("triggers.entrypoint", { ns: "forms" })}
 							className={inputClass("entryPoint")}
 							isError={!!errors.entryPoint}
-							placeholder="Entrypoint"
+							placeholder={t("triggers.placeholderEntrypoint", { ns: "forms" })}
 						/>
 						<ErrorMessage>{errors.entryPoint?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
 						<Input
 							{...register("eventType")}
-							aria-label="Event type"
+							aria-label={t("triggers.eventType", { ns: "forms" })}
 							className={inputClass("eventType")}
 							isError={!!errors.eventType}
-							placeholder="Event type"
+							placeholder={t("triggers.placeholderEventType", { ns: "forms" })}
 						/>
 						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
 					</div>
