@@ -45,7 +45,7 @@ export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
 						className="bg-white hover:border-gray-700"
 						isError={!!errors.name}
 						isRequired
-						placeholder={t("placeholderName", { ns: "modals" })}
+						placeholder={t("addCodeAssets.placeholderName", { ns: "modals" })}
 					/>
 					<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
 					<Button className="font-bold justify-center mt-2 rounded-lg py-2.5" type="submit" variant="filled">
