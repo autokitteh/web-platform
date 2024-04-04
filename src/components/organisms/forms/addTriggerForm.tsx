@@ -106,7 +106,7 @@ export const AddTriggerForm = () => {
 				</div>
 				<div className="flex items-center gap-6">
 					<Button className="text-gray-300 hover:text-white p-0 font-semibold" onClick={() => navigate(-1)}>
-						{t("cancel", { ns: "forms" })}
+						{t("cancel", { ns: "buttons" })}
 					</Button>
 					<Button
 						ariaLabel="Save trigger"
