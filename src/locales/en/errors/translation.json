@@ -2,7 +2,6 @@
 	"error": "Error",
 	"unexpectedError": "We're sorry, but an unexpected error has occurred and the application is currently unavailable. Please try again later.",
 	"projectNotFound": "Couldn't fetch the project details",
-	"environmentsNotFound": "Couldn't fetch the environments details",
 	"environmentsNotFoundExtended": "Couldn't fetch the environments details, by project ID: {{projectId}}",
 	"variblesNotFound": "Couldn't fetch the varibles details",
 	"projectIdNotFound": "Project ID not found",
