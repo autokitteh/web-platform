@@ -1,14 +1,18 @@
 import { z } from "zod";
 
-const selectSchema = z.object({
+const selectItemSchema = z.object({
 	label: z.string(),
 	value: z.string(),
 	disabled: z.boolean().optional(),
 });
 
 export const newTriggerSchema = z.object({
-	connection: selectSchema.array().min(1, "Select connection").default([]),
-	name: selectSchema.array().min(1, "Select name").default([]),
-	entryPoint: z.string().min(1, "Entry Point is required"),
-	eventType: z.string().min(1, "Event Type is required"),
+	connection: selectItemSchema.refine((value) => value.label, {
+		message: "Connection is required",
+	}),
+	filePath: selectItemSchema.refine((value) => value.label, {
+		message: "File name is required",
+	}),
+	entryPoint: z.string().min(1, "Entry point is required"),
+	eventType: z.string().min(1, "Event type is required"),
 });

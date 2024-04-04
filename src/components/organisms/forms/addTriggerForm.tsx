@@ -1,10 +1,9 @@
 import React, { useState, useLayoutEffect } from "react";
 import { ArrowLeft } from "@assets/image/icons";
 import { Select, Button, ErrorMessage, IconButton, Toast, Input } from "@components/atoms";
-import { namespaces } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISelectOption } from "@interfaces/components";
-import { ConnectionService, TriggersService, LoggerService } from "@services";
+import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
 import { newTriggerSchema } from "@validations";
 import { useForm, Controller } from "react-hook-form";
@@ -28,26 +27,23 @@ export const AddTriggerForm = () => {
 	useLayoutEffect(() => {
 		const fetchData = async () => {
 			const { data: connections, error } = await ConnectionService.list();
-			const formattedConnections = connections?.map((item) => ({
+
+			if (error || !connections?.length) {
+				setToast({ isOpen: true, message: t("connectionsFetchError") });
+				return;
+			}
+
+			const formattedConnections = connections.map((item) => ({
 				value: item.connectionId,
 				label: item.name,
 			}));
-			setConnections(formattedConnections || []);
+			setConnections(formattedConnections);
 
-			if (error) {
-				setToast({ isOpen: true, message: t("connectionsNotFound") });
-				LoggerService.error(
-					namespaces.projectUI,
-					t("connectionsNotFoundExtended", { projectId: projectId, error: (error as Error).message })
-				);
-			}
-
-			const resourceNames = Object.keys(resources || []);
-			const formattedResources = resourceNames?.map((name) => ({
+			const formattedResources = Object.keys(resources).map((name) => ({
 				value: name,
 				label: name,
 			}));
-			setFilesName(formattedResources || []);
+			setFilesName(formattedResources);
 		};
 		fetchData();
 	}, []);
@@ -62,31 +58,27 @@ export const AddTriggerForm = () => {
 		resolver: zodResolver(newTriggerSchema),
 		defaultValues: {
 			connection: { value: "", label: "" },
-			name: { value: "", label: "" },
+			filePath: { value: "", label: "" },
 			entryPoint: "",
 			eventType: "",
 		},
 	});
 
 	const onSubmit = async () => {
-		const { connection, name, eventType, entryPoint } = getValues();
+		const { connection, filePath, eventType, entryPoint } = getValues();
 		setIsLoading(true);
 		const { error } = await TriggersService.create(projectId!, {
 			triggerId: undefined,
 			connectionId: connection.value,
 			connectionName: connection.label,
 			eventType,
-			path: entryPoint,
-			name: name.label,
+			path: filePath.label,
+			name: entryPoint,
 		});
 		setIsLoading(false);
 
 		if (error) {
 			setToast({ isOpen: true, message: t("triggerNotCreated") });
-			LoggerService.error(
-				namespaces.triggerService,
-				t("triggerNotCreatedExtended", { projectId: projectId, error: (error as Error).message })
-			);
 			return;
 		}
 
@@ -142,12 +134,12 @@ export const AddTriggerForm = () => {
 					<div className="relative">
 						<Controller
 							control={control}
-							name="name"
+							name="filePath"
 							render={({ field }) => (
 								<Select
 									{...field}
 									aria-label="Select file"
-									isError={!!errors.name}
+									isError={!!errors.filePath}
 									onChange={(selected) => field.onChange(selected)}
 									options={filesName}
 									placeholder="Select file"
@@ -155,7 +147,7 @@ export const AddTriggerForm = () => {
 								/>
 							)}
 						/>
-						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
 						<Input
@@ -170,10 +162,10 @@ export const AddTriggerForm = () => {
 					<div className="relative">
 						<Input
 							{...register("eventType")}
-							aria-label="Event Type"
+							aria-label="Event type"
 							className={inputClass("eventType")}
 							isError={!!errors.eventType}
-							placeholder="Event Type"
+							placeholder="Event type"
 						/>
 						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
 					</div>
