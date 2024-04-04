@@ -80,7 +80,7 @@ export const AddConnectionForm = () => {
 									isError={!!errors.connectionApp}
 									onChange={(selected) => {
 										field.onChange(selected);
-										handleSelectChange({ name: "connectionApp", value: selected[0]?.value || "" });
+										handleSelectChange({ name: "connectionApp", value: selected?.value || "" });
 									}}
 									options={optionsSelectApp}
 									placeholder="Select app"

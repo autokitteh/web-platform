@@ -5,7 +5,7 @@ export interface ISelect {
 	value?: ISelectOption;
 	options: ISelectOption[];
 	isError?: boolean;
-	onChange: (value: SingleValue<ISelectOption>[]) => void;
+	onChange: (value: SingleValue<ISelectOption>) => void;
 	onBlur?: () => void;
 }
 

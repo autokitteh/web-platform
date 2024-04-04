@@ -1,4 +1,5 @@
 {
 	"inputPlaceholderName": "Name",
-	"inputAriaLabelNewFile": "new file name"
+	"inputAriaLabelNewFile": "new file name",
+	"addNewTrigger": "Add new trigger"
 }

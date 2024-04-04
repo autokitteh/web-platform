@@ -3,5 +3,7 @@
 	"createNewFile": "Create new file",
 	"addCodeAndAssets": "Add Code & Assets",
 	"more": "More",
-	"create": "Create"
+	"create": "Create",
+	"cancel": "Cancel",
+	"loading": "Loading"
 }

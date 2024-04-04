@@ -12,7 +12,7 @@ export const Select = ({ placeholder = "Select", value, options, isError = false
 
 	const handleChange = (selected: SingleValue<ISelectOption>) => {
 		setSelectedOption(selected);
-		onChange([selected]);
+		onChange(selected);
 	};
 
 	const handleMenuClose = () => {
