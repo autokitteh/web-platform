@@ -8,9 +8,9 @@ const selectItemSchema = z.object({
 
 export const newConnectionSchema = z.object({
 	connectionApp: selectItemSchema.refine((value) => value.label, {
-		message: "Connection app is required",
+		message: "Connection is required",
 	}),
-	userName: z.string().min(1, "User Name is required"),
+	userName: z.string().min(1, "Username is required"),
 	password: z.string().min(1, "Password is required"),
 	connectionName: z.string().min(1, "Connection name is required"),
 });
