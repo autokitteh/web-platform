@@ -8,7 +8,7 @@ import { Trigger } from "@type/models";
 import i18n from "i18next";
 
 export class TriggersService {
-	static async create(projectId: string, trigger: Omit<Trigger, "triggerId">): Promise<ServiceResponse<string>> {
+	static async create(projectId: string, trigger: Trigger): Promise<ServiceResponse<string>> {
 		try {
 			const { data: environments, error: envError } = await EnvironmentsService.listByProjectId(projectId);
 			if (envError) {
@@ -25,7 +25,7 @@ export class TriggersService {
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
-					triggerId: "",
+					triggerId: undefined,
 					envId: environments[0].envId,
 					connectionId,
 					eventType,
@@ -50,7 +50,7 @@ export class TriggersService {
 		try {
 			const { trigger } = await triggersClient.get({ triggerId });
 			if (!trigger) {
-				const errorMessage = i18n.t("errors.triggerNotFound");
+				const errorMessage = i18n.t("errors.triggerNotFoundExtended", { triggerId });
 				LoggerService.error(namespaces.triggerService, errorMessage);
 				return { data: undefined, error: errorMessage };
 			}
@@ -71,7 +71,7 @@ export class TriggersService {
 		try {
 			const data = await triggersClient.update({ trigger });
 			if (!data) {
-				const errorMessage = i18n.t("errors.triggerNotFound");
+				const errorMessage = i18n.t("errors.triggerNotFoundExtended", { triggerId: trigger.triggerId });
 				LoggerService.error(namespaces.triggerService, errorMessage);
 				return { data: undefined, error: errorMessage };
 			}
@@ -110,7 +110,7 @@ export class TriggersService {
 		try {
 			const data = await triggersClient.delete({ triggerId });
 			if (!data) {
-				const errorMessage = i18n.t("errors.triggerNotFound");
+				const errorMessage = i18n.t("errors.triggerRemoveFailedExtended", { triggerId });
 				LoggerService.error(namespaces.triggerService, errorMessage);
 				return { data: undefined, error: errorMessage };
 			}

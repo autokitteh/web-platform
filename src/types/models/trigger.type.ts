@@ -1,5 +1,5 @@
 export type Trigger = {
-	triggerId: string;
+	triggerId?: string;
 	connectionId: string;
 	connectionName: string;
 	eventType: string;

@@ -4,7 +4,7 @@ import { Select, Button, ErrorMessage, IconButton, Toast, Input } from "@compone
 import { namespaces } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISelectOption } from "@interfaces/components";
-import { ConnectionService, TriggersService, LoggerService } from "@services";
+import { ConnectionService, ProjectsService, TriggersService, LoggerService } from "@services";
 import { useProjectStore } from "@store";
 import { newTriggerSchema } from "@validations";
 import { useForm, Controller, FieldValues } from "react-hook-form";
@@ -22,30 +22,33 @@ export const AddTriggerForm = () => {
 	});
 	const { t } = useTranslation("errors");
 	const [isLoading, setIsLoading] = useState(false);
-	const [list, setList] = useState<{ connections: ISelectOption[]; filesName: ISelectOption[] }>({
-		connections: [],
-		filesName: [],
-	});
+	const [connections, setConnections] = useState<ISelectOption[]>([]);
+	const [filesName, setFilesName] = useState<ISelectOption[]>([]);
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {
-			const { data: connections, error } = await ConnectionService.list();
+			try {
+				const { data: connections } = await ConnectionService.list();
+				const formattedConnections = connections?.map((item) => ({
+					value: item.connectionId,
+					label: item.name,
+				}));
+				setConnections(formattedConnections || []);
 
-			if (error) {
-				setToast({ isOpen: true, message: t("connectionNotFound") });
+				const { data: resources } = await ProjectsService.getResources(projectId!);
+				const resourceNames = Object.keys(resources || []);
+				const formattedResources = resourceNames?.map((name) => ({
+					value: name,
+					label: name,
+				}));
+				setFilesName(formattedResources || []);
+			} catch (error) {
+				setToast({ isOpen: true, message: t("dataFetchError") });
 				LoggerService.error(
 					namespaces.projectUI,
-					t("connectionNotFound", { projectId: projectId, error: (error as Error).message })
+					t("dataFetchErrorExtended", { projectId: projectId, error: (error as Error).message })
 				);
-				return;
 			}
-
-			const formattedConnections = connections?.map((item) => ({
-				value: item.connectionId,
-				label: item.name,
-			}));
-
-			setList((prevState) => ({ ...prevState, connections: formattedConnections || [] }));
 		};
 		fetchData();
 	}, []);
@@ -58,21 +61,22 @@ export const AddTriggerForm = () => {
 	} = useForm({
 		resolver: zodResolver(newTriggerSchema),
 		defaultValues: {
-			connectionApp: { value: "", label: "" },
-			name: "",
+			connection: { value: "", label: "" },
+			name: { value: "", label: "" },
 			path: "",
 			eventType: "",
 		},
 	});
 
-	const onSubmit = async ({ connectionApp, eventType, path, name }: FieldValues) => {
+	const onSubmit = async ({ connection, eventType, path, name }: FieldValues) => {
 		setIsLoading(true);
 		const { error } = await TriggersService.create(projectId!, {
-			connectionId: connectionApp[0].value,
-			connectionName: connectionApp[0].label,
+			triggerId: undefined,
+			connectionId: connection[0].value,
+			connectionName: connection[0].label,
 			eventType,
 			path,
-			name,
+			name: name[0].label,
 		});
 		setIsLoading(false);
 
@@ -80,7 +84,7 @@ export const AddTriggerForm = () => {
 			setToast({ isOpen: true, message: t("triggerNotCreated") });
 			LoggerService.error(
 				namespaces.triggerService,
-				t("triggerNotCreated", { projectId: projectId, error: (error as Error).message })
+				t("triggerNotCreatedExtended", { projectId: projectId, error: (error as Error).message })
 			);
 			return;
 		}
@@ -118,28 +122,38 @@ export const AddTriggerForm = () => {
 					<div className="relative">
 						<Controller
 							control={control}
-							name="connectionApp"
+							name="connection"
 							render={({ field }) => (
 								<Select
 									{...field}
-									isError={!!errors.connectionApp}
+									isError={!!errors.connection}
 									onChange={(selected) => {
 										field.onChange(selected);
 									}}
-									options={list.connections}
+									options={connections}
 									placeholder="Select connection"
 									value={field.value}
 								/>
 							)}
 						/>
-						<ErrorMessage>{errors.connectionApp?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
-						<Input
-							{...register("name")}
-							className={inputClass("name")}
-							isError={!!errors.name}
-							placeholder="File Name"
+						<Controller
+							control={control}
+							name="name"
+							render={({ field }) => (
+								<Select
+									{...field}
+									isError={!!errors.name}
+									onChange={(selected) => {
+										field.onChange(selected);
+									}}
+									options={filesName}
+									placeholder="Select file"
+									value={field.value}
+								/>
+							)}
 						/>
 						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 					</div>
