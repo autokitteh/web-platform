@@ -3,6 +3,7 @@ import { NewProject } from "@assets/image";
 import { Button, IconSvg, Toast } from "@components/atoms";
 import { menuItems, fetchMenuInterval } from "@constants";
 import { ESidebarMenu } from "@enums/components";
+import { ESidebarHrefMenu } from "@enums/components";
 import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { IMenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
@@ -36,7 +37,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 			return;
 		}
 
-		navigate(`/${projectId}`);
+		navigate(`/${ESidebarHrefMenu.myProjects}/${projectId}`);
 
 		await getProjectsList();
 	};

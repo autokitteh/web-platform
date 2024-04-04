@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 import { Home, SignIn, NewConnection, NewTrigger, Project } from "@components/pages";
+import { ESidebarHrefMenu } from "@enums/components";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -12,7 +13,7 @@ export const router = createBrowserRouter([
 		element: <SignIn />,
 	},
 	{
-		path: ":projectId",
+		path: `/${ESidebarHrefMenu.myProjects}/:projectId`,
 		children: [
 			{
 				path: "add-new-connection",

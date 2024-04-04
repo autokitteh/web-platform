@@ -6,3 +6,11 @@ export enum ESidebarMenu {
 	stats,
 	settings,
 }
+
+export enum ESidebarHrefMenu {
+	myProjects = "my-projects",
+	dashboard = "dashboard",
+	connections = "connections",
+	stats = "stats",
+	settings = "settings",
+}

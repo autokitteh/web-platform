@@ -1,4 +1,5 @@
 import { Connections, Dashboard, Projects, Settings, StatsBlack } from "@assets/image";
+import { ESidebarHrefMenu } from "@enums/components";
 import { IMenuItem } from "@interfaces/components";
 
 export const menuItems: IMenuItem[] = [
@@ -6,34 +7,33 @@ export const menuItems: IMenuItem[] = [
 		id: 1,
 		icon: Projects,
 		name: "My Projects",
-		href: "my",
 	},
 	{
 		id: 2,
 		icon: Dashboard,
 		name: "Dashboard",
-		href: "dashboard",
+		href: `/${ESidebarHrefMenu.dashboard}`,
 	},
 	{
 		id: 3,
 		icon: Connections,
 		name: "Connections",
-		href: "connections",
+		href: `/${ESidebarHrefMenu.connections}`,
 		submenu: [
 			{
 				id: 0,
 				name: "Slack notification",
-				href: "/app",
+				href: "app",
 			},
 			{
 				id: 1,
 				name: "AWS monitor",
-				href: "/app",
+				href: "app",
 			},
 			{
 				id: 3,
 				name: "AK Pagerduty",
-				href: "/app",
+				href: "app",
 			},
 		],
 	},
@@ -41,12 +41,12 @@ export const menuItems: IMenuItem[] = [
 		id: 4,
 		icon: StatsBlack,
 		name: "Stats",
-		href: "stats",
+		href: `/${ESidebarHrefMenu.stats}`,
 	},
 	{
 		id: 5,
 		icon: Settings,
 		name: "Settings",
-		href: "settings",
+		href: `/${ESidebarHrefMenu.settings}`,
 	},
 ];
