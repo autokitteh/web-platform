@@ -9,6 +9,7 @@ export const IconButton = ({
 	className,
 	variant,
 	href,
+	ariaLabel,
 	disabled,
 	onMouseEnter,
 	onMouseLeave,
@@ -29,6 +30,7 @@ export const IconButton = ({
 
 	return !href ? (
 		<button
+			aria-label={ariaLabel}
 			className={iconButtonClass}
 			disabled={disabled}
 			onClick={onClick}

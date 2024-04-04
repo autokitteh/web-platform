@@ -1,0 +1,20 @@
+{
+	"variables": {
+		"titleAvailable": "Available Variables",
+		"titleNoAvailable": "No variables available.",
+		"buttonAddNew": "Add new",
+		"table": {
+			"columns": {
+				"name": "Name",
+				"value": "Value"
+			},
+			"buttons": {
+				"edit": "Edit",
+				"delete": "Delete",
+				"ariaDeleteVariable": "Delete variable",
+				"ariaSortByName": "Sort by name",
+				"ariaSortByValue": "Sort by value"
+			}
+		}
+	}
+}

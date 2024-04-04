@@ -30,6 +30,7 @@ export interface IIconButton extends Partial<IButton> {
 
 export interface ISortButton {
 	className?: string;
+	ariaLabel: string;
 	isActive: boolean;
 	sortDirection: TSortDirection | undefined;
 }
