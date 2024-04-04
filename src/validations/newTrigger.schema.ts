@@ -8,7 +8,7 @@ const selectSchema = z.object({
 
 export const newTriggerSchema = z.object({
 	connectionApp: selectSchema.array().min(1, "Select application").default([]),
-	fileName: z.string().min(1, "File Name is required"),
-	entrypoint: z.string().min(1, "Entry Point is required"),
+	name: z.string().min(1, "File Name is required"),
+	path: z.string().min(1, "Entry Point is required"),
 	eventType: z.string().min(1, "Event Type is required"),
 });

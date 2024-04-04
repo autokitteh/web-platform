@@ -2,19 +2,42 @@ import { ConnectionService } from "./connection.service";
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";
-import { LoggerService } from "@services";
+import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Trigger } from "@type/models";
 import i18n from "i18next";
 
 export class TriggersService {
-	static async create(trigger: Trigger): Promise<ServiceResponse<string>> {
+	static async create(projectId: string, trigger: Omit<Trigger, "triggerId">): Promise<ServiceResponse<string>> {
 		try {
-			const { triggerId } = await triggersClient.create({ trigger });
-			if (!triggerId) {
-				LoggerService.error(namespaces.triggerService, i18n.t("errors.triggerNotCreated"));
+			const { data: environments, error: envError } = await EnvironmentsService.listByProjectId(projectId);
+			if (envError) {
+				return { data: undefined, error: envError };
+			}
 
-				return { data: undefined, error: i18n.t("errors.triggerNotCreated") };
+			if (!environments?.length) {
+				const errorMessage = i18n.t("errors.defaultEnvironmentNotFound");
+				LoggerService.error(namespaces.projectService, errorMessage);
+				return { data: undefined, error: new Error(errorMessage) };
+			}
+
+			const { connectionId, eventType, path, name } = trigger;
+
+			const { triggerId } = await triggersClient.create({
+				trigger: {
+					triggerId: "",
+					envId: environments[0].envId,
+					connectionId,
+					eventType,
+					codeLocation: { path, name },
+				},
+			});
+
+			if (!triggerId) {
+				const errorMessage = i18n.t("errors.triggerNotCreated");
+				LoggerService.error(namespaces.triggerService, "errorMessage");
+
+				return { data: undefined, error: errorMessage };
 			}
 			return { data: triggerId, error: undefined };
 		} catch (error) {
@@ -27,9 +50,9 @@ export class TriggersService {
 		try {
 			const { trigger } = await triggersClient.get({ triggerId });
 			if (!trigger) {
-				LoggerService.error(namespaces.triggerService, i18n.t("errors.triggerNotFound"));
-
-				return { data: undefined, error: i18n.t("errors.triggerNotFound") };
+				const errorMessage = i18n.t("errors.triggerNotFound");
+				LoggerService.error(namespaces.triggerService, errorMessage);
+				return { data: undefined, error: errorMessage };
 			}
 			const convertedTrigger = convertTriggerProtoToModel(trigger);
 			const { data: connection } = await ConnectionService.get(convertedTrigger.connectionId);
@@ -48,8 +71,9 @@ export class TriggersService {
 		try {
 			const data = await triggersClient.update({ trigger });
 			if (!data) {
-				LoggerService.error(namespaces.triggerService, i18n.t("errors.triggerNotFound"));
-				return { data: undefined, error: i18n.t("errors.triggerNotFound") };
+				const errorMessage = i18n.t("errors.triggerNotFound");
+				LoggerService.error(namespaces.triggerService, errorMessage);
+				return { data: undefined, error: errorMessage };
 			}
 			return { data: undefined, error: undefined };
 		} catch (error) {
@@ -86,8 +110,9 @@ export class TriggersService {
 		try {
 			const data = await triggersClient.delete({ triggerId });
 			if (!data) {
-				LoggerService.error(namespaces.triggerService, i18n.t("errors.triggerNotFound"));
-				return { data: undefined, error: i18n.t("errors.triggerNotFound") };
+				const errorMessage = i18n.t("errors.triggerNotFound");
+				LoggerService.error(namespaces.triggerService, errorMessage);
+				return { data: undefined, error: errorMessage };
 			}
 			return { data: undefined, error: undefined };
 		} catch (error) {

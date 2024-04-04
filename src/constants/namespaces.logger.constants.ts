@@ -3,6 +3,7 @@ export const namespaces = {
 	environmentsService: "Environments Service",
 	manifestService: "Manifest Service",
 	projectService: "Project Service",
+	connectionService: "Connection Service",
 	triggerService: "Trigger Service",
 	resourcesService: "Resources Service",
 	sessionsService: "Sessions Service",

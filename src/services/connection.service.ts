@@ -17,7 +17,7 @@ export class ConnectionService {
 			}
 			return { data: convertConnectionProtoToModel(connection), error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
+			LoggerService.error(namespaces.connectionService, (error as Error).message);
 			return { data: undefined, error };
 		}
 	}
