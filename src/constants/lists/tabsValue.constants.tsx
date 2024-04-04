@@ -3,8 +3,8 @@ import { AddCodeAssetsTab, ConnectionsContent, TriggersContent, VariablesContent
 import { EProjectTabs } from "@enums/components";
 
 export const tabsMainFrame = [
-	{ id: EProjectTabs.codeAndAssets, title: "Code & Assets", count: 2, content: () => <AddCodeAssetsTab /> },
-	{ id: EProjectTabs.connections, title: "Connections", count: 6, content: () => <ConnectionsContent /> },
-	{ id: EProjectTabs.triggers, title: "Triggers", count: 4, content: () => <TriggersContent /> },
-	{ id: EProjectTabs.variables, title: "Variables", count: 4, content: () => <VariablesContent /> },
+	{ title: EProjectTabs.codeAndAssets, count: 2, content: () => <AddCodeAssetsTab /> },
+	{ title: EProjectTabs.connections, count: 6, content: () => <ConnectionsContent /> },
+	{ title: EProjectTabs.triggers, count: 4, content: () => <TriggersContent /> },
+	{ title: EProjectTabs.variables, count: 4, content: () => <VariablesContent /> },
 ];

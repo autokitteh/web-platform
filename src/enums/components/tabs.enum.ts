@@ -4,8 +4,8 @@ export enum EOutputTabs {
 }
 
 export enum EProjectTabs {
-	codeAndAssets = "code-and-assets",
-	connections = "connections",
-	triggers = "triggers",
-	variables = "variables",
+	codeAndAssets = "Code & Assets",
+	connections = "Connections",
+	triggers = "Triggers",
+	variables = "Variables",
 }
