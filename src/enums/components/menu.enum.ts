@@ -8,7 +8,7 @@ export enum ESidebarMenu {
 }
 
 export enum ESidebarHrefMenu {
-	myProjects = "projects",
+	projects = "projects",
 	dashboard = "dashboard",
 	connections = "connections",
 	stats = "stats",

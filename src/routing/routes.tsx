@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
 		element: <SignIn />,
 	},
 	{
-		path: `/${ESidebarHrefMenu.myProjects}/:projectId`,
+		path: `/${ESidebarHrefMenu.projects}/:projectId`,
 		children: [
 			{
 				path: "add-new-connection",

@@ -7,7 +7,7 @@ export const menuItems: IMenuItem[] = [
 		id: 1,
 		icon: Projects,
 		name: "My Projects",
-		href: `/${ESidebarHrefMenu.myProjects}`,
+		href: `/${ESidebarHrefMenu.projects}`,
 	},
 	{
 		id: 2,

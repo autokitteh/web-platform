@@ -61,7 +61,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		const updatedList = data?.map(({ projectId, name }) => ({
 			id: projectId,
 			name,
-			href: `/${ESidebarHrefMenu.myProjects}/${projectId}`,
+			href: `/${ESidebarHrefMenu.projects}/${projectId}`,
 		}));
 
 		set((state) => ({ ...state, list: updatedList }));

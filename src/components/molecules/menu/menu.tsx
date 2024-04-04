@@ -38,7 +38,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 			return;
 		}
 
-		navigate(`/${ESidebarHrefMenu.myProjects}/${projectId}`);
+		navigate(`/${ESidebarHrefMenu.projects}/${projectId}`);
 
 		await getProjectsList();
 	};
