@@ -11,8 +11,9 @@ export const Button = ({
 	href,
 	disabled,
 	type,
-	onClick,
+	form,
 	ariaLabel,
+	onClick,
 }: Partial<IButton>) => {
 	const buttonClass = cn(
 		"w-full flex items-center gap-2.5 p-2 rounded-3xl transition",
@@ -28,7 +29,14 @@ export const Button = ({
 	);
 
 	return !href ? (
-		<button aria-label={ariaLabel} className={buttonClass} disabled={disabled} onClick={onClick} type={type}>
+		<button
+			aria-label={ariaLabel}
+			className={buttonClass}
+			disabled={disabled}
+			form={form}
+			onClick={onClick}
+			type={type}
+		>
 			{children}
 		</button>
 	) : (

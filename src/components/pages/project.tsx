@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
-import { tabsMainFrame } from "@constants";
+import { namespaces, tabsMainFrame } from "@constants";
+import { LoggerService } from "@services";
 import { useProjectStore } from "@store";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -23,6 +24,10 @@ export const Project = () => {
 			const { error } = await loadProject(projectId);
 			if (error) {
 				setToast({ isOpen: true, message: (error as Error).message });
+				LoggerService.error(
+					namespaces.projectUI,
+					t("projectIdNotFoundExtended", { projectId: projectId, error: (error as Error).message })
+				);
 				return;
 			}
 		};

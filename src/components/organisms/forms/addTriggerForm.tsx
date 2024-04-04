@@ -1,35 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { ArrowLeft } from "@assets/image/icons";
-import { Select, Button, ErrorMessage, IconButton, Toast } from "@components/atoms";
-import { optionsSelectApp } from "@constants/lists";
+import { Select, Button, ErrorMessage, IconButton, Toast, Input } from "@components/atoms";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { newConnectionSchema } from "@validations";
+import { ISelectOption } from "@interfaces/components";
+import { ConnectionService, TriggersService } from "@services";
+import { useProjectStore } from "@store";
+import { newTriggerSchema } from "@validations";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export const AddTriggerForm = () => {
-	const { t } = useTranslation("errors");
+	const navigate = useNavigate();
+	const {
+		currentProject: { projectId, resources },
+	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
+	const { t } = useTranslation(["errors", "buttons", "forms"]);
 	const [isLoading, setIsLoading] = useState(false);
-	const navigate = useNavigate();
+	const [connections, setConnections] = useState<ISelectOption[]>([]);
+	const [filesName, setFilesName] = useState<ISelectOption[]>([]);
+
+	useLayoutEffect(() => {
+		const fetchData = async () => {
+			const { data: connections, error } = await ConnectionService.list();
+
+			if (error || !connections?.length) {
+				setToast({ isOpen: true, message: t("connectionsFetchError") });
+				return;
+			}
+
+			const formattedConnections = connections.map((item) => ({
+				value: item.connectionId,
+				label: item.name,
+			}));
+			setConnections(formattedConnections);
+
+			const formattedResources = Object.keys(resources).map((name) => ({
+				value: name,
+				label: name,
+			}));
+			setFilesName(formattedResources);
+		};
+		fetchData();
+	}, []);
 
 	const {
+		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, dirtyFields },
 		control,
+		getValues,
 	} = useForm({
-		resolver: zodResolver(newConnectionSchema),
+		resolver: zodResolver(newTriggerSchema),
+		defaultValues: {
+			connection: { value: "", label: "" },
+			filePath: { value: "", label: "" },
+			entryPoint: "",
+			eventType: "",
+		},
 	});
 
-	const onSubmit = () => {
+	const onSubmit = async () => {
+		const { connection, filePath, eventType, entryPoint } = getValues();
 		setIsLoading(true);
+		const { error } = await TriggersService.create(projectId!, {
+			triggerId: undefined,
+			connectionId: connection.value,
+			eventType,
+			path: filePath.label,
+			name: entryPoint,
+		});
 		setIsLoading(false);
+
+		if (error) {
+			setToast({ isOpen: true, message: t("triggerNotCreated") });
+			return;
+		}
+
 		navigate(-1);
 	};
+
+	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
 	return (
 		<div className="min-w-550">
@@ -38,56 +93,80 @@ export const AddTriggerForm = () => {
 					<IconButton className="hover:bg-black p-0 w-8 h-8" onClick={() => navigate(-1)}>
 						<ArrowLeft />
 					</IconButton>
-					<p className="text-gray-300 text-base">Add new trigger</p>
+					<p className="text-gray-300 text-base">{t("triggers.addNewTrigger", { ns: "forms" })}</p>
 				</div>
 				<div className="flex items-center gap-6">
 					<Button className="text-gray-300 hover:text-white p-0 font-semibold" onClick={() => navigate(-1)}>
-						Cancel
+						{t("cancel", { ns: "buttons" })}
 					</Button>
-					<Button className="px-4 py-2 font-semibold text-white border-white hover:bg-black" variant="outline">
-						{isLoading ? "Loading..." : "Save"}
+					<Button
+						ariaLabel="Save trigger"
+						className="px-4 py-2 font-semibold text-white border-white hover:bg-black"
+						disabled={isLoading}
+						form="createNewTriggerForm"
+						variant="outline"
+					>
+						{isLoading ? t("loading", { ns: "buttons" }) + "..." : t("save", { ns: "buttons" })}
 					</Button>
 				</div>
 			</div>
-			<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
+			<form className="flex items-start gap-10" id="createNewTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">
 					<div className="relative">
 						<Controller
 							control={control}
-							name="connectionApp"
+							name="connection"
 							render={({ field }) => (
 								<Select
 									{...field}
-									isError={!!errors.connectionApp}
-									onChange={(selected) => {
-										field.onChange(selected);
-									}}
-									options={optionsSelectApp}
-									placeholder="Select connection"
+									aria-label={t("triggers.ariaSelectConnection", { ns: "forms" })}
+									isError={!!errors.connection}
+									onChange={(selected) => field.onChange(selected)}
+									options={connections}
+									placeholder={t("triggers.placeholderSelectConnection", { ns: "forms" })}
 									value={field.value}
 								/>
 							)}
 						/>
-						<ErrorMessage>{errors.connectionApp?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
 						<Controller
 							control={control}
-							name="fileApp"
+							name="filePath"
 							render={({ field }) => (
 								<Select
 									{...field}
-									isError={!!errors.connectionApp}
-									onChange={(selected) => {
-										field.onChange(selected);
-									}}
-									options={optionsSelectApp}
-									placeholder="Select file"
+									aria-label={t("triggers.ariaSelectFile", { ns: "forms" })}
+									isError={!!errors.filePath}
+									onChange={(selected) => field.onChange(selected)}
+									options={filesName}
+									placeholder={t("triggers.placeholderSelectFile", { ns: "forms" })}
 									value={field.value}
 								/>
 							)}
 						/>
-						<ErrorMessage>{errors.connectionApp?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
+					</div>
+					<div className="relative">
+						<Input
+							{...register("entryPoint")}
+							aria-label={t("triggers.entrypoint", { ns: "forms" })}
+							className={inputClass("entryPoint")}
+							isError={!!errors.entryPoint}
+							placeholder={t("triggers.placeholderEntrypoint", { ns: "forms" })}
+						/>
+						<ErrorMessage>{errors.entryPoint?.message as string}</ErrorMessage>
+					</div>
+					<div className="relative">
+						<Input
+							{...register("eventType")}
+							aria-label={t("triggers.eventType", { ns: "forms" })}
+							className={inputClass("eventType")}
+							isError={!!errors.eventType}
+							placeholder={t("triggers.placeholderEventType", { ns: "forms" })}
+						/>
+						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
 					</div>
 				</div>
 			</form>

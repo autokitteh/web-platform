@@ -70,7 +70,7 @@ export const TriggersContent = () => {
 				<div className="text-base text-gray-300">Available triggers</div>
 				<Button
 					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
-					href="new-trigger"
+					href="add-new-trigger"
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 					Add new
