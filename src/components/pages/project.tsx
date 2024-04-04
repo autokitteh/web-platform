@@ -16,7 +16,6 @@ export const Project = () => {
 		isOpen: false,
 		message: "",
 	});
-	const { t } = useTranslation("errors");
 
 	useEffect(() => {
 		if (!projectId) return;
