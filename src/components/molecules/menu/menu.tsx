@@ -68,6 +68,25 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
 	};
 
+	const shouldApplyHoverBg = (href: string, isMenuOpen?: boolean) =>
+		isMenuOpen ? location.pathname.startsWith(href) && isMenuOpen : location.pathname.startsWith(href);
+
+	const buttonMenuIconStyle = (href: string) =>
+		cn("fill-gray-700", {
+			"fill-white p-0.5": shouldApplyHoverBg(href),
+		});
+
+	const buttonMenuIconWrapperStyle = (href: string) =>
+		cn("w-9 h-9 flex items-center justify-center rounded-full duration-500", {
+			"bg-gray-700 hover:bg-gray-700": shouldApplyHoverBg(href, !isOpen),
+		});
+
+	const buttonMenuStyle = (href: string) =>
+		cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
+			"hover:bg-gray-700 text-white": shouldApplyHoverBg(href),
+			"bg-gray-700": location.pathname.startsWith(href) && isOpen,
+		});
+
 	return (
 		<>
 			<div className={cn(className, "flex flex-col gap-4")}>
@@ -93,26 +112,9 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 				</div>
 				{menu.map(({ icon, name, href, submenu, id }) => (
 					<div key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
-						<Button
-							ariaLabel={name}
-							className={cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
-								"hover:bg-gray-700 text-white": location.pathname.startsWith(href!),
-								"bg-gray-700": location.pathname.startsWith(href!) && isOpen,
-							})}
-							href={href}
-						>
-							<div
-								className={cn("w-9 h-9 flex items-center justify-center rounded-full duration-500", {
-									"bg-gray-700 hover:bg-gray-700": location.pathname.startsWith(href!) && !isOpen,
-								})}
-							>
-								<IconSvg
-									alt={name}
-									className={cn("fill-gray-700", {
-										"fill-white p-0.5": location.pathname.startsWith(href!),
-									})}
-									src={icon}
-								/>
+						<Button ariaLabel={name} className={buttonMenuStyle(href!)} href={href}>
+							<div className={buttonMenuIconWrapperStyle(href!)}>
+								<IconSvg alt={name} className={buttonMenuIconStyle(href!)} src={icon} />
 							</div>
 							<AnimatePresence>
 								{isOpen ? (
