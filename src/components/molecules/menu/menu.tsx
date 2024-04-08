@@ -68,23 +68,22 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
 	};
 
-	const shouldApplyHoverBg = (href: string, isMenuOpen?: boolean) =>
-		isMenuOpen ? location.pathname.startsWith(href) && isMenuOpen : location.pathname.startsWith(href);
+	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
 	const buttonMenuIconStyle = (href: string) =>
 		cn("fill-gray-700", {
-			"fill-white p-0.5": shouldApplyHoverBg(href),
+			"fill-white p-0.5": isButtonActive(href),
 		});
 
 	const buttonMenuIconWrapperStyle = (href: string) =>
 		cn("w-9 h-9 flex items-center justify-center rounded-full duration-500", {
-			"bg-gray-700 hover:bg-gray-700": shouldApplyHoverBg(href, !isOpen),
+			"bg-gray-700 hover:bg-gray-700": isButtonActive(href) && !isOpen,
 		});
 
 	const buttonMenuStyle = (href: string) =>
 		cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
-			"hover:bg-gray-700 text-white": shouldApplyHoverBg(href),
-			"bg-gray-700": location.pathname.startsWith(href) && isOpen,
+			"hover:bg-gray-700 text-white": isButtonActive(href),
+			"bg-gray-700": isButtonActive(href!) && isOpen,
 		});
 
 	return (
