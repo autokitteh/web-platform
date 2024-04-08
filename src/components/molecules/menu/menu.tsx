@@ -70,6 +70,12 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 
 	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
+	const buttonMenuStyle = (href: string) =>
+		cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
+			"hover:bg-gray-700 text-white": isButtonActive(href),
+			"bg-gray-700": isButtonActive(href) && isOpen,
+		});
+
 	const buttonMenuIconStyle = (href: string) =>
 		cn("fill-gray-700", {
 			"fill-white p-0.5": isButtonActive(href),
@@ -78,12 +84,6 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	const buttonMenuIconWrapperStyle = (href: string) =>
 		cn("w-9 h-9 flex items-center justify-center rounded-full duration-500", {
 			"bg-gray-700 hover:bg-gray-700": isButtonActive(href) && !isOpen,
-		});
-
-	const buttonMenuStyle = (href: string) =>
-		cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
-			"hover:bg-gray-700 text-white": isButtonActive(href),
-			"bg-gray-700": isButtonActive(href!) && isOpen,
 		});
 
 	return (
@@ -111,9 +111,9 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 				</div>
 				{menu.map(({ icon, name, href, submenu, id }) => (
 					<div key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
-						<Button ariaLabel={name} className={buttonMenuStyle(href!)} href={href}>
-							<div className={buttonMenuIconWrapperStyle(href!)}>
-								<IconSvg alt={name} className={buttonMenuIconStyle(href!)} src={icon} />
+						<Button ariaLabel={name} className={buttonMenuStyle(href)} href={href}>
+							<div className={buttonMenuIconWrapperStyle(href)}>
+								<IconSvg alt={name} className={buttonMenuIconStyle(href)} src={icon} />
 							</div>
 							<AnimatePresence>
 								{isOpen ? (
