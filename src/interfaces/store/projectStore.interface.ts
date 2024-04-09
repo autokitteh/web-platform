@@ -10,11 +10,9 @@ interface IFilesResponse {
 	fileName?: string;
 }
 
-type TProjectList = {
-	id: string;
-	name: string;
-	href: string;
-};
+type TProjectList = { id: string; name: string; href: string };
+
+type TProjectModifyVariable = { name: string; value: string };
 
 export interface IProjectStore {
 	list: TProjectList[];
@@ -25,6 +23,7 @@ export interface IProjectStore {
 		resources: Record<string, Uint8Array>;
 		environments: TEnvironment[];
 		variables: TVariable[];
+		activeModifyVariable?: TProjectModifyVariable;
 	};
 	loadProject: (projectId: string) => Promise<IProjectStoreResponse>;
 	getProjectsList: () => Promise<IProjectStoreResponse & { list: TProjectList[] }>;
@@ -36,4 +35,5 @@ export interface IProjectStore {
 	updateActiveEditorFileName: (fileName: string) => void;
 	getProjectEnvironments: () => Promise<IProjectStoreResponse>;
 	getProjectVariables: () => Promise<IProjectStoreResponse>;
+	setProjectModifyVariable: (name: string, value: string) => void;
 }

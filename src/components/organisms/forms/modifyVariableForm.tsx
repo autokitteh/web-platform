@@ -14,7 +14,7 @@ export const ModifyVariableForm = () => {
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const navigate = useNavigate();
 	const {
-		currentProject: { environments },
+		currentProject: { environments, activeModifyVariable },
 		getProjectVariables,
 	} = useProjectStore();
 	const [toast, setToast] = useState({
@@ -31,26 +31,34 @@ export const ModifyVariableForm = () => {
 	} = useForm({
 		resolver: zodResolver(newVariableShema),
 		defaultValues: {
-			name: "",
-			value: "",
+			name: activeModifyVariable!.name,
+			value: activeModifyVariable!.value,
 		},
 	});
 
 	const onSubmit = async () => {
 		const { name, value } = getValues();
 		setIsLoading(true);
-		const { error } = await VariablesService.create({
+
+		const { error } = await VariablesService.delete({
+			envId: environments[0].envId,
+			name,
+		});
+		setIsLoading(false);
+
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
+
+		const { error: errorCreate } = await VariablesService.create({
 			envId: environments[0].envId,
 			name,
 			value,
 			isSecret: false,
 		});
-		setIsLoading(false);
 
-		if (error) {
-			setToast({ isOpen: true, message: t("variableNotCreated") });
-			return;
-		}
+		if (errorCreate) setToast({ isOpen: true, message: (error as Error).message });
 
 		await getProjectVariables();
 		navigate(-1);
@@ -63,7 +71,7 @@ export const ModifyVariableForm = () => {
 					<IconButton className="hover:bg-black p-0 w-8 h-8" onClick={() => navigate(-1)}>
 						<ArrowLeft />
 					</IconButton>
-					<p className="text-gray-300 text-base">{tForm("addNewVariable")}</p>
+					<p className="text-gray-300 text-base">{tForm("modifyVariable")}</p>
 				</div>
 				<div className="flex items-center gap-6">
 					<Button className="text-gray-300 hover:text-white p-0 font-semibold" onClick={() => navigate(-1)}>

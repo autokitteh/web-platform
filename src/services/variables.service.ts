@@ -12,7 +12,6 @@ export class VariablesService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			console.log("error", error);
 			LoggerService.error(
 				namespaces.projectService,
 				t("errors.variableNotCreatedExtended", { name: singleVariable.name, value: singleVariable.value })
@@ -38,7 +37,6 @@ export class VariablesService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			console.log("error", error);
 			LoggerService.error(namespaces.variableService, t("errors.variableRemoveFailedExtended", { name }));
 			return { data: undefined, error };
 		}

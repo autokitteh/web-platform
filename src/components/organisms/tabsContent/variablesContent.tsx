@@ -10,13 +10,14 @@ import { TSortDirection } from "@type/components";
 import { TVariable } from "@type/models";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export const VariablesContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { t: tError } = useTranslation("errors");
 	const dataVaribale = useModalStore((state) => state.data as Omit<TVariable, "envId" | "isSecret">);
 	const { openModal, closeModal } = useModalStore();
-	const { currentProject, getProjectVariables } = useProjectStore();
+	const { currentProject, getProjectVariables, setProjectModifyVariable } = useProjectStore();
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
 		column: keyof TVariable;
@@ -26,6 +27,7 @@ export const VariablesContent = () => {
 		isOpen: false,
 		message: "",
 	});
+	const navigate = useNavigate();
 
 	const toggleSortTriggers = (key: keyof TVariable) => {
 		const newDirection =
@@ -52,6 +54,11 @@ export const VariablesContent = () => {
 		}
 
 		getProjectVariables();
+	};
+
+	const handleModifyVariable = async (name: string, value: string) => {
+		setProjectModifyVariable(name, value);
+		navigate("modify-variable");
 	};
 
 	return (
@@ -104,7 +111,7 @@ export const VariablesContent = () => {
 												<Button
 													ariaLabel={t("table.buttons.ariaModifyVariable")}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													href="modify-variable"
+													onClick={() => handleModifyVariable(name, value)}
 												>
 													{t("table.buttons.modify")}
 												</Button>
