@@ -4,8 +4,3 @@ export type TVariable = {
 	value: string;
 	isSecret: boolean;
 };
-
-export type TVariableDelete = {
-	envId: string;
-	name: string;
-};

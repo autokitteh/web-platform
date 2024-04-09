@@ -2,7 +2,7 @@ import { environmentsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
-import { TVariable, TVariableDelete } from "@type/models";
+import { TVariable } from "@type/models";
 import { t } from "i18next";
 
 export class VariablesService {
@@ -31,7 +31,7 @@ export class VariablesService {
 		}
 	}
 
-	static async delete({ envId, name }: TVariableDelete): Promise<ServiceResponse<void>> {
+	static async delete({ envId, name }: { envId: string; name: string }): Promise<ServiceResponse<void>> {
 		try {
 			await environmentsClient.removeVar({ envId, name });
 
@@ -42,7 +42,7 @@ export class VariablesService {
 		}
 	}
 
-	static async update({ envId, name }: TVariableDelete): Promise<ServiceResponse<void>> {
+	static async update({ envId, name }: { envId: string; name: string }): Promise<ServiceResponse<void>> {
 		try {
 			await environmentsClient.revealVar({ envId, name });
 

@@ -5,4 +5,4 @@ export type { ProtoSessionHistoryState } from "@type/models/protoSessionHistoryS
 export type { Trigger } from "@type/models/trigger.type";
 export type { Connection } from "@type/models/connection.type";
 export type { TEnvironment } from "@type/models/environment.type";
-export type { TVariable, TVariableDelete } from "@type/models/variable.type";
+export type { TVariable } from "@type/models/variable.type";
