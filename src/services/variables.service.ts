@@ -12,6 +12,7 @@ export class VariablesService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
+			console.log("error", error);
 			LoggerService.error(
 				namespaces.projectService,
 				t("errors.variableNotCreatedExtended", { name: singleVariable.name, value: singleVariable.value })
@@ -37,18 +38,8 @@ export class VariablesService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
+			console.log("error", error);
 			LoggerService.error(namespaces.variableService, t("errors.variableRemoveFailedExtended", { name }));
-			return { data: undefined, error };
-		}
-	}
-
-	static async update({ envId, name }: { envId: string; name: string }): Promise<ServiceResponse<void>> {
-		try {
-			await environmentsClient.revealVar({ envId, name });
-
-			return { data: undefined, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.variableService, t("errors.variableUpdateFailedExtended", { name }));
 			return { data: undefined, error };
 		}
 	}

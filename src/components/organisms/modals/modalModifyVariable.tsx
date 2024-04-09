@@ -38,17 +38,30 @@ export const ModalModifyVariable = ({ onError }: IModalModifyVariable) => {
 	useEffect(() => reset({ name: data?.name, value: data?.value }), [data]);
 
 	const onSubmit = async () => {
-		const { name } = getValues();
+		const { name, value } = getValues();
 		setIsLoading(true);
-		const { error } = await VariablesService.update({
+
+		const { error } = await VariablesService.delete({
 			envId: environments[0].envId,
 			name,
 		});
 		setIsLoading(false);
 
+		if (error) {
+			onError((error as Error).message);
+			return;
+		}
+
+		const { error: errorCreate } = await VariablesService.create({
+			envId: environments[0].envId,
+			name,
+			value,
+			isSecret: false,
+		});
+
 		await getProjectVariables();
 
-		if (error) onError(error as string);
+		if (errorCreate) onError((errorCreate as Error).message);
 		closeModal(EModalName.modifyVariable);
 	};
 
