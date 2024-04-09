@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { PlusCircle, ThreeDots } from "@assets/image";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton, DropdownButton } from "@components/molecules";
-import { ModalDeleteVariable } from "@components/organisms/modals";
+import { ModalDeleteVariable, ModalModifyVariable } from "@components/organisms/modals";
 import { EModalName, ESortDirection } from "@enums/components";
 import { VariablesService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
@@ -99,13 +99,22 @@ export const VariablesContent = () => {
 									<DropdownButton
 										className="flex-col gap-1"
 										contentMenu={
-											<Button
-												ariaLabel={t("table.buttons.ariaDeleteVariable")}
-												className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-												onClick={() => openModal(EModalName.deleteVariable, idx + "")}
-											>
-												{t("table.buttons.delete")}
-											</Button>
+											<>
+												<Button
+													ariaLabel={t("table.buttons.ariaModifyVariable")}
+													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
+													onClick={() => openModal(EModalName.modifyVariable, idx + "")}
+												>
+													{t("table.buttons.modify")}
+												</Button>
+												<Button
+													ariaLabel={t("table.buttons.ariaDeleteVariable")}
+													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
+													onClick={() => openModal(EModalName.deleteVariable, idx + "")}
+												>
+													{t("table.buttons.delete")}
+												</Button>
+											</>
 										}
 									>
 										<IconButton className="w-6 h-6 p-1 hover:bg-gray-700">
@@ -131,6 +140,7 @@ export const VariablesContent = () => {
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 
+			<ModalModifyVariable onError={(message) => setToast({ isOpen: true, message })} />
 			<ModalDeleteVariable onDelete={handleDeleteVariable} />
 		</div>
 	);

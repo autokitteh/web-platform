@@ -10,8 +10,10 @@
 			},
 			"buttons": {
 				"edit": "Edit",
+				"modify": "Modify",
 				"delete": "Delete",
 				"ariaDeleteVariable": "Delete variable",
+				"ariaModifyVariable": "Delete variable",
 				"ariaSortByName": "Sort by name",
 				"ariaSortByValue": "Sort by value"
 			}
@@ -27,6 +29,15 @@
 				"save": "Save",
 				"cancel": "Cancel",
 				"loading": "Loading"
+			}
+		},
+		"modals": {
+			"modify": {
+				"title": "Modify variable",
+				"buttons": {
+					"save": "Save",
+					"cancel": "Cancel"
+				}
 			}
 		}
 	}

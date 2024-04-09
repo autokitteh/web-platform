@@ -34,5 +34,6 @@
 	"defaultEnvironmentNotFound": "Default environment not found",
 	"defaultEnvironmentNotFoundExtended": "Default environment not found, project ID: {{projectId}}",
 	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}, Name: {{name}}",
-	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}"
+	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}",
+	"variableUpdateFailedExtended": "Variable remove failed, Name: {{name}}"
 }

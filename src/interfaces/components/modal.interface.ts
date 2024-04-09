@@ -15,3 +15,7 @@ export interface IModalDeleteTrigger {
 export interface IModalDeleteVariable {
 	onDelete?: () => void;
 }
+
+export interface IModalModifyVariable {
+	onError: (message: string) => void;
+}

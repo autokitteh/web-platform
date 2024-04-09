@@ -41,4 +41,15 @@ export class VariablesService {
 			return { data: undefined, error: t("errors.variableRemoveFailedExtended", { name }) };
 		}
 	}
+
+	static async update({ envId, name }: TVariableDelete): Promise<ServiceResponse<void>> {
+		try {
+			await environmentsClient.revealVar({ envId, name });
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.variableService, t("errors.variableUpdateFailedExtended", { name }));
+			return { data: undefined, error: t("errors.variableUpdateFailedExtended", { name }) };
+		}
+	}
 }
