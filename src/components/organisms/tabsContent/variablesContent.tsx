@@ -4,6 +4,7 @@ import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@com
 import { SortButton, DropdownButton } from "@components/molecules";
 import { ModalDeleteVariable } from "@components/organisms/modals";
 import { EModalName, ESortDirection } from "@enums/components";
+import { VariablesService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
 import { TSortDirection } from "@type/components";
 import { TVariable } from "@type/models";
@@ -12,8 +13,8 @@ import { useTranslation } from "react-i18next";
 
 export const VariablesContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
-	const { openModal } = useModalStore();
-	const { currentProject } = useProjectStore();
+	const { itemId, openModal, closeModal } = useModalStore();
+	const { currentProject, getProjectVariables } = useProjectStore();
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
 		column: keyof TVariable;
@@ -33,13 +34,32 @@ export const VariablesContent = () => {
 		setVariables(sortedConnections);
 	};
 
-	const handleDeleteVariable = async () => {};
+	const handleDeleteVariable = async () => {
+		const envId = currentProject.environments[0].envId;
+		const variableName = variables[+itemId!].name;
+
+		const { error } = await VariablesService.delete({
+			envId,
+			name: variableName,
+		});
+		closeModal(EModalName.deleteVariable);
+
+		if (error) {
+			setToast({ isOpen: true, message: error as string });
+			return;
+		}
+
+		getProjectVariables();
+	};
 
 	return (
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
-				<Button className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white">
+				<Button
+					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
+					href="add-new-variable"
+				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 					{t("buttonAddNew")}
 				</Button>

@@ -4,6 +4,7 @@ export const namespaces = {
 	manifestService: "Manifest Service",
 	projectService: "Project Service",
 	connectionService: "Connection Service",
+	variableService: "Variable Service",
 	triggerService: "Trigger Service",
 	resourcesService: "Resources Service",
 	sessionsService: "Sessions Service",

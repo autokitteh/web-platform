@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { Home, SignIn, NewConnection, NewTrigger, Project } from "@components/pages";
+import { Home, SignIn, NewConnection, NewTrigger, NewVariable, Project } from "@components/pages";
 import { ESidebarHrefMenu } from "@enums/components";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 
@@ -22,6 +22,10 @@ export const router = createBrowserRouter([
 			{
 				path: "add-new-trigger",
 				element: <NewTrigger />,
+			},
+			{
+				path: "add-new-variable",
+				element: <NewVariable />,
 			},
 			{
 				path: "",

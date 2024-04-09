@@ -31,7 +31,8 @@
 	"variableNotCreated": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
 	"variablesNotFound": "Couldn't fetch the variables details, Environments ID: {{id}}",
 	"variableNotCreatedExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
-	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}",
 	"defaultEnvironmentNotFound": "Default environment not found",
-	"defaultEnvironmentNotFoundExtended": "Default environment not found, project ID: {{projectId}}"
+	"defaultEnvironmentNotFoundExtended": "Default environment not found, project ID: {{projectId}}",
+	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}, Name: {{name}}",
+	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}"
 }
