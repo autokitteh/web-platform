@@ -40,7 +40,7 @@ export const VariablesContent = () => {
 
 	const handleDeleteVariable = async () => {
 		const envId = currentProject.environments[0].envId;
-		const variableName = dataVaribale.name;
+		const variableName = dataVaribale?.name;
 
 		const { error } = await VariablesService.delete({
 			envId,
