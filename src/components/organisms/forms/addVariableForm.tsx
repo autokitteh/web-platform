@@ -48,7 +48,7 @@ export const AddVariableForm = () => {
 		setIsLoading(false);
 
 		if (error) {
-			setToast({ isOpen: true, message: t("variableNotCreated", { name, value }) });
+			setToast({ isOpen: true, message: t("variableNotCreated") });
 			return;
 		}
 
@@ -78,11 +78,6 @@ export const AddVariableForm = () => {
 					</Button>
 				</div>
 			</div>
-			{environments.length ? (
-				<p className="text-lg mb-5">
-					<strong>{tForm("environment")}:</strong> {environments[0].name}
-				</p>
-			) : null}
 			<form className="flex flex-col gap-6" id="createNewVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input

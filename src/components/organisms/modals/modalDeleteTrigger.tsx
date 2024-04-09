@@ -10,19 +10,20 @@ import { useTranslation, Trans } from "react-i18next";
 
 export const ModalDeleteTrigger = ({ onDelete }: IModalDeleteTrigger) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
-	const { closeModal, itemId } = useModalStore();
+	const { closeModal } = useModalStore();
+	const dataTrigger = useModalStore((state) => state.data as Pick<Trigger, "triggerId">);
 	const [trigger, setTrigger] = useState<Trigger>();
 	useEffect(() => {
-		if (itemId) {
+		if (dataTrigger && dataTrigger.triggerId) {
 			const fetchTrigger = async () => {
-				const { data } = await TriggersService.get(itemId);
+				const { data } = await TriggersService.get(dataTrigger.triggerId!);
 				if (!data) return;
 
 				setTrigger(data);
 			};
 			fetchTrigger();
 		}
-	}, [itemId]);
+	}, [dataTrigger]);
 
 	return (
 		<Modal name={EModalName.deleteTrigger}>

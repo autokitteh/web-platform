@@ -14,7 +14,8 @@ import { useTranslation } from "react-i18next";
 export const VariablesContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { t: tError } = useTranslation("errors");
-	const { itemId, openModal, closeModal } = useModalStore();
+	const dataVaribale = useModalStore((state) => state.data as Omit<TVariable, "envId" | "isSecret">);
+	const { openModal, closeModal } = useModalStore();
 	const { currentProject, getProjectVariables } = useProjectStore();
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
@@ -37,7 +38,7 @@ export const VariablesContent = () => {
 
 	const handleDeleteVariable = async () => {
 		const envId = currentProject.environments[0].envId;
-		const variableName = variables[+itemId!].name;
+		const variableName = dataVaribale.name;
 
 		const { error } = await VariablesService.delete({
 			envId,
@@ -45,8 +46,8 @@ export const VariablesContent = () => {
 		});
 		closeModal(EModalName.deleteVariable);
 
-		if (error) {
-			setToast({ isOpen: true, message: error as string });
+		if (error as Error) {
+			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
 
@@ -103,14 +104,14 @@ export const VariablesContent = () => {
 												<Button
 													ariaLabel={t("table.buttons.ariaModifyVariable")}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => openModal(EModalName.modifyVariable, idx + "")}
+													onClick={() => openModal(EModalName.modifyVariable, { name, value })}
 												>
 													{t("table.buttons.modify")}
 												</Button>
 												<Button
 													ariaLabel={t("table.buttons.ariaDeleteVariable")}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => openModal(EModalName.deleteVariable, idx + "")}
+													onClick={() => openModal(EModalName.deleteVariable, { name, value })}
 												>
 													{t("table.buttons.delete")}
 												</Button>

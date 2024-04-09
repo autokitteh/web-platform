@@ -3,15 +3,14 @@ import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { EModalName } from "@enums/components";
 import { IModalDeleteVariable } from "@interfaces/components";
-import { useModalStore, useProjectStore } from "@store";
+import { useModalStore } from "@store";
+import { TVariable } from "@type/models";
 import { useTranslation, Trans } from "react-i18next";
 
 export const ModalDeleteVariable = ({ onDelete }: IModalDeleteVariable) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteVariable" });
-	const {
-		currentProject: { variables },
-	} = useProjectStore();
-	const { itemId: index, closeModal } = useModalStore();
+	const data = useModalStore((state) => state.data as Omit<TVariable, "envId" | "isSecret">);
+	const { closeModal } = useModalStore();
 
 	return (
 		<Modal name={EModalName.deleteVariable}>
@@ -21,8 +20,8 @@ export const ModalDeleteVariable = ({ onDelete }: IModalDeleteVariable) => {
 				<p className="font-medium">
 					<Trans>
 						{t("line2", {
-							name: `<strong>${variables[Number(index)]?.name}</strong><br/>`,
-							value: `<strong>${variables[Number(index)]?.value}</strong>`,
+							name: `<strong>${data?.name}</strong><br/>`,
+							value: `<strong>${data?.value}</strong>`,
 						})}
 					</Trans>
 				</p>

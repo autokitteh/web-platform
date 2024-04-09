@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { IModalModifyVariable } from "@interfaces/components";
 import { VariablesService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
+import { TVariable } from "@type/models";
 import { newVariableShema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -15,9 +16,11 @@ export const ModalModifyVariable = ({ onError }: IModalModifyVariable) => {
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const [isLoading, setIsLoading] = useState(false);
 
-	const { itemId, closeModal } = useModalStore();
+	const data = useModalStore((state) => state.data as Omit<TVariable, "envId" | "isSecret">);
+	const { closeModal } = useModalStore();
+
 	const {
-		currentProject: { variables, environments },
+		currentProject: { environments },
 		getProjectVariables,
 	} = useProjectStore();
 
@@ -29,18 +32,10 @@ export const ModalModifyVariable = ({ onError }: IModalModifyVariable) => {
 		reset,
 	} = useForm({
 		resolver: zodResolver(newVariableShema),
-		defaultValues: {
-			name: variables[+itemId!]?.name,
-			value: variables[+itemId!]?.value,
-		},
+		defaultValues: { name: "", value: "" },
 	});
 
-	useEffect(() => {
-		reset({
-			name: variables[+itemId!]?.name,
-			value: variables[+itemId!]?.value,
-		});
-	}, [itemId, variables]);
+	useEffect(() => reset({ name: data?.name, value: data?.value }), [data]);
 
 	const onSubmit = async () => {
 		const { name } = getValues();

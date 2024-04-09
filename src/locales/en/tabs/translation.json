@@ -9,11 +9,9 @@
 				"value": "Value"
 			},
 			"buttons": {
-				"edit": "Edit",
 				"modify": "Modify",
 				"delete": "Delete",
-				"ariaDeleteVariable": "Delete variable",
-				"ariaModifyVariable": "Delete variable",
+				"ariaModifyVariable": "Modify variable",
 				"ariaSortByName": "Sort by name",
 				"ariaSortByValue": "Sort by value"
 			}

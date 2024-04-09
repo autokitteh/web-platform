@@ -27,7 +27,7 @@ export class VariablesService {
 			return { data: vars, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.projectService, t("errors.variablesNotFoundExtended", { id: envId }));
-			return { data: undefined, error: t("errors.variablesNotFoundExtended", { id: envId }) };
+			return { data: undefined, error };
 		}
 	}
 
@@ -38,7 +38,7 @@ export class VariablesService {
 			return { data: undefined, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.variableService, t("errors.variableRemoveFailedExtended", { name }));
-			return { data: undefined, error: t("errors.variableRemoveFailedExtended", { name }) };
+			return { data: undefined, error };
 		}
 	}
 
@@ -49,7 +49,7 @@ export class VariablesService {
 			return { data: undefined, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.variableService, t("errors.variableUpdateFailedExtended", { name }));
-			return { data: undefined, error: t("errors.variableUpdateFailedExtended", { name }) };
+			return { data: undefined, error };
 		}
 	}
 }
