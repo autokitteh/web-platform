@@ -3,6 +3,7 @@ import { NewProject } from "@assets/image";
 import { Button, IconSvg, Toast } from "@components/atoms";
 import { menuItems, fetchMenuInterval } from "@constants";
 import { ESidebarMenu } from "@enums/components";
+import { ESidebarHrefMenu } from "@enums/components";
 import { IMenu, ISubmenuInfo } from "@interfaces/components";
 import { IMenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
@@ -11,11 +12,12 @@ import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
 import { isEqual, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { list, getProjectsList } = useProjectStore();
 	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
@@ -36,7 +38,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 			return;
 		}
 
-		navigate(`/${projectId}`);
+		navigate(`/${ESidebarHrefMenu.projects}/${projectId}`);
 
 		await getProjectsList();
 	};
@@ -66,6 +68,24 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
 	};
 
+	const isButtonActive = (href: string) => location.pathname.startsWith(href);
+
+	const buttonMenuStyle = (href: string) =>
+		cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
+			"hover:bg-gray-700 text-white": isButtonActive(href),
+			"bg-gray-700": isButtonActive(href) && isOpen,
+		});
+
+	const buttonMenuIconStyle = (href: string) =>
+		cn("fill-gray-700", {
+			"fill-white p-0.5": isButtonActive(href),
+		});
+
+	const buttonMenuIconWrapperStyle = (href: string) =>
+		cn("w-9 h-9 flex items-center justify-center rounded-full duration-500", {
+			"bg-gray-700 hover:bg-gray-700": isButtonActive(href) && !isOpen,
+		});
+
 	return (
 		<>
 			<div className={cn(className, "flex flex-col gap-4")}>
@@ -91,9 +111,9 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 				</div>
 				{menu.map(({ icon, name, href, submenu, id }) => (
 					<div key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
-						<Button ariaLabel={name} className="hover:bg-green-light gap-1.5 p-0.5 pl-1" href={href}>
-							<div className="w-9 h-9 flex items-center justify-center">
-								<IconSvg alt={name} src={icon} />
+						<Button ariaLabel={name} className={buttonMenuStyle(href)} href={href}>
+							<div className={buttonMenuIconWrapperStyle(href)}>
+								<IconSvg alt={name} className={buttonMenuIconStyle(href)} src={icon} />
 							</div>
 							<AnimatePresence>
 								{isOpen ? (

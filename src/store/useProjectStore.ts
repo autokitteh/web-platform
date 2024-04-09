@@ -1,6 +1,7 @@
 import { namespaces } from "@constants";
 import { EStoreName } from "@enums";
 import { EProjectTabs } from "@enums/components";
+import { ESidebarHrefMenu } from "@enums/components";
 import { IProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
 import { TEnvironment } from "@type/models";
@@ -60,7 +61,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		const updatedList = data?.map(({ projectId, name }) => ({
 			id: projectId,
 			name,
-			href: `/${projectId}`,
+			href: `/${ESidebarHrefMenu.projects}/${projectId}`,
 		}));
 
 		set((state) => ({ ...state, list: updatedList }));
