@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 
 export const VariablesContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
+	const { t: tError } = useTranslation("errors");
 	const { itemId, openModal, closeModal } = useModalStore();
 	const { currentProject, getProjectVariables } = useProjectStore();
 	const [sort, setSort] = useState<{
@@ -126,7 +127,7 @@ export const VariablesContent = () => {
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<p className="font-semibold text-error">Error</p>
+				<p className="font-semibold text-error">{tError("error")}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 
