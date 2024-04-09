@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { PlusCircle, ThreeDots } from "@assets/image";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton, DropdownButton } from "@components/molecules";
-import { ModalDeleteVariable, ModalModifyVariable } from "@components/organisms/modals";
+import { ModalDeleteVariable } from "@components/organisms/modals";
 import { EModalName, ESortDirection } from "@enums/components";
 import { VariablesService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
@@ -104,7 +104,7 @@ export const VariablesContent = () => {
 												<Button
 													ariaLabel={t("table.buttons.ariaModifyVariable")}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => openModal(EModalName.modifyVariable, { name, value })}
+													href="modify-variable"
 												>
 													{t("table.buttons.modify")}
 												</Button>
@@ -141,7 +141,6 @@ export const VariablesContent = () => {
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 
-			<ModalModifyVariable onError={(message) => setToast({ isOpen: true, message })} />
 			<ModalDeleteVariable onDelete={handleDeleteVariable} />
 		</div>
 	);
