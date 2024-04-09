@@ -56,9 +56,9 @@ export const VariablesContent = () => {
 		getProjectVariables();
 	};
 
-	const handleModifyVariable = async (name: string, value: string) => {
+	const handleModifyVariable = async (name: string, value: string, href?: string) => {
 		setProjectModifyVariable(name, value);
-		navigate("modify-variable");
+		href && navigate(href);
 	};
 
 	return (
@@ -111,14 +111,17 @@ export const VariablesContent = () => {
 												<Button
 													ariaLabel={t("table.buttons.ariaModifyVariable")}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => handleModifyVariable(name, value)}
+													onClick={() => handleModifyVariable(name, value, "modify-variable")}
 												>
 													{t("table.buttons.modify")}
 												</Button>
 												<Button
 													ariaLabel={t("table.buttons.ariaDeleteVariable")}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => openModal(EModalName.deleteVariable, { name, value })}
+													onClick={() => {
+														openModal(EModalName.deleteVariable);
+														handleModifyVariable(name, value);
+													}}
 												>
 													{t("table.buttons.delete")}
 												</Button>
