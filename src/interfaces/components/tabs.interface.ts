@@ -8,6 +8,7 @@ export interface ITabs {
 export interface ITab {
 	className?: string;
 	value: string;
+	ariaLabel?: string;
 	children: React.ReactNode;
 }
 

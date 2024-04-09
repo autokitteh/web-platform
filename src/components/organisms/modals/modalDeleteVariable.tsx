@@ -31,12 +31,18 @@ export const ModalDeleteVariable = ({ onDelete }: IModalDeleteVariable) => {
 			</div>
 			<div className="flex justify-end gap-1 mt-14">
 				<Button
+					ariaLabel={t("cancelButton")}
 					className="font-semibold py-3 px-4 hover:text-white w-auto"
 					onClick={() => closeModal(EModalName.deleteVariable)}
 				>
 					{t("cancelButton")}
 				</Button>
-				<Button className="font-semibold py-3 px-4 bg-gray-700 w-auto" onClick={onDelete} variant="filled">
+				<Button
+					ariaLabel={t("deleteButton")}
+					className="font-semibold py-3 px-4 bg-gray-700 w-auto"
+					onClick={onDelete}
+					variant="filled"
+				>
 					{t("deleteButton")}
 				</Button>
 			</div>

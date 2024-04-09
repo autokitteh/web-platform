@@ -66,6 +66,7 @@ export const VariablesContent = () => {
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
+					ariaLabel={t("buttonAddNew")}
 					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
 					href="add-new-variable"
 				>
@@ -105,6 +106,7 @@ export const VariablesContent = () => {
 								<Td className="border-r-0">{value}</Td>
 								<Td className="max-w-10 border-0 pr-1.5 justify-end">
 									<DropdownButton
+										ariaLabel={t("table.buttons.ariaVariableOptions")}
 										className="flex-col gap-1"
 										contentMenu={
 											<>

@@ -41,7 +41,7 @@ export const Project = () => {
 				<Tabs defaultValue={activeTab} key={activeTab} onChange={setActiveTab}>
 					<TabList>
 						{tabsMainFrame.map(({ title, count }) => (
-							<Tab className="text-xs 3xl:text-sm" key={title} value={title}>
+							<Tab ariaLabel={title} className="text-xs 3xl:text-sm" key={title} value={title}>
 								{`${title} (${count})`}
 							</Tab>
 						))}

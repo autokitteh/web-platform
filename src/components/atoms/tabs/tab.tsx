@@ -3,7 +3,7 @@ import { TabsContext } from "@components/atoms/tabs/tabsContext";
 import { ITab } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Tab = ({ className, value, children }: ITab) => {
+export const Tab = ({ className, value, ariaLabel, children }: ITab) => {
 	const { activeTab, setActiveTab } = useContext(TabsContext);
 
 	const tabStyle = cn(
@@ -17,7 +17,7 @@ export const Tab = ({ className, value, children }: ITab) => {
 	const handleActive = () => setActiveTab(value);
 
 	return (
-		<button className={tabStyle} onClick={handleActive} onKeyDown={handleActive} role="tab">
+		<button aria-label={ariaLabel} className={tabStyle} onClick={handleActive} onKeyDown={handleActive} role="tab">
 			{children}
 		</button>
 	);

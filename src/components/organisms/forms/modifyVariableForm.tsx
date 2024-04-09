@@ -74,10 +74,15 @@ export const ModifyVariableForm = () => {
 					<p className="text-gray-300 text-base">{tForm("modifyVariable")}</p>
 				</div>
 				<div className="flex items-center gap-6">
-					<Button className="text-gray-300 hover:text-white p-0 font-semibold" onClick={() => navigate(-1)}>
+					<Button
+						ariaLabel={tForm("buttons.cancel")}
+						className="text-gray-300 hover:text-white p-0 font-semibold"
+						onClick={() => navigate(-1)}
+					>
 						{tForm("buttons.cancel")}
 					</Button>
 					<Button
+						ariaLabel={tForm("buttons.save")}
 						className="px-4 py-2 font-semibold text-white border-white hover:bg-black"
 						form="createNewVariableForm"
 						variant="outline"
@@ -90,6 +95,7 @@ export const ModifyVariableForm = () => {
 				<div className="relative">
 					<Input
 						{...register("name")}
+						ariaLabel={tForm("placeholders.name")}
 						className={dirtyFields["name"] ? "border-white" : ""}
 						isError={!!errors.name}
 						placeholder={tForm("placeholders.name")}
@@ -99,6 +105,7 @@ export const ModifyVariableForm = () => {
 				<div className="relative">
 					<Input
 						{...register("value")}
+						ariaLabel={tForm("placeholders.value")}
 						className={dirtyFields["value"] ? "border-white" : ""}
 						isError={!!errors.value}
 						placeholder={tForm("placeholders.value")}

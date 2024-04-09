@@ -3,7 +3,7 @@ import { DropdownMenu } from "@components/atoms";
 import { IDropdownButton, IDropdownState } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const DropdownButton = ({ contentMenu, className, children }: IDropdownButton) => {
+export const DropdownButton = ({ contentMenu, className, ariaLabel, children }: IDropdownButton) => {
 	const parentRef = useRef<HTMLDivElement>(null);
 	const [dropdownState, setDropdownState] = useState<IDropdownState>({ isOpen: false, style: {} });
 
@@ -25,7 +25,13 @@ export const DropdownButton = ({ contentMenu, className, children }: IDropdownBu
 	const handleMouseLeave = () => setDropdownState((prev) => ({ ...prev, isOpen: false }));
 
 	return (
-		<div className={baseStyle} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} ref={parentRef}>
+		<div
+			aria-label={ariaLabel}
+			className={baseStyle}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
+			ref={parentRef}
+		>
 			{children}
 			<DropdownMenu isOpen={dropdownState.isOpen} style={dropdownState.style}>
 				{contentMenu}

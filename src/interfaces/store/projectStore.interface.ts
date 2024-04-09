@@ -12,8 +12,6 @@ interface IFilesResponse {
 
 type TProjectList = { id: string; name: string; href: string };
 
-type TProjectModifyVariable = { name: string; value: string };
-
 export interface IProjectStore {
 	list: TProjectList[];
 	activeTab?: string;
@@ -23,7 +21,7 @@ export interface IProjectStore {
 		resources: Record<string, Uint8Array>;
 		environments: TEnvironment[];
 		variables: TVariable[];
-		activeModifyVariable?: TProjectModifyVariable;
+		activeModifyVariable?: { name: string; value: string };
 	};
 	loadProject: (projectId: string) => Promise<IProjectStoreResponse>;
 	getProjectsList: () => Promise<IProjectStoreResponse & { list: TProjectList[] }>;

@@ -12,8 +12,10 @@
 				"modify": "Modify",
 				"delete": "Delete",
 				"ariaModifyVariable": "Modify variable",
+				"ariaDeleteVariable": "Delete variable",
 				"ariaSortByName": "Sort by name",
-				"ariaSortByValue": "Sort by value"
+				"ariaSortByValue": "Sort by value",
+				"ariaVariableOptions": "Variable options"
 			}
 		},
 		"form": {
