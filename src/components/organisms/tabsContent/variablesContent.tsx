@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 export const VariablesContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { t: tError } = useTranslation("errors");
-	const dataVaribale = useModalStore((state) => state.data as Omit<TVariable, "envId" | "isSecret">);
 	const { openModal, closeModal } = useModalStore();
 	const { currentProject, getProjectVariables, setProjectModifyVariable } = useProjectStore();
 	const [sort, setSort] = useState<{
@@ -39,8 +38,10 @@ export const VariablesContent = () => {
 	};
 
 	const handleDeleteVariable = async () => {
+		if (!currentProject.activeModifyVariable) return;
+
 		const envId = currentProject.environments[0].envId;
-		const variableName = dataVaribale.name;
+		const variableName = currentProject.activeModifyVariable.name;
 
 		const { error } = await VariablesService.delete({
 			envId,

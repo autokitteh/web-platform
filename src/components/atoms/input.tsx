@@ -3,18 +3,7 @@ import { IInput } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Input = forwardRef<HTMLInputElement, IInput>((props, ref) => {
-	const {
-		icon,
-		isError,
-		className,
-		classInput,
-		disabled,
-		type = "text",
-		placeholder,
-		isRequired,
-		ariaLabel,
-		...rest
-	} = props;
+	const { icon, isError, className, classInput, disabled, type = "text", placeholder, isRequired, ...rest } = props;
 
 	const placeholderModif = isRequired ? `* ${placeholder}` : placeholder;
 
@@ -37,7 +26,6 @@ export const Input = forwardRef<HTMLInputElement, IInput>((props, ref) => {
 		<div className={baseStyle}>
 			<input
 				{...rest}
-				aria-label={ariaLabel}
 				className={inputStyle}
 				disabled={disabled}
 				placeholder={placeholderModif}

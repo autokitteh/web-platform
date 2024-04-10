@@ -5,7 +5,6 @@ export interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
 	placeholder?: string;
 	className?: string;
 	classInput?: string;
-	ariaLabel?: string;
 	isError?: boolean;
 	isRequired?: boolean;
 	disabled?: boolean;

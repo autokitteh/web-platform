@@ -95,7 +95,7 @@ export const ModifyVariableForm = () => {
 				<div className="relative">
 					<Input
 						{...register("name")}
-						ariaLabel={tForm("placeholders.name")}
+						aria-label={tForm("placeholders.name")}
 						className={dirtyFields["name"] ? "border-white" : ""}
 						isError={!!errors.name}
 						placeholder={tForm("placeholders.name")}
@@ -105,7 +105,7 @@ export const ModifyVariableForm = () => {
 				<div className="relative">
 					<Input
 						{...register("value")}
-						ariaLabel={tForm("placeholders.value")}
+						aria-label={tForm("placeholders.value")}
 						className={dirtyFields["value"] ? "border-white" : ""}
 						isError={!!errors.value}
 						placeholder={tForm("placeholders.value")}
