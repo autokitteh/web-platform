@@ -40,7 +40,7 @@ export const VariablesContent = () => {
 
 	const handleDeleteVariable = async () => {
 		const envId = currentProject.environments[0].envId;
-		const variableName = dataVaribale?.name;
+		const variableName = dataVaribale.name;
 
 		const { error } = await VariablesService.delete({
 			envId,
@@ -111,14 +111,14 @@ export const VariablesContent = () => {
 										contentMenu={
 											<>
 												<Button
-													ariaLabel={t("table.buttons.ariaModifyVariable")}
+													ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
 													onClick={() => handleModifyVariable(name, value, "modify-variable")}
 												>
 													{t("table.buttons.modify")}
 												</Button>
 												<Button
-													ariaLabel={t("table.buttons.ariaDeleteVariable")}
+													ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
 													onClick={() => {
 														openModal(EModalName.deleteVariable);

@@ -11,8 +11,8 @@
 			"buttons": {
 				"modify": "Modify",
 				"delete": "Delete",
-				"ariaModifyVariable": "Modify variable",
-				"ariaDeleteVariable": "Delete variable",
+				"ariaModifyVariable": "Modify {{name}} variable",
+				"ariaDeleteVariable": "Delete {{name}} variable",
 				"ariaSortByName": "Sort by name",
 				"ariaSortByValue": "Sort by value",
 				"ariaVariableOptions": "Variable options"
