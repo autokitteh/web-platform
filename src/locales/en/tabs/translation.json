@@ -1,4 +1,20 @@
 {
+	"ariaLabelReturnBack": "Return back",
+	"connections": {
+		"form": {
+			"addNewConnection": "Add new connection",
+			"placeholders": {
+				"selectApp": "Select app",
+				"userName": "User Name",
+				"password": "Password",
+				"nameNewConnection": "Name new connection"
+			},
+			"buttons": {
+				"testConnection": "Test Connection",
+				"testing": "Testing"
+			}
+		}
+	},
 	"variables": {
 		"titleAvailable": "Available Variables",
 		"titleNoAvailable": "No variables available.",

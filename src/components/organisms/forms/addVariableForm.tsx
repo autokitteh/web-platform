@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ArrowLeft } from "@assets/image/icons";
-import { Button, Input, ErrorMessage, IconButton, Toast } from "@components/atoms";
+import { Input, ErrorMessage, Toast } from "@components/atoms";
+import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
 import { useProjectStore } from "@store";
@@ -58,31 +58,12 @@ export const AddVariableForm = () => {
 
 	return (
 		<div className="min-w-550">
-			<div className="flex justify-between mb-11">
-				<div className="flex items-center gap-1">
-					<IconButton className="hover:bg-black p-0 w-8 h-8" onClick={() => navigate(-1)}>
-						<ArrowLeft />
-					</IconButton>
-					<p className="text-gray-300 text-base">{tForm("addNewVariable")}</p>
-				</div>
-				<div className="flex items-center gap-6">
-					<Button
-						ariaLabel={tForm("buttons.cancel")}
-						className="text-gray-300 hover:text-white p-0 font-semibold"
-						onClick={() => navigate(-1)}
-					>
-						{tForm("buttons.cancel")}
-					</Button>
-					<Button
-						ariaLabel={tForm("buttons.save")}
-						className="px-4 py-2 font-semibold text-white border-white hover:bg-black"
-						form="createNewVariableForm"
-						variant="outline"
-					>
-						{isLoading ? tForm("buttons.loading") + "..." : tForm("buttons.save")}
-					</Button>
-				</div>
-			</div>
+			<TabFormHeader
+				className="mb-11"
+				form="createNewVariableForm"
+				isLoading={isLoading}
+				title={tForm("addNewVariable")}
+			/>
 			<form className="flex flex-col gap-6" id="createNewVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
