@@ -17,7 +17,7 @@ export interface IProjectStore {
 	activeTab?: string;
 	currentProject: {
 		projectId?: string;
-		activeEditorFileName: string;
+		openedFiles: { name: string; isActive: boolean }[];
 		resources: Record<string, Uint8Array>;
 		environments: TEnvironment[];
 		variables: TVariable[];
@@ -30,8 +30,9 @@ export interface IProjectStore {
 	setProjectResources: (files: File[]) => Promise<IFilesResponse>;
 	setProjectEmptyResources: (name: string) => Promise<IProjectStoreResponse>;
 	getProjectResources: () => Promise<IProjectStoreResponse>;
-	updateActiveEditorFileName: (fileName: string) => void;
 	getProjectEnvironments: () => Promise<IProjectStoreResponse>;
 	getProjectVariables: () => Promise<IProjectStoreResponse>;
 	setProjectModifyVariable: (name: string, value: string) => void;
+	updateEditorOpenedFiles: (fileName: string) => void;
+	updateEditorClosedFiles: (fileName: string) => void;
 }

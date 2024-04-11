@@ -6,6 +6,8 @@ import { IProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
 import { TEnvironment } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
+import { updateOpenedFilesState } from "@utilities";
+import { remove } from "lodash";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -19,15 +21,16 @@ const defaultState: Omit<
 	| "setProjectEmptyResources"
 	| "setActiveTab"
 	| "getProjectsList"
-	| "updateActiveEditorFileName"
 	| "getProjectEnvironments"
 	| "getProjectVariables"
 	| "setProjectModifyVariable"
+	| "updateEditorOpenedFiles"
+	| "updateEditorClosedFiles"
 > = {
 	list: [],
 	currentProject: {
 		projectId: undefined,
-		activeEditorFileName: "",
+		openedFiles: [],
 		resources: {},
 		environments: [],
 		variables: [],
@@ -40,12 +43,12 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	...defaultState,
 	loadProject: async (projectId) => {
 		const activeTab = get().currentProject.projectId === projectId ? get().activeTab : EProjectTabs.codeAndAssets;
-		const activeEditorFileName = get().currentProject.activeEditorFileName;
+		const openedFiles = get().currentProject.projectId === projectId ? get().currentProject.openedFiles : [];
 
 		set(() => ({
 			...defaultState,
 			activeTab,
-			currentProject: { ...defaultState.currentProject, projectId, activeEditorFileName },
+			currentProject: { ...defaultState.currentProject, projectId, openedFiles },
 		}));
 
 		try {
@@ -74,7 +77,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
 
 	setUpdateFileContent: async (content) => {
-		const fileName = get().currentProject.activeEditorFileName;
+		const fileName = get().currentProject.openedFiles.find(({ isActive }) => isActive)?.name;
 
 		if (!fileName) return;
 
@@ -108,7 +111,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 			}
 
 			set((state) => {
-				state.currentProject.activeEditorFileName = file.name;
+				state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, file.name);
 				state.currentProject.resources[file.name] = fileContent;
 				return state;
 			});
@@ -126,7 +129,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		if (error) return { error };
 
 		set((state) => {
-			state.currentProject.activeEditorFileName = name;
+			state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, name);
 			state.currentProject.resources[name] = new Uint8Array();
 			return state;
 		});
@@ -178,9 +181,29 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		return { error };
 	},
 
-	updateActiveEditorFileName: (fileName) => {
+	updateEditorOpenedFiles: (fileName) => {
+		const isFileActive = get().currentProject.openedFiles.find(({ name }) => name === fileName)?.isActive;
+
+		if (isFileActive) return;
+
 		set((state) => {
-			state.currentProject.activeEditorFileName = fileName;
+			state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, fileName);
+			return state;
+		});
+	},
+
+	updateEditorClosedFiles: (fileName) => {
+		set((state) => {
+			const { openedFiles } = state.currentProject;
+			const fileIndex = openedFiles.findIndex(({ name }) => name === fileName);
+			const newOpenedFiles = remove([...openedFiles], ({ name }) => name !== fileName);
+
+			if (openedFiles[fileIndex]?.isActive && newOpenedFiles.length > 0) {
+				const newActiveIndex = Math.min(fileIndex, newOpenedFiles.length - 1);
+				newOpenedFiles[newActiveIndex].isActive = true;
+			}
+
+			state.currentProject.openedFiles = newOpenedFiles;
 			return state;
 		});
 	},

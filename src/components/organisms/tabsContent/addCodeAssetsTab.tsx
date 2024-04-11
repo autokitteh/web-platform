@@ -13,7 +13,7 @@ export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "tables"]);
 	const { openModal } = useModalStore();
-	const { currentProject, setProjectResources, updateActiveEditorFileName } = useProjectStore();
+	const { currentProject, setProjectResources, updateEditorOpenedFiles } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -65,6 +65,11 @@ export const AddCodeAssetsTab = () => {
 		}
 	};
 
+	const activeBodyRow = (fileName: string) =>
+		cn({
+			"bg-black": currentProject.openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
+		});
+
 	return (
 		<div className="flex flex-col h-full">
 			<div className="mb-5 mt-14 flex justify-end gap-6">
@@ -102,11 +107,8 @@ export const AddCodeAssetsTab = () => {
 						</THead>
 						<TBody>
 							{sortedResources.map(([name], idx) => (
-								<Tr className={cn({ "bg-black": name === currentProject.activeEditorFileName })} key={idx}>
-									<Td
-										className="font-semibold border-r-0 cursor-pointer"
-										onClick={() => updateActiveEditorFileName(name)}
-									>
+								<Tr className={activeBodyRow(name)} key={idx}>
+									<Td className="font-semibold border-r-0 cursor-pointer" onClick={() => updateEditorOpenedFiles(name)}>
 										{name}
 									</Td>
 									<Th className="border-r-0 max-w-8" />
