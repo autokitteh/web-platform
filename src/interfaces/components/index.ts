@@ -24,3 +24,4 @@ export type { IToast } from "@interfaces/components/toast.interface";
 export type { ISelectOption, ISelect, ISelectAppChangeForm, IInput, ITextArea } from "@interfaces/components/forms";
 export type { IErrorMessage } from "@interfaces/components/error.interface";
 export type { ISpinner } from "@interfaces/components/spinner.interface";
+export type { ITabFormHeader } from "@interfaces/components/tabFormHeader.interface";
