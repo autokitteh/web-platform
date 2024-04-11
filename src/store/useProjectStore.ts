@@ -182,7 +182,9 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 
 	updateEditorOpenedFiles: (fileName) => {
-		if (get().currentProject.openedFiles.find(({ name }) => name === fileName)?.isActive) return;
+		const isFileActive = get().currentProject.openedFiles.find(({ name }) => name === fileName)?.isActive;
+
+		if (isFileActive) return;
 
 		set((state) => {
 			state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, fileName);
