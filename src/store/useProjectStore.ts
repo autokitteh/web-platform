@@ -6,7 +6,8 @@ import { IProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
 import { TEnvironment } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
-import { map, uniqBy } from "lodash";
+import { updateOpenedFilesState } from "@utilities";
+import { remove } from "lodash";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -110,7 +111,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 			}
 
 			set((state) => {
-				state.currentProject.openedFiles = [...state.currentProject.openedFiles, { name: file.name, isActive: true }];
+				state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, file.name);
 				state.currentProject.resources[file.name] = fileContent;
 				return state;
 			});
@@ -128,7 +129,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		if (error) return { error };
 
 		set((state) => {
-			state.currentProject.openedFiles = [...state.currentProject.openedFiles, { name, isActive: true }];
+			state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, name);
 			state.currentProject.resources[name] = new Uint8Array();
 			return state;
 		});
@@ -184,13 +185,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		if (get().currentProject.openedFiles.find(({ name }) => name === fileName)?.isActive) return;
 
 		set((state) => {
-			state.currentProject.openedFiles = uniqBy(
-				[
-					...map(state.currentProject.openedFiles, (file) => ({ ...file, isActive: file.name === fileName })),
-					{ name: fileName, isActive: true },
-				],
-				"name"
-			);
+			state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, fileName);
 			return state;
 		});
 	},
@@ -199,10 +194,10 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		set((state) => {
 			const { openedFiles } = state.currentProject;
 			const fileIndex = openedFiles.findIndex(({ name }) => name === fileName);
-			const newOpenedFiles = openedFiles.filter(({ name }) => name !== fileName);
-			const newActiveIndex = openedFiles[fileIndex].isActive && newOpenedFiles.length > 0 ? fileIndex - 1 : null;
+			const newOpenedFiles = remove([...openedFiles], ({ name }) => name !== fileName);
 
-			if (newActiveIndex !== null) {
+			if (openedFiles[fileIndex]?.isActive && newOpenedFiles.length > 0) {
+				const newActiveIndex = Math.min(fileIndex, newOpenedFiles.length - 1);
 				newOpenedFiles[newActiveIndex].isActive = true;
 			}
 

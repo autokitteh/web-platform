@@ -19,7 +19,7 @@ export const EditorTabs = () => {
 	} = useProjectStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const initialContent = "// Code A: Initialize your code here...";
-	const activeEditorFileName = openedFiles.find(({ isActive }) => isActive)?.name || "";
+	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
 
 	const resource = get(resources, [activeEditorFileName], new Uint8Array());
 	const byteArray = Object.values(resource);
@@ -68,7 +68,7 @@ export const EditorTabs = () => {
 			{projectId ? (
 				<>
 					<TabList className="uppercase">
-						{openedFiles.map(({ name }) => (
+						{openedFiles?.map(({ name }) => (
 							<Tab className="flex items-center gap-1 group" key={name} value={name}>
 								{name}
 								<IconButton

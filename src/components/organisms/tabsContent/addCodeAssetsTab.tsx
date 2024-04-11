@@ -67,7 +67,7 @@ export const AddCodeAssetsTab = () => {
 
 	const activeBodyRow = (fileName: string) =>
 		cn({
-			"bg-black": currentProject.openedFiles.find(({ name, isActive }) => name === fileName && isActive),
+			"bg-black": currentProject.openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
 		});
 
 	return (
