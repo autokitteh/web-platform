@@ -41,5 +41,10 @@
 				}
 			}
 		}
+	},
+	"editor": {
+		"buttons": {
+			"ariaCloseFile": "Close file tab"
+		}
 	}
 }
