@@ -9,10 +9,10 @@ import { useNavigate } from "react-router-dom";
 export const TabFormHeader = ({ title, isLoading, form, className }: ITabFormHeader) => {
 	const { t } = useTranslation("tabs");
 	const navigate = useNavigate();
-	const basyStyle = cn("flex justify-between", className);
+	const baseStyle = cn("flex justify-between", className);
 
 	return (
-		<div className={basyStyle}>
+		<div className={baseStyle}>
 			<div className="flex items-center gap-1">
 				<IconButton
 					ariaLabel={t("ariaLabelReturnBack")}
