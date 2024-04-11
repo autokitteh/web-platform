@@ -22,6 +22,7 @@ const defaultState: Omit<
 	| "updateActiveEditorFileName"
 	| "getProjectEnvironments"
 	| "getProjectVariables"
+	| "setProjectModifyVariable"
 > = {
 	list: [],
 	currentProject: {
@@ -30,6 +31,7 @@ const defaultState: Omit<
 		resources: {},
 		environments: [],
 		variables: [],
+		activeModifyVariable: undefined,
 	},
 	activeTab: EProjectTabs.codeAndAssets,
 };
@@ -179,6 +181,13 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	updateActiveEditorFileName: (fileName) => {
 		set((state) => {
 			state.currentProject.activeEditorFileName = fileName;
+			return state;
+		});
+	},
+
+	setProjectModifyVariable: (name, value) => {
+		set((state) => {
+			state.currentProject.activeModifyVariable = { name, value };
 			return state;
 		});
 	},

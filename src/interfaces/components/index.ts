@@ -18,6 +18,7 @@ export type {
 	IModalAddCodeAssets,
 	IModalDeleteTrigger,
 	IModalDeleteVariable,
+	IModalModifyVariable,
 } from "@interfaces/components/modal.interface";
 export type { IToast } from "@interfaces/components/toast.interface";
 export type { ISelectOption, ISelect, ISelectAppChangeForm, IInput, ITextArea } from "@interfaces/components/forms";

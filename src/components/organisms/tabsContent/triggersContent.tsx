@@ -14,7 +14,9 @@ import { useTranslation } from "react-i18next";
 
 export const TriggersContent = () => {
 	const { t } = useTranslation("errors");
-	const { itemId, openModal, closeModal } = useModalStore();
+	const { openModal, closeModal } = useModalStore();
+	const dataTrigger = useModalStore((state) => state.data as Pick<Trigger, "triggerId">);
+
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
 		column: keyof Trigger;
@@ -49,15 +51,15 @@ export const TriggersContent = () => {
 	};
 
 	const handleDeleteTrigger = async () => {
-		if (!itemId) return;
+		if (!dataTrigger.triggerId) return;
 
-		const { error } = await TriggersService.delete(itemId);
+		const { error } = await TriggersService.delete(dataTrigger.triggerId);
 		closeModal(EModalName.deleteTrigger);
 		if (error) {
 			setToast({ isOpen: true, message: t("triggerRemoveFailed") });
 			LoggerService.error(
 				namespaces.projectUI,
-				t("triggerFailedExtended", { triggerId: itemId, error: (error as Error).message })
+				t("triggerFailedExtended", { triggerId: dataTrigger.triggerId, error: (error as Error).message })
 			);
 			return;
 		}
@@ -131,7 +133,7 @@ export const TriggersContent = () => {
 										contentMenu={
 											<Button
 												className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-												onClick={() => openModal(EModalName.deleteTrigger, triggerId)}
+												onClick={() => openModal(EModalName.deleteTrigger, { triggerId })}
 											>
 												Delete
 											</Button>

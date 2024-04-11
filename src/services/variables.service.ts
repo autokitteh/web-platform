@@ -3,7 +3,7 @@ import { namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { TVariable } from "@type/models";
-import i18n from "i18next";
+import { t } from "i18next";
 
 export class VariablesService {
 	static async create(singleVariable: TVariable): Promise<ServiceResponse<string>> {
@@ -14,7 +14,7 @@ export class VariablesService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
-				i18n.t("errors.variableNotCreatedExtended", { name: singleVariable.name, value: singleVariable.value })
+				t("errors.variableNotCreatedExtended", { name: singleVariable.name, value: singleVariable.value })
 			);
 			return { data: undefined, error };
 		}
@@ -26,8 +26,19 @@ export class VariablesService {
 
 			return { data: vars, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, i18n.t("errors.variablesNotFoundExtended", { id: envId }));
-			return { data: undefined, error: i18n.t("errors.variablesNotFoundExtended", { id: envId }) };
+			LoggerService.error(namespaces.projectService, t("errors.variablesNotFoundExtended", { id: envId }));
+			return { data: undefined, error };
+		}
+	}
+
+	static async delete({ envId, name }: { envId: string; name: string }): Promise<ServiceResponse<void>> {
+		try {
+			await environmentsClient.removeVar({ envId, name });
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.variableService, t("errors.variableRemoveFailedExtended", { name }));
+			return { data: undefined, error };
 		}
 	}
 }

@@ -9,11 +9,36 @@
 				"value": "Value"
 			},
 			"buttons": {
-				"edit": "Edit",
+				"modify": "Modify",
 				"delete": "Delete",
-				"ariaDeleteVariable": "Delete variable",
+				"ariaModifyVariable": "Modify {{name}} variable",
+				"ariaDeleteVariable": "Delete {{name}} variable",
 				"ariaSortByName": "Sort by name",
-				"ariaSortByValue": "Sort by value"
+				"ariaSortByValue": "Sort by value",
+				"ariaVariableOptions": "Variable options"
+			}
+		},
+		"form": {
+			"addNewVariable": "Add new variable",
+			"modifyVariable": "Modify variable",
+			"environment": "Environment",
+			"placeholders": {
+				"name": "Name",
+				"value": "Value"
+			},
+			"buttons": {
+				"save": "Save",
+				"cancel": "Cancel",
+				"loading": "Loading"
+			}
+		},
+		"modals": {
+			"modify": {
+				"title": "Modify variable",
+				"buttons": {
+					"save": "Save",
+					"cancel": "Cancel"
+				}
 			}
 		}
 	}
