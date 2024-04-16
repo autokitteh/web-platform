@@ -36,5 +36,6 @@
 	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}",
 	"variableUpdateFailedExtended": "Variable update failed, Name: {{name}}",
 	"buildInfoFetchFailedForBuild": "Couldn't fetch build info for build {{buildId}}, error: {{error}}",
-	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}"
+	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}",
+	"sessionLogRecordMultipleProps": "More than one session log record type found: {{props}}"
 }

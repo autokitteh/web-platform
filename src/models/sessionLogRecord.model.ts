@@ -22,7 +22,7 @@ export class SessionLogRecord {
 		if (Object.keys(props).length > 1) {
 			LoggerService.error(
 				namespaces.sessionsHistory,
-				`More than one session log record type found: ${Object.keys(props).join(", ")}`
+				i18n.t("errors.sessionLogRecordMultipleProps", { props: Object.keys(props).join(", ") })
 			);
 			return;
 		}
