@@ -1,24 +1,23 @@
 import { Build, Deploy, Stats } from "@assets/image";
+import { ETopbarButton } from "@enums/components";
 
 export const topbarItems = [
 	{
 		id: 0,
 		icon: Build,
-		name: "Build",
-		href: "/app/build",
+		name: ETopbarButton.build,
 		disabled: false,
 	},
 	{
 		id: 1,
 		icon: Deploy,
-		name: "Deploy",
-		href: "/app/deploy",
+		name: ETopbarButton.deploy,
 		disabled: false,
 	},
 	{
 		id: 2,
 		icon: Stats,
-		name: "View Stats",
+		name: ETopbarButton.viewStats,
 		href: "/app/stats",
 		disabled: true,
 	},

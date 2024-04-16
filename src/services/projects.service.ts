@@ -27,6 +27,31 @@ export class ProjectsService {
 		}
 	}
 
+	static async build(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
+		try {
+			await projectsClient.setResources({
+				projectId,
+				resources,
+			});
+			const { buildId, error } = await projectsClient.build({ projectId });
+			if (error) {
+				LoggerService.error(
+					`${namespaces.projectService} - Build: `,
+					i18n.t("errors.buildProjectError", { projectId, error: error.message })
+				);
+
+				return { data: undefined, error };
+			}
+			return { data: buildId, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.projectService,
+				i18n.t("errors.buildProjectError", { projectId, error: (error as Error).message })
+			);
+			return { data: undefined, error };
+		}
+	}
+
 	static async get(projectId: string): Promise<ServiceResponse<Project>> {
 		try {
 			const { project } = await projectsClient.get({ projectId });

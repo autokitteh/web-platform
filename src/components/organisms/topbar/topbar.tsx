@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FullScreen, More } from "@assets/image";
-import { Button, ErrorMessage, IconButton, IconSvg, Toast } from "@components/atoms";
+import { Button, ErrorMessage, IconButton, IconSvg, Spinner, Toast } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { topbarItems } from "@constants";
+import { ETopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { Project } from "@type/models";
@@ -13,7 +14,10 @@ import { useParams } from "react-router-dom";
 export const Topbar = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["shared", "errors", "buttons"]);
-	const { getProjectsList } = useProjectStore();
+	const {
+		getProjectsList,
+		currentProject: { resources },
+	} = useProjectStore();
 	const [project, setProject] = useState<Project>({
 		name: "",
 		projectId: "",
@@ -23,6 +27,7 @@ export const Topbar = () => {
 		isOpen: false,
 		message: "",
 	});
+	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 
 	const styleInput = cn(
 		"font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight",
@@ -70,6 +75,29 @@ export const Topbar = () => {
 		setIsNameValid(validateName(newName));
 	};
 
+	const handleButtonClick = async (name: string) => {
+		if (!projectId) return;
+		setLoadingButton((prev) => ({ ...prev, [name]: true }));
+
+		switch (name) {
+			case ETopbarButton.build: {
+				const { error } = await ProjectsService.build(projectId, resources);
+
+				if (error) {
+					setToast({ isOpen: true, message: (error as Error).message });
+					return;
+				}
+				break;
+			}
+			case ETopbarButton.deploy:
+				break;
+			default:
+				break;
+		}
+
+		setLoadingButton((prev) => ({ ...prev, [name]: false }));
+	};
+
 	return (
 		<div className="flex justify-between items-center bg-gray-800 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
 			<div className="flex items-end gap-3 relative font-fira-code text-gray-300">
@@ -95,12 +123,14 @@ export const Topbar = () => {
 				{topbarItems.map(({ id, name, href, icon, disabled }) => (
 					<Button
 						className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-						disabled={disabled}
+						disabled={disabled || loadingButton[name]}
 						href={href}
 						key={id}
+						onClick={() => handleButtonClick(name)}
 						variant="outline"
 					>
-						<IconSvg className="max-w-5" disabled={disabled} src={icon} />
+						{loadingButton[name] ? <Spinner /> : <IconSvg className="max-w-5" disabled={disabled} src={icon} />}
+
 						{name}
 					</Button>
 				))}

@@ -1,5 +1,6 @@
 {
 	"error": "Error",
+	"errorOccured": "An error occurred",
 	"nameRequired": "Name is required",
 	"unexpectedError": "We're sorry, but an unexpected error has occurred and the application is currently unavailable. Please try again later.",
 	"environmentsNotFoundExtended": "Couldn't fetch the environments details, by project ID: {{projectId}}",
@@ -37,5 +38,6 @@
 	"variableUpdateFailedExtended": "Variable update failed, Name: {{name}}",
 	"buildInfoFetchFailedForBuild": "Couldn't fetch build info for build {{buildId}}, error: {{error}}",
 	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}",
-	"sessionLogRecordMultipleProps": "More than one session log record type found: {{props}}"
+	"sessionLogRecordMultipleProps": "More than one session log record type found: {{props}}",
+	"buildProjectError": "Couldn't build project {{projectId}}, error: {{error}}"
 }

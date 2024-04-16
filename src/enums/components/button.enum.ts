@@ -3,3 +3,9 @@ export enum EButtonVariant {
 	filled = "filled",
 	outline = "outline",
 }
+
+export enum ETopbarButton {
+	build = "Build",
+	deploy = "Deploy",
+	viewStats = "View Stats",
+}
