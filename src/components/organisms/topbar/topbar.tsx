@@ -78,20 +78,20 @@ export const Topbar = () => {
 
 	const runBuild = async () => {
 		const { error } = await ProjectsService.build(projectId!, resources);
-		if (error) {
-			setToast({ isSuccess: false, isOpen: true, message: (error as Error).message });
-			return;
-		}
-		setToast({ isSuccess: true, isOpen: true, message: t("buildProjectSuccess") });
+		setToast({
+			isSuccess: !error,
+			isOpen: true,
+			message: error ? (error as Error).message : t("buildProjectSuccess"),
+		});
 	};
 
 	const runDeploy = async () => {
 		const { error } = await ProjectsService.run(projectId!, resources);
-		if (error) {
-			setToast({ isSuccess: false, isOpen: true, message: (error as Error).message });
-			return;
-		}
-		setToast({ isSuccess: true, isOpen: true, message: t("deployedProjectSuccess") });
+		setToast({
+			isSuccess: !error,
+			isOpen: true,
+			message: error ? (error as Error).message : t("deployedProjectSuccess"),
+		});
 	};
 
 	const handleButtonClick = async (name: string) => {
