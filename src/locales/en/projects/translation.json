@@ -1,6 +1,13 @@
 {
-	"rename": "Rename",
-	"success": "Success",
-	"buildProjectSuccess": "Project build completed successfully.",
-	"deployedProjectSuccess": "Project deploy completed successfully."
+	"topbar": {
+		"rename": "Rename",
+		"success": "Success",
+		"buildProjectSuccess": "Project build completed successfully.",
+		"deployedProjectSuccess": "Project deploy completed successfully.",
+		"buttons": {
+			"build": "Build",
+			"deploy": "Deploy",
+			"stats": "View Stats"
+		}
+	}
 }
