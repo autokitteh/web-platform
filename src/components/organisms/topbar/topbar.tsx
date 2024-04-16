@@ -13,7 +13,7 @@ import { useParams } from "react-router-dom";
 
 export const Topbar = () => {
 	const { projectId } = useParams();
-	const { t } = useTranslation(["shared", "errors", "buttons"]);
+	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const {
 		getProjectsList,
 		currentProject: { resources },
@@ -25,6 +25,7 @@ export const Topbar = () => {
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [toast, setToast] = useState({
 		isOpen: false,
+		isSuccess: false,
 		message: "",
 	});
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
@@ -61,7 +62,7 @@ export const Topbar = () => {
 		if ((isEnterKey || isBlur) && isValidName && projectId) {
 			const { error } = await ProjectsService.update(projectId, newName);
 			if (error) {
-				setToast({ isOpen: true, message: (error as Error).message });
+				setToast({ isSuccess: false, isOpen: true, message: (error as Error).message });
 				return;
 			}
 			(e.target as HTMLSpanElement).blur();
@@ -78,22 +79,26 @@ export const Topbar = () => {
 	const runBuild = async () => {
 		const { error } = await ProjectsService.build(projectId!, resources);
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			setToast({ isSuccess: false, isOpen: true, message: (error as Error).message });
+			return;
 		}
+		setToast({ isSuccess: true, isOpen: true, message: t("buildProjectSuccess") });
 	};
 
 	const runDeploy = async () => {
 		const { error } = await ProjectsService.run(projectId!, resources);
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			setToast({ isSuccess: false, isOpen: true, message: (error as Error).message });
+			return;
 		}
+		setToast({ isSuccess: true, isOpen: true, message: t("deployedProjectSuccess") });
 	};
 
 	const handleButtonClick = async (name: string) => {
 		if (!projectId) return;
 
 		if (!Object.keys(resources).length) {
-			setToast({ isOpen: true, message: t("Project code & assets is Empty", { ns: "errors" }) });
+			setToast({ isSuccess: false, isOpen: true, message: t("projectCodeAssetsEmpty", { ns: "errors" }) });
 			return;
 		}
 
@@ -178,12 +183,14 @@ export const Topbar = () => {
 				</IconButton>
 			</div>
 			<Toast
-				className="border-error"
-				duration={5}
+				className={cn("border-error", { "border-green-accent": toast.isSuccess })}
+				duration={5000}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<p className="font-semibold text-error">{t("error", { ns: "errors" })}</p>
+				<p className={cn("font-semibold text-error", { "text-green-accent": toast.isSuccess })}>
+					{toast.isSuccess ? t("success") : t("error", { ns: "errors" })}
+				</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>
