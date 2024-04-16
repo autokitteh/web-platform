@@ -7,11 +7,9 @@ import { ServiceResponse } from "@type/services.types";
 export class EnvironmentsService {
 	static async listByProjectId(projectId: string): Promise<ServiceResponse<TEnvironment[]>> {
 		try {
-			const environments = (
-				await environmentsClient.list({
-					projectId,
-				})
-			).envs;
+			const { envs: environments } = await environmentsClient.list({
+				projectId,
+			});
 			return { data: environments, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.environmentsService, (error as Error).message);

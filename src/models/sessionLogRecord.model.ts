@@ -72,22 +72,22 @@ export class SessionLogRecord {
 	private handleCallAttemptComplete(logRecord: ProtoSessionLogRecord) {
 		this.type = SessionLogRecordType.callAttemptComplete;
 
-		if (logRecord[this.type]?.result?.value?.time) {
+		const sessionLogRecord = logRecord[this.type];
+		if (sessionLogRecord?.result?.value?.time) {
 			this.logs =
 				// eslint-disable-next-line max-len
-				`${i18n.t("services.historyFunction")} - ${i18n.t("services.historyResult")}: ${i18n.t("services.historyTime")} - ${convertTimestampToDate(logRecord[this.type]?.result?.value?.time?.v).toISOString()}`;
-
+				`${i18n.t("services.historyFunction")} - ${i18n.t("services.historyResult")}: ${i18n.t("services.historyTime")} - ${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
 			return;
 		}
-		if (logRecord[this.type]?.result?.value?.nothing) {
+		if (sessionLogRecord?.result?.value?.nothing) {
 			this.logs =
 				// eslint-disable-next-line max-len
 				`${i18n.t("services.historyFunction")} - ${i18n.t("services.historyResult")}: ${i18n.t("services.historyNoOutput")}`;
 			return;
 		}
 
-		const functionResponse = logRecord[this.type]?.result?.value?.struct?.fields?.body?.string?.v || "";
-		const functionName = logRecord[this.type]?.result?.value?.struct?.ctor?.string?.v || "";
+		const functionResponse = sessionLogRecord?.result?.value?.struct?.fields?.body?.string?.v || "";
+		const functionName = sessionLogRecord?.result?.value?.struct?.ctor?.string?.v || "";
 
 		if (!functionName && !functionResponse) {
 			this.logs = undefined;
@@ -100,9 +100,10 @@ export class SessionLogRecord {
 
 	private handleFuncCall(logRecord: ProtoSessionLogRecord) {
 		this.type = SessionLogRecordType.callSpec;
+		const sessionLogRecord = logRecord[this.type];
 
-		const functionName = logRecord[this.type]?.function?.function?.name || "";
-		const args = (logRecord[this.type]?.args || [])
+		const functionName = sessionLogRecord?.function?.function?.name || "";
+		const args = (sessionLogRecord?.args || [])
 			.map((arg: Value) => arg.string?.v)
 			.join(", ")
 			.replace(/, ([^,]*)$/, "");

@@ -35,5 +35,6 @@
 	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}, Name: {{name}}",
 	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}",
 	"variableUpdateFailedExtended": "Variable update failed, Name: {{name}}",
-	"buildInfoFetchFailedForBuild": "Couldn't fetch build info for build {{buildId}}, error: {{error}}"
+	"buildInfoFetchFailedForBuild": "Couldn't fetch build info for build {{buildId}}, error: {{error}}",
+	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}"
 }

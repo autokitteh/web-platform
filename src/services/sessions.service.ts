@@ -83,10 +83,9 @@ export class SessionsService {
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
 			return { data: sessionId, error: undefined };
 		} catch (error) {
-			// eslint-disable-next-line max-len
-			const log = `Error running session execution: ${(error as Error).message} for deployment id: ${startSessionArgs.buildId}`;
+			const log = i18n.t("errors.sessionStartFailedExtended", { error, buildId: startSessionArgs.buildId });
 			LoggerService.error(namespaces.sessionsService, log);
-			return { data: undefined, error: log };
+			return { data: undefined, error };
 		}
 	}
 
