@@ -1,4 +1,3 @@
-import { error } from "console";
 import {
 	Session as ProtoSession,
 	SessionLogRecord as ProtoSessionLogRecord,
@@ -99,7 +98,7 @@ export class SessionsService {
 			if (environmentsError) {
 				LoggerService.error(namespaces.sessionsService, (environmentsError as Error).message);
 
-				return { data: undefined, error };
+				return { data: undefined, error: environmentsError };
 			}
 			const sessionsPromises = (projectEnvironments || []).map(async (environment) => {
 				const sessions = await this.listByEnvironmentId(environment.envId);
