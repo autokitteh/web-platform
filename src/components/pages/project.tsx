@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
-import { namespaces, tabsMainFrame } from "@constants";
+import { fetchMenuInterval, namespaces, tabsMainFrame } from "@constants";
 import { LoggerService } from "@services";
 import { useProjectStore } from "@store";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ import { useParams } from "react-router-dom";
 export const Project = () => {
 	const { t } = useTranslation("errors");
 	const { projectId } = useParams();
-	const { activeTab, loadProject, setActiveTab } = useProjectStore();
+	const { activeTab, loadProject, setActiveTab, getProjectVariables, getProjectResources } = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -33,6 +33,12 @@ export const Project = () => {
 		};
 
 		fetchProject();
+
+		const intervalMenu = setInterval(() => {
+			getProjectVariables();
+			getProjectResources();
+		}, fetchMenuInterval);
+		return () => clearInterval(intervalMenu);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
