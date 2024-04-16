@@ -74,15 +74,15 @@ export class SessionLogRecord {
 
 		const sessionLogRecord = logRecord[this.type];
 		if (sessionLogRecord?.result?.value?.time) {
-			this.logs =
-				// eslint-disable-next-line max-len
-				`${i18n.t("services.historyFunction")} - ${i18n.t("services.historyResult")}: ${i18n.t("services.historyTime")} - ${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
+			this.logs = `${i18n.t("services.historyFunction")} - 
+				${i18n.t("services.historyResult")}: ${i18n.t("services.historyTime")} - 
+				${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
 			return;
 		}
 		if (sessionLogRecord?.result?.value?.nothing) {
-			this.logs =
-				// eslint-disable-next-line max-len
-				`${i18n.t("services.historyFunction")} - ${i18n.t("services.historyResult")}: ${i18n.t("services.historyNoOutput")}`;
+			this.logs = `${i18n.t("services.historyFunction")} - 
+				${i18n.t("services.historyResult")}: 
+				${i18n.t("services.historyNoOutput")}`;
 			return;
 		}
 
@@ -93,9 +93,9 @@ export class SessionLogRecord {
 			this.logs = undefined;
 			return;
 		}
-		this.logs =
-			// eslint-disable-next-line max-len
-			`${i18n.t("services.historyFunction")} - ${i18n.t("services.historyResult")}: ${functionName} - ${functionResponse}`;
+		this.logs = `${i18n.t("services.historyFunction")} - 
+			${i18n.t("services.historyResult")}: 
+			${functionName} - ${functionResponse}`;
 	}
 
 	private handleFuncCall(logRecord: ProtoSessionLogRecord) {
