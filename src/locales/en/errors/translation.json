@@ -16,6 +16,7 @@
 	"projectNotCreated": "There was an issue creating the project",
 	"projectAddFailed": "Project code add failed",
 	"projectAddFailedExtended": "Project code add failed, ID: {{projectId}}, error message: {{error}}",
+	"projectCodeAssetsEmpty": "Project code & assets is empty",
 	"triggerNotFound": "Couldn't fetch the trigger details",
 	"triggersNotFound": "Couldn't fetch the triggers details",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",

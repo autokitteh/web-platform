@@ -75,24 +75,39 @@ export const Topbar = () => {
 		setIsNameValid(validateName(newName));
 	};
 
+	const runBuild = async () => {
+		const { error } = await ProjectsService.build(projectId!, resources);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+		}
+	};
+
+	const runDeploy = async () => {
+		const { error } = await ProjectsService.run(projectId!, resources);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+		}
+	};
+
 	const handleButtonClick = async (name: string) => {
 		if (!projectId) return;
+
+		if (!Object.keys(resources).length) {
+			setToast({ isOpen: true, message: t("Project code & assets is Empty", { ns: "errors" }) });
+			return;
+		}
+
 		setLoadingButton((prev) => ({ ...prev, [name]: true }));
 
 		switch (name) {
 			case ETopbarButton.build: {
-				const { error } = await ProjectsService.build(projectId, resources);
-
-				if (error) {
-					setToast({ isOpen: true, message: (error as Error).message });
-					return;
-				}
+				await runBuild();
 				break;
 			}
-			case ETopbarButton.deploy:
+			case ETopbarButton.deploy: {
+				await runDeploy();
 				break;
-			default:
-				break;
+			}
 		}
 
 		setLoadingButton((prev) => ({ ...prev, [name]: false }));
