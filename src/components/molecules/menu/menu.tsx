@@ -49,6 +49,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 
 		const intervalMenu = setInterval(fetchMenu, fetchMenuInterval);
 		return () => clearInterval(intervalMenu);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -62,6 +63,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		);
 
 		setMenu(updatedMenuItems);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [list]);
 
 	const handleMouseEnter = (e: React.MouseEvent, submenu?: ISubmenuInfo["submenu"]) => {

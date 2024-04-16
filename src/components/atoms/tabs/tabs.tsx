@@ -9,6 +9,7 @@ export const Tabs = ({ defaultValue, className, children, onChange }: ITabs) => 
 
 	useEffect(() => {
 		if (activeTab) onChange?.(activeTab);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeTab]);
 
 	return (

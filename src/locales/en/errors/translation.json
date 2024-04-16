@@ -34,5 +34,6 @@
 	"variableNotCreatedExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
 	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}, Name: {{name}}",
 	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}",
-	"variableUpdateFailedExtended": "Variable update failed, Name: {{name}}"
+	"variableUpdateFailedExtended": "Variable update failed, Name: {{name}}",
+	"buildInfoFetchFailedForBuild": "Couldn't fetch build info for build {{buildId}}, error: {{error}}"
 }

@@ -1,4 +1,5 @@
 import { ApplyService } from "@ak-proto-ts/apply/v1/svc_connect";
+import { BuildsService } from "@ak-proto-ts/builds/v1/svc_connect";
 import { ConnectionsService } from "@ak-proto-ts/connections/v1/svc_connect";
 import { DeploymentsService } from "@ak-proto-ts/deployments/v1/svc_connect";
 import { EnvsService } from "@ak-proto-ts/envs/v1/svc_connect";
@@ -15,3 +16,4 @@ export const deploymentsClient = createPromiseClient(DeploymentsService, grpcTra
 export const sessionsClient = createPromiseClient(SessionsService, grpcTransport);
 export const manifestApplyClient = createPromiseClient(ApplyService, grpcTransport);
 export const connectionsClient = createPromiseClient(ConnectionsService, grpcTransport);
+export const buildsClient = createPromiseClient(BuildsService, grpcTransport);

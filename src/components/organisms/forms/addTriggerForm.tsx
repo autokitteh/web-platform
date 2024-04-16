@@ -46,6 +46,7 @@ export const AddTriggerForm = () => {
 			setFilesName(formattedResources);
 		};
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const {

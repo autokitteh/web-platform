@@ -1,0 +1,10 @@
+{
+	"sessionLogMissingError": "Session error log value is missing",
+	"errorOccured": "An error occurred",
+	"historyResult": "Result",
+	"historyFunction": "Function",
+	"historyInitFunction": "Init function",
+	"historyTime": "Time",
+	"historyNoOutput": "No output",
+	"historyPrint": "Print"
+}
