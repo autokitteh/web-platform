@@ -46,6 +46,7 @@ export const SplitFrame = ({ children }: ISplitFrame) => {
 			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("mousedown", onResizeMouseDown);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [leftWidth]);
 
 	return (
