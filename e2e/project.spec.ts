@@ -28,7 +28,7 @@ test.describe("Project Suite", () => {
 		const createNewFileButton = page.getByRole("button", { name: "Create new file" });
 		if (await createNewFileButton.isVisible()) {
 			await createNewFileButton.click();
-			await page.waitForTimeout(1000);
+			await page.waitForTimeout(500);
 		} else {
 			test.fail();
 		}
