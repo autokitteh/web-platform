@@ -9,14 +9,12 @@ import { useProjectStore } from "@store";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 export const Topbar = () => {
-	const { projectId } = useParams();
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const {
 		getProjectsList,
-		currentProject: { resources },
+		currentProject: { resources, projectId },
 	} = useProjectStore();
 	const [project, setProject] = useState<Project>({
 		name: "",
