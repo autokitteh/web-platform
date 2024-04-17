@@ -74,19 +74,8 @@ export const Topbar = () => {
 		setIsNameValid(validateName(newName));
 	};
 
-	const checkResources = () => {
-		if (!projectId) return;
-
-		if (!Object.keys(resources).length) {
-			setToast({ isSuccess: false, isOpen: true, message: t("projectCodeAssetsEmpty", { ns: "errors" }) });
-			return;
-		}
-
-		return true;
-	};
-
 	const build = async () => {
-		if (!checkResources()) return;
+		if (!Object.keys(resources).length) return;
 
 		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.build]: true }));
 
@@ -101,7 +90,7 @@ export const Topbar = () => {
 	};
 
 	const deploy = async () => {
-		if (!checkResources()) return;
+		if (!Object.keys(resources).length) return;
 
 		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.deploy]: true }));
 
