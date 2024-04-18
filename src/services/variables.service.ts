@@ -3,7 +3,7 @@ import { namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { TVariable } from "@type/models";
-import { t } from "i18next";
+import i18n from "i18next";
 
 export class VariablesService {
 	static async create(singleVariable: TVariable): Promise<ServiceResponse<string>> {
@@ -14,7 +14,7 @@ export class VariablesService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
-				t("errors.variableNotCreatedExtended", { name: singleVariable.name, value: singleVariable.value })
+				i18n.t("variableNotCreatedExtended", { name: singleVariable.name, value: singleVariable.value })
 			);
 			return { data: undefined, error };
 		}
@@ -26,7 +26,7 @@ export class VariablesService {
 
 			return { data: vars, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, t("errors.variablesNotFoundExtended", { id: envId }));
+			LoggerService.error(namespaces.projectService, i18n.t("variablesNotFoundExtended", { id: envId }));
 			return { data: undefined, error };
 		}
 	}
@@ -37,7 +37,7 @@ export class VariablesService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.variableService, t("errors.variableRemoveFailedExtended", { name }));
+			LoggerService.error(namespaces.variableService, i18n.t("variableRemoveFailedExtended", { name }));
 			return { data: undefined, error };
 		}
 	}

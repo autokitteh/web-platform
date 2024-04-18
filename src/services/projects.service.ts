@@ -16,9 +16,9 @@ export class ProjectsService {
 				},
 			});
 			if (!projectId) {
-				LoggerService.error(`${namespaces.projectService} - Create: `, i18n.t("errors.projectNotCreated"));
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotCreated"));
 
-				return { data: undefined, error: i18n.t("errors.projectNotCreated") };
+				return { data: undefined, error: i18n.t("projectNotCreated") };
 			}
 			return { data: projectId, error: undefined };
 		} catch (error) {
@@ -31,9 +31,9 @@ export class ProjectsService {
 		try {
 			const { project } = await projectsClient.get({ projectId });
 			if (!project) {
-				LoggerService.error(namespaces.projectService, i18n.t("errors.projectNotFound"));
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound"));
 
-				return { data: undefined, error: i18n.t("errors.projectNotFound") };
+				return { data: undefined, error: i18n.t("projectNotFound") };
 			}
 			return { data: project, error: undefined };
 		} catch (error) {
@@ -45,8 +45,8 @@ export class ProjectsService {
 		try {
 			const project = await projectsClient.update({ project: { projectId, name } });
 			if (!project) {
-				LoggerService.error(namespaces.projectService, i18n.t("errors.projectNotFound"));
-				return { data: undefined, error: i18n.t("errors.projectNotFound") };
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound"));
+				return { data: undefined, error: i18n.t("projectNotFound") };
 			}
 			return { data: undefined, error: undefined };
 		} catch (error) {
@@ -107,7 +107,7 @@ export class ProjectsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
-				i18n.t("errors.buildProjectError", { projectId, error: (error as Error).message })
+				i18n.t("buildProjectError", { projectId, error: (error as Error).message })
 			);
 			return { data: undefined, error };
 		}
@@ -129,7 +129,7 @@ export class ProjectsService {
 		}
 
 		if (!environments?.length) {
-			const errorMessage = i18n.t("errors.defaultEnvironmentNotFound");
+			const errorMessage = i18n.t("defaultEnvironmentNotFound");
 			LoggerService.error(namespaces.projectService, errorMessage);
 			return { data: undefined, error: new Error(errorMessage) };
 		}
