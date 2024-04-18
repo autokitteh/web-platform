@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, ErrorMessage, Toast } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
 import { useProjectStore } from "@store";
+import { TVariable } from "@type/models";
 import { newVariableShema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const ModifyVariableForm = () => {
 	const { t } = useTranslation("errors");
+	const { variableName, environmentId } = useParams();
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const navigate = useNavigate();
+	const [currentVariable, setCurrentVariable] = useState<TVariable>();
 	const {
-		currentProject: { environments, activeModifyVariable },
+		currentProject: { environments },
 		getProjectVariables,
 	} = useProjectStore();
 	const [toast, setToast] = useState({
@@ -23,16 +26,33 @@ export const ModifyVariableForm = () => {
 	});
 	const [isLoading, setIsLoading] = useState(false);
 
+	const fetchVariable = async () => {
+		const { data: currentVar } = await VariablesService.get(environmentId!, variableName!);
+		if (!currentVar) return;
+
+		setCurrentVariable(currentVar);
+
+		reset({
+			name: currentVar.name,
+			value: currentVar.value,
+		});
+	};
+
+	useEffect(() => {
+		fetchVariable();
+	}, []);
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors, dirtyFields },
 		getValues,
+		reset,
 	} = useForm({
 		resolver: zodResolver(newVariableShema),
 		defaultValues: {
-			name: activeModifyVariable!.name,
-			value: activeModifyVariable!.value,
+			name: "",
+			value: "",
 		},
 	});
 
@@ -64,7 +84,7 @@ export const ModifyVariableForm = () => {
 		navigate(-1);
 	};
 
-	return (
+	return currentVariable ? (
 		<div className="min-w-550">
 			<TabFormHeader
 				className="mb-11"
@@ -104,5 +124,7 @@ export const ModifyVariableForm = () => {
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>
+	) : (
+		<div>Loading...</div>
 	);
 };

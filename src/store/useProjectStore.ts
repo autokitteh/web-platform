@@ -23,7 +23,6 @@ const defaultState: Omit<
 	| "getProjectsList"
 	| "getProjecEnvironments"
 	| "getProjectVariables"
-	| "setProjectModifyVariable"
 	| "updateEditorOpenedFiles"
 	| "updateEditorClosedFiles"
 	| "removeProjectFile"

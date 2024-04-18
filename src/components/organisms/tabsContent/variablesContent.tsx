@@ -16,7 +16,7 @@ export const VariablesContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { t: tError } = useTranslation("errors");
 	const { openModal, closeModal } = useModalStore();
-	const { currentProject, getProjectVariables, setProjectModifyVariable } = useProjectStore();
+	const { currentProject, getProjectVariables } = useProjectStore();
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Variable;
@@ -27,6 +27,7 @@ export const VariablesContent = () => {
 		message: "",
 	});
 	const navigate = useNavigate();
+	const envId = currentProject.environments[0].envId;
 
 	const toggleSortTriggers = (key: keyof Variable) => {
 		const newDirection =
@@ -40,7 +41,6 @@ export const VariablesContent = () => {
 	const handleDeleteVariable = async () => {
 		if (!currentProject.activeModifyVariable) return;
 
-		const envId = currentProject.environments[0].envId;
 		const variableName = currentProject.activeModifyVariable.name;
 
 		const { error } = await VariablesService.delete({
@@ -55,11 +55,6 @@ export const VariablesContent = () => {
 		}
 
 		getProjectVariables();
-	};
-
-	const handleModifyVariable = async (name: string, value: string, href?: string) => {
-		setProjectModifyVariable(name, value);
-		href && navigate(href);
 	};
 
 	return (
@@ -114,7 +109,7 @@ export const VariablesContent = () => {
 												<Button
 													ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => handleModifyVariable(name, value, "modify-variable")}
+													onClick={() => navigate(`modify-variable/${envId}/${name}`)}
 												>
 													{t("table.buttons.modify")}
 												</Button>
@@ -123,7 +118,6 @@ export const VariablesContent = () => {
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
 													onClick={() => {
 														openModal(EModalName.deleteVariable);
-														handleModifyVariable(name, value);
 													}}
 												>
 													{t("table.buttons.delete")}
