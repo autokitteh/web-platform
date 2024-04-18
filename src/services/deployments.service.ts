@@ -106,9 +106,10 @@ export class DeploymentsService {
 			await deploymentsClient.delete({ deploymentId });
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("deployments.deleteFailedIdError", {
+			const errorMessage = i18n.t("deleteFailedIdError", {
 				deploymentId,
 				error: (error as Error).message,
+				ns: "services",
 			});
 			LoggerService.error(namespaces.deploymentsService, errorMessage);
 

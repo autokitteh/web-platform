@@ -70,7 +70,7 @@ export class SessionsService {
 			}
 
 			if (!environments?.length) {
-				const errorMessage = i18n.t("errors.defaultEnvironmentNotFound");
+				const errorMessage = i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services" });
 				LoggerService.error(namespaces.projectService, errorMessage);
 				return { data: undefined, error: new Error(errorMessage) };
 			}
@@ -83,7 +83,7 @@ export class SessionsService {
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
 			return { data: sessionId, error: undefined };
 		} catch (error) {
-			const log = i18n.t("errors.sessionStartFailedExtended", { error, buildId: startSessionArgs.buildId });
+			const log = i18n.t("sessionStartFailedExtended", { error, buildId: startSessionArgs.buildId, ns: "services" });
 			LoggerService.error(namespaces.sessionsService, log);
 			return { data: undefined, error };
 		}

@@ -9,6 +9,7 @@ import i18n from "i18next";
 
 export class ProjectsService {
 	static async create(projectName: string): Promise<ServiceResponse<string>> {
+		console.log(i18n.t("projectNotCreated", { ns: "services" }));
 		try {
 			const { projectId } = await projectsClient.create({
 				project: {
@@ -16,9 +17,9 @@ export class ProjectsService {
 				},
 			});
 			if (!projectId) {
-				LoggerService.error(`${namespaces.projectService} - Create: `, i18n.t("errors.projectNotCreated"));
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotCreated", { ns: "services" }));
 
-				return { data: undefined, error: i18n.t("errors.projectNotCreated") };
+				return { data: undefined, error: i18n.t("projectNotCreated", { ns: "services" }) };
 			}
 			return { data: projectId, error: undefined };
 		} catch (error) {
@@ -31,9 +32,9 @@ export class ProjectsService {
 		try {
 			const { project } = await projectsClient.get({ projectId });
 			if (!project) {
-				LoggerService.error(namespaces.projectService, i18n.t("errors.projectNotFound"));
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
 
-				return { data: undefined, error: i18n.t("errors.projectNotFound") };
+				return { data: undefined, error: i18n.t("projectNotFound", { ns: "services" }) };
 			}
 			return { data: project, error: undefined };
 		} catch (error) {
@@ -45,8 +46,8 @@ export class ProjectsService {
 		try {
 			const project = await projectsClient.update({ project: { projectId, name } });
 			if (!project) {
-				LoggerService.error(namespaces.projectService, i18n.t("errors.projectNotFound"));
-				return { data: undefined, error: i18n.t("errors.projectNotFound") };
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
+				return { data: undefined, error: i18n.t("projectNotFound", { ns: "services" }) };
 			}
 			return { data: undefined, error: undefined };
 		} catch (error) {
@@ -107,7 +108,7 @@ export class ProjectsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
-				i18n.t("errors.buildProjectError", { projectId, error: (error as Error).message })
+				i18n.t("buildProjectError", { projectId, error: (error as Error).message, ns: "services" })
 			);
 			return { data: undefined, error };
 		}
@@ -129,7 +130,7 @@ export class ProjectsService {
 		}
 
 		if (!environments?.length) {
-			const errorMessage = i18n.t("errors.defaultEnvironmentNotFound");
+			const errorMessage = i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services" });
 			LoggerService.error(namespaces.projectService, errorMessage);
 			return { data: undefined, error: new Error(errorMessage) };
 		}

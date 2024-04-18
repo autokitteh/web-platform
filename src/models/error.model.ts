@@ -3,7 +3,7 @@ import i18n from "i18next";
 
 export function convertErrorProtoToModel(
 	protoValue?: Value,
-	defaultError: string = i18n.t("errors.errorOccured")
+	defaultError: string = i18n.t("errorOccured", { ns: "services" })
 ): Error {
 	return new Error(protoValue?.string?.v || defaultError);
 }
