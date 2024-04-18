@@ -54,7 +54,10 @@ export class VariablesService {
 
 			return { data: variable, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.variableService, i18n.t("variableRemoveFailedExtended", { name, ns: "services" }));
+			LoggerService.error(
+				namespaces.variableService,
+				i18n.t("variableGetFailedExtended", { name, error, ns: "services" })
+			);
 			return { data: undefined, error };
 		}
 	}
