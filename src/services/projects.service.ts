@@ -16,13 +16,13 @@ export class ProjectsService {
 				},
 			});
 			if (!projectId) {
-				LoggerService.error(namespaces.projectService, i18n.t("errors.projectNotCreated"));
+				LoggerService.error(`${namespaces.projectService} - Create: `, i18n.t("errors.projectNotCreated"));
 
 				return { data: undefined, error: i18n.t("errors.projectNotCreated") };
 			}
 			return { data: projectId, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
+			LoggerService.error(`${namespaces.projectService} - Create: `, (error as Error).message);
 			return { data: undefined, error };
 		}
 	}
@@ -109,7 +109,7 @@ export class ProjectsService {
 				namespaces.projectService,
 				i18n.t("errors.buildProjectError", { projectId, error: (error as Error).message })
 			);
-			return { data: undefined, error: (error as Error).message };
+			return { data: undefined, error };
 		}
 	}
 
@@ -118,7 +118,7 @@ export class ProjectsService {
 			const { resources } = await projectsClient.downloadResources({ projectId });
 			return { data: resources, error: undefined };
 		} catch (error) {
-			return { data: undefined, error: (error as Error).message };
+			return { data: undefined, error };
 		}
 	}
 

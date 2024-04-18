@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { FullScreen, More } from "@assets/image";
-import { Button, ErrorMessage, IconButton, IconSvg, Toast } from "@components/atoms";
+import { Build, Deploy, Stats } from "@assets/image";
+import { Button, ErrorMessage, IconButton, IconSvg, Spinner, Toast } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
-import { topbarItems } from "@constants";
+import { ETopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 export const Topbar = () => {
-	const { projectId } = useParams();
-	const { t } = useTranslation(["shared", "errors", "buttons"]);
-	const { getProjectsList } = useProjectStore();
+	const { t } = useTranslation(["projects", "errors", "buttons"]);
+	const {
+		getProjectsList,
+		currentProject: { resources, projectId },
+	} = useProjectStore();
 	const [project, setProject] = useState<Project>({
 		name: "",
 		projectId: "",
@@ -21,8 +23,10 @@ export const Topbar = () => {
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [toast, setToast] = useState({
 		isOpen: false,
+		isSuccess: false,
 		message: "",
 	});
+	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 
 	const styleInput = cn(
 		"font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight",
@@ -56,7 +60,7 @@ export const Topbar = () => {
 		if ((isEnterKey || isBlur) && isValidName && projectId) {
 			const { error } = await ProjectsService.update(projectId, newName);
 			if (error) {
-				setToast({ isOpen: true, message: (error as Error).message });
+				setToast({ isSuccess: false, isOpen: true, message: (error as Error).message });
 				return;
 			}
 			(e.target as HTMLSpanElement).blur();
@@ -68,6 +72,36 @@ export const Topbar = () => {
 	const handleInput = (e: React.ChangeEvent<HTMLSpanElement>) => {
 		const newName = e.target.textContent?.trim() || "";
 		setIsNameValid(validateName(newName));
+	};
+
+	const build = async () => {
+		if (!Object.keys(resources).length) return;
+
+		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.build]: true }));
+
+		const { error } = await ProjectsService.build(projectId!, resources);
+		setToast({
+			isSuccess: !error,
+			isOpen: true,
+			message: error ? (error as Error).message : t("topbar.buildProjectSuccess"),
+		});
+
+		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.build]: false }));
+	};
+
+	const deploy = async () => {
+		if (!Object.keys(resources).length) return;
+
+		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.deploy]: true }));
+
+		const { error } = await ProjectsService.run(projectId!, resources);
+		setToast({
+			isSuccess: !error,
+			isOpen: true,
+			message: error ? (error as Error).message : t("topbar.deployedProjectSuccess"),
+		});
+
+		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.deploy]: false }));
 	};
 
 	return (
@@ -92,34 +126,40 @@ export const Topbar = () => {
 				<span className="font-semibold leading-tight text-sm">{project.projectId}</span>
 			</div>
 			<div className="flex items-stretch gap-3">
-				{topbarItems.map(({ id, name, href, icon, disabled }) => (
-					<Button
-						className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-						disabled={disabled}
-						href={href}
-						key={id}
-						variant="outline"
-					>
-						<IconSvg className="max-w-5" disabled={disabled} src={icon} />
-						{name}
-					</Button>
-				))}
+				<Button
+					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
+					disabled={loadingButton[ETopbarButton.build]}
+					onClick={build}
+					variant="outline"
+				>
+					{loadingButton[ETopbarButton.build] ? <Spinner /> : <IconSvg className="max-w-5" src={Build} />}
+					{t("topbar.buttons.build")}
+				</Button>
+				<Button
+					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
+					disabled={loadingButton[ETopbarButton.deploy]}
+					onClick={deploy}
+					variant="outline"
+				>
+					{loadingButton[ETopbarButton.deploy] ? <Spinner /> : <IconSvg className="max-w-5" src={Deploy} />}
+					{t("topbar.buttons.deploy")}
+				</Button>
+				<Button
+					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
+					disabled
+					variant="outline"
+				>
+					<IconSvg className="max-w-5" src={Stats} />
+					{t("topbar.buttons.stats")}
+				</Button>
 				<DropdownButton
 					className="font-semibold text-white"
 					contentMenu={
 						<div className="flex flex-col gap-2">
-							{topbarItems.map(({ id, name, href, icon, disabled }) => (
-								<Button
-									className="px-4 py-1.5 font-semibold text-white whitespace-nowrap"
-									disabled={disabled}
-									href={href}
-									key={id}
-									variant="outline"
-								>
-									<IconSvg className="w-4" disabled={disabled} src={icon} />
-									{name}
-								</Button>
-							))}
+							<Button className="px-4 py-1.5 font-semibold text-white whitespace-nowrap" disabled variant="outline">
+								<IconSvg className="w-4" disabled src={Stats} />
+								{t("topbar.buttons.stats")}
+							</Button>
 						</div>
 					}
 				>
@@ -133,12 +173,14 @@ export const Topbar = () => {
 				</IconButton>
 			</div>
 			<Toast
-				className="border-error"
-				duration={5}
+				className={cn("border-error", { "border-green-accent": toast.isSuccess })}
+				duration={5000}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<p className="font-semibold text-error">{t("error", { ns: "errors" })}</p>
+				<p className={cn("font-semibold text-error", { "text-green-accent": toast.isSuccess })}>
+					{toast.isSuccess ? t("topbar.success") : t("error", { ns: "errors" })}
+				</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>
