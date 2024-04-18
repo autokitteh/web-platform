@@ -14,7 +14,7 @@ export class VariablesService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
-				i18n.t("variableNotCreatedExtended", { name: singleVariable.name, value: singleVariable.value })
+				i18n.t("variableNotCreatedExtended", { name: singleVariable.name, value: singleVariable.value, ns: "services" })
 			);
 			return { data: undefined, error };
 		}
@@ -26,7 +26,10 @@ export class VariablesService {
 
 			return { data: vars, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, i18n.t("variablesNotFoundExtended", { id: envId }));
+			LoggerService.error(
+				namespaces.projectService,
+				i18n.t("variablesNotFoundExtended", { id: envId, ns: "services" })
+			);
 			return { data: undefined, error };
 		}
 	}
@@ -37,7 +40,7 @@ export class VariablesService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.variableService, i18n.t("variableRemoveFailedExtended", { name }));
+			LoggerService.error(namespaces.variableService, i18n.t("variableRemoveFailedExtended", { name, ns: "services" }));
 			return { data: undefined, error };
 		}
 	}

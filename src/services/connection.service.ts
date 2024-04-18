@@ -11,9 +11,9 @@ export class ConnectionService {
 		try {
 			const { connection } = await connectionsClient.get({ connectionId });
 			if (!connection) {
-				LoggerService.error(namespaces.triggerService, i18n.t("connectionNotFound"));
+				LoggerService.error(namespaces.triggerService, i18n.t("connectionNotFound", { ns: "services" }));
 
-				return { data: undefined, error: i18n.t("connectionNotFound") };
+				return { data: undefined, error: i18n.t("connectionNotFound", { ns: "services" }) };
 			}
 			return { data: convertConnectionProtoToModel(connection), error: undefined };
 		} catch (error) {
@@ -26,9 +26,9 @@ export class ConnectionService {
 		try {
 			const { connections } = await connectionsClient.list({});
 			if (!connections) {
-				LoggerService.error(namespaces.triggerService, i18n.t("connectionNotFound"));
+				LoggerService.error(namespaces.triggerService, i18n.t("connectionNotFound", { ns: "services" }));
 
-				return { data: undefined, error: i18n.t("connectionNotFound") };
+				return { data: undefined, error: i18n.t("connectionNotFound", { ns: "services" }) };
 			}
 
 			const convertedConnections = connections.map((connection) => convertConnectionProtoToModel(connection));

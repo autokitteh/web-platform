@@ -17,7 +17,6 @@ i18n.use(initReactI18next).init({
 	react: {
 		transKeepBasicHtmlNodesFor: ["br", "strong", "i", "p", "b"],
 	},
-	defaultNS: "errors",
 });
 
 export default i18n;

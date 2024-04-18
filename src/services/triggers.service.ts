@@ -13,7 +13,10 @@ export class TriggersService {
 			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
 
 			if (error || !environments?.length) {
-				LoggerService.error(namespaces.triggerService, i18n.t("defaultEnvironmentNotFoundExtended", { projectId }));
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services" })
+				);
 				return { data: undefined, error };
 			}
 
@@ -33,7 +36,7 @@ export class TriggersService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
-				i18n.t("triggerNotCreatedExtended", { projectId, error: (error as Error).message })
+				i18n.t("triggerNotCreatedExtended", { projectId, error: (error as Error).message, ns: "services" })
 			);
 			return { data: undefined, error };
 		}
@@ -51,7 +54,7 @@ export class TriggersService {
 			} as Trigger;
 			return { data: triggerData, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, i18n.t("triggerNotFoundExtended", { triggerId }));
+			LoggerService.error(namespaces.projectService, i18n.t("triggerNotFoundExtended", { triggerId, ns: "services" }));
 			return { data: undefined, error };
 		}
 	}
@@ -64,7 +67,7 @@ export class TriggersService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
-				i18n.t("triggerNotUpdatedExtended", { triggerId: trigger.triggerId })
+				i18n.t("triggerNotUpdatedExtended", { triggerId: trigger.triggerId, ns: "services" })
 			);
 			return { data: undefined, error };
 		}
@@ -76,20 +79,20 @@ export class TriggersService {
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
 			const { data: connectionsList, error } = await ConnectionService.list();
 			if (error) {
-				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound"));
+				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
 				return { data: undefined, error };
 			}
 			const enrhichedTriggers = convertedTriggers.map((trigger) => {
 				const connection = connectionsList?.find((connection) => connection.connectionId === trigger.connectionId);
 				return {
 					...trigger,
-					connectionName: connection?.name || i18n.t("connectionNotFound"),
+					connectionName: connection?.name || i18n.t("connectionNotFound", { ns: "services" }),
 				};
 			});
 
 			return { data: enrhichedTriggers, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound"));
+			LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
 			return { data: undefined, error };
 		}
 	}
@@ -99,7 +102,10 @@ export class TriggersService {
 			await triggersClient.delete({ triggerId });
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.triggerService, i18n.t("triggerRemoveFailedExtended", { triggerId }));
+			LoggerService.error(
+				namespaces.triggerService,
+				i18n.t("triggerRemoveFailedExtended", { triggerId, ns: "services" })
+			);
 			return { data: undefined, error };
 		}
 	}
