@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { LogoFrame } from "@assets/image";
 import { Frame } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
-import { ISplitFrame } from "@interfaces/components";
+import { SplitFrameProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const SplitFrame = ({ children }: ISplitFrame) => {
+export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const [leftWidth, setLeftWidth] = useState(50);
 
 	const baseStyle = cn("flex justify-end h-full w-full");

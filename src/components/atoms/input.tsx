@@ -1,8 +1,8 @@
 import React, { forwardRef } from "react";
-import { IInput } from "@interfaces/components";
+import { InputProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Input = forwardRef<HTMLInputElement, IInput>((props, ref) => {
+export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const { icon, isError, className, classInput, disabled, type = "text", placeholder, isRequired, ...rest } = props;
 
 	const placeholderModif = isRequired ? `* ${placeholder}` : placeholder;

@@ -1,27 +1,33 @@
 export type {
-	IButton,
-	IDropdownButton,
-	IIconButton,
-	ISortButton,
-	IDropdownState,
+	ButtonProps,
+	DropdownButtonProps,
+	IconButtonProps,
+	SortButtonProps,
+	DropdownState,
 } from "@interfaces/components/button.interface";
-export type { IBadge } from "@interfaces/components/badge.interface";
-export type { IFrame, ISplitFrame } from "@interfaces/components/frame.interface";
-export type { ILink } from "@interfaces/components/link.interface";
-export type { ISubmenuInfo, ISubmenu, IMenu, IMenuItem } from "@interfaces/components/menu.interface";
-export type { IConnectionsContent, ITabConnection } from "@interfaces/components/tabsContent.interface";
-export type { ITab, ITabList, ITabs, ITabsContext } from "@interfaces/components/tabs.interface";
-export type { ITable } from "@interfaces/components/table.interface";
-export type { IIcon, IIconSvg } from "@interfaces/components/icon.interface";
+export type { BadgeProps } from "@interfaces/components/badge.interface";
+export type { FrameProps, SplitFrameProps } from "@interfaces/components/frame.interface";
+export type { LinkProps } from "@interfaces/components/link.interface";
+export type { SubmenuInfo, SubmenuProps, MenuProps, MenuItem } from "@interfaces/components/menu.interface";
+export type { ConnectionsContentProps, TabConnection } from "@interfaces/components/tabsContent.interface";
+export type { TabProps, TabListProps, TabsProps, TabsContextProps } from "@interfaces/components/tabs.interface";
+export type { TableProps } from "@interfaces/components/table.interface";
+export type { IconProps, IconSvgProps } from "@interfaces/components/icon.interface";
 export type {
-	IModal,
-	IModalAddCodeAssets,
-	IModalDeleteTrigger,
-	IModalDeleteVariable,
-	IModalModifyVariable,
+	ModalProps,
+	ModalAddCodeAssetsProps,
+	ModalDeleteTriggerProps,
+	ModalDeleteVariableProps,
+	ModalModifyVariableProps,
 } from "@interfaces/components/modal.interface";
-export type { IToast } from "@interfaces/components/toast.interface";
-export type { ISelectOption, ISelect, ISelectAppChangeForm, IInput, ITextArea } from "@interfaces/components/forms";
-export type { IErrorMessage } from "@interfaces/components/error.interface";
-export type { ISpinner } from "@interfaces/components/spinner.interface";
-export type { ITabFormHeader } from "@interfaces/components/tabFormHeader.interface";
+export type { ToastProps } from "@interfaces/components/toast.interface";
+export type {
+	SelectOption,
+	SelectProps,
+	SelectAppChangeForm,
+	InputProps,
+	TextArea,
+} from "@interfaces/components/forms";
+export type { ErrorMessageProps } from "@interfaces/components/error.interface";
+export type { SpinnerProps } from "@interfaces/components/spinner.interface";
+export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";

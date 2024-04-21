@@ -45,12 +45,12 @@ export class DeploymentsService {
 
 	static async listByProjectId(projectId: string): Promise<ServiceResponse<Deployment[]>> {
 		try {
-			const { data: environments, error: listEnvironmentsError } = await EnvironmentsService.listByProjectId(projectId);
+			const { data: environments, error: lisEnvironmentsError } = await EnvironmentsService.listByProjectId(projectId);
 
-			if (listEnvironmentsError) {
-				LoggerService.error(namespaces.deploymentsService, (listEnvironmentsError as Error).message);
+			if (lisEnvironmentsError) {
+				LoggerService.error(namespaces.deploymentsService, (lisEnvironmentsError as Error).message);
 
-				return { data: undefined, error: listEnvironmentsError };
+				return { data: undefined, error: lisEnvironmentsError };
 			}
 
 			const environmentIds = getIds(environments!, "envId");

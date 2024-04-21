@@ -1,4 +1,4 @@
-export interface IModalStore<T = unknown> {
+export interface ModalStore<T = unknown> {
 	modals: {
 		[key: string]: boolean;
 	};

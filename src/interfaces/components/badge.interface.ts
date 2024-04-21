@@ -1,4 +1,4 @@
-export interface IBadge {
+export interface BadgeProps {
 	children: React.ReactNode;
 	className?: string;
 }

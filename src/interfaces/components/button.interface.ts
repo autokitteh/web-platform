@@ -1,10 +1,10 @@
 import React, { MouseEventHandler } from "react";
-import { TButtonVariant, TSortDirection } from "@type/components";
+import { ButtonType, SortDirection } from "@type/components";
 
-export interface IButton extends React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, React.AriaAttributes {
+export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, React.AriaAttributes {
 	className: string;
 	ariaLabel: string;
-	variant: TButtonVariant;
+	variant: ButtonType;
 	href: string;
 	disabled: boolean;
 	children: React.ReactNode;
@@ -15,23 +15,23 @@ export interface IButton extends React.HTMLAttributes<HTMLButtonElement | HTMLAn
 	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export interface IDropdownButton extends Partial<IButton> {
+export interface DropdownButtonProps extends Partial<ButtonProps> {
 	contentMenu: React.ReactNode;
 }
 
-export interface IDropdownState {
+export interface DropdownState {
 	isOpen: boolean;
 	style: React.CSSProperties;
 }
 
-export interface IIconButton extends Partial<IButton> {
+export interface IconButtonProps extends Partial<ButtonProps> {
 	children: React.ReactNode;
-	variant?: TButtonVariant;
+	variant?: ButtonType;
 }
 
-export interface ISortButton {
+export interface SortButtonProps {
 	className?: string;
 	ariaLabel: string;
 	isActive: boolean;
-	sortDirection: TSortDirection | undefined;
+	sortDirection: SortDirection | undefined;
 }

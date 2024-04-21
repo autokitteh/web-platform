@@ -1,6 +1,6 @@
-import { ITabConnection } from "@interfaces/components";
+import { TabConnection } from "@interfaces/components";
 
-export const connectionsData: ITabConnection[] = [
+export const connectionsData: TabConnection[] = [
 	{
 		id: 1,
 		name: "JeffOnSlack",

@@ -1,8 +1,8 @@
 import { formColors } from "@constants/forms/formColors.constants";
-import { ISelectOption } from "@interfaces/components";
+import { SelectOption } from "@interfaces/components";
 import { StylesConfig } from "react-select";
 
-export const getSelectStyles = (isError: boolean): StylesConfig<ISelectOption, false> => ({
+export const getSelectStyles = (isError: boolean): StylesConfig<SelectOption, false> => ({
 	control: (provided, state) => ({
 		...provided,
 		"fontSize": 16,

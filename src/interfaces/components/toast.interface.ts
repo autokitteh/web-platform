@@ -1,4 +1,4 @@
-export interface IToast {
+export interface ToastProps {
 	className?: string;
 	children: React.ReactNode;
 	isOpen: boolean;

@@ -1,6 +1,6 @@
 import React from "react";
 
-export interface IIcon {
+export interface IconProps {
 	className?: string;
 	alt?: string;
 	src: string;
@@ -8,6 +8,6 @@ export interface IIcon {
 	disabled?: boolean;
 }
 
-export interface IIconSvg extends Omit<IIcon, "src"> {
+export interface IconSvgProps extends Omit<IconProps, "src"> {
 	src: React.FC<React.SVGProps<SVGSVGElement>>;
 }

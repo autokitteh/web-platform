@@ -1,11 +1,11 @@
 import { environmentsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { LoggerService } from "@services/logger.service";
-import { TEnvironment } from "@type/models";
+import { Environment } from "@type/models";
 import { ServiceResponse } from "@type/services.types";
 
 export class EnvironmentsService {
-	static async listByProjectId(projectId: string): Promise<ServiceResponse<TEnvironment[]>> {
+	static async listByProjectId(projectId: string): Promise<ServiceResponse<Environment[]>> {
 		try {
 			const { envs: environments } = await environmentsClient.list({
 				projectId,

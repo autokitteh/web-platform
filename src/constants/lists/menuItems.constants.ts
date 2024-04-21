@@ -1,8 +1,8 @@
 import { Connections, Dashboard, Projects, Settings, StatsBlack } from "@assets/image";
 import { ESidebarHrefMenu } from "@enums/components";
-import { IMenuItem } from "@interfaces/components";
+import { MenuItem } from "@interfaces/components";
 
-export const menuItems: IMenuItem[] = [
+export const menuItems: MenuItem[] = [
 	{
 		id: 1,
 		icon: Projects,

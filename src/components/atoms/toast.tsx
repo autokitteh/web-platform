@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { Close } from "@assets/image/icons";
 import { IconButton } from "@components/atoms";
-import { IToast } from "@interfaces/components";
+import { ToastProps } from "@interfaces/components";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
 
-export const Toast = ({ duration = 5, className, isOpen, children, onClose }: IToast) => {
+export const Toast = ({ duration = 5, className, isOpen, children, onClose }: ToastProps) => {
 	const baseStyle = cn("fixed right-20 bottom-10 z-50 bg-black max-w-420 py-3 px-4 pl-6 border rounded-4xl", className);
 
 	const variants = {

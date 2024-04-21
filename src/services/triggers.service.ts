@@ -15,7 +15,7 @@ export class TriggersService {
 			if (error || !environments?.length) {
 				LoggerService.error(
 					namespaces.triggerService,
-					i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services" })
+					i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" })
 				);
 				return { data: undefined, error };
 			}

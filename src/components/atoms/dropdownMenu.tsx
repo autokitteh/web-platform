@@ -1,5 +1,5 @@
 import React from "react";
-import { IDropdownMenu } from "@interfaces/components/dropdown";
+import { DropdownMenuProps } from "@interfaces/components/dropdown";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
@@ -12,7 +12,7 @@ export const DropdownMenu = ({
 	container = document.body,
 	onMouseEnter,
 	onMouseLeave,
-}: IDropdownMenu) => {
+}: DropdownMenuProps) => {
 	const dropdownVariants = {
 		opened: {
 			opacity: 1,

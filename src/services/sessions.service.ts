@@ -70,7 +70,7 @@ export class SessionsService {
 			}
 
 			if (!environments?.length) {
-				const errorMessage = i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services" });
+				const errorMessage = i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" });
 				LoggerService.error(namespaces.projectService, errorMessage);
 				return { data: undefined, error: new Error(errorMessage) };
 			}
@@ -91,7 +91,7 @@ export class SessionsService {
 
 	static async listByProjectId(projectId: string): Promise<ServiceResponse<Session[]>> {
 		try {
-			const { data: projectEnvironments, error: environmentsError } =
+			const { data: projecEnvironments, error: environmentsError } =
 				await EnvironmentsService.listByProjectId(projectId);
 
 			if (environmentsError) {
@@ -99,7 +99,7 @@ export class SessionsService {
 
 				return { data: undefined, error: environmentsError };
 			}
-			const sessionsPromises = (projectEnvironments || []).map(async (environment) => {
+			const sessionsPromises = (projecEnvironments || []).map(async (environment) => {
 				const sessions = await this.listByEnvironmentId(environment.envId);
 				return sessions;
 			});

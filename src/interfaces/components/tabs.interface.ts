@@ -1,23 +1,23 @@
-export interface ITabs {
+export interface TabsProps {
 	defaultValue?: string;
 	className?: string;
 	children: React.ReactNode;
 	onChange?: (value: string) => void;
 }
 
-export interface ITab {
+export interface TabProps {
 	className?: string;
 	value: string;
 	ariaLabel?: string;
 	children: React.ReactNode;
 }
 
-export interface ITabList {
+export interface TabListProps {
 	className?: string;
 	children: React.ReactNode;
 }
 
-export interface ITabsContext {
+export interface TabsContextProps {
 	activeTab?: string;
 	setActiveTab: (value: string) => void;
 }

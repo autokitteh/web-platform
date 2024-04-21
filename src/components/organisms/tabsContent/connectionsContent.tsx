@@ -5,24 +5,24 @@ import { SortButton, DropdownButton, TableConnectionInfo, TableConnectionAction 
 import { ModalDeleteConnection } from "@components/organisms/modals";
 import { connectionsData } from "@constants/lists";
 import { EModalName, ESortDirection } from "@enums/components";
-import { IConnectionsContent, ITabConnection } from "@interfaces/components";
+import { ConnectionsContentProps, TabConnection } from "@interfaces/components";
 import { useModalStore } from "@store";
-import { TSortDirection } from "@type/components";
+import { SortDirection } from "@type/components";
 import { cn } from "@utilities";
 import { orderBy } from "lodash";
 import moment from "moment";
 
-export const ConnectionsContent = ({ className }: IConnectionsContent) => {
+export const ConnectionsContent = ({ className }: ConnectionsContentProps) => {
 	const { openModal } = useModalStore();
 	const [sort, setSort] = useState<{
-		direction: TSortDirection;
-		column: Exclude<keyof ITabConnection, "id">;
+		direction: SortDirection;
+		column: Exclude<keyof TabConnection, "id">;
 	}>({ direction: ESortDirection.ASC, column: "lastTested" });
 	const [connections, setConnections] = useState(connectionsData);
 
 	const baseStyle = cn("pt-14", className);
 
-	const toggleSortConnections = (key: Exclude<keyof ITabConnection, "id">) => {
+	const toggleSortConnections = (key: Exclude<keyof TabConnection, "id">) => {
 		const newDirection =
 			sort.column === key && sort.direction === ESortDirection.ASC ? ESortDirection.DESC : ESortDirection.ASC;
 

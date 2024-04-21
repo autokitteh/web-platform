@@ -1,4 +1,4 @@
-export interface ILink {
+export interface LinkProps {
 	to: string;
 	className?: string;
 	disabled?: boolean;

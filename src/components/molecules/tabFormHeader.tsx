@@ -1,12 +1,12 @@
 import React from "react";
 import { ArrowLeft } from "@assets/image/icons";
 import { IconButton, Button } from "@components/atoms";
-import { ITabFormHeader } from "@interfaces/components";
+import { TabFormHeaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-export const TabFormHeader = ({ title, isLoading, form, className }: ITabFormHeader) => {
+export const TabFormHeader = ({ title, isLoading, form, className }: TabFormHeaderProps) => {
 	const { t } = useTranslation("tabs");
 	const navigate = useNavigate();
 	const baseStyle = cn("flex justify-between", className);

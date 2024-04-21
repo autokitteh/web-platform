@@ -11,7 +11,7 @@
 	"buildProjectError": "Couldn't build project {{projectId}}, error: {{error}}",
 	"projectNotCreated": "There was an issue creating the project",
 	"projectNotFound": "Couldn't fetch the project details",
-	"defaultEnvironmentNotFoundExtended": "Default environment not found, project ID: {{projectId}}",
+	"defaulEnvironmentNotFoundExtended": "Default environment not found, project ID: {{projectId}}",
 	"connectionNotFound": "Couldn't fetch the connection details",
 	"connectionNotFoundExtended": "Failed to fetch data for project {{projectId}}. Error: {{error}}",
 	"connectionsFetchError": "Couldn't fetch the connection details",

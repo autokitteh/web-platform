@@ -2,11 +2,11 @@ import React from "react";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { EModalName } from "@enums/components";
-import { IModalDeleteVariable } from "@interfaces/components";
+import { ModalDeleteVariableProps } from "@interfaces/components";
 import { useModalStore, useProjectStore } from "@store";
 import { useTranslation, Trans } from "react-i18next";
 
-export const ModalDeleteVariable = ({ onDelete }: IModalDeleteVariable) => {
+export const ModalDeleteVariable = ({ onDelete }: ModalDeleteVariableProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteVariable" });
 	const { closeModal } = useModalStore();
 	const {

@@ -1,6 +1,6 @@
-import { ISelectOption } from "@interfaces/components";
+import { SelectOption } from "@interfaces/components";
 
-export const optionsSelectApp: ISelectOption[] = [
+export const optionsSelectApp: SelectOption[] = [
 	{ value: "temporal", label: "Temporal" },
 	{ value: "github", label: "Github" },
 	{ value: "google", label: "Google", disabled: true },

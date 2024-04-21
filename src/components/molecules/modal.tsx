@@ -1,7 +1,7 @@
 import React from "react";
 import { Close } from "@assets/image/icons";
 import { IconButton } from "@components/atoms";
-import { IModal } from "@interfaces/components";
+import { ModalProps } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,7 +17,7 @@ const modalVariants = {
 	visible: { opacity: 1, scale: 1, transition: { duration: 0.2, delay: 0.1 } },
 };
 
-export const Modal = ({ className, name, children }: IModal) => {
+export const Modal = ({ className, name, children }: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => ({
 		isOpen: state.modals[name],
 		onClose: state.closeModal,

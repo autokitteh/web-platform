@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets/image";
 import { Icon, Badge, Button } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
-import { ISubmenuInfo } from "@interfaces/components";
+import { SubmenuInfo } from "@interfaces/components";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [submenuInfo, setSubmenuInfo] = useState<ISubmenuInfo>({ submenu: undefined, top: 0 });
+	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
 
 	const handleMouseLeave = () => {
 		setIsOpen(false);

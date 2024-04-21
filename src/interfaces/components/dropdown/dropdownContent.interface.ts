@@ -1,3 +1,3 @@
-export interface ITableConnectionAction {
+export interface TableConnectionActionProps {
 	onDelete?: () => void;
 }

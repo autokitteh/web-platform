@@ -1,3 +1,3 @@
-import { EButtonVariant } from "@enums/components";
+import { ButtonVariant } from "@enums/components";
 
-export type TButtonVariant = keyof typeof EButtonVariant;
+export type ButtonType = keyof typeof ButtonVariant;

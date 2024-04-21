@@ -3,14 +3,14 @@ import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { EModalName } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IModalAddCodeAssets } from "@interfaces/components";
+import { ModalAddCodeAssetsProps } from "@interfaces/components";
 import { useModalStore, useProjectStore } from "@store";
 import { codeAssetsSchema } from "@validations";
 import { useForm, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const ModalAddCodeAssets = ({ onError }: IModalAddCodeAssets) => {
+export const ModalAddCodeAssets = ({ onError }: ModalAddCodeAssetsProps) => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
 	const { closeModal } = useModalStore();

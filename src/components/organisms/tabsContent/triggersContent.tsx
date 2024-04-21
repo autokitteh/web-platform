@@ -7,7 +7,7 @@ import { fetchMenuInterval, namespaces } from "@constants";
 import { EModalName, ESortDirection } from "@enums/components";
 import { LoggerService, TriggersService } from "@services";
 import { useModalStore } from "@store";
-import { TSortDirection } from "@type/components";
+import { SortDirection } from "@type/components";
 import { Trigger } from "@type/models";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,7 @@ export const TriggersContent = () => {
 	const dataTrigger = useModalStore((state) => state.data as Pick<Trigger, "triggerId">);
 
 	const [sort, setSort] = useState<{
-		direction: TSortDirection;
+		direction: SortDirection;
 		column: keyof Trigger;
 	}>({ direction: ESortDirection.ASC, column: "name" });
 	const [triggers, setTriggers] = useState<Trigger[]>([]);

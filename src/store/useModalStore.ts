@@ -1,7 +1,7 @@
-import { IModalStore } from "@interfaces/store";
+import { ModalStore } from "@interfaces/store";
 import { StateCreator, create } from "zustand";
 
-const store: StateCreator<IModalStore> = (set) => ({
+const store: StateCreator<ModalStore> = (set) => ({
 	modals: {},
 	data: undefined,
 	openModal: (name, data) =>
