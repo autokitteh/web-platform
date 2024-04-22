@@ -1,8 +1,8 @@
 import React from "react";
-import { IErrorMessage } from "@interfaces/components";
+import { ErrorMessageProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const ErrorMessage = ({ children, className }: IErrorMessage) => {
+export const ErrorMessage = ({ children, className }: ErrorMessageProps) => {
 	const baseStyle = cn("absolute text-error", className);
 
 	return children && <p className={baseStyle}>{children}</p>;

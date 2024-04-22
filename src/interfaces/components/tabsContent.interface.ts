@@ -1,7 +1,7 @@
-export interface IConnectionsContent {
+export interface ConnectionsContentProps {
 	className?: string;
 }
-export interface ITabConnection {
+export interface TabConnection {
 	id: number;
 	name: string;
 	platform: string;

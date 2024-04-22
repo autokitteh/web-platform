@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react";
 import { DropdownMenu } from "@components/atoms";
-import { IDropdownButton, IDropdownState } from "@interfaces/components";
+import { DropdownButtonProps, DropdownState } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const DropdownButton = ({ contentMenu, className, ariaLabel, children }: IDropdownButton) => {
+export const DropdownButton = ({ contentMenu, className, ariaLabel, children }: DropdownButtonProps) => {
 	const parentRef = useRef<HTMLDivElement>(null);
-	const [dropdownState, setDropdownState] = useState<IDropdownState>({ isOpen: false, style: {} });
+	const [dropdownState, setDropdownState] = useState<DropdownState>({ isOpen: false, style: {} });
 
 	const baseStyle = cn("relative shrink-0", className);
 

@@ -1,3 +1,3 @@
-export interface ISpinner {
+export interface SpinnerProps {
 	className?: string;
 }

@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { TabsContext } from "@components/atoms/tabs/tabsContext";
-import { ITab } from "@interfaces/components";
+import { TabProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Tab = ({ className, value, ariaLabel, children }: ITab) => {
+export const Tab = ({ className, value, ariaLabel, children }: TabProps) => {
 	const { activeTab, setActiveTab } = useContext(TabsContext);
 
 	const tabStyle = cn(

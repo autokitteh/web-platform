@@ -1,8 +1,8 @@
 import React, { forwardRef } from "react";
-import { ITextArea } from "@interfaces/components";
+import { TextArea } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Partial<ITextArea>>((props, ref) => {
+export const Textarea = forwardRef<HTMLTextAreaElement, Partial<TextArea>>((props, ref) => {
 	const { placeholder = "Enter text", className, isError, disabled, ...rest } = props;
 
 	const baseStyle = cn(

@@ -1,8 +1,8 @@
 import React from "react";
-import { ITable } from "@interfaces/components";
+import { TableProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Td = ({ className, children, onClick }: ITable) => {
+export const Td = ({ className, children, onClick }: TableProps) => {
 	const tdStyle = cn(
 		"w-full overflow-hidden flex items-center p-2.5 border-r border-gray-600 last:border-r-0",
 		className

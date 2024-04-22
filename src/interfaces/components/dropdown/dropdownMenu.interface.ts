@@ -1,4 +1,4 @@
-export interface IDropdownMenu {
+export interface DropdownMenuProps {
 	isOpen: boolean;
 	className?: string;
 	children: React.ReactNode;

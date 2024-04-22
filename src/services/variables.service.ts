@@ -2,11 +2,11 @@ import { environmentsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
-import { TVariable } from "@type/models";
+import { Variable } from "@type/models";
 import i18n from "i18next";
 
 export class VariablesService {
-	static async create(singleVariable: TVariable): Promise<ServiceResponse<string>> {
+	static async create(singleVariable: Variable): Promise<ServiceResponse<string>> {
 		try {
 			await environmentsClient.setVar({ var: singleVariable });
 
@@ -20,7 +20,7 @@ export class VariablesService {
 		}
 	}
 
-	static async list(envId: string): Promise<ServiceResponse<TVariable[]>> {
+	static async list(envId: string): Promise<ServiceResponse<Variable[]>> {
 		try {
 			const { vars } = await environmentsClient.getVars({ envId });
 

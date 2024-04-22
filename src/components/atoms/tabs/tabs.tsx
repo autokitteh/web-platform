@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TabsContext } from "@components/atoms/tabs/tabsContext";
-import { ITabs } from "@interfaces/components";
+import { TabsProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Tabs = ({ defaultValue, className, children, onChange }: ITabs) => {
+export const Tabs = ({ defaultValue, className, children, onChange }: TabsProps) => {
 	const [activeTab, setActiveTab] = useState(defaultValue);
 	const tabsStyle = cn("flex flex-col flex-1 h-full", className);
 

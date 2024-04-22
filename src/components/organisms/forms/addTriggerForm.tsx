@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { Select, ErrorMessage, Toast, Input } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ISelectOption } from "@interfaces/components";
+import { SelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
 import { newTriggerSchema } from "@validations";
@@ -21,8 +21,8 @@ export const AddTriggerForm = () => {
 	});
 	const { t } = useTranslation(["errors", "buttons", "forms"]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [connections, setConnections] = useState<ISelectOption[]>([]);
-	const [filesName, setFilesName] = useState<ISelectOption[]>([]);
+	const [connections, setConnections] = useState<SelectOption[]>([]);
+	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {

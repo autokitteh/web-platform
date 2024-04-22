@@ -1,11 +1,11 @@
 import React from "react";
 import { Button } from "@components/atoms";
-import { ISubmenu } from "@interfaces/components";
+import { SubmenuProps } from "@interfaces/components";
 import { cn } from "@utilities";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 
-export const Submenu = ({ submenuInfo }: ISubmenu) => {
+export const Submenu = ({ submenuInfo }: SubmenuProps) => {
 	const { projectId } = useParams();
 
 	const submenuVariant = {

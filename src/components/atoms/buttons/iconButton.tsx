@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@components/atoms";
-import { EButtonVariant } from "@enums/components";
-import { IIconButton } from "@interfaces/components";
+import { ButtonVariant } from "@enums/components";
+import { IconButtonProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const IconButton = ({
@@ -14,16 +14,16 @@ export const IconButton = ({
 	onMouseEnter,
 	onMouseLeave,
 	onClick,
-}: IIconButton) => {
+}: IconButtonProps) => {
 	const iconButtonClass = cn(
 		"p-2 flex items-center justify-center rounded-full transition duration-300 hover:bg-gray-800 shrink-0 outline-0",
 		{
-			"bg-black": variant === EButtonVariant.filled,
-			"border border-gray-400 hover:border-transparent": variant === EButtonVariant.outline,
+			"bg-black": variant === ButtonVariant.filled,
+			"border border-gray-400 hover:border-transparent": variant === ButtonVariant.outline,
 		},
 		{
 			"opacity-40 cursor-not-allowed": disabled,
-			"hover:border-gray-400": disabled && variant === EButtonVariant.outline,
+			"hover:border-gray-400": disabled && variant === ButtonVariant.outline,
 		},
 		className
 	);

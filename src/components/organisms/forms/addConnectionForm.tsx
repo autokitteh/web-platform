@@ -4,7 +4,7 @@ import { Select, Input, Textarea, Button, ErrorMessage, Toast } from "@component
 import { TabFormHeader } from "@components/molecules";
 import { optionsSelectApp } from "@constants/lists";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ISelectAppChangeForm } from "@interfaces/components";
+import { SelectAppChangeForm } from "@interfaces/components";
 import { newConnectionSchema } from "@validations";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -37,7 +37,7 @@ export const AddConnectionForm = () => {
 			specificField: "",
 		},
 	});
-	const handleSelectChange = ({ name, value }: ISelectAppChangeForm) => {
+	const handleSelectChange = ({ name, value }: SelectAppChangeForm) => {
 		setSelectedApp((prevState) => ({
 			...prevState,
 			[name]: value,

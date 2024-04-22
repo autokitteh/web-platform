@@ -4,8 +4,8 @@ import { Button, IconSvg, Toast } from "@components/atoms";
 import { menuItems, fetchMenuInterval } from "@constants";
 import { ESidebarMenu } from "@enums/components";
 import { ESidebarHrefMenu } from "@enums/components";
-import { IMenu, ISubmenuInfo } from "@interfaces/components";
-import { IMenuItem } from "@interfaces/components";
+import { MenuProps, SubmenuInfo } from "@interfaces/components";
+import { MenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
@@ -14,12 +14,12 @@ import { isEqual, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 
-export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
+export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { list, getProjectsList } = useProjectStore();
-	const [menu, setMenu] = useState<IMenuItem[]>(menuItems);
+	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -66,7 +66,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: IMenu) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [list]);
 
-	const handleMouseEnter = (e: React.MouseEvent, submenu?: ISubmenuInfo["submenu"]) => {
+	const handleMouseEnter = (e: React.MouseEvent, submenu?: SubmenuInfo["submenu"]) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
 	};
 

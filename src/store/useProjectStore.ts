@@ -2,9 +2,9 @@ import { namespaces } from "@constants";
 import { EStoreName } from "@enums";
 import { EProjectTabs } from "@enums/components";
 import { ESidebarHrefMenu } from "@enums/components";
-import { IProjectStore } from "@interfaces/store";
+import { ProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
-import { TEnvironment } from "@type/models";
+import { Environment } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
 import { remove } from "lodash";
@@ -13,7 +13,7 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 const defaultState: Omit<
-	IProjectStore,
+	ProjectStore,
 	| "loadProject"
 	| "setUpdateFileContent"
 	| "setProjectResources"
@@ -21,7 +21,7 @@ const defaultState: Omit<
 	| "setProjectEmptyResources"
 	| "setActiveTab"
 	| "getProjectsList"
-	| "getProjectEnvironments"
+	| "getProjecEnvironments"
 	| "getProjectVariables"
 	| "setProjectModifyVariable"
 	| "updateEditorOpenedFiles"
@@ -39,7 +39,7 @@ const defaultState: Omit<
 	activeTab: EProjectTabs.codeAndAssets,
 };
 
-const store: StateCreator<IProjectStore> = (set, get) => ({
+const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 	loadProject: async (projectId) => {
 		const activeTab = get().currentProject.projectId === projectId ? get().activeTab : EProjectTabs.codeAndAssets;
@@ -52,7 +52,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		}));
 
 		try {
-			await Promise.all([get().getProjectResources(), get().getProjectEnvironments(), get().getProjectVariables()]);
+			await Promise.all([get().getProjectResources(), get().getProjecEnvironments(), get().getProjectVariables()]);
 
 			return { error: undefined };
 		} catch (error) {
@@ -150,7 +150,7 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 		return { error };
 	},
 
-	getProjectEnvironments: async () => {
+	getProjecEnvironments: async () => {
 		const { data: envs, error } = await EnvironmentsService.listByProjectId(get().currentProject.projectId!);
 
 		if (envs) {
@@ -164,11 +164,11 @@ const store: StateCreator<IProjectStore> = (set, get) => ({
 	},
 
 	getProjectVariables: async () => {
-		const { data: environments, error: errorEnvs } = await get().getProjectEnvironments();
+		const { data: environments, error: errorEnvs } = await get().getProjecEnvironments();
 
 		if (errorEnvs) return { error: errorEnvs };
 
-		const envId = (environments as TEnvironment[])[0].envId;
+		const envId = (environments as Environment[])[0].envId;
 		const { data: vars, error } = await VariablesService.list(envId);
 
 		if (vars) {

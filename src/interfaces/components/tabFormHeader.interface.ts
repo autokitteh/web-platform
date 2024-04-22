@@ -1,4 +1,4 @@
-export interface ITabFormHeader {
+export interface TabFormHeaderProps {
 	title: string;
 	form?: string;
 	isLoading?: boolean;

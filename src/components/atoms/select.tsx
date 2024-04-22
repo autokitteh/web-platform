@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { getSelectStyles } from "@constants";
-import { ISelect, ISelectOption } from "@interfaces/components";
+import { SelectProps, SelectOption } from "@interfaces/components";
 import ReactSelect, { SingleValue } from "react-select";
 
-export const Select = ({ placeholder = "Select", value, options, isError = false, onChange, ...rest }: ISelect) => {
-	const [selectedOption, setSelectedOption] = useState<SingleValue<ISelectOption>>();
+export const Select = ({ placeholder = "Select", value, options, isError = false, onChange, ...rest }: SelectProps) => {
+	const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>();
 
 	useEffect(() => {
 		setSelectedOption(options.find((option) => option.value === value?.value));
 	}, [value, options]);
 
-	const handleChange = (selected: SingleValue<ISelectOption>) => {
+	const handleChange = (selected: SingleValue<SelectOption>) => {
 		setSelectedOption(selected);
 		onChange(selected);
 	};

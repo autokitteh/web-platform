@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { EModalName } from "@enums/components";
-import { IModalDeleteTrigger } from "@interfaces/components";
+import { ModalDeleteTriggerProps } from "@interfaces/components";
 import { TriggersService } from "@services";
 import { useModalStore } from "@store";
 import { Trigger } from "@type/models";
 import { useTranslation, Trans } from "react-i18next";
 
-export const ModalDeleteTrigger = ({ onDelete }: IModalDeleteTrigger) => {
+export const ModalDeleteTrigger = ({ onDelete }: ModalDeleteTriggerProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
 	const { closeModal } = useModalStore();
 	const dataTrigger = useModalStore((state) => state.data as Pick<Trigger, "triggerId">);

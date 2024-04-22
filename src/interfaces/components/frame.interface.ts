@@ -1,8 +1,8 @@
-export interface IFrame {
+export interface FrameProps {
 	className?: string;
 	children: React.ReactNode;
 }
 
-export interface ISplitFrame {
+export interface SplitFrameProps {
 	children: React.ReactNode;
 }

@@ -1,21 +1,21 @@
-export interface IModal {
+export interface ModalProps {
 	className?: string;
 	children: React.ReactNode;
 	name: string;
 }
 
-export interface IModalAddCodeAssets {
+export interface ModalAddCodeAssetsProps {
 	onError: (message: string) => void;
 }
 
-export interface IModalDeleteTrigger {
+export interface ModalDeleteTriggerProps {
 	onDelete?: () => void;
 }
 
-export interface IModalDeleteVariable {
+export interface ModalDeleteVariableProps {
 	onDelete?: () => void;
 }
 
-export interface IModalModifyVariable {
+export interface ModalModifyVariableProps {
 	onError: (message: string) => void;
 }

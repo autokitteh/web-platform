@@ -6,8 +6,8 @@ import { ModalDeleteVariable } from "@components/organisms/modals";
 import { EModalName, ESortDirection } from "@enums/components";
 import { VariablesService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
-import { TSortDirection } from "@type/components";
-import { TVariable } from "@type/models";
+import { SortDirection } from "@type/components";
+import { Variable } from "@type/models";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -18,17 +18,17 @@ export const VariablesContent = () => {
 	const { openModal, closeModal } = useModalStore();
 	const { currentProject, getProjectVariables, setProjectModifyVariable } = useProjectStore();
 	const [sort, setSort] = useState<{
-		direction: TSortDirection;
-		column: keyof TVariable;
+		direction: SortDirection;
+		column: keyof Variable;
 	}>({ direction: ESortDirection.ASC, column: "name" });
-	const [variables, setVariables] = useState<TVariable[]>(currentProject.variables);
+	const [variables, setVariables] = useState<Variable[]>(currentProject.variables);
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
 	const navigate = useNavigate();
 
-	const toggleSortTriggers = (key: keyof TVariable) => {
+	const toggleSortTriggers = (key: keyof Variable) => {
 		const newDirection =
 			sort.column === key && sort.direction === ESortDirection.ASC ? ESortDirection.DESC : ESortDirection.ASC;
 

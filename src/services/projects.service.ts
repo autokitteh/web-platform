@@ -130,7 +130,7 @@ export class ProjectsService {
 		}
 
 		if (!environments?.length) {
-			const errorMessage = i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services" });
+			const errorMessage = i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" });
 			LoggerService.error(namespaces.projectService, errorMessage);
 			return { data: undefined, error: new Error(errorMessage) };
 		}

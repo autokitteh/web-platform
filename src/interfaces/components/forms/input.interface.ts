@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	icon?: ReactNode;
 	placeholder?: string;
 	className?: string;

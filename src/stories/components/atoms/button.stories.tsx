@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "@components/atoms/buttons";
-import { EButtonVariant } from "@enums/components";
+import { ButtonVariant } from "@enums/components";
 
 const meta: Meta<typeof Button> = {
 	title: "Buttons/Button",
@@ -9,7 +9,7 @@ const meta: Meta<typeof Button> = {
 		className: { control: "text" },
 		variant: {
 			control: "select",
-			options: Object.values(EButtonVariant),
+			options: Object.values(ButtonVariant),
 		},
 		color: {
 			control: "select",
@@ -26,14 +26,14 @@ export const Default: Story = {
 	args: {
 		children: "Click Me",
 		className: "",
-		variant: EButtonVariant.default,
+		variant: ButtonVariant.default,
 	},
 };
 
 export const Filled: Story = {
 	args: {
 		...Default.args,
-		variant: EButtonVariant.filled,
+		variant: ButtonVariant.filled,
 		children: "Filled Button",
 	},
 };
@@ -41,7 +41,7 @@ export const Filled: Story = {
 export const Outline: Story = {
 	args: {
 		...Default.args,
-		variant: EButtonVariant.outline,
+		variant: ButtonVariant.outline,
 		children: "Outline Button",
 	},
 };

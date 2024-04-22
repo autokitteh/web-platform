@@ -1,21 +1,21 @@
 import { SingleValue } from "react-select";
 
-export interface ISelect {
+export interface SelectProps {
 	placeholder?: string;
-	value?: ISelectOption;
-	options: ISelectOption[];
+	value?: SelectOption;
+	options: SelectOption[];
 	isError?: boolean;
-	onChange: (value: SingleValue<ISelectOption>) => void;
+	onChange: (value: SingleValue<SelectOption>) => void;
 	onBlur?: () => void;
 }
 
-export interface ISelectOption {
+export interface SelectOption {
 	value: string;
 	label: string;
 	disabled?: boolean;
 }
 
-export interface ISelectAppChangeForm {
+export interface SelectAppChangeForm {
 	name: string;
 	value: string;
 }
