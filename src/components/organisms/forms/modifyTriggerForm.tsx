@@ -60,13 +60,14 @@ export const ModifyTriggerForm = () => {
 		defaultValues: {
 			connection: { value: activeModifyTrigger!.connectionId, label: activeModifyTrigger!.connectionName! },
 			filePath: { value: activeModifyTrigger!.path, label: activeModifyTrigger!.path },
-			entrypoint: activeModifyTrigger!.name,
+			entryFunction: activeModifyTrigger!.name,
 			eventType: activeModifyTrigger!.eventType,
+			filter: activeModifyTrigger!.filter,
 		},
 	});
 
 	const onSubmit = async () => {
-		const { connection, filePath, entrypoint, eventType } = getValues();
+		const { connection, filePath, entryFunction, eventType } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.update(projectId!, {
@@ -74,7 +75,7 @@ export const ModifyTriggerForm = () => {
 			connectionId: connection.value,
 			eventType,
 			path: filePath.label,
-			name: entrypoint,
+			name: entryFunction,
 		});
 		setIsLoading(false);
 
@@ -131,13 +132,14 @@ export const ModifyTriggerForm = () => {
 					</div>
 					<div className="relative">
 						<Input
-							{...register("entrypoint")}
-							aria-label={t("placeholders.entrypoint")}
-							className={inputClass("entrypoint")}
-							isError={!!errors.entrypoint}
-							placeholder={t("placeholders.entrypoint")}
+							{...register("entryFunction")}
+							aria-label={t("placeholders.entryFunction")}
+							className={inputClass("entryFunction")}
+							isError={!!errors.entryFunction}
+							isRequired
+							placeholder={t("placeholders.entryFunction")}
 						/>
-						<ErrorMessage>{errors.entrypoint?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
 						<Input
@@ -148,6 +150,16 @@ export const ModifyTriggerForm = () => {
 							placeholder={t("placeholders.eventType")}
 						/>
 						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
+					</div>
+					<div className="relative">
+						<Input
+							{...register("filter")}
+							aria-label={t("placeholders.filter")}
+							className={inputClass("filter")}
+							isError={!!errors.filter}
+							placeholder={t("placeholders.filter")}
+						/>
+						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
 					</div>
 				</div>
 			</form>

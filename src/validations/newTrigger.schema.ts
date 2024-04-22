@@ -13,6 +13,7 @@ export const newTriggerSchema = z.object({
 	filePath: selectItemSchema.refine((value) => value.label, {
 		message: "File name is required",
 	}),
-	entrypoint: z.string().min(1, "Entrypoint is required"),
+	entryFunction: z.string().min(1, "Entry function is required"),
 	eventType: z.string().min(1, "Event type is required"),
+	filter: z.string(),
 });

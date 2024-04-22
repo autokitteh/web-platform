@@ -61,13 +61,14 @@ export const AddTriggerForm = () => {
 		defaultValues: {
 			connection: { value: "", label: "" },
 			filePath: { value: "", label: "" },
-			entrypoint: "",
+			entryFunction: "",
 			eventType: "",
+			filter: "",
 		},
 	});
 
 	const onSubmit = async () => {
-		const { connection, filePath, entrypoint, eventType } = getValues();
+		const { connection, filePath, entryFunction, eventType, filter } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.create(projectId!, {
@@ -75,7 +76,8 @@ export const AddTriggerForm = () => {
 			connectionId: connection.value,
 			eventType,
 			path: filePath.label,
-			name: entrypoint,
+			name: entryFunction,
+			filter,
 		});
 		setIsLoading(false);
 
@@ -132,16 +134,18 @@ export const AddTriggerForm = () => {
 					</div>
 					<div className="relative">
 						<Input
-							{...register("entrypoint")}
-							aria-label={t("placeholders.entrypoint")}
-							className={inputClass("entrypoint")}
-							isError={!!errors.entrypoint}
-							placeholder={t("placeholders.entrypoint")}
+							{...register("entryFunction")}
+							aria-label={t("placeholders.entryFunction")}
+							className={inputClass("entryFunction")}
+							isError={!!errors.entryFunction}
+							isRequired
+							placeholder={t("placeholders.entryFunction")}
 						/>
-						<ErrorMessage>{errors.entrypoint?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
 						<Input
+							isRequired
 							{...register("eventType")}
 							aria-label={t("placeholders.eventType")}
 							className={inputClass("eventType")}
@@ -149,6 +153,16 @@ export const AddTriggerForm = () => {
 							placeholder={t("placeholders.eventType")}
 						/>
 						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
+					</div>
+					<div className="relative">
+						<Input
+							{...register("filter")}
+							aria-label={t("placeholders.filter")}
+							className={inputClass("filter")}
+							isError={!!errors.filter}
+							placeholder={t("placeholders.filter")}
+						/>
+						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
 					</div>
 				</div>
 			</form>

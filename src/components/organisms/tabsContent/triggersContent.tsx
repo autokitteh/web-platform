@@ -97,18 +97,10 @@ export const TriggersContent = () => {
 								/>
 							</Th>
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("path")}>
-								{t("table.columns.fileName")}
+								{t("table.columns.call")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"path" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("name")}>
-								{t("table.columns.entrypoint")}
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"name" === sort.column}
 									sortDirection={sort.direction}
 								/>
 							</Th>
@@ -130,8 +122,9 @@ export const TriggersContent = () => {
 						{triggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
 								<Td className="font-semibold">{trigger.connectionName}</Td>
-								<Td>{trigger.path}</Td>
-								<Td>{trigger.name}</Td>
+								<Td>
+									{trigger.path}:{trigger.name}
+								</Td>
 								<Td className="border-r-0">{trigger.eventType}</Td>
 								<Td className="max-w-10 border-0 pr-1.5 justify-end">
 									<DropdownButton

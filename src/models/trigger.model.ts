@@ -15,5 +15,6 @@ export const convertTriggerProtoToModel = (protoTrigger: ProtoTrigger): Trigger 
 		eventType: protoTrigger.eventType,
 		path: protoTrigger.codeLocation!.path,
 		name: protoTrigger.codeLocation!.name,
+		filter: protoTrigger.filter,
 	};
 };

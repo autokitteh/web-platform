@@ -23,7 +23,8 @@
 				"connection": "Connection",
 				"fileName": "File name",
 				"entrypoint": "Entry Point",
-				"eventType": "Event Type"
+				"eventType": "Event Type",
+				"call": "Call"
 			},
 			"buttons": {
 				"modify": "Modify",
@@ -38,8 +39,9 @@
 			"placeholders": {
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
-				"entrypoint": "Entrypoint",
-				"eventType": "Event type"
+				"entryFunction": "Entry function",
+				"eventType": "Event type",
+				"filter": "Filter"
 			}
 		}
 	},

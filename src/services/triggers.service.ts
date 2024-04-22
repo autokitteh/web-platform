@@ -20,7 +20,7 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			const { connectionId, eventType, path, name } = trigger;
+			const { connectionId, eventType, path, name, filter } = trigger;
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
@@ -28,6 +28,7 @@ export class TriggersService {
 					envId: environments[0].envId,
 					connectionId,
 					eventType,
+					filter,
 					codeLocation: { path, name },
 				},
 			});
@@ -71,7 +72,7 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			const { triggerId, connectionId, eventType, path, name } = trigger;
+			const { triggerId, connectionId, eventType, path, name, filter } = trigger;
 
 			await triggersClient.update({
 				trigger: {
@@ -79,6 +80,7 @@ export class TriggersService {
 					connectionId,
 					envId: environments[0].envId,
 					eventType,
+					filter,
 					codeLocation: { path, name },
 				},
 			});
@@ -96,6 +98,7 @@ export class TriggersService {
 	static async list(): Promise<ServiceResponse<Trigger[]>> {
 		try {
 			const { triggers } = await triggersClient.list({});
+
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
 			const { data: connectionsList, error } = await ConnectionService.list();
 			if (error) {
