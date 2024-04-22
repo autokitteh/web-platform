@@ -16,10 +16,7 @@ export const ModifyVariableForm = () => {
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const navigate = useNavigate();
 	const [currentVariable, setCurrentVariable] = useState<TVariable>();
-	const {
-		currentProject: { environments },
-		getProjectVariables,
-	} = useProjectStore();
+	const { getProjectVariables } = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -61,7 +58,7 @@ export const ModifyVariableForm = () => {
 		setIsLoading(true);
 
 		const { error } = await VariablesService.delete({
-			envId: environments[0].envId,
+			envId: environmentId!,
 			name,
 		});
 		setIsLoading(false);
@@ -72,7 +69,7 @@ export const ModifyVariableForm = () => {
 		}
 
 		const { error: errorCreate } = await VariablesService.create({
-			envId: environments[0].envId,
+			envId: environmentId!,
 			name,
 			value,
 			isSecret: false,
@@ -125,6 +122,6 @@ export const ModifyVariableForm = () => {
 			</Toast>
 		</div>
 	) : (
-		<div>Loading...</div>
+		<div>{tForm("loading")}...</div>
 	);
 };
