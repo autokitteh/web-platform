@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { PlusCircle } from "@assets/image";
-import { Button, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
+import { Trash } from "@assets/image/icons";
+import { Button, IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { ModalAddCodeAssets } from "@components/organisms/modals";
 import { EModalName } from "@enums/components";
 import { useModalStore, useProjectStore } from "@store";
@@ -102,7 +103,7 @@ export const AddCodeAssetsTab = () => {
 						<THead>
 							<Tr>
 								<Th className="border-r-0 cursor-pointer group font-normal">{t("name", { ns: "tables" })}</Th>
-								<Th className="border-r-0 max-8" />
+								<Th className="border-r-0 max-11" />
 							</Tr>
 						</THead>
 						<TBody>
@@ -111,7 +112,11 @@ export const AddCodeAssetsTab = () => {
 									<Td className="font-semibold border-r-0 cursor-pointer" onClick={() => updateEditorOpenedFiles(name)}>
 										{name}
 									</Td>
-									<Th className="border-r-0 max-w-8" />
+									<Th className="border-r-0 max-w-11">
+										<IconButton>
+											<Trash className="fill-white w-3 h-3" />
+										</IconButton>
+									</Th>
 								</Tr>
 							))}
 						</TBody>
