@@ -71,11 +71,11 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			const { connectionId, eventType, path, name } = trigger;
+			const { triggerId, connectionId, eventType, path, name } = trigger;
 
 			await triggersClient.update({
 				trigger: {
-					triggerId: undefined,
+					triggerId,
 					connectionId,
 					envId: environments[0].envId,
 					eventType,

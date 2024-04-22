@@ -70,6 +70,7 @@ export const ModifyTriggerForm = () => {
 
 		setIsLoading(true);
 		const { error } = await TriggersService.update(projectId!, {
+			triggerId: activeModifyTrigger?.triggerId,
 			connectionId: connection.value,
 			eventType,
 			path: filePath.label,
