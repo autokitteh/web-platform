@@ -26,6 +26,12 @@
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete"
 	},
+	"deleteFile": {
+		"title": "Delete {{name}}",
+		"line": "You will not be able to recover it.",
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete"
+	},
 	"addCodeAssets": {
 		"title": "Create new",
 		"placeholderName": "Name",

@@ -9,5 +9,6 @@
 	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}",
 	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}",
 	"variableNotCreated": "There was an issue creating the variable",
-	"sessionLogRecordMultipleProps": "More than one session log record type found: {{props}}"
+	"sessionLogRecordMultipleProps": "More than one session log record type found: {{props}}",
+	"failedRemoveFile": "Failed to remove file: {{fileName}}"
 }

@@ -19,6 +19,7 @@ export type {
 	ModalDeleteTriggerProps,
 	ModalDeleteVariableProps,
 	ModalModifyVariableProps,
+	DeleteFile,
 } from "@interfaces/components/modal.interface";
 export type { ToastProps } from "@interfaces/components/toast.interface";
 export type {

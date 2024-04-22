@@ -3,4 +3,5 @@ export enum EModalName {
 	deleteTrigger = "deleteTrigger",
 	addCodeAssets = "addCodeAssets",
 	deleteVariable = "deleteVariable",
+	deleteFile = "deleteFile",
 }
