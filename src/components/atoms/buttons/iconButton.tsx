@@ -32,6 +32,7 @@ export const IconButton = ({
 		<button
 			aria-label={ariaLabel}
 			className={iconButtonClass}
+			data-tooltip="{ariaLabel}"
 			disabled={disabled}
 			onClick={onClick}
 			onMouseEnter={onMouseEnter}

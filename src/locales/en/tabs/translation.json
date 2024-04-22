@@ -37,6 +37,7 @@
 			"addNewTrigger": "Add new trigger",
 			"modifyTrigger": "Modify trigger",
 			"titleData": "Data",
+			"titleInfo": "Relevant only for HTTP",
 			"placeholders": {
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
