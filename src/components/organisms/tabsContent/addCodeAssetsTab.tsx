@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { PlusCircle } from "@assets/image";
 import { Trash } from "@assets/image/icons";
 import { Button, IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
-import { ModalAddCodeAssets } from "@components/organisms/modals";
+import { ModalAddCodeAssets, ModalDeleteFile } from "@components/organisms/modals";
 import { EModalName } from "@enums/components";
 import { useModalStore, useProjectStore } from "@store";
 import { cn } from "@utilities";
@@ -13,13 +13,14 @@ import { useParams } from "react-router-dom";
 export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "tables"]);
-	const { openModal } = useModalStore();
+	const { openModal, closeModal } = useModalStore();
 	const { currentProject, setProjectResources, updateEditorOpenedFiles, removeProjectFile } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
+	const selectedRemoveFileName = useModalStore((state) => state.data as string);
 
 	const resourcesEntries = Object.entries(currentProject.resources);
 	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
@@ -71,11 +72,11 @@ export const AddCodeAssetsTab = () => {
 			"bg-black": currentProject.openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
 		});
 
-	const handleRemoveFile = async (fileName: string) => {
-		const { error } = await removeProjectFile(fileName);
-		if (error) {
-			setToast({ isOpen: true, message: t("failedRemoveFile", { fileName }) });
-		}
+	const handleRemoveFile = async () => {
+		closeModal(EModalName.deleteFile);
+		const { error } = await removeProjectFile(selectedRemoveFileName);
+
+		if (error) setToast({ isOpen: true, message: t("failedRemoveFile", { fileName: selectedRemoveFileName }) });
 	};
 
 	return (
@@ -120,7 +121,7 @@ export const AddCodeAssetsTab = () => {
 										{name}
 									</Td>
 									<Th className="border-r-0 max-w-11">
-										<IconButton onClick={() => handleRemoveFile(name)}>
+										<IconButton onClick={() => openModal(EModalName.deleteFile, name)}>
 											<Trash className="fill-white w-3 h-3" />
 										</IconButton>
 									</Th>
@@ -144,6 +145,7 @@ export const AddCodeAssetsTab = () => {
 					</div>
 				</div>
 			</div>
+			<ModalDeleteFile onDelete={handleRemoveFile} />
 			<ModalAddCodeAssets onError={(message) => setToast({ isOpen: true, message })} />
 			<Toast
 				className="border-error"

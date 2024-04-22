@@ -26,6 +26,13 @@
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete"
 	},
+	"deleteFile": {
+		"title": "Delete Code & Assets",
+		"line": "Deleting the file may cause failure of projects.",
+		"line2": "Are you sure you want to delete this file?",
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete"
+	},
 	"addCodeAssets": {
 		"title": "Create new",
 		"placeholderName": "Name",

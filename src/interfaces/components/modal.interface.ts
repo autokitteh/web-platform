@@ -19,3 +19,7 @@ export interface ModalDeleteVariableProps {
 export interface ModalModifyVariableProps {
 	onError: (message: string) => void;
 }
+
+export interface DeleteFile {
+	onDelete?: () => void;
+}
