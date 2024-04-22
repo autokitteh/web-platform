@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PlusCircle } from "@assets/image";
-import { Trash } from "@assets/image/icons";
+import { TrashIcon } from "@assets/image/icons";
 import { Button, IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { ModalAddCodeAssets, ModalDeleteFile } from "@components/organisms/modals";
 import { EModalName } from "@enums/components";
@@ -122,7 +122,7 @@ export const AddCodeAssetsTab = () => {
 									</Td>
 									<Th className="border-r-0 max-w-11">
 										<IconButton onClick={() => openModal(EModalName.deleteFile, name)}>
-											<Trash className="fill-white w-3 h-3" />
+											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
 									</Th>
 								</Tr>
