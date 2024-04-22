@@ -10,14 +10,12 @@ export const Toast = ({ duration = 5, title, type, className, isOpen, children, 
 		"fixed right-20 bottom-10 z-50 bg-black max-w-420 py-3 px-4 pl-6 border rounded-4xl",
 		{
 			"border-green-accent": type === "success",
-			"border-white": type === "warning",
 			"border-error": type === "error",
 		},
 		className
 	);
 	const titleStyle = cn("font-semibold", {
 		"text-green-accent": type === "success",
-		"text-white": type === "warning",
 		"text-error": type === "error",
 	});
 
