@@ -1,8 +1,8 @@
 import React, { useState, useLayoutEffect } from "react";
-import { Select, ErrorMessage, Toast, Input } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { ArrowLeft } from "@assets/image/icons";
+import { Select, Button, ErrorMessage, IconButton, Toast, Input } from "@components/atoms";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectOption } from "@interfaces/components";
+import { ISelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
 import { newTriggerSchema } from "@validations";
@@ -10,10 +10,10 @@ import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-export const AddTriggerForm = () => {
+export const ModifyTriggerForm = () => {
 	const navigate = useNavigate();
 	const {
-		currentProject: { projectId, resources },
+		currentProject: { resources, activeModifyTrigger },
 	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -23,8 +23,8 @@ export const AddTriggerForm = () => {
 	const { t: tButtons } = useTranslation("buttons");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
-	const [connections, setConnections] = useState<SelectOption[]>([]);
-	const [filesName, setFilesName] = useState<SelectOption[]>([]);
+	const [connections, setConnections] = useState<ISelectOption[]>([]);
+	const [filesName, setFilesName] = useState<ISelectOption[]>([]);
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {
@@ -48,7 +48,6 @@ export const AddTriggerForm = () => {
 			setFilesName(formattedResources);
 		};
 		fetchData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const {
@@ -60,10 +59,10 @@ export const AddTriggerForm = () => {
 	} = useForm({
 		resolver: zodResolver(newTriggerSchema),
 		defaultValues: {
-			connection: { value: "", label: "" },
-			filePath: { value: "", label: "" },
-			entrypoint: "",
-			eventType: "",
+			connection: { value: activeModifyTrigger!.connectionId, label: activeModifyTrigger!.connectionName! },
+			filePath: { value: activeModifyTrigger!.path, label: activeModifyTrigger!.path },
+			entrypoint: activeModifyTrigger!.name,
+			eventType: activeModifyTrigger!.eventType,
 		},
 	});
 
@@ -71,8 +70,7 @@ export const AddTriggerForm = () => {
 		const { connection, filePath, entrypoint, eventType } = getValues();
 
 		setIsLoading(true);
-		const { error } = await TriggersService.create(projectId!, {
-			triggerId: undefined,
+		const { error } = await TriggersService.update({
 			connectionId: connection.value,
 			eventType,
 			path: filePath.label,
@@ -92,12 +90,28 @@ export const AddTriggerForm = () => {
 
 	return (
 		<div className="min-w-550">
-			<TabFormHeader
-				className="mb-11"
-				form="createNewTriggerForm"
-				isLoading={isLoading}
-				title={t("triggers.addNewTrigger", { ns: "forms" })}
-			/>
+			<div className="flex justify-between mb-11">
+				<div className="flex items-center gap-1">
+					<IconButton className="hover:bg-black p-0 w-8 h-8" onClick={() => navigate(-1)}>
+						<ArrowLeft />
+					</IconButton>
+					<p className="text-gray-300 text-base">{t("modifyTrigger")}</p>
+				</div>
+				<div className="flex items-center gap-6">
+					<Button className="text-gray-300 hover:text-white p-0 font-semibold" onClick={() => navigate(-1)}>
+						{tButtons("cancel")}
+					</Button>
+					<Button
+						ariaLabel="Save trigger"
+						className="px-4 py-2 font-semibold text-white border-white hover:bg-black"
+						disabled={isLoading}
+						form="createNewTriggerForm"
+						variant="outline"
+					>
+						{isLoading ? tButtons("loading") + "..." : tButtons("save")}
+					</Button>
+				</div>
+			</div>
 			<form className="flex items-start gap-10" id="createNewTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">
 					<div className="relative">

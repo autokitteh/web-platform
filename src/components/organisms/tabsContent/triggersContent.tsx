@@ -11,12 +11,13 @@ import { SortDirection } from "@type/components";
 import { Trigger } from "@type/models";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export const TriggersContent = () => {
-	const { t } = useTranslation("errors");
+	const { t: tError } = useTranslation("errors");
+	const { t } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { openModal, closeModal } = useModalStore();
 	const dataTrigger = useModalStore((state) => state.data as Pick<Trigger, "triggerId">);
-
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Trigger;
@@ -26,6 +27,7 @@ export const TriggersContent = () => {
 		isOpen: false,
 		message: "",
 	});
+	const navigate = useNavigate();
 
 	const fetchTriggers = async () => {
 		const { data } = await TriggersService.list();
@@ -56,7 +58,7 @@ export const TriggersContent = () => {
 		const { error } = await TriggersService.delete(dataTrigger.triggerId);
 		closeModal(EModalName.deleteTrigger);
 		if (error) {
-			setToast({ isOpen: true, message: t("triggerRemoveFailed") });
+			setToast({ isOpen: true, message: tError("triggerRemoveFailed") });
 			LoggerService.error(
 				namespaces.projectUI,
 				t("triggerFailedExtended", { triggerId: dataTrigger.triggerId, error: (error as Error).message })
@@ -66,10 +68,14 @@ export const TriggersContent = () => {
 		fetchTriggers();
 	};
 
+	const handleModifyTrigger = (trigger: Trigger, href?: string) => {
+		href && navigate(href);
+	};
+
 	return (
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
-				<div className="text-base text-gray-300">Available triggers</div>
+				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
 					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
 					href="add-new-trigger"
@@ -83,7 +89,7 @@ export const TriggersContent = () => {
 					<THead>
 						<Tr>
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("connectionName")}>
-								Connection
+								{t("table.columns.connection")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"connectionName" === sort.column}
@@ -91,7 +97,7 @@ export const TriggersContent = () => {
 								/>
 							</Th>
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("path")}>
-								File name
+								{t("table.columns.fileName")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"path" === sort.column}
@@ -99,7 +105,7 @@ export const TriggersContent = () => {
 								/>
 							</Th>
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("name")}>
-								Entry Point
+								{t("table.columns.entrypoint")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sort.column}
@@ -110,7 +116,7 @@ export const TriggersContent = () => {
 								className="cursor-pointer group font-normal border-r-0"
 								onClick={() => toggleSortTriggers("eventType")}
 							>
-								Event Type
+								{t("table.columns.eventType")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"eventType" === sort.column}
@@ -121,22 +127,32 @@ export const TriggersContent = () => {
 						</Tr>
 					</THead>
 					<TBody>
-						{triggers.map(({ triggerId, eventType, name, path, connectionName }) => (
-							<Tr className="group" key={triggerId}>
-								<Td className="font-semibold">{connectionName}</Td>
-								<Td>{path}</Td>
-								<Td>{name}</Td>
-								<Td className="border-r-0">{eventType}</Td>
+						{triggers.map((trigger) => (
+							<Tr className="group" key={trigger.triggerId}>
+								<Td className="font-semibold">{trigger.connectionName}</Td>
+								<Td>{trigger.path}</Td>
+								<Td>{trigger.name}</Td>
+								<Td className="border-r-0">{trigger.eventType}</Td>
 								<Td className="max-w-10 border-0 pr-1.5 justify-end">
 									<DropdownButton
 										className="flex-col gap-1"
 										contentMenu={
-											<Button
-												className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-												onClick={() => openModal(EModalName.deleteTrigger, { triggerId })}
-											>
-												Delete
-											</Button>
+											<>
+												<Button
+													ariaLabel={t("table.buttons.ariaModifyTrigger", { name })}
+													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
+													onClick={() => handleModifyTrigger(trigger, "modify-trigger")}
+												>
+													{t("table.buttons.modify")}
+												</Button>
+												<Button
+													ariaLabel={t("table.buttons.ariaDeleteTrigger", { name })}
+													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
+													onClick={() => openModal(EModalName.deleteTrigger, trigger.triggerId)}
+												>
+													{t("table.buttons.delete")}
+												</Button>
+											</>
 										}
 									>
 										<IconButton className="w-6 h-6 p-1  hover:bg-gray-700">
@@ -149,7 +165,7 @@ export const TriggersContent = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-gray-300 font-semibold text-xl text-center">No triggers available.</div>
+				<div className="mt-10 text-gray-300 font-semibold text-xl text-center">{t("titleNoAvailable")}</div>
 			)}
 
 			<Toast
@@ -158,7 +174,7 @@ export const TriggersContent = () => {
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<p className="font-semibold text-error">{t("error")}</p>
+				<p className="font-semibold text-error">{tError("error")}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 

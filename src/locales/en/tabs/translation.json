@@ -15,6 +15,35 @@
 			}
 		}
 	},
+	"triggers": {
+		"titleAvailable": "Available Triggers",
+		"titleNoAvailable": "No triggers available.",
+		"buttonAddNew": "Add new",
+		"table": {
+			"columns": {
+				"connection": "Connection",
+				"fileName": "File name",
+				"entrypoint": "Entry Point",
+				"eventType": "Event Type"
+			},
+			"buttons": {
+				"modify": "Modify",
+				"delete": "Delete",
+				"ariaModifyTrigger": "Modify {{name}} trigger",
+				"ariaDeleteTrigger": "Delete {{name}} trigger"
+			}
+		},
+		"form": {
+			"addNewTrigger": "Add new trigger",
+			"modifyTrigger": "Modify trigger",
+			"placeholders": {
+				"selectConnection": "Select connection",
+				"selectFile": "Select file",
+				"entrypoint": "Entrypoint",
+				"eventType": "Event type"
+			}
+		}
+	},
 	"variables": {
 		"titleAvailable": "Available Variables",
 		"titleNoAvailable": "No variables available.",
