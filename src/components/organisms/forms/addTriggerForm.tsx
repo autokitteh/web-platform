@@ -20,7 +20,6 @@ export const AddTriggerForm = () => {
 		message: "",
 	});
 	const { t: tError } = useTranslation("errors");
-	const { t: tButtons } = useTranslation("buttons");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
 	const [connections, setConnections] = useState<SelectOption[]>([]);
@@ -92,12 +91,7 @@ export const AddTriggerForm = () => {
 
 	return (
 		<div className="min-w-550">
-			<TabFormHeader
-				className="mb-11"
-				form="createNewTriggerForm"
-				isLoading={isLoading}
-				title={t("triggers.addNewTrigger", { ns: "forms" })}
-			/>
+			<TabFormHeader className="mb-11" form="createNewTriggerForm" isLoading={isLoading} title={t("addNewTrigger")} />
 			<form className="flex items-start gap-10" id="createNewTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">
 					<div className="relative">

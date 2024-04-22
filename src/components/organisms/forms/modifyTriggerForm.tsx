@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect } from "react";
-import { ArrowLeft } from "@assets/image/icons";
-import { Select, Button, ErrorMessage, IconButton, Toast, Input } from "@components/atoms";
+import { Select, ErrorMessage, Toast, Input } from "@components/atoms";
+import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ISelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
@@ -20,7 +20,6 @@ export const ModifyTriggerForm = () => {
 		message: "",
 	});
 	const { t: tError } = useTranslation("errors");
-	const { t: tButtons } = useTranslation("buttons");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
 	const [connections, setConnections] = useState<ISelectOption[]>([]);
@@ -90,29 +89,8 @@ export const ModifyTriggerForm = () => {
 
 	return (
 		<div className="min-w-550">
-			<div className="flex justify-between mb-11">
-				<div className="flex items-center gap-1">
-					<IconButton className="hover:bg-black p-0 w-8 h-8" onClick={() => navigate(-1)}>
-						<ArrowLeft />
-					</IconButton>
-					<p className="text-gray-300 text-base">{t("modifyTrigger")}</p>
-				</div>
-				<div className="flex items-center gap-6">
-					<Button className="text-gray-300 hover:text-white p-0 font-semibold" onClick={() => navigate(-1)}>
-						{tButtons("cancel")}
-					</Button>
-					<Button
-						ariaLabel="Save trigger"
-						className="px-4 py-2 font-semibold text-white border-white hover:bg-black"
-						disabled={isLoading}
-						form="createNewTriggerForm"
-						variant="outline"
-					>
-						{isLoading ? tButtons("loading") + "..." : tButtons("save")}
-					</Button>
-				</div>
-			</div>
-			<form className="flex items-start gap-10" id="createNewTriggerForm" onSubmit={handleSubmit(onSubmit)}>
+			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
+			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">
 					<div className="relative">
 						<Controller

@@ -1,6 +1,5 @@
 import buttons from "@locales/en/buttons/translation.json";
 import errors from "@locales/en/errors/translation.json";
-import forms from "@locales/en/forms/translation.json";
 import login from "@locales/en/login/translation.json";
 import menu from "@locales/en/menu/translation.json";
 import modals from "@locales/en/modals/translation.json";
@@ -16,7 +15,6 @@ export default {
 	modals,
 	buttons,
 	tables,
-	forms,
 	tabs,
 	projects,
 	services,
