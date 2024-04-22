@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { InfoIcon } from "@assets/image";
 import { Select, ErrorMessage, Toast, Input } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -6,16 +6,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ISelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
+import { Trigger } from "@type/models";
 import { newTriggerSchema } from "@validations";
 import { get, keys } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const ModifyTriggerForm = () => {
+	const { triggerId } = useParams();
 	const navigate = useNavigate();
 	const {
-		currentProject: { projectId, resources, activeModifyTrigger },
+		currentProject: { projectId, resources },
 	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -24,14 +26,26 @@ export const ModifyTriggerForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
+	const [trigger, setTrigger] = useState<Trigger>();
 	const [connections, setConnections] = useState<ISelectOption[]>([]);
 	const [filesName, setFilesName] = useState<ISelectOption[]>([]);
 
 	useLayoutEffect(() => {
+		const fetchTrigger = async () => {
+			const { data } = await TriggersService.get(triggerId!);
+			if (!data) return;
+			setTrigger(data);
+		};
+
+		fetchTrigger();
+	}, []);
+
+	useLayoutEffect(() => {
 		const fetchData = async () => {
 			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
+			if (!connections?.length) return;
 
-			if (error || !connections?.length) {
+			if (error) {
 				setToast({ isOpen: true, message: tErrors("connectionsFetchError") });
 				return;
 			}
@@ -51,8 +65,8 @@ export const ModifyTriggerForm = () => {
 		fetchData();
 	}, []);
 
-	const keyData = keys(get(activeModifyTrigger, "data"))[0] || "";
-	const valueData = get(activeModifyTrigger, ["data", keyData, "string", "v"], "");
+	const keyData = keys(get(trigger, "data"))[0] || "";
+	const valueData = get(trigger, ["data", keyData, "string", "v"], "");
 
 	const {
 		register,
@@ -60,25 +74,36 @@ export const ModifyTriggerForm = () => {
 		formState: { errors, dirtyFields },
 		control,
 		getValues,
+		reset,
 	} = useForm({
 		resolver: zodResolver(newTriggerSchema),
 		defaultValues: {
-			connection: { value: activeModifyTrigger!.connectionId, label: activeModifyTrigger!.connectionName! },
-			filePath: { value: activeModifyTrigger!.path, label: activeModifyTrigger!.path },
-			entryFunction: activeModifyTrigger!.name,
-			eventType: activeModifyTrigger!.eventType,
-			filter: activeModifyTrigger!.filter,
+			connection: { value: "", label: "" },
+			filePath: { value: "", label: "" },
+			entryFunction: "",
+			eventType: "",
+			filter: "",
 			key: keyData,
 			value: valueData,
 		},
 	});
+
+	useEffect(() => {
+		reset({
+			connection: { value: trigger?.connectionId, label: trigger?.connectionName },
+			filePath: { value: trigger?.path, label: trigger?.path },
+			entryFunction: trigger?.name,
+			eventType: trigger?.eventType,
+			filter: trigger?.filter,
+		});
+	}, [trigger]);
 
 	const onSubmit = async () => {
 		const { connection, filePath, entryFunction, eventType, filter, key, value } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.update(projectId!, {
-			triggerId: activeModifyTrigger?.triggerId,
+			triggerId: trigger?.triggerId,
 			connectionId: connection.value,
 			eventType,
 			path: filePath.label,

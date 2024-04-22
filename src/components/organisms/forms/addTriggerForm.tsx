@@ -29,8 +29,9 @@ export const AddTriggerForm = () => {
 	useLayoutEffect(() => {
 		const fetchData = async () => {
 			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
+			if (!connections?.length) return;
 
-			if (error || !connections?.length) {
+			if (error) {
 				setToast({ isOpen: true, message: tErrors("connectionsFetchError") });
 				return;
 			}

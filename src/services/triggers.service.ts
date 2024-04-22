@@ -12,7 +12,7 @@ export class TriggersService {
 		try {
 			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
 
-			if (error || !environments?.length) {
+			if (error) {
 				LoggerService.error(
 					namespaces.triggerService,
 					i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" })
@@ -25,7 +25,7 @@ export class TriggersService {
 			const { triggerId } = await triggersClient.create({
 				trigger: {
 					triggerId: undefined,
-					envId: environments[0].envId,
+					envId: environments && environments[0].envId,
 					connectionId,
 					eventType,
 					filter,
@@ -64,7 +64,7 @@ export class TriggersService {
 		try {
 			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
 
-			if (error || !environments?.length) {
+			if (error) {
 				LoggerService.error(
 					namespaces.triggerService,
 					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
@@ -78,7 +78,7 @@ export class TriggersService {
 				trigger: {
 					triggerId,
 					connectionId,
-					envId: environments[0].envId,
+					envId: environments && environments[0].envId,
 					eventType,
 					filter,
 					codeLocation: { path, name },
@@ -100,7 +100,7 @@ export class TriggersService {
 		try {
 			const { data: environments, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
 
-			if (errorEnvs || !environments?.length) {
+			if (errorEnvs) {
 				LoggerService.error(
 					namespaces.triggerService,
 					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
@@ -108,7 +108,7 @@ export class TriggersService {
 				return { data: undefined, error: errorEnvs };
 			}
 
-			const { triggers } = await triggersClient.list({ envId: environments[0].envId });
+			const { triggers } = await triggersClient.list({ envId: environments && environments[0].envId });
 
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
 			const { data: connectionsList, error } = await ConnectionService.listByProjectId(projectId);

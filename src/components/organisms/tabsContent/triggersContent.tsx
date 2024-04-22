@@ -69,10 +69,6 @@ export const TriggersContent = () => {
 		fetchTriggers();
 	};
 
-	const handleModifyTrigger = (trigger: Trigger, href?: string) => {
-		href && navigate(href);
-	};
-
 	return (
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
@@ -135,7 +131,7 @@ export const TriggersContent = () => {
 												<Button
 													ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => handleModifyTrigger(trigger, "modify-trigger")}
+													onClick={() => navigate(trigger.triggerId!)}
 												>
 													{t("table.buttons.modify")}
 												</Button>
