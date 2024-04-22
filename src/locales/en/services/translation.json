@@ -26,5 +26,6 @@
 	"variableNotCreatedExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
 	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}, Name: {{name}}",
 	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}",
-	"variableGetFailedExtended": "Variable fetch failed, Name: {{name}}, error: {{error}}"
+	"variableGetFailedExtended": "Variable fetch failed, Name: {{name}}, error: {{error}}",
+	"environmentNotFound": "Couldn't found the environment"
 }

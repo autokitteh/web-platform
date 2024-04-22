@@ -3,7 +3,7 @@ import { InfoIcon } from "@assets/image";
 import { Select, ErrorMessage, Toast, Input } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ISelectOption } from "@interfaces/components";
+import { SelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
 import { Trigger } from "@type/models";
@@ -27,8 +27,8 @@ export const ModifyTriggerForm = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
 	const [trigger, setTrigger] = useState<Trigger>();
-	const [connections, setConnections] = useState<ISelectOption[]>([]);
-	const [filesName, setFilesName] = useState<ISelectOption[]>([]);
+	const [connections, setConnections] = useState<SelectOption[]>([]);
+	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 
 	useLayoutEffect(() => {
 		const fetchTrigger = async () => {

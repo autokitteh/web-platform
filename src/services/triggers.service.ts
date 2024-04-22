@@ -36,7 +36,7 @@ export class TriggersService {
 
 				return { data: triggerId, error: undefined };
 			} else {
-				throw new Error("Invalid number of environments");
+				throw new Error(i18n.t("environmentNotFound", { ns: "services" }));
 			}
 		} catch (error) {
 			LoggerService.error(
@@ -91,7 +91,7 @@ export class TriggersService {
 
 				return { data: undefined, error: undefined };
 			} else {
-				throw new Error("Invalid number of environments");
+				throw new Error(i18n.t("environmentNotFound", { ns: "services" }));
 			}
 		} catch (error) {
 			LoggerService.error(

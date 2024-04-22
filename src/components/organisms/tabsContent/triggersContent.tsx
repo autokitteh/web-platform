@@ -18,6 +18,8 @@ export const TriggersContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { openModal, closeModal } = useModalStore();
 	const { projectId } = useParams();
+	const navigate = useNavigate();
+
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Trigger;
@@ -28,7 +30,6 @@ export const TriggersContent = () => {
 		isOpen: false,
 		message: "",
 	});
-	const navigate = useNavigate();
 
 	const fetchTriggers = async () => {
 		const { data } = await TriggersService.listByProjectId(projectId!);
