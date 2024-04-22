@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 export const VariablesContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
-	const { t: tError } = useTranslation("errors");
+	const { t: tErrors } = useTranslation("errors");
 	const { openModal, closeModal } = useModalStore();
 	const { currentProject, getProjectVariables } = useProjectStore();
 	const [sort, setSort] = useState<{
@@ -140,12 +140,12 @@ export const VariablesContent = () => {
 			)}
 
 			<Toast
-				className="border-error"
 				duration={5}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
+				title={tErrors("error")}
+				type="error"
 			>
-				<p className="font-semibold text-error">{tError("error")}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 

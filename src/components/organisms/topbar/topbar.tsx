@@ -173,14 +173,12 @@ export const Topbar = () => {
 				</IconButton>
 			</div>
 			<Toast
-				className={cn("border-error", { "border-green-accent": toast.isSuccess })}
-				duration={5000}
+				duration={5}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
+				title={toast.isSuccess ? t("topbar.success") : t("error", { ns: "errors" })}
+				type={toast.isSuccess ? "success" : "error"}
 			>
-				<p className={cn("font-semibold text-error", { "text-green-accent": toast.isSuccess })}>
-					{toast.isSuccess ? t("topbar.success") : t("error", { ns: "errors" })}
-				</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>
