@@ -1,4 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
+import { Info } from "@assets/image";
 import { Select, ErrorMessage, Toast, Input } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -170,7 +171,12 @@ export const ModifyTriggerForm = () => {
 						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
 					</div>
 					<div>
-						<p className="text-gray-300 text-base">{t("titleData")}</p>
+						<div className="flex items-center gap-1 text-gray-300 text-base">
+							{t("titleData")}
+							<div className="cursor-pointer" title={t("titleInfo")}>
+								<Info className="fill-white" />
+							</div>
+						</div>
 						<div className="flex gap-6">
 							<div className="relative w-full">
 								<Input
