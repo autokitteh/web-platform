@@ -104,6 +104,8 @@ export const Topbar = () => {
 		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.deploy]: false }));
 	};
 
+	const handleCloseToast = () => setToast({ ...toast, isOpen: false });
+
 	return (
 		<div className="flex justify-between items-center bg-gray-800 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
 			<div className="flex items-end gap-3 relative font-fira-code text-gray-300">
@@ -172,15 +174,21 @@ export const Topbar = () => {
 					<FullScreen />
 				</IconButton>
 			</div>
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={toast.isSuccess ? t("topbar.success") : t("error", { ns: "errors" })}
-				type={toast.isSuccess ? "success" : "error"}
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
+			{toast.isSuccess ? (
+				<Toast duration={5} isOpen={toast.isOpen} onClose={handleCloseToast} title={t("topbar.success")} type="success">
+					<p className="mt-1 text-xs">{toast.message}</p>
+				</Toast>
+			) : (
+				<Toast
+					duration={5}
+					isOpen={toast.isOpen}
+					onClose={handleCloseToast}
+					title={t("error", { ns: "errors" })}
+					type="error"
+				>
+					<p className="mt-1 text-xs">{toast.message}</p>
+				</Toast>
+			)}
 		</div>
 	);
 };
