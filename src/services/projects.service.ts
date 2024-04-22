@@ -9,7 +9,6 @@ import i18n from "i18next";
 
 export class ProjectsService {
 	static async create(projectName: string): Promise<ServiceResponse<string>> {
-		console.log(i18n.t("projectNotCreated", { ns: "services" }));
 		try {
 			const { projectId } = await projectsClient.create({
 				project: {

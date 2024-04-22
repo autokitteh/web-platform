@@ -26,6 +26,7 @@ const defaultState: Omit<
 	| "setProjectModifyVariable"
 	| "updateEditorOpenedFiles"
 	| "updateEditorClosedFiles"
+	| "removeProjectFile"
 > = {
 	list: [],
 	currentProject: {
@@ -213,6 +214,25 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			state.currentProject.activeModifyVariable = { name, value };
 			return state;
 		});
+	},
+
+	removeProjectFile: async (fileName) => {
+		const updatedResources = { ...get().currentProject.resources };
+		delete updatedResources[fileName];
+
+		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, updatedResources);
+
+		if (error) return { error };
+
+		set((state) => {
+			const updatedOpenedFiles = state.currentProject.openedFiles.filter((file) => file.name !== fileName);
+
+			state.currentProject.resources = updatedResources;
+			state.currentProject.openedFiles = updatedOpenedFiles;
+			return state;
+		});
+
+		return { error };
 	},
 });
 

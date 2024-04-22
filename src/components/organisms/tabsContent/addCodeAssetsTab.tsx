@@ -14,7 +14,7 @@ export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "tables"]);
 	const { openModal } = useModalStore();
-	const { currentProject, setProjectResources, updateEditorOpenedFiles } = useProjectStore();
+	const { currentProject, setProjectResources, updateEditorOpenedFiles, removeProjectFile } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -71,6 +71,13 @@ export const AddCodeAssetsTab = () => {
 			"bg-black": currentProject.openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
 		});
 
+	const handleRemoveFile = async (fileName: string) => {
+		const { error } = await removeProjectFile(fileName);
+		if (error) {
+			setToast({ isOpen: true, message: t("failedRemoveFile", { fileName }) });
+		}
+	};
+
 	return (
 		<div className="flex flex-col h-full">
 			<div className="mb-5 mt-14 flex justify-end gap-6">
@@ -113,7 +120,7 @@ export const AddCodeAssetsTab = () => {
 										{name}
 									</Td>
 									<Th className="border-r-0 max-w-11">
-										<IconButton>
+										<IconButton onClick={() => handleRemoveFile(name)}>
 											<Trash className="fill-white w-3 h-3" />
 										</IconButton>
 									</Th>
