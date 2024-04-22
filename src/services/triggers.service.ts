@@ -20,7 +20,7 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			const { connectionId, eventType, path, name, filter } = trigger;
+			const { connectionId, eventType, path, name, filter, data } = trigger;
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
@@ -30,6 +30,7 @@ export class TriggersService {
 					eventType,
 					filter,
 					codeLocation: { path, name },
+					data,
 				},
 			});
 
@@ -46,7 +47,6 @@ export class TriggersService {
 	static async get(triggerId: string): Promise<ServiceResponse<Trigger>> {
 		try {
 			const { trigger } = await triggersClient.get({ triggerId });
-
 			const convertedTrigger = convertTriggerProtoToModel(trigger!);
 			const { data: connection } = await ConnectionService.get(convertedTrigger.connectionId);
 			const triggerData = {
@@ -72,7 +72,7 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			const { triggerId, connectionId, eventType, path, name, filter } = trigger;
+			const { triggerId, connectionId, eventType, path, name, filter, data } = trigger;
 
 			await triggersClient.update({
 				trigger: {
@@ -82,6 +82,7 @@ export class TriggersService {
 					eventType,
 					filter,
 					codeLocation: { path, name },
+					data,
 				},
 			});
 
@@ -95,12 +96,22 @@ export class TriggersService {
 		}
 	}
 
-	static async list(): Promise<ServiceResponse<Trigger[]>> {
+	static async list(projectId: string): Promise<ServiceResponse<Trigger[]>> {
 		try {
-			const { triggers } = await triggersClient.list({});
+			const { data: environments, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
+
+			if (errorEnvs || !environments?.length) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
+				);
+				return { data: undefined, error: errorEnvs };
+			}
+
+			const { triggers } = await triggersClient.list({ envId: environments[0].envId });
 
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
-			const { data: connectionsList, error } = await ConnectionService.list();
+			const { data: connectionsList, error } = await ConnectionService.list(projectId);
 			if (error) {
 				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
 				return { data: undefined, error };

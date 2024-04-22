@@ -6,6 +6,7 @@ export type Trigger = {
 	eventType: string;
 	path: string;
 	name: string;
+	data?: { [key: string]: { string: { v: string } } };
 };
 
 export type TriggerObj = Record<string, string[]>;

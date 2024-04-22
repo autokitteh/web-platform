@@ -11,13 +11,15 @@ import { SortDirection } from "@type/components";
 import { Trigger } from "@type/models";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const TriggersContent = () => {
 	const { t: tError } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { openModal, closeModal } = useModalStore();
-	const dataTrigger = useModalStore((state) => state.data as Pick<Trigger, "triggerId">);
+	const { projectId } = useParams();
+	const triggerId = useModalStore((state) => state.data as string);
+
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Trigger;
@@ -30,9 +32,8 @@ export const TriggersContent = () => {
 	const navigate = useNavigate();
 
 	const fetchTriggers = async () => {
-		const { data } = await TriggersService.list();
+		const { data } = await TriggersService.list(projectId!);
 		if (!data) return;
-
 		setTriggers(data);
 	};
 
@@ -53,15 +54,15 @@ export const TriggersContent = () => {
 	};
 
 	const handleDeleteTrigger = async () => {
-		if (!dataTrigger.triggerId) return;
+		if (!triggerId) return;
 
-		const { error } = await TriggersService.delete(dataTrigger.triggerId);
+		const { error } = await TriggersService.delete(triggerId);
 		closeModal(EModalName.deleteTrigger);
 		if (error) {
 			setToast({ isOpen: true, message: tError("triggerRemoveFailed") });
 			LoggerService.error(
 				namespaces.projectUI,
-				t("triggerFailedExtended", { triggerId: dataTrigger.triggerId, error: (error as Error).message })
+				t("triggerFailedExtended", { triggerId: triggerId, error: (error as Error).message })
 			);
 			return;
 		}
@@ -132,14 +133,14 @@ export const TriggersContent = () => {
 										contentMenu={
 											<>
 												<Button
-													ariaLabel={t("table.buttons.ariaModifyTrigger", { name })}
+													ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
 													onClick={() => handleModifyTrigger(trigger, "modify-trigger")}
 												>
 													{t("table.buttons.modify")}
 												</Button>
 												<Button
-													ariaLabel={t("table.buttons.ariaDeleteTrigger", { name })}
+													ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
 													onClick={() => openModal(EModalName.deleteTrigger, trigger.triggerId)}
 												>

@@ -6,6 +6,7 @@ import { ISelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
 import { newTriggerSchema } from "@validations";
+import { get, keys } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +28,7 @@ export const ModifyTriggerForm = () => {
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {
-			const { data: connections, error } = await ConnectionService.list();
+			const { data: connections, error } = await ConnectionService.list(projectId!);
 
 			if (error || !connections?.length) {
 				setToast({ isOpen: true, message: tError("connectionsFetchError") });
@@ -49,6 +50,9 @@ export const ModifyTriggerForm = () => {
 		fetchData();
 	}, []);
 
+	const keyData = keys(get(activeModifyTrigger, "data"))[0] || "";
+	const valueData = get(activeModifyTrigger, ["data", keyData, "string", "v"], "");
+
 	const {
 		register,
 		handleSubmit,
@@ -63,11 +67,13 @@ export const ModifyTriggerForm = () => {
 			entryFunction: activeModifyTrigger!.name,
 			eventType: activeModifyTrigger!.eventType,
 			filter: activeModifyTrigger!.filter,
+			key: keyData,
+			value: valueData,
 		},
 	});
 
 	const onSubmit = async () => {
-		const { connection, filePath, entryFunction, eventType } = getValues();
+		const { connection, filePath, entryFunction, eventType, filter, key, value } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.update(projectId!, {
@@ -76,6 +82,8 @@ export const ModifyTriggerForm = () => {
 			eventType,
 			path: filePath.label,
 			name: entryFunction,
+			filter,
+			data: key ? { [key]: { string: { v: value } } } : {},
 		});
 		setIsLoading(false);
 
@@ -160,6 +168,31 @@ export const ModifyTriggerForm = () => {
 							placeholder={t("placeholders.filter")}
 						/>
 						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
+					</div>
+					<div>
+						<p className="text-gray-300 text-base">{t("titleData")}</p>
+						<div className="flex gap-6">
+							<div className="relative w-full">
+								<Input
+									{...register("key")}
+									aria-label={t("placeholders.key")}
+									className={inputClass("key")}
+									isError={!!errors.key}
+									placeholder={t("placeholders.key")}
+								/>
+								<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
+							</div>
+							<div className="relative w-full">
+								<Input
+									{...register("value")}
+									aria-label={t("placeholders.value")}
+									className={inputClass("value")}
+									isError={!!errors.value}
+									placeholder={t("placeholders.value")}
+								/>
+								<ErrorMessage>{errors.value?.message as string}</ErrorMessage>
+							</div>
+						</div>
 					</div>
 				</div>
 			</form>

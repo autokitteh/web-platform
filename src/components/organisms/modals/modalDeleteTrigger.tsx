@@ -11,19 +11,20 @@ import { useTranslation, Trans } from "react-i18next";
 export const ModalDeleteTrigger = ({ onDelete }: ModalDeleteTriggerProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
 	const { closeModal } = useModalStore();
-	const dataTrigger = useModalStore((state) => state.data as Pick<Trigger, "triggerId">);
-	const [trigger, setTrigger] = useState<Trigger>();
-	useEffect(() => {
-		if (dataTrigger && dataTrigger.triggerId) {
-			const fetchTrigger = async () => {
-				const { data } = await TriggersService.get(dataTrigger.triggerId!);
-				if (!data) return;
+	const triggerId = useModalStore((state) => state.data as string);
 
+	const [trigger, setTrigger] = useState<Trigger>();
+
+	useEffect(() => {
+		if (triggerId) {
+			const fetchTrigger = async () => {
+				const { data } = await TriggersService.get(triggerId);
+				if (!data) return;
 				setTrigger(data);
 			};
 			fetchTrigger();
 		}
-	}, [dataTrigger]);
+	}, [triggerId]);
 
 	return (
 		<Modal name={EModalName.deleteTrigger}>
@@ -34,7 +35,7 @@ export const ModalDeleteTrigger = ({ onDelete }: ModalDeleteTriggerProps) => {
 					<Trans>
 						{t("line2", {
 							connection: `<strong>${trigger?.connectionName}</strong><br/>`,
-							entrypoint: `<strong>${trigger?.path}:${trigger?.name}</strong><br/>`,
+							call: `<strong>${trigger?.path}:${trigger?.name}</strong><br/>`,
 							eventType: `<strong>${trigger?.eventType}</strong><br/>`,
 						})}
 					</Trans>

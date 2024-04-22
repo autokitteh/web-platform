@@ -36,12 +36,15 @@
 		"form": {
 			"addNewTrigger": "Add new trigger",
 			"modifyTrigger": "Modify trigger",
+			"titleData": "Data",
 			"placeholders": {
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
 				"entryFunction": "Entry function",
 				"eventType": "Event type",
-				"filter": "Filter"
+				"filter": "Filter",
+				"key": "Key",
+				"value": "Value"
 			}
 		}
 	},
