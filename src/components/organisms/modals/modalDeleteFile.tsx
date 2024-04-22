@@ -8,12 +8,13 @@ import { useTranslation } from "react-i18next";
 
 export const ModalDeleteFile = ({ onDelete }: DeleteFile) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteFile" });
+	const fileName = useModalStore((state) => state.data as string);
 	const { closeModal } = useModalStore();
 
 	return (
 		<Modal name={EModalName.deleteFile}>
 			<div className="mx-6">
-				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
+				<h3 className="text-xl font-bold mb-5">{t("title", { name: fileName })}</h3>
 				<p>{t("line")}</p>
 				<p>{t("line2")}</p>
 			</div>
