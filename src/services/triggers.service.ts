@@ -71,7 +71,17 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			await triggersClient.update({ trigger: { ...trigger, envId: environments[0].envId } });
+			const { connectionId, eventType, path, name } = trigger;
+
+			await triggersClient.update({
+				trigger: {
+					triggerId: undefined,
+					connectionId,
+					envId: environments[0].envId,
+					eventType,
+					codeLocation: { path, name },
+				},
+			});
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
