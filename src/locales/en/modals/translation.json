@@ -29,7 +29,6 @@
 	"deleteFile": {
 		"title": "Delete {{name}}",
 		"line": "You will not be able to recover it.",
-		"line2": "Are you sure you want to delete this file?",
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete"
 	},

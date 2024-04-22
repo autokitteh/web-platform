@@ -16,7 +16,6 @@ export const ModalDeleteFile = ({ onDelete }: DeleteFile) => {
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title", { name: fileName })}</h3>
 				<p>{t("line")}</p>
-				<p>{t("line2")}</p>
 			</div>
 			<div className="flex justify-end gap-1 mt-14">
 				<Button
