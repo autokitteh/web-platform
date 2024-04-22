@@ -96,7 +96,7 @@ export class TriggersService {
 		}
 	}
 
-	static async list(projectId: string): Promise<ServiceResponse<Trigger[]>> {
+	static async listByProjectId(projectId: string): Promise<ServiceResponse<Trigger[]>> {
 		try {
 			const { data: environments, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
 
@@ -111,7 +111,7 @@ export class TriggersService {
 			const { triggers } = await triggersClient.list({ envId: environments[0].envId });
 
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
-			const { data: connectionsList, error } = await ConnectionService.list(projectId);
+			const { data: connectionsList, error } = await ConnectionService.listByProjectId(projectId);
 			if (error) {
 				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
 				return { data: undefined, error };

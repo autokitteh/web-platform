@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
-import { Info } from "@assets/image";
+import { InfoIcon } from "@assets/image";
 import { Select, ErrorMessage, Toast, Input } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +20,7 @@ export const AddTriggerForm = () => {
 		isOpen: false,
 		message: "",
 	});
-	const { t: tError } = useTranslation("errors");
+	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
 	const [connections, setConnections] = useState<SelectOption[]>([]);
@@ -28,10 +28,10 @@ export const AddTriggerForm = () => {
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {
-			const { data: connections, error } = await ConnectionService.list(projectId!);
+			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
 
 			if (error || !connections?.length) {
-				setToast({ isOpen: true, message: tError("connectionsFetchError") });
+				setToast({ isOpen: true, message: tErrors("connectionsFetchError") });
 				return;
 			}
 
@@ -86,7 +86,7 @@ export const AddTriggerForm = () => {
 		setIsLoading(false);
 
 		if (error) {
-			setToast({ isOpen: true, message: tError("triggerNotCreated") });
+			setToast({ isOpen: true, message: tErrors("triggerNotCreated") });
 			return;
 		}
 
@@ -172,7 +172,7 @@ export const AddTriggerForm = () => {
 						<div className="flex items-center gap-1 text-gray-300 text-base">
 							{t("titleData")}
 							<div className="cursor-pointer" title={t("titleInfo")}>
-								<Info className="fill-white" />
+								<InfoIcon className="fill-white" />
 							</div>
 						</div>
 						<div className="flex gap-6">
@@ -206,7 +206,7 @@ export const AddTriggerForm = () => {
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
 			>
-				<p className="font-semibold text-error">{tError("error")}</p>
+				<p className="font-semibold text-error">{tErrors("error")}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>

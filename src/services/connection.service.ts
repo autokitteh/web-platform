@@ -22,7 +22,7 @@ export class ConnectionService {
 		}
 	}
 
-	static async list(projectId: string): Promise<ServiceResponse<Connection[]>> {
+	static async listByProjectId(projectId: string): Promise<ServiceResponse<Connection[]>> {
 		try {
 			const { connections } = await connectionsClient.list({ projectId });
 			if (!connections) {

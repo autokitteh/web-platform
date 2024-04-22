@@ -32,7 +32,7 @@ export const TriggersContent = () => {
 	const navigate = useNavigate();
 
 	const fetchTriggers = async () => {
-		const { data } = await TriggersService.list(projectId!);
+		const { data } = await TriggersService.listByProjectId(projectId!);
 		if (!data) return;
 		setTriggers(data);
 	};

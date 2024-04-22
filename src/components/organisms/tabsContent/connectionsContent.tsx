@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PlusCircle, ThreeDots, Info, TestS } from "@assets/image";
+import { PlusCircle, ThreeDots, InfoIcon, TestS } from "@assets/image";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
 import { SortButton, DropdownButton, TableConnectionInfo, TableConnectionAction } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
@@ -96,7 +96,7 @@ export const ConnectionsContent = ({ className }: ConnectionsContentProps) => {
 							<Td className="p-0 max-w-8">
 								<DropdownButton className="flex-col gap-1" contentMenu={<TableConnectionInfo />}>
 									<IconButton className="w-6 h-6 p-1 hover:bg-transparent">
-										<Info className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
+										<InfoIcon className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
 									</IconButton>
 								</DropdownButton>
 							</Td>

@@ -4,7 +4,16 @@ export { default as LogoFrame } from "@assets/image/LogoFrame.svg?react";
 export { default as IconLogoName } from "@assets/image/LogoName.svg?react";
 export { default as DefaultAvatar } from "@assets/image/avatar.png";
 export { default as Map } from "@assets/image/Map.svg?react";
-export { Minimize, PlusCircle, ArrowDown, ArrowUp, Info, SmallArrowDown, TestS, ThreeDots } from "@assets/image/icons";
+export {
+	Minimize,
+	PlusCircle,
+	ArrowDown,
+	ArrowUp,
+	InfoIcon,
+	SmallArrowDown,
+	TestS,
+	ThreeDots,
+} from "@assets/image/icons";
 export {
 	Connections,
 	Dashboard,
