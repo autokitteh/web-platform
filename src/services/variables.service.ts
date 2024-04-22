@@ -7,7 +7,7 @@ import { Variable } from "@type/models";
 import i18n from "i18next";
 
 export class VariablesService {
-	static async create(singleVariable: Variable): Promise<ServiceResponse<string>> {
+	static async set(singleVariable: Variable): Promise<ServiceResponse<string>> {
 		try {
 			await environmentsClient.setVar({ var: singleVariable });
 
@@ -47,7 +47,7 @@ export class VariablesService {
 		}
 	}
 
-	static async get(envId: string, name: string): Promise<ServiceResponse<TVariable>> {
+	static async get(envId: string, name: string): Promise<ServiceResponse<Variable>> {
 		try {
 			const { data: environmentVariables } = await this.list(envId);
 			const variable = environmentVariables?.find((env) => env.name === name);

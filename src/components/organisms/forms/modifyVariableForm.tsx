@@ -57,25 +57,14 @@ export const ModifyVariableForm = () => {
 		const { name, value } = getValues();
 		setIsLoading(true);
 
-		const { error } = await VariablesService.delete({
-			envId: environmentId!,
-			name,
-		});
-		setIsLoading(false);
-
-		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
-			return;
-		}
-
-		const { error: errorCreate } = await VariablesService.create({
+		const { error: errorCreate } = await VariablesService.set({
 			envId: environmentId!,
 			name,
 			value,
 			isSecret: false,
 		});
 
-		if (errorCreate) setToast({ isOpen: true, message: (error as Error).message });
+		if (errorCreate) setToast({ isOpen: true, message: (errorCreate as Error).message });
 
 		await getProjectVariables();
 		navigate(-1);
@@ -95,6 +84,7 @@ export const ModifyVariableForm = () => {
 						{...register("name")}
 						aria-label={tForm("placeholders.name")}
 						className={dirtyFields["name"] ? "border-white" : ""}
+						disabled
 						isError={!!errors.name}
 						placeholder={tForm("placeholders.name")}
 					/>

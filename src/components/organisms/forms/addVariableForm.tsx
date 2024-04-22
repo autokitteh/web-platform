@@ -39,7 +39,7 @@ export const AddVariableForm = () => {
 	const onSubmit = async () => {
 		const { name, value } = getValues();
 		setIsLoading(true);
-		const { error } = await VariablesService.create({
+		const { error } = await VariablesService.set({
 			envId: environments[0].envId,
 			name,
 			value,
