@@ -19,22 +19,25 @@ export class TriggersService {
 				);
 				return { data: undefined, error };
 			}
-
 			const { connectionId, eventType, path, name, filter, data } = trigger;
 
-			const { triggerId } = await triggersClient.create({
-				trigger: {
-					triggerId: undefined,
-					envId: environments && environments[0].envId,
-					connectionId,
-					eventType,
-					filter,
-					codeLocation: { path, name },
-					data,
-				},
-			});
+			if (environments && environments.length === 1) {
+				const { triggerId } = await triggersClient.create({
+					trigger: {
+						triggerId: undefined,
+						envId: environments[0].envId,
+						connectionId,
+						eventType,
+						filter,
+						codeLocation: { path, name },
+						data,
+					},
+				});
 
-			return { data: triggerId, error: undefined };
+				return { data: triggerId, error: undefined };
+			} else {
+				throw new Error("Invalid number of environments");
+			}
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
@@ -73,20 +76,23 @@ export class TriggersService {
 			}
 
 			const { triggerId, connectionId, eventType, path, name, filter, data } = trigger;
+			if (environments && environments.length === 1) {
+				await triggersClient.update({
+					trigger: {
+						triggerId,
+						connectionId,
+						envId: environments && environments[0].envId,
+						eventType,
+						filter,
+						codeLocation: { path, name },
+						data,
+					},
+				});
 
-			await triggersClient.update({
-				trigger: {
-					triggerId,
-					connectionId,
-					envId: environments && environments[0].envId,
-					eventType,
-					filter,
-					codeLocation: { path, name },
-					data,
-				},
-			});
-
-			return { data: undefined, error: undefined };
+				return { data: undefined, error: undefined };
+			} else {
+				throw new Error("Invalid number of environments");
+			}
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,

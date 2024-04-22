@@ -8,10 +8,9 @@ import { useModalStore } from "@store";
 import { Trigger } from "@type/models";
 import { useTranslation, Trans } from "react-i18next";
 
-export const ModalDeleteTrigger = ({ onDelete }: ModalDeleteTriggerProps) => {
+export const ModalDeleteTrigger = ({ onDelete, triggerId }: ModalDeleteTriggerProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
 	const { closeModal } = useModalStore();
-	const triggerId = useModalStore((state) => state.data as string);
 
 	const [trigger, setTrigger] = useState<Trigger>();
 

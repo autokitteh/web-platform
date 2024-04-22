@@ -18,13 +18,12 @@ export const TriggersContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { openModal, closeModal } = useModalStore();
 	const { projectId } = useParams();
-	const triggerId = useModalStore((state) => state.data as string);
-
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Trigger;
 	}>({ direction: ESortDirection.ASC, column: "name" });
 	const [triggers, setTriggers] = useState<Trigger[]>([]);
+	const [triggerId, setTriggerId] = useState<string>();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -75,10 +74,10 @@ export const TriggersContent = () => {
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
 					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
-					href="add-new-trigger"
+					href={`add-new-trigger/${projectId}`}
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					Add new
+					{t("buttonAddNew")}
 				</Button>
 			</div>
 			{triggers.length ? (
@@ -138,7 +137,10 @@ export const TriggersContent = () => {
 												<Button
 													ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => openModal(EModalName.deleteTrigger, trigger.triggerId)}
+													onClick={() => {
+														setTriggerId(trigger.triggerId);
+														openModal(EModalName.deleteTrigger);
+													}}
 												>
 													{t("table.buttons.delete")}
 												</Button>
@@ -168,7 +170,7 @@ export const TriggersContent = () => {
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 
-			<ModalDeleteTrigger onDelete={handleDeleteTrigger} />
+			<ModalDeleteTrigger onDelete={handleDeleteTrigger} triggerId={triggerId} />
 		</div>
 	);
 };
