@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 export const ModifyTriggerForm = () => {
 	const navigate = useNavigate();
 	const {
-		currentProject: { resources, activeModifyTrigger },
+		currentProject: { projectId, resources, activeModifyTrigger },
 	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -69,7 +69,7 @@ export const ModifyTriggerForm = () => {
 		const { connection, filePath, entrypoint, eventType } = getValues();
 
 		setIsLoading(true);
-		const { error } = await TriggersService.update({
+		const { error } = await TriggersService.update(projectId!, {
 			connectionId: connection.value,
 			eventType,
 			path: filePath.label,

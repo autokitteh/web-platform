@@ -59,9 +59,19 @@ export class TriggersService {
 		}
 	}
 
-	static async update(trigger: Trigger): Promise<ServiceResponse<void>> {
+	static async update(projectId: string, trigger: Trigger): Promise<ServiceResponse<void>> {
 		try {
-			await triggersClient.update({ trigger });
+			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
+
+			if (error || !environments?.length) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
+				);
+				return { data: undefined, error };
+			}
+
+			await triggersClient.update({ trigger: { ...trigger, envId: environments[0].envId } });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
