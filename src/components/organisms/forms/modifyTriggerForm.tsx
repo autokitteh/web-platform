@@ -79,7 +79,7 @@ export const ModifyTriggerForm = () => {
 		setIsLoading(false);
 
 		if (error) {
-			setToast({ isOpen: true, message: tError("triggerNotCreated") });
+			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
 
