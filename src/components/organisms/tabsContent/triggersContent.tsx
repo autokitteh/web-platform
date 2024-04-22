@@ -131,7 +131,7 @@ export const TriggersContent = () => {
 												<Button
 													ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => navigate(trigger.triggerId!)}
+													onClick={() => navigate(`modify-trigger/${trigger.triggerId!}`)}
 												>
 													{t("table.buttons.modify")}
 												</Button>

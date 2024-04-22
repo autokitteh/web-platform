@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
 				element: <ModifyVariable />,
 			},
 			{
-				path: ":triggerId",
+				path: "modify-trigger/:triggerId",
 				element: <ModifyTrigger />,
 			},
 			{
