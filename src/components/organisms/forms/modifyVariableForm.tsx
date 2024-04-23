@@ -70,7 +70,11 @@ export const ModifyVariableForm = () => {
 		navigate(-1);
 	};
 
-	return currentVariable ? (
+	if (!currentVariable) {
+		return <div>{tForm("loading")}...</div>;
+	}
+
+	return (
 		<div className="min-w-550">
 			<TabFormHeader
 				className="mb-11"
@@ -111,7 +115,5 @@ export const ModifyVariableForm = () => {
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>
-	) : (
-		<div>{tForm("loading")}...</div>
 	);
 };
