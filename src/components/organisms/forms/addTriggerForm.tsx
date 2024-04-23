@@ -29,17 +29,18 @@ export const AddTriggerForm = () => {
 	useLayoutEffect(() => {
 		const fetchData = async () => {
 			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
+			if (!connections?.length) return;
 
 			if (error) {
 				setToast({ isOpen: true, message: tErrors("connectionsFetchError") });
 				return;
 			}
 
-			const formattedConnections = connections?.map((item) => ({
+			const formattedConnections = connections.map((item) => ({
 				value: item.connectionId,
 				label: item.name,
 			}));
-			setConnections(formattedConnections || []);
+			setConnections(formattedConnections);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				value: name,

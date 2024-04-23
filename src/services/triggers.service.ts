@@ -19,25 +19,30 @@ export class TriggersService {
 				);
 				return { data: undefined, error };
 			}
+
+			if (!environments?.length) {
+				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
+			}
+
+			if (environments.length !== 1) {
+				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
+			}
+
 			const { connectionId, eventType, path, name, filter, data } = trigger;
 
-			if (environments && environments.length === 1) {
-				const { triggerId } = await triggersClient.create({
-					trigger: {
-						triggerId: undefined,
-						envId: environments[0].envId,
-						connectionId,
-						eventType,
-						filter,
-						codeLocation: { path, name },
-						data,
-					},
-				});
+			const { triggerId } = await triggersClient.create({
+				trigger: {
+					triggerId: undefined,
+					envId: environments[0].envId,
+					connectionId,
+					eventType,
+					filter,
+					codeLocation: { path, name },
+					data,
+				},
+			});
 
-				return { data: triggerId, error: undefined };
-			} else {
-				throw new Error(i18n.t("environmentNotFound", { ns: "services" }));
-			}
+			return { data: triggerId, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
@@ -75,24 +80,29 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			const { triggerId, connectionId, eventType, path, name, filter, data } = trigger;
-			if (environments && environments.length === 1) {
-				await triggersClient.update({
-					trigger: {
-						triggerId,
-						connectionId,
-						envId: environments && environments[0].envId,
-						eventType,
-						filter,
-						codeLocation: { path, name },
-						data,
-					},
-				});
-
-				return { data: undefined, error: undefined };
-			} else {
-				throw new Error(i18n.t("environmentNotFound", { ns: "services" }));
+			if (!environments?.length) {
+				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
 			}
+
+			if (environments.length !== 1) {
+				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
+			}
+
+			const { triggerId, connectionId, eventType, path, name, filter, data } = trigger;
+
+			await triggersClient.update({
+				trigger: {
+					triggerId,
+					connectionId,
+					envId: environments && environments[0].envId,
+					eventType,
+					filter,
+					codeLocation: { path, name },
+					data,
+				},
+			});
+
+			return { data: undefined, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
