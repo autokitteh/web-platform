@@ -34,7 +34,6 @@ const defaultState: Omit<
 		resources: {},
 		environments: [],
 		variables: [],
-		activeModifyVariable: undefined,
 	},
 	activeTab: EProjectTabs.codeAndAssets,
 };
@@ -204,13 +203,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			}
 
 			state.currentProject.openedFiles = newOpenedFiles;
-			return state;
-		});
-	},
-
-	setProjectModifyVariable: (name, value) => {
-		set((state) => {
-			state.currentProject.activeModifyVariable = { name, value };
 			return state;
 		});
 	},

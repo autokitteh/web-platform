@@ -26,26 +26,24 @@ export const VariablesContent = () => {
 		isOpen: false,
 		message: "",
 	});
-	const navigate = useNavigate();
-	const envId = currentProject.environments[0].envId;
+	const [deleteVariable, setDeleteVariable] = useState<Variable>();
 
-	const toggleSortTriggers = (key: keyof Variable) => {
+	const navigate = useNavigate();
+	const envId = currentProject?.environments?.[0]?.envId;
+
+	const toggleSortVariables = (key: keyof Variable) => {
 		const newDirection =
 			sort.column === key && sort.direction === ESortDirection.ASC ? ESortDirection.DESC : ESortDirection.ASC;
 
-		const sortedConnections = orderBy(variables, [key], [newDirection]);
+		const sortedVariables = orderBy(variables, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
-		setVariables(sortedConnections);
+		setVariables(sortedVariables);
 	};
 
 	const handleDeleteVariable = async () => {
-		if (!currentProject.activeModifyVariable) return;
-
-		const variableName = currentProject.activeModifyVariable.name;
-
 		const { error } = await VariablesService.delete({
 			envId,
-			name: variableName,
+			name: deleteVariable!.name,
 		});
 		closeModal(EModalName.deleteVariable);
 
@@ -55,6 +53,11 @@ export const VariablesContent = () => {
 		}
 
 		getProjectVariables();
+	};
+
+	const showDeleteModal = (variableName: string, variableValue: string) => {
+		openModal(EModalName.deleteVariable);
+		setDeleteVariable({ name: variableName, value: variableValue, envId, isSecret: false });
 	};
 
 	return (
@@ -74,7 +77,7 @@ export const VariablesContent = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("name")}>
+							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortVariables("name")}>
 								{t("table.columns.name")}
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByName")}
@@ -83,7 +86,7 @@ export const VariablesContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => toggleSortTriggers("value")}>
+							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => toggleSortVariables("value")}>
 								{t("table.columns.value")}
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByValue")}
@@ -116,9 +119,7 @@ export const VariablesContent = () => {
 												<Button
 													ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
 													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => {
-														openModal(EModalName.deleteVariable);
-													}}
+													onClick={() => showDeleteModal(name, value)}
 												>
 													{t("table.buttons.delete")}
 												</Button>
@@ -148,7 +149,7 @@ export const VariablesContent = () => {
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 
-			<ModalDeleteVariable onDelete={handleDeleteVariable} />
+			<ModalDeleteVariable onDelete={handleDeleteVariable} variable={deleteVariable!} />
 		</div>
 	);
 };

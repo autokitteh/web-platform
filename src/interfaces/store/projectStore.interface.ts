@@ -32,7 +32,6 @@ export interface ProjectStore {
 	getProjectResources: () => Promise<ProjectStoreResponse>;
 	getProjecEnvironments: () => Promise<ProjectStoreResponse>;
 	getProjectVariables: () => Promise<ProjectStoreResponse>;
-	setProjectModifyVariable: (name: string, value: string) => void;
 	updateEditorOpenedFiles: (fileName: string) => void;
 	updateEditorClosedFiles: (fileName: string) => void;
 	removeProjectFile: (fileName: string) => Promise<ProjectStoreResponse>;
