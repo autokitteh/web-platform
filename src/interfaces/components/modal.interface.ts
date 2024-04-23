@@ -16,7 +16,7 @@ export interface ModalDeleteTriggerProps {
 
 export interface ModalDeleteVariableProps {
 	onDelete?: () => void;
-	variable: Variable | undefined;
+	variable?: Variable;
 }
 
 export interface ModalModifyVariableProps {
