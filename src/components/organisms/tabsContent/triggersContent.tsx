@@ -32,9 +32,14 @@ export const TriggersContent = () => {
 	});
 
 	const fetchTriggers = async () => {
-		const { data } = await TriggersService.listByProjectId(projectId!);
-		if (!data) return;
-		setTriggers(data);
+		if (!projectId) return;
+		const { data: triggers, error } = await TriggersService.listByProjectId(projectId);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			LoggerService.error(namespaces.projectUI, (error as Error).message);
+		}
+		if (!triggers) return;
+		setTriggers(triggers);
 	};
 
 	useEffect(() => {
