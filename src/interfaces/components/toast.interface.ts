@@ -1,9 +1,9 @@
-import { ToastVariant } from "@enums/components";
+import { ToastType } from "@type/components";
 
 export interface ToastProps {
 	className?: string;
 	title?: string;
-	type: keyof typeof ToastVariant;
+	type: ToastType;
 	children: React.ReactNode;
 	isOpen: boolean;
 	duration?: number;
