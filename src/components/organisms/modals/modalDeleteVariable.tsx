@@ -3,15 +3,12 @@ import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { EModalName } from "@enums/components";
 import { ModalDeleteVariableProps } from "@interfaces/components";
-import { useModalStore, useProjectStore } from "@store";
+import { useModalStore } from "@store";
 import { useTranslation, Trans } from "react-i18next";
 
-export const ModalDeleteVariable = ({ onDelete }: ModalDeleteVariableProps) => {
+export const ModalDeleteVariable = ({ onDelete, variable }: ModalDeleteVariableProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteVariable" });
 	const { closeModal } = useModalStore();
-	const {
-		currentProject: { activeModifyVariable },
-	} = useProjectStore();
 
 	return (
 		<Modal name={EModalName.deleteVariable}>
@@ -21,8 +18,8 @@ export const ModalDeleteVariable = ({ onDelete }: ModalDeleteVariableProps) => {
 				<p className="font-medium">
 					<Trans>
 						{t("line2", {
-							name: `<strong>${activeModifyVariable?.name}</strong><br/>`,
-							value: `<strong>${activeModifyVariable?.value}</strong>`,
+							name: `<strong>${variable?.name}</strong><br/>`,
+							value: `<strong>${variable?.value}</strong>`,
 						})}
 					</Trans>
 				</p>

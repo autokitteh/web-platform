@@ -1,3 +1,5 @@
+import { Variable } from "@type/models";
+
 export interface ModalProps {
 	className?: string;
 	children: React.ReactNode;
@@ -14,6 +16,7 @@ export interface ModalDeleteTriggerProps {
 
 export interface ModalDeleteVariableProps {
 	onDelete?: () => void;
+	variable?: Variable;
 }
 
 export interface ModalModifyVariableProps {

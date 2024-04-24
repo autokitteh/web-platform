@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
 				element: <NewVariable />,
 			},
 			{
-				path: "modify-variable",
+				path: "modify-variable/:environmentId/:variableName",
 				element: <ModifyVariable />,
 			},
 			{
