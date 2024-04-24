@@ -3,9 +3,8 @@ import { PlusCircle, ThreeDots } from "@assets/image";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton, DropdownButton } from "@components/molecules";
 import { ModalDeleteTrigger } from "@components/organisms/modals";
-import { namespaces } from "@constants";
 import { EModalName, ESortDirection } from "@enums/components";
-import { LoggerService, TriggersService } from "@services";
+import { TriggersService } from "@services";
 import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Trigger } from "@type/models";
@@ -61,10 +60,6 @@ export const TriggersContent = () => {
 		closeModal(EModalName.deleteTrigger);
 		if (error) {
 			setToast({ isOpen: true, message: tError("triggerRemoveFailed") });
-			LoggerService.error(
-				namespaces.projectUI,
-				t("triggerFailedExtended", { triggerId: triggerId, error: (error as Error).message })
-			);
 			return;
 		}
 		fetchTriggers();
