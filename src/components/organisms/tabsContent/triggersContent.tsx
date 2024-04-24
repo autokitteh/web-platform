@@ -3,7 +3,7 @@ import { PlusCircle, ThreeDots } from "@assets/image";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton, DropdownButton } from "@components/molecules";
 import { ModalDeleteTrigger } from "@components/organisms/modals";
-import { fetchMenuInterval, namespaces } from "@constants";
+import { namespaces } from "@constants";
 import { EModalName, ESortDirection } from "@enums/components";
 import { LoggerService, TriggersService } from "@services";
 import { useModalStore } from "@store";
@@ -44,9 +44,6 @@ export const TriggersContent = () => {
 
 	useEffect(() => {
 		fetchTriggers();
-
-		const intervalMenu = setInterval(fetchTriggers, fetchMenuInterval);
-		return () => clearInterval(intervalMenu);
 	}, []);
 
 	const toggleSortTriggers = (key: keyof Trigger) => {
