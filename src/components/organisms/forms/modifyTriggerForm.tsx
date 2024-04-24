@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { InfoIcon } from "@assets/image";
 import { Select, ErrorMessage, Toast, Input } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -6,12 +6,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
+import { Trigger } from "@type/models";
 import { newTriggerSchema } from "@validations";
+import { get, keys } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-export const AddTriggerForm = () => {
+export const ModifyTriggerForm = () => {
+	const { triggerId } = useParams();
 	const navigate = useNavigate();
 	const {
 		currentProject: { projectId, resources },
@@ -23,8 +26,19 @@ export const AddTriggerForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
+	const [trigger, setTrigger] = useState<Trigger>();
 	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
+
+	useLayoutEffect(() => {
+		const fetchTrigger = async () => {
+			const { data } = await TriggersService.get(triggerId!);
+			if (!data) return;
+			setTrigger(data);
+		};
+
+		fetchTrigger();
+	}, []);
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {
@@ -49,8 +63,10 @@ export const AddTriggerForm = () => {
 			setFilesName(formattedResources);
 		};
 		fetchData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	const keyData = keys(get(trigger, "data"))[0] || "";
+	const valueData = get(trigger, ["data", keyData, "string", "v"], "");
 
 	const {
 		register,
@@ -58,6 +74,7 @@ export const AddTriggerForm = () => {
 		formState: { errors, dirtyFields },
 		control,
 		getValues,
+		reset,
 	} = useForm({
 		resolver: zodResolver(newTriggerSchema),
 		defaultValues: {
@@ -66,17 +83,27 @@ export const AddTriggerForm = () => {
 			entryFunction: "",
 			eventType: "",
 			filter: "",
-			key: "",
-			value: "",
+			key: keyData,
+			value: valueData,
 		},
 	});
+
+	useEffect(() => {
+		reset({
+			connection: { value: trigger?.connectionId, label: trigger?.connectionName },
+			filePath: { value: trigger?.path, label: trigger?.path },
+			entryFunction: trigger?.name,
+			eventType: trigger?.eventType,
+			filter: trigger?.filter,
+		});
+	}, [trigger]);
 
 	const onSubmit = async () => {
 		const { connection, filePath, entryFunction, eventType, filter, key, value } = getValues();
 
 		setIsLoading(true);
-		const { error } = await TriggersService.create(projectId!, {
-			triggerId: undefined,
+		const { error } = await TriggersService.update(projectId!, {
+			triggerId: trigger?.triggerId,
 			connectionId: connection.value,
 			eventType,
 			path: filePath.label,
@@ -87,7 +114,7 @@ export const AddTriggerForm = () => {
 		setIsLoading(false);
 
 		if (error) {
-			setToast({ isOpen: true, message: tErrors("triggerNotCreated") });
+			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
 
@@ -98,8 +125,8 @@ export const AddTriggerForm = () => {
 
 	return (
 		<div className="min-w-550">
-			<TabFormHeader className="mb-11" form="createNewTriggerForm" isLoading={isLoading} title={t("addNewTrigger")} />
-			<form className="flex items-start gap-10" id="createNewTriggerForm" onSubmit={handleSubmit(onSubmit)}>
+			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
+			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">
 					<div className="relative">
 						<Controller
@@ -150,7 +177,6 @@ export const AddTriggerForm = () => {
 					</div>
 					<div className="relative">
 						<Input
-							isRequired
 							{...register("eventType")}
 							aria-label={t("placeholders.eventType")}
 							className={inputClass("eventType")}

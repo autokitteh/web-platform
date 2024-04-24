@@ -22,9 +22,9 @@ export class ConnectionService {
 		}
 	}
 
-	static async list(): Promise<ServiceResponse<Connection[]>> {
+	static async listByProjectId(projectId: string): Promise<ServiceResponse<Connection[]>> {
 		try {
-			const { connections } = await connectionsClient.list({});
+			const { connections } = await connectionsClient.list({ projectId });
 			if (!connections) {
 				LoggerService.error(namespaces.triggerService, i18n.t("connectionNotFound", { ns: "services" }));
 

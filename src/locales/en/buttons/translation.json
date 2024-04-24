@@ -6,5 +6,6 @@
 	"create": "Create",
 	"cancel": "Cancel",
 	"save": "Save",
-	"loading": "Loading"
+	"loading": "Loading",
+	"ariaLabelReturnBack": "Return back"
 }

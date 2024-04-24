@@ -11,6 +11,7 @@ export interface ModalAddCodeAssetsProps {
 }
 
 export interface ModalDeleteTriggerProps {
+	triggerId?: string;
 	onDelete?: () => void;
 }
 

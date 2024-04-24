@@ -1,5 +1,4 @@
 {
-	"ariaLabelReturnBack": "Return back",
 	"connections": {
 		"form": {
 			"addNewConnection": "Add new connection",
@@ -12,6 +11,41 @@
 			"buttons": {
 				"testConnection": "Test Connection",
 				"testing": "Testing"
+			}
+		}
+	},
+	"triggers": {
+		"titleAvailable": "Available Triggers",
+		"titleNoAvailable": "No triggers available.",
+		"buttonAddNew": "Add new",
+		"table": {
+			"columns": {
+				"connection": "Connection",
+				"fileName": "File name",
+				"entrypoint": "Entry Point",
+				"eventType": "Event Type",
+				"call": "Call"
+			},
+			"buttons": {
+				"modify": "Modify",
+				"delete": "Delete",
+				"ariaModifyTrigger": "Modify {{name}} trigger",
+				"ariaDeleteTrigger": "Delete {{name}} trigger"
+			}
+		},
+		"form": {
+			"addNewTrigger": "Add new trigger",
+			"modifyTrigger": "Modify trigger",
+			"titleData": "Data",
+			"titleInfo": "Relevant only for HTTP",
+			"placeholders": {
+				"selectConnection": "Select connection",
+				"selectFile": "Select file",
+				"entryFunction": "Entry function",
+				"eventType": "Event type",
+				"filter": "Filter",
+				"key": "Key",
+				"value": "Value"
 			}
 		}
 	},
