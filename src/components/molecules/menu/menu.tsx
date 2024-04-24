@@ -21,7 +21,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { list, getProjectsList } = useProjectStore();
 	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
-		isOpen: false,
+		isOpen: true,
 		message: "",
 	});
 
@@ -135,12 +135,12 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 				))}
 			</div>
 			<Toast
-				className="border-error"
 				duration={5}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
+				title={t("error", { ns: "errors" })}
+				type="error"
 			>
-				<p className="font-semibold text-error">{t("error", { ns: "errors" })}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</>

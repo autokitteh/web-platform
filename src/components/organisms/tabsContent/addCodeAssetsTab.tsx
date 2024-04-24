@@ -148,12 +148,12 @@ export const AddCodeAssetsTab = () => {
 			<ModalDeleteFile onDelete={handleRemoveFile} />
 			<ModalAddCodeAssets onError={(message) => setToast({ isOpen: true, message })} />
 			<Toast
-				className="border-error"
-				duration={10}
+				duration={5}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
+				title={t("error")}
+				type="error"
 			>
-				<p className="font-semibold text-error">{t("error")}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>
