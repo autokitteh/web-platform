@@ -36,7 +36,6 @@ export const TriggersContent = () => {
 		const { data: triggers, error } = await TriggersService.listByProjectId(projectId);
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
-			LoggerService.error(namespaces.projectUI, (error as Error).message);
 		}
 		if (!triggers) return;
 		setTriggers(triggers);
