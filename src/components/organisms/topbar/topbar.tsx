@@ -104,12 +104,10 @@ export const Topbar = () => {
 		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.deploy]: false }));
 	};
 
-	const handleCloseToast = () => setToast({ ...toast, isOpen: false });
-
 	const toastProps = {
 		duration: 5,
 		isOpen: toast.isOpen,
-		onClose: handleCloseToast,
+		onClose: () => setToast({ ...toast, isOpen: false }),
 		title: toast.isSuccess ? t("topbar.success") : t("error", { ns: "errors" }),
 	};
 
