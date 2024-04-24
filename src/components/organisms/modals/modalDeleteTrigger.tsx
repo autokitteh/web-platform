@@ -15,14 +15,15 @@ export const ModalDeleteTrigger = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 	const [trigger, setTrigger] = useState<Trigger>();
 
 	useEffect(() => {
-		if (triggerId) {
-			const fetchTrigger = async () => {
-				const { data } = await TriggersService.get(triggerId);
-				if (!data) return;
-				setTrigger(data);
-			};
-			fetchTrigger();
+		if (!triggerId) {
+			return;
 		}
+		const fetchTrigger = async () => {
+			const { data } = await TriggersService.get(triggerId);
+			if (!data) return;
+			setTrigger(data);
+		};
+		fetchTrigger();
 	}, [triggerId]);
 
 	return (
