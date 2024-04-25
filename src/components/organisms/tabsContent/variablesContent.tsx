@@ -28,8 +28,8 @@ export const VariablesContent = () => {
 		message: "",
 	});
 	const [deleteVariable, setDeleteVariable] = useState<Variable>();
-
 	const navigate = useNavigate();
+
 	const envId = currentProject?.environments?.[0]?.envId;
 
 	const toggleSortVariables = (key: keyof Variable) => {
@@ -48,7 +48,7 @@ export const VariablesContent = () => {
 		});
 		closeModal(EModalName.deleteVariable);
 
-		if (error as Error) {
+		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
@@ -56,7 +56,10 @@ export const VariablesContent = () => {
 		getProjectVariables();
 	};
 
-	useEffect(() => setVariables(currentProject.variables), [currentProject.variables]);
+	useEffect(() => {
+		const sortedVariables = orderBy(currentProject.variables, [sort.column], [sort.direction]);
+		setVariables(sortedVariables);
+	}, [currentProject.variables]);
 
 	const showDeleteModal = (variableName: string, variableValue: string) => {
 		openModal(EModalName.deleteVariable);
