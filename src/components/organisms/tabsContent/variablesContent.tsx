@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { PlusCircle, ThreeDots } from "@assets/image";
+import React, { useState, useEffect } from "react";
+import { PlusCircle } from "@assets/image";
+import { TrashIcon, EditIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
-import { SortButton, DropdownButton } from "@components/molecules";
+import { SortButton } from "@components/molecules";
 import { ModalDeleteVariable } from "@components/organisms/modals";
 import { EModalName, ESortDirection } from "@enums/components";
 import { VariablesService } from "@services";
@@ -55,6 +56,8 @@ export const VariablesContent = () => {
 		getProjectVariables();
 	};
 
+	useEffect(() => setVariables(currentProject.variables), [currentProject.variables]);
+
 	const showDeleteModal = (variableName: string, variableValue: string) => {
 		openModal(EModalName.deleteVariable);
 		setDeleteVariable({ name: variableName, value: variableValue, envId, isSecret: false });
@@ -95,7 +98,8 @@ export const VariablesContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="max-w-10 border-0" />
+							<Th className="max-w-11 border-0" />
+							<Th className="max-w-8 border-0" />
 						</Tr>
 					</THead>
 					<TBody>
@@ -103,33 +107,21 @@ export const VariablesContent = () => {
 							<Tr className="group" key={idx}>
 								<Td className="font-semibold">{name}</Td>
 								<Td className="border-r-0">{value}</Td>
-								<Td className="max-w-10 border-0 pr-1.5 justify-end">
-									<DropdownButton
-										ariaLabel={t("table.buttons.ariaVariableOptions")}
-										className="flex-col gap-1"
-										contentMenu={
-											<>
-												<Button
-													ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
-													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => navigate(`modify-variable/${envId}/${name}`)}
-												>
-													{t("table.buttons.modify")}
-												</Button>
-												<Button
-													ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
-													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => showDeleteModal(name, value)}
-												>
-													{t("table.buttons.delete")}
-												</Button>
-											</>
-										}
+								<Td className="max-w-11 border-0 pr-1.5 justify-end">
+									<IconButton
+										ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
+										onClick={() => navigate(`modify-variable/${envId}/${name}`)}
 									>
-										<IconButton className="w-6 h-6 p-1 hover:bg-gray-700">
-											<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
-										</IconButton>
-									</DropdownButton>
+										<EditIcon className="fill-white w-3 h-3" />
+									</IconButton>
+								</Td>
+								<Td className="max-w-8 border-0 pl-0 pr-1 justify-end">
+									<IconButton
+										ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
+										onClick={() => showDeleteModal(name, value)}
+									>
+										<TrashIcon className="fill-white w-3 h-3" />
+									</IconButton>
 								</Td>
 							</Tr>
 						))}
