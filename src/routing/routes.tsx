@@ -29,8 +29,12 @@ export const router = createBrowserRouter([
 				element: <NewConnection />,
 			},
 			{
-				path: "add-new-trigger",
+				path: "add-new-trigger/:triggerId",
 				element: <NewTrigger />,
+			},
+			{
+				path: "modify-trigger/:triggerId",
+				element: <ModifyTrigger />,
 			},
 			{
 				path: "add-new-variable",
@@ -39,10 +43,6 @@ export const router = createBrowserRouter([
 			{
 				path: "modify-variable/:environmentId/:variableName",
 				element: <ModifyVariable />,
-			},
-			{
-				path: "modify-trigger/:triggerId",
-				element: <ModifyTrigger />,
 			},
 			{
 				path: "",
