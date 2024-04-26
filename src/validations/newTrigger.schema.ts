@@ -15,6 +15,5 @@ export const newTriggerSchema = z.object({
 	}),
 	entryFunction: z.string().min(1, "Entry function is required"),
 	eventType: z.string().min(1, "Event type is required"),
-	key: z.string(),
-	value: z.string(),
+	filter: z.string(),
 });

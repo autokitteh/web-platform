@@ -6,9 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
-import { Trigger } from "@type/models";
+import { Trigger, TriggerData } from "@type/models";
 import { newTriggerSchema } from "@validations";
-import { get, keys } from "lodash";
+import { debounce } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -27,6 +27,7 @@ export const ModifyTriggerForm = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
 	const [trigger, setTrigger] = useState<Trigger>();
+	const [triggerData, setTriggerData] = useState<TriggerData>({});
 	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 
@@ -35,6 +36,7 @@ export const ModifyTriggerForm = () => {
 			const { data } = await TriggersService.get(triggerId!);
 			if (!data) return;
 			setTrigger(data);
+			setTriggerData(data.data || {});
 		};
 
 		fetchTrigger();
@@ -65,9 +67,6 @@ export const ModifyTriggerForm = () => {
 		fetchData();
 	}, []);
 
-	const keyData = keys(get(trigger, "data"))[0] || "";
-	const valueData = get(trigger, ["data", keyData, "string", "v"], "");
-
 	const {
 		register,
 		handleSubmit,
@@ -83,23 +82,25 @@ export const ModifyTriggerForm = () => {
 			entryFunction: "",
 			eventType: "",
 			filter: "",
-			key: keyData,
-			value: valueData,
 		},
 	});
 
 	useEffect(() => {
-		reset({
-			connection: { value: trigger?.connectionId, label: trigger?.connectionName },
-			filePath: { value: trigger?.path, label: trigger?.path },
-			entryFunction: trigger?.name,
-			eventType: trigger?.eventType,
-			filter: trigger?.filter,
-		});
+		const resetForm = () => {
+			reset({
+				connection: { value: trigger?.connectionId, label: trigger?.connectionName },
+				filePath: { value: trigger?.path, label: trigger?.path },
+				entryFunction: trigger?.name,
+				eventType: trigger?.eventType,
+				filter: trigger?.filter,
+			});
+		};
+
+		resetForm();
 	}, [trigger]);
 
 	const onSubmit = async () => {
-		const { connection, filePath, entryFunction, eventType, filter, key, value } = getValues();
+		const { connection, filePath, entryFunction, eventType, filter } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.update(projectId!, {
@@ -109,7 +110,7 @@ export const ModifyTriggerForm = () => {
 			path: filePath.label,
 			name: entryFunction,
 			filter,
-			data: key ? { [key]: { string: { v: value } } } : {},
+			data: triggerData,
 		});
 		setIsLoading(false);
 
@@ -122,6 +123,22 @@ export const ModifyTriggerForm = () => {
 	};
 
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
+
+	const updateTriggerDataKey = debounce((newKey, oldKey) => {
+		if (newKey !== oldKey) {
+			const updatedTriggerData = Object.keys(triggerData).reduce((acc: TriggerData, key) => {
+				acc[key === oldKey ? newKey : key] = triggerData[key];
+				return acc;
+			}, {});
+			setTriggerData(updatedTriggerData);
+		}
+	}, 500);
+
+	const updateTriggerDataValue = (value: string, key: string) => {
+		const updatedTriggerData = { ...triggerData };
+		updatedTriggerData[key] = { ...updatedTriggerData[key], string: { v: value } };
+		setTriggerData(updatedTriggerData);
+	};
 
 	return (
 		<div className="min-w-550">
@@ -202,27 +219,33 @@ export const ModifyTriggerForm = () => {
 								<InfoIcon className="fill-white" />
 							</div>
 						</div>
-						<div className="flex gap-6">
-							<div className="relative w-full">
-								<Input
-									{...register("key")}
-									aria-label={t("placeholders.key")}
-									className={inputClass("key")}
-									isError={!!errors.key}
-									placeholder={t("placeholders.key")}
-								/>
-								<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
-							</div>
-							<div className="relative w-full">
-								<Input
-									{...register("value")}
-									aria-label={t("placeholders.value")}
-									className={inputClass("value")}
-									isError={!!errors.value}
-									placeholder={t("placeholders.value")}
-								/>
-								<ErrorMessage>{errors.value?.message as string}</ErrorMessage>
-							</div>
+						<div className="flex flex-col gap-2">
+							{triggerData
+								? Object.entries(triggerData).map(([key, value]) => (
+										<div className="flex gap-6" key={key}>
+											<Input
+												aria-label={t("placeholders.key")}
+												className="w-full"
+												defaultValue={key}
+												onChange={(e) => {
+													const newKey = e.target.value;
+													updateTriggerDataKey(newKey, key);
+												}}
+												placeholder={t("placeholders.key")}
+											/>
+											<Input
+												aria-label={t("placeholders.value")}
+												className="w-full"
+												defaultValue={value.string.v}
+												onChange={(e) => {
+													const newStringValue = e.target.value;
+													updateTriggerDataValue(newStringValue, key);
+												}}
+												placeholder={t("placeholders.value")}
+											/>
+										</div>
+									))
+								: null}
 						</div>
 					</div>
 				</div>
