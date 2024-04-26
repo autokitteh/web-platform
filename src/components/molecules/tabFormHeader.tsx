@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export const TabFormHeader = ({ title, isLoading, form, className }: TabFormHeaderProps) => {
-	const { t } = useTranslation("tabs");
+	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
 	const baseStyle = cn("flex justify-between", className);
 
