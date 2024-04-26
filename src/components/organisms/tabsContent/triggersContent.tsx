@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { PlusCircle, ThreeDots } from "@assets/image";
+import { PlusCircle } from "@assets/image";
+import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
-import { SortButton, DropdownButton } from "@components/molecules";
+import { SortButton } from "@components/molecules";
 import { ModalDeleteTrigger } from "@components/organisms/modals";
 import { EModalName, ESortDirection } from "@enums/components";
 import { TriggersService } from "@services";
@@ -108,7 +109,8 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="max-w-10 border-0" />
+							<Th className="max-w-11 border-0" />
+							<Th className="max-w-8 border-0" />
 						</Tr>
 					</THead>
 					<TBody>
@@ -119,35 +121,24 @@ export const TriggersContent = () => {
 									{trigger.path}:{trigger.name}
 								</Td>
 								<Td className="border-r-0">{trigger.eventType}</Td>
-								<Td className="max-w-10 border-0 pr-1.5 justify-end">
-									<DropdownButton
-										className="flex-col gap-1"
-										contentMenu={
-											<>
-												<Button
-													ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
-													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => navigate(`modify-trigger/${trigger.triggerId!}`)}
-												>
-													{t("table.buttons.modify")}
-												</Button>
-												<Button
-													ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
-													className="px-4 py-1.5 hover:bg-gray-700 rounded-md text-white"
-													onClick={() => {
-														setTriggerId(trigger.triggerId);
-														openModal(EModalName.deleteTrigger);
-													}}
-												>
-													{t("table.buttons.delete")}
-												</Button>
-											</>
-										}
+								<Td className="max-w-11 border-0 pr-1.5 justify-end">
+									<IconButton
+										ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
+										onClick={() => navigate(`modify-trigger/${trigger.triggerId!}`)}
 									>
-										<IconButton className="w-6 h-6 p-1  hover:bg-gray-700">
-											<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
-										</IconButton>
-									</DropdownButton>
+										<EditIcon className="fill-white w-3 h-3" />
+									</IconButton>
+								</Td>
+								<Td className="max-w-8 border-0 pl-0 pr-1 justify-end">
+									<IconButton
+										ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
+										onClick={() => {
+											setTriggerId(trigger.triggerId);
+											openModal(EModalName.deleteTrigger);
+										}}
+									>
+										<TrashIcon className="fill-white w-3 h-3" />
+									</IconButton>
 								</Td>
 							</Tr>
 						))}
