@@ -39,7 +39,13 @@ test.describe("Project Suite", () => {
 
 	async function createVariable(page: Page, name: string, value: string) {
 		await page.goto("");
-		await page.getByRole("button", { name: "New Project" }).click();
+		const button = page.getByRole("button", { name: "New Project" });
+		await button.hover();
+		if (await button.isVisible()) {
+			await button.click();
+		} else {
+			test.fail();
+		}
 		await page.getByRole("tab", { name: EProjectTabs.variables }).click();
 		await page.getByRole("link", { name: "Add new" }).click();
 
@@ -53,7 +59,7 @@ test.describe("Project Suite", () => {
 
 	test("Create variable", async ({ page }) => {
 		await createVariable(page, "nameVariable", "valueVariable");
-		const isVariableCreated = await page.getByText("nameVariable");
+		const isVariableCreated = page.getByText("nameVariable");
 		expect(isVariableCreated).toBeTruthy();
 	});
 
@@ -68,7 +74,7 @@ test.describe("Project Suite", () => {
 
 	test("Delete variable", async ({ page }) => {
 		await createVariable(page, "nameVariable", "valueVariable");
-		const removeVariableButton = await page.getByRole("button", { name: "Delete nameVariable variable" });
+		const removeVariableButton = page.getByRole("button", { name: "Delete nameVariable variable" });
 		await removeVariableButton.click();
 		await page.waitForTimeout(500);
 		await page.getByRole("button", { name: "Yes, delete" }).click();
