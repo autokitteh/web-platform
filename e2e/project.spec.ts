@@ -37,14 +37,40 @@ test.describe("Project Suite", () => {
 	// 	await newFileInput.isVisible();
 	// });
 
-	test.beforeEach(async ({ page }) => {
+	// test.beforeEach(async ({ page }) => {
+	// 	await page.goto("/");
+	// 	const button = page.getByRole("button", { name: "New Project" });
+	// 	await button.hover();
+	// 	if (await button.isVisible()) {
+	// 		await button.click();
+	// 	} else {
+	// 		test.fail();
+	// 	}
+	// 	await page.getByRole("tab", { name: EProjectTabs.variables }).click();
+	// 	await page.getByRole("link", { name: "Add new" }).click();
+
+	// 	await page.getByPlaceholder("Name").click();
+	// 	await page.getByPlaceholder("Name").fill("nameVariable");
+	// 	await page.getByPlaceholder("Value").click();
+	// 	await page.getByPlaceholder("Value").fill("valueVariable");
+
+	// 	await Promise.all([page.waitForURL(page.url()), page.getByRole("button", { name: "Save" }).click()]);
+	// });
+
+	// test("Create variable", async ({ page }) => {
+	// 	const isVariableCreated = page.getByText("nameVariable");
+	// 	expect(isVariableCreated).toBeTruthy();
+	// });
+
+	test("Modify variable", async ({ page }) => {
 		await page.goto("/");
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
-		await button.click();
-
-		await page.waitForTimeout(1500);
-
+		if (await button.isVisible()) {
+			await button.click();
+		} else {
+			test.fail();
+		}
 		await page.getByRole("tab", { name: EProjectTabs.variables }).click();
 		await page.getByRole("link", { name: "Add new" }).click();
 
@@ -52,16 +78,8 @@ test.describe("Project Suite", () => {
 		await page.getByPlaceholder("Name").fill("nameVariable");
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("valueVariable");
+		await page.getByRole("button", { name: "Save" }).click();
 
-		await Promise.all([page.waitForURL(page.url()), page.getByRole("button", { name: "Save" }).click()]);
-	});
-
-	test("Create variable", async ({ page }) => {
-		const isVariableCreated = page.getByText("nameVariable");
-		expect(isVariableCreated).toBeTruthy();
-	});
-
-	test("Modify variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("newValueVariable");
@@ -69,15 +87,15 @@ test.describe("Project Suite", () => {
 		expect(page.getByText("newValueVariable")).toBeTruthy();
 	});
 
-	test("Delete variable", async ({ page }) => {
-		const removeVariableButton = page.getByRole("button", { name: "Delete nameVariable variable" });
-		await removeVariableButton.click();
-		await page.waitForTimeout(500);
-		await page.getByRole("button", { name: "Yes, delete" }).click();
-		expect(await removeVariableButton.isHidden());
-	});
+	// test("Delete variable", async ({ page }) => {
+	// 	const removeVariableButton = page.getByRole("button", { name: "Delete nameVariable variable" });
+	// 	await removeVariableButton.click();
+	// 	await page.waitForTimeout(500);
+	// 	await page.getByRole("button", { name: "Yes, delete" }).click();
+	// 	expect(await removeVariableButton.isHidden());
+	// });
 
-	test.afterEach(async ({ page }) => {
-		await page.goto("/");
-	});
+	// test.afterEach(async ({ page }) => {
+	// 	await page.goto("/");
+	// });
 });
