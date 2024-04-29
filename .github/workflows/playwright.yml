@@ -38,9 +38,7 @@ jobs:
           echo "Backend is up!"
 
       - name: Run Playwright tests
-        run: |
-          git submodule update --init
-          npx playwright test
+        run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: always()
         with:
