@@ -1,5 +1,5 @@
 import { EProjectTabs } from "@enums/components";
-import { test, expect, Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
 test.describe("Project Suite", () => {
 	// test.beforeEach(async ({ page }) => {
@@ -37,8 +37,8 @@ test.describe("Project Suite", () => {
 	// 	await newFileInput.isVisible();
 	// });
 
-	async function createVariable(page: Page, name: string, value: string) {
-		await page.goto("");
+	test.beforeEach(async ({ page }) => {
+		await page.goto("/");
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
 		if (await button.isVisible()) {
@@ -50,21 +50,19 @@ test.describe("Project Suite", () => {
 		await page.getByRole("link", { name: "Add new" }).click();
 
 		await page.getByPlaceholder("Name").click();
-		await page.getByPlaceholder("Name").fill(name);
+		await page.getByPlaceholder("Name").fill("nameVariable");
 		await page.getByPlaceholder("Value").click();
-		await page.getByPlaceholder("Value").fill(value);
+		await page.getByPlaceholder("Value").fill("valueVariable");
 
 		await Promise.all([page.waitForURL(page.url()), page.getByRole("button", { name: "Save" }).click()]);
-	}
+	});
 
 	test("Create variable", async ({ page }) => {
-		await createVariable(page, "nameVariable", "valueVariable");
 		const isVariableCreated = page.getByText("nameVariable");
 		expect(isVariableCreated).toBeTruthy();
 	});
 
 	test("Modify variable", async ({ page }) => {
-		await createVariable(page, "nameVariable", "valueVariable");
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("newValueVariable");
@@ -73,11 +71,14 @@ test.describe("Project Suite", () => {
 	});
 
 	test("Delete variable", async ({ page }) => {
-		await createVariable(page, "nameVariable", "valueVariable");
 		const removeVariableButton = page.getByRole("button", { name: "Delete nameVariable variable" });
 		await removeVariableButton.click();
 		await page.waitForTimeout(500);
 		await page.getByRole("button", { name: "Yes, delete" }).click();
 		expect(await removeVariableButton.isHidden());
+	});
+
+	test.afterEach(async ({ page }) => {
+		await page.goto("/");
 	});
 });
