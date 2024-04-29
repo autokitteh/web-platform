@@ -21,7 +21,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { list, getProjectsList } = useProjectStore();
 	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
-		isOpen: true,
+		isOpen: false,
 		message: "",
 	});
 
