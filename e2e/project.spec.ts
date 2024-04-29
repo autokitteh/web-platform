@@ -1,4 +1,3 @@
-import { EProjectTabs } from "@enums/components";
 import { test, expect } from "@playwright/test";
 
 test.describe("Project Suite", () => {
@@ -37,32 +36,7 @@ test.describe("Project Suite", () => {
 	// 	await newFileInput.isVisible();
 	// });
 
-	// test.beforeEach(async ({ page }) => {
-	// 	await page.goto("/");
-	// 	const button = page.getByRole("button", { name: "New Project" });
-	// 	await button.hover();
-	// 	if (await button.isVisible()) {
-	// 		await button.click();
-	// 	} else {
-	// 		test.fail();
-	// 	}
-	// 	await page.getByRole("tab", { name: EProjectTabs.variables }).click();
-	// 	await page.getByRole("link", { name: "Add new" }).click();
-
-	// 	await page.getByPlaceholder("Name").click();
-	// 	await page.getByPlaceholder("Name").fill("nameVariable");
-	// 	await page.getByPlaceholder("Value").click();
-	// 	await page.getByPlaceholder("Value").fill("valueVariable");
-
-	// 	await Promise.all([page.waitForURL(page.url()), page.getByRole("button", { name: "Save" }).click()]);
-	// });
-
-	// test("Create variable", async ({ page }) => {
-	// 	const isVariableCreated = page.getByText("nameVariable");
-	// 	expect(isVariableCreated).toBeTruthy();
-	// });
-
-	test("Modify variable", async ({ page }) => {
+	test.beforeEach(async ({ page }) => {
 		await page.goto("/");
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
@@ -71,15 +45,23 @@ test.describe("Project Suite", () => {
 		} else {
 			test.fail();
 		}
-		await page.getByRole("tab", { name: EProjectTabs.variables }).click();
+		await page.getByRole("tab", { name: "Variables" }).click();
 		await page.getByRole("link", { name: "Add new" }).click();
 
 		await page.getByPlaceholder("Name").click();
 		await page.getByPlaceholder("Name").fill("nameVariable");
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("valueVariable");
-		await page.getByRole("button", { name: "Save" }).click();
 
+		await Promise.all([page.waitForURL(page.url()), page.getByRole("button", { name: "Save" }).click()]);
+	});
+
+	// test("Create variable", async ({ page }) => {
+	// 	const isVariableCreated = page.getByText("nameVariable");
+	// 	expect(isVariableCreated).toBeTruthy();
+	// });
+
+	test("Modify variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("newValueVariable");
