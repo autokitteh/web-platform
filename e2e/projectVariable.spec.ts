@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Project Variable", () => {
 	test.beforeEach(async ({ page }) => {
-		await page.goto("/");
+		await page.goto("");
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
 		if (await button.isVisible()) {
@@ -44,6 +44,6 @@ test.describe("Project Variable", () => {
 	});
 
 	test.afterEach(async ({ page }) => {
-		await page.goto("/");
+		await page.goto("");
 	});
 });
