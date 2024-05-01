@@ -5,11 +5,14 @@ test.describe("Project Variable", () => {
 
 	test.beforeEach(async ({ page }) => {
 		await page.goto("/");
+		await page.waitForTimeout(3000);
+
+		await page.reload();
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
 		await button.click();
 
-		await page.waitForTimeout(500);
+		await page.waitForTimeout(1000);
 
 		await page.getByRole("tab", { name: "Variables" }).click();
 		await page.getByRole("link", { name: "Add new" }).click();
