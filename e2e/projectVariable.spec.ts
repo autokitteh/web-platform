@@ -1,8 +1,6 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Project Variable", () => {
-	test.describe.configure({ mode: "serial" });
-
 	test.beforeEach(async ({ page }) => {
 		await page.goto("/");
 		const button = page.getByRole("button", { name: "New Project" });
