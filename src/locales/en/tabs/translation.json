@@ -1,4 +1,19 @@
 {
+	"code&assets": {
+		"buttons": {
+			"addNewFile": "Add new file",
+			"createNewFile": "Create new file",
+			"addCodeAndAssets": "Add Code & Assets"
+		},
+		"table": {
+			"columns": {
+				"name": "Name"
+			},
+			"buttons": {
+				"ariaDeleteFile": "Delete {{name}} file"
+			}
+		}
+	},
 	"connections": {
 		"form": {
 			"addNewConnection": "Add new connection",

@@ -12,7 +12,8 @@ import { useParams } from "react-router-dom";
 
 export const AddCodeAssetsTab = () => {
 	const { projectId } = useParams();
-	const { t } = useTranslation(["errors", "buttons", "tables"]);
+	const { t: tErrors } = useTranslation(["errors"]);
+	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { openModal, closeModal } = useModalStore();
 	const { currentProject, setProjectResources, updateEditorOpenedFiles, removeProjectFile } = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
@@ -62,7 +63,7 @@ export const AddCodeAssetsTab = () => {
 		const { error, fileName } = await setProjectResources(files);
 
 		if (error) {
-			setToast({ isOpen: true, message: t("fileAddFailedExtended", { projectId, fileName }) });
+			setToast({ isOpen: true, message: tErrors("fileAddFailedExtended", { projectId, fileName }) });
 			return;
 		}
 	};
@@ -76,7 +77,7 @@ export const AddCodeAssetsTab = () => {
 		closeModal(EModalName.deleteFile);
 		const { error } = await removeProjectFile(selectedRemoveFileName);
 
-		if (error) setToast({ isOpen: true, message: t("failedRemoveFile", { fileName: selectedRemoveFileName }) });
+		if (error) setToast({ isOpen: true, message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }) });
 	};
 
 	return (
@@ -86,17 +87,17 @@ export const AddCodeAssetsTab = () => {
 					<label className="group flex gap-1 p-0 font-semibold text-gray-300 hover:text-white cursor-pointer">
 						<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
 						<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-						{t("addNewFile", { ns: "buttons" })}
+						{t("buttons.addNewFile")}
 					</label>
 				) : null}
 
 				<Button
-					ariaLabel={t("createNewFile", { ns: "buttons" })}
+					ariaLabel={t("buttons.createNewFile")}
 					className="w-auto group gap-1 p-0 font-semibold text-gray-300 hover:text-white"
 					onClick={() => openModal(EModalName.addCodeAssets)}
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					{t("createNewFile", { ns: "buttons" })}
+					{t("buttons.createNewFile")}
 				</Button>
 			</div>
 			<div
@@ -110,7 +111,7 @@ export const AddCodeAssetsTab = () => {
 					<Table className="max-h-96">
 						<THead>
 							<Tr>
-								<Th className="border-r-0 cursor-pointer group font-normal">{t("name", { ns: "tables" })}</Th>
+								<Th className="border-r-0 cursor-pointer group font-normal">{t("table.columns.name")}</Th>
 								<Th className="border-r-0 max-11" />
 							</Tr>
 						</THead>
@@ -121,7 +122,10 @@ export const AddCodeAssetsTab = () => {
 										{name}
 									</Td>
 									<Th className="border-r-0 max-w-11">
-										<IconButton onClick={() => openModal(EModalName.deleteFile, name)}>
+										<IconButton
+											ariaLabel={t("table.buttons.ariaDeleteFile", { name })}
+											onClick={() => openModal(EModalName.deleteFile, name)}
+										>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
 									</Th>
@@ -140,7 +144,7 @@ export const AddCodeAssetsTab = () => {
 						>
 							<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
 							<PlusCircle className={styleCircle} />
-							{t("addCodeAndAssets", { ns: "buttons" })}
+							{t("buttons.addCodeAndAssets")}
 						</label>
 					</div>
 				</div>
@@ -151,7 +155,7 @@ export const AddCodeAssetsTab = () => {
 				duration={5}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={t("error")}
+				title={tErrors("error")}
 				type="error"
 			>
 				<p className="mt-1 text-xs">{toast.message}</p>
