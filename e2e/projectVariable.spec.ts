@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Project Variable", () => {
+	test.describe.configure({ mode: "serial" });
+
 	test.beforeEach(async ({ page }) => {
-		await page.goto("");
+		await page.goto("/");
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
 		if (await button.isVisible()) {
@@ -18,9 +20,7 @@ test.describe("Project Variable", () => {
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("valueVariable");
 		await page.getByRole("button", { name: "Save" }).click();
-	});
 
-	test("Create variable", async ({ page }) => {
 		const variableInTable = page.getByRole("cell", { name: "nameVariable", exact: true });
 		const variableValueInTable = page.getByRole("cell", { name: "valueVariable", exact: true });
 		await expect(variableInTable).toBeVisible();
@@ -41,9 +41,5 @@ test.describe("Project Variable", () => {
 		await removeVariableButton.click();
 		await page.getByRole("button", { name: "Yes, delete" }).click();
 		expect(await removeVariableButton.isHidden());
-	});
-
-	test.afterEach(async ({ page }) => {
-		await page.goto("");
 	});
 });
