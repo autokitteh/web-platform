@@ -9,6 +9,8 @@ test.describe("Project Variable", () => {
 		await button.hover();
 		await button.click();
 
+		await page.waitForTimeout(500);
+
 		await page.getByRole("tab", { name: "Variables" }).click();
 		await page.getByRole("link", { name: "Add new" }).click();
 
