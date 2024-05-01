@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton } from "@components/atoms";
+import { monacoLanguages } from "@constants";
 import { ReadtOnlyFile } from "@enums/components";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
-import { debounce, get } from "lodash";
+import { debounce, get, last } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -20,7 +21,10 @@ export const EditorTabs = () => {
 	} = useProjectStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const initialContent = "// Code A: Initialize your code here...";
+
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
+	const fileExtension = "." + last(activeEditorFileName.split("."));
+	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const resource = get(resources, [activeEditorFileName], new Uint8Array());
 	const byteArray = Object.values(resource);
@@ -98,7 +102,7 @@ export const EditorTabs = () => {
 								aria-label={fileName}
 								beforeMount={handleEditorWillMount}
 								key={editorKey}
-								language="python"
+								language={languageEditor}
 								onChange={handleUpdateContent}
 								onMount={handleEditorDidMount}
 								options={editorOptions}

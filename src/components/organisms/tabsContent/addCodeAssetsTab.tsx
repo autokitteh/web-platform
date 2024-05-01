@@ -3,6 +3,7 @@ import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 import { Button, IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { ModalAddCodeAssets, ModalDeleteFile } from "@components/organisms/modals";
+import { monacoLanguages } from "@constants";
 import { EModalName } from "@enums/components";
 import { useModalStore, useProjectStore } from "@store";
 import { cn } from "@utilities";
@@ -21,6 +22,7 @@ export const AddCodeAssetsTab = () => {
 		isOpen: false,
 		message: "",
 	});
+	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
 	const selectedRemoveFileName = useModalStore((state) => state.data as string);
 
 	const resourcesEntries = Object.entries(currentProject.resources);
@@ -85,7 +87,7 @@ export const AddCodeAssetsTab = () => {
 			<div className="mb-5 mt-14 flex justify-end gap-6">
 				{!isEmpty(sortedResources) ? (
 					<label className="group flex gap-1 p-0 font-semibold text-gray-300 hover:text-white cursor-pointer">
-						<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
+						<input accept={allowedExtensions} className="hidden" multiple onChange={handleFileSelect} type="file" />
 						<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 						{t("buttons.addNewFile")}
 					</label>
@@ -142,7 +144,7 @@ export const AddCodeAssetsTab = () => {
 								"text-center text-lg font-bold uppercase text-white"
 							)}
 						>
-							<input accept=".py, .star" className="hidden" multiple onChange={handleFileSelect} type="file" />
+							<input accept={allowedExtensions} className="hidden" multiple onChange={handleFileSelect} type="file" />
 							<PlusCircle className={styleCircle} />
 							{t("buttons.addCodeAndAssets")}
 						</label>
