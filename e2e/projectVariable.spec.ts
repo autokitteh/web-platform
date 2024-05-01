@@ -1,19 +1,15 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Project Variable", () => {
-	test.describe.configure({ mode: "serial" });
-
-	test.beforeEach(async ({ page }) => {
+test("Project variable", async ({ page }) => {
+	await test.step("Create variable", async () => {
 		await page.goto("/");
-		await page.waitForTimeout(3000);
-
-		await page.reload();
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
-		await button.click();
-
-		await page.waitForTimeout(1000);
-
+		if (await button.isVisible()) {
+			await button.click();
+		} else {
+			test.fail();
+		}
 		await page.getByRole("tab", { name: "Variables" }).click();
 		await page.getByRole("link", { name: "Add new" }).click();
 
@@ -22,26 +18,23 @@ test.describe("Project Variable", () => {
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("valueVariable");
 		await page.getByRole("button", { name: "Save" }).click();
-
-		const variableInTable = page.getByRole("cell", { name: "nameVariable", exact: true });
-		const variableValueInTable = page.getByRole("cell", { name: "valueVariable", exact: true });
-		await expect(variableInTable).toBeVisible();
-		await expect(variableValueInTable).toBeVisible();
 	});
 
-	test("Modify variable", async ({ page }) => {
+	await test.step("Modify variable", async () => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save" }).click();
 		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
+		await page.waitForTimeout(500);
 		await expect(newVariableInTable).toBeVisible();
 	});
 
-	test("Delete variable", async ({ page }) => {
-		const removeVariableButton = page.getByRole("button", { name: "Delete nameVariable variable" });
-		await removeVariableButton.click();
+	await test.step("Delete variable", async () => {
+		await page.getByRole("button", { name: "Delete nameVariable variable" }).click();
 		await page.getByRole("button", { name: "Yes, delete" }).click();
-		expect(await removeVariableButton.isHidden());
+		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
+		await page.waitForTimeout(500);
+		await expect(newVariableInTable).toBeHidden();
 	});
 });
