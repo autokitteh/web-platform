@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton } from "@components/atoms";
+import { ReadtOnlyFile } from "@enums/components";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
@@ -63,6 +64,16 @@ export const EditorTabs = () => {
 		updateEditorClosedFiles(name);
 	};
 
+	const editorOptions = activeEditorFileName === ReadtOnlyFile.autokittehYaml && {
+		readOnly: true,
+		minimap: {
+			enabled: false,
+		},
+		lineNumbers: "off",
+		renderLineHighlight: "none",
+		wordWrap: "on",
+	};
+
 	return (
 		<Tabs defaultValue={activeEditorFileName} key={activeEditorFileName} onChange={updateEditorOpenedFiles}>
 			{projectId ? (
@@ -90,6 +101,7 @@ export const EditorTabs = () => {
 								language="python"
 								onChange={handleUpdateContent}
 								onMount={handleEditorDidMount}
+								options={editorOptions}
 								theme="vs-dark"
 								value={content}
 							/>
