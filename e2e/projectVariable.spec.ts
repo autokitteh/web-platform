@@ -7,11 +7,8 @@ test.describe("Project Variable", () => {
 		await page.goto("/");
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
-		if (await button.isVisible()) {
-			await button.click();
-		} else {
-			test.fail();
-		}
+		await button.click();
+		await page.waitForTimeout(1000);
 		await page.getByRole("tab", { name: "Variables" }).click();
 		await page.getByRole("link", { name: "Add new" }).click();
 
