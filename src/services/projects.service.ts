@@ -8,11 +8,11 @@ import { Project } from "@type/models";
 import i18n from "i18next";
 
 export class ProjectsService {
-	static async create(): Promise<ServiceResponse<string>> {
+	static async create(projectName: string): Promise<ServiceResponse<string>> {
 		try {
 			const { projectId } = await projectsClient.create({
 				project: {
-					name: "",
+					name: projectName,
 				},
 			});
 			if (!projectId) {

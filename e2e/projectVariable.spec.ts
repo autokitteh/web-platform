@@ -5,11 +5,8 @@ test("Project variable", async ({ page }) => {
 		await page.goto("/");
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
-		if (await button.isVisible()) {
-			await button.click();
-		} else {
-			test.fail();
-		}
+		await button.click();
+
 		await page.getByRole("tab", { name: "Variables" }).click();
 		await page.getByRole("link", { name: "Add new" }).click();
 
@@ -35,6 +32,6 @@ test("Project variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Yes, delete" }).click();
 		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
 		await page.waitForTimeout(500);
-		await expect(newVariableInTable).toBeHidden();
+		await expect(newVariableInTable).not.toBeVisible();
 	});
 });
