@@ -1,23 +1,30 @@
 import { test, expect } from "@playwright/test";
 
-test("Project variable", async ({ page }) => {
-	await test.step("Create variable", async () => {
-		await page.goto("/");
-		const button = page.getByRole("button", { name: "New Project" });
-		await button.hover();
-		await button.click();
+test.beforeEach(async ({ page }) => {
+	await page.goto("/");
+	const button = page.getByRole("button", { name: "New Project" });
+	await button.hover();
+	await button.click();
 
-		await page.getByRole("tab", { name: "Variables" }).click();
-		await page.getByRole("link", { name: "Add new" }).click();
+	await page.getByRole("tab", { name: "Variables" }).click();
+	await page.getByRole("link", { name: "Add new" }).click();
 
-		await page.getByPlaceholder("Name").click();
-		await page.getByPlaceholder("Name").fill("nameVariable");
-		await page.getByPlaceholder("Value").click();
-		await page.getByPlaceholder("Value").fill("valueVariable");
-		await page.getByRole("button", { name: "Save" }).click();
+	await page.getByPlaceholder("Name").click();
+	await page.getByPlaceholder("Name").fill("nameVariable");
+	await page.getByPlaceholder("Value").click();
+	await page.getByPlaceholder("Value").fill("valueVariable");
+	await page.getByRole("button", { name: "Save" }).click();
+});
+
+test.describe("Project Variables Suite", () => {
+	test("Create variable", async ({ page }) => {
+		const variableInTable = page.getByRole("cell", { name: "nameVariable", exact: true });
+		const variableValueInTable = page.getByRole("cell", { name: "valueVariable", exact: true });
+		await expect(variableInTable).toBeVisible();
+		await expect(variableValueInTable).toBeVisible();
 	});
 
-	await test.step("Modify variable", async () => {
+	test("Modify variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("newValueVariable");
@@ -27,7 +34,7 @@ test("Project variable", async ({ page }) => {
 		await expect(newVariableInTable).toBeVisible();
 	});
 
-	await test.step("Delete variable", async () => {
+	test("Delete variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Delete nameVariable variable" }).click();
 		await page.getByRole("button", { name: "Yes, delete" }).click();
 		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
