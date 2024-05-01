@@ -1,3 +1,4 @@
+import { EProjectTabs } from "@enums/components";
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
@@ -6,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 	await button.hover();
 	await button.click();
 
-	await page.getByRole("tab", { name: "Variables" }).click();
+	await page.getByRole("tab", { name: EProjectTabs.variables }).click();
 	await page.getByRole("link", { name: "Add new" }).click();
 
 	await page.getByPlaceholder("Name").click();
