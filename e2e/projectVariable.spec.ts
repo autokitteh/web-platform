@@ -1,13 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Project Variable", () => {
-	test.describe.configure({ mode: "serial" });
-
 	test.beforeEach(async ({ page }) => {
 		await page.goto("/");
 		const button = page.getByRole("button", { name: "New Project" });
 		await button.hover();
 		await button.click();
+
+		await page.getByRole("tab", { name: "Variables" }).isVisible();
 
 		await page.getByRole("tab", { name: "Variables" }).click();
 		await page.getByRole("link", { name: "Add new" }).click();
