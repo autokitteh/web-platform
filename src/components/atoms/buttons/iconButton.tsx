@@ -11,6 +11,7 @@ export const IconButton = ({
 	href,
 	ariaLabel,
 	disabled,
+	title,
 	onMouseEnter,
 	onMouseLeave,
 	onClick,
@@ -32,11 +33,11 @@ export const IconButton = ({
 		<button
 			aria-label={ariaLabel}
 			className={iconButtonClass}
-			data-tooltip="{ariaLabel}"
 			disabled={disabled}
 			onClick={onClick}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
+			title={title}
 		>
 			{children}
 		</button>

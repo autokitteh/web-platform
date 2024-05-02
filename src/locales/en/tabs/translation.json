@@ -72,6 +72,8 @@
 			"addNewVariable": "Add new variable",
 			"modifyVariable": "Modify variable",
 			"environment": "Environment",
+			"ariaNameRequired": "Name is required",
+			"ariaValueRequired": "Value is required",
 			"placeholders": {
 				"name": "Name",
 				"value": "Value"

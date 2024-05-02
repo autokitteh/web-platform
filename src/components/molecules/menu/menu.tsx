@@ -11,6 +11,7 @@ import { useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
 import { isEqual, orderBy } from "lodash";
+import randomatic from "randomatic";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -21,7 +22,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { list, getProjectsList } = useProjectStore();
 	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
-		isOpen: true,
+		isOpen: false,
 		message: "",
 	});
 
@@ -31,7 +32,9 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	};
 
 	const createProject = async () => {
-		const { data: projectId, error } = await ProjectsService.create("");
+		const projectName = randomatic("Aa", 8);
+
+		const { data: projectId, error } = await ProjectsService.create(projectName);
 
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });

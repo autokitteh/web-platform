@@ -11,5 +11,6 @@ export { default as Eye } from "@assets/image/icons/Eye.svg?react";
 export { default as EyeClose } from "@assets/image/icons/EyeClose.svg?react";
 export { default as ArrowLeft } from "@assets/image/icons/ArrowLeft.svg?react";
 export { default as TrashIcon } from "@assets/image/icons/Trash.svg?react";
+export { default as EditIcon } from "@assets/image/icons/Edit.svg?react";
 export { default as IconGoogle } from "@assets/image/icons/Google.png";
 export { default as IconGithub } from "@assets/image/icons/Github.png";
