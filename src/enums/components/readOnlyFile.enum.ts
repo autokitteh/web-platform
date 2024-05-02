@@ -1,3 +1,3 @@
-export enum ReadtOnlyFile {
+export enum ReadOnlyFile {
 	autokittehYaml = "autokitteh.yaml",
 }
