@@ -101,8 +101,7 @@ export const VariablesContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="max-w-11 border-0" />
-							<Th className="max-w-8 border-0" />
+							<Th className="text-right max-w-20">Actions</Th>
 						</Tr>
 					</THead>
 					<TBody>
@@ -110,21 +109,21 @@ export const VariablesContent = () => {
 							<Tr className="group" key={idx}>
 								<Td className="font-semibold">{name}</Td>
 								<Td className="border-r-0">{value}</Td>
-								<Td className="max-w-11 border-0 pr-1.5 justify-end">
-									<IconButton
-										ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
-										onClick={() => navigate(`modify-variable/${envId}/${name}`)}
-									>
-										<EditIcon className="fill-white w-3 h-3" />
-									</IconButton>
-								</Td>
-								<Td className="max-w-8 border-0 pl-0 pr-1 justify-end">
-									<IconButton
-										ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
-										onClick={() => showDeleteModal(name, value)}
-									>
-										<TrashIcon className="fill-white w-3 h-3" />
-									</IconButton>
+								<Td className="max-w-20">
+									<div className="flex space-x-1">
+										<IconButton
+											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
+											onClick={() => navigate(`modify-variable/${envId}/${name}`)}
+										>
+											<EditIcon className="fill-white w-3 h-3" />
+										</IconButton>
+										<IconButton
+											ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
+											onClick={() => showDeleteModal(name, value)}
+										>
+											<TrashIcon className="fill-white w-3 h-3" />
+										</IconButton>
+									</div>
 								</Td>
 							</Tr>
 						))}
