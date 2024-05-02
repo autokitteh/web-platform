@@ -25,21 +25,38 @@ test.describe("Project Variables Suite", () => {
 		await expect(variableValueInTable).toBeVisible();
 	});
 
+	test("Create variable with empty fields", async ({ page }) => {
+		await page.getByRole("link", { name: "Add new" }).click();
+		await page.getByRole("button", { name: "Save" }).click();
+
+		const nameErrorMessage = page.getByRole("alert", { name: "Name is required" });
+		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });
+		await expect(nameErrorMessage).toBeVisible();
+		await expect(valueErrorMessage).toBeVisible();
+	});
+
 	test("Modify variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save" }).click();
 		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
-		await page.waitForTimeout(500);
 		await expect(newVariableInTable).toBeVisible();
+	});
+
+	test("Modifying variable with empty value", async ({ page }) => {
+		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
+		await page.getByPlaceholder("Value").clear();
+		await page.getByRole("button", { name: "Save" }).click();
+
+		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });
+		await expect(valueErrorMessage).toBeVisible();
 	});
 
 	test("Delete variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Delete nameVariable variable" }).click();
 		await page.getByRole("button", { name: "Yes, delete" }).click();
 		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
-		await page.waitForTimeout(500);
 		await expect(newVariableInTable).not.toBeVisible();
 	});
 });

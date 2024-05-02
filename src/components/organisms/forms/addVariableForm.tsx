@@ -73,7 +73,7 @@ export const AddVariableForm = () => {
 						isError={!!errors.name}
 						placeholder={tForm("placeholders.name")}
 					/>
-					<ErrorMessage>{errors.name?.message}</ErrorMessage>
+					<ErrorMessage ariaLabel={tForm("ariaNameRequired")}>{errors.name?.message}</ErrorMessage>
 				</div>
 				<div className="relative">
 					<Input
@@ -83,7 +83,7 @@ export const AddVariableForm = () => {
 						isError={!!errors.value}
 						placeholder={tForm("placeholders.value")}
 					/>
-					<ErrorMessage>{errors.value?.message}</ErrorMessage>
+					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
 			</form>
 			<Toast
