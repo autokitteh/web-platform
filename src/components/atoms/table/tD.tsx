@@ -9,8 +9,7 @@ export const Td = ({ className, children, onClick }: TableProps) => {
 	);
 
 	return (
-		// eslint-disable-next-line jsx-a11y/no-interactive-element-to-noninteractive-role
-		<td className={tdStyle} onClick={onClick} role="cell">
+		<td className={tdStyle} onClick={onClick}>
 			<div className="truncate">{children}</div>
 		</td>
 	);
