@@ -67,6 +67,11 @@ export const TriggersContent = () => {
 		fetchTriggers();
 	};
 
+	const handleOpenDeleteTriggerModal = (triggerId: string) => {
+		setTriggerId(triggerId);
+		openModal(EModalName.deleteTrigger);
+	};
+
 	return (
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
@@ -131,10 +136,7 @@ export const TriggersContent = () => {
 										</IconButton>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
-											onClick={() => {
-												setTriggerId(trigger.triggerId);
-												openModal(EModalName.deleteTrigger);
-											}}
+											onClick={() => handleOpenDeleteTriggerModal(trigger.triggerId!)}
 										>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
