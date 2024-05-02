@@ -15,16 +15,14 @@ test.beforeEach(async ({ page }) => {
 	await page.getByPlaceholder("Value").click();
 	await page.getByPlaceholder("Value").fill("valueVariable");
 	await page.getByRole("button", { name: "Save" }).click();
+
+	const variableInTable = page.getByRole("cell", { name: "nameVariable", exact: true });
+	const variableValueInTable = page.getByRole("cell", { name: "valueVariable", exact: true });
+	await expect(variableInTable).toBeVisible();
+	await expect(variableValueInTable).toBeVisible();
 });
 
 test.describe("Project Variables Suite", () => {
-	test("Create variable", async ({ page }) => {
-		const variableInTable = page.getByRole("cell", { name: "nameVariable", exact: true });
-		const variableValueInTable = page.getByRole("cell", { name: "valueVariable", exact: true });
-		await expect(variableInTable).toBeVisible();
-		await expect(variableValueInTable).toBeVisible();
-	});
-
 	test("Create variable with empty fields", async ({ page }) => {
 		await page.getByRole("link", { name: "Add new" }).click();
 		await page.getByRole("button", { name: "Save" }).click();
