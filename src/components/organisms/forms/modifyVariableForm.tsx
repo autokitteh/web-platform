@@ -88,7 +88,6 @@ export const ModifyVariableForm = () => {
 						{...register("name")}
 						aria-label={tForm("placeholders.name")}
 						className={dirtyFields["name"] ? "border-white" : ""}
-						disabled
 						isError={!!errors.name}
 						placeholder={tForm("placeholders.name")}
 					/>
