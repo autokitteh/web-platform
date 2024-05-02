@@ -33,16 +33,16 @@ export const router = createBrowserRouter([
 				element: <NewTrigger />,
 			},
 			{
+				path: "modify-trigger/:triggerId",
+				element: <ModifyTrigger />,
+			},
+			{
 				path: "add-new-variable",
 				element: <NewVariable />,
 			},
 			{
 				path: "modify-variable/:environmentId/:variableName",
 				element: <ModifyVariable />,
-			},
-			{
-				path: "modify-trigger/:triggerId",
-				element: <ModifyTrigger />,
 			},
 			{
 				path: "",

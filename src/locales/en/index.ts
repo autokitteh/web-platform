@@ -6,6 +6,7 @@ import modals from "@locales/en/modals/translation.json";
 import projects from "@locales/en/projects/translation.json";
 import services from "@locales/en/services/translation.json";
 import tabs from "@locales/en/tabs/translation.json";
+import validations from "@locales/en/validations/translation.json";
 
 export default {
 	login,
@@ -16,4 +17,5 @@ export default {
 	tabs,
 	projects,
 	services,
+	validations,
 };

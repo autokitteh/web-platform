@@ -1,3 +1,4 @@
+import i18n from "i18next";
 import { z } from "zod";
 
 const selectItemSchema = z.object({
@@ -8,13 +9,12 @@ const selectItemSchema = z.object({
 
 export const newTriggerSchema = z.object({
 	connection: selectItemSchema.refine((value) => value.label, {
-		message: "Connection is required",
+		message: i18n.t("connectionIsRequired", { ns: "validations" }),
 	}),
 	filePath: selectItemSchema.refine((value) => value.label, {
-		message: "File name is required",
+		message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 	}),
-	entryFunction: z.string().min(1, "Entry function is required"),
-	eventType: z.string().min(1, "Event type is required"),
-	key: z.string(),
-	value: z.string(),
+	entryFunction: z.string().min(1, i18n.t("entryFunctionIsRequired", { ns: "validations" })),
+	eventType: z.string().min(1, i18n.t("eventTypeIsRequired", { ns: "validations" })),
+	filter: z.string(),
 });

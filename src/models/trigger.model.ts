@@ -1,6 +1,6 @@
 import { Trigger as ProtoTrigger } from "@ak-proto-ts/triggers/v1/trigger_pb";
-import { Trigger } from "@type/models";
-import { get, keys } from "lodash";
+import { Trigger, TriggerData } from "@type/models";
+import { get } from "lodash";
 
 /**
  * Converts a ProtoTrigger object to a TypeScript Trigger object.
@@ -9,8 +9,13 @@ import { get, keys } from "lodash";
  * @returns {Trigger} The converted TypeScript Trigger object.
  */
 export const convertTriggerProtoToModel = (protoTrigger: ProtoTrigger): Trigger => {
-	const keyData = keys(get(protoTrigger, "data"))[0] || "";
-	const valueData = get(protoTrigger, ["data", keyData, "string", "v"], "");
+	const keyData = Object.keys(protoTrigger.data);
+	const data: TriggerData = {};
+
+	keyData.forEach((key: string) => {
+		const valueData = get(protoTrigger, ["data", key, "string", "v"]);
+		data[key] = { string: { v: valueData } };
+	});
 
 	return {
 		triggerId: protoTrigger.triggerId,
@@ -20,6 +25,6 @@ export const convertTriggerProtoToModel = (protoTrigger: ProtoTrigger): Trigger 
 		path: protoTrigger.codeLocation!.path,
 		name: protoTrigger.codeLocation!.name,
 		filter: protoTrigger.filter,
-		data: { [keyData]: { string: { v: valueData } } },
+		data,
 	};
 };
