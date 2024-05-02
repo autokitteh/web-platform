@@ -125,18 +125,23 @@ export const ModifyTriggerForm = () => {
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
 	const updateTriggerDataKey = debounce((newKey, oldKey) => {
-		if (newKey !== oldKey) {
-			const updatedTriggerData = Object.keys(triggerData).reduce((acc: TriggerData, key) => {
-				acc[key === oldKey ? newKey : key] = triggerData[key];
-				return acc;
-			}, {});
-			setTriggerData(updatedTriggerData);
-		}
+		if (newKey === oldKey) return;
+
+		const updatedTriggerData = Object.keys(triggerData).reduce((triggers: TriggerData, key) => {
+			if (key === oldKey) {
+				triggers[newKey] = triggerData[key];
+				return triggers;
+			}
+
+			triggers[key] = triggerData[key];
+			return triggers;
+		}, {});
+		setTriggerData(updatedTriggerData);
 	}, 500);
 
 	const updateTriggerDataValue = (value: string, key: string) => {
 		const updatedTriggerData = { ...triggerData };
-		updatedTriggerData[key] = { ...updatedTriggerData[key], string: { v: value } };
+		updatedTriggerData[key].string.v = value;
 		setTriggerData(updatedTriggerData);
 	};
 
@@ -227,20 +232,14 @@ export const ModifyTriggerForm = () => {
 												aria-label={t("placeholders.key")}
 												className="w-full"
 												defaultValue={key}
-												onChange={(e) => {
-													const newKey = e.target.value;
-													updateTriggerDataKey(newKey, key);
-												}}
+												onChange={(e) => updateTriggerDataKey(e.target.value, key)}
 												placeholder={t("placeholders.key")}
 											/>
 											<Input
 												aria-label={t("placeholders.value")}
 												className="w-full"
 												defaultValue={value.string.v}
-												onChange={(e) => {
-													const newStringValue = e.target.value;
-													updateTriggerDataValue(newStringValue, key);
-												}}
+												onChange={(e) => updateTriggerDataValue(e.target.value, key)}
 												placeholder={t("placeholders.value")}
 											/>
 										</div>

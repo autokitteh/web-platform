@@ -110,8 +110,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="max-w-11 border-0" />
-							<Th className="max-w-8 border-0" />
+							<Th className="text-right font-normal max-w-20">Actions</Th>
 						</Tr>
 					</THead>
 					<TBody>
@@ -122,24 +121,24 @@ export const TriggersContent = () => {
 									{trigger.path}:{trigger.name}
 								</Td>
 								<Td className="border-r-0">{trigger.eventType}</Td>
-								<Td className="max-w-11 border-0 pr-1.5 justify-end">
-									<IconButton
-										ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
-										onClick={() => navigate(`modify-trigger/${trigger.triggerId!}`)}
-									>
-										<EditIcon className="fill-white w-3 h-3" />
-									</IconButton>
-								</Td>
-								<Td className="max-w-8 border-0 pl-0 pr-1 justify-end">
-									<IconButton
-										ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
-										onClick={() => {
-											setTriggerId(trigger.triggerId);
-											openModal(EModalName.deleteTrigger);
-										}}
-									>
-										<TrashIcon className="fill-white w-3 h-3" />
-									</IconButton>
+								<Td className="max-w-20">
+									<div className="flex space-x-1">
+										<IconButton
+											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
+											onClick={() => navigate(`modify-trigger/${trigger.triggerId!}`)}
+										>
+											<EditIcon className="fill-white w-3 h-3" />
+										</IconButton>
+										<IconButton
+											ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
+											onClick={() => {
+												setTriggerId(trigger.triggerId);
+												openModal(EModalName.deleteTrigger);
+											}}
+										>
+											<TrashIcon className="fill-white w-3 h-3" />
+										</IconButton>
+									</div>
 								</Td>
 							</Tr>
 						))}

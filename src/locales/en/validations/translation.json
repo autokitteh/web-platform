@@ -1,0 +1,6 @@
+{
+	"connectionIsRequired": "Connection is required",
+	"fileNameIsRequired": "File name is required",
+	"entryFunctionIsRequired": "Entry function is required",
+	"eventTypeIsRequired": "Event type is required"
+}
