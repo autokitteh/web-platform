@@ -4,7 +4,7 @@ export enum ButtonVariant {
 	outline = "outline",
 }
 
-export enum ETopbarButton {
+export enum TopbarButton {
 	build = "Build",
 	deploy = "Deploy",
 	viewStats = "View Stats",

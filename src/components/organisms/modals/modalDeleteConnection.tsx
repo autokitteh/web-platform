@@ -1,17 +1,17 @@
 import React from "react";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
-import { EModalName } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { useModalStore } from "@store";
 import { useTranslation } from "react-i18next";
 
 export const ModalDeleteConnection = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });
 	const { closeModal } = useModalStore();
-	const handleCloseModal = () => closeModal(EModalName.deleteConnection);
+	const handleCloseModal = () => closeModal(ModalName.deleteConnection);
 
 	return (
-		<Modal name={EModalName.deleteConnection}>
+		<Modal name={ModalName.deleteConnection}>
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
 				<p>

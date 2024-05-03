@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
-import { EModalName } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { ModalDeleteTriggerProps } from "@interfaces/components";
 import { TriggersService } from "@services";
 import { useModalStore } from "@store";
@@ -27,7 +27,7 @@ export const ModalDeleteTrigger = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 	}, [triggerId]);
 
 	return (
-		<Modal name={EModalName.deleteTrigger}>
+		<Modal name={ModalName.deleteTrigger}>
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
 				<p>{t("line")}</p>
@@ -46,7 +46,7 @@ export const ModalDeleteTrigger = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 			<div className="flex justify-end gap-1 mt-14">
 				<Button
 					className="font-semibold py-3 px-4 hover:text-white w-auto"
-					onClick={() => closeModal(EModalName.deleteTrigger)}
+					onClick={() => closeModal(ModalName.deleteTrigger)}
 				>
 					{t("cancelButton")}
 				</Button>

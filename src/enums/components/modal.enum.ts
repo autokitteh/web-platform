@@ -1,4 +1,4 @@
-export enum EModalName {
+export enum ModalName {
 	deleteConnection = "deleteConnection",
 	deleteTrigger = "deleteTrigger",
 	addCodeAssets = "addCodeAssets",

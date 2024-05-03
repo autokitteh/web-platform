@@ -4,7 +4,7 @@ import { TrashIcon } from "@assets/image/icons";
 import { Button, IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { ModalAddCodeAssets, ModalDeleteFile } from "@components/organisms/modals";
 import { monacoLanguages } from "@constants";
-import { EModalName } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { useModalStore, useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { orderBy, isEmpty } from "lodash";
@@ -76,7 +76,7 @@ export const AddCodeAssetsTab = () => {
 		});
 
 	const handleRemoveFile = async () => {
-		closeModal(EModalName.deleteFile);
+		closeModal(ModalName.deleteFile);
 		const { error } = await removeProjectFile(selectedRemoveFileName);
 
 		if (error) setToast({ isOpen: true, message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }) });
@@ -96,7 +96,7 @@ export const AddCodeAssetsTab = () => {
 				<Button
 					ariaLabel={t("buttons.createNewFile")}
 					className="w-auto group gap-1 p-0 font-semibold text-gray-300 hover:text-white"
-					onClick={() => openModal(EModalName.addCodeAssets)}
+					onClick={() => openModal(ModalName.addCodeAssets)}
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 					{t("buttons.createNewFile")}
@@ -124,10 +124,7 @@ export const AddCodeAssetsTab = () => {
 										{name}
 									</Td>
 									<Th className="border-r-0 max-w-11">
-										<IconButton
-											ariaLabel={t("table.buttons.ariaDeleteFile", { name })}
-											onClick={() => openModal(EModalName.deleteFile, name)}
-										>
+										<IconButton onClick={() => openModal(ModalName.deleteFile, name)}>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
 									</Th>

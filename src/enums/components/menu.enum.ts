@@ -1,4 +1,4 @@
-export enum ESidebarMenu {
+export enum SidebarMenu {
 	newProject,
 	myProjects,
 	dashboard,
@@ -7,7 +7,7 @@ export enum ESidebarMenu {
 	settings,
 }
 
-export enum ESidebarHrefMenu {
+export enum SidebarHrefMenu {
 	projects = "projects",
 	dashboard = "dashboard",
 	connections = "connections",

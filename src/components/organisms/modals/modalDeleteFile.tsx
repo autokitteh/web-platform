@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
-import { EModalName } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { DeleteFile } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { useTranslation } from "react-i18next";
@@ -12,7 +12,7 @@ export const ModalDeleteFile = ({ onDelete }: DeleteFile) => {
 	const { closeModal } = useModalStore();
 
 	return (
-		<Modal name={EModalName.deleteFile}>
+		<Modal name={ModalName.deleteFile}>
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title", { name: fileName })}</h3>
 				<p>{t("line")}</p>
@@ -21,7 +21,7 @@ export const ModalDeleteFile = ({ onDelete }: DeleteFile) => {
 				<Button
 					ariaLabel={t("cancelButton")}
 					className="font-semibold py-3 px-4 hover:text-white w-auto"
-					onClick={() => closeModal(EModalName.deleteFile)}
+					onClick={() => closeModal(ModalName.deleteFile)}
 				>
 					{t("cancelButton")}
 				</Button>

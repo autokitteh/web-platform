@@ -4,7 +4,7 @@ import { TrashIcon, EditIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { ModalDeleteVariable } from "@components/organisms/modals";
-import { EModalName, ESortDirection } from "@enums/components";
+import { ModalName, SortDirectionVariant } from "@enums/components";
 import { VariablesService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
 import { SortDirection } from "@type/components";
@@ -21,7 +21,7 @@ export const VariablesContent = () => {
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Variable;
-	}>({ direction: ESortDirection.ASC, column: "name" });
+	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [variables, setVariables] = useState<Variable[]>(currentProject.variables);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -34,7 +34,9 @@ export const VariablesContent = () => {
 
 	const toggleSortVariables = (key: keyof Variable) => {
 		const newDirection =
-			sort.column === key && sort.direction === ESortDirection.ASC ? ESortDirection.DESC : ESortDirection.ASC;
+			sort.column === key && sort.direction === SortDirectionVariant.ASC
+				? SortDirectionVariant.DESC
+				: SortDirectionVariant.ASC;
 
 		const sortedVariables = orderBy(variables, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
@@ -46,7 +48,7 @@ export const VariablesContent = () => {
 			envId,
 			name: deleteVariable!.name,
 		});
-		closeModal(EModalName.deleteVariable);
+		closeModal(ModalName.deleteVariable);
 
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
@@ -62,7 +64,7 @@ export const VariablesContent = () => {
 	}, [currentProject.variables]);
 
 	const showDeleteModal = (variableName: string, variableValue: string) => {
-		openModal(EModalName.deleteVariable);
+		openModal(ModalName.deleteVariable);
 		setDeleteVariable({ name: variableName, value: variableValue, envId, isSecret: false });
 	};
 
