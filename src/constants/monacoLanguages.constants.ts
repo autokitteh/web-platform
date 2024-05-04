@@ -14,6 +14,7 @@ export const monacoLanguages = {
 	".c": "c",
 	".h": "cpp",
 	".py": "python",
+	".star": "python",
 	".rb": "ruby",
 	".php": "php",
 	".java": "java",
