@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { DefaultAvatar, IconLogo, IconLogoName, IconNotification } from "@assets/image";
-import { Icon, Badge, Button } from "@components/atoms";
+import { IconLogo, IconLogoName } from "@assets/image";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { SubmenuInfo } from "@interfaces/components";
 import { AnimatePresence, motion } from "framer-motion";
@@ -46,43 +45,6 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Link>
 						<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
-					</div>
-					<div className="flex flex-col gap-5">
-						<Button className="hover:bg-transparent" href="#">
-							<div className="w-8 h-8 p-1 relative">
-								<IconNotification />
-								<Badge className="absolute top-0 right-0">2</Badge>
-							</div>
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="whitespace-nowrap overflow-hidden"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
-									>
-										Notifications
-									</motion.span>
-								) : null}
-							</AnimatePresence>
-						</Button>
-						<Button className="hover:bg-transparent" href="#">
-							<Icon alt="Notifications" className="w-9 h-9" src={DefaultAvatar} />
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="whitespace-nowrap overflow-hidden"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
-									>
-										James L.
-									</motion.span>
-								) : null}
-							</AnimatePresence>
-						</Button>
 					</div>
 				</div>
 				<AnimatePresence>
