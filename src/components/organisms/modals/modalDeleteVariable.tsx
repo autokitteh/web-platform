@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
-import { EModalName } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { ModalDeleteVariableProps } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { useTranslation, Trans } from "react-i18next";
@@ -11,7 +11,7 @@ export const ModalDeleteVariable = ({ onDelete, variable }: ModalDeleteVariableP
 	const { closeModal } = useModalStore();
 
 	return (
-		<Modal name={EModalName.deleteVariable}>
+		<Modal name={ModalName.deleteVariable}>
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
 				<p>{t("line")}</p>
@@ -30,7 +30,7 @@ export const ModalDeleteVariable = ({ onDelete, variable }: ModalDeleteVariableP
 				<Button
 					ariaLabel={t("cancelButton")}
 					className="font-semibold py-3 px-4 hover:text-white w-auto"
-					onClick={() => closeModal(EModalName.deleteVariable)}
+					onClick={() => closeModal(ModalName.deleteVariable)}
 				>
 					{t("cancelButton")}
 				</Button>

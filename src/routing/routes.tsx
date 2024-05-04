@@ -9,7 +9,7 @@ import {
 	ModifyVariable,
 	Project,
 } from "@components/pages";
-import { ESidebarHrefMenu } from "@enums/components";
+import { SidebarHrefMenu } from "@enums/components";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
 		element: <SignIn />,
 	},
 	{
-		path: `/${ESidebarHrefMenu.projects}/:projectId`,
+		path: `/${SidebarHrefMenu.projects}/:projectId`,
 		children: [
 			{
 				path: "add-new-connection",

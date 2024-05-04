@@ -1,9 +1,9 @@
-export enum EOutputTabs {
+export enum OutputTabsVariants {
 	output = "output",
 	tab = "tab",
 }
 
-export enum EProjectTabs {
+export enum ProjectTabs {
 	codeAndAssets = "Code & Assets",
 	connections = "Connections",
 	triggers = "Triggers",

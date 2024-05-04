@@ -4,7 +4,7 @@ import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { ModalDeleteTrigger } from "@components/organisms/modals";
-import { EModalName, ESortDirection } from "@enums/components";
+import { ModalName, SortDirectionVariant } from "@enums/components";
 import { TriggersService } from "@services";
 import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
@@ -23,7 +23,7 @@ export const TriggersContent = () => {
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Trigger;
-	}>({ direction: ESortDirection.ASC, column: "name" });
+	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [triggers, setTriggers] = useState<Trigger[]>([]);
 
 	const [triggerId, setTriggerId] = useState<string>();
@@ -48,7 +48,9 @@ export const TriggersContent = () => {
 
 	const toggleSortTriggers = (key: keyof Trigger) => {
 		const newDirection =
-			sort.column === key && sort.direction === ESortDirection.ASC ? ESortDirection.DESC : ESortDirection.ASC;
+			sort.column === key && sort.direction === SortDirectionVariant.ASC
+				? SortDirectionVariant.DESC
+				: SortDirectionVariant.ASC;
 
 		const sortedConnections = orderBy(triggers, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
@@ -59,7 +61,7 @@ export const TriggersContent = () => {
 		if (!triggerId) return;
 
 		const { error } = await TriggersService.delete(triggerId);
-		closeModal(EModalName.deleteTrigger);
+		closeModal(ModalName.deleteTrigger);
 		if (error) {
 			setToast({ isOpen: true, message: tError("triggerRemoveFailed") });
 			return;
@@ -69,7 +71,7 @@ export const TriggersContent = () => {
 
 	const handleOpenDeleteTriggerModal = (triggerId: string) => {
 		setTriggerId(triggerId);
-		openModal(EModalName.deleteTrigger);
+		openModal(ModalName.deleteTrigger);
 	};
 
 	return (

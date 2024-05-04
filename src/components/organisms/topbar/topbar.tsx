@@ -3,7 +3,7 @@ import { FullScreen, More } from "@assets/image";
 import { Build, Deploy, Stats } from "@assets/image";
 import { Button, ErrorMessage, IconButton, IconSvg, Spinner, Toast } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
-import { ETopbarButton } from "@enums/components";
+import { TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { Project } from "@type/models";
@@ -77,7 +77,7 @@ export const Topbar = () => {
 	const build = async () => {
 		if (!Object.keys(resources).length) return;
 
-		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.build]: true }));
+		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
 
 		const { error } = await ProjectsService.build(projectId!, resources);
 		setToast({
@@ -86,13 +86,13 @@ export const Topbar = () => {
 			message: error ? (error as Error).message : t("topbar.buildProjectSuccess"),
 		});
 
-		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.build]: false }));
+		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
 	};
 
 	const deploy = async () => {
 		if (!Object.keys(resources).length) return;
 
-		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.deploy]: true }));
+		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
 
 		const { error } = await ProjectsService.run(projectId!, resources);
 		setToast({
@@ -101,7 +101,7 @@ export const Topbar = () => {
 			message: error ? (error as Error).message : t("topbar.deployedProjectSuccess"),
 		});
 
-		setLoadingButton((prev) => ({ ...prev, [ETopbarButton.deploy]: false }));
+		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 	};
 
 	const toastProps = {
@@ -135,20 +135,20 @@ export const Topbar = () => {
 			<div className="flex items-stretch gap-3">
 				<Button
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={loadingButton[ETopbarButton.build]}
+					disabled={loadingButton[TopbarButton.build]}
 					onClick={build}
 					variant="outline"
 				>
-					{loadingButton[ETopbarButton.build] ? <Spinner /> : <IconSvg className="max-w-5" src={Build} />}
+					{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg className="max-w-5" src={Build} />}
 					{t("topbar.buttons.build")}
 				</Button>
 				<Button
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={loadingButton[ETopbarButton.deploy]}
+					disabled={loadingButton[TopbarButton.deploy]}
 					onClick={deploy}
 					variant="outline"
 				>
-					{loadingButton[ETopbarButton.deploy] ? <Spinner /> : <IconSvg className="max-w-5" src={Deploy} />}
+					{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg className="max-w-5" src={Deploy} />}
 					{t("topbar.buttons.deploy")}
 				</Button>
 				<Button

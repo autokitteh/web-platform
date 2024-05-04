@@ -4,7 +4,7 @@ import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components
 import { SortButton, DropdownButton, TableConnectionInfo, TableConnectionAction } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
 import { connectionsData } from "@constants/lists";
-import { EModalName, ESortDirection } from "@enums/components";
+import { ModalName, SortDirectionVariant } from "@enums/components";
 import { ConnectionsContentProps, TabConnection } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
@@ -17,14 +17,16 @@ export const ConnectionsContent = ({ className }: ConnectionsContentProps) => {
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: Exclude<keyof TabConnection, "id">;
-	}>({ direction: ESortDirection.ASC, column: "lastTested" });
+	}>({ direction: SortDirectionVariant.ASC, column: "lastTested" });
 	const [connections, setConnections] = useState(connectionsData);
 
 	const baseStyle = cn("pt-14", className);
 
 	const toggleSortConnections = (key: Exclude<keyof TabConnection, "id">) => {
 		const newDirection =
-			sort.column === key && sort.direction === ESortDirection.ASC ? ESortDirection.DESC : ESortDirection.ASC;
+			sort.column === key && sort.direction === SortDirectionVariant.ASC
+				? SortDirectionVariant.DESC
+				: SortDirectionVariant.ASC;
 
 		const sortedConnections = orderBy(connections, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
@@ -111,7 +113,7 @@ export const ConnectionsContent = ({ className }: ConnectionsContentProps) => {
 							<Td className="max-w-10 border-0 pr-1.5 justify-end">
 								<DropdownButton
 									className="flex-col gap-1"
-									contentMenu={<TableConnectionAction onDelete={() => openModal(EModalName.deleteConnection)} />}
+									contentMenu={<TableConnectionAction onDelete={() => openModal(ModalName.deleteConnection)} />}
 								>
 									<IconButton className="w-6 h-6 p-1  hover:bg-gray-700">
 										<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />

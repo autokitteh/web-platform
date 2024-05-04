@@ -1,4 +1,4 @@
-export enum EStoreName {
+export enum StoreName {
 	project = "ProjectStore",
 	uiGlobal = "UIGlobalStore",
 }

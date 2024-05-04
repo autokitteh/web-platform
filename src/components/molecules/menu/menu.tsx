@@ -2,8 +2,8 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { NewProject } from "@assets/image";
 import { Button, IconSvg, Toast } from "@components/atoms";
 import { menuItems, fetchMenuInterval } from "@constants";
-import { ESidebarMenu } from "@enums/components";
-import { ESidebarHrefMenu } from "@enums/components";
+import { SidebarMenu } from "@enums/components";
+import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
 import { MenuItem } from "@interfaces/components";
 import { ProjectsService } from "@services";
@@ -41,7 +41,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 			return;
 		}
 
-		navigate(`/${ESidebarHrefMenu.projects}/${projectId}`);
+		navigate(`/${SidebarHrefMenu.projects}/${projectId}`);
 
 		await getProjectsList();
 	};
@@ -58,11 +58,11 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	useEffect(() => {
 		const sortedList = orderBy(list, "name", "asc");
 
-		const currentSubmenu = menu.find(({ id }) => id === ESidebarMenu.myProjects)?.submenu;
+		const currentSubmenu = menu.find(({ id }) => id === SidebarMenu.myProjects)?.submenu;
 		if (isEqual(currentSubmenu, sortedList)) return;
 
 		const updatedMenuItems = menuItems.map((item) =>
-			item.id === ESidebarMenu.myProjects ? { ...item, submenu: sortedList } : item
+			item.id === SidebarMenu.myProjects ? { ...item, submenu: sortedList } : item
 		);
 
 		setMenu(updatedMenuItems);

@@ -1,7 +1,7 @@
 import { namespaces } from "@constants";
-import { EStoreName } from "@enums";
-import { EProjectTabs } from "@enums/components";
-import { ESidebarHrefMenu } from "@enums/components";
+import { StoreName } from "@enums";
+import { ProjectTabs } from "@enums/components";
+import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
 import { Environment } from "@type/models";
@@ -35,13 +35,13 @@ const defaultState: Omit<
 		environments: [],
 		variables: [],
 	},
-	activeTab: EProjectTabs.codeAndAssets,
+	activeTab: ProjectTabs.codeAndAssets,
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 	loadProject: async (projectId) => {
-		const activeTab = get().currentProject.projectId === projectId ? get().activeTab : EProjectTabs.codeAndAssets;
+		const activeTab = get().currentProject.projectId === projectId ? get().activeTab : ProjectTabs.codeAndAssets;
 		const openedFiles = get().currentProject.projectId === projectId ? get().currentProject.openedFiles : [];
 
 		set(() => ({
@@ -65,7 +65,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		const updatedList = data?.map(({ projectId, name }) => ({
 			id: projectId,
 			name,
-			href: `/${ESidebarHrefMenu.projects}/${projectId}`,
+			href: `/${SidebarHrefMenu.projects}/${projectId}`,
 		}));
 
 		set((state) => ({ ...state, list: updatedList }));
@@ -227,4 +227,4 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 });
 
-export const useProjectStore = create(persist(immer(store), { name: EStoreName.project }));
+export const useProjectStore = create(persist(immer(store), { name: StoreName.project }));

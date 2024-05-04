@@ -1,5 +1,5 @@
 import { Connections, Dashboard, Projects, Settings, StatsBlack } from "@assets/image";
-import { ESidebarHrefMenu } from "@enums/components";
+import { SidebarHrefMenu } from "@enums/components";
 import { MenuItem } from "@interfaces/components";
 
 export const menuItems: MenuItem[] = [
@@ -7,19 +7,19 @@ export const menuItems: MenuItem[] = [
 		id: 1,
 		icon: Projects,
 		name: "My Projects",
-		href: `/${ESidebarHrefMenu.projects}`,
+		href: `/${SidebarHrefMenu.projects}`,
 	},
 	{
 		id: 2,
 		icon: Dashboard,
 		name: "Dashboard",
-		href: `/${ESidebarHrefMenu.dashboard}`,
+		href: `/${SidebarHrefMenu.dashboard}`,
 	},
 	{
 		id: 3,
 		icon: Connections,
 		name: "Connections",
-		href: `/${ESidebarHrefMenu.connections}`,
+		href: `/${SidebarHrefMenu.connections}`,
 		submenu: [
 			{
 				id: 0,
@@ -42,12 +42,12 @@ export const menuItems: MenuItem[] = [
 		id: 4,
 		icon: StatsBlack,
 		name: "Stats",
-		href: `/${ESidebarHrefMenu.stats}`,
+		href: `/${SidebarHrefMenu.stats}`,
 	},
 	{
 		id: 5,
 		icon: Settings,
 		name: "Settings",
-		href: `/${ESidebarHrefMenu.settings}`,
+		href: `/${SidebarHrefMenu.settings}`,
 	},
 ];

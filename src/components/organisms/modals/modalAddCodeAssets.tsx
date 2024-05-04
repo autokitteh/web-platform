@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
-import { EModalName } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ModalAddCodeAssetsProps } from "@interfaces/components";
 import { useModalStore, useProjectStore } from "@store";
@@ -27,14 +27,14 @@ export const ModalAddCodeAssets = ({ onError }: ModalAddCodeAssetsProps) => {
 
 	const onSubmit = async ({ name }: FieldValues) => {
 		const { error } = await setProjectEmptyResources(name);
-		closeModal(EModalName.addCodeAssets);
+		closeModal(ModalName.addCodeAssets);
 
 		if (error) onError(t("fileAddFailedExtended", { projectId, fileName: name }));
 		reset();
 	};
 
 	return (
-		<Modal name={EModalName.addCodeAssets}>
+		<Modal name={ModalName.addCodeAssets}>
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("addCodeAssets.title", { ns: "modals" })}</h3>
 				<form onSubmit={handleSubmit(onSubmit)}>
