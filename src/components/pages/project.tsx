@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
-import { tabsMainFrame } from "@constants";
+import { tabsProject } from "@constants";
+import { EProjectTabs } from "@enums/components";
 import { useProjectStore } from "@store";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -10,13 +11,18 @@ import { useParams } from "react-router-dom";
 export const Project = () => {
 	const { t } = useTranslation("errors");
 	const { projectId } = useParams();
-	const { activeTab, loadProject, setActiveTab } = useProjectStore();
+	const {
+		activeTab,
+		loadProject,
+		setActiveTab,
+		currentProject: { variables, resources, triggers },
+	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (!projectId) return;
 
 		const fetchProject = async () => {
@@ -31,12 +37,25 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
+	const updatedTabsProject = tabsProject.map((tab) => {
+		switch (tab.title) {
+			case EProjectTabs.codeAndAssets:
+				return { ...tab, count: Object.keys(resources).length };
+			case EProjectTabs.triggers:
+				return { ...tab, count: triggers.length };
+			case EProjectTabs.variables:
+				return { ...tab, count: variables.length };
+			default:
+				return tab;
+		}
+	});
+
 	return (
 		<AppWrapper>
 			<MapMenuFrameLayout>
 				<Tabs defaultValue={activeTab} key={activeTab} onChange={setActiveTab}>
 					<TabList>
-						{tabsMainFrame.map(({ title, count }) => (
+						{updatedTabsProject.map(({ title, count }) => (
 							<Tab ariaLabel={title} className="text-xs 3xl:text-sm" key={title} value={title}>
 								{`${title} (${count})`}
 							</Tab>
@@ -45,7 +64,7 @@ export const Project = () => {
 							<Close className="transition w-3 h-3 fill-gray-400 group-hover:fill-white" />
 						</IconButton>
 					</TabList>
-					{tabsMainFrame.map(({ title, content }) => (
+					{updatedTabsProject.map(({ title, content }) => (
 						<TabPanel key={title} value={title}>
 							{content()}
 						</TabPanel>
