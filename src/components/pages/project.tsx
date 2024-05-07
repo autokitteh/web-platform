@@ -3,7 +3,7 @@ import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
 import { tabsProject } from "@constants";
-import { EProjectTabs } from "@enums/components";
+import { ProjectTabs } from "@enums/components";
 import { useProjectStore } from "@store";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -39,11 +39,11 @@ export const Project = () => {
 
 	const updatedTabsProject = tabsProject.map((tab) => {
 		switch (tab.title) {
-			case EProjectTabs.codeAndAssets:
+			case ProjectTabs.codeAndAssets:
 				return { ...tab, count: Object.keys(resources)?.length };
-			case EProjectTabs.triggers:
+			case ProjectTabs.triggers:
 				return { ...tab, count: triggers?.length };
-			case EProjectTabs.variables:
+			case ProjectTabs.variables:
 				return { ...tab, count: variables?.length };
 			default:
 				return tab;

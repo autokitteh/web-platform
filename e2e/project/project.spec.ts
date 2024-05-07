@@ -1,4 +1,4 @@
-import { EProjectTabs } from "@enums/components";
+import { ProjectTabs } from "@enums/components";
 import { test, expect } from "@playwright/test";
 
 test.describe("Project Suite", () => {
@@ -27,7 +27,7 @@ test.describe("Project Suite", () => {
 	});
 
 	test("Tabs counters", async ({ page }) => {
-		const tabElement = page.getByRole("tab", { name: EProjectTabs.variables });
+		const tabElement = page.getByRole("tab", { name: ProjectTabs.variables });
 		const initialText = await tabElement.textContent();
 
 		await tabElement.click();
