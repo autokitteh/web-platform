@@ -16,7 +16,7 @@ test.describe("Project Suite", () => {
 	test("Change project name", async ({ page }) => {
 		await page.getByRole("textbox", { name: "Rename" }).click();
 		await page.getByRole("textbox", { name: "Rename" }).fill("Grankie_0121");
-		expect(page.getByText("Grankie_0121")).toBeTruthy();
+		await expect(page.getByText("Grankie_0121")).toBeTruthy();
 	});
 
 	test("Create new file to project", async ({ page }) => {
@@ -27,8 +27,7 @@ test.describe("Project Suite", () => {
 	});
 
 	test("Tabs counters", async ({ page }) => {
-		const tabElement = page.getByRole("tab", { name: ProjectTabs.variables });
-		const initialText = await tabElement.textContent();
+		const tabElement = page.getByRole("tab", { name: `${ProjectTabs.variables} (0)` });
 
 		await tabElement.click();
 		await page.getByRole("link", { name: "Add new" }).click();
@@ -40,8 +39,8 @@ test.describe("Project Suite", () => {
 		await page.getByRole("button", { name: "Save" }).click();
 		await page.waitForTimeout(500);
 
-		const updatedText = await tabElement.textContent();
+		const updatedTab = page.getByRole("tab", { name: `${ProjectTabs.variables} (1)` });
 
-		expect(updatedText).not.toBe(initialText);
+		await expect(updatedTab).toBeVisible();
 	});
 });

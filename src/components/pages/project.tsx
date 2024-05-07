@@ -56,7 +56,7 @@ export const Project = () => {
 				<Tabs defaultValue={activeTab} key={activeTab} onChange={setActiveTab}>
 					<TabList>
 						{updatedTabsProject.map(({ title, count }) => (
-							<Tab ariaLabel={title} className="text-xs 3xl:text-sm" key={title} value={title}>
+							<Tab ariaLabel={`${title} (${count})`} className="text-xs 3xl:text-sm" key={title} value={title}>
 								{`${title} (${count})`}
 							</Tab>
 						))}
