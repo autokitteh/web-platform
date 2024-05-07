@@ -7,6 +7,7 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { debounce, get, last } from "lodash";
+import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -68,7 +69,7 @@ export const EditorTabs = () => {
 		updateEditorClosedFiles(name);
 	};
 
-	let editorOptions: Monaco;
+	let editorOptions: monaco.editor.IStandaloneEditorConstructionOptions;
 	if (activeEditorFileName === ReadOnlyFile.autokittehYaml) {
 		editorOptions = {
 			readOnly: true,
