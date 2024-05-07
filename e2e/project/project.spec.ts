@@ -1,3 +1,4 @@
+import { EProjectTabs } from "@enums/components";
 import { test, expect } from "@playwright/test";
 
 test.describe("Project Suite", () => {
@@ -26,10 +27,10 @@ test.describe("Project Suite", () => {
 	});
 
 	test("Tabs counters", async ({ page }) => {
-		const textElement = page.getByLabel("Variables");
-		const initialText = await textElement.textContent();
+		const tabElement = page.getByRole("tab", { name: EProjectTabs.variables });
+		const initialText = await tabElement.textContent();
 
-		await page.getByRole("tab", { name: "Variables" }).click();
+		await tabElement.click();
 		await page.getByRole("link", { name: "Add new" }).click();
 
 		await page.getByPlaceholder("Name").click();
@@ -39,12 +40,8 @@ test.describe("Project Suite", () => {
 		await page.getByRole("button", { name: "Save" }).click();
 		await page.waitForTimeout(500);
 
-		const updatedText = textElement.textContent();
+		const updatedText = await tabElement.textContent();
 
 		expect(updatedText).not.toBe(initialText);
-	});
-
-	test.afterEach(async ({ page }) => {
-		await page.goto("");
 	});
 });

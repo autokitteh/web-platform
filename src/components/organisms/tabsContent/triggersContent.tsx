@@ -32,6 +32,14 @@ export const TriggersContent = () => {
 		message: "",
 	});
 
+	useEffect(() => {
+		const fetchTriggers = async () => {
+			await getProjectTriggers();
+			setTriggers(currentProject.triggers);
+		};
+		fetchTriggers();
+	}, []);
+
 	const toggleSortTriggers = (key: keyof Trigger) => {
 		const newDirection =
 			sort.column === key && sort.direction === SortDirectionVariant.ASC
