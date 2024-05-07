@@ -40,11 +40,11 @@ export const Project = () => {
 	const updatedTabsProject = tabsProject.map((tab) => {
 		switch (tab.title) {
 			case EProjectTabs.codeAndAssets:
-				return { ...tab, count: Object.keys(resources).length };
+				return { ...tab, count: Object.keys(resources)?.length };
 			case EProjectTabs.triggers:
-				return { ...tab, count: triggers.length };
+				return { ...tab, count: triggers?.length };
 			case EProjectTabs.variables:
-				return { ...tab, count: variables.length };
+				return { ...tab, count: variables?.length };
 			default:
 				return tab;
 		}

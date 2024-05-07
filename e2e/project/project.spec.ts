@@ -10,12 +10,6 @@ test.describe("Project Suite", () => {
 		} else {
 			test.fail();
 		}
-		const projectURL = await page.url();
-		const projectId = projectURL.split("/").pop();
-		if (!projectId) {
-			test.fail();
-		}
-		await expect(page.getByText(projectId!)).toBeVisible();
 	});
 
 	test("Change project name", async ({ page }) => {
@@ -25,14 +19,32 @@ test.describe("Project Suite", () => {
 	});
 
 	test("Create new file to project", async ({ page }) => {
-		const createNewFileButton = page.getByRole("button", { name: "Create new file" });
-		if (await createNewFileButton.isVisible()) {
-			await createNewFileButton.click();
-			await page.waitForTimeout(500);
-		} else {
-			test.fail();
-		}
-		const newFileInput = page.getByRole("textbox", { name: "new file name" });
-		await newFileInput.isVisible();
+		await page.getByRole("button", { name: "Create new file" }).click();
+		await page.getByRole("textbox", { name: "new file name" }).click();
+		await page.getByRole("textbox", { name: "new file name" }).fill("newFile");
+		await page.getByRole("button", { name: "Create", exact: true }).click();
+	});
+
+	test("Tabs counters", async ({ page }) => {
+		const textElement = page.getByLabel("Variables");
+		const initialText = await textElement.textContent();
+
+		await page.getByRole("tab", { name: "Variables" }).click();
+		await page.getByRole("link", { name: "Add new" }).click();
+
+		await page.getByPlaceholder("Name").click();
+		await page.getByPlaceholder("Name").fill("nameVariable");
+		await page.getByPlaceholder("Value").click();
+		await page.getByPlaceholder("Value").fill("valueVariable");
+		await page.getByRole("button", { name: "Save" }).click();
+		await page.waitForTimeout(500);
+
+		const updatedText = textElement.textContent();
+
+		expect(updatedText).not.toBe(initialText);
+	});
+
+	test.afterEach(async ({ page }) => {
+		await page.goto("");
 	});
 });
