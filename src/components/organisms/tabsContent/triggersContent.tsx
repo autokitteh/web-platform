@@ -33,6 +33,7 @@ export const TriggersContent = () => {
 	});
 
 	useEffect(() => {
+		// TODO: in future - fetch triggers from the backend, not use zustand store, also change for variable, connections and code&assets
 		const fetchTriggers = async () => {
 			await getProjectTriggers();
 			setTriggers(currentProject.triggers);

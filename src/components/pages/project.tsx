@@ -37,6 +37,7 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
+	// TODO: in future - fetch count for all tabs from the backend, not use zustand store and don't forget to add also for connections
 	const projectTabsWithCount = initialProjectTabs.map((tab) => {
 		switch (tab.title) {
 			case ProjectTabs.codeAndAssets:
