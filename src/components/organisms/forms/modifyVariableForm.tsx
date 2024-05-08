@@ -58,7 +58,7 @@ export const ModifyVariableForm = () => {
 		setIsLoading(true);
 
 		const { error } = await VariablesService.set({
-			envId: environmentId!,
+			scopeId: "",
 			name,
 			value,
 			isSecret: false,

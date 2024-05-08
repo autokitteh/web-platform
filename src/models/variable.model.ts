@@ -1,9 +1,8 @@
-import { EnvVar as ProtoVariable } from "@ak-proto-ts/envs/v1/env_pb";
 import { Variable } from "@type/models";
 
-export const convertVariableProtoToModel = (protoVariable: ProtoVariable): Variable => {
+export const convertVariableProtoToModel = (protoVariable: Variable): Variable => {
 	return {
-		envId: protoVariable.envId,
+		scopeId: protoVariable.scopeId,
 		value: protoVariable.value,
 		name: protoVariable.name,
 		isSecret: protoVariable.isSecret,

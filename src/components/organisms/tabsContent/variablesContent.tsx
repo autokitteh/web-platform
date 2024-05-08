@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon, EditIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
@@ -22,7 +22,6 @@ export const VariablesContent = () => {
 		direction: SortDirection;
 		column: keyof Variable;
 	}>({ direction: SortDirectionVariant.ASC, column: "name" });
-	const [variables, setVariables] = useState<Variable[]>(currentProject.variables);
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -38,14 +37,15 @@ export const VariablesContent = () => {
 				? SortDirectionVariant.DESC
 				: SortDirectionVariant.ASC;
 
-		const sortedVariables = orderBy(variables, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
-		setVariables(sortedVariables);
 	};
+
+	const sortedVariables = useMemo(() => {
+		return orderBy(currentProject.variables, [sort.column], [sort.direction]);
+	}, [currentProject.variables, sort.column, sort.direction]);
 
 	const handleDeleteVariable = async () => {
 		const { error } = await VariablesService.delete({
-			envId,
 			name: deleteVariable!.name,
 		});
 		closeModal(ModalName.deleteVariable);
@@ -58,14 +58,9 @@ export const VariablesContent = () => {
 		getProjectVariables();
 	};
 
-	useEffect(() => {
-		const sortedVariables = orderBy(currentProject.variables, [sort.column], [sort.direction]);
-		setVariables(sortedVariables);
-	}, [currentProject.variables]);
-
-	const showDeleteModal = (variableName: string, variableValue: string) => {
+	const showDeleteModal = (variableName: string, variableValue: string, scopeId: string) => {
 		openModal(ModalName.deleteVariable);
-		setDeleteVariable({ name: variableName, value: variableValue, envId, isSecret: false });
+		setDeleteVariable({ name: variableName, value: variableValue, scopeId, isSecret: false });
 	};
 
 	return (
@@ -81,7 +76,7 @@ export const VariablesContent = () => {
 					{t("buttonAddNew")}
 				</Button>
 			</div>
-			{variables.length ? (
+			{sortedVariables.length ? (
 				<Table className="mt-5">
 					<THead>
 						<Tr>
@@ -107,7 +102,7 @@ export const VariablesContent = () => {
 						</Tr>
 					</THead>
 					<TBody>
-						{variables.map(({ name, value }, idx) => (
+						{sortedVariables.map(({ name, value, scopeId }, idx) => (
 							<Tr className="group" key={idx}>
 								<Td className="font-semibold">{name}</Td>
 								<Td className="border-r-0">{value}</Td>
@@ -121,7 +116,7 @@ export const VariablesContent = () => {
 										</IconButton>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
-											onClick={() => showDeleteModal(name, value)}
+											onClick={() => showDeleteModal(name, value, scopeId)}
 										>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>

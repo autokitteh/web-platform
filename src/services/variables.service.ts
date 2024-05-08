@@ -1,4 +1,4 @@
-import { environmentsClient } from "@api/grpc/clients.grpc.api";
+import { variablesClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertVariableProtoToModel } from "@models/variable.model";
 import { LoggerService } from "@services";
@@ -9,7 +9,7 @@ import i18n from "i18next";
 export class VariablesService {
 	static async set(singleVariable: Variable): Promise<ServiceResponse<string>> {
 		try {
-			await environmentsClient.setVar({ var: singleVariable });
+			await variablesClient.set({ vars: [singleVariable] });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
@@ -23,7 +23,7 @@ export class VariablesService {
 
 	static async list(envId: string): Promise<ServiceResponse<Variable[]>> {
 		try {
-			const { vars } = await environmentsClient.getVars({ envId });
+			const { vars } = await variablesClient.get({ scopeId: envId });
 			const variables = vars.map(convertVariableProtoToModel);
 
 			return { data: variables, error: undefined };
@@ -36,9 +36,9 @@ export class VariablesService {
 		}
 	}
 
-	static async delete({ envId, name }: { envId: string; name: string }): Promise<ServiceResponse<void>> {
+	static async delete({ name }: { name: string }): Promise<ServiceResponse<void>> {
 		try {
-			await environmentsClient.removeVar({ envId, name });
+			await variablesClient.delete({ names: [name] });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
