@@ -17,6 +17,7 @@ export const AddTriggerForm = () => {
 	const navigate = useNavigate();
 	const {
 		currentProject: { projectId, resources },
+		getProjectTriggers,
 	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -91,7 +92,7 @@ export const AddTriggerForm = () => {
 			setToast({ isOpen: true, message: tErrors("triggerNotCreated") });
 			return;
 		}
-
+		await getProjectTriggers();
 		navigate(-1);
 	};
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
@@ -41,21 +41,17 @@ export const TriggersContent = () => {
 		fetchTriggers();
 	}, []);
 
-	const toggleSortTriggers = (key: keyof Trigger) => {
+	const handleToggleSort = (key: keyof Trigger) => {
 		const newDirection =
 			sort.column === key && sort.direction === SortDirectionVariant.ASC
 				? SortDirectionVariant.DESC
 				: SortDirectionVariant.ASC;
-
-		const sortedConnections = orderBy(triggers, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
-		setTriggers(sortedConnections);
 	};
 
-	useEffect(() => {
-		const sortedTriggers = orderBy(currentProject.triggers, [sort.column], [sort.direction]);
-		setTriggers(sortedTriggers);
-	}, [currentProject.triggers]);
+	const sortedTriggers = useMemo(() => {
+		return orderBy(currentProject.triggers, [sort.column], [sort.direction]);
+	}, [currentProject.triggers, sort.column, sort.direction]);
 
 	const handleDeleteTrigger = async () => {
 		if (!triggerId) return;
@@ -90,7 +86,7 @@ export const TriggersContent = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("connectionName")}>
+							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("connectionName")}>
 								{t("table.columns.connection")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -98,7 +94,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("path")}>
+							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("path")}>
 								{t("table.columns.call")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -106,10 +102,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th
-								className="cursor-pointer group font-normal border-r-0"
-								onClick={() => toggleSortTriggers("eventType")}
-							>
+							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => handleToggleSort("eventType")}>
 								{t("table.columns.eventType")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -121,7 +114,7 @@ export const TriggersContent = () => {
 						</Tr>
 					</THead>
 					<TBody>
-						{triggers.map((trigger) => (
+						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
 								<Td className="font-semibold">{trigger.connectionName}</Td>
 								<Td>
