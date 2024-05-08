@@ -16,7 +16,7 @@ test.describe("Project Suite", () => {
 	test("Change project name", async ({ page }) => {
 		await page.getByRole("textbox", { name: "Rename" }).click();
 		await page.getByRole("textbox", { name: "Rename" }).fill("Grankie_0121");
-		await expect(page.getByText("Grankie_0121")).toBeTruthy();
+		expect(page.getByText("Grankie_0121")).toBeTruthy();
 	});
 
 	test("Create new file to project", async ({ page }) => {

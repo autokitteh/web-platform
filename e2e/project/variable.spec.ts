@@ -39,7 +39,6 @@ test.describe("Project Variables Suite", () => {
 		await page.getByPlaceholder("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save" }).click();
 		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
-		await page.waitForTimeout(500);
 		await expect(newVariableInTable).toBeVisible();
 	});
 

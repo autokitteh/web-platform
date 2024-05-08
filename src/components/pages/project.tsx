@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
-import { tabsProject } from "@constants";
+import { initialProjectTabs } from "@constants";
 import { ProjectTabs } from "@enums/components";
 import { useProjectStore } from "@store";
 import { useTranslation } from "react-i18next";
@@ -37,16 +37,16 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const updatedTabsProject = tabsProject.map((tab) => {
+	const projectTabsWithCount = initialProjectTabs.map((tab) => {
 		switch (tab.title) {
 			case ProjectTabs.codeAndAssets:
 				return { ...tab, count: Object.keys(resources)?.length };
+			case ProjectTabs.connections:
+				return { ...tab, count: 6 };
 			case ProjectTabs.triggers:
 				return { ...tab, count: triggers?.length };
 			case ProjectTabs.variables:
 				return { ...tab, count: variables?.length };
-			default:
-				return tab;
 		}
 	});
 
@@ -55,7 +55,7 @@ export const Project = () => {
 			<MapMenuFrameLayout>
 				<Tabs defaultValue={activeTab} key={activeTab} onChange={setActiveTab}>
 					<TabList>
-						{updatedTabsProject.map(({ title, count }) => (
+						{projectTabsWithCount.map(({ title, count }) => (
 							<Tab ariaLabel={`${title} (${count})`} className="text-xs 3xl:text-sm" key={title} value={title}>
 								{`${title} (${count})`}
 							</Tab>
@@ -64,7 +64,7 @@ export const Project = () => {
 							<Close className="transition w-3 h-3 fill-gray-400 group-hover:fill-white" />
 						</IconButton>
 					</TabList>
-					{updatedTabsProject.map(({ title, content }) => (
+					{projectTabsWithCount.map(({ title, content }) => (
 						<TabPanel key={title} value={title}>
 							{content()}
 						</TabPanel>
