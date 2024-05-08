@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
-import { Close } from "@assets/image/icons";
+import { Close, AlertIcon } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
 import { initialProjectTabs } from "@constants";
@@ -40,13 +40,16 @@ export const Project = () => {
 	const projectTabsWithCount = initialProjectTabs.map((tab) => {
 		switch (tab.title) {
 			case ProjectTabs.codeAndAssets:
-				return { ...tab, count: Object.keys(resources)?.length };
+				return {
+					...tab,
+					count: resources ? Object.keys(resources).length : <AlertIcon className="fill-error size-4" />,
+				};
 			case ProjectTabs.connections:
-				return { ...tab, count: 6 };
+				return { ...tab, count: <AlertIcon className="fill-error size-4" /> };
 			case ProjectTabs.triggers:
-				return { ...tab, count: triggers?.length };
+				return { ...tab, count: triggers ? triggers.length : <AlertIcon className="fill-error size-4" /> };
 			case ProjectTabs.variables:
-				return { ...tab, count: variables?.length };
+				return { ...tab, count: variables ? variables.length : <AlertIcon className="fill-error size-4" /> };
 		}
 	});
 
@@ -56,8 +59,13 @@ export const Project = () => {
 				<Tabs defaultValue={activeTab} key={activeTab} onChange={setActiveTab}>
 					<TabList>
 						{projectTabsWithCount.map(({ title, count }) => (
-							<Tab ariaLabel={`${title} (${count})`} className="text-xs 3xl:text-sm" key={title} value={title}>
-								{`${title} (${count})`}
+							<Tab
+								ariaLabel={`${title} (${count})`}
+								className="text-xs 3xl:text-sm flex items-center"
+								key={title}
+								value={title}
+							>
+								{title} ({count})
 							</Tab>
 						))}
 						<IconButton className="bg-black p-0 w-default-icon h-default-icon hover:bg-black group ml-auto ">
