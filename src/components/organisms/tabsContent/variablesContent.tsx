@@ -46,7 +46,7 @@ export const VariablesContent = () => {
 
 	const handleDeleteVariable = async () => {
 		const { error } = await VariablesService.delete({
-			projectId: currentProject.projectId!,
+			scopeId: deleteVariable!.scopeId,
 			name: deleteVariable!.name,
 		});
 		closeModal(ModalName.deleteVariable);

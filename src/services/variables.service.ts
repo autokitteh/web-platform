@@ -54,26 +54,9 @@ export class VariablesService {
 		}
 	}
 
-	static async delete({ projectId, name }: { projectId: string; name: string }): Promise<ServiceResponse<void>> {
+	static async delete({ scopeId, name }: { scopeId: string; name: string }): Promise<ServiceResponse<void>> {
 		try {
-			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
-
-			if (error) {
-				LoggerService.error(
-					namespaces.triggerService,
-					i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" })
-				);
-				return { data: undefined, error };
-			}
-
-			if (!environments?.length) {
-				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
-			}
-
-			if (environments.length !== 1) {
-				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
-			}
-			await variablesClient.delete({ scopeId: environments[0].envId, names: [name] });
+			await variablesClient.delete({ scopeId, names: [name] });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
