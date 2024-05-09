@@ -46,6 +46,7 @@ export const VariablesContent = () => {
 
 	const handleDeleteVariable = async () => {
 		const { error } = await VariablesService.delete({
+			projectId: currentProject.projectId!,
 			name: deleteVariable!.name,
 		});
 		closeModal(ModalName.deleteVariable);
@@ -55,7 +56,7 @@ export const VariablesContent = () => {
 			return;
 		}
 
-		getProjectVariables();
+		await getProjectVariables();
 	};
 
 	const showDeleteModal = (variableName: string, variableValue: string, scopeId: string) => {

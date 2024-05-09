@@ -1,15 +1,33 @@
 import { variablesClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertVariableProtoToModel } from "@models/variable.model";
-import { LoggerService } from "@services";
+import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Variable } from "@type/models";
 import i18n from "i18next";
 
 export class VariablesService {
-	static async set(singleVariable: Variable): Promise<ServiceResponse<string>> {
+	static async set(projectId: string, singleVariable: Variable): Promise<ServiceResponse<string>> {
 		try {
-			await variablesClient.set({ vars: [singleVariable] });
+			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
+
+			if (error) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" })
+				);
+				return { data: undefined, error };
+			}
+
+			if (!environments?.length) {
+				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
+			}
+
+			if (environments.length !== 1) {
+				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
+			}
+
+			await variablesClient.set({ vars: [{ ...singleVariable, scopeId: environments[0].envId }] });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
@@ -36,9 +54,26 @@ export class VariablesService {
 		}
 	}
 
-	static async delete({ name }: { name: string }): Promise<ServiceResponse<void>> {
+	static async delete({ projectId, name }: { projectId: string; name: string }): Promise<ServiceResponse<void>> {
 		try {
-			await variablesClient.delete({ names: [name] });
+			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
+
+			if (error) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" })
+				);
+				return { data: undefined, error };
+			}
+
+			if (!environments?.length) {
+				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
+			}
+
+			if (environments.length !== 1) {
+				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
+			}
+			await variablesClient.delete({ scopeId: environments[0].envId, names: [name] });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {

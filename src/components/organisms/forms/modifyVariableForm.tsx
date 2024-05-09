@@ -16,7 +16,10 @@ export const ModifyVariableForm = () => {
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const navigate = useNavigate();
 	const [currentVariable, setCurrentVariable] = useState<Variable>();
-	const { getProjectVariables } = useProjectStore();
+	const {
+		getProjectVariables,
+		currentProject: { projectId },
+	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -56,8 +59,7 @@ export const ModifyVariableForm = () => {
 	const onSubmit = async () => {
 		const { name, value } = getValues();
 		setIsLoading(true);
-
-		const { error } = await VariablesService.set({
+		const { error } = await VariablesService.set(projectId!, {
 			scopeId: "",
 			name,
 			value,
