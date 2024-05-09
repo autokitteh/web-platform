@@ -28,5 +28,6 @@
 	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}",
 	"variableGetFailedExtended": "Variable fetch failed, Name: {{name}}, error: {{error}}",
 	"environmentNotFound": "Couldn't found the environment",
-	"multipleEnvironments": "Multiple environments found, please reload the page"
+	"multipleEnvironments": "Multiple environments found, please reload the page",
+	"multipleEnvironmentsFoundExtended": "Multiple environments found, project ID: {{projectId}}"
 }

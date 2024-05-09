@@ -36,7 +36,6 @@ export default defineConfig({
 		// 	name: "chromium",
 		// 	use: { ...devices["Desktop Chrome"] },
 		// },
-
 		{
 			name: "firefox",
 			use: { ...devices["Desktop Firefox"] },
@@ -68,5 +67,7 @@ export default defineConfig({
 		port: 4173,
 		timeout: 360000,
 		reuseExistingServer: !process.env.CI,
+		stdout: "pipe",
+		stderr: "pipe",
 	},
 });

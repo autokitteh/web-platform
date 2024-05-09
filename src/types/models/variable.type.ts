@@ -1,5 +1,5 @@
 export type Variable = {
-	envId: string;
+	scopeId: string;
 	name: string;
 	value: string;
 	isSecret: boolean;

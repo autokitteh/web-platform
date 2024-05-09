@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
@@ -6,18 +6,18 @@ import { SortButton } from "@components/molecules";
 import { ModalDeleteTrigger } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { TriggersService } from "@services";
-import { useModalStore } from "@store";
+import { useModalStore, useProjectStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Trigger } from "@type/models";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const TriggersContent = () => {
 	const { t: tError } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers" });
 	const { openModal, closeModal } = useModalStore();
-	const { projectId } = useParams();
+	const { currentProject, getProjectTriggers } = useProjectStore();
 	const navigate = useNavigate();
 
 	const [sort, setSort] = useState<{
@@ -32,30 +32,26 @@ export const TriggersContent = () => {
 		message: "",
 	});
 
-	const fetchTriggers = async () => {
-		if (!projectId) return;
-		const { data: triggers, error } = await TriggersService.listByProjectId(projectId);
-		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
-		}
-		if (!triggers) return;
-		setTriggers(triggers);
-	};
-
 	useEffect(() => {
+		// TODO: in future - fetch triggers from the backend, not use zustand store, also change for variable, connections and code&assets
+		const fetchTriggers = async () => {
+			await getProjectTriggers();
+			setTriggers(currentProject.triggers);
+		};
 		fetchTriggers();
 	}, []);
 
-	const toggleSortTriggers = (key: keyof Trigger) => {
+	const handleToggleSort = (key: keyof Trigger) => {
 		const newDirection =
 			sort.column === key && sort.direction === SortDirectionVariant.ASC
 				? SortDirectionVariant.DESC
 				: SortDirectionVariant.ASC;
-
-		const sortedConnections = orderBy(triggers, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
-		setTriggers(sortedConnections);
 	};
+
+	const sortedTriggers = useMemo(() => {
+		return orderBy(currentProject.triggers, [sort.column], [sort.direction]);
+	}, [currentProject.triggers, sort.column, sort.direction]);
 
 	const handleDeleteTrigger = async () => {
 		if (!triggerId) return;
@@ -66,7 +62,7 @@ export const TriggersContent = () => {
 			setToast({ isOpen: true, message: tError("triggerRemoveFailed") });
 			return;
 		}
-		fetchTriggers();
+		await getProjectTriggers();
 	};
 
 	const handleOpenDeleteTriggerModal = (triggerId: string) => {
@@ -90,7 +86,7 @@ export const TriggersContent = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("connectionName")}>
+							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("connectionName")}>
 								{t("table.columns.connection")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -98,7 +94,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortTriggers("path")}>
+							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("path")}>
 								{t("table.columns.call")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -106,10 +102,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th
-								className="cursor-pointer group font-normal border-r-0"
-								onClick={() => toggleSortTriggers("eventType")}
-							>
+							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => handleToggleSort("eventType")}>
 								{t("table.columns.eventType")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -121,7 +114,7 @@ export const TriggersContent = () => {
 						</Tr>
 					</THead>
 					<TBody>
-						{triggers.map((trigger) => (
+						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
 								<Td className="font-semibold">{trigger.connectionName}</Td>
 								<Td>

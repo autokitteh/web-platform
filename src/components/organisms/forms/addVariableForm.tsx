@@ -14,8 +14,8 @@ export const AddVariableForm = () => {
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const navigate = useNavigate();
 	const {
-		currentProject: { environments },
 		getProjectVariables,
+		currentProject: { projectId },
 	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -39,8 +39,8 @@ export const AddVariableForm = () => {
 	const onSubmit = async () => {
 		const { name, value } = getValues();
 		setIsLoading(true);
-		const { error } = await VariablesService.set({
-			envId: environments[0].envId,
+		const { error } = await VariablesService.set(projectId!, {
+			scopeId: "",
 			name,
 			value,
 			isSecret: false,

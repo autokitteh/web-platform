@@ -1,4 +1,4 @@
-import { Environment } from "@type/models";
+import { Environment, Trigger } from "@type/models";
 import { Variable } from "@type/models";
 
 interface ProjectStoreResponse {
@@ -21,6 +21,7 @@ export interface ProjectStore {
 		resources: Record<string, Uint8Array>;
 		environments: Environment[];
 		variables: Variable[];
+		triggers: Trigger[];
 		activeModifyVariable?: { name: string; value: string };
 	};
 	loadProject: (projectId: string) => Promise<ProjectStoreResponse>;
@@ -32,6 +33,7 @@ export interface ProjectStore {
 	getProjectResources: () => Promise<ProjectStoreResponse>;
 	getProjecEnvironments: () => Promise<ProjectStoreResponse>;
 	getProjectVariables: () => Promise<ProjectStoreResponse>;
+	getProjectTriggers: () => Promise<ProjectStoreResponse>;
 	updateEditorOpenedFiles: (fileName: string) => void;
 	updateEditorClosedFiles: (fileName: string) => void;
 	removeProjectFile: (fileName: string) => Promise<ProjectStoreResponse>;

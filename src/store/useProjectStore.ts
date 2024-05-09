@@ -3,7 +3,7 @@ import { StoreName } from "@enums";
 import { ProjectTabs } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
-import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
+import { LoggerService, ProjectsService, EnvironmentsService, VariablesService, TriggersService } from "@services";
 import { Environment } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
@@ -23,6 +23,7 @@ const defaultState: Omit<
 	| "getProjectsList"
 	| "getProjecEnvironments"
 	| "getProjectVariables"
+	| "getProjectTriggers"
 	| "updateEditorOpenedFiles"
 	| "updateEditorClosedFiles"
 	| "removeProjectFile"
@@ -34,6 +35,7 @@ const defaultState: Omit<
 		resources: {},
 		environments: [],
 		variables: [],
+		triggers: [],
 	},
 	activeTab: ProjectTabs.codeAndAssets,
 };
@@ -51,7 +53,12 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}));
 
 		try {
-			await Promise.all([get().getProjectResources(), get().getProjecEnvironments(), get().getProjectVariables()]);
+			await Promise.all([
+				get().getProjectResources(),
+				get().getProjecEnvironments(),
+				get().getProjectVariables(),
+				get().getProjectTriggers(),
+			]);
 
 			return { error: undefined };
 		} catch (error) {
@@ -62,6 +69,8 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	getProjectsList: async () => {
 		const { data, error } = await ProjectsService.list();
 
+		if (error) return { error, list: [] };
+
 		const updatedList = data?.map(({ projectId, name }) => ({
 			id: projectId,
 			name,
@@ -70,7 +79,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		set((state) => ({ ...state, list: updatedList }));
 
-		return { error, list: updatedList || [] };
+		return { error: undefined, list: updatedList || [] };
 	},
 
 	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
@@ -139,27 +148,27 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	getProjectResources: async () => {
 		const { data: resources, error } = await ProjectsService.getResources(get().currentProject.projectId!);
 
-		if (resources) {
-			set((state) => {
-				state.currentProject.resources = resources;
-				return state;
-			});
-		}
+		if (error) return { error };
 
-		return { error };
+		set((state) => {
+			state.currentProject.resources = resources!;
+			return state;
+		});
+
+		return { error: undefined };
 	},
 
 	getProjecEnvironments: async () => {
 		const { data: envs, error } = await EnvironmentsService.listByProjectId(get().currentProject.projectId!);
 
-		if (envs) {
-			set((state) => {
-				state.currentProject.environments = envs;
-				return state;
-			});
-		}
+		if (error) return { error };
 
-		return { data: envs, error };
+		set((state) => {
+			state.currentProject.environments = envs!;
+			return state;
+		});
+
+		return { data: envs, error: undefined };
 	},
 
 	getProjectVariables: async () => {
@@ -170,14 +179,27 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		const envId = (environments as Environment[])[0].envId;
 		const { data: vars, error } = await VariablesService.list(envId);
 
-		if (vars) {
-			set((state) => {
-				state.currentProject.variables = vars;
-				return state;
-			});
-		}
+		if (error) return { error };
 
-		return { error };
+		set((state) => {
+			state.currentProject.variables = vars!;
+			return state;
+		});
+
+		return { error: undefined };
+	},
+
+	getProjectTriggers: async () => {
+		const { data: triggers, error } = await TriggersService.listByProjectId(get().currentProject.projectId!);
+
+		if (error) return { error };
+
+		set((state) => {
+			state.currentProject.triggers = triggers!;
+			return state;
+		});
+
+		return { error: undefined };
 	},
 
 	updateEditorOpenedFiles: (fileName) => {
@@ -223,7 +245,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			return state;
 		});
 
-		return { error };
+		return { error: undefined };
 	},
 });
 
