@@ -37,10 +37,8 @@ test.describe("Project Suite", () => {
 		await page.getByPlaceholder("Value").click();
 		await page.getByPlaceholder("Value").fill("valueVariable");
 		await page.getByRole("button", { name: "Save" }).click();
-		await page.waitForTimeout(500);
 
 		const updatedTab = page.getByRole("tab", { name: `${ProjectTabs.variables} (1)` });
-
 		await expect(updatedTab).toBeVisible();
 	});
 });

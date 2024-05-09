@@ -21,7 +21,7 @@ export const Project = () => {
 		isOpen: false,
 		message: "",
 	});
-
+	console.log(triggers.length);
 	useLayoutEffect(() => {
 		if (!projectId) return;
 
@@ -43,14 +43,14 @@ export const Project = () => {
 			case ProjectTabs.codeAndAssets:
 				return {
 					...tab,
-					count: Object.keys(resources)?.length || "",
+					count: resources ? Object.keys(resources).length : "",
 				};
 			case ProjectTabs.connections:
 				return { ...tab, count: "" };
 			case ProjectTabs.triggers:
-				return { ...tab, count: triggers?.length || "" };
+				return { ...tab, count: triggers ? triggers.length : "" };
 			case ProjectTabs.variables:
-				return { ...tab, count: variables?.length || "" };
+				return { ...tab, count: variables ? variables.length : "" };
 		}
 	});
 
