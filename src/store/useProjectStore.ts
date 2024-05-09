@@ -199,7 +199,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			});
 		}
 
-		return { error };
+		return { error: undefined };
 	},
 
 	updateEditorOpenedFiles: (fileName) => {

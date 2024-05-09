@@ -20,10 +20,18 @@ export class VariablesService {
 			}
 
 			if (!environments?.length) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" })
+				);
 				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
 			}
 
 			if (environments.length !== 1) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("multipleEnvironmentsFoundExtended", { projectId, ns: "services" })
+				);
 				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
 
