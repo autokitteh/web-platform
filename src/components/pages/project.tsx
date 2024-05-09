@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from "react";
-import { Close, AlertIcon } from "@assets/image/icons";
+import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
 import { initialProjectTabs } from "@constants";
@@ -43,14 +43,14 @@ export const Project = () => {
 			case ProjectTabs.codeAndAssets:
 				return {
 					...tab,
-					count: resources ? Object.keys(resources).length : <AlertIcon className="fill-error size-4" />,
+					count: Object.keys(resources)?.length || "",
 				};
 			case ProjectTabs.connections:
-				return { ...tab, count: <AlertIcon className="fill-error size-4" /> };
+				return { ...tab, count: "" };
 			case ProjectTabs.triggers:
-				return { ...tab, count: triggers ? triggers.length : <AlertIcon className="fill-error size-4" /> };
+				return { ...tab, count: triggers?.length || "" };
 			case ProjectTabs.variables:
-				return { ...tab, count: variables ? variables.length : <AlertIcon className="fill-error size-4" /> };
+				return { ...tab, count: variables?.length || "" };
 		}
 	});
 
