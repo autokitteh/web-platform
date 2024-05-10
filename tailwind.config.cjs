@@ -21,6 +21,7 @@ export default {
 			},
 			width: {
 				"500": "500px",
+				"550": "550px",
 				"default-icon": "1.625rem",
 				"main-nav-sidebar": "85px",
 			},
