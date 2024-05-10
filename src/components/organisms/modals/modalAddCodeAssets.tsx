@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, ErrorMessage, Input, Select } from "@components/atoms";
 import { Modal } from "@components/molecules";
-import { monacoLanguages } from "@constants";
+import { monacoLanguages, defalutFileExtension } from "@constants";
 import { ModalName } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ModalAddCodeAssetsProps } from "@interfaces/components";
@@ -32,7 +32,7 @@ export const ModalAddCodeAssets = ({ onError }: ModalAddCodeAssetsProps) => {
 		resolver: zodResolver(codeAssetsSchema),
 		defaultValues: {
 			name: "",
-			extension: { value: "", label: "" },
+			extension: { value: defalutFileExtension, label: defalutFileExtension },
 		},
 	});
 
@@ -76,6 +76,7 @@ export const ModalAddCodeAssets = ({ onError }: ModalAddCodeAssetsProps) => {
 										options={languageSelectOptions}
 										placeholder={t("addCodeAssets.selectExtension", { ns: "modals" })}
 										value={field.value}
+										variant="white"
 									/>
 								)}
 							/>

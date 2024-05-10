@@ -1,3 +1,5 @@
+export const defalutFileExtension = ".star";
+
 export const monacoLanguages = {
 	".js": "javascript",
 	".jsx": "javascript",
