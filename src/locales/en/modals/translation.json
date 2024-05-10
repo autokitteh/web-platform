@@ -35,7 +35,7 @@
 	"addCodeAssets": {
 		"title": "Create new",
 		"placeholderName": "Name",
-		"ariaLabelNewFile": "new file name",
+		"ariaLabelNewFile": "New file name",
 		"selectExtension": "Extension"
 	}
 }
