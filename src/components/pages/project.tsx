@@ -21,7 +21,7 @@ export const Project = () => {
 		isOpen: false,
 		message: "",
 	});
-	console.log(triggers.length);
+
 	useLayoutEffect(() => {
 		if (!projectId) return;
 

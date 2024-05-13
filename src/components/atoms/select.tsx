@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { getSelectStyles } from "@constants";
+import { getSelectBlackStyles, getSelectWhiteStyles } from "@constants";
 import { SelectProps, SelectOption } from "@interfaces/components";
 import ReactSelect, { SingleValue } from "react-select";
 
-export const Select = ({ placeholder = "Select", value, options, isError = false, onChange, ...rest }: SelectProps) => {
+export const Select = ({
+	placeholder = "Select",
+	value,
+	options,
+	isError = false,
+	variant,
+	onChange,
+	...rest
+}: SelectProps) => {
 	const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>();
 
 	useEffect(() => {
@@ -19,6 +27,16 @@ export const Select = ({ placeholder = "Select", value, options, isError = false
 		(document.activeElement as HTMLElement).blur();
 	};
 
+	let selectStyles;
+	switch (variant) {
+		case "white":
+			selectStyles = getSelectWhiteStyles(isError);
+			break;
+		default:
+			selectStyles = getSelectBlackStyles(isError);
+			break;
+	}
+
 	return (
 		<ReactSelect
 			{...rest}
@@ -28,7 +46,7 @@ export const Select = ({ placeholder = "Select", value, options, isError = false
 			onMenuClose={handleMenuClose}
 			options={options}
 			placeholder={placeholder}
-			styles={getSelectStyles(isError)}
+			styles={selectStyles}
 			value={selectedOption}
 		/>
 	);
