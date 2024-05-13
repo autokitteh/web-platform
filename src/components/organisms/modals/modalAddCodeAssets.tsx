@@ -43,7 +43,7 @@ export const ModalAddCodeAssets = ({ onError }: ModalAddCodeAssetsProps) => {
 		closeModal(ModalName.addCodeAssets);
 
 		if (error) onError(t("fileAddFailedExtended", { projectId, fileName: name }));
-		reset();
+		reset({ name: "", extension });
 	};
 
 	return (
