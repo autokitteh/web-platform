@@ -64,7 +64,7 @@ export const ModalAddCodeAssets = ({ onError }: ModalAddCodeAssetsProps) => {
 							/>
 							<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
 						</div>
-						<div className="relative w-48">
+						<div className="relative w-36 shrink-0">
 							<Controller
 								control={control}
 								name="extension"

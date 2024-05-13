@@ -169,7 +169,7 @@ const getSelectWhiteStyles = (isError: boolean): StylesConfig<SelectOption, fals
 	}),
 	input: (provided) => ({
 		...provided,
-		color: formColors.white,
+		color: formColors.black,
 	}),
 	placeholder: (provided, state) => ({
 		...provided,
