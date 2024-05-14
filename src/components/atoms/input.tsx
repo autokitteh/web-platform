@@ -16,7 +16,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	);
 
 	const inputStyle = cn(
-		"w-full h-12 py-2.5 px-4 bg-transparent",
+		"w-full h-12 py-2.5 px-4 bg-transparent appearance-none",
 		"placeholder:font-light placeholder:text-white hover:placeholder:font-medium",
 		{ "placeholder:text-gray-500": disabled },
 		classInput

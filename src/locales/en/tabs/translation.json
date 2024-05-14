@@ -54,6 +54,8 @@
 			"modifyTrigger": "Modify trigger",
 			"titleData": "Data",
 			"titleInfo": "Relevant only for HTTP",
+			"buttonAddNewData": "Add new data",
+			"ariaDeleteData": "Delete {{name}} data",
 			"placeholders": {
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
@@ -62,6 +64,9 @@
 				"filter": "Filter",
 				"key": "Key",
 				"value": "Value"
+			},
+			"errors": {
+				"isEmptyKeyExist": "Empty key already exists"
 			}
 		}
 	},

@@ -14,7 +14,7 @@ export const Toast = ({ duration = 5, title, type, className, isOpen, children, 
 		},
 		className
 	);
-	const titleStyle = cn("font-semibold", {
+	const titleStyle = cn("font-semibold w-full", {
 		"text-green-accent": type === "success",
 		"text-error": type === "error",
 	});
@@ -43,9 +43,11 @@ export const Toast = ({ duration = 5, title, type, className, isOpen, children, 
 					transition={{ duration: 0.4 }}
 					variants={variants}
 				>
-					<div className="flex justify-between items-center gap-2.5">
-						<p className={titleStyle}>{title}</p>
-						{children}
+					<div className="flex gap-2.5">
+						<div>
+							<p className={titleStyle}>{title}</p>
+							{children}
+						</div>
 						<IconButton className="bg-gray-600 p-0 w-default-icon h-default-icon group ml-auto" onClick={onClose}>
 							<Close className="transition fill-white w-3 h-3" />
 						</IconButton>
