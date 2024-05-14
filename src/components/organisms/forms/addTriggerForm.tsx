@@ -163,17 +163,16 @@ export const AddTriggerForm = () => {
 					<div className="relative">
 						<Input
 							{...register("entryFunction")}
-							aria-label={t("placeholders.entryFunction")}
+							aria-label={t("placeholders.functionName")}
 							className={inputClass("entryFunction")}
 							isError={!!errors.entryFunction}
 							isRequired
-							placeholder={t("placeholders.entryFunction")}
+							placeholder={t("placeholders.functionName")}
 						/>
 						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
 						<Input
-							isRequired
 							{...register("eventType")}
 							aria-label={t("placeholders.eventType")}
 							className={inputClass("eventType")}

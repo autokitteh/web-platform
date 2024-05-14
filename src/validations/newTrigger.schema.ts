@@ -14,7 +14,7 @@ export const newTriggerSchema = z.object({
 	filePath: selectItemSchema.refine((value) => value.label, {
 		message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 	}),
-	entryFunction: z.string().min(1, i18n.t("entryFunctionIsRequired", { ns: "validations" })),
-	eventType: z.string().min(1, i18n.t("eventTypeIsRequired", { ns: "validations" })),
+	entryFunction: z.string().min(1, i18n.t("functionNameIsRequired", { ns: "validations" })),
+	eventType: z.string(),
 	filter: z.string(),
 });

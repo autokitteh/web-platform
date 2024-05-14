@@ -110,6 +110,14 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
+							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("filter")}>
+								{t("table.columns.filter")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"filter" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
 							<Th className="text-right font-normal max-w-20">Actions</Th>
 						</Tr>
 					</THead>
@@ -120,7 +128,8 @@ export const TriggersContent = () => {
 								<Td>
 									{trigger.path}:{trigger.name}
 								</Td>
-								<Td className="border-r-0">{trigger.eventType}</Td>
+								<Td>{trigger.eventType}</Td>
+								<Td>{trigger.filter}</Td>
 								<Td className="max-w-20">
 									<div className="flex space-x-1">
 										<IconButton

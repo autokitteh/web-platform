@@ -1,9 +1,8 @@
 {
 	"connectionIsRequired": "Connection is required",
 	"fileNameIsRequired": "File name is required",
-	"entryFunctionIsRequired": "Entry function is required",
-	"eventTypeIsRequired": "Event type is required",
 	"extensionIsRequired": "File extension is required",
 	"nameIsRequired": "Name is required",
-	"valueIsRequired": "Value is required"
+	"valueIsRequired": "Value is required",
+	"functionNameIsRequired": "Function name is required"
 }
