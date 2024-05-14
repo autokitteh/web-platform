@@ -241,7 +241,6 @@ export const AddTriggerForm = () => {
 												ariaLabel={t("ariaDeleteData", { name: key })}
 												className="hover:bg-black bg-black-900 self-center"
 												onClick={() => handleDeleteData(key)}
-												type="button"
 											>
 												<TrashIcon className="fill-white w-4 h-4" />
 											</IconButton>

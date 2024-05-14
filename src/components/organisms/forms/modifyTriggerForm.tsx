@@ -278,7 +278,6 @@ export const ModifyTriggerForm = () => {
 						<Button
 							className="w-auto ml-auto group gap-1 p-0 font-semibold text-gray-300 hover:text-white"
 							onClick={handleAddNewData}
-							type="button"
 						>
 							<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
 							{t("buttonAddNewData")}
