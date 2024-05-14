@@ -1,5 +1,5 @@
 import i18n from "i18next";
-import { z } from "zod";
+import { z, ZodObject, ZodTypeAny } from "zod";
 
 const selectItemSchema = z.object({
 	label: z.string(),
@@ -7,14 +7,20 @@ const selectItemSchema = z.object({
 	disabled: z.boolean().optional(),
 });
 
-export const newTriggerSchema = z.object({
-	connection: selectItemSchema.refine((value) => value.label, {
-		message: i18n.t("connectionIsRequired", { ns: "validations" }),
-	}),
-	filePath: selectItemSchema.refine((value) => value.label, {
-		message: i18n.t("fileNameIsRequired", { ns: "validations" }),
-	}),
-	entryFunction: z.string().min(1, i18n.t("functionNameIsRequired", { ns: "validations" })),
-	eventType: z.string(),
-	filter: z.string(),
+let newTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
+
+i18n.on("initialized", () => {
+	newTriggerSchema = z.object({
+		connection: selectItemSchema.refine((value) => value.label, {
+			message: i18n.t("connectionIsRequired", { ns: "validations" }),
+		}),
+		filePath: selectItemSchema.refine((value) => value.label, {
+			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
+		}),
+		entryFunction: z.string().min(1, i18n.t("functionNameIsRequired", { ns: "validations" })),
+		eventType: z.string(),
+		filter: z.string(),
+	});
 });
+
+export { newTriggerSchema };

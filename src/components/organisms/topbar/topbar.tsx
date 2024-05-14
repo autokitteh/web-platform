@@ -123,7 +123,7 @@ export const Topbar = () => {
 					role="textbox"
 					suppressContentEditableWarning={true}
 					tabIndex={0}
-					title={t("rename")}
+					title={t("topbar.rename")}
 				>
 					{project.name}
 				</span>
