@@ -57,6 +57,11 @@ export const DeploymentsHistory = () => {
 		fetchDeployments();
 	};
 
+	const handleRemoveDeployment = async (id: string) => {
+		await DeploymentsService.delete(id);
+		fetchDeployments();
+	};
+
 	return (
 		<div>
 			<div className="flex items-center justify-between">
@@ -125,7 +130,7 @@ export const DeploymentsHistory = () => {
 									)}
 								</Td>
 								<Td className="max-w-12 border-0 pr-1.5 justify-end">
-									<IconButton>
+									<IconButton onClick={() => handleRemoveDeployment(deploymentId)}>
 										<TrashIcon className="fill-white w-3 h-3" />
 									</IconButton>
 								</Td>
