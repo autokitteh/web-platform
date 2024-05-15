@@ -4,7 +4,7 @@ import { IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/
 import { SortButton } from "@components/molecules";
 import { DeploymentState, DeploymentSessionStats } from "@components/organisms/deployments";
 import { DeploymentStateVariant } from "@enums";
-import { ESortDirection } from "@enums/components";
+import { SortDirectionVariant } from "@enums/components";
 import { DeploymentsService } from "@services";
 import { SortDirection } from "@type/components";
 import { Deployment } from "@type/models";
@@ -20,7 +20,7 @@ export const DeploymentsHistory = () => {
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Deployment;
-	}>({ direction: ESortDirection.ASC, column: "createdAt" });
+	}>({ direction: SortDirectionVariant.ASC, column: "createdAt" });
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -41,7 +41,9 @@ export const DeploymentsHistory = () => {
 
 	const toggleSortDeployments = (key: keyof Deployment) => {
 		const newDirection =
-			sort.column === key && sort.direction === ESortDirection.ASC ? ESortDirection.DESC : ESortDirection.ASC;
+			sort.column === key && sort.direction === SortDirectionVariant.ASC
+				? SortDirectionVariant.DESC
+				: SortDirectionVariant.ASC;
 
 		const sortedDeployments = orderBy(deployments, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
