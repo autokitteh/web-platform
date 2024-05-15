@@ -8,6 +8,7 @@ import {
 	NewVariable,
 	ModifyVariable,
 	Project,
+	Deployments,
 } from "@components/pages";
 import { SidebarHrefMenu } from "@enums/components";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
 			{
 				path: "",
 				element: <Project />,
+			},
+			{
+				path: "deployments",
+				element: <Deployments />,
 			},
 		],
 	},
