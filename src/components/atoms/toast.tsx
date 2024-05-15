@@ -5,7 +5,7 @@ import { ToastProps } from "@interfaces/components";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
 
-export const Toast = ({ duration = 5, title, type, className, isOpen, children, onClose }: ToastProps) => {
+export const Toast = ({ duration = 5, title, type, className, isOpen, children, ariaLabel, onClose }: ToastProps) => {
 	const baseStyle = cn(
 		"fixed right-20 bottom-10 z-50 bg-black max-w-420 py-3 px-4 pl-6 border rounded-4xl",
 		{
@@ -37,9 +37,11 @@ export const Toast = ({ duration = 5, title, type, className, isOpen, children, 
 			{isOpen ? (
 				<motion.div
 					animate="visible"
+					aria-label={ariaLabel}
 					className={baseStyle}
 					exit="hidden"
 					initial="hidden"
+					role="alert"
 					transition={{ duration: 0.4 }}
 					variants={variants}
 				>

@@ -5,6 +5,8 @@
 		"loading": "Loading",
 		"deleteDisabled": "Cannot delete active deployment",
 		"ariaDeleDeploy": "Delete deployment",
+		"ariaDeactivateDeploy": "Deactivate deployment",
+		"ariaActivateDeploy": "Activate deployment",
 		"table": {
 			"columns": {
 				"deploymentTime": "Deployment Time",

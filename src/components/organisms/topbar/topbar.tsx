@@ -136,6 +136,7 @@ export const Topbar = () => {
 			</div>
 			<div className="flex items-stretch gap-3">
 				<Button
+					ariaLabel={t("topbar.buttons.ariaBuildProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
 					disabled={!projectId || loadingButton[TopbarButton.build]}
 					onClick={build}
@@ -145,6 +146,7 @@ export const Topbar = () => {
 					{t("topbar.buttons.build")}
 				</Button>
 				<Button
+					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
 					disabled={!projectId || loadingButton[TopbarButton.deploy]}
 					onClick={deploy}
@@ -154,6 +156,7 @@ export const Topbar = () => {
 					{t("topbar.buttons.deploy")}
 				</Button>
 				<Button
+					ariaLabel={t("topbar.buttons.ariaStats")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
 					disabled={!projectId}
 					href={`/projects/${projectId}/deployments`}
@@ -184,7 +187,7 @@ export const Topbar = () => {
 				</IconButton>
 			</div>
 
-			<Toast {...toastProps} type={toast.isSuccess ? "success" : "error"}>
+			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>
