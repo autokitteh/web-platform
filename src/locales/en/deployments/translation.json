@@ -1,0 +1,22 @@
+{
+	"history": {
+		"tableTitle": "Deployment History",
+		"noDeployments": "No deployments found",
+		"table": {
+			"columns": {
+				"deploymentTime": "Deployment Time",
+				"sessions": "Sessions",
+				"buildId": "Build ID",
+				"status": "Status"
+			},
+			"statuses": {
+				"active": "Active",
+				"inactive": "Inactive",
+				"unspecified": "Unspecified",
+				"testing": "Testing",
+				"draining": "Draining",
+				"error": "Error - please reload"
+			}
+		}
+	}
+}

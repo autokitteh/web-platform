@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
+import { DeploymentState, DeploymentSessionStats } from "@components/organisms/deployments";
 import { ESortDirection } from "@enums/components";
 import { DeploymentsService } from "@services";
 import { TSortDirection } from "@type/components";
@@ -12,6 +13,7 @@ import { useParams } from "react-router-dom";
 
 export const DeploymentsHistory = () => {
 	const { t: tErrors } = useTranslation("errors");
+	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
 	const [sort, setSort] = useState<{
 		direction: TSortDirection;
@@ -22,7 +24,7 @@ export const DeploymentsHistory = () => {
 		message: "",
 	});
 	const { projectId } = useParams();
-	console.log(deployments);
+
 	useEffect(() => {
 		if (!projectId) return;
 
@@ -45,37 +47,40 @@ export const DeploymentsHistory = () => {
 	return (
 		<div>
 			<div className="flex items-center justify-between">
-				<div className="text-base text-black">Deployment History (48)</div>
+				<div className="text-base text-black">
+					{t("tableTitle")} ({deployments.length})
+				</div>
 			</div>
 			{deployments.length ? (
-				<Table className="mt-5">
+				<Table className="mt-4">
 					<THead>
 						<Tr>
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortDeployments("createdAt")}>
-								Deployed
+								{t("table.columns.deploymentTime")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"createdAt" === sort.column}
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortDeployments("state")}>
-								Status
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"state" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
-							<Th className="cursor-pointer group font-normal">Sessions</Th>
-							<Th
-								className="cursor-pointer group font-normal border-r-0"
-								onClick={() => toggleSortDeployments("buildId")}
-							>
-								Build ID
+
+							<Th className="cursor-pointer group font-normal">{t("table.columns.sessions")}</Th>
+							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortDeployments("buildId")}>
+								{t("table.columns.buildId")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"buildId" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
+							<Th
+								className="cursor-pointer group font-normal border-r-0"
+								onClick={() => toggleSortDeployments("state")}
+							>
+								{t("table.columns.status")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"state" === sort.column}
 									sortDirection={sort.direction}
 								/>
 							</Th>
@@ -83,21 +88,24 @@ export const DeploymentsHistory = () => {
 						</Tr>
 					</THead>
 					<TBody className="bg-gray-700">
-						{deployments.map(({ deploymentId, createdAt, state }) => (
-							<Tr className="group" key={deploymentId}>
+						{deployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
+							<Tr className="group cursor-pointer" key={deploymentId}>
 								<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
-								<Td>{state}</Td>
-								<Td />
-								<Td className="border-r-0" />
+
+								<Td>
+									<DeploymentSessionStats sessionStats={sessionStats} />
+								</Td>
+								<Td>{buildId}</Td>
+								<Td className="border-r-0">
+									<DeploymentState deploymentState={state} />
+								</Td>
 								<Td className="max-w-10 border-0 pr-1.5 justify-end" />
 							</Tr>
 						))}
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-black font-semibold text-xl text-center">
-					No deployments available. First deploy project!
-				</div>
+				<div className="mt-10 text-black font-semibold text-xl text-center">{t("noDeployments")}</div>
 			)}
 
 			<Toast

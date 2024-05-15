@@ -6,8 +6,10 @@ export type Deployment = {
 	buildId: string;
 	createdAt: Date;
 	state: number;
-	sessionStats?: {
-		state?: SessionStateType;
-		count: number;
-	}[];
+	sessionStats?: DeploymentSession[];
+};
+
+export type DeploymentSession = {
+	state?: SessionStateType;
+	count: number;
 };
