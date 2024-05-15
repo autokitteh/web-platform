@@ -1,7 +1,7 @@
 export enum DeploymentStateVariant {
-	unspecifiedDeployment = 0,
-	activeDeployment = 1,
-	testingDeployment = 2,
-	drainingDeployment = 3,
-	inactiveDeployment = 4,
+	unspecified = 0,
+	active = 1,
+	testing = 2,
+	draining = 3,
+	inactive = 4,
 }

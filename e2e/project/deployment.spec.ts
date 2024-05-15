@@ -13,8 +13,8 @@ test.beforeEach(async ({ page }) => {
 	await page.getByRole("button", { name: "Create", exact: true }).click();
 	await page.getByRole("button", { name: "Deploy project" }).click();
 
-	const newFileIsDeployed = page.getByRole("alert", { name: "Project deploy completed successfully." });
-	await expect(newFileIsDeployed).toBeVisible();
+	const projectDeployedWithFile = page.getByRole("alert", { name: "Project deploy completed successfully." });
+	await expect(projectDeployedWithFile).toBeVisible();
 });
 
 test.describe("Project Deployment Suite", () => {
