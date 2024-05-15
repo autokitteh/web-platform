@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { TrashIcon, ActionActiveIcon, ActionStoppedIcon } from "@assets/image/icons";
 import { IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
@@ -53,49 +53,38 @@ export const DeploymentsHistory = () => {
 		fetchDeployments();
 	}, [projectId]);
 
-	const toggleSortDeployments = (key: keyof Deployment) => {
-		const newDirection =
-			sort.column === key && sort.direction === SortDirectionVariant.ASC
-				? SortDirectionVariant.DESC
-				: SortDirectionVariant.ASC;
-		setSort({ direction: newDirection, column: key });
-	};
+	const toggleSortDeployments = useCallback(
+		(key: keyof Deployment) => {
+			const newDirection =
+				sort.column === key && sort.direction === SortDirectionVariant.ASC
+					? SortDirectionVariant.DESC
+					: SortDirectionVariant.ASC;
+			setSort({ direction: newDirection, column: key });
+		},
+		[sort]
+	);
 
-	const sortedDeployments = useMemo(() => {
-		return orderBy(deployments, [sort.column], [sort.direction]);
-	}, [deployments, sort.column, sort.direction]);
+	const sortedDeployments = useMemo(() => orderBy(deployments, [sort.column], [sort.direction]), [deployments, sort]);
 
-	const handleActiveDeployment = async (event: React.MouseEvent, id: string) => {
-		event.stopPropagation();
-		const { error } = await DeploymentsService.activate(id);
-		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
-			return;
-		}
-		fetchDeployments();
-	};
+	const handleDeploymentAction = useCallback(
+		async (id: string, action: "activate" | "deactivate" | "delete", event?: React.MouseEvent) => {
+			event?.stopPropagation();
 
-	const handleStoppedDeployment = async (event: React.MouseEvent, id: string) => {
-		event.stopPropagation();
-		const { error } = await DeploymentsService.deactivate(id);
-		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
-			return;
-		}
-		fetchDeployments();
-	};
+			const { error } = await (action === "activate"
+				? DeploymentsService.activate(id)
+				: action === "deactivate"
+					? DeploymentsService.deactivate(id)
+					: DeploymentsService.delete(id));
 
-	const handleRemoveDeployment = async () => {
-		if (!deploymentId) return;
-
-		const { error } = await DeploymentsService.delete(deploymentId);
-		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
-			return;
-		}
-		closeModal(ModalName.deleteDeployment);
-		fetchDeployments();
-	};
+			if (error) {
+				setToast({ isOpen: true, message: (error as Error).message });
+				return;
+			}
+			if (action === "delete") closeModal(ModalName.deleteDeployment);
+			fetchDeployments();
+		},
+		[]
+	);
 
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
@@ -105,7 +94,6 @@ export const DeploymentsHistory = () => {
 
 	if (isLoadingDeployments)
 		return <div className="mt-10 text-black font-semibold text-xl text-center">{t("loading")}...</div>;
-
 	if (!sortedDeployments.length)
 		return <div className="mt-10 text-black font-semibold text-xl text-center">{t("noDeployments")}</div>;
 
@@ -165,7 +153,7 @@ export const DeploymentsHistory = () => {
 										<IconButton
 											ariaLabel={t("ariaDeactivateDeploy")}
 											className="p-1"
-											onClick={(e) => handleStoppedDeployment(e, deploymentId)}
+											onClick={(e) => handleDeploymentAction(deploymentId, "deactivate", e)}
 										>
 											<ActionStoppedIcon className="group-hover:fill-white w-4 h-4 transition" />
 										</IconButton>
@@ -173,27 +161,26 @@ export const DeploymentsHistory = () => {
 										<IconButton
 											ariaLabel={t("ariaActivateDeploy")}
 											className="p-1"
-											onClick={(e) => handleActiveDeployment(e, deploymentId)}
+											onClick={(e) => handleDeploymentAction(deploymentId, "activate", e)}
 										>
 											<ActionActiveIcon className="group-hover:fill-green-accent w-4 h-4 transition" />
 										</IconButton>
 									)}
-									{state === DeploymentStateVariant.active ? (
-										<IconButton ariaLabel={t("ariaDeleDeploy")} disabled={true} title={t("deleteDisabled")}>
-											<TrashIcon className="fill-white w-3 h-3" />
-										</IconButton>
-									) : (
-										<IconButton ariaLabel={t("ariaDeleDeploy")} onClick={(e) => showDeleteModal(e, deploymentId)}>
-											<TrashIcon className="fill-white w-3 h-3" />
-										</IconButton>
-									)}
+									<IconButton
+										ariaLabel={t("ariaDeleDeploy")}
+										disabled={state === DeploymentStateVariant.active}
+										onClick={(e) => showDeleteModal(e, deploymentId)}
+										title={t("deleteDisabled")}
+									>
+										<TrashIcon className="fill-white w-3 h-3" />
+									</IconButton>
 								</div>
 							</Td>
 						</Tr>
 					))}
 				</TBody>
 			</Table>
-			<ModalDeleteDeployment onDelete={handleRemoveDeployment} />
+			<ModalDeleteDeployment onDelete={() => handleDeploymentAction(deploymentId!, "delete")} />
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
