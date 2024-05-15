@@ -86,6 +86,14 @@ export const TriggersContent = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
+							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("name")}>
+								{t("table.columns.name")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"name" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
 							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("connectionName")}>
 								{t("table.columns.connection")}
 								<SortButton
@@ -102,7 +110,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => handleToggleSort("eventType")}>
+							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("eventType")}>
 								{t("table.columns.eventType")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -124,9 +132,10 @@ export const TriggersContent = () => {
 					<TBody>
 						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
+								<Td className="font-semibold">{trigger.name}</Td>
 								<Td className="font-semibold">{trigger.connectionName}</Td>
 								<Td>
-									{trigger.path}:{trigger.name}
+									{trigger.path}:{trigger.entryFunction}
 								</Td>
 								<Td>{trigger.eventType}</Td>
 								<Td>{trigger.filter}</Td>

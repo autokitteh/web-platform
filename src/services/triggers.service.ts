@@ -28,16 +28,17 @@ export class TriggersService {
 				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
 
-			const { connectionId, eventType, path, name, filter, data } = trigger;
+			const { connectionId, eventType, path, entryFunction, name, filter, data } = trigger;
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
 					triggerId: undefined,
+					name,
 					envId: environments[0].envId,
 					connectionId,
 					eventType,
 					filter,
-					codeLocation: { path, name },
+					codeLocation: { path, name: entryFunction },
 					data,
 				},
 			});
@@ -57,6 +58,7 @@ export class TriggersService {
 			const { trigger } = await triggersClient.get({ triggerId });
 			const convertedTrigger = convertTriggerProtoToModel(trigger!);
 			const { data: connection } = await ConnectionService.get(convertedTrigger.connectionId);
+
 			const triggerData = {
 				...convertedTrigger,
 				connectionName: connection?.name,
@@ -88,16 +90,17 @@ export class TriggersService {
 				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
 
-			const { triggerId, connectionId, eventType, path, name, filter, data } = trigger;
+			const { triggerId, connectionId, eventType, path, entryFunction, name, filter, data } = trigger;
 
 			await triggersClient.update({
 				trigger: {
 					triggerId,
 					connectionId,
+					name,
 					envId: environments && environments[0].envId,
 					eventType,
 					filter,
-					codeLocation: { path, name },
+					codeLocation: { path, name: entryFunction },
 					data,
 				},
 			});

@@ -78,6 +78,7 @@ export const ModifyTriggerForm = () => {
 	} = useForm({
 		resolver: zodResolver(newTriggerSchema),
 		defaultValues: {
+			name: "",
 			connection: { value: "", label: "" },
 			filePath: { value: "", label: "" },
 			entryFunction: "",
@@ -89,9 +90,10 @@ export const ModifyTriggerForm = () => {
 	useEffect(() => {
 		const resetForm = () => {
 			reset({
+				name: trigger?.name,
 				connection: { value: trigger?.connectionId, label: trigger?.connectionName },
 				filePath: { value: trigger?.path, label: trigger?.path },
-				entryFunction: trigger?.name,
+				entryFunction: trigger?.entryFunction,
 				eventType: trigger?.eventType,
 				filter: trigger?.filter,
 			});
@@ -101,15 +103,16 @@ export const ModifyTriggerForm = () => {
 	}, [trigger]);
 
 	const onSubmit = async () => {
-		const { connection, filePath, entryFunction, eventType, filter } = getValues();
+		const { connection, filePath, name, entryFunction, eventType, filter } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.update(projectId!, {
 			triggerId: trigger?.triggerId,
 			connectionId: connection.value,
 			eventType,
+			name,
 			path: filePath.label,
-			name: entryFunction,
+			entryFunction,
 			filter,
 			data: triggerData,
 		});
@@ -169,6 +172,17 @@ export const ModifyTriggerForm = () => {
 			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
 			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">
+					<div className="relative">
+						<Input
+							{...register("name")}
+							aria-label={t("placeholders.name")}
+							className={inputClass("name")}
+							isError={!!errors.name}
+							isRequired
+							placeholder={t("placeholders.name")}
+						/>
+						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
+					</div>
 					<div className="relative">
 						<Controller
 							control={control}

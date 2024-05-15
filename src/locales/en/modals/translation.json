@@ -9,7 +9,7 @@
 		"deleteButton": "Yes, delete"
 	},
 	"deleteTrigger": {
-		"title": "Delete Trigger",
+		"title": "Delete {{name}} Trigger",
 		"line": "This trigger you are about to delete uses:",
 		"line2": "Connection - {{connection}} Call - {{call}} Event Type - {{eventType}}",
 		"line3": "Deleting the trigger may cause failure of project.",

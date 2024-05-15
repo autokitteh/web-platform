@@ -29,13 +29,13 @@ export const ModalDeleteTrigger = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 	return (
 		<Modal name={ModalName.deleteTrigger}>
 			<div className="mx-6">
-				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
+				<h3 className="text-xl font-bold mb-5">{t("title", { name: trigger?.name })}</h3>
 				<p>{t("line")}</p>
 				<p className="font-medium">
 					<Trans>
 						{t("line2", {
 							connection: `<strong>${trigger?.connectionName}</strong><br/>`,
-							call: `<strong>${trigger?.path}:${trigger?.name}</strong><br/>`,
+							call: `<strong>${trigger?.path}:${trigger?.entryFunction}</strong><br/>`,
 							eventType: `<strong>${trigger?.eventType}</strong><br/>`,
 						})}
 					</Trans>

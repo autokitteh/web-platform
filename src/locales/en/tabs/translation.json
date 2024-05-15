@@ -35,6 +35,7 @@
 		"buttonAddNew": "Add new",
 		"table": {
 			"columns": {
+				"name": "Name",
 				"connection": "Connection",
 				"fileName": "File name",
 				"entrypoint": "Entry Point",
@@ -60,6 +61,7 @@
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
 				"functionName": "Function name",
+				"name": "Name",
 				"eventType": "Event type",
 				"filter": "Filter",
 				"key": "Key",
