@@ -8,7 +8,7 @@ import { SelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
-import { newTriggerSchema } from "@validations";
+import { triggerSchema } from "@validations";
 import { debounce, has } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -76,7 +76,7 @@ export const ModifyTriggerForm = () => {
 		getValues,
 		reset,
 	} = useForm({
-		resolver: zodResolver(newTriggerSchema),
+		resolver: zodResolver(triggerSchema),
 		defaultValues: {
 			name: "",
 			connection: { value: "", label: "" },
@@ -151,7 +151,7 @@ export const ModifyTriggerForm = () => {
 
 	const handleAddNewData = () => {
 		if (has(triggerData, "")) {
-			setToast({ isOpen: true, message: t("errors.isEmptyKeyExist") });
+			setToast({ isOpen: true, message: t("errors.emptyKeyExist") });
 			return;
 		}
 
@@ -281,7 +281,6 @@ export const ModifyTriggerForm = () => {
 												ariaLabel={t("ariaDeleteData", { name: key })}
 												className="hover:bg-black bg-black-900 self-center"
 												onClick={() => handleDeleteData(key)}
-												type="button"
 											>
 												<TrashIcon className="fill-white w-4 h-4" />
 											</IconButton>

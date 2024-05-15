@@ -12,7 +12,7 @@ export const IconButton = ({
 	ariaLabel,
 	disabled,
 	title,
-	type,
+	type = "button",
 	onMouseEnter,
 	onMouseLeave,
 	onClick,

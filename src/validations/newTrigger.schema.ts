@@ -7,10 +7,10 @@ const selectItemSchema = z.object({
 	disabled: z.boolean().optional(),
 });
 
-let newTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
+let triggerSchema: ZodObject<Record<string, ZodTypeAny>>;
 
 i18n.on("initialized", () => {
-	newTriggerSchema = z.object({
+	triggerSchema = z.object({
 		name: z.string().min(1, i18n.t("triggerNameIsRequired", { ns: "validations" })),
 		connection: selectItemSchema.refine((value) => value.label, {
 			message: i18n.t("connectionIsRequired", { ns: "validations" }),
@@ -24,4 +24,4 @@ i18n.on("initialized", () => {
 	});
 });
 
-export { newTriggerSchema };
+export { triggerSchema };

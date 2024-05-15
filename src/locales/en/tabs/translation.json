@@ -68,7 +68,7 @@
 				"value": "Value"
 			},
 			"errors": {
-				"isEmptyKeyExist": "Empty key already exists"
+				"emptyKeyExist": "Empty key already exists"
 			}
 		}
 	},
