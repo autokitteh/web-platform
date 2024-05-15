@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { TrashIcon, ActionActiveIcon, ActionStoppedIcon } from "@assets/image/icons";
 import { IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
@@ -58,11 +58,12 @@ export const DeploymentsHistory = () => {
 			sort.column === key && sort.direction === SortDirectionVariant.ASC
 				? SortDirectionVariant.DESC
 				: SortDirectionVariant.ASC;
-
-		const sortedDeployments = orderBy(deployments, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
-		setDeployments(sortedDeployments);
 	};
+
+	const sortedDeployments = useMemo(() => {
+		return orderBy(deployments, [sort.column], [sort.direction]);
+	}, [deployments, sort.column, sort.direction]);
 
 	const handleActiveDeployment = async (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
@@ -105,7 +106,7 @@ export const DeploymentsHistory = () => {
 	if (isLoadingDeployments)
 		return <div className="mt-10 text-black font-semibold text-xl text-center">{t("loading")}...</div>;
 
-	if (!deployments.length)
+	if (!sortedDeployments.length)
 		return <div className="mt-10 text-black font-semibold text-xl text-center">{t("noDeployments")}</div>;
 
 	return (
@@ -148,7 +149,7 @@ export const DeploymentsHistory = () => {
 					</Tr>
 				</THead>
 				<TBody className="bg-gray-700">
-					{deployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
+					{sortedDeployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
 						<Tr className="group cursor-pointer" key={deploymentId} onClick={() => navigate(deploymentId)}>
 							<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
 							<Td>
