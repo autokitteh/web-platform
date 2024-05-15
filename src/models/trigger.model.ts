@@ -20,10 +20,10 @@ export const convertTriggerProtoToModel = (protoTrigger: ProtoTrigger): Trigger 
 	return {
 		triggerId: protoTrigger.triggerId,
 		connectionId: protoTrigger.connectionId,
-		connectionName: "",
+		entryFunction: protoTrigger.codeLocation!.name,
 		eventType: protoTrigger.eventType,
 		path: protoTrigger.codeLocation!.path,
-		name: protoTrigger.codeLocation!.name,
+		name: protoTrigger.name,
 		filter: protoTrigger.filter,
 		data,
 	};

@@ -23,6 +23,14 @@
 	--transition: all 0.25s ease-in-out;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	transition: background-color 5000s ease-in-out 0s;
+	-webkit-text-fill-color: white;
+}
+
 body {
 	overflow-x: hidden;
 }

@@ -35,6 +35,7 @@ export const TabFormHeader = ({ title, isLoading, form, className }: TabFormHead
 					ariaLabel={t("save")}
 					className="px-4 py-2 font-semibold text-white border-white hover:bg-black"
 					form={form}
+					type="submit"
 					variant="outline"
 				>
 					{isLoading ? t("loading") + "..." : t("save")}

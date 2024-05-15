@@ -1,14 +1,15 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-import { InfoIcon } from "@assets/image";
-import { Select, ErrorMessage, Toast, Input } from "@components/atoms";
+import { InfoIcon, PlusCircle } from "@assets/image";
+import { TrashIcon } from "@assets/image/icons";
+import { Select, ErrorMessage, Toast, Input, Button, IconButton } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
-import { newTriggerSchema } from "@validations";
-import { debounce } from "lodash";
+import { triggerSchema } from "@validations";
+import { debounce, has } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -75,8 +76,9 @@ export const ModifyTriggerForm = () => {
 		getValues,
 		reset,
 	} = useForm({
-		resolver: zodResolver(newTriggerSchema),
+		resolver: zodResolver(triggerSchema),
 		defaultValues: {
+			name: "",
 			connection: { value: "", label: "" },
 			filePath: { value: "", label: "" },
 			entryFunction: "",
@@ -88,9 +90,10 @@ export const ModifyTriggerForm = () => {
 	useEffect(() => {
 		const resetForm = () => {
 			reset({
+				name: trigger?.name,
 				connection: { value: trigger?.connectionId, label: trigger?.connectionName },
 				filePath: { value: trigger?.path, label: trigger?.path },
-				entryFunction: trigger?.name,
+				entryFunction: trigger?.entryFunction,
 				eventType: trigger?.eventType,
 				filter: trigger?.filter,
 			});
@@ -100,15 +103,16 @@ export const ModifyTriggerForm = () => {
 	}, [trigger]);
 
 	const onSubmit = async () => {
-		const { connection, filePath, entryFunction, eventType, filter } = getValues();
+		const { connection, filePath, name, entryFunction, eventType, filter } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.update(projectId!, {
 			triggerId: trigger?.triggerId,
 			connectionId: connection.value,
 			eventType,
+			name,
 			path: filePath.label,
-			name: entryFunction,
+			entryFunction,
 			filter,
 			data: triggerData,
 		});
@@ -145,11 +149,40 @@ export const ModifyTriggerForm = () => {
 		setTriggerData(updatedTriggerData);
 	};
 
+	const handleAddNewData = () => {
+		if (has(triggerData, "")) {
+			setToast({ isOpen: true, message: t("errors.emptyKeyExist") });
+			return;
+		}
+
+		const updatedTriggerData = { ...triggerData, [""]: { string: { v: "" } } };
+		setTriggerData(updatedTriggerData);
+	};
+
+	const handleDeleteData = (key: string) => {
+		setTriggerData((prevData) => {
+			const updatedData = { ...prevData };
+			delete updatedData[key];
+			return updatedData;
+		});
+	};
+
 	return (
 		<div className="min-w-550">
 			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
 			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">
+					<div className="relative">
+						<Input
+							{...register("name")}
+							aria-label={t("placeholders.name")}
+							className={inputClass("name")}
+							isError={!!errors.name}
+							isRequired
+							placeholder={t("placeholders.name")}
+						/>
+						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
+					</div>
 					<div className="relative">
 						<Controller
 							control={control}
@@ -189,11 +222,11 @@ export const ModifyTriggerForm = () => {
 					<div className="relative">
 						<Input
 							{...register("entryFunction")}
-							aria-label={t("placeholders.entryFunction")}
+							aria-label={t("placeholders.functionName")}
 							className={inputClass("entryFunction")}
 							isError={!!errors.entryFunction}
 							isRequired
-							placeholder={t("placeholders.entryFunction")}
+							placeholder={t("placeholders.functionName")}
 						/>
 						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 					</div>
@@ -224,28 +257,44 @@ export const ModifyTriggerForm = () => {
 								<InfoIcon className="fill-white" />
 							</div>
 						</div>
-						<div className="flex flex-col gap-2">
+						<div className="flex flex-col gap-2 mb-2">
 							{triggerData
 								? Object.entries(triggerData).map(([key, value]) => (
-										<div className="flex gap-6" key={key}>
-											<Input
-												aria-label={t("placeholders.key")}
-												className="w-full"
-												defaultValue={key}
-												onChange={(e) => updateTriggerDataKey(e.target.value, key)}
-												placeholder={t("placeholders.key")}
-											/>
-											<Input
-												aria-label={t("placeholders.value")}
-												className="w-full"
-												defaultValue={value.string.v}
-												onChange={(e) => updateTriggerDataValue(e.target.value, key)}
-												placeholder={t("placeholders.value")}
-											/>
+										<div className="flex align-center gap-1" key={key}>
+											<div className="flex gap-6 w-full">
+												<Input
+													aria-label={t("placeholders.key")}
+													className="w-full"
+													defaultValue={key}
+													onChange={(e) => updateTriggerDataKey(e.target.value, key)}
+													placeholder={t("placeholders.key")}
+												/>
+												<Input
+													aria-label={t("placeholders.value")}
+													className="w-full"
+													defaultValue={value.string.v}
+													onChange={(e) => updateTriggerDataValue(e.target.value, key)}
+													placeholder={t("placeholders.value")}
+												/>
+											</div>
+											<IconButton
+												ariaLabel={t("ariaDeleteData", { name: key })}
+												className="hover:bg-black bg-black-900 self-center"
+												onClick={() => handleDeleteData(key)}
+											>
+												<TrashIcon className="fill-white w-4 h-4" />
+											</IconButton>
 										</div>
 									))
 								: null}
 						</div>
+						<Button
+							className="w-auto ml-auto group gap-1 p-0 font-semibold text-gray-300 hover:text-white"
+							onClick={handleAddNewData}
+						>
+							<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+							{t("buttonAddNewData")}
+						</Button>
 					</div>
 				</div>
 			</form>

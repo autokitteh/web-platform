@@ -1,11 +1,12 @@
 export type Trigger = {
 	triggerId?: string;
 	connectionId: string;
-	connectionName?: string;
+	name: string;
 	filter?: string;
 	eventType: string;
 	path: string;
-	name: string;
+	entryFunction: string;
+	connectionName?: string;
 	data?: TriggerData;
 };
 

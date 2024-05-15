@@ -10,7 +10,7 @@ export const Button = ({
 	variant,
 	href,
 	disabled,
-	type,
+	type = "button",
 	form,
 	ariaLabel,
 	onClick,

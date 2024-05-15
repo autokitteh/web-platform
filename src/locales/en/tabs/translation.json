@@ -35,11 +35,13 @@
 		"buttonAddNew": "Add new",
 		"table": {
 			"columns": {
+				"name": "Name",
 				"connection": "Connection",
 				"fileName": "File name",
 				"entrypoint": "Entry Point",
 				"eventType": "Event Type",
-				"call": "Call"
+				"call": "Call",
+				"filter": "Filter"
 			},
 			"buttons": {
 				"modify": "Modify",
@@ -53,14 +55,20 @@
 			"modifyTrigger": "Modify trigger",
 			"titleData": "Data",
 			"titleInfo": "Relevant only for HTTP",
+			"buttonAddNewData": "Add new data",
+			"ariaDeleteData": "Delete {{name}} data",
 			"placeholders": {
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
-				"entryFunction": "Entry function",
+				"functionName": "Function name",
+				"name": "Name",
 				"eventType": "Event type",
 				"filter": "Filter",
 				"key": "Key",
 				"value": "Value"
+			},
+			"errors": {
+				"emptyKeyExist": "Empty key already exists"
 			}
 		}
 	},
