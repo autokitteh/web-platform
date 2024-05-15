@@ -37,5 +37,11 @@
 		"placeholderName": "Name",
 		"ariaLabelNewFile": "New file name",
 		"selectExtension": "Extension"
+	},
+	"deleteDeployment": {
+		"title": "Delete this deployment?",
+		"line": "You will not be able to recover it",
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete"
 	}
 }

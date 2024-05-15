@@ -27,3 +27,7 @@ export interface ModalModifyVariableProps {
 export interface DeleteFile {
 	onDelete?: () => void;
 }
+
+export interface ModalDeleteDeploymentProps {
+	onDelete?: () => void;
+}

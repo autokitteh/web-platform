@@ -3,6 +3,8 @@
 		"tableTitle": "Deployment History",
 		"noDeployments": "No deployments found",
 		"loading": "Loading",
+		"deleteDisabled": "Cannot delete active deployment",
+		"ariaDeleDeploy": "Delete deployment",
 		"table": {
 			"columns": {
 				"deploymentTime": "Deployment Time",
