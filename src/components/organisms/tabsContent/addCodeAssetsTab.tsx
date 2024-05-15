@@ -114,7 +114,7 @@ export const AddCodeAssetsTab = () => {
 						<THead>
 							<Tr>
 								<Th className="border-r-0 cursor-pointer group font-normal">{t("table.columns.name")}</Th>
-								<Th className="border-r-0 max-11" />
+								<Th className="border-r-0 max-12" />
 							</Tr>
 						</THead>
 						<TBody>
@@ -123,11 +123,11 @@ export const AddCodeAssetsTab = () => {
 									<Td className="font-semibold border-r-0 cursor-pointer" onClick={() => updateEditorOpenedFiles(name)}>
 										{name}
 									</Td>
-									<Th className="border-r-0 max-w-11">
+									<Td className="border-r-0 max-w-12">
 										<IconButton onClick={() => openModal(ModalName.deleteFile, name)}>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
-									</Th>
+									</Td>
 								</Tr>
 							))}
 						</TBody>
