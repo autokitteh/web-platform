@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
 				element: <NewConnection />,
 			},
 			{
-				path: "add-new-trigger",
+				path: "add-new-trigger/:projectId",
 				element: <NewTrigger />,
 			},
 			{
