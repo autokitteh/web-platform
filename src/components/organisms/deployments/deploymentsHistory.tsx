@@ -17,6 +17,7 @@ export const DeploymentsHistory = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
+	const [isLoadingDeployments, setIsLoadingDeployments] = useState(true);
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Deployment;
@@ -31,8 +32,14 @@ export const DeploymentsHistory = () => {
 	const fetchDeployments = async () => {
 		if (!projectId) return;
 
-		const { data } = await DeploymentsService.listByProjectId(projectId);
-		data && setDeployments(data);
+		const { data, error } = await DeploymentsService.listByProjectId(projectId);
+		setIsLoadingDeployments(false);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
+		if (!data) return;
+		setDeployments(data);
 	};
 
 	useEffect(() => {
@@ -52,79 +59,92 @@ export const DeploymentsHistory = () => {
 
 	const handleActiveDeployment = async (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
-		await DeploymentsService.activate(id);
+		const { error } = await DeploymentsService.activate(id);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
 		fetchDeployments();
 	};
 
 	const handleStoppedDeployment = async (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
-		await DeploymentsService.deactivate(id);
+		const { error } = await DeploymentsService.deactivate(id);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
 		fetchDeployments();
 	};
 
 	const handleRemoveDeployment = async (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
-		await DeploymentsService.delete(id);
+		const { error } = await DeploymentsService.delete(id);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
 		fetchDeployments();
 	};
 
+	if (isLoadingDeployments)
+		return <div className="mt-10 text-black font-semibold text-xl text-center">{t("loading")}...</div>;
+
+	if (!deployments.length)
+		return <div className="mt-10 text-black font-semibold text-xl text-center">{t("noDeployments")}</div>;
+
 	return (
-		<div>
+		<>
 			<div className="flex items-center justify-between">
 				<div className="text-base text-black">
 					{t("tableTitle")} ({deployments.length})
 				</div>
 			</div>
-			{deployments.length ? (
-				<Table className="mt-4">
-					<THead>
-						<Tr>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortDeployments("createdAt")}>
-								{t("table.columns.deploymentTime")}
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"createdAt" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
+			<Table className="mt-4">
+				<THead>
+					<Tr>
+						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortDeployments("createdAt")}>
+							{t("table.columns.deploymentTime")}
+							<SortButton
+								className="opacity-0 group-hover:opacity-100"
+								isActive={"createdAt" === sort.column}
+								sortDirection={sort.direction}
+							/>
+						</Th>
 
-							<Th className="cursor-pointer group font-normal">{t("table.columns.sessions")}</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortDeployments("buildId")}>
-								{t("table.columns.buildId")}
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"buildId" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
-							<Th
-								className="cursor-pointer group font-normal border-r-0"
-								onClick={() => toggleSortDeployments("state")}
-							>
-								{t("table.columns.status")}
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"state" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
-							<Th className="max-w-12 border-0" />
-							<Th className="max-w-12 border-0" />
-						</Tr>
-					</THead>
-					<TBody className="bg-gray-700">
-						{deployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
-							<Tr className="group cursor-pointer" key={deploymentId} onClick={() => navigate(deploymentId)}>
-								<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
-
-								<Td>
-									<DeploymentSessionStats sessionStats={sessionStats} />
-								</Td>
-								<Td>{buildId}</Td>
-								<Td className="border-r-0">
-									<DeploymentState deploymentState={state} />
-								</Td>
-								<Td className="max-w-12 border-0 pr-1.5 justify-end">
+						<Th className="cursor-pointer group font-normal">{t("table.columns.sessions")}</Th>
+						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortDeployments("buildId")}>
+							{t("table.columns.buildId")}
+							<SortButton
+								className="opacity-0 group-hover:opacity-100"
+								isActive={"buildId" === sort.column}
+								sortDirection={sort.direction}
+							/>
+						</Th>
+						<Th className="cursor-pointer group font-normal border-r-0" onClick={() => toggleSortDeployments("state")}>
+							{t("table.columns.status")}
+							<SortButton
+								className="opacity-0 group-hover:opacity-100"
+								isActive={"state" === sort.column}
+								sortDirection={sort.direction}
+							/>
+						</Th>
+						<Th className="text-right font-normal max-w-20">Actions</Th>
+					</Tr>
+				</THead>
+				<TBody className="bg-gray-700">
+					{deployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
+						<Tr className="group cursor-pointer" key={deploymentId} onClick={() => navigate(deploymentId)}>
+							<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
+							<Td>
+								<DeploymentSessionStats sessionStats={sessionStats} />
+							</Td>
+							<Td>{buildId}</Td>
+							<Td className="border-r-0">
+								<DeploymentState deploymentState={state} />
+							</Td>
+							<Td className="max-w-20">
+								<div className="flex space-x-1">
 									{state === DeploymentStateVariant.activeDeployment ? (
 										<IconButton className="p-1" onClick={(e) => handleStoppedDeployment(e, deploymentId)}>
 											<ActionStoppedIcon className="group-hover:fill-white w-4 h-4 transition" />
@@ -134,20 +154,15 @@ export const DeploymentsHistory = () => {
 											<ActionActiveIcon className="group-hover:fill-green-accent w-4 h-4 transition" />
 										</IconButton>
 									)}
-								</Td>
-								<Td className="max-w-12 border-0 pr-1.5 justify-end">
 									<IconButton onClick={(e) => handleRemoveDeployment(e, deploymentId)}>
 										<TrashIcon className="fill-white w-3 h-3" />
 									</IconButton>
-								</Td>
-							</Tr>
-						))}
-					</TBody>
-				</Table>
-			) : (
-				<div className="mt-10 text-black font-semibold text-xl text-center">{t("noDeployments")}</div>
-			)}
-
+								</div>
+							</Td>
+						</Tr>
+					))}
+				</TBody>
+			</Table>
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
@@ -157,6 +172,6 @@ export const DeploymentsHistory = () => {
 			>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
-		</div>
+		</>
 	);
 };

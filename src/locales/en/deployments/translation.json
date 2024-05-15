@@ -2,6 +2,7 @@
 	"history": {
 		"tableTitle": "Deployment History",
 		"noDeployments": "No deployments found",
+		"loading": "Loading",
 		"table": {
 			"columns": {
 				"deploymentTime": "Deployment Time",
