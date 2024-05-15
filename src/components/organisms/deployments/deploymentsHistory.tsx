@@ -11,7 +11,7 @@ import { Deployment } from "@type/models";
 import { orderBy } from "lodash";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export const DeploymentsHistory = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -26,6 +26,7 @@ export const DeploymentsHistory = () => {
 		message: "",
 	});
 	const { projectId } = useParams();
+	const navigate = useNavigate();
 
 	const fetchDeployments = async () => {
 		if (!projectId) return;
@@ -47,17 +48,20 @@ export const DeploymentsHistory = () => {
 		setDeployments(sortedDeployments);
 	};
 
-	const handleActiveDeployment = async (id: string) => {
+	const handleActiveDeployment = async (event: React.MouseEvent, id: string) => {
+		event.stopPropagation();
 		await DeploymentsService.activate(id);
 		fetchDeployments();
 	};
 
-	const handleStoppedDeployment = async (id: string) => {
+	const handleStoppedDeployment = async (event: React.MouseEvent, id: string) => {
+		event.stopPropagation();
 		await DeploymentsService.deactivate(id);
 		fetchDeployments();
 	};
 
-	const handleRemoveDeployment = async (id: string) => {
+	const handleRemoveDeployment = async (event: React.MouseEvent, id: string) => {
+		event.stopPropagation();
 		await DeploymentsService.delete(id);
 		fetchDeployments();
 	};
@@ -108,7 +112,7 @@ export const DeploymentsHistory = () => {
 					</THead>
 					<TBody className="bg-gray-700">
 						{deployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
-							<Tr className="group cursor-pointer" key={deploymentId}>
+							<Tr className="group cursor-pointer" key={deploymentId} onClick={() => navigate(deploymentId)}>
 								<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
 
 								<Td>
@@ -120,17 +124,17 @@ export const DeploymentsHistory = () => {
 								</Td>
 								<Td className="max-w-12 border-0 pr-1.5 justify-end">
 									{state === DeploymentStateVariant.activeDeployment ? (
-										<IconButton className="p-1" onClick={() => handleStoppedDeployment(deploymentId)}>
+										<IconButton className="p-1" onClick={(e) => handleStoppedDeployment(e, deploymentId)}>
 											<ActionStoppedIcon className="group-hover:fill-white w-4 h-4 transition" />
 										</IconButton>
 									) : (
-										<IconButton className="p-1" onClick={() => handleActiveDeployment(deploymentId)}>
+										<IconButton className="p-1" onClick={(e) => handleActiveDeployment(e, deploymentId)}>
 											<ActionActiveIcon className="group-hover:fill-green-accent w-4 h-4 transition" />
 										</IconButton>
 									)}
 								</Td>
 								<Td className="max-w-12 border-0 pr-1.5 justify-end">
-									<IconButton onClick={() => handleRemoveDeployment(deploymentId)}>
+									<IconButton onClick={(e) => handleRemoveDeployment(e, deploymentId)}>
 										<TrashIcon className="fill-white w-3 h-3" />
 									</IconButton>
 								</Td>
