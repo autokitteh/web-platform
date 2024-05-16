@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { LogoFrame } from "@assets/image";
+import React, { useState, useEffect, useMemo } from "react";
+import { LogoFrame, CatImage } from "@assets/image";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
@@ -44,10 +44,12 @@ export const DeploymentSessions = () => {
 				? SortDirectionVariant.DESC
 				: SortDirectionVariant.ASC;
 
-		const sortedSessions = orderBy(sessions, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
-		setSessions(sortedSessions);
 	};
+
+	const sortedSessions = useMemo(() => {
+		return orderBy(sessions, [sort.column], [sort.direction]);
+	}, [sessions, sort.column, sort.direction]);
 
 	const handleRemoveSession = async (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
@@ -83,8 +85,8 @@ export const DeploymentSessions = () => {
 		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": sessionId === selectedSession });
 
 	return (
-		<div className="flex h-full">
-			<Frame className="pl-7 bg-gray-700 rounded-r-none w-2/4">
+		<div className="flex h-full gap-2.5">
+			<Frame className="pl-7 bg-gray-700 w-1/2">
 				<div className="flex items-center gap-2.5">
 					<IconButton
 						ariaLabel={t("ariaLabelReturnBack")}
@@ -98,7 +100,7 @@ export const DeploymentSessions = () => {
 						{sessions.length} {t("sessionsName")}
 					</div>
 				</div>
-				{sessions.length ? (
+				{sortedSessions.length ? (
 					<Table className="mt-4">
 						<THead>
 							<Tr>
@@ -134,7 +136,7 @@ export const DeploymentSessions = () => {
 							</Tr>
 						</THead>
 						<TBody className="bg-gray-700">
-							{sessions.map(({ sessionId, createdAt, state }) => (
+							{sortedSessions.map(({ sessionId, createdAt, state }) => (
 								<Tr className={activeBodyRow(sessionId)} key={sessionId} onClick={() => handleGetSessionLog(sessionId)}>
 									<Td>{moment(createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
 									<Td className="text-green-accent">
@@ -154,29 +156,39 @@ export const DeploymentSessions = () => {
 					<div className="mt-10 font-semibold text-xl text-center">{t("noSessions")}</div>
 				)}
 			</Frame>
-			<Frame className="w-2/4 rounded-l-none">
-				<p className="font-bold mb-8">{t("output")}:</p>
-				<Editor
-					aria-label={selectedSession}
-					beforeMount={handleEditorWillMount}
-					className="-ml-6"
-					defaultLanguage="json"
-					onMount={handleEditorDidMount}
-					options={{
-						readOnly: true,
-						minimap: {
-							enabled: false,
-						},
-						lineNumbers: "off",
-						renderLineHighlight: "none",
-						wordWrap: "on",
-					}}
-					theme="vs-dark"
-					value={sessionLog
-						?.map(({ logs }) => logs)
-						.filter((log) => log)
-						.join("\n")}
-				/>
+			<Frame className="w-4/6">
+				{sessionLog ? (
+					<>
+						<p className="font-bold mb-8">{t("output")}:</p>
+						<Editor
+							aria-label={selectedSession}
+							beforeMount={handleEditorWillMount}
+							className="-ml-6"
+							defaultLanguage="json"
+							onMount={handleEditorDidMount}
+							options={{
+								readOnly: true,
+								minimap: {
+									enabled: false,
+								},
+								lineNumbers: "off",
+								renderLineHighlight: "none",
+								wordWrap: "on",
+							}}
+							theme="vs-dark"
+							value={sessionLog
+								?.map(({ logs }) => logs)
+								.filter((log) => log)
+								.join("\n")}
+						/>
+					</>
+				) : (
+					<div className="flex flex-col items-center mt-20">
+						<p className="font-bold text-gray-400 text-lg mb-8">{t("noData")}</p>
+						<CatImage className="border-b border-gray-400 fill-gray-400" />
+					</div>
+				)}
+
 				<LogoFrame
 					className={cn(
 						"absolute fill-white opacity-10 pointer-events-none",
