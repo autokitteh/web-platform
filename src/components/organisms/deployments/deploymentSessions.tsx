@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { LogoFrame, CatImage } from "@assets/image";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
-import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeploymentSessionState } from "@components/organisms/deployments";
 import { SortDirectionVariant } from "@enums/components";
@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const DeploymentSessions = () => {
+	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
@@ -25,13 +26,25 @@ export const DeploymentSessions = () => {
 		direction: SortDirection;
 		column: keyof Session;
 	}>({ direction: SortDirectionVariant.ASC, column: "createdAt" });
+	const [toast, setToast] = useState({
+		isOpen: false,
+		message: "",
+	});
+
 	const { deploymentId } = useParams();
 	const navigate = useNavigate();
 
 	const fetchSessions = async () => {
 		if (!deploymentId) return;
-		const { data } = await SessionsService.listByDeploymentId(deploymentId);
-		data && setSessions(data);
+
+		const { data, error } = await SessionsService.listByDeploymentId(deploymentId);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
+		if (!data) return;
+
+		setSessions(data);
 	};
 
 	useEffect(() => {
@@ -53,7 +66,12 @@ export const DeploymentSessions = () => {
 
 	const handleRemoveSession = async (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
-		await SessionsService.deleteSession(id);
+		const { error } = await SessionsService.deleteSession(id);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
+
 		fetchSessions();
 	};
 
@@ -75,14 +93,20 @@ export const DeploymentSessions = () => {
 	const handleGetSessionLog = async (sessionId: string) => {
 		setSelectedSession(sessionId);
 
-		const { data } = await SessionsService.getLogRecordsBySessionId(sessionId);
-
+		const { data, error } = await SessionsService.getLogRecordsBySessionId(sessionId);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
 		if (!data) return;
+
 		setSessionLog(data);
 	};
 
 	const activeBodyRow = (sessionId: string) =>
 		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": sessionId === selectedSession });
+
+	const sessionLogValue = sessionLog?.map(({ logs }) => logs).join("\n");
 
 	return (
 		<div className="flex h-full gap-2.5">
@@ -176,10 +200,7 @@ export const DeploymentSessions = () => {
 								wordWrap: "on",
 							}}
 							theme="vs-dark"
-							value={sessionLog
-								?.map(({ logs }) => logs)
-								.filter((log) => log)
-								.join("\n")}
+							value={sessionLogValue}
 						/>
 					</>
 				) : (
@@ -196,6 +217,15 @@ export const DeploymentSessions = () => {
 					)}
 				/>
 			</Frame>
+			<Toast
+				duration={5}
+				isOpen={toast.isOpen}
+				onClose={() => setToast({ ...toast, isOpen: false })}
+				title={tErrors("error")}
+				type="error"
+			>
+				<p className="mt-1 text-xs">{toast.message}</p>
+			</Toast>
 		</div>
 	);
 };
