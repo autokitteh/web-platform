@@ -3,7 +3,7 @@ import { LogoFrame } from "@assets/image";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { ESortDirection } from "@enums/components";
+import { SortDirectionVariant } from "@enums/components";
 import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { SessionsService } from "@services";
@@ -23,7 +23,7 @@ export const DeploymentSessions = () => {
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Session;
-	}>({ direction: ESortDirection.ASC, column: "createdAt" });
+	}>({ direction: SortDirectionVariant.ASC, column: "createdAt" });
 	const { deploymentId } = useParams();
 	const navigate = useNavigate();
 
@@ -39,7 +39,9 @@ export const DeploymentSessions = () => {
 
 	const toggleSortSessions = (key: keyof Session) => {
 		const newDirection =
-			sort.column === key && sort.direction === ESortDirection.ASC ? ESortDirection.DESC : ESortDirection.ASC;
+			sort.column === key && sort.direction === SortDirectionVariant.ASC
+				? SortDirectionVariant.DESC
+				: SortDirectionVariant.ASC;
 
 		const sortedSessions = orderBy(sessions, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
