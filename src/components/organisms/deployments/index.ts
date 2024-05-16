@@ -1,3 +1,3 @@
-export { DeploymentsHistory } from "@components/organisms/deployments/deploymentsHistory";
-export { DeploymentState } from "@components/organisms/deployments/deploymentState";
-export { DeploymentSessionStats } from "@components/organisms/deployments/deploymentSessionStats";
+export { DeploymentsHistory } from "@components/organisms/deployments/history";
+export { DeploymentState } from "@components/organisms/deployments/state";
+export { DeploymentSessionStats } from "@components/organisms/deployments/sessionStats";
