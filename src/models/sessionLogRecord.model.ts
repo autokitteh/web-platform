@@ -19,14 +19,15 @@ export class SessionLogRecord {
 	constructor(logRecord: ProtoSessionLogRecord) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { t, ...props } = logRecord;
-		if (Object.keys(props).length > 1) {
+		const logRecordType = this.getLogRecordType(props);
+
+		if (!logRecordType) {
 			LoggerService.error(
 				namespaces.sessionsHistory,
-				i18n.t("sessionLogRecordMultipleProps", { props: Object.keys(props).join(", "), ns: "errors" })
+				i18n.t("sessionLogRecordTypeNotFound", { props: Object.keys(props).join(", "), ns: "errors" })
 			);
 			return;
 		}
-		const logRecordType = Object.keys(props)[0] as SessionLogRecordType;
 
 		switch (logRecordType) {
 			case SessionLogRecordType.callAttemptStart:
@@ -44,7 +45,9 @@ export class SessionLogRecord {
 				break;
 			case SessionLogRecordType.print:
 				this.type = SessionLogRecordType.print;
-				this.logs = `${i18n.t("print", { ns: "services" })}: ${logRecord.print!.text}`;
+				if (logRecord.print?.text) {
+					this.logs = `${i18n.t("historyPrint", { ns: "sessions" })}: ${logRecord.print.text}`;
+				}
 				break;
 		}
 
@@ -53,19 +56,29 @@ export class SessionLogRecord {
 		}
 	}
 
+	private getLogRecordType(props: { [key: string]: any }): SessionLogRecordType | undefined {
+		const keys = Object.keys(props);
+		for (const key of keys) {
+			if (key in SessionLogRecordType) {
+				return key as SessionLogRecordType;
+			}
+		}
+		return undefined;
+	}
+
 	private handleStateRecord(logRecord: ProtoSessionLogRecord) {
 		this.type = SessionLogRecordType.state;
 		this.state = Object.keys(logRecord.state!)[0] as SessionStateType;
 		if (this.state === SessionStateType.running) {
 			const functionRunning = logRecord.state?.running?.call?.function?.name;
 			this.logs = functionRunning
-				? `${i18n.t("historyInitFunction", { ns: "services" })}: ${functionRunning}`
+				? `${i18n.t("historyInitFunction", { ns: "sessions" })}: ${functionRunning}`
 				: undefined;
 		}
 		if (this.state === SessionStateType.error) {
 			this.error = convertErrorProtoToModel(
 				logRecord.state?.error?.error?.value,
-				i18n.t("sessionLogMissingError", { ns: "services" })
+				i18n.t("sessionLogMissingOnErrorType", { ns: "errors" })
 			)?.message;
 			this.callstackTrace = (logRecord?.state?.error?.error?.callstack || []) as Callstack[];
 		}
@@ -76,15 +89,15 @@ export class SessionLogRecord {
 
 		const sessionLogRecord = logRecord[this.type];
 		if (sessionLogRecord?.result?.value?.time) {
-			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
-				${i18n.t("historyResult", { ns: "services" })}: ${i18n.t("historyTime", { ns: "services" })} - 
-				${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
+			this.logs = `${i18n.t("historyFunction", { ns: "sessions" })} - 
+					${i18n.t("historyResult", { ns: "sessions" })}: ${i18n.t("historyTime", { ns: "sessions" })} - 
+						${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
 			return;
 		}
 		if (sessionLogRecord?.result?.value?.nothing) {
-			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
-				${i18n.t("historyResult", { ns: "services" })}: 
-				${i18n.t("historyNoOutput", { ns: "services" })}`;
+			this.logs = `${i18n.t("historyFunction", { ns: "sessions" })} - 
+				${i18n.t("historyResult", { ns: "sessions" })}: 
+				${i18n.t("historyNoOutput", { ns: "sessions" })}`;
 			return;
 		}
 
@@ -95,8 +108,8 @@ export class SessionLogRecord {
 			this.logs = undefined;
 			return;
 		}
-		this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
-			${i18n.t("historyResult", { ns: "services" })}: 
+		this.logs = `${i18n.t("historyFunction", { ns: "sessions" })} - 
+			${i18n.t("historyResult", { ns: "sessions" })}: 
 			${functionName} - ${functionResponse}`;
 	}
 
@@ -109,7 +122,7 @@ export class SessionLogRecord {
 			.map((arg: Value) => arg.string?.v)
 			.join(", ")
 			.replace(/, ([^,]*)$/, "");
-		this.logs = `${i18n.t("historyFunction", { ns: "services" })}: ${functionName}(${args})`;
+		this.logs = `${i18n.t("historyFunction", { ns: "sessions" })}: ${functionName}(${args})`;
 	}
 
 	getError(): string {

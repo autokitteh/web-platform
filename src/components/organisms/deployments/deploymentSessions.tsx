@@ -4,6 +4,7 @@ import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { ESortDirection } from "@enums/components";
+import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { SessionsService } from "@services";
 import { SortDirection } from "@type/components";
@@ -17,7 +18,7 @@ import { useNavigate, useParams } from "react-router-dom";
 export const DeploymentSessions = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const [sessions, setSessions] = useState<Session[]>([]);
-	const [sessionInputs, setSessionInputs] = useState<string>();
+	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
 	const [selectedSession, setSelectedSession] = useState<string>();
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
@@ -66,9 +67,13 @@ export const DeploymentSessions = () => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const handleSessionInputs = async (sessionId: string, inputs: object) => {
+	const handleGetSessionLog = async (sessionId: string) => {
 		setSelectedSession(sessionId);
-		setSessionInputs(JSON.stringify(inputs, null, 2));
+
+		const { data } = await SessionsService.getLogRecordsBySessionId(sessionId);
+
+		if (!data) return;
+		setSessionLog(data);
 	};
 
 	const activeBodyRow = (sessionId: string) =>
@@ -126,12 +131,8 @@ export const DeploymentSessions = () => {
 							</Tr>
 						</THead>
 						<TBody className="bg-gray-700">
-							{sessions.map(({ sessionId, createdAt, inputs }) => (
-								<Tr
-									className={activeBodyRow(sessionId)}
-									key={sessionId}
-									onClick={() => handleSessionInputs(sessionId, inputs)}
-								>
+							{sessions.map(({ sessionId, createdAt }) => (
+								<Tr className={activeBodyRow(sessionId)} key={sessionId} onClick={() => handleGetSessionLog(sessionId)}>
 									<Td>{moment(createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
 									<Td className="text-green-accent">{t("table.statuses.completed")}</Td>
 									<Td className="border-r-0">{sessionId}</Td>
@@ -163,9 +164,13 @@ export const DeploymentSessions = () => {
 						},
 						lineNumbers: "off",
 						renderLineHighlight: "none",
+						wordWrap: "on",
 					}}
 					theme="vs-dark"
-					value={sessionInputs}
+					value={sessionLog
+						?.map(({ logs }) => logs)
+						.filter((log) => log)
+						.join("\n")}
 				/>
 				<LogoFrame
 					className={cn(

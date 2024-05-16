@@ -10,5 +10,7 @@
 	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}",
 	"variableNotCreated": "There was an issue creating the variable",
 	"sessionLogRecordMultipleProps": "More than one session log record type found: {{props}}",
-	"failedRemoveFile": "Failed to remove file: {{fileName}}"
+	"failedRemoveFile": "Failed to remove file: {{fileName}}",
+	"sessionLogRecordTypeNotFound": "Session log record type not found: {{props}}",
+	"sessionLogMissingOnErrorType": "Session History - No error"
 }
