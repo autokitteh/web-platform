@@ -4,3 +4,4 @@ export { ModalDeleteTrigger } from "@components/organisms/modals/modalDeleteTrig
 export { ModalDeleteVariable } from "@components/organisms/modals/modalDeleteVariable";
 export { ModalDeleteFile } from "@components/organisms/modals/modalDeleteFile";
 export { ModalDeleteDeployment } from "@components/organisms/modals/modalDeleteDeployment";
+export { ModalDeleteDeploymentSession } from "@components/organisms/modals/modalDeleteDeploymentSession";

@@ -4,10 +4,12 @@ import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeploymentSessionState } from "@components/organisms/deployments";
-import { SortDirectionVariant } from "@enums/components";
+import { ModalDeleteDeploymentSession } from "@components/organisms/modals";
+import { ModalName, SortDirectionVariant } from "@enums/components";
 import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { SessionsService } from "@services";
+import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Session } from "@type/models";
 import { cn } from "@utilities";
@@ -19,6 +21,8 @@ import { useNavigate, useParams } from "react-router-dom";
 export const DeploymentSessions = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
+	const { openModal, closeModal } = useModalStore();
+
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
 	const [selectedSession, setSelectedSession] = useState<string>();
@@ -65,16 +69,22 @@ export const DeploymentSessions = () => {
 
 	const sortedSessions = useMemo(() => orderBy(sessions, [sort.column], [sort.direction]), [sessions, sort]);
 
-	const handleRemoveSession = useCallback(async (event: React.MouseEvent, id: string) => {
-		event.stopPropagation();
-		const { error } = await SessionsService.deleteSession(id);
+	const showDeleteModal = useCallback((id: string) => {
+		setSelectedSession(id);
+		openModal(ModalName.deleteDeploymentSession);
+	}, []);
+
+	const handleRemoveSession = async () => {
+		if (!selectedSession) return;
+		const { error } = await SessionsService.deleteSession(selectedSession);
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
 
+		closeModal(ModalName.deleteDeploymentSession);
 		fetchSessions();
-	}, []);
+	};
 
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("myCustomTheme", {
@@ -104,8 +114,8 @@ export const DeploymentSessions = () => {
 		setSessionLog(data);
 	}, []);
 
-	const activeBodyRow = (sessionId: string) =>
-		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": sessionId === selectedSession });
+	const activeBodyRow = (id: string) =>
+		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === selectedSession });
 
 	const sessionLogValue = sessionLog?.map(({ logs }) => logs).join("\n");
 
@@ -169,7 +179,7 @@ export const DeploymentSessions = () => {
 									</Td>
 									<Td className="border-r-0">{sessionId}</Td>
 									<Td className="max-w-12 border-0 pr-1.5 justify-end">
-										<IconButton onClick={(e) => handleRemoveSession(e, sessionId)}>
+										<IconButton onClick={() => showDeleteModal(sessionId)}>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
 									</Td>
@@ -186,7 +196,6 @@ export const DeploymentSessions = () => {
 					<>
 						<p className="font-bold mb-8">{t("output")}:</p>
 						<Editor
-							aria-label={selectedSession}
 							beforeMount={handleEditorWillMount}
 							className="-ml-6"
 							defaultLanguage="json"
@@ -218,6 +227,7 @@ export const DeploymentSessions = () => {
 					)}
 				/>
 			</Frame>
+			<ModalDeleteDeploymentSession onDelete={handleRemoveSession} />
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
