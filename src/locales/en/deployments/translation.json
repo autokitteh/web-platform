@@ -27,6 +27,17 @@
 	"sessions": {
 		"ariaLabelReturnBack": "Return back",
 		"sessionsName": "Sessions",
+		"noSessions": "No sessions found",
+		"table": {
+			"columns": {
+				"activationTime": "Activation time",
+				"status": "Status",
+				"sessionId": "Session ID"
+			},
+			"statuses": {
+				"completed": "Completed"
+			}
+		},
 		"buttons": {
 			"back": "Back"
 		}
