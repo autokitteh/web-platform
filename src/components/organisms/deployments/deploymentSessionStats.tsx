@@ -13,7 +13,7 @@ export const DeploymentSessionStats = ({ sessionStats }: { sessionStats?: Deploy
 		});
 
 	return sessionStats?.map(({ count, state }, idx) => (
-		<span aria-label="ffff" className={countStyle(state)} key={idx} title={state}>
+		<span aria-label={state} className={countStyle(state)} key={idx} title={state}>
 			{count}
 		</span>
 	));
