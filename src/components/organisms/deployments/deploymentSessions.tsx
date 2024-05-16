@@ -4,7 +4,6 @@ import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { ESortDirection } from "@enums/components";
-import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { SessionsService } from "@services";
 import { SortDirection } from "@type/components";
@@ -18,15 +17,15 @@ import { useNavigate, useParams } from "react-router-dom";
 export const DeploymentSessions = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const [sessions, setSessions] = useState<Session[]>([]);
-	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
-	const [activeSession, setActiveSession] = useState<string>();
+	const [sessionInputs, setSessionInputs] = useState<string>();
+	const [selectedSession, setSelectedSession] = useState<string>();
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Session;
 	}>({ direction: ESortDirection.ASC, column: "createdAt" });
 	const { deploymentId } = useParams();
 	const navigate = useNavigate();
-	console.log(sessionLog);
+
 	const fetchSessions = async () => {
 		if (!deploymentId) return;
 		const { data } = await SessionsService.listByDeploymentId(deploymentId);
@@ -67,13 +66,9 @@ export const DeploymentSessions = () => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const handleGetSessionLog = async (sessionId: string) => {
-		setActiveSession(sessionId);
-
-		const { data } = await SessionsService.getLogRecordsBySessionId(sessionId);
-
-		if (!data) return;
-		setSessionLog(data);
+	const handleSessionInputs = async (sessionId: string, inputs: object) => {
+		setSelectedSession(sessionId);
+		setSessionInputs(JSON.stringify(inputs, null, 2));
 	};
 
 	const editorOptions = {
@@ -86,7 +81,7 @@ export const DeploymentSessions = () => {
 	};
 
 	const activeBodyRow = (sessionId: string) =>
-		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": sessionId === activeSession });
+		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": sessionId === selectedSession });
 
 	return (
 		<div className="flex h-full">
@@ -140,8 +135,12 @@ export const DeploymentSessions = () => {
 							</Tr>
 						</THead>
 						<TBody className="bg-gray-700">
-							{sessions.map(({ sessionId, createdAt }) => (
-								<Tr className={activeBodyRow(sessionId)} key={sessionId} onClick={() => handleGetSessionLog(sessionId)}>
+							{sessions.map(({ sessionId, createdAt, inputs }) => (
+								<Tr
+									className={activeBodyRow(sessionId)}
+									key={sessionId}
+									onClick={() => handleSessionInputs(sessionId, inputs)}
+								>
 									<Td>{moment(createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
 									<Td className="text-green-accent">{t("table.statuses.completed")}</Td>
 									<Td className="border-r-0">{sessionId}</Td>
@@ -161,15 +160,14 @@ export const DeploymentSessions = () => {
 			<Frame className="w-2/4 rounded-l-none">
 				<p className="font-bold mb-8">{t("output")}:</p>
 				<Editor
-					aria-label={activeSession}
+					aria-label={selectedSession}
 					beforeMount={handleEditorWillMount}
 					className="-ml-6"
-					key="editorKey"
-					language="python"
+					defaultLanguage="json"
 					onMount={handleEditorDidMount}
 					options={editorOptions}
 					theme="vs-dark"
-					value="log session here..."
+					value={sessionInputs}
 				/>
 				<LogoFrame
 					className={cn(
