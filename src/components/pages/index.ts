@@ -6,3 +6,4 @@ export { NewTrigger } from "@components/pages/newTrigger";
 export { NewVariable } from "@components/pages/newVariable";
 export { ModifyVariable } from "@components/pages/modifyVariable";
 export { ModifyTrigger } from "@components/pages/modifyTrigger";
+export { Deployments } from "@components/pages/deployments";

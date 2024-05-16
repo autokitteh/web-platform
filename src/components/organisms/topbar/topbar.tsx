@@ -9,12 +9,14 @@ import { useProjectStore } from "@store";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 export const Topbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
+	const { projectId } = useParams();
 	const {
 		getProjectsList,
-		currentProject: { resources, projectId },
+		currentProject: { resources },
 	} = useProjectStore();
 	const [project, setProject] = useState<Project>({
 		name: "",
@@ -134,8 +136,9 @@ export const Topbar = () => {
 			</div>
 			<div className="flex items-stretch gap-3">
 				<Button
+					ariaLabel={t("topbar.buttons.ariaBuildProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={loadingButton[TopbarButton.build]}
+					disabled={!projectId || loadingButton[TopbarButton.build]}
 					onClick={build}
 					variant="outline"
 				>
@@ -143,8 +146,9 @@ export const Topbar = () => {
 					{t("topbar.buttons.build")}
 				</Button>
 				<Button
+					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={loadingButton[TopbarButton.deploy]}
+					disabled={!projectId || loadingButton[TopbarButton.deploy]}
 					onClick={deploy}
 					variant="outline"
 				>
@@ -152,8 +156,10 @@ export const Topbar = () => {
 					{t("topbar.buttons.deploy")}
 				</Button>
 				<Button
+					ariaLabel={t("topbar.buttons.ariaStats")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled
+					disabled={!projectId}
+					href={`/projects/${projectId}/deployments`}
 					variant="outline"
 				>
 					<IconSvg className="max-w-5" src={Stats} />
@@ -169,8 +175,9 @@ export const Topbar = () => {
 							</Button>
 						</div>
 					}
+					disabled={!projectId}
 				>
-					<Button className="h-full text-white px-4 hover:bg-gray-700" variant="outline">
+					<Button className="h-full text-white px-4 hover:bg-gray-700" disabled={!projectId} variant="outline">
 						<More />
 						{t("more", { ns: "buttons" })}
 					</Button>
@@ -180,7 +187,7 @@ export const Topbar = () => {
 				</IconButton>
 			</div>
 
-			<Toast {...toastProps} type={toast.isSuccess ? "success" : "error"}>
+			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
 		</div>

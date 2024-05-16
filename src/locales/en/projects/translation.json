@@ -7,7 +7,10 @@
 		"buttons": {
 			"build": "Build",
 			"deploy": "Deploy",
-			"stats": "View Stats"
+			"stats": "View Stats",
+			"ariaBuildProject": "Build project",
+			"ariaDeployProject": "Deploy project",
+			"ariaStats": "View project stats"
 		}
 	}
 }

@@ -1,4 +1,5 @@
 import buttons from "@locales/en/buttons/translation.json";
+import deployments from "@locales/en/deployments/translation.json";
 import errors from "@locales/en/errors/translation.json";
 import login from "@locales/en/login/translation.json";
 import menu from "@locales/en/menu/translation.json";
@@ -18,4 +19,5 @@ export default {
 	projects,
 	services,
 	validations,
+	deployments,
 };
