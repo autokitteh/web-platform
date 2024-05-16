@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { LogoFrame, CatImage } from "@assets/image";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr, Toast } from "@components/atoms";
@@ -22,6 +22,7 @@ export const DeploymentSessions = () => {
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
 	const [selectedSession, setSelectedSession] = useState<string>();
+
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Session;
@@ -51,20 +52,20 @@ export const DeploymentSessions = () => {
 		fetchSessions();
 	}, [deploymentId]);
 
-	const toggleSortSessions = (key: keyof Session) => {
-		const newDirection =
-			sort.column === key && sort.direction === SortDirectionVariant.ASC
-				? SortDirectionVariant.DESC
-				: SortDirectionVariant.ASC;
+	const toggleSortSessions = useCallback(
+		(key: keyof Session) => {
+			const newDirection =
+				sort.column === key && sort.direction === SortDirectionVariant.ASC
+					? SortDirectionVariant.DESC
+					: SortDirectionVariant.ASC;
+			setSort({ direction: newDirection, column: key });
+		},
+		[sort]
+	);
 
-		setSort({ direction: newDirection, column: key });
-	};
+	const sortedSessions = useMemo(() => orderBy(sessions, [sort.column], [sort.direction]), [sessions, sort]);
 
-	const sortedSessions = useMemo(() => {
-		return orderBy(sessions, [sort.column], [sort.direction]);
-	}, [sessions, sort.column, sort.direction]);
-
-	const handleRemoveSession = async (event: React.MouseEvent, id: string) => {
+	const handleRemoveSession = useCallback(async (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
 		const { error } = await SessionsService.deleteSession(id);
 		if (error) {
@@ -73,7 +74,7 @@ export const DeploymentSessions = () => {
 		}
 
 		fetchSessions();
-	};
+	}, []);
 
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("myCustomTheme", {
@@ -90,7 +91,7 @@ export const DeploymentSessions = () => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const handleGetSessionLog = async (sessionId: string) => {
+	const handleGetSessionLog = useCallback(async (sessionId: string) => {
 		setSelectedSession(sessionId);
 
 		const { data, error } = await SessionsService.getLogRecordsBySessionId(sessionId);
@@ -101,7 +102,7 @@ export const DeploymentSessions = () => {
 		if (!data) return;
 
 		setSessionLog(data);
-	};
+	}, []);
 
 	const activeBodyRow = (sessionId: string) =>
 		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": sessionId === selectedSession });
