@@ -3,6 +3,7 @@ import { LogoFrame } from "@assets/image";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
+import { DeploymentSessionState } from "@components/organisms/deployments";
 import { SortDirectionVariant } from "@enums/components";
 import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
@@ -133,10 +134,12 @@ export const DeploymentSessions = () => {
 							</Tr>
 						</THead>
 						<TBody className="bg-gray-700">
-							{sessions.map(({ sessionId, createdAt }) => (
+							{sessions.map(({ sessionId, createdAt, state }) => (
 								<Tr className={activeBodyRow(sessionId)} key={sessionId} onClick={() => handleGetSessionLog(sessionId)}>
 									<Td>{moment(createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
-									<Td className="text-green-accent">{t("table.statuses.completed")}</Td>
+									<Td className="text-green-accent">
+										<DeploymentSessionState sessionState={state} />
+									</Td>
 									<Td className="border-r-0">{sessionId}</Td>
 									<Td className="max-w-12 border-0 pr-1.5 justify-end">
 										<IconButton onClick={(e) => handleRemoveSession(e, sessionId)}>
