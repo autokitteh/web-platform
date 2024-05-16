@@ -9,7 +9,7 @@ export const DeploymentSessionStats = ({ sessionStats }: { sessionStats?: Deploy
 			"text-gray-black": SessionStateType.stopped === state,
 			"text-green-accent": SessionStateType.completed === state,
 			"hidden": SessionStateType.created === state,
-			"text-error": SessionStateType.error === state,
+			"text-red": SessionStateType.error === state,
 		});
 
 	return sessionStats?.map(({ count, state }) => (

@@ -38,7 +38,7 @@ export const DeploymentSessionState = ({ sessionState }: { sessionState: Session
 			return (
 				<div
 					aria-label={i18n.t("sessions.table.statuses.error", { ns: "deployments" })}
-					className="text-red-500"
+					className="text-red"
 					role="status"
 				>
 					{i18n.t("sessions.table.statuses.error", { ns: "deployments" })}
@@ -48,7 +48,7 @@ export const DeploymentSessionState = ({ sessionState }: { sessionState: Session
 			return (
 				<div
 					aria-label={i18n.t("sessions.table.statuses.completed", { ns: "deployments" })}
-					className="text-green-500"
+					className="text-green-accent"
 					role="status"
 				>
 					{i18n.t("sessions.table.statuses.completed", { ns: "deployments" })}
