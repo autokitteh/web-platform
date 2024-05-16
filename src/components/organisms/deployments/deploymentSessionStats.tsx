@@ -12,8 +12,8 @@ export const DeploymentSessionStats = ({ sessionStats }: { sessionStats?: Deploy
 			"text-error": SessionStateType.error === state,
 		});
 
-	return sessionStats?.map(({ count, state }, idx) => (
-		<span aria-label={state} className={countStyle(state)} key={idx} title={state}>
+	return sessionStats?.map(({ count, state }) => (
+		<span aria-label={state} className={countStyle(state)} key={state} title={state}>
 			{count}
 		</span>
 	));
