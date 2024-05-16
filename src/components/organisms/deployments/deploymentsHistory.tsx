@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
+import { TrashIcon, ActionActiveIcon, ActionStoppedIcon } from "@assets/image/icons";
+import { IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeploymentState, DeploymentSessionStats } from "@components/organisms/deployments";
+import { DeploymentStateVariant } from "@enums";
 import { ESortDirection } from "@enums/components";
 import { DeploymentsService } from "@services";
-import { TSortDirection } from "@type/components";
+import { SortDirection } from "@type/components";
 import { Deployment } from "@type/models";
 import { orderBy } from "lodash";
 import moment from "moment";
@@ -16,7 +18,7 @@ export const DeploymentsHistory = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
 	const [sort, setSort] = useState<{
-		direction: TSortDirection;
+		direction: SortDirection;
 		column: keyof Deployment;
 	}>({ direction: ESortDirection.ASC, column: "createdAt" });
 	const [toast, setToast] = useState({
@@ -25,13 +27,14 @@ export const DeploymentsHistory = () => {
 	});
 	const { projectId } = useParams();
 
-	useEffect(() => {
+	const fetchDeployments = async () => {
 		if (!projectId) return;
 
-		const fetchDeployments = async () => {
-			const { data } = await DeploymentsService.listByProjectId(projectId);
-			data && setDeployments(data);
-		};
+		const { data } = await DeploymentsService.listByProjectId(projectId);
+		data && setDeployments(data);
+	};
+
+	useEffect(() => {
 		fetchDeployments();
 	}, [projectId]);
 
@@ -42,6 +45,16 @@ export const DeploymentsHistory = () => {
 		const sortedDeployments = orderBy(deployments, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
 		setDeployments(sortedDeployments);
+	};
+
+	const handleActiveDeployment = async (id: string) => {
+		await DeploymentsService.activate(id);
+		fetchDeployments();
+	};
+
+	const handleStoppedDeployment = async (id: string) => {
+		await DeploymentsService.deactivate(id);
+		fetchDeployments();
 	};
 
 	return (
@@ -84,7 +97,8 @@ export const DeploymentsHistory = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="max-w-10 border-0" />
+							<Th className="max-w-12 border-0" />
+							<Th className="max-w-12 border-0" />
 						</Tr>
 					</THead>
 					<TBody className="bg-gray-700">
@@ -99,7 +113,22 @@ export const DeploymentsHistory = () => {
 								<Td className="border-r-0">
 									<DeploymentState deploymentState={state} />
 								</Td>
-								<Td className="max-w-10 border-0 pr-1.5 justify-end" />
+								<Td className="max-w-12 border-0 pr-1.5 justify-end">
+									{state === DeploymentStateVariant.activeDeployment ? (
+										<IconButton className="p-1" onClick={() => handleStoppedDeployment(deploymentId)}>
+											<ActionStoppedIcon className="group-hover:fill-white w-4 h-4 transition" />
+										</IconButton>
+									) : (
+										<IconButton className="p-1" onClick={() => handleActiveDeployment(deploymentId)}>
+											<ActionActiveIcon className="group-hover:fill-green-accent w-4 h-4 transition" />
+										</IconButton>
+									)}
+								</Td>
+								<Td className="max-w-12 border-0 pr-1.5 justify-end">
+									<IconButton>
+										<TrashIcon className="fill-white w-3 h-3" />
+									</IconButton>
+								</Td>
 							</Tr>
 						))}
 					</TBody>
