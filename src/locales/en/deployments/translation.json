@@ -28,6 +28,7 @@
 		"ariaLabelReturnBack": "Return back",
 		"sessionsName": "Sessions",
 		"noSessions": "No sessions found",
+		"output": "Output",
 		"table": {
 			"columns": {
 				"activationTime": "Activation time",
