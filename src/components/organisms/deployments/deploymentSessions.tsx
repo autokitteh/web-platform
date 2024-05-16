@@ -71,15 +71,6 @@ export const DeploymentSessions = () => {
 		setSessionInputs(JSON.stringify(inputs, null, 2));
 	};
 
-	const editorOptions = {
-		readOnly: true,
-		minimap: {
-			enabled: false,
-		},
-		lineNumbers: "off",
-		renderLineHighlight: "none",
-	};
-
 	const activeBodyRow = (sessionId: string) =>
 		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": sessionId === selectedSession });
 
@@ -165,7 +156,14 @@ export const DeploymentSessions = () => {
 					className="-ml-6"
 					defaultLanguage="json"
 					onMount={handleEditorDidMount}
-					options={editorOptions}
+					options={{
+						readOnly: true,
+						minimap: {
+							enabled: false,
+						},
+						lineNumbers: "off",
+						renderLineHighlight: "none",
+					}}
 					theme="vs-dark"
 					value={sessionInputs}
 				/>
