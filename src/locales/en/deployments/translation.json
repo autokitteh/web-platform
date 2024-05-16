@@ -23,5 +23,12 @@
 				"error": "Error - please reload"
 			}
 		}
+	},
+	"sessions": {
+		"ariaLabelReturnBack": "Return back",
+		"sessionsName": "Sessions",
+		"buttons": {
+			"back": "Back"
+		}
 	}
 }
