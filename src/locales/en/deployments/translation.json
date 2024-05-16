@@ -30,6 +30,7 @@
 		"noSessions": "No sessions found",
 		"output": "Output",
 		"noData": "No data yet",
+		"noSelectedSession": "No session selected",
 		"table": {
 			"columns": {
 				"activationTime": "Activation time",

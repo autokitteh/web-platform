@@ -192,7 +192,7 @@ export const DeploymentSessions = () => {
 				)}
 			</Frame>
 			<Frame className="w-4/6">
-				{sessionLog ? (
+				{sessionLog?.length ? (
 					<>
 						<p className="font-bold mb-8">{t("output")}:</p>
 						<Editor
@@ -215,7 +215,9 @@ export const DeploymentSessions = () => {
 					</>
 				) : (
 					<div className="flex flex-col items-center mt-20">
-						<p className="font-bold text-gray-400 text-lg mb-8">{t("noData")}</p>
+						<p className="font-bold text-gray-400 text-lg mb-8">
+							{!selectedSession ? t("noSelectedSession") : t("noData")}
+						</p>
 						<CatImage className="border-b border-gray-400 fill-gray-400" />
 					</div>
 				)}
