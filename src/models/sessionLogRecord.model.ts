@@ -19,8 +19,6 @@ export class SessionLogRecord {
 	constructor(logRecord: ProtoSessionLogRecord) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { t, processId, ...props } = logRecord;
-		console.log("logRecord", logRecord);
-		console.log("props", props);
 
 		const logRecordType = this.getLogRecordType(props);
 		if (!logRecordType) {
