@@ -11,7 +11,7 @@ const deploymentSessionStateStyles = {
 	[SessionState.unspecified]: "text-blue-500",
 };
 
-export const DeploymentSessionState = ({ sessionState }: { sessionState: SessionState }) => {
+export const SessionsTableState = ({ sessionState }: { sessionState: SessionState }) => {
 	const baseClass = deploymentSessionStateStyles[sessionState];
 
 	const status = i18n.t(`sessions.table.statuses.${SessionState[sessionState]}`, { ns: "deployments" });

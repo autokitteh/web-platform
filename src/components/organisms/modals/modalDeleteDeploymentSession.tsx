@@ -14,7 +14,7 @@ export const ModalDeleteDeploymentSession = ({ onDelete }: ModalDeleteDeployment
 		<Modal name={ModalName.deleteDeploymentSession}>
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
-				<p>{t("line")}</p>
+				<p>{t("content")}</p>
 			</div>
 			<div className="flex justify-end gap-1 mt-10">
 				<Button

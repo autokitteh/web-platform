@@ -3,7 +3,7 @@ import { LogoFrame, CatImage } from "@assets/image";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { DeploymentSessionState } from "@components/organisms/deployments";
+import { SessionsTableState } from "@components/organisms/deployments";
 import { ModalDeleteDeploymentSession } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { SessionLogRecord } from "@models";
@@ -18,7 +18,7 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const DeploymentSessions = () => {
+export const SessionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { openModal, closeModal } = useModalStore();
@@ -87,7 +87,7 @@ export const DeploymentSessions = () => {
 	};
 
 	const handleEditorWillMount = (monaco: Monaco) => {
-		monaco.editor.defineTheme("myCustomTheme", {
+		monaco.editor.defineTheme("sessionsTheme", {
 			base: "vs-dark",
 			inherit: true,
 			rules: [],
@@ -98,7 +98,7 @@ export const DeploymentSessions = () => {
 	};
 
 	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
-		monaco.editor.setTheme("myCustomTheme");
+		monaco.editor.setTheme("sessionsTheme");
 	};
 
 	const handleGetSessionLog = useCallback(async (sessionId: string) => {
@@ -114,8 +114,10 @@ export const DeploymentSessions = () => {
 		setSessionLog(data);
 	}, []);
 
-	const activeBodyRow = (id: string) =>
-		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === selectedSession });
+	const activeBodyRow = useCallback(
+		(id: string) => cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === selectedSession }),
+		[selectedSession]
+	);
 
 	const sessionLogValue = sessionLog?.map(({ logs }) => logs).join("\n");
 
@@ -174,12 +176,12 @@ export const DeploymentSessions = () => {
 							{sortedSessions.map(({ sessionId, createdAt, state }) => (
 								<Tr className={activeBodyRow(sessionId)} key={sessionId} onClick={() => handleGetSessionLog(sessionId)}>
 									<Td>{moment(createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
-									<Td className="text-green-accent">
-										<DeploymentSessionState sessionState={state} />
+									<Td>
+										<SessionsTableState sessionState={state} />
 									</Td>
 									<Td className="border-r-0">{sessionId}</Td>
 									<Td className="max-w-12 border-0 pr-1.5 justify-end">
-										<IconButton onClick={() => showDeleteModal(sessionId)}>
+										<IconButton className="hover:bg-gray-700" onClick={() => showDeleteModal(sessionId)}>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
 									</Td>
