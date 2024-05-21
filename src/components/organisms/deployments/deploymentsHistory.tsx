@@ -3,9 +3,11 @@ import { TrashIcon, ActionActiveIcon, ActionStoppedIcon } from "@assets/image/ic
 import { IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeploymentState, DeploymentSessionStats } from "@components/organisms/deployments";
+import { ModalDeleteDeployment } from "@components/organisms/modals";
 import { DeploymentStateVariant } from "@enums";
-import { SortDirectionVariant } from "@enums/components";
+import { ModalName, SortDirectionVariant } from "@enums/components";
 import { DeploymentsService } from "@services";
+import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Deployment } from "@type/models";
 import { orderBy } from "lodash";
@@ -16,8 +18,12 @@ import { useParams, useNavigate } from "react-router-dom";
 export const DeploymentsHistory = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
+
+	const { openModal, closeModal } = useModalStore();
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
+	const [deploymentId, setDeploymentId] = useState<string>();
 	const [isLoadingDeployments, setIsLoadingDeployments] = useState(true);
+
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Deployment;
@@ -26,6 +32,7 @@ export const DeploymentsHistory = () => {
 		isOpen: false,
 		message: "",
 	});
+
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 
@@ -77,14 +84,22 @@ export const DeploymentsHistory = () => {
 		fetchDeployments();
 	};
 
-	const handleRemoveDeployment = async (event: React.MouseEvent, id: string) => {
-		event.stopPropagation();
-		const { error } = await DeploymentsService.delete(id);
+	const handleRemoveDeployment = async () => {
+		if (!deploymentId) return;
+
+		const { error } = await DeploymentsService.delete(deploymentId);
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
+		closeModal(ModalName.deleteDeployment);
 		fetchDeployments();
+	};
+
+	const showDeleteModal = (event: React.MouseEvent, id: string) => {
+		event.stopPropagation();
+		setDeploymentId(id);
+		openModal(ModalName.deleteDeployment);
 	};
 
 	if (isLoadingDeployments)
@@ -154,15 +169,22 @@ export const DeploymentsHistory = () => {
 											<ActionActiveIcon className="group-hover:fill-green-accent w-4 h-4 transition" />
 										</IconButton>
 									)}
-									<IconButton onClick={(e) => handleRemoveDeployment(e, deploymentId)}>
-										<TrashIcon className="fill-white w-3 h-3" />
-									</IconButton>
+									{state === DeploymentStateVariant.activeDeployment ? (
+										<IconButton aria-label={t("ariaDeleDeploy")} disabled={true} title={t("deleteDisabled")}>
+											<TrashIcon className="fill-white w-3 h-3" />
+										</IconButton>
+									) : (
+										<IconButton aria-label={t("ariaDeleDeploy")} onClick={(e) => showDeleteModal(e, deploymentId)}>
+											<TrashIcon className="fill-white w-3 h-3" />
+										</IconButton>
+									)}
 								</div>
 							</Td>
 						</Tr>
 					))}
 				</TBody>
 			</Table>
+			<ModalDeleteDeployment onDelete={handleRemoveDeployment} />
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
