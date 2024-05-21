@@ -5,4 +5,5 @@ export enum ModalName {
 	deleteVariable = "deleteVariable",
 	deleteFile = "deleteFile",
 	deleteDeployment = "deleteDeployment",
+	deleteDeploymentSession = "deleteDeploymentSession",
 }
