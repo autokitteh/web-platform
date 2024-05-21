@@ -161,7 +161,7 @@ export const DeploymentsHistory = () => {
 							</Td>
 							<Td className="max-w-20">
 								<div className="flex space-x-1">
-									{state === DeploymentStateVariant.activeDeployment ? (
+									{state === DeploymentStateVariant.active ? (
 										<IconButton
 											ariaLabel={t("ariaDeactivateDeploy")}
 											className="p-1"
@@ -178,7 +178,7 @@ export const DeploymentsHistory = () => {
 											<ActionActiveIcon className="group-hover:fill-green-accent w-4 h-4 transition" />
 										</IconButton>
 									)}
-									{state === DeploymentStateVariant.activeDeployment ? (
+									{state === DeploymentStateVariant.active ? (
 										<IconButton ariaLabel={t("ariaDeleDeploy")} disabled={true} title={t("deleteDisabled")}>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
