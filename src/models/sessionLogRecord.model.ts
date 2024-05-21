@@ -18,9 +18,11 @@ export class SessionLogRecord {
 
 	constructor(logRecord: ProtoSessionLogRecord) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { t, ...props } = logRecord;
-		const logRecordType = this.getLogRecordType(props);
+		const { t, processId, ...props } = logRecord;
+		console.log("logRecord", logRecord);
+		console.log("props", props);
 
+		const logRecordType = this.getLogRecordType(props);
 		if (!logRecordType) {
 			LoggerService.error(
 				namespaces.sessionsHistory,
@@ -45,9 +47,7 @@ export class SessionLogRecord {
 				break;
 			case SessionLogRecordType.print:
 				this.type = SessionLogRecordType.print;
-				if (logRecord.print?.text) {
-					this.logs = `${i18n.t("historyPrint", { ns: "sessions" })}: ${logRecord.print.text}`;
-				}
+				this.logs = `${i18n.t("historyPrint", { ns: "models" })}: ${logRecord.print?.text}`;
 				break;
 		}
 
@@ -57,22 +57,26 @@ export class SessionLogRecord {
 	}
 
 	private getLogRecordType(props: { [key: string]: any }): SessionLogRecordType | undefined {
-		const keys = Object.keys(props);
-		for (const key of keys) {
-			if (key in SessionLogRecordType) {
-				return key as SessionLogRecordType;
-			}
+		const activeKey = Object.keys(props).find((key) => props[key] !== undefined);
+
+		if (activeKey && activeKey in SessionLogRecordType) {
+			return activeKey as SessionLogRecordType;
 		}
 		return undefined;
 	}
 
 	private handleStateRecord(logRecord: ProtoSessionLogRecord) {
 		this.type = SessionLogRecordType.state;
-		this.state = Object.keys(logRecord.state!)[0] as SessionStateType;
+		const activeKey = Object.keys(logRecord.state!).find(
+			(key) =>
+				logRecord.state?.[key as unknown as SessionStateType] !== null &&
+				typeof logRecord.state?.[key as unknown as SessionStateType] === "object"
+		);
+		this.state = activeKey as SessionStateType;
 		if (this.state === SessionStateType.running) {
 			const functionRunning = logRecord.state?.running?.call?.function?.name;
 			this.logs = functionRunning
-				? `${i18n.t("historyInitFunction", { ns: "sessions" })}: ${functionRunning}`
+				? `${i18n.t("historyInitFunction", { ns: "models" })}: ${functionRunning}`
 				: undefined;
 		}
 		if (this.state === SessionStateType.error) {
@@ -89,15 +93,15 @@ export class SessionLogRecord {
 
 		const sessionLogRecord = logRecord[this.type];
 		if (sessionLogRecord?.result?.value?.time) {
-			this.logs = `${i18n.t("historyFunction", { ns: "sessions" })} - 
-					${i18n.t("historyResult", { ns: "sessions" })}: ${i18n.t("historyTime", { ns: "sessions" })} - 
+			this.logs = `${i18n.t("historyFunction", { ns: "models" })} - 
+					${i18n.t("historyResult", { ns: "models" })}: ${i18n.t("historyTime", { ns: "models" })} - 
 						${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
 			return;
 		}
 		if (sessionLogRecord?.result?.value?.nothing) {
-			this.logs = `${i18n.t("historyFunction", { ns: "sessions" })} - 
-				${i18n.t("historyResult", { ns: "sessions" })}: 
-				${i18n.t("historyNoOutput", { ns: "sessions" })}`;
+			this.logs = `${i18n.t("historyFunction", { ns: "models" })} - 
+				${i18n.t("historyResult", { ns: "models" })}: 
+				${i18n.t("historyNoOutput", { ns: "models" })}`;
 			return;
 		}
 
@@ -108,8 +112,8 @@ export class SessionLogRecord {
 			this.logs = undefined;
 			return;
 		}
-		this.logs = `${i18n.t("historyFunction", { ns: "sessions" })} - 
-			${i18n.t("historyResult", { ns: "sessions" })}: 
+		this.logs = `${i18n.t("historyFunction", { ns: "models" })} - 
+			${i18n.t("historyResult", { ns: "models" })}: 
 			${functionName} - ${functionResponse}`;
 	}
 
@@ -122,7 +126,7 @@ export class SessionLogRecord {
 			.map((arg: Value) => arg.string?.v)
 			.join(", ")
 			.replace(/, ([^,]*)$/, "");
-		this.logs = `${i18n.t("historyFunction", { ns: "sessions" })}: ${functionName}(${args})`;
+		this.logs = `${i18n.t("historyFunction", { ns: "models" })}: ${functionName}(${args})`;
 	}
 
 	getError(): string {
