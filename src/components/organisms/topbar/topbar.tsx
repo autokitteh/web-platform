@@ -9,12 +9,11 @@ import { useProjectStore } from "@store";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export const Topbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const { projectId } = useParams();
-	const location = useLocation();
 	const {
 		getProjectsList,
 		currentProject: { resources },
@@ -139,7 +138,7 @@ export const Topbar = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaBuildProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={!projectId || loadingButton[TopbarButton.build] || !location.pathname.endsWith(projectId)}
+					disabled={loadingButton[TopbarButton.build]}
 					onClick={build}
 					variant="outline"
 				>
@@ -149,7 +148,6 @@ export const Topbar = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={!projectId || loadingButton[TopbarButton.deploy] || !location.pathname.endsWith(projectId)}
 					onClick={deploy}
 					variant="outline"
 				>
@@ -159,7 +157,6 @@ export const Topbar = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaStats")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={!projectId || !location.pathname.endsWith(projectId)}
 					href={`/projects/${projectId}/deployments`}
 					variant="outline"
 				>
@@ -177,11 +174,7 @@ export const Topbar = () => {
 						</div>
 					}
 				>
-					<Button
-						className="h-full text-white px-4 hover:bg-gray-700"
-						disabled={!projectId || !location.pathname.endsWith(projectId)}
-						variant="outline"
-					>
+					<Button className="h-full text-white px-4 hover:bg-gray-700" variant="outline">
 						<More />
 						{t("more", { ns: "buttons" })}
 					</Button>

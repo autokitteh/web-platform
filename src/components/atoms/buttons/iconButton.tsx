@@ -18,7 +18,7 @@ export const IconButton = ({
 	onClick,
 }: IconButtonProps) => {
 	const iconButtonClass = cn(
-		"p-2 flex items-center justify-center rounded-full transition duration-300 hover:bg-gray-800 shrink-0 outline-0",
+		"p-2 flex items-center justify-center rounded-full transition duration-300 hover:bg-gray-700 shrink-0 outline-0",
 		{
 			"bg-black": variant === ButtonVariant.filled,
 			"border border-gray-400 hover:border-transparent": variant === ButtonVariant.outline,

@@ -67,7 +67,7 @@ export class SessionLogRecord {
 		this.type = SessionLogRecordType.state;
 		const activeKey = Object.keys(logRecord.state!).find(
 			(key) =>
-				logRecord.state?.[key as unknown as SessionStateType] !== null &&
+				logRecord.state?.[key as unknown as SessionStateType] !== undefined &&
 				typeof logRecord.state?.[key as unknown as SessionStateType] === "object"
 		);
 		this.state = activeKey as SessionStateType;

@@ -25,7 +25,6 @@ export const SessionsTable = () => {
 
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
-	const [selectedSession, setSelectedSession] = useState<string>();
 
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
@@ -36,7 +35,7 @@ export const SessionsTable = () => {
 		message: "",
 	});
 
-	const { deploymentId } = useParams();
+	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
 
 	const fetchSessions = async () => {
@@ -56,6 +55,23 @@ export const SessionsTable = () => {
 		fetchSessions();
 	}, [deploymentId]);
 
+	const fetchSessionLog = useCallback(async () => {
+		if (!sessionId) return;
+
+		const { data, error } = await SessionsService.getLogRecordsBySessionId(sessionId);
+		if (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+			return;
+		}
+		if (!data) return;
+
+		setSessionLog(data);
+	}, [sessionId]);
+
+	useEffect(() => {
+		fetchSessionLog();
+	}, [sessionId]);
+
 	const toggleSortSessions = useCallback(
 		(key: keyof Session) => {
 			const newDirection =
@@ -69,14 +85,13 @@ export const SessionsTable = () => {
 
 	const sortedSessions = useMemo(() => orderBy(sessions, [sort.column], [sort.direction]), [sessions, sort]);
 
-	const showDeleteModal = useCallback((id: string) => {
-		setSelectedSession(id);
+	const showDeleteModal = useCallback(() => {
 		openModal(ModalName.deleteDeploymentSession);
-	}, []);
+	}, [openModal]);
 
 	const handleRemoveSession = async () => {
-		if (!selectedSession) return;
-		const { error } = await SessionsService.deleteSession(selectedSession);
+		if (!sessionId) return;
+		const { error } = await SessionsService.deleteSession(sessionId);
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
@@ -101,22 +116,16 @@ export const SessionsTable = () => {
 		monaco.editor.setTheme("sessionsTheme");
 	};
 
-	const handleGetSessionLog = useCallback(async (sessionId: string) => {
-		setSelectedSession(sessionId);
-
-		const { data, error } = await SessionsService.getLogRecordsBySessionId(sessionId);
-		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
-			return;
-		}
-		if (!data) return;
-
-		setSessionLog(data);
-	}, []);
+	const handleGetSessionLog = useCallback(
+		(sessionId: string) => {
+			navigate(`/projects/${projectId}/deployments/${deploymentId}/${sessionId}`);
+		},
+		[sessionId]
+	);
 
 	const activeBodyRow = useCallback(
-		(id: string) => cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === selectedSession }),
-		[selectedSession]
+		(id: string) => cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === sessionId }),
+		[sessionId]
 	);
 
 	const sessionLogValue = sessionLog?.map(({ logs }) => logs).join("\n");
@@ -181,7 +190,7 @@ export const SessionsTable = () => {
 									</Td>
 									<Td className="border-r-0">{sessionId}</Td>
 									<Td className="max-w-12 border-0 pr-1.5 justify-end">
-										<IconButton className="hover:bg-gray-700" onClick={() => showDeleteModal(sessionId)}>
+										<IconButton onClick={showDeleteModal}>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
 									</Td>
@@ -217,9 +226,7 @@ export const SessionsTable = () => {
 					</>
 				) : (
 					<div className="flex flex-col items-center mt-20">
-						<p className="font-bold text-gray-400 text-lg mb-8">
-							{!selectedSession ? t("noSelectedSession") : t("noData")}
-						</p>
+						<p className="font-bold text-gray-400 text-lg mb-8">{!sessionId ? t("noSelectedSession") : t("noData")}</p>
 						<CatImage className="border-b border-gray-400 fill-gray-400" />
 					</div>
 				)}

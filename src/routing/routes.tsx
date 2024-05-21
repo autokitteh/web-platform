@@ -58,6 +58,10 @@ export const router = createBrowserRouter([
 				path: "deployments/:deploymentId",
 				element: <Sessions />,
 			},
+			{
+				path: "deployments/:deploymentId/:sessionId",
+				element: <Sessions />,
+			},
 		],
 	},
 	{
