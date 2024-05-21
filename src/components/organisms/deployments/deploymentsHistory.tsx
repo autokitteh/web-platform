@@ -161,20 +161,28 @@ export const DeploymentsHistory = () => {
 							<Td className="max-w-20">
 								<div className="flex space-x-1">
 									{state === DeploymentStateVariant.activeDeployment ? (
-										<IconButton className="p-1" onClick={(e) => handleStoppedDeployment(e, deploymentId)}>
+										<IconButton
+											ariaLabel={t("ariaDeactivateDeploy")}
+											className="p-1"
+											onClick={(e) => handleStoppedDeployment(e, deploymentId)}
+										>
 											<ActionStoppedIcon className="group-hover:fill-white w-4 h-4 transition" />
 										</IconButton>
 									) : (
-										<IconButton className="p-1" onClick={(e) => handleActiveDeployment(e, deploymentId)}>
+										<IconButton
+											ariaLabel={t("ariaActivateDeploy")}
+											className="p-1"
+											onClick={(e) => handleActiveDeployment(e, deploymentId)}
+										>
 											<ActionActiveIcon className="group-hover:fill-green-accent w-4 h-4 transition" />
 										</IconButton>
 									)}
 									{state === DeploymentStateVariant.activeDeployment ? (
-										<IconButton aria-label={t("ariaDeleDeploy")} disabled={true} title={t("deleteDisabled")}>
+										<IconButton ariaLabel={t("ariaDeleDeploy")} disabled={true} title={t("deleteDisabled")}>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
 									) : (
-										<IconButton aria-label={t("ariaDeleDeploy")} onClick={(e) => showDeleteModal(e, deploymentId)}>
+										<IconButton ariaLabel={t("ariaDeleDeploy")} onClick={(e) => showDeleteModal(e, deploymentId)}>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
 									)}
