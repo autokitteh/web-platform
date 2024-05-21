@@ -151,6 +151,7 @@ export const DeploymentsHistory = () => {
 				duration={5}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
+				type="error"
 			>
 				<p className="font-semibold text-error">{tErrors("error")}</p>
 				<p className="mt-1 text-xs">{toast.message}</p>
