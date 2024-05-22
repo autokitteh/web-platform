@@ -3,8 +3,7 @@ import { StoreName } from "@enums";
 import { ProjectTabs } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
-import { LoggerService, ProjectsService, EnvironmentsService, VariablesService, TriggersService } from "@services";
-import { Environment } from "@type/models";
+import { LoggerService, ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
 import { remove } from "lodash";
@@ -14,57 +13,28 @@ import { immer } from "zustand/middleware/immer";
 
 const defaultState: Omit<
 	ProjectStore,
-	| "loadProject"
+	| "setActiveTab"
+	| "getProjectsList"
 	| "setUpdateFileContent"
 	| "setProjectResources"
 	| "getProjectResources"
 	| "setProjectEmptyResources"
-	| "setActiveTab"
-	| "getProjectsList"
-	| "getProjecEnvironments"
-	| "getProjectVariables"
-	| "getProjectTriggers"
 	| "updateEditorOpenedFiles"
 	| "updateEditorClosedFiles"
 	| "removeProjectFile"
 > = {
 	list: [],
 	currentProject: {
-		projectId: undefined,
 		openedFiles: [],
 		resources: {},
-		environments: [],
-		variables: [],
-		triggers: [],
 	},
 	activeTab: ProjectTabs.codeAndAssets,
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
-	loadProject: async (projectId) => {
-		const activeTab = get().currentProject.projectId === projectId ? get().activeTab : ProjectTabs.codeAndAssets;
-		const openedFiles = get().currentProject.projectId === projectId ? get().currentProject.openedFiles : [];
 
-		set(() => ({
-			...defaultState,
-			activeTab,
-			currentProject: { ...defaultState.currentProject, projectId, openedFiles },
-		}));
-
-		try {
-			await Promise.all([
-				get().getProjectResources(),
-				get().getProjecEnvironments(),
-				get().getProjectVariables(),
-				get().getProjectTriggers(),
-			]);
-
-			return { error: undefined };
-		} catch (error) {
-			return { error };
-		}
-	},
+	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
 
 	getProjectsList: async () => {
 		const { data, error } = await ProjectsService.list();
@@ -82,14 +52,12 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { error: undefined, list: updatedList || [] };
 	},
 
-	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
-
-	setUpdateFileContent: async (content) => {
+	setUpdateFileContent: async (content, projectId) => {
 		const fileName = get().currentProject.openedFiles.find(({ isActive }) => isActive)?.name;
 
 		if (!fileName) return;
 
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
+		const { error } = await ProjectsService.setResources(projectId, {
 			...get().currentProject.resources,
 			[fileName]: content,
 		});
@@ -105,11 +73,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	setProjectResources: async (files) => {
+	setProjectResources: async (files, projectId) => {
 		for (const file of files) {
 			const fileContent = await readFileAsUint8Array(file);
 
-			const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
+			const { error } = await ProjectsService.setResources(projectId, {
 				...get().currentProject.resources,
 				[file.name]: fileContent,
 			});
@@ -128,8 +96,8 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { error: undefined };
 	},
 
-	setProjectEmptyResources: async (name) => {
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
+	setProjectEmptyResources: async (name, projectId) => {
+		const { error } = await ProjectsService.setResources(projectId, {
 			...get().currentProject.resources,
 			[name]: new Uint8Array(),
 		});
@@ -145,61 +113,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { error: undefined };
 	},
 
-	getProjectResources: async () => {
-		const { data: resources, error } = await ProjectsService.getResources(get().currentProject.projectId!);
-
-		if (error) return { error };
-
+	getProjectResources: async (resources) => {
 		set((state) => {
-			state.currentProject.resources = resources!;
+			state.currentProject.resources = resources;
 			return state;
 		});
-
-		return { error: undefined };
-	},
-
-	getProjecEnvironments: async () => {
-		const { data: envs, error } = await EnvironmentsService.listByProjectId(get().currentProject.projectId!);
-
-		if (error) return { error };
-
-		set((state) => {
-			state.currentProject.environments = envs!;
-			return state;
-		});
-
-		return { data: envs, error: undefined };
-	},
-
-	getProjectVariables: async () => {
-		const { data: environments, error: errorEnvs } = await get().getProjecEnvironments();
-
-		if (errorEnvs) return { error: errorEnvs };
-
-		const envId = (environments as Environment[])[0].envId;
-		const { data: vars, error } = await VariablesService.list(envId);
-
-		if (error) return { error };
-
-		set((state) => {
-			state.currentProject.variables = vars!;
-			return state;
-		});
-
-		return { error: undefined };
-	},
-
-	getProjectTriggers: async () => {
-		const { data: triggers, error } = await TriggersService.listByProjectId(get().currentProject.projectId!);
-
-		if (error) return { error };
-
-		set((state) => {
-			state.currentProject.triggers = triggers!;
-			return state;
-		});
-
-		return { error: undefined };
 	},
 
 	updateEditorOpenedFiles: (fileName) => {
@@ -229,11 +147,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	removeProjectFile: async (fileName) => {
+	removeProjectFile: async (fileName, projectId) => {
 		const updatedResources = { ...get().currentProject.resources };
 		delete updatedResources[fileName];
 
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, updatedResources);
+		const { error } = await ProjectsService.setResources(projectId, updatedResources);
 
 		if (error) return { error };
 

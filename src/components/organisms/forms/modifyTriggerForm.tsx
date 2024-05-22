@@ -15,10 +15,10 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const ModifyTriggerForm = () => {
-	const { triggerId } = useParams();
+	const { triggerId, projectId } = useParams();
 	const navigate = useNavigate();
 	const {
-		currentProject: { projectId, resources },
+		currentProject: { resources },
 	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -27,6 +27,7 @@ export const ModifyTriggerForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
 	const [connections, setConnections] = useState<SelectOption[]>([]);
@@ -43,15 +44,11 @@ export const ModifyTriggerForm = () => {
 		fetchTrigger();
 	}, []);
 
-	useLayoutEffect(() => {
-		const fetchData = async () => {
-			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
+	const fetchData = async () => {
+		try {
+			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
+			if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
 			if (!connections?.length) return;
-
-			if (error) {
-				setToast({ isOpen: true, message: tErrors("connectionsFetchError") });
-				return;
-			}
 
 			const formattedConnections = connections.map((item) => ({
 				value: item.connectionId,
@@ -64,7 +61,14 @@ export const ModifyTriggerForm = () => {
 				label: name,
 			}));
 			setFilesName(formattedResources);
-		};
+		} catch (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+		} finally {
+			setIsLoadingData(false);
+		}
+	};
+
+	useLayoutEffect(() => {
 		fetchData();
 	}, []);
 
@@ -167,8 +171,10 @@ export const ModifyTriggerForm = () => {
 		});
 	};
 
-	return (
-		<div className="min-w-550">
+	return isLoadingData ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{t("loading")}...</div>
+	) : (
+		<div className="min-w-80">
 			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
 			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">

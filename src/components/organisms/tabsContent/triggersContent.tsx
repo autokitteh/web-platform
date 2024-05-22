@@ -6,19 +6,20 @@ import { SortButton } from "@components/molecules";
 import { ModalDeleteTrigger } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { TriggersService } from "@services";
-import { useModalStore, useProjectStore } from "@store";
+import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Trigger } from "@type/models";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const TriggersContent = () => {
 	const { t: tError } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers" });
-	const { openModal, closeModal } = useModalStore();
-	const { currentProject, getProjectTriggers } = useProjectStore();
+	const { projectId } = useParams();
 	const navigate = useNavigate();
+	const { openModal, closeModal } = useModalStore();
+	const [isLoading, setIsLoading] = useState(true);
 
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
@@ -32,12 +33,22 @@ export const TriggersContent = () => {
 		message: "",
 	});
 
+	const fetchTriggers = async () => {
+		setIsLoading(true);
+		try {
+			const { data: triggers, error } = await TriggersService.listByProjectId(projectId!);
+			if (error) throw error;
+			if (!triggers) return;
+
+			setTriggers(triggers);
+		} catch (err) {
+			setToast({ isOpen: true, message: (err as Error).message });
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	useEffect(() => {
-		// TODO: in future - fetch triggers from the backend, not use zustand store, also change for variable, connections and code&assets
-		const fetchTriggers = async () => {
-			await getProjectTriggers();
-			setTriggers(currentProject.triggers);
-		};
 		fetchTriggers();
 	}, []);
 
@@ -50,8 +61,8 @@ export const TriggersContent = () => {
 	};
 
 	const sortedTriggers = useMemo(() => {
-		return orderBy(currentProject.triggers, [sort.column], [sort.direction]);
-	}, [currentProject.triggers, sort.column, sort.direction]);
+		return orderBy(triggers, [sort.column], [sort.direction]);
+	}, [triggers, sort.column, sort.direction]);
 
 	const handleDeleteTrigger = async () => {
 		if (!triggerId) return;
@@ -62,7 +73,7 @@ export const TriggersContent = () => {
 			setToast({ isOpen: true, message: tError("triggerRemoveFailed") });
 			return;
 		}
-		await getProjectTriggers();
+		fetchTriggers();
 	};
 
 	const handleOpenDeleteTriggerModal = (triggerId: string) => {
@@ -70,7 +81,11 @@ export const TriggersContent = () => {
 		openModal(ModalName.deleteTrigger);
 	};
 
-	return (
+	return isLoading ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+			{t("buttons.loading")}...
+		</div>
+	) : (
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
@@ -79,7 +94,7 @@ export const TriggersContent = () => {
 					href="add-new-trigger"
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					{t("buttonAddNew")}
+					{t("buttons.addNew")}
 				</Button>
 			</div>
 			{triggers.length ? (

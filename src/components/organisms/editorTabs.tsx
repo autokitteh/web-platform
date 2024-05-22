@@ -55,9 +55,11 @@ export const EditorTabs = () => {
 	};
 
 	const handleUpdateContent = debounce((content?: string) => {
+		if (!projectId) return;
+
 		const contentUintArray = new TextEncoder().encode(content);
-		setUpdateFileContent(contentUintArray);
-	}, 1000);
+		setUpdateFileContent(contentUintArray, projectId);
+	}, 3000);
 
 	const activeCloseIcon = (fileName: string) =>
 		cn("w-4 h-4 p-0.5 hover:bg-gray-700 opacity-0 group-hover:opacity-100", {

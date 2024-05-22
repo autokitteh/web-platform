@@ -11,7 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const ModalAddCodeAssets = ({ onError }: ModalAddCodeAssetsProps) => {
+export const ModalAddCodeAssets = ({ onError, onSuccess }: ModalAddCodeAssetsProps) => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
 	const { closeModal } = useModalStore();
@@ -39,10 +39,11 @@ export const ModalAddCodeAssets = ({ onError }: ModalAddCodeAssetsProps) => {
 	const onSubmit = async () => {
 		const { name, extension } = getValues();
 		const newFile = name + extension.value;
-		const { error } = await setProjectEmptyResources(newFile);
+		const { error } = await setProjectEmptyResources(newFile, projectId!);
 		closeModal(ModalName.addCodeAssets);
 
-		if (error) onError(t("fileAddFailedExtended", { projectId, fileName: name }));
+		if (error) return onError(t("fileAddFailedExtended", { projectId, fileName: name }));
+		onSuccess();
 		reset({ name: "", extension });
 	};
 

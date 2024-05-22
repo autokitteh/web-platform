@@ -3,20 +3,16 @@ import { Input, ErrorMessage, Toast } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
-import { useProjectStore } from "@store";
 import { newVariableShema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const AddVariableForm = () => {
 	const { t } = useTranslation("errors");
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const navigate = useNavigate();
-	const {
-		getProjectVariables,
-		currentProject: { projectId },
-	} = useProjectStore();
+	const { projectId } = useParams();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -51,13 +47,11 @@ export const AddVariableForm = () => {
 			setToast({ isOpen: true, message: t("variableNotCreated") });
 			return;
 		}
-
-		await getProjectVariables();
 		navigate(-1);
 	};
 
 	return (
-		<div className="min-w-550">
+		<div className="min-w-80">
 			<TabFormHeader
 				className="mb-11"
 				form="createNewVariableForm"

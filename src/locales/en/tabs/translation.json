@@ -3,7 +3,8 @@
 		"buttons": {
 			"addNewFile": "Add new file",
 			"createNewFile": "Create new file",
-			"addCodeAndAssets": "Add Code & Assets"
+			"addCodeAndAssets": "Add Code & Assets",
+			"loading": "Loading"
 		},
 		"table": {
 			"columns": {
@@ -32,7 +33,10 @@
 	"triggers": {
 		"titleAvailable": "Available Triggers",
 		"titleNoAvailable": "No triggers available.",
-		"buttonAddNew": "Add new",
+		"buttons": {
+			"addNew": "Add new",
+			"loading": "Loading"
+		},
 		"table": {
 			"columns": {
 				"name": "Name",
@@ -57,6 +61,7 @@
 			"titleInfo": "Relevant only for HTTP",
 			"buttonAddNewData": "Add new data",
 			"ariaDeleteData": "Delete {{name}} data",
+			"loading": "Loading",
 			"placeholders": {
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
@@ -75,7 +80,10 @@
 	"variables": {
 		"titleAvailable": "Available Variables",
 		"titleNoAvailable": "No variables available.",
-		"buttonAddNew": "Add new",
+		"buttons": {
+			"addNew": "Add new",
+			"loading": "Loading"
+		},
 		"table": {
 			"columns": {
 				"name": "Name",
@@ -97,6 +105,7 @@
 			"environment": "Environment",
 			"ariaNameRequired": "Name is required",
 			"ariaValueRequired": "Value is required",
+			"loading": "Loading",
 			"placeholders": {
 				"name": "Name",
 				"value": "Value"

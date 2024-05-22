@@ -3,8 +3,6 @@ import { Input, ErrorMessage, Toast } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
-import { useProjectStore } from "@store";
-import { Variable } from "@type/models";
 import { newVariableShema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -12,25 +10,23 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export const ModifyVariableForm = () => {
 	const { t } = useTranslation("errors");
-	const { variableName, environmentId } = useParams();
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
+
+	const { variableName, environmentId, projectId } = useParams();
 	const navigate = useNavigate();
-	const [currentVariable, setCurrentVariable] = useState<Variable>();
-	const {
-		getProjectVariables,
-		currentProject: { projectId },
-	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
 	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(true);
 
 	const fetchVariable = async () => {
-		const { data: currentVar } = await VariablesService.get(environmentId!, variableName!);
-		if (!currentVar) return;
+		const { data: currentVar, error } = await VariablesService.get(environmentId!, variableName!);
+		setIsLoadingData(false);
 
-		setCurrentVariable(currentVar);
+		if (error) setToast({ isOpen: true, message: (error as Error).message });
+		if (!currentVar) return;
 
 		reset({
 			name: currentVar.name,
@@ -68,16 +64,13 @@ export const ModifyVariableForm = () => {
 
 		if (error) setToast({ isOpen: true, message: (error as Error).message });
 
-		await getProjectVariables();
 		navigate(-1);
 	};
 
-	if (!currentVariable) {
-		return <div>{tForm("loading")}...</div>;
-	}
-
-	return (
-		<div className="min-w-550">
+	return isLoadingData ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{tForm("loading")}...</div>
+	) : (
+		<div className="min-w-80">
 			<TabFormHeader
 				className="mb-11"
 				form="modifyVariableForm"

@@ -12,13 +12,13 @@ import { triggerSchema } from "@validations";
 import { debounce, has } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const AddTriggerForm = () => {
 	const navigate = useNavigate();
+	const { projectId } = useParams();
 	const {
-		currentProject: { projectId, resources },
-		getProjectTriggers,
+		currentProject: { resources },
 	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -27,32 +27,36 @@ export const AddTriggerForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {
-			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
-			if (!connections?.length) return;
+			try {
+				const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
+				if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
+				if (!connections?.length) return;
 
-			if (error) {
-				setToast({ isOpen: true, message: tErrors("connectionsFetchError") });
-				return;
+				const formattedConnections = connections.map((item) => ({
+					value: item.connectionId,
+					label: item.name,
+				}));
+				setConnections(formattedConnections);
+
+				const formattedResources = Object.keys(resources).map((name) => ({
+					value: name,
+					label: name,
+				}));
+				setFilesName(formattedResources);
+			} catch (error) {
+				setToast({ isOpen: true, message: (error as Error).message });
+			} finally {
+				setIsLoadingData(false);
 			}
-
-			const formattedConnections = connections.map((item) => ({
-				value: item.connectionId,
-				label: item.name,
-			}));
-			setConnections(formattedConnections);
-
-			const formattedResources = Object.keys(resources).map((name) => ({
-				value: name,
-				label: name,
-			}));
-			setFilesName(formattedResources);
 		};
+
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -95,7 +99,6 @@ export const AddTriggerForm = () => {
 			setToast({ isOpen: true, message: tErrors("triggerNotCreated") });
 			return;
 		}
-		await getProjectTriggers();
 		navigate(-1);
 	};
 
@@ -139,9 +142,10 @@ export const AddTriggerForm = () => {
 			return updatedData;
 		});
 	};
-
-	return (
-		<div className="min-w-550">
+	return isLoadingData ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{t("loading")}...</div>
+	) : (
+		<div className="min-w-80">
 			<TabFormHeader className="mb-11" form="createNewTriggerForm" isLoading={isLoading} title={t("addNewTrigger")} />
 			<form className="flex items-start gap-10" id="createNewTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">
