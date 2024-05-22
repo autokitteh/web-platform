@@ -1,4 +1,4 @@
-export { SessionLogRecordType, SessionStateType } from "@enums/sessionStates.enum";
+export { SessionLogRecordType, SessionStateType, SessionState } from "@enums/session.enum";
 export { LoggerLevel } from "@enums/output.enum";
 export { SortOrder } from "@enums/sortOrder.enum";
 export { ProjectIntervalTypes } from "@enums/projectIntervals.enum";

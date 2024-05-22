@@ -54,6 +54,12 @@ export default {
 				DEFAULT: "#000000",
 				900: "#101010",
 			},
+			"blue": {
+				500: "#3b82f6",
+			},
+			"yellow": {
+				500: "#eab308",
+			},
 			"green-light": {
 				DEFAULT: "#E8FFCA",
 			},

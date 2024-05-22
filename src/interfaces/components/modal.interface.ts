@@ -31,3 +31,7 @@ export interface DeleteFile {
 export interface ModalDeleteDeploymentProps {
 	onDelete?: () => void;
 }
+
+export interface ModalDeleteDeploymentSessionProps {
+	onDelete?: () => void;
+}

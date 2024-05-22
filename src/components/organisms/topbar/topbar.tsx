@@ -138,7 +138,7 @@ export const Topbar = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaBuildProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={!projectId || loadingButton[TopbarButton.build]}
+					disabled={loadingButton[TopbarButton.build]}
 					onClick={build}
 					variant="outline"
 				>
@@ -148,7 +148,6 @@ export const Topbar = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={!projectId || loadingButton[TopbarButton.deploy]}
 					onClick={deploy}
 					variant="outline"
 				>
@@ -158,7 +157,6 @@ export const Topbar = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaStats")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					disabled={!projectId}
 					href={`/projects/${projectId}/deployments`}
 					variant="outline"
 				>
@@ -175,9 +173,8 @@ export const Topbar = () => {
 							</Button>
 						</div>
 					}
-					disabled={!projectId}
 				>
-					<Button className="h-full text-white px-4 hover:bg-gray-700" disabled={!projectId} variant="outline">
+					<Button className="h-full text-white px-4 hover:bg-gray-700" variant="outline">
 						<More />
 						{t("more", { ns: "buttons" })}
 					</Button>

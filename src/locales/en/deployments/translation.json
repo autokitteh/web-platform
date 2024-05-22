@@ -23,5 +23,31 @@
 				"error": "Error - please reload"
 			}
 		}
+	},
+	"sessions": {
+		"ariaLabelReturnBack": "Return back",
+		"sessionsName": "Sessions",
+		"noSessions": "No sessions found",
+		"output": "Output",
+		"noData": "No data yet",
+		"noSelectedSession": "No session selected",
+		"table": {
+			"columns": {
+				"activationTime": "Activation time",
+				"status": "Status",
+				"sessionId": "Session ID"
+			},
+			"statuses": {
+				"created": "Created",
+				"running": "Running",
+				"stopped": "Stopped",
+				"unspecified": "Unspecified",
+				"error": "Error",
+				"completed": "Completed"
+			}
+		},
+		"buttons": {
+			"back": "Back"
+		}
 	}
 }

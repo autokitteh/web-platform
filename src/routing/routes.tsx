@@ -9,6 +9,7 @@ import {
 	ModifyVariable,
 	Project,
 	Deployments,
+	Sessions,
 } from "@components/pages";
 import { SidebarHrefMenu } from "@enums/components";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
@@ -30,7 +31,7 @@ export const router = createBrowserRouter([
 				element: <NewConnection />,
 			},
 			{
-				path: "add-new-trigger",
+				path: "add-new-trigger/:projectId",
 				element: <NewTrigger />,
 			},
 			{
@@ -52,6 +53,14 @@ export const router = createBrowserRouter([
 			{
 				path: "deployments",
 				element: <Deployments />,
+			},
+			{
+				path: "deployments/:deploymentId",
+				element: <Sessions />,
+			},
+			{
+				path: "deployments/:deploymentId/:sessionId",
+				element: <Sessions />,
 			},
 		],
 	},

@@ -43,5 +43,11 @@
 		"line": "You will not be able to recover it",
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete"
+	},
+	"deleteDeploymentSession": {
+		"title": "Delete this session?",
+		"content": "You will not be able to recover it",
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete"
 	}
 }
