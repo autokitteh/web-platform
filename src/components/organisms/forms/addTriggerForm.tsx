@@ -149,7 +149,7 @@ export const AddTriggerForm = () => {
 		);
 
 	return (
-		<div className="min-w-550">
+		<div className="min-w-80">
 			<TabFormHeader className="mb-11" form="createNewTriggerForm" isLoading={isLoading} title={t("addNewTrigger")} />
 			<form className="flex items-start gap-10" id="createNewTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-6 w-full">

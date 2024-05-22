@@ -46,6 +46,11 @@ export const AddCodeAssetsTab = () => {
 			"opacity-1 pointer-events-auto": isEmpty(sortedResources),
 		}
 	);
+	const activeBodyRow = (fileName: string) =>
+		cn({
+			"bg-black": currentProject.openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
+		});
+
 	const fetchResourses = async () => {
 		const { data: resources, error } = await ProjectsService.getResources(projectId!);
 		setIsLoadingResources(false);
@@ -87,11 +92,6 @@ export const AddCodeAssetsTab = () => {
 		}
 		fetchResourses();
 	};
-
-	const activeBodyRow = (fileName: string) =>
-		cn({
-			"bg-black": currentProject.openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
-		});
 
 	const handleRemoveFile = async () => {
 		closeModal(ModalName.deleteFile);

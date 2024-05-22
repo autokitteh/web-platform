@@ -51,7 +51,7 @@ export const AddVariableForm = () => {
 	};
 
 	return (
-		<div className="min-w-550">
+		<div className="min-w-80">
 			<TabFormHeader
 				className="mb-11"
 				form="createNewVariableForm"

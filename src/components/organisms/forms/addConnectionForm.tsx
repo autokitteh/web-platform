@@ -57,7 +57,7 @@ export const AddConnectionForm = () => {
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
 	return (
-		<div className="min-w-550">
+		<div className="min-w-80">
 			<TabFormHeader
 				className="mb-11"
 				form="createNewConnectionForm"
