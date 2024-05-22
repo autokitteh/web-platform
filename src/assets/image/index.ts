@@ -20,7 +20,7 @@ export {
 	Dashboard,
 	NewProject,
 	IconNotification,
-	Projects,
+	ProjectsIcon,
 	Settings,
 	StatsBlack,
 } from "@assets/image/sidebar";

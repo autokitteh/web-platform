@@ -10,7 +10,8 @@
 			"stats": "View Stats",
 			"ariaBuildProject": "Build project",
 			"ariaDeployProject": "Deploy project",
-			"ariaStats": "View project stats"
+			"ariaStats": "View project stats",
+			"goToProject": "Go to project"
 		}
 	}
 }

@@ -40,7 +40,15 @@ export const Topbar = () => {
 	useEffect(() => {
 		if (!projectId) return;
 		const fetchProject = async () => {
-			const { data } = await ProjectsService.get(projectId);
+			const { data, error } = await ProjectsService.get(projectId);
+			if (error) {
+				setToast({
+					isSuccess: !error,
+					isOpen: true,
+					message: error ? (error as Error).message : (error as Error).message,
+				});
+				return;
+			}
 			data && setProject(data);
 		};
 		fetchProject();
