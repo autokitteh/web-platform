@@ -19,7 +19,7 @@ export const TriggersContent = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { openModal, closeModal } = useModalStore();
-	const [isLoadingTriggers, setIsLoadingTriggers] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
@@ -34,15 +34,18 @@ export const TriggersContent = () => {
 	});
 
 	const fetchTriggers = async () => {
-		const { data: triggers, error } = await TriggersService.listByProjectId(projectId!);
-		setIsLoadingTriggers(false);
-		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
-			return;
-		}
-		if (!triggers?.length) return;
+		setIsLoading(true);
+		try {
+			const { data: triggers, error } = await TriggersService.listByProjectId(projectId!);
+			if (error) throw error;
+			if (!triggers) return;
 
-		setTriggers(triggers);
+			setTriggers(triggers);
+		} catch (err) {
+			setToast({ isOpen: true, message: (err as Error).message });
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	useEffect(() => {
@@ -78,7 +81,7 @@ export const TriggersContent = () => {
 		openModal(ModalName.deleteTrigger);
 	};
 
-	return isLoadingTriggers ? (
+	return isLoading ? (
 		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
 			{t("buttons.loading")}...
 		</div>

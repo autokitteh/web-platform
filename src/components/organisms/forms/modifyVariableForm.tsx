@@ -3,7 +3,6 @@ import { Input, ErrorMessage, Toast } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
-import { Variable } from "@type/models";
 import { newVariableShema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -15,18 +14,19 @@ export const ModifyVariableForm = () => {
 
 	const { variableName, environmentId, projectId } = useParams();
 	const navigate = useNavigate();
-	const [currentVariable, setCurrentVariable] = useState<Variable>();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
 	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(true);
 
 	const fetchVariable = async () => {
-		const { data: currentVar } = await VariablesService.get(environmentId!, variableName!);
-		if (!currentVar) return;
+		const { data: currentVar, error } = await VariablesService.get(environmentId!, variableName!);
+		setIsLoadingData(false);
 
-		setCurrentVariable(currentVar);
+		if (error) setToast({ isOpen: true, message: (error as Error).message });
+		if (!currentVar) return;
 
 		reset({
 			name: currentVar.name,
@@ -67,11 +67,9 @@ export const ModifyVariableForm = () => {
 		navigate(-1);
 	};
 
-	if (!currentVariable) {
-		return <div>{tForm("loading")}...</div>;
-	}
-
-	return (
+	return isLoadingData ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{tForm("loading")}...</div>
+	) : (
 		<div className="min-w-80">
 			<TabFormHeader
 				className="mb-11"

@@ -14,7 +14,7 @@ import { useParams } from "react-router-dom";
 
 export const AddCodeAssetsTab = () => {
 	const [resources, setResources] = useState<Record<string, Uint8Array>>({});
-	const [isLoadingResources, setIsLoadingResources] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation(["errors"]);
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
@@ -51,18 +51,24 @@ export const AddCodeAssetsTab = () => {
 			"bg-black": currentProject.openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
 		});
 
-	const fetchResourses = async () => {
-		const { data: resources, error } = await ProjectsService.getResources(projectId!);
-		setIsLoadingResources(false);
-		if (error) setToast({ isOpen: true, message: (error as Error).message });
+	const fetchResources = async () => {
+		setIsLoading(true);
+		try {
+			const { data: resources, error } = await ProjectsService.getResources(projectId!);
+			if (error) throw error;
+			if (!resources) return;
 
-		if (!resources) return;
-		getProjectResources(resources);
-		setResources(resources);
+			getProjectResources(resources);
+			setResources(resources);
+		} catch (err) {
+			setToast({ isOpen: true, message: (err as Error).message });
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	useEffect(() => {
-		fetchResourses();
+		fetchResources();
 	}, [projectId]);
 
 	const handleDragOver = (event: React.DragEvent) => {
@@ -90,7 +96,7 @@ export const AddCodeAssetsTab = () => {
 			setToast({ isOpen: true, message: tErrors("fileAddFailedExtended", { projectId, fileName }) });
 			return;
 		}
-		fetchResourses();
+		fetchResources();
 	};
 
 	const handleRemoveFile = async () => {
@@ -101,10 +107,10 @@ export const AddCodeAssetsTab = () => {
 			setToast({ isOpen: true, message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }) });
 			return;
 		}
-		fetchResourses();
+		fetchResources();
 	};
 
-	return isLoadingResources ? (
+	return isLoading ? (
 		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
 			{t("buttons.loading")}...
 		</div>
@@ -175,7 +181,7 @@ export const AddCodeAssetsTab = () => {
 				</div>
 			</div>
 			<ModalDeleteFile onDelete={handleRemoveFile} />
-			<ModalAddCodeAssets onError={(message) => setToast({ isOpen: true, message })} onSuccess={fetchResourses} />
+			<ModalAddCodeAssets onError={(message) => setToast({ isOpen: true, message })} onSuccess={fetchResources} />
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}

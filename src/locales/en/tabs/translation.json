@@ -105,6 +105,7 @@
 			"environment": "Environment",
 			"ariaNameRequired": "Name is required",
 			"ariaValueRequired": "Value is required",
+			"loading": "Loading",
 			"placeholders": {
 				"name": "Name",
 				"value": "Value"

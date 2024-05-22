@@ -59,7 +59,7 @@ export const EditorTabs = () => {
 
 		const contentUintArray = new TextEncoder().encode(content);
 		setUpdateFileContent(contentUintArray, projectId);
-	}, 1000);
+	}, 3000);
 
 	const activeCloseIcon = (fileName: string) =>
 		cn("w-4 h-4 p-0.5 hover:bg-gray-700 opacity-0 group-hover:opacity-100", {
