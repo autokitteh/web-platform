@@ -6,20 +6,21 @@ export const useProject = (projectId?: string) => {
 	const [project, setProject] = useState<Project>({ name: "", projectId: "" });
 	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
 
-	useEffect(() => {
+	const fetchProject = async () => {
 		if (!projectId) return;
-		const fetchProject = async () => {
-			const { data, error } = await ProjectsService.get(projectId);
-			if (error) {
-				setToast({
-					isSuccess: !error,
-					isOpen: true,
-					message: error ? (error as Error).message : (error as Error).message,
-				});
-				return;
-			}
-			data && setProject(data);
-		};
+		const { data, error } = await ProjectsService.get(projectId);
+		if (error) {
+			setToast({
+				isSuccess: !error,
+				isOpen: true,
+				message: error ? (error as Error).message : (error as Error).message,
+			});
+			return;
+		}
+		data && setProject(data);
+	};
+
+	useEffect(() => {
 		fetchProject();
 	}, [projectId]);
 
