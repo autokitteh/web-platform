@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 import { Button, IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
 import { ModalAddCodeAssets, ModalDeleteFile } from "@components/organisms/modals";
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
+import { ProjectsService } from "@services";
 import { useModalStore, useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { orderBy, isEmpty } from "lodash";
@@ -12,11 +13,14 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 export const AddCodeAssetsTab = () => {
+	const [resources, setResources] = useState<Record<string, Uint8Array>>({});
+	const [isLoadingResources, setIsLoadingResources] = useState(true);
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation(["errors"]);
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { openModal, closeModal } = useModalStore();
-	const { currentProject, setProjectResources, updateEditorOpenedFiles, removeProjectFile } = useProjectStore();
+	const { currentProject, getProjectResources, setProjectResources, updateEditorOpenedFiles, removeProjectFile } =
+		useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -25,7 +29,7 @@ export const AddCodeAssetsTab = () => {
 	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
 	const selectedRemoveFileName = useModalStore((state) => state.data as string);
 
-	const resourcesEntries = Object.entries(currentProject.resources);
+	const resourcesEntries = Object.entries(resources);
 	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
 
 	const styleCircle = cn("transition stroke-gray-400 group-hover:stroke-green-accent", {
@@ -42,6 +46,19 @@ export const AddCodeAssetsTab = () => {
 			"opacity-1 pointer-events-auto": isEmpty(sortedResources),
 		}
 	);
+	const fetchResourses = async () => {
+		const { data: resources, error } = await ProjectsService.getResources(projectId!);
+		setIsLoadingResources(false);
+		if (error) setToast({ isOpen: true, message: (error as Error).message });
+
+		if (!resources) return;
+		getProjectResources(resources);
+		setResources(resources);
+	};
+
+	useEffect(() => {
+		fetchResourses();
+	}, []);
 
 	const handleDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
@@ -68,6 +85,7 @@ export const AddCodeAssetsTab = () => {
 			setToast({ isOpen: true, message: tErrors("fileAddFailedExtended", { projectId, fileName }) });
 			return;
 		}
+		fetchResourses();
 	};
 
 	const activeBodyRow = (fileName: string) =>
@@ -79,8 +97,19 @@ export const AddCodeAssetsTab = () => {
 		closeModal(ModalName.deleteFile);
 		const { error } = await removeProjectFile(selectedRemoveFileName);
 
-		if (error) setToast({ isOpen: true, message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }) });
+		if (error) {
+			setToast({ isOpen: true, message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }) });
+			return;
+		}
+		fetchResourses();
 	};
+
+	if (isLoadingResources)
+		return (
+			<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+				{t("buttons.loading")}...
+			</div>
+		);
 
 	return (
 		<div className="flex flex-col h-full">

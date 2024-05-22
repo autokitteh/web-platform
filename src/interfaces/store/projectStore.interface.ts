@@ -30,7 +30,7 @@ export interface ProjectStore {
 	setUpdateFileContent: (content: Uint8Array) => void;
 	setProjectResources: (files: File[]) => Promise<FilesResponse>;
 	setProjectEmptyResources: (name: string) => Promise<ProjectStoreResponse>;
-	getProjectResources: () => Promise<ProjectStoreResponse>;
+	getProjectResources: (resources: Record<string, Uint8Array>) => void;
 	getProjecEnvironments: () => Promise<ProjectStoreResponse>;
 	getProjectVariables: () => Promise<ProjectStoreResponse>;
 	getProjectTriggers: () => Promise<ProjectStoreResponse>;

@@ -53,12 +53,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}));
 
 		try {
-			await Promise.all([
-				get().getProjectResources(),
-				get().getProjecEnvironments(),
-				get().getProjectVariables(),
-				get().getProjectTriggers(),
-			]);
+			await Promise.all([get().getProjecEnvironments(), get().getProjectVariables(), get().getProjectTriggers()]);
 
 			return { error: undefined };
 		} catch (error) {
@@ -145,13 +140,9 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { error: undefined };
 	},
 
-	getProjectResources: async () => {
-		const { data: resources, error } = await ProjectsService.getResources(get().currentProject.projectId!);
-
-		if (error) return { error };
-
+	getProjectResources: async (resources) => {
 		set((state) => {
-			state.currentProject.resources = resources!;
+			state.currentProject.resources = resources;
 			return state;
 		});
 

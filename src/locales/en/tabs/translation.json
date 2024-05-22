@@ -3,7 +3,8 @@
 		"buttons": {
 			"addNewFile": "Add new file",
 			"createNewFile": "Create new file",
-			"addCodeAndAssets": "Add Code & Assets"
+			"addCodeAndAssets": "Add Code & Assets",
+			"loading": "Loading"
 		},
 		"table": {
 			"columns": {
