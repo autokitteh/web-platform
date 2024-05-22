@@ -48,6 +48,8 @@
 			"@api": ["./src/api/index"],
 			"@store": ["./src/store/index"],
 			"@locales/*": ["./src/locales/*"],
+			"@hooks": ["./src/hooks/index"],
+			"@hooks/*": ["./src/hooks/*"],
 			"@ak-proto-ts/*": ["./src/autokitteh/proto/gen/ts/autokitteh/*"]
 		}
 	},

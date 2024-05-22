@@ -1,39 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FullScreen } from "@assets/image";
 import { ProjectsIcon } from "@assets/image";
 import { Button, IconButton, IconSvg, Toast } from "@components/atoms";
-import { ProjectsService } from "@services";
-import { Project } from "@type/models";
+import { useProject } from "@hooks";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 export const TopbarDeployments = () => {
 	const { t } = useTranslation(["projects", "errors"]);
 	const { projectId } = useParams();
-	const [project, setProject] = useState<Project>({
-		name: "",
-		projectId: "",
-	});
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
-
-	useEffect(() => {
-		if (!projectId) return;
-		const fetchProject = async () => {
-			const { data, error } = await ProjectsService.get(projectId);
-			if (error) {
-				setToast({
-					isOpen: true,
-					message: error ? (error as Error).message : (error as Error).message,
-				});
-				return;
-			}
-			data && setProject(data);
-		};
-		fetchProject();
-	}, [projectId]);
+	const { project, toast, setToast } = useProject(projectId);
 
 	const toastProps = {
 		duration: 5,
