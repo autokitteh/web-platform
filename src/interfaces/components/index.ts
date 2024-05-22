@@ -34,3 +34,4 @@ export type {
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
+export type { SwitchProps } from "@interfaces/components/switch.interface";

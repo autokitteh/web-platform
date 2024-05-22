@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, ErrorMessage, Toast } from "@components/atoms";
+import { Input, ErrorMessage, Toast, Switch } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
@@ -18,6 +18,7 @@ export const AddVariableForm = () => {
 		message: "",
 	});
 	const [isLoading, setIsLoading] = useState(false);
+	const [isSecret, setIsSecret] = useState(false);
 
 	const {
 		register,
@@ -39,7 +40,7 @@ export const AddVariableForm = () => {
 			scopeId: "",
 			name,
 			value,
-			isSecret: false,
+			isSecret,
 		});
 		setIsLoading(false);
 
@@ -79,6 +80,7 @@ export const AddVariableForm = () => {
 					/>
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
+				<Switch checked={isSecret} label="Is secret?" onChange={setIsSecret} />
 			</form>
 			<Toast
 				duration={5}

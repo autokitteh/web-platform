@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Input, ErrorMessage, Toast } from "@components/atoms";
+import { Input, ErrorMessage, Toast, Switch } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
@@ -20,6 +20,7 @@ export const ModifyVariableForm = () => {
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [isSecret, setIsSecret] = useState(false);
 
 	const fetchVariable = async () => {
 		const { data: currentVar, error } = await VariablesService.get(environmentId!, variableName!);
@@ -32,6 +33,7 @@ export const ModifyVariableForm = () => {
 			name: currentVar.name,
 			value: currentVar.value,
 		});
+		setIsSecret(currentVar.isSecret);
 	};
 
 	useEffect(() => {
@@ -59,7 +61,7 @@ export const ModifyVariableForm = () => {
 			scopeId: "",
 			name,
 			value,
-			isSecret: false,
+			isSecret,
 		});
 
 		if (error) setToast({ isOpen: true, message: (error as Error).message });
@@ -98,6 +100,7 @@ export const ModifyVariableForm = () => {
 					/>
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
+				<Switch checked={isSecret} label="Is secret?" onChange={setIsSecret} />
 			</form>
 			<Toast
 				duration={5}
