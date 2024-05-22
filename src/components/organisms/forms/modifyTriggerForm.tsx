@@ -40,37 +40,36 @@ export const ModifyTriggerForm = () => {
 		fetchTrigger();
 	}, []);
 
+	const fetchData = async () => {
+		try {
+			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
+			if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
+			if (!connections?.length) return;
+
+			const formattedConnections = connections.map((item) => ({
+				value: item.connectionId,
+				label: item.name,
+			}));
+			setConnections(formattedConnections);
+
+			const { data: resources, error: resourcesError } = await ProjectsService.getResources(projectId!);
+			if (resourcesError) throw resourcesError;
+			if (!resources) return;
+
+			const formattedResources = Object.keys(resources).map((name) => ({
+				value: name,
+				label: name,
+			}));
+			setFilesName(formattedResources);
+		} catch (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+		} finally {
+			setIsLoadingData(false);
+		}
+	};
+
 	useLayoutEffect(() => {
-		const fetchData = async () => {
-			try {
-				const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-				if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
-				if (!connections?.length) return;
-
-				const formattedConnections = connections.map((item) => ({
-					value: item.connectionId,
-					label: item.name,
-				}));
-				setConnections(formattedConnections);
-
-				const { data: resources, error: resourcesError } = await ProjectsService.getResources(projectId!);
-				if (resourcesError) throw resourcesError;
-				if (!resources) return;
-
-				const formattedResources = Object.keys(resources).map((name) => ({
-					value: name,
-					label: name,
-				}));
-				setFilesName(formattedResources);
-			} catch (error) {
-				setToast({ isOpen: true, message: (error as Error).message });
-			} finally {
-				setIsLoadingData(false);
-			}
-		};
-
 		fetchData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const {
@@ -172,12 +171,9 @@ export const ModifyTriggerForm = () => {
 		});
 	};
 
-	if (isLoadingData)
-		return (
-			<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{t("loading")}...</div>
-		);
-
-	return (
+	return isLoadingData ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{t("loading")}...</div>
+	) : (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
 			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>

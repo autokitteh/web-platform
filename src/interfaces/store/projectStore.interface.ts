@@ -13,18 +13,16 @@ export interface ProjectStore {
 	list: ProjectList[];
 	activeTab?: string;
 	currentProject: {
-		projectId?: string;
 		openedFiles: { name: string; isActive: boolean }[];
 		resources: Record<string, Uint8Array>;
 	};
-	loadProject: (projectId: string) => void;
 	getProjectsList: () => Promise<ProjectStoreResponse & { list: ProjectList[] }>;
 	setActiveTab: (value: string) => void;
-	setUpdateFileContent: (content: Uint8Array) => void;
-	setProjectResources: (files: File[]) => Promise<FilesResponse>;
-	setProjectEmptyResources: (name: string) => Promise<ProjectStoreResponse>;
+	setUpdateFileContent: (content: Uint8Array, projectId: string) => void;
+	setProjectResources: (files: File[], projectId: string) => Promise<FilesResponse>;
+	setProjectEmptyResources: (name: string, projectId: string) => Promise<ProjectStoreResponse>;
 	getProjectResources: (resources: Record<string, Uint8Array>) => void;
 	updateEditorOpenedFiles: (fileName: string) => void;
 	updateEditorClosedFiles: (fileName: string) => void;
-	removeProjectFile: (fileName: string) => Promise<ProjectStoreResponse>;
+	removeProjectFile: (fileName: string, projectId: string) => Promise<ProjectStoreResponse>;
 }

@@ -142,13 +142,9 @@ export const AddTriggerForm = () => {
 			return updatedData;
 		});
 	};
-
-	if (isLoadingData)
-		return (
-			<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{t("loading")}...</div>
-		);
-
-	return (
+	return isLoadingData ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{t("loading")}...</div>
+	) : (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" form="createNewTriggerForm" isLoading={isLoading} title={t("addNewTrigger")} />
 			<form className="flex items-start gap-10" id="createNewTriggerForm" onSubmit={handleSubmit(onSubmit)}>

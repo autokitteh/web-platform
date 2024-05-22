@@ -13,7 +13,6 @@ import { immer } from "zustand/middleware/immer";
 
 const defaultState: Omit<
 	ProjectStore,
-	| "loadProject"
 	| "setActiveTab"
 	| "getProjectsList"
 	| "setUpdateFileContent"
@@ -26,7 +25,6 @@ const defaultState: Omit<
 > = {
 	list: [],
 	currentProject: {
-		projectId: undefined,
 		openedFiles: [],
 		resources: {},
 	},
@@ -35,18 +33,6 @@ const defaultState: Omit<
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
-	loadProject: async (projectId) => {
-		const isSameProject = get().currentProject.projectId === projectId;
-		const activeTab = isSameProject ? get().activeTab : ProjectTabs.codeAndAssets;
-		const openedFiles = isSameProject ? get().currentProject.openedFiles : [];
-		const resources = isSameProject ? get().currentProject.resources : {};
-
-		set(() => ({
-			...defaultState,
-			activeTab,
-			currentProject: { resources, projectId, openedFiles },
-		}));
-	},
 
 	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
 
@@ -66,12 +52,12 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { error: undefined, list: updatedList || [] };
 	},
 
-	setUpdateFileContent: async (content) => {
+	setUpdateFileContent: async (content, projectId) => {
 		const fileName = get().currentProject.openedFiles.find(({ isActive }) => isActive)?.name;
 
 		if (!fileName) return;
 
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
+		const { error } = await ProjectsService.setResources(projectId, {
 			...get().currentProject.resources,
 			[fileName]: content,
 		});
@@ -87,11 +73,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	setProjectResources: async (files) => {
+	setProjectResources: async (files, projectId) => {
 		for (const file of files) {
 			const fileContent = await readFileAsUint8Array(file);
 
-			const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
+			const { error } = await ProjectsService.setResources(projectId, {
 				...get().currentProject.resources,
 				[file.name]: fileContent,
 			});
@@ -110,8 +96,8 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { error: undefined };
 	},
 
-	setProjectEmptyResources: async (name) => {
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, {
+	setProjectEmptyResources: async (name, projectId) => {
+		const { error } = await ProjectsService.setResources(projectId, {
 			...get().currentProject.resources,
 			[name]: new Uint8Array(),
 		});
@@ -161,11 +147,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	removeProjectFile: async (fileName) => {
+	removeProjectFile: async (fileName, projectId) => {
 		const updatedResources = { ...get().currentProject.resources };
 		delete updatedResources[fileName];
 
-		const { error } = await ProjectsService.setResources(get().currentProject.projectId!, updatedResources);
+		const { error } = await ProjectsService.setResources(projectId, updatedResources);
 
 		if (error) return { error };
 

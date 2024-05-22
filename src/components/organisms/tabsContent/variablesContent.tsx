@@ -83,14 +83,11 @@ export const VariablesContent = () => {
 		setDeleteVariable({ name: variableName, value: variableValue, scopeId, isSecret: false });
 	};
 
-	if (isLoadingVariables)
-		return (
-			<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
-				{t("buttons.loading")}...
-			</div>
-		);
-
-	return (
+	return isLoadingVariables ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+			{t("buttons.loading")}...
+		</div>
+	) : (
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>

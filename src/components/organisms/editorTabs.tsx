@@ -55,8 +55,10 @@ export const EditorTabs = () => {
 	};
 
 	const handleUpdateContent = debounce((content?: string) => {
+		if (!projectId) return;
+
 		const contentUintArray = new TextEncoder().encode(content);
-		setUpdateFileContent(contentUintArray);
+		setUpdateFileContent(contentUintArray, projectId);
 	}, 1000);
 
 	const activeCloseIcon = (fileName: string) =>

@@ -39,7 +39,7 @@ export const ModalAddCodeAssets = ({ onError, onSuccess }: ModalAddCodeAssetsPro
 	const onSubmit = async () => {
 		const { name, extension } = getValues();
 		const newFile = name + extension.value;
-		const { error } = await setProjectEmptyResources(newFile);
+		const { error } = await setProjectEmptyResources(newFile, projectId!);
 		closeModal(ModalName.addCodeAssets);
 
 		if (error) return onError(t("fileAddFailedExtended", { projectId, fileName: name }));

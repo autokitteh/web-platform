@@ -84,7 +84,7 @@ export const AddCodeAssetsTab = () => {
 	};
 
 	const fileUpload = async (files: File[]) => {
-		const { error, fileName } = await setProjectResources(files);
+		const { error, fileName } = await setProjectResources(files, projectId!);
 
 		if (error) {
 			setToast({ isOpen: true, message: tErrors("fileAddFailedExtended", { projectId, fileName }) });
@@ -95,7 +95,7 @@ export const AddCodeAssetsTab = () => {
 
 	const handleRemoveFile = async () => {
 		closeModal(ModalName.deleteFile);
-		const { error } = await removeProjectFile(selectedRemoveFileName);
+		const { error } = await removeProjectFile(selectedRemoveFileName, projectId!);
 
 		if (error) {
 			setToast({ isOpen: true, message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }) });
@@ -104,14 +104,11 @@ export const AddCodeAssetsTab = () => {
 		fetchResourses();
 	};
 
-	if (isLoadingResources)
-		return (
-			<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
-				{t("buttons.loading")}...
-			</div>
-		);
-
-	return (
+	return isLoadingResources ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+			{t("buttons.loading")}...
+		</div>
+	) : (
 		<div className="flex flex-col h-full">
 			<div className="mb-5 mt-14 flex justify-end gap-6">
 				{!isEmpty(sortedResources) ? (
