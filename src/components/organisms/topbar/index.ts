@@ -1,2 +1,2 @@
 export { Topbar } from "@components/organisms/topbar/topbar";
-export { TopbarDeployments } from "@components/organisms/topbar/deployments";
+export { StatsTopbar } from "@components/organisms/topbar/stats";

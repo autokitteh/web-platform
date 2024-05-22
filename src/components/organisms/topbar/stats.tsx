@@ -6,7 +6,7 @@ import { useProject } from "@hooks";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const TopbarDeployments = () => {
+export const StatsTopbar = () => {
 	const { t } = useTranslation(["projects", "errors"]);
 	const { projectId } = useParams();
 	const { project, toast, setToast } = useProject(projectId);
