@@ -3,8 +3,8 @@ import { AddCodeAssetsTab, ConnectionsContent, TriggersContent, VariablesContent
 import { ProjectTabs } from "@enums/components";
 
 export const initialProjectTabs = [
-	{ title: ProjectTabs.codeAndAssets, count: undefined, content: () => <AddCodeAssetsTab /> },
-	{ title: ProjectTabs.connections, count: undefined, content: () => <ConnectionsContent /> },
-	{ title: ProjectTabs.triggers, count: undefined, content: () => <TriggersContent /> },
-	{ title: ProjectTabs.variables, count: undefined, content: () => <VariablesContent /> },
+	{ title: ProjectTabs.codeAndAssets, content: () => <AddCodeAssetsTab /> },
+	{ title: ProjectTabs.connections, content: () => <ConnectionsContent /> },
+	{ title: ProjectTabs.triggers, content: () => <TriggersContent /> },
+	{ title: ProjectTabs.variables, content: () => <VariablesContent /> },
 ];

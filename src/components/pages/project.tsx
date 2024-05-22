@@ -3,7 +3,6 @@ import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
 import { initialProjectTabs } from "@constants";
-import { ProjectTabs } from "@enums/components";
 import { useProjectStore } from "@store";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -11,12 +10,7 @@ import { useParams } from "react-router-dom";
 export const Project = () => {
 	const { t } = useTranslation("errors");
 	const { projectId } = useParams();
-	const {
-		activeTab,
-		loadProject,
-		setActiveTab,
-		currentProject: { variables, resources, triggers },
-	} = useProjectStore();
+	const { activeTab, loadProject, setActiveTab } = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -37,43 +31,21 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	// TODO: in future - fetch count for all tabs from the backend, not use zustand store and don't forget to add also for connections
-	const projectTabsWithCount = initialProjectTabs.map((tab) => {
-		switch (tab.title) {
-			case ProjectTabs.codeAndAssets:
-				return {
-					...tab,
-					count: resources ? Object.keys(resources).length : "",
-				};
-			case ProjectTabs.connections:
-				return { ...tab, count: "" };
-			case ProjectTabs.triggers:
-				return { ...tab, count: triggers ? triggers.length : "" };
-			case ProjectTabs.variables:
-				return { ...tab, count: variables ? variables.length : "" };
-		}
-	});
-
 	return (
 		<AppWrapper>
 			<MapMenuFrameLayout>
 				<Tabs defaultValue={activeTab} key={activeTab} onChange={setActiveTab}>
 					<TabList>
-						{projectTabsWithCount.map(({ title, count }) => (
-							<Tab
-								ariaLabel={`${title} (${count})`}
-								className="text-xs 3xl:text-sm flex items-center"
-								key={title}
-								value={title}
-							>
-								{title} ({count})
+						{initialProjectTabs.map(({ title }) => (
+							<Tab ariaLabel={title} className="text-xs 3xl:text-sm flex items-center" key={title} value={title}>
+								{title}
 							</Tab>
 						))}
 						<IconButton className="bg-black p-0 w-default-icon h-default-icon hover:bg-black group ml-auto ">
 							<Close className="transition w-3 h-3 fill-gray-400 group-hover:fill-white" />
 						</IconButton>
 					</TabList>
-					{projectTabsWithCount.map(({ title, content }) => (
+					{initialProjectTabs.map(({ title, content }) => (
 						<TabPanel key={title} value={title}>
 							{content()}
 						</TabPanel>
