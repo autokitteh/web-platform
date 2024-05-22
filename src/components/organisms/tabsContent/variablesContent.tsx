@@ -95,7 +95,7 @@ export const VariablesContent = () => {
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
-					ariaLabel={t("buttonAddNew")}
+					ariaLabel={t("buttons.addNew")}
 					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
 					href="add-new-variable"
 				>
