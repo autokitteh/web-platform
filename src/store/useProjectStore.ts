@@ -3,8 +3,7 @@ import { StoreName } from "@enums";
 import { ProjectTabs } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
-import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
-import { Environment } from "@type/models";
+import { LoggerService, ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
 import { remove } from "lodash";
@@ -21,8 +20,6 @@ const defaultState: Omit<
 	| "setProjectEmptyResources"
 	| "setActiveTab"
 	| "getProjectsList"
-	| "getProjecEnvironments"
-	| "getProjectVariables"
 	| "updateEditorOpenedFiles"
 	| "updateEditorClosedFiles"
 	| "removeProjectFile"
@@ -32,9 +29,6 @@ const defaultState: Omit<
 		projectId: undefined,
 		openedFiles: [],
 		resources: {},
-		environments: [],
-		variables: [],
-		triggers: [],
 	},
 	activeTab: ProjectTabs.codeAndAssets,
 };
@@ -50,14 +44,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			activeTab,
 			currentProject: { ...defaultState.currentProject, projectId, openedFiles },
 		}));
-
-		try {
-			await Promise.all([get().getProjecEnvironments(), get().getProjectVariables()]);
-
-			return { error: undefined };
-		} catch (error) {
-			return { error };
-		}
 	},
 
 	getProjectsList: async () => {
@@ -142,37 +128,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	getProjectResources: async (resources) => {
 		set((state) => {
 			state.currentProject.resources = resources;
-			return state;
-		});
-
-		return { error: undefined };
-	},
-
-	getProjecEnvironments: async () => {
-		const { data: envs, error } = await EnvironmentsService.listByProjectId(get().currentProject.projectId!);
-
-		if (error) return { error };
-
-		set((state) => {
-			state.currentProject.environments = envs!;
-			return state;
-		});
-
-		return { data: envs, error: undefined };
-	},
-
-	getProjectVariables: async () => {
-		const { data: environments, error: errorEnvs } = await get().getProjecEnvironments();
-
-		if (errorEnvs) return { error: errorEnvs };
-
-		const envId = (environments as Environment[])[0].envId;
-		const { data: vars, error } = await VariablesService.list(envId);
-
-		if (error) return { error };
-
-		set((state) => {
-			state.currentProject.variables = vars!;
 			return state;
 		});
 

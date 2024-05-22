@@ -3,7 +3,6 @@ import { Input, ErrorMessage, Toast } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
-import { useProjectStore } from "@store";
 import { Variable } from "@type/models";
 import { newVariableShema } from "@validations";
 import { useForm } from "react-hook-form";
@@ -12,14 +11,11 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export const ModifyVariableForm = () => {
 	const { t } = useTranslation("errors");
-	const { variableName, environmentId } = useParams();
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
+
+	const { variableName, environmentId, projectId } = useParams();
 	const navigate = useNavigate();
 	const [currentVariable, setCurrentVariable] = useState<Variable>();
-	const {
-		getProjectVariables,
-		currentProject: { projectId },
-	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -68,7 +64,6 @@ export const ModifyVariableForm = () => {
 
 		if (error) setToast({ isOpen: true, message: (error as Error).message });
 
-		await getProjectVariables();
 		navigate(-1);
 	};
 

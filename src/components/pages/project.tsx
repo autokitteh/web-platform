@@ -19,15 +19,7 @@ export const Project = () => {
 	useLayoutEffect(() => {
 		if (!projectId) return;
 
-		const fetchProject = async () => {
-			const { error } = await loadProject(projectId);
-			if (error) {
-				setToast({ isOpen: true, message: (error as Error).message });
-				return;
-			}
-		};
-
-		fetchProject();
+		loadProject(projectId);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 

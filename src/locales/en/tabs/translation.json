@@ -37,7 +37,6 @@
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
-
 		"table": {
 			"columns": {
 				"name": "Name",
@@ -81,7 +80,10 @@
 	"variables": {
 		"titleAvailable": "Available Variables",
 		"titleNoAvailable": "No variables available.",
-		"buttonAddNew": "Add new",
+		"buttons": {
+			"addNew": "Add new",
+			"loading": "Loading"
+		},
 		"table": {
 			"columns": {
 				"name": "Name",

@@ -1,23 +1,25 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon, EditIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { ModalDeleteVariable } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
-import { VariablesService } from "@services";
-import { useModalStore, useProjectStore } from "@store";
+import { EnvironmentsService, VariablesService } from "@services";
+import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
-import { Variable } from "@type/models";
+import { Environment, Variable } from "@type/models";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const VariablesContent = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { t: tErrors } = useTranslation("errors");
+	const [isLoadingVariables, setIsLoadingVariables] = useState(true);
+	const [variables, setVariables] = useState<Variable[]>();
+	const [envId, setEnvId] = useState<string>();
 	const { openModal, closeModal } = useModalStore();
-	const { currentProject, getProjectVariables } = useProjectStore();
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Variable;
@@ -28,8 +30,28 @@ export const VariablesContent = () => {
 	});
 	const [deleteVariable, setDeleteVariable] = useState<Variable>();
 	const navigate = useNavigate();
+	const { projectId } = useParams();
 
-	const envId = currentProject?.environments?.[0]?.envId;
+	const fetchVariables = async () => {
+		try {
+			const { data: envs, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId!);
+			if (errorEnvs) throw errorEnvs;
+
+			const envId = (envs as Environment[])[0].envId;
+			setEnvId(envId);
+			const { data: vars, error } = await VariablesService.list(envId);
+			if (error) throw error;
+			setVariables(vars);
+		} catch (error) {
+			setToast({ isOpen: true, message: (error as Error).message });
+		} finally {
+			setIsLoadingVariables(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchVariables();
+	}, []);
 
 	const toggleSortVariables = (key: keyof Variable) => {
 		const newDirection =
@@ -41,8 +63,8 @@ export const VariablesContent = () => {
 	};
 
 	const sortedVariables = useMemo(() => {
-		return orderBy(currentProject.variables, [sort.column], [sort.direction]);
-	}, [currentProject.variables, sort.column, sort.direction]);
+		return orderBy(variables, [sort.column], [sort.direction]);
+	}, [variables, sort.column, sort.direction]);
 
 	const handleDeleteVariable = async () => {
 		const { error } = await VariablesService.delete({
@@ -51,18 +73,22 @@ export const VariablesContent = () => {
 		});
 		closeModal(ModalName.deleteVariable);
 
-		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
-			return;
-		}
+		if (error) return setToast({ isOpen: true, message: (error as Error).message });
 
-		await getProjectVariables();
+		fetchVariables();
 	};
 
 	const showDeleteModal = (variableName: string, variableValue: string, scopeId: string) => {
 		openModal(ModalName.deleteVariable);
 		setDeleteVariable({ name: variableName, value: variableValue, scopeId, isSecret: false });
 	};
+
+	if (isLoadingVariables)
+		return (
+			<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+				{t("buttons.loading")}...
+			</div>
+		);
 
 	return (
 		<div className="pt-14">
@@ -74,7 +100,7 @@ export const VariablesContent = () => {
 					href="add-new-variable"
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					{t("buttonAddNew")}
+					{t("buttons.addNew")}
 				</Button>
 			</div>
 			{sortedVariables.length ? (
