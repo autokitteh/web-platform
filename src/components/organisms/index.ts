@@ -1,4 +1,4 @@
-export { Topbar } from "@components/organisms/topbar/topbar";
+export { Topbar, StatsTopbar } from "@components/organisms/topbar";
 export { Sidebar } from "@components/organisms/sidebar/sidebar";
 export { SplitFrame } from "@components/organisms/splitFrame";
 export { EditorTabs } from "@components/organisms/editorTabs";

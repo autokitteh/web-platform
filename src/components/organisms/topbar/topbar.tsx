@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FullScreen, More } from "@assets/image";
 import { Build, Deploy, Stats } from "@assets/image";
 import { Button, ErrorMessage, IconButton, IconSvg, Spinner, Toast } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { TopbarButton } from "@enums/components";
+import { useProject } from "@hooks";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
-import { Project } from "@type/models";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -18,16 +18,8 @@ export const Topbar = () => {
 		getProjectsList,
 		currentProject: { resources },
 	} = useProjectStore();
-	const [project, setProject] = useState<Project>({
-		name: "",
-		projectId: "",
-	});
+	const { project, toast, setToast } = useProject(projectId);
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
-	const [toast, setToast] = useState({
-		isOpen: false,
-		isSuccess: false,
-		message: "",
-	});
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 
 	const styleInput = cn(
@@ -36,15 +28,6 @@ export const Topbar = () => {
 			"outline-error outline-2": !isNameValid,
 		}
 	);
-
-	useEffect(() => {
-		if (!projectId) return;
-		const fetchProject = async () => {
-			const { data } = await ProjectsService.get(projectId);
-			data && setProject(data);
-		};
-		fetchProject();
-	}, [projectId]);
 
 	const validateName = (name: string): boolean => {
 		const nameLength = name.trim().length;
@@ -148,6 +131,7 @@ export const Topbar = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
+					disabled={loadingButton[TopbarButton.deploy]}
 					onClick={deploy}
 					variant="outline"
 				>
