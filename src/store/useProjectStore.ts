@@ -14,12 +14,12 @@ import { immer } from "zustand/middleware/immer";
 const defaultState: Omit<
 	ProjectStore,
 	| "loadProject"
+	| "setActiveTab"
+	| "getProjectsList"
 	| "setUpdateFileContent"
 	| "setProjectResources"
 	| "getProjectResources"
 	| "setProjectEmptyResources"
-	| "setActiveTab"
-	| "getProjectsList"
 	| "updateEditorOpenedFiles"
 	| "updateEditorClosedFiles"
 	| "removeProjectFile"
@@ -36,15 +36,19 @@ const defaultState: Omit<
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 	loadProject: async (projectId) => {
-		const activeTab = get().currentProject.projectId === projectId ? get().activeTab : ProjectTabs.codeAndAssets;
-		const openedFiles = get().currentProject.projectId === projectId ? get().currentProject.openedFiles : [];
+		const isSameProject = get().currentProject.projectId === projectId;
+		const activeTab = isSameProject ? get().activeTab : ProjectTabs.codeAndAssets;
+		const openedFiles = isSameProject ? get().currentProject.openedFiles : [];
+		const resources = isSameProject ? get().currentProject.resources : {};
 
 		set(() => ({
 			...defaultState,
 			activeTab,
-			currentProject: { ...defaultState.currentProject, projectId, openedFiles },
+			currentProject: { resources, projectId, openedFiles },
 		}));
 	},
+
+	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
 
 	getProjectsList: async () => {
 		const { data, error } = await ProjectsService.list();
@@ -61,8 +65,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		return { error: undefined, list: updatedList || [] };
 	},
-
-	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
 
 	setUpdateFileContent: async (content) => {
 		const fileName = get().currentProject.openedFiles.find(({ isActive }) => isActive)?.name;
@@ -130,8 +132,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			state.currentProject.resources = resources;
 			return state;
 		});
-
-		return { error: undefined };
 	},
 
 	updateEditorOpenedFiles: (fileName) => {

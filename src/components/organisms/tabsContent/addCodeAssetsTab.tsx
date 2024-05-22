@@ -58,7 +58,7 @@ export const AddCodeAssetsTab = () => {
 
 	useEffect(() => {
 		fetchResourses();
-	}, []);
+	}, [projectId]);
 
 	const handleDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
@@ -178,7 +178,7 @@ export const AddCodeAssetsTab = () => {
 				</div>
 			</div>
 			<ModalDeleteFile onDelete={handleRemoveFile} />
-			<ModalAddCodeAssets onError={(message) => setToast({ isOpen: true, message })} />
+			<ModalAddCodeAssets onError={(message) => setToast({ isOpen: true, message })} onSuccess={fetchResourses} />
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
