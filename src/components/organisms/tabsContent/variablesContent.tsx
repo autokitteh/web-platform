@@ -113,7 +113,7 @@ export const VariablesContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal border-r-0" onClick={() => toggleSortVariables("value")}>
+							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortVariables("value")}>
 								{t("table.columns.value")}
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByValue")}
@@ -129,7 +129,7 @@ export const VariablesContent = () => {
 						{sortedVariables.map(({ name, value, scopeId }, idx) => (
 							<Tr className="group" key={idx}>
 								<Td className="font-semibold">{name}</Td>
-								<Td className="border-r-0">{value}</Td>
+								<Td>{value}</Td>
 								<Td className="max-w-20">
 									<div className="flex space-x-1">
 										<IconButton

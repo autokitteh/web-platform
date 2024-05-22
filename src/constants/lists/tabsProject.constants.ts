@@ -1,12 +1,13 @@
+import { lazy } from "react";
+import * as Organisms from "@components/organisms";
 import { ProjectTabs } from "@enums/components";
-import { lazily } from "react-lazily";
-const { AddCodeAssetsTab, ConnectionsContent, TriggersContent, VariablesContent } = lazily(
-	() => import("@components/organisms")
-);
+
+const lazyLoadComponent = (name: keyof typeof Organisms) =>
+	lazy(() => import("@components/organisms").then((module) => ({ default: module[name] })));
 
 export const initialProjectTabs = [
-	{ title: ProjectTabs.codeAndAssets, component: AddCodeAssetsTab },
-	{ title: ProjectTabs.connections, component: ConnectionsContent },
-	{ title: ProjectTabs.triggers, component: TriggersContent },
-	{ title: ProjectTabs.variables, component: VariablesContent },
+	{ title: ProjectTabs.codeAndAssets, component: lazyLoadComponent("AddCodeAssetsTab") },
+	{ title: ProjectTabs.connections, component: lazyLoadComponent("ConnectionsContent") },
+	{ title: ProjectTabs.triggers, component: lazyLoadComponent("TriggersContent") },
+	{ title: ProjectTabs.variables, component: lazyLoadComponent("VariablesContent") },
 ];
