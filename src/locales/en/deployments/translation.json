@@ -47,7 +47,8 @@
 			}
 		},
 		"buttons": {
-			"back": "Back"
+			"back": "Back",
+			"ariaCloseEditor": "Close Editor"
 		}
 	}
 }

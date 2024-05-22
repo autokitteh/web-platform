@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { LogoFrame, CatImage } from "@assets/image";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { SessionsTableState } from "@components/organisms/deployments";
+import { SessionsTableState, SessionTableEditor, SessionsTableFilter } from "@components/organisms/deployments";
 import { ModalDeleteDeploymentSession } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { SessionLogRecord } from "@models";
-import Editor, { Monaco } from "@monaco-editor/react";
+import { reverseSessionStateConverter } from "@models/utils";
 import { SessionsService } from "@services";
 import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
-import { Session } from "@type/models";
+import { Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 import { orderBy } from "lodash";
 import moment from "moment";
@@ -22,10 +21,11 @@ export const SessionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { openModal, closeModal } = useModalStore();
+	const { projectId, deploymentId, sessionId } = useParams();
+	const navigate = useNavigate();
 
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
-
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Session;
@@ -35,13 +35,17 @@ export const SessionsTable = () => {
 		message: "",
 	});
 
-	const { projectId, deploymentId, sessionId } = useParams();
-	const navigate = useNavigate();
+	const baseFrameStyle = cn("pl-7 bg-gray-700 w-3/4 transition-all", {
+		"rounded-r-none": !sessionId,
+		"w-1/2": sessionId,
+	});
+	const activeBodyRowStyle = (id: string) =>
+		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === sessionId });
 
-	const fetchSessions = async () => {
+	const fetchSessions = async (stateType?: number) => {
 		if (!deploymentId) return;
 
-		const { data, error } = await SessionsService.listByDeploymentId(deploymentId);
+		const { data, error } = await SessionsService.listByDeploymentId(deploymentId, { stateType });
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
@@ -50,10 +54,6 @@ export const SessionsTable = () => {
 
 		setSessions(data);
 	};
-
-	useEffect(() => {
-		fetchSessions();
-	}, [deploymentId]);
 
 	const fetchSessionLog = useCallback(async () => {
 		if (!sessionId) return;
@@ -67,6 +67,10 @@ export const SessionsTable = () => {
 
 		setSessionLog(data);
 	}, [sessionId]);
+
+	useEffect(() => {
+		fetchSessions();
+	}, [deploymentId]);
 
 	useEffect(() => {
 		fetchSessionLog();
@@ -87,7 +91,7 @@ export const SessionsTable = () => {
 
 	const showDeleteModal = useCallback(() => {
 		openModal(ModalName.deleteDeploymentSession);
-	}, [openModal]);
+	}, []);
 
 	const handleRemoveSession = async () => {
 		if (!sessionId) return;
@@ -101,21 +105,6 @@ export const SessionsTable = () => {
 		fetchSessions();
 	};
 
-	const handleEditorWillMount = (monaco: Monaco) => {
-		monaco.editor.defineTheme("sessionsTheme", {
-			base: "vs-dark",
-			inherit: true,
-			rules: [],
-			colors: {
-				"editor.background": "#000000",
-			},
-		});
-	};
-
-	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
-		monaco.editor.setTheme("sessionsTheme");
-	};
-
 	const handleGetSessionLog = useCallback(
 		(sessionId: string) => {
 			navigate(`/projects/${projectId}/deployments/${deploymentId}/${sessionId}`);
@@ -123,28 +112,34 @@ export const SessionsTable = () => {
 		[sessionId]
 	);
 
-	const activeBodyRow = useCallback(
-		(id: string) => cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === sessionId }),
-		[sessionId]
-	);
+	const handleCloseSessionLog = useCallback(() => {
+		navigate(`/projects/${projectId}/deployments/${deploymentId}`);
+	}, [deploymentId]);
 
-	const sessionLogValue = sessionLog?.map(({ logs }) => logs).join("\n");
+	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
+		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
+		fetchSessions(selectedSessionStateFilter);
+		handleCloseSessionLog();
+	};
 
 	return (
-		<div className="flex h-full gap-2.5">
-			<Frame className="pl-7 bg-gray-700 w-1/2">
-				<div className="flex items-center gap-2.5">
-					<IconButton
-						ariaLabel={t("ariaLabelReturnBack")}
-						className="bg-gray-600 hover:bg-black text-white gap-2 min-w-20 text-sm"
-						onClick={() => navigate(-1)}
-					>
-						<ArrowLeft className="h-4" />
-						{t("buttons.back")}
-					</IconButton>
-					<div className="text-gray-300 text-base">
-						{sessions.length} {t("sessionsName")}
+		<div className="flex h-full">
+			<Frame className={baseFrameStyle}>
+				<div className="flex items-center justify-between gap-2.5">
+					<div className="flex items-center flex-wrap gap-2.5">
+						<IconButton
+							ariaLabel={t("ariaLabelReturnBack")}
+							className="bg-gray-600 hover:bg-black text-white gap-2 min-w-20 text-sm"
+							onClick={() => navigate(-1)}
+						>
+							<ArrowLeft className="h-4" />
+							{t("buttons.back")}
+						</IconButton>
+						<div className="text-gray-300 text-base">
+							{sessions.length} {t("sessionsName")}
+						</div>
 					</div>
+					<SessionsTableFilter onChange={(state) => handleFilterSessions(state)} />
 				</div>
 				{sortedSessions.length ? (
 					<Table className="mt-4">
@@ -183,9 +178,13 @@ export const SessionsTable = () => {
 						</THead>
 						<TBody className="bg-gray-700">
 							{sortedSessions.map(({ sessionId, createdAt, state }) => (
-								<Tr className={activeBodyRow(sessionId)} key={sessionId} onClick={() => handleGetSessionLog(sessionId)}>
+								<Tr
+									className={activeBodyRowStyle(sessionId)}
+									key={sessionId}
+									onClick={() => handleGetSessionLog(sessionId)}
+								>
 									<Td>{moment(createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
-									<Td>
+									<Td className="text-green-accent">
 										<SessionsTableState sessionState={state} />
 									</Td>
 									<Td className="border-r-0">{sessionId}</Td>
@@ -202,42 +201,7 @@ export const SessionsTable = () => {
 					<div className="mt-10 font-semibold text-xl text-center">{t("noSessions")}</div>
 				)}
 			</Frame>
-			<Frame className="w-4/6">
-				{sessionLog?.length ? (
-					<>
-						<p className="font-bold mb-8">{t("output")}:</p>
-						<Editor
-							beforeMount={handleEditorWillMount}
-							className="-ml-6"
-							defaultLanguage="json"
-							onMount={handleEditorDidMount}
-							options={{
-								readOnly: true,
-								minimap: {
-									enabled: false,
-								},
-								lineNumbers: "off",
-								renderLineHighlight: "none",
-								wordWrap: "on",
-							}}
-							theme="vs-dark"
-							value={sessionLogValue}
-						/>
-					</>
-				) : (
-					<div className="flex flex-col items-center mt-20">
-						<p className="font-bold text-gray-400 text-lg mb-8">{!sessionId ? t("noSelectedSession") : t("noData")}</p>
-						<CatImage className="border-b border-gray-400 fill-gray-400" />
-					</div>
-				)}
-
-				<LogoFrame
-					className={cn(
-						"absolute fill-white opacity-10 pointer-events-none",
-						"max-w-72 2xl:max-w-80 3xl:max-w-420 -bottom-10 2xl:bottom-7 right-2 2xl:right-7"
-					)}
-				/>
-			</Frame>
+			<SessionTableEditor isSelectedSession={!!sessionId} onClose={handleCloseSessionLog} session={sessionLog} />
 			<ModalDeleteDeploymentSession onDelete={handleRemoveSession} />
 			<Toast
 				duration={5}
