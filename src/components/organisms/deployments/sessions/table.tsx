@@ -130,7 +130,7 @@ export const SessionsTable = () => {
 						<IconButton
 							ariaLabel={t("ariaLabelReturnBack")}
 							className="bg-gray-600 hover:bg-black text-white gap-2 min-w-20 text-sm"
-							onClick={() => navigate(-1)}
+							onClick={() => navigate(`/projects/${projectId}/deployments`)}
 						>
 							<ArrowLeft className="h-4" />
 							{t("buttons.back")}
