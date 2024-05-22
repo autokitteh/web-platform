@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback, Suspense } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
@@ -7,7 +7,7 @@ import { useProjectStore } from "@store";
 import { useTranslation } from "react-i18next";
 
 export const Project = () => {
-	const { t } = useTranslation("errors");
+	const { t } = useTranslation(["errors", "buttons"]);
 	const { activeTab, setActiveTab } = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -43,9 +43,11 @@ export const Project = () => {
 
 	const tabPanels = useMemo(
 		() =>
-			initialProjectTabs.map(({ title, content }) => (
+			initialProjectTabs.map(({ title, component: Component }) => (
 				<TabPanel key={title} value={title}>
-					{content()}
+					<Suspense fallback={t("loading", { ns: "buttons" })}>
+						<Component />
+					</Suspense>
 				</TabPanel>
 			)),
 		[]

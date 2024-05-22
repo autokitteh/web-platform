@@ -5,7 +5,8 @@ import { Select, ErrorMessage, Toast, Input, Button, IconButton } from "@compone
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, ProjectsService, TriggersService } from "@services";
+import { ConnectionService, TriggersService } from "@services";
+import { useProjectStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
 import { triggerSchema } from "@validations";
 import { debounce, has } from "lodash";
@@ -16,6 +17,9 @@ import { useNavigate, useParams } from "react-router-dom";
 export const ModifyTriggerForm = () => {
 	const { triggerId, projectId } = useParams();
 	const navigate = useNavigate();
+	const {
+		currentProject: { resources },
+	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -51,10 +55,6 @@ export const ModifyTriggerForm = () => {
 				label: item.name,
 			}));
 			setConnections(formattedConnections);
-
-			const { data: resources, error: resourcesError } = await ProjectsService.getResources(projectId!);
-			if (resourcesError) throw resourcesError;
-			if (!resources) return;
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				value: name,
