@@ -5,8 +5,7 @@ import { Select, ErrorMessage, Toast, Input, Button, IconButton } from "@compone
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, TriggersService } from "@services";
-import { useProjectStore } from "@store";
+import { ConnectionService, ProjectsService, TriggersService } from "@services";
 import { Trigger, TriggerData } from "@type/models";
 import { triggerSchema } from "@validations";
 import { debounce, has } from "lodash";
@@ -15,11 +14,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const ModifyTriggerForm = () => {
-	const { triggerId } = useParams();
+	const { triggerId, projectId } = useParams();
 	const navigate = useNavigate();
-	const {
-		currentProject: { projectId, resources },
-	} = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -27,6 +23,7 @@ export const ModifyTriggerForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
 	const [connections, setConnections] = useState<SelectOption[]>([]);
@@ -45,27 +42,35 @@ export const ModifyTriggerForm = () => {
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {
-			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
-			if (!connections?.length) return;
+			try {
+				const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
+				if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
+				if (!connections?.length) return;
 
-			if (error) {
-				setToast({ isOpen: true, message: tErrors("connectionsFetchError") });
-				return;
+				const formattedConnections = connections.map((item) => ({
+					value: item.connectionId,
+					label: item.name,
+				}));
+				setConnections(formattedConnections);
+
+				const { data: resources, error: resourcesError } = await ProjectsService.getResources(projectId!);
+				if (resourcesError) throw resourcesError;
+				if (!resources) return;
+
+				const formattedResources = Object.keys(resources).map((name) => ({
+					value: name,
+					label: name,
+				}));
+				setFilesName(formattedResources);
+			} catch (error) {
+				setToast({ isOpen: true, message: (error as Error).message });
+			} finally {
+				setIsLoadingData(false);
 			}
-
-			const formattedConnections = connections.map((item) => ({
-				value: item.connectionId,
-				label: item.name,
-			}));
-			setConnections(formattedConnections);
-
-			const formattedResources = Object.keys(resources).map((name) => ({
-				value: name,
-				label: name,
-			}));
-			setFilesName(formattedResources);
 		};
+
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const {
@@ -166,6 +171,11 @@ export const ModifyTriggerForm = () => {
 			return updatedData;
 		});
 	};
+
+	if (isLoadingData)
+		return (
+			<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{t("loading")}...</div>
+		);
 
 	return (
 		<div className="min-w-550">

@@ -3,7 +3,7 @@ import { StoreName } from "@enums";
 import { ProjectTabs } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
-import { LoggerService, ProjectsService, EnvironmentsService, VariablesService, TriggersService } from "@services";
+import { LoggerService, ProjectsService, EnvironmentsService, VariablesService } from "@services";
 import { Environment } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
@@ -23,7 +23,6 @@ const defaultState: Omit<
 	| "getProjectsList"
 	| "getProjecEnvironments"
 	| "getProjectVariables"
-	| "getProjectTriggers"
 	| "updateEditorOpenedFiles"
 	| "updateEditorClosedFiles"
 	| "removeProjectFile"
@@ -53,7 +52,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}));
 
 		try {
-			await Promise.all([get().getProjecEnvironments(), get().getProjectVariables(), get().getProjectTriggers()]);
+			await Promise.all([get().getProjecEnvironments(), get().getProjectVariables()]);
 
 			return { error: undefined };
 		} catch (error) {
@@ -174,19 +173,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		set((state) => {
 			state.currentProject.variables = vars!;
-			return state;
-		});
-
-		return { error: undefined };
-	},
-
-	getProjectTriggers: async () => {
-		const { data: triggers, error } = await TriggersService.listByProjectId(get().currentProject.projectId!);
-
-		if (error) return { error };
-
-		set((state) => {
-			state.currentProject.triggers = triggers!;
 			return state;
 		});
 
