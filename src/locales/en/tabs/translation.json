@@ -106,6 +106,7 @@
 			"ariaNameRequired": "Name is required",
 			"ariaValueRequired": "Value is required",
 			"loading": "Loading",
+			"isSicret": "Is sicret",
 			"placeholders": {
 				"name": "Name",
 				"value": "Value"

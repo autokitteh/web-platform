@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { LockFilledIcon } from "@assets/image/icons";
 import { Input, ErrorMessage, Toast, Switch } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,7 +32,7 @@ export const ModifyVariableForm = () => {
 
 		reset({
 			name: currentVar.name,
-			value: currentVar.value,
+			value: currentVar.isSecret ? "" : currentVar.value,
 		});
 		setIsSecret(currentVar.isSecret);
 	};
@@ -96,11 +97,13 @@ export const ModifyVariableForm = () => {
 						aria-label={tForm("placeholders.value")}
 						className={dirtyFields["value"] ? "border-white" : ""}
 						isError={!!errors.value}
-						placeholder={tForm("placeholders.value")}
+						placeholder={isSecret ? "**********" : tForm("placeholders.value")}
 					/>
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
-				<Switch checked={isSecret} label="Is secret?" onChange={setIsSecret} />
+				<div className="flex items-center gap-2" title={tForm("isSicret")}>
+					<Switch checked={isSecret} onChange={setIsSecret} /> <LockFilledIcon className="w-4 h-4 fill-white" />
+				</div>
 			</form>
 			<Toast
 				duration={5}

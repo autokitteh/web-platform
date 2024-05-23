@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
-import { TrashIcon, EditIcon } from "@assets/image/icons";
+import { TrashIcon, EditIcon, LockFilledIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { ModalDeleteVariable } from "@components/organisms/modals";
@@ -126,10 +126,19 @@ export const VariablesContent = () => {
 						</Tr>
 					</THead>
 					<TBody>
-						{sortedVariables.map(({ name, value, scopeId }, idx) => (
+						{sortedVariables.map(({ name, value, scopeId, isSecret }, idx) => (
 							<Tr className="group" key={idx}>
 								<Td className="font-semibold">{name}</Td>
-								<Td>{value}</Td>
+								<Td>
+									{!isSecret ? (
+										value
+									) : (
+										<div className="flex items-center gap-2 leading-none">
+											<LockFilledIcon className="w-3 h-3 fill-white" />
+											<span className="pt-2">**********</span>
+										</div>
+									)}
+								</Td>
 								<Td className="max-w-20">
 									<div className="flex space-x-1">
 										<IconButton
