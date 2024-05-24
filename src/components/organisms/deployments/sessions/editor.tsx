@@ -7,7 +7,7 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
 
-export const SessionTableEditorFrame = ({ session, isSelectedSession, onClose }: SessionTableEditorProps) => {
+export const SessionTableEditorFrame = ({ sessionLog, isSelectedSession, onClose }: SessionTableEditorProps) => {
 	const [editorKey, setEditorKey] = useState(0);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const sessionLogsEditorClass = cn("w-3/5 transition pt-20", {
@@ -38,7 +38,7 @@ export const SessionTableEditorFrame = ({ session, isSelectedSession, onClose }:
 		monaco.editor.setTheme("sessionEditorTheme");
 	};
 
-	const sessionLogValue = session?.map(({ logs }) => logs).join("\n");
+	const sessionLogValue = sessionLog?.map(({ logs }) => logs).join("\n");
 
 	return (
 		<Frame className={sessionLogsEditorClass}>
@@ -50,7 +50,7 @@ export const SessionTableEditorFrame = ({ session, isSelectedSession, onClose }:
 					</IconButton>
 				</div>
 			) : null}
-			{isSelectedSession && session?.length ? (
+			{isSelectedSession && sessionLog?.length ? (
 				<Editor
 					beforeMount={handleEditorWillMount}
 					className="-ml-6"

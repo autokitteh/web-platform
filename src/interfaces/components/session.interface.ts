@@ -6,7 +6,7 @@ export interface SessionTableFilterProps {
 }
 
 export interface SessionTableEditorProps {
-	session?: SessionLogRecord[];
+	sessionLog?: SessionLogRecord[];
 	isSelectedSession: boolean;
 	onClose: () => void;
 }

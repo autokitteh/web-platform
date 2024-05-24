@@ -194,7 +194,7 @@ export const SessionsTable = () => {
 					<div className="mt-10 text-xl font-semibold text-center">{t("noSessions")}</div>
 				)}
 			</Frame>
-			<SessionTableEditorFrame isSelectedSession={!!sessionId} onClose={closeSessionLog} session={sessionLog} />
+			<SessionTableEditorFrame isSelectedSession={!!sessionId} onClose={closeSessionLog} sessionLog={sessionLog} />
 			<ModalDeleteDeploymentSession onDelete={handleRemoveSession} />
 			<Toast
 				duration={5}
