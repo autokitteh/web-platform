@@ -1,7 +1,6 @@
 import React from "react";
-import { LogoCatImage } from "@assets/image";
 import { IconGithub, IconGoogle } from "@assets/image/icons";
-import { Frame, Badge, Button, Icon } from "@components/atoms";
+import { Frame, Badge, Button, Icon, LogoCatLarge } from "@components/atoms";
 import { SignInForm } from "@components/organisms";
 import { AuthWrapper } from "@components/templates";
 import { cn } from "@utilities";
@@ -14,9 +13,9 @@ export const SignIn = () => {
 
 	return (
 		<AuthWrapper>
-			<div className="mt-5 flex justify-between items-center flex-1 gap-20">
-				<div className="text-black m-auto max-w-96">
-					<h1 className="font-semibold text-5xl text-center">{t("welcome")}</h1>
+			<div className="flex items-center justify-between flex-1 gap-20 mt-5">
+				<div className="m-auto text-black max-w-96">
+					<h1 className="text-5xl font-semibold text-center">{t("welcome")}</h1>
 					<Button
 						className={cn(
 							"justify-center hover:bg-green-light text-base font-semibold py-3.5 rounded-full mt-14 border-black"
@@ -34,40 +33,40 @@ export const SignIn = () => {
 						<Icon alt="Google" className="w-7 h-7" src={IconGoogle} /> {t("signUpWithGoogle")}
 					</Button>
 					<div className="flex items-center justify-center my-6 opacity-50">
-						<div className="border-t border-gray-700 flex-grow" />
-						<span className="text-gray-700 mx-3">{t("or")}</span>
-						<div className="border-t border-gray-700 flex-grow" />
+						<div className="flex-grow border-t border-gray-700" />
+						<span className="mx-3 text-gray-700">{t("or")}</span>
+						<div className="flex-grow border-t border-gray-700" />
 					</div>
-					<p className="text-center font-bold mb-4">{t("useYourEmail")}</p>
+					<p className="mb-4 font-bold text-center">{t("useYourEmail")}</p>
 					<SignInForm />
-					<p className="text-center text-xs text-gray-400 mt-3">
+					<p className="mt-3 text-xs text-center text-gray-400">
 						{t("meansAgreement")}{" "}
-						<Link className="hover:text-green-accent underline" to="#">
+						<Link className="underline hover:text-green-accent" to="#">
 							{t("privacyPolicy")}
 						</Link>{" "}
 						{t("and")}{" "}
-						<Link className="hover:text-green-accent underline" to="#">
+						<Link className="underline hover:text-green-accent" to="#">
 							{t("termsOfService")}
 						</Link>
 						.
 					</p>
-					<p className="text-center text-lg text-gray-400 mt-8">
+					<p className="mt-8 text-lg text-center text-gray-400">
 						{t("alreadyHaveAccount")}{" "}
-						<Link className="hover:text-green-accent text-gray-800" to="#">
+						<Link className="text-gray-800 hover:text-green-accent" to="#">
 							{t("signIn")}
 						</Link>
 					</p>
 				</div>
-				<Frame className="w-1/2 relative flex flex-col items-center bg-gray-black-100 h-full pt-52">
-					<h2 className="font-bold text-3xl z-10 text-black">{t("whyDevelopersLove")}</h2>
+				<Frame className="relative flex flex-col items-center w-1/2 h-full bg-gray-black-100 pt-52">
+					<h2 className="z-10 text-3xl font-bold text-black">{t("whyDevelopersLove")}</h2>
 					<div className="flex flex-wrap gap-3.5 mt-8 max-w-485">
 						{benefits.map((name, idx) => (
-							<Badge className="bg-white px-4 py-2 font-normal text-base z-10" key={idx}>
+							<Badge className="z-10 px-4 py-2 text-base font-normal bg-white" key={idx}>
 								{t(name)}
 							</Badge>
 						))}
 					</div>
-					<LogoCatImage className="absolute -bottom-5 -right-5 fill-white" />
+					<LogoCatLarge className="opacity-100 !-bottom-5 !-right-5" />
 				</Frame>
 			</div>
 		</AuthWrapper>

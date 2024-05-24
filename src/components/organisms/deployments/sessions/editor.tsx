@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { LogoCatImage, CatImage } from "@assets/image";
+import { CatImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
-import { Frame, IconButton } from "@components/atoms";
+import { Frame, IconButton, LogoCatLarge } from "@components/atoms";
 import { SessionTableEditorProps } from "@interfaces/components";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { cn } from "@utilities";
@@ -78,12 +78,7 @@ export const SessionTableEditorFrame = ({ session, isSelectedSession, onClose }:
 				</div>
 			)}
 
-			<LogoCatImage
-				className={cn(
-					"absolute fill-white opacity-10 pointer-events-none",
-					"max-w-72 2xl:max-w-80 3xl:max-w-420 -bottom-10 2xl:bottom-7 right-2 2xl:right-7"
-				)}
-			/>
+			<LogoCatLarge />
 		</Frame>
 	);
 };
