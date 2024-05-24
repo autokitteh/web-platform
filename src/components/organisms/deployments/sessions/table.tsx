@@ -136,7 +136,7 @@ export const SessionsTable = () => {
 							{sessions.length} {t("sessionsName")}
 						</div>
 					</div>
-					<SessionsTableFilter onChange={(state) => handleFilterSessions(state)} />
+					<SessionsTableFilter onChange={handleFilterSessions} />
 				</div>
 				{sortedSessions.length ? (
 					<Table className="mt-4">

@@ -38,6 +38,7 @@
 				"sessionId": "Session ID"
 			},
 			"statuses": {
+				"all": "All",
 				"created": "Created",
 				"running": "Running",
 				"stopped": "Stopped",
