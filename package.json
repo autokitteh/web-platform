@@ -24,6 +24,7 @@
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.7.2",
+		"@descope/react-sdk": "^2.0.30",
 		"@hookform/resolvers": "^3.3.4",
 		"@monaco-editor/react": "^4.6.0",
 		"@types/lodash": "^4.14.202",
