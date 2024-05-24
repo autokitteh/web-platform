@@ -14,6 +14,6 @@ export { default as TrashIcon } from "@assets/image/icons/Trash.svg?react";
 export { default as EditIcon } from "@assets/image/icons/Edit.svg?react";
 export { default as ActionActiveIcon } from "@assets/image/icons/ActionActive.svg?react";
 export { default as ActionStoppedIcon } from "@assets/image/icons/ActionStopped.svg?react";
-export { default as LockFilledIcon } from "@assets/image/icons/LockFilled.svg?react";
+export { default as LockClassicIcon } from "@assets/image/icons/LockClassic.svg?react";
 export { default as IconGoogle } from "@assets/image/icons/Google.png";
 export { default as IconGithub } from "@assets/image/icons/Github.png";

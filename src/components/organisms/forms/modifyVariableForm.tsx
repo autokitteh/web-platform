@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LockFilledIcon } from "@assets/image/icons";
+import { LockClassicIcon } from "@assets/image/icons";
 import { Input, ErrorMessage, Toast, Switch } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -102,7 +102,7 @@ export const ModifyVariableForm = () => {
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
 				<div className="flex items-center gap-2" title={tForm("isSicret")}>
-					<Switch checked={isSecret} onChange={setIsSecret} /> <LockFilledIcon className="w-4 h-4 fill-white" />
+					<Switch checked={isSecret} onChange={setIsSecret} /> <LockClassicIcon className="w-4 h-4 fill-white" />
 				</div>
 			</form>
 			<Toast
