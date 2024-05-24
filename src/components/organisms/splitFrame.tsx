@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LogoFrame } from "@assets/image";
+import { LogoCatImage } from "@assets/image";
 import { Frame } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
 import { SplitFrameProps } from "@interfaces/components";
@@ -64,7 +64,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 					<div className="-mx-8 px-8 pt-7 border-0 border-t border-t-gray-600">
 						<OutputTabs />
 					</div>
-					<LogoFrame
+					<LogoCatImage
 						className={cn(
 							"absolute fill-white opacity-10 pointer-events-none",
 							"max-w-72 2xl:max-w-80 3xl:max-w-420 -bottom-10 2xl:bottom-7 right-2 2xl:right-7"

@@ -48,7 +48,7 @@
 		},
 		"buttons": {
 			"back": "Back",
-			"ariaCloseEditor": "Close Editor"
+			"ariaCloseEditor": "Close session log viewer"
 		}
 	}
 }

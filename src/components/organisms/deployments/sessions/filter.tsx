@@ -8,14 +8,14 @@ import { cn } from "@utilities";
 export const SessionsTableFilter = ({ onChange }: SessionTableFilterProps) => {
 	const [activeState, setActiveState] = useState<SessionStateKeyType>();
 
-	const buttonStyle = {
+	const buttonClassText = {
 		[SessionStateType.error]: "text-red",
 		[SessionStateType.completed]: "text-green-accent",
 		[SessionStateType.stopped]: "text-yellow-500",
 	} as const;
 
-	const baseStyle = (state?: keyof typeof buttonStyle) =>
-		cn("w-auto border border-gray-500 px-2.5 py-1.5 rounded-lg text-white", state && buttonStyle[state], {
+	const buttonClass = (state?: keyof typeof buttonClassText) =>
+		cn("w-auto border border-gray-500 px-2.5 py-1.5 rounded-lg text-white", state && buttonClassText[state], {
 			"bg-gray-800 border-white": activeState === state,
 		});
 
@@ -34,12 +34,12 @@ export const SessionsTableFilter = ({ onChange }: SessionTableFilterProps) => {
 
 	return (
 		<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-			<Button className={baseStyle()} onClick={() => handleButtonClick()}>
+			<Button className={buttonClass()} onClick={() => handleButtonClick()}>
 				All
 			</Button>
 			{filteredSessionStates.map((sessionState) => (
 				<Button
-					className={baseStyle(sessionState as keyof typeof buttonStyle)}
+					className={buttonClass(sessionState as keyof typeof buttonClassText)}
 					key={sessionState}
 					onClick={() => handleButtonClick(sessionState)}
 				>

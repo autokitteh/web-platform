@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LogoFrame, CatImage } from "@assets/image";
+import { LogoCatImage, CatImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
 import { Frame, IconButton } from "@components/atoms";
 import { SessionTableEditorProps } from "@interfaces/components";
@@ -7,10 +7,10 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
 
-export const SessionTableEditor = ({ session, isSelectedSession, onClose }: SessionTableEditorProps) => {
+export const SessionTableEditorFrame = ({ session, isSelectedSession, onClose }: SessionTableEditorProps) => {
 	const [editorKey, setEditorKey] = useState(0);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
-	const baseStyle = cn("w-3/5 transition pt-20", {
+	const sessionLogsEditorClass = cn("w-3/5 transition pt-20", {
 		"bg-gray-700 rounded-l-none": !isSelectedSession,
 		"ml-2.5": isSelectedSession,
 	});
@@ -24,7 +24,7 @@ export const SessionTableEditor = ({ session, isSelectedSession, onClose }: Sess
 	}, []);
 
 	const handleEditorWillMount = (monaco: Monaco) => {
-		monaco.editor.defineTheme("myCustomTheme", {
+		monaco.editor.defineTheme("sessionEditorTheme", {
 			base: "vs-dark",
 			inherit: true,
 			rules: [],
@@ -35,18 +35,18 @@ export const SessionTableEditor = ({ session, isSelectedSession, onClose }: Sess
 	};
 
 	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
-		monaco.editor.setTheme("myCustomTheme");
+		monaco.editor.setTheme("sessionEditorTheme");
 	};
 
 	const sessionLogValue = session?.map(({ logs }) => logs).join("\n");
 
 	return (
-		<Frame className={baseStyle}>
+		<Frame className={sessionLogsEditorClass}>
 			{isSelectedSession ? (
-				<div className="font-bold -mt-10 flex justify-between items-center">
+				<div className="flex items-center justify-between -mt-10 font-bold">
 					{t("output")}:
 					<IconButton ariaLabel={t("buttons.ariaCloseEditor")} className="w-7 h-7 p-0.5 bg-gray-700" onClick={onClose}>
-						<Close className="transition w-3 h-3 fill-white" />
+						<Close className="w-3 h-3 transition fill-white" />
 					</IconButton>
 				</div>
 			) : null}
@@ -71,14 +71,14 @@ export const SessionTableEditor = ({ session, isSelectedSession, onClose }: Sess
 				/>
 			) : (
 				<div className="flex flex-col items-center mt-20">
-					<p className="font-bold text-gray-400 text-lg mb-8">
+					<p className="mb-8 text-lg font-bold text-gray-400">
 						{isSelectedSession ? t("noData") : t("noSelectedSession")}
 					</p>
 					<CatImage className="border-b border-gray-400 fill-gray-400" />
 				</div>
 			)}
 
-			<LogoFrame
+			<LogoCatImage
 				className={cn(
 					"absolute fill-white opacity-10 pointer-events-none",
 					"max-w-72 2xl:max-w-80 3xl:max-w-420 -bottom-10 2xl:bottom-7 right-2 2xl:right-7"

@@ -1,5 +1,5 @@
 import React from "react";
-import { LogoFrame } from "@assets/image";
+import { LogoCatImage } from "@assets/image";
 import { IconGithub, IconGoogle } from "@assets/image/icons";
 import { Frame, Badge, Button, Icon } from "@components/atoms";
 import { SignInForm } from "@components/organisms";
@@ -67,7 +67,7 @@ export const SignIn = () => {
 							</Badge>
 						))}
 					</div>
-					<LogoFrame className="absolute -bottom-5 -right-5 fill-white" />
+					<LogoCatImage className="absolute -bottom-5 -right-5 fill-white" />
 				</Frame>
 			</div>
 		</AuthWrapper>

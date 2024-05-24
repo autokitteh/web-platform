@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { SessionsTableState, SessionTableEditor, SessionsTableFilter } from "@components/organisms/deployments";
+import { SessionsTableState, SessionTableEditorFrame, SessionsTableFilter } from "@components/organisms/deployments";
 import { ModalDeleteDeploymentSession } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { SessionLogRecord } from "@models";
@@ -35,11 +35,11 @@ export const SessionsTable = () => {
 		message: "",
 	});
 
-	const baseFrameStyle = cn("pl-7 bg-gray-700 w-3/4 transition-all", {
-		"rounded-r-none": !sessionId,
+	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
+		"w-3/4 rounded-r-none": !sessionId,
 		"w-1/2": sessionId,
 	});
-	const activeBodyRowStyle = (id: string) =>
+	const sessionRowClass = (id: string) =>
 		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === sessionId });
 
 	const fetchSessions = async (stateType?: number) => {
@@ -70,7 +70,7 @@ export const SessionsTable = () => {
 
 	useEffect(() => {
 		fetchSessions();
-	}, [deploymentId]);
+	}, []);
 
 	useEffect(() => {
 		fetchSessionLog();
@@ -105,37 +105,34 @@ export const SessionsTable = () => {
 		fetchSessions();
 	};
 
-	const handleGetSessionLog = useCallback(
-		(sessionId: string) => {
-			navigate(`/projects/${projectId}/deployments/${deploymentId}/${sessionId}`);
-		},
-		[sessionId]
-	);
+	const openSessionLog = useCallback((sessionId: string) => {
+		navigate(`/projects/${projectId}/deployments/${deploymentId}/${sessionId}`);
+	}, []);
 
-	const handleCloseSessionLog = useCallback(() => {
+	const closeSessionLog = useCallback(() => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}`);
-	}, [deploymentId]);
+	}, []);
 
 	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
 		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
 		fetchSessions(selectedSessionStateFilter);
-		handleCloseSessionLog();
+		closeSessionLog();
 	};
 
 	return (
 		<div className="flex h-full">
-			<Frame className={baseFrameStyle}>
+			<Frame className={frameClass}>
 				<div className="flex items-center justify-between gap-2.5">
 					<div className="flex items-center flex-wrap gap-2.5">
 						<IconButton
 							ariaLabel={t("ariaLabelReturnBack")}
-							className="bg-gray-600 hover:bg-black text-white gap-2 min-w-20 text-sm"
+							className="gap-2 text-sm text-white bg-gray-600 hover:bg-black min-w-20"
 							onClick={() => navigate(`/projects/${projectId}/deployments`)}
 						>
 							<ArrowLeft className="h-4" />
 							{t("buttons.back")}
 						</IconButton>
-						<div className="text-gray-300 text-base">
+						<div className="text-base text-gray-300">
 							{sessions.length} {t("sessionsName")}
 						</div>
 					</div>
@@ -145,7 +142,7 @@ export const SessionsTable = () => {
 					<Table className="mt-4">
 						<THead>
 							<Tr>
-								<Th className="cursor-pointer group font-normal" onClick={() => toggleSortSessions("createdAt")}>
+								<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("createdAt")}>
 									{t("table.columns.activationTime")}
 									<SortButton
 										className="opacity-0 group-hover:opacity-100"
@@ -153,7 +150,7 @@ export const SessionsTable = () => {
 										sortDirection={sort.direction}
 									/>
 								</Th>
-								<Th className="cursor-pointer group font-normal" onClick={() => toggleSortSessions("state")}>
+								<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("state")}>
 									{t("table.columns.status")}
 									<SortButton
 										className="opacity-0 group-hover:opacity-100"
@@ -162,7 +159,7 @@ export const SessionsTable = () => {
 									/>
 								</Th>
 								<Th
-									className="cursor-pointer group font-normal border-0"
+									className="font-normal border-0 cursor-pointer group"
 									onClick={() => toggleSortSessions("sessionId")}
 								>
 									{t("table.columns.sessionId")}
@@ -173,16 +170,12 @@ export const SessionsTable = () => {
 									/>
 								</Th>
 
-								<Th className="max-w-12 border-0" />
+								<Th className="border-0 max-w-12" />
 							</Tr>
 						</THead>
 						<TBody className="bg-gray-700">
 							{sortedSessions.map(({ sessionId, createdAt, state }) => (
-								<Tr
-									className={activeBodyRowStyle(sessionId)}
-									key={sessionId}
-									onClick={() => handleGetSessionLog(sessionId)}
-								>
+								<Tr className={sessionRowClass(sessionId)} key={sessionId} onClick={() => openSessionLog(sessionId)}>
 									<Td>{moment(createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
 									<Td className="text-green-accent">
 										<SessionsTableState sessionState={state} />
@@ -190,7 +183,7 @@ export const SessionsTable = () => {
 									<Td className="border-r-0">{sessionId}</Td>
 									<Td className="max-w-12 border-0 pr-1.5 justify-end">
 										<IconButton onClick={showDeleteModal}>
-											<TrashIcon className="fill-white w-3 h-3" />
+											<TrashIcon className="w-3 h-3 fill-white" />
 										</IconButton>
 									</Td>
 								</Tr>
@@ -198,10 +191,10 @@ export const SessionsTable = () => {
 						</TBody>
 					</Table>
 				) : (
-					<div className="mt-10 font-semibold text-xl text-center">{t("noSessions")}</div>
+					<div className="mt-10 text-xl font-semibold text-center">{t("noSessions")}</div>
 				)}
 			</Frame>
-			<SessionTableEditor isSelectedSession={!!sessionId} onClose={handleCloseSessionLog} session={sessionLog} />
+			<SessionTableEditorFrame isSelectedSession={!!sessionId} onClose={closeSessionLog} session={sessionLog} />
 			<ModalDeleteDeploymentSession onDelete={handleRemoveSession} />
 			<Toast
 				duration={5}

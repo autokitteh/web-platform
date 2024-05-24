@@ -11,11 +11,11 @@ export const SessionsTableState = ({ sessionState }: { sessionState: SessionStat
 		[SessionState.completed]: "text-green-accent",
 		[SessionState.unspecified]: "text-blue-500",
 	};
-	const baseClass = sessionsTableStateStyle[sessionState];
+	const sessionStateClass = sessionsTableStateStyle[sessionState];
 	const status = i18n.t(`sessions.table.statuses.${SessionState[sessionState]}`, { ns: "deployments" });
 
 	return (
-		<div aria-label={status} className={baseClass} role="status">
+		<div aria-label={status} className={sessionStateClass} role="status">
 			{status}
 		</div>
 	);
