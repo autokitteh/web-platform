@@ -71,7 +71,7 @@ export const ModifyVariableForm = () => {
 	};
 
 	return isLoadingData ? (
-		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{tForm("loading")}...</div>
+		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{tForm("loading")}...</div>
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader
@@ -101,7 +101,7 @@ export const ModifyVariableForm = () => {
 					/>
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
-				<div className="flex items-center gap-2" title={tForm("isSicret")}>
+				<div className="flex items-center gap-2" title={tForm("isSecret")}>
 					<Switch checked={isSecret} onChange={setIsSecret} /> <LockClassicIcon className="w-4 h-4 fill-white" />
 				</div>
 			</form>
