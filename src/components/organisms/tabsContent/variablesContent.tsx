@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
-import { TrashIcon, EditIcon, LockClassicIcon } from "@assets/image/icons";
+import { TrashIcon, EditIcon, LockSolid } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { ModalDeleteVariable } from "@components/organisms/modals";
@@ -134,7 +134,7 @@ export const VariablesContent = () => {
 										value
 									) : (
 										<div className="flex items-center gap-2 leading-none">
-											<LockClassicIcon className="w-3 h-3 fill-white" />
+											<LockSolid className="w-3 h-3 fill-white" />
 											<span className="pt-2">**********</span>
 										</div>
 									)}
