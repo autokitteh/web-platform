@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LockSolid } from "@assets/image/icons";
-import { Input, ErrorMessage, Toast, Switch } from "@components/atoms";
+import { Input, ErrorMessage, Toast, Toggle } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
@@ -82,7 +82,7 @@ export const AddVariableForm = () => {
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
 				<div className="flex items-center gap-2" title={tForm("isSecret")}>
-					<Switch checked={isSecret} onChange={setIsSecret} /> <LockSolid className="w-4 h-4 fill-white" />
+					<Toggle checked={isSecret} onChange={setIsSecret} /> <LockSolid className="w-4 h-4 fill-white" />
 				</div>
 			</form>
 			<Toast

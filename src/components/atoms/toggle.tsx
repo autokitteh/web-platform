@@ -1,8 +1,8 @@
 import React from "react";
-import { SwitchProps } from "@interfaces/components";
+import { ToggleProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Switch = ({ label, checked, onChange }: SwitchProps) => {
+export const Toggle = ({ label, checked, onChange }: ToggleProps) => {
 	const baseStyle = cn(
 		"relative w-10 h-5 bg-gray-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-gray-300",
 		"after:content-[''] peer-checked:bg-green-accent after:absolute",

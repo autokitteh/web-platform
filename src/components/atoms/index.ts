@@ -12,5 +12,5 @@ export { Textarea } from "@components/atoms/textarea";
 export { Toast } from "@components/atoms/toast";
 export { ErrorMessage } from "@components/atoms/errorMessage";
 export { Spinner } from "@components/atoms/spinner";
-export { Switch } from "@components/atoms/switch";
+export { Toggle } from "@components/atoms/toggle";
 export { LogoCatLarge } from "@components/atoms/logoCatLarge";
