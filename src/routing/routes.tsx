@@ -1,7 +1,5 @@
 import React, { ReactElement } from "react";
 import {
-	Home,
-	SignIn,
 	NewConnection,
 	NewTrigger,
 	ModifyTrigger,
@@ -10,6 +8,7 @@ import {
 	Project,
 	Deployments,
 	Sessions,
+	Dashboard,
 } from "@components/pages";
 import { SidebarHrefMenu } from "@enums/components";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
@@ -17,11 +16,7 @@ import { createBrowserRouter, RouteObject } from "react-router-dom";
 export const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <Home />,
-	},
-	{
-		path: "signin",
-		element: <SignIn />,
+		element: <Dashboard />,
 	},
 	{
 		path: `/${SidebarHrefMenu.projects}/:projectId`,

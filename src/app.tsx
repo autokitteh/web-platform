@@ -1,8 +1,9 @@
 import React from "react";
-import { useCallback } from "react";
 import { AuthProvider } from "@descope/react-sdk";
-import { useDescope, useSession, useUser } from "@descope/react-sdk";
+import { useSession, useUser } from "@descope/react-sdk";
 import { Descope } from "@descope/react-sdk";
+import { router } from "@routing/routes";
+import { RouterProvider } from "react-router-dom";
 
 export const App = () => {
 	return (
@@ -17,16 +18,7 @@ const AppContainer = () => {
 	const { isUserLoading } = useUser();
 
 	return (
-		<div
-			style={{
-				margin: "5vw",
-				width: "90vw",
-				display: "flex",
-				flexDirection: "column",
-				alignItems: "flex-start",
-				justifyContent: "center",
-			}}
-		>
+		<div>
 			{!isAuthenticated ? (
 				<Descope
 					flowId="sign-up-or-in"
@@ -37,30 +29,7 @@ const AppContainer = () => {
 
 			{isSessionLoading || isUserLoading ? <p>Loading...</p> : null}
 
-			{!isUserLoading && isAuthenticated ? <LoggedIn /> : null}
+			{!isUserLoading && isAuthenticated ? <RouterProvider router={router} /> : null}
 		</div>
-	);
-};
-
-const LoggedIn = () => {
-	const { logout } = useDescope();
-	const { user } = useUser();
-
-	const handleLogout = useCallback(() => {
-		logout();
-	}, [logout]);
-
-	return (
-		<>
-			<h1 className="text-black">Unit Test</h1>
-			<p className="text-black">
-				{"For " + user.givenName + "s"}
-				<br />
-				{"Logged in user: " + user.email}
-			</p>
-			<button className="text-black" onClick={handleLogout}>
-				Logout
-			</button>
-		</>
 	);
 };
