@@ -8,6 +8,7 @@
 	"historyNoOutput": "No output",
 	"historyPrint": "Print",
 	"buildInfoFetchFailedForBuild": "Couldn't fetch build info for build {{buildId}}, error: {{error}}",
+	"tokenFetchFailed": "Token authentication failed",
 	"buildProjectError": "Couldn't build project {{projectId}}, error: {{error}}",
 	"projectNotCreated": "There was an issue creating the project",
 	"projectNotFound": "Couldn't fetch the project details",

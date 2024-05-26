@@ -19,13 +19,7 @@ const AppContainer = () => {
 
 	return (
 		<div>
-			{!isAuthenticated ? (
-				<Descope
-					flowId="sign-up-or-in"
-					onError={() => console.log("Could not log in!")}
-					onSuccess={() => console.log("Logged in!")}
-				/>
-			) : null}
+			{!isAuthenticated ? <Descope flowId="sign-up-or-in" onError={() => console.log("Could not log in!")} /> : null}
 
 			{isSessionLoading || isUserLoading ? <p>Loading...</p> : null}
 

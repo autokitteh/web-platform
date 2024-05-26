@@ -1,14 +1,29 @@
 import React, { useCallback } from "react";
 import { AppWrapper } from "@components/templates";
-import { useDescope, useUser } from "@descope/react-sdk";
+import { useDescope, useSession, useUser } from "@descope/react-sdk";
+import axios from "axios";
 
 export const Dashboard = () => {
 	const { logout } = useDescope();
-	const { user } = useUser();
 
 	const handleLogout = useCallback(() => {
 		logout();
 	}, [logout]);
+
+	const { sessionToken } = useSession();
+	const { user } = useUser();
+
+	console.log("Logged in!", user);
+	console.log("Logged in!", sessionToken);
+
+	axios
+		.get(`http://localhost:9980/auth/descope/login?jwt=${sessionToken}`, {})
+		.then((response) => {
+			console.log("Response", response.data);
+		})
+		.catch((error) => {
+			console.log("Error", error);
+		});
 
 	return (
 		<AppWrapper>

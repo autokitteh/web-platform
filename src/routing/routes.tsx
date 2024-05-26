@@ -9,6 +9,7 @@ import {
 	Deployments,
 	Sessions,
 	Dashboard,
+	Logout,
 } from "@components/pages";
 import { SidebarHrefMenu } from "@enums/components";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Dashboard />,
+	},
+	{
+		path: "/logout",
+		element: <Logout />,
 	},
 	{
 		path: `/${SidebarHrefMenu.projects}/:projectId`,
