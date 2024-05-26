@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Input, ErrorMessage, Toast } from "@components/atoms";
+import { LockSolid } from "@assets/image/icons";
+import { Input, ErrorMessage, Toast, Switch } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
@@ -20,6 +21,7 @@ export const ModifyVariableForm = () => {
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [isSecret, setIsSecret] = useState(false);
 
 	const fetchVariable = async () => {
 		const { data: currentVar, error } = await VariablesService.get(environmentId!, variableName!);
@@ -30,8 +32,9 @@ export const ModifyVariableForm = () => {
 
 		reset({
 			name: currentVar.name,
-			value: currentVar.value,
+			value: currentVar.isSecret ? "" : currentVar.value,
 		});
+		setIsSecret(currentVar.isSecret);
 	};
 
 	useEffect(() => {
@@ -59,7 +62,7 @@ export const ModifyVariableForm = () => {
 			scopeId: "",
 			name,
 			value,
-			isSecret: false,
+			isSecret,
 		});
 
 		if (error) setToast({ isOpen: true, message: (error as Error).message });
@@ -68,7 +71,7 @@ export const ModifyVariableForm = () => {
 	};
 
 	return isLoadingData ? (
-		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{tForm("loading")}...</div>
+		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{tForm("loading")}...</div>
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader
@@ -94,9 +97,12 @@ export const ModifyVariableForm = () => {
 						aria-label={tForm("placeholders.value")}
 						className={dirtyFields["value"] ? "border-white" : ""}
 						isError={!!errors.value}
-						placeholder={tForm("placeholders.value")}
+						placeholder={isSecret ? "**********" : tForm("placeholders.value")}
 					/>
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
+				</div>
+				<div className="flex items-center gap-2" title={tForm("isSecret")}>
+					<Switch checked={isSecret} onChange={setIsSecret} /> <LockSolid className="w-4 h-4 fill-white" />
 				</div>
 			</form>
 			<Toast
