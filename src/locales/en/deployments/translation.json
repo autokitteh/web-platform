@@ -38,6 +38,7 @@
 				"sessionId": "Session ID"
 			},
 			"statuses": {
+				"all": "All",
 				"created": "Created",
 				"running": "Running",
 				"stopped": "Stopped",
@@ -47,7 +48,8 @@
 			}
 		},
 		"buttons": {
-			"back": "Back"
+			"back": "Back",
+			"ariaCloseEditor": "Close session log viewer"
 		}
 	}
 }

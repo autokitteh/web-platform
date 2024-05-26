@@ -1,3 +1,6 @@
+import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions/v1/session_pb";
+import { SessionStateType } from "@enums";
+
 export type Session = {
 	sessionId: string;
 	deploymentId: string;
@@ -22,3 +25,9 @@ export type SessionEntrypoint = {
 export type Callstack = {
 	location: SessionEntrypoint;
 };
+
+export type SessionFilter = {
+	stateType?: ProtoSessionStateType;
+};
+
+export type SessionStateKeyType = keyof typeof SessionStateType;

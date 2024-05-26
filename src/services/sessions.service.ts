@@ -8,7 +8,7 @@ import { namespaces } from "@constants";
 import { SessionLogRecord, convertSessionProtoToModel } from "@models";
 import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse, StartSessionArgsType } from "@type";
-import { Session } from "@type/models";
+import { Session, SessionFilter } from "@type/models";
 import { flattenArray } from "@utilities";
 import i18n from "i18next";
 import { get } from "lodash";
@@ -25,9 +25,9 @@ export class SessionsService {
 		}
 	}
 
-	static async listByDeploymentId(deploymentId: string): Promise<ServiceResponse<Session[]>> {
+	static async listByDeploymentId(deploymentId: string, filter?: SessionFilter): Promise<ServiceResponse<Session[]>> {
 		try {
-			const { sessions: sessionsResponse } = await sessionsClient.list({ deploymentId });
+			const { sessions: sessionsResponse } = await sessionsClient.list({ deploymentId, stateType: filter?.stateType });
 			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
 			return { data: sessions, error: undefined };
 		} catch (error) {

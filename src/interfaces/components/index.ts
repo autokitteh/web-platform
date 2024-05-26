@@ -35,3 +35,5 @@ export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
 export type { SwitchProps } from "@interfaces/components/switch.interface";
+export type { SessionTableFilterProps, SessionTableEditorProps } from "@interfaces/components/session.interface";
+export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
