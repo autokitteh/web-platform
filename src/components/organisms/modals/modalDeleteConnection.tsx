@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@components/atoms";
+import { Button, Spinner } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { ModalName } from "@enums/components";
 import { ModalDeleteConnectionProps } from "@interfaces/components";
@@ -8,7 +8,7 @@ import { useModalStore } from "@store";
 import { Connection } from "@type/models";
 import { Trans, useTranslation } from "react-i18next";
 
-export const ModalDeleteConnection = ({ onDelete, connectionId }: ModalDeleteConnectionProps) => {
+export const ModalDeleteConnection = ({ onDelete, connectionId, loading }: ModalDeleteConnectionProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });
 	const { closeModal } = useModalStore();
 	const [connection, setConnection] = useState<Connection>();
@@ -43,12 +43,18 @@ export const ModalDeleteConnection = ({ onDelete, connectionId }: ModalDeleteCon
 			<div className="flex justify-end gap-1 mt-14">
 				<Button
 					className="w-auto px-4 py-3 font-semibold hover:text-white"
+					disabled={loading}
 					onClick={() => closeModal(ModalName.deleteConnection)}
 				>
 					{t("cancelButton")}
 				</Button>
-				<Button className="w-auto px-4 py-3 font-semibold bg-gray-700" onClick={onDelete} variant="filled">
-					{t("deleteButton")}
+				<Button
+					className="w-auto px-4 py-3 font-semibold bg-gray-700"
+					disabled={loading}
+					onClick={onDelete}
+					variant="filled"
+				>
+					{loading ? <Spinner /> : null} {t("deleteButton")}
 				</Button>
 			</div>
 		</Modal>

@@ -21,6 +21,7 @@ export const ConnectionsContent = () => {
 	const { projectId } = useParams();
 
 	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingDeleteConnection, setIsLoadingDeleteConnection] = useState(false);
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Connection;
@@ -73,8 +74,9 @@ export const ConnectionsContent = () => {
 
 	const handleDeleteConnection = async () => {
 		if (!connectionId) return;
-
+		setIsLoadingDeleteConnection(true);
 		const { error } = await ConnectionService.delete(connectionId);
+		setIsLoadingDeleteConnection(false);
 		closeModal(ModalName.deleteConnection);
 		if (error) {
 			setToast({ isOpen: true, message: tError("connectionRemoveFailed") });
@@ -171,7 +173,13 @@ export const ConnectionsContent = () => {
 			) : (
 				<div className="mt-10 text-xl font-semibold text-center text-gray-300">{t("titleNoAvailable")}</div>
 			)}
-			{connectionId ? <ModalDeleteConnection connectionId={connectionId} onDelete={handleDeleteConnection} /> : null}
+			{connectionId ? (
+				<ModalDeleteConnection
+					connectionId={connectionId}
+					loading={isLoadingDeleteConnection}
+					onDelete={handleDeleteConnection}
+				/>
+			) : null}
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
