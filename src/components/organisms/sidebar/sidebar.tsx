@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IconLogo, IconLogoName } from "@assets/image";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { SubmenuInfo } from "@interfaces/components";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
+	const location = useLocation();
 
 	const handleMouseLeave = () => {
 		setIsOpen(false);
 		setSubmenuInfo({ submenu: undefined, top: 0 });
 	};
+
+	useEffect(() => {
+		setIsOpen(false);
+	}, [location.pathname]);
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
