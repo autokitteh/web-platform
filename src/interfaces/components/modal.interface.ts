@@ -38,6 +38,6 @@ export interface ModalDeleteDeploymentSessionProps {
 }
 
 export interface ModalDeleteConnectionProps {
-	connectionId?: string;
-	onDelete?: () => void;
+	connectionId: string;
+	onDelete: () => void;
 }

@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useCallback, useState } from "react";
 import { PlusCircle } from "@assets/image";
-import { EditIcon, TrashIcon, LinkIcon, TestIcon } from "@assets/image/icons";
+import { TrashIcon, LinkIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
-import { SortButton, ConnectionTableState } from "@components/molecules";
+import { SortButton, ConnectionTableStatus } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
 import { baseUrl } from "@constants";
 import { ModalName, SortDirectionVariant } from "@enums/components";
@@ -38,7 +38,7 @@ export const ConnectionsContent = () => {
 			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
 			if (error) throw error;
 			if (!connections) return;
-			console.log(connections);
+
 			setConnections(connections);
 		} catch (err) {
 			setToast({ isOpen: true, message: (err as Error).message });
@@ -49,7 +49,7 @@ export const ConnectionsContent = () => {
 
 	useEffect(() => {
 		fetchConnections();
-	}, []);
+	}, [projectId]);
 
 	const toggleSortConnections = (key: keyof Connection) => {
 		const newDirection =
@@ -83,16 +83,13 @@ export const ConnectionsContent = () => {
 		fetchConnections();
 	};
 
+	//Should take us to the ModifyConnectionPage - to initialize it from there (for example for GitHub: PAT/OAuth)
 	const handleConnectionInitClick = useCallback((url: string) => {
 		window.open(`${baseUrl}/${url}`, "_blank");
 	}, []);
 
-	const handleConnectionTestClick = useCallback((url: string) => {
-		window.open(`${baseUrl}/${url}`, "_blank");
-	}, []);
-
 	return isLoading ? (
-		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
 			{t("buttons.loading")}...
 		</div>
 	) : (
@@ -100,10 +97,10 @@ export const ConnectionsContent = () => {
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
-					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
+					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
 					href="add-new-connection"
 				>
-					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+					<PlusCircle className="w-5 h-5 duration-300 transtion stroke-gray-300 group-hover:stroke-white" />
 					{t("buttons.addNew")}
 				</Button>
 			</div>
@@ -111,7 +108,7 @@ export const ConnectionsContent = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("name")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortConnections("name")}>
 								{t("table.columns.name")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -119,7 +116,7 @@ export const ConnectionsContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("integrationName")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortConnections("integrationName")}>
 								{t("table.columns.app")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -127,7 +124,7 @@ export const ConnectionsContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal max-w-32" onClick={() => toggleSortConnections("status")}>
+							<Th className="font-normal cursor-pointer group max-w-32" onClick={() => toggleSortConnections("status")}>
 								{t("table.columns.status")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -135,47 +132,35 @@ export const ConnectionsContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal">{t("table.columns.information")}</Th>
-							<Th className="text-right font-normal max-w-36">{t("table.columns.actions")}</Th>
+							<Th className="font-normal cursor-pointer group">{t("table.columns.information")}</Th>
+							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 					<TBody>
-						{sortedConnections.map(({ name, integrationName, status, connectionId, initLink, testLink }) => (
+						{sortedConnections.map(({ name, integrationName, status, statusInfoMessage, connectionId, initUrl }) => (
 							<Tr className="group" key={connectionId}>
 								<Td className="font-semibold">{name}</Td>
 								<Td>{integrationName}</Td>
-								<Td className="max-w-32">{status ? <ConnectionTableState connectnionState={status.code} /> : null}</Td>
-								<Td>{status ? status.message : null}</Td>
-								<Td className="max-w-36">
+								<Td className="max-w-32">
+									<ConnectionTableStatus status={status} />
+								</Td>
+								<Td>{statusInfoMessage}</Td>
+								<Td className="max-w-20">
 									<div className="flex space-x-1">
-										<IconButton
-											ariaLabel={t("table.buttons.titleTestConnection")}
-											className="p-1.5"
-											onClick={() => handleConnectionTestClick(testLink)}
-											title={t("table.buttons.titleTestConnection")}
-										>
-											<TestIcon className="fill-white w-4 h-4" />
-										</IconButton>
 										<IconButton
 											ariaLabel={t("table.buttons.titleInitConnection")}
 											className="p-1.5"
-											onClick={() => handleConnectionInitClick(initLink)}
+											onClick={() => handleConnectionInitClick(initUrl)}
 											title={t("table.buttons.titleInitConnection")}
 										>
-											<LinkIcon className="fill-white w-4 h-4" />
-										</IconButton>
-										<IconButton
-											ariaLabel={t("table.buttons.ariaModifyConnection", { name })}
-											title={t("table.buttons.titleEditConnection")}
-										>
-											<EditIcon className="fill-white w-3 h-3" />
+											<LinkIcon className="w-4 h-4 fill-white" />
 										</IconButton>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
 											onClick={() => handleOpenModalDeleteConnection(connectionId)}
 											title={t("table.buttons.titleRemoveConnection")}
 										>
-											<TrashIcon className="fill-white w-3 h-3" />
+											<TrashIcon className="w-3 h-3 fill-white" />
 										</IconButton>
 									</div>
 								</Td>
@@ -184,9 +169,9 @@ export const ConnectionsContent = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-gray-300 font-semibold text-xl text-center">{t("titleNoAvailable")}</div>
+				<div className="mt-10 text-xl font-semibold text-center text-gray-300">{t("titleNoAvailable")}</div>
 			)}
-			<ModalDeleteConnection connectionId={connectionId} onDelete={handleDeleteConnection} />
+			{connectionId ? <ModalDeleteConnection connectionId={connectionId} onDelete={handleDeleteConnection} /> : null}
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}

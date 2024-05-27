@@ -13,9 +13,27 @@ export class ConnectionService {
 			if (!connection) {
 				LoggerService.error(namespaces.triggerService, i18n.t("connectionNotFound", { ns: "services" }));
 
-				return { data: undefined, error: i18n.t("connectionNotFound", { ns: "services" }) };
+				return { data: undefined, error: new Error(i18n.t("connectionNotFound", { ns: "services" })) };
 			}
-			return { data: convertConnectionProtoToModel(connection), error: undefined };
+			const { integrations } = await integrationsClient.list({});
+			if (!integrations) {
+				const errorMessage = i18n.t("intergrationsNotFoundExtended", {
+					projectId: connection.projectId,
+					ns: "services",
+				});
+				LoggerService.error(namespaces.triggerService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const convertedConnection = convertConnectionProtoToModel(connection);
+			const integration = integrations.find((integration) => integration.integrationId === connection.integrationId);
+			convertedConnection.integrationName = integration?.displayName;
+
+			return { data: convertedConnection, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.connectionService, (error as Error).message);
 			return { data: undefined, error };
@@ -28,20 +46,18 @@ export class ConnectionService {
 			if (!connections) {
 				LoggerService.error(namespaces.triggerService, i18n.t("connectionNotFound", { ns: "services" }));
 
-				return { data: undefined, error: i18n.t("connectionNotFound", { ns: "services" }) };
+				return { data: undefined, error: new Error(i18n.t("connectionNotFound", { ns: "services" })) };
 			}
 
 			const convertedConnections = connections.map(convertConnectionProtoToModel);
 			const { integrations } = await integrationsClient.list({});
 			if (!integrations) {
-				LoggerService.error(
-					namespaces.triggerService,
-					i18n.t("intergrationsNotFoundExtended", { projectId, ns: "services" })
-				);
+				const errorMessage = i18n.t("intergrationsNotFoundExtended", { projectId, ns: "services" });
+				LoggerService.error(namespaces.triggerService, errorMessage);
 
 				return {
 					data: undefined,
-					error: { message: i18n.t("intergrationsNotFoundExtended", { projectId, ns: "services" }) },
+					error: new Error(errorMessage),
 				};
 			}
 			convertedConnections.map((connection) => {

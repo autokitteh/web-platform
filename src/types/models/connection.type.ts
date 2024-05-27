@@ -1,14 +1,13 @@
-type ConnectionStatus = {
-	code: number;
-	message: string;
-};
+import { ConnectionStatus } from "@enums";
+
+export type ConnectionStatusType = keyof typeof ConnectionStatus;
 
 export type Connection = {
 	connectionId: string;
 	name: string;
-	initLink: string;
-	testLink: string;
+	initUrl: string;
 	integrationId?: string;
 	integrationName?: string;
-	status?: ConnectionStatus;
+	status: ConnectionStatusType;
+	statusInfoMessage: string;
 };

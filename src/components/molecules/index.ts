@@ -4,4 +4,4 @@ export { SortButton } from "@components/molecules/sortButton";
 export { Modal } from "@components/molecules/modal";
 export { MapMenu } from "@components/molecules/mapMenu";
 export { TabFormHeader } from "@components/molecules/tabFormHeader";
-export { ConnectionTableState } from "@components/molecules/connectionTableState";
+export { ConnectionTableStatus } from "@components/molecules/connectionTableStatus";

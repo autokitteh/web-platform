@@ -27,13 +27,13 @@ export const ModalDeleteConnection = ({ onDelete, connectionId }: ModalDeleteCon
 	return (
 		<Modal name={ModalName.deleteConnection}>
 			<div className="mx-6">
-				<h3 className="text-xl font-bold mb-5">{t("title", { name: connection?.name })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title", { name: connection?.name })}</h3>
 				<p>{t("line")}</p>
 				<p className="font-medium">
 					<Trans>
 						{t("line2", {
 							name: `<strong>${connection?.name}</strong><br/>`,
-							appName: `<strong>${connection?.name}</strong><br/>`,
+							appName: `<strong>${connection?.integrationName}</strong><br/>`,
 						})}
 					</Trans>
 				</p>
@@ -42,12 +42,12 @@ export const ModalDeleteConnection = ({ onDelete, connectionId }: ModalDeleteCon
 			</div>
 			<div className="flex justify-end gap-1 mt-14">
 				<Button
-					className="font-semibold py-3 px-4 hover:text-white w-auto"
+					className="w-auto px-4 py-3 font-semibold hover:text-white"
 					onClick={() => closeModal(ModalName.deleteConnection)}
 				>
 					{t("cancelButton")}
 				</Button>
-				<Button className="font-semibold py-3 px-4 bg-gray-700 w-auto" onClick={onDelete} variant="filled">
+				<Button className="w-auto px-4 py-3 font-semibold bg-gray-700" onClick={onDelete} variant="filled">
 					{t("deleteButton")}
 				</Button>
 			</div>
