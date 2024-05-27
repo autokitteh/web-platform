@@ -2,16 +2,14 @@ import React, { useEffect, useMemo, useCallback, useState } from "react";
 import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
-import { SortButton } from "@components/molecules";
+import { SortButton, ConnectionTableState } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
-import { TabConnection } from "@interfaces/components";
 import { ConnectionService } from "@services";
 import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Connection } from "@type/models";
 import { orderBy } from "lodash";
-import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -24,8 +22,8 @@ export const ConnectionsContent = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
-		column: Exclude<keyof TabConnection, "id">;
-	}>({ direction: SortDirectionVariant.ASC, column: "lastTested" });
+		column: keyof Connection;
+	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [connections, setConnections] = useState<Connection[]>([]);
 	const [connectionId, setConnectionId] = useState<string>();
 	const [toast, setToast] = useState({
@@ -39,7 +37,7 @@ export const ConnectionsContent = () => {
 			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
 			if (error) throw error;
 			if (!connections) return;
-
+			console.log(connections);
 			setConnections(connections);
 		} catch (err) {
 			setToast({ isOpen: true, message: (err as Error).message });
@@ -52,7 +50,7 @@ export const ConnectionsContent = () => {
 		fetchConnections();
 	}, []);
 
-	const toggleSortConnections = (key: Exclude<keyof TabConnection, "id">) => {
+	const toggleSortConnections = (key: keyof Connection) => {
 		const newDirection =
 			sort.column === key && sort.direction === SortDirectionVariant.ASC
 				? SortDirectionVariant.DESC
@@ -112,40 +110,34 @@ export const ConnectionsContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("platform")}>
+							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("integrationName")}>
 								{t("table.columns.app")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"platform" === sort.column}
+									isActive={"integrationName" === sort.column}
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("user")}>
-								{t("table.columns.user")}
+							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("status")}>
+								{t("table.columns.status")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"user" === sort.column}
+									isActive={"status" === sort.column}
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="pr-6 cursor-pointer group font-normal" onClick={() => toggleSortConnections("lastTested")}>
-								{t("table.columns.lastTested")}
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"lastTested" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
-							<Th className="text-right font-normal max-w-20">Actions</Th>
+							<Th className="text-right font-normal max-w-20">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 					<TBody>
-						{sortedConnections.map(({ name, connectionId }) => (
+						{sortedConnections.map(({ name, integrationName, status, connectionId }) => (
 							<Tr className="group" key={connectionId}>
 								<Td className="font-semibold">{name}</Td>
-								<Td>{connectionId}</Td>
-								<Td>{connectionId}</Td>
-								<Td className="text-xs pr-6">{moment(connectionId).fromNow()}</Td>
+								<Td>{integrationName}</Td>
+								<Td>
+									{status ? <ConnectionTableState connectnionState={status.code} /> : null}
+									{status ? <span className="text-xs">{status.message}</span> : null}
+								</Td>
 								<Td className="max-w-20">
 									<div className="flex space-x-1">
 										<IconButton ariaLabel={t("table.buttons.ariaModifyConnection", { name })}>

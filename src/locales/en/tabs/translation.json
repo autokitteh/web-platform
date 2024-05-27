@@ -26,12 +26,18 @@
 			"columns": {
 				"name": "Name",
 				"app": "App",
-				"user": "User",
-				"lastTested": "Last tested"
+				"status": "Status",
+				"actions": "Actions"
 			},
 			"buttons": {
 				"ariaModifyConnection": "Modify {{name}} connection",
 				"ariaDeleteConnection": "Delete {{name}} connection"
+			},
+			"statuses": {
+				"unspecified": "Unspecified",
+				"ok": "OK",
+				"warning": "Warning",
+				"error": "Error"
 			}
 		},
 		"form": {
@@ -59,11 +65,10 @@
 			"columns": {
 				"name": "Name",
 				"connection": "Connection",
-				"fileName": "File name",
-				"entrypoint": "Entry Point",
-				"eventType": "Event Type",
 				"call": "Call",
-				"filter": "Filter"
+				"eventType": "Event Type",
+				"filter": "Filter",
+				"actions": "Actions"
 			},
 			"buttons": {
 				"modify": "Modify",
@@ -105,7 +110,8 @@
 		"table": {
 			"columns": {
 				"name": "Name",
-				"value": "Value"
+				"value": "Value",
+				"actions": "Actions"
 			},
 			"buttons": {
 				"modify": "Modify",

@@ -1,4 +1,4 @@
-import { connectionsClient } from "@api/grpc/clients.grpc.api";
+import { connectionsClient, integrationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
 import { LoggerService } from "@services";
@@ -31,7 +31,18 @@ export class ConnectionService {
 				return { data: undefined, error: i18n.t("connectionNotFound", { ns: "services" }) };
 			}
 
-			const convertedConnections = connections.map((connection) => convertConnectionProtoToModel(connection));
+			const convertedConnections = connections.map(convertConnectionProtoToModel);
+			const integrationsList = await integrationsClient.list({});
+
+			convertedConnections.map((connection) => {
+				const integration = integrationsList.integrations.find(
+					(integration) => integration.integrationId === connection.integrationId
+				);
+				if (integration) {
+					connection.integrationName = integration.displayName;
+				}
+			});
+
 			return { data: convertedConnections, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.projectService, (error as Error).message);

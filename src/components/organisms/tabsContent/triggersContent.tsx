@@ -143,7 +143,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="text-right font-normal max-w-20">Actions</Th>
+							<Th className="text-right font-normal max-w-20">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 					<TBody>
