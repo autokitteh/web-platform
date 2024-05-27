@@ -1,130 +1,168 @@
-import React, { useState } from "react";
-import { PlusCircle, ThreeDots, InfoIcon, TestS } from "@assets/image";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
-import { SortButton, DropdownButton, TableConnectionInfo, TableConnectionAction } from "@components/molecules";
+import React, { useEffect, useMemo, useState } from "react";
+import { PlusCircle, InfoIcon } from "@assets/image";
+import { EditIcon, TrashIcon } from "@assets/image/icons";
+import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
+import { SortButton, DropdownButton, TableConnectionInfo } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
-import { connectionsData } from "@constants/lists";
 import { ModalName, SortDirectionVariant } from "@enums/components";
-import { ConnectionsContentProps, TabConnection } from "@interfaces/components";
+import { TabConnection } from "@interfaces/components";
+import { ConnectionService } from "@services";
 import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
-import { cn } from "@utilities";
+import { Connection } from "@type/models";
 import { orderBy } from "lodash";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
-export const ConnectionsContent = ({ className }: ConnectionsContentProps) => {
+export const ConnectionsContent = () => {
+	const { t: tError } = useTranslation("errors");
+	const { t } = useTranslation("tabs", { keyPrefix: "connections" });
 	const { openModal } = useModalStore();
+	const { projectId } = useParams();
+
+	const [isLoading, setIsLoading] = useState(false);
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: Exclude<keyof TabConnection, "id">;
 	}>({ direction: SortDirectionVariant.ASC, column: "lastTested" });
-	const [connections, setConnections] = useState(connectionsData);
+	const [connections, setConnections] = useState<Connection[]>([]);
+	const [toast, setToast] = useState({
+		isOpen: false,
+		message: "",
+	});
 
-	const baseStyle = cn("pt-14", className);
+	const fetchConnections = async () => {
+		setIsLoading(true);
+		try {
+			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
+			if (error) throw error;
+			if (!connections) return;
+
+			setConnections(connections);
+		} catch (err) {
+			setToast({ isOpen: true, message: (err as Error).message });
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchConnections();
+	}, []);
 
 	const toggleSortConnections = (key: Exclude<keyof TabConnection, "id">) => {
 		const newDirection =
 			sort.column === key && sort.direction === SortDirectionVariant.ASC
 				? SortDirectionVariant.DESC
 				: SortDirectionVariant.ASC;
-
-		const sortedConnections = orderBy(connections, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
-		setConnections(sortedConnections);
 	};
 
-	return (
-		<div className={baseStyle}>
+	const sortedConnections = useMemo(() => {
+		return orderBy(connections, [sort.column], [sort.direction]);
+	}, [connections, sort.column, sort.direction]);
+
+	return isLoading ? (
+		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+			{t("buttons.loading")}...
+		</div>
+	) : (
+		<div className="pt-14">
 			<div className="flex items-center justify-between">
-				<div className="text-base text-gray-300">Available connections</div>
+				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
 					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
 					href="add-new-connection"
 				>
 					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					Add new
+					{t("buttons.addNew")}
 				</Button>
 			</div>
-			<Table className="mt-5">
-				<THead>
-					<Tr>
-						<Th className="border-r-0 cursor-pointer group font-normal" onClick={() => toggleSortConnections("name")}>
-							Name
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"name" === sort.column}
-								sortDirection={sort.direction}
-							/>
-						</Th>
-						<Th className="max-w-8 p-0" />
-						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("platform")}>
-							App
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"platform" === sort.column}
-								sortDirection={sort.direction}
-							/>
-						</Th>
-						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("user")}>
-							User
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"user" === sort.column}
-								sortDirection={sort.direction}
-							/>
-						</Th>
-						<Th
-							className="border-r-0 pr-6 cursor-pointer group font-normal"
-							onClick={() => toggleSortConnections("lastTested")}
-						>
-							Last tested
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"lastTested" === sort.column}
-								sortDirection={sort.direction}
-							/>
-						</Th>
-						<Th
-							className="max-w-9 border-0 p-0 -ml-6 cursor-pointer group"
-							onClick={() => toggleSortConnections("lastTested")}
-						/>
-						<Th className="max-w-10 border-0" />
-					</Tr>
-				</THead>
-				<TBody>
-					{connections.map(({ name, platform, user, lastTested, id }) => (
-						<Tr className="group" key={id}>
-							<Td className="font-semibold border-r-0">{name}</Td>
-							<Td className="p-0 max-w-8">
-								<DropdownButton className="flex-col gap-1" contentMenu={<TableConnectionInfo />}>
-									<IconButton className="w-6 h-6 p-1 hover:bg-transparent">
-										<InfoIcon className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
-									</IconButton>
-								</DropdownButton>
-							</Td>
-							<Td>{platform}</Td>
-							<Td>{user}</Td>
-							<Td className="text-xs border-r-0 pr-6">{moment(lastTested).fromNow()}</Td>
-							<Td className="max-w-9 border-0 p-0 -ml-6">
-								<IconButton className="w-6 h-6 p-1 hover:bg-gray-700">
-									<TestS className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
-								</IconButton>
-							</Td>
-							<Td className="max-w-10 border-0 pr-1.5 justify-end">
-								<DropdownButton
-									className="flex-col gap-1"
-									contentMenu={<TableConnectionAction onDelete={() => openModal(ModalName.deleteConnection)} />}
-								>
-									<IconButton className="w-6 h-6 p-1  hover:bg-gray-700">
-										<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
-									</IconButton>
-								</DropdownButton>
-							</Td>
+			{connections.length ? (
+				<Table className="mt-5">
+					<THead>
+						<Tr>
+							<Th className="border-r-0 cursor-pointer group font-normal" onClick={() => toggleSortConnections("name")}>
+								{t("table.columns.name")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"name" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
+							<Th className="max-w-8 p-0" />
+							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("platform")}>
+								{t("table.columns.app")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"platform" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
+							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("user")}>
+								{t("table.columns.user")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"user" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
+							<Th className="pr-6 cursor-pointer group font-normal" onClick={() => toggleSortConnections("lastTested")}>
+								{t("table.columns.lastTested")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"lastTested" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
+							<Th className="text-right font-normal max-w-20">Actions</Th>
 						</Tr>
-					))}
-				</TBody>
-			</Table>
+					</THead>
+					<TBody>
+						{sortedConnections.map(({ name, connectionId }) => (
+							<Tr className="group" key={connectionId}>
+								<Td className="font-semibold border-r-0">{name}</Td>
+								<Td className="p-0 max-w-8">
+									<DropdownButton className="flex-col gap-1" contentMenu={<TableConnectionInfo />}>
+										<IconButton className="w-6 h-6 p-1 hover:bg-transparent">
+											<InfoIcon className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
+										</IconButton>
+									</DropdownButton>
+								</Td>
+								<Td>{connectionId}</Td>
+								<Td>{connectionId}</Td>
+								<Td className="text-xs pr-6">{moment(connectionId).fromNow()}</Td>
+								<Td className="max-w-20">
+									<div className="flex space-x-1">
+										<IconButton ariaLabel={t("table.buttons.ariaModifyConnection", { name })}>
+											<EditIcon className="fill-white w-3 h-3" />
+										</IconButton>
+										<IconButton
+											ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
+											onClick={() => openModal(ModalName.deleteConnection)}
+										>
+											<TrashIcon className="fill-white w-3 h-3" />
+										</IconButton>
+									</div>
+								</Td>
+							</Tr>
+						))}
+					</TBody>
+				</Table>
+			) : (
+				<div className="mt-10 text-gray-300 font-semibold text-xl text-center">{t("titleNoAvailable")}</div>
+			)}
 			<ModalDeleteConnection />
+			<Toast
+				duration={5}
+				isOpen={toast.isOpen}
+				onClose={() => setToast({ ...toast, isOpen: false })}
+				title={tError("error")}
+				type="error"
+			>
+				<p className="mt-1 text-xs">{toast.message}</p>
+			</Toast>
 		</div>
 	);
 };

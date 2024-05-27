@@ -38,4 +38,20 @@ export class ConnectionService {
 			return { data: undefined, error };
 		}
 	}
+
+	static async delete(connectionId: string): Promise<ServiceResponse<void>> {
+		try {
+			await connectionsClient.delete({ connectionId });
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			const errorMessage = i18n.t("connectionDeleteFailedExtended", {
+				connectionId,
+				error: (error as Error).message,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.connectionService, errorMessage);
+
+			return { data: undefined, error };
+		}
+	}
 }

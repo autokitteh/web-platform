@@ -16,6 +16,7 @@
 	"connectionNotFoundExtended": "Failed to fetch data for project {{projectId}}. Error: {{error}}",
 	"connectionsFetchError": "Couldn't fetch the connection details",
 	"connectionsFetchErrorExtended": "Failed to fetch data for project {{projectId}}. Error: {{error}}",
+	"connectionDeleteFailedExtended": "Connection deletion failed - connection ID: {{deploymentId}}, error: {{error}}",
 	"deleteFailedIdError": "Deployment deletion failed - deployment: {{deploymentId}}, error: {{error}}",
 	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}",
 	"triggerNotCreatedExtended": "Failed to create trigger for project {{projectId}}. Error: {{error}}",

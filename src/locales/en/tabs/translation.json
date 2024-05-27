@@ -16,6 +16,24 @@
 		}
 	},
 	"connections": {
+		"titleAvailable": "Available Connections",
+		"titleNoAvailable": "No connections available.",
+		"buttons": {
+			"addNew": "Add new",
+			"loading": "Loading"
+		},
+		"table": {
+			"columns": {
+				"name": "Name",
+				"app": "App",
+				"user": "User",
+				"lastTested": "Last tested"
+			},
+			"buttons": {
+				"ariaModifyConnection": "Modify {{name}} connection",
+				"ariaDeleteConnection": "Delete {{name}} connection"
+			}
+		},
 		"form": {
 			"addNewConnection": "Add new connection",
 			"placeholders": {

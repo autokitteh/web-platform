@@ -182,7 +182,7 @@ export const TriggersContent = () => {
 				duration={5}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={t("error")}
+				title={tError("error")}
 				type="error"
 			>
 				<p className="mt-1 text-xs">{toast.message}</p>
