@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { PlusCircle, InfoIcon } from "@assets/image";
+import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
-import { SortButton, DropdownButton, TableConnectionInfo } from "@components/molecules";
+import { SortButton } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { TabConnection } from "@interfaces/components";
@@ -83,7 +83,7 @@ export const ConnectionsContent = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="border-r-0 cursor-pointer group font-normal" onClick={() => toggleSortConnections("name")}>
+							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("name")}>
 								{t("table.columns.name")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -91,7 +91,6 @@ export const ConnectionsContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="max-w-8 p-0" />
 							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("platform")}>
 								{t("table.columns.app")}
 								<SortButton
@@ -122,14 +121,7 @@ export const ConnectionsContent = () => {
 					<TBody>
 						{sortedConnections.map(({ name, connectionId }) => (
 							<Tr className="group" key={connectionId}>
-								<Td className="font-semibold border-r-0">{name}</Td>
-								<Td className="p-0 max-w-8">
-									<DropdownButton className="flex-col gap-1" contentMenu={<TableConnectionInfo />}>
-										<IconButton className="w-6 h-6 p-1 hover:bg-transparent">
-											<InfoIcon className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
-										</IconButton>
-									</DropdownButton>
-								</Td>
+								<Td className="font-semibold">{name}</Td>
 								<Td>{connectionId}</Td>
 								<Td>{connectionId}</Td>
 								<Td className="text-xs pr-6">{moment(connectionId).fromNow()}</Td>
