@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NewProject } from "@assets/image";
 import { Button, IconSvg, Toast } from "@components/atoms";
 import { menuItems, fetchMenuInterval } from "@constants";
@@ -46,7 +46,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		await getProjectsList();
 	};
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		const fetchMenu = async () => await getProjectsList();
 		fetchMenu();
 
