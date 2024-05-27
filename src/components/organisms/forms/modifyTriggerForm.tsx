@@ -172,12 +172,12 @@ export const ModifyTriggerForm = () => {
 	};
 
 	return isLoadingData ? (
-		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">{t("loading")}...</div>
+		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{t("loading")}...</div>
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
 			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex flex-col gap-6 w-full">
+				<div className="flex flex-col w-full gap-6">
 					<div className="relative">
 						<Input
 							{...register("name")}
@@ -257,7 +257,7 @@ export const ModifyTriggerForm = () => {
 						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
 					</div>
 					<div>
-						<div className="flex items-center gap-1 text-gray-300 text-base">
+						<div className="flex items-center gap-1 text-base text-gray-300">
 							{t("titleData")}
 							<div className="cursor-pointer" title={t("titleInfo")}>
 								<InfoIcon className="fill-white" />
@@ -266,8 +266,8 @@ export const ModifyTriggerForm = () => {
 						<div className="flex flex-col gap-2 mb-2">
 							{triggerData
 								? Object.entries(triggerData).map(([key, value]) => (
-										<div className="flex align-center gap-1" key={key}>
-											<div className="flex gap-6 w-full">
+										<div className="flex gap-1 align-center" key={key}>
+											<div className="flex w-full gap-6">
 												<Input
 													aria-label={t("placeholders.key")}
 													className="w-full"
@@ -285,20 +285,20 @@ export const ModifyTriggerForm = () => {
 											</div>
 											<IconButton
 												ariaLabel={t("ariaDeleteData", { name: key })}
-												className="hover:bg-black bg-black-900 self-center"
+												className="self-center hover:bg-black bg-black-900"
 												onClick={() => handleDeleteData(key)}
 											>
-												<TrashIcon className="fill-white w-4 h-4" />
+												<TrashIcon className="w-4 h-4 fill-white" />
 											</IconButton>
 										</div>
 									))
 								: null}
 						</div>
 						<Button
-							className="w-auto ml-auto group gap-1 p-0 font-semibold text-gray-300 hover:text-white"
+							className="w-auto gap-1 p-0 ml-auto font-semibold text-gray-300 group hover:text-white"
 							onClick={handleAddNewData}
 						>
-							<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+							<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
 							{t("buttonAddNewData")}
 						</Button>
 					</div>
