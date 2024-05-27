@@ -7,6 +7,7 @@ export const convertConnectionProtoToModel = (protoConnection: ProtoConnection):
 		integrationId: protoConnection.integrationId,
 		name: protoConnection.name,
 		initLink: protoConnection.links.init_url,
+		testLink: protoConnection.links.test_url,
 		status: protoConnection.status,
 	};
 };

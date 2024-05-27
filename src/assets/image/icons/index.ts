@@ -4,7 +4,7 @@ export { default as ArrowDown } from "@assets/image/icons/ArrowDown.svg?react";
 export { default as ArrowUp } from "@assets/image/icons/ArrowUp.svg?react";
 export { default as InfoIcon } from "@assets/image/icons/Info.svg?react";
 export { default as SmallArrowDown } from "@assets/image/icons/SmallArrowDown.svg?react";
-export { default as TestS } from "@assets/image/icons/TestS.svg?react";
+export { default as TestIcon } from "@assets/image/icons/Test.svg?react";
 export { default as ThreeDots } from "@assets/image/icons/ThreeDots.svg?react";
 export { default as Close } from "@assets/image/icons/Close.svg?react";
 export { default as Eye } from "@assets/image/icons/Eye.svg?react";

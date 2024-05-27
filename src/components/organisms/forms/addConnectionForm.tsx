@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TestS } from "@assets/image";
+import { TestIcon } from "@assets/image/icons";
 import { Select, Input, Textarea, Button, ErrorMessage, Toast } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { optionsSelectApp } from "@constants/lists";
@@ -137,7 +137,7 @@ export const AddConnectionForm = () => {
 					type="submit"
 					variant="outline"
 				>
-					<TestS className="w-5 h-4 transition fill-white" />
+					<TestIcon className="w-5 h-4 transition fill-white" />
 					{isLoading ? t("buttons.testing") + "..." : t("buttons.testConnection")}
 				</Button>
 			</form>

@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useCallback, useState } from "react";
 import { PlusCircle } from "@assets/image";
-import { EditIcon, TrashIcon } from "@assets/image/icons";
+import { EditIcon, TrashIcon, LinkIcon, TestIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
 import { SortButton, ConnectionTableState } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
+import { baseUrl } from "@constants";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { ConnectionService } from "@services";
 import { useModalStore } from "@store";
@@ -82,6 +83,14 @@ export const ConnectionsContent = () => {
 		fetchConnections();
 	};
 
+	const handleConnectionInitClick = useCallback((url: string) => {
+		window.open(`${baseUrl}/${url}`, "_blank");
+	}, []);
+
+	const handleConnectionTestClick = useCallback((url: string) => {
+		window.open(`${baseUrl}/${url}`, "_blank");
+	}, []);
+
 	return isLoading ? (
 		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
 			{t("buttons.loading")}...
@@ -118,7 +127,7 @@ export const ConnectionsContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("status")}>
+							<Th className="cursor-pointer group font-normal max-w-32" onClick={() => toggleSortConnections("status")}>
 								{t("table.columns.status")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -126,26 +135,45 @@ export const ConnectionsContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="text-right font-normal max-w-20">{t("table.columns.actions")}</Th>
+							<Th className="cursor-pointer group font-normal">{t("table.columns.information")}</Th>
+							<Th className="text-right font-normal max-w-36">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 					<TBody>
-						{sortedConnections.map(({ name, integrationName, status, connectionId }) => (
+						{sortedConnections.map(({ name, integrationName, status, connectionId, initLink, testLink }) => (
 							<Tr className="group" key={connectionId}>
 								<Td className="font-semibold">{name}</Td>
 								<Td>{integrationName}</Td>
-								<Td>
-									{status ? <ConnectionTableState connectnionState={status.code} /> : null}
-									{status ? <span className="text-xs">{status.message}</span> : null}
-								</Td>
-								<Td className="max-w-20">
+								<Td className="max-w-32">{status ? <ConnectionTableState connectnionState={status.code} /> : null}</Td>
+								<Td>{status ? status.message : null}</Td>
+								<Td className="max-w-36">
 									<div className="flex space-x-1">
-										<IconButton ariaLabel={t("table.buttons.ariaModifyConnection", { name })}>
+										<IconButton
+											ariaLabel={t("table.buttons.titleTestConnection")}
+											className="p-1.5"
+											onClick={() => handleConnectionTestClick(testLink)}
+											title={t("table.buttons.titleTestConnection")}
+										>
+											<TestIcon className="fill-white w-4 h-4" />
+										</IconButton>
+										<IconButton
+											ariaLabel={t("table.buttons.titleInitConnection")}
+											className="p-1.5"
+											onClick={() => handleConnectionInitClick(initLink)}
+											title={t("table.buttons.titleInitConnection")}
+										>
+											<LinkIcon className="fill-white w-4 h-4" />
+										</IconButton>
+										<IconButton
+											ariaLabel={t("table.buttons.ariaModifyConnection", { name })}
+											title={t("table.buttons.titleEditConnection")}
+										>
 											<EditIcon className="fill-white w-3 h-3" />
 										</IconButton>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
 											onClick={() => handleOpenModalDeleteConnection(connectionId)}
+											title={t("table.buttons.titleRemoveConnection")}
 										>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>

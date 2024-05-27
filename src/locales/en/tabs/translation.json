@@ -27,11 +27,16 @@
 				"name": "Name",
 				"app": "App",
 				"status": "Status",
+				"information": "Information",
 				"actions": "Actions"
 			},
 			"buttons": {
 				"ariaModifyConnection": "Modify {{name}} connection",
-				"ariaDeleteConnection": "Delete {{name}} connection"
+				"ariaDeleteConnection": "Delete {{name}} connection",
+				"titleTestConnection": "Test Connection",
+				"titleInitConnection": "Initialize Connection",
+				"titleEditConnection": "Edit connection",
+				"titleRemoveConnection": "Remove connection"
 			},
 			"statuses": {
 				"unspecified": "Unspecified",
