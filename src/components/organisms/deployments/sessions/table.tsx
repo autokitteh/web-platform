@@ -31,7 +31,7 @@ export const SessionsTable = () => {
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Session;
-	}>({ direction: SortDirectionVariant.ASC, column: "createdAt" });
+	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
