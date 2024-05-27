@@ -19,10 +19,8 @@ const store: StateCreator<UserStore> = (set) => ({
 			return { error, user: undefined };
 		}
 
-		set((state) => {
-			state.user = data;
-			return state;
-		});
+		set((state) => ({ ...state, user: data }));
+
 		return { error: undefined, user: data };
 	},
 });
