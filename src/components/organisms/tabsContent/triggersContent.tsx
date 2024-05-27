@@ -26,7 +26,6 @@ export const TriggersContent = () => {
 		column: keyof Trigger;
 	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [triggers, setTriggers] = useState<Trigger[]>([]);
-
 	const [triggerId, setTriggerId] = useState<string>();
 	const [toast, setToast] = useState({
 		isOpen: false,

@@ -22,6 +22,7 @@ export type {
 	DeleteFile,
 	ModalDeleteDeploymentProps,
 	ModalDeleteDeploymentSessionProps,
+	ModalDeleteConnectionProps,
 } from "@interfaces/components/modal.interface";
 export type { ToastProps } from "@interfaces/components/toast.interface";
 export type {

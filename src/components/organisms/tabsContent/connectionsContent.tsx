@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useCallback, useState } from "react";
 import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
@@ -18,7 +18,7 @@ import { useParams } from "react-router-dom";
 export const ConnectionsContent = () => {
 	const { t: tError } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "connections" });
-	const { openModal } = useModalStore();
+	const { openModal, closeModal } = useModalStore();
 	const { projectId } = useParams();
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +31,7 @@ export const ConnectionsContent = () => {
 		isOpen: false,
 		message: "",
 	});
+	const [connectionId, setConnectionId] = useState<string>();
 
 	const fetchConnections = async () => {
 		setIsLoading(true);
@@ -62,6 +63,26 @@ export const ConnectionsContent = () => {
 	const sortedConnections = useMemo(() => {
 		return orderBy(connections, [sort.column], [sort.direction]);
 	}, [connections, sort.column, sort.direction]);
+
+	const handleOpenModalDeleteConnection = useCallback(
+		(connectionId: string) => {
+			setConnectionId(connectionId);
+			openModal(ModalName.deleteConnection);
+		},
+		[connectionId]
+	);
+
+	const handleDeleteConnection = async () => {
+		if (!connectionId) return;
+
+		const { error } = await ConnectionService.delete(connectionId);
+		closeModal(ModalName.deleteConnection);
+		if (error) {
+			setToast({ isOpen: true, message: tError("connectionRemoveFailed") });
+			return;
+		}
+		fetchConnections();
+	};
 
 	return isLoading ? (
 		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
@@ -132,7 +153,7 @@ export const ConnectionsContent = () => {
 										</IconButton>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
-											onClick={() => openModal(ModalName.deleteConnection)}
+											onClick={() => handleOpenModalDeleteConnection(connectionId)}
 										>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
@@ -145,7 +166,7 @@ export const ConnectionsContent = () => {
 			) : (
 				<div className="mt-10 text-gray-300 font-semibold text-xl text-center">{t("titleNoAvailable")}</div>
 			)}
-			<ModalDeleteConnection />
+			<ModalDeleteConnection connectionId={connectionId} onDelete={handleDeleteConnection} />
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
