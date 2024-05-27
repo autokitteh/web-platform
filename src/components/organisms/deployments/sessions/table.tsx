@@ -4,6 +4,7 @@ import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr, Toast } from "@comp
 import { SortButton } from "@components/molecules";
 import { SessionsTableState, SessionTableEditorFrame, SessionsTableFilter } from "@components/organisms/deployments";
 import { ModalDeleteDeploymentSession } from "@components/organisms/modals";
+import { fetchSessionsInterval } from "@constants";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { SessionLogRecord } from "@models";
 import { reverseSessionStateConverter } from "@models/utils";
@@ -26,6 +27,7 @@ export const SessionsTable = () => {
 
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
+	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Session;
@@ -42,10 +44,10 @@ export const SessionsTable = () => {
 	const sessionRowClass = (id: string) =>
 		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === sessionId });
 
-	const fetchSessions = async (stateType?: number) => {
+	const fetchSessions = async () => {
 		if (!deploymentId) return;
 
-		const { data, error } = await SessionsService.listByDeploymentId(deploymentId, { stateType });
+		const { data, error } = await SessionsService.listByDeploymentId(deploymentId, { stateType: sessionStateType });
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
@@ -70,10 +72,16 @@ export const SessionsTable = () => {
 
 	useEffect(() => {
 		fetchSessions();
-	}, []);
+
+		const intervalSessions = setInterval(fetchSessions, fetchSessionsInterval);
+		return () => clearInterval(intervalSessions);
+	}, [sessionStateType]);
 
 	useEffect(() => {
 		fetchSessionLog();
+
+		const intervalSessionLog = setInterval(fetchSessionLog, fetchSessionsInterval);
+		return () => clearInterval(intervalSessionLog);
 	}, [sessionId]);
 
 	const toggleSortSessions = useCallback(
@@ -115,7 +123,7 @@ export const SessionsTable = () => {
 
 	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
 		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
-		fetchSessions(selectedSessionStateFilter);
+		setSessionStateType(selectedSessionStateFilter);
 		closeSessionLog();
 	};
 
