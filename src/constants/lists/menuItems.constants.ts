@@ -6,6 +6,6 @@ export const menuItems: MenuItem[] = [
 		id: 1,
 		icon: ProjectsIcon,
 		name: "My Projects",
-		href: "/",
+		href: "#",
 	},
 ];
