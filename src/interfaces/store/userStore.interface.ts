@@ -7,5 +7,5 @@ interface UserStoreResponse {
 
 export interface UserStore {
 	user?: User;
-	whoAmI: () => Promise<UserStoreResponse & { user: User | undefined }>;
+	whoAmI: () => Promise<UserStoreResponse & { user?: User }>;
 }
