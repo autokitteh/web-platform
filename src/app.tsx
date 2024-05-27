@@ -1,4 +1,5 @@
 import React from "react";
+import { useUserStore } from "./store/useUserStore";
 import { AuthProvider } from "@descope/react-sdk";
 import { useSession, useUser } from "@descope/react-sdk";
 import { Descope } from "@descope/react-sdk";
@@ -17,15 +18,14 @@ export const App = () => {
 const AppContainer = () => {
 	const { isAuthenticated, isSessionLoading } = useSession();
 	const { isUserLoading } = useUser();
+	const { whoAmI } = useUserStore();
 
 	const getAKToken = async (e: CustomEvent<any>) => {
 		console.log("sessionToken0,", e);
 
 		axios
 			.get(`https://87decc23cce6.ngrok.app/auth/descope/login?jwt=${e.detail.sessionJwt}`, { withCredentials: true })
-			.catch((error) => {
-				console.log("Login Error", error);
-			});
+			.then(() => whoAmI());
 	};
 
 	return (
