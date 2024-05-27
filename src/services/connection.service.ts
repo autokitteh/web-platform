@@ -32,12 +32,20 @@ export class ConnectionService {
 			}
 
 			const convertedConnections = connections.map(convertConnectionProtoToModel);
-			const integrationsList = await integrationsClient.list({});
-
-			convertedConnections.map((connection) => {
-				const integration = integrationsList.integrations.find(
-					(integration) => integration.integrationId === connection.integrationId
+			const { integrations } = await integrationsClient.list({});
+			if (!integrations) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("intergrationsNotFoundExtended", { projectId, ns: "services" })
 				);
+
+				return {
+					data: undefined,
+					error: { message: i18n.t("intergrationsNotFoundExtended", { projectId, ns: "services" }) },
+				};
+			}
+			convertedConnections.map((connection) => {
+				const integration = integrations.find((integration) => integration.integrationId === connection.integrationId);
 				if (integration) {
 					connection.integrationName = integration.displayName;
 				}

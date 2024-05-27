@@ -46,7 +46,7 @@ export class ProjectsService {
 			const project = await projectsClient.update({ project: { projectId, name } });
 			if (!project) {
 				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
-				return { data: undefined, error: i18n.t("projectNotFound", { ns: "services" }) };
+				return { data: undefined, error: { message: i18n.t("projectNotFound", { ns: "services" }) } };
 			}
 			return { data: undefined, error: undefined };
 		} catch (error) {
