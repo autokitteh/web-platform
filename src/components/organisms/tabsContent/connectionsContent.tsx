@@ -27,11 +27,11 @@ export const ConnectionsContent = () => {
 		column: Exclude<keyof TabConnection, "id">;
 	}>({ direction: SortDirectionVariant.ASC, column: "lastTested" });
 	const [connections, setConnections] = useState<Connection[]>([]);
+	const [connectionId, setConnectionId] = useState<string>();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
-	const [connectionId, setConnectionId] = useState<string>();
 
 	const fetchConnections = async () => {
 		setIsLoading(true);

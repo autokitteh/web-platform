@@ -11,12 +11,10 @@ import { Trans, useTranslation } from "react-i18next";
 export const ModalDeleteConnection = ({ onDelete, connectionId }: ModalDeleteConnectionProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });
 	const { closeModal } = useModalStore();
-
 	const [connection, setConnection] = useState<Connection>();
 
 	const fetchConnection = async () => {
 		if (!connectionId) return;
-
 		const { data } = await ConnectionService.get(connectionId);
 		if (!data) return;
 		setConnection(data);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
@@ -75,10 +75,13 @@ export const TriggersContent = () => {
 		fetchTriggers();
 	};
 
-	const handleOpenDeleteTriggerModal = (triggerId: string) => {
-		setTriggerId(triggerId);
-		openModal(ModalName.deleteTrigger);
-	};
+	const handleOpenModalDeleteTrigger = useCallback(
+		(triggerId: string) => {
+			setTriggerId(triggerId);
+			openModal(ModalName.deleteTrigger);
+		},
+		[triggerId]
+	);
 
 	return isLoading ? (
 		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
@@ -163,7 +166,7 @@ export const TriggersContent = () => {
 										</IconButton>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
-											onClick={() => handleOpenDeleteTriggerModal(trigger.triggerId!)}
+											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
 										>
 											<TrashIcon className="fill-white w-3 h-3" />
 										</IconButton>
