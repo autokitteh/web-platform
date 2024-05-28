@@ -13,14 +13,18 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 export const AddCodeAssetsTab = () => {
-	const [resources, setResources] = useState<Record<string, Uint8Array>>({});
 	const [isLoading, setIsLoading] = useState(true);
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation(["errors"]);
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { openModal, closeModal } = useModalStore();
-	const { currentProject, getProjectResources, setProjectResources, updateEditorOpenedFiles, removeProjectFile } =
-		useProjectStore();
+	const {
+		currentProject: { openedFiles, resources },
+		getProjectResources,
+		setProjectResources,
+		updateEditorOpenedFiles,
+		removeProjectFile,
+	} = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -48,7 +52,7 @@ export const AddCodeAssetsTab = () => {
 	);
 	const activeBodyRow = (fileName: string) =>
 		cn({
-			"bg-black": currentProject.openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
+			"bg-black": openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
 		});
 
 	const fetchResources = async () => {
@@ -59,7 +63,6 @@ export const AddCodeAssetsTab = () => {
 			if (!resources) return;
 
 			getProjectResources(resources);
-			setResources(resources);
 		} catch (err) {
 			setToast({ isOpen: true, message: (err as Error).message });
 		} finally {
