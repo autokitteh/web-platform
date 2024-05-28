@@ -84,7 +84,7 @@ export const VariablesContent = () => {
 	};
 
 	return isLoadingVariables ? (
-		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
 			{t("buttons.loading")}...
 		</div>
 	) : (
@@ -93,10 +93,10 @@ export const VariablesContent = () => {
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
 					ariaLabel={t("buttons.addNew")}
-					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
+					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
 					href="add-new-variable"
 				>
-					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
 					{t("buttons.addNew")}
 				</Button>
 			</div>
@@ -104,7 +104,7 @@ export const VariablesContent = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortVariables("name")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortVariables("name")}>
 								{t("table.columns.name")}
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByName")}
@@ -113,7 +113,7 @@ export const VariablesContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => toggleSortVariables("value")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortVariables("value")}>
 								{t("table.columns.value")}
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByValue")}
@@ -122,7 +122,7 @@ export const VariablesContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="text-right max-w-20">Actions</Th>
+							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 					<TBody>
@@ -145,13 +145,13 @@ export const VariablesContent = () => {
 											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
 											onClick={() => navigate(`modify-variable/${envId}/${name}`)}
 										>
-											<EditIcon className="fill-white w-3 h-3" />
+											<EditIcon className="w-3 h-3 fill-white" />
 										</IconButton>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
 											onClick={() => showDeleteModal(name, value, scopeId)}
 										>
-											<TrashIcon className="fill-white w-3 h-3" />
+											<TrashIcon className="w-3 h-3 fill-white" />
 										</IconButton>
 									</div>
 								</Td>
@@ -160,7 +160,7 @@ export const VariablesContent = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-gray-300 font-semibold text-xl text-center"> {t("titleNoAvailable")}</div>
+				<div className="mt-10 text-xl font-semibold text-center text-gray-300"> {t("titleNoAvailable")}</div>
 			)}
 
 			<Toast

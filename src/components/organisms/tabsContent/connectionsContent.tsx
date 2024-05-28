@@ -1,130 +1,194 @@
-import React, { useState } from "react";
-import { PlusCircle, ThreeDots, InfoIcon, TestS } from "@assets/image";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
-import { SortButton, DropdownButton, TableConnectionInfo, TableConnectionAction } from "@components/molecules";
+import React, { useEffect, useMemo, useCallback, useState } from "react";
+import { PlusCircle } from "@assets/image";
+import { TrashIcon, LinkIcon } from "@assets/image/icons";
+import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
+import { SortButton, ConnectionTableStatus } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
-import { connectionsData } from "@constants/lists";
+import { baseUrl } from "@constants";
 import { ModalName, SortDirectionVariant } from "@enums/components";
-import { ConnectionsContentProps, TabConnection } from "@interfaces/components";
+import { ConnectionService } from "@services";
 import { useModalStore } from "@store";
 import { SortDirection } from "@type/components";
-import { cn } from "@utilities";
+import { Connection } from "@type/models";
 import { orderBy } from "lodash";
-import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
-export const ConnectionsContent = ({ className }: ConnectionsContentProps) => {
-	const { openModal } = useModalStore();
+export const ConnectionsContent = () => {
+	const { t: tError } = useTranslation("errors");
+	const { t } = useTranslation("tabs", { keyPrefix: "connections" });
+	const { openModal, closeModal } = useModalStore();
+	const { projectId } = useParams();
+
+	const [isLoading, setIsLoading] = useState(false);
+	const [isLoadingDeleteConnection, setIsLoadingDeleteConnection] = useState(false);
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
-		column: Exclude<keyof TabConnection, "id">;
-	}>({ direction: SortDirectionVariant.ASC, column: "lastTested" });
-	const [connections, setConnections] = useState(connectionsData);
+		column: keyof Connection;
+	}>({ direction: SortDirectionVariant.ASC, column: "name" });
+	const [connections, setConnections] = useState<Connection[]>([]);
+	const [connectionId, setConnectionId] = useState<string>();
+	const [toast, setToast] = useState({
+		isOpen: false,
+		message: "",
+	});
 
-	const baseStyle = cn("pt-14", className);
+	const fetchConnections = async () => {
+		setIsLoading(true);
+		try {
+			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
+			if (error) throw error;
+			if (!connections) return;
 
-	const toggleSortConnections = (key: Exclude<keyof TabConnection, "id">) => {
+			setConnections(connections);
+		} catch (err) {
+			setToast({ isOpen: true, message: (err as Error).message });
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchConnections();
+	}, [projectId]);
+
+	const toggleSortConnections = (key: keyof Connection) => {
 		const newDirection =
 			sort.column === key && sort.direction === SortDirectionVariant.ASC
 				? SortDirectionVariant.DESC
 				: SortDirectionVariant.ASC;
-
-		const sortedConnections = orderBy(connections, [key], [newDirection]);
 		setSort({ direction: newDirection, column: key });
-		setConnections(sortedConnections);
 	};
 
-	return (
-		<div className={baseStyle}>
+	const sortedConnections = useMemo(() => {
+		return orderBy(connections, [sort.column], [sort.direction]);
+	}, [connections, sort.column, sort.direction]);
+
+	const handleOpenModalDeleteConnection = useCallback(
+		(connectionId: string) => {
+			setConnectionId(connectionId);
+			openModal(ModalName.deleteConnection);
+		},
+		[connectionId]
+	);
+
+	const handleDeleteConnection = async () => {
+		if (!connectionId) return;
+		setIsLoadingDeleteConnection(true);
+		const { error } = await ConnectionService.delete(connectionId);
+		setIsLoadingDeleteConnection(false);
+		closeModal(ModalName.deleteConnection);
+		if (error) {
+			setToast({ isOpen: true, message: tError("connectionRemoveFailed") });
+			return;
+		}
+		fetchConnections();
+	};
+
+	//Should take us to the ModifyConnectionPage - to initialize it from there (for example for GitHub: PAT/OAuth)
+	const handleConnectionInitClick = useCallback((url: string) => {
+		window.open(`${baseUrl}/${url}`, "_blank");
+	}, []);
+
+	return isLoading ? (
+		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
+			{t("buttons.loading")}...
+		</div>
+	) : (
+		<div className="pt-14">
 			<div className="flex items-center justify-between">
-				<div className="text-base text-gray-300">Available connections</div>
+				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
-					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
+					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
 					href="add-new-connection"
 				>
-					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
-					Add new
+					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
+					{t("buttons.addNew")}
 				</Button>
 			</div>
-			<Table className="mt-5">
-				<THead>
-					<Tr>
-						<Th className="border-r-0 cursor-pointer group font-normal" onClick={() => toggleSortConnections("name")}>
-							Name
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"name" === sort.column}
-								sortDirection={sort.direction}
-							/>
-						</Th>
-						<Th className="max-w-8 p-0" />
-						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("platform")}>
-							App
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"platform" === sort.column}
-								sortDirection={sort.direction}
-							/>
-						</Th>
-						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortConnections("user")}>
-							User
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"user" === sort.column}
-								sortDirection={sort.direction}
-							/>
-						</Th>
-						<Th
-							className="border-r-0 pr-6 cursor-pointer group font-normal"
-							onClick={() => toggleSortConnections("lastTested")}
-						>
-							Last tested
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"lastTested" === sort.column}
-								sortDirection={sort.direction}
-							/>
-						</Th>
-						<Th
-							className="max-w-9 border-0 p-0 -ml-6 cursor-pointer group"
-							onClick={() => toggleSortConnections("lastTested")}
-						/>
-						<Th className="max-w-10 border-0" />
-					</Tr>
-				</THead>
-				<TBody>
-					{connections.map(({ name, platform, user, lastTested, id }) => (
-						<Tr className="group" key={id}>
-							<Td className="font-semibold border-r-0">{name}</Td>
-							<Td className="p-0 max-w-8">
-								<DropdownButton className="flex-col gap-1" contentMenu={<TableConnectionInfo />}>
-									<IconButton className="w-6 h-6 p-1 hover:bg-transparent">
-										<InfoIcon className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
-									</IconButton>
-								</DropdownButton>
-							</Td>
-							<Td>{platform}</Td>
-							<Td>{user}</Td>
-							<Td className="text-xs border-r-0 pr-6">{moment(lastTested).fromNow()}</Td>
-							<Td className="max-w-9 border-0 p-0 -ml-6">
-								<IconButton className="w-6 h-6 p-1 hover:bg-gray-700">
-									<TestS className="w-4 h-4 transition fill-gray-500 group-hover:fill-white" />
-								</IconButton>
-							</Td>
-							<Td className="max-w-10 border-0 pr-1.5 justify-end">
-								<DropdownButton
-									className="flex-col gap-1"
-									contentMenu={<TableConnectionAction onDelete={() => openModal(ModalName.deleteConnection)} />}
-								>
-									<IconButton className="w-6 h-6 p-1  hover:bg-gray-700">
-										<ThreeDots className="w-full h-full transition fill-gray-500 group-hover:fill-white" />
-									</IconButton>
-								</DropdownButton>
-							</Td>
+			{connections.length ? (
+				<Table className="mt-5">
+					<THead>
+						<Tr>
+							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortConnections("name")}>
+								{t("table.columns.name")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"name" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
+							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortConnections("integrationName")}>
+								{t("table.columns.app")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"integrationName" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
+							<Th className="font-normal cursor-pointer group max-w-32" onClick={() => toggleSortConnections("status")}>
+								{t("table.columns.status")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"status" === sort.column}
+									sortDirection={sort.direction}
+								/>
+							</Th>
+							<Th className="font-normal cursor-pointer group">{t("table.columns.information")}</Th>
+							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>
 						</Tr>
-					))}
-				</TBody>
-			</Table>
-			<ModalDeleteConnection />
+					</THead>
+					<TBody>
+						{sortedConnections.map(({ name, integrationName, status, statusInfoMessage, connectionId, initUrl }) => (
+							<Tr className="group" key={connectionId}>
+								<Td className="font-semibold">{name}</Td>
+								<Td>{integrationName}</Td>
+								<Td className="max-w-32">
+									<ConnectionTableStatus status={status} />
+								</Td>
+								<Td>{statusInfoMessage}</Td>
+								<Td className="max-w-20">
+									<div className="flex space-x-1">
+										<IconButton
+											ariaLabel={t("table.buttons.titleInitConnection")}
+											className="p-1.5"
+											onClick={() => handleConnectionInitClick(initUrl)}
+											title={t("table.buttons.titleInitConnection")}
+										>
+											<LinkIcon className="w-4 h-4 fill-white" />
+										</IconButton>
+										<IconButton
+											ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
+											onClick={() => handleOpenModalDeleteConnection(connectionId)}
+											title={t("table.buttons.titleRemoveConnection")}
+										>
+											<TrashIcon className="w-3 h-3 fill-white" />
+										</IconButton>
+									</div>
+								</Td>
+							</Tr>
+						))}
+					</TBody>
+				</Table>
+			) : (
+				<div className="mt-10 text-xl font-semibold text-center text-gray-300">{t("titleNoAvailable")}</div>
+			)}
+			{connectionId ? (
+				<ModalDeleteConnection
+					connectionId={connectionId}
+					loading={isLoadingDeleteConnection}
+					onDelete={handleDeleteConnection}
+				/>
+			) : null}
+			<Toast
+				duration={5}
+				isOpen={toast.isOpen}
+				onClose={() => setToast({ ...toast, isOpen: false })}
+				title={tError("error")}
+				type="error"
+			>
+				<p className="mt-1 text-xs">{toast.message}</p>
+			</Toast>
 		</div>
 	);
 };

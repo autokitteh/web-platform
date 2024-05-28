@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
@@ -26,7 +26,6 @@ export const TriggersContent = () => {
 		column: keyof Trigger;
 	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [triggers, setTriggers] = useState<Trigger[]>([]);
-
 	const [triggerId, setTriggerId] = useState<string>();
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -76,13 +75,16 @@ export const TriggersContent = () => {
 		fetchTriggers();
 	};
 
-	const handleOpenDeleteTriggerModal = (triggerId: string) => {
-		setTriggerId(triggerId);
-		openModal(ModalName.deleteTrigger);
-	};
+	const handleOpenModalDeleteTrigger = useCallback(
+		(triggerId: string) => {
+			setTriggerId(triggerId);
+			openModal(ModalName.deleteTrigger);
+		},
+		[triggerId]
+	);
 
 	return isLoading ? (
-		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
 			{t("buttons.loading")}...
 		</div>
 	) : (
@@ -90,10 +92,10 @@ export const TriggersContent = () => {
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
-					className="w-auto group gap-1 p-0 capitalize font-semibold text-gray-300 hover:text-white"
+					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
 					href="add-new-trigger"
 				>
-					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
 					{t("buttons.addNew")}
 				</Button>
 			</div>
@@ -101,7 +103,7 @@ export const TriggersContent = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("name")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("name")}>
 								{t("table.columns.name")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -109,7 +111,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("connectionName")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("connectionName")}>
 								{t("table.columns.connection")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -117,7 +119,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("path")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("path")}>
 								{t("table.columns.call")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -125,7 +127,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("eventType")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("eventType")}>
 								{t("table.columns.eventType")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -133,7 +135,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="cursor-pointer group font-normal" onClick={() => handleToggleSort("filter")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("filter")}>
 								{t("table.columns.filter")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
@@ -141,7 +143,7 @@ export const TriggersContent = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="text-right font-normal max-w-20">Actions</Th>
+							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 					<TBody>
@@ -160,13 +162,13 @@ export const TriggersContent = () => {
 											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
 											onClick={() => navigate(`modify-trigger/${trigger.triggerId!}`)}
 										>
-											<EditIcon className="fill-white w-3 h-3" />
+											<EditIcon className="w-3 h-3 fill-white" />
 										</IconButton>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
-											onClick={() => handleOpenDeleteTriggerModal(trigger.triggerId!)}
+											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
 										>
-											<TrashIcon className="fill-white w-3 h-3" />
+											<TrashIcon className="w-3 h-3 fill-white" />
 										</IconButton>
 									</div>
 								</Td>
@@ -175,14 +177,14 @@ export const TriggersContent = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-gray-300 font-semibold text-xl text-center">{t("titleNoAvailable")}</div>
+				<div className="mt-10 text-xl font-semibold text-center text-gray-300">{t("titleNoAvailable")}</div>
 			)}
 
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
 				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={t("error")}
+				title={tError("error")}
 				type="error"
 			>
 				<p className="mt-1 text-xs">{toast.message}</p>

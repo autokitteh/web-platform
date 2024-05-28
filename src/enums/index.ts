@@ -4,3 +4,4 @@ export { SortOrder } from "@enums/sortOrder.enum";
 export { ProjectIntervalTypes } from "@enums/projectIntervals.enum";
 export { StoreName } from "@enums/storeName.enum";
 export { DeploymentStateVariant } from "@enums/deploymentState.enum";
+export { ConnectionStatus } from "@enums/components";

@@ -32,14 +32,14 @@ export const AddCodeAssetsTab = () => {
 	const resourcesEntries = Object.entries(resources);
 	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
 
-	const styleCircle = cn("transition stroke-gray-400 group-hover:stroke-green-accent", {
+	const styleCircle = cn("duration-300 stroke-gray-400 group-hover:stroke-green-accent", {
 		"stroke-green-accent": isDragOver,
 	});
-	const styleBase = cn("transition rounded-xl relative flex-1", {
+	const styleBase = cn("duration-300 rounded-xl relative flex-1", {
 		"mt-auto mb-auto flex justify-center items-center": isEmpty(sortedResources),
 	});
 	const styleFrame = cn(
-		"absolute transition top-0 h-full w-full rounded-lg z-10 flex justify-center items-center",
+		"absolute duration-300 top-0 h-full w-full rounded-lg z-10 flex justify-center items-center",
 		"opacity-0 select-none pointer-events-none",
 		{
 			"bg-white/40 border-2 opacity-1": isDragOver,
@@ -111,26 +111,26 @@ export const AddCodeAssetsTab = () => {
 	};
 
 	return isLoading ? (
-		<div className="font-semibold text-xl text-center flex flex-col h-full justify-center">
+		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
 			{t("buttons.loading")}...
 		</div>
 	) : (
 		<div className="flex flex-col h-full">
-			<div className="mb-5 mt-14 flex justify-end gap-6">
+			<div className="flex justify-end gap-6 mb-5 mt-14">
 				{!isEmpty(sortedResources) ? (
-					<label className="group flex gap-1 p-0 font-semibold text-gray-300 hover:text-white cursor-pointer">
+					<label className="flex gap-1 p-0 font-semibold text-gray-300 cursor-pointer group hover:text-white">
 						<input accept={allowedExtensions} className="hidden" multiple onChange={handleFileSelect} type="file" />
-						<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+						<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
 						{t("buttons.addNewFile")}
 					</label>
 				) : null}
 
 				<Button
 					ariaLabel={t("buttons.createNewFile")}
-					className="w-auto group gap-1 p-0 font-semibold text-gray-300 hover:text-white"
+					className="w-auto gap-1 p-0 font-semibold text-gray-300 group hover:text-white"
 					onClick={() => openModal(ModalName.addCodeAssets)}
 				>
-					<PlusCircle className="transtion duration-300 stroke-gray-300 group-hover:stroke-white w-5 h-5" />
+					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
 					{t("buttons.createNewFile")}
 				</Button>
 			</div>
@@ -145,7 +145,7 @@ export const AddCodeAssetsTab = () => {
 					<Table className="max-h-96">
 						<THead>
 							<Tr>
-								<Th className="border-r-0 cursor-pointer group font-normal">{t("table.columns.name")}</Th>
+								<Th className="font-normal border-r-0 cursor-pointer group">{t("table.columns.name")}</Th>
 								<Th className="border-r-0 max-12" />
 							</Tr>
 						</THead>
@@ -157,7 +157,7 @@ export const AddCodeAssetsTab = () => {
 									</Td>
 									<Td className="border-r-0 max-w-12">
 										<IconButton onClick={() => openModal(ModalName.deleteFile, name)}>
-											<TrashIcon className="fill-white w-3 h-3" />
+											<TrashIcon className="w-3 h-3 fill-white" />
 										</IconButton>
 									</Td>
 								</Tr>

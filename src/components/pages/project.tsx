@@ -45,7 +45,7 @@ export const Project = () => {
 		() =>
 			initialProjectTabs.map(({ title, component: Component }) => (
 				<TabPanel key={title} value={title}>
-					<Suspense fallback={t("loading", { ns: "buttons" })}>
+					<Suspense>
 						<Component />
 					</Suspense>
 				</TabPanel>

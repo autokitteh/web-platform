@@ -16,6 +16,35 @@
 		}
 	},
 	"connections": {
+		"titleAvailable": "Available Connections",
+		"titleNoAvailable": "No connections available.",
+		"buttons": {
+			"addNew": "Add new",
+			"loading": "Loading"
+		},
+		"table": {
+			"columns": {
+				"name": "Name",
+				"app": "App",
+				"status": "Status",
+				"information": "Information",
+				"actions": "Actions"
+			},
+			"buttons": {
+				"ariaModifyConnection": "Modify {{name}} connection",
+				"ariaDeleteConnection": "Delete {{name}} connection",
+				"titleTestConnection": "Test Connection",
+				"titleInitConnection": "Initialize Connection",
+				"titleEditConnection": "Edit connection",
+				"titleRemoveConnection": "Remove connection"
+			},
+			"statuses": {
+				"unspecified": "Unspecified",
+				"ok": "OK",
+				"warning": "Warning",
+				"error": "Error"
+			}
+		},
 		"form": {
 			"addNewConnection": "Add new connection",
 			"placeholders": {
@@ -41,11 +70,10 @@
 			"columns": {
 				"name": "Name",
 				"connection": "Connection",
-				"fileName": "File name",
-				"entrypoint": "Entry Point",
-				"eventType": "Event Type",
 				"call": "Call",
-				"filter": "Filter"
+				"eventType": "Event Type",
+				"filter": "Filter",
+				"actions": "Actions"
 			},
 			"buttons": {
 				"modify": "Modify",
@@ -87,7 +115,8 @@
 		"table": {
 			"columns": {
 				"name": "Name",
-				"value": "Value"
+				"value": "Value",
+				"actions": "Actions"
 			},
 			"buttons": {
 				"modify": "Modify",

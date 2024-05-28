@@ -18,7 +18,7 @@ export class ProjectsService {
 			if (!projectId) {
 				LoggerService.error(namespaces.projectService, i18n.t("projectNotCreated", { ns: "services" }));
 
-				return { data: undefined, error: i18n.t("projectNotCreated", { ns: "services" }) };
+				return { data: undefined, error: new Error(i18n.t("projectNotCreated", { ns: "services" })) };
 			}
 			return { data: projectId, error: undefined };
 		} catch (error) {
@@ -33,7 +33,7 @@ export class ProjectsService {
 			if (!project) {
 				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
 
-				return { data: undefined, error: i18n.t("projectNotFound", { ns: "services" }) };
+				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
 			}
 			return { data: project, error: undefined };
 		} catch (error) {
@@ -46,7 +46,7 @@ export class ProjectsService {
 			const project = await projectsClient.update({ project: { projectId, name } });
 			if (!project) {
 				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
-				return { data: undefined, error: i18n.t("projectNotFound", { ns: "services" }) };
+				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
 			}
 			return { data: undefined, error: undefined };
 		} catch (error) {

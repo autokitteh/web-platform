@@ -11,18 +11,16 @@ import { useTranslation, Trans } from "react-i18next";
 export const ModalDeleteTrigger = ({ onDelete, triggerId }: ModalDeleteTriggerProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
 	const { closeModal } = useModalStore();
-
 	const [trigger, setTrigger] = useState<Trigger>();
 
+	const fetchTrigger = async () => {
+		if (!triggerId) return;
+		const { data } = await TriggersService.get(triggerId);
+		if (!data) return;
+		setTrigger(data);
+	};
+
 	useEffect(() => {
-		if (!triggerId) {
-			return;
-		}
-		const fetchTrigger = async () => {
-			const { data } = await TriggersService.get(triggerId);
-			if (!data) return;
-			setTrigger(data);
-		};
 		fetchTrigger();
 	}, [triggerId]);
 
