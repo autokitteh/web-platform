@@ -13,30 +13,25 @@ export const ModalDeleteVariable = ({ onDelete, variable }: ModalDeleteVariableP
 	return (
 		<Modal name={ModalName.deleteVariable}>
 			<div className="mx-6">
-				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p>{t("line")}</p>
-				<p className="font-medium">
-					<Trans>
-						{t("line2", {
-							name: `<strong>${variable?.name}</strong><br/>`,
-							value: `<strong>${variable?.value}</strong>`,
-						})}
-					</Trans>
-				</p>
+				<div className="font-medium">
+					<Trans i18nKey="line2" t={t} values={{ name: variable?.name, value: variable?.value }} />
+				</div>
 				<p>{t("line3")}</p>
 				<p>{t("line4")}</p>
 			</div>
 			<div className="flex justify-end gap-1 mt-14">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="font-semibold py-3 px-4 hover:text-white w-auto"
+					className="w-auto px-4 py-3 font-semibold hover:text-white"
 					onClick={() => closeModal(ModalName.deleteVariable)}
 				>
 					{t("cancelButton")}
 				</Button>
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="font-semibold py-3 px-4 bg-gray-700 w-auto"
+					className="w-auto px-4 py-3 font-semibold bg-gray-700"
 					onClick={onDelete}
 					variant="filled"
 				>
