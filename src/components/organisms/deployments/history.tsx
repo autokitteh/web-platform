@@ -29,7 +29,7 @@ export const DeploymentsHistory = () => {
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Deployment;
-	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
+	}>({ direction: SortDirectionVariant.ASC, column: "createdAt" });
 
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -53,7 +53,7 @@ export const DeploymentsHistory = () => {
 	};
 
 	useEffect(() => {
-		if (deployments.length > 0 && initialLoad) setInitialLoad(false);
+		if (deployments.length && initialLoad) setInitialLoad(false);
 	}, [deployments]);
 
 	useEffect(() => {

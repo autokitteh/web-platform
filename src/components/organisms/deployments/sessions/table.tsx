@@ -72,7 +72,7 @@ export const SessionsTable = () => {
 	}, [sessionId]);
 
 	useEffect(() => {
-		if (sessions.length > 0 && initialLoad) setInitialLoad(false);
+		if (sessions.length && initialLoad) setInitialLoad(false);
 	}, [sessions]);
 
 	useEffect(() => {
