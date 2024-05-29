@@ -36,6 +36,7 @@ export const SessionsTable = () => {
 		isOpen: false,
 		message: "",
 	});
+	const [initialLoad, setInitialLoad] = useState(true);
 
 	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
 		"w-3/4 rounded-r-none": !sessionId,
@@ -71,6 +72,10 @@ export const SessionsTable = () => {
 	}, [sessionId]);
 
 	useEffect(() => {
+		if (sessions.length > 0 && initialLoad) setInitialLoad(false);
+	}, [sessions]);
+
+	useEffect(() => {
 		fetchSessions();
 
 		const intervalSessions = setInterval(fetchSessions, fetchSessionsInterval);
@@ -91,11 +96,15 @@ export const SessionsTable = () => {
 					? SortDirectionVariant.DESC
 					: SortDirectionVariant.ASC;
 			setSort({ direction: newDirection, column: key });
+			initialLoad && setInitialLoad(false);
 		},
 		[sort]
 	);
 
-	const sortedSessions = useMemo(() => orderBy(sessions, [sort.column], [sort.direction]), [sessions, sort]);
+	const sortedSessions = useMemo(() => {
+		if (initialLoad) return sessions;
+		return orderBy(sessions, [sort.column], [sort.direction]);
+	}, [sessions, sort]);
 
 	const showDeleteModal = useCallback(() => {
 		openModal(ModalName.deleteDeploymentSession);

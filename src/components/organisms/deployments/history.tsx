@@ -24,11 +24,13 @@ export const DeploymentsHistory = () => {
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
 	const [deploymentId, setDeploymentId] = useState<string>();
 	const [isLoadingDeployments, setIsLoadingDeployments] = useState(true);
+	const [initialLoad, setInitialLoad] = useState(true);
 
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Deployment;
 	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
+
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -51,6 +53,10 @@ export const DeploymentsHistory = () => {
 	};
 
 	useEffect(() => {
+		if (deployments.length > 0 && initialLoad) setInitialLoad(false);
+	}, [deployments]);
+
+	useEffect(() => {
 		fetchDeployments();
 
 		const intervalDeployments = setInterval(fetchDeployments, fetchDeploymentsInterval);
@@ -64,11 +70,15 @@ export const DeploymentsHistory = () => {
 					? SortDirectionVariant.DESC
 					: SortDirectionVariant.ASC;
 			setSort({ direction: newDirection, column: key });
+			initialLoad && setInitialLoad(false);
 		},
 		[sort]
 	);
 
-	const sortedDeployments = useMemo(() => orderBy(deployments, [sort.column], [sort.direction]), [deployments, sort]);
+	const sortedDeployments = useMemo(() => {
+		if (initialLoad) return deployments;
+		return orderBy(deployments, [sort.column], [sort.direction]);
+	}, [deployments, sort]);
 
 	const handleDeploymentAction = useCallback(
 		async (id: string, action: "activate" | "deactivate" | "delete", event?: React.MouseEvent) => {
