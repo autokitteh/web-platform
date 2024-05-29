@@ -2,7 +2,7 @@
 	"deleteConnection": {
 		"title": "Delete  {{name}} Connection",
 		"line": "This connection you are about to delete uses:",
-		"line2": "Connection name - {{name}} App name - {{appName}}",
+		"line2": "Connection name - <strong>{{name}}</strong> <br /> App name - <strong>{{appName}}</strong>",
 		"line3": "Deleting the connection may cause failure of projects.",
 		"line4": "Are you sure you want to delete this connection?",
 		"cancelButton": "Cancel",
@@ -11,7 +11,7 @@
 	"deleteTrigger": {
 		"title": "Delete {{name}} Trigger",
 		"line": "This trigger you are about to delete uses:",
-		"line2": "Connection - {{connection}} Call - {{call}} Event Type - {{eventType}}",
+		"line2": "Connection - <strong>{{connection}}</strong> <br /> Call - <strong>{{call}}</strong> <br /> Event Type - <strong>{{eventType}}</strong>",
 		"line3": "Deleting the trigger may cause failure of project.",
 		"line4": "Are you sure you want to delete this trigger?",
 		"cancelButton": "Cancel",
@@ -20,7 +20,7 @@
 	"deleteVariable": {
 		"title": "Delete Variable",
 		"line": "This variable you are about to delete uses:",
-		"line2": "Name - {{name}} Value - {{value}}",
+		"line2": "Name - <strong>{{name}}</strong> <br /> Value - <strong>{{value}}</strong>",
 		"line3": "Deleting the variable may cause failure of projects.",
 		"line4": "Are you sure you want to delete this variable?",
 		"cancelButton": "Cancel",

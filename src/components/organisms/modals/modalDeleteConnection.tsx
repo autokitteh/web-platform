@@ -29,14 +29,10 @@ export const ModalDeleteConnection = ({ onDelete, connectionId, loading }: Modal
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title", { name: connection?.name })}</h3>
 				<p>{t("line")}</p>
-				<p className="font-medium">
-					<Trans>
-						{t("line2", {
-							name: `<strong>${connection?.name}</strong><br/>`,
-							appName: `<strong>${connection?.integrationName}</strong><br/>`,
-						})}
-					</Trans>
-				</p>
+				<div className="font-medium">
+					<Trans i18nKey="line2" t={t} values={{ name: connection?.name, appName: connection?.integrationName }} />
+				</div>
+
 				<p className="mt-1">{t("line3")}</p>
 				<p className="mt-1">{t("line4")}</p>
 			</div>
