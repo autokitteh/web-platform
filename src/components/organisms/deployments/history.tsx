@@ -59,8 +59,8 @@ export const DeploymentsHistory = () => {
 	useEffect(() => {
 		fetchDeployments();
 
-		const intervalDeployments = setInterval(fetchDeployments, fetchDeploymentsInterval);
-		return () => clearInterval(intervalDeployments);
+		const deploymentsFetchInterval = setInterval(fetchDeployments, fetchDeploymentsInterval);
+		return () => clearInterval(deploymentsFetchInterval);
 	}, [projectId]);
 
 	const toggleSortDeployments = useCallback(
