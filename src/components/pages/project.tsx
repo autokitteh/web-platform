@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 export const Project = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons"]);
-	const { activeTab, setActiveTab, resetEditorOpenedFiles } = useProjectStore();
+	const { activeTab, setActiveTab, resetResources } = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -19,7 +19,7 @@ export const Project = () => {
 	useEffect(() => {
 		if (!projectId) return;
 
-		resetEditorOpenedFiles();
+		resetResources();
 	}, [projectId]);
 
 	const handleTabChange = useCallback(

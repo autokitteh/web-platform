@@ -50,10 +50,12 @@ export const AddCodeAssetsTab = () => {
 			"opacity-1 pointer-events-auto": isEmpty(sortedResources),
 		}
 	);
-	const activeBodyRow = (fileName: string) =>
-		cn({
-			"bg-black": openedFiles?.find(({ name, isActive }) => name === fileName && isActive),
+	const activeBodyRow = (fileName: string) => {
+		const isActiveFile = openedFiles?.find(({ name, isActive }) => name === fileName && isActive);
+		return cn({
+			"bg-black": isActiveFile,
 		});
+	};
 
 	const fetchResources = async () => {
 		setIsLoading(true);
