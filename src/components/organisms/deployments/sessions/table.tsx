@@ -78,8 +78,8 @@ export const SessionsTable = () => {
 	useEffect(() => {
 		fetchSessions();
 
-		const sessionsFetchInterval = setInterval(fetchSessions, fetchSessionsInterval);
-		return () => clearInterval(sessionsFetchInterval);
+		const sessionsFetchIntervalId = setInterval(fetchSessions, fetchSessionsInterval);
+		return () => clearInterval(sessionsFetchIntervalId);
 	}, [sessionStateType]);
 
 	useEffect(() => {
