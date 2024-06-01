@@ -1,18 +1,26 @@
-import React, { useMemo, useState, useCallback, Suspense } from "react";
+import React, { useEffect, useMemo, useState, useCallback, Suspense } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
 import { initialProjectTabs } from "@constants";
 import { useProjectStore } from "@store";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 export const Project = () => {
+	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons"]);
-	const { activeTab, setActiveTab } = useProjectStore();
+	const { activeTab, setActiveTab, resetResources } = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
+
+	useEffect(() => {
+		if (!projectId) return;
+
+		resetResources();
+	}, [projectId]);
 
 	const handleTabChange = useCallback(
 		(value: string) => {
@@ -29,12 +37,12 @@ export const Project = () => {
 		() => (
 			<TabList>
 				{initialProjectTabs.map(({ title }) => (
-					<Tab ariaLabel={title} className="text-xs 3xl:text-sm flex items-center" key={title} value={title}>
+					<Tab ariaLabel={title} className="flex items-center text-xs 3xl:text-sm" key={title} value={title}>
 						{title}
 					</Tab>
 				))}
-				<IconButton className="bg-black p-0 w-default-icon h-default-icon hover:bg-black group ml-auto ">
-					<Close className="transition w-3 h-3 fill-gray-400 group-hover:fill-white" />
+				<IconButton className="p-0 ml-auto bg-black w-default-icon h-default-icon hover:bg-black group ">
+					<Close className="w-3 h-3 transition fill-gray-400 group-hover:fill-white" />
 				</IconButton>
 			</TabList>
 		),

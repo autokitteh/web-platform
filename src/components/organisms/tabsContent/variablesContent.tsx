@@ -51,7 +51,7 @@ export const VariablesContent = () => {
 
 	useEffect(() => {
 		fetchVariables();
-	}, []);
+	}, [projectId]);
 
 	const toggleSortVariables = (key: keyof Variable) => {
 		const newDirection =

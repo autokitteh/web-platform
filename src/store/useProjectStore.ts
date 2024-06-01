@@ -20,6 +20,7 @@ const defaultState: Omit<
 	| "getProjectResources"
 	| "setProjectEmptyResources"
 	| "updateEditorOpenedFiles"
+	| "resetResources"
 	| "updateEditorClosedFiles"
 	| "removeProjectFile"
 > = {
@@ -127,6 +128,14 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 		set((state) => {
 			state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, fileName);
+			return state;
+		});
+	},
+
+	resetResources: () => {
+		set((state) => {
+			state.currentProject.openedFiles = [];
+			state.currentProject.resources = {};
 			return state;
 		});
 	},

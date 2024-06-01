@@ -49,7 +49,7 @@ export const TriggersContent = () => {
 
 	useEffect(() => {
 		fetchTriggers();
-	}, []);
+	}, [projectId]);
 
 	const handleToggleSort = (key: keyof Trigger) => {
 		const newDirection =
