@@ -10,6 +10,7 @@ import { useProjectStore } from "@store";
 import randomatic from "randomatic";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+
 const DashboardContent = ({ userName, createProject }: { userName?: string; createProject: () => Promise<void> }) => (
 	<div className="flex h-full">
 		<div className="flex flex-col flex-2">
