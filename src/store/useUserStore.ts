@@ -4,14 +4,14 @@ import { AuthService } from "@services";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const defaultState: Omit<UserStore, "whoAmI"> = {
+const defaultState: Omit<UserStore, "getLoggedInUser"> = {
 	user: undefined,
 };
 
 const store: StateCreator<UserStore> = (set) => ({
 	...defaultState,
 
-	whoAmI: async () => {
+	getLoggedInUser: async () => {
 		const { data, error } = await AuthService.whoAmI();
 
 		if (error) {

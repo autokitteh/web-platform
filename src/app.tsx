@@ -19,12 +19,12 @@ export const App = () => {
 const AppContainer = () => {
 	const { isAuthenticated, isSessionLoading } = useSession();
 	const { isUserLoading } = useUser();
-	const { whoAmI } = useUserStore();
+	const { getLoggedInUser } = useUserStore();
 
 	const getAKToken = async (e: CustomEvent<any>) => {
 		axios
 			.get(`${baseUrl}/auth/descope/login?jwt=${e.detail.sessionJwt}`, { withCredentials: true })
-			.then(() => whoAmI());
+			.then(() => getLoggedInUser());
 	};
 
 	return (

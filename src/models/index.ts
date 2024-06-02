@@ -6,3 +6,4 @@ export { convertConnectionProtoToModel } from "@models/connection.model";
 export { SessionLogRecord } from "@models/sessionLogRecord.model";
 export { convertErrorProtoToModel } from "@models/error.model";
 export { convertVariableProtoToModel } from "@models/variable.model";
+export { convertUserProtoToModel } from "@models/user.model";

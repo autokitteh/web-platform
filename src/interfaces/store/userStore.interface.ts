@@ -1,4 +1,4 @@
-import { User } from "@ak-proto-ts/users/v1/user_pb";
+import { User } from "@type/models";
 
 interface UserStoreResponse {
 	error?: unknown;
@@ -7,5 +7,5 @@ interface UserStoreResponse {
 
 export interface UserStore {
 	user?: User;
-	whoAmI: () => Promise<UserStoreResponse & { user?: User }>;
+	getLoggedInUser: () => Promise<UserStoreResponse & { user?: User }>;
 }
