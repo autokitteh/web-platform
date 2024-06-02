@@ -8,6 +8,7 @@ export { Frame } from "@components/atoms/frame";
 export { Table, THead, TBody, Td, Th, Tr } from "@components/atoms/table";
 export { Select } from "@components/atoms/select";
 export { Input } from "@components/atoms/input";
+export { SearchInput } from "@components/atoms/searchInput";
 export { Textarea } from "@components/atoms/textarea";
 export { Toast } from "@components/atoms/toast";
 export { ErrorMessage } from "@components/atoms/errorMessage";

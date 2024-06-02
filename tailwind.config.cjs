@@ -7,6 +7,9 @@ export default {
 		fontFamily: {
 			"fira-sans": ["Fira Sans", "sans-serif"],
 			"fira-code": ["Fira Code", "sans-serif"],
+			"averta": ["averta", "sans-serif"],
+			"averta-semi-bold": ["avertasemibold", "sans-serif"],
+			"averta-bold": ["avertabold", "sans-serif"],
 		},
 		extend: {
 			maxWidth: {
@@ -30,6 +33,9 @@ export default {
 			},
 			borderRadius: {
 				"4xl": "40px",
+			},
+			flex: {
+				2: "2 2 0%",
 			},
 		},
 		screens: {
@@ -72,6 +78,7 @@ export default {
 			},
 			"gray": {
 				DEFAULT: "#D9D9D9",
+				100: "#F8F8F8",
 				200: "#f1f1f1",
 				300: "#d2d2d7",
 				400: "#818181",

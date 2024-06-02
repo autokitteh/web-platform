@@ -76,3 +76,24 @@ textarea:focus::placeholder {
 a {
 	transition: var(--transition);
 }
+
+@font-face {
+	font-family: "averta";
+	src: url("./fonts/averta/averta-regular-webfont.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "avertasemibold";
+	src: url("./fonts/averta/averta-semibold-webfont.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "avertabold";
+	src: url("./fonts/averta/averta-bold-webfont.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}

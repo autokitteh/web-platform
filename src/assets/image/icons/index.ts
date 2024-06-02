@@ -1,4 +1,7 @@
 export { default as PlusCircle } from "@assets/image/icons/PlusCircle.svg?react";
+export { default as Plus } from "@assets/image/icons/Plus.svg?react";
+export { default as GraphUp } from "@assets/image/icons/GraphUp.svg?react";
+export { default as Search } from "@assets/image/icons/Search.svg?react";
 export { default as Minimize } from "@assets/image/icons/Minimize.svg?react";
 export { default as ArrowDown } from "@assets/image/icons/ArrowDown.svg?react";
 export { default as ArrowUp } from "@assets/image/icons/ArrowUp.svg?react";
