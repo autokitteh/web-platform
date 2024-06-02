@@ -47,10 +47,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	};
 
 	useEffect(() => {
-		const fetchMenu = async () => await getProjectsList();
-		fetchMenu();
-
-		const intervalMenu = setInterval(fetchMenu, fetchMenuInterval);
+		const intervalMenu = setInterval(getProjectsList, fetchMenuInterval);
 		return () => clearInterval(intervalMenu);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

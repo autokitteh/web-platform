@@ -5,6 +5,7 @@ import { AuthProvider } from "@descope/react-sdk";
 import { useSession, useUser } from "@descope/react-sdk";
 import { Descope } from "@descope/react-sdk";
 import { router } from "@routing/routes";
+import { useProjectStore } from "@store";
 import axios from "axios";
 import { RouterProvider } from "react-router-dom";
 
@@ -18,13 +19,15 @@ export const App = () => {
 
 const AppContainer = () => {
 	const { isAuthenticated, isSessionLoading } = useSession();
+	const { getProjectsList } = useProjectStore();
+
 	const { isUserLoading } = useUser();
 	const { getLoggedInUser } = useUserStore();
-
 	const getAKToken = async (e: CustomEvent<any>) => {
-		axios
-			.get(`${baseUrl}/auth/descope/login?jwt=${e.detail.sessionJwt}`, { withCredentials: true })
-			.then(() => getLoggedInUser());
+		axios.get(`${baseUrl}/auth/descope/login?jwt=${e.detail.sessionJwt}`, { withCredentials: true }).then(async () => {
+			await getLoggedInUser();
+			await getProjectsList();
+		});
 	};
 
 	return (

@@ -15,7 +15,6 @@ const store: StateCreator<UserStore> = (set) => ({
 		const { data, error } = await AuthService.whoAmI();
 
 		if (error) {
-			// LoggerService.error(namespaces.userStore, (error as Error).message);
 			return { error, user: undefined };
 		}
 
