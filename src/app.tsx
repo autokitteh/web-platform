@@ -8,7 +8,6 @@ import { ProjectsMenuList, User } from "@type/models";
 import axios from "axios";
 import { RouterProvider } from "react-router-dom";
 
-// Adjusted function to handle the actual return types of getLoggedInUser and getProjectsList
 const getAKToken = async (
 	sessionJwt: string,
 	getLoggedInUser: () => Promise<{ user?: User }>,
