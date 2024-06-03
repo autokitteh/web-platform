@@ -66,7 +66,6 @@ export const DeploymentsHistory = () => {
 					? SortDirectionVariant.DESC
 					: SortDirectionVariant.ASC;
 			setSort({ direction: newDirection, column: key });
-			initialLoad && setInitialLoad(false);
 		},
 		[sort]
 	);

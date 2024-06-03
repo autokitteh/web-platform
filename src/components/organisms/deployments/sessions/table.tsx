@@ -92,7 +92,6 @@ export const SessionsTable = () => {
 					? SortDirectionVariant.DESC
 					: SortDirectionVariant.ASC;
 			setSort({ direction: newDirection, column: key });
-			initialLoad && setInitialLoad(false);
 		},
 		[sort]
 	);
