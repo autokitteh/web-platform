@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useUserStore } from "./store/useUserStore";
 import { Toast } from "@components/atoms";
-import { baseUrl, isAuthEnabled } from "@constants";
+import { baseUrl, descopeProjectId, isAuthEnabled } from "@constants";
 import { AuthProvider, useSession, useUser, Descope } from "@descope/react-sdk";
 import { router } from "@routing/routes";
 import { useProjectStore } from "@store";
@@ -26,7 +26,7 @@ const getAKToken = async (
 
 export const App: React.FC = () => {
 	return (
-		<AuthProvider projectId="P2gBMthNrBAMwJ4nH5V3rOEvtNw8">
+		<AuthProvider projectId={descopeProjectId}>
 			<AppContainer />
 		</AuthProvider>
 	);

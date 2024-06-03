@@ -8,5 +8,6 @@ export {
 	fetchSessionsInterval,
 	isDevelopment,
 	isAuthEnabled,
+	descopeProjectId,
 } from "@constants/global.constants";
 export { monacoLanguages, defalutFileExtension } from "@constants/monacoLanguages.constants.ts";
