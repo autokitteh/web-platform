@@ -4,3 +4,12 @@ export enum ConnectionStatus {
 	warning = 2,
 	error = 3,
 }
+
+export enum Integrations {
+	github = "github",
+}
+
+export enum GithubConnectionType {
+	OAUTH = "oauth",
+	PAT = "pat",
+}

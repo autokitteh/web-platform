@@ -3,5 +3,6 @@ export interface LinkProps {
 	className?: string;
 	ariaLabel?: string;
 	disabled?: boolean;
+	target?: React.HTMLAttributeAnchorTarget;
 	children: React.ReactNode;
 }

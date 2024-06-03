@@ -44,19 +44,6 @@
 				"warning": "Warning",
 				"error": "Error"
 			}
-		},
-		"form": {
-			"addNewConnection": "Add new connection",
-			"placeholders": {
-				"selectApp": "Select app",
-				"userName": "User Name",
-				"password": "Password",
-				"nameNewConnection": "Name new connection"
-			},
-			"buttons": {
-				"testConnection": "Test Connection",
-				"testing": "Testing"
-			}
 		}
 	},
 	"triggers": {

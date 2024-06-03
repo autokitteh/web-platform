@@ -4,4 +4,4 @@ export { ModalName } from "@enums/components/modal.enum";
 export { OutputTabsVariants, ProjectTabs } from "@enums/components/tabs.enum";
 export { SidebarMenu, SidebarHrefMenu } from "@enums/components/menu.enum";
 export { ReadOnlyFile } from "@enums/components/readOnlyFile.enum";
-export { ConnectionStatus } from "@enums/components/connection.enum";
+export { ConnectionStatus, Integrations, GithubConnectionType } from "@enums/components/connection.enum";
