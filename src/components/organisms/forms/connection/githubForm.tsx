@@ -4,14 +4,14 @@ import { Select, Button, ErrorMessage, Input, Link, Spinner, Toast } from "@comp
 import { baseUrl } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { integrationGithubSchema } from "@validations";
+import { githubIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-export const IntegrationGithubForm = () => {
+export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "connections.form" });
-	const [selected, setSelected] = useState<string>();
+	const [selectedConnectionType, setSelectedConnectionType] = useState<string>();
 	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ export const IntegrationGithubForm = () => {
 		formState: { errors },
 		register,
 	} = useForm({
-		resolver: zodResolver(integrationGithubSchema),
+		resolver: zodResolver(githubIntegrationSchema),
 		defaultValues: {
 			pat: "",
 			webhookSercet: "",
@@ -38,9 +38,9 @@ export const IntegrationGithubForm = () => {
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-			setToast({ isOpen: true, isSuccess: true, message: t("github.coppiedSuccessfully") });
+			setToast({ isOpen: true, isSuccess: true, message: t("github.copySuccess") });
 		} catch (err) {
-			setToast({ isOpen: true, isSuccess: false, message: t("github.failedCopy") });
+			setToast({ isOpen: true, isSuccess: false, message: t("github.copyFailulre") });
 		}
 	};
 
@@ -149,14 +149,14 @@ export const IntegrationGithubForm = () => {
 			<form className="flex items-start gap-10" id="createNewConnectionForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col w-full gap-6">
 					<Select
-						aria-label={t("placeholders.selectIntegration")}
+						aria-label={t("placeholders.selectConnectionType")}
 						onChange={(selected) => {
-							setSelected(selected?.value);
+							setSelectedConnectionType(selected?.value);
 						}}
 						options={selectIntegrationGithub}
-						placeholder={t("placeholders.selectIntegration")}
+						placeholder={t("placeholders.selectConnectionType")}
 					/>
-					{selected ? (selected === "pat" ? renderPATFields() : renderOAuthButton()) : null}
+					{selectedConnectionType ? (selectedConnectionType === "pat" ? renderPATFields() : renderOAuthButton()) : null}
 				</div>
 			</form>
 			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>

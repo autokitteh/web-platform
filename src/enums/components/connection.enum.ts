@@ -5,6 +5,11 @@ export enum ConnectionStatus {
 	error = 3,
 }
 
-export enum ConnectionApp {
+export enum Integrations {
 	github = "github",
+}
+
+export enum GithubConnectionType {
+	OAuth = "oauth",
+	PAT = "pat",
 }
