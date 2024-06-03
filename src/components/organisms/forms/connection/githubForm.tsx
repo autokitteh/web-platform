@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TestIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
-import { Select, Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
+import { Select, Button, ErrorMessage, Input, Link, Spinner, Toast } from "@components/atoms";
 import { baseUrl } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,8 +9,10 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 export const IntegrationGithubForm = () => {
+	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "connections.form" });
 	const [selected, setSelected] = useState<string>();
+	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -36,15 +38,13 @@ export const IntegrationGithubForm = () => {
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-			alert("Copied to clipboard successfully!");
+			setToast({ isOpen: true, isSuccess: true, message: t("github.coppiedSuccessfully") });
 		} catch (err) {
-			console.error("Could not copy text: ", err);
+			setToast({ isOpen: true, isSuccess: false, message: t("github.failedCopy") });
 		}
 	};
 
-	const handleGithubOAuth = () => {
-		window.open(`${baseUrl}/oauth/start/github`, "_blank");
-	};
+	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
 
 	const renderPATFields = () => (
 		<>
@@ -96,7 +96,7 @@ export const IntegrationGithubForm = () => {
 				{isLoading ? <Spinner /> : <TestIcon className="w-5 h-4 transition fill-white" />} {t("buttons.saveConnection")}
 			</Button>
 			<div>
-				<p className="text-lg">{t("github.information")}:</p>
+				<p className="text-lg">{t("information")}:</p>
 				<div className="flex flex-col items-start gap-2 mt-2">
 					{infoGithubLinks.map(({ url, text, id }) => (
 						<Link
@@ -116,7 +116,7 @@ export const IntegrationGithubForm = () => {
 
 	const renderOAuthButton = () => (
 		<div>
-			<p className="text-lg">{t("github.information")}:</p>
+			<p className="text-lg">{t("information")}:</p>
 			<Link
 				className="mt-1 inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent text-md"
 				target="_blank"
@@ -137,19 +137,31 @@ export const IntegrationGithubForm = () => {
 		</div>
 	);
 
+	const toastProps = {
+		duration: 5,
+		isOpen: toast.isOpen,
+		onClose: () => setToast({ ...toast, isOpen: false }),
+		title: toast.isSuccess ? t("success") : tErrors("error"),
+	};
+
 	return (
-		<form className="flex items-start gap-10" id="createNewConnectionForm" onSubmit={handleSubmit(onSubmit)}>
-			<div className="flex flex-col w-full gap-6">
-				<Select
-					aria-label={t("placeholders.selectIntegration")}
-					onChange={(selected) => {
-						setSelected(selected?.value);
-					}}
-					options={selectIntegrationGithub}
-					placeholder={t("placeholders.selectIntegration")}
-				/>
-				{selected ? (selected === "pat" ? renderPATFields() : renderOAuthButton()) : null}
-			</div>
-		</form>
+		<>
+			<form className="flex items-start gap-10" id="createNewConnectionForm" onSubmit={handleSubmit(onSubmit)}>
+				<div className="flex flex-col w-full gap-6">
+					<Select
+						aria-label={t("placeholders.selectIntegration")}
+						onChange={(selected) => {
+							setSelected(selected?.value);
+						}}
+						options={selectIntegrationGithub}
+						placeholder={t("placeholders.selectIntegration")}
+					/>
+					{selected ? (selected === "pat" ? renderPATFields() : renderOAuthButton()) : null}
+				</div>
+			</form>
+			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
+				<p className="mt-1 text-xs">{toast.message}</p>
+			</Toast>
+		</>
 	);
 };

@@ -47,6 +47,8 @@
 		},
 		"form": {
 			"addNewConnection": "Add new connection",
+			"information": "Information",
+			"success": "Success",
 			"placeholders": {
 				"selectApp": "Select app",
 				"selectIntegration": "Select integration"
@@ -57,7 +59,8 @@
 				"copy": "Copy"
 			},
 			"github": {
-				"information": "Information",
+				"coppiedSuccessfully": "Copied to clipboard successfully!",
+				"failedCopy": "Could not copy text",
 				"aboutGitHubApps": "About using GitHub Apps",
 				"clickButtonInstall": "Click the button below to install and authorize the autokitteh GitHub apps",
 				"placeholders": {
