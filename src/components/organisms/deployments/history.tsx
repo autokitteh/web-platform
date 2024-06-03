@@ -53,10 +53,6 @@ export const DeploymentsHistory = () => {
 	};
 
 	useEffect(() => {
-		if (deployments.length && initialLoad) setInitialLoad(false);
-	}, [deployments]);
-
-	useEffect(() => {
 		fetchDeployments();
 
 		const deploymentsFetchIntervalId = setInterval(fetchDeployments, fetchDeploymentsInterval);
@@ -76,7 +72,10 @@ export const DeploymentsHistory = () => {
 	);
 
 	const sortedDeployments = useMemo(() => {
-		if (initialLoad) return deployments;
+		if (initialLoad) {
+			setInitialLoad(false);
+			return deployments;
+		}
 		return orderBy(deployments, [sort.column], [sort.direction]);
 	}, [deployments, sort]);
 

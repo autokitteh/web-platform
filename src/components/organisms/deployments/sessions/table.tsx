@@ -72,10 +72,6 @@ export const SessionsTable = () => {
 	}, [sessionId]);
 
 	useEffect(() => {
-		if (sessions.length && initialLoad) setInitialLoad(false);
-	}, [sessions]);
-
-	useEffect(() => {
 		fetchSessions();
 
 		const sessionsFetchIntervalId = setInterval(fetchSessions, fetchSessionsInterval);
@@ -102,7 +98,10 @@ export const SessionsTable = () => {
 	);
 
 	const sortedSessions = useMemo(() => {
-		if (initialLoad) return sessions;
+		if (initialLoad) {
+			setInitialLoad(false);
+			return sessions;
+		}
 		return orderBy(sessions, [sort.column], [sort.direction]);
 	}, [sessions, sort]);
 
