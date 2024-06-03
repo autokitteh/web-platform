@@ -6,11 +6,12 @@ const selectItemSchema = z.object({
 	disabled: z.boolean().optional(),
 });
 
-export const newConnectionSchema = z.object({
+export const connectionSchema = z.object({
 	connectionApp: selectItemSchema.refine((value) => value.label, {
 		message: "Connection is required",
 	}),
-	userName: z.string().min(1, "Username is required"),
-	password: z.string().min(1, "Password is required"),
-	connectionName: z.string().min(1, "Connection name is required"),
+});
+export const integrationGithubSchema = z.object({
+	pat: z.string().min(5, "Personal Access Token is required"),
+	webhookSercet: z.string().min(2, "Webhook Secret is required"),
 });

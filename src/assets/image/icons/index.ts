@@ -16,5 +16,7 @@ export { default as ActionActiveIcon } from "@assets/image/icons/ActionActive.sv
 export { default as ActionStoppedIcon } from "@assets/image/icons/ActionStopped.svg?react";
 export { default as LockSolid } from "@assets/image/icons/LockSolid.svg?react";
 export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
+export { default as CopyIcon } from "@assets/image/icons/Copy.svg?react";
+export { default as ExternalLinkIcon } from "@assets/image/icons/ExternalLink.svg?react";
 export { default as IconGoogle } from "@assets/image/icons/Google.png";
 export { default as IconGithub } from "@assets/image/icons/Github.png";

@@ -4,3 +4,7 @@ export enum ConnectionStatus {
 	warning = 2,
 	error = 3,
 }
+
+export enum ConnectionApp {
+	github = "github",
+}

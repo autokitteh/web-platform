@@ -15,8 +15,3 @@ export interface SelectOption {
 	label: string;
 	disabled?: boolean;
 }
-
-export interface SelectAppChangeForm {
-	name: string;
-	value: string;
-}

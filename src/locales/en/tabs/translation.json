@@ -49,13 +49,28 @@
 			"addNewConnection": "Add new connection",
 			"placeholders": {
 				"selectApp": "Select app",
-				"userName": "User Name",
-				"password": "Password",
-				"nameNewConnection": "Name new connection"
+				"selectIntegration": "Select integration"
 			},
 			"buttons": {
-				"testConnection": "Test Connection",
-				"testing": "Testing"
+				"saveConnection": "Save Connection",
+				"startOAuthFlow": "Start OAuth Flow",
+				"copy": "Copy"
+			},
+			"github": {
+				"information": "Information",
+				"aboutGitHubApps": "About using GitHub Apps",
+				"clickButtonInstall": "Click the button below to install and authorize the autokitteh GitHub apps",
+				"placeholders": {
+					"pat": "Personal Access Token (PAT) - fine-grained or classic",
+					"webhookUrl": "Webhook URL",
+					"webhookSecret": "Webhook Secret"
+				},
+				"informationPat": {
+					"auth": "Authenticating with a personal access token",
+					"manage": "Managing your personal access tokens",
+					"setting": "Setting a PAT policy for your organization",
+					"endpoints": "Endpoints available for fine-grained PATs"
+				}
 			}
 		}
 	},
