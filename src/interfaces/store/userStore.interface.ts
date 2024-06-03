@@ -8,4 +8,5 @@ interface UserStoreResponse {
 export interface UserStore {
 	user?: User;
 	getLoggedInUser: () => Promise<UserStoreResponse & { user?: User }>;
+	reset: () => void;
 }

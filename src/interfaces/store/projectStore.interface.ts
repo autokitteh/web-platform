@@ -27,5 +27,6 @@ export interface ProjectStore {
 	updateEditorOpenedFiles: (fileName: string) => void;
 	updateEditorClosedFiles: (fileName: string) => void;
 	resetResources: () => void;
+	reset: () => void;
 	removeProjectFile: (fileName: string, projectId: string) => Promise<ProjectStoreResponse>;
 }

@@ -3,9 +3,11 @@ import { UserStore } from "@interfaces/store";
 import { AuthService } from "@services";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 
 const defaultState: Omit<UserStore, "getLoggedInUser"> = {
 	user: undefined,
+	reset: () => {},
 };
 
 const store: StateCreator<UserStore> = (set) => ({
@@ -22,6 +24,10 @@ const store: StateCreator<UserStore> = (set) => ({
 
 		return { error: undefined, user: data };
 	},
+
+	reset: () => {
+		set(defaultState);
+	},
 });
 
-export const useUserStore = create(persist(store, { name: StoreName.user }));
+export const useUserStore = create(persist(immer(store), { name: StoreName.project }));
