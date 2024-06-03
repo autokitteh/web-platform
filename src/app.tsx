@@ -1,11 +1,13 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useUserStore } from "./store/useUserStore";
+import { Toast } from "@components/atoms";
 import { baseUrl, isAuthEnabled } from "@constants";
 import { AuthProvider, useSession, useUser, Descope } from "@descope/react-sdk";
 import { router } from "@routing/routes";
 import { useProjectStore } from "@store";
 import { ProjectsMenuList, User } from "@type/models";
 import axios from "axios";
+import { t } from "i18next";
 import { RouterProvider } from "react-router-dom";
 
 const getAKToken = async (
@@ -18,7 +20,7 @@ const getAKToken = async (
 		await getLoggedInUser();
 		await getProjectsList();
 	} catch (error) {
-		console.error("Error fetching AK token:", error);
+		throw new Error(`Error fetching AK token: ${(error as Error).message}`);
 	}
 };
 
@@ -35,10 +37,18 @@ const AppContainer: React.FC = () => {
 	const { getProjectsList } = useProjectStore();
 	const { isUserLoading } = useUser();
 	const { getLoggedInUser } = useUserStore();
+	const [toast, setToast] = useState({
+		isOpen: false,
+		message: "",
+	});
 
 	const handleSuccess = useCallback(
 		(e: CustomEvent<any>) => {
-			getAKToken(e.detail.sessionJwt, getLoggedInUser, getProjectsList);
+			try {
+				getAKToken(e.detail.sessionJwt, getLoggedInUser, getProjectsList);
+			} catch (error) {
+				setToast({ isOpen: true, message: (error as Error).message });
+			}
 		},
 		[getLoggedInUser, getProjectsList]
 	);
@@ -51,6 +61,15 @@ const AppContainer: React.FC = () => {
 		<div>
 			{!isAuthenticated && isAuthEnabled ? <Descope flowId="sign-up-or-in" onSuccess={handleSuccess} /> : null}
 			{(!isUserLoading && isAuthenticated) || !isAuthEnabled ? <RouterProvider router={router} /> : null}
+			<Toast
+				duration={5}
+				isOpen={toast.isOpen}
+				onClose={() => setToast({ ...toast, isOpen: false })}
+				title={t("error", { ns: "errors" })}
+				type="error"
+			>
+				<p className="mt-1 text-xs">{toast.message}</p>
+			</Toast>
 		</div>
 	);
 };
