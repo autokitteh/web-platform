@@ -1,15 +1,29 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useUserStore } from "./store/useUserStore";
-import { baseUrl } from "@constants";
-import { AuthProvider } from "@descope/react-sdk";
-import { useSession, useUser } from "@descope/react-sdk";
-import { Descope } from "@descope/react-sdk";
+import { baseUrl, isAuthEnabled } from "@constants";
+import { AuthProvider, useSession, useUser, Descope } from "@descope/react-sdk";
 import { router } from "@routing/routes";
 import { useProjectStore } from "@store";
+import { ProjectsMenuList, User } from "@type/models";
 import axios from "axios";
 import { RouterProvider } from "react-router-dom";
 
-export const App = () => {
+// Adjusted function to handle the actual return types of getLoggedInUser and getProjectsList
+const getAKToken = async (
+	sessionJwt: string,
+	getLoggedInUser: () => Promise<{ user?: User }>,
+	getProjectsList: () => Promise<{ list: ProjectsMenuList }>
+) => {
+	try {
+		await axios.get(`${baseUrl}/auth/descope/login?jwt=${sessionJwt}`, { withCredentials: true });
+		await getLoggedInUser();
+		await getProjectsList();
+	} catch (error) {
+		console.error("Error fetching AK token:", error);
+	}
+};
+
+export const App: React.FC = () => {
 	return (
 		<AuthProvider projectId="P2gBMthNrBAMwJ4nH5V3rOEvtNw8">
 			<AppContainer />
@@ -17,26 +31,27 @@ export const App = () => {
 	);
 };
 
-const AppContainer = () => {
+const AppContainer: React.FC = () => {
 	const { isAuthenticated, isSessionLoading } = useSession();
 	const { getProjectsList } = useProjectStore();
-
 	const { isUserLoading } = useUser();
 	const { getLoggedInUser } = useUserStore();
-	const getAKToken = async (e: CustomEvent<any>) => {
-		axios.get(`${baseUrl}/auth/descope/login?jwt=${e.detail.sessionJwt}`, { withCredentials: true }).then(async () => {
-			await getLoggedInUser();
-			await getProjectsList();
-		});
-	};
+
+	const handleSuccess = useCallback(
+		(e: CustomEvent<any>) => {
+			getAKToken(e.detail.sessionJwt, getLoggedInUser, getProjectsList);
+		},
+		[getLoggedInUser, getProjectsList]
+	);
+
+	if (isSessionLoading || isUserLoading) {
+		return <p>Loading...</p>;
+	}
 
 	return (
 		<div>
-			{!isAuthenticated ? <Descope flowId="sign-up-or-in" onSuccess={(e) => getAKToken(e)} /> : null}
-
-			{isSessionLoading || isUserLoading ? <p>Loading...</p> : null}
-
-			{!isUserLoading && isAuthenticated ? <RouterProvider router={router} /> : null}
+			{!isAuthenticated && isAuthEnabled ? <Descope flowId="sign-up-or-in" onSuccess={handleSuccess} /> : null}
+			{(!isUserLoading && isAuthenticated) || !isAuthEnabled ? <RouterProvider router={router} /> : null}
 		</div>
 	);
 };

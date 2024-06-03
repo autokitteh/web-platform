@@ -1,5 +1,5 @@
 export type { Deployment, DeploymentSession } from "@type/models/deployment.type";
-export type { Project } from "@type/models/project.type";
+export type { Project, ProjectsMenuList } from "@type/models/project.type";
 export type {
 	Session,
 	Callstack,

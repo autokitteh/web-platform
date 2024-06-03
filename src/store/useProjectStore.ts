@@ -4,6 +4,7 @@ import { ProjectTabs } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService } from "@services";
+import { ProjectsMenuList } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
 import { remove } from "lodash";
@@ -46,7 +47,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			id: projectId,
 			name,
 			href: `/${SidebarHrefMenu.projects}/${projectId}`,
-		}));
+		})) as ProjectsMenuList;
 
 		set((state) => ({ ...state, list: updatedList }));
 
