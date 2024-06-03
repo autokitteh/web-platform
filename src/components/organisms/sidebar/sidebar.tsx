@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState } from "react";
 import { IconLogo, IconLogoName } from "@assets/image";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { SubmenuInfo } from "@interfaces/components";
@@ -25,39 +25,37 @@ export const Sidebar = () => {
 	};
 
 	return (
-		<Suspense fallback={<div>loading...</div>}>
-			<div className="w-main-nav-sidebar relative">
-				<div
-					className="absolute flex items-start h-full top-0 left-0 z-50"
-					onMouseEnter={() => setIsOpen(true)}
-					onMouseLeave={handleMouseLeave}
-				>
-					<div className="h-full p-4 pt-6 pb-10 flex flex-col justify-between bg-white z-10">
-						<div>
-							<Link className="flex items-center gap-2.5 ml-1" to="/">
-								<IconLogo className="w-8 h-8" />
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="whitespace-nowrap overflow-hidden"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											<IconLogoName className="w-20 h-3" />
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Link>
-							<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
-						</div>
+		<div className="w-main-nav-sidebar relative">
+			<div
+				className="absolute flex items-start h-full top-0 left-0 z-50"
+				onMouseEnter={() => setIsOpen(true)}
+				onMouseLeave={handleMouseLeave}
+			>
+				<div className="h-full p-4 pt-6 pb-10 flex flex-col justify-between bg-white z-10">
+					<div>
+						<Link className="flex items-center gap-2.5 ml-1" to="/">
+							<IconLogo className="w-8 h-8" />
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="whitespace-nowrap overflow-hidden"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										<IconLogoName className="w-20 h-3" />
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Link>
+						<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 					</div>
-					<AnimatePresence>
-						{submenuInfo.submenu && submenuInfo.submenu.length > 0 ? <Submenu submenuInfo={submenuInfo} /> : null}
-					</AnimatePresence>
 				</div>
+				<AnimatePresence>
+					{submenuInfo.submenu && submenuInfo.submenu.length > 0 ? <Submenu submenuInfo={submenuInfo} /> : null}
+				</AnimatePresence>
 			</div>
-		</Suspense>
+		</div>
 	);
 };
