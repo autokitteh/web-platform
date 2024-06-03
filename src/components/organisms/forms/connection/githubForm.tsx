@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
-	const { t } = useTranslation("tabs", { keyPrefix: "connections.form" });
+	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<string>();
 	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
 

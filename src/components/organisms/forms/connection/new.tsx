@@ -8,7 +8,7 @@ import { IntegrationType } from "@type/components";
 import { useTranslation } from "react-i18next";
 
 export const NewConnectionForm = () => {
-	const { t } = useTranslation("tabs", { keyPrefix: "connections.form" });
+	const { t } = useTranslation("integrations");
 	const [selectedIntegration, setSelectedIntegration] = useState<SelectOption>();
 
 	const integrationComponents: Record<IntegrationType, React.ReactNode> = {
