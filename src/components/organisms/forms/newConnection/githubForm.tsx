@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TestIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
 import { Select, Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
+import { baseUrl } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { integrationGithubSchema } from "@validations";
@@ -39,6 +40,10 @@ export const IntegrationGithubForm = () => {
 		} catch (err) {
 			console.error("Could not copy text: ", err);
 		}
+	};
+
+	const handleGithubOAuth = () => {
+		window.open(`${baseUrl}/oauth/start/github`, "_blank");
 	};
 
 	const renderPATFields = () => (
@@ -124,6 +129,7 @@ export const IntegrationGithubForm = () => {
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="px-3 ml-auto font-medium bg-white border-black hover:bg-gray-500 hover:text-white w-fit"
+				onClick={handleGithubOAuth}
 				variant="outline"
 			>
 				{t("buttons.startOAuthFlow")}
