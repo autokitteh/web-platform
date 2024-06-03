@@ -10,6 +10,6 @@ export enum Integrations {
 }
 
 export enum GithubConnectionType {
-	OAuth = "oauth",
+	OAUTH = "oauth",
 	PAT = "pat",
 }
