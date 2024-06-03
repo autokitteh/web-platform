@@ -31,7 +31,7 @@ jobs:
           AK_AUTHSESSIONS__COOKIE_KEYS: ${{ secrets.AK_AUTHSESSIONS__COOKIE_KEYS }}
           AK_HTTP__CORS__ALLOWED_ORIGINS: ${{ secrets.AK_HTTP__CORS__ALLOWED_ORIGINS }}
         run: |
-          ak up &
+          ak up --mode=dev &
 
       - name: Wait for Backend to Start
         run: |
