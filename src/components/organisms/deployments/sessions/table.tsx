@@ -36,6 +36,7 @@ export const SessionsTable = () => {
 		isOpen: false,
 		message: "",
 	});
+	const [initialLoad, setInitialLoad] = useState(true);
 
 	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
 		"w-3/4 rounded-r-none": !sessionId,
@@ -73,15 +74,15 @@ export const SessionsTable = () => {
 	useEffect(() => {
 		fetchSessions();
 
-		const intervalSessions = setInterval(fetchSessions, fetchSessionsInterval);
-		return () => clearInterval(intervalSessions);
+		const sessionsFetchIntervalId = setInterval(fetchSessions, fetchSessionsInterval);
+		return () => clearInterval(sessionsFetchIntervalId);
 	}, [sessionStateType]);
 
 	useEffect(() => {
 		fetchSessionLog();
 
-		const intervalSessionLog = setInterval(fetchSessionLog, fetchSessionsInterval);
-		return () => clearInterval(intervalSessionLog);
+		const sessionFetchIntervalId = setInterval(fetchSessionLog, fetchSessionsInterval);
+		return () => clearInterval(sessionFetchIntervalId);
 	}, [sessionId]);
 
 	const toggleSortSessions = useCallback(
@@ -95,7 +96,13 @@ export const SessionsTable = () => {
 		[sort]
 	);
 
-	const sortedSessions = useMemo(() => orderBy(sessions, [sort.column], [sort.direction]), [sessions, sort]);
+	const sortedSessions = useMemo(() => {
+		if (initialLoad) {
+			setInitialLoad(false);
+			return sessions;
+		}
+		return orderBy(sessions, [sort.column], [sort.direction]);
+	}, [sessions, sort]);
 
 	const showDeleteModal = useCallback(() => {
 		openModal(ModalName.deleteDeploymentSession);

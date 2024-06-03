@@ -4,6 +4,7 @@ import { IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/
 import { SortButton } from "@components/molecules";
 import { DeploymentState, DeploymentSessionStats } from "@components/organisms/deployments";
 import { ModalDeleteDeployment } from "@components/organisms/modals";
+import { fetchDeploymentsInterval } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { DeploymentsService } from "@services";
@@ -23,11 +24,13 @@ export const DeploymentsHistory = () => {
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
 	const [deploymentId, setDeploymentId] = useState<string>();
 	const [isLoadingDeployments, setIsLoadingDeployments] = useState(true);
+	const [initialLoad, setInitialLoad] = useState(true);
 
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Deployment;
 	}>({ direction: SortDirectionVariant.ASC, column: "createdAt" });
+
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -51,6 +54,9 @@ export const DeploymentsHistory = () => {
 
 	useEffect(() => {
 		fetchDeployments();
+
+		const deploymentsFetchIntervalId = setInterval(fetchDeployments, fetchDeploymentsInterval);
+		return () => clearInterval(deploymentsFetchIntervalId);
 	}, [projectId]);
 
 	const toggleSortDeployments = useCallback(
@@ -64,7 +70,13 @@ export const DeploymentsHistory = () => {
 		[sort]
 	);
 
-	const sortedDeployments = useMemo(() => orderBy(deployments, [sort.column], [sort.direction]), [deployments, sort]);
+	const sortedDeployments = useMemo(() => {
+		if (initialLoad) {
+			setInitialLoad(false);
+			return deployments;
+		}
+		return orderBy(deployments, [sort.column], [sort.direction]);
+	}, [deployments, sort]);
 
 	const handleDeploymentAction = useCallback(
 		async (id: string, action: "activate" | "deactivate" | "delete", event?: React.MouseEvent) => {
@@ -93,9 +105,9 @@ export const DeploymentsHistory = () => {
 	};
 
 	if (isLoadingDeployments)
-		return <div className="mt-10 text-black font-semibold text-xl text-center">{t("loading")}...</div>;
+		return <div className="mt-10 text-xl font-semibold text-center text-black">{t("loading")}...</div>;
 	if (!sortedDeployments.length)
-		return <div className="mt-10 text-black font-semibold text-xl text-center">{t("noDeployments")}</div>;
+		return <div className="mt-10 text-xl font-semibold text-center text-black">{t("noDeployments")}</div>;
 
 	return (
 		<>
@@ -107,7 +119,7 @@ export const DeploymentsHistory = () => {
 			<Table className="mt-4">
 				<THead>
 					<Tr>
-						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortDeployments("createdAt")}>
+						<Th className="font-normal cursor-pointer group" onClick={() => toggleSortDeployments("createdAt")}>
 							{t("table.columns.deploymentTime")}
 							<SortButton
 								className="opacity-0 group-hover:opacity-100"
@@ -116,8 +128,8 @@ export const DeploymentsHistory = () => {
 							/>
 						</Th>
 
-						<Th className="cursor-pointer group font-normal">{t("table.columns.sessions")}</Th>
-						<Th className="cursor-pointer group font-normal" onClick={() => toggleSortDeployments("buildId")}>
+						<Th className="font-normal cursor-pointer group">{t("table.columns.sessions")}</Th>
+						<Th className="font-normal cursor-pointer group" onClick={() => toggleSortDeployments("buildId")}>
 							{t("table.columns.buildId")}
 							<SortButton
 								className="opacity-0 group-hover:opacity-100"
@@ -125,7 +137,7 @@ export const DeploymentsHistory = () => {
 								sortDirection={sort.direction}
 							/>
 						</Th>
-						<Th className="cursor-pointer group font-normal border-r-0" onClick={() => toggleSortDeployments("state")}>
+						<Th className="font-normal border-r-0 cursor-pointer group" onClick={() => toggleSortDeployments("state")}>
 							{t("table.columns.status")}
 							<SortButton
 								className="opacity-0 group-hover:opacity-100"
@@ -133,12 +145,12 @@ export const DeploymentsHistory = () => {
 								sortDirection={sort.direction}
 							/>
 						</Th>
-						<Th className="text-right font-normal max-w-20">Actions</Th>
+						<Th className="font-normal text-right max-w-20">Actions</Th>
 					</Tr>
 				</THead>
 				<TBody className="bg-gray-700">
 					{sortedDeployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
-						<Tr className="group cursor-pointer" key={deploymentId} onClick={() => navigate(deploymentId)}>
+						<Tr className="cursor-pointer group" key={deploymentId} onClick={() => navigate(deploymentId)}>
 							<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
 							<Td>
 								<DeploymentSessionStats sessionStats={sessionStats} />
@@ -155,7 +167,7 @@ export const DeploymentsHistory = () => {
 											className="p-1"
 											onClick={(e) => handleDeploymentAction(deploymentId, "deactivate", e)}
 										>
-											<ActionStoppedIcon className="group-hover:fill-white w-4 h-4 transition" />
+											<ActionStoppedIcon className="w-4 h-4 transition group-hover:fill-white" />
 										</IconButton>
 									) : (
 										<IconButton
@@ -163,7 +175,7 @@ export const DeploymentsHistory = () => {
 											className="p-1"
 											onClick={(e) => handleDeploymentAction(deploymentId, "activate", e)}
 										>
-											<ActionActiveIcon className="group-hover:fill-green-accent w-4 h-4 transition" />
+											<ActionActiveIcon className="w-4 h-4 transition group-hover:fill-green-accent" />
 										</IconButton>
 									)}
 									<IconButton
@@ -172,7 +184,7 @@ export const DeploymentsHistory = () => {
 										onClick={(e) => showDeleteModal(e, deploymentId)}
 										title={t("deleteDisabled")}
 									>
-										<TrashIcon className="fill-white w-3 h-3" />
+										<TrashIcon className="w-3 h-3 fill-white" />
 									</IconButton>
 								</div>
 							</Td>
