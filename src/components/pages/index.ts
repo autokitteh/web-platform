@@ -8,4 +8,3 @@ export { ModifyVariable } from "@components/pages/modifyVariable";
 export { ModifyTrigger } from "@components/pages/modifyTrigger";
 export { Deployments } from "@components/pages/deployments";
 export { Sessions } from "@components/pages/sessions";
-export { Logout } from "@components/pages/logout";
