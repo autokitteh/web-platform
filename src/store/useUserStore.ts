@@ -17,12 +17,12 @@ const store: StateCreator<UserStore> = (set) => ({
 		const { data, error } = await AuthService.whoAmI();
 
 		if (error) {
-			return { error, user: undefined };
+			return { error, data: undefined };
 		}
 
 		set((state) => ({ ...state, user: data }));
 
-		return { error: undefined, user: data };
+		return { error: undefined, data };
 	},
 
 	reset: () => {

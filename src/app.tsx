@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { ServiceResponse } from "./types";
 import { Toast } from "@components/atoms";
 import { baseUrl, descopeProjectId, isAuthEnabled } from "@constants";
 import { AuthProvider, useSession, useUser, Descope } from "@descope/react-sdk";
@@ -12,7 +13,7 @@ import { RouterProvider } from "react-router-dom";
 
 const getAKToken = async (
 	sessionJwt: string,
-	getLoggedInUser: () => Promise<{ user?: User }>,
+	getLoggedInUser: () => ServiceResponse<User>,
 	getProjectsList: () => Promise<{ list: ProjectsMenuList }>
 ) => {
 	try {
