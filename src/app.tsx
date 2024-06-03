@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from "react";
-import { useUserStore } from "./store/useUserStore";
 import { Toast } from "@components/atoms";
 import { baseUrl, descopeProjectId, isAuthEnabled } from "@constants";
 import { AuthProvider, useSession, useUser, Descope } from "@descope/react-sdk";
 import { router } from "@routing/routes";
 import { useProjectStore } from "@store";
+import { useUserStore } from "@store/useUserStore";
 import { ProjectsMenuList, User } from "@type/models";
 import axios from "axios";
 import { t } from "i18next";
@@ -59,8 +59,8 @@ const AppContainer: React.FC = () => {
 
 	return (
 		<div>
-			{!isAuthenticated && isAuthEnabled ? <Descope flowId="sign-up-or-in" onSuccess={handleSuccess} /> : null}
-			{(!isUserLoading && isAuthenticated) || !isAuthEnabled ? <RouterProvider router={router} /> : null}
+			{isAuthEnabled && !isAuthenticated ? <Descope flowId="sign-up-or-in" onSuccess={handleSuccess} /> : null}
+			{!isAuthEnabled || (!isUserLoading && isAuthenticated) ? <RouterProvider router={router} /> : null}
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
