@@ -47,6 +47,7 @@
 			"@type/*": ["./src/types/*"],
 			"@type": ["./src/types/index"],
 			"@api": ["./src/api/index"],
+			"@store/*": ["./src/store/*"],
 			"@store": ["./src/store/index"],
 			"@locales/*": ["./src/locales/*"],
 			"@hooks": ["./src/hooks/index"],

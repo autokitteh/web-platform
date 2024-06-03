@@ -1,13 +1,19 @@
 import React, { useCallback } from "react";
 import { AppWrapper } from "@components/templates";
 import { useDescope, useUser } from "@descope/react-sdk";
+import { useProjectStore, useUserStore } from "@store";
 
 export const Dashboard = () => {
 	const { logout } = useDescope();
 	const { user } = useUser();
+	const { reset: resetProjectStore } = useProjectStore();
+	const { reset: resetUserStore } = useUserStore();
 
 	const handleLogout = useCallback(() => {
+		resetProjectStore();
+		resetUserStore();
 		logout();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [logout]);
 
 	return (
