@@ -24,8 +24,14 @@ jobs:
           curl -sSL https://get.autokitteh.sh | bash
 
       - name: Run autokitteh
+        env:
+          AK_AUTHHTTMIDDLEWARE__REQUIRED: ${{ secrets.AK_AUTHHTTMIDDLEWARE__REQUIRED }}
+          AK_AUTHJWTTOKENS__SIGN_KEY: ${{ secrets.AK_AUTHJWTTOKENS__SIGN_KEY }}
+          AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE: ${{ secrets.AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE }}
+          AK_AUTHSESSIONS__COOKIE_KEYS: ${{ secrets.AK_AUTHSESSIONS__COOKIE_KEYS }}
+          AK_HTTP__CORS__ALLOWED_ORIGINS: ${{ secrets.AK_HTTP__CORS__ALLOWED_ORIGINS }}
         run: |
-          ak up --mode=dev &
+          ak up &
 
       - name: Wait for Backend to Start
         run: |
