@@ -42,7 +42,7 @@ export const GithubIntegrationForm = () => {
 			await navigator.clipboard.writeText(text);
 			setToast({ isOpen: true, isSuccess: true, message: t("github.copySuccess") });
 		} catch (err) {
-			setToast({ isOpen: true, isSuccess: false, message: t("github.copyFailulre") });
+			setToast({ isOpen: true, isSuccess: false, message: t("github.copyFailure") });
 		}
 	};
 
@@ -159,11 +159,8 @@ export const GithubIntegrationForm = () => {
 						options={selectIntegrationGithub}
 						placeholder={t("placeholders.selectConnectionType")}
 					/>
-					{selectedConnectionType
-						? selectedConnectionType === GithubConnectionType.PAT
-							? renderPATFields()
-							: renderOAuthButton()
-						: null}
+					{selectedConnectionType && selectedConnectionType === GithubConnectionType.PAT ? renderPATFields() : null}
+					{selectedConnectionType && selectedConnectionType === GithubConnectionType.OAUTH ? renderOAuthButton() : null}
 				</div>
 			</form>
 			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
