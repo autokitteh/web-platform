@@ -85,8 +85,8 @@ export const SessionsTable = () => {
 	useEffect(() => {
 		fetchSessionLog();
 
-		const sessionsFetchIntervalLog = setInterval(fetchSessionLog, fetchSessionsInterval);
-		return () => clearInterval(sessionsFetchIntervalLog);
+		const sessionFetchIntervalId = setInterval(fetchSessionLog, fetchSessionsInterval);
+		return () => clearInterval(sessionFetchIntervalId);
 	}, [sessionId]);
 
 	const toggleSortSessions = useCallback(
