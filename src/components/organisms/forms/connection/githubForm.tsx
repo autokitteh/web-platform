@@ -29,6 +29,7 @@ export const GithubIntegrationForm = () => {
 		},
 	});
 
+	//TODO: Implement onSubmit (request as it works in the current integration configuration HTTP://localhost:9980/i)
 	const onSubmit = () => {
 		setIsLoading(true);
 		setTimeout(() => {
@@ -60,6 +61,7 @@ export const GithubIntegrationForm = () => {
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative flex gap-2">
+				{/* TODO: Implement after grpc is ready the correct value="https://{{.address}}/github/webhook/{{.path}}" */}
 				<Input
 					aria-label={t("github.placeholders.webhookUrl")}
 					className="w-full"
