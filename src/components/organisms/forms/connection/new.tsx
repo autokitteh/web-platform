@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { IntegrationGithubForm } from "@components/organisms/forms";
-import { optionsSelectApp } from "@constants/lists";
+import { selectConnectionApp } from "@constants/lists";
 import { ConnectionApp } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,7 @@ export const NewConnectionForm = () => {
 				<Select
 					aria-label={t("placeholders.selectApp")}
 					onChange={(option) => setSelectedApp(option as SelectOption)}
-					options={optionsSelectApp}
+					options={selectConnectionApp}
 					placeholder={t("placeholders.selectApp")}
 					value={selectedApp}
 				/>
