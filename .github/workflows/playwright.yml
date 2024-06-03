@@ -48,6 +48,8 @@ jobs:
           echo "Backend is up!"
 
       - name: Run Playwright tests
+        env:
+          VITE_DESCOPE_PROJECT_ID: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
         run: |
           git submodule update --init
           npx playwright test

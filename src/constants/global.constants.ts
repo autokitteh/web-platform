@@ -4,4 +4,4 @@ export const fetchDeploymentsInterval = 30000;
 
 export const isDevelopment = process.env.NODE_ENV === "development";
 export const isAuthEnabled: boolean = import.meta.env.VITE_AUTH_ENABLED === "true" || false;
-export const descopeProjectId: string = (import.meta.env.VITE_DESCOPE_PROJECT_ID as string) || "";
+export const descopeProjectId: string = import.meta.env.VITE_DESCOPE_PROJECT_ID || "";
