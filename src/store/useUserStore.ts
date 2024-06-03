@@ -30,4 +30,4 @@ const store: StateCreator<UserStore> = (set) => ({
 	},
 });
 
-export const useUserStore = create(persist(immer(store), { name: StoreName.project }));
+export const useUserStore = create(persist(immer(store), { name: StoreName.user }));
