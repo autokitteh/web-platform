@@ -3,7 +3,7 @@ import { TestIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
 import { Select, Button, ErrorMessage, Input, Link, Spinner, Toast } from "@components/atoms";
 import { baseUrl } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
-import { GithubConnectionType } from "@enums/components";
+import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { githubIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const [selectedConnectionType, setSelectedConnectionType] = useState<string>();
+	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
 	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,6 @@ export const GithubIntegrationForm = () => {
 			webhookSercet: "",
 		},
 	});
-
 	//TODO: Implement onSubmit (request as it works in the current integration configuration HTTP://localhost:9980/i)
 	const onSubmit = () => {
 		setIsLoading(true);
@@ -46,6 +45,10 @@ export const GithubIntegrationForm = () => {
 		}
 	};
 
+	const isGithubConnectionType = (value: string): value is GithubConnectionType => {
+		return Object.values(GithubConnectionType).includes(value as GithubConnectionType);
+	};
+
 	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
 
 	const renderPATFields = () => (
@@ -61,7 +64,6 @@ export const GithubIntegrationForm = () => {
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative flex gap-2">
-				{/* TODO: Implement after grpc is ready the correct value="https://{{.address}}/github/webhook/{{.path}}" */}
 				<Input
 					aria-label={t("github.placeholders.webhookUrl")}
 					className="w-full"
@@ -154,13 +156,15 @@ export const GithubIntegrationForm = () => {
 					<Select
 						aria-label={t("placeholders.selectConnectionType")}
 						onChange={(selected) => {
-							setSelectedConnectionType(selected?.value);
+							if (selected?.value && isGithubConnectionType(selected.value)) {
+								setSelectedConnectionType(selected.value);
+							}
 						}}
 						options={selectIntegrationGithub}
 						placeholder={t("placeholders.selectConnectionType")}
 					/>
-					{selectedConnectionType && selectedConnectionType === GithubConnectionType.PAT ? renderPATFields() : null}
-					{selectedConnectionType && selectedConnectionType === GithubConnectionType.OAUTH ? renderOAuthButton() : null}
+					{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat ? renderPATFields() : null}
+					{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth ? renderOAuthButton() : null}
 				</div>
 			</form>
 			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
