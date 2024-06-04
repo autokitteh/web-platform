@@ -163,8 +163,8 @@ export const GithubIntegrationForm = () => {
 						options={selectIntegrationGithub}
 						placeholder={t("placeholders.selectConnectionType")}
 					/>
-					{selectedConnectionType && selectedConnectionType === GithubConnectionType.PAT ? renderPATFields() : null}
-					{selectedConnectionType && selectedConnectionType === GithubConnectionType.OAuth ? renderOAuthButton() : null}
+					{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat ? renderPATFields() : null}
+					{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth ? renderOAuthButton() : null}
 				</div>
 			</form>
 			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
