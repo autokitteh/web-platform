@@ -3,7 +3,6 @@ import { TestIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
 import { Select, Button, ErrorMessage, Input, Link, Spinner, Toast } from "@components/atoms";
 import { baseUrl } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
-import { GithubConnectionType } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { githubIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
@@ -159,8 +158,8 @@ export const GithubIntegrationForm = () => {
 						options={selectIntegrationGithub}
 						placeholder={t("placeholders.selectConnectionType")}
 					/>
-					{selectedConnectionType && selectedConnectionType === GithubConnectionType.PAT ? renderPATFields() : null}
-					{selectedConnectionType && selectedConnectionType === GithubConnectionType.OAUTH ? renderOAuthButton() : null}
+					{selectedConnectionType && selectedConnectionType === "pat" ? renderPATFields() : null}
+					{selectedConnectionType && selectedConnectionType === "oauth" ? renderOAuthButton() : null}
 				</div>
 			</form>
 			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
