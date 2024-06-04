@@ -1,0 +1,243 @@
+i {
+	font-style: oblique;
+}
+
+[class*="loader"] {
+	position: relative;
+	top: 40%;
+	display: inline-block;
+	margin: 0 auto;
+	cursor: wait;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.loader-playflix-button {
+	display: flex;
+	font-size: 0.75em;
+	font-family: "Podkova", serif;
+	height: 3em;
+	border-radius: 0.25em;
+	background-color: #083d56;
+	color: #19a6cf;
+	overflow: hidden;
+	counter-reset: playflix-counter 5;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border: none;
+	cursor: pointer;
+	transition: all 0.25s;
+	-webkit-animation: playflix-text 5s linear infinite forwards;
+	animation: playflix-text 5s linear infinite forwards;
+}
+.loader-playflix-button:hover {
+	background-color: #0b4e66;
+}
+.loader-playflix-button:active {
+	color: #fff;
+}
+.loader-playflix-button:active,
+.loader-playflix-button:active:after,
+.loader-playflix-button:active:before {
+	-webkit-animation: none;
+	animation: none;
+}
+.loader-playflix-button:active:before {
+	background-color: #080;
+	width: calc(100% + 1em);
+	counter-reset: playflix-counter 0;
+}
+.loader-playflix-button:before,
+.loader-playflix-button:after {
+	pointer-events: none;
+}
+.loader-playflix-button:before {
+	content: attr(data-icon);
+	font-size: 2em;
+	line-height: 1.2;
+	position: absolute;
+	width: 0%;
+	left: -0.5em;
+	top: 0;
+	z-index: 0;
+	text-align: left;
+	padding: 0.25em;
+	text-indent: 0.5em;
+	-webkit-animation: playflix 5s linear infinite forwards;
+	animation: playflix 5s linear infinite forwards;
+}
+.loader-playflix-button:after {
+	content: attr(data-label) "  " counter(playflix-counter);
+	font-weight: 700;
+	display: block;
+	font-size: 1.5em;
+	line-height: 1;
+	padding: 0.5em;
+	position: relative;
+	white-space: nowrap;
+	-webkit-animation: playflix-countdown 5s linear infinite forwards;
+	animation: playflix-countdown 5s linear infinite forwards;
+}
+.loader-playflix-button[data-icon]:not([data-icon=""]):after {
+	padding-left: 2em;
+}
+
+@-webkit-keyframes playflix {
+	0% {
+		width: 0%;
+		background-color: #0e5f76;
+	}
+	89% {
+		width: calc(100% + 0.5em);
+		background-color: #0e5f76;
+	}
+	89.5%,
+	100% {
+		width: calc(100% + 0.5em);
+		background-color: #080;
+	}
+}
+
+@keyframes playflix {
+	0% {
+		width: 0%;
+		background-color: #0e5f76;
+	}
+	89% {
+		width: calc(100% + 0.5em);
+		background-color: #0e5f76;
+	}
+	89.5%,
+	100% {
+		width: calc(100% + 0.5em);
+		background-color: #080;
+	}
+}
+@-webkit-keyframes playflix-countdown {
+	0% {
+		counter-increment: playflix-counter 0;
+	}
+	20% {
+		counter-increment: playflix-counter -1;
+	}
+	40% {
+		counter-increment: playflix-counter -2;
+	}
+	60% {
+		counter-increment: playflix-counter -3;
+	}
+	80% {
+		counter-increment: playflix-counter -4;
+	}
+	100% {
+		counter-increment: playflix-counter -5;
+	}
+}
+@keyframes playflix-countdown {
+	0% {
+		counter-increment: playflix-counter 0;
+	}
+	20% {
+		counter-increment: playflix-counter -1;
+	}
+	40% {
+		counter-increment: playflix-counter -2;
+	}
+	60% {
+		counter-increment: playflix-counter -3;
+	}
+	80% {
+		counter-increment: playflix-counter -4;
+	}
+	100% {
+		counter-increment: playflix-counter -5;
+	}
+}
+@-webkit-keyframes playflix-text {
+	0%,
+	89% {
+		color: #19a6cf;
+	}
+	89.5%,
+	100% {
+		color: #fff;
+	}
+}
+@keyframes playflix-text {
+	0%,
+	89% {
+		color: #19a6cf;
+	}
+	89.5%,
+	100% {
+		color: #fff;
+	}
+}
+
+.loader-cycle-disks {
+	position: relative;
+	display: inline-block;
+	margin: 0 auto;
+	width: 4em;
+	height: 2em;
+}
+#toggle:checked ~ #sect .loader-cycle-disks {
+	filter: url("#filter-goo2");
+}
+.loader-cycle-disks:before,
+.loader-cycle-disks:after {
+	content: "";
+	left: 0;
+	position: absolute;
+	width: 2em;
+	height: 2em;
+	border-radius: 50%;
+	background-color: gray;
+	-webkit-animation: movingCircles 2s infinite ease-in-out;
+	animation: movingCircles 2s infinite ease-in-out;
+}
+.loader-cycle-disks:after {
+	-webkit-animation-delay: -1s;
+	animation-delay: -1s;
+	background-color: black;
+}
+
+@-webkit-keyframes movingCircles {
+	0% {
+		z-index: 1;
+		transform: translate(0, 0);
+	}
+	50% {
+		z-index: 1;
+		transform: translate(120%, 0);
+	}
+	50.1% {
+		z-index: 0;
+		transform: translate(120%, 0);
+	}
+	100% {
+		z-index: 0;
+		transform: translate(0, 0);
+	}
+}
+
+@keyframes movingCircles {
+	0% {
+		z-index: 1;
+		transform: translate(0, 0);
+	}
+	50% {
+		z-index: 1;
+		transform: translate(120%, 0);
+	}
+	50.1% {
+		z-index: 0;
+		transform: translate(120%, 0);
+	}
+	100% {
+		z-index: 0;
+		transform: translate(0, 0);
+	}
+}
