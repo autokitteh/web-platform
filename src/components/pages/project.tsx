@@ -3,6 +3,7 @@ import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
 import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
 import { initialProjectTabs } from "@constants";
+import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -10,16 +11,29 @@ import { useParams } from "react-router-dom";
 export const Project = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons"]);
-	const { activeTab, setActiveTab, resetResources } = useProjectStore();
+	const { activeTab, setActiveTab, resetResources, getProjectResources } = useProjectStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
 
+	const fetchResources = async () => {
+		try {
+			const { data: resources, error } = await ProjectsService.getResources(projectId!);
+			if (error) throw error;
+			if (!resources) return;
+
+			getProjectResources(resources);
+		} catch (err) {
+			setToast({ isOpen: true, message: (err as Error).message });
+		}
+	};
+
 	useEffect(() => {
 		if (!projectId) return;
 
 		resetResources();
+		fetchResources();
 	}, [projectId]);
 
 	const handleTabChange = useCallback(
