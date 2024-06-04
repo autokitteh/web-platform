@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { TestIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
 import { Select, Button, ErrorMessage, Input, Link, Spinner, Toast } from "@components/atoms";
-import { baseUrl } from "@constants";
+import { baseUrl, namespaces } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LoggerService } from "@services/logger.service";
 import { githubIntegrationSchema } from "@validations";
+import axios from "axios";
 import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
 	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
+	const { projectId } = useParams();
 
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -22,19 +26,39 @@ export const GithubIntegrationForm = () => {
 		handleSubmit,
 		formState: { errors },
 		register,
+		getValues,
 	} = useForm({
 		resolver: zodResolver(githubIntegrationSchema),
 		defaultValues: {
 			pat: "",
 			webhookSercet: "",
+			name: "",
 		},
 	});
-	//TODO: Implement onSubmit (request as it works in the current integration configuration HTTP://localhost:9980/i)
-	const onSubmit = () => {
+	const randomForPATWebhook = useMemo(() => randomatic("Aa0", 8), [projectId]);
+	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
+
+	const onSubmit = async () => {
+		const { pat, webhookSercet: secret, name } = getValues();
+
 		setIsLoading(true);
-		setTimeout(() => {
-			setIsLoading(false);
-		}, 3000);
+		try {
+			const response = await axios.post(
+				`${baseUrl}/github/save`,
+				{ pat, secret, webhook: webhookUrl, name },
+				{ headers: { "content-type": "application/x-www-form-urlencoded" } }
+			);
+			if (response.data.url) {
+				// Handle the received URL, e.g., redirect to it or display it
+				console.log("Received URL:", response.data.url);
+				window.location.href = `${baseUrl}/${response.data.url}`;
+			}
+		} catch (error) {
+			console.log("error", error);
+
+			LoggerService.error(namespaces.connectionService, "Error while creating a new trigger");
+		}
+		setIsLoading(false);
 	};
 
 	const copyToClipboard = async (text: string) => {
@@ -52,11 +76,12 @@ export const GithubIntegrationForm = () => {
 
 	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
 
-	const randomForPATWebhook = randomatic("Aa0", 8);
-	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
-
 	const renderPATFields = () => (
 		<>
+			<div className="relative">
+				<Input {...register("name")} aria-label="name" isRequired placeholder="name" />
+				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
+			</div>
 			<div className="relative">
 				<Input
 					{...register("pat")}
