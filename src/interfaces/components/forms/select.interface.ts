@@ -10,8 +10,8 @@ export interface SelectProps {
 	onBlur?: () => void;
 }
 
-export interface SelectOption {
-	value: string;
+export interface SelectOption<T = string> {
+	value: T;
 	label: string;
 	disabled?: boolean;
 }

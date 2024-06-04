@@ -4,14 +4,18 @@ import { Select, Button, ErrorMessage, Input, Link, Spinner, Toast } from "@comp
 import { baseUrl } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { GithubConnectionType } from "@type/models";
+import { isValidOptionInType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+const validGithubConnectionTypes: GithubConnectionType[] = ["pat", "oauth"];
+
 export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const [selectedConnectionType, setSelectedConnectionType] = useState<string>();
+	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType | undefined>(undefined);
 	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +31,6 @@ export const GithubIntegrationForm = () => {
 			webhookSercet: "",
 		},
 	});
-
 	//TODO: Implement onSubmit (request as it works in the current integration configuration HTTP://localhost:9980/i)
 	const onSubmit = () => {
 		setIsLoading(true);
@@ -60,7 +63,6 @@ export const GithubIntegrationForm = () => {
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative flex gap-2">
-				{/* TODO: Implement after grpc is ready the correct value="https://{{.address}}/github/webhook/{{.path}}" */}
 				<Input
 					aria-label={t("github.placeholders.webhookUrl")}
 					className="w-full"
@@ -153,7 +155,9 @@ export const GithubIntegrationForm = () => {
 					<Select
 						aria-label={t("placeholders.selectConnectionType")}
 						onChange={(selected) => {
-							setSelectedConnectionType(selected?.value);
+							if (selected?.value && isValidOptionInType(selected.value, validGithubConnectionTypes)) {
+								setSelectedConnectionType(selected.value);
+							}
 						}}
 						options={selectIntegrationGithub}
 						placeholder={t("placeholders.selectConnectionType")}
