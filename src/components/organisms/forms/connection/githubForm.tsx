@@ -6,6 +6,7 @@ import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { githubIntegrationSchema } from "@validations";
+import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -51,6 +52,9 @@ export const GithubIntegrationForm = () => {
 
 	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
 
+	const randomForPATWebhook = randomatic("Aa0", 8);
+	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
+
 	const renderPATFields = () => (
 		<>
 			<div className="relative">
@@ -69,12 +73,12 @@ export const GithubIntegrationForm = () => {
 					className="w-full"
 					disabled
 					placeholder={t("github.placeholders.webhookUrl")}
-					value="https:///github/webhook/hLjam62q8Vq4DXsWmLFgsQ"
+					value={webhookUrl}
 				/>
 				<Button
 					aria-label={t("buttons.copy")}
 					className="px-5 font-semibold bg-white border-black rounded-md hover:bg-gray-300 w-fit"
-					onClick={() => copyToClipboard("https:///github/webhook/hLjam62q8Vq4DXsWmLFgsQ")}
+					onClick={() => copyToClipboard(webhookUrl)}
 					variant="outline"
 				>
 					<CopyIcon className="w-3.5 h-3.5 fill-black" />
