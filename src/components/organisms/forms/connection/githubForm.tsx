@@ -3,14 +3,11 @@ import { TestIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
 import { Select, Button, ErrorMessage, Input, Link, Spinner, Toast } from "@components/atoms";
 import { baseUrl } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
+import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GithubConnectionType } from "@type/models";
-import { isValidOptionInType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-
-const validGithubConnectionTypes: GithubConnectionType[] = ["pat", "oauth"];
 
 export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -46,6 +43,10 @@ export const GithubIntegrationForm = () => {
 		} catch (err) {
 			setToast({ isOpen: true, isSuccess: false, message: t("github.copyFailure") });
 		}
+	};
+
+	const isGithubConnectionType = (value: any): value is GithubConnectionType => {
+		return Object.values(GithubConnectionType).includes(value);
 	};
 
 	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
@@ -155,7 +156,7 @@ export const GithubIntegrationForm = () => {
 					<Select
 						aria-label={t("placeholders.selectConnectionType")}
 						onChange={(selected) => {
-							if (selected?.value && isValidOptionInType(selected.value, validGithubConnectionTypes)) {
+							if (selected?.value && isGithubConnectionType(selected.value)) {
 								setSelectedConnectionType(selected.value);
 							}
 						}}

@@ -6,4 +6,3 @@ export { sortArray } from "@utilities/sortArray.utils";
 export { cn } from "@utilities/cn.utils";
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
 export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils";
-export { isValidOptionInType } from "@utilities/types.utils";
