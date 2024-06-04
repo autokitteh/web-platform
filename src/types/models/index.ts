@@ -12,4 +12,5 @@ export type { ProtoSessionHistoryState } from "@type/models/protoSessionHistoryS
 export type { Trigger, TriggerObj, TriggerData } from "@type/models/trigger.type";
 export type { Environment } from "@type/models/environment.type";
 export type { Variable } from "@type/models/variable.type";
-export type { Connection, ConnectionStatusType } from "@type/models/connection.type";
+export type { Connection, ConnectionStatusType } from "@type/models/connections/connection.type";
+export type { GithubConnectionType } from "@type/models/connections/github.type";

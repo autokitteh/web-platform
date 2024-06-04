@@ -8,8 +8,3 @@ export enum ConnectionStatus {
 export enum Integrations {
 	github = "github",
 }
-
-export enum GithubConnectionType {
-	OAUTH = "oauth",
-	PAT = "pat",
-}
