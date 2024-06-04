@@ -45,8 +45,8 @@ export const GithubIntegrationForm = () => {
 		}
 	};
 
-	const isGithubConnectionType = (value: any): value is GithubConnectionType => {
-		return Object.values(GithubConnectionType).includes(value);
+	const isGithubConnectionType = (value: string): value is GithubConnectionType => {
+		return Object.values(GithubConnectionType).includes(value as GithubConnectionType);
 	};
 
 	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
