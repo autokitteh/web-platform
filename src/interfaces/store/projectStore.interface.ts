@@ -1,4 +1,5 @@
-import { ProjectsMenuList } from "@type/models";
+import { ProjectMenuItem } from "@type/models";
+import { ServiceResponse } from "@type/services.types";
 
 interface ProjectStoreResponse {
 	error?: unknown;
@@ -18,7 +19,7 @@ export interface ProjectStore {
 		openedFiles: { name: string; isActive: boolean }[];
 		resources: Record<string, Uint8Array>;
 	};
-	getProjectsList: () => Promise<ProjectStoreResponse & { list: ProjectsMenuList }>;
+	getProjectsList: () => ServiceResponse<ProjectMenuItem[]>;
 	setActiveTab: (value: string) => void;
 	setUpdateFileContent: (content: Uint8Array, projectId: string) => void;
 	setProjectResources: (files: File[], projectId: string) => Promise<FilesResponse>;

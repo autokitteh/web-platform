@@ -4,7 +4,6 @@ import { ProjectTabs } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService } from "@services";
-import { ProjectsMenuList } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
 import { remove } from "lodash";
@@ -42,17 +41,17 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	getProjectsList: async () => {
 		const { data, error } = await ProjectsService.list();
 
-		if (error) return { error, list: [] };
+		if (error) return { error, data: undefined };
 
 		const updatedList = data?.map(({ projectId, name }) => ({
 			id: projectId,
 			name,
 			href: `/${SidebarHrefMenu.projects}/${projectId}`,
-		})) as ProjectsMenuList;
+		}));
 
 		set((state) => ({ ...state, list: updatedList }));
 
-		return { error: undefined, list: updatedList || [] };
+		return { error: undefined, data: updatedList };
 	},
 
 	setUpdateFileContent: async (content, projectId) => {

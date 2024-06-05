@@ -3,8 +3,8 @@ export type Project = {
 	name: string;
 };
 
-export type ProjectsMenuList = {
+export type ProjectMenuItem = {
 	id: string;
 	name: string;
 	href: string;
-}[];
+};

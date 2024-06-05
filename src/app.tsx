@@ -6,7 +6,7 @@ import { AuthProvider, Descope } from "@descope/react-sdk";
 import { router } from "@routing/routes";
 import { useProjectStore } from "@store";
 import { useUserStore } from "@store/useUserStore";
-import { ProjectsMenuList, User } from "@type/models";
+import { ProjectMenuItem, User } from "@type/models";
 import axios from "axios";
 import { t } from "i18next";
 import { RouterProvider } from "react-router-dom";
@@ -14,7 +14,7 @@ import { RouterProvider } from "react-router-dom";
 const getAKToken = async (
 	sessionJwt: string,
 	getLoggedInUser: () => ServiceResponse<User>,
-	getProjectsList: () => Promise<{ list: ProjectsMenuList }>
+	getProjectsList: () => ServiceResponse<ProjectMenuItem[]>
 ) => {
 	try {
 		await axios.get(`${baseUrl}/auth/descope/login?jwt=${sessionJwt}`, { withCredentials: true });
