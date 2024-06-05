@@ -42,7 +42,7 @@ export const App: React.FC = () => {
 const AuthenticationAppContainer: React.FC = () => {
 	const { isAuthenticated } = useSession();
 	const { getProjectsList } = useProjectStore();
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const { isUserLoading } = useUser();
 	const { user, getLoggedInUser } = useUserStore();
@@ -62,6 +62,7 @@ const AuthenticationAppContainer: React.FC = () => {
 			} catch (error) {
 				setToast({ isOpen: true, message: (error as Error).message });
 			}
+			setIsLoading(false);
 		},
 		[getLoggedInUser, getProjectsList]
 	);
@@ -71,12 +72,6 @@ const AuthenticationAppContainer: React.FC = () => {
 			getProjectsList();
 		}
 	}, []);
-
-	useEffect(() => {
-		if (!isUserLoading && isAuthenticated && user) {
-			setIsLoading(false);
-		}
-	}, [isUserLoading]);
 
 	return (
 		<>
