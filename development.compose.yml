@@ -6,4 +6,3 @@ services:
       - "8000:8000"
     environment:
       - NODE_ENV=development
-      - VITE_AUTH_ENABLED=false
