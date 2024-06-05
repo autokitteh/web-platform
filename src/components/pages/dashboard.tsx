@@ -20,11 +20,13 @@ export const Dashboard = () => {
 		<AppWrapper>
 			<div>
 				<h1 className="text-black">Unit Test</h1>
-				<p className="text-black">
-					{"For " + user ? user?.name : null}
-					<br />
-					{"Logged in user: " + user ? user?.email : null}
-				</p>
+				{isAuthEnabled ? (
+					<p className="text-black">
+						For {user ? user?.name : null}
+						<br />
+						Logged in user: {user ? user?.email : null}
+					</p>
+				) : null}
 				<button className="text-black" onClick={handleLogout}>
 					Logout
 				</button>
