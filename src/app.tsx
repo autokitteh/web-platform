@@ -27,9 +27,15 @@ const getAKToken = async (
 
 export const App: React.FC = () => {
 	return (
-		<AuthProvider projectId={descopeProjectId}>
-			{isAuthEnabled ? <AuthenticationAppContainer /> : <AppContainerWithoutAuthentication />}
-		</AuthProvider>
+		<div>
+			{isAuthEnabled ? (
+				<AuthProvider projectId={descopeProjectId}>
+					<AuthenticationAppContainer />
+				</AuthProvider>
+			) : (
+				<AppContainerWithoutAuthentication />
+			)}
+		</div>
 	);
 };
 
