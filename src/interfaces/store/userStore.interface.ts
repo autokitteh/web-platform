@@ -3,6 +3,6 @@ import { User } from "@type/models";
 
 export interface UserStore {
 	user?: User;
-	getLoggedInUser: () => ServiceResponse<User | undefined>;
+	getLoggedInUser: () => ServiceResponse<User>;
 	reset: () => void;
 }
