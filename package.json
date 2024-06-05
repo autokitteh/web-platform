@@ -7,8 +7,8 @@
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "npx playwright test --ui",
 		"test:e2e:report": "npx playwright show-report",
-		"dev": "vite",
-		"build": "tsc && vite build",
+		"dev": "npm run validate-env && vite",
+		"build": "npm run validate-env && tsc && vite build",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
 		"lint-fix": "eslint . --ext ts,tsx --report-unused-disable-directives --fix",
 		"preview": "vite preview",
@@ -20,7 +20,8 @@
 		"tsc": "tsc",
 		"check-types": "tsc --pretty --noEmit",
 		"check-format:staged": "prettier . --check",
-		"fixed-format:staged": "prettier . --write"
+		"fixed-format:staged": "prettier . --write",
+		"validate-env": "node ./validateEnv"
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.7.2",
@@ -67,7 +68,7 @@
 		"@testing-library/react": "^14.2.1",
 		"@testing-library/user-event": "^14.5.2",
 		"@types/jest": "^29.5.12",
-		"@types/node": "^20.11.28",
+		"@types/node": "^20.14.2",
 		"@types/randomatic": "^3.1.5",
 		"@types/react": "^18.2.55",
 		"@types/react-dom": "^18.2.19",
