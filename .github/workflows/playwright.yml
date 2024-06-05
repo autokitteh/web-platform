@@ -32,7 +32,7 @@ jobs:
           AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE: "true"
           AK_AUTHSESSIONS__ALLOWED_DOMAIN: "localhost:4173"
         run: |
-          ak up &
+          ak up --mode=dev &
 
       - name: Wait for Backend to Start
         run: |
