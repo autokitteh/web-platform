@@ -5,4 +5,6 @@ export interface UserStore {
 	user?: User;
 	getLoggedInUser: () => ServiceResponse<User>;
 	reset: () => void;
+	logoutFunction: () => void;
+	setLogoutFunction: (logoutFn: () => void) => void;
 }

@@ -1,18 +1,23 @@
 import { StoreName } from "@enums";
 import { UserStore } from "@interfaces/store";
 import { AuthService } from "@services";
-import { StateCreator, create } from "zustand";
+import create, { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-const defaultState: Omit<UserStore, "getLoggedInUser"> = {
+const defaultState = {
 	user: undefined,
-	reset: () => {},
 };
 
 const store: StateCreator<UserStore> = (set) => ({
 	...defaultState,
-
+	logoutFunction: () => {},
+	setLogoutFunction: (logoutFn) => {
+		set((state) => ({
+			...state,
+			logoutFunction: logoutFn,
+		}));
+	},
 	getLoggedInUser: async () => {
 		const { data, error } = await AuthService.whoAmI();
 
@@ -20,13 +25,35 @@ const store: StateCreator<UserStore> = (set) => ({
 			return { error, data: undefined };
 		}
 
-		set((state) => ({ ...state, user: data }));
+		set((state) => ({
+			...state,
+			user: data,
+		}));
 
 		return { error: undefined, data };
 	},
-
 	reset: () => {
-		set(defaultState);
+		set(() => ({
+			...defaultState,
+			logoutFunction: () => {},
+			setLogoutFunction: (logoutFn) => {
+				set((state) => ({
+					...state,
+					logoutFunction: logoutFn,
+				}));
+			},
+			getLoggedInUser: async () => {
+				const { data, error } = await AuthService.whoAmI();
+				if (error) {
+					return { error, data: undefined };
+				}
+				set((state) => ({
+					...state,
+					user: data,
+				}));
+				return { error: undefined, data };
+			},
+		}));
 	},
 });
 
