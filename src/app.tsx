@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ServiceResponse } from "./types";
 import { Toast } from "@components/atoms";
 import { baseUrl, descopeProjectId, isAuthEnabled } from "@constants";
@@ -28,16 +28,17 @@ const getAKToken = async (
 export const App: React.FC = () => {
 	return (
 		<AuthProvider projectId={descopeProjectId}>
-			<AppContainer />
+			{isAuthEnabled ? <AuthenticatedAppContainer /> : <NotAuthenticatedAppContainer />}
 		</AuthProvider>
 	);
 };
 
-const AppContainer: React.FC = () => {
-	const { isAuthenticated, isSessionLoading } = useSession();
+const AuthenticatedAppContainer: React.FC = () => {
+	const { isAuthenticated } = useSession();
 	const { getProjectsList } = useProjectStore();
+
 	const { isUserLoading } = useUser();
-	const { getLoggedInUser } = useUserStore();
+	const { user, getLoggedInUser } = useUserStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
@@ -54,14 +55,20 @@ const AppContainer: React.FC = () => {
 		[getLoggedInUser, getProjectsList]
 	);
 
-	if (isSessionLoading || isUserLoading) {
-		return <p>Loading...</p>;
-	}
+	useEffect(() => {
+		if (user) {
+			getProjectsList();
+		}
+	}, []);
 
 	return (
-		<div>
-			{isAuthEnabled && !isAuthenticated ? <Descope flowId="sign-up-or-in" onSuccess={handleSuccess} /> : null}
-			{!isAuthEnabled || (!isUserLoading && isAuthenticated) ? <RouterProvider router={router} /> : null}
+		<>
+			{!isAuthenticated ? <Descope flowId="sign-up-or-in" onSuccess={handleSuccess} /> : null}
+			{!isUserLoading && isAuthenticated ? <RouterProvider router={router} /> : null}
+			{isUserLoading ? (
+				<h1 className="text-black w-full text-center text-2xl font-averta-bold mt-6">Loading...</h1>
+			) : null}
+
 			<Toast
 				duration={5}
 				isOpen={toast.isOpen}
@@ -71,6 +78,16 @@ const AppContainer: React.FC = () => {
 			>
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
-		</div>
+		</>
 	);
+};
+
+const NotAuthenticatedAppContainer: React.FC = () => {
+	const { getProjectsList } = useProjectStore();
+
+	useEffect(() => {
+		getProjectsList();
+	}, []);
+
+	return <RouterProvider router={router} />;
 };

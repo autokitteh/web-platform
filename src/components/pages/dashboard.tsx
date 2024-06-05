@@ -1,13 +1,14 @@
 import React from "react";
 import { AppWrapper } from "@components/templates";
+import { isAuthEnabled } from "@constants";
 import { useDescope } from "@descope/react-sdk";
 import { useProjectStore, useUserStore } from "@store";
 
 export const Dashboard = () => {
-	const { logout } = useDescope();
-	const { user } = useUserStore();
+	const descope = useDescope();
+	const logout = isAuthEnabled ? descope.logout : () => {};
 	const { reset: resetProjectStore } = useProjectStore();
-	const { reset: resetUserStore } = useUserStore();
+	const { reset: resetUserStore, user } = useUserStore();
 
 	const handleLogout = () => {
 		resetProjectStore();
