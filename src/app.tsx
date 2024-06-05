@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ServiceResponse } from "./types";
 import { Toast } from "@components/atoms";
 import { baseUrl, descopeProjectId, isAuthEnabled } from "@constants";
-import { AuthProvider, useSession, useUser, Descope } from "@descope/react-sdk";
+import { AuthProvider, useSession, Descope } from "@descope/react-sdk";
 import { router } from "@routing/routes";
 import { useProjectStore } from "@store";
 import { useUserStore } from "@store/useUserStore";
@@ -26,16 +26,14 @@ const getAKToken = async (
 };
 
 const AuthenticationAppContainer: React.FC = () => {
-	const { isAuthenticated } = useSession();
+	const { isAuthenticated, isSessionLoading } = useSession();
 	const { getProjectsList } = useProjectStore();
-	const [isLoading, setIsLoading] = useState(false);
-
-	const { isUserLoading } = useUser();
 	const { user, getLoggedInUser } = useUserStore();
 	const [toast, setToast] = useState({
 		isOpen: false,
 		message: "",
 	});
+	const [isAuthChecked, setIsAuthChecked] = useState(false);
 
 	const handleSuccess = useCallback(
 		(e: CustomEvent<any>) => {
@@ -48,10 +46,15 @@ const AuthenticationAppContainer: React.FC = () => {
 			} catch (error) {
 				setToast({ isOpen: true, message: (error as Error).message });
 			}
-			setIsLoading(false);
 		},
 		[getLoggedInUser, getProjectsList]
 	);
+
+	useEffect(() => {
+		if (!isSessionLoading) {
+			setIsAuthChecked(true);
+		}
+	}, [isSessionLoading]);
 
 	useEffect(() => {
 		if (user) {
@@ -59,15 +62,17 @@ const AuthenticationAppContainer: React.FC = () => {
 		}
 	}, [user, getProjectsList]);
 
+	if (!isAuthChecked) {
+		return <h1 className="text-black w-full text-center text-2xl font-averta-bold mt-6">Loading...</h1>;
+	}
+
 	return (
 		<>
-			{isLoading ? (
-				<h1 className="text-black w-full text-center text-2xl font-averta-bold mt-6">Loading...</h1>
-			) : !isAuthenticated ? (
-				<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
-			) : !isUserLoading && isAuthenticated ? (
+			{isAuthenticated ? (
 				<RouterProvider router={router} />
-			) : null}
+			) : (
+				<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
+			)}
 
 			<Toast
 				duration={5}
