@@ -7,7 +7,7 @@ import { useProjectStore, useUserStore } from "@store";
 const DashboardContent = ({ userName }: { userName?: string }) => (
 	<div className="flex h-full">
 		<div className="flex w-full">
-			<h1 className="text-black w-full text-2xl font-averta-bold mt-6">Hello, {userName}</h1>
+			<h1 className="text-black w-full text-2xl font-averta-bold mt-6">Welcome {userName ? `, ${userName}` : null}</h1>
 		</div>
 	</div>
 );
