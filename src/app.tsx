@@ -42,6 +42,7 @@ export const App: React.FC = () => {
 const AuthenticationAppContainer: React.FC = () => {
 	const { isAuthenticated } = useSession();
 	const { getProjectsList } = useProjectStore();
+	const [isLoading, setIsLoading] = useState(true);
 
 	const { isUserLoading } = useUser();
 	const { user, getLoggedInUser } = useUserStore();
@@ -53,7 +54,11 @@ const AuthenticationAppContainer: React.FC = () => {
 	const handleSuccess = useCallback(
 		(e: CustomEvent<any>) => {
 			try {
-				getAKToken(e.detail.sessionJwt, getLoggedInUser, getProjectsList);
+				getAKToken(
+					e.detail.sessionJwt,
+					() => getLoggedInUser(),
+					() => getProjectsList()
+				);
 			} catch (error) {
 				setToast({ isOpen: true, message: (error as Error).message });
 			}
@@ -67,12 +72,20 @@ const AuthenticationAppContainer: React.FC = () => {
 		}
 	}, []);
 
+	useEffect(() => {
+		if (!isUserLoading && isAuthenticated && user) {
+			setIsLoading(false);
+		}
+	}, [isUserLoading]);
+
 	return (
 		<>
-			{!isAuthenticated ? <Descope flowId="sign-up-or-in" onSuccess={handleSuccess} /> : null}
-			{!isUserLoading && isAuthenticated ? <RouterProvider router={router} /> : null}
-			{isUserLoading ? (
+			{isLoading ? (
 				<h1 className="text-black w-full text-center text-2xl font-averta-bold mt-6">Loading...</h1>
+			) : !isAuthenticated ? (
+				<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
+			) : !isUserLoading && isAuthenticated ? (
+				<RouterProvider router={router} />
 			) : null}
 
 			<Toast
