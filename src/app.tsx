@@ -28,12 +28,12 @@ const getAKToken = async (
 export const App: React.FC = () => {
 	return (
 		<AuthProvider projectId={descopeProjectId}>
-			{isAuthEnabled ? <AuthenticatedAppContainer /> : <NotAuthenticatedAppContainer />}
+			{isAuthEnabled ? <AuthenticationAppContainer /> : <AppContainerWithoutAuthentication />}
 		</AuthProvider>
 	);
 };
 
-const AuthenticatedAppContainer: React.FC = () => {
+const AuthenticationAppContainer: React.FC = () => {
 	const { isAuthenticated } = useSession();
 	const { getProjectsList } = useProjectStore();
 
@@ -82,7 +82,7 @@ const AuthenticatedAppContainer: React.FC = () => {
 	);
 };
 
-const NotAuthenticatedAppContainer: React.FC = () => {
+const AppContainerWithoutAuthentication: React.FC = () => {
 	const { getProjectsList } = useProjectStore();
 
 	useEffect(() => {
