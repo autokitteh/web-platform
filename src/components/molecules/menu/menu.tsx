@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { NewProject } from "@assets/image";
 import { Button, IconSvg, Toast } from "@components/atoms";
-import { menuItems, fetchProjectsMenuItemsInterval } from "@constants";
+import { menuItems } from "@constants";
 import { SidebarMenu } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
 import { MenuItem } from "@interfaces/components";
-import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
 import { isEqual, orderBy } from "lodash";
-import randomatic from "randomatic";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -19,7 +17,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { list, getProjectMenutItems } = useProjectStore();
+	const { list, getProjectMenutItems, createProject } = useProjectStore();
 	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -31,10 +29,8 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		visible: { opacity: 1, width: "auto", transition: { duration: 0.35, ease: "easeOut" } },
 	};
 
-	const createProject = async () => {
-		const projectName = randomatic("Aa", 8);
-
-		const { data: projectId, error } = await ProjectsService.create(projectName);
+	const handleCreateProject = async () => {
+		const { data: projectId, error } = await createProject();
 
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
@@ -45,12 +41,6 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 
 		await getProjectMenutItems();
 	};
-
-	useEffect(() => {
-		const projectsMenuItemsFetchIntervalId = setInterval(getProjectMenutItems, fetchProjectsMenuItemsInterval);
-		return () => clearInterval(projectsMenuItemsFetchIntervalId);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	useEffect(() => {
 		const sortedList = orderBy(list, "name", "asc");
@@ -92,7 +82,11 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		<>
 			<div className={cn(className, "flex flex-col gap-4")}>
 				<div onMouseEnter={(e) => handleMouseEnter(e)}>
-					<Button ariaLabel="New Project" className="hover:bg-green-light gap-1.5 p-0.5 pl-1" onClick={createProject}>
+					<Button
+						ariaLabel="New Project"
+						className="hover:bg-green-light gap-1.5 p-0.5 pl-1"
+						onClick={handleCreateProject}
+					>
 						<div className="flex items-center justify-center w-9 h-9">
 							<IconSvg alt="New Project" className="w-8 h-8 p-1" src={NewProject} />
 						</div>

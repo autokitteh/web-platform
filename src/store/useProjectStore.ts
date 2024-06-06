@@ -7,6 +7,7 @@ import { LoggerService, ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
 import { remove } from "lodash";
+import randomatic from "randomatic";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -15,6 +16,7 @@ const defaultState: Omit<
 	ProjectStore,
 	| "setActiveTab"
 	| "getProjectMenutItems"
+	| "createProject"
 	| "setUpdateFileContent"
 	| "setProjectResources"
 	| "getProjectResources"
@@ -37,6 +39,17 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 
 	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
+
+	createProject: async () => {
+		const projectName = randomatic("Aa", 8);
+		const { data: projectId, error } = await ProjectsService.create(projectName);
+
+		if (error) {
+			return { error, data: undefined };
+		}
+
+		return { error: undefined, data: projectId };
+	},
 
 	getProjectMenutItems: async () => {
 		const { data, error } = await ProjectsService.list();
