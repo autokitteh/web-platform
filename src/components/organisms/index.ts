@@ -3,13 +3,7 @@ export { Sidebar } from "@components/organisms/sidebar/sidebar";
 export { SplitFrame } from "@components/organisms/splitFrame";
 export { EditorTabs } from "@components/organisms/editorTabs";
 export { OutputTabs } from "@components/organisms/outputTabs";
-export {
-	NewConnectionForm,
-	SignInForm,
-	AddTriggerForm,
-	AddVariableForm,
-	ModifyVariableForm,
-} from "@components/organisms/forms";
+export { NewConnectionForm } from "@components/organisms/forms";
 export {
 	AddCodeAssetsTab,
 	ConnectionsContent,

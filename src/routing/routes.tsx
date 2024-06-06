@@ -1,15 +1,7 @@
 import React, { ReactElement } from "react";
-import {
-	NewConnection,
-	NewTrigger,
-	ModifyTrigger,
-	NewVariable,
-	ModifyVariable,
-	Project,
-	Sessions,
-	Dashboard,
-	DeploymentsHistory,
-} from "@components/pages";
+import { NewConnectionForm } from "@components/organisms";
+import { Project, Sessions, Dashboard, DeploymentsHistory } from "@components/pages";
+import { AddTriggerForm, AddVariableForm, ModifyTriggerForm, ModifyVariableForm } from "@components/pages/forms";
 import { AppLayout, MapMenuFrameLayout } from "@components/templates";
 import { SidebarHrefMenu } from "@enums/components";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
@@ -31,7 +23,7 @@ export const router = createBrowserRouter([
 				element: (
 					<AppLayout displayTopbar>
 						<MapMenuFrameLayout>
-							<NewConnection />
+							<NewConnectionForm />
 						</MapMenuFrameLayout>
 					</AppLayout>
 				),
@@ -41,7 +33,7 @@ export const router = createBrowserRouter([
 				element: (
 					<AppLayout displayTopbar>
 						<MapMenuFrameLayout>
-							<NewTrigger />
+							<AddTriggerForm />
 						</MapMenuFrameLayout>
 					</AppLayout>
 				),
@@ -51,7 +43,7 @@ export const router = createBrowserRouter([
 				element: (
 					<AppLayout displayTopbar>
 						<MapMenuFrameLayout>
-							<ModifyTrigger />
+							<ModifyTriggerForm />
 						</MapMenuFrameLayout>
 					</AppLayout>
 				),
@@ -61,7 +53,7 @@ export const router = createBrowserRouter([
 				element: (
 					<AppLayout displayTopbar>
 						<MapMenuFrameLayout>
-							<NewVariable />
+							<AddVariableForm />
 						</MapMenuFrameLayout>
 					</AppLayout>
 				),
@@ -71,7 +63,7 @@ export const router = createBrowserRouter([
 				element: (
 					<AppLayout displayTopbar>
 						<MapMenuFrameLayout>
-							<ModifyVariable />
+							<ModifyVariableForm />
 						</MapMenuFrameLayout>
 					</AppLayout>
 				),
