@@ -20,6 +20,7 @@ const defaultState: Omit<
 	| "setUpdateFileContent"
 	| "setProjectResources"
 	| "getProjectResources"
+	| "getProject"
 	| "setProjectEmptyResources"
 	| "updateEditorOpenedFiles"
 	| "reset"
@@ -42,7 +43,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	getProject: async (projectId: string) => {
 		const project = get().list.find(({ id }) => id === projectId);
-		if (project) return project;
+		if (project) return { data: project, error: undefined };
 		const { data: responseProject, error } = await ProjectsService.get(projectId);
 
 		if (error) {
@@ -52,7 +53,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			return { error: new Error("Project not found"), data: undefined };
 		}
 
-		return responseProject;
+		return { error, data: convertProtoProjectToMenuItemModel(responseProject) };
 	},
 
 	createProject: async () => {

@@ -10,16 +10,15 @@ interface FilesResponse {
 	fileName?: string;
 }
 
-type ProjectList = { id: string; name: string; href: string };
-
 export interface ProjectStore {
-	list: ProjectList[];
+	list: ProjectMenuItem[];
 	activeTab?: string;
 	currentProject: {
 		openedFiles: { name: string; isActive: boolean }[];
 		resources: Record<string, Uint8Array>;
 	};
 	getProjectMenutItems: () => ServiceResponse<ProjectMenuItem[]>;
+	getProject: (projectId: string) => ServiceResponse<ProjectMenuItem>;
 	setActiveTab: (value: string) => void;
 	createProject: () => ServiceResponse<string>;
 	setUpdateFileContent: (content: Uint8Array, projectId: string) => void;
