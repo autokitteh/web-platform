@@ -16,4 +16,4 @@ export {
 	TriggersContent,
 	VariablesContent,
 } from "@components/organisms/tabsContent";
-export { DeploymentsHistory, SessionsTable } from "@components/organisms/deployments";
+export { SessionsTable } from "@components/organisms/deployments";

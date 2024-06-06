@@ -1,4 +1,3 @@
-export { Home } from "@components/pages/home";
 export { Dashboard } from "@components/pages/dashboard";
 export { NewConnection } from "@components/pages/newConnection";
 export { Project } from "@components/pages/project";
@@ -6,5 +5,5 @@ export { NewTrigger } from "@components/pages/newTrigger";
 export { NewVariable } from "@components/pages/newVariable";
 export { ModifyVariable } from "@components/pages/modifyVariable";
 export { ModifyTrigger } from "@components/pages/modifyTrigger";
-export { Deployments } from "@components/pages/deployments";
+export { DeploymentsHistory } from "@components/pages/deploymentsHistory";
 export { Sessions } from "@components/pages/sessions";

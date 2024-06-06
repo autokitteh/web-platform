@@ -6,56 +6,107 @@ import {
 	NewVariable,
 	ModifyVariable,
 	Project,
-	Deployments,
 	Sessions,
 	Dashboard,
+	DeploymentsHistory,
 } from "@components/pages";
+import { AppLayout, MapMenuFrameLayout } from "@components/templates";
 import { SidebarHrefMenu } from "@enums/components";
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 
 export const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <Dashboard />,
+		element: (
+			<AppLayout>
+				<Dashboard />
+			</AppLayout>
+		),
 	},
 	{
 		path: `/${SidebarHrefMenu.projects}/:projectId`,
 		children: [
 			{
 				path: "add-new-connection",
-				element: <NewConnection />,
+				element: (
+					<AppLayout displayTopbar>
+						<MapMenuFrameLayout>
+							<NewConnection />
+						</MapMenuFrameLayout>
+					</AppLayout>
+				),
 			},
 			{
 				path: "add-new-trigger",
-				element: <NewTrigger />,
+				element: (
+					<AppLayout displayTopbar>
+						<MapMenuFrameLayout>
+							<NewTrigger />
+						</MapMenuFrameLayout>
+					</AppLayout>
+				),
 			},
 			{
 				path: "modify-trigger/:triggerId",
-				element: <ModifyTrigger />,
+				element: (
+					<AppLayout displayTopbar>
+						<MapMenuFrameLayout>
+							<ModifyTrigger />
+						</MapMenuFrameLayout>
+					</AppLayout>
+				),
 			},
 			{
 				path: "add-new-variable",
-				element: <NewVariable />,
+				element: (
+					<AppLayout displayTopbar>
+						<MapMenuFrameLayout>
+							<NewVariable />
+						</MapMenuFrameLayout>
+					</AppLayout>
+				),
 			},
 			{
 				path: "modify-variable/:environmentId/:variableName",
-				element: <ModifyVariable />,
+				element: (
+					<AppLayout displayTopbar>
+						<MapMenuFrameLayout>
+							<ModifyVariable />
+						</MapMenuFrameLayout>
+					</AppLayout>
+				),
 			},
 			{
 				path: "",
-				element: <Project />,
+				element: (
+					<AppLayout displayTopbar>
+						<Project />
+					</AppLayout>
+				),
 			},
 			{
 				path: "deployments",
-				element: <Deployments />,
+				element: (
+					<AppLayout displayStatsTopbar>
+						<DeploymentsHistory />
+					</AppLayout>
+				),
 			},
 			{
 				path: "deployments/:deploymentId",
-				element: <Sessions />,
+				element: (
+					<AppLayout displayStatsTopbar>
+						<Sessions />
+					</AppLayout>
+				),
 			},
 			{
 				path: "deployments/:deploymentId/:sessionId",
-				element: <Sessions />,
+				element: (
+					<AppLayout displayStatsTopbar>
+						<Sessions />
+					</AppLayout>
+				),
 			},
 		],
 	},

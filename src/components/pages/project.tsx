@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback, Suspense } from "react";
 import { Close } from "@assets/image/icons";
 import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
-import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
+import { MapMenuFrameLayout } from "@components/templates";
 import { initialProjectTabs } from "@constants";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
@@ -76,7 +76,7 @@ export const Project = () => {
 	);
 
 	return (
-		<AppWrapper>
+		<div className="h-full">
 			<MapMenuFrameLayout>
 				<Tabs defaultValue={activeTab} key={activeTab} onChange={handleTabChange}>
 					{tabList}
@@ -86,6 +86,6 @@ export const Project = () => {
 			<Toast duration={5} isOpen={toast.isOpen} onClose={handleToastClose} title={t("error")} type="error">
 				<p className="mt-1 text-xs">{toast.message}</p>
 			</Toast>
-		</AppWrapper>
+		</div>
 	);
 };

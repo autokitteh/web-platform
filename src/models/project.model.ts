@@ -1,5 +1,6 @@
 import { Project as ProtoProject } from "@ak-proto-ts/projects/v1/project_pb";
-import { Project } from "@type/models/project.type";
+import { SidebarHrefMenu } from "@enums/components";
+import { Project, ProjectMenuItem } from "@type/models/project.type";
 
 /**
  * Converts a ProtoProject object to a TypeScript Project object.
@@ -11,5 +12,13 @@ export const convertProjectProtoToModel = (protoProject: ProtoProject): Project 
 	return {
 		name: protoProject.name,
 		projectId: protoProject.projectId,
+	};
+};
+
+export const convertProtoProjectToMenuItemModel = (protoProject: Project): ProjectMenuItem => {
+	return {
+		name: protoProject.name,
+		id: protoProject.projectId,
+		href: `/${SidebarHrefMenu.projects}/${protoProject.projectId}`,
 	};
 };

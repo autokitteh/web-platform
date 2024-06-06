@@ -1,8 +1,8 @@
 import { namespaces } from "@constants";
 import { StoreName } from "@enums";
 import { ProjectTabs } from "@enums/components";
-import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
+import { convertProtoProjectToMenuItemModel } from "@models/project.model";
 import { LoggerService, ProjectsService } from "@services";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
@@ -40,6 +40,21 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
 
+	getProject: async (projectId: string) => {
+		const project = get().list.find(({ id }) => id === projectId);
+		if (project) return project;
+		const { data: responseProject, error } = await ProjectsService.get(projectId);
+
+		if (error) {
+			return { error, data: undefined };
+		}
+		if (!responseProject) {
+			return { error: new Error("Project not found"), data: undefined };
+		}
+
+		return responseProject;
+	},
+
 	createProject: async () => {
 		const projectName = randomatic("Aa", 8);
 		const { data: projectId, error } = await ProjectsService.create(projectName);
@@ -52,19 +67,15 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	getProjectMenutItems: async () => {
-		const { data, error } = await ProjectsService.list();
+		const { data: projects, error } = await ProjectsService.list();
 
 		if (error) return { error, data: undefined };
 
-		const updatedList = data?.map(({ projectId, name }) => ({
-			id: projectId,
-			name,
-			href: `/${SidebarHrefMenu.projects}/${projectId}`,
-		}));
+		const convertedProjectsMenuItems = projects?.map(convertProtoProjectToMenuItemModel);
 
-		set((state) => ({ ...state, list: updatedList }));
+		set((state) => ({ ...state, list: convertedProjectsMenuItems }));
 
-		return { error: undefined, data: updatedList };
+		return { error: undefined, data: convertedProjectsMenuItems };
 	},
 
 	setUpdateFileContent: async (content, projectId) => {

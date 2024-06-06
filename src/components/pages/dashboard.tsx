@@ -1,5 +1,4 @@
 import React from "react";
-import { AppWrapper } from "@components/templates";
 import { isAuthEnabled } from "@constants";
 import { useUserStore } from "@store";
 
@@ -9,7 +8,7 @@ export const Dashboard: React.FC = () => {
 	const userName = user?.name || "";
 
 	return (
-		<AppWrapper>
+		<div>
 			<div className="flex w-full">
 				<h1 className="text-black w-full text-2xl font-averta-bold mt-6">
 					Welcome {userName ? `, ${userName}` : null}
@@ -20,6 +19,6 @@ export const Dashboard: React.FC = () => {
 					Logout
 				</button>
 			) : null}
-		</AppWrapper>
+		</div>
 	);
 };

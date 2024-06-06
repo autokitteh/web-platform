@@ -35,7 +35,7 @@ export class ProjectsService {
 
 				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
 			}
-			return { data: project, error: undefined };
+			return { data: convertProjectProtoToModel(project), error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.projectService, (error as Error).message);
 			return { data: undefined, error };
@@ -72,6 +72,7 @@ export class ProjectsService {
 			return { data: undefined, error };
 		}
 	}
+
 	static async setResources(
 		projectId: string,
 		resources: Record<string, Uint8Array>

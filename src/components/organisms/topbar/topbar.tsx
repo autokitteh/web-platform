@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { FullScreen, More } from "@assets/image";
 import { Build, Deploy, Stats } from "@assets/image";
-import { Button, ErrorMessage, IconButton, IconSvg, Spinner, Toast } from "@components/atoms";
+import { Button, ErrorMessage, IconButton, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { TopbarButton } from "@enums/components";
-import { useProject } from "@hooks";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
@@ -18,7 +17,6 @@ export const Topbar = () => {
 		getProjectMenutItems,
 		currentProject: { resources },
 	} = useProjectStore();
-	const { project, toast, setToast } = useProject(projectId);
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 
@@ -45,7 +43,7 @@ export const Topbar = () => {
 		if ((isEnterKey || isBlur) && isValidName && projectId) {
 			const { error } = await ProjectsService.update(projectId, newName);
 			if (error) {
-				setToast({ isSuccess: false, isOpen: true, message: (error as Error).message });
+				// setToast({ isSuccess: false, isOpen: true, message: (error as Error).message });
 				return;
 			}
 			(e.target as HTMLSpanElement).blur();
@@ -64,12 +62,12 @@ export const Topbar = () => {
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
 
-		const { error } = await ProjectsService.build(projectId!, resources);
-		setToast({
-			isSuccess: !error,
-			isOpen: true,
-			message: error ? (error as Error).message : t("topbar.buildProjectSuccess"),
-		});
+		// const { error } = await ProjectsService.build(projectId!, resources);
+		// setToast({
+		// 	isSuccess: !error,
+		// 	isOpen: true,
+		// 	message: error ? (error as Error).message : t("topbar.buildProjectSuccess"),
+		// });
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
 	};
@@ -79,22 +77,24 @@ export const Topbar = () => {
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
 
-		const { error } = await ProjectsService.run(projectId!, resources);
-		setToast({
-			isSuccess: !error,
-			isOpen: true,
-			message: error ? (error as Error).message : t("topbar.deployedProjectSuccess"),
-		});
+		// const { error } = await ProjectsService.run(projectId!, resources);
+		// setToast({
+		// 	isSuccess: !error,
+		// 	isOpen: true,
+		// 	message: error ? (error as Error).message : t("topbar.deployedProjectSuccess"),
+		// });
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 	};
 
-	const toastProps = {
-		duration: 5,
-		isOpen: toast.isOpen,
-		onClose: () => setToast({ ...toast, isOpen: false }),
-		title: toast.isSuccess ? t("topbar.success") : t("error", { ns: "errors" }),
-	};
+	// const toastProps = {
+	// 	duration: 5,
+	// 	isOpen: toast.isOpen,
+	// 	onClose: () => setToast({ ...toast, isOpen: false }),
+	// 	title: toast.isSuccess ? t("topbar.success") : t("error", { ns: "errors" }),
+	// };
+
+	// const projectName = store.findById();
 
 	return (
 		<div className="flex justify-between items-center bg-gray-800 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
@@ -110,12 +110,12 @@ export const Topbar = () => {
 					tabIndex={0}
 					title={t("topbar.rename")}
 				>
-					{project.name}
+					{/* {project.name} */}
 				</span>
 				<ErrorMessage className="-bottom-5 text-xs">
 					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
 				</ErrorMessage>
-				<span className="font-semibold leading-tight text-sm">{project.projectId}</span>
+				{/* <span className="font-semibold leading-tight text-sm">{project.projectId}</span> */}
 			</div>
 			<div className="flex items-stretch gap-3">
 				<Button
@@ -168,9 +168,9 @@ export const Topbar = () => {
 				</IconButton>
 			</div>
 
-			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
+			{/* <Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
 				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
+			</Toast> */}
 		</div>
 	);
 };
