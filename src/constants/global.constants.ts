@@ -1,4 +1,4 @@
-export const fetchProjectsMenuItems = 60000;
+export const fetchProjectsMenuItemsInterval = 60000;
 export const fetchSessionsInterval = 10000;
 export const fetchDeploymentsInterval = 30000;
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NewProject } from "@assets/image";
 import { Button, IconSvg, Toast } from "@components/atoms";
-import { menuItems, fetchMenuInterval } from "@constants";
+import { menuItems, fetchProjectsMenuItemsInterval } from "@constants";
 import { SidebarMenu } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
@@ -47,7 +47,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	};
 
 	useEffect(() => {
-		const intervalMenu = setInterval(getProjectMenutItems, fetchMenuInterval);
+		const intervalMenu = setInterval(getProjectMenutItems, fetchProjectsMenuItemsInterval);
 		return () => clearInterval(intervalMenu);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
