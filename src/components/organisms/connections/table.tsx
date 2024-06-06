@@ -12,13 +12,15 @@ import { SortDirection } from "@type/components";
 import { Connection } from "@type/models";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-export const ConnectionsContent = () => {
+export const ConnectionsTable = () => {
 	const { t: tError } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "connections" });
 	const { openModal, closeModal } = useModalStore();
 	const { projectId } = useParams();
+
+	const navigate = useNavigate();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingDeleteConnection, setIsLoadingDeleteConnection] = useState(false);
@@ -95,12 +97,12 @@ export const ConnectionsContent = () => {
 			{t("buttons.loading")}...
 		</div>
 	) : (
-		<div className="pt-14">
+		<div className="pt-5">
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
 					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
-					href="add-new-connection"
+					onClick={() => navigate("new")}
 				>
 					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
 					{t("buttons.addNew")}

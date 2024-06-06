@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const ModifyTriggerForm = () => {
+	console.log("test");
+
 	const { triggerId, projectId } = useParams();
 	const navigate = useNavigate();
 	const {
@@ -201,6 +203,7 @@ export const ModifyTriggerForm = () => {
 									onChange={(selected) => field.onChange(selected)}
 									options={connections}
 									placeholder={t("placeholders.selectConnection")}
+									ref={null}
 									value={field.value}
 								/>
 							)}
@@ -219,6 +222,7 @@ export const ModifyTriggerForm = () => {
 									onChange={(selected) => field.onChange(selected)}
 									options={filesName}
 									placeholder={t("placeholders.selectFile")}
+									ref={null}
 									value={field.value}
 								/>
 							)}

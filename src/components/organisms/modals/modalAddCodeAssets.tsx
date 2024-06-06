@@ -76,6 +76,7 @@ export const ModalAddCodeAssets = ({ onError, onSuccess }: ModalAddCodeAssetsPro
 										isError={!!errors.extension}
 										options={languageSelectOptions}
 										placeholder={t("addCodeAssets.selectExtension", { ns: "modals" })}
+										ref={null}
 										value={field.value}
 										variant="white"
 									/>

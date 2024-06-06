@@ -26,7 +26,7 @@ export const Toast = ({ duration = 5, title, type, className, isOpen, children, 
 
 	useEffect(() => {
 		if (isOpen) {
-			const timerId = setTimeout(onClose, duration * 1000);
+			const timerId = setTimeout(onClose!, duration * 1000);
 
 			return () => clearTimeout(timerId);
 		}

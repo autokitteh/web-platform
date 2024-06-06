@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FullScreen } from "@assets/image";
 import { ProjectsIcon } from "@assets/image";
-import { Button, IconButton, IconSvg, Toast } from "@components/atoms";
+import { Button, IconSvg, Toast } from "@components/atoms";
 import { useProjectStore } from "@store/useProjectStore";
 import { ProjectMenuItem } from "@type/models";
 import { useTranslation } from "react-i18next";
@@ -56,10 +55,6 @@ export const StatsTopbar = () => {
 					<IconSvg className="fill-white w-6 h-6" src={ProjectsIcon} />
 					{t("topbar.buttons.goToProject")}
 				</Button>
-
-				<IconButton disabled variant="outline">
-					<FullScreen />
-				</IconButton>
 			</div>
 			<Toast {...toastProps} ariaLabel={toast.message} type="error">
 				<p className="mt-1 text-xs">{toast.message}</p>

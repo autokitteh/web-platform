@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { GithubIntegrationForm } from "@components/organisms/forms";
+import { GithubIntegrationForm } from "@components/organisms/connections/add";
 import { selectConnectionApp } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
 import { IntegrationType } from "@type/components";
 import { useTranslation } from "react-i18next";
 
-export const NewConnectionForm = () => {
+export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
 	const [selectedIntegration, setSelectedIntegration] = useState<SelectOption>();
 

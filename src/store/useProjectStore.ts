@@ -1,6 +1,5 @@
 import { namespaces } from "@constants";
 import { StoreName } from "@enums";
-import { ProjectTabs } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { convertProtoProjectToMenuItemModel } from "@models/project.model";
 import { LoggerService, ProjectsService } from "@services";
@@ -36,7 +35,7 @@ const defaultState: Omit<
 		openedFiles: [],
 		resources: {},
 	},
-	activeTab: ProjectTabs.codeAndAssets,
+	activeTab: "code",
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({

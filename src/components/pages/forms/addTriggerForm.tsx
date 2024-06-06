@@ -172,6 +172,7 @@ export const AddTriggerForm = () => {
 									onChange={(selected) => field.onChange(selected)}
 									options={connections}
 									placeholder={t("placeholders.selectConnection")}
+									ref={null}
 									value={field.value}
 								/>
 							)}
@@ -190,6 +191,7 @@ export const AddTriggerForm = () => {
 									onChange={(selected) => field.onChange(selected)}
 									options={filesName}
 									placeholder={t("placeholders.selectFile")}
+									ref={null}
 									value={field.value}
 								/>
 							)}

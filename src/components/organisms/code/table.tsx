@@ -12,7 +12,7 @@ import { orderBy, isEmpty } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const AddCodeAssetsTab = () => {
+export const CodeTable = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation(["errors"]);

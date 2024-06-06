@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FullScreen, More } from "@assets/image";
 import { Build, Deploy, Stats } from "@assets/image";
-import { Button, ErrorMessage, IconButton, IconSvg, Spinner, Toast } from "@components/atoms";
-import { DropdownButton } from "@components/molecules";
+import { Button, ErrorMessage, IconSvg, Spinner, Toast } from "@components/atoms";
 import { TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
@@ -167,25 +165,6 @@ export const Topbar = () => {
 					<IconSvg className="max-w-5" src={Stats} />
 					{t("topbar.buttons.stats")}
 				</Button>
-				<DropdownButton
-					className="font-semibold text-white"
-					contentMenu={
-						<div className="flex flex-col gap-2">
-							<Button className="px-4 py-1.5 font-semibold text-white whitespace-nowrap" disabled variant="outline">
-								<IconSvg className="w-4" disabled src={Stats} />
-								{t("topbar.buttons.stats")}
-							</Button>
-						</div>
-					}
-				>
-					<Button className="h-full text-white px-4 hover:bg-gray-700" variant="outline">
-						<More />
-						{t("more", { ns: "buttons" })}
-					</Button>
-				</DropdownButton>
-				<IconButton disabled variant="outline">
-					<FullScreen />
-				</IconButton>
 			</div>
 
 			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>

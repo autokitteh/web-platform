@@ -4,9 +4,9 @@ export interface ToastProps {
 	className?: string;
 	title?: string;
 	ariaLabel?: string;
-	type: ToastType;
-	children: React.ReactNode;
-	isOpen: boolean;
+	type?: ToastType;
+	children?: React.ReactNode;
+	isOpen?: boolean;
 	duration?: number;
-	onClose: () => void;
+	onClose?: () => void;
 }
