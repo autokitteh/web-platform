@@ -102,6 +102,7 @@ export const Topbar = () => {
 		onClose: () => setToast({ ...toast, isOpen: false }),
 		title: toast.isSuccess ? t("topbar.success") : t("error", { ns: "errors" }),
 	};
+
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
 		if (error) {

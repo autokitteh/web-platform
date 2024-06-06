@@ -19,8 +19,9 @@ export interface ProjectStore {
 	};
 	getProjectMenutItems: () => ServiceResponse<ProjectMenuItem[]>;
 	getProject: (projectId: string) => ServiceResponse<ProjectMenuItem>;
+	addProjectToMenu: (project: ProjectMenuItem) => void;
 	setActiveTab: (value: string) => void;
-	createProject: () => ServiceResponse<string>;
+	createProject: () => ServiceResponse<{ id: string; name: string }>;
 	setUpdateFileContent: (content: Uint8Array, projectId: string) => void;
 	setProjectResources: (files: File[], projectId: string) => Promise<FilesResponse>;
 	setProjectEmptyResources: (name: string, projectId: string) => Promise<ProjectStoreResponse>;

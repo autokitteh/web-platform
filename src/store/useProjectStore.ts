@@ -4,6 +4,7 @@ import { ProjectTabs } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { convertProtoProjectToMenuItemModel } from "@models/project.model";
 import { LoggerService, ProjectsService } from "@services";
+import { ProjectMenuItem } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
 import { remove } from "lodash";
@@ -16,6 +17,7 @@ const defaultState: Omit<
 	ProjectStore,
 	| "setActiveTab"
 	| "getProjectMenutItems"
+	| "addProjectToMenu"
 	| "createProject"
 	| "setUpdateFileContent"
 	| "setProjectResources"
@@ -63,8 +65,18 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (error) {
 			return { error, data: undefined };
 		}
+		if (!projectId) {
+			return { error: new Error("Project not created"), data: undefined };
+		}
 
-		return { error: undefined, data: projectId };
+		return { error: undefined, data: { id: projectId, name: projectName } };
+	},
+
+	addProjectToMenu: async (project: ProjectMenuItem) => {
+		set((state) => {
+			state.list.push(project);
+			return state;
+		});
 	},
 
 	getProjectMenutItems: async () => {

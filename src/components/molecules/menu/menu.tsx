@@ -17,7 +17,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { list, getProjectMenutItems, createProject } = useProjectStore();
+	const { list, createProject, addProjectToMenu } = useProjectStore();
 	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -30,16 +30,28 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	};
 
 	const handleCreateProject = async () => {
-		const { data: projectId, error } = await createProject();
+		const { data, error } = await createProject();
 
 		if (error) {
 			setToast({ isOpen: true, message: (error as Error).message });
 			return;
 		}
 
-		navigate(`/${SidebarHrefMenu.projects}/${projectId}`);
+		if (!data) {
+			setToast({ isOpen: true, message: t("errors:projectNotCreated") });
+			return;
+		}
 
-		await getProjectMenutItems();
+		const { id, name } = data;
+		const newProject = {
+			id,
+			name,
+			href: `/${SidebarHrefMenu.projects}/${id}`,
+		};
+
+		addProjectToMenu(newProject);
+
+		navigate(`/${SidebarHrefMenu.projects}/${id}`);
 	};
 
 	useEffect(() => {
