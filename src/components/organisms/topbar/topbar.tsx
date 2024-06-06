@@ -57,7 +57,7 @@ export const Topbar = () => {
 			}
 			(e.target as HTMLSpanElement).blur();
 			setIsNameValid(isValidName);
-			getProjectMenutItems();
+			getProjectMenutItems(); // Rename project in store instead of reloading all projects
 		}
 	};
 
