@@ -62,7 +62,7 @@ export const Dashboard: React.FC = () => {
 	const navigate = useNavigate();
 	const { t } = useTranslation(["menu", "errors"]);
 	const { toast, openToast, closeToast } = useToast();
-	const { getProjectsList } = useProjectStore();
+	const { getProjectMenutItems } = useProjectStore();
 
 	const userName = user?.name || "";
 
@@ -76,7 +76,7 @@ export const Dashboard: React.FC = () => {
 		}
 
 		navigate(`/${SidebarHrefMenu.projects}/${projectId}`);
-		await getProjectsList();
+		await getProjectMenutItems();
 	};
 
 	return (
