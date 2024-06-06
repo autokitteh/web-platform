@@ -15,9 +15,9 @@ export const Topbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const { projectId } = useParams();
 	const {
-		getProjectMenutItems,
 		currentProject: { resources },
 		getProject,
+		renameProject,
 	} = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
@@ -57,7 +57,7 @@ export const Topbar = () => {
 			}
 			(e.target as HTMLSpanElement).blur();
 			setIsNameValid(isValidName);
-			getProjectMenutItems(); // Rename project in store instead of reloading all projects
+			renameProject(projectId, newName);
 		}
 	};
 

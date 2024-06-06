@@ -19,6 +19,7 @@ export interface ProjectStore {
 	};
 	getProjectMenutItems: () => ServiceResponse<ProjectMenuItem[]>;
 	getProject: (projectId: string) => ServiceResponse<ProjectMenuItem>;
+	renameProject: (projectId: string, projectName: string) => void;
 	addProjectToMenu: (project: ProjectMenuItem) => void;
 	setActiveTab: (value: string) => void;
 	createProject: () => ServiceResponse<{ id: string; name: string }>;

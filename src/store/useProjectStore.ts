@@ -17,6 +17,7 @@ const defaultState: Omit<
 	ProjectStore,
 	| "setActiveTab"
 	| "getProjectMenutItems"
+	| "renameProject"
 	| "addProjectToMenu"
 	| "createProject"
 	| "setUpdateFileContent"
@@ -75,6 +76,14 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	addProjectToMenu: async (project: ProjectMenuItem) => {
 		set((state) => {
 			state.list.push(project);
+			return state;
+		});
+	},
+	renameProject: async (projectId: string, newProjectName: string) => {
+		set((state) => {
+			const projectIndex = state.list.findIndex(({ id }) => id === projectId);
+			if (projectIndex === -1) return state;
+			state.list[projectIndex].name = newProjectName;
 			return state;
 		});
 	},
