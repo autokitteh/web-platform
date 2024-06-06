@@ -3,7 +3,7 @@ export { baseUrl } from "@constants/api.constants";
 export { menuItems, initialProjectTabs } from "@constants/lists";
 export { getSelectBlackStyles, getSelectWhiteStyles } from "@constants/forms";
 export {
-	fetchMenuInterval,
+	fetchProjectsMenuItems as fetchMenuInterval,
 	fetchDeploymentsInterval,
 	fetchSessionsInterval,
 	isDevelopment,

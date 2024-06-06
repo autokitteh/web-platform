@@ -14,7 +14,7 @@ import { immer } from "zustand/middleware/immer";
 const defaultState: Omit<
 	ProjectStore,
 	| "setActiveTab"
-	| "getProjectsList"
+	| "getProjectMenutItems"
 	| "setUpdateFileContent"
 	| "setProjectResources"
 	| "getProjectResources"
@@ -38,7 +38,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
 
-	getProjectsList: async () => {
+	getProjectMenutItems: async () => {
 		const { data, error } = await ProjectsService.list();
 
 		if (error) return { error, data: undefined };

@@ -19,7 +19,7 @@ export interface ProjectStore {
 		openedFiles: { name: string; isActive: boolean }[];
 		resources: Record<string, Uint8Array>;
 	};
-	getProjectsList: () => ServiceResponse<ProjectMenuItem[]>;
+	getProjectMenutItems: () => ServiceResponse<ProjectMenuItem[]>;
 	setActiveTab: (value: string) => void;
 	setUpdateFileContent: (content: Uint8Array, projectId: string) => void;
 	setProjectResources: (files: File[], projectId: string) => Promise<FilesResponse>;

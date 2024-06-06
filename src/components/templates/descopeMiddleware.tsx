@@ -24,7 +24,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [resetProjectStore, resetUserStore, logout]);
 
-	const { getProjectsList } = useProjectStore();
+	const { getProjectMenutItems } = useProjectStore();
 	const { user, getLoggedInUser } = useUserStore();
 
 	const [toast, setToast] = useState({
@@ -38,17 +38,17 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 			try {
 				await axios.get(`${baseUrl}/auth/descope/login?jwt=${e.detail.sessionJwt}`, { withCredentials: true });
 				await getLoggedInUser();
-				await getProjectsList();
+				await getProjectMenutItems();
 			} catch (error) {
 				setToast({ isOpen: true, message: `Error occured during login: ${(error as Error).message}` });
 			}
 		},
-		[getLoggedInUser, getProjectsList]
+		[getLoggedInUser, getProjectMenutItems]
 	);
 
 	useEffect(() => {
 		if (user) {
-			getProjectsList();
+			getProjectMenutItems();
 			setIsAuthChecked(true);
 		} else if (!isAuthenticated) {
 			setIsAuthChecked(true);

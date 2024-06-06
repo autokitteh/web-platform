@@ -6,11 +6,11 @@ import { useProjectStore } from "@store/useProjectStore";
 import { RouterProvider } from "react-router-dom";
 
 export const App: React.FC = () => {
-	const { getProjectsList } = useProjectStore();
+	const { getProjectMenutItems } = useProjectStore();
 
 	useEffect(() => {
-		getProjectsList();
-	}, [getProjectsList]);
+		getProjectMenutItems();
+	}, [getProjectMenutItems]);
 
 	return (
 		<div>

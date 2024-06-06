@@ -15,7 +15,7 @@ export const Topbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const { projectId } = useParams();
 	const {
-		getProjectsList,
+		getProjectMenutItems,
 		currentProject: { resources },
 	} = useProjectStore();
 	const { project, toast, setToast } = useProject(projectId);
@@ -50,7 +50,7 @@ export const Topbar = () => {
 			}
 			(e.target as HTMLSpanElement).blur();
 			setIsNameValid(isValidName);
-			getProjectsList();
+			getProjectMenutItems();
 		}
 	};
 

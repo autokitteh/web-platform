@@ -19,7 +19,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { list, getProjectsList } = useProjectStore();
+	const { list, getProjectMenutItems } = useProjectStore();
 	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const [toast, setToast] = useState({
 		isOpen: false,
@@ -43,11 +43,11 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 
 		navigate(`/${SidebarHrefMenu.projects}/${projectId}`);
 
-		await getProjectsList();
+		await getProjectMenutItems();
 	};
 
 	useEffect(() => {
-		const intervalMenu = setInterval(getProjectsList, fetchMenuInterval);
+		const intervalMenu = setInterval(getProjectMenutItems, fetchMenuInterval);
 		return () => clearInterval(intervalMenu);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
