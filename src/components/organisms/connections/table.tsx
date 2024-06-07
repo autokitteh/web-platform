@@ -102,7 +102,7 @@ export const ConnectionsTable = () => {
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
 					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
-					onClick={() => navigate("new")}
+					onClick={() => navigate("add")}
 				>
 					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
 					{t("buttons.addNew")}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { GithubIntegrationForm } from "@components/organisms/connections/add";
+import { GithubIntegrationForm } from "@components/organisms/connections/integrations";
 import { selectConnectionApp } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
 import { IntegrationType } from "@type/components";

@@ -13,7 +13,7 @@ import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const VariablesContent = () => {
+export const VariablesTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { t: tErrors } = useTranslation("errors");
 	const [isLoadingVariables, setIsLoadingVariables] = useState(true);
@@ -94,7 +94,7 @@ export const VariablesContent = () => {
 				<Button
 					ariaLabel={t("buttons.addNew")}
 					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
-					href="add-new-variable"
+					href="add"
 				>
 					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
 					{t("buttons.addNew")}

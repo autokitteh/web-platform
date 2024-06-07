@@ -27,8 +27,6 @@ export const Project = () => {
 
 	useEffect(() => {
 		if (location?.pathname) {
-			console.log(calculatePathDepth(location.pathname));
-
 			const isProjectsMainView = calculatePathDepth(location.pathname) < 4;
 			setDisplayTabs(isProjectsMainView);
 		}
