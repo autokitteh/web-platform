@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { LockSolid } from "@assets/image/icons";
-import { Input, ErrorMessage, Toast, Toggle } from "@components/atoms";
+import { Input, ErrorMessage, Toggle } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
+import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -12,13 +13,10 @@ import { useNavigate, useParams } from "react-router-dom";
 export const EditVariable = () => {
 	const { t } = useTranslation("errors");
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
+	const addToast = useToastStore((state) => state.addToast);
 
 	const { variableName, environmentId, projectId } = useParams();
 	const navigate = useNavigate();
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [isSecret, setIsSecret] = useState(false);
@@ -27,7 +25,14 @@ export const EditVariable = () => {
 		const { data: currentVar, error } = await VariablesService.get(environmentId!, variableName!);
 		setIsLoadingData(false);
 
-		if (error) setToast({ isOpen: true, message: (error as Error).message });
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: t("error"),
+			});
+		}
 		if (!currentVar) return;
 
 		reset({
@@ -65,7 +70,13 @@ export const EditVariable = () => {
 			isSecret,
 		});
 
-		if (error) setToast({ isOpen: true, message: (error as Error).message });
+		if (error)
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: t("error"),
+			});
 
 		navigate(-1);
 	};
@@ -105,15 +116,6 @@ export const EditVariable = () => {
 					<Toggle checked={isSecret} onChange={setIsSecret} /> <LockSolid className="w-4 h-4 fill-white" />
 				</div>
 			</form>
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={t("error")}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
 		</div>
 	);
 };

@@ -6,7 +6,7 @@ import { useToastStore } from "@store/useToastStore";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
 
-export const Toast = ({ duration = 5, title, type, className, isOpen, ariaLabel, onClose }: ToastProps) => {
+export const Toast = ({ title, type, className, ariaLabel }: ToastProps) => {
 	const { toasts, removeToast } = useToastStore();
 
 	useEffect(() => {
@@ -33,13 +33,6 @@ export const Toast = ({ duration = 5, title, type, className, isOpen, ariaLabel,
 		hidden: { filter: "blur(4px)", x: "100%" },
 	};
 
-	useEffect(() => {
-		if (isOpen) {
-			// const timerId = setTimeout(onClose, duration * 1000);
-			// return () => clearTimeout(timerId);
-		}
-	}, [isOpen, duration, onClose]);
-
 	return toasts.map((toast, index) => (
 		<AnimatePresence key={index}>
 			<motion.div
@@ -57,7 +50,7 @@ export const Toast = ({ duration = 5, title, type, className, isOpen, ariaLabel,
 						<p className={titleStyle}>{title}</p>
 						{toast.message}
 					</div>
-					<IconButton className="bg-gray-600 p-0 w-default-icon h-default-icon group ml-auto" onClick={onClose}>
+					<IconButton className="bg-gray-600 p-0 w-default-icon h-default-icon group ml-auto">
 						<Close className="transition fill-white w-3 h-3" />
 					</IconButton>
 				</div>

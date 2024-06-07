@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useCallback, useState } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon, LinkIcon } from "@assets/image/icons";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
+import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
 import { SortButton, ConnectionTableStatus } from "@components/molecules";
 import { ModalDeleteConnection } from "@components/organisms/modals";
 import { baseUrl } from "@constants";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { ConnectionService } from "@services";
-import { useModalStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Connection } from "@type/models";
 import { orderBy } from "lodash";
@@ -19,6 +19,7 @@ export const ConnectionsTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "connections" });
 	const { openModal, closeModal } = useModalStore();
 	const { projectId } = useParams();
+	const { t: tErrors } = useTranslation(["errors"]);
 
 	const navigate = useNavigate();
 
@@ -30,10 +31,8 @@ export const ConnectionsTable = () => {
 	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [connections, setConnections] = useState<Connection[]>([]);
 	const [connectionId, setConnectionId] = useState<string>();
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
+
+	const addToast = useToastStore((state) => state.addToast);
 
 	const fetchConnections = async () => {
 		setIsLoading(true);
@@ -44,7 +43,12 @@ export const ConnectionsTable = () => {
 
 			setConnections(connections);
 		} catch (err) {
-			setToast({ isOpen: true, message: (err as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (err as Error).message,
+				title: tErrors("error"),
+				type: "error",
+			});
 		} finally {
 			setIsLoading(false);
 		}
@@ -81,7 +85,13 @@ export const ConnectionsTable = () => {
 		setIsLoadingDeleteConnection(false);
 		closeModal(ModalName.deleteConnection);
 		if (error) {
-			setToast({ isOpen: true, message: tError("connectionRemoveFailed") });
+			addToast({
+				id: Date.now().toString(),
+				message: tError("connectionRemoveFailed"),
+				title: tErrors("error"),
+				type: "error",
+			});
+
 			return;
 		}
 		fetchConnections();
@@ -182,15 +192,6 @@ export const ConnectionsTable = () => {
 					onDelete={handleDeleteConnection}
 				/>
 			) : null}
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={tError("error")}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
 		</div>
 	);
 };

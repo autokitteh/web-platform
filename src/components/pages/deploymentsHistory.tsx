@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { TrashIcon, ActionActiveIcon, ActionStoppedIcon } from "@assets/image/icons";
-import { IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
+import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeploymentState, DeploymentSessionStats } from "@components/organisms/deployments";
 import { ModalDeleteDeployment } from "@components/organisms/modals";
@@ -8,7 +8,7 @@ import { fetchDeploymentsInterval } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { DeploymentsService } from "@services";
-import { useModalStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Deployment } from "@type/models";
 import { orderBy } from "lodash";
@@ -19,6 +19,7 @@ import { useParams, useNavigate } from "react-router-dom";
 export const DeploymentsHistory = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
+	const addToast = useToastStore((state) => state.addToast);
 
 	const { openModal, closeModal } = useModalStore();
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
@@ -31,11 +32,6 @@ export const DeploymentsHistory = () => {
 		column: keyof Deployment;
 	}>({ direction: SortDirectionVariant.ASC, column: "createdAt" });
 
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
-
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 
@@ -45,7 +41,12 @@ export const DeploymentsHistory = () => {
 		const { data, error } = await DeploymentsService.listByProjectId(projectId);
 		setIsLoadingDeployments(false);
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 			return;
 		}
 		if (!data) return;
@@ -89,7 +90,12 @@ export const DeploymentsHistory = () => {
 					: DeploymentsService.delete(id));
 
 			if (error) {
-				setToast({ isOpen: true, message: (error as Error).message });
+				addToast({
+					id: Date.now().toString(),
+					message: (error as Error).message,
+					type: "error",
+					title: tErrors("error"),
+				});
 				return;
 			}
 			if (action === "delete") closeModal(ModalName.deleteDeployment);
@@ -193,15 +199,6 @@ export const DeploymentsHistory = () => {
 				</TBody>
 			</Table>
 			<ModalDeleteDeployment onDelete={() => handleDeploymentAction(deploymentId!, "delete")} />
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={tErrors("error")}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
 		</>
 	);
 };

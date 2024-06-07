@@ -5,17 +5,19 @@ import { monacoLanguages, defalutFileExtension } from "@constants";
 import { ModalName } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ModalAddCodeAssetsProps } from "@interfaces/components";
-import { useModalStore, useProjectStore } from "@store";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { codeAssetsSchema } from "@validations";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const ModalAddCodeAssets = ({ onError, onSuccess }: ModalAddCodeAssetsProps) => {
+export const ModalAddCodeAssets = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
 	const { closeModal } = useModalStore();
 	const { setProjectEmptyResources } = useProjectStore();
+	const addToast = useToastStore((state) => state.addToast);
+
 	const languageSelectOptions = Object.keys(monacoLanguages).map((key) => ({
 		label: key,
 		value: key,
@@ -42,7 +44,14 @@ export const ModalAddCodeAssets = ({ onError, onSuccess }: ModalAddCodeAssetsPro
 		const { error } = await setProjectEmptyResources(newFile, projectId!);
 		closeModal(ModalName.addCodeAssets);
 
-		if (error) return onError(t("fileAddFailedExtended", { projectId, fileName: name }));
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: t("fileAddFailedExtended", { projectId, fileName: name }),
+				type: "error",
+				title: t("error"),
+			});
+		}
 		onSuccess();
 		reset({ name: "", extension });
 	};

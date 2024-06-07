@@ -2,6 +2,7 @@ export interface Toast {
 	id: string;
 	message: string;
 	type: "success" | "error" | "info";
+	title: string;
 }
 
 export interface ToastStore {

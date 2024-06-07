@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon } from "@assets/image/icons";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
+import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { ModalDeleteTrigger } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { TriggersService } from "@services";
-import { useModalStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Trigger } from "@type/models";
 import { orderBy } from "lodash";
@@ -27,10 +27,7 @@ export const TriggersTable = () => {
 	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [triggers, setTriggers] = useState<Trigger[]>([]);
 	const [triggerId, setTriggerId] = useState<string>();
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
+	const addToast = useToastStore((state) => state.addToast);
 
 	const fetchTriggers = async () => {
 		setIsLoading(true);
@@ -40,8 +37,13 @@ export const TriggersTable = () => {
 			if (!triggers) return;
 
 			setTriggers(triggers);
-		} catch (err) {
-			setToast({ isOpen: true, message: (err as Error).message });
+		} catch (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tError("error"),
+			});
 		} finally {
 			setIsLoading(false);
 		}
@@ -69,7 +71,12 @@ export const TriggersTable = () => {
 		const { error } = await TriggersService.delete(triggerId);
 		closeModal(ModalName.deleteTrigger);
 		if (error) {
-			setToast({ isOpen: true, message: tError("triggerRemoveFailed") });
+			addToast({
+				id: Date.now().toString(),
+				message: tError("triggerRemoveFailed") + (error as Error).message,
+				type: "error",
+				title: tError("error"),
+			});
 			return;
 		}
 		fetchTriggers();
@@ -176,16 +183,6 @@ export const TriggersTable = () => {
 			) : (
 				<div className="mt-10 text-xl font-semibold text-center text-gray-300">{t("titleNoAvailable")}</div>
 			)}
-
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={tError("error")}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
 
 			<ModalDeleteTrigger onDelete={handleDeleteTrigger} triggerId={triggerId} />
 		</div>

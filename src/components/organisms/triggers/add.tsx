@@ -1,12 +1,12 @@
 import React, { useState, useLayoutEffect } from "react";
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-import { Select, ErrorMessage, Toast, Input, Button, IconButton } from "@components/atoms";
+import { Select, ErrorMessage, Input, Button, IconButton } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
-import { useProjectStore } from "@store";
+import { useProjectStore, useToastStore } from "@store";
 import { TriggerData } from "@type/models";
 import { triggerSchema } from "@validations";
 import { debounce, has } from "lodash";
@@ -20,17 +20,14 @@ export const AddTrigger = () => {
 	const {
 		currentProject: { resources },
 	} = useProjectStore();
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
+	const { t: tErrors } = useTranslation(["errors"]);
+	const addToast = useToastStore((state) => state.addToast);
 
 	useLayoutEffect(() => {
 		const fetchData = async () => {
@@ -51,7 +48,12 @@ export const AddTrigger = () => {
 				}));
 				setFilesName(formattedResources);
 			} catch (error) {
-				setToast({ isOpen: true, message: (error as Error).message });
+				addToast({
+					id: Date.now().toString(),
+					message: (error as Error).message,
+					type: "error",
+					title: tErrors("error"),
+				});
 			} finally {
 				setIsLoadingData(false);
 			}
@@ -96,7 +98,12 @@ export const AddTrigger = () => {
 		setIsLoading(false);
 
 		if (error) {
-			setToast({ isOpen: true, message: tErrors("triggerNotCreated") });
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("triggerNotCreated") + (error as Error).message,
+				type: "error",
+				title: t("error"),
+			});
 			return;
 		}
 		navigate(-1);
@@ -127,7 +134,12 @@ export const AddTrigger = () => {
 
 	const handleAddNewData = () => {
 		if (has(triggerData, "")) {
-			setToast({ isOpen: true, message: t("errors.emptyKeyExist") });
+			addToast({
+				id: Date.now().toString(),
+				message: t("errors.emptyKeyExist"),
+				type: "error",
+				title: t("error"),
+			});
 			return;
 		}
 
@@ -278,15 +290,6 @@ export const AddTrigger = () => {
 					</div>
 				</div>
 			</form>
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={tErrors("error")}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
 		</div>
 	);
 };

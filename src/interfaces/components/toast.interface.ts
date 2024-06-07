@@ -6,7 +6,4 @@ export interface ToastProps {
 	ariaLabel?: string;
 	type?: ToastType;
 	children?: React.ReactNode;
-	isOpen?: boolean;
-	duration?: number;
-	onClose?: () => void;
 }

@@ -7,7 +7,6 @@ export interface ModalProps {
 }
 
 export interface ModalAddCodeAssetsProps {
-	onError: (message: string) => void;
 	onSuccess: () => void;
 }
 

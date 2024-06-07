@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ProjectsIcon } from "@assets/image";
-import { Button, IconSvg, Toast } from "@components/atoms";
+import { Button, IconSvg } from "@components/atoms";
 import { useProjectStore } from "@store/useProjectStore";
+import { useToastStore } from "@store/useToastStore";
 import { ProjectMenuItem } from "@type/models";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -10,7 +11,8 @@ export const StatsTopbar = () => {
 	const { t } = useTranslation(["projects", "errors"]);
 	const { projectId } = useParams();
 	const [project, setProject] = useState<ProjectMenuItem>();
-	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
+	const addToast = useToastStore((state) => state.addToast);
+	const { t: tErrors } = useTranslation(["errors"]);
 
 	const { getProject } = useProjectStore();
 
@@ -22,21 +24,24 @@ export const StatsTopbar = () => {
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
 		if (error) {
-			setToast({ isSuccess: false, isOpen: true, message: (error as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 			return <div />;
 		}
 		if (!project) {
-			setToast({ isSuccess: false, isOpen: true, message: "project not found" });
+			addToast({
+				id: Date.now().toString(),
+				message: "project not found",
+				type: "error",
+				title: tErrors("error"),
+			});
 			return <div />;
 		}
 		setProject(project);
-	};
-
-	const toastProps = {
-		duration: 5,
-		isOpen: toast.isOpen,
-		onClose: () => setToast({ ...toast, isOpen: false }),
-		title: t("error", { ns: "errors" }),
 	};
 
 	return (
@@ -56,9 +61,6 @@ export const StatsTopbar = () => {
 					{t("topbar.buttons.goToProject")}
 				</Button>
 			</div>
-			<Toast {...toastProps} ariaLabel={toast.message} type="error">
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
 		</div>
 	);
 };

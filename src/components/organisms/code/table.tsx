@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-import { Button, IconButton, TBody, THead, Table, Td, Th, Toast, Tr } from "@components/atoms";
+import { Button, IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ModalAddCodeAssets, ModalDeleteFile } from "@components/organisms/modals";
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
 import { ProjectsService } from "@services";
-import { useModalStore, useProjectStore } from "@store";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { cn } from "@utilities";
 import { orderBy, isEmpty } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -18,6 +18,8 @@ export const CodeTable = () => {
 	const { t: tErrors } = useTranslation(["errors"]);
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { openModal, closeModal } = useModalStore();
+	const addToast = useToastStore((state) => state.addToast);
+
 	const {
 		currentProject: { openedFiles, resources },
 		getProjectResources,
@@ -26,10 +28,7 @@ export const CodeTable = () => {
 		removeProjectFile,
 	} = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
+
 	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
 	const selectedRemoveFileName = useModalStore((state) => state.data as string);
 
@@ -66,7 +65,12 @@ export const CodeTable = () => {
 
 			getProjectResources(resources);
 		} catch (err) {
-			setToast({ isOpen: true, message: (err as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (err as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 		} finally {
 			setIsLoading(false);
 		}
@@ -98,7 +102,12 @@ export const CodeTable = () => {
 		const { error, fileName } = await setProjectResources(files, projectId!);
 
 		if (error) {
-			setToast({ isOpen: true, message: tErrors("fileAddFailedExtended", { projectId, fileName }) });
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("fileAddFailedExtended", { projectId, fileName }),
+				title: tErrors("error"),
+				type: "error",
+			});
 			return;
 		}
 		fetchResources();
@@ -109,7 +118,12 @@ export const CodeTable = () => {
 		const { error } = await removeProjectFile(selectedRemoveFileName, projectId!);
 
 		if (error) {
-			setToast({ isOpen: true, message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }) });
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }),
+				title: tErrors("error"),
+				type: "error",
+			});
 			return;
 		}
 		fetchResources();
@@ -186,16 +200,7 @@ export const CodeTable = () => {
 				</div>
 			</div>
 			<ModalDeleteFile onDelete={handleRemoveFile} />
-			<ModalAddCodeAssets onError={(message) => setToast({ isOpen: true, message })} onSuccess={fetchResources} />
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={tErrors("error")}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
+			<ModalAddCodeAssets onSuccess={fetchResources} />
 		</div>
 	);
 };

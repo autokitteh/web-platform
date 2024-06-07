@@ -1,27 +1,22 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Toast } from "@components/atoms";
+import React, { useCallback, useEffect } from "react";
 import { baseUrl } from "@constants";
 import { Descope, useDescope } from "@descope/react-sdk";
-import { useProjectStore } from "@store";
+import { useProjectStore, useToastStore } from "@store";
 import { useUserStore } from "@store/useUserStore";
 import axios from "axios";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) => {
 	const { reset: resetProjectStore, getProjectMenutItems } = useProjectStore();
 	const { reset: resetUserStore, setLogoutFunction, user, getLoggedInUser } = useUserStore();
 	const { logout } = useDescope();
-
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
-
 	const handleLogout = useCallback(() => {
 		resetProjectStore();
 		resetUserStore();
 		logout();
 	}, [resetProjectStore, resetUserStore, logout]);
+	const { t: tErrors } = useTranslation(["errors"]);
+	const addToast = useToastStore((state) => state.addToast);
 
 	useEffect(() => {
 		setLogoutFunction(handleLogout);
@@ -34,27 +29,19 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 				await getLoggedInUser();
 				await getProjectMenutItems();
 			} catch (error) {
-				setToast({ isOpen: true, message: `Error occurred during login: ${(error as Error).message}` });
+				addToast({
+					id: Date.now().toString(),
+					message: `Error occurred during login: ${(error as Error).message}`,
+					type: "error",
+					title: tErrors("error"),
+				});
 			}
 		},
 		[getLoggedInUser, getProjectMenutItems]
 	);
 
 	if (!user) {
-		return (
-			<>
-				<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
-				<Toast
-					duration={5}
-					isOpen={toast.isOpen}
-					onClose={() => setToast({ ...toast, isOpen: false })}
-					title={t("error", { ns: "errors" })}
-					type="error"
-				>
-					<p className="mt-1 text-xs">{toast.message}</p>
-				</Toast>
-			</>
-		);
+		return <Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />;
 	}
 
 	return children;

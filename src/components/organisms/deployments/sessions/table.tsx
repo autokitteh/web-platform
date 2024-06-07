@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
-import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr, Toast } from "@components/atoms";
+import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { SessionsTableState, SessionTableEditorFrame, SessionsTableFilter } from "@components/organisms/deployments";
 import { ModalDeleteDeploymentSession } from "@components/organisms/modals";
@@ -9,7 +9,7 @@ import { ModalName, SortDirectionVariant } from "@enums/components";
 import { SessionLogRecord } from "@models";
 import { reverseSessionStateConverter } from "@models/utils";
 import { SessionsService } from "@services";
-import { useModalStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
@@ -24,6 +24,7 @@ export const SessionsTable = () => {
 	const { openModal, closeModal } = useModalStore();
 	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
+	const addToast = useToastStore((state) => state.addToast);
 
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
@@ -32,10 +33,6 @@ export const SessionsTable = () => {
 		direction: SortDirection;
 		column: keyof Session;
 	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
 	const [initialLoad, setInitialLoad] = useState(true);
 
 	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
@@ -50,7 +47,12 @@ export const SessionsTable = () => {
 
 		const { data, error } = await SessionsService.listByDeploymentId(deploymentId, { stateType: sessionStateType });
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 			return;
 		}
 		if (!data) return;
@@ -63,7 +65,12 @@ export const SessionsTable = () => {
 
 		const { data, error } = await SessionsService.getLogRecordsBySessionId(sessionId);
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 			return;
 		}
 		if (!data) return;
@@ -112,7 +119,12 @@ export const SessionsTable = () => {
 		if (!sessionId) return;
 		const { error } = await SessionsService.deleteSession(sessionId);
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 			return;
 		}
 
@@ -211,15 +223,6 @@ export const SessionsTable = () => {
 			</Frame>
 			<SessionTableEditorFrame isSelectedSession={!!sessionId} onClose={closeSessionLog} sessionLog={sessionLog} />
 			<ModalDeleteDeploymentSession onDelete={handleRemoveSession} />
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={tErrors("error")}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
 		</div>
 	);
 };

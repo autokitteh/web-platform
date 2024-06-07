@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { TestIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
-import { Select, Button, ErrorMessage, Input, Link, Spinner, Toast } from "@components/atoms";
+import { Select, Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { baseUrl, namespaces } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoggerService } from "@services/logger.service";
+import { useToastStore } from "@store/useToastStore";
 import { githubIntegrationSchema } from "@validations";
 import axios from "axios";
 import randomatic from "randomatic";
@@ -17,7 +18,6 @@ export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
-	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
 	const { projectId } = useParams();
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +35,9 @@ export const GithubIntegrationForm = () => {
 			name: "",
 		},
 	});
+
+	const addToast = useToastStore((state) => state.addToast);
+
 	const randomForPATWebhook = useMemo(() => randomatic("Aa0", 8), [projectId]);
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
@@ -54,8 +57,6 @@ export const GithubIntegrationForm = () => {
 				window.location.href = `${baseUrl}/${response.data.url}`;
 			}
 		} catch (error) {
-			console.log("error", error);
-
 			LoggerService.error(namespaces.connectionService, "Error while creating a new trigger");
 		}
 		setIsLoading(false);
@@ -64,9 +65,20 @@ export const GithubIntegrationForm = () => {
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-			setToast({ isOpen: true, isSuccess: true, message: t("github.copySuccess") });
+
+			addToast({
+				id: Date.now().toString(),
+				message: t("github.copySuccess"),
+				title: "Success",
+				type: "success",
+			});
 		} catch (err) {
-			setToast({ isOpen: true, isSuccess: false, message: t("github.copyFailure") });
+			addToast({
+				id: Date.now().toString(),
+				message: t("github.copyFailure"),
+				title: tErrors("error"),
+				type: "error",
+			});
 		}
 	};
 
@@ -171,34 +183,22 @@ export const GithubIntegrationForm = () => {
 		</div>
 	);
 
-	const toastProps = {
-		duration: 5,
-		isOpen: toast.isOpen,
-		onClose: () => setToast({ ...toast, isOpen: false }),
-		title: toast.isSuccess ? t("success") : tErrors("error"),
-	};
-
 	return (
-		<>
-			<form className="flex items-start gap-10" id="createNewConnectionForm" onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex flex-col w-full gap-6">
-					<Select
-						aria-label={t("placeholders.selectConnectionType")}
-						onChange={(selected) => {
-							if (selected?.value && isGithubConnectionType(selected.value)) {
-								setSelectedConnectionType(selected.value);
-							}
-						}}
-						options={selectIntegrationGithub}
-						placeholder={t("placeholders.selectConnectionType")}
-					/>
-					{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat ? renderPATFields() : null}
-					{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth ? renderOAuthButton() : null}
-				</div>
-			</form>
-			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
-		</>
+		<form className="flex items-start gap-10" id="createNewConnectionForm" onSubmit={handleSubmit(onSubmit)}>
+			<div className="flex flex-col w-full gap-6">
+				<Select
+					aria-label={t("placeholders.selectConnectionType")}
+					onChange={(selected) => {
+						if (selected?.value && isGithubConnectionType(selected.value)) {
+							setSelectedConnectionType(selected.value);
+						}
+					}}
+					options={selectIntegrationGithub}
+					placeholder={t("placeholders.selectConnectionType")}
+				/>
+				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat ? renderPATFields() : null}
+				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth ? renderOAuthButton() : null}
+			</div>
+		</form>
 	);
 };

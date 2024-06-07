@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon, EditIcon, LockSolid } from "@assets/image/icons";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Toast } from "@components/atoms";
+import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { ModalDeleteVariable } from "@components/organisms/modals";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { EnvironmentsService, VariablesService } from "@services";
-import { useModalStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Environment, Variable } from "@type/models";
 import { orderBy } from "lodash";
@@ -24,13 +24,10 @@ export const VariablesTable = () => {
 		direction: SortDirection;
 		column: keyof Variable;
 	}>({ direction: SortDirectionVariant.ASC, column: "name" });
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
 	const [deleteVariable, setDeleteVariable] = useState<Variable>();
 	const navigate = useNavigate();
 	const { projectId } = useParams();
+	const addToast = useToastStore((state) => state.addToast);
 
 	const fetchVariables = async () => {
 		try {
@@ -43,7 +40,12 @@ export const VariablesTable = () => {
 			if (error) throw error;
 			setVariables(vars);
 		} catch (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 		} finally {
 			setIsLoadingVariables(false);
 		}
@@ -73,7 +75,13 @@ export const VariablesTable = () => {
 		});
 		closeModal(ModalName.deleteVariable);
 
-		if (error) return setToast({ isOpen: true, message: (error as Error).message });
+		if (error)
+			return addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 
 		fetchVariables();
 	};
@@ -162,16 +170,6 @@ export const VariablesTable = () => {
 			) : (
 				<div className="mt-10 text-xl font-semibold text-center text-gray-300"> {t("titleNoAvailable")}</div>
 			)}
-
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={tErrors("error")}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
 
 			<ModalDeleteVariable onDelete={handleDeleteVariable} variable={deleteVariable!} />
 		</div>

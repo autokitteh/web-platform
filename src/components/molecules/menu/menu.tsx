@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { NewProject } from "@assets/image";
-import { Button, IconSvg, Toast } from "@components/atoms";
+import { Button, IconSvg } from "@components/atoms";
 import { menuItems } from "@constants";
 import { SidebarMenu } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
 import { MenuItem } from "@interfaces/components";
-import { useProjectStore } from "@store";
+import { useProjectStore, useToastStore } from "@store";
 import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
 import { isEqual, orderBy } from "lodash";
@@ -19,10 +19,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const location = useLocation();
 	const { list, createProject, addProjectToMenu } = useProjectStore();
 	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
+	const addToast = useToastStore((state) => state.addToast);
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
@@ -33,12 +30,22 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		const { data, error } = await createProject();
 
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: t("error"),
+			});
 			return;
 		}
 
 		if (!data) {
-			setToast({ isOpen: true, message: t("errors:projectNotCreated") });
+			addToast({
+				id: Date.now().toString(),
+				message: t("errors:projectNotCreated"),
+				type: "error",
+				title: t("error"),
+			});
 			return;
 		}
 
@@ -91,16 +98,36 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		});
 
 	return (
-		<>
-			<div className={cn(className, "flex flex-col gap-4")}>
-				<div onMouseEnter={(e) => handleMouseEnter(e)}>
-					<Button
-						ariaLabel="New Project"
-						className="hover:bg-green-light gap-1.5 p-0.5 pl-1"
-						onClick={handleCreateProject}
-					>
-						<div className="flex items-center justify-center w-9 h-9">
-							<IconSvg alt="New Project" className="w-8 h-8 p-1" src={NewProject} />
+		<div className={cn(className, "flex flex-col gap-4")}>
+			<div onMouseEnter={(e) => handleMouseEnter(e)}>
+				<Button
+					ariaLabel="New Project"
+					className="hover:bg-green-light gap-1.5 p-0.5 pl-1"
+					onClick={handleCreateProject}
+				>
+					<div className="flex items-center justify-center w-9 h-9">
+						<IconSvg alt="New Project" className="w-8 h-8 p-1" src={NewProject} />
+					</div>
+					<AnimatePresence>
+						{isOpen ? (
+							<motion.span
+								animate="visible"
+								className="overflow-hidden whitespace-nowrap"
+								exit="hidden"
+								initial="hidden"
+								variants={animateVariant}
+							>
+								{t("newProject")}
+							</motion.span>
+						) : null}
+					</AnimatePresence>
+				</Button>
+			</div>
+			{menu.map(({ icon, name, href, submenu, id }) => (
+				<div key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
+					<Button ariaLabel={name} className={buttonMenuStyle(href)} href={href}>
+						<div className={buttonMenuIconWrapperStyle(href)}>
+							<IconSvg alt={name} className={buttonMenuIconStyle(href)} src={icon} />
 						</div>
 						<AnimatePresence>
 							{isOpen ? (
@@ -111,44 +138,13 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 									initial="hidden"
 									variants={animateVariant}
 								>
-									{t("newProject")}
+									{name}
 								</motion.span>
 							) : null}
 						</AnimatePresence>
 					</Button>
 				</div>
-				{menu.map(({ icon, name, href, submenu, id }) => (
-					<div key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
-						<Button ariaLabel={name} className={buttonMenuStyle(href)} href={href}>
-							<div className={buttonMenuIconWrapperStyle(href)}>
-								<IconSvg alt={name} className={buttonMenuIconStyle(href)} src={icon} />
-							</div>
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="overflow-hidden whitespace-nowrap"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
-									>
-										{name}
-									</motion.span>
-								) : null}
-							</AnimatePresence>
-						</Button>
-					</div>
-				))}
-			</div>
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={t("error", { ns: "errors" })}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
-		</>
+			))}
+		</div>
 	);
 };
