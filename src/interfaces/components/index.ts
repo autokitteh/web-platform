@@ -23,7 +23,7 @@ export type {
 	ModalDeleteDeploymentSessionProps,
 	ModalDeleteConnectionProps,
 } from "@interfaces/components/modal.interface";
-export type { ToastProps } from "@interfaces/components/toast.interface";
+export type { Toast } from "@interfaces/components/toast.interface";
 export type { SelectOption, SelectProps, InputProps, TextArea } from "@interfaces/components/forms";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";

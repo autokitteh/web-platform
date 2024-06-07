@@ -17,7 +17,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { list, getProjectMenutItems, createProject } = useProjectStore();
+	const { menuList: projectsMenuList, createProject, addProjectToMenu } = useProjectStore();
 	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -27,7 +27,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	};
 
 	const handleCreateProject = async () => {
-		const { data: projectId, error } = await createProject();
+		const { data, error } = await createProject();
 
 		if (error) {
 			addToast({
@@ -39,13 +39,19 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 			return;
 		}
 
-		navigate(`/${SidebarHrefMenu.projects}/${projectId}`);
+		const menuProject = {
+			id: data!.projectId,
+			name: data!.name,
+			href: `/${SidebarHrefMenu.projects}/${data?.projectId}`,
+		};
 
-		await getProjectMenutItems();
+		addProjectToMenu(menuProject);
+
+		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
 	};
 
 	useEffect(() => {
-		const sortedList = orderBy(list, "name", "asc");
+		const sortedList = orderBy(projectsMenuList, "name", "asc");
 
 		const currentSubmenu = menu.find(({ id }) => id === SidebarMenu.myProjects)?.submenu;
 		if (isEqual(currentSubmenu, sortedList)) return;
@@ -56,7 +62,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 
 		setMenu(updatedMenuItems);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [list]);
+	}, [projectsMenuList]);
 
 	const handleMouseEnter = (e: React.MouseEvent, submenu?: SubmenuInfo["submenu"]) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });

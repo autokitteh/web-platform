@@ -11,6 +11,8 @@ test.beforeEach(async ({ page, dashboardPage }) => {
 	await expect(page.getByRole("row", { name: "newFile.star" })).toHaveCount(1);
 
 	await page.getByRole("button", { name: "Deploy project" }).click();
+	await expect(page.getByText("// Code A: Initialize your code here...")).toBeVisible();
+
 	const projectDeployedWithFile = page.getByRole("alert", { name: "Project deploy completed successfully." });
 	await expect(projectDeployedWithFile).toBeVisible();
 

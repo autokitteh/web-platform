@@ -21,7 +21,8 @@ export const CodeTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
-		currentProject: { openedFiles, resources },
+		openedFiles,
+		resources,
 		getProjectResources,
 		setProjectResources,
 		updateEditorOpenedFiles,

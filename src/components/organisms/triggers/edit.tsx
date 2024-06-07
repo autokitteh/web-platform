@@ -17,9 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
 export const EditTrigger = () => {
 	const { triggerId, projectId } = useParams();
 	const navigate = useNavigate();
-	const {
-		currentProject: { resources },
-	} = useProjectStore();
+	const { resources } = useProjectStore();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);

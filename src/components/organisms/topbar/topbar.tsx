@@ -12,11 +12,7 @@ import { useParams } from "react-router-dom";
 export const Topbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const { projectId } = useParams();
-	const {
-		currentProject: { resources },
-		getProject,
-		renameProject,
-	} = useProjectStore();
+	const { resources, getProject, renameProject } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [project, setProject] = useState<ProjectMenuItem>();
@@ -85,9 +81,9 @@ export const Topbar = () => {
 		} else {
 			addToast({
 				id: Date.now().toString(),
-				message: t("topbar.buildProjectSuccess"),
+				message: "",
 				type: "success",
-				title: "Project built successfully",
+				title: t("topbar.buildProjectSuccess"),
 			});
 		}
 
@@ -110,9 +106,9 @@ export const Topbar = () => {
 		} else {
 			addToast({
 				id: Date.now().toString(),
-				message: t("topbar.deployedProjectSuccess"),
+				message: "",
 				type: "success",
-				title: "Project deployed successfully",
+				title: t("topbar.deployedProjectSuccess"),
 			});
 		}
 

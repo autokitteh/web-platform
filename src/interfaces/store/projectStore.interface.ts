@@ -11,18 +11,14 @@ interface FilesResponse {
 }
 
 export interface ProjectStore {
-	list: ProjectMenuItem[];
-	activeTab?: string;
-	currentProject: {
-		openedFiles: { name: string; isActive: boolean }[];
-		resources: Record<string, Uint8Array>;
-	};
+	menuList: ProjectMenuItem[];
+	openedFiles: { name: string; isActive: boolean }[];
+	resources: Record<string, Uint8Array>;
 	getProjectMenutItems: () => ServiceResponse<ProjectMenuItem[]>;
 	getProject: (projectId: string) => ServiceResponse<ProjectMenuItem>;
 	renameProject: (projectId: string, projectName: string) => void;
 	addProjectToMenu: (project: ProjectMenuItem) => void;
-	setActiveTab: (value: string) => void;
-	createProject: () => ServiceResponse<{ id: string; name: string }>;
+	createProject: () => ServiceResponse<{ projectId: string; name: string }>;
 	setUpdateFileContent: (content: Uint8Array, projectId: string) => void;
 	setProjectResources: (files: File[], projectId: string) => Promise<FilesResponse>;
 	setProjectEmptyResources: (name: string, projectId: string) => Promise<ProjectStoreResponse>;

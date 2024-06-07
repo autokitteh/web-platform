@@ -14,12 +14,8 @@ import { useParams } from "react-router-dom";
 export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const {
-		currentProject: { resources, openedFiles },
-		setUpdateFileContent,
-		updateEditorOpenedFiles,
-		updateEditorClosedFiles,
-	} = useProjectStore();
+	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
+		useProjectStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const initialContent = "// Code A: Initialize your code here...";
 

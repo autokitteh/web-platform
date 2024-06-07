@@ -17,9 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
 export const AddTrigger = () => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const {
-		currentProject: { resources },
-	} = useProjectStore();
+	const { resources } = useProjectStore();
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
