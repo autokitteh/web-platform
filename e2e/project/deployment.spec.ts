@@ -1,10 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../fixtures";
 
-test.beforeEach(async ({ page }) => {
-	await page.goto("/");
-	const button = page.getByRole("button", { name: "New Project" });
-	await button.hover();
-	await button.click();
+test.beforeEach(async ({ page, dashboardPage }) => {
+	await dashboardPage.createProjectFromMenu();
 
 	await page.getByRole("button", { name: "Create new file" }).click();
 	const newFileInput = page.getByRole("textbox", { name: "new file name" });
@@ -23,13 +20,13 @@ test.beforeEach(async ({ page }) => {
 test.describe("Project Deployment Suite", () => {
 	test("New deployment has been created", async ({ page }) => {
 		await page.waitForTimeout(1000);
-		const deployment = await page.locator("tbody").locator("tr").count();
-		expect(deployment).toBe(1);
+		const deploymentCount = await page.locator("tbody").locator("tr").count();
+		expect(deploymentCount).toBe(1);
 	});
 
 	test("Deactivate deployment", async ({ page }) => {
-		const deactiveButton = page.getByRole("button", { name: "Deactivate deployment" });
-		await deactiveButton.click();
+		const deactivateButton = page.getByRole("button", { name: "Deactivate deployment" });
+		await deactivateButton.click();
 		await expect(page.getByRole("button", { name: "Activate deployment" })).toBeVisible();
 		await expect(page.getByRole("status", { name: "Inactive" })).toBeVisible();
 	});
@@ -39,7 +36,8 @@ test.describe("Project Deployment Suite", () => {
 	});
 
 	test("Delete deactivated deployment", async ({ page }) => {
-		await page.getByRole("button", { name: "Deactivate deployment" }).click();
+		const deactivateButton = page.getByRole("button", { name: "Deactivate deployment" });
+		await deactivateButton.click();
 		const deleteButton = page.getByRole("button", { name: "Delete deployment" });
 		await deleteButton.click();
 		await page.getByRole("button", { name: "Yes, delete" }).click();

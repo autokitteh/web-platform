@@ -1,10 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../fixtures";
 
-test.beforeEach(async ({ page }) => {
-	await page.goto("/");
-	const button = page.getByRole("button", { name: "New Project" });
-	await button.hover();
-	await button.click();
+test.beforeEach(async ({ page, dashboardPage }) => {
+	await dashboardPage.createProjectFromMenu();
 
 	await page.getByRole("tab", { name: "variables" }).click();
 	await page.getByRole("link", { name: "Add new" }).click();
