@@ -3,7 +3,7 @@ import { PlusCircle } from "@assets/image";
 import { TrashIcon, LinkIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
 import { SortButton, ConnectionTableStatus } from "@components/molecules";
-import { ModalDeleteConnection } from "@components/organisms/modals";
+import { DeleteConnectionModal } from "@components/organisms/connections";
 import { baseUrl } from "@constants";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { ConnectionService } from "@services";
@@ -186,7 +186,7 @@ export const ConnectionsTable = () => {
 				<div className="mt-10 text-xl font-semibold text-center text-gray-300">{t("titleNoAvailable")}</div>
 			)}
 			{connectionId ? (
-				<ModalDeleteConnection
+				<DeleteConnectionModal
 					connectionId={connectionId}
 					loading={isLoadingDeleteConnection}
 					onDelete={handleDeleteConnection}

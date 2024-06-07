@@ -3,7 +3,7 @@ import { TrashIcon, ActionActiveIcon, ActionStoppedIcon } from "@assets/image/ic
 import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeploymentState, DeploymentSessionStats } from "@components/organisms/deployments";
-import { ModalDeleteDeployment } from "@components/organisms/modals";
+import { DeleteDeploymentModal } from "@components/organisms/deployments";
 import { fetchDeploymentsInterval } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName, SortDirectionVariant } from "@enums/components";
@@ -16,7 +16,7 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 
-export const DeploymentsHistory = () => {
+export const DeploymentsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const addToast = useToastStore((state) => state.addToast);
@@ -198,7 +198,7 @@ export const DeploymentsHistory = () => {
 					))}
 				</TBody>
 			</Table>
-			<ModalDeleteDeployment onDelete={() => handleDeploymentAction(deploymentId!, "delete")} />
+			<DeleteDeploymentModal onDelete={() => handleDeploymentAction(deploymentId!, "delete")} />
 		</>
 	);
 };

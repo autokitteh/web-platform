@@ -3,7 +3,7 @@ import { ArrowLeft, TrashIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { SessionsTableState, SessionTableEditorFrame, SessionsTableFilter } from "@components/organisms/deployments";
-import { ModalDeleteDeploymentSession } from "@components/organisms/modals";
+import { DeleteSessionModal } from "@components/organisms/deployments/sessions";
 import { fetchSessionsInterval } from "@constants";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { SessionLogRecord } from "@models";
@@ -222,7 +222,7 @@ export const SessionsTable = () => {
 				)}
 			</Frame>
 			<SessionTableEditorFrame isSelectedSession={!!sessionId} onClose={closeSessionLog} sessionLog={sessionLog} />
-			<ModalDeleteDeploymentSession onDelete={handleRemoveSession} />
+			<DeleteSessionModal onDelete={handleRemoveSession} />
 		</div>
 	);
 };

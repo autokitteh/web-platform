@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 import { Button, IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { ModalAddCodeAssets, ModalDeleteFile } from "@components/organisms/modals";
+import { DeleteFileModal, AddFileModal } from "@components/organisms/code";
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
 import { ProjectsService } from "@services";
@@ -199,8 +199,8 @@ export const CodeTable = () => {
 					</div>
 				</div>
 			</div>
-			<ModalDeleteFile onDelete={handleRemoveFile} />
-			<ModalAddCodeAssets onSuccess={fetchResources} />
+			<DeleteFileModal onDelete={handleRemoveFile} />
+			<AddFileModal onSuccess={fetchResources} />
 		</div>
 	);
 };

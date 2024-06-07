@@ -3,7 +3,7 @@ import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { ModalDeleteTrigger } from "@components/organisms/modals";
+import { DeleteTriggerModal } from "@components/organisms/triggers";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { TriggersService } from "@services";
 import { useModalStore, useToastStore } from "@store";
@@ -184,7 +184,7 @@ export const TriggersTable = () => {
 				<div className="mt-10 text-xl font-semibold text-center text-gray-300">{t("titleNoAvailable")}</div>
 			)}
 
-			<ModalDeleteTrigger onDelete={handleDeleteTrigger} triggerId={triggerId} />
+			<DeleteTriggerModal onDelete={handleDeleteTrigger} triggerId={triggerId} />
 		</div>
 	);
 };

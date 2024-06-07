@@ -6,7 +6,7 @@ import { ModalDeleteDeploymentSessionProps } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { useTranslation } from "react-i18next";
 
-export const ModalDeleteDeploymentSession = ({ onDelete }: ModalDeleteDeploymentSessionProps) => {
+export const DeleteSessionModal = ({ onDelete }: ModalDeleteDeploymentSessionProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteDeploymentSession" });
 	const { closeModal } = useModalStore();
 

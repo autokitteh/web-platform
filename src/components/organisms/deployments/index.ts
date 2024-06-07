@@ -6,3 +6,4 @@ export {
 	SessionsTableFilter,
 	SessionsTable,
 } from "@components/organisms/deployments/sessions";
+export { DeleteDeploymentModal } from "@components/organisms/deployments/deleteModal";

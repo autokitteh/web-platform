@@ -3,7 +3,7 @@ import { PlusCircle } from "@assets/image";
 import { TrashIcon, EditIcon, LockSolid } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { ModalDeleteVariable } from "@components/organisms/modals";
+import { DeleteVariableModal } from "@components/organisms/variables";
 import { ModalName, SortDirectionVariant } from "@enums/components";
 import { EnvironmentsService, VariablesService } from "@services";
 import { useModalStore, useToastStore } from "@store";
@@ -171,7 +171,7 @@ export const VariablesTable = () => {
 				<div className="mt-10 text-xl font-semibold text-center text-gray-300"> {t("titleNoAvailable")}</div>
 			)}
 
-			<ModalDeleteVariable onDelete={handleDeleteVariable} variable={deleteVariable!} />
+			<DeleteVariableModal onDelete={handleDeleteVariable} variable={deleteVariable!} />
 		</div>
 	);
 };

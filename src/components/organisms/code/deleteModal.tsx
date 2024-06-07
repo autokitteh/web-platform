@@ -6,7 +6,7 @@ import { DeleteFile } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { useTranslation } from "react-i18next";
 
-export const ModalDeleteFile = ({ onDelete }: DeleteFile) => {
+export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteFile" });
 	const fileName = useModalStore((state) => state.data as string);
 	const { closeModal } = useModalStore();

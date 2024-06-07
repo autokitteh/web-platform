@@ -8,7 +8,7 @@ import { useModalStore } from "@store";
 import { Connection } from "@type/models";
 import { Trans, useTranslation } from "react-i18next";
 
-export const ModalDeleteConnection = ({ onDelete, connectionId, loading }: ModalDeleteConnectionProps) => {
+export const DeleteConnectionModal = ({ onDelete, connectionId, loading }: ModalDeleteConnectionProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });
 	const { closeModal } = useModalStore();
 	const [connection, setConnection] = useState<Connection>();

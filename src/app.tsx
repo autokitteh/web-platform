@@ -7,6 +7,7 @@ import { AddVariable, EditVariable, VariablesTable } from "@components/organisms
 import { Dashboard, Project, Variables } from "@components/pages";
 import { Triggers } from "@components/pages";
 import { Connections } from "@components/pages";
+import { Deployments } from "@components/pages/deployments";
 import { AppLayout } from "@components/templates";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
@@ -36,6 +37,8 @@ export const App: React.FC = () => (
 						<Route element={<AddVariable />} path="add" />
 						<Route element={<EditVariable />} path=":variableId/edit" />
 					</Route>
+
+					<Route element={<Deployments />} path="deployments" />
 				</Route>
 			</Route>
 		</Routes>

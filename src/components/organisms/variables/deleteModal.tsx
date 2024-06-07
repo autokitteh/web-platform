@@ -6,7 +6,7 @@ import { ModalDeleteVariableProps } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { useTranslation, Trans } from "react-i18next";
 
-export const ModalDeleteVariable = ({ onDelete, variable }: ModalDeleteVariableProps) => {
+export const DeleteVariableModal = ({ onDelete, variable }: ModalDeleteVariableProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteVariable" });
 	const { closeModal } = useModalStore();
 
