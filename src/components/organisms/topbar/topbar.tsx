@@ -85,7 +85,7 @@ export const Topbar = () => {
 		} else {
 			addToast({
 				id: Date.now().toString(),
-				message: t("topbar.deployedProjectSuccess"),
+				message: t("topbar.buildProjectSuccess"),
 				type: "success",
 				title: "Project built successfully",
 			});
