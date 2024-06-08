@@ -1,3 +1,4 @@
+import { waitForToast } from "@e2e/utils";
 import { test, expect } from "../fixtures";
 
 test.beforeEach(async ({ page, dashboardPage }) => {
@@ -13,11 +14,15 @@ test.beforeEach(async ({ page, dashboardPage }) => {
 	await page.getByRole("button", { name: "Deploy project" }).click();
 	await expect(page.getByText("// Code A: Initialize your code here...")).toBeVisible();
 
+	const toast = await waitForToast(page, "Project deploy completed successfully.");
+	await expect(toast).toBeVisible();
+
 	await page.getByRole("link", { name: "View project stats" }).click();
 });
 
 test.describe("Project Deployment Suite", () => {
 	test("New deployment has been created", async ({ page }) => {
+		await page.waitForTimeout(1000);
 		const deploymentCount = await page.locator("tbody").locator("tr").count();
 		expect(deploymentCount).toBe(1);
 	});
