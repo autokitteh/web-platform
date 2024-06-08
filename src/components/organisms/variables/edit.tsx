@@ -44,6 +44,7 @@ export const EditVariable = () => {
 
 	useEffect(() => {
 		fetchVariable();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const {

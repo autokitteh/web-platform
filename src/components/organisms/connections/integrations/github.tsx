@@ -38,6 +38,7 @@ export const GithubIntegrationForm = () => {
 
 	const addToast = useToastStore((state) => state.addToast);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const randomForPATWebhook = useMemo(() => randomatic("Aa0", 8), [projectId]);
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 

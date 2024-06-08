@@ -51,6 +51,7 @@ export const TriggersTable = () => {
 
 	useEffect(() => {
 		fetchTriggers();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
 	const handleToggleSort = (key: keyof Trigger) => {
@@ -87,6 +88,7 @@ export const TriggersTable = () => {
 			setTriggerId(triggerId);
 			openModal(ModalName.deleteTrigger);
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[triggerId]
 	);
 

@@ -22,6 +22,7 @@ export const DeleteConnectionModal = ({ onDelete, connectionId, loading }: Modal
 
 	useEffect(() => {
 		fetchConnection();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
 	return (

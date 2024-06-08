@@ -184,7 +184,7 @@ export const Topbar = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaStats")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
-					href={`/projects/${projectId}/deployments`}
+					href={`/projects/${projectId}/stats/deployments`}
 					variant="outline"
 				>
 					<IconSvg className="max-w-5" src={Stats} />

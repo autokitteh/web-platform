@@ -79,6 +79,7 @@ export const CodeTable = () => {
 
 	useEffect(() => {
 		fetchResources();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
 	const handleDragOver = (event: React.DragEvent) => {

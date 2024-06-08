@@ -22,6 +22,7 @@ export const DeleteTriggerModal = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 
 	useEffect(() => {
 		fetchTrigger();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [triggerId]);
 
 	return (

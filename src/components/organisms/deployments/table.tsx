@@ -58,6 +58,7 @@ export const DeploymentsTable = () => {
 
 		const deploymentsFetchIntervalId = setInterval(fetchDeployments, fetchDeploymentsInterval);
 		return () => clearInterval(deploymentsFetchIntervalId);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
 	const toggleSortDeployments = useCallback(
@@ -77,6 +78,7 @@ export const DeploymentsTable = () => {
 			return deployments;
 		}
 		return orderBy(deployments, [sort.column], [sort.direction]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deployments, sort]);
 
 	const handleDeploymentAction = useCallback(
@@ -101,6 +103,7 @@ export const DeploymentsTable = () => {
 			if (action === "delete") closeModal(ModalName.deleteDeployment);
 			fetchDeployments();
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
 	);
 
@@ -116,7 +119,7 @@ export const DeploymentsTable = () => {
 		return <div className="mt-10 text-xl font-semibold text-center text-black">{t("noDeployments")}</div>;
 
 	return (
-		<>
+		<div className="flex flex-col w-full">
 			<div className="flex items-center justify-between">
 				<div className="text-base text-black">
 					{t("tableTitle")} ({deployments.length})
@@ -156,7 +159,11 @@ export const DeploymentsTable = () => {
 				</THead>
 				<TBody className="bg-gray-700">
 					{sortedDeployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
-						<Tr className="cursor-pointer group" key={deploymentId} onClick={() => navigate(deploymentId)}>
+						<Tr
+							className="cursor-pointer group"
+							key={deploymentId}
+							onClick={() => navigate(`${deploymentId}/sessions`)}
+						>
 							<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
 							<Td>
 								<DeploymentSessionStats sessionStats={sessionStats} />
@@ -199,6 +206,6 @@ export const DeploymentsTable = () => {
 				</TBody>
 			</Table>
 			<DeleteDeploymentModal onDelete={() => handleDeploymentAction(deploymentId!, "delete")} />
-		</>
+		</div>
 	);
 };

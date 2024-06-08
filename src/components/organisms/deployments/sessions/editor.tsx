@@ -1,19 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CatImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
 import { Frame, IconButton, LogoCatLarge } from "@components/atoms";
-import { SessionTableEditorProps } from "@interfaces/components";
+import { fetchSessionsInterval } from "@constants";
+import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
-import { cn } from "@utilities";
+import { SessionsService } from "@services";
+import { useToastStore } from "@store/useToastStore";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
-export const SessionTableEditorFrame = ({ sessionLog, isSelectedSession, onClose }: SessionTableEditorProps) => {
+export const SessionTableEditorFrame = () => {
 	const [editorKey, setEditorKey] = useState(0);
+	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
+	const { sessionId, projectId, deploymentId } = useParams();
+	const addToast = useToastStore((state) => state.addToast);
+	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
-	const sessionLogsEditorClass = cn("w-3/5 transition pt-20", {
-		"bg-gray-700 rounded-l-none": !isSelectedSession,
-		"ml-2.5": isSelectedSession,
-	});
+	const navigate = useNavigate();
+
+	const fetchSessionLog = useCallback(async () => {
+		const { data, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
+			return;
+		}
+		if (!data) return;
+
+		setSessionLog(data);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId]);
+
+	useEffect(() => {
+		fetchSessionLog();
+
+		const sessionFetchIntervalId = setInterval(fetchSessionLog, fetchSessionsInterval);
+		return () => clearInterval(sessionFetchIntervalId);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId]);
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
@@ -39,18 +68,21 @@ export const SessionTableEditorFrame = ({ sessionLog, isSelectedSession, onClose
 	};
 
 	const sessionLogValue = sessionLog?.map(({ logs }) => logs).join("\n");
+	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}`);
 
 	return (
-		<Frame className={sessionLogsEditorClass}>
-			{isSelectedSession ? (
-				<div className="flex items-center justify-between -mt-10 font-bold">
-					{t("output")}:
-					<IconButton ariaLabel={t("buttons.ariaCloseEditor")} className="w-7 h-7 p-0.5 bg-gray-700" onClick={onClose}>
-						<Close className="w-3 h-3 transition fill-white" />
-					</IconButton>
-				</div>
-			) : null}
-			{isSelectedSession && sessionLog?.length ? (
+		<Frame className="w-3/5 transition pt-20 ml-2.5">
+			<div className="flex items-center justify-between -mt-10 font-bold">
+				{t("output")}:
+				<IconButton
+					ariaLabel={t("buttons.ariaCloseEditor")}
+					className="w-7 h-7 p-0.5 bg-gray-700"
+					onClick={() => closeEditor()}
+				>
+					<Close className="w-3 h-3 transition fill-white" />
+				</IconButton>
+			</div>
+			{sessionLog?.length ? (
 				<Editor
 					beforeMount={handleEditorWillMount}
 					className="-ml-6"
@@ -71,9 +103,7 @@ export const SessionTableEditorFrame = ({ sessionLog, isSelectedSession, onClose
 				/>
 			) : (
 				<div className="flex flex-col items-center mt-20">
-					<p className="mb-8 text-lg font-bold text-gray-400">
-						{isSelectedSession ? t("noData") : t("noSelectedSession")}
-					</p>
+					<p className="mb-8 text-lg font-bold text-gray-400">{t("noData")}</p>
 					<CatImage className="border-b border-gray-400 fill-gray-400" />
 				</div>
 			)}

@@ -17,7 +17,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { menuList: projectsMenuList, createProject, addProjectToMenu } = useProjectStore();
+	const { menuList: projectsMenuList, createProject, addProjectToMenu, getProjectMenutItems } = useProjectStore();
 	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -63,6 +63,11 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		setMenu(updatedMenuItems);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectsMenuList]);
+
+	useEffect(() => {
+		getProjectMenutItems();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleMouseEnter = (e: React.MouseEvent, submenu?: SubmenuInfo["submenu"]) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });

@@ -56,6 +56,7 @@ export const ConnectionsTable = () => {
 
 	useEffect(() => {
 		fetchConnections();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
 	const toggleSortConnections = (key: keyof Connection) => {
@@ -75,6 +76,7 @@ export const ConnectionsTable = () => {
 			setConnectionId(connectionId);
 			openModal(ModalName.deleteConnection);
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[connectionId]
 	);
 
@@ -97,7 +99,6 @@ export const ConnectionsTable = () => {
 		fetchConnections();
 	};
 
-	//Should take us to the ModifyConnectionPage - to initialize it from there (for example for GitHub: PAT/OAuth)
 	const handleConnectionInitClick = useCallback((url: string) => {
 		window.open(`${baseUrl}/${url}`, "_blank");
 	}, []);

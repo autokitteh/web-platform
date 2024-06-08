@@ -37,6 +37,7 @@ export const EditTrigger = () => {
 		};
 
 		fetchTrigger();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const fetchData = async () => {
@@ -70,6 +71,7 @@ export const EditTrigger = () => {
 
 	useLayoutEffect(() => {
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const {
@@ -104,6 +106,7 @@ export const EditTrigger = () => {
 		};
 
 		resetForm();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger]);
 
 	const onSubmit = async () => {

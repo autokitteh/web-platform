@@ -37,6 +37,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 				});
 			}
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getLoggedInUser, getProjectMenutItems]
 	);
 

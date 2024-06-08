@@ -53,6 +53,7 @@ export const VariablesTable = () => {
 
 	useEffect(() => {
 		fetchVariables();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
 	const toggleSortVariables = (key: keyof Variable) => {
