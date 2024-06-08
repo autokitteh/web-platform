@@ -1,5 +1,5 @@
+import { test, expect } from "@e2e/fixtures";
 import { waitForToast } from "@e2e/utils";
-import { test, expect } from "../fixtures";
 
 test.beforeEach(async ({ page, dashboardPage }) => {
 	await dashboardPage.createProjectFromMenu();
