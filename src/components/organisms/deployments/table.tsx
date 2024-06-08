@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { TrashIcon, ActionActiveIcon, ActionStoppedIcon } from "@assets/image/icons";
-import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeploymentState, DeploymentSessionStats } from "@components/organisms/deployments";
 import { DeleteDeploymentModal } from "@components/organisms/deployments";
@@ -191,13 +191,13 @@ export const DeploymentsTable = () => {
 											<ActionActiveIcon className="w-4 h-4 transition group-hover:fill-green-accent" />
 										</IconButton>
 									)}
-									<IconButton
-										ariaLabel={t("ariaDeleDeploy")}
-										disabled={state === DeploymentStateVariant.active}
-										onClick={(e) => showDeleteModal(e, deploymentId)}
-										title={t("deleteDisabled")}
-									>
-										<TrashIcon className="w-3 h-3 fill-white" />
+									<IconButton ariaLabel={t("ariaDeleDeploy")} title={t("deleteDisabled")}>
+										<Button
+											disabled={state === DeploymentStateVariant.active}
+											onClick={(e) => showDeleteModal(e, deploymentId)}
+										>
+											<TrashIcon className="w-3 h-3 fill-white" />
+										</Button>
 									</IconButton>
 								</div>
 							</Td>

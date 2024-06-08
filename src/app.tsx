@@ -37,7 +37,7 @@ export const App: React.FC = () => (
 					<Route element={<Variables />} path="variables">
 						<Route element={<VariablesTable />} index />
 						<Route element={<AddVariable />} path="add" />
-						<Route element={<EditVariable />} path=":variableId/edit" />
+						<Route element={<EditVariable />} path="edit/:environmentId/:variableName" />
 					</Route>
 				</Route>
 			</Route>

@@ -152,7 +152,7 @@ export const VariablesTable = () => {
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
-											onClick={() => navigate(`modify-variable/${envId}/${name}`)}
+											onClick={() => navigate(`edit/${envId}/${name}`)}
 										>
 											<EditIcon className="w-3 h-3 fill-white" />
 										</IconButton>
