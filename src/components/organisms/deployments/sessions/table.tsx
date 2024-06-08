@@ -110,7 +110,7 @@ export const SessionsTable = () => {
 	};
 
 	const openSessionLog = useCallback((sessionId: string) => {
-		navigate(`/projects/${projectId}/stats/deployments/${deploymentId}/sessions/${sessionId}`);
+		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -128,7 +128,7 @@ export const SessionsTable = () => {
 						<IconButton
 							ariaLabel={t("ariaLabelReturnBack")}
 							className="gap-2 text-sm text-white bg-gray-600 hover:bg-black min-w-20"
-							onClick={() => navigate(`/projects/${projectId}/stats/deployments`)}
+							onClick={() => navigate(`/projects/${projectId}/deployments`)}
 						>
 							<ArrowLeft className="h-4" />
 							{t("buttons.back")}

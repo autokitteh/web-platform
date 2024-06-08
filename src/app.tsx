@@ -41,7 +41,7 @@ export const App: React.FC = () => (
 					</Route>
 				</Route>
 			</Route>
-			<Route element={<AppLayout displayStatsTopbar />} path="projects/:projectId/stats">
+			<Route element={<AppLayout displayStatsTopbar />} path="projects/:projectId">
 				<Route element={<Deployments />} path="deployments">
 					<Route element={<DeploymentsTable />} index />
 					<Route element={<Sessions />} path=":deploymentId">
@@ -50,7 +50,6 @@ export const App: React.FC = () => (
 						</Route>
 					</Route>
 				</Route>
-				<Route element={<Navigate to="deployments" />} index />
 			</Route>
 		</Routes>
 	</BrowserRouter>
