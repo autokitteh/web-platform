@@ -7,7 +7,7 @@ export const waitForToast = async (page: Page, toastMessage: string, timeout = 5
 		if (await toast.isVisible()) {
 			return toast;
 		}
-		await page.waitForTimeout(100); // Polling interval
+		await page.waitForTimeout(500);
 	}
 	throw new Error(`Toast with message "${toastMessage}" not found`);
 };
