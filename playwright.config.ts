@@ -66,9 +66,11 @@ export default defineConfig({
 	webServer: {
 		command: "VITE_AUTH_ENABLED=false npm run build && VITE_AUTH_ENABLED=false npm run preview",
 		port: 4173,
-		timeout: 360000,
+		timeout: 60000,
 		reuseExistingServer: !process.env.CI,
 		stdout: "pipe",
 		stderr: "pipe",
 	},
+	// test timeout set to 2 minutes
+	timeout: 2 * 60 * 1000,
 });
