@@ -108,7 +108,7 @@ export const ConnectionsTable = () => {
 			{t("buttons.loading")}...
 		</div>
 	) : (
-		<div className="pt-5">
+		<div className="pt-14">
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button

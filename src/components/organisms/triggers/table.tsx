@@ -166,7 +166,7 @@ export const TriggersTable = () => {
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
-											onClick={() => navigate(`modify-trigger/${trigger.triggerId!}`)}
+											onClick={() => navigate(`${trigger.triggerId!}/edit`)}
 										>
 											<EditIcon className="w-3 h-3 fill-white" />
 										</IconButton>

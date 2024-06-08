@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tab, TabList } from "@components/atoms";
+import { Tab, TabList, Tabs } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
@@ -49,42 +49,46 @@ export const Project = () => {
 	return (
 		<SplitFrame>
 			{displayTabs ? (
-				<TabList>
-					<Tab
-						ariaLabel="Code & Assets"
-						className="flex items-center text-xs 3xl:text-sm"
-						onClick={() => goTo("code")}
-						value="code"
-					>
-						Code & Assets
-					</Tab>
-					<Tab
-						ariaLabel="Connections"
-						className="flex items-center text-xs 3xl:text-sm"
-						onClick={() => goTo("connections")}
-						value="connections"
-					>
-						Connections
-					</Tab>
-					<Tab
-						ariaLabel="Triggers"
-						className="flex items-center text-xs 3xl:text-sm"
-						onClick={() => goTo("triggers")}
-						value="triggers"
-					>
-						Triggers
-					</Tab>
-					<Tab
-						ariaLabel="Variables"
-						className="flex items-center text-xs 3xl:text-sm"
-						onClick={() => goTo("variables")}
-						value="variables"
-					>
-						Variables
-					</Tab>
-				</TabList>
-			) : null}
-			<Outlet />
+				<Tabs>
+					<TabList>
+						<Tab
+							ariaLabel="Code & Assets"
+							className="flex items-center text-xs 3xl:text-sm"
+							onClick={() => goTo("code")}
+							value="code"
+						>
+							Code & Assets
+						</Tab>
+						<Tab
+							ariaLabel="Connections"
+							className="flex items-center text-xs 3xl:text-sm"
+							onClick={() => goTo("connections")}
+							value="connections"
+						>
+							Connections
+						</Tab>
+						<Tab
+							ariaLabel="Triggers"
+							className="flex items-center text-xs 3xl:text-sm"
+							onClick={() => goTo("triggers")}
+							value="triggers"
+						>
+							Triggers
+						</Tab>
+						<Tab
+							ariaLabel="Variables"
+							className="flex items-center text-xs 3xl:text-sm"
+							onClick={() => goTo("variables")}
+							value="variables"
+						>
+							Variables
+						</Tab>
+					</TabList>
+					<Outlet />
+				</Tabs>
+			) : (
+				<Outlet />
+			)}
 		</SplitFrame>
 	);
 };
