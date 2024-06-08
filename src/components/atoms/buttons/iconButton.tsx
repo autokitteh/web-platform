@@ -30,9 +30,6 @@ export const IconButton = ({
 		className
 	);
 
-	console.log("ariaLabel: ", ariaLabel);
-	console.log("title: ", title);
-
 	return !href ? (
 		<Button
 			ariaLabel={ariaLabel}
