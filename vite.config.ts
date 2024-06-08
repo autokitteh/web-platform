@@ -11,6 +11,7 @@ export default defineConfig({
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
 			"@assets": path.resolve(__dirname, "./src/assets"),
+			"@e2e": path.resolve(__dirname, "./e2e"),
 			"@components": path.resolve(__dirname, "./src/components"),
 			"@api": path.resolve(__dirname, "./src/api"),
 			"@utils": path.resolve(__dirname, "./src/utils"),
@@ -27,7 +28,6 @@ export default defineConfig({
 			"@store": path.resolve(__dirname, "./src/store"),
 			"@locales": path.resolve(__dirname, "./src/locales"),
 			"@ak-proto-ts": path.resolve(__dirname, "./src/autokitteh/proto/gen/ts/autokitteh"),
-			"@hooks": path.resolve(__dirname, "./src/hooks"),
 			"tailwind-config": path.resolve(__dirname, "./tailwind.config.cjs"),
 		},
 	},
@@ -45,5 +45,16 @@ export default defineConfig({
 		strictPort: true,
 		host: true,
 		origin: "http://0.0.0.0:8000",
+	},
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks(id) {
+					if (id.includes("node_modules")) {
+						return id.toString().split("node_modules/")[1].split("/")[0].toString();
+					}
+				},
+			},
+		},
 	},
 });

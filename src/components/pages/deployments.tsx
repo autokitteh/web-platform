@@ -1,11 +1,6 @@
 import React from "react";
-import { DeploymentsHistory } from "@components/organisms";
-import { AppWrapper } from "@components/templates";
+import { Outlet } from "react-router-dom";
 
 export const Deployments = () => {
-	return (
-		<AppWrapper>
-			<DeploymentsHistory />
-		</AppWrapper>
-	);
+	return <Outlet />;
 };

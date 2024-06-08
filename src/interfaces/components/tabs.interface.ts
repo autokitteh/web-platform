@@ -10,6 +10,7 @@ export interface TabProps {
 	value: string;
 	ariaLabel?: string;
 	children: React.ReactNode;
+	onClick?: () => void;
 }
 
 export interface TabListProps {

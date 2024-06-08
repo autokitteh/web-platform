@@ -1,4 +1,3 @@
-export { DeploymentsHistory } from "@components/organisms/deployments/history";
 export { DeploymentState } from "@components/organisms/deployments/state";
 export { DeploymentSessionStats } from "@components/organisms/deployments/sessionStats";
 export {
@@ -7,3 +6,4 @@ export {
 	SessionsTableFilter,
 	SessionsTable,
 } from "@components/organisms/deployments/sessions";
+export { DeleteDeploymentModal } from "@components/organisms/deployments/deleteModal";

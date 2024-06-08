@@ -1,3 +1,6 @@
+import { ProjectMenuItem } from "@type/models";
+import { ServiceResponse } from "@type/services.types";
+
 interface ProjectStoreResponse {
 	error?: unknown;
 	data?: unknown;
@@ -7,17 +10,15 @@ interface FilesResponse {
 	fileName?: string;
 }
 
-type ProjectList = { id: string; name: string; href: string };
-
 export interface ProjectStore {
-	list: ProjectList[];
-	activeTab?: string;
-	currentProject: {
-		openedFiles: { name: string; isActive: boolean }[];
-		resources: Record<string, Uint8Array>;
-	};
-	getProjectsList: () => Promise<ProjectStoreResponse & { list: ProjectList[] }>;
-	setActiveTab: (value: string) => void;
+	menuList: ProjectMenuItem[];
+	openedFiles: { name: string; isActive: boolean }[];
+	resources: Record<string, Uint8Array>;
+	getProjectMenutItems: () => ServiceResponse<ProjectMenuItem[]>;
+	getProject: (projectId: string) => ServiceResponse<ProjectMenuItem>;
+	renameProject: (projectId: string, projectName: string) => void;
+	addProjectToMenu: (project: ProjectMenuItem) => void;
+	createProject: () => ServiceResponse<{ projectId: string; name: string }>;
 	setUpdateFileContent: (content: Uint8Array, projectId: string) => void;
 	setProjectResources: (files: File[], projectId: string) => Promise<FilesResponse>;
 	setProjectEmptyResources: (name: string, projectId: string) => Promise<ProjectStoreResponse>;
@@ -25,5 +26,6 @@ export interface ProjectStore {
 	updateEditorOpenedFiles: (fileName: string) => void;
 	updateEditorClosedFiles: (fileName: string) => void;
 	resetResources: () => void;
+	reset: () => void;
 	removeProjectFile: (fileName: string, projectId: string) => Promise<ProjectStoreResponse>;
 }

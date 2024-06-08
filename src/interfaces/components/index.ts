@@ -23,11 +23,11 @@ export type {
 	ModalDeleteDeploymentSessionProps,
 	ModalDeleteConnectionProps,
 } from "@interfaces/components/modal.interface";
-export type { ToastProps } from "@interfaces/components/toast.interface";
+export type { Toast } from "@interfaces/components/toast.interface";
 export type { SelectOption, SelectProps, InputProps, TextArea } from "@interfaces/components/forms";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
 export type { ToggleProps } from "@interfaces/components/toggle.interface";
-export type { SessionTableFilterProps, SessionTableEditorProps } from "@interfaces/components/session.interface";
+export type { SessionTableFilterProps } from "@interfaces/components/session.interface";
 export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";

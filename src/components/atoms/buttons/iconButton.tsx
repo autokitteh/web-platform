@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@components/atoms";
+import { Button, Link } from "@components/atoms";
 import { ButtonVariant } from "@enums/components";
 import { IconButtonProps } from "@interfaces/components";
 import { cn } from "@utilities";
@@ -12,10 +12,10 @@ export const IconButton = ({
 	ariaLabel,
 	disabled,
 	title,
-	type = "button",
 	onMouseEnter,
 	onMouseLeave,
 	onClick,
+	onKeyDown,
 }: IconButtonProps) => {
 	const iconButtonClass = cn(
 		"p-2 flex items-center justify-center rounded-full transition duration-300 hover:bg-gray-700 shrink-0 outline-0",
@@ -31,20 +31,21 @@ export const IconButton = ({
 	);
 
 	return !href ? (
-		<button
-			aria-label={ariaLabel}
+		<Button
+			ariaLabel={ariaLabel}
 			className={iconButtonClass}
 			disabled={disabled}
 			onClick={onClick}
+			onKeyDown={onKeyDown}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
+			tabIndex={0}
 			title={title}
-			type={type}
 		>
 			{children}
-		</button>
+		</Button>
 	) : (
-		<Link className={iconButtonClass} disabled={disabled} to={href}>
+		<Link ariaLabel={ariaLabel} className={iconButtonClass} disabled={disabled} to={href}>
 			{children}
 		</Link>
 	);

@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { CatImage } from "@assets/image";
 import { ArrowLeft, TrashIcon } from "@assets/image/icons";
-import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr, Toast } from "@components/atoms";
+import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { SessionsTableState, SessionTableEditorFrame, SessionsTableFilter } from "@components/organisms/deployments";
-import { ModalDeleteDeploymentSession } from "@components/organisms/modals";
+import { SessionsTableState, SessionsTableFilter } from "@components/organisms/deployments";
+import { DeleteSessionModal } from "@components/organisms/deployments/sessions";
 import { fetchSessionsInterval } from "@constants";
 import { ModalName, SortDirectionVariant } from "@enums/components";
-import { SessionLogRecord } from "@models";
 import { reverseSessionStateConverter } from "@models/utils";
 import { SessionsService } from "@services";
-import { useModalStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 import { SortDirection } from "@type/components";
 import { Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 import { orderBy } from "lodash";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 
 export const SessionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -24,18 +24,14 @@ export const SessionsTable = () => {
 	const { openModal, closeModal } = useModalStore();
 	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
+	const addToast = useToastStore((state) => state.addToast);
 
 	const [sessions, setSessions] = useState<Session[]>([]);
-	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
 	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Session;
 	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
 	const [initialLoad, setInitialLoad] = useState(true);
 
 	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
@@ -50,7 +46,12 @@ export const SessionsTable = () => {
 
 		const { data, error } = await SessionsService.listByDeploymentId(deploymentId, { stateType: sessionStateType });
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 			return;
 		}
 		if (!data) return;
@@ -58,32 +59,13 @@ export const SessionsTable = () => {
 		setSessions(data);
 	};
 
-	const fetchSessionLog = useCallback(async () => {
-		if (!sessionId) return;
-
-		const { data, error } = await SessionsService.getLogRecordsBySessionId(sessionId);
-		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
-			return;
-		}
-		if (!data) return;
-
-		setSessionLog(data);
-	}, [sessionId]);
-
 	useEffect(() => {
 		fetchSessions();
 
 		const sessionsFetchIntervalId = setInterval(fetchSessions, fetchSessionsInterval);
 		return () => clearInterval(sessionsFetchIntervalId);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionStateType]);
-
-	useEffect(() => {
-		fetchSessionLog();
-
-		const sessionFetchIntervalId = setInterval(fetchSessionLog, fetchSessionsInterval);
-		return () => clearInterval(sessionFetchIntervalId);
-	}, [sessionId]);
 
 	const toggleSortSessions = useCallback(
 		(key: keyof Session) => {
@@ -102,17 +84,24 @@ export const SessionsTable = () => {
 			return sessions;
 		}
 		return orderBy(sessions, [sort.column], [sort.direction]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessions, sort]);
 
 	const showDeleteModal = useCallback(() => {
 		openModal(ModalName.deleteDeploymentSession);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleRemoveSession = async () => {
 		if (!sessionId) return;
 		const { error } = await SessionsService.deleteSession(sessionId);
 		if (error) {
-			setToast({ isOpen: true, message: (error as Error).message });
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
 			return;
 		}
 
@@ -121,21 +110,18 @@ export const SessionsTable = () => {
 	};
 
 	const openSessionLog = useCallback((sessionId: string) => {
-		navigate(`/projects/${projectId}/deployments/${deploymentId}/${sessionId}`);
-	}, []);
-
-	const closeSessionLog = useCallback(() => {
-		navigate(`/projects/${projectId}/deployments/${deploymentId}`);
+		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
 		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
 		setSessionStateType(selectedSessionStateFilter);
-		closeSessionLog();
 	};
+	const sessionLogsEditorClass = cn("w-3/5 transition pt-20 bg-gray-700 rounded-l-none");
 
 	return (
-		<div className="flex h-full">
+		<div className="flex h-full w-full">
 			<Frame className={frameClass}>
 				<div className="flex items-center justify-between gap-2.5">
 					<div className="flex items-center flex-wrap gap-2.5">
@@ -209,17 +195,17 @@ export const SessionsTable = () => {
 					<div className="mt-10 text-xl font-semibold text-center">{t("noSessions")}</div>
 				)}
 			</Frame>
-			<SessionTableEditorFrame isSelectedSession={!!sessionId} onClose={closeSessionLog} sessionLog={sessionLog} />
-			<ModalDeleteDeploymentSession onDelete={handleRemoveSession} />
-			<Toast
-				duration={5}
-				isOpen={toast.isOpen}
-				onClose={() => setToast({ ...toast, isOpen: false })}
-				title={tErrors("error")}
-				type="error"
-			>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
+			{sessionId ? (
+				<Outlet />
+			) : (
+				<Frame className={sessionLogsEditorClass}>
+					<div className="flex flex-col items-center mt-20">
+						<p className="mb-8 text-lg font-bold text-gray-400">{t("noSelectedSession")}</p>
+						<CatImage className="border-b border-gray-400 fill-gray-400" />
+					</div>
+				</Frame>
+			)}
+			<DeleteSessionModal onDelete={handleRemoveSession} />
 		</div>
 	);
 };

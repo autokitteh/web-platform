@@ -3,7 +3,9 @@
 /// <reference types="vite-plugin-svgr/client" />
 
 interface ImportMetaEnv {
-	readonly BASE_API_URL: string;
+	readonly VITE_HOST_URL: string;
+	readonly VITE_AUTH_ENABLED: string;
+	readonly VITE_DESCOPE_PROJECT_ID: string;
 }
 
 interface ImportMeta {

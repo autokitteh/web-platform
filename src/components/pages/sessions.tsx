@@ -1,11 +1,6 @@
 import React from "react";
-import { SessionsTable } from "@components/organisms";
-import { AppWrapper } from "@components/templates";
+import { Outlet } from "react-router-dom";
 
 export const Sessions = () => {
-	return (
-		<AppWrapper>
-			<SessionsTable />
-		</AppWrapper>
-	);
+	return <Outlet />;
 };

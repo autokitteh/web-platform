@@ -5,6 +5,7 @@
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"module": "ESNext",
 		"skipLibCheck": true,
+		"useUnknownInCatchVariables": false,
 
 		/* Bundler mode */
 		"moduleResolution": "bundler",
@@ -25,6 +26,7 @@
 			"@components/*": ["./src/components/*"],
 			"@api/*": ["./src/api/*"],
 			"@routing/*": ["./src/routing/*"],
+			"@e2e/*": ["./e2e/*"],
 			"@utils/*": ["./src/utils/*"],
 			"@utils": ["./src/utils/index"],
 			"@validations/*": ["./src/validations/*"],
@@ -46,10 +48,9 @@
 			"@type/*": ["./src/types/*"],
 			"@type": ["./src/types/index"],
 			"@api": ["./src/api/index"],
+			"@store/*": ["./src/store/*"],
 			"@store": ["./src/store/index"],
 			"@locales/*": ["./src/locales/*"],
-			"@hooks": ["./src/hooks/index"],
-			"@hooks/*": ["./src/hooks/*"],
 			"@ak-proto-ts/*": ["./src/autokitteh/proto/gen/ts/autokitteh/*"]
 		}
 	},

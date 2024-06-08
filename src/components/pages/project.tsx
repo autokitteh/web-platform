@@ -1,21 +1,17 @@
-import React, { useEffect, useMemo, useState, useCallback, Suspense } from "react";
-import { Close } from "@assets/image/icons";
-import { Tabs, Tab, TabList, TabPanel, IconButton, Toast } from "@components/atoms";
-import { AppWrapper, MapMenuFrameLayout } from "@components/templates";
-import { initialProjectTabs } from "@constants";
+import React, { useEffect, useState } from "react";
+import { Tab, TabList, Tabs } from "@components/atoms";
+import { SplitFrame } from "@components/organisms";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { calculatePathDepth } from "@utilities";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 export const Project = () => {
 	const { projectId } = useParams();
-	const { t } = useTranslation(["errors", "buttons"]);
-	const { activeTab, setActiveTab, resetResources, getProjectResources } = useProjectStore();
-	const [toast, setToast] = useState({
-		isOpen: false,
-		message: "",
-	});
+	const { resetResources, getProjectResources } = useProjectStore();
+	const navigate = useNavigate();
+	const [displayTabs, setDisplayTabs] = useState(false);
+	const location = useLocation();
 
 	const fetchResources = async () => {
 		try {
@@ -25,67 +21,74 @@ export const Project = () => {
 
 			getProjectResources(resources);
 		} catch (err) {
-			setToast({ isOpen: true, message: (err as Error).message });
+			// setToast({ isOpen: true, message: (err as Error).message });
 		}
 	};
+
+	useEffect(() => {
+		if (location?.pathname) {
+			const isProjectsMainView = calculatePathDepth(location.pathname) < 4;
+			setDisplayTabs(isProjectsMainView);
+		}
+	}, [location]);
 
 	useEffect(() => {
 		if (!projectId) return;
 
 		resetResources();
 		fetchResources();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const handleTabChange = useCallback(
-		(value: string) => {
-			setActiveTab(value);
-		},
-		[setActiveTab]
-	);
+	const goTo = (path: string) => {
+		navigate(path.toLowerCase());
+	};
 
-	const handleToastClose = useCallback(() => {
-		setToast((prev) => ({ ...prev, isOpen: false }));
-	}, []);
-
-	const tabList = useMemo(
-		() => (
-			<TabList>
-				{initialProjectTabs.map(({ title }) => (
-					<Tab ariaLabel={title} className="flex items-center text-xs 3xl:text-sm" key={title} value={title}>
-						{title}
-					</Tab>
-				))}
-				<IconButton className="p-0 ml-auto bg-black w-default-icon h-default-icon hover:bg-black group ">
-					<Close className="w-3 h-3 transition fill-gray-400 group-hover:fill-white" />
-				</IconButton>
-			</TabList>
-		),
-		[]
-	);
-
-	const tabPanels = useMemo(
-		() =>
-			initialProjectTabs.map(({ title, component: Component }) => (
-				<TabPanel key={title} value={title}>
-					<Suspense>
-						<Component />
-					</Suspense>
-				</TabPanel>
-			)),
-		[]
-	);
+	// const isProjectsMain = path;
 
 	return (
-		<AppWrapper>
-			<MapMenuFrameLayout>
-				<Tabs defaultValue={activeTab} key={activeTab} onChange={handleTabChange}>
-					{tabList}
-					{tabPanels}
+		<SplitFrame>
+			{displayTabs ? (
+				<Tabs>
+					<TabList>
+						<Tab
+							ariaLabel="Code & Assets"
+							className="flex items-center text-xs 3xl:text-sm"
+							onClick={() => goTo("code")}
+							value="code"
+						>
+							Code & Assets
+						</Tab>
+						<Tab
+							ariaLabel="Connections"
+							className="flex items-center text-xs 3xl:text-sm"
+							onClick={() => goTo("connections")}
+							value="connections"
+						>
+							Connections
+						</Tab>
+						<Tab
+							ariaLabel="Triggers"
+							className="flex items-center text-xs 3xl:text-sm"
+							onClick={() => goTo("triggers")}
+							value="triggers"
+						>
+							Triggers
+						</Tab>
+						<Tab
+							ariaLabel="Variables"
+							className="flex items-center text-xs 3xl:text-sm"
+							onClick={() => goTo("variables")}
+							value="variables"
+						>
+							Variables
+						</Tab>
+					</TabList>
+					<Outlet />
 				</Tabs>
-			</MapMenuFrameLayout>
-			<Toast duration={5} isOpen={toast.isOpen} onClose={handleToastClose} title={t("error")} type="error">
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
-		</AppWrapper>
+			) : (
+				<Outlet />
+			)}
+		</SplitFrame>
 	);
 };

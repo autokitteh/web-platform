@@ -14,12 +14,8 @@ import { useParams } from "react-router-dom";
 export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const {
-		currentProject: { resources, openedFiles },
-		setUpdateFileContent,
-		updateEditorOpenedFiles,
-		updateEditorClosedFiles,
-	} = useProjectStore();
+	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
+		useProjectStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const initialContent = "// Code A: Initialize your code here...";
 
@@ -66,7 +62,10 @@ export const EditorTabs = () => {
 			"opacity-100": openedFiles.find(({ name, isActive }) => name === fileName && isActive),
 		});
 
-	const handleCloseButtonClick = (e: React.MouseEvent<HTMLButtonElement>, name: string): void => {
+	const handleCloseButtonClick = (
+		e: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>,
+		name: string
+	): void => {
 		e.stopPropagation();
 		updateEditorClosedFiles(name);
 	};

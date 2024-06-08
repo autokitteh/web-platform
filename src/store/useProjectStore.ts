@@ -1,65 +1,105 @@
 import { namespaces } from "@constants";
 import { StoreName } from "@enums";
-import { ProjectTabs } from "@enums/components";
-import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
+import { convertProtoProjectToMenuItemModel } from "@models/project.model";
 import { LoggerService, ProjectsService } from "@services";
+import { ProjectMenuItem } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
 import { remove } from "lodash";
+import randomatic from "randomatic";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 const defaultState: Omit<
 	ProjectStore,
-	| "setActiveTab"
-	| "getProjectsList"
+	| "getProjectMenutItems"
+	| "renameProject"
+	| "addProjectToMenu"
+	| "createProject"
 	| "setUpdateFileContent"
 	| "setProjectResources"
 	| "getProjectResources"
+	| "getProject"
 	| "setProjectEmptyResources"
 	| "updateEditorOpenedFiles"
+	| "reset"
 	| "resetResources"
 	| "updateEditorClosedFiles"
 	| "removeProjectFile"
 > = {
-	list: [],
-	currentProject: {
-		openedFiles: [],
-		resources: {},
-	},
-	activeTab: ProjectTabs.codeAndAssets,
+	menuList: [],
+	openedFiles: [],
+	resources: {},
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 
-	setActiveTab: (activeTab) => set((state) => ({ ...state, activeTab })),
+	getProject: async (projectId: string) => {
+		const project = get().menuList.find(({ id }) => id === projectId);
+		if (project) return { data: project, error: undefined };
+		const { data: responseProject, error } = await ProjectsService.get(projectId);
 
-	getProjectsList: async () => {
-		const { data, error } = await ProjectsService.list();
+		if (error) {
+			return { error, data: undefined };
+		}
+		if (!responseProject) {
+			return { error: new Error("Project not found"), data: undefined };
+		}
 
-		if (error) return { error, list: [] };
+		return { error, data: convertProtoProjectToMenuItemModel(responseProject) };
+	},
 
-		const updatedList = data?.map(({ projectId, name }) => ({
-			id: projectId,
-			name,
-			href: `/${SidebarHrefMenu.projects}/${projectId}`,
-		}));
+	createProject: async () => {
+		const projectName = randomatic("Aa", 8);
+		const { data: projectId, error } = await ProjectsService.create(projectName);
 
-		set((state) => ({ ...state, list: updatedList }));
+		if (error) {
+			return { error, data: undefined };
+		}
+		if (!projectId) {
+			return { error: new Error("Project not created"), data: undefined };
+		}
 
-		return { error: undefined, list: updatedList || [] };
+		return { error: undefined, data: { projectId, name: projectName } };
+	},
+
+	addProjectToMenu: (project: ProjectMenuItem) => {
+		set((state) => {
+			state.menuList.push(project);
+			return state;
+		});
+	},
+	renameProject: async (projectId: string, newProjectName: string) => {
+		set((state) => {
+			const projectIndex = state.menuList.findIndex(({ id }) => id === projectId);
+			if (projectIndex === -1) return state;
+			state.menuList[projectIndex].name = newProjectName;
+			return state;
+		});
+	},
+
+	getProjectMenutItems: async () => {
+		const { data: projects, error } = await ProjectsService.list();
+
+		if (error) return { error, data: undefined };
+
+		const convertedProjectsMenuItems = projects?.map(convertProtoProjectToMenuItemModel);
+
+		set((state) => ({ ...state, menuList: convertedProjectsMenuItems }));
+
+		return { error: undefined, data: convertedProjectsMenuItems };
 	},
 
 	setUpdateFileContent: async (content, projectId) => {
-		const fileName = get().currentProject.openedFiles.find(({ isActive }) => isActive)?.name;
+		const fileName = get().openedFiles.find(({ isActive }) => isActive)?.name;
 
 		if (!fileName) return;
 
 		const { error } = await ProjectsService.setResources(projectId, {
-			...get().currentProject.resources,
+			...get().resources,
 			[fileName]: content,
 		});
 
@@ -69,7 +109,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}
 
 		set((state) => {
-			state.currentProject.resources[fileName] = content;
+			state.resources[fileName] = content;
 			return state;
 		});
 	},
@@ -79,7 +119,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			const fileContent = await readFileAsUint8Array(file);
 
 			const { error } = await ProjectsService.setResources(projectId, {
-				...get().currentProject.resources,
+				...get().resources,
 				[file.name]: fileContent,
 			});
 
@@ -88,8 +128,8 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			}
 
 			set((state) => {
-				state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, file.name);
-				state.currentProject.resources[file.name] = fileContent;
+				state.openedFiles = updateOpenedFilesState(state.openedFiles, file.name);
+				state.resources[file.name] = fileContent;
 				return state;
 			});
 		}
@@ -99,15 +139,15 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	setProjectEmptyResources: async (name, projectId) => {
 		const { error } = await ProjectsService.setResources(projectId, {
-			...get().currentProject.resources,
+			...get().resources,
 			[name]: new Uint8Array(),
 		});
 
 		if (error) return { error };
 
 		set((state) => {
-			state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, name);
-			state.currentProject.resources[name] = new Uint8Array();
+			state.openedFiles = updateOpenedFilesState(state.openedFiles, name);
+			state.resources[name] = new Uint8Array();
 			return state;
 		});
 
@@ -116,48 +156,51 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	getProjectResources: async (resources) => {
 		set((state) => {
-			state.currentProject.resources = resources;
+			state.resources = resources;
 			return state;
 		});
 	},
 
 	updateEditorOpenedFiles: (fileName) => {
-		const isFileActive = get().currentProject.openedFiles.find(({ name }) => name === fileName)?.isActive;
+		const isFileActive = get().openedFiles.find(({ name }) => name === fileName)?.isActive;
 
 		if (isFileActive) return;
 
 		set((state) => {
-			state.currentProject.openedFiles = updateOpenedFilesState(state.currentProject.openedFiles, fileName);
+			state.openedFiles = updateOpenedFilesState(state.openedFiles, fileName);
 			return state;
 		});
 	},
 
+	reset: () => {
+		set(defaultState);
+	},
+
 	resetResources: () => {
 		set((state) => {
-			state.currentProject.openedFiles = [];
-			state.currentProject.resources = {};
+			state.openedFiles = [];
+			state.resources = {};
 			return state;
 		});
 	},
 
 	updateEditorClosedFiles: (fileName) => {
 		set((state) => {
-			const { openedFiles } = state.currentProject;
-			const fileIndex = openedFiles.findIndex(({ name }) => name === fileName);
-			const newOpenedFiles = remove([...openedFiles], ({ name }) => name !== fileName);
+			const fileIndex = state.openedFiles.findIndex(({ name }) => name === fileName);
+			const newOpenedFiles = remove([...state.openedFiles], ({ name }) => name !== fileName);
 
-			if (openedFiles[fileIndex]?.isActive && newOpenedFiles.length > 0) {
+			if (state.openedFiles[fileIndex]?.isActive && newOpenedFiles.length > 0) {
 				const newActiveIndex = Math.min(fileIndex, newOpenedFiles.length - 1);
 				newOpenedFiles[newActiveIndex].isActive = true;
 			}
 
-			state.currentProject.openedFiles = newOpenedFiles;
+			state.openedFiles = newOpenedFiles;
 			return state;
 		});
 	},
 
 	removeProjectFile: async (fileName, projectId) => {
-		const updatedResources = { ...get().currentProject.resources };
+		const updatedResources = { ...get().resources };
 		delete updatedResources[fileName];
 
 		const { error } = await ProjectsService.setResources(projectId, updatedResources);
@@ -165,10 +208,10 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (error) return { error };
 
 		set((state) => {
-			const updatedOpenedFiles = state.currentProject.openedFiles.filter((file) => file.name !== fileName);
+			const updatedOpenedFiles = state.openedFiles.filter((file) => file.name !== fileName);
 
-			state.currentProject.resources = updatedResources;
-			state.currentProject.openedFiles = updatedOpenedFiles;
+			state.resources = updatedResources;
+			state.openedFiles = updatedOpenedFiles;
 			return state;
 		});
 

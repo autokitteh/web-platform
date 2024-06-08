@@ -8,6 +8,7 @@ export interface SelectProps {
 	isError?: boolean;
 	onChange: (value: SingleValue<SelectOption>) => void;
 	onBlur?: () => void;
+	ref?: null;
 }
 
 export interface SelectOption {

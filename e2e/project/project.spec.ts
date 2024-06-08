@@ -1,15 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "@e2e/fixtures";
 
 test.describe("Project Suite", () => {
-	test.beforeEach(async ({ page }) => {
-		await page.goto("");
-		const button = page.getByRole("button", { name: "New Project" });
-		await button.hover();
-		if (await button.isVisible()) {
-			await button.click();
-		} else {
-			test.fail();
-		}
+	test.beforeEach(async ({ dashboardPage }) => {
+		await dashboardPage.createProjectFromMenu();
 	});
 
 	test("Change project name", async ({ page }) => {

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from "react";
+import React, { KeyboardEventHandler, MouseEventHandler } from "react";
 import { ButtonType, SortDirection } from "@type/components";
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, React.AriaAttributes {
@@ -10,7 +10,8 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement | HT
 	children: React.ReactNode;
 	type?: "button" | "submit" | "reset";
 	form?: string;
-	onClick: MouseEventHandler<HTMLButtonElement> | undefined;
+	onClick: MouseEventHandler<HTMLButtonElement>;
+	onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 	onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -24,9 +25,19 @@ export interface DropdownState {
 	style: React.CSSProperties;
 }
 
-export interface IconButtonProps extends Partial<ButtonProps> {
-	children: React.ReactNode;
+export interface IconButtonProps extends React.AriaAttributes, React.DOMAttributes<HTMLDivElement> {
+	className?: string;
+	ariaLabel?: string;
 	variant?: ButtonType;
+	href?: string;
+	disabled?: boolean;
+	children: React.ReactNode;
+	form?: string;
+	title?: string;
+	onClick?: MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
+	onKeyDown?: KeyboardEventHandler<HTMLDivElement | HTMLButtonElement>;
+	onMouseEnter?: (event: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLButtonElement>) => void;
+	onMouseLeave?: (event: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface SortButtonProps {
