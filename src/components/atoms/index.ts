@@ -13,3 +13,4 @@ export { ErrorMessage } from "@components/atoms/errorMessage";
 export { Spinner } from "@components/atoms/spinner";
 export { Toggle } from "@components/atoms/toggle";
 export { LogoCatLarge } from "@components/atoms/logoCatLarge";
+export { Loader } from "@components/atoms/loader";

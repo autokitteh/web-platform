@@ -1,4 +1,5 @@
 import React from "react";
+import { Loader } from "@components/atoms";
 import { isAuthEnabled } from "@constants";
 import { useUserStore } from "@store";
 
@@ -13,6 +14,7 @@ export const Dashboard: React.FC = () => {
 				<h1 className="text-black w-full text-2xl font-averta-bold mt-6">
 					Welcome {userName ? `, ${userName}` : null}
 				</h1>
+				<Loader />
 			</div>
 			{isAuthEnabled ? (
 				<button className="text-black" onClick={() => logoutFunction()}>
