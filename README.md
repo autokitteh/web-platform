@@ -45,7 +45,7 @@ Ensure you have the following installed on your system:
 1.  **Clone the Repository**:
     `git clone https://github.com/autokitteh/web-platform && cd autokitteh`
 
-2.  **Install Dependencies**: Use npm to install all the required dependencie:
+2.  **Install Dependencies**: Use npm to install all the required dependencies:
     `npm install`
 
 ### Environment Setup 🌐
