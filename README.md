@@ -117,3 +117,10 @@ Create a `.env` file in the root of the project directory and add the necessary 
 3.  **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
 
     ```npm run tailwind-config-viewer```
+
+### License
+This project is licensed under
+
+- [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) ([`LICENSE.md`](LICENSE))
+
+The [autokitteh](https://autokitteh.com) license identifier for this project is `Apache-2.0`.

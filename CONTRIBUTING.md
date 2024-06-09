@@ -1,6 +1,6 @@
 # Contributing to autokitteh
 
-We love your input! We want to make contributing to this project as easy and transparent as possible.
+We'd love to get your input! We want to make contributing to this project as easy and transparent as possible.
 
 ## Reporting Issues
 
@@ -13,9 +13,9 @@ We love your input! We want to make contributing to this project as easy and tra
 1. Fork the repository.
 2. Create a new branch (`git checkout -b my-new-feature`).
 3. Make the changes in your fork.
-4. Commit your changes (`git commit -am 'Add some feature'`).
+4. Commit your changes (`git commit -m 'Add some feature' path/to/my/file.ts`).
 5. Push to the branch (`git push origin my-new-feature`).
-6. Create a new Pull Request.
+6. Create a new pull request ([How to create a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request))
 
 ## Code of Conduct
 
@@ -24,4 +24,6 @@ We love your input! We want to make contributing to this project as easy and tra
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under its MIT License.
+- [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) ([`LICENSE.md`](LICENSE))
+
+The [autokitteh](https://autokitteh.com) license identifier for this project is `Apache-2.0`.
