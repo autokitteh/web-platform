@@ -31,3 +31,4 @@ export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.in
 export type { ToggleProps } from "@interfaces/components/toggle.interface";
 export type { SessionTableFilterProps } from "@interfaces/components/session.interface";
 export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
+export type { LoaderProps } from "@interfaces/components/loader.interface";

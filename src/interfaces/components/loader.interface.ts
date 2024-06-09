@@ -1,5 +1,7 @@
 export interface LoaderProps {
 	size?: "sm" | "md" | "lg" | "xl";
-	firstColor?: string;
-	secondColor?: string;
+	firstColor?: LoaderColorType;
+	secondColor?: LoaderColorType;
 }
+
+type LoaderColorType = "red" | "green" | "gray" | "black";
