@@ -49,11 +49,11 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		return (
 			<div className="w-screen h-screen pt-5 pb-10 pr-9 pl-10 flex flex-col">
 				<IconLogoAuth />
-				<div className="flex items-center justify-between flex-1 gap-20 mt-5">
-					<div className="m-auto text-black max-w-96">
+				<div className="flex items-center justify-between flex-1 mt-5">
+					<div className="m-auto text-black max-w-96 pt-8 mt-80">
 						<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
 					</div>
-					<Frame className="relative flex flex-col items-center w-1/2 h-full bg-gray-black-100 pt-52">
+					<Frame className="relative flex flex-col items-center w-1/2 h-full bg-gray-black-100 pt-96">
 						<h2 className="z-10 text-3xl font-bold text-black">{t("whyDevelopersLove")}</h2>
 						<div className="flex flex-wrap gap-3.5 mt-8 max-w-485">
 							{benefits.map((name, idx) => (
