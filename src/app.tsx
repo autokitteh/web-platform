@@ -21,7 +21,7 @@ export const App: React.FC = () => (
 			</Route>
 			<Route element={<AppLayout displayTopbar />} path="projects">
 				<Route element={<Project />} path=":projectId">
-					<Route element={<Navigate to="code" />} index />
+					<Route element={<Navigate replace to="code" />} index />
 					<Route element={<Connections />} path="connections">
 						<Route element={<ConnectionsTable />} index />
 						<Route element={<AddConnection />} path="add" />
