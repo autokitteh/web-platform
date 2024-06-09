@@ -18,7 +18,7 @@
 		"tailwind-config-viewer": "tailwind-config-viewer -o --config tailwind.config.cjs",
 		"prepare": "husky install",
 		"tsc": "tsc",
-		"check-types": "tsc --pretty --noEmit",
+		"check-types-and-compile": "tsc --pretty --noEmit",
 		"check-format:staged": "prettier . --check",
 		"fixed-format:staged": "prettier . --write",
 		"validate-env": "node ./validateEnv"
