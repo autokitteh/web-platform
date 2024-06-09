@@ -43,10 +43,12 @@ Ensure you have the following installed on your system:
 ### Installation Steps 🚀
 
 1.  **Clone the Repository**:
-    `git clone https://github.com/autokitteh/web-platform && cd autokitteh`
+
+    ```git clone https://github.com/autokitteh/web-platform && cd autokitteh```
 
 2.  **Install Dependencies**: Use npm to install all the required dependencies:
-    `npm install`
+
+    ```npm install```
 
 ### Environment Setup 🌐
 
@@ -55,49 +57,63 @@ Create a `.env` file in the root of the project directory and add the necessary 
 ### Running the Project 🏃
 
 1.  **Development Mode**: Start the development server with hot reloading.
-    `npm run dev`
+
+    ```npm run dev```
 
 2.  **Building the Project**: Create a production-ready build.
-    `npm run build`
+
+    ```npm run build```
 
 3.  **Preview the Build**: Serve the production build locally to ensure everything is working as expected.
-    `npm run preview`
+
+    ```npm run preview```
 
 ### Testing 🧪
 
 1.  **Run Unit Tests**: Execute the test suite.
-    `npm run test`
+
+    ```npm run test```
 
 2.  **Run End-to-End Tests**: Run the Playwright end-to-end tests.
-    `npm run test:e2e`
+
+    ```npm run test:e2e```
 
 3.  **View E2E Test UI**: Launch the Playwright test runner UI.
-    `npm run test:e2e:ui`
+
+    ```npm run test:e2e:ui```
 
 4.  **Generate E2E Test Report**: Generate and view the test report.
-    `npm run test:e2e:report`
+
+    ```npm run test:e2e:report```
 
 ### Linting and Formatting 🧹
 
 1.  **Lint the Code**: Lint the codebase to ensure code quality.
-    `npm run lint`
+
+    ```npm run lint```
 
 2.  **Fix Linting Issues**: Automatically fix linting issues where possible.
-    `npm run lint-fix`
+
+    ```npm run lint-fix```
 
 3.  **Check Code Formatting**: Check if the code meets the formatting standards.
-    `npm run check-format:staged`
+
+    ```npm run check-format:staged```
 
 4.  **Fix Code Formatting**: Automatically format the codebase.
-    `npm run fixed-format:staged`
+
+    ```npm run fixed-format:staged```
 
 ### Additional Commands 📜
 
 1.  **Type Checking**: Perform type checking without emitting output files and compile the project.
-    `npm run check-types-and-compile`
+
+    ```npm run check-types-and-compile```
 
 2.  **Storybook**: Launch the Storybook development environment.
-    `npm run storybook`
+
+    ```npm run storybook```
 
 3.  **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
-    `npm run tailwind-config-viewer`
+
+    ```npm run tailwind-config-viewer```
