@@ -10,12 +10,14 @@ import { Dashboard, Project, Sessions, Variables } from "@components/pages";
 import { Triggers } from "@components/pages";
 import { Connections } from "@components/pages";
 import { Deployments } from "@components/pages/deployments";
+import { SignIn } from "@components/pages/signin";
 import { AppLayout } from "@components/templates";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 export const App: React.FC = () => (
 	<BrowserRouter>
 		<Routes>
+			<Route element={<SignIn />} path="/login" />
 			<Route element={<AppLayout />} path="/">
 				<Route element={<Dashboard />} index />
 			</Route>

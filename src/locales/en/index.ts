@@ -2,6 +2,7 @@ import buttons from "@locales/en/buttons/translation.json";
 import deployments from "@locales/en/deployments/translation.json";
 import errors from "@locales/en/errors/translation.json";
 import integrations from "@locales/en/integrations/translation.json";
+import login from "@locales/en/login/translation.json";
 import menu from "@locales/en/menu/translation.json";
 import modals from "@locales/en/modals/translation.json";
 import models from "@locales/en/models/translation.json";
@@ -16,6 +17,7 @@ export default {
 	modals,
 	models,
 	buttons,
+	login,
 	tabs,
 	projects,
 	services,
