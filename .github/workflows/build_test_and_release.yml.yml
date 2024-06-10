@@ -30,6 +30,12 @@ jobs:
         run: npm run check-types
       - name: Run vscode build
         run: npm run build
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-files
+          path: |
+            ./dist
 
   test:
     runs-on: ubuntu-latest
@@ -97,6 +103,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: built-files
       - uses: actions/setup-node@v4
         with:
           node-version: "21.2.0"
