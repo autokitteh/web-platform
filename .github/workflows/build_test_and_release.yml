@@ -12,7 +12,7 @@ jobs:
   test:
     name: E2E Tests
     runs-on: ubuntu-latest
-    if: (!endsWith(github.event.head_commit.message, '[skip_e2e]'))
+    if: (!endsWith(github.event.head_commit.message, '[skip_e2e]') == true)
     steps:
       - uses: actions/checkout@v4
         with:
@@ -125,7 +125,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: built-files
-          
+
       - name: Release and tag a new version
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
