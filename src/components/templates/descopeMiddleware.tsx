@@ -57,7 +57,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 							"h-full justify-center items-center w-[46vw]"
 						)}
 					>
-						<div className="w-[25vw]">
+						<div className="max-w-96">
 							<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
 						</div>
 					</div>
