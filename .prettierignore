@@ -2,3 +2,5 @@ node_modules/
 dist/
 /src/autokitteh
 tsconfig.json
+CHANGELOG.md
+.github/workflows/*
