@@ -5,6 +5,7 @@ import { baseUrl } from "@constants";
 import { Descope, useDescope } from "@descope/react-sdk";
 import { useProjectStore, useToastStore } from "@store";
 import { useUserStore } from "@store/useUserStore";
+import { cn } from "@utilities";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 
@@ -49,11 +50,23 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		return (
 			<div className="w-screen h-screen pt-5 pb-10 pr-9 pl-10 flex flex-col">
 				<IconLogoAuth />
-				<div className="flex items-center justify-between flex-1 mt-5">
-					<div className="m-auto text-black max-w-96 pt-8 mt-80">
-						<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
+				<div className="flex items-center justify-between flex-1">
+					<div
+						className={cn(
+							"px-8 py-10 rounded-2xl relative flex flex-col w-1/2",
+							"h-full justify-center items-center w-[46vw]"
+						)}
+					>
+						<div className="w-[25vw]">
+							<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
+						</div>
 					</div>
-					<Frame className="relative flex flex-col items-center w-1/2 h-full bg-gray-black-100 pt-96">
+					<Frame
+						className={cn(
+							"relative flex flex-col items-center w-1/2 h-full",
+							" bg-gray-black-100 justify-center items-center"
+						)}
+					>
 						<h2 className="z-10 text-3xl font-bold text-black">{t("whyDevelopersLove")}</h2>
 						<div className="flex flex-wrap gap-3.5 mt-8 max-w-485">
 							{benefits.map((name, idx) => (
