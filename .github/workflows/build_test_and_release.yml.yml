@@ -106,10 +106,6 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: built-files
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "21.2.0"
-          cache: "npm"
       - name: Release and tag a new version
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
