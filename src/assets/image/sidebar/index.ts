@@ -5,3 +5,4 @@ export { default as IconNotification } from "@assets/image/sidebar/Notification.
 export { default as ProjectsIcon } from "@assets/image/sidebar/Projects.svg?react";
 export { default as Settings } from "@assets/image/sidebar/Settings.svg?react";
 export { default as StatsBlack } from "@assets/image/sidebar/Stats.svg?react";
+export { default as Logout } from "@assets/image/sidebar/Logout.svg?react";
