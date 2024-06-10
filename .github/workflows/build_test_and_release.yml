@@ -10,7 +10,7 @@ jobs:
   test:
     name: E2E Tests
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip_e2e_tests]') }}
+    if: ${{ !startsWith(github.event.head_commit.message, '[skip_e2e]')}},
     steps:
       - uses: actions/checkout@v4
         with:
