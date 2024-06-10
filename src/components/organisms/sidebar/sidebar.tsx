@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { IconLogo, DefaultAvatar, IconLogoName } from "@assets/image";
-import { Icon, Button } from "@components/atoms";
+import { IconLogo, IconLogoName } from "@assets/image";
+import { Button } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { SubmenuInfo } from "@interfaces/components";
 import { AnimatePresence, motion } from "framer-motion";
@@ -55,7 +55,7 @@ export const Sidebar = () => {
 						</div>
 						<div className="flex flex-col gap-5">
 							<Button className="hover:bg-transparent" href="#">
-								<Icon alt="User profile" className="w-9 h-9" src={DefaultAvatar} />
+								<img alt="avatar" className="w-8 h-8 rounded-full" src="https://via.placeholder.com/30" />
 								<AnimatePresence>
 									{isOpen ? (
 										<motion.span
