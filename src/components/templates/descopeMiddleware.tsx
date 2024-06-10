@@ -18,7 +18,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		resetUserStore();
 		logout();
 	}, [resetProjectStore, resetUserStore, logout]);
-	const { t: tErrors } = useTranslation(["errors"]);
+	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("login");
 	const benefits = Object.values(t("benefits", { returnObjects: true }));
@@ -54,7 +54,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 					<div
 						className={cn(
 							"px-8 py-10 rounded-2xl relative flex flex-col w-1/2",
-							"h-full justify-center items-center w-[46vw]"
+							"h-full justify-center items-center w-1/2"
 						)}
 					>
 						<div className="max-w-96">
