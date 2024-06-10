@@ -20,10 +20,13 @@ jobs:
         with:
           node-version: "21.2.0"
           cache: "npm"
+
       - name: Pull submodule from remote
         run: git submodule update --remote
+
       - name: Install dependencies
         run: npm ci
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Download autokitteh executable
@@ -80,12 +83,16 @@ jobs:
           cache: "npm"
       - name: Pull submodule from remote
         run: git submodule update --remote
+
       - name: Install dependencies
         run: npm ci
+
       - name: Run code TS validation
         run: npm run check-types
+
       - name: Run build
         run: npm run build
+        
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
