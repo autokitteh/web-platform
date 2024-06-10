@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/autokitteh/web-platform/compare/v1.0.1...v1.1.0) (2024-06-10)
+
+
+### Features
+
+* login page ([#114](https://github.com/autokitteh/web-platform/issues/114)) ([743a80a](https://github.com/autokitteh/web-platform/commit/743a80a7aa5d40a36406a65480d9ba936b0623d0))
+
 ## [1.0.1](https://github.com/autokitteh/web-platform/compare/v1.0.0...v1.0.1) (2024-06-10)
 
 
