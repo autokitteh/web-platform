@@ -19,8 +19,7 @@ We'd love to get your input! We want to make contributing to this project as eas
 
 ## Code of Conduct
 
-- Be respectful and constructive.
-- Report any abusive behavior.
+We follow the [go community code of conduct](https://go.dev/conduct)
 
 ## License
 
