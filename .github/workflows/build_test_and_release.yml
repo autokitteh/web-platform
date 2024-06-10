@@ -12,7 +12,7 @@ jobs:
   test:
     name: E2E Tests
     runs-on: ubuntu-latest
-    if: (!endsWith(github.event.head_commit.message, '[skip_e2e]') == 'true')
+    if: (!endsWith(github.event.head_commit.message, '[skip_e2e]') == true)
     steps:
       - uses: actions/checkout@v4
         with:
