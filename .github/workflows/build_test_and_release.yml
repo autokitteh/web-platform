@@ -1,12 +1,12 @@
 name: Test, Build & Release
-on: [push]
+on: push
 
 permissions:
   contents: read
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+
 jobs:
   test:
     name: E2E Tests
