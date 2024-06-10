@@ -22,16 +22,6 @@ export default {
 			},
 		],
 		[
-			"@semantic-release/github",
-			{
-				assets: [
-					{
-						path: "*.vsix",
-					},
-				],
-			},
-		],
-		[
 			"semantic-release-slack-bot",
 			{
 				notifyOnSuccess: false,
