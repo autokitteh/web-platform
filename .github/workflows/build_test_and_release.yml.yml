@@ -80,9 +80,9 @@ jobs:
         run: git submodule update --remote
       - name: Install dependencies
         run: npm ci
-      - name: Run vscode TS validation
+      - name: Run code TS validation
         run: npm run check-types
-      - name: Run vscode build
+      - name: Run build
         run: npm run build
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
