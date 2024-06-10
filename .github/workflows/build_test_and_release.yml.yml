@@ -1,0 +1,109 @@
+name: Build & Release
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          submodules: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "21.2.0"
+          cache: "npm"
+      - name: Pull submodule from remote
+        run: git submodule update --remote
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Download autokitteh executable
+        run: |
+          curl -sSL https://get.autokitteh.sh | bash
+
+      - name: Run autokitteh
+        env:
+          AK_AUTHHTTMIDDLEWARE__REQUIRED: "false"
+          AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED: "false"
+          AK_AUTHLOGINHTTPSVC__ALLOWED_LOGINS: "*"
+          AK_HTTP__CORS__ALLOWED_ORIGINS: "http://localhost:4173"
+          AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE: "true"
+          AK_AUTHSESSIONS__ALLOWED_DOMAIN: "localhost:4173"
+        run: |
+          ak up --mode=dev &
+
+      - name: Wait for Backend to Start
+        run: |
+          URL=http://localhost:9980
+          echo "Waiting for backend to start..." 
+          until $(curl --output /dev/null --silent --head --fail -X POST $URL); do
+            printf '.'
+            sleep 5
+          done
+          echo "Backend is up!"
+
+      - name: Run Playwright tests
+        run: |
+          git submodule update --init
+          npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30    
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          submodules: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "21.2.0"
+          cache: "npm"
+      - name: Pull submodule from remote
+        run: git submodule update --remote
+      - name: Install dependencies
+        run: npm ci
+      - name: Run code TS validation
+        run: npm run check-types
+      - name: Run build
+        run: npm run build
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-files
+          path: |
+            ./dist
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: built-files
+      - name: Release and tag a new version
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: npx semantic-release
