@@ -108,7 +108,7 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 1.  **Type Checking**: Perform type checking without emitting output files and compile the project.
 
-    ```npm run check-types-and-compile```
+    ```npm run type-check```
 
 2.  **Storybook**: Launch the Storybook development environment.
 
