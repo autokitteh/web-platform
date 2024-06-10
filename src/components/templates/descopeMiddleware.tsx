@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect } from "react";
+import { IconLogoAuth } from "@assets/image";
+import { Badge, Frame, LogoCatLarge } from "@components/atoms";
 import { baseUrl } from "@constants";
 import { Descope, useDescope } from "@descope/react-sdk";
 import { useProjectStore, useToastStore } from "@store";
@@ -15,8 +17,10 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		resetUserStore();
 		logout();
 	}, [resetProjectStore, resetUserStore, logout]);
-	const { t: tErrors } = useTranslation(["errors"]);
+	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
+	const { t } = useTranslation("login");
+	const benefits = Object.values(t("benefits", { returnObjects: true }));
 
 	useEffect(() => {
 		setLogoutFunction(handleLogout);
@@ -42,7 +46,29 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	);
 
 	if (!user) {
-		return <Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />;
+		return (
+			<div className="w-screen h-screen pt-5 pb-10 pr-9 pl-10 flex flex-col">
+				<IconLogoAuth />
+				<div className="flex items-center justify-between flex-1">
+					<div className="px-8 py-10 rounded-2xl flex w-1/2 h-full justify-center items-center">
+						<div className="max-w-96">
+							<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
+						</div>
+					</div>
+					<Frame className="flex items-center w-1/2 h-full bg-gray-black-100 justify-center">
+						<h2 className="text-3xl font-bold text-black">{t("whyDevelopersLove")}</h2>
+						<div className="flex flex-wrap gap-3.5 mt-8 max-w-485">
+							{benefits.map((name, idx) => (
+								<Badge className="z-10 px-4 py-2 text-base font-normal bg-white" key={idx}>
+									{t(name)}
+								</Badge>
+							))}
+						</div>
+						<LogoCatLarge className="opacity-100 !-bottom-5 !-right-5" />
+					</Frame>
+				</div>
+			</div>
+		);
 	}
 
 	return children;
