@@ -6,6 +6,8 @@ on:
     branches: [ main ]
 permissions:
   contents: read
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   test:
     name: E2E Tests
