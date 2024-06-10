@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/autokitteh/web-platform/compare/v1.0.0...v1.0.1) (2024-06-10)
+
+
+### Bug Fixes
+
+* fix navigation (back) to and from project ([#116](https://github.com/autokitteh/web-platform/issues/116)) ([d774e3a](https://github.com/autokitteh/web-platform/commit/d774e3a39b3122aef1588d10555171899ffe8284))
+
 # 1.0.0 (2024-06-10)
 
 
