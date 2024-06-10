@@ -6,8 +6,8 @@
 export default {
 	branches: ["main"],
 	plugins: [
+		"@semantic-release/release-notes-generator",
 		[
-			"@semantic-release/release-notes-generator",
 			"@semantic-release/commit-analyzer",
 			{
 				preset: "conventionalcommits",
@@ -19,7 +19,12 @@ export default {
 				assets: ["dist/**"],
 			},
 		],
-		"@semantic-release/changelog",
+		[
+			"@semantic-release/changelog",
+			{
+				changelogFile: "CHANGELOG.md",
+			},
+		],
 		[
 			"@semantic-release/git",
 			{
