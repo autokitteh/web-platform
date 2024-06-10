@@ -13,6 +13,12 @@ export default {
 				preset: "conventionalcommits",
 			},
 		],
+		[
+			"@semantic-release/github",
+			{
+				assets: ["dist/**"],
+			},
+		],
 		"@semantic-release/changelog",
 		[
 			"@semantic-release/git",
