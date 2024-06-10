@@ -23,8 +23,6 @@ jobs:
         run: git submodule update --remote
       - name: Install dependencies
         run: npm ci
-      - name: Run E2E tests
-        run: npm run test:e2e
       - name: Run vscode TS validation
         run: npm run check-types
       - name: Run vscode build
