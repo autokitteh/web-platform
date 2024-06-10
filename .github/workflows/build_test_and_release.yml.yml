@@ -7,39 +7,8 @@ on:
 permissions:
   contents: read
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-          submodules: true
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "21.2.0"
-          cache: "npm"
-      - name: Pull submodule from remote
-        run: git submodule update --remote
-      - name: Install dependencies
-        run: npm ci
-      - name: Run vscode TS validation
-        run: npm run check-types
-      - name: Run vscode build
-        run: npm run build
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: built-files
-          path: |
-            ./dist
-
   test:
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - uses: actions/checkout@v4
         with:
@@ -90,6 +59,37 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30    
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          submodules: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "21.2.0"
+          cache: "npm"
+      - name: Pull submodule from remote
+        run: git submodule update --remote
+      - name: Install dependencies
+        run: npm ci
+      - name: Run vscode TS validation
+        run: npm run check-types
+      - name: Run vscode build
+        run: npm run build
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-files
+          path: |
+            ./dist
 
   release:
     needs: test
