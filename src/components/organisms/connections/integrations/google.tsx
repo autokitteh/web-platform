@@ -112,7 +112,7 @@ export const GoogleIntegrationForm = () => {
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="w-5 h-4 transition fill-white" />}{" "}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="w-5 h-5 transition fill-white" />}{" "}
 				{t("buttons.saveConnection")}
 			</Button>
 			<p className="text-lg">{t("information")}:</p>
