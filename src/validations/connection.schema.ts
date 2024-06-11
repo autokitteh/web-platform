@@ -7,5 +7,5 @@ export const githubIntegrationSchema = z.object({
 });
 
 export const googleIntegrationSchema = z.object({
-	key: z.string().min(5, "Json Key is required"),
+	jsonKey: z.string().min(5, "Json Key is required"),
 });

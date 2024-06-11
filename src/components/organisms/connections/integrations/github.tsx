@@ -67,7 +67,10 @@ export const GithubIntegrationForm = () => {
 				title: "Error",
 				type: "error",
 			});
-			LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("errorCreatingNewConnection")}: ${(error as Error).message}`
+			);
 		} finally {
 			setIsLoading(false);
 		}

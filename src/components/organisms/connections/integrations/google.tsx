@@ -28,12 +28,12 @@ export const GoogleIntegrationForm = () => {
 	} = useForm({
 		resolver: zodResolver(googleIntegrationSchema),
 		defaultValues: {
-			key: "",
+			jsonKey: "",
 		},
 	});
 
 	const onSubmit = async () => {
-		const { key: jsonKey } = getValues();
+		const { jsonKey } = getValues();
 
 		setIsLoading(true);
 		try {
@@ -55,7 +55,10 @@ export const GoogleIntegrationForm = () => {
 				title: "Error",
 				type: "error",
 			});
-			LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("errorCreatingNewConnection")}: ${(error as Error).message}`
+			);
 		} finally {
 			setIsLoading(false);
 		}
@@ -95,12 +98,12 @@ export const GoogleIntegrationForm = () => {
 			<div className="relative mb-3">
 				<Textarea
 					rows={5}
-					{...register("key")}
+					{...register("jsonKey")}
 					aria-label={t("google.placeholders.jsonKey")}
-					isError={!!errors.key}
+					isError={!!errors.jsonKey}
 					placeholder={t("google.placeholders.jsonKey")}
 				/>
-				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
 			</div>
 			<Button
 				aria-label={t("buttons.saveConnection")}
