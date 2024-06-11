@@ -55,7 +55,7 @@ export const GithubIntegrationForm = () => {
 					title: "Error",
 					type: "error",
 				});
-				LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
+				`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`;
 				return;
 			}
 
@@ -69,7 +69,7 @@ export const GithubIntegrationForm = () => {
 			});
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnection")}: ${(error as Error).message}`
+				`${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`
 			);
 		} finally {
 			setIsLoading(false);
@@ -108,7 +108,7 @@ export const GithubIntegrationForm = () => {
 					isRequired
 					placeholder={t("github.placeholders.name")}
 				/>
-				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				<Input

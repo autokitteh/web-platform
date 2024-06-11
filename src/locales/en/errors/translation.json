@@ -14,5 +14,7 @@
 	"sessionLogRecordTypeNotFound": "Session log record type not found: {{props}}",
 	"sessionLogMissingOnErrorType": "Session History - No error",
 	"connectionRemoveFailed": "Connection remove failed",
-	"errorCreatingNewConnection": "Error while creating a new connection"
+	"errorCreatingNewConnection": "Error while creating a new connection",
+	"errorCreatingNewConnectionExtended": "Error while creating a new connection, error: {{error}}",
+	"noDataReturnedFromServer": "No data returned from the server"
 }

@@ -45,7 +45,7 @@ export const GoogleIntegrationForm = () => {
 					title: "Error",
 					type: "error",
 				});
-				LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
+				`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`;
 				return;
 			}
 		} catch (error) {
@@ -57,7 +57,7 @@ export const GoogleIntegrationForm = () => {
 			});
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnection")}: ${(error as Error).message}`
+				`${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`
 			);
 		} finally {
 			setIsLoading(false);
