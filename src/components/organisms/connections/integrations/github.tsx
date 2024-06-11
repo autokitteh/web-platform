@@ -7,7 +7,7 @@ import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoggerService } from "@services";
 import { HttpService } from "@services";
-import { useToastStore } from "@store/useToastStore";
+import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
 import randomatic from "randomatic";
@@ -22,6 +22,7 @@ export const GithubIntegrationForm = () => {
 	const { projectId } = useParams();
 
 	const [isLoading, setIsLoading] = useState(false);
+	const addToast = useToastStore((state) => state.addToast);
 
 	const {
 		handleSubmit,
@@ -36,8 +37,6 @@ export const GithubIntegrationForm = () => {
 			name: "",
 		},
 	});
-
-	const addToast = useToastStore((state) => state.addToast);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const randomForPATWebhook = useMemo(() => randomatic("Aa0", 8), [projectId]);

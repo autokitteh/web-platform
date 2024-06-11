@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
-import { Select, Button, Link, Toast, Spinner, Textarea, ErrorMessage } from "@components/atoms";
+import { Select, Button, Link, Spinner, Textarea, ErrorMessage } from "@components/atoms";
 import { baseUrl, namespaces } from "@constants";
 import { selectIntegrationGoogle, infoGoogleUserLinks, infoGoogleAccountLinks } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoggerService, HttpService } from "@services";
+import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
@@ -15,9 +16,9 @@ export const GoogleIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GoogleConnectionType>();
-	const [toast, setToast] = useState({ isOpen: false, isSuccess: false, message: "" });
 
 	const [isLoading, setIsLoading] = useState(false);
+	const addToast = useToastStore((state) => state.addToast);
 
 	const {
 		handleSubmit,
@@ -38,13 +39,22 @@ export const GoogleIntegrationForm = () => {
 		try {
 			const { data } = await HttpService.post("/google/save", { jsonKey });
 			if (!data.url) {
-				setToast({ isOpen: true, message: tErrors("errorCreatingNewConnection"), isSuccess: false });
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("errorCreatingNewConnection"),
+					title: "Error",
+					type: "error",
+				});
 				LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
 				return;
 			}
 		} catch (error) {
-			// error is a string or error.message ?
-			setToast({ isOpen: true, message: error as string, isSuccess: false });
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("errorCreatingNewConnection"),
+				title: "Error",
+				type: "error",
+			});
 			LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
 		} finally {
 			setIsLoading(false);
@@ -119,36 +129,24 @@ export const GoogleIntegrationForm = () => {
 		</div>
 	);
 
-	const toastProps = {
-		duration: 5,
-		isOpen: toast.isOpen,
-		onClose: () => setToast({ ...toast, isOpen: false }),
-		title: toast.isSuccess ? t("success") : tErrors("error"),
-	};
-
 	return (
-		<>
-			<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex flex-col w-full gap-6">
-					<Select
-						aria-label={t("placeholders.selectConnectionType")}
-						onChange={(selected) => {
-							if (selected?.value && isConnectionType(selected.value, GoogleConnectionType)) {
-								setSelectedConnectionType(selected.value);
-							}
-						}}
-						options={selectIntegrationGoogle}
-						placeholder={t("placeholders.selectConnectionType")}
-					/>
-					{selectedConnectionType && selectedConnectionType === GoogleConnectionType.Oauth ? renderOAuthButton() : null}
-					{selectedConnectionType && selectedConnectionType === GoogleConnectionType.ServiceAccount
-						? renderServiceAccount()
-						: null}
-				</div>
-			</form>
-			<Toast {...toastProps} ariaLabel={toast.message} type={toast.isSuccess ? "success" : "error"}>
-				<p className="mt-1 text-xs">{toast.message}</p>
-			</Toast>
-		</>
+		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
+			<div className="flex flex-col w-full gap-6">
+				<Select
+					aria-label={t("placeholders.selectConnectionType")}
+					onChange={(selected) => {
+						if (selected?.value && isConnectionType(selected.value, GoogleConnectionType)) {
+							setSelectedConnectionType(selected.value);
+						}
+					}}
+					options={selectIntegrationGoogle}
+					placeholder={t("placeholders.selectConnectionType")}
+				/>
+				{selectedConnectionType && selectedConnectionType === GoogleConnectionType.Oauth ? renderOAuthButton() : null}
+				{selectedConnectionType && selectedConnectionType === GoogleConnectionType.ServiceAccount
+					? renderServiceAccount()
+					: null}
+			</div>
+		</form>
 	);
 };
