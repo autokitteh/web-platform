@@ -9,6 +9,9 @@ export default {
 			"fira-code": ["Fira Code", "sans-serif"],
 		},
 		extend: {
+			flex: {
+				2: "2 2 0%",
+			},
 			maxWidth: {
 				650: "650px",
 				420: "420px",
