@@ -5,11 +5,11 @@ import { baseUrl, namespaces } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { httpService } from "@services";
 import { LoggerService } from "@services/logger.service";
 import { useToastStore } from "@store/useToastStore";
 import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
-import axios from "axios";
 import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -48,16 +48,11 @@ export const GithubIntegrationForm = () => {
 
 		setIsLoading(true);
 		try {
-			const response = await axios.post(
-				`${baseUrl}/github/save`,
-				{ pat, secret, webhook: webhookUrl, name },
-				{ headers: { "content-type": "application/x-www-form-urlencoded" } }
-			);
-			if (response.data.url) {
-				// Handle the received URL, e.g., redirect to it or display it
-				console.log("Received URL:", response.data.url);
-				window.location.href = `${baseUrl}/${response.data.url}`;
-			}
+			const { data } = await httpService.post("/github/save", { pat, secret, webhook: webhookUrl, name });
+			if (!data.url) return;
+
+			console.log("Received URL:", data.url);
+			window.location.href = `${baseUrl}/${data.url}`;
 		} catch (error) {
 			LoggerService.error(namespaces.connectionService, "Error while creating a new trigger");
 		}
