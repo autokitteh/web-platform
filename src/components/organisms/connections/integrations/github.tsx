@@ -183,7 +183,7 @@ export const GithubIntegrationForm = () => {
 	);
 
 	return (
-		<form className="flex items-start gap-10" id="createNewConnectionForm" onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex flex-col w-full gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
