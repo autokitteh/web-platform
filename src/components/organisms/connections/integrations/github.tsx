@@ -7,6 +7,7 @@ import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoggerService } from "@services/logger.service";
 import { useToastStore } from "@store/useToastStore";
+import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
 import axios from "axios";
 import randomatic from "randomatic";
@@ -81,10 +82,6 @@ export const GithubIntegrationForm = () => {
 				type: "error",
 			});
 		}
-	};
-
-	const isGithubConnectionType = (value: string): value is GithubConnectionType => {
-		return Object.values(GithubConnectionType).includes(value as GithubConnectionType);
 	};
 
 	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
@@ -190,7 +187,7 @@ export const GithubIntegrationForm = () => {
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
 					onChange={(selected) => {
-						if (selected?.value && isGithubConnectionType(selected.value)) {
+						if (selected?.value && isConnectionType(selected.value, GithubConnectionType)) {
 							setSelectedConnectionType(selected.value);
 						}
 					}}
