@@ -8,7 +8,7 @@ const httpClient = axios.create({
 	},
 });
 
-export const httpService = {
+export const HttpService = {
 	get: httpClient.get,
 	post: httpClient.post,
 	put: httpClient.put,

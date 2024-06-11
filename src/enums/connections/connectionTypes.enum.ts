@@ -4,6 +4,6 @@ export enum GithubConnectionType {
 }
 
 export enum GoogleConnectionType {
-	JsonKey = "jsonKey",
+	ServiceAccount = "serviceAccount",
 	Oauth = "oauth",
 }

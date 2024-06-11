@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from "react";
-import { TestIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
+import { FloppyDiskIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
 import { Select, Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { baseUrl, namespaces } from "@constants";
 import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { httpService } from "@services";
-import { LoggerService } from "@services/logger.service";
+import { LoggerService } from "@services";
+import { HttpService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
@@ -48,12 +48,27 @@ export const GithubIntegrationForm = () => {
 
 		setIsLoading(true);
 		try {
-			const { data } = await httpService.post("/github/save", { pat, secret, webhook: webhookUrl, name });
-			if (!data.url) return;
+			const { data } = await HttpService.post("/github/save", { pat, secret, webhook: webhookUrl, name });
+			if (!data.url) {
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("errorCreatingNewConnection"),
+					title: "Error",
+					type: "error",
+				});
+				LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
+				return;
+			}
 
 			window.location.href = `${baseUrl}/${data.url}`;
 		} catch (error) {
-			LoggerService.error(namespaces.connectionService, "Error while creating a new connection");
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("errorCreatingNewConnection"),
+				title: "Error",
+				type: "error",
+			});
+			LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
 		} finally {
 			setIsLoading(false);
 		}
@@ -138,15 +153,16 @@ export const GithubIntegrationForm = () => {
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <TestIcon className="w-5 h-4 transition fill-white" />} {t("buttons.saveConnection")}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="w-5 h-4 transition fill-white" />}
+				{t("buttons.saveConnection")}
 			</Button>
 			<div>
 				<p className="text-lg">{t("information")}:</p>
 				<div className="flex flex-col items-start gap-2 mt-2">
-					{infoGithubLinks.map(({ url, text, id }) => (
+					{infoGithubLinks.map(({ url, text }, idx) => (
 						<Link
 							className="inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent"
-							key={id}
+							key={idx}
 							target="_blank"
 							to={url}
 						>

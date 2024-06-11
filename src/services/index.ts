@@ -7,4 +7,4 @@ export { TriggersService } from "@services/triggers.service";
 export { VariablesService } from "@services/variables.service";
 export { ConnectionService } from "@services/connection.service";
 export { AuthService } from "@services/auth.service";
-export { httpService } from "@services/http.service";
+export { HttpService } from "@services/http.service";

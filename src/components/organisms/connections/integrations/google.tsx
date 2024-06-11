@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { ExternalLinkIcon, TestIcon } from "@assets/image/icons";
+import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 import { Select, Button, Link, Toast, Spinner, Textarea, ErrorMessage } from "@components/atoms";
 import { baseUrl, namespaces } from "@constants";
 import { selectIntegrationGoogle, infoGoogleUserLinks, infoGoogleAccountLinks } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoggerService, httpService } from "@services";
+import { LoggerService, HttpService } from "@services";
 import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
@@ -27,21 +27,25 @@ export const GoogleIntegrationForm = () => {
 	} = useForm({
 		resolver: zodResolver(googleIntegrationSchema),
 		defaultValues: {
-			jsonKey: "",
+			key: "",
 		},
 	});
 
 	const onSubmit = async () => {
-		const { jsonKey } = getValues();
+		const { key: jsonKey } = getValues();
 
 		setIsLoading(true);
 		try {
-			const { data } = await httpService.post("/google/save", { jsonKey });
-			if (!data.url) return;
+			const { data } = await HttpService.post("/google/save", { jsonKey });
+			if (!data.url) {
+				setToast({ isOpen: true, message: tErrors("errorCreatingNewConnection"), isSuccess: false });
+				LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
+				return;
+			}
 		} catch (error) {
-			console.log("error", error);
-
-			LoggerService.error(namespaces.connectionService, "Error while creating a new connection");
+			// error is a string or error.message ?
+			setToast({ isOpen: true, message: error as string, isSuccess: false });
+			LoggerService.error(namespaces.connectionService, tErrors("errorCreatingNewConnection"));
 		} finally {
 			setIsLoading(false);
 		}
@@ -53,10 +57,10 @@ export const GoogleIntegrationForm = () => {
 		<>
 			<p className="text-lg">{t("information")}:</p>
 			<div className="flex flex-col items-start gap-2 mt-2">
-				{infoGoogleUserLinks.map(({ url, text, id }) => (
+				{infoGoogleUserLinks.map(({ url, text }, idx) => (
 					<Link
 						className="inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent"
-						key={id}
+						key={idx}
 						target="_blank"
 						to={url}
 					>
@@ -81,12 +85,12 @@ export const GoogleIntegrationForm = () => {
 			<div className="relative mb-3">
 				<Textarea
 					rows={5}
-					{...register("jsonKey")}
+					{...register("key")}
 					aria-label={t("google.placeholders.jsonKey")}
-					isError={!!errors.jsonKey}
+					isError={!!errors.key}
 					placeholder={t("google.placeholders.jsonKey")}
 				/>
-				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>
 			<Button
 				aria-label={t("buttons.saveConnection")}
@@ -95,14 +99,15 @@ export const GoogleIntegrationForm = () => {
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <TestIcon className="w-5 h-4 transition fill-white" />} {t("buttons.saveConnection")}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="w-5 h-4 transition fill-white" />}{" "}
+				{t("buttons.saveConnection")}
 			</Button>
 			<p className="text-lg">{t("information")}:</p>
 			<div className="flex flex-col items-start gap-2 mt-2">
-				{infoGoogleAccountLinks.map(({ url, text, id }) => (
+				{infoGoogleAccountLinks.map(({ url, text }, idx) => (
 					<Link
 						className="inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent"
-						key={id}
+						key={idx}
 						target="_blank"
 						to={url}
 					>
@@ -136,7 +141,7 @@ export const GoogleIntegrationForm = () => {
 						placeholder={t("placeholders.selectConnectionType")}
 					/>
 					{selectedConnectionType && selectedConnectionType === GoogleConnectionType.Oauth ? renderOAuthButton() : null}
-					{selectedConnectionType && selectedConnectionType === GoogleConnectionType.JsonKey
+					{selectedConnectionType && selectedConnectionType === GoogleConnectionType.ServiceAccount
 						? renderServiceAccount()
 						: null}
 				</div>

@@ -13,5 +13,5 @@ export const selectIntegrationGithub: SelectOption[] = [
 
 export const selectIntegrationGoogle: SelectOption[] = [
 	{ value: GoogleConnectionType.Oauth, label: "User (OAuth v2)" },
-	{ value: GoogleConnectionType.JsonKey, label: "Service Account (JSON Key)" },
+	{ value: GoogleConnectionType.ServiceAccount, label: "Service Account (JSON Key)" },
 ];

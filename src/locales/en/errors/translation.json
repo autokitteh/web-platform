@@ -13,5 +13,6 @@
 	"failedRemoveFile": "Failed to remove file: {{fileName}}",
 	"sessionLogRecordTypeNotFound": "Session log record type not found: {{props}}",
 	"sessionLogMissingOnErrorType": "Session History - No error",
-	"connectionRemoveFailed": "Connection remove failed"
+	"connectionRemoveFailed": "Connection remove failed",
+	"errorCreatingNewConnection": "Error while creating a new connection"
 }
