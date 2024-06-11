@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/autokitteh/web-platform/compare/v1.1.0...v1.2.0) (2024-06-11)
+
+
+### Features
+
+* add google form ([#111](https://github.com/autokitteh/web-platform/issues/111)) ([d202fcf](https://github.com/autokitteh/web-platform/commit/d202fcff87ce2af0bba4eb2c1b465861ba43777c))
+
 # [1.1.0](https://github.com/autokitteh/web-platform/compare/v1.0.1...v1.1.0) (2024-06-10)
 
 
