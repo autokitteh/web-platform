@@ -51,12 +51,12 @@ export const GithubIntegrationForm = () => {
 			const { data } = await httpService.post("/github/save", { pat, secret, webhook: webhookUrl, name });
 			if (!data.url) return;
 
-			console.log("Received URL:", data.url);
 			window.location.href = `${baseUrl}/${data.url}`;
 		} catch (error) {
-			LoggerService.error(namespaces.connectionService, "Error while creating a new trigger");
+			LoggerService.error(namespaces.connectionService, "Error while creating a new connection");
+		} finally {
+			setIsLoading(false);
 		}
-		setIsLoading(false);
 	};
 
 	const copyToClipboard = async (text: string) => {
@@ -84,7 +84,13 @@ export const GithubIntegrationForm = () => {
 	const renderPATFields = () => (
 		<>
 			<div className="relative">
-				<Input {...register("name")} aria-label="name" isRequired placeholder="name" />
+				<Input
+					{...register("name")}
+					aria-label={t("github.placeholders.name")}
+					isError={!!errors.name}
+					isRequired
+					placeholder={t("github.placeholders.name")}
+				/>
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">

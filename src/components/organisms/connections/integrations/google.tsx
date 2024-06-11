@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { ExternalLinkIcon, TestIcon } from "@assets/image/icons";
 import { Select, Button, Link, Toast, Spinner, Textarea, ErrorMessage } from "@components/atoms";
-import { baseUrl } from "@constants";
+import { baseUrl, namespaces } from "@constants";
 import { selectIntegrationGoogle, infoGoogleUserLinks, infoGoogleAccountLinks } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LoggerService, httpService } from "@services";
 import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
@@ -22,7 +23,7 @@ export const GoogleIntegrationForm = () => {
 		handleSubmit,
 		formState: { errors },
 		register,
-		reset,
+		getValues,
 	} = useForm({
 		resolver: zodResolver(googleIntegrationSchema),
 		defaultValues: {
@@ -30,12 +31,20 @@ export const GoogleIntegrationForm = () => {
 		},
 	});
 
-	const onSubmit = () => {
+	const onSubmit = async () => {
+		const { jsonKey } = getValues();
+
 		setIsLoading(true);
-		setTimeout(() => {
+		try {
+			const { data } = await httpService.post("/google/save", { jsonKey });
+			if (!data.url) return;
+		} catch (error) {
+			console.log("error", error);
+
+			LoggerService.error(namespaces.connectionService, "Error while creating a new connection");
+		} finally {
 			setIsLoading(false);
-			reset();
-		}, 3000);
+		}
 	};
 
 	const handleGoogleOAuth = () => window.open(`${baseUrl}/oauth/start/google`, "_blank");
