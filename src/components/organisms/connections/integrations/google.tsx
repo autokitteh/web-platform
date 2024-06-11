@@ -45,7 +45,10 @@ export const GoogleIntegrationForm = () => {
 					title: "Error",
 					type: "error",
 				});
-				`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`;
+				LoggerService.error(
+					namespaces.connectionService,
+					`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`
+				);
 				return;
 			}
 		} catch (error) {
