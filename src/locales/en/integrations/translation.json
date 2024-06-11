@@ -36,7 +36,7 @@
 		"information": {
 			"aboutAuth": "Learn about authentication and authorization",
 			"uisingOAuth": "Using OAuth 2.0 for web server applications",
-			"gsp": "GCP service accounts overview",
+			"gcp": "GCP service accounts overview",
 			"credentials": "Service account credentials",
 			"serviceAccount": "Create and delete service account keys",
 			"managingAccount": "Best practices for managing service account keys"

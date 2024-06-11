@@ -39,7 +39,7 @@ i18n.on("initialized", () => {
 	infoGoogleAccountLinks = [
 		{
 			url: "https://cloud.google.com/iam/docs/service-account-overview",
-			text: i18n.t("google.information.gsp", { ns: "integrations" }),
+			text: i18n.t("google.information.gcp", { ns: "integrations" }),
 		},
 		{
 			url: "https://cloud.google.com/iam/docs/service-account-creds",
