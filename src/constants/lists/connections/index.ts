@@ -1,2 +1,10 @@
-export { selectConnectionApp, selectIntegrationGithub } from "@constants/lists/connections/options.constants";
-export { infoGithubLinks } from "@constants/lists/connections/integrationInfoLinks.constants";
+export {
+	selectIntegrations,
+	selectIntegrationGithub,
+	selectIntegrationGoogle,
+} from "@constants/lists/connections/options.constants";
+export {
+	infoGithubLinks,
+	infoGoogleUserLinks,
+	infoGoogleAccountLinks,
+} from "@constants/lists/connections/integrationInfoLinks.constants";

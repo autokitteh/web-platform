@@ -7,3 +7,4 @@ export { cn } from "@utilities/cn.utils";
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
 export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils";
 export { calculatePathDepth } from "@utilities/calculatePathDepth.utils";
+export { isConnectionType } from "@utilities/connectionType.utils";
