@@ -2,6 +2,8 @@
 import i18n from "i18next";
 
 let infoGithubLinks: { id: number; url: string; text: string }[] = [];
+let infoGoogleUserLinks: { id: number; url: string; text: string }[] = [];
+let infoGoogleAccountLinks: { id: number; url: string; text: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -26,6 +28,42 @@ i18n.on("initialized", () => {
 			text: i18n.t("github.informationPat.endpoints", { ns: "integrations" }),
 		},
 	];
+
+	infoGoogleUserLinks = [
+		{
+			id: 0,
+			url: "https://developers.google.com/workspace/guides/auth-overview",
+			text: i18n.t("google.information.aboutAuth", { ns: "integrations" }),
+		},
+		{
+			id: 1,
+			url: "https://developers.google.com/identity/protocols/oauth2/web-server",
+			text: i18n.t("google.information.uisingOAuth", { ns: "integrations" }),
+		},
+	];
+
+	infoGoogleAccountLinks = [
+		{
+			id: 0,
+			url: "https://cloud.google.com/iam/docs/service-account-overview",
+			text: i18n.t("google.information.gsp", { ns: "integrations" }),
+		},
+		{
+			id: 1,
+			url: "https://cloud.google.com/iam/docs/service-account-creds",
+			text: i18n.t("google.information.credentials", { ns: "integrations" }),
+		},
+		{
+			id: 2,
+			url: "https://cloud.google.com/iam/docs/keys-create-delete",
+			text: i18n.t("google.information.serviceAccount", { ns: "integrations" }),
+		},
+		{
+			id: 3,
+			url: "https://cloud.google.com/iam/docs/best-practices-for-managing-service-account-keys",
+			text: i18n.t("google.information.managingAccount", { ns: "integrations" }),
+		},
+	];
 });
 
-export { infoGithubLinks };
+export { infoGithubLinks, infoGoogleUserLinks, infoGoogleAccountLinks };
