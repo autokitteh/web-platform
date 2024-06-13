@@ -3,6 +3,7 @@ export {
 	selectIntegrations,
 	selectIntegrationGithub,
 	selectIntegrationGoogle,
+	selectIntegrationAws,
 	infoGithubLinks,
 	infoGoogleUserLinks,
 	infoGoogleAccountLinks,

@@ -9,3 +9,17 @@ export const githubIntegrationSchema = z.object({
 export const googleIntegrationSchema = z.object({
 	jsonKey: z.string().min(5, "Json Key is required"),
 });
+
+export const selectRegionSchema = z.object({
+	label: z.string(),
+	value: z.string(),
+});
+
+export const awsIntegrationSchema = z.object({
+	region: selectRegionSchema.refine((value) => value.label, {
+		message: "Region is required",
+	}),
+	accessKey: z.string().min(3, "Access Key is required"),
+	secretKey: z.string().min(3, "Secret Key is required"),
+	token: z.string().min(3, "Token is required"),
+});

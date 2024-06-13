@@ -2,6 +2,7 @@ export {
 	selectIntegrations,
 	selectIntegrationGithub,
 	selectIntegrationGoogle,
+	selectIntegrationAws,
 } from "@constants/lists/connections/options.constants";
 export {
 	infoGithubLinks,

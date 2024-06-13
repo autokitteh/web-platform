@@ -41,5 +41,13 @@
 			"serviceAccount": "Create and delete service account keys",
 			"managingAccount": "Best practices for managing service account keys"
 		}
+	},
+	"aws": {
+		"placeholders": {
+			"region": "Region",
+			"accessKey": "Access Key",
+			"secretKey": "Secret Key",
+			"token": "Token"
+		}
 	}
 }
