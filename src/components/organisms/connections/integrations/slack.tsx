@@ -39,7 +39,6 @@ export const SlackIntegrationForm = () => {
 		setIsLoading(true);
 		try {
 			const { data } = await HttpService.post("/slack/save", { bot_token: botToken, app_token: appToken });
-			console.log(data);
 			if (!data.url) {
 				addToast({
 					id: Date.now().toString(),
