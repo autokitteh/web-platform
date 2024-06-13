@@ -1,1 +1,5 @@
-export { GithubConnectionType, GoogleConnectionType } from "@enums/connections/connectionTypes.enum";
+export {
+	GithubConnectionType,
+	GoogleConnectionType,
+	SlackConnectionType,
+} from "@enums/connections/connectionTypes.enum";

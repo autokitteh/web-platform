@@ -18,11 +18,11 @@ import { useParams } from "react-router-dom";
 export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
 	const { projectId } = useParams();
-
-	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
+
+	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const {
 		handleSubmit,

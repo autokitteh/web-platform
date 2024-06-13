@@ -15,10 +15,10 @@ import { useTranslation } from "react-i18next";
 export const GoogleIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const [selectedConnectionType, setSelectedConnectionType] = useState<GoogleConnectionType>();
-
-	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
+
+	const [selectedConnectionType, setSelectedConnectionType] = useState<GoogleConnectionType>();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const {
 		handleSubmit,
