@@ -3,6 +3,8 @@ import i18n from "i18next";
 let infoGithubLinks: { url: string; text: string }[] = [];
 let infoGoogleUserLinks: { url: string; text: string }[] = [];
 let infoGoogleAccountLinks: { url: string; text: string }[] = [];
+let infoHttpBasicLinks: { url: string; text: string }[] = [];
+let infoHttpBearerLinks: { url: string; text: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -53,6 +55,20 @@ i18n.on("initialized", () => {
 			text: i18n.t("google.information.managingAccount", { ns: "integrations" }),
 		},
 	];
+
+	infoHttpBasicLinks = [
+		{
+			url: "https://datatracker.ietf.org/doc/html/rfc7617",
+			text: i18n.t("http.information.rfc7617", { ns: "integrations" }),
+		},
+	];
+
+	infoHttpBearerLinks = [
+		{
+			url: "https://datatracker.ietf.org/doc/html/rfc6750",
+			text: i18n.t("http.information.rfc6750", { ns: "integrations" }),
+		},
+	];
 });
 
-export { infoGithubLinks, infoGoogleUserLinks, infoGoogleAccountLinks };
+export { infoGithubLinks, infoGoogleUserLinks, infoGoogleAccountLinks, infoHttpBasicLinks, infoHttpBearerLinks };

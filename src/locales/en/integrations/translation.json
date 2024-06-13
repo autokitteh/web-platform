@@ -36,6 +36,17 @@
 			"jsonKey": "JSON Key"
 		}
 	},
+	"http": {
+		"information": {
+			"rfc6750": "RFC 6750",
+			"rfc7617": "RFC 7617"
+		},
+		"placeholders": {
+			"accessToken": "Access Token",
+			"password": "Password",
+			"username": "Username"
+		}
+	},
 	"information": "Information",
 	"placeholders": {
 		"noConnectionTypesAvailable": "No connection types available",

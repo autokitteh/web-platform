@@ -1,10 +1,11 @@
-import { GithubConnectionType, GoogleConnectionType } from "@enums";
+import { GithubConnectionType, GoogleConnectionType, HttpConnectionType } from "@enums";
 import { TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 export const integrationTypes: SelectOption[] = [
 	{ value: "github", label: "Github", disabled: false },
 	{ value: "google", label: "Google (All APIs)", disabled: false },
+	{ value: "http", label: "HTTP", disabled: false },
 ];
 
 export const triggerTypes: SelectOption[] = [
@@ -20,4 +21,10 @@ export const githubIntegrationAuthMethods: SelectOption[] = [
 export const selectIntegrationGoogle: SelectOption[] = [
 	{ value: GoogleConnectionType.Oauth, label: "User (OAuth v2)" },
 	{ value: GoogleConnectionType.ServiceAccount, label: "Service Account (JSON Key)" },
+];
+
+export const selectIntegrationHttp: SelectOption[] = [
+	{ value: HttpConnectionType.NoAuth, label: "No Auth" },
+	{ value: HttpConnectionType.Basic, label: "Basic" },
+	{ value: HttpConnectionType.Bearer, label: "Bearer" },
 ];

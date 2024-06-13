@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { GithubIntegrationForm, GoogleIntegrationForm } from "@components/organisms/connections/integrations";
+import {
+	GithubIntegrationForm,
+	GoogleIntegrationForm,
+	HttpIntegrationForm,
+} from "@components/organisms/connections/integrations";
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
 import { IntegrationType } from "@type/components";
@@ -14,6 +18,7 @@ export const AddConnection = () => {
 	const integrationComponents: Record<IntegrationType, React.ReactNode> = {
 		github: <GithubIntegrationForm />,
 		google: <GoogleIntegrationForm />,
+		http: <HttpIntegrationForm />,
 	};
 
 	const selectedIntegrationComponent = selectedIntegration
