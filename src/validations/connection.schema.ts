@@ -9,3 +9,7 @@ export const githubIntegrationSchema = z.object({
 export const googleIntegrationSchema = z.object({
 	jsonKey: z.string().min(5, "Json Key is required"),
 });
+
+export const chatGPTIntegrationSchema = z.object({
+	key: z.string().min(5, "Key is required"),
+});

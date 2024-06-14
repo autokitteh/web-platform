@@ -7,4 +7,5 @@ export {
 	infoGithubLinks,
 	infoGoogleUserLinks,
 	infoGoogleAccountLinks,
+	infoChatGPTLinks,
 } from "@constants/lists/connections/integrationInfoLinks.constants";

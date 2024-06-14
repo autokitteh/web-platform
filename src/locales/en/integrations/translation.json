@@ -41,5 +41,14 @@
 			"serviceAccount": "Create and delete service account keys",
 			"managingAccount": "Best practices for managing service account keys"
 		}
+	},
+	"chatGPT": {
+		"placeholders": {
+			"apiKey": "Secret API Key"
+		},
+		"information": {
+			"openAI": "OpenAI developer platform",
+			"apiKeys": "API keys"
+		}
 	}
 }

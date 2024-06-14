@@ -4,6 +4,7 @@ import i18n from "i18next";
 let infoGithubLinks: { url: string; text: string }[] = [];
 let infoGoogleUserLinks: { url: string; text: string }[] = [];
 let infoGoogleAccountLinks: { url: string; text: string }[] = [];
+let infoChatGPTLinks: { url: string; text: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -54,6 +55,17 @@ i18n.on("initialized", () => {
 			text: i18n.t("google.information.managingAccount", { ns: "integrations" }),
 		},
 	];
+
+	infoChatGPTLinks = [
+		{
+			url: "https://platform.openai.com/",
+			text: i18n.t("chatGPT.information.openAI", { ns: "integrations" }),
+		},
+		{
+			url: "https://platform.openai.com/api-keys",
+			text: i18n.t("chatGPT.information.apiKeys", { ns: "integrations" }),
+		},
+	];
 });
 
-export { infoGithubLinks, infoGoogleUserLinks, infoGoogleAccountLinks };
+export { infoGithubLinks, infoGoogleUserLinks, infoGoogleAccountLinks, infoChatGPTLinks };

@@ -1,9 +1,11 @@
 import { GithubConnectionType, GoogleConnectionType } from "@enums";
+import { Integrations } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 export const selectIntegrations: SelectOption[] = [
-	{ value: "github", label: "Github", disabled: false },
-	{ value: "google", label: "Google (All APIs)", disabled: false },
+	{ value: Integrations.github, label: "Github", disabled: false },
+	{ value: Integrations.google, label: "Google (All APIs)", disabled: false },
+	{ value: Integrations.chatGpt, label: "OpenAI ChatGPT", disabled: false },
 ];
 
 export const selectIntegrationGithub: SelectOption[] = [
