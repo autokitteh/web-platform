@@ -4,6 +4,7 @@ import i18n from "i18next";
 let infoGithubLinks: { url: string; text: string }[] = [];
 let infoGoogleUserLinks: { url: string; text: string }[] = [];
 let infoGoogleAccountLinks: { url: string; text: string }[] = [];
+let infoTwilioLinks: { url: string; text: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -54,6 +55,17 @@ i18n.on("initialized", () => {
 			text: i18n.t("google.information.managingAccount", { ns: "integrations" }),
 		},
 	];
+
+	infoTwilioLinks = [
+		{
+			url: "https://www.twilio.com/docs/glossary/what-is-an-api-key",
+			text: i18n.t("twilio.information.aboutAuth", { ns: "integrations" }),
+		},
+		{
+			url: "https://www.twilio.com/docs/iam/api-keys",
+			text: i18n.t("twilio.information.apiOverview", { ns: "integrations" }),
+		},
+	];
 });
 
-export { infoGithubLinks, infoGoogleUserLinks, infoGoogleAccountLinks };
+export { infoGithubLinks, infoGoogleUserLinks, infoGoogleAccountLinks, infoTwilioLinks };

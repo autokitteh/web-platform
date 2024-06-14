@@ -41,5 +41,17 @@
 			"serviceAccount": "Create and delete service account keys",
 			"managingAccount": "Best practices for managing service account keys"
 		}
+	},
+	"twilio": {
+		"placeholders": {
+			"sid": "Account SID",
+			"token": "Auth Token",
+			"key": "API Key",
+			"secret": "API Secret"
+		},
+		"information": {
+			"aboutAuth": "Auth tokens and API keys",
+			"apiOverview": "API keys overview"
+		}
 	}
 }
