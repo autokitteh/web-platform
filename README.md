@@ -17,9 +17,6 @@
 - **Work and Marketing Automation**: Facilitate tasks using systems like Gmail, Docs, Slack, Calendar, etc.
 - **Corporate Operations Automation**: Enhance enterprise-specific procedures for HR, sales, etc.
 
-## Current Status 📣
-
-autokitteh is currently in stealth mode. Stay tuned for updates.
 
 ## Contact 📬
 
@@ -28,7 +25,7 @@ For inquiries, contact: meow@autokitteh.com
 ## How to Contribute 🤝
 
 To contribute to autokitteh, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-We appreciate contributions from everyone! For more details, check the CONTRIBUTING.md file.
+We appreciate contributions from everyone!
 
 ## How to Install and Run 🛠️
 
@@ -119,9 +116,5 @@ Create a `.env` file in the root of the project directory and add the necessary 
     `npm run tailwind-config-viewer`
 
 ### License
-
-This project is licensed under
-
-- [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) ([`LICENSE.md`](LICENSE))
 
 The [autokitteh](https://autokitteh.com) license identifier for this project is `Apache-2.0`.
