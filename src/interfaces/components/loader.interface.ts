@@ -4,4 +4,4 @@ export interface LoaderProps {
 	secondColor?: LoaderColorType;
 }
 
-type LoaderColorType = "red" | "green" | "gray" | "black";
+type LoaderColorType = "dark-gray" | "gray";
