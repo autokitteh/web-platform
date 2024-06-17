@@ -17,10 +17,6 @@ We'd love to get your input! We want to make contributing to this project as eas
 5. Push to the branch (`git push origin my-new-feature`).
 6. Create a new pull request ([How to create a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request))
 
-## Code of Conduct
-
-We follow the [go community code of conduct](https://go.dev/conduct)
-
 ## License
 
 - [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) ([`LICENSE.md`](LICENSE))
