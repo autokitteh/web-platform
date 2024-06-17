@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/autokitteh/web-platform/compare/v1.2.0...v1.3.0) (2024-06-17)
+
+
+### Features
+
+* css loader ([#110](https://github.com/autokitteh/web-platform/issues/110)) ([d84645b](https://github.com/autokitteh/web-platform/commit/d84645b765aca86497b5dda13095cf70709d1845))
+
 # [1.2.0](https://github.com/autokitteh/web-platform/compare/v1.1.0...v1.2.0) (2024-06-11)
 
 
