@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import i18n from "i18next";
 
 let infoGithubLinks: { url: string; text: string }[] = [];
