@@ -1,17 +1,16 @@
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, { useCallback, useMemo } from "react";
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 import { ModalName } from "@enums/components";
 import { SessionsTableListProps } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { useNavigate, useParams } from "react-router-dom";
+import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 
-export const SessionsTableList = ({ sessions, frameRef, onItemsRendered }: SessionsTableListProps) => {
+export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: SessionsTableListProps) => {
 	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
-
-	const [listHeight, setListHeight] = useState(400);
 
 	const openSessionLog = useCallback((sessionId: string) => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/${sessionId}`);
@@ -31,28 +30,25 @@ export const SessionsTableList = ({ sessions, frameRef, onItemsRendered }: Sessi
 		[sessions, sessionId, openSessionLog, showDeleteModal]
 	);
 
-	useEffect(() => {
-		if (frameRef?.current) {
-			const frameHeight = frameRef.current.clientHeight - 100;
-			const newHeight = sessions.length * 48 > frameHeight ? frameHeight : sessions.length * 48;
-			setListHeight(newHeight);
-		}
-	}, [sessions, frameRef]);
-
 	return (
-		<div>
-			<List
-				className="scrollbar"
-				height={listHeight}
-				itemCount={sessions.length}
-				itemData={itemData}
-				itemKey={(idx) => sessions?.[idx]?.sessionId || 0}
-				itemSize={48}
-				onItemsRendered={onItemsRendered}
-				width="100%"
-			>
-				{SessionsTableRow}
-			</List>
+		<div className="h-full">
+			<AutoSizer>
+				{({ height, width }) => (
+					<List
+						className="scrollbar"
+						height={height}
+						itemCount={sessions.length}
+						itemData={itemData}
+						itemKey={(idx) => sessions?.[idx]?.sessionId || 0}
+						itemSize={48}
+						onItemsRendered={onItemsRendered}
+						onScroll={onScroll}
+						width={width}
+					>
+						{SessionsTableRow}
+					</List>
+				)}
+			</AutoSizer>
 		</div>
 	);
 };

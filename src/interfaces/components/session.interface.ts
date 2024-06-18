@@ -1,5 +1,5 @@
 import { Session, SessionStateKeyType } from "@type/models";
-import { ListOnItemsRenderedProps } from "react-window";
+import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
 
 export interface SessionTableFilterProps {
 	onChange: (sessionState?: SessionStateKeyType) => void;
@@ -14,6 +14,6 @@ export interface SessionsTableRowProps {
 
 export interface SessionsTableListProps {
 	sessions: Session[];
-	frameRef: React.RefObject<HTMLDivElement>;
 	onItemsRendered: (props: ListOnItemsRenderedProps) => void;
+	onScroll: (props: ListOnScrollProps) => void;
 }

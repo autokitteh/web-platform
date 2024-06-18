@@ -17,7 +17,7 @@ import { cn } from "@utilities";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { ListOnItemsRenderedProps } from "react-window";
+import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
 
 export const SessionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -35,7 +35,7 @@ export const SessionsTable = () => {
 		column: keyof Session;
 	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
 	const [initialLoad, setInitialLoad] = useState(true);
-	const frameRef = useRef<HTMLDivElement>(null);
+	const [liveTailState, setLiveTailState] = useState(true);
 	const sessionsFetchIntervalId = useRef<NodeJS.Timeout>();
 
 	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
@@ -65,9 +65,10 @@ export const SessionsTable = () => {
 		setSessionNextPageToken(data.nextPageToken);
 	};
 
-	const loadMoreSessions = async () => {
+	const loadMoreSessions = useCallback(async () => {
 		if (!deploymentId) return;
 		if (!sessionNextPageToken) return;
+		if (sessionsFetchIntervalId.current && !liveTailState) clearInterval(sessionsFetchIntervalId.current);
 
 		const { data, error } = await SessionsService.listByDeploymentId(
 			deploymentId,
@@ -90,12 +91,7 @@ export const SessionsTable = () => {
 
 		setSessions([...sessions, ...data.sessions]);
 		setSessionNextPageToken(data.nextPageToken);
-
-		if (sessionsFetchIntervalId.current) {
-			clearInterval(sessionsFetchIntervalId.current);
-		}
-		sessionsFetchIntervalId.current = setInterval(loadMoreSessions, fetchSessionsInterval);
-	};
+	}, [sessionNextPageToken]);
 
 	useEffect(() => {
 		fetchSessions();
@@ -155,73 +151,75 @@ export const SessionsTable = () => {
 		}
 	};
 
+	const handleScroll = useCallback(({ scrollOffset }: ListOnScrollProps) => {
+		if (scrollOffset !== 0) setLiveTailState(false);
+	}, []);
+
 	return (
 		<div className="flex w-full h-full">
 			<Frame className={frameClass}>
-				<div className="h-full" ref={frameRef}>
-					<div className="flex items-center justify-between gap-2.5">
-						<div className="flex items-center flex-wrap gap-2.5">
-							<IconButton
-								ariaLabel={t("ariaLabelReturnBack")}
-								className="gap-2 text-sm text-white bg-gray-600 hover:bg-black min-w-20"
-								onClick={() => navigate(`/projects/${projectId}/deployments`)}
-							>
-								<ArrowLeft className="h-4" />
-								{t("buttons.back")}
-							</IconButton>
-							<div className="text-base text-gray-300">
-								{sessions.length} {t("sessionsName")}
-							</div>
+				<div className="flex items-center justify-between gap-2.5">
+					<div className="flex items-center flex-wrap gap-2.5">
+						<IconButton
+							ariaLabel={t("ariaLabelReturnBack")}
+							className="gap-2 text-sm text-white bg-gray-600 hover:bg-black min-w-20"
+							onClick={() => navigate(`/projects/${projectId}/deployments`)}
+						>
+							<ArrowLeft className="h-4" />
+							{t("buttons.back")}
+						</IconButton>
+						<div className="text-base text-gray-300">
+							{sessions.length} {t("sessionsName")}
 						</div>
-						<SessionsTableFilter onChange={handleFilterSessions} />
 					</div>
-					{sortedSessions.length ? (
-						<Table className="mt-4">
-							<THead>
-								<Tr>
-									<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("createdAt")}>
-										{t("table.columns.activationTime")}
-										<SortButton
-											className="opacity-0 group-hover:opacity-100"
-											isActive={"createdAt" === sort.column}
-											sortDirection={sort.direction}
-										/>
-									</Th>
-									<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("state")}>
-										{t("table.columns.status")}
-										<SortButton
-											className="opacity-0 group-hover:opacity-100"
-											isActive={"state" === sort.column}
-											sortDirection={sort.direction}
-										/>
-									</Th>
-									<Th
-										className="font-normal border-0 cursor-pointer group"
-										onClick={() => toggleSortSessions("sessionId")}
-									>
-										{t("table.columns.sessionId")}
-										<SortButton
-											className="opacity-0 group-hover:opacity-100"
-											isActive={"sessionId" === sort.column}
-											sortDirection={sort.direction}
-										/>
-									</Th>
-
-									<Th className="border-0 max-w-12" />
-								</Tr>
-							</THead>
-							<TBody className="bg-gray-700 ">
-								<SessionsTableList
-									frameRef={frameRef}
-									onItemsRendered={handleItemsRendered}
-									sessions={sortedSessions}
-								/>
-							</TBody>
-						</Table>
-					) : (
-						<div className="mt-10 text-xl font-semibold text-center">{t("noSessions")}</div>
-					)}
+					<SessionsTableFilter onChange={handleFilterSessions} />
 				</div>
+				{sortedSessions.length ? (
+					<Table className="flex-1 mt-4 overflow-hidden border-transparent">
+						<THead className="border border-gray-600">
+							<Tr>
+								<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("createdAt")}>
+									{t("table.columns.activationTime")}
+									<SortButton
+										className="opacity-0 group-hover:opacity-100"
+										isActive={"createdAt" === sort.column}
+										sortDirection={sort.direction}
+									/>
+								</Th>
+								<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("state")}>
+									{t("table.columns.status")}
+									<SortButton
+										className="opacity-0 group-hover:opacity-100"
+										isActive={"state" === sort.column}
+										sortDirection={sort.direction}
+									/>
+								</Th>
+								<Th
+									className="font-normal border-0 cursor-pointer group"
+									onClick={() => toggleSortSessions("sessionId")}
+								>
+									{t("table.columns.sessionId")}
+									<SortButton
+										className="opacity-0 group-hover:opacity-100"
+										isActive={"sessionId" === sort.column}
+										sortDirection={sort.direction}
+									/>
+								</Th>
+
+								<Th className="border-0 max-w-12" />
+							</Tr>
+						</THead>
+						<TBody className="border border-gray-600">
+							<SessionsTableList
+								onItemsRendered={handleItemsRendered}
+								onScroll={handleScroll}
+								sessions={sortedSessions}
+							/>
+						</TBody>
+					</Table>
+				) : (
+					<div className="mt-10 text-xl font-semibold text-center">{t("noSessions")}</div>
+				)}
 			</Frame>
 			{sessionId ? (
 				<Outlet />
