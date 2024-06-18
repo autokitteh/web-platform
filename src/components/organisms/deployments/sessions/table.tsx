@@ -6,20 +6,21 @@ import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal } from "@components/organisms/deployments/sessions";
 import { SessionsTableList } from "@components/organisms/deployments/sessions";
 import { fetchSessionsInterval, namespaces } from "@constants";
+import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
 import { useInterval } from "@hooks";
 import { reverseSessionStateConverter } from "@models/utils";
-import { LoggerService, SessionsService } from "@services";
+import { LoggerService, SessionsService, DeploymentsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
-import { Session, SessionStateKeyType } from "@type/models";
+import { Session, SessionStateKeyType, Deployment } from "@type/models";
 import { cn } from "@utilities";
-import { debounce } from "lodash";
+import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
 
 export const SessionsTable = () => {
-	const { t: tErrors } = useTranslation("errors");
+	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
 	const { startInterval, stopInterval } = useInterval();
@@ -27,25 +28,55 @@ export const SessionsTable = () => {
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const [sessions, setSessions] = useState<{ list: Session[]; total: number; nextPageToken?: string }>({
-		list: [],
-		total: 0,
-		nextPageToken: undefined,
-	});
+	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
-	const [liveTailState, setLiveTailState] = useState(true);
+	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
+	const [totalSessions, setTotalSessions] = useState<number>();
+	const [deployment, setDeployment] = useState<Deployment>();
+	const [liveTailState, setLiveTailState] = useState(false);
+	const [displayLiveTail, setDisplayLiveTail] = useState(false);
 
 	const frameClass = useMemo(
 		() => cn("pl-7 bg-gray-700 transition-all w-1/2", { "w-3/4 rounded-r-none": !sessionId }),
 		[sessionId]
 	);
 
+	const fetchDeployments = useCallback(async () => {
+		if (!projectId) return;
+		const { data, error } = await DeploymentsService.listByProjectId(projectId!);
+		if (!data?.length) return;
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("deploymentFetchError", { ns: "services" }),
+				type: "error",
+				title: tErrors("error"),
+			});
+			return;
+		}
+
+		const deploymentData = data.find((deployment) => deployment.deploymentId === deploymentId);
+		const sessionsTotal = deploymentData?.sessionStats?.reduce((totalCount, current) => {
+			const currentSessionState = reverseSessionStateConverter(current.state);
+			const countToAdd = !sessionStateType || currentSessionState === sessionStateType ? current.count : 0;
+
+			return totalCount + countToAdd;
+		}, 0);
+		setTotalSessions(sessionsTotal);
+
+		if (isEqual(deploymentData, deployment)) return;
+
+		const deploymentState = deploymentData?.state === DeploymentStateVariant.active ? true : false;
+		setLiveTailState(deploymentState);
+		setDisplayLiveTail(deploymentState);
+		setDeployment(deploymentData);
+	}, [sessionStateType]);
+
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
-				projectId!,
 				{
 					stateType: sessionStateType,
 				},
@@ -69,19 +100,20 @@ export const SessionsTable = () => {
 			if (!data?.sessions) return;
 
 			setSessions((prevSessions) => {
-				if (!nextPageToken) {
-					return { ...data, list: data.sessions };
-				}
-				return { ...data, list: [...prevSessions.list, ...data.sessions] };
+				if (!nextPageToken) return data.sessions;
+				return [...prevSessions, ...data.sessions];
 			});
+			setSessionsNextPageToken(data.nextPageToken);
 		},
 		[sessionStateType]
 	);
 
 	const debouncedFetchSessions = debounce(fetchSessions, 100);
+	const debouncedFetchDeployments = debounce(fetchDeployments, 100);
 
 	useEffect(() => {
 		debouncedFetchSessions();
+		debouncedFetchDeployments();
 	}, [sessionStateType]);
 
 	useEffect(() => {
@@ -127,8 +159,8 @@ export const SessionsTable = () => {
 	};
 
 	const handleItemsRendered = ({ visibleStopIndex }: ListOnItemsRenderedProps) => {
-		if (visibleStopIndex >= sessions.list.length - 1 && sessions.nextPageToken) {
-			debouncedFetchSessions(sessions.nextPageToken);
+		if (visibleStopIndex >= sessions.length - 1 && sessionsNextPageToken) {
+			debouncedFetchSessions(sessionsNextPageToken);
 		}
 	};
 
@@ -152,20 +184,20 @@ export const SessionsTable = () => {
 							<ArrowLeft className="h-4" />
 							{t("buttons.back")}
 						</IconButton>
-						<div className="text-base text-gray-300">
-							{t("totalSessions", { total: sessions.total, suffix: sessions.total > 1 ? "s" : "" })}
-						</div>
-						<IconButton
-							className="w-5 h-5 p-0 ml-3 cursor-pointer"
-							onClick={() => setLiveTailState((prevState) => !prevState)}
-							title={liveTailState ? t("pauseLiveTail") : t("resumeLiveTail")}
-						>
-							<RotateIcon fill={liveTailState ? "green" : "gray"} />
-						</IconButton>
+						<div className="text-base text-gray-300 font-mediumy">{t("totalSessions", { total: totalSessions })}</div>
+						{displayLiveTail ? (
+							<IconButton
+								className="w-5 h-5 p-0 ml-3 cursor-pointer"
+								onClick={() => setLiveTailState((prevState) => !prevState)}
+								title={liveTailState ? t("pauseLiveTail") : t("resumeLiveTail")}
+							>
+								<RotateIcon fill={liveTailState ? "green" : "gray"} />
+							</IconButton>
+						) : null}
 					</div>
 					<SessionsTableFilter onChange={handleFilterSessions} />
 				</div>
-				{sessions.list.length ? (
+				{sessions.length ? (
 					<Table className="flex-1 mt-4 overflow-hidden border-transparent border-none">
 						<THead>
 							<Tr className="rounded-3xl">
@@ -180,7 +212,7 @@ export const SessionsTable = () => {
 								onItemsRendered={handleItemsRendered}
 								onScroll={handleScroll}
 								onSelectedSessionId={setSelectedSessionId}
-								sessions={sessions.list}
+								sessions={sessions}
 							/>
 						</TBody>
 					</Table>

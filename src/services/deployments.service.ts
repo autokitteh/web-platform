@@ -116,4 +116,23 @@ export class DeploymentsService {
 			return { data: undefined, error };
 		}
 	}
+
+	static async getById(deploymentId: string): Promise<ServiceResponse<Deployment>> {
+		try {
+			const { deployment } = await deploymentsClient.get({ deploymentId });
+			if (!deployment) {
+				return { data: undefined, error: new Error(i18n.t("deploymentFetchError", { ns: "services" })) };
+			}
+			return { data: convertDeploymentProtoToModel(deployment), error: undefined };
+		} catch (error) {
+			const errorMessage = i18n.t("deploymentFetchErrorExtended", {
+				deploymentId,
+				error: (error as Error).message,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.deploymentsService, errorMessage);
+
+			return { data: undefined, error };
+		}
+	}
 }
