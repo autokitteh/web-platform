@@ -17,6 +17,12 @@ export const SessionsTableRow = memo(
 		const sessionLastTdClass = cn("justify-end border-0 max-w-20", { "mr-1.5": !scrollDisplayed });
 
 		if (!session) return null;
+
+		const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+			e.stopPropagation();
+			showDeleteModal(session.sessionId);
+		};
+
 		return (
 			<Tr
 				className={sessionRowClass(session.sessionId)}
@@ -29,7 +35,7 @@ export const SessionsTableRow = memo(
 				</Td>
 				<Td className="border-r-0">{session.sessionId}</Td>
 				<Td className={sessionLastTdClass}>
-					<IconButton onClick={showDeleteModal}>
+					<IconButton onClick={handleDeleteClick}>
 						<TrashIcon className="w-3 h-3 fill-white" />
 					</IconButton>
 				</Td>

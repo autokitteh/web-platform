@@ -7,7 +7,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
 
-export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: SessionsTableListProps) => {
+export const SessionsTableList = ({
+	sessions,
+	onItemsRendered,
+	onScroll,
+	onSelectedSessionId,
+}: SessionsTableListProps) => {
 	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
@@ -17,7 +22,8 @@ export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: Sessi
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`);
 	}, []);
 
-	const showDeleteModal = useCallback(() => {
+	const showDeleteModal = useCallback((id: string) => {
+		onSelectedSessionId(id);
 		openModal(ModalName.deleteDeploymentSession);
 	}, []);
 

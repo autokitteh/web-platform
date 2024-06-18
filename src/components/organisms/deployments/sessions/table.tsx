@@ -30,6 +30,7 @@ export const SessionsTable = () => {
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [sessionNextPageToken, setSessionNextPageToken] = useState<string>();
+	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [liveTailState, setLiveTailState] = useState(true);
 
 	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
@@ -75,23 +76,22 @@ export const SessionsTable = () => {
 	const debouncedFetchSessions = debounce(fetchSessions, 200);
 
 	useEffect(() => {
-		if (liveTailState) {
-			debouncedFetchSessions();
-			startInterval("sessionsFetchIntervalId", debouncedFetchSessions, fetchSessionsInterval);
-		}
-		if (!liveTailState) {
-			stopInterval("sessionsFetchIntervalId");
-		}
+		debouncedFetchSessions();
+	}, [sessionStateType]);
+
+	useEffect(() => {
+		if (liveTailState) startInterval("sessionsFetchIntervalId", debouncedFetchSessions, fetchSessionsInterval);
+		if (!liveTailState) stopInterval("sessionsFetchIntervalId");
 
 		return () => {
 			stopInterval("sessionsFetchIntervalId");
 			debouncedFetchSessions.cancel();
 		};
-	}, [liveTailState, sessionStateType]);
+	}, [liveTailState]);
 
 	const handleRemoveSession = async () => {
-		if (!sessionId) return;
-		const { error } = await SessionsService.deleteSession(sessionId);
+		if (!selectedSessionId) return;
+		const { error } = await SessionsService.deleteSession(selectedSessionId);
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -99,7 +99,10 @@ export const SessionsTable = () => {
 				type: "error",
 				title: tErrors("error"),
 			});
-			LoggerService.error(namespaces.sessionsService, tErrors("failedRemoveSessionExtended", { sessionId }));
+			LoggerService.error(
+				namespaces.sessionsService,
+				tErrors("failedRemoveSessionExtended", { sessionId: selectedSessionId })
+			);
 			return;
 		}
 
@@ -164,7 +167,12 @@ export const SessionsTable = () => {
 							</Tr>
 						</THead>
 						<TBody>
-							<SessionsTableList onItemsRendered={handleItemsRendered} onScroll={handleScroll} sessions={sessions} />
+							<SessionsTableList
+								onItemsRendered={handleItemsRendered}
+								onScroll={handleScroll}
+								onSelectedSessionId={setSelectedSessionId}
+								sessions={sessions}
+							/>
 						</TBody>
 					</Table>
 				) : (
