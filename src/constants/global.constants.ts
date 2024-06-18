@@ -1,5 +1,5 @@
 export const fetchProjectsMenuItemsInterval = 60000;
-export const fetchSessionsInterval = 2000;
+export const fetchSessionsInterval = 10000;
 export const fetchDeploymentsInterval = 30000;
 export const defaultSessionsVisiblePageSize = 10;
 
