@@ -1,15 +1,25 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 import { ModalName } from "@enums/components";
 import { useModalStore } from "@store";
 import { Session } from "@type/models";
 import { useNavigate, useParams } from "react-router-dom";
-import { FixedSizeList as List } from "react-window";
+import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
 
-export const SessionsTableList = ({ sessions }: { sessions: Session[] }) => {
+export const SessionsTableList = ({
+	sessions,
+	onItemsRendered,
+	frameRef,
+}: {
+	sessions: Session[];
+	onItemsRendered: (props: ListOnItemsRenderedProps) => void;
+	frameRef: React.RefObject<HTMLDivElement>;
+}) => {
 	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
+
+	const [listHeight, setListHeight] = useState(400);
 
 	const openSessionLog = useCallback((sessionId: string) => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/${sessionId}`);
@@ -29,17 +39,28 @@ export const SessionsTableList = ({ sessions }: { sessions: Session[] }) => {
 		[sessions, sessionId, openSessionLog, showDeleteModal]
 	);
 
+	useEffect(() => {
+		if (frameRef?.current) {
+			const frameHeight = frameRef.current.clientHeight - 100;
+			const newHeight = sessions.length * 48 > frameHeight ? frameHeight : sessions.length * 48;
+			setListHeight(newHeight);
+		}
+	}, [sessions, frameRef]);
+
 	return (
-		<List
-			className="scrollbar"
-			height={700}
-			itemCount={sessions.length}
-			itemData={itemData}
-			itemKey={(idx) => sessions?.[idx]?.sessionId || 0}
-			itemSize={48}
-			width="100%"
-		>
-			{SessionsTableRow}
-		</List>
+		<div>
+			<List
+				className="scrollbar"
+				height={listHeight}
+				itemCount={sessions.length}
+				itemData={itemData}
+				itemKey={(idx) => sessions?.[idx]?.sessionId || 0}
+				itemSize={48}
+				onItemsRendered={onItemsRendered}
+				width="100%"
+			>
+				{SessionsTableRow}
+			</List>
+		</div>
 	);
 };

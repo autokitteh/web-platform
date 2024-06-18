@@ -17,6 +17,7 @@ import { cn } from "@utilities";
 import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { ListOnItemsRenderedProps } from "react-window";
 
 export const SessionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -28,6 +29,7 @@ export const SessionsTable = () => {
 
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionStateType, setSessionStateType] = useState<number>();
+	const [sessionNextPageToken, setSessionNextPageToken] = useState<string>();
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Session;
@@ -43,7 +45,10 @@ export const SessionsTable = () => {
 	const fetchSessions = async () => {
 		if (!deploymentId) return;
 
-		const { data, error } = await SessionsService.listByDeploymentId(deploymentId, { stateType: sessionStateType });
+		const { data, error } = await SessionsService.listByDeploymentId(deploymentId, {
+			stateType: sessionStateType,
+		});
+
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -53,9 +58,37 @@ export const SessionsTable = () => {
 			});
 			return;
 		}
-		if (!data) return;
+		if (!data?.sessions) return;
 
-		setSessions(data);
+		setSessions(data.sessions);
+		setSessionNextPageToken(data.nextPageToken);
+	};
+
+	const loadMoreSessions = async () => {
+		if (!deploymentId) return;
+		if (!sessionNextPageToken) return;
+
+		const { data, error } = await SessionsService.listByDeploymentId(
+			deploymentId,
+			{
+				stateType: sessionStateType,
+			},
+			sessionNextPageToken
+		);
+
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
+			return;
+		}
+		if (!data?.sessions) return;
+
+		setSessions([...sessions, ...data.sessions]);
+		setSessionNextPageToken(data.nextPageToken);
 	};
 
 	useEffect(() => {
@@ -109,6 +142,13 @@ export const SessionsTable = () => {
 	};
 	const sessionLogsEditorClass = cn("w-3/5 transition pt-20 bg-gray-700 rounded-l-none");
 
+	const handleItemsRendered = ({ visibleStopIndex }: ListOnItemsRenderedProps) => {
+		if (visibleStopIndex >= sessions?.length - 1) {
+			loadMoreSessions();
+			return;
+		}
+	};
+
 	return (
 		<div className="flex w-full h-full">
 			<Frame className={frameClass}>
@@ -131,7 +171,7 @@ export const SessionsTable = () => {
 					</div>
 					{sortedSessions.length ? (
 						<Table className="mt-4">
-							<THead>
+							<THead className="overflow-y-scroll">
 								<Tr>
 									<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("createdAt")}>
 										{t("table.columns.activationTime")}
@@ -164,8 +204,12 @@ export const SessionsTable = () => {
 									<Th className="border-0 max-w-12" />
 								</Tr>
 							</THead>
-							<TBody className="bg-gray-700">
-								<SessionsTableList sessions={sortedSessions} />
+							<TBody className="bg-gray-700 ">
+								<SessionsTableList
+									frameRef={frameRef}
+									onItemsRendered={handleItemsRendered}
+									sessions={sortedSessions}
+								/>
 							</TBody>
 						</Table>
 					) : (

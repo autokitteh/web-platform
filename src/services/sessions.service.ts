@@ -29,16 +29,17 @@ export class SessionsService {
 		deploymentId: string,
 		filter?: SessionFilter,
 		pageToken?: string
-	): Promise<ServiceResponse<Session[]>> {
+	): Promise<ServiceResponse<{ sessions: Session[]; nextPageToken: string }>> {
 		try {
-			const { sessions: sessionsResponse } = await sessionsClient.list({
+			const { sessions: sessionsResponse, nextPageToken } = await sessionsClient.list({
 				deploymentId,
 				stateType: filter?.stateType,
 				pageToken,
 				pageSize: DEFAULT_SESSIONS_VISIBLE_PAGE_SIZE,
 			});
+
 			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
-			return { data: sessions, error: undefined };
+			return { data: { sessions, nextPageToken }, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);
 
