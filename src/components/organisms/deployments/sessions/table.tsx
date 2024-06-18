@@ -107,6 +107,7 @@ export const SessionsTable = () => {
 		}
 
 		closeModal(ModalName.deleteDeploymentSession);
+		closeSessionLog();
 		debouncedFetchSessions();
 	};
 
