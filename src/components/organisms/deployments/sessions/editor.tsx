@@ -68,7 +68,7 @@ export const SessionTableEditorFrame = () => {
 	};
 
 	const sessionLogValue = sessionLog?.map(({ logs }) => logs).join("\n");
-	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}`);
+	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
 	return (
 		<Frame className="w-3/5 transition pt-20 ml-2.5">

@@ -89,7 +89,7 @@ export const SessionsTable = () => {
 	};
 
 	const closeSessionLog = useCallback(() => {
-		navigate(`/projects/${projectId}/deployments/${deploymentId}`);
+		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 	}, []);
 
 	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
@@ -139,8 +139,6 @@ export const SessionsTable = () => {
 		if (scrollOffset !== 0) setLiveTailState(false);
 	}, []);
 
-	const sessionLogsEditorClass = cn("w-3/5 transition pt-20 bg-gray-700 rounded-l-none");
-
 	return (
 		<div className="flex w-full h-full">
 			<Frame className={frameClass}>
@@ -157,13 +155,13 @@ export const SessionsTable = () => {
 						<div className="text-base text-gray-300">
 							{sessions.length} {t("sessionsName")}
 						</div>
-						<button
-							className="w-5 h-5 ml-3 cursor-pointer"
+						<IconButton
+							className="w-5 h-5 p-0 ml-3 cursor-pointer"
 							onClick={() => setLiveTailState(!liveTailState)}
 							title={liveTailState ? t("pauseLiveTail") : t("resumeLiveTail")}
 						>
 							<RotateIcon fill={liveTailState ? "green" : "gray"} />
-						</button>
+						</IconButton>
 					</div>
 					<SessionsTableFilter onChange={handleFilterSessions} />
 				</div>
@@ -189,7 +187,7 @@ export const SessionsTable = () => {
 			{sessionId ? (
 				<Outlet />
 			) : (
-				<Frame className={sessionLogsEditorClass}>
+				<Frame className="w-3/5 pt-20 transition bg-gray-700 rounded-l-none">
 					<div className="flex flex-col items-center mt-20">
 						<p className="mb-8 text-lg font-bold text-gray-400">{t("noSelectedSession")}</p>
 						<CatImage className="border-b border-gray-400 fill-gray-400" />

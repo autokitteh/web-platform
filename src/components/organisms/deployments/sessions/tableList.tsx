@@ -14,7 +14,7 @@ export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: Sessi
 	const [scrollDisplayed, setScrollDisplayed] = useState(false);
 
 	const openSessionLog = useCallback((sessionId: string) => {
-		navigate(`/projects/${projectId}/deployments/${deploymentId}/${sessionId}`);
+		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`);
 	}, []);
 
 	const showDeleteModal = useCallback(() => {
