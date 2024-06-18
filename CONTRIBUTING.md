@@ -16,9 +16,3 @@ We'd love to get your input! We want to make contributing to this project as eas
 4. Commit your changes (`git commit -m 'Add some feature' path/to/my/file.ts`).
 5. Push to the branch (`git push origin my-new-feature`).
 6. Create a new pull request ([How to create a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request))
-
-## License
-
-- [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) ([`LICENSE.md`](LICENSE))
-
-The [autokitteh](https://autokitteh.com) license identifier for this project is `Apache-2.0`.

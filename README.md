@@ -17,7 +17,6 @@
 - **Work and Marketing Automation**: Facilitate tasks using systems like Gmail, Docs, Slack, Calendar, etc.
 - **Corporate Operations Automation**: Enhance enterprise-specific procedures for HR, sales, etc.
 
-
 ## Contact 📬
 
 For inquiries, contact: meow@autokitteh.com
@@ -114,7 +113,3 @@ Create a `.env` file in the root of the project directory and add the necessary 
 3.  **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
 
     `npm run tailwind-config-viewer`
-
-### License
-
-The [autokitteh](https://autokitteh.com) license identifier for this project is `Apache-2.0`.
