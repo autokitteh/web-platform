@@ -1,21 +1,18 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { CatImage } from "@assets/image";
 import { ArrowLeft } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Th, Tr } from "@components/atoms";
-import { SortButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal } from "@components/organisms/deployments/sessions";
 import { SessionsTableList } from "@components/organisms/deployments/sessions";
 import { fetchSessionsInterval } from "@constants";
-import { ModalName, SortDirectionVariant } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { useInterval } from "@hooks";
 import { reverseSessionStateConverter } from "@models/utils";
 import { SessionsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
-import { SortDirection } from "@type/components";
 import { Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
-import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
@@ -32,11 +29,6 @@ export const SessionsTable = () => {
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [sessionNextPageToken, setSessionNextPageToken] = useState<string>();
-	const [sort, setSort] = useState<{
-		direction: SortDirection;
-		column: keyof Session;
-	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
-	const [initialLoad, setInitialLoad] = useState(true);
 	const [liveTailState, setLiveTailState] = useState(true);
 
 	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
@@ -73,6 +65,33 @@ export const SessionsTable = () => {
 		return () => stopInterval("sessionsFetchIntervalId");
 	}, [deploymentId, sessionStateType]);
 
+	const handleRemoveSession = async () => {
+		if (!sessionId) return;
+		const { error } = await SessionsService.deleteSession(sessionId);
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
+			return;
+		}
+
+		closeModal(ModalName.deleteDeploymentSession);
+		fetchSessions();
+	};
+
+	const closeSessionLog = useCallback(() => {
+		navigate(`/projects/${projectId}/deployments/${deploymentId}`);
+	}, []);
+
+	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
+		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
+		setSessionStateType(selectedSessionStateFilter);
+		closeSessionLog();
+	};
+
 	const loadMoreSessions = useCallback(async () => {
 		if (!deploymentId || !sessionNextPageToken) return;
 		setLiveTailState((prevState) => {
@@ -103,57 +122,6 @@ export const SessionsTable = () => {
 		setSessionNextPageToken(data.nextPageToken);
 	}, [sessionNextPageToken, liveTailState]);
 
-	useEffect(() => {
-		fetchSessions();
-
-		const sessionsFetchIntervalId = setInterval(fetchSessions, fetchSessionsInterval);
-		return () => clearInterval(sessionsFetchIntervalId);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionStateType]);
-
-	const toggleSortSessions = useCallback(
-		(key: keyof Session) => {
-			const newDirection =
-				sort.column === key && sort.direction === SortDirectionVariant.ASC
-					? SortDirectionVariant.DESC
-					: SortDirectionVariant.ASC;
-			setSort({ direction: newDirection, column: key });
-		},
-		[sort]
-	);
-
-	const sortedSessions = useMemo(() => {
-		if (initialLoad) {
-			setInitialLoad(false);
-			return sessions;
-		}
-		return orderBy(sessions, [sort.column], [sort.direction]);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessions, sort]);
-
-	const handleRemoveSession = async () => {
-		if (!sessionId) return;
-		const { error } = await SessionsService.deleteSession(sessionId);
-		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-				title: tErrors("error"),
-			});
-			return;
-		}
-
-		closeModal(ModalName.deleteDeploymentSession);
-		fetchSessions();
-	};
-
-	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
-		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
-		setSessionStateType(selectedSessionStateFilter);
-	};
-	const sessionLogsEditorClass = cn("w-3/5 transition pt-20 bg-gray-700 rounded-l-none");
-
 	const handleItemsRendered = ({ visibleStopIndex }: ListOnItemsRenderedProps) => {
 		if (visibleStopIndex >= sessions?.length - 1) {
 			loadMoreSessions();
@@ -164,6 +132,8 @@ export const SessionsTable = () => {
 	const handleScroll = useCallback(({ scrollOffset }: ListOnScrollProps) => {
 		if (scrollOffset !== 0) setLiveTailState(false);
 	}, []);
+
+	const sessionLogsEditorClass = cn("w-3/5 transition pt-20 bg-gray-700 rounded-l-none");
 
 	return (
 		<div className="flex w-full h-full">
@@ -184,47 +154,19 @@ export const SessionsTable = () => {
 					</div>
 					<SessionsTableFilter onChange={handleFilterSessions} />
 				</div>
-				{sortedSessions.length ? (
+				{sessions.length ? (
 					<Table className="flex-1 mt-4 overflow-hidden border-transparent">
 						<THead className="border border-gray-600">
 							<Tr>
-								<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("createdAt")}>
-									{t("table.columns.activationTime")}
-									<SortButton
-										className="opacity-0 group-hover:opacity-100"
-										isActive={"createdAt" === sort.column}
-										sortDirection={sort.direction}
-									/>
-								</Th>
-								<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("state")}>
-									{t("table.columns.status")}
-									<SortButton
-										className="opacity-0 group-hover:opacity-100"
-										isActive={"state" === sort.column}
-										sortDirection={sort.direction}
-									/>
-								</Th>
-								<Th
-									className="font-normal border-0 cursor-pointer group"
-									onClick={() => toggleSortSessions("sessionId")}
-								>
-									{t("table.columns.sessionId")}
-									<SortButton
-										className="opacity-0 group-hover:opacity-100"
-										isActive={"sessionId" === sort.column}
-										sortDirection={sort.direction}
-									/>
-								</Th>
+								<Th className="font-normal cursor-pointer group">{t("table.columns.activationTime")}</Th>
+								<Th className="font-normal cursor-pointer group">{t("table.columns.status")}</Th>
+								<Th className="font-normal border-0 cursor-pointer group">{t("table.columns.sessionId")}</Th>
 
 								<Th className="font-normal border-0 max-w-20 mr-1.5">Actions</Th>
 							</Tr>
 						</THead>
 						<TBody className="border border-gray-600">
-							<SessionsTableList
-								onItemsRendered={handleItemsRendered}
-								onScroll={handleScroll}
-								sessions={sortedSessions}
-							/>
+							<SessionsTableList onItemsRendered={handleItemsRendered} onScroll={handleScroll} sessions={sessions} />
 						</TBody>
 					</Table>
 				) : (
