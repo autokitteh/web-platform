@@ -41,13 +41,12 @@ body {
 }
 
 .scrollbar::-webkit-scrollbar {
-	width: 6px;
-	height: 6px;
+	@apply w-1.5 h-1.5;
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
 	@apply bg-gray-300;
-	border-radius: 10px;
+	@apply rounded-xl;
 }
 
 .scrollbar::-webkit-scrollbar-thumb:hover {

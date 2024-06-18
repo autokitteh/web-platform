@@ -207,7 +207,7 @@ export const SessionsTable = () => {
 									/>
 								</Th>
 
-								<Th className="border-0 max-w-12" />
+								<Th className="font-normal border-0 max-w-20 mr-1.5">Actions</Th>
 							</Tr>
 						</THead>
 						<TBody className="border border-gray-600">

@@ -26,7 +26,7 @@ export const SessionsTableRow = memo(
 						<SessionsTableState sessionState={session.state} />
 					</Td>
 					<Td className="border-r-0">{session.sessionId}</Td>
-					<Td className="max-w-12 border-0 pr-1.5 justify-end">
+					<Td className="justify-end border-0 max-w-20">
 						<IconButton onClick={showDeleteModal}>
 							<TrashIcon className="w-3 h-3 fill-white" />
 						</IconButton>

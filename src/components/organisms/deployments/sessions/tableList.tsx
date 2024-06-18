@@ -35,7 +35,7 @@ export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: Sessi
 			<AutoSizer>
 				{({ height, width }) => (
 					<List
-						className="scrollbar"
+						className="scrollbar mr-1.5"
 						height={height}
 						itemCount={sessions.length}
 						itemData={itemData}
@@ -43,6 +43,7 @@ export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: Sessi
 						itemSize={48}
 						onItemsRendered={onItemsRendered}
 						onScroll={onScroll}
+						style={{ overflowY: "scroll" }}
 						width={width}
 					>
 						{SessionsTableRow}
