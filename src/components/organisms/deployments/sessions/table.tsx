@@ -39,9 +39,14 @@ export const SessionsTable = () => {
 	const fetchSessions = async () => {
 		if (!deploymentId) return;
 
-		const { data, error } = await SessionsService.listByDeploymentId(deploymentId, {
-			stateType: sessionStateType,
-		});
+		const { data, error } = await SessionsService.listByDeploymentId(
+			deploymentId,
+			{
+				stateType: sessionStateType,
+			},
+			undefined,
+			sessions.length
+		);
 
 		if (error) {
 			addToast({
@@ -61,42 +66,6 @@ export const SessionsTable = () => {
 	useEffect(() => {
 		fetchSessions();
 	}, [sessionStateType]);
-
-	useEffect(() => {
-		if (liveTailState) {
-			startInterval("sessionsFetchIntervalId", fetchSessions, fetchSessionsInterval);
-		} else {
-			stopInterval("sessionsFetchIntervalId");
-		}
-		return () => stopInterval("sessionsFetchIntervalId");
-	}, [liveTailState, deploymentId]);
-
-	const handleRemoveSession = async () => {
-		if (!sessionId) return;
-		const { error } = await SessionsService.deleteSession(sessionId);
-		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-				title: tErrors("error"),
-			});
-			return;
-		}
-
-		closeModal(ModalName.deleteDeploymentSession);
-		fetchSessions();
-	};
-
-	const closeSessionLog = useCallback(() => {
-		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
-	}, []);
-
-	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
-		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
-		setSessionStateType(selectedSessionStateFilter);
-		closeSessionLog();
-	};
 
 	const loadMoreSessions = useCallback(async () => {
 		if (!deploymentId || !sessionNextPageToken) return;
@@ -127,6 +96,40 @@ export const SessionsTable = () => {
 		setSessions((prevSessions) => [...prevSessions, ...data.sessions]);
 		setSessionNextPageToken(data.nextPageToken);
 	}, [sessionNextPageToken, liveTailState]);
+
+	useEffect(() => {
+		if (liveTailState) startInterval("sessionsFetchIntervalId", fetchSessions, fetchSessionsInterval);
+		if (!liveTailState) stopInterval("sessionsFetchIntervalId");
+
+		return () => stopInterval("sessionsFetchIntervalId");
+	}, [liveTailState, deploymentId]);
+
+	const handleRemoveSession = async () => {
+		if (!sessionId) return;
+		const { error } = await SessionsService.deleteSession(sessionId);
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+				title: tErrors("error"),
+			});
+			return;
+		}
+
+		closeModal(ModalName.deleteDeploymentSession);
+		fetchSessions();
+	};
+
+	const closeSessionLog = useCallback(() => {
+		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
+	}, []);
+
+	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
+		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
+		setSessionStateType(selectedSessionStateFilter);
+		closeSessionLog();
+	};
 
 	const handleItemsRendered = ({ visibleStopIndex }: ListOnItemsRenderedProps) => {
 		if (visibleStopIndex >= sessions?.length - 1) {
@@ -166,9 +169,9 @@ export const SessionsTable = () => {
 					<SessionsTableFilter onChange={handleFilterSessions} />
 				</div>
 				{sessions.length ? (
-					<Table className="flex-1 mt-4 overflow-hidden border-transparent">
-						<THead className="border border-gray-600">
-							<Tr>
+					<Table className="flex-1 mt-4 overflow-hidden border-transparent border-none">
+						<THead>
+							<Tr className="rounded-3xl">
 								<Th className="font-normal cursor-pointer group">{t("table.columns.activationTime")}</Th>
 								<Th className="font-normal cursor-pointer group">{t("table.columns.status")}</Th>
 								<Th className="font-normal border-0 cursor-pointer group">{t("table.columns.sessionId")}</Th>
@@ -176,7 +179,7 @@ export const SessionsTable = () => {
 								<Th className="font-normal border-0 max-w-20 mr-1.5">{t("table.columns.actions")}</Th>
 							</Tr>
 						</THead>
-						<TBody className="border border-gray-600">
+						<TBody>
 							<SessionsTableList onItemsRendered={handleItemsRendered} onScroll={handleScroll} sessions={sessions} />
 						</TBody>
 					</Table>
