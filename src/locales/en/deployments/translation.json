@@ -31,11 +31,14 @@
 		"output": "Output",
 		"noData": "No data yet",
 		"noSelectedSession": "No session selected",
+		"resumeLiveTail": "Resume live tail",
+		"pauseLiveTail": "Pause live tail",
 		"table": {
 			"columns": {
 				"activationTime": "Activation time",
 				"status": "Status",
-				"sessionId": "Session ID"
+				"sessionId": "Session ID",
+				"actions": "Actions"
 			},
 			"statuses": {
 				"all": "All",

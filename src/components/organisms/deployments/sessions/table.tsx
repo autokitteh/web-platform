@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { CatImage } from "@assets/image";
-import { ArrowLeft } from "@assets/image/icons";
+import { ArrowLeft, RotateIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Th, Tr } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal } from "@components/organisms/deployments/sessions";
@@ -60,10 +60,16 @@ export const SessionsTable = () => {
 
 	useEffect(() => {
 		fetchSessions();
+	}, [sessionStateType]);
 
-		startInterval("sessionsFetchIntervalId", fetchSessions, fetchSessionsInterval);
+	useEffect(() => {
+		if (liveTailState) {
+			startInterval("sessionsFetchIntervalId", fetchSessions, fetchSessionsInterval);
+		} else {
+			stopInterval("sessionsFetchIntervalId");
+		}
 		return () => stopInterval("sessionsFetchIntervalId");
-	}, [deploymentId, sessionStateType]);
+	}, [liveTailState, deploymentId]);
 
 	const handleRemoveSession = async () => {
 		if (!sessionId) return;
@@ -151,6 +157,13 @@ export const SessionsTable = () => {
 						<div className="text-base text-gray-300">
 							{sessions.length} {t("sessionsName")}
 						</div>
+						<button
+							className="w-5 h-5 ml-3 cursor-pointer"
+							onClick={() => setLiveTailState(!liveTailState)}
+							title={liveTailState ? t("pauseLiveTail") : t("resumeLiveTail")}
+						>
+							<RotateIcon fill={liveTailState ? "green" : "gray"} />
+						</button>
 					</div>
 					<SessionsTableFilter onChange={handleFilterSessions} />
 				</div>
@@ -162,7 +175,7 @@ export const SessionsTable = () => {
 								<Th className="font-normal cursor-pointer group">{t("table.columns.status")}</Th>
 								<Th className="font-normal border-0 cursor-pointer group">{t("table.columns.sessionId")}</Th>
 
-								<Th className="font-normal border-0 max-w-20 mr-1.5">Actions</Th>
+								<Th className="font-normal border-0 max-w-20 mr-1.5">{t("table.columns.actions")}</Th>
 							</Tr>
 						</THead>
 						<TBody className="border border-gray-600">

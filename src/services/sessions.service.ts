@@ -31,13 +31,17 @@ export class SessionsService {
 		pageToken?: string
 	): Promise<ServiceResponse<{ sessions: Session[]; nextPageToken: string }>> {
 		try {
-			const { sessions: sessionsResponse, nextPageToken } = await sessionsClient.list({
+			const {
+				sessions: sessionsResponse,
+				nextPageToken,
+				count,
+			} = await sessionsClient.list({
 				deploymentId,
 				stateType: filter?.stateType,
 				pageToken,
 				pageSize: defaultSessionsVisiblePageSize,
 			});
-
+			console.log(count);
 			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
 			return { data: { sessions, nextPageToken }, error: undefined };
 		} catch (error) {
