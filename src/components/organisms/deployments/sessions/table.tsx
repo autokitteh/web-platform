@@ -36,73 +36,48 @@ export const SessionsTable = () => {
 		"w-1/2": sessionId,
 	});
 
-	const fetchSessions = async () => {
-		if (!deploymentId) return;
+	const fetchSessions = useCallback(
+		async (nextPageToken?: string) => {
+			if (!deploymentId) return;
 
-		const { data, error } = await SessionsService.listByDeploymentId(
-			deploymentId,
-			{
-				stateType: sessionStateType,
-			},
-			undefined,
-			sessions.length
-		);
+			const { data, error } = await SessionsService.listByDeploymentId(
+				deploymentId,
+				{
+					stateType: sessionStateType,
+				},
+				nextPageToken,
+				nextPageToken ? undefined : sessions.length
+			);
 
-		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-				title: tErrors("error"),
+			if (error) {
+				addToast({
+					id: Date.now().toString(),
+					message: (error as Error).message,
+					type: "error",
+					title: tErrors("error"),
+				});
+				return;
+			}
+			if (!data?.sessions) return;
+
+			setSessions((prevSessions) => {
+				if (!nextPageToken) return data.sessions;
+				return [...prevSessions, ...data.sessions];
 			});
-			return;
-		}
-		if (!data?.sessions) return;
-
-		setSessions(data.sessions);
-		setSessionNextPageToken(data.nextPageToken);
-	};
+			setSessionNextPageToken(data.nextPageToken);
+		},
+		[deploymentId, sessionStateType, sessions.length]
+	);
 
 	useEffect(() => {
 		fetchSessions();
-	}, [sessionStateType]);
 
-	const loadMoreSessions = useCallback(async () => {
-		if (!deploymentId || !sessionNextPageToken) return;
-		setLiveTailState((prevState) => {
-			if (!prevState) stopInterval("sessionsFetchIntervalId");
-			return prevState;
-		});
-
-		const { data, error } = await SessionsService.listByDeploymentId(
-			deploymentId,
-			{
-				stateType: sessionStateType,
-			},
-			sessionNextPageToken
-		);
-
-		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-				title: tErrors("error"),
-			});
-			return;
-		}
-		if (!data?.sessions) return;
-
-		setSessions((prevSessions) => [...prevSessions, ...data.sessions]);
-		setSessionNextPageToken(data.nextPageToken);
-	}, [sessionNextPageToken, liveTailState]);
-
-	useEffect(() => {
-		if (liveTailState) startInterval("sessionsFetchIntervalId", fetchSessions, fetchSessionsInterval);
+		if (liveTailState || sessionStateType)
+			startInterval("sessionsFetchIntervalId", fetchSessions, fetchSessionsInterval);
 		if (!liveTailState) stopInterval("sessionsFetchIntervalId");
 
 		return () => stopInterval("sessionsFetchIntervalId");
-	}, [liveTailState, deploymentId]);
+	}, [sessionStateType, liveTailState, deploymentId]);
 
 	const handleRemoveSession = async () => {
 		if (!sessionId) return;
@@ -123,7 +98,7 @@ export const SessionsTable = () => {
 
 	const closeSessionLog = useCallback(() => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
-	}, []);
+	}, [navigate, projectId, deploymentId]);
 
 	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
 		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
@@ -132,9 +107,8 @@ export const SessionsTable = () => {
 	};
 
 	const handleItemsRendered = ({ visibleStopIndex }: ListOnItemsRenderedProps) => {
-		if (visibleStopIndex >= sessions?.length - 1) {
-			loadMoreSessions();
-			return;
+		if (visibleStopIndex >= sessions?.length - 1 && sessionNextPageToken) {
+			fetchSessions(sessionNextPageToken);
 		}
 	};
 
@@ -175,7 +149,6 @@ export const SessionsTable = () => {
 								<Th className="font-normal cursor-pointer group">{t("table.columns.activationTime")}</Th>
 								<Th className="font-normal cursor-pointer group">{t("table.columns.status")}</Th>
 								<Th className="font-normal border-0 cursor-pointer group">{t("table.columns.sessionId")}</Th>
-
 								<Th className="font-normal border-0 max-w-20 mr-1.5">{t("table.columns.actions")}</Th>
 							</Tr>
 						</THead>
