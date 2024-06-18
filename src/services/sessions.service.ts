@@ -4,7 +4,7 @@ import {
 } from "@ak-proto-ts/sessions/v1/session_pb";
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
-import { namespaces } from "@constants";
+import { DEFAULT_SESSIONS_VISIBLE_PAGE_SIZE, namespaces } from "@constants";
 import { SessionLogRecord, convertSessionProtoToModel } from "@models";
 import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse, StartSessionArgsType } from "@type";
@@ -25,9 +25,18 @@ export class SessionsService {
 		}
 	}
 
-	static async listByDeploymentId(deploymentId: string, filter?: SessionFilter): Promise<ServiceResponse<Session[]>> {
+	static async listByDeploymentId(
+		deploymentId: string,
+		filter?: SessionFilter,
+		pageToken?: string
+	): Promise<ServiceResponse<Session[]>> {
 		try {
-			const { sessions: sessionsResponse } = await sessionsClient.list({ deploymentId, stateType: filter?.stateType });
+			const { sessions: sessionsResponse } = await sessionsClient.list({
+				deploymentId,
+				stateType: filter?.stateType,
+				pageToken,
+				pageSize: DEFAULT_SESSIONS_VISIBLE_PAGE_SIZE,
+			});
 			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
 			return { data: sessions, error: undefined };
 		} catch (error) {
