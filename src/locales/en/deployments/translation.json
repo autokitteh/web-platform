@@ -27,6 +27,7 @@
 	"sessions": {
 		"ariaLabelReturnBack": "Return back",
 		"sessionsName": "Sessions",
+		"totalSessions": "Total of {{total}} session{{suffix}}",
 		"noSessions": "No sessions found",
 		"output": "Output",
 		"noData": "No data yet",

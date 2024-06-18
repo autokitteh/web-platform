@@ -27,9 +27,12 @@ export const SessionsTable = () => {
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const [sessions, setSessions] = useState<Session[]>([]);
+	const [sessions, setSessions] = useState<{ list: Session[]; total: number; nextPageToken?: string }>({
+		list: [],
+		total: 0,
+		nextPageToken: undefined,
+	});
 	const [sessionStateType, setSessionStateType] = useState<number>();
-	const [sessionNextPageToken, setSessionNextPageToken] = useState<string>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [liveTailState, setLiveTailState] = useState(true);
 
@@ -42,6 +45,7 @@ export const SessionsTable = () => {
 		async (nextPageToken?: string) => {
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
+				projectId!,
 				{
 					stateType: sessionStateType,
 				},
@@ -65,10 +69,11 @@ export const SessionsTable = () => {
 			if (!data?.sessions) return;
 
 			setSessions((prevSessions) => {
-				if (!nextPageToken) return data.sessions;
-				return [...prevSessions, ...data.sessions];
+				if (!nextPageToken) {
+					return { ...data, list: data.sessions };
+				}
+				return { ...data, list: [...prevSessions.list, ...data.sessions] };
 			});
-			setSessionNextPageToken(data.nextPageToken);
 		},
 		[sessionStateType]
 	);
@@ -122,14 +127,17 @@ export const SessionsTable = () => {
 	};
 
 	const handleItemsRendered = ({ visibleStopIndex }: ListOnItemsRenderedProps) => {
-		if (visibleStopIndex >= sessions?.length - 1 && sessionNextPageToken) {
-			debouncedFetchSessions(sessionNextPageToken);
+		if (visibleStopIndex >= sessions.list.length - 1 && sessions.nextPageToken) {
+			debouncedFetchSessions(sessions.nextPageToken);
 		}
 	};
 
-	const handleScroll = useCallback(({ scrollOffset }: ListOnScrollProps) => {
-		if (scrollOffset !== 0 && liveTailState) setLiveTailState(false);
-	}, []);
+	const handleScroll = useCallback(
+		({ scrollOffset }: ListOnScrollProps) => {
+			if (scrollOffset !== 0 && liveTailState) setLiveTailState(false);
+		},
+		[liveTailState]
+	);
 
 	return (
 		<div className="flex w-full h-full">
@@ -145,7 +153,7 @@ export const SessionsTable = () => {
 							{t("buttons.back")}
 						</IconButton>
 						<div className="text-base text-gray-300">
-							{sessions.length} {t("sessionsName")}
+							{t("totalSessions", { total: sessions.total, suffix: sessions.total > 1 ? "s" : "" })}
 						</div>
 						<IconButton
 							className="w-5 h-5 p-0 ml-3 cursor-pointer"
@@ -157,7 +165,7 @@ export const SessionsTable = () => {
 					</div>
 					<SessionsTableFilter onChange={handleFilterSessions} />
 				</div>
-				{sessions.length ? (
+				{sessions.list.length ? (
 					<Table className="flex-1 mt-4 overflow-hidden border-transparent border-none">
 						<THead>
 							<Tr className="rounded-3xl">
@@ -172,7 +180,7 @@ export const SessionsTable = () => {
 								onItemsRendered={handleItemsRendered}
 								onScroll={handleScroll}
 								onSelectedSessionId={setSelectedSessionId}
-								sessions={sessions}
+								sessions={sessions.list}
 							/>
 						</TBody>
 					</Table>

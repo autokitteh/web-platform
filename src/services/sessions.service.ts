@@ -6,7 +6,8 @@ import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
 import { SessionLogRecord, convertSessionProtoToModel } from "@models";
-import { EnvironmentsService, LoggerService } from "@services";
+import { reverseSessionStateConverter } from "@models/utils";
+import { DeploymentsService, EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse, StartSessionArgsType } from "@type";
 import { Session, SessionFilter } from "@type/models";
 import { flattenArray } from "@utilities";
@@ -27,10 +28,11 @@ export class SessionsService {
 
 	static async listByDeploymentId(
 		deploymentId: string,
+		projectId: string,
 		filter?: SessionFilter,
 		pageToken?: string,
 		pageSize?: number
-	): Promise<ServiceResponse<{ sessions: Session[]; nextPageToken: string }>> {
+	): Promise<ServiceResponse<{ sessions: Session[]; nextPageToken: string; total: number }>> {
 		try {
 			const { sessions: sessionsResponse, nextPageToken } = await sessionsClient.list({
 				deploymentId,
@@ -39,7 +41,17 @@ export class SessionsService {
 				pageSize: pageSize || defaultSessionsVisiblePageSize,
 			});
 			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
-			return { data: { sessions, nextPageToken }, error: undefined };
+			const { data, error } = await DeploymentsService.listByProjectId(projectId);
+			if (error) throw error;
+
+			const sessionStats = data?.[0]?.sessionStats || [];
+			const total = sessionStats.reduce((totalCount, current) => {
+				const currentSessionState = reverseSessionStateConverter(current.state);
+				const countToAdd = !filter?.stateType || currentSessionState === filter.stateType ? current.count : 0;
+
+				return totalCount + countToAdd;
+			}, 0);
+			return { data: { sessions, nextPageToken, total }, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);
 
