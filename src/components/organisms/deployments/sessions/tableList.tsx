@@ -51,7 +51,7 @@ export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: Sessi
 						height={height}
 						itemCount={sessions.length}
 						itemData={itemData}
-						itemKey={(idx) => sessions?.[idx]?.sessionId || 0}
+						itemKey={(idx) => sessions[idx].sessionId}
 						itemSize={48}
 						onItemsRendered={(e) => itemsRendered(e, height)}
 						onScroll={onScroll}
