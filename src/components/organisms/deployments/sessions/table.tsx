@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { CatImage } from "@assets/image";
 import { ArrowLeft, RotateIcon } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Th, Tr } from "@components/atoms";
@@ -33,10 +33,10 @@ export const SessionsTable = () => {
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [liveTailState, setLiveTailState] = useState(true);
 
-	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
-		"w-3/4 rounded-r-none": !sessionId,
-		"w-1/2": sessionId,
-	});
+	const frameClass = useMemo(
+		() => cn("pl-7 bg-gray-700 transition-all", { "w-3/4 rounded-r-none": !sessionId, "w-1/2": sessionId }),
+		[sessionId]
+	);
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
@@ -73,7 +73,7 @@ export const SessionsTable = () => {
 		[sessionStateType]
 	);
 
-	const debouncedFetchSessions = debounce(fetchSessions, 200);
+	const debouncedFetchSessions = debounce(fetchSessions, 100);
 
 	useEffect(() => {
 		debouncedFetchSessions();
@@ -149,7 +149,7 @@ export const SessionsTable = () => {
 						</div>
 						<IconButton
 							className="w-5 h-5 p-0 ml-3 cursor-pointer"
-							onClick={() => setLiveTailState(!liveTailState)}
+							onClick={() => setLiveTailState((prevState) => !prevState)}
 							title={liveTailState ? t("pauseLiveTail") : t("resumeLiveTail")}
 						>
 							<RotateIcon fill={liveTailState ? "green" : "gray"} />
