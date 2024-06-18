@@ -5,17 +5,19 @@ import { baseUrl, namespaces } from "@constants";
 import { selectIntegrationGoogle, infoGoogleUserLinks, infoGoogleAccountLinks } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoggerService, HttpService } from "@services";
+import { LoggerService, HttpService, ConnectionService } from "@services";
 import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
-export const GoogleIntegrationForm = () => {
+export const GoogleIntegrationForm = ({ connectionName }: { connectionName?: string }) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GoogleConnectionType>();
+	const { projectId } = useParams();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
@@ -37,6 +39,8 @@ export const GoogleIntegrationForm = () => {
 
 		setIsLoading(true);
 		try {
+			await ConnectionService.create(projectId!, "google", connectionName!);
+
 			const { data } = await HttpService.post("/google/save", { jsonKey });
 			if (!data.url) {
 				addToast({

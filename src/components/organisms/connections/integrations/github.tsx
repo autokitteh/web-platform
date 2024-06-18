@@ -5,7 +5,7 @@ import { baseUrl, namespaces } from "@constants";
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoggerService } from "@services";
+import { ConnectionService, LoggerService } from "@services";
 import { HttpService } from "@services";
 import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const GithubIntegrationForm = () => {
+export const GithubIntegrationForm = ({ connectionName }: { connectionName?: string }) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
@@ -34,7 +34,6 @@ export const GithubIntegrationForm = () => {
 		defaultValues: {
 			pat: "",
 			webhookSercet: "",
-			name: "",
 		},
 	});
 
@@ -43,11 +42,19 @@ export const GithubIntegrationForm = () => {
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
 	const onSubmit = async () => {
-		const { pat, webhookSercet: secret, name } = getValues();
+		const { pat, webhookSercet: secret } = getValues();
 
 		setIsLoading(true);
 		try {
-			const { data } = await HttpService.post("/github/save", { pat, secret, webhook: webhookUrl, name });
+			console.log("step1");
+
+			const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
+
+			const { data } = await HttpService.post(`/github/save?cid=${connectionId}`, {
+				pat,
+				secret,
+				webhook: webhookUrl,
+			});
 			if (!data.url) {
 				addToast({
 					id: Date.now().toString(),
@@ -103,16 +110,6 @@ export const GithubIntegrationForm = () => {
 
 	const renderPATFields = () => (
 		<>
-			<div className="relative">
-				<Input
-					{...register("name")}
-					aria-label={t("github.placeholders.name")}
-					isError={!!errors.name}
-					isRequired
-					placeholder={t("github.placeholders.name")}
-				/>
-				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
-			</div>
 			<div className="relative">
 				<Input
 					{...register("pat")}
