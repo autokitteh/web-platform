@@ -1,20 +1,12 @@
 import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 import { ModalName } from "@enums/components";
+import { SessionsTableListProps } from "@interfaces/components";
 import { useModalStore } from "@store";
-import { Session } from "@type/models";
 import { useNavigate, useParams } from "react-router-dom";
-import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
+import { FixedSizeList as List } from "react-window";
 
-export const SessionsTableList = ({
-	sessions,
-	onItemsRendered,
-	frameRef,
-}: {
-	sessions: Session[];
-	onItemsRendered: (props: ListOnItemsRenderedProps) => void;
-	frameRef: React.RefObject<HTMLDivElement>;
-}) => {
+export const SessionsTableList = ({ sessions, frameRef, onItemsRendered }: SessionsTableListProps) => {
 	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();

@@ -36,6 +36,7 @@ export const SessionsTable = () => {
 	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
 	const [initialLoad, setInitialLoad] = useState(true);
 	const frameRef = useRef<HTMLDivElement>(null);
+	const sessionsFetchIntervalId = useRef<NodeJS.Timeout>();
 
 	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
 		"w-3/4 rounded-r-none": !sessionId,
@@ -89,6 +90,11 @@ export const SessionsTable = () => {
 
 		setSessions([...sessions, ...data.sessions]);
 		setSessionNextPageToken(data.nextPageToken);
+
+		if (sessionsFetchIntervalId.current) {
+			clearInterval(sessionsFetchIntervalId.current);
+		}
+		sessionsFetchIntervalId.current = setInterval(loadMoreSessions, fetchSessionsInterval);
 	};
 
 	useEffect(() => {
@@ -171,7 +177,7 @@ export const SessionsTable = () => {
 					</div>
 					{sortedSessions.length ? (
 						<Table className="mt-4">
-							<THead className="overflow-y-scroll">
+							<THead>
 								<Tr>
 									<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("createdAt")}>
 										{t("table.columns.activationTime")}
