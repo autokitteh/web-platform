@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { CatImage } from "@assets/image";
 import { ArrowLeft } from "@assets/image/icons";
 import { IconButton, Frame, TBody, THead, Table, Th, Tr } from "@components/atoms";
@@ -8,6 +8,7 @@ import { DeleteSessionModal } from "@components/organisms/deployments/sessions";
 import { SessionsTableList } from "@components/organisms/deployments/sessions";
 import { fetchSessionsInterval } from "@constants";
 import { ModalName, SortDirectionVariant } from "@enums/components";
+import { useInterval } from "@hooks";
 import { reverseSessionStateConverter } from "@models/utils";
 import { SessionsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
@@ -36,7 +37,6 @@ export const SessionsTable = () => {
 	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
 	const [initialLoad, setInitialLoad] = useState(true);
 	const [liveTailState, setLiveTailState] = useState(true);
-	const sessionsFetchIntervalId = useRef<NodeJS.Timeout>();
 
 	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
 		"w-3/4 rounded-r-none": !sessionId,
@@ -65,10 +65,11 @@ export const SessionsTable = () => {
 		setSessionNextPageToken(data.nextPageToken);
 	};
 
+	const clearSessionsFetchIntervalId = useInterval(fetchSessions, fetchSessionsInterval);
+
 	const loadMoreSessions = useCallback(async () => {
-		if (!deploymentId) return;
-		if (!sessionNextPageToken) return;
-		if (sessionsFetchIntervalId.current && !liveTailState) clearInterval(sessionsFetchIntervalId.current);
+		if (!deploymentId || !sessionNextPageToken) return;
+		if (!liveTailState) clearSessionsFetchIntervalId();
 
 		const { data, error } = await SessionsService.listByDeploymentId(
 			deploymentId,
@@ -89,9 +90,9 @@ export const SessionsTable = () => {
 		}
 		if (!data?.sessions) return;
 
-		setSessions([...sessions, ...data.sessions]);
+		setSessions((prevSessions) => [...prevSessions, ...data.sessions]);
 		setSessionNextPageToken(data.nextPageToken);
-	}, [sessionNextPageToken]);
+	}, [sessionNextPageToken, liveTailState]);
 
 	useEffect(() => {
 		fetchSessions();
