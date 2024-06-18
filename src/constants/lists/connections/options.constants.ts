@@ -4,6 +4,7 @@ import { SelectOption } from "@interfaces/components";
 export const selectIntegrations: SelectOption[] = [
 	{ value: "github", label: "Github", disabled: false },
 	{ value: "google", label: "Google (All APIs)", disabled: false },
+	{ value: "googleSheets", label: "Google Sheets", disabled: false },
 ];
 
 export const selectIntegrationGithub: SelectOption[] = [
