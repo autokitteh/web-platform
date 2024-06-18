@@ -70,7 +70,7 @@ export const SessionsTable = () => {
 			});
 			setSessionNextPageToken(data.nextPageToken);
 		},
-		[deploymentId, sessionStateType]
+		[sessionStateType]
 	);
 
 	const debouncedFetchSessions = debounce(fetchSessions, 200);
