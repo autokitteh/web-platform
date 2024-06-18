@@ -12,9 +12,9 @@ import { useInterval } from "@hooks";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService, DeploymentsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
-import { Session, SessionStateKeyType, Deployment } from "@type/models";
+import { Session, SessionStateKeyType, DeploymentSession } from "@type/models";
 import { cn } from "@utilities";
-import { debounce, isEqual } from "lodash";
+import { debounce, isEqual, sumBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
@@ -32,10 +32,11 @@ export const SessionsTable = () => {
 	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
-	const [totalSessions, setTotalSessions] = useState<number>();
-	const [deployment, setDeployment] = useState<Deployment>();
-	const [liveTailState, setLiveTailState] = useState(false);
-	const [displayLiveTail, setDisplayLiveTail] = useState(false);
+	const [tailState, seTailState] = useState({
+		live: false,
+		display: false,
+	});
+	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 
 	const frameClass = useMemo(
 		() => cn("pl-7 bg-gray-700 transition-all w-1/2", { "w-3/4 rounded-r-none": !sessionId }),
@@ -45,7 +46,6 @@ export const SessionsTable = () => {
 	const fetchDeployments = useCallback(async () => {
 		if (!projectId) return;
 		const { data, error } = await DeploymentsService.listByProjectId(projectId!);
-		if (!data?.length) return;
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -55,23 +55,18 @@ export const SessionsTable = () => {
 			});
 			return;
 		}
+		if (!data?.length) return;
 
-		const deploymentData = data.find((deployment) => deployment.deploymentId === deploymentId);
-		const sessionsTotal = deploymentData?.sessionStats?.reduce((totalCount, current) => {
-			const currentSessionState = reverseSessionStateConverter(current.state);
-			const countToAdd = !sessionStateType || currentSessionState === sessionStateType ? current.count : 0;
+		const deployment = data.find((deployment) => deployment.deploymentId === deploymentId);
 
-			return totalCount + countToAdd;
-		}, 0);
-		setTotalSessions(sessionsTotal);
+		if (isEqual(deployment?.sessionStats, sessionStats) || !deployment?.sessionStats) return;
 
-		if (isEqual(deploymentData, deployment)) return;
+		const deploymentState = deployment?.state === DeploymentStateVariant.active ? true : false;
+		seTailState({ live: deploymentState, display: deploymentState });
 
-		const deploymentState = deploymentData?.state === DeploymentStateVariant.active ? true : false;
-		setLiveTailState(deploymentState);
-		setDisplayLiveTail(deploymentState);
-		setDeployment(deploymentData);
-	}, [sessionStateType]);
+		setSessionStats(deployment?.sessionStats);
+		debouncedFetchSessions();
+	}, [sessionStats]);
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
@@ -112,19 +107,18 @@ export const SessionsTable = () => {
 	const debouncedFetchDeployments = debounce(fetchDeployments, 100);
 
 	useEffect(() => {
-		debouncedFetchSessions();
 		debouncedFetchDeployments();
+		debouncedFetchSessions();
 	}, [sessionStateType]);
 
 	useEffect(() => {
-		if (liveTailState) startInterval("sessionsFetchIntervalId", debouncedFetchSessions, fetchSessionsInterval);
-		if (!liveTailState) stopInterval("sessionsFetchIntervalId");
-
+		if (tailState.live) startInterval("sessionsFetchIntervalId", debouncedFetchDeployments, fetchSessionsInterval);
+		if (!tailState.live) stopInterval("sessionsFetchIntervalId");
 		return () => {
 			stopInterval("sessionsFetchIntervalId");
-			debouncedFetchSessions.cancel();
+			debouncedFetchDeployments.cancel();
 		};
-	}, [liveTailState]);
+	}, [tailState.live]);
 
 	const handleRemoveSession = async () => {
 		if (!selectedSessionId) return;
@@ -145,7 +139,7 @@ export const SessionsTable = () => {
 
 		closeModal(ModalName.deleteDeploymentSession);
 		closeSessionLog();
-		debouncedFetchSessions();
+		debouncedFetchDeployments();
 	};
 
 	const closeSessionLog = useCallback(() => {
@@ -166,10 +160,18 @@ export const SessionsTable = () => {
 
 	const handleScroll = useCallback(
 		({ scrollOffset }: ListOnScrollProps) => {
-			if (scrollOffset !== 0 && liveTailState) setLiveTailState(false);
+			if (scrollOffset !== 0 && tailState.live)
+				seTailState((prevState) => ({
+					...prevState,
+					live: !prevState.live,
+				}));
 		},
-		[liveTailState]
+		[tailState.live]
 	);
+
+	const totalSessions = useMemo(() => {
+		return sumBy(sessionStats, "count");
+	}, [sessionStats]);
 
 	return (
 		<div className="flex w-full h-full">
@@ -185,17 +187,17 @@ export const SessionsTable = () => {
 							{t("buttons.back")}
 						</IconButton>
 						<div className="text-base text-gray-300 font-mediumy">{t("totalSessions", { total: totalSessions })}</div>
-						{displayLiveTail ? (
+						{tailState.display ? (
 							<IconButton
 								className="w-5 h-5 p-0 ml-3 cursor-pointer"
-								onClick={() => setLiveTailState((prevState) => !prevState)}
-								title={liveTailState ? t("pauseLiveTail") : t("resumeLiveTail")}
+								onClick={() => seTailState((prevState) => ({ ...prevState, live: !prevState.live }))}
+								title={tailState.live ? t("pauseLiveTail") : t("resumeLiveTail")}
 							>
-								<RotateIcon fill={liveTailState ? "green" : "gray"} />
+								<RotateIcon fill={tailState.live ? "green" : "gray"} />
 							</IconButton>
 						) : null}
 					</div>
-					<SessionsTableFilter onChange={handleFilterSessions} />
+					<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 				</div>
 				{sessions.length ? (
 					<Table className="flex-1 mt-4 overflow-hidden border-transparent border-none">

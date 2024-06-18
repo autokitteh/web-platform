@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Button } from "@components/atoms";
 import { SessionStateType } from "@enums";
 import { SessionTableFilterProps } from "@interfaces/components";
@@ -6,7 +6,7 @@ import { SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
 
-export const SessionsTableFilter = ({ onChange }: SessionTableFilterProps) => {
+export const SessionsTableFilter = ({ sessionStats, onChange }: SessionTableFilterProps) => {
 	const [activeState, setActiveState] = useState<SessionStateKeyType>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
 
@@ -27,31 +27,52 @@ export const SessionsTableFilter = ({ onChange }: SessionTableFilterProps) => {
 		onChange(state);
 	};
 
+	const initialSessionCounts = {
+		[SessionStateType.created]: 0,
+		[SessionStateType.running]: 0,
+		[SessionStateType.error]: 0,
+		[SessionStateType.completed]: 0,
+		[SessionStateType.stopped]: 0,
+	};
+
+	const sessionCounts = useMemo(
+		() =>
+			sessionStats.reduce(
+				(acc, stat) => {
+					acc[stat.state!] = stat.count;
+					acc.total += stat.count;
+					return acc;
+				},
+				{ total: 0, ...initialSessionCounts }
+			),
+		[sessionStats]
+	);
+
 	return (
 		<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
 			<Button className={buttonClass()} onClick={() => handleButtonClick()}>
-				{t("all")}
+				{t("all")} ({sessionCounts.total})
 			</Button>
 			<Button
 				className={buttonClass(SessionStateType.running)}
 				onClick={() => handleButtonClick(SessionStateType.running)}
 			>
-				{t("running")}
+				{t("running")} ({sessionCounts.running})
 			</Button>
 			<Button
 				className={buttonClass(SessionStateType.stopped)}
 				onClick={() => handleButtonClick(SessionStateType.stopped)}
 			>
-				{t("stopped")}
+				{t("stopped")} ({sessionCounts.stopped})
 			</Button>
 			<Button className={buttonClass(SessionStateType.error)} onClick={() => handleButtonClick(SessionStateType.error)}>
-				{t("error")}
+				{t("error")} ({sessionCounts.error})
 			</Button>
 			<Button
 				className={buttonClass(SessionStateType.completed)}
 				onClick={() => handleButtonClick(SessionStateType.completed)}
 			>
-				{t("completed")}
+				{t("completed")} ({sessionCounts.completed})
 			</Button>
 		</div>
 	);
