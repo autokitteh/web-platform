@@ -1,32 +1,47 @@
-import { useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 
 type Callback = () => void;
 
-export const useInterval = (callback: Callback, delay: number): (() => void) => {
-	const callbackRef = useRef<Callback>();
-	const intervalRef = useRef<number | null>(null);
+type Intervals = {
+	[key: string]: number | null;
+};
 
-	useEffect(() => {
-		callbackRef.current = callback;
-	}, [callback]);
+export const useInterval = (): {
+	startInterval: (name: string, callback: Callback, delay: number) => void;
+	stopInterval: (name: string) => void;
+} => {
+	const callbackRefs = useRef<{ [key: string]: Callback }>({});
+	const [intervals, setIntervals] = useState<Intervals>({});
 
-	useEffect(() => {
-		function tick() {
-			if (callbackRef.current) {
-				callbackRef.current();
-			}
+	const startInterval = (name: string, callback: Callback, delay: number) => {
+		if (intervals[name]) {
+			clearInterval(intervals[name] as number);
 		}
 
-		intervalRef.current = window.setInterval(tick, delay);
-		return () => clearInterval(intervalRef.current as number);
-	}, [delay]);
+		callbackRefs.current[name] = callback;
 
-	const clear = () => {
-		if (!intervalRef.current) return;
+		const intervalId = window.setInterval(() => {
+			callbackRefs.current[name]?.();
+		}, delay);
 
-		clearInterval(intervalRef.current as number);
-		intervalRef.current = null;
+		setIntervals((prev) => ({
+			...prev,
+			[name]: intervalId,
+		}));
 	};
 
-	return clear;
+	const stopInterval = (name: string) => {
+		if (intervals[name]) {
+			clearInterval(intervals[name] as number);
+			setIntervals((prev) => ({
+				...prev,
+				[name]: null,
+			}));
+		}
+	};
+
+	return {
+		startInterval,
+		stopInterval,
+	};
 };

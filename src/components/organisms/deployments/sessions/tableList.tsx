@@ -1,16 +1,17 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 import { ModalName } from "@enums/components";
 import { SessionsTableListProps } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { useNavigate, useParams } from "react-router-dom";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List } from "react-window";
+import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
 
 export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: SessionsTableListProps) => {
 	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
+	const [scrollDisplayed, setScrollDisplayed] = useState(false);
 
 	const openSessionLog = useCallback((sessionId: string) => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/${sessionId}`);
@@ -24,10 +25,21 @@ export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: Sessi
 		() => ({
 			sessions,
 			selectedSessionId: sessionId,
+			scrollDisplayed,
 			openSessionLog,
 			showDeleteModal,
 		}),
-		[sessions, sessionId, openSessionLog, showDeleteModal]
+		[sessions, sessionId, scrollDisplayed, openSessionLog, showDeleteModal]
+	);
+
+	const itemsRendered = useCallback(
+		(event: ListOnItemsRenderedProps, height: number) => {
+			const totalSessionsHeight = sessions.length * 48;
+			const hasScroll = height < totalSessionsHeight;
+			onItemsRendered(event);
+			setScrollDisplayed(hasScroll);
+		},
+		[sessions]
 	);
 
 	return (
@@ -35,15 +47,14 @@ export const SessionsTableList = ({ sessions, onItemsRendered, onScroll }: Sessi
 			<AutoSizer>
 				{({ height, width }) => (
 					<List
-						className="scrollbar mr-1.5"
+						className="scrollbar"
 						height={height}
 						itemCount={sessions.length}
 						itemData={itemData}
 						itemKey={(idx) => sessions?.[idx]?.sessionId || 0}
 						itemSize={48}
-						onItemsRendered={onItemsRendered}
+						onItemsRendered={(e) => itemsRendered(e, height)}
 						onScroll={onScroll}
-						style={{ overflowY: "scroll" }}
 						width={width}
 					>
 						{SessionsTableRow}

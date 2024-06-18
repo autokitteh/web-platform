@@ -6,6 +6,7 @@ export interface SessionTableFilterProps {
 }
 
 export interface SessionsTableRowProps {
+	scrollDisplayed: boolean;
 	sessions: Session[];
 	selectedSessionId?: string;
 	openSessionLog: (sessionId: string) => void;

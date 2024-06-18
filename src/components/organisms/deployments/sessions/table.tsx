@@ -24,6 +24,7 @@ export const SessionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
+	const { startInterval, stopInterval } = useInterval();
 	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
@@ -65,11 +66,19 @@ export const SessionsTable = () => {
 		setSessionNextPageToken(data.nextPageToken);
 	};
 
-	const clearSessionsFetchIntervalId = useInterval(fetchSessions, fetchSessionsInterval);
+	useEffect(() => {
+		fetchSessions();
+
+		startInterval("sessionsFetchIntervalId", fetchSessions, fetchSessionsInterval);
+		return () => stopInterval("sessionsFetchIntervalId");
+	}, [deploymentId, sessionStateType]);
 
 	const loadMoreSessions = useCallback(async () => {
 		if (!deploymentId || !sessionNextPageToken) return;
-		if (!liveTailState) clearSessionsFetchIntervalId();
+		setLiveTailState((prevState) => {
+			if (!prevState) stopInterval("sessionsFetchIntervalId");
+			return prevState;
+		});
 
 		const { data, error } = await SessionsService.listByDeploymentId(
 			deploymentId,
