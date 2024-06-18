@@ -34,7 +34,7 @@ export const SessionsTable = () => {
 	const [liveTailState, setLiveTailState] = useState(true);
 
 	const frameClass = useMemo(
-		() => cn("pl-7 bg-gray-700 transition-all", { "w-3/4 rounded-r-none": !sessionId, "w-1/2": sessionId }),
+		() => cn("pl-7 bg-gray-700 transition-all w-1/2", { "w-3/4 rounded-r-none": !sessionId }),
 		[sessionId]
 	);
 
