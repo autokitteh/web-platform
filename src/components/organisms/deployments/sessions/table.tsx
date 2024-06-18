@@ -5,11 +5,11 @@ import { IconButton, Frame, TBody, THead, Table, Th, Tr } from "@components/atom
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal } from "@components/organisms/deployments/sessions";
 import { SessionsTableList } from "@components/organisms/deployments/sessions";
-import { fetchSessionsInterval } from "@constants";
+import { fetchSessionsInterval, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { useInterval } from "@hooks";
 import { reverseSessionStateConverter } from "@models/utils";
-import { SessionsService } from "@services";
+import { LoggerService, SessionsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
@@ -52,13 +52,17 @@ export const SessionsTable = () => {
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: (error as Error).message,
+					message: tErrors("sessionsFetchError"),
 					type: "error",
 					title: tErrors("error"),
 				});
+				LoggerService.error(
+					namespaces.sessionsService,
+					tErrors("sessionsFetchErrorExtended", { error: (error as Error).message })
+				);
 				return;
 			}
-			if (!data?.sessions) return;
+			if (!data?.sessions.length) return;
 
 			setSessions((prevSessions) => {
 				if (!nextPageToken) return data.sessions;
@@ -85,10 +89,11 @@ export const SessionsTable = () => {
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: tErrors("failedRemoveSession"),
 				type: "error",
 				title: tErrors("error"),
 			});
+			LoggerService.error(namespaces.sessionsService, tErrors("failedRemoveSessionExtended", { sessionId }));
 			return;
 		}
 
