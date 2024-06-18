@@ -13,6 +13,7 @@ import { LoggerService, SessionsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
+import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
@@ -38,15 +39,12 @@ export const SessionsTable = () => {
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
-			if (!deploymentId) return;
-
 			const { data, error } = await SessionsService.listByDeploymentId(
-				deploymentId,
+				deploymentId!,
 				{
 					stateType: sessionStateType,
 				},
-				nextPageToken,
-				nextPageToken ? undefined : sessions.length
+				nextPageToken
 			);
 
 			if (error) {
@@ -62,7 +60,8 @@ export const SessionsTable = () => {
 				);
 				return;
 			}
-			if (!data?.sessions.length) return;
+
+			if (!data?.sessions) return;
 
 			setSessions((prevSessions) => {
 				if (!nextPageToken) return data.sessions;
@@ -70,18 +69,25 @@ export const SessionsTable = () => {
 			});
 			setSessionNextPageToken(data.nextPageToken);
 		},
-		[deploymentId, sessionStateType, sessions.length]
+		[deploymentId, sessionStateType]
 	);
 
+	const debouncedFetchSessions = debounce(fetchSessions, 200);
+
 	useEffect(() => {
-		fetchSessions();
+		if (liveTailState) {
+			debouncedFetchSessions();
+			startInterval("sessionsFetchIntervalId", debouncedFetchSessions, fetchSessionsInterval);
+		}
+		if (!liveTailState) {
+			stopInterval("sessionsFetchIntervalId");
+		}
 
-		if (liveTailState || sessionStateType)
-			startInterval("sessionsFetchIntervalId", fetchSessions, fetchSessionsInterval);
-		if (!liveTailState) stopInterval("sessionsFetchIntervalId");
-
-		return () => stopInterval("sessionsFetchIntervalId");
-	}, [sessionStateType, liveTailState, deploymentId]);
+		return () => {
+			stopInterval("sessionsFetchIntervalId");
+			debouncedFetchSessions.cancel();
+		};
+	}, [liveTailState, sessionStateType]);
 
 	const handleRemoveSession = async () => {
 		if (!sessionId) return;
@@ -98,7 +104,7 @@ export const SessionsTable = () => {
 		}
 
 		closeModal(ModalName.deleteDeploymentSession);
-		fetchSessions();
+		debouncedFetchSessions();
 	};
 
 	const closeSessionLog = useCallback(() => {
@@ -113,12 +119,12 @@ export const SessionsTable = () => {
 
 	const handleItemsRendered = ({ visibleStopIndex }: ListOnItemsRenderedProps) => {
 		if (visibleStopIndex >= sessions?.length - 1 && sessionNextPageToken) {
-			fetchSessions(sessionNextPageToken);
+			debouncedFetchSessions(sessionNextPageToken);
 		}
 	};
 
 	const handleScroll = useCallback(({ scrollOffset }: ListOnScrollProps) => {
-		if (scrollOffset !== 0) setLiveTailState(false);
+		if (scrollOffset !== 0 && liveTailState) setLiveTailState(false);
 	}, []);
 
 	return (
