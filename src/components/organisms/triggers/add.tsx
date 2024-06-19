@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { TriggerDefaultForm, TriggerSchedulerForm } from "@components/organisms/triggers";
+import { DefaultTriggerForm, TriggerSchedulerForm } from "@components/organisms/triggers";
 import { selectTriggerType } from "@constants/lists/connections";
 import { TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
@@ -29,10 +29,10 @@ export const AddTrigger = () => {
 					value={selectedType}
 				/>
 				{selectedType?.value === TriggerFormType.default ? (
-					<TriggerDefaultForm formId="createNewDefaultForm" setIsLoading={setIsLoading} />
+					<DefaultTriggerForm formId="createNewDefaultForm" setIsSaving={setIsLoading} />
 				) : null}
 				{selectedType?.value === TriggerFormType.scheduler ? (
-					<TriggerSchedulerForm formId="createNewSchedulerForm" setIsLoading={setIsLoading} />
+					<TriggerSchedulerForm formId="createNewSchedulerForm" setIsSaving={setIsLoading} />
 				) : null}
 			</div>
 		</div>

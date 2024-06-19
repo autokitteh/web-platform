@@ -1,8 +1,9 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Select, ErrorMessage, Input } from "@components/atoms";
+import { namespaces } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, TriggersService } from "@services";
+import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { triggerSchedulerSchema } from "@validations";
 import { useForm, Controller } from "react-hook-form";
@@ -11,10 +12,10 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export const TriggerSchedulerForm = ({
 	formId,
-	setIsLoading,
+	setIsSaving,
 }: {
 	formId: string;
-	setIsLoading: (event: boolean) => void;
+	setIsSaving: (event: boolean) => void;
 }) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
@@ -23,15 +24,22 @@ export const TriggerSchedulerForm = ({
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
 
-	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
+	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
 				if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
 				if (!connections?.length) return;
+
+				const formattedConnections = connections.map((item) => ({
+					value: item.connectionId,
+					label: item.name,
+				}));
+				setConnections(formattedConnections);
 
 				const formattedResources = Object.keys(resources).map((name) => ({
 					value: name,
@@ -41,12 +49,16 @@ export const TriggerSchedulerForm = ({
 			} catch (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: (error as Error).message,
+					message: tErrors("connectionsFetchError"),
 					type: "error",
 					title: tErrors("error"),
 				});
+				LoggerService.error(
+					namespaces.triggerService,
+					tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+				);
 			} finally {
-				setIsLoadingData(false);
+				setIsLoading(false);
 			}
 		};
 
@@ -65,33 +77,38 @@ export const TriggerSchedulerForm = ({
 		defaultValues: {
 			name: "",
 			cron: "",
+			connection: { value: "", label: "" },
 			filePath: { value: "", label: "" },
 			entryFunction: "",
 		},
 	});
 
 	const onSubmit = async () => {
-		const { name, filePath, entryFunction, cron } = getValues();
+		const { name, connection, cron, filePath, entryFunction } = getValues();
 
-		setIsLoading(true);
+		setIsSaving(true);
 		const { error } = await TriggersService.create(projectId!, {
 			triggerId: undefined,
 			name,
-			connectionId: "",
+			connectionId: connection.value,
 			eventType: "",
 			path: filePath.label,
 			entryFunction,
 			data: { ["schedule"]: { string: { v: cron } } },
 		});
-		setIsLoading(false);
+		setIsSaving(false);
 
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: tErrors("triggerNotCreated") + (error as Error).message,
+				message: tErrors("triggerNotCreated"),
 				type: "error",
-				title: t("error"),
+				title: tErrors("error"),
 			});
+			LoggerService.error(
+				namespaces.triggerService,
+				tErrors("triggerNotCreatedExtended", { projectId, error: (error as Error).message })
+			);
 			return;
 		}
 		navigate(-1);
@@ -99,7 +116,7 @@ export const TriggerSchedulerForm = ({
 
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
-	return isLoadingData ? (
+	return isLoading ? (
 		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{t("loading")}...</div>
 	) : (
 		<form className="flex flex-col w-full gap-6" id={formId} onSubmit={handleSubmit(onSubmit)}>
@@ -113,6 +130,25 @@ export const TriggerSchedulerForm = ({
 					placeholder={t("placeholders.name")}
 				/>
 				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
+			</div>
+			<div className="relative">
+				<Controller
+					control={control}
+					name="connection"
+					render={({ field }) => (
+						<Select
+							{...field}
+							aria-label={t("placeholders.selectConnection")}
+							isError={!!errors.connection}
+							onChange={(selected) => field.onChange(selected)}
+							options={connections}
+							placeholder={t("placeholders.selectConnection")}
+							ref={null}
+							value={field.value}
+						/>
+					)}
+				/>
+				<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				<Input

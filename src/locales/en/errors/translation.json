@@ -2,11 +2,13 @@
 	"error": "Error",
 	"errorOccured": "An error occurred",
 	"nameRequired": "Name is required",
+	"emptyKeyExist": "Cannot have empty key",
 	"projectIdNotFound": "Project ID not found",
 	"projectIdNotFoundExtended": "Project ID {{triggerId}} not found",
 	"triggerNotCreated": "There was an issue creating the trigger",
 	"triggerRemoveFailed": "Trigger remove failed",
 	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}",
+	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
 	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}",
 	"variableNotCreated": "There was an issue creating the variable",
 	"sessionLogRecordMultipleProps": "More than one session log record type found: {{props}}",
@@ -16,5 +18,7 @@
 	"connectionRemoveFailed": "Connection remove failed",
 	"errorCreatingNewConnection": "Error while creating a new connection",
 	"errorCreatingNewConnectionExtended": "Error while creating a new connection, error: {{error}}",
-	"noDataReturnedFromServer": "No data returned from the server"
+	"noDataReturnedFromServer": "No data returned from the server",
+	"connectionsFetchError": "Couldn't fetch the connections details",
+	"connectionsFetchErrorExtended": "Failed to fetch the connections for the project {{projectId}}. Error: {{error}}"
 }

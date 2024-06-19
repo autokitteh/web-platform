@@ -1,10 +1,11 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 import { Select, ErrorMessage, Input, Button, IconButton } from "@components/atoms";
+import { namespaces } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, TriggersService } from "@services";
+import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { TriggerData } from "@type/models";
 import { triggerDefaultSchema } from "@validations";
@@ -13,12 +14,12 @@ import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const TriggerDefaultForm = ({
+export const DefaultTriggerForm = ({
 	formId,
-	setIsLoading,
+	setIsSaving,
 }: {
 	formId: string;
-	setIsLoading: (event: boolean) => void;
+	setIsSaving: (event: boolean) => void;
 }) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
@@ -27,16 +28,16 @@ export const TriggerDefaultForm = ({
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
 
-	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
 	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-				if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
+				if (connectionsError) throw connectionsError;
 				if (!connections?.length) return;
 
 				const formattedConnections = connections.map((item) => ({
@@ -53,12 +54,16 @@ export const TriggerDefaultForm = ({
 			} catch (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: (error as Error).message,
+					message: tErrors("connectionsFetchError"),
 					type: "error",
 					title: tErrors("error"),
 				});
+				LoggerService.error(
+					namespaces.triggerService,
+					tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+				);
 			} finally {
-				setIsLoadingData(false);
+				setIsLoading(false);
 			}
 		};
 
@@ -87,7 +92,7 @@ export const TriggerDefaultForm = ({
 	const onSubmit = async () => {
 		const { name, connection, filePath, entryFunction, eventType, filter } = getValues();
 
-		setIsLoading(true);
+		setIsSaving(true);
 		const { error } = await TriggersService.create(projectId!, {
 			triggerId: undefined,
 			name,
@@ -98,15 +103,19 @@ export const TriggerDefaultForm = ({
 			filter,
 			data: triggerData,
 		});
-		setIsLoading(false);
+		setIsSaving(false);
 
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: tErrors("triggerNotCreated") + (error as Error).message,
+				message: tErrors("triggerNotCreated"),
 				type: "error",
-				title: t("error"),
+				title: tErrors("error"),
 			});
+			LoggerService.error(
+				namespaces.triggerService,
+				tErrors("triggerNotCreatedExtended", { projectId, error: (error as Error).message })
+			);
 			return;
 		}
 		navigate(-1);
@@ -139,9 +148,9 @@ export const TriggerDefaultForm = ({
 		if (has(triggerData, "")) {
 			addToast({
 				id: Date.now().toString(),
-				message: t("errors.emptyKeyExist"),
+				message: tErrors("emptyKeyExist"),
 				type: "error",
-				title: t("error"),
+				title: tErrors("error"),
 			});
 			return;
 		}
@@ -157,7 +166,7 @@ export const TriggerDefaultForm = ({
 			return updatedData;
 		});
 	};
-	return isLoadingData ? (
+	return isLoading ? (
 		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{t("loading")}...</div>
 	) : (
 		<form className="flex flex-col w-full gap-6" id={formId} onSubmit={handleSubmit(onSubmit)}>
