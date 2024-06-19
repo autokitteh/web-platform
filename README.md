@@ -1,8 +1,8 @@
-# 🐾 autokitteh
+# 🐾 AutoKitteh
 
 ## Overview 🌟
 
-[autokitteh](https://www.autokitteh.com) is an open-source, developer-first framework aimed at simplifying the automation of distributed systems. It supports various deployment models including on-prem, cloud, and hybrid systems.
+[AutoKitteh](https://www.autokitteh.com) is an open-source, developer-first framework aimed at simplifying the automation of distributed systems. It supports various deployment models including on-prem, cloud, and hybrid systems.
 
 ## Key Features 🔑
 
@@ -23,7 +23,7 @@ For inquiries, contact: meow@autokitteh.com
 
 ## How to Contribute 🤝
 
-To contribute to autokitteh, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+To contribute to AutoKitteh, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 We appreciate contributions from everyone!
 
 ## How to Install and Run 🛠️
