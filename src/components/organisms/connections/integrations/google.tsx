@@ -13,7 +13,15 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const GoogleIntegrationForm = ({ connectionName }: { connectionName?: string }) => {
+export const GoogleIntegrationForm = ({
+	connectionName,
+	isConnectionNameValid,
+	triggerParentFormSubmit,
+}: {
+	connectionName?: string;
+	isConnectionNameValid: boolean;
+	triggerParentFormSubmit: () => void;
+}) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GoogleConnectionType>();
@@ -35,6 +43,11 @@ export const GoogleIntegrationForm = ({ connectionName }: { connectionName?: str
 	});
 
 	const onSubmit = async () => {
+		if (!isConnectionNameValid) {
+			triggerParentFormSubmit();
+			return;
+		}
+
 		const { jsonKey } = getValues();
 
 		setIsLoading(true);
@@ -71,7 +84,15 @@ export const GoogleIntegrationForm = ({ connectionName }: { connectionName?: str
 		}
 	};
 
-	const handleGoogleOAuth = () => window.open(`${baseUrl}/oauth/start/google`, "_blank");
+	const handleGoogleOAuth = async () => {
+		if (!isConnectionNameValid) {
+			triggerParentFormSubmit();
+			return;
+		}
+		const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
+
+		window.open(`${baseUrl}/oauth/start/google?cid=${connectionId}`, "_blank");
+	};
 
 	const renderOAuthButton = () => (
 		<>

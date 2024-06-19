@@ -15,7 +15,15 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const GithubIntegrationForm = ({ connectionName }: { connectionName?: string }) => {
+export const GithubIntegrationForm = ({
+	connectionName,
+	isConnectionNameValid,
+	triggerParentFormSubmit,
+}: {
+	connectionName?: string;
+	isConnectionNameValid?: boolean;
+	triggerParentFormSubmit: () => void;
+}) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
@@ -43,6 +51,10 @@ export const GithubIntegrationForm = ({ connectionName }: { connectionName?: str
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
 	const onSubmit = async () => {
+		if (!isConnectionNameValid) {
+			triggerParentFormSubmit();
+			return;
+		}
 		const { pat, webhookSercet: secret } = getValues();
 
 		setIsLoading(true);
@@ -97,7 +109,30 @@ export const GithubIntegrationForm = ({ connectionName }: { connectionName?: str
 		}
 	};
 
-	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
+	const handleGithubOAuth = async () => {
+		try {
+			if (!isConnectionNameValid) {
+				triggerParentFormSubmit();
+				return;
+			}
+			const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
+
+			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}`, "_blank");
+		} catch (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("errorCreatingNewConnection"),
+				title: "Error",
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	const renderPATFields = () => (
 		<>
