@@ -7,11 +7,11 @@ const selectItemSchema = z.object({
 	disabled: z.boolean().optional(),
 });
 
-let triggerDefaultSchema: ZodObject<Record<string, ZodTypeAny>>;
-let triggerSchedulerSchema: ZodObject<Record<string, ZodTypeAny>>;
+let defaultTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
+let schedulerTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
 
 i18n.on("initialized", () => {
-	triggerDefaultSchema = z.object({
+	defaultTriggerSchema = z.object({
 		name: z.string().min(1, i18n.t("triggerNameIsRequired", { ns: "validations" })),
 		connection: selectItemSchema.refine((value) => value.label, {
 			message: i18n.t("connectionIsRequired", { ns: "validations" }),
@@ -24,7 +24,7 @@ i18n.on("initialized", () => {
 		filter: z.string(),
 	});
 
-	triggerSchedulerSchema = z.object({
+	schedulerTriggerSchema = z.object({
 		name: z.string().min(1, i18n.t("triggerNameIsRequired", { ns: "validations" })),
 		cron: z
 			.string()
@@ -49,4 +49,4 @@ i18n.on("initialized", () => {
 	});
 });
 
-export { triggerDefaultSchema, triggerSchedulerSchema };
+export { defaultTriggerSchema, schedulerTriggerSchema };

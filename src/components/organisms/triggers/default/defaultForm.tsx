@@ -8,7 +8,7 @@ import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { TriggerData } from "@type/models";
-import { triggerDefaultSchema } from "@validations";
+import { defaultTriggerSchema } from "@validations";
 import { debounce, has } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -78,7 +78,7 @@ export const DefaultTriggerForm = ({
 		control,
 		getValues,
 	} = useForm({
-		resolver: zodResolver(triggerDefaultSchema),
+		resolver: zodResolver(defaultTriggerSchema),
 		defaultValues: {
 			name: "",
 			connection: { value: "", label: "" },

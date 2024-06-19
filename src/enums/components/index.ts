@@ -5,4 +5,4 @@ export { OutputTabsVariants } from "@enums/components/tabs.enum";
 export { SidebarMenu, SidebarHrefMenu } from "@enums/components/menu.enum";
 export { ReadOnlyFile } from "@enums/components/readOnlyFile.enum";
 export { ConnectionStatus, Integrations } from "@enums/components/connection.enum";
-export { TriggerFormType } from "@enums/components/trigger.enum";
+export { TriggerFormType, TriggerFormIds } from "@enums/components/trigger.enum";

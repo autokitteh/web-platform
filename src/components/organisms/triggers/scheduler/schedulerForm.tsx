@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
-import { triggerSchedulerSchema } from "@validations";
+import { schedulerTriggerSchema } from "@validations";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -32,7 +32,7 @@ export const TriggerSchedulerForm = ({
 		const fetchData = async () => {
 			try {
 				const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-				if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
+				if (connectionsError) throw connectionsError;
 				if (!connections?.length) return;
 
 				const formattedConnections = connections.map((item) => ({
@@ -73,7 +73,7 @@ export const TriggerSchedulerForm = ({
 		control,
 		getValues,
 	} = useForm({
-		resolver: zodResolver(triggerSchedulerSchema),
+		resolver: zodResolver(schedulerTriggerSchema),
 		defaultValues: {
 			name: "",
 			cron: "",

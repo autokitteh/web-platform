@@ -1,12 +1,13 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Select, ErrorMessage, Input } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
+import { namespaces } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, TriggersService } from "@services";
+import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { Trigger } from "@type/models";
-import { triggerSchedulerSchema } from "@validations";
+import { schedulerTriggerSchema } from "@validations";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,27 +18,17 @@ export const SchedulerEditTrigger = () => {
 	const { resources } = useProjectStore();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
+	const addToast = useToastStore((state) => state.addToast);
+
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
-	const addToast = useToastStore((state) => state.addToast);
-
-	useLayoutEffect(() => {
-		const fetchTrigger = async () => {
-			const { data } = await TriggersService.get(triggerId!);
-			if (!data) return;
-			setTrigger(data);
-		};
-
-		fetchTrigger();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const fetchData = async () => {
 		try {
 			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-			if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
+			if (connectionsError) throw connectionsError;
 			if (!connections?.length) return;
 
 			const formattedResources = Object.keys(resources).map((name) => ({
@@ -48,16 +39,36 @@ export const SchedulerEditTrigger = () => {
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: tErrors("connectionsFetchError"),
 				type: "error",
 				title: tErrors("error"),
 			});
+			LoggerService.error(
+				namespaces.triggerService,
+				tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+			);
 		} finally {
 			setIsLoadingData(false);
 		}
 	};
 
-	useLayoutEffect(() => {
+	useEffect(() => {
+		const fetchTrigger = async () => {
+			const { data } = await TriggersService.get(triggerId!);
+			if (!data) {
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("triggerNotFound"),
+					type: "error",
+					title: tErrors("error"),
+				});
+				LoggerService.error(namespaces.triggerService, tErrors("triggerNotFoundExtended", { triggerId }));
+				return;
+			}
+			setTrigger(data);
+		};
+
+		fetchTrigger();
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -70,7 +81,7 @@ export const SchedulerEditTrigger = () => {
 		getValues,
 		reset,
 	} = useForm({
-		resolver: zodResolver(triggerSchedulerSchema),
+		resolver: zodResolver(schedulerTriggerSchema),
 		defaultValues: {
 			name: "",
 			cron: "",
@@ -109,10 +120,14 @@ export const SchedulerEditTrigger = () => {
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: tErrors("triggerNotFound"),
 				type: "error",
 				title: tErrors("error"),
 			});
+			LoggerService.error(
+				namespaces.triggerService,
+				tErrors("triggerNotUpdatedExtended", { triggerId, error: (error as Error).message })
+			);
 			return;
 		}
 

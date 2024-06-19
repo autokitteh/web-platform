@@ -1,14 +1,15 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 import { Select, ErrorMessage, Input, Button, IconButton } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
+import { namespaces } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, TriggersService } from "@services";
+import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
-import { triggerDefaultSchema } from "@validations";
+import { defaultTriggerSchema } from "@validations";
 import { debounce, has } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -22,28 +23,17 @@ export const DefaultEditTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const addToast = useToastStore((state) => state.addToast);
+
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
 	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
-	const addToast = useToastStore((state) => state.addToast);
-
-	useLayoutEffect(() => {
-		const fetchTrigger = async () => {
-			const { data } = await TriggersService.get(triggerId!);
-			if (!data) return;
-			setTrigger(data);
-			setTriggerData(data.data || {});
-		};
-
-		fetchTrigger();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const fetchData = async () => {
 		try {
 			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-			if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
+			if (connectionsError) throw connectionsError;
 			if (!connections?.length) return;
 
 			const formattedConnections = connections.map((item) => ({
@@ -60,16 +50,37 @@ export const DefaultEditTrigger = () => {
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: tErrors("connectionsFetchError"),
 				type: "error",
 				title: tErrors("error"),
 			});
+			LoggerService.error(
+				namespaces.triggerService,
+				tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+			);
 		} finally {
 			setIsLoadingData(false);
 		}
 	};
 
-	useLayoutEffect(() => {
+	useEffect(() => {
+		const fetchTrigger = async () => {
+			const { data } = await TriggersService.get(triggerId!);
+			if (!data) {
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("triggerNotFound"),
+					type: "error",
+					title: tErrors("error"),
+				});
+				LoggerService.error(namespaces.triggerService, tErrors("triggerNotFoundExtended", { triggerId }));
+				return;
+			}
+			setTrigger(data);
+			setTriggerData(data.data || {});
+		};
+
+		fetchTrigger();
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -82,7 +93,7 @@ export const DefaultEditTrigger = () => {
 		getValues,
 		reset,
 	} = useForm({
-		resolver: zodResolver(triggerDefaultSchema),
+		resolver: zodResolver(defaultTriggerSchema),
 		defaultValues: {
 			name: "",
 			connection: { value: "", label: "" },
@@ -128,10 +139,14 @@ export const DefaultEditTrigger = () => {
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: tErrors("triggerNotFound"),
 				type: "error",
 				title: tErrors("error"),
 			});
+			LoggerService.error(
+				namespaces.triggerService,
+				tErrors("triggerNotUpdatedExtended", { triggerId, error: (error as Error).message })
+			);
 			return;
 		}
 
