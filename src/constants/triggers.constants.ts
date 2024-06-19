@@ -1,8 +1,8 @@
-import { selectTriggerType } from "@constants/lists/connections";
+import { triggerTypes } from "@constants/lists/connections";
 import i18n from "i18next";
 
 export const schedulerTriggerConnectionName = "cron";
-export const defaultTriggerType = selectTriggerType[0];
+export const defaultTriggerType = triggerTypes[0];
 
 export let infoCronExpressionsLinks: { url: string; text: string }[] = [];
 

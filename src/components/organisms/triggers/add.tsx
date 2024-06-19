@@ -3,7 +3,7 @@ import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { DefaultTriggerForm, TriggerSchedulerForm } from "@components/organisms/triggers";
 import { defaultTriggerType } from "@constants";
-import { selectTriggerType } from "@constants/lists/connections";
+import { triggerTypes } from "@constants/lists/connections";
 import { TriggerFormType, TriggerFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { useTranslation } from "react-i18next";
@@ -36,7 +36,7 @@ export const AddTrigger = () => {
 				<Select
 					aria-label={t("placeholders.selectTriggerType")}
 					onChange={(option) => setSelectedType(option as SelectOption)}
-					options={selectTriggerType}
+					options={triggerTypes}
 					placeholder={t("placeholders.selectTriggerType")}
 					value={selectedType}
 				/>

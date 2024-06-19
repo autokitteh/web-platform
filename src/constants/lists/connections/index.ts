@@ -2,7 +2,7 @@ export {
 	integrationTypes,
 	githubIntegrationAuthMethods,
 	selectIntegrationGoogle,
-	selectTriggerType,
+	triggerTypes,
 } from "@constants/lists/connections/options.constants";
 export {
 	infoGithubLinks,

@@ -7,7 +7,7 @@ export const integrationTypes: SelectOption[] = [
 	{ value: "google", label: "Google (All APIs)", disabled: false },
 ];
 
-export const selectTriggerType: SelectOption[] = [
+export const triggerTypes: SelectOption[] = [
 	{ value: TriggerFormType.default, label: "Default", disabled: false },
 	{ value: TriggerFormType.scheduler, label: "Scheduler", disabled: false },
 ];

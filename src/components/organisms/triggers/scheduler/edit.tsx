@@ -97,16 +97,12 @@ export const SchedulerEditTrigger = () => {
 	});
 
 	useEffect(() => {
-		const loadForm = () => {
-			reset({
-				name: trigger?.name,
-				filePath: { value: trigger?.path, label: trigger?.path },
-				entryFunction: trigger?.entryFunction,
-				cron: trigger?.data?.schedule?.string?.v,
-			});
-		};
-
-		loadForm();
+		reset({
+			name: trigger?.name,
+			filePath: { value: trigger?.path, label: trigger?.path },
+			entryFunction: trigger?.entryFunction,
+			cron: trigger?.data?.schedule?.string?.v,
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger]);
 

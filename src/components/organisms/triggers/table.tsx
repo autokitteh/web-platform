@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { PlusCircle } from "@assets/image";
-import { EditIcon, TrashIcon } from "@assets/image/icons";
+import { EditIcon, TrashIcon, ClockIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
@@ -138,19 +138,21 @@ export const TriggersTable = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group">{t("table.columns.cronSchedule")}</Th>
 							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 					<TBody>
 						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
-								<Td className="font-semibold">{trigger.name}</Td>
+								<Td className="font-semibold">
+									<div className="flex gap-3">
+										{trigger.data?.schedule?.string?.v ? <ClockIcon className="w-4 fill-white" /> : null} {trigger.name}
+									</div>
+								</Td>
 								<Td className="font-semibold">{trigger.connectionName}</Td>
 								<Td>
 									{trigger.path}:{trigger.entryFunction}
 								</Td>
-								<Td>{trigger.data?.schedule?.string?.v}</Td>
 								<Td className="max-w-20">
 									<div className="flex space-x-1">
 										<IconButton
