@@ -65,7 +65,7 @@ export const TriggersTable = () => {
 	const sortedTriggers = useMemo(() => {
 		return orderBy(triggers, [sort.column], [sort.direction]);
 	}, [triggers, sort.column, sort.direction]);
-	console.log(sortedTriggers);
+
 	const handleDeleteTrigger = async () => {
 		if (!triggerId) return;
 
