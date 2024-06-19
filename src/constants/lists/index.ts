@@ -1,7 +1,7 @@
 export { menuItems } from "@constants/lists/menuItems.constants";
 export {
-	selectIntegrations,
-	selectIntegrationGithub,
+	integrationTypes,
+	githubIntegrationAuthMethods,
 	selectIntegrationGoogle,
 	infoGithubLinks,
 	infoGoogleUserLinks,

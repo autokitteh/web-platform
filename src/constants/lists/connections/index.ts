@@ -1,6 +1,6 @@
 export {
-	selectIntegrations,
-	selectIntegrationGithub,
+	integrationTypes,
+	githubIntegrationAuthMethods,
 	selectIntegrationGoogle,
 	selectTriggerType,
 } from "@constants/lists/connections/options.constants";

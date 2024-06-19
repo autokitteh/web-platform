@@ -92,8 +92,8 @@ export const TriggersTable = () => {
 		[triggerId]
 	);
 
-	const handleNavigate = (triggerId: string, hasSchedule: boolean) => {
-		const path = hasSchedule ? `/edit-scheduler` : `/edit`;
+	const handleNavigate = (triggerId: string, isScheduler: boolean) => {
+		const path = isScheduler ? `/edit-scheduler` : `/edit`;
 		navigate(`${triggerId}${path}`);
 	};
 

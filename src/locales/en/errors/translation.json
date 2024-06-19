@@ -2,7 +2,7 @@
 	"error": "Error",
 	"errorOccured": "An error occurred",
 	"nameRequired": "Name is required",
-	"emptyKeyExist": "Cannot have empty key",
+	"emptyKeyExist": "Empty key is not allowed",
 	"projectIdNotFound": "Project ID not found",
 	"projectIdNotFoundExtended": "Project ID {{triggerId}} not found",
 	"triggerNotCreated": "There was an issue creating the trigger",
@@ -17,10 +17,10 @@
 	"failedRemoveFile": "Failed to remove file: {{fileName}}",
 	"sessionLogRecordTypeNotFound": "Session log record type not found: {{props}}",
 	"sessionLogMissingOnErrorType": "Session History - No error",
-	"connectionRemoveFailed": "Connection remove failed",
 	"errorCreatingNewConnection": "Error while creating a new connection",
 	"errorCreatingNewConnectionExtended": "Error while creating a new connection, error: {{error}}",
 	"noDataReturnedFromServer": "No data returned from the server",
+	"connectionRemoveFailed": "Connection remove failed",
 	"connectionsFetchError": "Couldn't fetch the connections details",
 	"connectionsFetchErrorExtended": "Failed to fetch the connections for the project {{projectId}}. Error: {{error}}"
 }

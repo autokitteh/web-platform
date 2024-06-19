@@ -71,6 +71,7 @@
 			}
 		},
 		"form": {
+			"information": "Information",
 			"addNewTrigger": "Add new trigger",
 			"modifyTrigger": "Modify trigger",
 			"titleData": "Data",
@@ -84,7 +85,7 @@
 				"selectFile": "Select file",
 				"functionName": "Function name",
 				"name": "Name",
-				"cron": "Cron Expression",
+				"cron": "Cron expression",
 				"eventType": "Event type",
 				"filter": "Filter",
 				"key": "Key",
@@ -92,6 +93,10 @@
 			},
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
+			},
+			"info": {
+				"aboutCron": "About cronjob expressions",
+				"schedules": "Predefined schedules or intervals"
 			}
 		}
 	},

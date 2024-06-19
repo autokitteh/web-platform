@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Select, ErrorMessage, Input } from "@components/atoms";
+import { ExternalLinkIcon } from "@assets/image/icons";
+import { Select, ErrorMessage, Input, Loader, Link } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { namespaces } from "@constants";
+import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } from "@constants";
 import { TriggerFormIds } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
@@ -17,30 +18,30 @@ export const SchedulerEditTrigger = () => {
 	const { triggerId, projectId } = useParams();
 	const navigate = useNavigate();
 	const { resources } = useProjectStore();
-	const { t: tErrors } = useTranslation("errors");
+	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const addToast = useToastStore((state) => state.addToast);
 
-	const [isLoading, setIsLoading] = useState(false);
+	const [isSaving, setIsSaving] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [cronConnectionId, setCronConnectionId] = useState<string>();
 	const [trigger, setTrigger] = useState<Trigger>();
-	const [filesName, setFilesName] = useState<SelectOption[]>([]);
+	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 
 	const fetchData = async () => {
 		try {
 			const { data: connections, error: connectionsError } = await ConnectionService.list();
 			if (connectionsError) throw connectionsError;
-			if (!connections?.length) return;
 
-			const connectionId = connections.find((item) => item.name === "cron")?.connectionId;
+			const connectionId = connections?.find((item) => item.name === schedulerTriggerConnectionName)?.connectionId;
+			if (!connectionId) throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
 			setCronConnectionId(connectionId);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				value: name,
 				label: name,
 			}));
-			setFilesName(formattedResources);
+			setFilesNameList(formattedResources);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -96,7 +97,7 @@ export const SchedulerEditTrigger = () => {
 	});
 
 	useEffect(() => {
-		const resetForm = () => {
+		const loadForm = () => {
 			reset({
 				name: trigger?.name,
 				filePath: { value: trigger?.path, label: trigger?.path },
@@ -105,24 +106,24 @@ export const SchedulerEditTrigger = () => {
 			});
 		};
 
-		resetForm();
+		loadForm();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger]);
 
 	const onSubmit = async () => {
 		const { name, cron, filePath, entryFunction } = getValues();
 
-		setIsLoading(true);
+		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
 			triggerId: triggerId!,
 			name,
 			connectionId: cronConnectionId!,
 			eventType: "",
-			path: filePath.label,
+			path: filePath.value,
 			entryFunction,
 			data: { ["schedule"]: { string: { v: cron } } },
 		});
-		setIsLoading(false);
+		setIsSaving(false);
 
 		if (error) {
 			addToast({
@@ -134,19 +135,21 @@ export const SchedulerEditTrigger = () => {
 			return;
 		}
 
-		navigate(-1);
+		navigate(`/projects/${projectId}/triggers`);
 	};
 
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
 	return isLoadingData ? (
-		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{t("loading")}...</div>
+		<div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+			<Loader />
+		</div>
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader
 				className="mb-11"
 				form={TriggerFormIds.modifySchedulerForm}
-				isLoading={isLoading}
+				isLoading={isSaving}
 				title={t("modifyTrigger")}
 			/>
 			<form
@@ -189,7 +192,7 @@ export const SchedulerEditTrigger = () => {
 									aria-label={t("placeholders.selectFile")}
 									isError={!!errors.filePath}
 									onChange={(selected) => field.onChange(selected)}
-									options={filesName}
+									options={filesNameList}
 									placeholder={t("placeholders.selectFile")}
 									ref={null}
 									value={field.value}
@@ -211,6 +214,20 @@ export const SchedulerEditTrigger = () => {
 					</div>
 				</div>
 			</form>
+			<p className="mt-6 text-lg">{t("information")}:</p>
+			<div className="flex flex-col items-start gap-2 mt-2">
+				{infoCronExpressionsLinks.map(({ url, text }, idx) => (
+					<Link
+						className="inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent"
+						key={idx}
+						target="_blank"
+						to={url}
+					>
+						{text}
+						<ExternalLinkIcon className="w-3.5 h-3.5 duration-200 fill-white group-hover:fill-green-accent" />
+					</Link>
+				))}
+			</div>
 		</div>
 	);
 };

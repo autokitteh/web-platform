@@ -16,6 +16,7 @@
 	"connectionNotFound": "Couldn't fetch the connection details",
 	"connectionNotFoundExtended": "Failed to fetch the connection for the project {{projectId}}. Error: {{error}}",
 	"connectionDeleteFailedExtended": "Connection deletion failed - connection ID: {{connectionId}}, error: {{error}}",
+	"connectionCronNotFound": "Couldn't fetch the connection with cron name details",
 	"deleteFailedIdError": "Deployment deletion failed - deployment: {{deploymentId}}, error: {{error}}",
 	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}",
 	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
@@ -30,6 +31,6 @@
 	"environmentNotFound": "Couldn't found the environment",
 	"multipleEnvironments": "Multiple environments found, please reload the page",
 	"multipleEnvironmentsFoundExtended": "Multiple environments found, project ID: {{projectId}}",
-	"intergrationsNotFound": "Couldn't fetch the intergration",
-	"intergrationsNotFoundExtended": "Couldn't fetch the intergration, project ID: {{projectId}}"
+	"intergrationsNotFound": "Couldn't fetch intergrations",
+	"intergrationsNotFoundExtended": "Couldn't fetch intergrations, project ID: {{projectId}}"
 }

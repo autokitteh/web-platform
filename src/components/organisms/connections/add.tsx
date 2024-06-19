@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { GithubIntegrationForm, GoogleIntegrationForm } from "@components/organisms/connections/integrations";
-import { selectIntegrations } from "@constants/lists";
+import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
 import { IntegrationType } from "@type/components";
 import { useTranslation } from "react-i18next";
@@ -27,7 +27,7 @@ export const AddConnection = () => {
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
 					onChange={(option) => setSelectedIntegration(option as SelectOption)}
-					options={selectIntegrations}
+					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}
 					value={selectedIntegration}
 				/>

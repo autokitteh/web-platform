@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-import { Select, ErrorMessage, Input, Button, IconButton } from "@components/atoms";
+import { Select, ErrorMessage, Input, Button, IconButton, Loader } from "@components/atoms";
 import { namespaces } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
@@ -31,42 +31,41 @@ export const DefaultTriggerForm = ({
 	const [isLoading, setIsLoading] = useState(true);
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
 	const [connections, setConnections] = useState<SelectOption[]>([]);
-	const [filesName, setFilesName] = useState<SelectOption[]>([]);
+	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
+
+	const fetchData = async () => {
+		try {
+			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
+			if (connectionsError) throw connectionsError;
+
+			const formattedConnections = connections?.map((item) => ({
+				value: item.connectionId,
+				label: item.name,
+			}));
+			setConnections(formattedConnections || []);
+
+			const formattedResources = Object.keys(resources).map((name) => ({
+				value: name,
+				label: name,
+			}));
+			setFilesNameList(formattedResources);
+		} catch (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("connectionsFetchError"),
+				type: "error",
+				title: tErrors("error"),
+			});
+			LoggerService.error(
+				namespaces.triggerService,
+				tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-				if (connectionsError) throw connectionsError;
-				if (!connections?.length) return;
-
-				const formattedConnections = connections.map((item) => ({
-					value: item.connectionId,
-					label: item.name,
-				}));
-				setConnections(formattedConnections);
-
-				const formattedResources = Object.keys(resources).map((name) => ({
-					value: name,
-					label: name,
-				}));
-				setFilesName(formattedResources);
-			} catch (error) {
-				addToast({
-					id: Date.now().toString(),
-					message: tErrors("connectionsFetchError"),
-					type: "error",
-					title: tErrors("error"),
-				});
-				LoggerService.error(
-					namespaces.triggerService,
-					tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
-				);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -98,7 +97,7 @@ export const DefaultTriggerForm = ({
 			name,
 			connectionId: connection.value,
 			eventType,
-			path: filePath.label,
+			path: filePath.value,
 			entryFunction,
 			filter,
 			data: triggerData,
@@ -138,7 +137,7 @@ export const DefaultTriggerForm = ({
 		setTriggerData(updatedTriggerData);
 	}, 500);
 
-	const updateTriggerDataValue = (value: string, key: string) => {
+	const updateTriggerDataValue = (key: string, value: string) => {
 		const updatedTriggerData = { ...triggerData };
 		updatedTriggerData[key].string.v = value;
 		setTriggerData(updatedTriggerData);
@@ -167,7 +166,9 @@ export const DefaultTriggerForm = ({
 		});
 	};
 	return isLoading ? (
-		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{t("loading")}...</div>
+		<div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+			<Loader />
+		</div>
 	) : (
 		<form className="flex flex-col w-full gap-6" id={formId} onSubmit={handleSubmit(onSubmit)}>
 			<div className="relative">
@@ -210,7 +211,7 @@ export const DefaultTriggerForm = ({
 							aria-label={t("placeholders.selectFile")}
 							isError={!!errors.filePath}
 							onChange={(selected) => field.onChange(selected)}
-							options={filesName}
+							options={filesNameList}
 							placeholder={t("placeholders.selectFile")}
 							ref={null}
 							value={field.value}
@@ -273,7 +274,7 @@ export const DefaultTriggerForm = ({
 											aria-label={t("placeholders.value")}
 											className="w-full"
 											defaultValue={value.string.v}
-											onChange={(e) => updateTriggerDataValue(e.target.value, key)}
+											onChange={(e) => updateTriggerDataValue(key, e.target.value)}
 											placeholder={t("placeholders.value")}
 										/>
 									</div>
