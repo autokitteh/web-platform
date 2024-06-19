@@ -28,7 +28,6 @@ i18n.on("initialized", () => {
 		name: z.string().min(1, i18n.t("triggerNameIsRequired", { ns: "validations" })),
 		cron: z
 			.string()
-			.min(6, { message: i18n.t("scheduleIsRequired", { ns: "validations" }) })
 			.regex(
 				new RegExp(
 					"^(@(?:yearly|annually|monthly|weekly|daily|midnight|hourly)" +
@@ -40,9 +39,6 @@ i18n.on("initialized", () => {
 				),
 				{ message: i18n.t("cronExpressionsFormat", { ns: "validations" }) }
 			),
-		connection: selectItemSchema.refine((value) => value.label, {
-			message: i18n.t("connectionIsRequired", { ns: "validations" }),
-		}),
 		filePath: selectItemSchema.refine((value) => value.label, {
 			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 		}),

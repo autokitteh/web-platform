@@ -5,7 +5,6 @@
 	"nameIsRequired": "Name is required",
 	"triggerNameIsRequired": "Trigger name is required",
 	"valueIsRequired": "Value is required",
-	"scheduleIsRequired": "Schedule is required",
 	"functionNameIsRequired": "Function name is required",
-	"cronExpressionsFormat": "The string must match the required cron expressions format."
+	"cronExpressionsFormat": "The cron schedule expression must match the required format."
 }

@@ -71,7 +71,7 @@ export const TriggerSchedulerForm = ({
 	});
 
 	const onSubmit = async () => {
-		const { name, filePath, entryFunction } = getValues();
+		const { name, filePath, entryFunction, cron } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.create(projectId!, {
@@ -81,6 +81,7 @@ export const TriggerSchedulerForm = ({
 			eventType: "",
 			path: filePath.label,
 			entryFunction,
+			data: { ["schedule"]: { string: { v: cron } } },
 		});
 		setIsLoading(false);
 
