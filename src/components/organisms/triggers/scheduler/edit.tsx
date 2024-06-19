@@ -23,21 +23,18 @@ export const SchedulerEditTrigger = () => {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
-	const [connections, setConnections] = useState<SelectOption[]>([]);
+	const [cronConnectionId, setCronConnectionId] = useState<string>();
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 
 	const fetchData = async () => {
 		try {
-			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
+			const { data: connections, error: connectionsError } = await ConnectionService.list();
 			if (connectionsError) throw connectionsError;
 			if (!connections?.length) return;
 
-			const formattedConnections = connections.map((item) => ({
-				value: item.connectionId,
-				label: item.name,
-			}));
-			setConnections(formattedConnections);
+			const connectionId = connections.find((item) => item.name === "cron")?.connectionId;
+			setCronConnectionId(connectionId);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				value: name,
@@ -93,7 +90,6 @@ export const SchedulerEditTrigger = () => {
 		defaultValues: {
 			name: "",
 			cron: "",
-			connection: { value: "", label: "" },
 			filePath: { value: "", label: "" },
 			entryFunction: "",
 		},
@@ -103,7 +99,6 @@ export const SchedulerEditTrigger = () => {
 		const resetForm = () => {
 			reset({
 				name: trigger?.name,
-				connection: { value: trigger?.connectionId, label: trigger?.connectionName },
 				filePath: { value: trigger?.path, label: trigger?.path },
 				entryFunction: trigger?.entryFunction,
 				cron: trigger?.data?.schedule?.string?.v,
@@ -115,13 +110,13 @@ export const SchedulerEditTrigger = () => {
 	}, [trigger]);
 
 	const onSubmit = async () => {
-		const { name, cron, connection, filePath, entryFunction } = getValues();
+		const { name, cron, filePath, entryFunction } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.update(projectId!, {
-			triggerId: trigger?.triggerId,
+			triggerId: triggerId!,
 			name,
-			connectionId: connection.value,
+			connectionId: cronConnectionId!,
 			eventType: "",
 			path: filePath.label,
 			entryFunction,
@@ -136,10 +131,6 @@ export const SchedulerEditTrigger = () => {
 				type: "error",
 				title: tErrors("error"),
 			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("triggerNotUpdatedExtended", { triggerId, error: (error as Error).message })
-			);
 			return;
 		}
 
@@ -169,6 +160,7 @@ export const SchedulerEditTrigger = () => {
 							{...register("name")}
 							aria-label={t("placeholders.name")}
 							className={inputClass("name")}
+							disabled
 							isError={!!errors.name}
 							isRequired
 							placeholder={t("placeholders.name")}
@@ -186,25 +178,7 @@ export const SchedulerEditTrigger = () => {
 						/>
 						<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
 					</div>
-					<div className="relative">
-						<Controller
-							control={control}
-							name="connection"
-							render={({ field }) => (
-								<Select
-									{...field}
-									aria-label={t("placeholders.selectConnection")}
-									isError={!!errors.connection}
-									onChange={(selected) => field.onChange(selected)}
-									options={connections}
-									placeholder={t("placeholders.selectConnection")}
-									ref={null}
-									value={field.value}
-								/>
-							)}
-						/>
-						<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
-					</div>
+
 					<div className="relative">
 						<Controller
 							control={control}

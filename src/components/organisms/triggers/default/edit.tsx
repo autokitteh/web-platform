@@ -144,10 +144,6 @@ export const DefaultEditTrigger = () => {
 				type: "error",
 				title: tErrors("error"),
 			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("triggerNotUpdatedExtended", { triggerId, error: (error as Error).message })
-			);
 			return;
 		}
 

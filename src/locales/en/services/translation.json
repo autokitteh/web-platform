@@ -20,7 +20,7 @@
 	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}",
 	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
-	"triggerNotUpdatedExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
+	"triggerNotUpdatedExtended": "Failed to update trigger for the project, trigger ID: {{triggerId}}. Error: {{error}}",
 	"triggerRemoveFailedExtended": "Trigger remove failed, ID: {{triggerId}}",
 	"triggersNotFound": "Couldn't fetch the triggers details",
 	"variableNotCreatedExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
@@ -30,5 +30,6 @@
 	"environmentNotFound": "Couldn't found the environment",
 	"multipleEnvironments": "Multiple environments found, please reload the page",
 	"multipleEnvironmentsFoundExtended": "Multiple environments found, project ID: {{projectId}}",
+	"intergrationsNotFound": "Couldn't fetch the intergration",
 	"intergrationsNotFoundExtended": "Couldn't fetch the intergration, project ID: {{projectId}}"
 }

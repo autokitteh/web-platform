@@ -25,21 +25,18 @@ export const TriggerSchedulerForm = ({
 	const { t: tErrors } = useTranslation("errors");
 
 	const [isLoading, setIsLoading] = useState(true);
-	const [connections, setConnections] = useState<SelectOption[]>([]);
+	const [cronConnectionId, setCronConnectionId] = useState<string>();
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
+				const { data: connections, error: connectionsError } = await ConnectionService.list();
 				if (connectionsError) throw connectionsError;
 				if (!connections?.length) return;
 
-				const formattedConnections = connections.map((item) => ({
-					value: item.connectionId,
-					label: item.name,
-				}));
-				setConnections(formattedConnections);
+				const connectionId = connections.find((item) => item.name === "cron")?.connectionId;
+				setCronConnectionId(connectionId);
 
 				const formattedResources = Object.keys(resources).map((name) => ({
 					value: name,
@@ -77,20 +74,19 @@ export const TriggerSchedulerForm = ({
 		defaultValues: {
 			name: "",
 			cron: "",
-			connection: { value: "", label: "" },
 			filePath: { value: "", label: "" },
 			entryFunction: "",
 		},
 	});
 
 	const onSubmit = async () => {
-		const { name, cron, connection, filePath, entryFunction } = getValues();
+		const { name, cron, filePath, entryFunction } = getValues();
 
 		setIsSaving(true);
 		const { error } = await TriggersService.create(projectId!, {
 			triggerId: undefined,
 			name,
-			connectionId: connection.value,
+			connectionId: cronConnectionId!,
 			eventType: "",
 			path: filePath.label,
 			entryFunction,
@@ -141,25 +137,6 @@ export const TriggerSchedulerForm = ({
 					placeholder={t("placeholders.cron")}
 				/>
 				<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
-			</div>
-			<div className="relative">
-				<Controller
-					control={control}
-					name="connection"
-					render={({ field }) => (
-						<Select
-							{...field}
-							aria-label={t("placeholders.selectConnection")}
-							isError={!!errors.connection}
-							onChange={(selected) => field.onChange(selected)}
-							options={connections}
-							placeholder={t("placeholders.selectConnection")}
-							ref={null}
-							value={field.value}
-						/>
-					)}
-				/>
-				<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				<Controller

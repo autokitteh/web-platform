@@ -109,7 +109,11 @@ export class TriggersService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
-				i18n.t("triggerNotUpdatedExtended", { triggerId: trigger.triggerId, ns: "services" })
+				i18n.t("triggerNotUpdatedExtended", {
+					triggerId: trigger.triggerId,
+					error: (error as Error).message,
+					ns: "services",
+				})
 			);
 			return { data: undefined, error };
 		}
@@ -130,11 +134,12 @@ export class TriggersService {
 			const { triggers } = await triggersClient.list({ envId: environments && environments[0].envId });
 
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
-			const { data: connectionsList, error } = await ConnectionService.listByProjectId(projectId);
+			const { data: connectionsList, error } = await ConnectionService.list();
 			if (error) {
 				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
 				return { data: undefined, error };
 			}
+
 			const enrhichedTriggers = convertedTriggers.map((trigger) => {
 				const connection = connectionsList?.find((connection) => connection.connectionId === trigger.connectionId);
 				return {

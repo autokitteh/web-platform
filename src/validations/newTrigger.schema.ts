@@ -39,9 +39,6 @@ i18n.on("initialized", () => {
 				),
 				{ message: i18n.t("cronExpressionsFormat", { ns: "validations" }) }
 			),
-		connection: selectItemSchema.refine((value) => value.label, {
-			message: i18n.t("connectionIsRequired", { ns: "validations" }),
-		}),
 		filePath: selectItemSchema.refine((value) => value.label, {
 			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 		}),

@@ -9,7 +9,6 @@
 	"triggerRemoveFailed": "Trigger remove failed",
 	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}",
 	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
-	"triggerNotUpdatedExtended": "Failed to update trigger for the project {{projectId}}. Error: {{error}}",
 	"triggerNotFound": "Couldn't fetch the trigger",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
 	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}",
