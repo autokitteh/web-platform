@@ -13,13 +13,14 @@ import { githubIntegrationSchema } from "@validations";
 import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const GithubIntegrationForm = ({ connectionName }: { connectionName?: string }) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
 	const { projectId } = useParams();
+	const navigate = useNavigate();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
@@ -46,34 +47,24 @@ export const GithubIntegrationForm = ({ connectionName }: { connectionName?: str
 
 		setIsLoading(true);
 		try {
-			console.log("step1");
-
 			const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
 
-			const { data } = await HttpService.post(`/github/save?cid=${connectionId}`, {
+			const data = await HttpService.post(`/github/save?cid=${connectionId}`, {
 				pat,
 				secret,
 				webhook: webhookUrl,
 			});
-			if (!data.url) {
-				addToast({
-					id: Date.now().toString(),
-					message: tErrors("errorCreatingNewConnection"),
-					title: "Error",
-					type: "error",
-				});
-				LoggerService.error(
-					namespaces.connectionService,
-					`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`
-				);
-				return;
-			}
 
-			window.location.href = `${baseUrl}/${data.url}`;
+			if (data.request.responseURL.includes("error=")) {
+				const errorMsg = new URL(data.request.responseURL).searchParams.get("error");
+				throw new Error(errorMsg!);
+			} else {
+				navigate(`/projects/${projectId}/connections`);
+			}
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: tErrors("errorCreatingNewConnection"),
+				message: error.message,
 				title: "Error",
 				type: "error",
 			});
