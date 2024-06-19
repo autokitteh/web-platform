@@ -92,6 +92,11 @@ export const TriggersTable = () => {
 		[triggerId]
 	);
 
+	const handleNavigate = (triggerId: string, hasSchedule: boolean) => {
+		const path = hasSchedule ? `/edit-scheduler` : `/edit`;
+		navigate(`${triggerId}${path}`);
+	};
+
 	return isLoading ? (
 		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
 			{t("buttons.loading")}...
@@ -150,9 +155,7 @@ export const TriggersTable = () => {
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
-											onClick={() =>
-												navigate(`${trigger.triggerId!}${trigger.data?.schedule ? "/edit-scheduler" : "/edit"}`)
-											}
+											onClick={() => handleNavigate(trigger.triggerId!, !!trigger.data?.schedule)}
 										>
 											<EditIcon className="w-3 h-3 fill-white" />
 										</IconButton>
