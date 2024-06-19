@@ -5,5 +5,7 @@
 	"nameIsRequired": "Name is required",
 	"triggerNameIsRequired": "Trigger name is required",
 	"valueIsRequired": "Value is required",
-	"functionNameIsRequired": "Function name is required"
+	"scheduleIsRequired": "Schedule is required",
+	"functionNameIsRequired": "Function name is required",
+	"scheduleFormat": "The string must match the required schedule format."
 }

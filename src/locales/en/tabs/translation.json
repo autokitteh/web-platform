@@ -78,10 +78,12 @@
 			"ariaDeleteData": "Delete {{name}} data",
 			"loading": "Loading",
 			"placeholders": {
+				"selectTriggerType": "Select trigger type",
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
 				"functionName": "Function name",
 				"name": "Name",
+				"schedule": "Schedule",
 				"eventType": "Event type",
 				"filter": "Filter",
 				"key": "Key",

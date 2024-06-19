@@ -8,7 +8,7 @@ import { SelectOption } from "@interfaces/components";
 import { ConnectionService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
-import { triggerSchema } from "@validations";
+import { triggerDefaultSchema } from "@validations";
 import { debounce, has } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -82,7 +82,7 @@ export const EditTrigger = () => {
 		getValues,
 		reset,
 	} = useForm({
-		resolver: zodResolver(triggerSchema),
+		resolver: zodResolver(triggerDefaultSchema),
 		defaultValues: {
 			name: "",
 			connection: { value: "", label: "" },
