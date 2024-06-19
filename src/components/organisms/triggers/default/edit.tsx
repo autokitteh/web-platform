@@ -14,7 +14,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const EditTrigger = () => {
+export const DefaultEditTrigger = () => {
 	const { triggerId, projectId } = useParams();
 	const navigate = useNavigate();
 	const { resources } = useProjectStore();

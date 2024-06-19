@@ -4,7 +4,7 @@ import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
 import { SessionTableEditorFrame } from "@components/organisms/deployments";
-import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
+import { AddTrigger, DefaultEditTrigger, SchedulerEditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import { Dashboard, Project, Sessions, Variables } from "@components/pages";
 import { Triggers } from "@components/pages";
@@ -31,7 +31,8 @@ export const App: React.FC = () => (
 					<Route element={<Triggers />} path="triggers">
 						<Route element={<TriggersTable />} index />
 						<Route element={<AddTrigger />} path="add" />
-						<Route element={<EditTrigger />} path=":triggerId/edit" />
+						<Route element={<DefaultEditTrigger />} path=":triggerId/edit" />
+						<Route element={<SchedulerEditTrigger />} path=":triggerId/edit-scheduler" />
 					</Route>
 
 					<Route element={<Variables />} path="variables">
