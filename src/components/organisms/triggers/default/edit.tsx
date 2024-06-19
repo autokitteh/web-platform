@@ -4,6 +4,7 @@ import { TrashIcon } from "@assets/image/icons";
 import { Select, ErrorMessage, Input, Button, IconButton } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { namespaces } from "@constants";
+import { TriggerFormIds } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
@@ -203,8 +204,13 @@ export const DefaultEditTrigger = () => {
 		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{t("loading")}...</div>
 	) : (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
-			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>
+			<TabFormHeader
+				className="mb-11"
+				form={TriggerFormIds.modifyDefaultForm}
+				isLoading={isLoading}
+				title={t("modifyTrigger")}
+			/>
+			<form className="flex items-start gap-10" id={TriggerFormIds.modifyDefaultForm} onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col w-full gap-6">
 					<div className="relative">
 						<Input

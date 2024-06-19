@@ -84,7 +84,7 @@ export const TriggerSchedulerForm = ({
 	});
 
 	const onSubmit = async () => {
-		const { name, connection, cron, filePath, entryFunction } = getValues();
+		const { name, cron, connection, filePath, entryFunction } = getValues();
 
 		setIsSaving(true);
 		const { error } = await TriggersService.create(projectId!, {
@@ -132,6 +132,17 @@ export const TriggerSchedulerForm = ({
 				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
+				<Input
+					{...register("cron")}
+					aria-label={t("placeholders.cron")}
+					className={inputClass("cron")}
+					isError={!!errors.cron}
+					isRequired
+					placeholder={t("placeholders.cron")}
+				/>
+				<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
+			</div>
+			<div className="relative">
 				<Controller
 					control={control}
 					name="connection"
@@ -149,17 +160,6 @@ export const TriggerSchedulerForm = ({
 					)}
 				/>
 				<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
-			</div>
-			<div className="relative">
-				<Input
-					{...register("cron")}
-					aria-label={t("placeholders.cron")}
-					className={inputClass("cron")}
-					isError={!!errors.cron}
-					isRequired
-					placeholder={t("placeholders.cron")}
-				/>
-				<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
 				<Controller

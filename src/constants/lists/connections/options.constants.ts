@@ -1,4 +1,5 @@
 import { GithubConnectionType, GoogleConnectionType } from "@enums";
+import { TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 export const selectIntegrations: SelectOption[] = [
@@ -7,8 +8,8 @@ export const selectIntegrations: SelectOption[] = [
 ];
 
 export const selectTriggerType: SelectOption[] = [
-	{ value: "default", label: "Default", disabled: false },
-	{ value: "scheduler", label: "Scheduler", disabled: false },
+	{ value: TriggerFormType.default, label: "Default", disabled: false },
+	{ value: TriggerFormType.scheduler, label: "Scheduler", disabled: false },
 ];
 
 export const selectIntegrationGithub: SelectOption[] = [

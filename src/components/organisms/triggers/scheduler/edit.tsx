@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Select, ErrorMessage, Input } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { namespaces } from "@constants";
+import { TriggerFormIds } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
@@ -22,6 +23,7 @@ export const SchedulerEditTrigger = () => {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [filesName, setFilesName] = useState<SelectOption[]>([]);
 
@@ -30,6 +32,12 @@ export const SchedulerEditTrigger = () => {
 			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
 			if (connectionsError) throw connectionsError;
 			if (!connections?.length) return;
+
+			const formattedConnections = connections.map((item) => ({
+				value: item.connectionId,
+				label: item.name,
+			}));
+			setConnections(formattedConnections);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				value: name,
@@ -85,6 +93,7 @@ export const SchedulerEditTrigger = () => {
 		defaultValues: {
 			name: "",
 			cron: "",
+			connection: { value: "", label: "" },
 			filePath: { value: "", label: "" },
 			entryFunction: "",
 		},
@@ -94,8 +103,10 @@ export const SchedulerEditTrigger = () => {
 		const resetForm = () => {
 			reset({
 				name: trigger?.name,
+				connection: { value: trigger?.connectionId, label: trigger?.connectionName },
 				filePath: { value: trigger?.path, label: trigger?.path },
 				entryFunction: trigger?.entryFunction,
+				cron: trigger?.data?.schedule?.string?.v,
 			});
 		};
 
@@ -104,16 +115,17 @@ export const SchedulerEditTrigger = () => {
 	}, [trigger]);
 
 	const onSubmit = async () => {
-		const { filePath, name, entryFunction } = getValues();
+		const { name, cron, connection, filePath, entryFunction } = getValues();
 
 		setIsLoading(true);
 		const { error } = await TriggersService.update(projectId!, {
 			triggerId: trigger?.triggerId,
 			name,
-			connectionId: "",
+			connectionId: connection.value,
 			eventType: "",
 			path: filePath.label,
 			entryFunction,
+			data: { ["schedule"]: { string: { v: cron } } },
 		});
 		setIsLoading(false);
 
@@ -140,8 +152,17 @@ export const SchedulerEditTrigger = () => {
 		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{t("loading")}...</div>
 	) : (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
-			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>
+			<TabFormHeader
+				className="mb-11"
+				form={TriggerFormIds.modifySchedulerForm}
+				isLoading={isLoading}
+				title={t("modifyTrigger")}
+			/>
+			<form
+				className="flex items-start gap-10"
+				id={TriggerFormIds.modifySchedulerForm}
+				onSubmit={handleSubmit(onSubmit)}
+			>
 				<div className="flex flex-col w-full gap-6">
 					<div className="relative">
 						<Input
@@ -164,6 +185,25 @@ export const SchedulerEditTrigger = () => {
 							placeholder={t("placeholders.cron")}
 						/>
 						<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
+					</div>
+					<div className="relative">
+						<Controller
+							control={control}
+							name="connection"
+							render={({ field }) => (
+								<Select
+									{...field}
+									aria-label={t("placeholders.selectConnection")}
+									isError={!!errors.connection}
+									onChange={(selected) => field.onChange(selected)}
+									options={connections}
+									placeholder={t("placeholders.selectConnection")}
+									ref={null}
+									value={field.value}
+								/>
+							)}
+						/>
+						<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
 						<Controller

@@ -65,7 +65,7 @@ export const TriggersTable = () => {
 	const sortedTriggers = useMemo(() => {
 		return orderBy(triggers, [sort.column], [sort.direction]);
 	}, [triggers, sort.column, sort.direction]);
-
+	console.log(sortedTriggers);
 	const handleDeleteTrigger = async () => {
 		if (!triggerId) return;
 
@@ -133,22 +133,7 @@ export const TriggersTable = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("eventType")}>
-								{t("table.columns.eventType")}
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"eventType" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("filter")}>
-								{t("table.columns.filter")}
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"filter" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
+							<Th className="font-normal cursor-pointer group">{t("table.columns.cronSchedule")}</Th>
 							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
@@ -160,13 +145,14 @@ export const TriggersTable = () => {
 								<Td>
 									{trigger.path}:{trigger.entryFunction}
 								</Td>
-								<Td>{trigger.eventType}</Td>
-								<Td>{trigger.filter}</Td>
+								<Td>{trigger.data?.schedule?.string?.v}</Td>
 								<Td className="max-w-20">
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
-											onClick={() => navigate(`${trigger.triggerId!}/edit`)}
+											onClick={() =>
+												navigate(`${trigger.triggerId!}${trigger.data?.schedule ? "/edit-scheduler" : "/edit"}`)
+											}
 										>
 											<EditIcon className="w-3 h-3 fill-white" />
 										</IconButton>
