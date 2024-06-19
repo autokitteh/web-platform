@@ -2,5 +2,5 @@ export { TriggersTable } from "@components/organisms/triggers/table";
 export { AddTrigger } from "@components/organisms/triggers/add";
 export { EditTrigger } from "@components/organisms/triggers/edit";
 export { DeleteTriggerModal } from "@components/organisms/triggers/deleteModal";
-export { TriggerDefaultForm } from "@components/organisms/triggers/defaultForm";
-export { TriggerSchedulerForm } from "@components/organisms/triggers/schedulerForm";
+export { TriggerDefaultForm } from "@components/organisms/triggers/default";
+export { TriggerSchedulerForm } from "@components/organisms/triggers/scheduler";

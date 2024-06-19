@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isLoading, setIsLoading] = useState(false);
-	const [selectedType, setSelectedType] = useState<SelectOption>();
+	const [selectedType, setSelectedType] = useState<SelectOption>(selectTriggerType[0]);
 
 	return (
 		<div className="min-w-80">

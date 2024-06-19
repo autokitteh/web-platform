@@ -7,5 +7,5 @@
 	"valueIsRequired": "Value is required",
 	"scheduleIsRequired": "Schedule is required",
 	"functionNameIsRequired": "Function name is required",
-	"scheduleFormat": "The string must match the required schedule format."
+	"cronExpressionsFormat": "The string must match the required cron expressions format."
 }

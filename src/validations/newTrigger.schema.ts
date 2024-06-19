@@ -26,7 +26,7 @@ i18n.on("initialized", () => {
 
 	triggerSchedulerSchema = z.object({
 		name: z.string().min(1, i18n.t("triggerNameIsRequired", { ns: "validations" })),
-		schedule: z
+		cron: z
 			.string()
 			.min(6, { message: i18n.t("scheduleIsRequired", { ns: "validations" }) })
 			.regex(
@@ -38,7 +38,7 @@ i18n.on("initialized", () => {
 						"(?:[ \\d]+)?" +
 						")$"
 				),
-				{ message: i18n.t("scheduleFormat", { ns: "validations" }) }
+				{ message: i18n.t("cronExpressionsFormat", { ns: "validations" }) }
 			),
 		connection: selectItemSchema.refine((value) => value.label, {
 			message: i18n.t("connectionIsRequired", { ns: "validations" }),

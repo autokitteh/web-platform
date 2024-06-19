@@ -83,7 +83,7 @@
 				"selectFile": "Select file",
 				"functionName": "Function name",
 				"name": "Name",
-				"schedule": "Schedule",
+				"cron": "Cron Expression",
 				"eventType": "Event type",
 				"filter": "Filter",
 				"key": "Key",
