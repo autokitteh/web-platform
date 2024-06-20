@@ -4,13 +4,13 @@ import { SortDirectionVariant } from "@enums/components";
 import { SortConfig } from "@type";
 import { orderBy } from "lodash";
 
-export const useSortableData = <T,>(list: T[]) => {
+export const useSort = <T,>(items: T[]) => {
 	const [sortConfig, setSortConfig] = useState<SortConfig<T>>(initialSortConfig);
 
-	const sortedList = useMemo(() => {
-		if (!sortConfig.key) return list;
-		return orderBy(list, [sortConfig.key], [sortConfig.direction]);
-	}, [list, sortConfig]);
+	const sortedItems = useMemo(() => {
+		if (!sortConfig.key) return items;
+		return orderBy(items, [sortConfig.key], [sortConfig.direction]);
+	}, [items, sortConfig]);
 
 	const requestSort = useCallback((key: keyof T) => {
 		setSortConfig((prevConfig) => ({
@@ -22,5 +22,5 @@ export const useSortableData = <T,>(list: T[]) => {
 		}));
 	}, []);
 
-	return { list: sortedList, sortConfig, requestSort };
+	return { items: sortedItems, sortConfig, requestSort };
 };

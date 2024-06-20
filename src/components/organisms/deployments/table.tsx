@@ -7,7 +7,7 @@ import { DeleteDeploymentModal } from "@components/organisms/deployments";
 import { fetchDeploymentsInterval } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
-import { useSortableData } from "@hooks";
+import { useSort } from "@hooks";
 import { DeploymentsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Deployment } from "@type/models";
@@ -28,7 +28,7 @@ export const DeploymentsTable = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 
-	const { list: sortedDeployments, sortConfig, requestSort } = useSortableData<Deployment>(deployments);
+	const { items: sortedDeployments, sortConfig, requestSort } = useSort<Deployment>(deployments);
 
 	const fetchDeployments = async () => {
 		if (!projectId) return;

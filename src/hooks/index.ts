@@ -1,2 +1,2 @@
 export { useInterval } from "@hooks/useInterval";
-export { useSortableData } from "@hooks/useSortableData";
+export { useSort } from "@hooks/useSort";
