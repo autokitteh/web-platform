@@ -77,7 +77,11 @@ export const DeploymentsTable = () => {
 			setInitialLoad(false);
 			return deployments;
 		}
-		return orderBy(deployments, [sort.column], [sort.direction]);
+		if (!initialLoad && deployments.length) {
+			return orderBy(deployments, [sort.column], [sort.direction]);
+		}
+
+		return [];
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deployments, sort]);
