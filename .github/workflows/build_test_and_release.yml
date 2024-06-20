@@ -89,7 +89,7 @@ jobs:
         run: npm ci
 
       - name: Run code TS validation
-        run: npm run check-types
+        run: npm run type-check
 
       - name: Run code ESLint validation
         run: npm run lint
