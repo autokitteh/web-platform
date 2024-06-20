@@ -60,7 +60,6 @@
 				"call": "Call",
 				"eventType": "Event Type",
 				"filter": "Filter",
-				"cronSchedule": "Cron Schedule",
 				"actions": "Actions"
 			},
 			"buttons": {

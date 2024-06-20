@@ -154,22 +154,19 @@ export const DefaultEditTrigger = () => {
 	const updateTriggerDataKey = debounce((newKey, oldKey) => {
 		if (newKey === oldKey) return;
 
-		const updatedTriggerData = Object.keys(triggerData).reduce((triggers: TriggerData, key) => {
-			if (key === oldKey) {
-				triggers[newKey] = triggerData[key];
-				return triggers;
-			}
-
-			triggers[key] = triggerData[key];
-			return triggers;
-		}, {});
-		setTriggerData(updatedTriggerData);
+		setTriggerData((prevData) => {
+			const updatedTriggerData = { ...prevData };
+			updatedTriggerData[newKey] = updatedTriggerData[oldKey];
+			delete updatedTriggerData[oldKey];
+			return updatedTriggerData;
+		});
 	}, 500);
 
 	const updateTriggerDataValue = (key: string, value: string) => {
-		const updatedTriggerData = { ...triggerData };
-		updatedTriggerData[key].string.v = value;
-		setTriggerData(updatedTriggerData);
+		setTriggerData((prevData) => ({
+			...prevData,
+			[key]: { string: { v: value } },
+		}));
 	};
 
 	const handleAddNewData = () => {
@@ -183,8 +180,10 @@ export const DefaultEditTrigger = () => {
 			return;
 		}
 
-		const updatedTriggerData = { ...triggerData, [""]: { string: { v: "" } } };
-		setTriggerData(updatedTriggerData);
+		setTriggerData((prevData) => ({
+			...prevData,
+			"": { string: { v: "" } },
+		}));
 	};
 
 	const handleDeleteData = (key: string) => {
