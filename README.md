@@ -21,10 +21,9 @@
 
 For inquiries, contact: meow@autokitteh.com
 
-## How to Contribute 🤝
+# Contributing to autokitteh
 
-To contribute to AutoKitteh, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-We appreciate contributions from everyone!
+We'd love to get your input! We want to make contributing to this project as easy and transparent as possible.
 
 ## How to Install and Run 🛠️
 
