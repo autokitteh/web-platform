@@ -210,6 +210,7 @@ export const DefaultEditTrigger = () => {
 				<div className="flex flex-col w-full gap-6">
 					<div className="relative">
 						<Input
+							disabled
 							{...register("name")}
 							aria-label={t("placeholders.name")}
 							className={inputClass("name")}
