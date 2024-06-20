@@ -4,7 +4,7 @@
 		"noDeployments": "No deployments found",
 		"loading": "Loading",
 		"deleteDisabled": "Cannot delete active deployment",
-		"ariaDeleDeploy": "Delete deployment",
+		"ariaDeleteDeploy": "Delete deployment",
 		"ariaDeactivateDeploy": "Deactivate deployment",
 		"ariaActivateDeploy": "Activate deployment",
 		"table": {

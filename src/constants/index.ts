@@ -17,3 +17,4 @@ export {
 	defaultTriggerType,
 	infoCronExpressionsLinks,
 } from "@constants/triggers.constants";
+export { initialSortConfig } from "@constants/sortConfig.constants";
