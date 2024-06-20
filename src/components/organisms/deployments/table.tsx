@@ -30,7 +30,7 @@ export const DeploymentsTable = () => {
 	const [sort, setSort] = useState<{
 		direction: SortDirection;
 		column: keyof Deployment;
-	}>({ direction: SortDirectionVariant.ASC, column: "createdAt" });
+	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
 
 	const { projectId } = useParams();
 	const navigate = useNavigate();
@@ -59,7 +59,7 @@ export const DeploymentsTable = () => {
 		const deploymentsFetchIntervalId = setInterval(fetchDeployments, fetchDeploymentsInterval);
 		return () => clearInterval(deploymentsFetchIntervalId);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	}, []);
 
 	const toggleSortDeployments = useCallback(
 		(key: keyof Deployment) => {
@@ -73,11 +73,12 @@ export const DeploymentsTable = () => {
 	);
 
 	const sortedDeployments = useMemo(() => {
-		if (initialLoad) {
+		if (initialLoad && deployments.length) {
 			setInitialLoad(false);
 			return deployments;
 		}
 		return orderBy(deployments, [sort.column], [sort.direction]);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deployments, sort]);
 
