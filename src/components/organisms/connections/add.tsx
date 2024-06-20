@@ -34,9 +34,7 @@ export const AddConnection: React.FC = () => {
 	const connectionName: string = watch("connectionName");
 	const selectedIntegration: SelectOption = watch("integration");
 
-	const onSubmit = (data: { connectionName: string; integration: SelectOption | null }) => {
-		console.log("Form submitted with:", data);
-	};
+	const onSubmit = () => {};
 
 	const handleIntegrationChange = (option: SingleValue<SelectOption>): void => {
 		setValue("integration", option as SelectOption);
@@ -66,28 +64,25 @@ export const AddConnection: React.FC = () => {
 	return (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" title={t("addNewConnection")} />
-			<form className="flex flex-col w-5/6 gap-6" onSubmit={handleSubmit(onSubmit)}>
-				<div className="relative">
+			<form className="flex flex-col w-5/6 mb-6" onSubmit={handleSubmit(onSubmit)}>
+				<div className="relative mb-6">
 					<Input
 						aria-label={t("github.placeholders.name")}
-						className="mb-6"
 						{...register("connectionName", { required: "Connection name is required" })}
 						isError={!!errors.connectionName}
 						placeholder={t("github.placeholders.name")}
 					/>
 					<ErrorMessage>{errors?.connectionName?.message}</ErrorMessage>
 				</div>
-				<div title={!!errors.connectionName || !connectionName ? "Name is required" : ""}>
-					<Select
-						aria-label={t("placeholders.selectIntegration")}
-						onChange={handleIntegrationChange}
-						options={integrationTypes}
-						placeholder={t("placeholders.selectIntegration")}
-						value={selectedIntegration}
-					/>
-				</div>
+				<Select
+					aria-label={t("placeholders.selectIntegration")}
+					onChange={handleIntegrationChange}
+					options={integrationTypes}
+					placeholder={t("placeholders.selectIntegration")}
+					value={selectedIntegration}
+				/>
 			</form>
-			{selectedIntegrationComponent}
+			<div className="w-5/6">{selectedIntegrationComponent}</div>
 		</div>
 	);
 };

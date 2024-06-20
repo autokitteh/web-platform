@@ -71,6 +71,7 @@ export const GithubIntegrationForm = ({
 				const errorMsg = new URL(data.request.responseURL).searchParams.get("error");
 				throw new Error(errorMsg!);
 			} else {
+				console.log("data.request.responseURL", data.request.responseURL);
 				navigate(`/projects/${projectId}/connections`);
 			}
 		} catch (error) {
