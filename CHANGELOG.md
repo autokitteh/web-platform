@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/autokitteh/web-platform/compare/v1.4.0...v1.5.0) (2024-06-20)
+
+
+### Features
+
+* add react-window sessions scroll ([#112](https://github.com/autokitteh/web-platform/issues/112)) ([f564e47](https://github.com/autokitteh/web-platform/commit/f564e472d83ea7f847240fd399aaa1e46b4a5429))
+
 # [1.4.0](https://github.com/autokitteh/web-platform/compare/v1.3.0...v1.4.0) (2024-06-20)
 
 
