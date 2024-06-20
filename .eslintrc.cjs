@@ -150,5 +150,6 @@ module.exports = {
 				"pathGroupsExcludedImportTypes": ["builtin"],
 			},
 		],
+		"no-console": "error",
 	},
 };

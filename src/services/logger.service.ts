@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { LoggerLevel } from "@enums";
 import moment from "moment";
 
