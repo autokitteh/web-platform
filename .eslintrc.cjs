@@ -9,6 +9,7 @@ module.exports = {
 		"plugin:@typescript-eslint/recommended",
 		"plugin:storybook/recommended",
 		"prettier",
+		"plugin:security/recommended-legacy",
 	],
 	settings: {
 		"react": {
@@ -51,6 +52,7 @@ module.exports = {
 			},
 			{ usePrettierrc: true },
 		],
+		"security/detect-object-injection": "off",
 		// React Rules
 		"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 		"react/prefer-stateless-function": "error",
@@ -112,16 +114,7 @@ module.exports = {
 				format: ["PascalCase"],
 			},
 		],
-		"max-len": [
-			"error",
-			{
-				code: 120,
-				ignoreComments: true,
-				tabWidth: 2,
-			},
-		],
 		"no-throw-literal": "warn",
-		"semi": "off",
 		"unicorn/filename-case": [
 			"error",
 			{
