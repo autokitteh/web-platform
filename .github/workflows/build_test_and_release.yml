@@ -91,6 +91,9 @@ jobs:
       - name: Run code TS validation
         run: npm run check-types
 
+      - name: Run code ESLint validation
+        run: npm run lint
+
       - name: Run code linter check
         run: npm run lint
 
