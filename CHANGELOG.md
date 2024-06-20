@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/autokitteh/web-platform/compare/v1.3.0...v1.4.0) (2024-06-20)
+
+
+### Features
+
+* trigger form default/scheduler ([#127](https://github.com/autokitteh/web-platform/issues/127)) ([eb69315](https://github.com/autokitteh/web-platform/commit/eb69315521d005dd1ace6a0a80e55cfbf152c077))
+
 # [1.3.0](https://github.com/autokitteh/web-platform/compare/v1.2.0...v1.3.0) (2024-06-17)
 
 
