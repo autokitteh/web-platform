@@ -1,4 +1,5 @@
 import React, { forwardRef, useState, useCallback, useId } from "react";
+import { InputVariant } from "@enums/components";
 import { InputProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
@@ -12,6 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 		type = "text",
 		placeholder,
 		isRequired,
+		variant,
 		onChange,
 		...rest
 	} = props;
@@ -32,6 +34,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const handleChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const newValue = !!e.target.value;
+			console.log(newValue);
 			if (newValue !== hasValue) setHasValue(newValue);
 			onChange?.(e);
 		},
@@ -43,6 +46,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const baseClass = cn(
 		"relative flex items-center pr-2.5 text-base bg-black border border-gray-500",
 		"rounded-lg transition focus-within:border-white hover:border-white ",
+		{ "bg-white hover:border-gray-700 focus-within:border-gray-700": variant === InputVariant.white },
 		{ "pointer-events-none select-none": disabled },
 		className,
 		{ "border-error": isError }
@@ -50,6 +54,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
 	const inputClass = cn(
 		"w-full h-12 py-2.5 px-4 bg-transparent outline-none",
+		{ "autofill-black": variant === InputVariant.white },
 		{ "text-gray-400": disabled },
 		classInput
 	);
@@ -60,10 +65,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 		{ "-top-2 left-3 text-xs  before:bg-gray-500 px-1": isFocused || hasValue }
 	);
 
-	const borderOverlayLabelClass = cn(
-		"absolute left-0 z-0 w-full h-0.5 -translate-y-1/2 top-1/2 bg-black",
-		className?.split(" ").find((c) => c.startsWith("bg-"))
-	);
+	const borderOverlayLabelClass = cn("absolute left-0 z-0 w-full h-0.5 -translate-y-1/2 top-1/2 bg-black", {
+		"bg-white": variant === InputVariant.white,
+	});
 
 	const id = useId();
 

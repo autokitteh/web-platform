@@ -66,11 +66,10 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 							<Input
 								{...register("name")}
 								aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}
-								classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800 autofill-black"
-								className="bg-white hover:border-gray-700 focus-within:border-gray-700"
 								isError={!!errors.name}
 								isRequired
 								placeholder={t("addCodeAssets.placeholderName", { ns: "modals" })}
+								variant="white"
 							/>
 							<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
 						</div>
