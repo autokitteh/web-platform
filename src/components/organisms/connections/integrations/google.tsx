@@ -11,7 +11,7 @@ import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const GoogleIntegrationForm = ({
 	connectionName,
@@ -26,6 +26,7 @@ export const GoogleIntegrationForm = ({
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GoogleConnectionType>();
 	const { projectId } = useParams();
+	const navigate = useNavigate();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
@@ -54,19 +55,16 @@ export const GoogleIntegrationForm = ({
 		try {
 			await ConnectionService.create(projectId!, "google", connectionName!);
 
-			const { data } = await HttpService.post("/google/save", { jsonKey });
-			if (!data.url) {
-				addToast({
-					id: Date.now().toString(),
-					message: tErrors("errorCreatingNewConnection"),
-					title: "Error",
-					type: "error",
-				});
-				LoggerService.error(
-					namespaces.connectionService,
-					`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`
-				);
-				return;
+			const data = await HttpService.post("/google/save", { jsonKey });
+
+			if (data.request.responseURL.includes("error=")) {
+				const errorMsg = new URL(data.request.responseURL).searchParams.get("error");
+				throw new Error(errorMsg!);
+			} else {
+				const msg = new URL(data.request.responseURL).searchParams.get("msg") || "";
+				if (msg.includes("Connection initialized")) {
+					navigate(`/projects/${projectId}/connections`);
+				}
 			}
 		} catch (error) {
 			addToast({
