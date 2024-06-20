@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useSortableData } from "./useSortableData";
 import { TrashIcon, ActionActiveIcon, ActionStoppedIcon } from "@assets/image/icons";
 import { IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
 import { SortButton } from "@components/molecules";
@@ -8,6 +7,7 @@ import { DeleteDeploymentModal } from "@components/organisms/deployments";
 import { fetchDeploymentsInterval } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
+import { useSortableData } from "@hooks";
 import { DeploymentsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Deployment } from "@type/models";
