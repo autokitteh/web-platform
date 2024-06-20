@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/autokitteh/web-platform/compare/v1.5.0...v1.6.0) (2024-06-20)
+
+
+### Features
+
+* add no-console rule in eslint ([#142](https://github.com/autokitteh/web-platform/issues/142)) ([dd84b1f](https://github.com/autokitteh/web-platform/commit/dd84b1f95bb84b74849c6a5f047aac4806a7b42d))
+
 # [1.5.0](https://github.com/autokitteh/web-platform/compare/v1.4.0...v1.5.0) (2024-06-20)
 
 
