@@ -13,6 +13,7 @@ export const Button = ({
 	type = "button",
 	form,
 	ariaLabel,
+	title,
 	onClick,
 }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
@@ -35,6 +36,7 @@ export const Button = ({
 			disabled={disabled}
 			form={form}
 			onClick={onClick}
+			title={title}
 			type={type}
 		>
 			{children}

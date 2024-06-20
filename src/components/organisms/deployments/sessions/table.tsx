@@ -1,127 +1,184 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { CatImage } from "@assets/image";
-import { ArrowLeft, TrashIcon } from "@assets/image/icons";
-import { IconButton, Frame, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { SortButton } from "@components/molecules";
-import { SessionsTableState, SessionsTableFilter } from "@components/organisms/deployments";
+import { ArrowLeft, RotateIcon } from "@assets/image/icons";
+import { IconButton, Frame, TBody, THead, Table, Th, Tr } from "@components/atoms";
+import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal } from "@components/organisms/deployments/sessions";
-import { fetchSessionsInterval } from "@constants";
-import { ModalName, SortDirectionVariant } from "@enums/components";
+import { SessionsTableList } from "@components/organisms/deployments/sessions";
+import { fetchSessionsInterval, namespaces } from "@constants";
+import { DeploymentStateVariant } from "@enums";
+import { ModalName } from "@enums/components";
+import { useInterval } from "@hooks";
 import { reverseSessionStateConverter } from "@models/utils";
-import { SessionsService } from "@services";
+import { LoggerService, SessionsService, DeploymentsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
-import { SortDirection } from "@type/components";
-import { Session, SessionStateKeyType } from "@type/models";
+import { Session, SessionStateKeyType, DeploymentSession } from "@type/models";
 import { cn } from "@utilities";
-import { orderBy } from "lodash";
-import moment from "moment";
+import { debounce, isEqual, sumBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
 
 export const SessionsTable = () => {
-	const { t: tErrors } = useTranslation("errors");
+	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
-	const { openModal, closeModal } = useModalStore();
+	const { closeModal } = useModalStore();
+	const { startInterval, stopInterval } = useInterval();
 	const { projectId, deploymentId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionStateType, setSessionStateType] = useState<number>();
-	const [sort, setSort] = useState<{
-		direction: SortDirection;
-		column: keyof Session;
-	}>({ direction: SortDirectionVariant.DESC, column: "createdAt" });
-	const [initialLoad, setInitialLoad] = useState(true);
-
-	const frameClass = cn("pl-7 bg-gray-700 transition-all", {
-		"w-3/4 rounded-r-none": !sessionId,
-		"w-1/2": sessionId,
+	const [selectedSessionId, setSelectedSessionId] = useState<string>();
+	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
+	const [tailState, seTailState] = useState({
+		live: false,
+		display: false,
 	});
-	const sessionRowClass = (id: string) =>
-		cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === sessionId });
+	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 
-	const fetchSessions = async () => {
-		if (!deploymentId) return;
+	const frameClass = useMemo(
+		() => cn("pl-7 bg-gray-700 transition-all w-1/2", { "w-3/4 rounded-r-none": !sessionId }),
+		[sessionId]
+	);
 
-		const { data, error } = await SessionsService.listByDeploymentId(deploymentId, { stateType: sessionStateType });
+	const fetchDeployments = useCallback(async () => {
+		if (!projectId) return;
+		const { data, error } = await DeploymentsService.listByProjectId(projectId!);
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: tErrors("deploymentFetchError", { ns: "services" }),
 				type: "error",
 				title: tErrors("error"),
 			});
 			return;
 		}
-		if (!data) return;
+		if (!data?.length) return;
 
-		setSessions(data);
-	};
+		const deployment = data.find((deployment) => deployment.deploymentId === deploymentId);
+
+		if (isEqual(deployment?.sessionStats, sessionStats) || !deployment?.sessionStats) return;
+
+		const deploymentState = deployment?.state === DeploymentStateVariant.active ? true : false;
+		seTailState({ live: deploymentState, display: deploymentState });
+
+		setSessionStats(deployment?.sessionStats);
+		debouncedFetchSessions();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionStats]);
+
+	const fetchSessions = useCallback(
+		async (nextPageToken?: string) => {
+			const { data, error } = await SessionsService.listByDeploymentId(
+				deploymentId!,
+				{
+					stateType: sessionStateType,
+				},
+				nextPageToken
+			);
+
+			if (error) {
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("sessionsFetchError"),
+					type: "error",
+					title: tErrors("error"),
+				});
+				LoggerService.error(
+					namespaces.sessionsService,
+					tErrors("sessionsFetchErrorExtended", { error: (error as Error).message })
+				);
+				return;
+			}
+
+			if (!data?.sessions) return;
+
+			setSessions((prevSessions) => {
+				if (!nextPageToken) return data.sessions;
+				return [...prevSessions, ...data.sessions];
+			});
+			setSessionsNextPageToken(data.nextPageToken);
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[sessionStateType]
+	);
+
+	const debouncedFetchSessions = debounce(fetchSessions, 100);
+	const debouncedFetchDeployments = debounce(fetchDeployments, 100);
 
 	useEffect(() => {
-		fetchSessions();
-
-		const sessionsFetchIntervalId = setInterval(fetchSessions, fetchSessionsInterval);
-		return () => clearInterval(sessionsFetchIntervalId);
+		debouncedFetchDeployments();
+		debouncedFetchSessions();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionStateType]);
 
-	const toggleSortSessions = useCallback(
-		(key: keyof Session) => {
-			const newDirection =
-				sort.column === key && sort.direction === SortDirectionVariant.ASC
-					? SortDirectionVariant.DESC
-					: SortDirectionVariant.ASC;
-			setSort({ direction: newDirection, column: key });
-		},
-		[sort]
-	);
-
-	const sortedSessions = useMemo(() => {
-		if (initialLoad) {
-			setInitialLoad(false);
-			return sessions;
-		}
-		return orderBy(sessions, [sort.column], [sort.direction]);
+	useEffect(() => {
+		if (tailState.live) startInterval("sessionsFetchIntervalId", debouncedFetchDeployments, fetchSessionsInterval);
+		if (!tailState.live) stopInterval("sessionsFetchIntervalId");
+		return () => {
+			stopInterval("sessionsFetchIntervalId");
+			debouncedFetchDeployments.cancel();
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessions, sort]);
-
-	const showDeleteModal = useCallback(() => {
-		openModal(ModalName.deleteDeploymentSession);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [tailState.live]);
 
 	const handleRemoveSession = async () => {
-		if (!sessionId) return;
-		const { error } = await SessionsService.deleteSession(sessionId);
+		if (!selectedSessionId) return;
+		const { error } = await SessionsService.deleteSession(selectedSessionId);
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: tErrors("failedRemoveSession"),
 				type: "error",
 				title: tErrors("error"),
 			});
+			LoggerService.error(
+				namespaces.sessionsService,
+				tErrors("failedRemoveSessionExtended", { sessionId: selectedSessionId })
+			);
 			return;
 		}
 
 		closeModal(ModalName.deleteDeploymentSession);
-		fetchSessions();
+		closeSessionLog();
+		debouncedFetchDeployments();
 	};
 
-	const openSessionLog = useCallback((sessionId: string) => {
-		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const closeSessionLog = useCallback(() => {
+		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
+	}, [navigate, projectId, deploymentId]);
 
 	const handleFilterSessions = (stateType?: SessionStateKeyType) => {
 		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
 		setSessionStateType(selectedSessionStateFilter);
+		closeSessionLog();
 	};
-	const sessionLogsEditorClass = cn("w-3/5 transition pt-20 bg-gray-700 rounded-l-none");
+
+	const handleItemsRendered = ({ visibleStopIndex }: ListOnItemsRenderedProps) => {
+		if (visibleStopIndex >= sessions.length - 1 && sessionsNextPageToken) {
+			debouncedFetchSessions(sessionsNextPageToken);
+		}
+	};
+
+	const handleScroll = useCallback(
+		({ scrollOffset }: ListOnScrollProps) => {
+			if (scrollOffset !== 0 && tailState.live)
+				seTailState((prevState) => ({
+					...prevState,
+					live: !prevState.live,
+				}));
+		},
+		[tailState.live]
+	);
+
+	const totalSessions = useMemo(() => {
+		return sumBy(sessionStats, "count");
+	}, [sessionStats]);
 
 	return (
-		<div className="flex h-full w-full">
+		<div className="flex w-full h-full">
 			<Frame className={frameClass}>
 				<div className="flex items-center justify-between gap-2.5">
 					<div className="flex items-center flex-wrap gap-2.5">
@@ -133,62 +190,36 @@ export const SessionsTable = () => {
 							<ArrowLeft className="h-4" />
 							{t("buttons.back")}
 						</IconButton>
-						<div className="text-base text-gray-300">
-							{sessions.length} {t("sessionsName")}
-						</div>
+						<div className="text-base text-gray-300 font-mediumy">{t("totalSessions", { total: totalSessions })}</div>
+						{tailState.display ? (
+							<IconButton
+								className="w-5 h-5 p-0 ml-3 cursor-pointer"
+								onClick={() => seTailState((prevState) => ({ ...prevState, live: !prevState.live }))}
+								title={tailState.live ? t("pauseLiveTail") : t("resumeLiveTail")}
+							>
+								<RotateIcon fill={tailState.live ? "green" : "gray"} />
+							</IconButton>
+						) : null}
 					</div>
-					<SessionsTableFilter onChange={handleFilterSessions} />
+					<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 				</div>
-				{sortedSessions.length ? (
-					<Table className="mt-4">
+				{sessions.length ? (
+					<Table className="flex-1 mt-4 overflow-hidden border-transparent border-none">
 						<THead>
-							<Tr>
-								<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("createdAt")}>
-									{t("table.columns.activationTime")}
-									<SortButton
-										className="opacity-0 group-hover:opacity-100"
-										isActive={"createdAt" === sort.column}
-										sortDirection={sort.direction}
-									/>
-								</Th>
-								<Th className="font-normal cursor-pointer group" onClick={() => toggleSortSessions("state")}>
-									{t("table.columns.status")}
-									<SortButton
-										className="opacity-0 group-hover:opacity-100"
-										isActive={"state" === sort.column}
-										sortDirection={sort.direction}
-									/>
-								</Th>
-								<Th
-									className="font-normal border-0 cursor-pointer group"
-									onClick={() => toggleSortSessions("sessionId")}
-								>
-									{t("table.columns.sessionId")}
-									<SortButton
-										className="opacity-0 group-hover:opacity-100"
-										isActive={"sessionId" === sort.column}
-										sortDirection={sort.direction}
-									/>
-								</Th>
-
-								<Th className="border-0 max-w-12" />
+							<Tr className="rounded-3xl">
+								<Th className="font-normal cursor-pointer group">{t("table.columns.activationTime")}</Th>
+								<Th className="font-normal cursor-pointer group">{t("table.columns.status")}</Th>
+								<Th className="font-normal border-0 cursor-pointer group">{t("table.columns.sessionId")}</Th>
+								<Th className="font-normal border-0 max-w-20 mr-1.5">{t("table.columns.actions")}</Th>
 							</Tr>
 						</THead>
-						<TBody className="bg-gray-700">
-							{sortedSessions.map(({ sessionId, createdAt, state }) => (
-								<Tr className={sessionRowClass(sessionId)} key={sessionId} onClick={() => openSessionLog(sessionId)}>
-									<Td>{moment(createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
-									<Td className="text-green-accent">
-										<SessionsTableState sessionState={state} />
-									</Td>
-									<Td className="border-r-0">{sessionId}</Td>
-									<Td className="max-w-12 border-0 pr-1.5 justify-end">
-										<IconButton onClick={showDeleteModal}>
-											<TrashIcon className="w-3 h-3 fill-white" />
-										</IconButton>
-									</Td>
-								</Tr>
-							))}
+						<TBody>
+							<SessionsTableList
+								onItemsRendered={handleItemsRendered}
+								onScroll={handleScroll}
+								onSelectedSessionId={setSelectedSessionId}
+								sessions={sessions}
+							/>
 						</TBody>
 					</Table>
 				) : (
@@ -198,7 +229,7 @@ export const SessionsTable = () => {
 			{sessionId ? (
 				<Outlet />
 			) : (
-				<Frame className={sessionLogsEditorClass}>
+				<Frame className="w-3/5 pt-20 transition bg-gray-700 rounded-l-none">
 					<div className="flex flex-col items-center mt-20">
 						<p className="mb-8 text-lg font-bold text-gray-400">{t("noSelectedSession")}</p>
 						<CatImage className="border-b border-gray-400 fill-gray-400" />

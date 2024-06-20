@@ -4,7 +4,7 @@ import {
 } from "@ak-proto-ts/sessions/v1/session_pb";
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
-import { namespaces } from "@constants";
+import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
 import { SessionLogRecord, convertSessionProtoToModel } from "@models";
 import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse, StartSessionArgsType } from "@type";
@@ -25,11 +25,22 @@ export class SessionsService {
 		}
 	}
 
-	static async listByDeploymentId(deploymentId: string, filter?: SessionFilter): Promise<ServiceResponse<Session[]>> {
+	static async listByDeploymentId(
+		deploymentId: string,
+		filter?: SessionFilter,
+		pageToken?: string,
+		pageSize?: number
+	): Promise<ServiceResponse<{ sessions: Session[]; nextPageToken: string }>> {
 		try {
-			const { sessions: sessionsResponse } = await sessionsClient.list({ deploymentId, stateType: filter?.stateType });
+			const { sessions: sessionsResponse, nextPageToken } = await sessionsClient.list({
+				deploymentId,
+				stateType: filter?.stateType,
+				pageToken,
+				pageSize: pageSize || defaultSessionsVisiblePageSize,
+			});
 			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
-			return { data: sessions, error: undefined };
+
+			return { data: { sessions, nextPageToken }, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);
 

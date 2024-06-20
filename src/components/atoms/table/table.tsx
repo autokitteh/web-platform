@@ -7,7 +7,7 @@ export const Table = ({ className, children }: TableProps) => {
 
 	return (
 		<div className={tableStyle}>
-			<table className="min-w-full">{children}</table>
+			<table className="h-full min-w-full">{children}</table>
 		</div>
 	);
 };

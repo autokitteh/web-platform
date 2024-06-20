@@ -3,3 +3,5 @@ export { SessionsTableState } from "@components/organisms/deployments/sessions/s
 export { SessionTableEditorFrame } from "@components/organisms/deployments/sessions/editor";
 export { SessionsTableFilter } from "@components/organisms/deployments/sessions/filter";
 export { DeleteSessionModal } from "@components/organisms/deployments/sessions/deleteModal";
+export { SessionsTableRow } from "@components/organisms/deployments/sessions/tableRow";
+export { SessionsTableList } from "@components/organisms/deployments/sessions/tableList";

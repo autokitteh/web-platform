@@ -9,6 +9,7 @@ export {
 	isDevelopment,
 	isAuthEnabled,
 	descopeProjectId,
+	defaultSessionsVisiblePageSize,
 } from "@constants/global.constants";
 export { monacoLanguages, defalutFileExtension } from "@constants/monacoLanguages.constants.ts";
 export {
