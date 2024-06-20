@@ -66,6 +66,7 @@ export const SessionsTable = () => {
 
 		setSessionStats(deployment?.sessionStats);
 		debouncedFetchSessions();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionStats]);
 
 	const fetchSessions = useCallback(
@@ -100,6 +101,7 @@ export const SessionsTable = () => {
 			});
 			setSessionsNextPageToken(data.nextPageToken);
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[sessionStateType]
 	);
 
@@ -109,6 +111,7 @@ export const SessionsTable = () => {
 	useEffect(() => {
 		debouncedFetchDeployments();
 		debouncedFetchSessions();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionStateType]);
 
 	useEffect(() => {
@@ -118,6 +121,7 @@ export const SessionsTable = () => {
 			stopInterval("sessionsFetchIntervalId");
 			debouncedFetchDeployments.cancel();
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tailState.live]);
 
 	const handleRemoveSession = async () => {

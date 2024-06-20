@@ -16,6 +16,7 @@ export const useInterval = (): {
 		intervalRefs.current[name] = window.setInterval(() => {
 			callbackRefs.current[name]?.();
 		}, delay);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const stopInterval = useCallback((name: string) => {

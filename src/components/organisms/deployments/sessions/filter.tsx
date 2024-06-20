@@ -45,6 +45,7 @@ export const SessionsTableFilter = ({ sessionStats, onChange }: SessionTableFilt
 				},
 				{ total: 0, ...initialSessionCounts }
 			),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[sessionStats]
 	);
 

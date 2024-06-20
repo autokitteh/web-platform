@@ -20,11 +20,13 @@ export const SessionsTableList = ({
 
 	const openSessionLog = useCallback((sessionId: string) => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const showDeleteModal = useCallback((id: string) => {
 		onSelectedSessionId(id);
 		openModal(ModalName.deleteDeploymentSession);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const itemData = useMemo(
@@ -45,6 +47,7 @@ export const SessionsTableList = ({
 			onItemsRendered(event);
 			setScrollDisplayed(hasScroll);
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[sessions]
 	);
 
