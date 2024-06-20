@@ -14,15 +14,14 @@
 	"projectNotFound": "Couldn't fetch the project details",
 	"defaulEnvironmentNotFoundExtended": "Default environment not found, project ID: {{projectId}}",
 	"connectionNotFound": "Couldn't fetch the connection details",
-	"connectionNotFoundExtended": "Failed to fetch data for project {{projectId}}. Error: {{error}}",
-	"connectionsFetchError": "Couldn't fetch the connection details",
-	"connectionsFetchErrorExtended": "Failed to fetch data for project {{projectId}}. Error: {{error}}",
+	"connectionNotFoundExtended": "Failed to fetch the connection for the project {{projectId}}. Error: {{error}}",
 	"connectionDeleteFailedExtended": "Connection deletion failed - connection ID: {{connectionId}}, error: {{error}}",
+	"connectionCronNotFound": "Couldn't fetch the connection with cron name details",
 	"deleteFailedIdError": "Deployment deletion failed - deployment: {{deploymentId}}, error: {{error}}",
 	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}",
-	"triggerNotCreatedExtended": "Failed to create trigger for project {{projectId}}. Error: {{error}}",
+	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
-	"triggerNotUpdatedExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
+	"triggerNotUpdatedExtended": "Failed to update trigger for the project, trigger ID: {{triggerId}}. Error: {{error}}",
 	"triggerRemoveFailedExtended": "Trigger remove failed, ID: {{triggerId}}",
 	"triggersNotFound": "Couldn't fetch the triggers details",
 	"variableNotCreatedExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
@@ -32,5 +31,6 @@
 	"environmentNotFound": "Couldn't found the environment",
 	"multipleEnvironments": "Multiple environments found, please reload the page",
 	"multipleEnvironmentsFoundExtended": "Multiple environments found, project ID: {{projectId}}",
-	"intergrationsNotFoundExtended": "Couldn't fetch the intergration, project ID: {{projectId}}"
+	"intergrationsNotFound": "Couldn't fetch intergrations",
+	"intergrationsNotFoundExtended": "Couldn't fetch intergrations, project ID: {{projectId}}"
 }

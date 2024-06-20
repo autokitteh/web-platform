@@ -70,6 +70,7 @@
 			}
 		},
 		"form": {
+			"information": "Information",
 			"addNewTrigger": "Add new trigger",
 			"modifyTrigger": "Modify trigger",
 			"titleData": "Data",
@@ -78,10 +79,12 @@
 			"ariaDeleteData": "Delete {{name}} data",
 			"loading": "Loading",
 			"placeholders": {
+				"selectTriggerType": "Select trigger type",
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
 				"functionName": "Function name",
 				"name": "Name",
+				"cron": "Cron expression",
 				"eventType": "Event type",
 				"filter": "Filter",
 				"key": "Key",
@@ -89,6 +92,10 @@
 			},
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
+			},
+			"info": {
+				"aboutCron": "About cronjob expressions",
+				"schedules": "Predefined schedules or intervals"
 			}
 		}
 	},

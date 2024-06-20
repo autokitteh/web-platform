@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { PlusCircle } from "@assets/image";
-import { EditIcon, TrashIcon } from "@assets/image/icons";
+import { EditIcon, TrashIcon, ClockIcon } from "@assets/image/icons";
 import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
@@ -92,6 +92,11 @@ export const TriggersTable = () => {
 		[triggerId]
 	);
 
+	const handleNavigate = (triggerId: string, isScheduler: boolean) => {
+		const path = isScheduler ? `/edit-scheduler` : `/edit`;
+		navigate(`${triggerId}${path}`);
+	};
+
 	return isLoading ? (
 		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
 			{t("buttons.loading")}...
@@ -133,40 +138,26 @@ export const TriggersTable = () => {
 									sortDirection={sort.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("eventType")}>
-								{t("table.columns.eventType")}
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"eventType" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("filter")}>
-								{t("table.columns.filter")}
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"filter" === sort.column}
-									sortDirection={sort.direction}
-								/>
-							</Th>
 							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 					<TBody>
 						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
-								<Td className="font-semibold">{trigger.name}</Td>
+								<Td className="font-semibold">
+									<div className="flex gap-3">
+										{trigger.data?.schedule?.string?.v ? <ClockIcon className="w-4 fill-white" /> : null} {trigger.name}
+									</div>
+								</Td>
 								<Td className="font-semibold">{trigger.connectionName}</Td>
 								<Td>
 									{trigger.path}:{trigger.entryFunction}
 								</Td>
-								<Td>{trigger.eventType}</Td>
-								<Td>{trigger.filter}</Td>
 								<Td className="max-w-20">
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
-											onClick={() => navigate(`${trigger.triggerId!}/edit`)}
+											onClick={() => handleNavigate(trigger.triggerId!, !!trigger.data?.schedule)}
 										>
 											<EditIcon className="w-3 h-3 fill-white" />
 										</IconButton>

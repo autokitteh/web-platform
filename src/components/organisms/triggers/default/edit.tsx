@@ -1,75 +1,86 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-import { Select, ErrorMessage, Input, Button, IconButton } from "@components/atoms";
+import { Select, ErrorMessage, Input, Button, IconButton, Loader } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
+import { namespaces } from "@constants";
+import { TriggerFormIds } from "@enums/components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, TriggersService } from "@services";
+import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
-import { triggerSchema } from "@validations";
+import { defaultTriggerSchema } from "@validations";
 import { debounce, has } from "lodash";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const EditTrigger = () => {
+export const DefaultEditTrigger = () => {
 	const { triggerId, projectId } = useParams();
 	const navigate = useNavigate();
 	const { resources } = useProjectStore();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
-	const [isLoading, setIsLoading] = useState(false);
+	const [isSaving, setIsSaving] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const addToast = useToastStore((state) => state.addToast);
+
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
 	const [connections, setConnections] = useState<SelectOption[]>([]);
-	const [filesName, setFilesName] = useState<SelectOption[]>([]);
-	const addToast = useToastStore((state) => state.addToast);
-
-	useLayoutEffect(() => {
-		const fetchTrigger = async () => {
-			const { data } = await TriggersService.get(triggerId!);
-			if (!data) return;
-			setTrigger(data);
-			setTriggerData(data.data || {});
-		};
-
-		fetchTrigger();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 
 	const fetchData = async () => {
 		try {
 			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-			if (connectionsError) throw new Error(tErrors("connectionsFetchError"));
-			if (!connections?.length) return;
+			if (connectionsError) throw connectionsError;
 
-			const formattedConnections = connections.map((item) => ({
+			const formattedConnections = connections?.map((item) => ({
 				value: item.connectionId,
 				label: item.name,
 			}));
-			setConnections(formattedConnections);
+			setConnections(formattedConnections || []);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				value: name,
 				label: name,
 			}));
-			setFilesName(formattedResources);
+			setFilesNameList(formattedResources);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: tErrors("connectionsFetchError"),
 				type: "error",
 				title: tErrors("error"),
 			});
+			LoggerService.error(
+				namespaces.triggerService,
+				tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+			);
 		} finally {
 			setIsLoadingData(false);
 		}
 	};
 
-	useLayoutEffect(() => {
+	const fetchTrigger = async () => {
+		const { data } = await TriggersService.get(triggerId!);
+		if (!data) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("triggerNotFound"),
+				type: "error",
+				title: tErrors("error"),
+			});
+			LoggerService.error(namespaces.triggerService, tErrors("triggerNotFoundExtended", { triggerId }));
+			return;
+		}
+		setTrigger(data);
+		setTriggerData(data.data || {});
+	};
+
+	useEffect(() => {
+		fetchTrigger();
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -82,7 +93,7 @@ export const EditTrigger = () => {
 		getValues,
 		reset,
 	} = useForm({
-		resolver: zodResolver(triggerSchema),
+		resolver: zodResolver(defaultTriggerSchema),
 		defaultValues: {
 			name: "",
 			connection: { value: "", label: "" },
@@ -112,23 +123,23 @@ export const EditTrigger = () => {
 	const onSubmit = async () => {
 		const { connection, filePath, name, entryFunction, eventType, filter } = getValues();
 
-		setIsLoading(true);
+		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
 			triggerId: trigger?.triggerId,
 			connectionId: connection.value,
 			eventType,
 			name,
-			path: filePath.label,
+			path: filePath.value,
 			entryFunction,
 			filter,
 			data: triggerData,
 		});
-		setIsLoading(false);
+		setIsSaving(false);
 
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: tErrors("triggerNotFound"),
 				type: "error",
 				title: tErrors("error"),
 			});
@@ -143,22 +154,19 @@ export const EditTrigger = () => {
 	const updateTriggerDataKey = debounce((newKey, oldKey) => {
 		if (newKey === oldKey) return;
 
-		const updatedTriggerData = Object.keys(triggerData).reduce((triggers: TriggerData, key) => {
-			if (key === oldKey) {
-				triggers[newKey] = triggerData[key];
-				return triggers;
-			}
-
-			triggers[key] = triggerData[key];
-			return triggers;
-		}, {});
-		setTriggerData(updatedTriggerData);
+		setTriggerData((prevData) => {
+			const updatedTriggerData = { ...prevData };
+			updatedTriggerData[newKey] = updatedTriggerData[oldKey];
+			delete updatedTriggerData[oldKey];
+			return updatedTriggerData;
+		});
 	}, 500);
 
-	const updateTriggerDataValue = (value: string, key: string) => {
-		const updatedTriggerData = { ...triggerData };
-		updatedTriggerData[key].string.v = value;
-		setTriggerData(updatedTriggerData);
+	const updateTriggerDataValue = (key: string, value: string) => {
+		setTriggerData((prevData) => ({
+			...prevData,
+			[key]: { string: { v: value } },
+		}));
 	};
 
 	const handleAddNewData = () => {
@@ -172,8 +180,10 @@ export const EditTrigger = () => {
 			return;
 		}
 
-		const updatedTriggerData = { ...triggerData, [""]: { string: { v: "" } } };
-		setTriggerData(updatedTriggerData);
+		setTriggerData((prevData) => ({
+			...prevData,
+			"": { string: { v: "" } },
+		}));
 	};
 
 	const handleDeleteData = (key: string) => {
@@ -185,14 +195,22 @@ export const EditTrigger = () => {
 	};
 
 	return isLoadingData ? (
-		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{t("loading")}...</div>
+		<div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+			<Loader />
+		</div>
 	) : (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" form="modifyTriggerForm" isLoading={isLoading} title={t("modifyTrigger")} />
-			<form className="flex items-start gap-10" id="modifyTriggerForm" onSubmit={handleSubmit(onSubmit)}>
+			<TabFormHeader
+				className="mb-11"
+				form={TriggerFormIds.modifyDefaultForm}
+				isLoading={isSaving}
+				title={t("modifyTrigger")}
+			/>
+			<form className="flex items-start gap-10" id={TriggerFormIds.modifyDefaultForm} onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col w-full gap-6">
 					<div className="relative">
 						<Input
+							disabled
 							{...register("name")}
 							aria-label={t("placeholders.name")}
 							className={inputClass("name")}
@@ -231,7 +249,7 @@ export const EditTrigger = () => {
 									aria-label={t("placeholders.selectFile")}
 									isError={!!errors.filePath}
 									onChange={(selected) => field.onChange(selected)}
-									options={filesName}
+									options={filesNameList}
 									placeholder={t("placeholders.selectFile")}
 									ref={null}
 									value={field.value}
@@ -294,7 +312,7 @@ export const EditTrigger = () => {
 													aria-label={t("placeholders.value")}
 													className="w-full"
 													defaultValue={value.string.v}
-													onChange={(e) => updateTriggerDataValue(e.target.value, key)}
+													onChange={(e) => updateTriggerDataValue(key, e.target.value)}
 													placeholder={t("placeholders.value")}
 												/>
 											</div>

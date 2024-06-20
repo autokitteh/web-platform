@@ -7,10 +7,11 @@ const selectItemSchema = z.object({
 	disabled: z.boolean().optional(),
 });
 
-let triggerSchema: ZodObject<Record<string, ZodTypeAny>>;
+let defaultTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
+let schedulerTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
 
 i18n.on("initialized", () => {
-	triggerSchema = z.object({
+	defaultTriggerSchema = z.object({
 		name: z.string().min(1, i18n.t("triggerNameIsRequired", { ns: "validations" })),
 		connection: selectItemSchema.refine((value) => value.label, {
 			message: i18n.t("connectionIsRequired", { ns: "validations" }),
@@ -22,6 +23,27 @@ i18n.on("initialized", () => {
 		eventType: z.string(),
 		filter: z.string(),
 	});
+
+	schedulerTriggerSchema = z.object({
+		name: z.string().min(1, i18n.t("triggerNameIsRequired", { ns: "validations" })),
+		cron: z
+			.string()
+			.regex(
+				new RegExp(
+					"^(@(?:yearly|annually|monthly|weekly|daily|midnight|hourly)" +
+						"|@every\\ +(?:\\d+[dhms])+" +
+						"|(?:(?:(?:\\d+,)*\\d+|\\d+[/-]\\d+|\\*(?:\\/\\d+)?|\\?)\\ +){4,5}" +
+						"(?:(?:\\d+,)*\\d+|\\d+[/-]\\d+|\\*(?:\\/\\d+)?|\\?|(?:[a-zA-Z]{3}-)?[a-zA-Z]{3})" +
+						"(?:[ \\d]+)?" +
+						")$"
+				),
+				{ message: i18n.t("cronExpressionsFormat", { ns: "validations" }) }
+			),
+		filePath: selectItemSchema.refine((value) => value.label, {
+			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
+		}),
+		entryFunction: z.string().min(1, i18n.t("functionNameIsRequired", { ns: "validations" })),
+	});
 });
 
-export { triggerSchema };
+export { defaultTriggerSchema, schedulerTriggerSchema };

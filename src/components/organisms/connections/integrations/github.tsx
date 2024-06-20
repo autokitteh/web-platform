@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { FloppyDiskIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
 import { Select, Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { baseUrl, namespaces } from "@constants";
-import { selectIntegrationGithub, infoGithubLinks } from "@constants/lists";
+import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoggerService } from "@services";
@@ -213,7 +213,7 @@ export const GithubIntegrationForm = () => {
 							setSelectedConnectionType(selected.value);
 						}
 					}}
-					options={selectIntegrationGithub}
+					options={githubIntegrationAuthMethods}
 					placeholder={t("placeholders.selectConnectionType")}
 				/>
 				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat ? renderPATFields() : null}
