@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useCallback } from "react";
+import React, { forwardRef, useState, useCallback, useId } from "react";
 import { InputProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
@@ -20,16 +20,22 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const [hasValue, setHasValue] = useState(!!rest.value);
 
 	const handleFocus = useCallback(() => setIsFocused(true), []);
-	const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-		setIsFocused(false);
-		setHasValue(!!e.target.value);
-	}, []);
+	const handleBlur = useCallback(
+		(e: React.FocusEvent<HTMLInputElement>) => {
+			setIsFocused(false);
+			const newValue = !!e.target.value;
+			if (newValue !== hasValue) setHasValue(newValue);
+		},
+		[hasValue]
+	);
+
 	const handleChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
-			setHasValue(!!e.target.value);
+			const newValue = !!e.target.value;
+			if (newValue !== hasValue) setHasValue(newValue);
 			onChange?.(e);
 		},
-		[onChange]
+		[hasValue, onChange]
 	);
 
 	const placeholderText = isRequired ? `${placeholder} *` : placeholder;
@@ -59,19 +65,22 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 		className?.split(" ").find((c) => c.startsWith("bg-"))
 	);
 
+	const id = useId();
+
 	return (
 		<div className={baseClass}>
 			<input
 				{...rest}
 				className={inputClass}
 				disabled={disabled}
+				id={id}
 				onBlur={handleBlur}
 				onChange={handleChange}
 				onFocus={handleFocus}
 				ref={ref}
 				type={type}
 			/>
-			<label className={labelClass}>
+			<label className={labelClass} htmlFor={id}>
 				<span className="relative z-10">{placeholderText}</span>
 				<span className={borderOverlayLabelClass} />
 			</label>
