@@ -73,7 +73,7 @@ export const Sidebar = () => {
 									) : null}
 								</AnimatePresence>
 							</Button>
-							<Button className="hover:bg-transparent" href="/settings">
+							<Button className="hover:bg-transparent" href="/settings/profile">
 								<Settings className="w-8 h-8" fill="black" />
 								<AnimatePresence>
 									{isOpen ? (
