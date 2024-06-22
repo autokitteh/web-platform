@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { IconLogo, IconLogoName } from "@assets/image";
 import { Logout, Settings } from "@assets/image/sidebar";
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
@@ -30,7 +30,7 @@ export const Sidebar = () => {
 	};
 
 	return (
-		<Suspense fallback={<div>loading...</div>}>
+		<Suspense fallback={<Loader size="lg" />}>
 			<div className="w-main-nav-sidebar relative">
 				<div
 					className="absolute flex items-start h-full top-0 left-0 z-50"
@@ -76,7 +76,7 @@ export const Sidebar = () => {
 							</Button>
 							{isAuthEnabled ? (
 								<div>
-									<Button className="hover:bg-transparent" href="/settings/profile">
+									<Button className="hover:bg-transparent" href="/settings">
 										<Settings className="w-8 h-8" fill="black" />
 										<AnimatePresence>
 											{isOpen ? (
