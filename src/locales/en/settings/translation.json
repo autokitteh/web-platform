@@ -1,4 +1,11 @@
 {
+	"menu": {
+		"advanced": "Advanced",
+		"billing": "Billing",
+		"myProfile": "My Profile",
+		"notifications": "Notifications",
+		"security": "Security"
+	},
 	"security": {
 		"creatTokenButton": "Create Token",
 		"creatTokenTextAreaPlaceholder": "Click the button below to create a token",
