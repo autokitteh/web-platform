@@ -2,6 +2,7 @@ export enum ButtonVariant {
 	default = "default",
 	filled = "filled",
 	outline = "outline",
+	light = "light",
 }
 
 export enum TopbarButton {
