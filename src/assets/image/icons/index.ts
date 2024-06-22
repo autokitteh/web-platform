@@ -27,3 +27,4 @@ export { default as User } from "@assets/image/icons/User.svg?react";
 export { default as Bell } from "@assets/image/icons/Bell.svg?react";
 export { default as Sliders } from "@assets/image/icons/Sliders.svg?react";
 export { default as Receipt } from "@assets/image/icons/Receipt.svg?react";
+export { default as Security } from "@assets/image/icons/Security.svg?react";

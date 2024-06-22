@@ -4,4 +4,3 @@ export { Sessions } from "@components/pages/sessions";
 export { Triggers } from "@components/pages/triggers";
 export { Variables } from "@components/pages/variables";
 export { Connections } from "@components/pages/connections";
-export { Settings } from "@components/pages/settings";
