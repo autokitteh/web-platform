@@ -27,11 +27,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 		{ "border-error": isError }
 	);
 
-	const inputClass = cn(
-		"w-full h-12 py-2.5 px-4 bg-transparent outline-none",
-		{ "text-gray-400": disabled },
-		classInput
-	);
+	const inputClass = cn("w-full h-12 py-2.5 px-4 bg-transparent outline-none", classInput);
 
 	const labelClass = cn(
 		"absolute left-4 transition-all pointer-events-none",
