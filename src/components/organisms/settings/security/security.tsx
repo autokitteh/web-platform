@@ -18,15 +18,15 @@ export const Security = () => {
 		openModal(ModalName.getToken, jwtToken);
 	};
 	return (
-		<div className="flex flex-col">
+		<>
 			<Title className="mb-4">{t("security.title")}</Title>
 			<div>
 				<p className="mb-4">{t("security.howToUseTokenText")}</p>
-				<Button className="border-2 border-black float-end" onClick={createToken} variant="light">
+				<Button className="border-2 border-black" onClick={createToken} variant="light">
 					{isLoading ? <Loader size="md" /> : null}
 					{t("security.creatTokenButton")}
 				</Button>
 			</div>
-		</div>
+		</>
 	);
 };

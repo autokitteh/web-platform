@@ -7,7 +7,7 @@ import { SessionTableEditorFrame } from "@components/organisms/deployments";
 import { Security } from "@components/organisms/settings";
 import { AddTrigger, DefaultEditTrigger, SchedulerEditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
-import { Dashboard, Project, Sessions, Settings, Variables } from "@components/pages";
+import { Dashboard, Project, Sessions, Variables } from "@components/pages";
 import { Triggers } from "@components/pages";
 import { Connections } from "@components/pages";
 import { Deployments } from "@components/pages/deployments";
@@ -54,11 +54,8 @@ export const App: React.FC = () => (
 					</Route>
 				</Route>
 			</Route>
-
 			<Route element={<SettingsLayout />} path="settings">
-				<Route element={<Settings />} path="profile">
-					<Route element={<Security />} index />
-				</Route>
+				<Route element={<Security />} index />
 			</Route>
 		</Routes>
 	</BrowserRouter>
