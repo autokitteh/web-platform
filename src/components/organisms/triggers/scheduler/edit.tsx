@@ -86,6 +86,7 @@ export const SchedulerEditTrigger = () => {
 		control,
 		getValues,
 		reset,
+		watch,
 	} = useForm({
 		resolver: zodResolver(schedulerTriggerSchema),
 		defaultValues: {
@@ -108,7 +109,6 @@ export const SchedulerEditTrigger = () => {
 
 	const onSubmit = async () => {
 		const { name, cron, filePath, entryFunction } = getValues();
-
 		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
 			triggerId: triggerId!,
@@ -135,6 +135,8 @@ export const SchedulerEditTrigger = () => {
 	};
 
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
+
+	const { name, cron, entryFunction } = watch();
 
 	return isLoadingData ? (
 		<div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
@@ -163,11 +165,13 @@ export const SchedulerEditTrigger = () => {
 							isError={!!errors.name}
 							isRequired
 							placeholder={t("placeholders.name")}
+							value={name}
 						/>
 						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 					</div>
 					<div className="relative">
 						<Input
+							value={cron}
 							{...register("cron")}
 							aria-label={t("placeholders.cron")}
 							className={inputClass("cron")}
@@ -199,6 +203,7 @@ export const SchedulerEditTrigger = () => {
 					</div>
 					<div className="relative">
 						<Input
+							value={entryFunction}
 							{...register("entryFunction")}
 							aria-label={t("placeholders.functionName")}
 							className={inputClass("entryFunction")}

@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useCallback, useId } from "react";
+import React, { forwardRef, useState, useCallback, useEffect, useId } from "react";
 import { InputVariant } from "@enums/components";
 import { InputProps } from "@interfaces/components";
 import { cn } from "@utilities";
@@ -14,12 +14,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 		placeholder,
 		isRequired,
 		variant,
+		value,
+		defaultValue,
 		onChange,
 		...rest
 	} = props;
 
 	const [isFocused, setIsFocused] = useState(false);
-	const [hasValue, setHasValue] = useState(!!rest.value);
+	const [hasValue, setHasValue] = useState<boolean>();
+
+	useEffect(() => {
+		setHasValue(!!value || !!defaultValue);
+	}, [value, defaultValue]);
 
 	const handleFocus = useCallback(() => setIsFocused(true), []);
 	const handleBlur = useCallback(
@@ -34,7 +40,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const handleChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const newValue = !!e.target.value;
-			console.log(newValue);
+
 			if (newValue !== hasValue) setHasValue(newValue);
 			onChange?.(e);
 		},
@@ -76,6 +82,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 			<input
 				{...rest}
 				className={inputClass}
+				defaultValue={defaultValue}
 				disabled={disabled}
 				id={id}
 				onBlur={handleBlur}
@@ -83,6 +90,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 				onFocus={handleFocus}
 				ref={ref}
 				type={type}
+				value={value}
 			/>
 			<label className={labelClass} htmlFor={id}>
 				<span className="relative z-10">{placeholderText}</span>
