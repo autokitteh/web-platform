@@ -16,7 +16,7 @@ export const Toast = () => {
 	}, [toasts, removeToast]);
 
 	const baseStyle = (toastType: ToasterTypes) =>
-		cn("fixed right-20 bottom-10 z-50 bg-black max-w-420 py-3 px-4 pl-6 border rounded-4xl", {
+		cn("fixed right-20 bottom-10 z-[51] bg-black max-w-420 py-3 px-4 pl-6 border rounded-4xl", {
 			"border-green-accent": toastType === "success",
 			"border-error": toastType === "error",
 		});

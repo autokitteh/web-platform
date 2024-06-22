@@ -4,6 +4,7 @@ export enum ModalName {
 	addCodeAssets = "addCodeAssets",
 	deleteVariable = "deleteVariable",
 	deleteFile = "deleteFile",
+	getToken = "getToken",
 	deleteDeployment = "deleteDeployment",
 	deleteDeploymentSession = "deleteDeploymentSession",
 }

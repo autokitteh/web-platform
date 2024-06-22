@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { Bell, Receipt, Sliders, User } from "@assets/image/icons";
-import { Button, IconSvg, Loader, LogoCatLarge, Textarea, Title } from "@components/atoms";
+import { Button, IconSvg, Loader, LogoCatLarge, Title } from "@components/atoms";
+import { DisplayTokenModal } from "@components/organisms/settings";
+import { ModalName } from "@enums/components";
 import { HttpService } from "@services";
+import { useModalStore } from "@store";
 import { useTranslation } from "react-i18next";
 
 export const Settings = () => {
 	const { t } = useTranslation("settings");
 	const [isLoading, setIsLoading] = useState(false);
+	const [token, setToken] = useState("");
+	const { openModal } = useModalStore();
+
 	const createToken = () => {
 		setIsLoading(true);
 		HttpService.post("/auth/tokens");
+		setToken("token");
+		openModal(ModalName.getToken, token);
 	};
 
 	return (
@@ -44,14 +52,6 @@ export const Settings = () => {
 				<div className="flex flex-col">
 					<Title className="mb-4">{t("security.title")}</Title>
 					<div>
-						<div className="block w-full mb-2">
-							<Textarea
-								aria-label={t("security.creatTokenTextAreaPlaceholder")}
-								disabled
-								placeholder={t("security.creatTokenTextAreaPlaceholder")}
-								rows={4}
-							/>
-						</div>
 						<p className="mb-4">{t("security.howToUseTokenText")}</p>
 						<Button className="border-2 border-black float-end" onClick={createToken} variant="light">
 							{isLoading ? <Loader size="md" /> : null}
@@ -61,6 +61,7 @@ export const Settings = () => {
 				</div>
 				<LogoCatLarge className="!-bottom-5 !-right-5" />
 			</div>
+			<DisplayTokenModal />
 		</div>
 	);
 };

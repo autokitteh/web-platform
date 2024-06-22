@@ -1,54 +1,61 @@
 {
+	"addCodeAssets": {
+		"ariaLabelNewFile": "New file name",
+		"placeholderName": "Name",
+		"selectExtension": "Extension",
+		"title": "Create new"
+	},
 	"deleteConnection": {
-		"title": "Delete  {{name}} Connection",
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete",
 		"line": "This connection you are about to delete uses:",
 		"line2": "Connection name - <strong>{{name}}</strong> <br /> App name - <strong>{{appName}}</strong>",
 		"line3": "Deleting the connection may cause failure of projects.",
 		"line4": "Are you sure you want to delete this connection?",
+		"title": "Delete  {{name}} Connection"
+	},
+	"deleteDeployment": {
 		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete"
+		"deleteButton": "Yes, delete",
+		"line": "You will not be able to recover it",
+		"title": "Delete this deployment?"
+	},
+	"deleteDeploymentSession": {
+		"cancelButton": "Cancel",
+		"content": "You will not be able to recover it",
+		"deleteButton": "Yes, delete",
+		"title": "Delete this session?"
+	},
+	"deleteFile": {
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete",
+		"line": "You will not be able to recover it.",
+		"title": "Delete {{name}}"
 	},
 	"deleteTrigger": {
-		"title": "Delete {{name}} Trigger",
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete",
 		"line": "This trigger you are about to delete uses:",
 		"line2": "Connection - <strong>{{connection}}</strong> <br /> Call - <strong>{{call}}</strong> <br /> Event Type - <strong>{{eventType}}</strong>",
 		"line3": "Deleting the trigger may cause failure of project.",
 		"line4": "Are you sure you want to delete this trigger?",
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete"
+		"title": "Delete {{name}} Trigger"
 	},
 	"deleteVariable": {
-		"title": "Delete Variable",
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete",
 		"line": "This variable you are about to delete uses:",
 		"line2": "Name - <strong>{{name}}</strong> <br /> Value - <strong>{{value}}</strong>",
 		"line3": "Deleting the variable may cause failure of projects.",
 		"line4": "Are you sure you want to delete this variable?",
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete"
+		"title": "Delete Variable"
 	},
-	"deleteFile": {
-		"title": "Delete {{name}}",
-		"line": "You will not be able to recover it.",
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete"
-	},
-	"addCodeAssets": {
-		"title": "Create new",
-		"placeholderName": "Name",
-		"ariaLabelNewFile": "New file name",
-		"selectExtension": "Extension",
-		"noExtensionsAvailable": "No extensions available"
-	},
-	"deleteDeployment": {
-		"title": "Delete this deployment?",
-		"line": "You will not be able to recover it",
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete"
-	},
-	"deleteDeploymentSession": {
-		"title": "Delete this session?",
-		"content": "You will not be able to recover it",
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete"
+	"getToken": {
+		"closeButton": "Close",
+		"copyButton": "Copy",
+		"copyFailure": "Failed to copy token to clipboard",
+		"copySuccess": "Token copied to clipboard",
+		"line": "Create, copy and use  the token in your application - using CLI or our VSCode Extension",
+		"title": "Get Token"
 	}
 }

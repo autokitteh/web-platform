@@ -2,7 +2,7 @@
 	"security": {
 		"creatTokenButton": "Create Token",
 		"creatTokenTextAreaPlaceholder": "Click the button below to create a token",
-		"howToUseTokenText": "Copy that token to your clipboard and use it in your application - using CLI or our VSCode Extension.",
+		"howToUseTokenText": "Create, copy and use  the token in your application - using CLI or our VSCode Extension.",
 		"title": "Security"
 	}
 }
