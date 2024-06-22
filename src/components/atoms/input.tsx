@@ -6,7 +6,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const { icon, isError, className, classInput, disabled, type = "text", placeholder, isRequired, ...rest } = props;
 
 	const [isFocused, setIsFocused] = useState(false);
-	const [hasValue, setHasValue] = useState(false);
+	const [hasValue, setHasValue] = useState(!!rest.value);
 
 	const handleFocus = useCallback(() => setIsFocused(true), []);
 	const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
@@ -28,14 +28,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	);
 
 	const inputClass = cn(
-		"w-full h-12 py-2.5 px-4 bg-transparent outline-none text-gray-800",
-		{ "placeholder:text-gray-500": disabled },
+		"w-full h-12 py-2.5 px-4 bg-transparent outline-none",
+		{ "text-gray-400": disabled },
 		classInput
 	);
 
 	const labelClass = cn(
 		"absolute left-4 transition-all pointer-events-none",
-		{ "text-gray-500": disabled },
+		{ "text-gray-400": disabled },
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
 		{ "-top-2 left-3 text-xs  before:bg-gray-500 px-1": isFocused || hasValue }
 	);
