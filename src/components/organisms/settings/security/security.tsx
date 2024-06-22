@@ -9,13 +9,12 @@ import { useTranslation } from "react-i18next";
 export const Security = () => {
 	const { t } = useTranslation("settings");
 	const [isLoading, setIsLoading] = useState(false);
-	// const [token, setToken] = useState("");
 	const { openModal } = useModalStore();
 
 	const createToken = async () => {
 		setIsLoading(true);
 		const { data: jwtToken } = await HttpService.post("/auth/tokens");
-		// setToken(jwtToken);
+		setIsLoading(false);
 		openModal(ModalName.getToken, jwtToken);
 	};
 	return (
