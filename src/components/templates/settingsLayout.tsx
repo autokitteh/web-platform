@@ -10,11 +10,9 @@ export const SettingsLayout = () => {
 				<Sidebar />
 				<div className="flex flex-col overflow-auto pl-7 -ml-7 transition w-full">
 					<SettingsTopbar />
-					<div className="pb-2.5 w-full">
-						<div className="h-full">
-							<div className="flex h-full gap-6">
-								<Outlet />
-							</div>
+					<div className="h-full w-full">
+						<div className="flex h-full gap-6">
+							<Outlet />
 						</div>
 					</div>
 				</div>

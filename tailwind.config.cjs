@@ -10,7 +10,7 @@ export default {
 		},
 		extend: {
 			flex: {
-				3: "3 3 0%",
+				5: "5 5 0%",
 			},
 			maxWidth: {
 				650: "650px",

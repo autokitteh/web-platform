@@ -23,3 +23,7 @@ export { default as ClockIcon } from "@assets/image/icons/Clock.svg?react";
 export { default as RotateIcon } from "@assets/image/icons/Rotate.svg?react";
 export { default as IconGoogle } from "@assets/image/icons/Google.png";
 export { default as IconGithub } from "@assets/image/icons/Github.png";
+export { default as User } from "@assets/image/icons/User.svg?react";
+export { default as Bell } from "@assets/image/icons/Bell.svg?react";
+export { default as Sliders } from "@assets/image/icons/Sliders.svg?react";
+export { default as Receipt } from "@assets/image/icons/Receipt.svg?react";
