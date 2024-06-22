@@ -195,9 +195,7 @@ export const DefaultEditTrigger = () => {
 	};
 
 	return isLoadingData ? (
-		<div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-			<Loader />
-		</div>
+		<Loader isAbsolute size="2xl" />
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader
