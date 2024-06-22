@@ -3,6 +3,7 @@ import { IconLogo, IconLogoName } from "@assets/image";
 import { Logout, Settings } from "@assets/image/sidebar";
 import { Button } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
+import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 import { useUserStore } from "@store";
 import { AnimatePresence, motion } from "framer-motion";
@@ -73,32 +74,36 @@ export const Sidebar = () => {
 									) : null}
 								</AnimatePresence>
 							</Button>
-							<Button className="hover:bg-transparent" href="/settings/profile">
-								<Settings className="w-8 h-8" fill="black" />
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="whitespace-nowrap overflow-hidden"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											Settings
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Button>
-							<Button className="hover:bg-transparent" onClick={() => logoutFunction()}>
-								<Logout className="w-8 h-8" fill="black" />
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span animate="visible" exit="hidden" initial="hidden" variants={animateVariant}>
-											Logout
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Button>
+							{isAuthEnabled ? (
+								<div>
+									<Button className="hover:bg-transparent" href="/settings/profile">
+										<Settings className="w-8 h-8" fill="black" />
+										<AnimatePresence>
+											{isOpen ? (
+												<motion.span
+													animate="visible"
+													className="whitespace-nowrap overflow-hidden"
+													exit="hidden"
+													initial="hidden"
+													variants={animateVariant}
+												>
+													Settings
+												</motion.span>
+											) : null}
+										</AnimatePresence>
+									</Button>
+									<Button className="hover:bg-transparent" onClick={() => logoutFunction()}>
+										<Logout className="w-8 h-8" fill="black" />
+										<AnimatePresence>
+											{isOpen ? (
+												<motion.span animate="visible" exit="hidden" initial="hidden" variants={animateVariant}>
+													Logout
+												</motion.span>
+											) : null}
+										</AnimatePresence>
+									</Button>
+								</div>
+							) : null}
 						</div>
 					</div>
 					<AnimatePresence>
