@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 export const DisplayTokenModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "getToken" });
 	const { t: tErrors } = useTranslation("errors");
-	const fileName = useModalStore((state) => state.data as string);
+	const token = useModalStore((state) => state.data as string);
 	const { closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -36,7 +36,7 @@ export const DisplayTokenModal = () => {
 	return (
 		<Modal name={ModalName.getToken}>
 			<div className="mx-6">
-				<h3 className="text-xl font-bold mb-5">{t("title", { name: fileName })}</h3>
+				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
 				<p>{t("line")}</p>
 				<div className="flex mt-4 w-full">
 					<Input
@@ -44,7 +44,7 @@ export const DisplayTokenModal = () => {
 						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="flex-1 bg-white hover:border-gray-700"
 						disabled
-						placeholder={t("addCodeAssets.placeholderName", { ns: "modals" })}
+						value={token}
 					/>
 					<Button
 						aria-label={t("buttons.copy")}
