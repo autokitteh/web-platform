@@ -80,6 +80,7 @@ export const EditorTabs = ({ key = 0 }: { key?: number }) => {
 			lineNumbers: "off",
 			renderLineHighlight: "none",
 			wordWrap: "on",
+			scrollBeyondLastLine: false,
 		};
 	}
 
