@@ -98,7 +98,8 @@ export const SessionTableEditorFrame = () => {
 	};
 
 	useEffect(() => {
-		scrollToBottom();
+		if (!firstLoad) scrollToBottom();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cachedSessionLogs]);
 
 	const sessionLogsAsStringForOutput = cachedSessionLogs?.map(({ logs }) => logs).join("\n");
