@@ -1,158 +1,161 @@
 {
 	"code&assets": {
 		"buttons": {
+			"addCodeAndAssets": "Add Code & Assets",
 			"addNewFile": "Add new file",
 			"createNewFile": "Create new file",
-			"addCodeAndAssets": "Add Code & Assets",
 			"loading": "Loading"
 		},
 		"table": {
-			"columns": {
-				"name": "Name"
-			},
 			"buttons": {
 				"ariaDeleteFile": "Delete {{name}} file"
+			},
+			"columns": {
+				"name": "Name"
 			}
 		}
 	},
 	"connections": {
-		"titleAvailable": "Available Connections",
-		"titleNoAvailable": "No connections available.",
 		"buttons": {
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
 		"table": {
-			"columns": {
-				"name": "Name",
-				"app": "App",
-				"status": "Status",
-				"information": "Information",
-				"actions": "Actions"
-			},
 			"buttons": {
-				"ariaModifyConnection": "Modify {{name}} connection",
 				"ariaDeleteConnection": "Delete {{name}} connection",
-				"titleTestConnection": "Test Connection",
-				"titleInitConnection": "Initialize Connection",
+				"ariaModifyConnection": "Modify {{name}} connection",
 				"titleEditConnection": "Edit connection",
-				"titleRemoveConnection": "Remove connection"
+				"titleInitConnection": "Initialize Connection",
+				"titleRemoveConnection": "Remove connection",
+				"titleTestConnection": "Test Connection"
+			},
+			"columns": {
+				"actions": "Actions",
+				"app": "App",
+				"information": "Information",
+				"name": "Name",
+				"status": "Status"
 			},
 			"statuses": {
-				"unspecified": "Unspecified",
+				"error": "Error",
 				"ok": "OK",
-				"warning": "Warning",
-				"error": "Error"
+				"unspecified": "Unspecified",
+				"warning": "Warning"
 			}
+		},
+		"titleAvailable": "Available Connections",
+		"titleNoAvailable": "No connections available."
+	},
+	"editor": {
+		"buttons": {
+			"ariaCloseFile": "Close file tab"
 		}
 	},
 	"triggers": {
-		"titleAvailable": "Available Triggers",
-		"titleNoAvailable": "No triggers available.",
 		"buttons": {
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
-		"table": {
-			"columns": {
-				"name": "Name",
-				"connection": "Connection",
-				"call": "Call",
-				"eventType": "Event Type",
-				"filter": "Filter",
-				"actions": "Actions"
-			},
-			"buttons": {
-				"modify": "Modify",
-				"delete": "Delete",
-				"ariaModifyTrigger": "Modify {{name}} trigger",
-				"ariaDeleteTrigger": "Delete {{name}} trigger"
-			}
-		},
 		"form": {
-			"information": "Information",
 			"addNewTrigger": "Add new trigger",
-			"modifyTrigger": "Modify trigger",
-			"titleData": "Data",
-			"titleInfo": "Relevant only for HTTP",
-			"buttonAddNewData": "Add new data",
 			"ariaDeleteData": "Delete {{name}} data",
-			"loading": "Loading",
-			"placeholders": {
-				"selectTriggerType": "Select trigger type",
-				"selectConnection": "Select connection",
-				"selectFile": "Select file",
-				"functionName": "Function name",
-				"name": "Name",
-				"cron": "Cron expression",
-				"eventType": "Event type",
-				"filter": "Filter",
-				"key": "Key",
-				"value": "Value"
-			},
+			"buttonAddNewData": "Add new data",
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
 			},
 			"info": {
 				"aboutCron": "About cronjob expressions",
 				"schedules": "Predefined schedules or intervals"
+			},
+			"information": "Information",
+			"loading": "Loading",
+			"modifyTrigger": "Modify trigger",
+			"noConnectionsAvailable": "No connections available",
+			"noFilesAvailable": "No files available",
+			"placeholders": {
+				"cron": "Cron expression",
+				"eventType": "Event type",
+				"filter": "Filter",
+				"functionName": "Function name",
+				"key": "Key",
+				"name": "Name",
+				"selectConnection": "Select connection",
+				"selectFile": "Select file",
+				"selectTriggerType": "Select trigger type",
+				"value": "Value",
+				"noTriggerTypesAvailable": "No trigger types available"
+			},
+			"titleData": "Data",
+			"titleInfo": "Relevant only for HTTP"
+		},
+		"table": {
+			"buttons": {
+				"ariaDeleteTrigger": "Delete {{name}} trigger",
+				"ariaModifyTrigger": "Modify {{name}} trigger",
+				"delete": "Delete",
+				"modify": "Modify"
+			},
+			"columns": {
+				"actions": "Actions",
+				"call": "Call",
+				"connection": "Connection",
+				"eventType": "Event Type",
+				"filter": "Filter",
+				"name": "Name"
 			}
-		}
+		},
+		"titleAvailable": "Available Triggers",
+		"titleNoAvailable": "No triggers available."
 	},
 	"variables": {
-		"titleAvailable": "Available Variables",
-		"titleNoAvailable": "No variables available.",
 		"buttons": {
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
-		"table": {
-			"columns": {
-				"name": "Name",
-				"value": "Value",
-				"actions": "Actions"
-			},
-			"buttons": {
-				"modify": "Modify",
-				"delete": "Delete",
-				"ariaModifyVariable": "Modify {{name}} variable",
-				"ariaDeleteVariable": "Delete {{name}} variable",
-				"ariaSortByName": "Sort by name",
-				"ariaSortByValue": "Sort by value",
-				"ariaVariableOptions": "Variable options"
-			}
-		},
 		"form": {
 			"addNewVariable": "Add new variable",
-			"modifyVariable": "Modify variable",
-			"environment": "Environment",
 			"ariaNameRequired": "Name is required",
 			"ariaValueRequired": "Value is required",
-			"loading": "Loading",
+			"buttons": {
+				"cancel": "Cancel",
+				"loading": "Loading",
+				"save": "Save"
+			},
+			"environment": "Environment",
 			"isSecret": "Is secret",
+			"loading": "Loading",
+			"modifyVariable": "Modify variable",
 			"placeholders": {
 				"name": "Name",
 				"value": "Value"
-			},
-			"buttons": {
-				"save": "Save",
-				"cancel": "Cancel",
-				"loading": "Loading"
 			}
 		},
 		"modals": {
 			"modify": {
-				"title": "Modify variable",
 				"buttons": {
-					"save": "Save",
-					"cancel": "Cancel"
-				}
+					"cancel": "Cancel",
+					"save": "Save"
+				},
+				"title": "Modify variable"
 			}
-		}
-	},
-	"editor": {
-		"buttons": {
-			"ariaCloseFile": "Close file tab"
-		}
+		},
+		"table": {
+			"buttons": {
+				"ariaDeleteVariable": "Delete {{name}} variable",
+				"ariaModifyVariable": "Modify {{name}} variable",
+				"ariaSortByName": "Sort by name",
+				"ariaSortByValue": "Sort by value",
+				"ariaVariableOptions": "Variable options",
+				"delete": "Delete",
+				"modify": "Modify"
+			},
+			"columns": {
+				"actions": "Actions",
+				"name": "Name",
+				"value": "Value"
+			}
+		},
+		"titleAvailable": "Available Variables",
+		"titleNoAvailable": "No variables available."
 	}
 }

@@ -9,6 +9,7 @@ export interface SelectProps {
 	onChange: (value: SingleValue<SelectOption>) => void;
 	onBlur?: () => void;
 	ref?: null;
+	noOptionsLabel?: string;
 }
 
 export interface SelectOption {

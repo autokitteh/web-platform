@@ -26,6 +26,7 @@ export const AddConnection = () => {
 			<div className="flex flex-col w-5/6 gap-6">
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
+					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
 					onChange={(option) => setSelectedIntegration(option as SelectOption)}
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}

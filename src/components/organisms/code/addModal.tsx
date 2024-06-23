@@ -82,6 +82,7 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 										{...field}
 										aria-label={t("addCodeAssets.selectExtension", { ns: "modals" })}
 										isError={!!errors.extension}
+										noOptionsLabel={t("addCodeAssets.noExtensionsAvailable", { ns: "modals" })}
 										options={languageSelectOptions}
 										placeholder={t("addCodeAssets.selectExtension", { ns: "modals" })}
 										ref={null}

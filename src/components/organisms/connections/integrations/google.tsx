@@ -140,6 +140,7 @@ export const GoogleIntegrationForm = () => {
 			<div className="flex flex-col w-full gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
+					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
 					onChange={(selected) => {
 						if (selected?.value && isConnectionType(selected.value, GoogleConnectionType)) {
 							setSelectedConnectionType(selected.value);

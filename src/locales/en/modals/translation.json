@@ -36,7 +36,8 @@
 		"title": "Create new",
 		"placeholderName": "Name",
 		"ariaLabelNewFile": "New file name",
-		"selectExtension": "Extension"
+		"selectExtension": "Extension",
+		"noExtensionsAvailable": "No extensions available"
 	},
 	"deleteDeployment": {
 		"title": "Delete this deployment?",

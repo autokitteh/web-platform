@@ -11,9 +11,11 @@ export const Select = ({
 	variant,
 	onChange,
 	ref = null,
+	noOptionsLabel = "No options available",
 	...rest
 }: SelectProps) => {
 	const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>();
+	const [selectableOptions, setSelectableOptions] = useState<SelectOption[]>(options);
 
 	useEffect(() => {
 		setSelectedOption(options.find((option) => option.value === value?.value));
@@ -23,6 +25,15 @@ export const Select = ({
 		setSelectedOption(selected);
 		onChange(selected);
 	};
+
+	useEffect(() => {
+		if (options.length === 0) {
+			const options = [{ label: noOptionsLabel, value: "", disabled: true }];
+			setSelectableOptions(options);
+			setSelectedOption(options[0]);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleMenuClose = () => {
 		(document.activeElement as HTMLElement).blur();
@@ -45,7 +56,7 @@ export const Select = ({
 			isOptionDisabled={(option) => !!option.disabled}
 			onChange={handleChange}
 			onMenuClose={handleMenuClose}
-			options={options}
+			options={selectableOptions}
 			placeholder={placeholder}
 			ref={ref}
 			styles={selectStyles}

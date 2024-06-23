@@ -1,45 +1,47 @@
 {
 	"addNewConnection": "Add new connection",
-	"information": "Information",
-	"success": "Success",
-	"placeholders": {
-		"selectIntegration": "Select integration",
-		"selectConnectionType": "Select connection type"
-	},
 	"buttons": {
+		"copy": "Copy",
 		"saveConnection": "Save Connection",
-		"startOAuthFlow": "Start OAuth Flow",
-		"copy": "Copy"
+		"startOAuthFlow": "Start OAuth Flow"
 	},
 	"github": {
-		"copySuccess": "Copied webhook URL to clipboard successfully!",
-		"copyFailure": "Could not copy webhook URL",
 		"aboutGitHubApps": "About using GitHub Apps",
 		"clickButtonInstall": "Click the button below to install and authorize the autokitteh GitHub apps",
+		"copyFailure": "Could not copy webhook URL",
+		"copySuccess": "Copied webhook URL to clipboard successfully!",
+		"informationPat": {
+			"auth": "Authenticating with a personal access token",
+			"endpoints": "Endpoints available for fine-grained PATs",
+			"manage": "Managing your personal access tokens",
+			"setting": "Setting a PAT policy for your organization"
+		},
 		"placeholders": {
 			"name": "Name",
 			"pat": "Personal Access Token (PAT) - fine-grained or classic",
-			"webhookUrl": "Webhook URL",
-			"webhookSecret": "Webhook Secret"
-		},
-		"informationPat": {
-			"auth": "Authenticating with a personal access token",
-			"manage": "Managing your personal access tokens",
-			"setting": "Setting a PAT policy for your organization",
-			"endpoints": "Endpoints available for fine-grained PATs"
+			"webhookSecret": "Webhook Secret",
+			"webhookUrl": "Webhook URL"
 		}
 	},
 	"google": {
-		"placeholders": {
-			"jsonKey": "JSON Key"
-		},
 		"information": {
 			"aboutAuth": "Learn about authentication and authorization",
-			"uisingOAuth": "Using OAuth 2.0 for web server applications",
-			"gcp": "GCP service accounts overview",
 			"credentials": "Service account credentials",
+			"gcp": "GCP service accounts overview",
+			"managingAccount": "Best practices for managing service account keys",
 			"serviceAccount": "Create and delete service account keys",
-			"managingAccount": "Best practices for managing service account keys"
+			"uisingOAuth": "Using OAuth 2.0 for web server applications"
+		},
+		"placeholders": {
+			"jsonKey": "JSON Key"
 		}
-	}
+	},
+	"information": "Information",
+	"placeholders": {
+		"noConnectionTypesAvailable": "No connection types available",
+		"noIntegrationsAvailable": "No integrations available",
+		"selectConnectionType": "Select connection type",
+		"selectIntegration": "Select integration"
+	},
+	"success": "Success"
 }
