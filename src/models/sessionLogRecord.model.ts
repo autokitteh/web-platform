@@ -23,7 +23,10 @@ export class SessionLogRecord {
 		const logRecordType = this.getLogRecordType(props);
 
 		if (!logRecordType) {
-			LoggerService.error(namespaces.sessionsHistory, i18n.t("sessionLogRecordTypeNotFound", { ns: "services" }));
+			LoggerService.error(
+				namespaces.sessionsHistory,
+				i18n.t("sessionLogRecordTypeNotFound", { props: Object.keys(props).join(", "), ns: "services" })
+			);
 			return;
 		}
 
