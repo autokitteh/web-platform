@@ -1,5 +1,6 @@
 import { useState } from "react";
 import React from "react";
+import { DisplayTokenModal } from "./displayTokenModal";
 import { Button, Loader, Title } from "@components/atoms";
 import { ModalName } from "@enums/components";
 import { HttpService } from "@services";
@@ -23,10 +24,11 @@ export const Security = () => {
 			<div>
 				<p className="mb-4">{t("security.howToUseTokenText")}</p>
 				<Button className="border-2 border-black" onClick={createToken} variant="light">
-					{isLoading ? <Loader size="md" /> : null}
+					{isLoading ? <Loader size="sm" /> : null}
 					{t("security.creatTokenButton")}
 				</Button>
 			</div>
+			<DisplayTokenModal />
 		</>
 	);
 };

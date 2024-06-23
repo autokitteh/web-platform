@@ -13,9 +13,11 @@ export const SettingsLayout = () => {
 					<SettingsTopbar />
 					<div className="h-full w-full flex py-4">
 						<SettingsMenu />
-						<div className="flex flex-col bg-gray-800 flex-5 rounded-tr-lg rounded-br-lg pt-10 pl-6 w-1/3">
+						<div className="flex flex-col bg-gray-800 flex-5 rounded-tr-lg rounded-br-lg pt-10 pl-6 w-1/3 h-full">
 							<Outlet />
-							<LogoCatLarge className="!-bottom-5 !-right-5" />
+							<div className="absolute !-bottom-5 !-right-5">
+								<LogoCatLarge />
+							</div>
 						</div>
 					</div>
 				</div>
