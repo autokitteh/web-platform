@@ -172,8 +172,8 @@ export const SessionTableEditorFrame = () => {
 						</div>
 					)}
 
-					<Button className="m-auto" onClick={scrollToBottom} variant="filled">
-						{t("buttons.scrollToBottom")}
+					<Button className="m-auto" onClick={scrollToTop} variant="filled">
+						{t("buttons.scrollToTop")}
 					</Button>
 				</>
 			)}

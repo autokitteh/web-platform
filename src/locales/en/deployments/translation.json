@@ -29,7 +29,7 @@
 		"buttons": {
 			"ariaCloseEditor": "Close session log viewer",
 			"back": "Back",
-			"scrollToBottom": "Scroll to Bottom"
+			"scrollToTop": "Scroll to Top"
 		},
 		"noData": "No data yet",
 		"noSelectedSession": "No session selected",
