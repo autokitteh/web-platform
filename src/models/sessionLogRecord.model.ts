@@ -97,6 +97,7 @@ export class SessionLogRecord {
 				ns: "services",
 				sessionState: this.state || "unknown",
 			})}`;
+
 			this.logs = this.logs ? `${this.logs}${finishedMessagePrint}` : finishedMessagePrint;
 		}
 	}

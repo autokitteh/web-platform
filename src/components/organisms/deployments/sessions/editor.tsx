@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CatImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
-import { Frame, IconButton, LogoCatLarge } from "@components/atoms";
+import { Button, Frame, IconButton, Loader, LogoCatLarge } from "@components/atoms";
 import { fetchSessionsInterval } from "@constants";
 import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
@@ -22,9 +22,12 @@ export const SessionTableEditorFrame = () => {
 	const navigate = useNavigate();
 	const [sessionFetchIntervalId, setSessionFetchIntervalId] = useState<NodeJS.Timeout>();
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const fetchSessionLog = useCallback(async () => {
+		setIsLoading(true);
 		const { data: sessionHistoryStates, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
+		setIsLoading(false);
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -93,42 +96,52 @@ export const SessionTableEditorFrame = () => {
 
 	return (
 		<Frame className="w-3/5 transition pt-20 ml-2.5">
-			<div className="flex items-center justify-between -mt-10 font-bold">
-				{t("output")}:
-				<IconButton
-					ariaLabel={t("buttons.ariaCloseEditor")}
-					className="w-7 h-7 p-0.5 bg-gray-700"
-					onClick={() => closeEditor()}
-				>
-					<Close className="w-3 h-3 transition fill-white" />
-				</IconButton>
-			</div>
-			{cachedSessionLogs?.length ? (
-				<Editor
-					beforeMount={handleEditorWillMount}
-					className="-ml-6"
-					key={editorKey}
-					onMount={handleEditorDidMount}
-					options={{
-						readOnly: true,
-						minimap: {
-							enabled: false,
-						},
-						lineNumbers: "off",
-						renderLineHighlight: "none",
-						wordWrap: "on",
-					}}
-					theme="vs-dark"
-					value={sessionLogsAsStringForOutput}
-				/>
-			) : (
-				<div className="flex flex-col items-center mt-20">
-					<p className="mb-8 text-lg font-bold text-gray-400">{t("noData")}</p>
-					<CatImage className="border-b border-gray-400 fill-gray-400" />
+			{isLoading ? (
+				<div className="flex items-center h-full w-full">
+					<Loader />
 				</div>
-			)}
+			) : (
+				<>
+					<div className="flex items-center justify-between -mt-10 font-bold">
+						{t("output")}:
+						<IconButton
+							ariaLabel={t("buttons.ariaCloseEditor")}
+							className="w-7 h-7 p-0.5 bg-gray-700"
+							onClick={() => closeEditor()}
+						>
+							<Close className="w-3 h-3 transition fill-white" />
+						</IconButton>
+					</div>
+					{cachedSessionLogs?.length ? (
+						<Editor
+							beforeMount={handleEditorWillMount}
+							className="-ml-6"
+							key={editorKey}
+							onMount={handleEditorDidMount}
+							options={{
+								readOnly: true,
+								minimap: {
+									enabled: false,
+								},
+								lineNumbers: "off",
+								renderLineHighlight: "none",
+								wordWrap: "on",
+							}}
+							theme="vs-dark"
+							value={sessionLogsAsStringForOutput}
+						/>
+					) : (
+						<div className="flex flex-col items-center mt-20">
+							<p className="mb-8 text-lg font-bold text-gray-400">{t("noData")}</p>
+							<CatImage className="border-b border-gray-400 fill-gray-400" />
+						</div>
+					)}
 
-			<button onClick={scrollToBottom}>Scroll to Bottom</button>
+					<Button className="m-auto" onClick={scrollToBottom} variant="filled">
+						{t("buttons.scrollToBottom")}
+					</Button>
+				</>
+			)}
 
 			<LogoCatLarge />
 		</Frame>
