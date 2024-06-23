@@ -83,7 +83,7 @@ export class SessionLogRecord {
 		if (this.state === SessionStateType.error) {
 			this.error = convertErrorProtoToModel(
 				logRecord.state?.error?.error?.value,
-				i18n.t("errors.sessionLogMissingOnErrorType")
+				i18n.t("sessionLogMissingOnErrorType", { ns: "errors" })
 			)?.message;
 			this.logs = `Error: ${this.error}\n`;
 			this.callstackTrace = (logRecord?.state?.error?.error?.callstack || []) as Callstack[];
