@@ -47,7 +47,7 @@ export class SessionLogRecord {
 			case SessionLogRecordType.print:
 				this.type = SessionLogRecordType.print;
 				this.logs = logRecord.print?.text
-					? `${i18n.t("historyPrint", { ns: "services" })}: ${logRecord.print!.text}`
+					? `${i18n.t("historyPrint", { ns: "services" })}: ${logRecord.print.text}`
 					: undefined;
 				break;
 		}
