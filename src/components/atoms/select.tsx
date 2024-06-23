@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getSelectBlackStyles, getSelectWhiteStyles } from "@constants";
 import { SelectProps, SelectOption } from "@interfaces/components";
+import { useTranslation } from "react-i18next";
 import ReactSelect, { SingleValue } from "react-select";
 
 export const Select = ({
@@ -11,11 +12,12 @@ export const Select = ({
 	variant,
 	onChange,
 	ref = null,
-	noOptionsLabel = "No options available",
+	noOptionsLabel,
 	...rest
 }: SelectProps) => {
 	const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>();
 	const [selectableOptions, setSelectableOptions] = useState<SelectOption[]>(options);
+	const { t } = useTranslation("components", { keyPrefix: "select" });
 
 	useEffect(() => {
 		setSelectedOption(options.find((option) => option.value === value?.value));
@@ -28,9 +30,9 @@ export const Select = ({
 
 	useEffect(() => {
 		if (options.length === 0) {
-			const options = [{ label: noOptionsLabel, value: "", disabled: true }];
-			setSelectableOptions(options);
-			setSelectedOption(options[0]);
+			const noOptions = [{ label: noOptionsLabel || t("noOptionsAvailable"), value: "", disabled: true }];
+			setSelectableOptions(noOptions);
+			setSelectedOption(noOptions[0]);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
