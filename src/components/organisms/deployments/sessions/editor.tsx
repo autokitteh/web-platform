@@ -14,7 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export const SessionTableEditorFrame = () => {
 	const [editorKey, setEditorKey] = useState(0);
-	const [cachedSessionLogs, setCachedSessionLog] = useState<SessionLogRecord[]>();
+	const [cachedSessionLogs, setCachedSessionLogs] = useState<SessionLogRecord[]>();
 	const { sessionId, projectId, deploymentId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 	const { t: tErrors } = useTranslation("errors");
@@ -38,17 +38,17 @@ export const SessionTableEditorFrame = () => {
 			return;
 		}
 		if (!sessionHistoryStates) {
-			setCachedSessionLog([]);
+			setCachedSessionLogs([]);
 			return;
 		}
+
 		if (isEqual(cachedSessionLogs, sessionHistoryStates)) return;
 
-		setCachedSessionLog(sessionHistoryStates);
+		setCachedSessionLogs(sessionHistoryStates);
 
 		const completedState = sessionHistoryStates.find((state) => state.isFinished());
 		if (completedState) {
 			clearInterval(sessionFetchIntervalId);
-			return;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
