@@ -37,7 +37,12 @@ export const SessionTableEditorFrame = () => {
 			});
 			return;
 		}
-		if (!sessionHistoryStates || isEqual(cachedSessionLogs, sessionHistoryStates)) return;
+		if (!sessionHistoryStates) {
+			setCachedSessionLog([]);
+			return;
+		}
+		if (isEqual(cachedSessionLogs, sessionHistoryStates)) return;
+
 		setCachedSessionLog(sessionHistoryStates);
 
 		const completedState = sessionHistoryStates.find((state) => state.isFinished());
