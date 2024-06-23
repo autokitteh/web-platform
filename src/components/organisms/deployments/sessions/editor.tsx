@@ -7,12 +7,13 @@ import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { SessionsService } from "@services";
 import { useToastStore } from "@store/useToastStore";
+import { isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const SessionTableEditorFrame = () => {
 	const [editorKey, setEditorKey] = useState(0);
-	const [sessionLog, setSessionLog] = useState<SessionLogRecord[]>();
+	const [cachedSessionLogs, setCachedSessionLog] = useState<SessionLogRecord[]>();
 	const { sessionId, projectId, deploymentId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 	const { t: tErrors } = useTranslation("errors");
@@ -20,7 +21,7 @@ export const SessionTableEditorFrame = () => {
 	const navigate = useNavigate();
 
 	const fetchSessionLog = useCallback(async () => {
-		const { data, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
+		const { data: sessionHistoryStates, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -30,9 +31,8 @@ export const SessionTableEditorFrame = () => {
 			});
 			return;
 		}
-		if (!data) return;
-
-		setSessionLog(data);
+		if (!sessionHistoryStates || isEqual(cachedSessionLogs, sessionHistoryStates)) return;
+		setCachedSessionLog(sessionHistoryStates);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 
@@ -67,7 +67,7 @@ export const SessionTableEditorFrame = () => {
 		monaco.editor.setTheme("sessionEditorTheme");
 	};
 
-	const sessionLogValue = sessionLog?.map(({ logs }) => logs).join("\n");
+	const sessionLogsAsStringForOutput = cachedSessionLogs?.map(({ logs }) => logs).join("\n");
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
 	return (
@@ -82,7 +82,7 @@ export const SessionTableEditorFrame = () => {
 					<Close className="w-3 h-3 transition fill-white" />
 				</IconButton>
 			</div>
-			{sessionLog?.length ? (
+			{cachedSessionLogs?.length ? (
 				<Editor
 					beforeMount={handleEditorWillMount}
 					className="-ml-6"
@@ -98,7 +98,7 @@ export const SessionTableEditorFrame = () => {
 						wordWrap: "on",
 					}}
 					theme="vs-dark"
-					value={sessionLogValue}
+					value={sessionLogsAsStringForOutput}
 				/>
 			) : (
 				<div className="flex flex-col items-center mt-20">
