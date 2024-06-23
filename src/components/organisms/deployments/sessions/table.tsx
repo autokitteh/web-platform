@@ -93,8 +93,7 @@ export const SessionsTable = () => {
 				return;
 			}
 
-			if (!data?.sessions) return;
-
+			if (!data?.sessions || isEqual(data.sessions, sessions)) return;
 			setSessions((prevSessions) => {
 				if (!nextPageToken) return data.sessions;
 				return [...prevSessions, ...data.sessions];
