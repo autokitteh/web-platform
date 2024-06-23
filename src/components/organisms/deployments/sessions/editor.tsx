@@ -19,6 +19,7 @@ export const SessionTableEditorFrame = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const navigate = useNavigate();
+	const [sessionFetchIntervalId, setSessionFetchIntervalId] = useState<NodeJS.Timeout>();
 
 	const fetchSessionLog = useCallback(async () => {
 		const { data: sessionHistoryStates, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
@@ -33,13 +34,20 @@ export const SessionTableEditorFrame = () => {
 		}
 		if (!sessionHistoryStates || isEqual(cachedSessionLogs, sessionHistoryStates)) return;
 		setCachedSessionLog(sessionHistoryStates);
+
+		const completedState = sessionHistoryStates.find((state) => state.isFinished());
+		if (completedState) {
+			clearInterval(sessionFetchIntervalId);
+			return;
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 
 	useEffect(() => {
 		fetchSessionLog();
 
-		const sessionFetchIntervalId = setInterval(fetchSessionLog, fetchSessionsInterval);
+		const sessionsLogIntervalId = setInterval(fetchSessionLog, fetchSessionsInterval);
+		setSessionFetchIntervalId(sessionsLogIntervalId);
 		return () => clearInterval(sessionFetchIntervalId);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
