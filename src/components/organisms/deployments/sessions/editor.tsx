@@ -20,14 +20,15 @@ export const SessionTableEditorFrame = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const navigate = useNavigate();
-	const [sessionFetchIntervalId, setSessionFetchIntervalId] = useState<NodeJS.Timeout>();
+	const intervalIdRef = useRef<number | null>(null);
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [firstLoad, setFirstLoad] = useState(true);
 
 	const fetchSessionLog = useCallback(async () => {
-		setIsLoading(true);
+		if (firstLoad) setIsLoading(true);
 		const { data: sessionHistoryStates, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
-		setIsLoading(false);
+		if (firstLoad) setIsLoading(false);
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -42,31 +43,33 @@ export const SessionTableEditorFrame = () => {
 			return;
 		}
 
-		if (isEqual(cachedSessionLogs, sessionHistoryStates)) return;
-
-		setCachedSessionLogs(sessionHistoryStates);
+		if (!isEqual(cachedSessionLogs, sessionHistoryStates)) {
+			setCachedSessionLogs(sessionHistoryStates);
+		}
 
 		const completedState = sessionHistoryStates.find((state) => state.isFinished());
-		if (completedState) {
-			clearInterval(sessionFetchIntervalId);
+		if (completedState && intervalIdRef.current) {
+			clearInterval(intervalIdRef.current);
+			intervalIdRef.current = null;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId, addToast, tErrors, cachedSessionLogs]);
+
+	useEffect(() => {
+		setFirstLoad(false);
 	}, [sessionId]);
 
 	useEffect(() => {
 		fetchSessionLog();
-
-		const sessionsLogIntervalId = setInterval(fetchSessionLog, fetchSessionsInterval);
-		setSessionFetchIntervalId(sessionsLogIntervalId);
-		return () => clearInterval(sessionFetchIntervalId);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId]);
+		intervalIdRef.current = window.setInterval(fetchSessionLog, fetchSessionsInterval);
+		return () => {
+			if (intervalIdRef.current) clearInterval(intervalIdRef.current);
+		};
+	}, [fetchSessionLog]);
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
-
 		window.addEventListener("resize", handleResize);
-
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
@@ -75,9 +78,7 @@ export const SessionTableEditorFrame = () => {
 			base: "vs-dark",
 			inherit: true,
 			rules: [],
-			colors: {
-				"editor.background": "#000000",
-			},
+			colors: { "editor.background": "#000000" },
 		});
 	};
 
@@ -89,12 +90,16 @@ export const SessionTableEditorFrame = () => {
 	const scrollToBottom = () => {
 		const editor = editorRef.current;
 		if (editor) {
-			const lastLine = editor?.getModel()?.getLineCount();
+			const lastLine = editor.getModel()?.getLineCount();
 			if (lastLine) {
-				editor.revealLine(lastLine);
+				editor.revealLine(lastLine * 1.2);
 			}
 		}
 	};
+
+	useEffect(() => {
+		scrollToBottom();
+	}, [cachedSessionLogs]);
 
 	const sessionLogsAsStringForOutput = cachedSessionLogs?.map(({ logs }) => logs).join("\n");
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
@@ -112,7 +117,7 @@ export const SessionTableEditorFrame = () => {
 						<IconButton
 							ariaLabel={t("buttons.ariaCloseEditor")}
 							className="w-7 h-7 p-0.5 bg-gray-700"
-							onClick={() => closeEditor()}
+							onClick={closeEditor}
 						>
 							<Close className="w-3 h-3 transition fill-white" />
 						</IconButton>
@@ -125,9 +130,7 @@ export const SessionTableEditorFrame = () => {
 							onMount={handleEditorDidMount}
 							options={{
 								readOnly: true,
-								minimap: {
-									enabled: false,
-								},
+								minimap: { enabled: false },
 								lineNumbers: "off",
 								renderLineHighlight: "none",
 								wordWrap: "on",
