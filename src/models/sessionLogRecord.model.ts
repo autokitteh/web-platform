@@ -146,43 +146,11 @@ export class SessionLogRecord {
 		this.logs = `${i18n.t("historyFunction", { ns: "services" })}: ${functionName}(${args})`;
 	}
 
-	getError(): string {
-		return this.error!;
-	}
-
-	getCallstack(): Callstack[] {
-		return this.callstackTrace;
-	}
-
-	isError(): boolean {
-		return this.state === SessionStateType.error;
-	}
-
-	isRunning(): boolean {
-		return this.state === SessionStateType.running;
-	}
-
-	isPrint(): boolean {
-		return this.type === SessionLogRecordType.print;
-	}
-
 	isFinished(): boolean {
 		return (
 			this.state === SessionStateType.error ||
 			this.state === SessionStateType.completed ||
 			this.state === SessionStateType.stopped
 		);
-	}
-
-	getStateName(): string | undefined {
-		return this.state;
-	}
-
-	containLogs(): boolean {
-		return !!(this.logs && this.logs.length);
-	}
-
-	getLogs(): string | undefined {
-		return this.logs;
 	}
 }
