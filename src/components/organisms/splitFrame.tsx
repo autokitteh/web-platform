@@ -10,18 +10,11 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 
 	const mainFrameStyle = cn("rounded-l-none pb-0 overflow-hidden", { "rounded-2xl": !children });
 
-	const minWidthPercent = 35;
-	const maxWidthPercent = 70;
+	const editorMinWidthPercent = 35;
+	const editorMaxWidthPercent = 70;
 
-	const minHeightPercent = 30;
-	const maxHeightPercent = 70;
-
-	const onKeyDown = (e: KeyboardEvent) => {
-		const adjustment = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-		if (!adjustment) return;
-
-		setLeftWidth((prevWidth) => Math.max(minWidthPercent, Math.min(maxWidthPercent, prevWidth + adjustment)));
-	};
+	const outputMinHeightPercent = 5;
+	const outputMaxHeightPercent = 95;
 
 	const onResizeMouseDown = (event: MouseEvent) => {
 		if (!(event.target instanceof HTMLElement) || !event.target.classList.contains("resize-handle")) return;
@@ -33,7 +26,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 				const deltaX = moveEvent.clientX - startX;
 				const newWidthPercent = (deltaX / window.innerWidth) * 100 + leftWidth;
 
-				setLeftWidth(Math.max(minWidthPercent, Math.min(maxWidthPercent, newWidthPercent)));
+				setLeftWidth(Math.max(editorMinWidthPercent, Math.min(editorMaxWidthPercent, newWidthPercent)));
 			};
 
 			const stopResizing = () => {
@@ -43,35 +36,34 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 
 			document.addEventListener("mousemove", doResize);
 			document.addEventListener("mouseup", stopResizing);
+			return;
 		}
 
-		if (event.target.classList.contains("resize-handle-vertical")) {
-			const startY = event.clientY;
+		const startY = event.clientY;
 
-			const doHeightResize = (moveEvent: MouseEvent) => {
-				const deltaY = startY - moveEvent.clientY;
-				const newHeightPercent = (deltaY / window.innerHeight) * 100 + outputHeight;
+		const doHeightResize = (moveEvent: MouseEvent) => {
+			const deltaY = startY - moveEvent.clientY;
+			const newHeightPercent = (deltaY / window.innerHeight) * 100 + outputHeight;
 
-				setOutputHeight(Math.max(minHeightPercent, Math.min(maxHeightPercent, newHeightPercent)));
-			};
+			setOutputHeight(Math.max(outputMinHeightPercent, Math.min(outputMaxHeightPercent, newHeightPercent)));
+		};
 
-			const stopHeightResizing = () => {
-				document.removeEventListener("mousemove", doHeightResize);
-				document.removeEventListener("mouseup", stopHeightResizing);
-			};
+		const stopHeightResizing = () => {
+			document.removeEventListener("mousemove", doHeightResize);
+			document.removeEventListener("mouseup", stopHeightResizing);
+		};
 
-			document.addEventListener("mousemove", doHeightResize);
-			document.addEventListener("mouseup", stopHeightResizing);
-		}
+		document.addEventListener("mousemove", doHeightResize);
+		document.addEventListener("mouseup", stopHeightResizing);
 	};
 
 	useEffect(() => {
-		document.addEventListener("keydown", onKeyDown);
 		document.addEventListener("mousedown", onResizeMouseDown);
+
 		return () => {
-			document.removeEventListener("keydown", onKeyDown);
 			document.removeEventListener("mousedown", onResizeMouseDown);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [leftWidth, outputHeight]);
 
 	return (
@@ -86,7 +78,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 			<div className="flex" style={{ width: `calc(100% - ${leftWidth}%)` }}>
 				<Frame className={mainFrameStyle}>
 					<EditorTabs key={outputHeight} />
-					<div className="h-2 -mx-8 cursor-ns-resize resize-handle resize-handle-vertical" />
+					<div className="h-2 -mx-8 cursor-ns-resize resize-handle resize-handle-vertical " />
 					<div className="px-8 -mx-8 border-0 border-t pt-7 border-t-gray-600" style={{ height: `${outputHeight}%` }}>
 						<OutputTabs />
 					</div>
