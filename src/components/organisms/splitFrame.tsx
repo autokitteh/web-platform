@@ -6,15 +6,15 @@ import { cn } from "@utilities";
 
 export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const [leftWidth, setLeftWidth] = useState(50);
-	const [outputHeight, setOutputHeight] = useState(250);
+	const [outputHeight, setOutputHeight] = useState(30);
 
 	const mainFrameStyle = cn("rounded-l-none pb-0 overflow-hidden", { "rounded-2xl": !children });
 
 	const minWidthPercent = 35;
 	const maxWidthPercent = 70;
 
-	const minHeight = 200;
-	const maxHeight = 550;
+	const minHeightPercent = 30;
+	const maxHeightPercent = 70;
 
 	const onKeyDown = (e: KeyboardEvent) => {
 		const adjustment = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
@@ -50,9 +50,9 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 
 			const doHeightResize = (moveEvent: MouseEvent) => {
 				const deltaY = startY - moveEvent.clientY;
-				const newHeightPercent = (deltaY / window.innerHeight) * 100 + (outputHeight / window.innerHeight) * 100;
+				const newHeightPercent = (deltaY / window.innerHeight) * 100 + outputHeight;
 
-				setOutputHeight(Math.max(minHeight, Math.min(maxHeight, (newHeightPercent / 100) * window.innerHeight)));
+				setOutputHeight(Math.max(minHeightPercent, Math.min(maxHeightPercent, newHeightPercent)));
 			};
 
 			const stopHeightResizing = () => {
@@ -87,7 +87,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 				<Frame className={mainFrameStyle}>
 					<EditorTabs key={outputHeight} />
 					<div className="h-2 -mx-8 cursor-ns-resize resize-handle resize-handle-vertical" />
-					<div className="px-8 -mx-8 border-0 border-t pt-7 border-t-gray-600" style={{ height: `${outputHeight}px` }}>
+					<div className="px-8 -mx-8 border-0 border-t pt-7 border-t-gray-600" style={{ height: `${outputHeight}%` }}>
 						<OutputTabs />
 					</div>
 				</Frame>
