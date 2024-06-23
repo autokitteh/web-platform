@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CatImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
 import { Frame, IconButton, LogoCatLarge } from "@components/atoms";
@@ -8,6 +8,7 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { SessionsService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { isEqual } from "lodash";
+import * as monaco from "monaco-editor"; // Ensure to import monaco-editor types
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -20,6 +21,7 @@ export const SessionTableEditorFrame = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const navigate = useNavigate();
 	const [sessionFetchIntervalId, setSessionFetchIntervalId] = useState<NodeJS.Timeout>();
+	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
 	const fetchSessionLog = useCallback(async () => {
 		const { data: sessionHistoryStates, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
@@ -71,8 +73,19 @@ export const SessionTableEditorFrame = () => {
 		});
 	};
 
-	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
+	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("sessionEditorTheme");
+		editorRef.current = _editor;
+	};
+
+	const scrollToBottom = () => {
+		const editor = editorRef.current;
+		if (editor) {
+			const lastLine = editor?.getModel()?.getLineCount();
+			if (lastLine) {
+				editor.revealLine(lastLine);
+			}
+		}
 	};
 
 	const sessionLogsAsStringForOutput = cachedSessionLogs?.map(({ logs }) => logs).join("\n");
@@ -114,6 +127,8 @@ export const SessionTableEditorFrame = () => {
 					<CatImage className="border-b border-gray-400 fill-gray-400" />
 				</div>
 			)}
+
+			<button onClick={scrollToBottom}>Scroll to Bottom</button>
 
 			<LogoCatLarge />
 		</Frame>

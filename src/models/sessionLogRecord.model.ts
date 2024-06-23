@@ -92,16 +92,12 @@ export class SessionLogRecord {
 				this.logs += `\t${path}: ${row}.${col}: ${name}\n`;
 			});
 		}
-		if (this.state === SessionStateType.completed && logRecord.state?.completed?.prints) {
-			const completedSessionRecordLogs = logRecord.state.completed.prints.join("\n").replace(/(\n)+$/, "");
-			this.logs = `${i18n.t("historyPrint", { ns: "services" })}: ${completedSessionRecordLogs}`;
-		}
 		if (this.isFinished()) {
-			const finishedMessagePrint = i18n.t("lastPrintForSessionLog", {
+			const finishedMessagePrint = `\n\n${i18n.t("lastPrintForSessionLog", {
 				ns: "services",
 				sessionState: this.state || "unknown",
-			});
-			this.logs = this.logs ? `${this.logs}\n${finishedMessagePrint}` : finishedMessagePrint;
+			})}`;
+			this.logs = this.logs ? `${this.logs}${finishedMessagePrint}` : finishedMessagePrint;
 		}
 	}
 
