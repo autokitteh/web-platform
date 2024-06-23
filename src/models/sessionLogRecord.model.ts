@@ -94,15 +94,11 @@ export class SessionLogRecord {
 			this.logs = `${i18n.t("historyPrint", { ns: "services" })}: ${completedSessionRecordLogs}`;
 		}
 		if (this.isFinished()) {
-			this.logs = this.logs
-				? `${this.logs}\n${i18n.t("lastPrintForSessionLog", {
-						ns: "services",
-						sessionState: this.state || "unknown",
-					})}`
-				: i18n.t("lastPrintForSessionLog", {
-						ns: "services",
-						sessionState: this.state || "unknown",
-					});
+			const finishedMessagePrint = i18n.t("lastPrintForSessionLog", {
+				ns: "services",
+				sessionState: this.state || "unknown",
+			});
+			this.logs = this.logs ? `${this.logs}\n${finishedMessagePrint}` : finishedMessagePrint;
 		}
 	}
 
