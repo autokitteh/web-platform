@@ -11,6 +11,7 @@ import { isEqual } from "lodash";
 import * as monaco from "monaco-editor"; // Ensure to import monaco-editor types
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+const editorLineHeight = 20;
 
 export const SessionTableEditorFrame = () => {
 	const [editorKey, setEditorKey] = useState(0);
@@ -57,6 +58,7 @@ export const SessionTableEditorFrame = () => {
 
 	useEffect(() => {
 		setFirstLoad(false);
+		scrollToTop();
 	}, [sessionId]);
 
 	useEffect(() => {
@@ -97,8 +99,31 @@ export const SessionTableEditorFrame = () => {
 		}
 	};
 
+	const scrollToTop = () => {
+		const editor = editorRef.current;
+		if (editor) {
+			editor.setScrollTop(0);
+		}
+	};
+
+	const calculateNonEmptyLinesHeight = () => {
+		const model = editorRef.current?.getModel();
+		if (!model) return 0;
+
+		return editorLineHeight * model.getLineCount();
+	};
+
+	const checkIfLogsOverflowsEditor = () => {
+		if (!editorRef.current) return;
+
+		const contentHeight = calculateNonEmptyLinesHeight();
+		const editorHeight = editorRef.current.getLayoutInfo().height;
+
+		return contentHeight > editorHeight;
+	};
+
 	useEffect(() => {
-		if (!firstLoad) scrollToBottom();
+		if (checkIfLogsOverflowsEditor()) scrollToBottom();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cachedSessionLogs]);
 
@@ -135,6 +160,7 @@ export const SessionTableEditorFrame = () => {
 								lineNumbers: "off",
 								renderLineHighlight: "none",
 								wordWrap: "on",
+								lineHeight: 20,
 							}}
 							theme="vs-dark"
 							value={sessionLogsAsStringForOutput}
