@@ -21,7 +21,7 @@ export const SessionTableEditorFrame = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const navigate = useNavigate();
-	const intervalIdRef = useRef<number | null>(null);
+	const sessionFetchIntervalIdRef = useRef<number | null>(null);
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [firstLoad, setFirstLoad] = useState(true);
@@ -49,9 +49,9 @@ export const SessionTableEditorFrame = () => {
 		}
 
 		const completedState = sessionHistoryStates.find((state) => state.isFinished());
-		if (completedState && intervalIdRef.current) {
-			clearInterval(intervalIdRef.current);
-			intervalIdRef.current = null;
+		if (completedState && sessionFetchIntervalIdRef.current) {
+			clearInterval(sessionFetchIntervalIdRef.current);
+			sessionFetchIntervalIdRef.current = null;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId, addToast, tErrors, cachedSessionLogs]);
@@ -63,9 +63,9 @@ export const SessionTableEditorFrame = () => {
 
 	useEffect(() => {
 		fetchSessionLog();
-		intervalIdRef.current = window.setInterval(fetchSessionLog, fetchSessionsInterval);
+		sessionFetchIntervalIdRef.current = window.setInterval(fetchSessionLog, fetchSessionsInterval);
 		return () => {
-			if (intervalIdRef.current) clearInterval(intervalIdRef.current);
+			if (sessionFetchIntervalIdRef.current) clearInterval(sessionFetchIntervalIdRef.current);
 		};
 	}, [fetchSessionLog]);
 
