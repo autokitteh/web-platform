@@ -90,7 +90,7 @@ export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 				<>
 					<TabList className="uppercase">
 						{openedFiles?.map(({ name }) => (
-							<Tab className="flex items-center gap-1 group" key={name} value={name}>
+							<Tab activeTab={activeEditorFileName} className="flex items-center gap-1 group" key={name} value={name}>
 								{name}
 								<IconButton
 									ariaLabel={t("buttons.ariaCloseFile")}

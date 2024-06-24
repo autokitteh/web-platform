@@ -6,6 +6,7 @@ export interface TabsProps {
 }
 
 export interface TabProps {
+	activeTab?: string;
 	className?: string;
 	value: string;
 	ariaLabel?: string;

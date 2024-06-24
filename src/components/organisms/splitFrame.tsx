@@ -22,7 +22,11 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 			<div className="z-10 w-2 -mr-2 resize-handle-horizontal cursor-ew-resize" />
 			<div className="flex" style={{ width: `calc(100% - ${leftSideWidth}%)` }}>
 				<Frame className={mainFrameStyle}>
+<<<<<<< HEAD
 					<EditorTabs editorKey={outputHeight as number} />
+=======
+					<EditorTabs editTabsKey={outputHeight as number} />
+>>>>>>> c2afc94 (fix: set active project tab after refresh)
 					<div className="h-2 -mx-8 cursor-ns-resize resize-handle-vertical" />
 					<div className="px-8 -mx-8 border-0 border-t pt-7 border-t-gray-600" style={{ height: `${outputHeight}%` }}>
 						<OutputTabs />

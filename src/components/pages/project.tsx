@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tab, TabList, Tabs } from "@components/atoms";
+import { Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
@@ -12,6 +12,18 @@ export const Project = () => {
 	const navigate = useNavigate();
 	const [displayTabs, setDisplayTabs] = useState(false);
 	const location = useLocation();
+
+	const [activeTab, setActiveTab] = useState("");
+
+	useEffect(() => {
+		const pathParts = location.pathname.split("/").filter(Boolean);
+		const activeTabIndex = pathParts[2];
+		setActiveTab(activeTabIndex || "code");
+	}, [location]);
+
+	const goTo = (path: string) => {
+		navigate(path.toLowerCase());
+	};
 
 	const fetchResources = async () => {
 		try {
@@ -40,18 +52,20 @@ export const Project = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const goTo = (path: string) => {
-		navigate(path.toLowerCase());
-	};
-
 	// const isProjectsMain = path;
 
 	return (
 		<SplitFrame>
 			{displayTabs ? (
-				<Tabs>
-					<TabList>
+				<div className="flex flex-col flex-1 h-full">
+					<div
+						className={
+							"flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none" +
+							"overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar"
+						}
+					>
 						<Tab
+							activeTab={activeTab}
 							ariaLabel="Code & Assets"
 							className="flex items-center text-xs 3xl:text-sm"
 							onClick={() => goTo("code")}
@@ -60,6 +74,7 @@ export const Project = () => {
 							Code & Assets
 						</Tab>
 						<Tab
+							activeTab={activeTab}
 							ariaLabel="Connections"
 							className="flex items-center text-xs 3xl:text-sm"
 							onClick={() => goTo("connections")}
@@ -68,6 +83,7 @@ export const Project = () => {
 							Connections
 						</Tab>
 						<Tab
+							activeTab={activeTab}
 							ariaLabel="Triggers"
 							className="flex items-center text-xs 3xl:text-sm"
 							onClick={() => goTo("triggers")}
@@ -76,6 +92,7 @@ export const Project = () => {
 							Triggers
 						</Tab>
 						<Tab
+							activeTab={activeTab}
 							ariaLabel="Variables"
 							className="flex items-center text-xs 3xl:text-sm"
 							onClick={() => goTo("variables")}
@@ -83,9 +100,9 @@ export const Project = () => {
 						>
 							Variables
 						</Tab>
-					</TabList>
+					</div>
 					<Outlet />
-				</Tabs>
+				</div>
 			) : (
 				<Outlet />
 			)}
