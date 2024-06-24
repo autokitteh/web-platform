@@ -7,6 +7,7 @@ import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 import { useUserStore } from "@store";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 export const Sidebar = () => {
@@ -14,6 +15,7 @@ export const Sidebar = () => {
 	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
 	const { logoutFunction } = useUserStore();
 	const location = useLocation();
+	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
 
 	const handleMouseLeave = () => {
 		setIsOpen(false);
@@ -87,7 +89,7 @@ export const Sidebar = () => {
 													initial="hidden"
 													variants={animateVariant}
 												>
-													Settings
+													{t("settings")}
 												</motion.span>
 											) : null}
 										</AnimatePresence>
@@ -97,7 +99,7 @@ export const Sidebar = () => {
 										<AnimatePresence>
 											{isOpen ? (
 												<motion.span animate="visible" exit="hidden" initial="hidden" variants={animateVariant}>
-													Logout
+													{t("logout")}
 												</motion.span>
 											) : null}
 										</AnimatePresence>

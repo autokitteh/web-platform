@@ -9,6 +9,7 @@ import modals from "@locales/en/modals/translation.json";
 import projects from "@locales/en/projects/translation.json";
 import services from "@locales/en/services/translation.json";
 import settings from "@locales/en/settings/translation.json";
+import sidebar from "@locales/en/sidebar/translation.json";
 import tabs from "@locales/en/tabs/translation.json";
 import validations from "@locales/en/validations/translation.json";
 
@@ -28,4 +29,5 @@ export default {
 		select,
 	},
 	settings,
+	sidebar,
 };
