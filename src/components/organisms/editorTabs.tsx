@@ -5,7 +5,7 @@ import { monacoLanguages } from "@constants";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
-import { debounce, get, last } from "lodash";
+import { get, last } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -48,13 +48,15 @@ export const EditorTabs = ({ editorHeight = 0 }: { editorHeight?: number }) => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const handleUpdateContent = debounce((newContent?: string) => {
+	const handleUpdateContent = (newContent?: string) => {
 		if (!projectId) return;
 
-		if (newContent === content && newContent !== initialContent) return;
+		if (newContent === content || newContent === initialContent) {
+			return;
+		}
 		const contentUintArray = new TextEncoder().encode(newContent);
 		setUpdateFileContent(contentUintArray, projectId);
-	}, 500);
+	};
 
 	const activeCloseIcon = (fileName: string) =>
 		cn("w-4 h-4 p-0.5 hover:bg-gray-700 opacity-0 group-hover:opacity-100", {
@@ -121,7 +123,6 @@ export const EditorTabs = ({ editorHeight = 0 }: { editorHeight?: number }) => {
 							renderLineHighlight: "none",
 							wordWrap: "on",
 							scrollBeyondLastLine: false,
-							readOnly: activeEditorFileName === "autokitteh.yaml",
 						}}
 						theme="vs-dark"
 						value={content}

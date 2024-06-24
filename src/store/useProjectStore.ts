@@ -156,14 +156,14 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	getProjectResources: async (resources) => {
 		set((state) => {
-			const incomingResourcesConverted: Record<string, Uint8Array> = {};
+			const stateResourcesConverted: Record<string, Uint8Array> = {};
 			for (const [key, value] of Object.entries(get().resources)) {
-				incomingResourcesConverted[key] = new Uint8Array(Object.values(value));
+				stateResourcesConverted[key] = new Uint8Array(Object.values(value));
 			}
 
 			if (!resources) return state;
 
-			if (isEqual(cloneDeep(resources), cloneDeep(incomingResourcesConverted))) {
+			if (isEqual(cloneDeep(resources), cloneDeep(stateResourcesConverted))) {
 				return state;
 			}
 			state.openedFiles = [];
