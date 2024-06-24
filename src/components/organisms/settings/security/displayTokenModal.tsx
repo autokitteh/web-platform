@@ -4,9 +4,9 @@ import { Button, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { ModalName } from "@enums/components";
 import { useModalStore, useToastStore } from "@store";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
-export const DisplayTokenModal = () => {
+export const DisplayConnectionTokenModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "getToken" });
 	const { t: tErrors } = useTranslation("errors");
 	const token = useModalStore((state) => state.data as string);
@@ -37,7 +37,22 @@ export const DisplayTokenModal = () => {
 		<Modal name={ModalName.getToken}>
 			<div className="mx-6">
 				<h3 className="text-xl font-bold mb-5">{t("title")}</h3>
-				<p>{t("line")}</p>
+				<p>
+					<Trans
+						components={{
+							anchor: (
+								<a
+									href="https://marketplace.visualstudio.com/items?itemName=autokitteh.autokitteh"
+									key="extensionLink"
+									rel="noreferrer"
+									target="_blank"
+									title="AutoKitteh Extension"
+								/>
+							),
+						}}
+						i18nKey={t("line")}
+					/>
+				</p>
 				<div className="flex mt-4 w-full">
 					<Input
 						aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}

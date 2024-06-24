@@ -1,6 +1,6 @@
 import { useState } from "react";
 import React from "react";
-import { DisplayTokenModal } from "./displayTokenModal";
+import { DisplayConnectionTokenModal } from "./displayTokenModal";
 import { Button, Loader, Title } from "@components/atoms";
 import { ModalName } from "@enums/components";
 import { HttpService } from "@services";
@@ -28,7 +28,7 @@ export const Security = () => {
 					{t("security.creatTokenButton")}
 				</Button>
 			</div>
-			<DisplayTokenModal />
+			<DisplayConnectionTokenModal />
 		</>
 	);
 };
