@@ -40,7 +40,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const handleChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const newValue = !!e.target.value;
-
 			if (newValue !== hasValue) setHasValue(newValue);
 			onChange?.(e);
 		},
