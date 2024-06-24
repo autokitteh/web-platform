@@ -6,3 +6,4 @@ export { SidebarMenu, SidebarHrefMenu } from "@enums/components/menu.enum";
 export { ReadOnlyFile } from "@enums/components/readOnlyFile.enum";
 export { ConnectionStatus, Integrations } from "@enums/components/connection.enum";
 export { TriggerFormType, TriggerFormIds } from "@enums/components/trigger.enum";
+export { InputVariant } from "@enums/components/input.enum";
