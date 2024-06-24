@@ -69,7 +69,7 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 								isError={!!errors.name}
 								isRequired
 								placeholder={t("addCodeAssets.placeholderName", { ns: "modals" })}
-								variant="white"
+								variant="light"
 							/>
 							<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
 						</div>

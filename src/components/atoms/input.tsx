@@ -15,7 +15,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 		isRequired,
 		variant,
 		value,
-		defaultValue,
 		onChange,
 		...rest
 	} = props;
@@ -24,8 +23,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const [hasValue, setHasValue] = useState<boolean>();
 
 	useEffect(() => {
-		setHasValue(!!value || !!defaultValue);
-	}, [value, defaultValue]);
+		setHasValue(!!value);
+	}, [value]);
 
 	const handleFocus = useCallback(() => setIsFocused(true), []);
 	const handleBlur = useCallback(
@@ -51,7 +50,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const baseClass = cn(
 		"relative flex items-center pr-2.5 text-base bg-black border border-gray-500",
 		"rounded-lg transition focus-within:border-white hover:border-white ",
-		{ "bg-white hover:border-gray-700 focus-within:border-gray-700": variant === InputVariant.white },
+		{ "bg-white hover:border-gray-700 focus-within:border-gray-700": variant === InputVariant.light },
 		{ "pointer-events-none select-none": disabled },
 		className,
 		{ "border-error": isError }
@@ -59,7 +58,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
 	const inputClass = cn(
 		"w-full h-12 py-2.5 px-4 bg-transparent outline-none",
-		{ "autofill-black": variant === InputVariant.white },
+		{ "autofill-black": variant === InputVariant.light },
 		{ "text-gray-400": disabled },
 		classInput
 	);
@@ -71,7 +70,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	);
 
 	const borderOverlayLabelClass = cn("absolute left-0 z-0 w-full h-0.5 -translate-y-1/2 top-1/2 bg-black", {
-		"bg-white": variant === InputVariant.white,
+		"bg-white": variant === InputVariant.light,
 	});
 
 	const id = useId();
@@ -81,7 +80,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 			<input
 				{...rest}
 				className={inputClass}
-				defaultValue={defaultValue}
 				disabled={disabled}
 				id={id}
 				onBlur={handleBlur}

@@ -1,3 +1,3 @@
 export enum InputVariant {
-	white = "white",
+	light = "light",
 }
