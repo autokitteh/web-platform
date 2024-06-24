@@ -53,6 +53,7 @@ export const EditVariable = () => {
 		formState: { errors, dirtyFields },
 		getValues,
 		reset,
+		watch,
 	} = useForm({
 		resolver: zodResolver(newVariableShema),
 		defaultValues: {
@@ -82,6 +83,8 @@ export const EditVariable = () => {
 		navigate(-1);
 	};
 
+	const { name, value } = watch();
+
 	return isLoadingData ? (
 		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{tForm("loading")}...</div>
 	) : (
@@ -95,6 +98,7 @@ export const EditVariable = () => {
 			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
+						value={name}
 						{...register("name")}
 						aria-label={tForm("placeholders.name")}
 						className={dirtyFields["name"] ? "border-white" : ""}
@@ -105,6 +109,7 @@ export const EditVariable = () => {
 				</div>
 				<div className="relative">
 					<Input
+						value={value}
 						{...register("value")}
 						aria-label={tForm("placeholders.value")}
 						className={dirtyFields["value"] ? "border-white" : ""}
