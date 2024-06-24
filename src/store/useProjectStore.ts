@@ -6,7 +6,7 @@ import { LoggerService, ProjectsService } from "@services";
 import { ProjectMenuItem } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
-import { remove } from "lodash";
+import { isEqual, remove, cloneDeep } from "lodash";
 import randomatic from "randomatic";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -25,7 +25,6 @@ const defaultState: Omit<
 	| "setProjectEmptyResources"
 	| "updateEditorOpenedFiles"
 	| "reset"
-	| "resetResources"
 	| "updateEditorClosedFiles"
 	| "removeProjectFile"
 > = {
@@ -157,8 +156,14 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	getProjectResources: async (resources) => {
 		set((state) => {
+			const incomingResourcesConverted: Record<string, Uint8Array> = {};
+			for (const [key, value] of Object.entries(get().resources)) {
+				incomingResourcesConverted[key] = new Uint8Array(Object.values(value));
+			}
+
 			if (!resources) return state;
-			if (state.resources === resources) {
+
+			if (isEqual(cloneDeep(resources), cloneDeep(incomingResourcesConverted))) {
 				return state;
 			}
 			state.openedFiles = [];
@@ -181,14 +186,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	reset: () => {
 		set(defaultState);
-	},
-
-	resetResources: () => {
-		set((state) => {
-			state.openedFiles = [];
-			state.resources = {};
-			return state;
-		});
 	},
 
 	updateEditorClosedFiles: (fileName) => {

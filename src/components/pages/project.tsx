@@ -8,7 +8,7 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 export const Project = () => {
 	const { projectId } = useParams();
-	const { resetResources, getProjectResources } = useProjectStore();
+	const { getProjectResources } = useProjectStore();
 	const navigate = useNavigate();
 	const [displayTabs, setDisplayTabs] = useState(false);
 	const location = useLocation();
@@ -46,8 +46,6 @@ export const Project = () => {
 
 	useEffect(() => {
 		if (!projectId) return;
-
-		resetResources();
 		fetchResources();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);

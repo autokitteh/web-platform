@@ -9,12 +9,12 @@ import { debounce, get, last } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
+export const EditorTabs = ({ editorHeight = 0 }: { editorHeight?: number }) => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
 		useProjectStore();
-	const [key, setKey] = useState(editorKey);
+	const [editorKey, setEditorKey] = useState(editorHeight);
 	const initialContent = "Click on a file to start editing or create a new one";
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
@@ -26,7 +26,7 @@ export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 	const content = String.fromCharCode.apply(null, byteArray) || initialContent;
 
 	useEffect(() => {
-		const handleResize = () => setKey((prevKey) => prevKey + 1);
+		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
 
 		window.addEventListener("resize", handleResize);
 
@@ -77,7 +77,7 @@ export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 	const [activeTab, setActiveTab] = useState("");
 
 	return (
-		<div className="flex flex-col flex-1 h-full">
+		<div className="flex flex-col flex-1 h-full" style={{ height: `${editorHeight + 5}%` }}>
 			{projectId ? (
 				<>
 					<div
@@ -109,7 +109,7 @@ export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 					<Editor
 						aria-label={activeTab}
 						beforeMount={handleEditorWillMount}
-						key={key}
+						key={editorKey}
 						language={languageEditor}
 						onChange={handleUpdateContent}
 						onMount={handleEditorDidMount}
