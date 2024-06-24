@@ -6,7 +6,7 @@ import { LoggerService, ProjectsService } from "@services";
 import { ProjectMenuItem } from "@type/models";
 import { readFileAsUint8Array } from "@utilities";
 import { updateOpenedFilesState } from "@utilities";
-import { isEqual, remove, cloneDeep } from "lodash";
+import { isEqual, cloneDeep } from "lodash";
 import randomatic from "randomatic";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -191,11 +191,17 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	updateEditorClosedFiles: (fileName) => {
 		set((state) => {
 			const fileIndex = state.openedFiles.findIndex(({ name }) => name === fileName);
-			const newOpenedFiles = remove([...state.openedFiles], ({ name }) => name !== fileName);
+			const newOpenedFiles = state.openedFiles.filter(({ name }) => name !== fileName);
 
-			if (state.openedFiles[fileIndex]?.isActive && newOpenedFiles.length > 0) {
-				const newActiveIndex = Math.min(fileIndex, newOpenedFiles.length - 1);
-				newOpenedFiles[newActiveIndex].isActive = true;
+			if (newOpenedFiles.length > 0) {
+				const activeFileIndex = state.openedFiles.findIndex(
+					({ name }) => name === fileName && state.openedFiles[fileIndex]?.isActive
+				);
+
+				if (activeFileIndex !== -1) {
+					const newActiveIndex = Math.min(activeFileIndex, newOpenedFiles.length - 1);
+					newOpenedFiles[newActiveIndex].isActive = true;
+				}
 			}
 
 			state.openedFiles = newOpenedFiles;
