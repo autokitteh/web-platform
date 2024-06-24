@@ -11,12 +11,12 @@ import { editor } from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const EditorTabs = () => {
+export const EditorTabs = ({ key = 0 }: { key?: number }) => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
 		useProjectStore();
-	const [editorKey, setEditorKey] = useState(0);
+	const [editorKey, setEditorKey] = useState(key);
 	const initialContent = "// Code A: Initialize your code here...";
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
@@ -80,6 +80,7 @@ export const EditorTabs = () => {
 			lineNumbers: "off",
 			renderLineHighlight: "none",
 			wordWrap: "on",
+			scrollBeyondLastLine: false,
 		};
 	}
 
@@ -96,7 +97,7 @@ export const EditorTabs = () => {
 									className={activeCloseIcon(name)}
 									onClick={(e) => handleCloseButtonClick(e, name)}
 								>
-									<Close className="transition w-2 h-2 fill-gray-400 group-hover:fill-white" />
+									<Close className="w-2 h-2 transition fill-gray-400 group-hover:fill-white" />
 								</IconButton>
 							</Tab>
 						))}
