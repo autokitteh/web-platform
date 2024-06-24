@@ -94,7 +94,7 @@ export const SessionTableEditorFrame = () => {
 		if (editor) {
 			const lastLine = editor.getModel()?.getLineCount();
 			if (lastLine) {
-				editor.revealLine(lastLine * 1.2);
+				editor.revealLine(lastLine);
 			}
 		}
 	};
