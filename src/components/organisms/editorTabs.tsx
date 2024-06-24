@@ -15,7 +15,7 @@ export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
 		useProjectStore();
 	const [key, setKey] = useState(editorKey);
-	const initialContent = "Click on the file to start editing or create a new one";
+	const initialContent = "Click on a file to start editing or create a new one";
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
@@ -48,12 +48,13 @@ export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const handleUpdateContent = debounce((content?: string) => {
+	const handleUpdateContent = debounce((newContent?: string) => {
 		if (!projectId) return;
 
-		const contentUintArray = new TextEncoder().encode(content);
+		if (newContent === content && newContent !== initialContent) return;
+		const contentUintArray = new TextEncoder().encode(newContent);
 		setUpdateFileContent(contentUintArray, projectId);
-	}, 3000);
+	}, 500);
 
 	const activeCloseIcon = (fileName: string) =>
 		cn("w-4 h-4 p-0.5 hover:bg-gray-700 opacity-0 group-hover:opacity-100", {

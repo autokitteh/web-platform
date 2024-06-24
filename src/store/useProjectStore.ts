@@ -72,6 +72,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			return state;
 		});
 	},
+
 	renameProject: async (projectId: string, newProjectName: string) => {
 		set((state) => {
 			const projectIndex = state.menuList.findIndex(({ id }) => id === projectId);
@@ -156,6 +157,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	getProjectResources: async (resources) => {
 		set((state) => {
+			if (!resources) return state;
+			if (state.resources === resources) {
+				return state;
+			}
+			state.openedFiles = [];
 			state.resources = resources;
 			return state;
 		});
@@ -167,7 +173,8 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (isFileActive) return;
 
 		set((state) => {
-			state.openedFiles = updateOpenedFilesState(state.openedFiles, fileName);
+			const newOpenedFiles = updateOpenedFilesState(state.openedFiles, fileName);
+			state.openedFiles = newOpenedFiles;
 			return state;
 		});
 	},
