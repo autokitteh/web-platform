@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/autokitteh/web-platform/compare/v1.6.0...v1.7.0) (2024-06-24)
+
+
+### Features
+
+* ability resize output tab pane ([#133](https://github.com/autokitteh/web-platform/issues/133)) ([638fe18](https://github.com/autokitteh/web-platform/commit/638fe1842b055faf2484497cd8860777ceaea790))
+
 # [1.6.0](https://github.com/autokitteh/web-platform/compare/v1.5.0...v1.6.0) (2024-06-20)
 
 
