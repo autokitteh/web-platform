@@ -16,7 +16,6 @@ export const Topbar = () => {
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [project, setProject] = useState<ProjectMenuItem>();
-	const { t: tErrors } = useTranslation(["errors"]);
 	const addToast = useToastStore((state) => state.addToast);
 	const styleInput = cn(
 		"font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight",
@@ -50,7 +49,7 @@ export const Topbar = () => {
 					id: Date.now().toString(),
 					message: (error as Error).message,
 					type: "error",
-					title: tErrors("error"),
+					title: t("error", { ns: "errors" }),
 				});
 				return <div />;
 			}
@@ -76,14 +75,14 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
+				title: t("error", { ns: "errors" }),
 			});
 		} else {
 			addToast({
 				id: Date.now().toString(),
 				message: "",
 				type: "success",
-				title: t("topbar.buildProjectSuccess"),
+				title: t("topbar.buildProjectSuccess", { ns: "projects" }),
 			});
 		}
 
@@ -101,14 +100,14 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
+				title: t("error", { ns: "errors" }),
 			});
 		} else {
 			addToast({
 				id: Date.now().toString(),
 				message: "",
 				type: "success",
-				title: t("topbar.deployedProjectSuccess"),
+				title: t("topbar.deployedProjectSuccess", { ns: "projects" }),
 			});
 		}
 
@@ -123,7 +122,7 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
+				title: t("error", { ns: "errors" }),
 			});
 			return <div />;
 		}
@@ -151,7 +150,7 @@ export const Topbar = () => {
 					role="textbox"
 					suppressContentEditableWarning={true}
 					tabIndex={0}
-					title={t("topbar.rename")}
+					title={t("topbar.rename", { ns: "projects" })}
 				>
 					{project?.name}
 				</span>
@@ -162,14 +161,14 @@ export const Topbar = () => {
 			</div>
 			<div className="flex items-stretch gap-3">
 				<Button
-					ariaLabel={t("topbar.buttons.ariaBuildProject")}
+					ariaLabel={t("topbar.buttons.ariaBuildProject", { ns: "projects" })}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
 					disabled={loadingButton[TopbarButton.build]}
 					onClick={build}
 					variant="outline"
 				>
 					{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg className="max-w-5" src={Build} />}
-					{t("topbar.buttons.build")}
+					{t("topbar.buttons.build", { ns: "projects" })}
 				</Button>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
@@ -179,7 +178,7 @@ export const Topbar = () => {
 					variant="outline"
 				>
 					{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg className="max-w-5" src={Deploy} />}
-					{t("topbar.buttons.deploy")}
+					{t("topbar.buttons.deploy", { ns: "projects" })}
 				</Button>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaStats")}
@@ -188,7 +187,7 @@ export const Topbar = () => {
 					variant="outline"
 				>
 					<IconSvg className="max-w-5" src={Stats} />
-					{t("topbar.buttons.stats")}
+					{t("topbar.buttons.stats", { ns: "projects" })}
 				</Button>
 			</div>
 		</div>
