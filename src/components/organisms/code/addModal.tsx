@@ -59,15 +59,15 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	return (
 		<Modal className="w-550" name={ModalName.addCodeAssets}>
 			<div className="mx-6">
-				<h3 className="text-xl font-bold mb-5">{t("addCodeAssets.title", { ns: "modals" })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("addCodeAssets.title", { ns: "modals" })}</h3>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<div className="flex gap-2">
 						<div className="relative w-full">
 							<Input
 								{...register("name")}
 								aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}
-								classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
-								className="bg-white hover:border-gray-700"
+								classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800 autofill-black"
+								className="bg-white hover:border-gray-700 focus-within:border-gray-700"
 								isError={!!errors.name}
 								isRequired
 								placeholder={t("addCodeAssets.placeholderName", { ns: "modals" })}

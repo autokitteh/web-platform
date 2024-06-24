@@ -28,8 +28,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	);
 
 	const inputClass = cn(
-		"w-full h-12 py-2.5 px-4 bg-transparent outline-none partial-border-input",
-		"placeholder-transparent",
+		"w-full h-12 py-2.5 px-4 bg-transparent outline-none text-gray-800",
 		{ "placeholder:text-gray-500": disabled },
 		classInput
 	);
