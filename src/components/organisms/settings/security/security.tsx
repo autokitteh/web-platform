@@ -1,7 +1,8 @@
 import { useState } from "react";
 import React from "react";
 import { DisplayConnectionTokenModal } from "./displayTokenModal";
-import { Button, Loader, Title } from "@components/atoms";
+import { NewProject } from "@assets/image";
+import { Button, IconSvg, Loader, Title } from "@components/atoms";
 import { ModalName } from "@enums/components";
 import { HttpService } from "@services";
 import { useModalStore } from "@store";
@@ -24,8 +25,13 @@ export const Security = () => {
 			<div>
 				<p className="mb-4">{t("security.howToUseTokenText")}</p>
 				<Button className="border-2 border-black" onClick={createToken} variant="light">
-					{isLoading ? <Loader size="sm" /> : null}
-					{t("security.creatTokenButton")}
+					<div className="ml-1 flex items-center">
+						{!isLoading ? (
+							<IconSvg alt="New Project" className="w-4 before:w-2 before:h-2 after:w-2 after:h-2" src={NewProject} />
+						) : null}
+						{isLoading ? <Loader size="sm" /> : null}
+					</div>
+					<div className="flex mr-1">{t("security.creatTokenButton")}</div>
 				</Button>
 			</div>
 			<DisplayConnectionTokenModal />
