@@ -52,7 +52,8 @@
 	},
 	"getToken": {
 		"closeButton": "Close",
-		"copyButton": "Copy",
+		"copyButton": "Copy connection token",
+		"copyInputAriaLabel": "Copy this token to be able to use it in your application",
 		"copyFailure": "Failed to copy token to clipboard",
 		"copySuccess": "Token copied to clipboard",
 		"line": "Create, copy and use  the token in your application - using CLI or our VSCode Extension <anchor>(click here to get the extension)</anchor> - to connect to the platform.",

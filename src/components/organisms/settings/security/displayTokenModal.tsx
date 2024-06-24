@@ -55,14 +55,14 @@ export const DisplayConnectionTokenModal = () => {
 				</p>
 				<div className="flex mt-4 w-full">
 					<Input
-						aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}
+						aria-label={t("copyInputAriaLabel")}
 						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="flex-1 bg-white hover:border-gray-700"
 						disabled
 						value={token}
 					/>
 					<Button
-						aria-label={t("buttons.copy")}
+						aria-label={t("copyButton")}
 						className="px-3 font-semibold bg-white border-black rounded-md hover:bg-gray-300 ml-4"
 						onClick={() => copyToClipboard("test")}
 						variant="outline"
@@ -73,7 +73,7 @@ export const DisplayConnectionTokenModal = () => {
 			</div>
 			<div className="flex justify-end gap-1 mt-14">
 				<Button
-					ariaLabel={t("cancelButton")}
+					ariaLabel={t("closeButton")}
 					className="font-semibold py-3 px-4 hover:text-white w-auto"
 					onClick={() => closeModal(ModalName.getToken)}
 				>
