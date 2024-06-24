@@ -8,7 +8,7 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { SessionsService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { isEqual } from "lodash";
-import * as monaco from "monaco-editor"; // Ensure to import monaco-editor types
+import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 const editorLineHeight = 20;
