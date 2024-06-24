@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Close } from "@assets/image/icons";
-import { Tabs, Tab, TabList, TabPanel, IconButton } from "@components/atoms";
+import { Tab, IconButton } from "@components/atoms";
 import { monacoLanguages } from "@constants";
-import { ReadOnlyFile } from "@enums/components";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { debounce, get, last } from "lodash";
-import { editor } from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -17,7 +15,7 @@ export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
 		useProjectStore();
 	const [key, setKey] = useState(editorKey);
-	const initialContent = "// Code A: Initialize your code here...";
+	const initialContent = "Click on the file to start editing or create a new one";
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
@@ -70,27 +68,31 @@ export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 		updateEditorClosedFiles(name);
 	};
 
-	let editorOptions: editor.IStandaloneEditorConstructionOptions;
-	if (activeEditorFileName === ReadOnlyFile.autokittehYaml) {
-		editorOptions = {
-			readOnly: true,
-			minimap: {
-				enabled: false,
-			},
-			lineNumbers: "off",
-			renderLineHighlight: "none",
-			wordWrap: "on",
-			scrollBeyondLastLine: false,
-		};
-	}
+	const onTabClick = (value: string) => {
+		setActiveTab(value);
+		updateEditorOpenedFiles(value);
+	};
+
+	const [activeTab, setActiveTab] = useState("");
 
 	return (
-		<Tabs defaultValue={activeEditorFileName} key={activeEditorFileName} onChange={updateEditorOpenedFiles}>
+		<div className="flex flex-col flex-1 h-full">
 			{projectId ? (
 				<>
-					<TabList className="uppercase">
+					<div
+						className={
+							`uppercase flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none ` +
+							`overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar mb-2`
+						}
+					>
 						{openedFiles?.map(({ name }) => (
-							<Tab activeTab={activeEditorFileName} className="flex items-center gap-1 group" key={name} value={name}>
+							<Tab
+								activeTab={activeEditorFileName}
+								className="flex items-center gap-1 group"
+								key={name}
+								onClick={() => onTabClick(name)}
+								value={name}
+							>
 								{name}
 								<IconButton
 									ariaLabel={t("buttons.ariaCloseFile")}
@@ -101,24 +103,30 @@ export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 								</IconButton>
 							</Tab>
 						))}
-					</TabList>
-					{Object.entries(resources).map(([fileName]) => (
-						<TabPanel className="pt-10 -ml-7" key={fileName} value={fileName}>
-							<Editor
-								aria-label={fileName}
-								beforeMount={handleEditorWillMount}
-								key={key}
-								language={languageEditor}
-								onChange={handleUpdateContent}
-								onMount={handleEditorDidMount}
-								options={editorOptions}
-								theme="vs-dark"
-								value={content}
-							/>
-						</TabPanel>
-					))}
+					</div>
+
+					<Editor
+						aria-label={activeTab}
+						beforeMount={handleEditorWillMount}
+						key={key}
+						language={languageEditor}
+						onChange={handleUpdateContent}
+						onMount={handleEditorDidMount}
+						options={{
+							minimap: {
+								enabled: false,
+							},
+							lineNumbers: "off",
+							renderLineHighlight: "none",
+							wordWrap: "on",
+							scrollBeyondLastLine: false,
+							readOnly: activeEditorFileName === "autokitteh.yaml",
+						}}
+						theme="vs-dark"
+						value={content}
+					/>
 				</>
 			) : null}
-		</Tabs>
+		</div>
 	);
 };
