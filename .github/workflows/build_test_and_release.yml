@@ -68,6 +68,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           submodules: true
+
       - uses: actions/setup-node@v4
         with:
           node-version: "21.2.0"
@@ -86,6 +87,9 @@ jobs:
           path: |
             ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
+      
+      - name: Install system dependencies for WebKit
+        run: npx playwright install-deps webkit
 
       - name: Download autokitteh executable
         run: |
@@ -133,10 +137,12 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           submodules: true
+
       - uses: actions/setup-node@v4
         with:
           node-version: "21.2.0"
           cache: "npm"
+
       - name: Pull submodule from remote
         run: git submodule update --remote
 
