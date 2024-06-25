@@ -45,14 +45,12 @@ jobs:
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
-      - name: Install system dependencies for WebKit
-        if: steps.cache-playwright.outputs.cache-hit == 'true'
-        run: npx playwright install-deps webkit
-  
 
   test:
     name: 🧪 Test (${{ matrix.shard }}/${{ strategy.job-total }})
     needs: install
+    env:
+      WEBKIT_REQUIRED: ${{ contains(matrix.shard, '2') }}
     strategy:
       matrix:
         shard: [1, 2, 3, 4]
@@ -103,6 +101,10 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
+      
+      - name: Install system dependencies for WebKit
+        if: env.WEBKIT_REQUIRED == 'true'
+        run: npx playwright install-deps webkit
 
       - name: Run Playwright tests
         run: npx playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
