@@ -27,22 +27,20 @@ jobs:
         uses: actions/cache@v4
         id: cache-node-modules
         with:
-          path: |
-            node_modules
-          key: modules-${{ hashFiles('package-lock.json') }}
- 
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Cache Playwright binaries
         uses: actions/cache@v4
         id: cache-playwright
         with:
-          path: |
-            ~/.cache/ms-playwright
+          path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
- 
+
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
- 
+
       - name: Install Playwright Browsers
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
@@ -53,12 +51,12 @@ jobs:
 
       - name: Get AK submodule for the frontend
         run: git submodule update --init
+  
 
   test:
     name: 🧪 Test (${{ matrix.shard }}/${{ strategy.job-total }})
     needs: install
     strategy:
-      fail-fast: false  
       matrix:
         shard: [1, 2, 3, 4]
     runs-on: ubuntu-latest
@@ -72,22 +70,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "21.2.0"
-          cache: "npm"
- 
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-          key: modules-${{ hashFiles('package-lock.json') }}
- 
-      - name: Cache Playwright
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: playwright-${{ hashFiles('package-lock.json') }}
-
+      
       - name: Download autokitteh executable
         run: |
           curl -sSL https://get.autokitteh.sh | bash
@@ -100,9 +83,8 @@ jobs:
           AK_HTTP__CORS__ALLOWED_ORIGINS: "http://localhost:4173"
           AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE: "true"
           AK_AUTHSESSIONS__ALLOWED_DOMAIN: "localhost:4173"
-        run: |
-          ak up --mode=dev &
-
+        run: ak up --mode=dev &
+  
       - name: Wait for Backend to Start
         run: |
           URL=http://localhost:9980
@@ -113,10 +95,23 @@ jobs:
           done
           echo "Backend is up!"
 
+      - name: Use cached node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Use cached Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
       - name: Run Playwright tests
         run: npx playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-${{ matrix.shard }}_${{ strategy.job-total }}
@@ -158,7 +153,7 @@ jobs:
       - name: Run build
         run: npm run build
 
-      - name: Upload Artifacts
+      - name: Upload Built Files
         uses: actions/upload-artifact@v4
         with:
           name: built-files
