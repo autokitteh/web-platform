@@ -8,13 +8,10 @@ env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  test:
-    name: 🧪 Test (${{ matrix.shard }}/${{ strategy.job-total }})
-    strategy:
-      matrix:
-        shard: [1, 2]
+  install:
+    timeout-minutes: 60
+    name: 🔍 Install
     runs-on: ubuntu-latest
-    if: ${{ ! contains(github.event.head_commit.message, '[skip_e2e]') }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,16 +21,43 @@ jobs:
         with:
           node-version: "21.2.0"
           cache: "npm"
+      - uses: actions/checkout@v3
 
-      - name: Pull submodule from remote
-        run: git submodule update --remote
-
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+          key: modules-${{ hashFiles('package-lock.json') }}
+ 
+      - name: Cache Playwright binaries
+        uses: actions/cache@v4
+        id: cache-playwright
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+ 
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
-
+ 
       - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
+      - name: Get AK submodule for the frontend
+        run: git submodule update --init
+
+  test:
+    name: 🧪 Test (${{ matrix.shard }}/${{ strategy.job-total }})
+    strategy:
+      matrix:
+        shard: [1, 2, 3, 4]
+    runs-on: ubuntu-latest
+    if: ${{ ! contains(github.event.head_commit.message, '[skip_e2e]') }}
+    steps:
       - name: Download autokitteh executable
         run: |
           curl -sSL https://get.autokitteh.sh | bash
@@ -58,9 +82,6 @@ jobs:
             sleep 5
           done
           echo "Backend is up!"
-
-      - name: Get AK submodule for the frontend
-        run: git submodule update --init
 
       - name: Run Playwright tests
         run: npx playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
