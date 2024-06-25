@@ -114,7 +114,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}_${{ strategy.job-total }}
           path: playwright-report/
           retention-days: 30
 
@@ -154,7 +154,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.shard }}_${{ strategy.job-total }}
+          name: built-files
           path: |
             ./dist
 
