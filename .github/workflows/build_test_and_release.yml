@@ -154,7 +154,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: built-files
+          name: playwright-report-${{ matrix.shard }}_${{ strategy.job-total }}
           path: |
             ./dist
 
