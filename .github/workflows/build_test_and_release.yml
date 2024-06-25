@@ -48,7 +48,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Install system dependencies for WebKit
-        if: ${{ steps.cache-playwright.outputs.cache-hit == 'true' }}
+        if: steps.cache-playwright.outputs.cache-hit == 'true'
         run: npx playwright install-deps webkit
 
       - name: Get AK submodule for the frontend
