@@ -16,7 +16,6 @@ export const Topbar = () => {
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [project, setProject] = useState<ProjectMenuItem>();
-	const { t: tErrors } = useTranslation(["errors"]);
 	const addToast = useToastStore((state) => state.addToast);
 	const styleInput = cn(
 		"font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight",
@@ -50,7 +49,7 @@ export const Topbar = () => {
 					id: Date.now().toString(),
 					message: (error as Error).message,
 					type: "error",
-					title: tErrors("error"),
+					title: t("error", { ns: "errors" }),
 				});
 				return <div />;
 			}
@@ -76,7 +75,7 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
+				title: t("error", { ns: "errors" }),
 			});
 		} else {
 			addToast({
@@ -101,7 +100,7 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
+				title: t("error", { ns: "errors" }),
 			});
 		} else {
 			addToast({
@@ -123,7 +122,7 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
+				title: t("error", { ns: "errors" }),
 			});
 			return <div />;
 		}
