@@ -79,7 +79,7 @@ export const EditorTabs = ({ editorHeight = 0 }: { editorHeight?: number }) => {
 	const [activeTab, setActiveTab] = useState("");
 
 	return (
-		<div className="flex flex-col flex-1 h-full" style={{ height: `${editorHeight + 5}%` }}>
+		<div className="flex flex-col flex-1 h-full" style={{ height: editorHeight }}>
 			{projectId ? (
 				<>
 					<div

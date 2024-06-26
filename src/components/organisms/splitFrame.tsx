@@ -22,7 +22,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 			<div className="flex" style={{ width: `calc(100% - ${leftSideWidth}%)` }}>
 				<Frame className={mainFrameStyle}>
 					<EditorTabs editorHeight={100 - (outputHeight as number)} />
-					<div className="h-2 -mx-8 cursor-ns-resize resize-handle-vertical z-30" />
+					<div className="h-3 -mx-8 mt-8 cursor-ns-resize resize-handle-vertical z-30" />
 					<div className="px-8 -mx-8 border-0 border-t pt-7 border-t-gray-600" style={{ height: `${outputHeight}%` }}>
 						<OutputTabs />
 					</div>
