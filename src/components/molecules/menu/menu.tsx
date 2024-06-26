@@ -63,9 +63,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
 	};
 
-	const isButtonActive = (href: string) => {
-		return location.pathname.startsWith(href);
-	};
+	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
 	const buttonMenuStyle = (href: string) =>
 		cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
