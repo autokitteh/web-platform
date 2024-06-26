@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/autokitteh/web-platform/compare/v1.8.0...v1.8.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* make tab selection to be consistent after page refresh ([#153](https://github.com/autokitteh/web-platform/issues/153)) ([2c258d4](https://github.com/autokitteh/web-platform/commit/2c258d49dfd0770becca670f8e86588d456f88ee))
+
 # [1.8.0](https://github.com/autokitteh/web-platform/compare/v1.7.1...v1.8.0) (2024-06-26)
 
 
