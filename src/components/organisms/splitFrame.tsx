@@ -26,7 +26,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 							<EditorTabs />
 						</div>
 
-						<div className="h-3 -mx-8 mt-8 cursor-ns-resize resize-handle-vertical z-40" />
+						<div className="h-1 -mx-8 mt-8 cursor-ns-resize resize-handle-vertical bg-gray-700 z-40" />
 						<div
 							className="px-8 -mx-8 border-0 border-t pt-7 border-t-gray-600"
 							style={{ height: `${outputHeight as number}%` }}
