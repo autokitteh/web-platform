@@ -151,10 +151,10 @@ export const TriggerSchedulerForm = ({
 								{...field}
 								aria-label={t("placeholders.selectFile")}
 								isError={!!errors.filePath}
+								noOptionsLabel={t("noFilesAvailable")}
 								onChange={(selected) => field.onChange(selected)}
 								options={filesNameList}
 								placeholder={t("placeholders.selectFile")}
-								ref={null}
 								value={field.value}
 							/>
 						)}

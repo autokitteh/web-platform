@@ -190,10 +190,10 @@ export const DefaultTriggerForm = ({
 							{...field}
 							aria-label={t("placeholders.selectConnection")}
 							isError={!!errors.connection}
+							noOptionsLabel={t("noConnectionsAvailable")}
 							onChange={(selected) => field.onChange(selected)}
 							options={connections}
 							placeholder={t("placeholders.selectConnection")}
-							ref={null}
 							value={field.value}
 						/>
 					)}
@@ -209,10 +209,10 @@ export const DefaultTriggerForm = ({
 							{...field}
 							aria-label={t("placeholders.selectFile")}
 							isError={!!errors.filePath}
+							noOptionsLabel={t("noFilesAvailable")}
 							onChange={(selected) => field.onChange(selected)}
 							options={filesNameList}
 							placeholder={t("placeholders.selectFile")}
-							ref={null}
 							value={field.value}
 						/>
 					)}

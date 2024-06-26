@@ -1,4 +1,5 @@
 import buttons from "@locales/en/buttons/translation.json";
+import select from "@locales/en/components/select/translation.json";
 import deployments from "@locales/en/deployments/translation.json";
 import errors from "@locales/en/errors/translation.json";
 import integrations from "@locales/en/integrations/translation.json";
@@ -24,4 +25,7 @@ export default {
 	validations,
 	deployments,
 	integrations,
+	components: {
+		select,
+	},
 };

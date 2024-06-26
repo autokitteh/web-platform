@@ -35,6 +35,7 @@ export const AddTrigger = () => {
 			<div className="flex flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectTriggerType")}
+					noOptionsLabel={t("placeholders.noTriggerTypesAvailable")}
 					onChange={(option) => setSelectedType(option as SelectOption)}
 					options={triggerTypes}
 					placeholder={t("placeholders.selectTriggerType")}
