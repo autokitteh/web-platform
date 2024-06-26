@@ -9,12 +9,12 @@ import { get, last } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const EditorTabs = ({ editorHeight = 0 }: { editorHeight?: number }) => {
+export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
 		useProjectStore();
-	const [editorKey, setEditorKey] = useState(editorHeight);
+	const [editorKey, setEditorKey] = useState(0);
 	const initialContent = "Click on a file to start editing or create a new one";
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
@@ -79,7 +79,7 @@ export const EditorTabs = ({ editorHeight = 0 }: { editorHeight?: number }) => {
 	const [activeTab, setActiveTab] = useState("");
 
 	return (
-		<div className="flex flex-col flex-1 h-full" style={{ height: editorHeight }}>
+		<div className="flex flex-col flex-1 h-full">
 			{projectId ? (
 				<>
 					<div

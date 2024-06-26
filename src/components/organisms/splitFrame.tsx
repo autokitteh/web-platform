@@ -19,12 +19,20 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 				) : null}
 			</div>
 			<div className="z-10 w-2 -ml-2 resize-handle-horizontal cursor-ew-resize" />
-			<div className="flex" style={{ width: `calc(100% - ${leftSideWidth}%)` }}>
+			<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				<Frame className={mainFrameStyle}>
-					<EditorTabs editorHeight={100 - (outputHeight as number)} />
-					<div className="h-3 -mx-8 mt-8 cursor-ns-resize resize-handle-vertical z-30" />
-					<div className="px-8 -mx-8 border-0 border-t pt-7 border-t-gray-600" style={{ height: `${outputHeight}%` }}>
-						<OutputTabs />
+					<div className="flex flex-col h-full">
+						<div style={{ height: `${100 - (outputHeight as number)}%` }}>
+							<EditorTabs />
+						</div>
+
+						<div className="h-3 -mx-8 mt-8 cursor-ns-resize resize-handle-vertical z-40" />
+						<div
+							className="px-8 -mx-8 border-0 border-t pt-7 border-t-gray-600"
+							style={{ height: `${outputHeight as number}%` }}
+						>
+							<OutputTabs />
+						</div>
 					</div>
 				</Frame>
 				<LogoCatLarge />
