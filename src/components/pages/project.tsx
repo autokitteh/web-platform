@@ -15,7 +15,7 @@ export const Project = () => {
 	const [displayTabs, setDisplayTabs] = useState(false);
 	const location = useLocation();
 	const addToast = useToastStore((state) => state.addToast);
-	const { t: tErrors } = useTranslation("errors");
+	const { t } = useTranslation("errors");
 
 	const [activeTab, setActiveTab] = useState(defaultProjectTab);
 
@@ -37,7 +37,7 @@ export const Project = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
+				title: t("error"),
 			});
 		}
 	};
