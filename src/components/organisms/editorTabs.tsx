@@ -11,12 +11,12 @@ import { editor } from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-export const EditorTabs = ({ key = 0 }: { key?: number }) => {
+export const EditorTabs = ({ editorKey = 0 }: { editorKey?: number }) => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
 		useProjectStore();
-	const [editorKey, setEditorKey] = useState(key);
+	const [key, setKey] = useState(editorKey);
 	const initialContent = "// Code A: Initialize your code here...";
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
@@ -28,7 +28,7 @@ export const EditorTabs = ({ key = 0 }: { key?: number }) => {
 	const content = String.fromCharCode.apply(null, byteArray) || initialContent;
 
 	useEffect(() => {
-		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
+		const handleResize = () => setKey((prevKey) => prevKey + 1);
 
 		window.addEventListener("resize", handleResize);
 
@@ -107,7 +107,7 @@ export const EditorTabs = ({ key = 0 }: { key?: number }) => {
 							<Editor
 								aria-label={fileName}
 								beforeMount={handleEditorWillMount}
-								key={editorKey}
+								key={key}
 								language={languageEditor}
 								onChange={handleUpdateContent}
 								onMount={handleEditorDidMount}
