@@ -6,10 +6,10 @@ export interface SelectProps {
 	options: SelectOption[];
 	variant?: "black" | "white";
 	isError?: boolean;
-	onChange: (value: SingleValue<SelectOption>) => void;
-	onBlur?: () => void;
 	ref?: null;
 	noOptionsLabel?: string;
+	onChange: (value: SingleValue<SelectOption>) => void;
+	onBlur?: () => void;
 }
 
 export interface SelectOption {
