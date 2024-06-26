@@ -1,5 +1,5 @@
 import React from "react";
-import { Frame, LogoCatLarge } from "@components/atoms";
+import { Button, Frame, LogoCatLarge } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
 import { useResize } from "@hooks";
 import { SplitFrameProps } from "@interfaces/components";
@@ -25,8 +25,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 						<div style={{ height: `${100 - (outputHeight as number)}%` }}>
 							<EditorTabs />
 						</div>
-
-						<div className="h-1 -mx-8 mt-8 cursor-ns-resize resize-handle-vertical bg-gray-700 z-40" />
+						<Button className="p-1 -mx-8 cursor-ns-resize resize-handle-vertical bg-gray-700 z-40 rounded-none" />
 						<div
 							className="px-8 -mx-8 border-0 border-t pt-7 border-t-gray-600"
 							style={{ height: `${outputHeight as number}%` }}

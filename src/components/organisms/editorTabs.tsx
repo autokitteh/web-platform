@@ -15,15 +15,20 @@ export const EditorTabs = () => {
 	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
 		useProjectStore();
 	const [editorKey, setEditorKey] = useState(0);
-	const initialContent = "Click on a file to start editing or create a new one";
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const resource = get(resources, [activeEditorFileName], new Uint8Array());
-	const byteArray = Object.values(resource);
-	const content = String.fromCharCode.apply(null, byteArray) || initialContent;
+	let content;
+
+	if (resource.length === 0) {
+		content = t("noFileText");
+	} else {
+		const byteArray = Object.values(resource);
+		content = String.fromCharCode.apply(null, byteArray) || t("initialContentForNewFile");
+	}
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
@@ -50,10 +55,6 @@ export const EditorTabs = () => {
 
 	const handleUpdateContent = (newContent?: string) => {
 		if (!projectId) return;
-
-		if (newContent === content || newContent === initialContent) {
-			return;
-		}
 		const contentUintArray = new TextEncoder().encode(newContent);
 		setUpdateFileContent(contentUintArray, projectId);
 	};
@@ -123,6 +124,7 @@ export const EditorTabs = () => {
 								renderLineHighlight: "none",
 								wordWrap: "on",
 								scrollBeyondLastLine: false,
+								readOnly: resource.length === 0,
 							}}
 							theme="vs-dark"
 							value={content}

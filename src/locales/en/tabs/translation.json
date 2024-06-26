@@ -49,7 +49,9 @@
 	"editor": {
 		"buttons": {
 			"ariaCloseFile": "Close file tab"
-		}
+		},
+		"initialContentForNewFile": "// Start typing here...",
+		"noFileText": "// Click on a file to start editing or create a new one"
 	},
 	"triggers": {
 		"buttons": {
@@ -79,11 +81,11 @@
 				"functionName": "Function name",
 				"key": "Key",
 				"name": "Name",
+				"noTriggerTypesAvailable": "No trigger types available",
 				"selectConnection": "Select connection",
 				"selectFile": "Select file",
 				"selectTriggerType": "Select trigger type",
-				"value": "Value",
-				"noTriggerTypesAvailable": "No trigger types available"
+				"value": "Value"
 			},
 			"titleData": "Data",
 			"titleInfo": "Relevant only for HTTP"
