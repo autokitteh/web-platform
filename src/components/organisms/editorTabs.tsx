@@ -84,7 +84,7 @@ export const EditorTabs = ({ editorHeight = 0 }: { editorHeight?: number }) => {
 				<>
 					<div
 						className={
-							`uppercase flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none ` +
+							`absolute top-9 h-8 uppercase flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none ` +
 							`overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar mb-2`
 						}
 					>
@@ -107,26 +107,27 @@ export const EditorTabs = ({ editorHeight = 0 }: { editorHeight?: number }) => {
 							</Tab>
 						))}
 					</div>
-
-					<Editor
-						aria-label={activeTab}
-						beforeMount={handleEditorWillMount}
-						key={editorKey}
-						language={languageEditor}
-						onChange={handleUpdateContent}
-						onMount={handleEditorDidMount}
-						options={{
-							minimap: {
-								enabled: false,
-							},
-							lineNumbers: "off",
-							renderLineHighlight: "none",
-							wordWrap: "on",
-							scrollBeyondLastLine: false,
-						}}
-						theme="vs-dark"
-						value={content}
-					/>
+					<div className="mt-9 h-full">
+						<Editor
+							aria-label={activeTab}
+							beforeMount={handleEditorWillMount}
+							key={editorKey}
+							language={languageEditor}
+							onChange={handleUpdateContent}
+							onMount={handleEditorDidMount}
+							options={{
+								minimap: {
+									enabled: false,
+								},
+								lineNumbers: "off",
+								renderLineHighlight: "none",
+								wordWrap: "on",
+								scrollBeyondLastLine: false,
+							}}
+							theme="vs-dark"
+							value={content}
+						/>
+					</div>
 				</>
 			) : null}
 		</div>
