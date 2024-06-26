@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
+import { defaultProjectTab } from "@constants/project.constants";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { calculatePathDepth } from "@utilities";
@@ -13,12 +14,12 @@ export const Project = () => {
 	const [displayTabs, setDisplayTabs] = useState(false);
 	const location = useLocation();
 
-	const [activeTab, setActiveTab] = useState("");
+	const [activeTab, setActiveTab] = useState(defaultProjectTab);
 
 	useEffect(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
 		const activeTabIndex = pathParts[2];
-		setActiveTab(activeTabIndex || "code");
+		setActiveTab(activeTabIndex);
 	}, [location]);
 
 	const goTo = (path: string) => {
