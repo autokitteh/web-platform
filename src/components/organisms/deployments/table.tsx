@@ -88,12 +88,7 @@ export const DeploymentsTable = () => {
 		openModal(ModalName.deleteDeployment);
 	};
 
-	if (isLoadingDeployments)
-		return (
-			<div className="flex justify-center w-full mt-20">
-				<Loader isCenter size="2xl" />
-			</div>
-		);
+	if (isLoadingDeployments) return <Loader isCenter size="2xl" />;
 	if (!sortedDeployments.length)
 		return <div className="mt-10 text-xl font-semibold text-center text-black">{t("noDeployments")}</div>;
 
