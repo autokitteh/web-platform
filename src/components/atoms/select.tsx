@@ -16,7 +16,6 @@ export const Select = ({
 	...rest
 }: SelectProps) => {
 	const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>();
-	const [selectableOptions, setSelectableOptions] = useState<SelectOption[]>(options);
 	const { t } = useTranslation("components", { keyPrefix: "select" });
 
 	useEffect(() => {
@@ -27,15 +26,7 @@ export const Select = ({
 		setSelectedOption(selected);
 		onChange(selected);
 	};
-
-	useEffect(() => {
-		if (options.length === 0) {
-			const noOptions = [{ label: noOptionsLabel || t("noOptionsAvailable"), value: "", disabled: true }];
-			setSelectableOptions(noOptions);
-			setSelectedOption(noOptions[0]);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const noOptionsMessage = noOptionsLabel || t("noOptionsAvailable");
 
 	const handleMenuClose = () => {
 		(document.activeElement as HTMLElement).blur();
@@ -54,11 +45,11 @@ export const Select = ({
 	return (
 		<ReactSelect
 			{...rest}
-			defaultValue={selectedOption}
 			isOptionDisabled={(option) => !!option.disabled}
+			noOptionsMessage={() => noOptionsMessage}
 			onChange={handleChange}
 			onMenuClose={handleMenuClose}
-			options={selectableOptions}
+			options={options}
 			placeholder={placeholder}
 			ref={ref}
 			styles={selectStyles}
