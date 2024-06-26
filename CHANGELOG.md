@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/autokitteh/web-platform/compare/v1.7.0...v1.7.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* editor tabs key error ([#149](https://github.com/autokitteh/web-platform/issues/149)) ([a451176](https://github.com/autokitteh/web-platform/commit/a45117683175dffcbaabc9ec3a34965bc157d131))
+
 # [1.7.0](https://github.com/autokitteh/web-platform/compare/v1.6.0...v1.7.0) (2024-06-24)
 
 
