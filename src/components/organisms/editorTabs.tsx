@@ -20,10 +20,10 @@ export const EditorTabs = () => {
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
-	const resource = get(resources, [activeEditorFileName], new Uint8Array());
+	const resource = get(resources, [activeEditorFileName], null);
 	let content;
 
-	if (resource.length === 0) {
+	if (resource === null) {
 		content = t("noFileText");
 	} else {
 		const byteArray = Object.values(resource);
@@ -124,7 +124,7 @@ export const EditorTabs = () => {
 								renderLineHighlight: "none",
 								wordWrap: "on",
 								scrollBeyondLastLine: false,
-								readOnly: resource.length === 0,
+								readOnly: resource === null,
 							}}
 							theme="vs-dark"
 							value={content}
