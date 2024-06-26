@@ -79,7 +79,7 @@ jobs:
           AK_HTTP__CORS__ALLOWED_ORIGINS: "http://localhost:4173"
           AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE: "true"
           AK_AUTHSESSIONS__ALLOWED_DOMAIN: "localhost:4173"
-        run: ak up --mode=dev &
+        run: ak up --mode=dev
   
       - name: Wait for Backend to Start
         run: |
