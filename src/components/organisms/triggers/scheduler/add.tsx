@@ -114,7 +114,7 @@ export const TriggerSchedulerForm = ({
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
 	return isLoading ? (
-		<Loader isAbsolute size="2xl" />
+		<Loader isCenter size="2xl" />
 	) : (
 		<>
 			<form className="flex flex-col w-full gap-6" id={formId} onSubmit={handleSubmit(onSubmit)}>

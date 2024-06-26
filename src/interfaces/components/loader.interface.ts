@@ -4,7 +4,7 @@ export interface LoaderProps {
 	size?: SystemSizes;
 	firstColor?: LoaderColorType;
 	secondColor?: LoaderColorType;
-	isAbsolute?: boolean;
+	isCenter?: boolean;
 }
 
 type LoaderColorType = "dark-gray" | "gray";

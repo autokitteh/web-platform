@@ -91,7 +91,7 @@ export const DeploymentsTable = () => {
 	if (isLoadingDeployments)
 		return (
 			<div className="flex justify-center w-full mt-20">
-				<Loader isAbsolute size="2xl" />
+				<Loader isCenter size="2xl" />
 			</div>
 		);
 	if (!sortedDeployments.length)

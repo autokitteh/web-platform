@@ -1,12 +1,12 @@
 import React from "react";
-import { LoaderProps } from "@interfaces/components/loader.interface";
+import { LoaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Loader = ({
 	size = "md",
 	firstColor = "dark-gray",
 	secondColor = "gray",
-	isAbsolute = false,
+	isCenter = false,
 }: LoaderProps) => {
 	const sizeClass = cn("loader-cycle-disks flex items-center", {
 		"w-4 before:w-2 before:h-2 after:w-2 after:h-2": size === "sm",
@@ -25,7 +25,7 @@ export const Loader = ({
 			"after:bg-gray-500": secondColor === "gray",
 		},
 		{
-			"absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2": isAbsolute,
+			"absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2": isCenter,
 		}
 	);
 
