@@ -80,9 +80,9 @@ export const Topbar = () => {
 		} else {
 			addToast({
 				id: Date.now().toString(),
-				message: "",
+				message: t("topbar.buildProjectSuccess"),
 				type: "success",
-				title: t("topbar.buildProjectSuccess"),
+				title: "Success",
 			});
 		}
 
@@ -105,9 +105,9 @@ export const Topbar = () => {
 		} else {
 			addToast({
 				id: Date.now().toString(),
-				message: "",
+				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
-				title: t("topbar.deployedProjectSuccess"),
+				title: "Success",
 			});
 		}
 
