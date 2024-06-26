@@ -3,9 +3,8 @@ import { TabsContext } from "@components/atoms/tabs/tabsContext";
 import { TabProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Tab = ({ className, value, ariaLabel, children, onClick }: TabProps) => {
-	const { activeTab, setActiveTab } = useContext(TabsContext);
-
+export const Tab = ({ activeTab, className, value, ariaLabel, children, onClick }: TabProps) => {
+	const { setActiveTab } = useContext(TabsContext);
 	const tabStyle = cn(
 		"border-b-2 cursor-pointer hover:font-bold border-transparent pb-1 tracking-tight uppercase",
 		{

@@ -17,3 +17,4 @@ export {
 	infoCronExpressionsLinks,
 } from "@constants/triggers.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
+export { defaultProjectTab, projectTabs } from "@constants/project.constants";
