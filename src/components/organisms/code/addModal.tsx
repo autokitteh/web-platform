@@ -85,7 +85,6 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 										noOptionsLabel={t("addCodeAssets.noExtensionsAvailable", { ns: "modals" })}
 										options={languageSelectOptions}
 										placeholder={t("addCodeAssets.selectExtension", { ns: "modals" })}
-										ref={null}
 										value={field.value}
 										variant="white"
 									/>

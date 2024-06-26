@@ -195,7 +195,6 @@ export const SchedulerEditTrigger = () => {
 									onChange={(selected) => field.onChange(selected)}
 									options={filesNameList}
 									placeholder={t("placeholders.selectFile")}
-									ref={null}
 									value={field.value}
 								/>
 							)}

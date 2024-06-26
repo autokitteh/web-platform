@@ -11,7 +11,6 @@ export const Select = ({
 	isError = false,
 	variant,
 	onChange,
-	ref = null,
 	noOptionsLabel,
 	...rest
 }: SelectProps) => {
@@ -51,7 +50,6 @@ export const Select = ({
 			onMenuClose={handleMenuClose}
 			options={options}
 			placeholder={placeholder}
-			ref={ref}
 			styles={selectStyles}
 			value={selectedOption}
 		/>

@@ -233,7 +233,6 @@ export const DefaultEditTrigger = () => {
 									onChange={(selected) => field.onChange(selected)}
 									options={connections}
 									placeholder={t("placeholders.selectConnection")}
-									ref={null}
 									value={field.value}
 								/>
 							)}
@@ -253,7 +252,6 @@ export const DefaultEditTrigger = () => {
 									onChange={(selected) => field.onChange(selected)}
 									options={filesNameList}
 									placeholder={t("placeholders.selectFile")}
-									ref={null}
 									value={field.value}
 								/>
 							)}
