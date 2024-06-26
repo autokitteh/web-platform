@@ -1,4 +1,3 @@
-export { menuItems } from "@constants/lists/menuItems.constants";
 export {
 	integrationTypes,
 	githubIntegrationAuthMethods,

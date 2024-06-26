@@ -1,6 +1,5 @@
 export { namespaces } from "@constants/namespaces.logger.constants";
 export { baseUrl } from "@constants/api.constants";
-export { menuItems } from "@constants/lists";
 export { getSelectBlackStyles, getSelectWhiteStyles } from "@constants/forms";
 export {
 	fetchProjectsMenuItemsInterval,
