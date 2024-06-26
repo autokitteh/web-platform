@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/autokitteh/web-platform/compare/v1.7.1...v1.8.0) (2024-06-26)
+
+
+### Features
+
+* add label to select component when no options ([#146](https://github.com/autokitteh/web-platform/issues/146)) ([c053bb4](https://github.com/autokitteh/web-platform/commit/c053bb46f256b67534d26dbfac1e1243923c00fd))
+
 ## [1.7.1](https://github.com/autokitteh/web-platform/compare/v1.7.0...v1.7.1) (2024-06-26)
 
 
