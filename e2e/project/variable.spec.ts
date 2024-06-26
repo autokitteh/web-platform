@@ -6,10 +6,10 @@ test.beforeEach(async ({ page, dashboardPage }) => {
 	await page.getByRole("tab", { name: "variables" }).click();
 	await page.getByRole("link", { name: "Add new" }).click();
 
-	await page.getByPlaceholder("Name").click();
-	await page.getByPlaceholder("Name").fill("nameVariable");
-	await page.getByPlaceholder("Value").click();
-	await page.getByPlaceholder("Value").fill("valueVariable");
+	await page.getByLabel("Name").click();
+	await page.getByLabel("Name").fill("nameVariable");
+	await page.getByLabel("Value").click();
+	await page.getByLabel("Value").fill("valueVariable");
 	await page.getByRole("button", { name: "Save" }).click();
 
 	const variableInTable = page.getByRole("cell", { name: "nameVariable", exact: true });
@@ -31,8 +31,8 @@ test.describe("Project Variables Suite", () => {
 
 	test("Modify variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
-		await page.getByPlaceholder("Value").click();
-		await page.getByPlaceholder("Value").fill("newValueVariable");
+		await page.getByLabel("Value").click();
+		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save" }).click();
 		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
 		await expect(newVariableInTable).toBeVisible();
@@ -40,7 +40,7 @@ test.describe("Project Variables Suite", () => {
 
 	test("Modifying variable with empty value", async ({ page }) => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
-		await page.getByPlaceholder("Value").clear();
+		await page.getByLabel("Value").clear();
 		await page.getByRole("button", { name: "Save" }).click();
 
 		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });

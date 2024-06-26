@@ -64,7 +64,7 @@ export default defineConfig({
 		},
 	],
 	webServer: {
-		command: "VITE_AUTH_ENABLED=false npm run build && VITE_AUTH_ENABLED=false npm run preview",
+		command: "npm run build && npm run preview",
 		port: 4173,
 		timeout: 60000,
 		reuseExistingServer: !process.env.CI,
