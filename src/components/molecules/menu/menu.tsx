@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NewProject, ProjectsIcon } from "@assets/image";
 import { Button, IconSvg } from "@components/atoms";
 import { SidebarHrefMenu } from "@enums/components";
@@ -16,7 +16,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const location = useLocation();
 	const { menuList: projectsMenuList, createProject, addProjectToMenu, getProjectMenutItems } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const [sortedProjectsList, setSortedProjectsList] = React.useState<ProjectMenuItem[]>();
+	const [sortedProjectsList, setSortedProjectsList] = useState<ProjectMenuItem[]>([]);
 
 	useEffect(() => {
 		if (projectsMenuList.length) {
@@ -108,10 +108,10 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 						</AnimatePresence>
 					</Button>
 				</li>
-				<li onMouseEnter={(e) => handleMouseEnter(e, sortedProjectsList || [])}>
-					<Button ariaLabel="My Projects" className={buttonMenuStyle("#")} href="#">
+				<li onMouseEnter={(e) => handleMouseEnter(e, sortedProjectsList)}>
+					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} href="#">
 						<div className={buttonMenuIconWrapperStyle("#")}>
-							<IconSvg alt="My Projects" className={buttonMenuIconStyle("#")} src={ProjectsIcon} />
+							<IconSvg alt={t("myProjects")} className={buttonMenuIconStyle("#")} src={ProjectsIcon} />
 						</div>
 						<AnimatePresence>
 							{isOpen ? (
