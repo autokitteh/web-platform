@@ -12,11 +12,3 @@ export interface MenuProps {
 	isOpen: boolean;
 	onSubmenu?: (submenuInfo: SubmenuInfo) => void;
 }
-
-export interface MenuItem {
-	id: number;
-	icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-	name: string;
-	href: string;
-	submenu?: SubmenuInfo["submenu"];
-}

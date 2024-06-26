@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { NewProject } from "@assets/image";
+import { NewProject, ProjectsIcon } from "@assets/image";
 import { Button, IconSvg } from "@components/atoms";
-import { menuItems } from "@constants";
-import { SidebarMenu } from "@enums/components";
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
-import { MenuItem } from "@interfaces/components";
 import { useProjectStore, useToastStore } from "@store";
+import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
-import { isEqual, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -18,8 +15,15 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { menuList: projectsMenuList, createProject, addProjectToMenu, getProjectMenutItems } = useProjectStore();
-	const [menu, setMenu] = useState<MenuItem[]>(menuItems);
 	const addToast = useToastStore((state) => state.addToast);
+	const [sortedProjectsList, setSortedProjectsList] = useState<ProjectMenuItem[]>([]);
+
+	useEffect(() => {
+		if (projectsMenuList.length) {
+			const sortedProjects = projectsMenuList.slice().sort((a, b) => a.name.localeCompare(b.name));
+			setSortedProjectsList(sortedProjects);
+		}
+	}, [projectsMenuList]);
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
@@ -49,20 +53,6 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 
 		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
 	};
-
-	useEffect(() => {
-		const sortedList = orderBy(projectsMenuList, "name", "asc");
-
-		const currentSubmenu = menu.find(({ id }) => id === SidebarMenu.myProjects)?.submenu;
-		if (isEqual(currentSubmenu, sortedList)) return;
-
-		const updatedMenuItems = menuItems.map((item) =>
-			item.id === SidebarMenu.myProjects ? { ...item, submenu: sortedList } : item
-		);
-
-		setMenu(updatedMenuItems);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectsMenuList]);
 
 	useEffect(() => {
 		getProjectMenutItems();
@@ -118,28 +108,26 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 						</AnimatePresence>
 					</Button>
 				</li>
-				{menu.map(({ icon, name, href, submenu, id }) => (
-					<li key={id} onMouseEnter={(e) => handleMouseEnter(e, submenu)}>
-						<Button ariaLabel={name} className={buttonMenuStyle(href)} href={href}>
-							<div className={buttonMenuIconWrapperStyle(href)}>
-								<IconSvg alt={name} className={buttonMenuIconStyle(href)} src={icon} />
-							</div>
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="overflow-hidden whitespace-nowrap"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
-									>
-										{name}
-									</motion.span>
-								) : null}
-							</AnimatePresence>
-						</Button>
-					</li>
-				))}
+				<li onMouseEnter={(e) => handleMouseEnter(e, sortedProjectsList)}>
+					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} href="#">
+						<div className={buttonMenuIconWrapperStyle("#")}>
+							<IconSvg alt={t("myProjects")} className={buttonMenuIconStyle("#")} src={ProjectsIcon} />
+						</div>
+						<AnimatePresence>
+							{isOpen ? (
+								<motion.span
+									animate="visible"
+									className="overflow-hidden whitespace-nowrap"
+									exit="hidden"
+									initial="hidden"
+									variants={animateVariant}
+								>
+									{t("myProjects")}
+								</motion.span>
+							) : null}
+						</AnimatePresence>
+					</Button>
+				</li>
 			</ul>
 		</nav>
 	);

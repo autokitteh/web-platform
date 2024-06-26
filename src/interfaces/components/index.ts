@@ -8,7 +8,7 @@ export type {
 export type { BadgeProps } from "@interfaces/components/badge.interface";
 export type { FrameProps, SplitFrameProps } from "@interfaces/components/frame.interface";
 export type { LinkProps } from "@interfaces/components/link.interface";
-export type { SubmenuInfo, SubmenuProps, MenuProps, MenuItem } from "@interfaces/components/menu.interface";
+export type { SubmenuInfo, SubmenuProps, MenuProps } from "@interfaces/components/menu.interface";
 export type { TabProps, TabListProps, TabsProps, TabsContextProps } from "@interfaces/components/tabs.interface";
 export type { TableProps } from "@interfaces/components/table.interface";
 export type { IconProps, IconSvgProps } from "@interfaces/components/icon.interface";
