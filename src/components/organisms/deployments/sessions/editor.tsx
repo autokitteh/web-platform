@@ -86,7 +86,6 @@ export const SessionTableEditorFrame = () => {
 				<Editor
 					beforeMount={handleEditorWillMount}
 					className="-ml-6"
-					defaultLanguage="json"
 					key={editorKey}
 					onMount={handleEditorDidMount}
 					options={{
