@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
-import { defaultProjectTab } from "@constants/project.constants";
+import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { ProjectsService } from "@services";
 import { useProjectStore } from "@store";
 import { calculatePathDepth } from "@utilities";
@@ -63,42 +63,18 @@ export const Project = () => {
 							"overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar"
 						}
 					>
-						<Tab
-							activeTab={activeTab}
-							ariaLabel="Code & Assets"
-							className="flex items-center text-xs 3xl:text-sm"
-							onClick={() => goTo("code")}
-							value="code"
-						>
-							Code & Assets
-						</Tab>
-						<Tab
-							activeTab={activeTab}
-							ariaLabel="Connections"
-							className="flex items-center text-xs 3xl:text-sm"
-							onClick={() => goTo("connections")}
-							value="connections"
-						>
-							Connections
-						</Tab>
-						<Tab
-							activeTab={activeTab}
-							ariaLabel="Triggers"
-							className="flex items-center text-xs 3xl:text-sm"
-							onClick={() => goTo("triggers")}
-							value="triggers"
-						>
-							Triggers
-						</Tab>
-						<Tab
-							activeTab={activeTab}
-							ariaLabel="Variables"
-							className="flex items-center text-xs 3xl:text-sm"
-							onClick={() => goTo("variables")}
-							value="variables"
-						>
-							Variables
-						</Tab>
+						{projectTabs.map((singleTab) => (
+							<Tab
+								activeTab={activeTab}
+								ariaLabel={singleTab.label}
+								className="flex items-center text-xs 3xl:text-sm"
+								key={singleTab.value}
+								onClick={() => goTo(singleTab.value)}
+								value={singleTab.value}
+							>
+								{singleTab.label}
+							</Tab>
+						))}
 					</div>
 					<Outlet />
 				</div>
