@@ -122,7 +122,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 									initial="hidden"
 									variants={animateVariant}
 								>
-									My Projects
+									{t("myProjects")}
 								</motion.span>
 							) : null}
 						</AnimatePresence>
