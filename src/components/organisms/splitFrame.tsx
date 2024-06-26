@@ -23,7 +23,10 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 				{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 			</div>
 			<div className="z-10 w-2 -ml-2 resize-handle-horizontal cursor-ew-resize" />
-			<div className="flex items-center" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+			<div
+				className="relative flex items-center overflow-hidden"
+				style={{ width: `${100 - (leftSideWidth as number)}%` }}
+			>
 				<Frame className={rightFrameClass}>
 					<div style={{ height: `${100 - (outputHeight as number)}%` }}>
 						<EditorTabs />
