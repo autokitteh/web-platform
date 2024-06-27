@@ -6,30 +6,31 @@
 export default {
 	branches: ["main"],
 	plugins: [
-		"@semantic-release/release-notes-generator",
 		[
 			"@semantic-release/commit-analyzer",
 			{
 				preset: "conventionalcommits",
 			},
 		],
-		[
-			"@semantic-release/github",
-			{
-				assets: ["dist/**"],
-			},
-		],
+		"@semantic-release/release-notes-generator",
 		[
 			"@semantic-release/changelog",
 			{
 				changelogFile: "CHANGELOG.md",
 			},
 		],
+		"@semantic-release/npm",
 		[
 			"@semantic-release/git",
 			{
 				assets: ["CHANGELOG.md", "package.json", "package-lock.json"],
 				message: "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}",
+			},
+		],
+		[
+			"@semantic-release/github",
+			{
+				assets: ["dist/**"],
 			},
 		],
 		[
