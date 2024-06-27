@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LockSolid } from "@assets/image/icons";
-import { Input, ErrorMessage, Toggle } from "@components/atoms";
+import { Input, ErrorMessage, Toggle, Loader } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
@@ -86,7 +86,9 @@ export const EditVariable = () => {
 	const { name, value } = watch();
 
 	return isLoadingData ? (
-		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">{tForm("loading")}...</div>
+		<div className="flex flex-col justify-center h-full">
+			<Loader />
+		</div>
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader

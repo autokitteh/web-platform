@@ -1,16 +1,15 @@
-import React, { useEffect, useMemo, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon, LinkIcon } from "@assets/image/icons";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
+import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Loader } from "@components/atoms";
 import { SortButton, ConnectionTableStatus } from "@components/molecules";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 import { baseUrl } from "@constants";
-import { ModalName, SortDirectionVariant } from "@enums/components";
+import { ModalName } from "@enums/components";
+import { useSort } from "@hooks";
 import { ConnectionService } from "@services";
 import { useModalStore, useToastStore } from "@store";
-import { SortDirection } from "@type/components";
 import { Connection } from "@type/models";
-import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -25,14 +24,11 @@ export const ConnectionsTable = () => {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingDeleteConnection, setIsLoadingDeleteConnection] = useState(false);
-	const [sort, setSort] = useState<{
-		direction: SortDirection;
-		column: keyof Connection;
-	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [connections, setConnections] = useState<Connection[]>([]);
 	const [connectionId, setConnectionId] = useState<string>();
 
 	const addToast = useToastStore((state) => state.addToast);
+	const { items: sortedConnections, sortConfig, requestSort } = useSort<Connection>(connections, "name");
 
 	const fetchConnections = async () => {
 		setIsLoading(true);
@@ -58,18 +54,6 @@ export const ConnectionsTable = () => {
 		fetchConnections();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
-
-	const toggleSortConnections = (key: keyof Connection) => {
-		const newDirection =
-			sort.column === key && sort.direction === SortDirectionVariant.ASC
-				? SortDirectionVariant.DESC
-				: SortDirectionVariant.ASC;
-		setSort({ direction: newDirection, column: key });
-	};
-
-	const sortedConnections = useMemo(() => {
-		return orderBy(connections, [sort.column], [sort.direction]);
-	}, [connections, sort.column, sort.direction]);
 
 	const handleOpenModalDeleteConnection = useCallback(
 		(connectionId: string) => {
@@ -104,8 +88,8 @@ export const ConnectionsTable = () => {
 	}, []);
 
 	return isLoading ? (
-		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
-			{t("buttons.loading")}...
+		<div className="flex flex-col justify-center h-full">
+			<Loader />
 		</div>
 	) : (
 		<div className="pt-14">
@@ -123,28 +107,28 @@ export const ConnectionsTable = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortConnections("name")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("name")}>
 								{t("table.columns.name")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"name" === sort.column}
-									sortDirection={sort.direction}
+									isActive={"name" === sortConfig.key}
+									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortConnections("integrationName")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("integrationName")}>
 								{t("table.columns.app")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"integrationName" === sort.column}
-									sortDirection={sort.direction}
+									isActive={"integrationName" === sortConfig.key}
+									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group max-w-32" onClick={() => toggleSortConnections("status")}>
+							<Th className="font-normal cursor-pointer group max-w-32" onClick={() => requestSort("status")}>
 								{t("table.columns.status")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"status" === sort.column}
-									sortDirection={sort.direction}
+									isActive={"status" === sortConfig.key}
+									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 							<Th className="font-normal cursor-pointer group">{t("table.columns.information")}</Th>

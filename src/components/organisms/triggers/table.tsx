@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PlusCircle } from "@assets/image";
 import { EditIcon, TrashIcon, ClockIcon } from "@assets/image/icons";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
+import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Loader } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
-import { ModalName, SortDirectionVariant } from "@enums/components";
+import { ModalName } from "@enums/components";
+import { useSort } from "@hooks";
 import { TriggersService } from "@services";
 import { useModalStore, useToastStore } from "@store";
-import { SortDirection } from "@type/components";
 import { Trigger } from "@type/models";
-import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -21,13 +20,10 @@ export const TriggersTable = () => {
 	const { openModal, closeModal } = useModalStore();
 	const [isLoading, setIsLoading] = useState(true);
 
-	const [sort, setSort] = useState<{
-		direction: SortDirection;
-		column: keyof Trigger;
-	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [triggers, setTriggers] = useState<Trigger[]>([]);
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
+	const { items: sortedTriggers, sortConfig, requestSort } = useSort<Trigger>(triggers, "name");
 
 	const fetchTriggers = async () => {
 		setIsLoading(true);
@@ -53,18 +49,6 @@ export const TriggersTable = () => {
 		fetchTriggers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
-
-	const handleToggleSort = (key: keyof Trigger) => {
-		const newDirection =
-			sort.column === key && sort.direction === SortDirectionVariant.ASC
-				? SortDirectionVariant.DESC
-				: SortDirectionVariant.ASC;
-		setSort({ direction: newDirection, column: key });
-	};
-
-	const sortedTriggers = useMemo(() => {
-		return orderBy(triggers, [sort.column], [sort.direction]);
-	}, [triggers, sort.column, sort.direction]);
 
 	const handleDeleteTrigger = async () => {
 		if (!triggerId) return;
@@ -98,8 +82,8 @@ export const TriggersTable = () => {
 	};
 
 	return isLoading ? (
-		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
-			{t("buttons.loading")}...
+		<div className="flex flex-col justify-center h-full">
+			<Loader />
 		</div>
 	) : (
 		<div className="pt-14">
@@ -114,28 +98,28 @@ export const TriggersTable = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("name")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("name")}>
 								{t("table.columns.name")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"name" === sort.column}
-									sortDirection={sort.direction}
+									isActive={"name" === sortConfig.key}
+									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("connectionName")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("connectionName")}>
 								{t("table.columns.connection")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"connectionName" === sort.column}
-									sortDirection={sort.direction}
+									isActive={"connectionName" === sortConfig.key}
+									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => handleToggleSort("path")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("path")}>
 								{t("table.columns.call")}
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"path" === sort.column}
-									sortDirection={sort.direction}
+									isActive={"path" === sortConfig.key}
+									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>

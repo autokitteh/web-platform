@@ -1,15 +1,14 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon, EditIcon, LockSolid } from "@assets/image/icons";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button } from "@components/atoms";
+import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Loader } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteVariableModal } from "@components/organisms/variables";
-import { ModalName, SortDirectionVariant } from "@enums/components";
+import { ModalName } from "@enums/components";
+import { useSort } from "@hooks";
 import { EnvironmentsService, VariablesService } from "@services";
 import { useModalStore, useToastStore } from "@store";
-import { SortDirection } from "@type/components";
 import { Environment, Variable } from "@type/models";
-import { orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -17,17 +16,15 @@ export const VariablesTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { t: tErrors } = useTranslation("errors");
 	const [isLoadingVariables, setIsLoadingVariables] = useState(true);
-	const [variables, setVariables] = useState<Variable[]>();
+	const [variables, setVariables] = useState<Variable[]>([]);
 	const [envId, setEnvId] = useState<string>();
-	const { openModal, closeModal } = useModalStore();
-	const [sort, setSort] = useState<{
-		direction: SortDirection;
-		column: keyof Variable;
-	}>({ direction: SortDirectionVariant.ASC, column: "name" });
 	const [deleteVariable, setDeleteVariable] = useState<Variable>();
+
 	const navigate = useNavigate();
 	const { projectId } = useParams();
+	const { openModal, closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
+	const { items: sortedVariables, sortConfig, requestSort } = useSort<Variable>(variables, "name");
 
 	const fetchVariables = async () => {
 		try {
@@ -38,6 +35,8 @@ export const VariablesTable = () => {
 			setEnvId(envId);
 			const { data: vars, error } = await VariablesService.list(envId);
 			if (error) throw error;
+			if (!vars) return;
+
 			setVariables(vars);
 		} catch (error) {
 			addToast({
@@ -55,19 +54,6 @@ export const VariablesTable = () => {
 		fetchVariables();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
-
-	const toggleSortVariables = (key: keyof Variable) => {
-		const newDirection =
-			sort.column === key && sort.direction === SortDirectionVariant.ASC
-				? SortDirectionVariant.DESC
-				: SortDirectionVariant.ASC;
-
-		setSort({ direction: newDirection, column: key });
-	};
-
-	const sortedVariables = useMemo(() => {
-		return orderBy(variables, [sort.column], [sort.direction]);
-	}, [variables, sort.column, sort.direction]);
 
 	const handleDeleteVariable = async () => {
 		const { error } = await VariablesService.delete({
@@ -93,8 +79,8 @@ export const VariablesTable = () => {
 	};
 
 	return isLoadingVariables ? (
-		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
-			{t("buttons.loading")}...
+		<div className="flex flex-col justify-center h-full">
+			<Loader />
 		</div>
 	) : (
 		<div className="pt-14">
@@ -113,22 +99,22 @@ export const VariablesTable = () => {
 				<Table className="mt-5">
 					<THead>
 						<Tr>
-							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortVariables("name")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("name")}>
 								{t("table.columns.name")}
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByName")}
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"name" === sort.column}
-									sortDirection={sort.direction}
+									isActive={"name" === sortConfig.key}
+									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => toggleSortVariables("value")}>
+							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("value")}>
 								{t("table.columns.value")}
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByValue")}
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"value" === sort.column}
-									sortDirection={sort.direction}
+									isActive={"value" === sortConfig.key}
+									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>

@@ -4,8 +4,10 @@ import { SortDirectionVariant } from "@enums/components";
 import { SortConfig } from "@type";
 import { orderBy } from "lodash";
 
-export const useSort = <T,>(items: T[]) => {
-	const [sortConfig, setSortConfig] = useState<SortConfig<T>>(initialSortConfig);
+export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
+	const [sortConfig, setSortConfig] = useState<SortConfig<T>>(
+		initialSortKey ? { key: initialSortKey, direction: SortDirectionVariant.ASC } : initialSortConfig
+	);
 
 	const sortedItems = useMemo(() => {
 		if (!sortConfig.key) return items;
