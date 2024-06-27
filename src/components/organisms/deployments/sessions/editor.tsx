@@ -14,7 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export const SessionTableEditorFrame = () => {
 	const [editorKey, setEditorKey] = useState(0);
-	const [cachedSessionLogs, setCachedSessionLogs] = useState<SessionLogRecord[]>();
+	const [cachedSessionLogs, setCachedSessionLogs] = useState<SessionLogRecord[]>([]);
 	const { sessionId, projectId, deploymentId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 	const { t: tErrors } = useTranslation("errors");
@@ -24,6 +24,7 @@ export const SessionTableEditorFrame = () => {
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [firstLoad, setFirstLoad] = useState(true);
+	const [isScrollToTopButtonVisible, setIsScrollToTopButtonVisible] = useState(false);
 
 	const fetchSessionLog = useCallback(async () => {
 		if (firstLoad) setIsLoading(true);
@@ -53,12 +54,7 @@ export const SessionTableEditorFrame = () => {
 			sessionFetchIntervalIdRef.current = null;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId, addToast, tErrors, cachedSessionLogs]);
-
-	useEffect(() => {
-		setFirstLoad(false);
-		scrollToTop();
-	}, [sessionId]);
+	}, [sessionId, cachedSessionLogs]);
 
 	useEffect(() => {
 		fetchSessionLog();
@@ -70,6 +66,8 @@ export const SessionTableEditorFrame = () => {
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
+		setFirstLoad(false);
+
 		window.addEventListener("resize", handleResize);
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
@@ -86,6 +84,10 @@ export const SessionTableEditorFrame = () => {
 	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("sessionEditorTheme");
 		editorRef.current = _editor;
+		if (checkIfLogsOverflowsEditor()) {
+			scrollToBottom();
+			setIsScrollToTopButtonVisible(true);
+		}
 	};
 
 	const scrollToBottom = () => {
@@ -100,6 +102,7 @@ export const SessionTableEditorFrame = () => {
 		if (editor) {
 			editor.setScrollTop(0);
 		}
+		setIsScrollToTopButtonVisible(false);
 	};
 
 	const calculateNonEmptyLinesHeight = () => {
@@ -168,9 +171,11 @@ export const SessionTableEditorFrame = () => {
 						</div>
 					)}
 
-					<Button className="m-auto" onClick={scrollToTop} variant="filled">
-						{t("buttons.scrollToTop")}
-					</Button>
+					{isScrollToTopButtonVisible ? (
+						<Button className="m-auto" onClick={scrollToTop} variant="filled">
+							{t("buttons.scrollToTop")}
+						</Button>
+					) : null}
 				</>
 			)}
 
