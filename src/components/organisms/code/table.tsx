@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-import { Button, IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
 import { DeleteFileModal, AddFileModal } from "@components/organisms/code";
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
@@ -132,8 +132,8 @@ export const CodeTable = () => {
 	};
 
 	return isLoading ? (
-		<div className="flex flex-col justify-center h-full text-xl font-semibold text-center">
-			{t("buttons.loading")}...
+		<div className="flex flex-col justify-center h-full">
+			<Loader />
 		</div>
 	) : (
 		<div className="flex flex-col h-full">
