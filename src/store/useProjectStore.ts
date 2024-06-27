@@ -229,4 +229,4 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 });
 
-export const useProjectStore = create(persist(immer(store), { name: StoreName.project }));
+export const useProjectStore = create(persist(immer(store), { name: StoreName.logger }));

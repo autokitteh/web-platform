@@ -1,8 +1,11 @@
 import React from "react";
 import { Tab } from "@components/atoms";
 import { OutputTabsVariants } from "@enums/components";
+import { useLoggerStore } from "@store";
 
-export const OutputTabs = () => {
+export const OutputTabs: React.FC = () => {
+	const logs = useLoggerStore((state) => state.logs);
+
 	return (
 		<div className="flex flex-col flex-1">
 			<div
@@ -15,9 +18,13 @@ export const OutputTabs = () => {
 					output
 				</Tab>
 			</div>
-			<div className="flex-auto h-48 pt-6 overflow-auto scrollbar mt-4">
-				<p className="text-error-200">Failed: 04.27.23 14:20</p>
-				<p className="mt-3 text-error-200">Lorem Ipsum</p>
+			<div className="flex-auto h-48 pt-6 mt-4 overflow-auto scrollbar">
+				{logs.map(({ id, timestamp, message }) => (
+					<div className="mb-4" key={id}>
+						<p className="font-medium text-gray-200">{timestamp}</p>
+						<p className="text-error-200">{message}</p>
+					</div>
+				))}
 			</div>
 		</div>
 	);
