@@ -90,12 +90,9 @@ export const SessionTableEditorFrame = () => {
 
 	const scrollToBottom = () => {
 		const editor = editorRef.current;
-		if (editor) {
-			const lastLine = editor.getModel()?.getLineCount();
-			if (lastLine) {
-				editor.revealLine(lastLine);
-			}
-		}
+		if (!editor) return;
+		const lastLine = editor.getModel()?.getLineCount();
+		if (lastLine) editor.revealLine(lastLine);
 	};
 
 	const scrollToTop = () => {
