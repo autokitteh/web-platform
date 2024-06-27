@@ -28,7 +28,7 @@ export class LoggerService {
 	}
 
 	public static info(namespace: string, message: string): void {
-		this.output(namespace, message);
+		this.output(namespace, message, LoggerLevel.info);
 	}
 
 	public static error(namespace: string, message: string): void {
@@ -44,10 +44,6 @@ export class LoggerService {
 	}
 
 	public static print(namespace: string, message: string): void {
-		console.log(`[${namespace}]: ${message}`);
-	}
-
-	public static printError(namespace: string, message: string): void {
-		console.error(`Error: [${namespace}]: ${message}`);
+		this.output(namespace, message, LoggerLevel.log);
 	}
 }
