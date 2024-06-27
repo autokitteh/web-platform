@@ -14,7 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export const SessionTableEditorFrame = () => {
 	const [editorKey, setEditorKey] = useState(0);
-	const [cachedSessionLogs, setCachedSessionLogs] = useState<SessionLogRecord[]>();
+	const [cachedSessionLogs, setCachedSessionLogs] = useState<SessionLogRecord[]>([]);
 	const { sessionId, projectId, deploymentId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 	const { t: tErrors } = useTranslation("errors");
@@ -24,11 +24,15 @@ export const SessionTableEditorFrame = () => {
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [firstLoad, setFirstLoad] = useState(true);
+	const [isScrolledDown, setIsScrolledDown] = useState(false);
 
 	const fetchSessionLog = useCallback(async () => {
 		if (firstLoad) setIsLoading(true);
 		const { data: sessionHistoryStates, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
-		if (firstLoad) setIsLoading(false);
+		if (firstLoad) {
+			setFirstLoad(false);
+			setIsLoading(false);
+		}
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -53,12 +57,7 @@ export const SessionTableEditorFrame = () => {
 			sessionFetchIntervalIdRef.current = null;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId, addToast, tErrors, cachedSessionLogs]);
-
-	useEffect(() => {
-		setFirstLoad(false);
-		scrollToTop();
-	}, [sessionId]);
+	}, [sessionId, cachedSessionLogs]);
 
 	useEffect(() => {
 		fetchSessionLog();
@@ -71,6 +70,7 @@ export const SessionTableEditorFrame = () => {
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
 		window.addEventListener("resize", handleResize);
+
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
@@ -86,6 +86,11 @@ export const SessionTableEditorFrame = () => {
 	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("sessionEditorTheme");
 		editorRef.current = _editor;
+
+		// Add scroll listener
+		_editor.onDidScrollChange(checkScrollPosition);
+
+		if (checkIfLogsOverflowsEditor()) scrollToBottom();
 	};
 
 	const scrollToBottom = () => {
@@ -102,25 +107,28 @@ export const SessionTableEditorFrame = () => {
 		}
 	};
 
-	const calculateNonEmptyLinesHeight = () => {
-		const model = editorRef.current?.getModel();
-		if (!model) return 0;
-
-		return sessionsEditorLineHeight * model.getLineCount();
-	};
-
 	const checkIfLogsOverflowsEditor = () => {
 		if (!editorRef.current) return;
 
-		const contentHeight = calculateNonEmptyLinesHeight();
 		const editorHeight = editorRef.current.getLayoutInfo().height;
 
-		return contentHeight > editorHeight;
+		return sessionsEditorLineHeight > editorHeight;
+	};
+
+	const checkScrollPosition = () => {
+		const editor = editorRef.current;
+		if (editor) {
+			const scrollPosition = editor.getScrollTop();
+			if (scrollPosition > 0) {
+				setIsScrolledDown(true);
+			} else {
+				setIsScrolledDown(false);
+			}
+		}
 	};
 
 	useEffect(() => {
 		if (checkIfLogsOverflowsEditor()) scrollToBottom();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cachedSessionLogs]);
 
 	const sessionLogsAsStringForOutput = cachedSessionLogs?.map(({ logs }) => logs).join("\n");
@@ -157,6 +165,7 @@ export const SessionTableEditorFrame = () => {
 								renderLineHighlight: "none",
 								wordWrap: "on",
 								lineHeight: sessionsEditorLineHeight,
+								scrollBeyondLastLine: false,
 							}}
 							theme="vs-dark"
 							value={sessionLogsAsStringForOutput}
@@ -168,9 +177,13 @@ export const SessionTableEditorFrame = () => {
 						</div>
 					)}
 
-					<Button className="m-auto" onClick={scrollToTop} variant="filled">
-						{t("buttons.scrollToTop")}
-					</Button>
+					{isScrolledDown ? (
+						<div className="absolute m-auto transform -translate-x-1/2 left-1/2 bottom-2">
+							<Button className="justify-center" onClick={scrollToTop} variant="filled">
+								{t("buttons.scrollToTop")}
+							</Button>
+						</div>
+					) : null}
 				</>
 			)}
 
