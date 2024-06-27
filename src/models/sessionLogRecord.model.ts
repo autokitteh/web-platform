@@ -21,10 +21,11 @@ export class SessionLogRecord {
 		const { t, processId, ...props } = logRecord;
 
 		const logRecordType = this.getLogRecordType(props);
+
 		if (!logRecordType) {
 			LoggerService.error(
 				namespaces.sessionsHistory,
-				i18n.t("sessionLogRecordTypeNotFound", { props: Object.keys(props).join(", "), ns: "errors" })
+				i18n.t("sessionLogRecordTypeNotFound", { props: Object.keys(props).join(", "), ns: "services" })
 			);
 			return;
 		}
@@ -45,7 +46,9 @@ export class SessionLogRecord {
 				break;
 			case SessionLogRecordType.print:
 				this.type = SessionLogRecordType.print;
-				this.logs = `${i18n.t("historyPrint", { ns: "models" })}: ${logRecord.print?.text}`;
+				this.logs = logRecord.print?.text
+					? `${i18n.t("historyPrint", { ns: "services" })}: ${logRecord.print.text}`
+					: undefined;
 				break;
 		}
 
@@ -74,7 +77,7 @@ export class SessionLogRecord {
 		if (this.state === SessionStateType.running) {
 			const functionRunning = logRecord.state?.running?.call?.function?.name;
 			this.logs = functionRunning
-				? `${i18n.t("historyInitFunction", { ns: "models" })}: ${functionRunning}`
+				? `${i18n.t("historyInitFunction", { ns: "services" })}: ${functionRunning}`
 				: undefined;
 		}
 		if (this.state === SessionStateType.error) {
@@ -82,7 +85,20 @@ export class SessionLogRecord {
 				logRecord.state?.error?.error?.value,
 				i18n.t("sessionLogMissingOnErrorType", { ns: "errors" })
 			)?.message;
+			this.logs = `Error: ${this.error}\n`;
 			this.callstackTrace = (logRecord?.state?.error?.error?.callstack || []) as Callstack[];
+			this.logs += `Callstack:\n`;
+			this.callstackTrace.map(({ location: { col, name, path, row } }) => {
+				this.logs += `\t${path}: ${row}.${col}: ${name}\n`;
+			});
+		}
+		if (this.isFinished()) {
+			const finishedMessagePrint = `\n\n${i18n.t("lastPrintForSessionLog", {
+				ns: "services",
+				sessionState: this.state || "unknown",
+			})}`;
+
+			this.logs = this.logs ? `${this.logs}${finishedMessagePrint}` : finishedMessagePrint;
 		}
 	}
 
@@ -91,15 +107,15 @@ export class SessionLogRecord {
 
 		const sessionLogRecord = logRecord[this.type];
 		if (sessionLogRecord?.result?.value?.time) {
-			this.logs = `${i18n.t("historyFunction", { ns: "models" })} - 
-					${i18n.t("historyResult", { ns: "models" })}: ${i18n.t("historyTime", { ns: "models" })} - 
+			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
+					${i18n.t("historyResult", { ns: "services" })}: ${i18n.t("historyTime", { ns: "services" })} - 
 						${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
 			return;
 		}
 		if (sessionLogRecord?.result?.value?.nothing) {
-			this.logs = `${i18n.t("historyFunction", { ns: "models" })} - 
-				${i18n.t("historyResult", { ns: "models" })}: 
-				${i18n.t("historyNoOutput", { ns: "models" })}`;
+			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
+				${i18n.t("historyResult", { ns: "services" })}: 
+				${i18n.t("historyNoOutput", { ns: "services" })}`;
 			return;
 		}
 
@@ -110,8 +126,8 @@ export class SessionLogRecord {
 			this.logs = undefined;
 			return;
 		}
-		this.logs = `${i18n.t("historyFunction", { ns: "models" })} - 
-			${i18n.t("historyResult", { ns: "models" })}: 
+		this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
+			${i18n.t("historyResult", { ns: "services" })}: 
 			${functionName} - ${functionResponse}`;
 	}
 
@@ -124,27 +140,7 @@ export class SessionLogRecord {
 			.map((arg: Value) => arg.string?.v)
 			.join(", ")
 			.replace(/, ([^,]*)$/, "");
-		this.logs = `${i18n.t("historyFunction", { ns: "models" })}: ${functionName}(${args})`;
-	}
-
-	getError(): string {
-		return this.error!;
-	}
-
-	getCallstack(): Callstack[] {
-		return this.callstackTrace;
-	}
-
-	isError(): boolean {
-		return this.state === SessionStateType.error;
-	}
-
-	isRunning(): boolean {
-		return this.state === SessionStateType.running;
-	}
-
-	isPrint(): boolean {
-		return this.type === SessionLogRecordType.print;
+		this.logs = `${i18n.t("historyFunction", { ns: "services" })}: ${functionName}(${args})`;
 	}
 
 	isFinished(): boolean {
@@ -153,13 +149,5 @@ export class SessionLogRecord {
 			this.state === SessionStateType.completed ||
 			this.state === SessionStateType.stopped
 		);
-	}
-
-	containLogs(): boolean {
-		return !!(this.logs && this.logs.length);
-	}
-
-	getLogs(): string | undefined {
-		return this.logs;
 	}
 }

@@ -19,6 +19,7 @@
 	"historyTime": "Time",
 	"intergrationsNotFound": "Couldn't fetch intergrations",
 	"intergrationsNotFoundExtended": "Couldn't fetch intergrations, project ID: {{projectId}}",
+	"lastPrintForSessionLog": "Session finished with {{sessionState}} state",
 	"multipleEnvironments": "Multiple environments found, please reload the page",
 	"multipleEnvironmentsFoundExtended": "Multiple environments found, project ID: {{projectId}}",
 	"projectNotCreated": "There was an issue creating the project",

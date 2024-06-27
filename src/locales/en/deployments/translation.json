@@ -1,59 +1,60 @@
 {
 	"history": {
-		"tableTitle": "Deployment History",
-		"noDeployments": "No deployments found",
-		"loading": "Loading",
-		"deleteDisabled": "Cannot delete active deployment",
-		"ariaDeleteDeploy": "Delete deployment",
-		"ariaDeactivateDeploy": "Deactivate deployment",
 		"ariaActivateDeploy": "Activate deployment",
+		"ariaDeactivateDeploy": "Deactivate deployment",
+		"ariaDeleteDeploy": "Delete deployment",
+		"deleteDisabled": "Cannot delete active deployment",
+		"loading": "Loading",
+		"noDeployments": "No deployments found",
 		"table": {
 			"columns": {
+				"buildId": "Build ID",
 				"deploymentTime": "Deployment Time",
 				"sessions": "Sessions",
-				"buildId": "Build ID",
 				"status": "Status"
 			},
 			"statuses": {
 				"active": "Active",
-				"inactive": "Inactive",
-				"unspecified": "Unspecified",
-				"testing": "Testing",
 				"draining": "Draining",
-				"error": "Error - please reload"
+				"error": "Error - please reload",
+				"inactive": "Inactive",
+				"testing": "Testing",
+				"unspecified": "Unspecified"
 			}
-		}
+		},
+		"tableTitle": "Deployment History"
 	},
 	"sessions": {
 		"ariaLabelReturnBack": "Return back",
-		"sessionsName": "Sessions",
-		"totalSessions": "Total {{total}}",
-		"noSessions": "No sessions found",
-		"output": "Output",
+		"buttons": {
+			"ariaCloseEditor": "Close session log viewer",
+			"back": "Back",
+			"scrollToTop": "Scroll to Top"
+		},
 		"noData": "No data yet",
 		"noSelectedSession": "No session selected",
-		"resumeLiveTail": "Resume live tail",
+		"noSessions": "No sessions found",
+		"output": "Output",
 		"pauseLiveTail": "Pause live tail",
+		"resumeLiveTail": "Resume live tail",
+		"sessionsName": "Sessions",
 		"table": {
 			"columns": {
+				"actions": "Actions",
 				"activationTime": "Activation time",
-				"status": "Status",
 				"sessionId": "Session ID",
-				"actions": "Actions"
+				"status": "Status"
 			},
 			"statuses": {
 				"all": "All",
+				"completed": "Completed",
 				"created": "Created",
+				"error": "Error",
 				"running": "Running",
 				"stopped": "Stopped",
-				"unspecified": "Unspecified",
-				"error": "Error",
-				"completed": "Completed"
+				"unspecified": "Unspecified"
 			}
 		},
-		"buttons": {
-			"back": "Back",
-			"ariaCloseEditor": "Close session log viewer"
-		}
+		"totalSessions": "Total {{total}}"
 	}
 }
