@@ -48,13 +48,11 @@ jobs:
 
 
   test:
-    name: 🧪 Test (${{ matrix.shard }}/${{ strategy.job-total }})
+    name: 🧪 Testing ${{ matrix.browser }}
     needs: install
-    env:
-      WEBKIT_REQUIRED: ${{ contains(matrix.shard, '2') }}
     strategy:
       matrix:
-        shard: [1, 2, 3, 4]
+        browser: ["Chrome", "Edge", "Firefox", "Safari"]
     runs-on: ubuntu-latest
     if: ${{ ! contains(github.event.head_commit.message, '[skip_e2e]') }}
     steps:
@@ -67,11 +65,14 @@ jobs:
         with:
           node-version: "21.2.0"
       
-      - name: Download autokitteh executable
+      - name: Download AutoKitteh executable
         run: |
           curl -sSL https://get.autokitteh.sh | bash
 
-      - name: Run autokitteh
+      - name: Get downloaded AutoKitteh version
+        run: ak version --full
+
+      - name: Run AutoKitteh
         env:
           AK_AUTHHTTMIDDLEWARE__REQUIRED: "false"
           AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED: "false"
@@ -103,18 +104,23 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
       
-      - name: Install system dependencies for WebKit
-        if: env.WEBKIT_REQUIRED == 'true'
+      - name: Install system dependencies for safari
+        if: matrix.browser == 'Safari'
         run: npx playwright install-deps webkit
 
+      - name: Get installed Playwright version
+        id: playwright-version
+        run: |
+              echo "version=$(grep '\"@playwright/test\": {' -A 2 package-lock.json | grep 'version' | sed 's/.*: \"\([^\"]*\)\".*/\1/')" >> $GITHUB_OUTPUT
+
       - name: Run Playwright tests
-        run: npx playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+        run: npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report-${{ matrix.shard }}_${{ strategy.job-total }}
+          name: playwright-report-${{ matrix.browser }}
           path: playwright-report/
           retention-days: 30
 
