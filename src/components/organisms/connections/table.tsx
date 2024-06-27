@@ -28,7 +28,7 @@ export const ConnectionsTable = () => {
 	const [connectionId, setConnectionId] = useState<string>();
 
 	const addToast = useToastStore((state) => state.addToast);
-	const { items: sortedConnections, sortConfig, requestSort } = useSort<Connection>(connections);
+	const { items: sortedConnections, sortConfig, requestSort } = useSort<Connection>(connections, "name");
 
 	const fetchConnections = async () => {
 		setIsLoading(true);

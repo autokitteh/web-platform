@@ -23,7 +23,7 @@ export const TriggersTable = () => {
 	const [triggers, setTriggers] = useState<Trigger[]>([]);
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
-	const { items: sortedTriggers, sortConfig, requestSort } = useSort<Trigger>(triggers);
+	const { items: sortedTriggers, sortConfig, requestSort } = useSort<Trigger>(triggers, "name");
 
 	const fetchTriggers = async () => {
 		setIsLoading(true);

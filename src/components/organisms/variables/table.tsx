@@ -24,7 +24,7 @@ export const VariablesTable = () => {
 	const { projectId } = useParams();
 	const { openModal, closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { items: sortedVariables, sortConfig, requestSort } = useSort<Variable>(variables);
+	const { items: sortedVariables, sortConfig, requestSort } = useSort<Variable>(variables, "name");
 
 	const fetchVariables = async () => {
 		try {
