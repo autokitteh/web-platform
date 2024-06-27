@@ -4,14 +4,12 @@ import { useLoggerStore } from "@store";
 import moment from "moment";
 
 export class LoggerService {
-	private static output(namespace: string, message: string, level: string = LoggerLevel.info): void {
+	private static output(namespace: string, message: string, level: LoggerLevel = LoggerLevel.info): void {
 		const timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
 		const formattedMessage = `[${namespace}] [${level}] ${message}`;
 		console.log(`${timestamp} - ${formattedMessage}`);
 
-		if (level === LoggerLevel.error) {
-			useLoggerStore.getState().addLog({ timestamp, message: formattedMessage });
-		}
+		useLoggerStore.getState().addLog({ timestamp, message: formattedMessage, status: level });
 	}
 
 	public static info(namespace: string, message: string): void {

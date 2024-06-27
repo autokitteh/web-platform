@@ -1,7 +1,10 @@
+import { LoggerLevel } from "@enums";
+
 interface Log {
 	id: string;
 	timestamp: string;
 	message: string;
+	status: LoggerLevel;
 }
 
 export interface LoggerStore {
