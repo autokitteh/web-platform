@@ -90,6 +90,8 @@ export const Topbar = () => {
 	};
 
 	const deploy = async () => {
+		if (!Object.keys(resources).length) return <div />;
+
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
 
 		const { error } = await ProjectsService.run(projectId!, resources);
