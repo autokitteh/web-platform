@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/autokitteh/web-platform/compare/v1.8.1...v1.9.0) (2024-06-27)
+
+
+### Features
+
+* add logger store ([#157](https://github.com/autokitteh/web-platform/issues/157)) ([a68b967](https://github.com/autokitteh/web-platform/commit/a68b967b0cb12500ad01b26bf2176ad9c203a7af))
+
 ## [1.8.1](https://github.com/autokitteh/web-platform/compare/v1.8.0...v1.8.1) (2024-06-26)
 
 
