@@ -90,8 +90,6 @@ export const Topbar = () => {
 	};
 
 	const deploy = async () => {
-		if (!Object.keys(resources).length) return <div />;
-
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
 
 		const { error } = await ProjectsService.run(projectId!, resources);
@@ -140,7 +138,7 @@ export const Topbar = () => {
 
 	return (
 		<div className="flex justify-between items-center bg-gray-800 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
-			<div className="flex items-end gap-3 relative font-fira-code text-gray-300">
+			<div className="relative flex items-end gap-3 text-gray-300 font-fira-code">
 				<span
 					className={styleInput}
 					contentEditable={true}
@@ -154,10 +152,10 @@ export const Topbar = () => {
 				>
 					{project?.name}
 				</span>
-				<ErrorMessage className="-bottom-5 text-xs">
+				<ErrorMessage className="text-xs -bottom-5">
 					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
 				</ErrorMessage>
-				<span className="font-semibold leading-tight text-sm">{project?.id}</span>
+				<span className="text-sm font-semibold leading-tight">{project?.id}</span>
 			</div>
 			<div className="flex items-stretch gap-3">
 				<Button
