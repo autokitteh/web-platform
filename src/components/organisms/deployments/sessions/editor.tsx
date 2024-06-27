@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CatImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
 import { Button, Frame, IconButton, Loader, LogoCatLarge } from "@components/atoms";
-import { fetchSessionsInterval } from "@constants";
+import { fetchSessionsInterval, sessionsEditorLineHeight } from "@constants";
 import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { SessionsService } from "@services";
@@ -11,7 +11,6 @@ import { isEqual } from "lodash";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-const editorLineHeight = 20;
 
 export const SessionTableEditorFrame = () => {
 	const [editorKey, setEditorKey] = useState(0);
@@ -110,7 +109,7 @@ export const SessionTableEditorFrame = () => {
 		const model = editorRef.current?.getModel();
 		if (!model) return 0;
 
-		return editorLineHeight * model.getLineCount();
+		return sessionsEditorLineHeight * model.getLineCount();
 	};
 
 	const checkIfLogsOverflowsEditor = () => {
@@ -160,7 +159,7 @@ export const SessionTableEditorFrame = () => {
 								lineNumbers: "off",
 								renderLineHighlight: "none",
 								wordWrap: "on",
-								lineHeight: 20,
+								lineHeight: sessionsEditorLineHeight,
 							}}
 							theme="vs-dark"
 							value={sessionLogsAsStringForOutput}
