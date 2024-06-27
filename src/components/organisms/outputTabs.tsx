@@ -1,8 +1,20 @@
 import React from "react";
 import { Tab } from "@components/atoms";
+import { LoggerLevel } from "@enums";
 import { OutputTabsVariants } from "@enums/components";
+import { useLoggerStore } from "@store";
 
-export const OutputTabs = () => {
+export const OutputTabs: React.FC = () => {
+	const logs = useLoggerStore((state) => state.logs);
+
+	const ouputTextStyle = {
+		[LoggerLevel.error]: "text-error-200",
+		[LoggerLevel.warn]: "text-yellow-500",
+		[LoggerLevel.debug]: "",
+		[LoggerLevel.info]: "",
+		[LoggerLevel.log]: "",
+	} as const;
+
 	return (
 		<div className="flex flex-col flex-1">
 			<div
@@ -15,9 +27,13 @@ export const OutputTabs = () => {
 					output
 				</Tab>
 			</div>
-			<div className="flex-auto h-48 pt-6 overflow-auto scrollbar mt-4">
-				<p className="text-error-200">Failed: 04.27.23 14:20</p>
-				<p className="mt-3 text-error-200">Lorem Ipsum</p>
+			<div className="flex-auto h-48 pt-6 mt-4 overflow-auto scrollbar">
+				{logs.map(({ id, timestamp, message, status }) => (
+					<div className="mb-4" key={id}>
+						<p className="font-medium text-gray-200">{timestamp}</p>
+						<p className={ouputTextStyle[status]}>{message}</p>
+					</div>
+				))}
 			</div>
 		</div>
 	);
