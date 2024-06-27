@@ -74,6 +74,16 @@ export const SessionTableEditorFrame = () => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
+	useEffect(() => {
+		return () => {
+			const editor = editorRef.current;
+			if (editor) {
+				const disposable = editor.onDidScrollChange(checkScrollPosition);
+				disposable.dispose();
+			}
+		};
+	}, []);
+
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("sessionEditorTheme", {
 			base: "vs-dark",
