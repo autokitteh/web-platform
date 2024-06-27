@@ -117,14 +117,12 @@ export const SessionTableEditorFrame = () => {
 
 	const checkScrollPosition = () => {
 		const editor = editorRef.current;
-		if (editor) {
-			const scrollPosition = editor.getScrollTop();
-			if (scrollPosition > 0) {
-				setIsScrolledDown(true);
-			} else {
-				setIsScrolledDown(false);
-			}
-		}
+
+		if (!editor) return;
+
+		const scrollPosition = editor.getScrollTop();
+
+		setIsScrolledDown(scrollPosition > 0);
 	};
 
 	useEffect(() => {
