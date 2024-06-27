@@ -71,16 +71,13 @@ export const SessionTableEditorFrame = () => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
 		window.addEventListener("resize", handleResize);
 
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
-
-	useEffect(() => {
 		return () => {
 			const editor = editorRef.current;
 			if (editor) {
 				const disposable = editor.onDidScrollChange(checkScrollPosition);
 				disposable.dispose();
 			}
+			window.removeEventListener("resize", handleResize);
 		};
 	}, []);
 
