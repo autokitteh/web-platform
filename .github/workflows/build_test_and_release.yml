@@ -8,8 +8,9 @@ env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  test:
-    name: E2E Tests
+  install:
+    timeout-minutes: 60
+    name: 🔍 Install
     runs-on: ubuntu-latest
     if: ${{ ! contains(github.event.head_commit.message, '[skip_e2e]') }}
     steps:
@@ -17,25 +18,61 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           submodules: true
+
       - uses: actions/setup-node@v4
         with:
           node-version: "21.2.0"
           cache: "npm"
 
-      - name: Pull submodule from remote
-        run: git submodule update --remote
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        id: cache-node-modules
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Cache Playwright binaries
+        uses: actions/cache@v4
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
-      - name: Download autokitteh executable
+
+  test:
+    name: 🧪 Testing ${{ matrix.browser }}
+    needs: install
+    strategy:
+      matrix:
+        browser: ["Chrome", "Edge", "Firefox", "Safari"]
+    runs-on: ubuntu-latest
+    if: ${{ ! contains(github.event.head_commit.message, '[skip_e2e]') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          submodules: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "21.2.0"
+      
+      - name: Download AutoKitteh executable
         run: |
           curl -sSL https://get.autokitteh.sh | bash
 
-      - name: Run autokitteh
+      - name: Display AutoKitteh version
+        run: ak version --full
+
+      - name: Run AutoKitteh
         env:
           AK_AUTHHTTMIDDLEWARE__REQUIRED: "false"
           AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED: "false"
@@ -43,9 +80,8 @@ jobs:
           AK_HTTP__CORS__ALLOWED_ORIGINS: "http://localhost:4173"
           AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE: "true"
           AK_AUTHSESSIONS__ALLOWED_DOMAIN: "localhost:4173"
-        run: |
-          ak up --mode=dev &
-
+        run: ak up --mode=dev &
+  
       - name: Wait for Backend to Start
         run: |
           URL=http://localhost:9980
@@ -56,14 +92,30 @@ jobs:
           done
           echo "Backend is up!"
 
+      - name: Use cached node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Use cached Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+      
+      - name: Install system dependencies for safari
+        if: matrix.browser == 'Safari'
+        run: npx playwright install-deps webkit
+
       - name: Run Playwright tests
-        run: |
-          git submodule update --init
-          npx playwright test
-      - uses: actions/upload-artifact@v4
+        run: npx playwright test --project=${{ matrix.browser }}
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.browser }}
           path: playwright-report/
           retention-days: 30
 
@@ -78,10 +130,12 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           submodules: true
+
       - uses: actions/setup-node@v4
         with:
           node-version: "21.2.0"
           cache: "npm"
+
       - name: Pull submodule from remote
         run: git submodule update --remote
 
@@ -100,7 +154,7 @@ jobs:
       - name: Run build
         run: npm run build
 
-      - name: Upload Artifacts
+      - name: Upload Built Files
         uses: actions/upload-artifact@v4
         with:
           name: built-files

@@ -20,9 +20,10 @@ test.beforeEach(async ({ page, dashboardPage }) => {
 
 test.describe("Project Deployment Suite", () => {
 	test("New deployment has been created", async ({ page }) => {
-		await page.waitForTimeout(1000);
-		const deploymentCount = await page.locator("tbody").locator("tr").count();
-		expect(deploymentCount).toBe(1);
+		await expect(page.getByRole("heading", { name: "Deployment History (1)" })).toBeVisible();
+		await expect(page.getByRole("status", { name: "Active" })).toBeVisible();
+		const deploymentTableRow = page.locator("td").getByText(/bld_*/);
+		await expect(deploymentTableRow).toHaveCount(1);
 	});
 
 	test("Deactivate deployment", async ({ page }) => {
@@ -41,7 +42,9 @@ test.describe("Project Deployment Suite", () => {
 		await deactivateButton.click();
 		const deleteButton = page.getByRole("button", { name: "Delete deployment" });
 		await deleteButton.click();
+
 		await page.getByRole("button", { name: "Yes, delete" }).click();
 		await expect(deleteButton).not.toBeVisible();
+		await expect(page.getByText("No deployments found")).toBeVisible();
 	});
 });

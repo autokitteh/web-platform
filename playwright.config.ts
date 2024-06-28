@@ -11,14 +11,10 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
 	testDir: "e2e",
-	/* Run tests in files in parallel */
-	fullyParallel: true,
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
 	/* Retry on CI only */
 	retries: process.env.CI ? 3 : 0,
-	/* Opt out of parallel tests on CI. */
-	workers: process.env.CI ? "50%" : undefined,
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: [["html"], ["list"]],
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -27,7 +23,7 @@ export default defineConfig({
 		baseURL: "http://localhost:4173",
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-		trace: "retain-on-failure",
+		trace: "on",
 		video: "retain-on-failure",
 	},
 
@@ -38,12 +34,12 @@ export default defineConfig({
 		// 	use: { ...devices["Desktop Chrome"] },
 		// },
 		{
-			name: "firefox",
+			name: "Firefox",
 			use: { ...devices["Desktop Firefox"] },
 		},
 
 		{
-			name: "webkit",
+			name: "Safari",
 			use: { ...devices["Desktop Safari"] },
 		},
 		// {
@@ -55,11 +51,11 @@ export default defineConfig({
 		// 	use: { ...devices["iPhone 12"] },
 		// },
 		{
-			name: "Microsoft Edge",
+			name: "Edge",
 			use: { ...devices["Desktop Edge"], channel: "msedge" },
 		},
 		{
-			name: "Google Chrome",
+			name: "Chrome",
 			use: { ...devices["Desktop Chrome"], channel: "chrome" },
 		},
 	],
