@@ -20,8 +20,8 @@ test.beforeEach(async ({ page, dashboardPage }) => {
 
 test.describe("Project Deployment Suite", () => {
 	test("New deployment has been created", async ({ page }) => {
-		const deploymentTableRow = page.locator("tbody tr");
-		expect(deploymentTableRow).toHaveCount(1, { timeout: 700 });
+		const deploymentTableRow = page.locator("table tr").getByText(/bld_*/);
+		expect(deploymentTableRow).toHaveCount(1);
 	});
 
 	test("Deactivate deployment", async ({ page }) => {
@@ -42,5 +42,6 @@ test.describe("Project Deployment Suite", () => {
 		await deleteButton.click();
 		await page.getByRole("button", { name: "Yes, delete" }).click();
 		await expect(deleteButton).not.toBeVisible();
+		await expect(page.getByText("No deployments found")).toBeVisible();
 	});
 });
