@@ -95,9 +95,9 @@ export const DeploymentsTable = () => {
 	return (
 		<div className="flex flex-col w-full">
 			<div className="flex items-center justify-between">
-				<div className="text-base text-black">
+				<h1 className="text-base text-black">
 					{t("tableTitle")} ({deployments.length})
-				</div>
+				</h1>
 			</div>
 			<Table className="mt-4">
 				<THead>

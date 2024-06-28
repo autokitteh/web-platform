@@ -20,8 +20,10 @@ test.beforeEach(async ({ page, dashboardPage }) => {
 
 test.describe("Project Deployment Suite", () => {
 	test("New deployment has been created", async ({ page }) => {
-		const deploymentTableRow = page.locator("table tr").getByText(/bld_*/);
-		expect(deploymentTableRow).toHaveCount(1);
+		await expect(page.getByRole("heading", { name: "Deployment History (1)" })).toBeVisible();
+		await expect(page.getByRole("status", { name: "Active" })).toBeVisible();
+		const deploymentTableRow = page.locator("td").getByText(/bld_*/);
+		await expect(deploymentTableRow).toHaveCount(1);
 	});
 
 	test("Deactivate deployment", async ({ page }) => {
