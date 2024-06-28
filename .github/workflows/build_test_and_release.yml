@@ -69,7 +69,7 @@ jobs:
         run: |
           curl -sSL https://get.autokitteh.sh | bash
 
-      - name: Get downloaded AutoKitteh version
+      - name: Display AutoKitteh version
         run: ak version --full
 
       - name: Run AutoKitteh
