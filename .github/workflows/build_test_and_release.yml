@@ -108,16 +108,6 @@ jobs:
         if: matrix.browser == 'Safari'
         run: npx playwright install-deps webkit
 
-      - name: Get installed Playwright version
-        id: playwright-version
-        run: |
-          PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
-          echo "playwright_version=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
-
-      - name: Display Playwright Version
-        run: |
-          echo "Using Playwright version $playwright_version"
-
       - name: Run Playwright tests
         run: npx playwright test --project=${{ matrix.browser }}
 
