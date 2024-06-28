@@ -20,9 +20,8 @@ test.beforeEach(async ({ page, dashboardPage }) => {
 
 test.describe("Project Deployment Suite", () => {
 	test("New deployment has been created", async ({ page }) => {
-		await page.waitForTimeout(500);
-		const deploymentCount = await page.locator("tbody").locator("tr").count();
-		expect(deploymentCount).toBe(1);
+		const deploymentRow = await page.locator("tbody > tr");
+		expect(deploymentRow).toHaveCount(1, { timeout: 1000 });
 	});
 
 	test("Deactivate deployment", async ({ page }) => {
