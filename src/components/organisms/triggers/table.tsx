@@ -38,7 +38,6 @@ export const TriggersTable = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tError("error"),
 			});
 		} finally {
 			setIsLoading(false);
@@ -60,7 +59,6 @@ export const TriggersTable = () => {
 				id: Date.now().toString(),
 				message: tError("triggerRemoveFailed") + (error as Error).message,
 				type: "error",
-				title: tError("error"),
 			});
 			return;
 		}

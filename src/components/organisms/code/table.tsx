@@ -70,7 +70,6 @@ export const CodeTable = () => {
 				id: Date.now().toString(),
 				message: (err as Error).message,
 				type: "error",
-				title: tErrors("error"),
 			});
 		} finally {
 			setIsLoading(false);
@@ -107,7 +106,6 @@ export const CodeTable = () => {
 			addToast({
 				id: Date.now().toString(),
 				message: tErrors("fileAddFailedExtended", { projectId, fileName }),
-				title: tErrors("error"),
 				type: "error",
 			});
 			return;
@@ -123,7 +121,6 @@ export const CodeTable = () => {
 			addToast({
 				id: Date.now().toString(),
 				message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }),
-				title: tErrors("error"),
 				type: "error",
 			});
 			return;

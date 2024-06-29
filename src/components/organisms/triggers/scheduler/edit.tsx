@@ -47,7 +47,6 @@ export const SchedulerEditTrigger = () => {
 				id: Date.now().toString(),
 				message: tErrors("connectionsFetchError"),
 				type: "error",
-				title: tErrors("error"),
 			});
 			LoggerService.error(
 				namespaces.triggerService,
@@ -66,7 +65,6 @@ export const SchedulerEditTrigger = () => {
 					id: Date.now().toString(),
 					message: tErrors("triggerNotFound"),
 					type: "error",
-					title: tErrors("error"),
 				});
 				LoggerService.error(namespaces.triggerService, tErrors("triggerNotFoundExtended", { triggerId }));
 				return;
@@ -126,7 +124,6 @@ export const SchedulerEditTrigger = () => {
 				id: Date.now().toString(),
 				message: tErrors("triggerNotFound"),
 				type: "error",
-				title: tErrors("error"),
 			});
 			return;
 		}

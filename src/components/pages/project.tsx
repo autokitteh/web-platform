@@ -5,7 +5,6 @@ import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { ProjectsService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { calculatePathDepth } from "@utilities";
-import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 export const Project = () => {
@@ -15,7 +14,6 @@ export const Project = () => {
 	const [displayTabs, setDisplayTabs] = useState(false);
 	const location = useLocation();
 	const addToast = useToastStore((state) => state.addToast);
-	const { t } = useTranslation("errors");
 
 	const [activeTab, setActiveTab] = useState(defaultProjectTab);
 
@@ -37,7 +35,6 @@ export const Project = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: t("error"),
 			});
 		}
 	};

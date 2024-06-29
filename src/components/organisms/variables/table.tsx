@@ -14,7 +14,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export const VariablesTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
-	const { t: tErrors } = useTranslation("errors");
 	const [isLoadingVariables, setIsLoadingVariables] = useState(true);
 	const [variables, setVariables] = useState<Variable[]>([]);
 	const [envId, setEnvId] = useState<string>();
@@ -43,7 +42,6 @@ export const VariablesTable = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
 			});
 		} finally {
 			setIsLoadingVariables(false);
@@ -67,7 +65,6 @@ export const VariablesTable = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
 			});
 
 		fetchVariables();

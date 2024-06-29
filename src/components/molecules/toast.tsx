@@ -5,9 +5,11 @@ import { ToasterTypes } from "@interfaces/components/toast.interface";
 import { useToastStore } from "@store/useToastStore";
 import { cn } from "@utilities";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export const Toast = () => {
 	const { toasts, removeToast } = useToastStore();
+	const { t } = useTranslation("toasts");
 
 	useEffect(() => {
 		toasts.forEach((toast) => {
@@ -34,32 +36,35 @@ export const Toast = () => {
 
 	return (
 		<>
-			{toasts.map(({ title, message, id, type }, index) => (
-				<AnimatePresence key={index}>
-					<motion.div
-						animate="visible"
-						aria-label={title}
-						className={baseStyle(type)}
-						exit="hidden"
-						initial="hidden"
-						transition={{ duration: 0.4 }}
-						variants={variants}
-					>
-						<div className="flex gap-2.5" role="alert" title={title}>
-							<div>
-								<p className={titleStyle(type)}>{title}</p>
-								{message}
+			{toasts.map(({ message, id, type }, index) => {
+				const title = t(`titles.${type}`);
+				return (
+					<AnimatePresence key={index}>
+						<motion.div
+							animate="visible"
+							aria-label={title}
+							className={baseStyle(type)}
+							exit="hidden"
+							initial="hidden"
+							transition={{ duration: 0.4 }}
+							variants={variants}
+						>
+							<div className="flex gap-2.5" role="alert" title={title}>
+								<div>
+									<p className={titleStyle(type)}>{title}</p>
+									{message}
+								</div>
+								<IconButton
+									className="bg-gray-600 p-0 w-default-icon h-default-icon group ml-auto"
+									onClick={() => removeToast(id)}
+								>
+									<Close className="transition fill-white w-3 h-3" />
+								</IconButton>
 							</div>
-							<IconButton
-								className="bg-gray-600 p-0 w-default-icon h-default-icon group ml-auto"
-								onClick={() => removeToast(id)}
-							>
-								<Close className="transition fill-white w-3 h-3" />
-							</IconButton>
-						</div>
-					</motion.div>
-				</AnimatePresence>
-			))}
+						</motion.div>
+					</AnimatePresence>
+				);
+			})}
 		</>
 	);
 };

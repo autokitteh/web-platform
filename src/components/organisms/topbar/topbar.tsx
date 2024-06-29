@@ -49,7 +49,6 @@ export const Topbar = () => {
 					id: Date.now().toString(),
 					message: (error as Error).message,
 					type: "error",
-					title: t("error", { ns: "errors" }),
 				});
 				return <div />;
 			}
@@ -75,14 +74,12 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: t("error", { ns: "errors" }),
 			});
 		} else {
 			addToast({
 				id: Date.now().toString(),
 				message: t("topbar.buildProjectSuccess"),
 				type: "success",
-				title: "Success",
 			});
 		}
 
@@ -100,14 +97,12 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: t("error", { ns: "errors" }),
 			});
 		} else {
 			addToast({
 				id: Date.now().toString(),
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
-				title: "Success",
 			});
 		}
 
@@ -122,7 +117,6 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: t("error", { ns: "errors" }),
 			});
 			return redirect("/404");
 		}
@@ -131,7 +125,6 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: t("projectNotFound"),
 			});
 			return redirect("/404");
 		}

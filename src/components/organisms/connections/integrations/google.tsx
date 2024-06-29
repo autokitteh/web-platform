@@ -42,7 +42,6 @@ export const GoogleIntegrationForm = () => {
 				addToast({
 					id: Date.now().toString(),
 					message: tErrors("errorCreatingNewConnection"),
-					title: "Error",
 					type: "error",
 				});
 				LoggerService.error(
@@ -55,7 +54,6 @@ export const GoogleIntegrationForm = () => {
 			addToast({
 				id: Date.now().toString(),
 				message: tErrors("errorCreatingNewConnection"),
-				title: "Error",
 				type: "error",
 			});
 			LoggerService.error(

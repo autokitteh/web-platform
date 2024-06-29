@@ -48,7 +48,6 @@ export const AddVariable = () => {
 				id: Date.now().toString(),
 				message: t("variableNotCreated") + (error as Error).message,
 				type: "error",
-				title: t("error"),
 			});
 			return;
 		}

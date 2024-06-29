@@ -16,7 +16,6 @@ import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 
 export const DeploymentsTable = () => {
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -40,7 +39,6 @@ export const DeploymentsTable = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
 			});
 			return;
 		}
@@ -71,7 +69,6 @@ export const DeploymentsTable = () => {
 					id: Date.now().toString(),
 					message: (error as Error).message,
 					type: "error",
-					title: tErrors("error"),
 				});
 				return;
 			}

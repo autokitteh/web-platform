@@ -17,7 +17,6 @@ export const SessionTableEditorFrame = () => {
 	const [cachedSessionLogs, setCachedSessionLogs] = useState<SessionLogRecord[]>([]);
 	const { sessionId, projectId, deploymentId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const navigate = useNavigate();
 	const sessionFetchIntervalIdRef = useRef<number | null>(null);
@@ -38,7 +37,6 @@ export const SessionTableEditorFrame = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: tErrors("error"),
 			});
 			return;
 		}

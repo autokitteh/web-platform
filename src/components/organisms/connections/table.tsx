@@ -14,11 +14,10 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const ConnectionsTable = () => {
-	const { t: tError } = useTranslation("errors");
+	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "connections" });
 	const { openModal, closeModal } = useModalStore();
 	const { projectId } = useParams();
-	const { t: tErrors } = useTranslation(["errors"]);
 
 	const navigate = useNavigate();
 
@@ -42,7 +41,6 @@ export const ConnectionsTable = () => {
 			addToast({
 				id: Date.now().toString(),
 				message: (err as Error).message,
-				title: tErrors("error"),
 				type: "error",
 			});
 		} finally {
@@ -73,8 +71,7 @@ export const ConnectionsTable = () => {
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: tError("connectionRemoveFailed"),
-				title: tErrors("error"),
+				message: tErrors("connectionRemoveFailed"),
 				type: "error",
 			});
 

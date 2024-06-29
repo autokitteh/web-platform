@@ -52,7 +52,6 @@ export const GithubIntegrationForm = () => {
 				addToast({
 					id: Date.now().toString(),
 					message: tErrors("errorCreatingNewConnection"),
-					title: "Error",
 					type: "error",
 				});
 				LoggerService.error(
@@ -67,7 +66,6 @@ export const GithubIntegrationForm = () => {
 			addToast({
 				id: Date.now().toString(),
 				message: tErrors("errorCreatingNewConnection"),
-				title: "Error",
 				type: "error",
 			});
 			LoggerService.error(
@@ -86,14 +84,12 @@ export const GithubIntegrationForm = () => {
 			addToast({
 				id: Date.now().toString(),
 				message: t("github.copySuccess"),
-				title: "Success",
 				type: "success",
 			});
 		} catch (err) {
 			addToast({
 				id: Date.now().toString(),
 				message: t("github.copyFailure"),
-				title: tErrors("error"),
 				type: "error",
 			});
 		}
