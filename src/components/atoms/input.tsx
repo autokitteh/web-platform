@@ -58,15 +58,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
 	const inputClass = cn(
 		"w-full h-12 py-2.5 px-4 bg-transparent outline-none",
-		{ "autofill-black": variant === InputVariant.light },
 		{ "text-gray-400": disabled },
+		{ "autofill-black": variant === InputVariant.light && !disabled },
+		{ "autofill-gray-700": variant === InputVariant.light && disabled },
 		classInput
 	);
 
 	const labelClass = cn(
 		"absolute left-4 transition-all pointer-events-none",
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
-		{ "-top-2 left-3 text-xs  before:bg-gray-500 px-1": isFocused || hasValue }
+		{ "-top-2 left-3 text-xs  before:bg-gray-500 px-1": isFocused || hasValue },
+		{ "-top-2 left-3 text-xs  before:bg-white px-1": (isFocused || hasValue) && variant === InputVariant.light }
 	);
 
 	const borderOverlayLabelClass = cn("absolute left-0 z-0 w-full h-0.5 -translate-y-1/2 top-1/2 bg-black", {

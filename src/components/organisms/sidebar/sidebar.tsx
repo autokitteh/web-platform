@@ -59,24 +59,24 @@ export const Sidebar = () => {
 							</Link>
 							<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 						</div>
-						<div className="flex flex-col gap-5 justify-end">
-							<Button className="hover:bg-transparent" href="#">
-								<img alt="avatar" className="w-8 h-8 rounded-full" src="https://via.placeholder.com/30" />
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="whitespace-nowrap overflow-hidden"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											James L.
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Button>
-							{isAuthEnabled ? (
+						{isAuthEnabled ? (
+							<div className="flex flex-col gap-5 justify-end">
+								<Button className="hover:bg-transparent" href="#">
+									<img alt="avatar" className="w-8 h-8 rounded-full" src="https://via.placeholder.com/30" />
+									<AnimatePresence>
+										{isOpen ? (
+											<motion.span
+												animate="visible"
+												className="whitespace-nowrap overflow-hidden"
+												exit="hidden"
+												initial="hidden"
+												variants={animateVariant}
+											>
+												James L.
+											</motion.span>
+										) : null}
+									</AnimatePresence>
+								</Button>
 								<div>
 									<Button className="hover:bg-transparent" href="/settings">
 										<SettingsIcon className="w-8 h-8" fill="black" />
@@ -105,8 +105,8 @@ export const Sidebar = () => {
 										</AnimatePresence>
 									</Button>
 								</div>
-							) : null}
-						</div>
+							</div>
+						) : null}
 					</div>
 					<AnimatePresence>
 						{submenuInfo.submenu && submenuInfo.submenu.length > 0 ? <Submenu submenuInfo={submenuInfo} /> : null}

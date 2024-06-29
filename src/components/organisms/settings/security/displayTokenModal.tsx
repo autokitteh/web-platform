@@ -53,13 +53,14 @@ export const DisplayConnectionTokenModal = () => {
 						i18nKey={t("line")}
 					/>
 				</p>
-				<div className="flex mt-4 w-full">
+				<div className="flex mt-6 w-full">
 					<Input
 						aria-label={t("copyInputAriaLabel")}
-						classInput="placeholder:text-gray-400 hover:placeholder:text-gray-800"
 						className="flex-1 bg-white hover:border-gray-700"
 						disabled
+						placeholder={t("copyInputLabel")}
 						value={token}
+						variant="light"
 					/>
 					<Button
 						aria-label={t("copyButton")}
