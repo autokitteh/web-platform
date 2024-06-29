@@ -17,7 +17,7 @@ export const Topbar = () => {
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [project, setProject] = useState<ProjectMenuItem>();
 	const addToast = useToastStore((state) => state.addToast);
-	const styleInput = cn(
+	const inputClass = cn(
 		"font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight",
 		{
 			"outline-error outline-2": !isNameValid,
@@ -142,7 +142,7 @@ export const Topbar = () => {
 		<div className="flex justify-between items-center bg-gray-800 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
 			<div className="relative flex items-end gap-3 text-gray-300 font-fira-code">
 				<span
-					className={styleInput}
+					className={inputClass}
 					contentEditable={true}
 					onBlur={handleInputChange}
 					onInput={handleInput}

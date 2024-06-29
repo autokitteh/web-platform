@@ -11,7 +11,7 @@ export const SettingsLayout = () => {
 				<Sidebar />
 				<div className="flex flex-col transition w-full">
 					<SettingsTopbar />
-					<div className="h-full w-full flex py-4">
+					<div className="h-full w-full flex py-4 relative overflow-hidden">
 						<SettingsMenu />
 						<div className="flex flex-col bg-gray-800 flex-5 rounded-tr-lg rounded-br-lg pt-10 pl-6 w-1/3 h-full">
 							<Outlet />
