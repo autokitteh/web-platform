@@ -41,7 +41,11 @@ Ensure you have the following installed on your system:
 
     `git clone https://github.com/autokitteh/web-platform && cd autokitteh`
 
-2.  **Install Dependencies**: Use npm to install all the required dependencies:
+2.  **Get AutoKitteh Submodule**: Use git to install the AutoKitteh submodule, which our app relies on:
+
+    `git submodule update --remote`
+
+3.  **Install Dependencies**: Use npm to install all the required dependencies:
 
     `npm install`
 
