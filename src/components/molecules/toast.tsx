@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useLayoutEffect, useRef } from "react";
 import { Close } from "@assets/image/icons";
 import { IconButton } from "@components/atoms";
 import { ToasterTypes } from "@interfaces/components/toast.interface";
@@ -10,17 +10,66 @@ import { useTranslation } from "react-i18next";
 export const Toast = () => {
 	const { toasts, removeToast } = useToastStore();
 	const { t } = useTranslation("toasts");
+	const toastRefs = useRef<(HTMLDivElement | null)[]>([]);
+	const timerRefs = useRef<{ [id: string]: NodeJS.Timeout }>({});
+	const [hoveredToasts, setHoveredToasts] = useState<{ [id: string]: boolean }>({});
 
-	useEffect(() => {
-		toasts.forEach((toast) => {
-			setTimeout(() => removeToast(toast.id), 5000);
+	const updateToastPositions = () => {
+		let currentBottom = 26;
+		toastRefs.current.forEach((ref) => {
+			if (ref) {
+				ref.style.bottom = `${currentBottom}px`;
+				currentBottom += ref.offsetHeight + 8;
+			}
 		});
-	}, [toasts, removeToast]);
+	};
 
-	const baseStyle = (toastType: ToasterTypes) =>
-		cn("fixed right-20 z-50 bg-black max-w-420 py-3 px-4 pl-6 border rounded-4xl", {
+	const startTimer = (id: string) => {
+		if (timerRefs.current[id]) {
+			clearTimeout(timerRefs.current[id]);
+		}
+		timerRefs.current[id] = setTimeout(() => removeToast(id), 3000);
+	};
+
+	const pauseTimer = (id: string) => {
+		if (timerRefs.current[id]) {
+			clearTimeout(timerRefs.current[id]);
+		}
+	};
+
+	const handleMouseEnter = (id: string) => {
+		setHoveredToasts((prev) => ({ ...prev, [id]: true }));
+		pauseTimer(id);
+	};
+
+	const handleMouseLeave = (id: string) => {
+		setHoveredToasts((prev) => ({ ...prev, [id]: false }));
+		startTimer(id);
+	};
+
+	useLayoutEffect(() => {
+		toasts.forEach((toast) => {
+			if (!hoveredToasts[toast.id]) {
+				startTimer(toast.id);
+			}
+		});
+
+		updateToastPositions();
+
+		const currentTimerRefs = timerRefs.current;
+
+		return () => {
+			Object.values(currentTimerRefs).forEach(clearTimeout);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [toasts]);
+
+	const baseStyle = (toastType: ToasterTypes, isHovered: boolean) =>
+		cn("fixed right-20 z-50 max-w-420 py-3 px-4 pl-6 border rounded-4xl transition-colors duration-200", {
 			"border-green-accent": toastType === "success",
 			"border-error": toastType === "error",
+			"bg-black": !isHovered,
+			"bg-gray-800": isHovered,
 		});
 
 	const titleStyle = (toastType: ToasterTypes) =>
@@ -30,8 +79,8 @@ export const Toast = () => {
 		});
 
 	const variants = {
-		visible: { filter: "blur(0px)", x: 0 },
-		hidden: { filter: "blur(4px)", x: "100%" },
+		visible: { opacity: 1, y: 0 },
+		hidden: { opacity: 0, y: 50 },
 	};
 
 	const renderToasts = () =>
@@ -41,12 +90,14 @@ export const Toast = () => {
 				<AnimatePresence key={id}>
 					<motion.div
 						animate="visible"
-						aria-label={title}
-						className={baseStyle(type)}
+						className={baseStyle(type, hoveredToasts[id])}
 						exit="hidden"
 						initial="hidden"
-						style={{ bottom: `${index * 6 + 3}rem` }}
-						transition={{ duration: 0.4 }}
+						key={id}
+						onMouseEnter={() => handleMouseEnter(id)}
+						onMouseLeave={() => handleMouseLeave(id)}
+						ref={(el) => (toastRefs.current[index] = el)}
+						transition={{ duration: 0.3 }}
 						variants={variants}
 					>
 						<div className="flex gap-2.5" role="alert" title={title}>
