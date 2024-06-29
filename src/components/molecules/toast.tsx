@@ -13,12 +13,12 @@ export const Toast = () => {
 
 	useEffect(() => {
 		toasts.forEach((toast) => {
-			setTimeout(() => removeToast(toast.id), 3000);
+			setTimeout(() => removeToast(toast.id), 5000);
 		});
 	}, [toasts, removeToast]);
 
 	const baseStyle = (toastType: ToasterTypes) =>
-		cn("fixed right-20 bottom-10 z-50 bg-black max-w-420 py-3 px-4 pl-6 border rounded-4xl", {
+		cn("fixed right-20 z-50 bg-black max-w-420 py-3 px-4 pl-6 border rounded-4xl", {
 			"border-green-accent": toastType === "success",
 			"border-error": toastType === "error",
 		});
@@ -35,7 +35,7 @@ export const Toast = () => {
 	};
 
 	const renderToasts = () =>
-		toasts.map(({ message, id, type }) => {
+		toasts.map(({ message, id, type }, index) => {
 			const title = t(`titles.${type}`);
 			return (
 				<AnimatePresence key={id}>
@@ -45,6 +45,7 @@ export const Toast = () => {
 						className={baseStyle(type)}
 						exit="hidden"
 						initial="hidden"
+						style={{ bottom: `${index * 6 + 3}rem` }}
 						transition={{ duration: 0.4 }}
 						variants={variants}
 					>
