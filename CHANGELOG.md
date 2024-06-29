@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/autokitteh/web-platform/compare/v1.9.0...v1.9.1) (2024-06-29)
+
+
+### Bug Fixes
+
+* fix 404 on page reload in netlify deployment ([#164](https://github.com/autokitteh/web-platform/issues/164)) ([b9c2bbb](https://github.com/autokitteh/web-platform/commit/b9c2bbbc0591485a27444cffce094a34b7ea10e9))
+
 # [1.9.0](https://github.com/autokitteh/web-platform/compare/v1.8.1...v1.9.0) (2024-06-27)
 
 
