@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { IconLogo, IconLogoName } from "@assets/image";
-import { Logout, Settings } from "@assets/image/sidebar";
+import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 import { Button, Loader } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
 import { isAuthEnabled } from "@constants";
@@ -79,7 +79,7 @@ export const Sidebar = () => {
 							{isAuthEnabled ? (
 								<div>
 									<Button className="hover:bg-transparent" href="/settings">
-										<Settings className="w-8 h-8" fill="black" />
+										<SettingsIcon className="w-8 h-8" fill="black" />
 										<AnimatePresence>
 											{isOpen ? (
 												<motion.span
@@ -95,7 +95,7 @@ export const Sidebar = () => {
 										</AnimatePresence>
 									</Button>
 									<Button className="hover:bg-transparent" onClick={() => logoutFunction()}>
-										<Logout className="w-8 h-8" fill="black" />
+										<LogoutIcon className="w-8 h-8" fill="black" />
 										<AnimatePresence>
 											{isOpen ? (
 												<motion.span animate="visible" exit="hidden" initial="hidden" variants={animateVariant}>

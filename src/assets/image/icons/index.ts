@@ -21,10 +21,10 @@ export { default as ExternalLinkIcon } from "@assets/image/icons/ExternalLink.sv
 export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?react";
 export { default as ClockIcon } from "@assets/image/icons/Clock.svg?react";
 export { default as RotateIcon } from "@assets/image/icons/Rotate.svg?react";
-export { default as IconGoogle } from "@assets/image/icons/Google.png";
-export { default as IconGithub } from "@assets/image/icons/Github.png";
-export { default as User } from "@assets/image/icons/User.svg?react";
-export { default as Bell } from "@assets/image/icons/Bell.svg?react";
-export { default as Sliders } from "@assets/image/icons/Sliders.svg?react";
-export { default as Receipt } from "@assets/image/icons/Receipt.svg?react";
-export { default as Security } from "@assets/image/icons/Security.svg?react";
+export { default as GoogleIcon } from "@assets/image/icons/Google.png";
+export { default as GitHubIcon } from "@assets/image/icons/Github.png";
+export { default as UserIcon } from "@assets/image/icons/User.svg?react";
+export { default as BellIcon } from "@assets/image/icons/Bell.svg?react";
+export { default as SlidersIcon } from "@assets/image/icons/Sliders.svg?react";
+export { default as ReceiptIcon } from "@assets/image/icons/Receipt.svg?react";
+export { default as SecurityIcon } from "@assets/image/icons/Security.svg?react";
