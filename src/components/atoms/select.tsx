@@ -2,7 +2,22 @@ import React, { useState, useEffect } from "react";
 import { getSelectBlackStyles, getSelectWhiteStyles } from "@constants";
 import { SelectProps, SelectOption } from "@interfaces/components";
 import { useTranslation } from "react-i18next";
-import ReactSelect, { SingleValue } from "react-select";
+import ReactSelect, { GroupBase, OptionProps, SingleValue, components } from "react-select";
+
+type IconOptionProps = OptionProps<SelectOption, false, GroupBase<SelectOption>>;
+
+const { Option } = components;
+const IconOption: React.FC<IconOptionProps> = ({ data, ...props }) => {
+	const { icon: Icon, label } = data;
+	return (
+		<Option {...props} data={data}>
+			<div className="flex flex-row h-4">
+				<div className="flex">{Icon ? <Icon style={{ width: 24, height: 24, marginRight: 10 }} /> : null}</div>
+				<div className="flex">{label}</div>
+			</div>
+		</Option>
+	);
+};
 
 export const Select = ({
 	placeholder = "Select",
@@ -44,6 +59,7 @@ export const Select = ({
 	return (
 		<ReactSelect
 			{...rest}
+			components={{ Option: IconOption }}
 			isOptionDisabled={(option) => !!option.disabled}
 			noOptionsMessage={() => noOptionsMessage}
 			onChange={handleChange}

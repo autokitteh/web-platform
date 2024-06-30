@@ -1,10 +1,11 @@
+import { GitHubIcon } from "@assets/image/icons/integrations";
 import { GithubConnectionType, GoogleConnectionType } from "@enums";
 import { TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 export const integrationTypes: SelectOption[] = [
-	{ value: "github", label: "Github", disabled: false },
-	{ value: "google", label: "Google (All APIs)", disabled: false },
+	{ value: "github", label: "Github", disabled: false, icon: GitHubIcon },
+	{ value: "google", label: "Google (All APIs)", disabled: false, icon: GitHubIcon },
 ];
 
 export const triggerTypes: SelectOption[] = [

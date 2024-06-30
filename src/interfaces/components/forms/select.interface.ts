@@ -1,3 +1,4 @@
+import { FunctionComponent, SVGProps } from "react";
 import { SingleValue } from "react-select";
 
 export interface SelectProps {
@@ -15,4 +16,5 @@ export interface SelectOption {
 	value: string;
 	label: string;
 	disabled?: boolean;
+	icon?: FunctionComponent<SVGProps<SVGSVGElement>>;
 }
