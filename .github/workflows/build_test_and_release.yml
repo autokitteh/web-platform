@@ -54,6 +54,21 @@ jobs:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: pg_db        
+          POSTGRES_PASSWORD: pg_password
+          POSTGRES_USER: pg_user
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
     if: ${{ ! contains(github.event.head_commit.message, '[skip_e2e]') }}
     steps:
       - uses: actions/checkout@v4
@@ -80,7 +95,9 @@ jobs:
           AK_HTTP__CORS__ALLOWED_ORIGINS: "http://localhost:4173"
           AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE: "true"
           AK_AUTHSESSIONS__ALLOWED_DOMAIN: "localhost:4173"
-        run: ak up --mode=dev &
+          AK_DB__TYPE: "postgres"
+          AK_DB__DSN: "host=localhost user=pg_user password=pg_password dbname=pg_db port=5432"
+        run: ak up &
   
       - name: Wait for Backend to Start
         run: |
