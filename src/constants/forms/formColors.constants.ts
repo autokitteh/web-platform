@@ -12,4 +12,5 @@ export const formColors = {
 	"gray-500": twConfig.theme.colors.gray[500],
 	"gray-800": twConfig.theme.colors.gray[800],
 	"green-light": twConfig.theme.colors["green-light"]["DEFAULT"],
+	"green-accent": twConfig.theme.colors["green-accent"]["DEFAULT"],
 };
