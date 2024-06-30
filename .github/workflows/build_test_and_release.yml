@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:latest
+        image: postgres:15.4
         env:
           POSTGRES_DB: pgdb        
           POSTGRES_PASSWORD: pgpassword
@@ -83,7 +83,9 @@ jobs:
 
       - name: Install Temporal CLI
         uses: temporalio/setup-temporal@v0
-      
+        with:
+          version: v0.13.1  
+
       - name: Start a local Temporal server
         shell: bash
         run: temporal server start-dev --headless &          
