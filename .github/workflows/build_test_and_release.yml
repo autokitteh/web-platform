@@ -81,7 +81,7 @@ jobs:
         with:
           node-version: "21.2.0"
 
-      - name: Install Temporal CLI
+      - name: Download Temporal CLI v0.10.7
         run: curl -L "https://temporal.download/cli/archive/v0.10.7?platform=linux&arch=amd64" -o temporal_cli_0.10.7_linux_amd64.tar.gz
 
       - name: Extract Temporal CLI
