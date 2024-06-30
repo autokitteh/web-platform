@@ -58,9 +58,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: pg_db        
-          POSTGRES_PASSWORD: pg_password
-          POSTGRES_USER: pg_user
+          POSTGRES_DB: pgdb        
+          POSTGRES_PASSWORD: pgpassword
+          POSTGRES_USER: pguser
         ports:
           - 5432:5432
         options: >-
@@ -96,7 +96,7 @@ jobs:
           AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE: "true"
           AK_AUTHSESSIONS__ALLOWED_DOMAIN: "localhost:4173"
           AK_DB__TYPE: "postgres"
-          AK_DB__DSN: "host=localhost user=pg_user password=pg_password dbname=pg_db port=5432"
+          AK_DB__DSN: "host=localhost user=pguser password=pgpassword dbname=pgdb port=5432"
         run: ak up &
   
       - name: Wait for Backend to Start
