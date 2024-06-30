@@ -100,7 +100,7 @@ jobs:
           AK_AUTHJWTTOKENS__SIGN_KEY: "183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154"
           AK_SECRETS__PROVIDER: db
           AK_DB__TYPE: "postgres"
-          AK_DB__DSN: "host=localhost user=pguser password=pgpassword dbname=pg_db port=5432"
+          AK_DB__DSN: "host=localhost user=pguser password=pgpassword dbname=pgdb port=5432"
         run: ak up &
   
       - name: Wait for Backend to Start
