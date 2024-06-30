@@ -82,11 +82,17 @@ jobs:
           node-version: "21.2.0"
 
       - name: Install Temporal CLI
-        run: curl -sSf https://temporal.download/cli.sh | sh
+        run: curl -sS https://temporal.download/cli/archive/v0.10.7?platform=linux&arch=amd64
+
+      - name: Extract Temporal CLI
+        uses: ihiroky/extract-action@v1
+        with:
+          file_path: temporal_cli_0.10.7_linux_amd64.tar
+          extract_dir: ./temporal_cli
 
       - name: Start a local Temporal server
         shell: bash
-        run: temporal server start-dev --headless &          
+        run: ./temporal_cli/temporal server start-dev --headless &          
       
       - name: Download AutoKitteh executable
         run: |
