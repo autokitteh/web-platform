@@ -84,7 +84,7 @@ jobs:
       - name: Install Temporal CLI
         uses: temporalio/setup-temporal@v0
         with:
-          version: v0.13.1  
+          version: v0.10.7
 
       - name: Start a local Temporal server
         shell: bash
