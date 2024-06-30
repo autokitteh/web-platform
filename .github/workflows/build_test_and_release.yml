@@ -82,7 +82,7 @@ jobs:
           node-version: "21.2.0"
 
       - name: Install Temporal CLI
-        run: curl -sS "https://temporal.download/cli/archive/v0.10.7?platform=linux&arch=amd64"
+        run: curl -L "https://temporal.download/cli/archive/v0.10.7?platform=linux&arch=amd64"
 
       - name: Extract Temporal CLI
         uses: ihiroky/extract-action@v1
