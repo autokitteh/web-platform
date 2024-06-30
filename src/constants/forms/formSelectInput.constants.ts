@@ -1,37 +1,65 @@
 import { formColors } from "@constants/forms/formColors.constants";
-import { SelectOption } from "@interfaces/components";
-import { StylesConfig } from "react-select";
+import { ColorScheme, SelectOption } from "@interfaces/components";
+import { StylesConfig, GroupBase } from "react-select";
 
-const getSelectBlackStyles = (isError: boolean): StylesConfig<SelectOption, false> => {
+const baseStyles = {
+	"fontSize": "16px",
+	"padding": "6px 11px 6px 16px",
+	"borderRadius": "8px",
+	"boxShadow": "none",
+	"cursor": "pointer",
+	"transition": "all 0.25s",
+	"::-webkit-scrollbar": {
+		width: "6px",
+		height: "6px",
+	},
+	"::-webkit-scrollbar-thumb": {
+		borderRadius: "10px",
+	},
+	"::-webkit-scrollbar-thumb:hover": {
+		background: formColors["gray-400"],
+	},
+	"svg": {
+		width: "24px",
+		height: "24px",
+	},
+};
+
+const getSelectStyles = (
+	isError: boolean,
+	colorScheme: ColorScheme
+): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
 	const defaultBorderColor = `0.5px solid ${isError ? formColors.error : formColors["gray-500"]}`;
-	const greenBorderColor = `0.5px solid ${formColors["green-light"]}`;
-	const whiteBorderColor = `0.5px solid ${formColors.white}`;
+	const greenBorderColor = `0.5px solid ${colorScheme === "black" ? formColors["green-light"] : formColors["green-accent"]}`;
+	const hoverBorderColor = colorScheme === "black" ? formColors.white : formColors["gray-400"];
+	const backgroundColor = formColors[colorScheme];
+	const oppositeSchemeColor = formColors[colorScheme === "black" ? "white" : "black"];
+	const hoverBackgroundColor = formColors["gray-800"];
+	const selectedBackgroundColor = colorScheme === "black" ? formColors.white : formColors.black;
+	const selectedTextColor = colorScheme === "black" ? formColors.black : formColors.white;
 
 	return {
 		control: (provided, state) => ({
 			...provided,
-			"fontSize": 16,
-			"padding": "9px 11px 9px 17px",
-			"borderRadius": 8,
+			...baseStyles,
 			"border": defaultBorderColor,
-			"backgroundColor": formColors.black,
-			"boxShadow": "none",
+			backgroundColor,
 			"fontWeight": state.menuIsOpen ? 500 : 400,
-			"cursor": "pointer",
-			"color": "red",
-			"borderBottomLeftRadius": state.menuIsOpen ? 0 : undefined,
-			"borderBottomRightRadius": state.menuIsOpen ? 0 : undefined,
+			"color": oppositeSchemeColor,
+			"borderBottomLeftRadius": state.menuIsOpen ? "0px" : undefined,
+			"borderBottomRightRadius": state.menuIsOpen ? "0px" : undefined,
 			"borderBottom": state.menuIsOpen ? "transparent" : defaultBorderColor,
 			"borderTop": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
 			"borderLeft": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
 			"borderRight": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
+			"boxSizing": "border-box", // Ensure box-sizing is consistent
 			"&:hover": {
 				fontWeight: 500,
-				borderColor: formColors.white,
-				borderBottom: state.menuIsOpen ? "transparent" : whiteBorderColor,
-				borderTop: state.menuIsOpen ? greenBorderColor : whiteBorderColor,
-				borderLeft: state.menuIsOpen ? greenBorderColor : whiteBorderColor,
-				borderRight: state.menuIsOpen ? greenBorderColor : whiteBorderColor,
+				borderColor: hoverBorderColor,
+				borderBottom: state.menuIsOpen ? "transparent" : `0.5px solid ${hoverBorderColor}`,
+				borderTop: state.menuIsOpen ? greenBorderColor : `0.5px solid ${hoverBorderColor}`,
+				borderLeft: state.menuIsOpen ? greenBorderColor : `0.5px solid ${hoverBorderColor}`,
+				borderRight: state.menuIsOpen ? greenBorderColor : `0.5px solid ${hoverBorderColor}`,
 			},
 			"&:after": {
 				content: '""',
@@ -48,46 +76,34 @@ const getSelectBlackStyles = (isError: boolean): StylesConfig<SelectOption, fals
 		}),
 		singleValue: (provided) => ({
 			...provided,
-			color: formColors.white,
+			color: oppositeSchemeColor,
 		}),
 		menu: (provided) => ({
 			...provided,
-			backgroundColor: formColors.black,
-			borderRadius: 8,
-			boxShadow: "none",
-			padding: "4px 10px 13px 10px",
+			backgroundColor,
+			borderRadius: "8px",
+			padding: "0px 7px 9px 0px",
 			borderRight: greenBorderColor,
 			borderLeft: greenBorderColor,
 			borderBottom: greenBorderColor,
-			borderTopRightRadius: 0,
-			borderTopLeftRadius: 0,
-			marginTop: "0",
+			borderTopRightRadius: "0px",
+			borderTopLeftRadius: "0px",
+			marginTop: "0px",
 		}),
 		menuList: (provided) => ({
 			...provided,
-			"::-webkit-scrollbar": {
-				width: 6,
-				height: 6,
-			},
-			"::-webkit-scrollbar-thumb": {
-				background: formColors["gray-300"],
-				borderRadius: 10,
-			},
-			"::-webkit-scrollbar-thumb:hover": {
-				background: formColors["gray-400"],
-			},
+			...baseStyles,
+			paddingLeft: "7px",
 		}),
 		option: (provided, state) => ({
 			...provided,
-			"backgroundColor": state.isSelected ? formColors.white : formColors.black,
-			"color": state.isSelected ? formColors.black : state.isDisabled ? formColors["gray-400"] : formColors.white,
-			"borderRadius": 8,
-			"transition": ".25s",
-			"marginTop": 7,
-			"fontSize": 16,
+			"backgroundColor": state.isSelected ? selectedBackgroundColor : backgroundColor,
+			"color": state.isSelected ? selectedTextColor : state.isDisabled ? formColors["gray-400"] : oppositeSchemeColor,
+			"borderRadius": "8px",
+			"marginTop": "4px",
 			"cursor": state.isDisabled ? "not-allowed" : "pointer",
 			"&:hover": !state.isDisabled && {
-				backgroundColor: formColors["gray-800"],
+				backgroundColor: hoverBackgroundColor,
 				color: formColors.white,
 			},
 		}),
@@ -96,157 +112,32 @@ const getSelectBlackStyles = (isError: boolean): StylesConfig<SelectOption, fals
 		}),
 		valueContainer: (provided) => ({
 			...provided,
-			padding: 0,
+			padding: "0px",
 		}),
 		dropdownIndicator: (provided, state) => ({
 			...provided,
-			"padding": 0,
+			...baseStyles,
 			"transform": state.selectProps.menuIsOpen ? "matrix(1,0,0,-1,0,0)" : "none",
-			"transition": ".25s",
-			"marginRight": "0.4vw",
-			"color": formColors.white,
-			"svg": {
-				width: "24px",
-				height: "24px",
-			},
+			"color": oppositeSchemeColor,
 			"&:hover": {
-				color: formColors.white,
+				color: oppositeSchemeColor,
 			},
 		}),
 		input: (provided) => ({
 			...provided,
-			color: formColors.white,
+			color: oppositeSchemeColor,
 		}),
 		placeholder: (provided, state) => ({
 			...provided,
-			transition: ".25s",
-			color: state.isFocused ? "transparent" : formColors.white,
+			color: state.isFocused ? "transparent" : oppositeSchemeColor,
 		}),
 	};
 };
 
-const getSelectWhiteStyles = (isError: boolean): StylesConfig<SelectOption, false> => {
-	const defaultBorderColor = `0.5px solid ${isError ? formColors.error : formColors["gray-500"]}`;
-	const greenBorderColor = `0.5px solid ${formColors["green-accent"]}`;
-	const grayBorderColor = `0.5px solid ${formColors["gray-500"]}`;
+const getSelectBlackStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
+	getSelectStyles(isError, "black");
 
-	return {
-		control: (provided, state) => ({
-			...provided,
-			"fontSize": 16,
-			"padding": "9px 11px 9px 17px",
-			"borderRadius": 8,
-			"border": defaultBorderColor,
-			"backgroundColor": formColors.white,
-			"boxShadow": "none",
-			"fontWeight": state.isFocused ? 500 : 400,
-			"cursor": "pointer",
-			"color": formColors.black,
-			"borderBottomLeftRadius": state.menuIsOpen ? 0 : undefined,
-			"borderBottomRightRadius": state.menuIsOpen ? 0 : undefined,
-			"borderBottom": state.menuIsOpen ? "transparent" : defaultBorderColor,
-			"borderTop": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
-			"borderLeft": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
-			"borderRight": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
-			"&:hover": {
-				fontWeight: 500,
-				borderColor: formColors["gray-400"],
-				borderBottom: state.menuIsOpen ? "transparent" : grayBorderColor,
-				borderTop: state.menuIsOpen ? greenBorderColor : grayBorderColor,
-				borderLeft: state.menuIsOpen ? greenBorderColor : grayBorderColor,
-				borderRight: state.menuIsOpen ? greenBorderColor : grayBorderColor,
-			},
-			"&:after": {
-				content: '""',
-				position: "absolute",
-				left: 0,
-				right: 0,
-				bottom: 0,
-				width: "94%",
-				margin: "auto",
-				height: state.menuIsOpen ? "1px" : "0",
-				backgroundColor: state.menuIsOpen ? formColors["gray-300"] : "transparent",
-				transition: "all 0.25s",
-			},
-		}),
-		singleValue: (provided) => ({
-			...provided,
-			color: formColors.black,
-		}),
-		menu: (provided) => ({
-			...provided,
-			backgroundColor: formColors.white,
-			borderRadius: 8,
-			boxShadow: "none",
-			padding: "4px 10px 13px 10px",
-			marginTop: "0",
-			border: greenBorderColor,
-			borderRight: greenBorderColor,
-			borderLeft: greenBorderColor,
-			borderBottom: greenBorderColor,
-			borderTop: 0,
-			borderTopRightRadius: 0,
-			borderTopLeftRadius: 0,
-		}),
-		menuList: (provided) => ({
-			...provided,
-			"::-webkit-scrollbar": {
-				width: 6,
-				height: 6,
-			},
-			"::-webkit-scrollbar-thumb": {
-				background: formColors["gray-300"],
-				borderRadius: 10,
-			},
-			"::-webkit-scrollbar-thumb:hover": {
-				background: formColors["gray-400"],
-			},
-		}),
-		option: (provided, state) => ({
-			...provided,
-			"backgroundColor": state.isSelected ? formColors.black : formColors.white,
-			"color": state.isSelected ? formColors.white : formColors.black,
-			"borderRadius": 8,
-			"transition": ".25s",
-			"marginTop": 7,
-			"fontSize": 16,
-			"cursor": state.isDisabled ? "not-allowed" : "pointer",
-			"&:hover": {
-				backgroundColor: formColors["gray-800"],
-				color: formColors.white,
-			},
-		}),
-		indicatorSeparator: () => ({
-			display: "none",
-		}),
-		valueContainer: (provided) => ({
-			...provided,
-			padding: 0,
-		}),
-		dropdownIndicator: (provided, state) => ({
-			...provided,
-			"padding": 0,
-			"transform": state.selectProps.menuIsOpen ? "matrix(1,0,0,-1,0,0)" : "none",
-			"transition": ".25s",
-			"color": formColors.black,
-			"svg": {
-				width: "24px",
-				height: "24px",
-			},
-			"&:hover": {
-				color: formColors.white,
-			},
-		}),
-		input: (provided) => ({
-			...provided,
-			color: formColors.black,
-		}),
-		placeholder: (provided, state) => ({
-			...provided,
-			transition: ".25s",
-			color: state.isFocused ? "transparent" : formColors.black,
-		}),
-	};
-};
+const getSelectWhiteStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
+	getSelectStyles(isError, "white");
 
 export { getSelectBlackStyles, getSelectWhiteStyles };
