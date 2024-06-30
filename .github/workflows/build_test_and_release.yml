@@ -82,7 +82,7 @@ jobs:
           node-version: "21.2.0"
 
       - name: Install Temporal CLI
-        run: npm install -g @temporalio/cli
+        run: curl -sSf https://temporal.download/cli.sh | sh
 
       - name: Start a local Temporal server
         shell: bash
