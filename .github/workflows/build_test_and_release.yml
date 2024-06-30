@@ -80,6 +80,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "21.2.0"
+
+      - name: Install Temporal CLI
+        uses: temporalio/setup-temporal@v0
+      
+      - name: Start a local Temporal server
+        shell: bash
+        run: temporal server start-dev --headless &          
       
       - name: Download AutoKitteh executable
         run: |
