@@ -4,7 +4,7 @@ import { Page } from "@playwright/test";
 async function createTrigger(page: Page, name: string, cronExpression: string, fileName: string, functionName: string) {
 	await page.getByRole("link", { name: "Add new" }).click();
 
-	await page.getByRole("combobox", { name: "Select trigger type" }).click();
+	await page.getByRole("combobox", { name: "Select trigger type", exact: true }).click();
 	await page.getByRole("option", { name: "Scheduler" }).click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
@@ -15,7 +15,7 @@ async function createTrigger(page: Page, name: string, cronExpression: string, f
 	await cronInput.click();
 	await cronInput.fill(cronExpression);
 
-	await page.getByRole("combobox", { name: "Select file" }).click();
+	await page.getByRole("combobox", { name: "Select file", exact: true }).click();
 	await page.getByRole("option", { name: fileName }).click();
 
 	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
