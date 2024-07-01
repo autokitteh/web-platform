@@ -10,7 +10,9 @@ async function createTriggerScheduler(
 ) {
 	await page.getByRole("link", { name: "Add new" }).click();
 
-	await page.locator('input[aria-label="Select trigger type"]').click();
+	await page.getByRole("combobox", { name: "Select trigger type" }).hover();
+	await page.getByRole("combobox", { name: "Select trigger type" }).focus();
+	await page.getByRole("combobox", { name: "Select trigger type" }).click();
 	await page.getByRole("option", { name: "Scheduler" }).click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
@@ -21,7 +23,7 @@ async function createTriggerScheduler(
 	await cronInput.click();
 	await cronInput.fill(cronExpression);
 
-	await page.locator('input[aria-label="Select file"]').click();
+	await page.getByRole("combobox", { name: "Select file" }).click();
 	await page.getByRole("option", { name: fileName }).click();
 
 	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
