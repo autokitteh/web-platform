@@ -141,22 +141,24 @@ export const TriggerSchedulerForm = ({
 					<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
 				</div>
 				<div className="relative">
-					<Controller
-						control={control}
-						name="filePath"
-						render={({ field }) => (
-							<Select
-								{...field}
-								aria-label={t("placeholders.selectFile")}
-								isError={!!errors.filePath}
-								noOptionsLabel={t("noFilesAvailable")}
-								onChange={(selected) => field.onChange(selected)}
-								options={filesNameList}
-								placeholder={t("placeholders.selectFile")}
-								value={field.value}
-							/>
-						)}
-					/>
+					<div data-testid="select-file">
+						<Controller
+							control={control}
+							name="filePath"
+							render={({ field }) => (
+								<Select
+									{...field}
+									aria-label={t("placeholders.selectFile")}
+									isError={!!errors.filePath}
+									noOptionsLabel={t("noFilesAvailable")}
+									onChange={(selected) => field.onChange(selected)}
+									options={filesNameList}
+									placeholder={t("placeholders.selectFile")}
+									value={field.value}
+								/>
+							)}
+						/>
+					</div>
 					<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 				</div>
 				<div className="relative">
