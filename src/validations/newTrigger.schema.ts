@@ -12,7 +12,7 @@ let schedulerTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
 
 i18n.on("initialized", () => {
 	defaultTriggerSchema = z.object({
-		name: z.string().min(1, i18n.t("triggerNameIsRequired", { ns: "validations" })),
+		name: z.string().min(1, i18n.t("nameIsRequired", { ns: "validations" })),
 		connection: selectItemSchema.refine((value) => value.label, {
 			message: i18n.t("connectionIsRequired", { ns: "validations" }),
 		}),
@@ -25,7 +25,7 @@ i18n.on("initialized", () => {
 	});
 
 	schedulerTriggerSchema = z.object({
-		name: z.string().min(1, i18n.t("triggerNameIsRequired", { ns: "validations" })),
+		name: z.string().min(1, i18n.t("nameIsRequired", { ns: "validations" })),
 		cron: z
 			.string()
 			.regex(

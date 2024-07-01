@@ -226,6 +226,7 @@ export const DefaultEditTrigger = () => {
 								<Select
 									{...field}
 									aria-label={t("placeholders.selectConnection")}
+									dataTestid="select-trigger-connection"
 									isError={!!errors.connection}
 									noOptionsLabel={t("noConnectionsAvailable")}
 									onChange={(selected) => field.onChange(selected)}

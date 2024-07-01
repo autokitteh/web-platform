@@ -33,16 +33,15 @@ export const AddTrigger = () => {
 				title={t("addNewTrigger")}
 			/>
 			<div className="flex flex-col gap-6">
-				<div data-testid="select-trigger-type">
-					<Select
-						aria-label={t("placeholders.selectTriggerType")}
-						noOptionsLabel={t("placeholders.noTriggerTypesAvailable")}
-						onChange={(option) => setSelectedType(option as SelectOption)}
-						options={triggerTypes}
-						placeholder={t("placeholders.selectTriggerType")}
-						value={selectedType}
-					/>
-				</div>
+				<Select
+					aria-label={t("placeholders.selectTriggerType")}
+					dataTestid="select-trigger-type"
+					noOptionsLabel={t("placeholders.noTriggerTypesAvailable")}
+					onChange={(option) => setSelectedType(option as SelectOption)}
+					options={triggerTypes}
+					placeholder={t("placeholders.selectTriggerType")}
+					value={selectedType}
+				/>
 				{FormTriggerComponent}
 			</div>
 		</div>

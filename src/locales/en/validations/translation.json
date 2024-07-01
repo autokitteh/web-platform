@@ -3,7 +3,6 @@
 	"fileNameIsRequired": "File name is required",
 	"extensionIsRequired": "File extension is required",
 	"nameIsRequired": "Name is required",
-	"triggerNameIsRequired": "Trigger name is required",
 	"valueIsRequired": "Value is required",
 	"functionNameIsRequired": "Function name is required",
 	"cronExpressionsFormat": "The cron schedule expression must match the required format"

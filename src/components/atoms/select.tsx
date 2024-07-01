@@ -12,6 +12,7 @@ export const Select = ({
 	variant,
 	onChange,
 	noOptionsLabel,
+	dataTestid,
 	...rest
 }: SelectProps) => {
 	const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>();
@@ -42,16 +43,18 @@ export const Select = ({
 	}
 
 	return (
-		<ReactSelect
-			{...rest}
-			isOptionDisabled={(option) => !!option.disabled}
-			noOptionsMessage={() => noOptionsMessage}
-			onChange={handleChange}
-			onMenuClose={handleMenuClose}
-			options={options}
-			placeholder={placeholder}
-			styles={selectStyles}
-			value={selectedOption}
-		/>
+		<div data-testid={dataTestid}>
+			<ReactSelect
+				{...rest}
+				isOptionDisabled={(option) => !!option.disabled}
+				noOptionsMessage={() => noOptionsMessage}
+				onChange={handleChange}
+				onMenuClose={handleMenuClose}
+				options={options}
+				placeholder={placeholder}
+				styles={selectStyles}
+				value={selectedOption}
+			/>
+		</div>
 	);
 };
