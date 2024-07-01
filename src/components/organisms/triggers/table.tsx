@@ -89,7 +89,11 @@ export const TriggersTable = () => {
 		<div className="pt-14">
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
-				<Button className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white" href="add">
+				<Button
+					ariaLabel={t("buttons.addNew")}
+					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
+					href="add"
+				>
 					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
 					{t("buttons.addNew")}
 				</Button>
