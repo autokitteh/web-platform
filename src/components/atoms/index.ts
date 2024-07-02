@@ -14,4 +14,4 @@ export { Spinner } from "@components/atoms/spinner";
 export { Toggle } from "@components/atoms/toggle";
 export { LogoCatLarge } from "@components/atoms/logoCatLarge";
 export { Loader } from "@components/atoms/loader";
-export { Title } from "@components/atoms/title";
+export { Typography } from "@components/atoms/typography";

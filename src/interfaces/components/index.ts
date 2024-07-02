@@ -36,3 +36,4 @@ export type {
 } from "@interfaces/components/session.interface";
 export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
 export type { LoaderProps } from "@interfaces/components/loader.interface";
+export type { TypographyProps } from "@interfaces/components/typography.interface";
