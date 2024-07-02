@@ -80,13 +80,13 @@ export const EditorTabs = () => {
 	const [activeTab, setActiveTab] = useState("");
 
 	return (
-		<div className="flex flex-col flex-1 h-full">
+		<div className="flex flex-col flex-1 h-full pt-8">
 			{projectId ? (
 				<>
 					<div
 						className={
 							`absolute top-9 h-8 uppercase flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none ` +
-							`overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar mb-2`
+							`overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar`
 						}
 					>
 						{openedFiles?.map(({ name }) => (
@@ -108,7 +108,7 @@ export const EditorTabs = () => {
 							</Tab>
 						))}
 					</div>
-					<div className="mt-9 h-full">
+					<div className="h-full mt-6">
 						<Editor
 							aria-label={activeTab}
 							beforeMount={handleEditorWillMount}

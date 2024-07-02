@@ -86,7 +86,7 @@ export const TriggersTable = () => {
 			<Loader />
 		</div>
 	) : (
-		<div className="pt-14">
+		<div className="pt-8">
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
