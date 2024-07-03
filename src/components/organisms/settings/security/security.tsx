@@ -66,21 +66,6 @@ export const Security = () => {
 					/>
 				</p>
 				<div className="flex flex-row w-2/3">
-					{!token ? (
-						<Button className="flex border-2 border-black" onClick={createToken} variant="light">
-							<div className="flex items-center">
-								{!isLoading ? (
-									<IconSvg
-										alt="New Project"
-										className="w-4 before:w-2 before:h-2 after:w-2 after:h-2"
-										src={NewProject}
-									/>
-								) : null}
-								{isLoading ? <Loader size="sm" /> : null}
-							</div>
-							<div className="flex mr-1">{tSettings("security.creatTokenButton")}</div>
-						</Button>
-					) : null}
 					{token ? (
 						<div className="flex w-full">
 							<Input
@@ -98,7 +83,21 @@ export const Security = () => {
 								<CopyIcon className="w-4.1 h-6 fill-black" />
 							</Button>
 						</div>
-					) : null}
+					) : (
+						<Button className="flex border-2 border-black" onClick={createToken} variant="light">
+							<div className="flex items-center">
+								{!isLoading ? (
+									<IconSvg
+										alt="New Project"
+										className="w-4 before:w-2 before:h-2 after:w-2 after:h-2"
+										src={NewProject}
+									/>
+								) : null}
+								{isLoading ? <Loader size="sm" /> : null}
+							</div>
+							<div className="flex mr-1">{tSettings("security.creatTokenButton")}</div>
+						</Button>
+					)}
 				</div>
 			</div>
 			<DisplayConnectionTokenModal />
