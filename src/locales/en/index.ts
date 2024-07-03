@@ -30,10 +30,7 @@ export default {
 	components: {
 		select,
 	},
-<<<<<<< HEAD
 	settings,
 	sidebar,
-=======
 	notFound404,
->>>>>>> 269fdbea (refactor: refactor by pr comments)
 };
