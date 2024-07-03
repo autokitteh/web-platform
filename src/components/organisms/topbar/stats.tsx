@@ -34,7 +34,7 @@ export const StatsTopbar = () => {
 		if (!project) {
 			addToast({
 				id: Date.now().toString(),
-				message: t("projectNotFound", { ns: "projects" }),
+				message: t("projectNotFound"),
 				type: "error",
 				title: t("error", { ns: "errors" }),
 			});
