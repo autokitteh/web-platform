@@ -1,6 +1,5 @@
 import { useState } from "react";
 import React from "react";
-import { DisplayConnectionTokenModal } from "./displayTokenModal";
 import { NewProject } from "@assets/image";
 import { CopyIcon } from "@assets/image/icons";
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
@@ -100,7 +99,6 @@ export const Security = () => {
 					)}
 				</div>
 			</div>
-			<DisplayConnectionTokenModal />
 		</>
 	);
 };
