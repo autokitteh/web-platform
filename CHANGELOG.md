@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/autokitteh/web-platform/compare/v1.9.1...v1.10.0) (2024-07-03)
+
+
+### Features
+
+* token creation in security settings ([#122](https://github.com/autokitteh/web-platform/issues/122)) ([77e41d5](https://github.com/autokitteh/web-platform/commit/77e41d5bee5e5bbf3cff9dea5dd5400a5018c969))
+
 ## [1.9.1](https://github.com/autokitteh/web-platform/compare/v1.9.0...v1.9.1) (2024-06-29)
 
 
