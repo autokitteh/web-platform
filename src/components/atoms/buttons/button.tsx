@@ -21,6 +21,7 @@ export const Button = ({
 		"duration-300 text-gray-700 text-center hover:bg-gray-800 hover:text-current",
 		{
 			"bg-black text-white": variant === ButtonVariant.filled,
+			"bg-white text-gray-800 hover:bg-gray-300 hover:text-black": variant === ButtonVariant.light,
 			"border border-gray-400": variant === ButtonVariant.outline,
 		},
 		{

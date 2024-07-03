@@ -20,3 +20,4 @@ export {
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { defaultProjectTab, projectTabs } from "@constants/project.constants";
 export { sessionsEditorLineHeight } from "@constants/sessionsTable.constants";
+export { menuItems } from "@constants/menuItems.constants";

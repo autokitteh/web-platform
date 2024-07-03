@@ -1,4 +1,4 @@
-export { Icon, IconSvg } from "@components/atoms/icons";
+export { IconSvg } from "@components/atoms/icons";
 export { Badge } from "@components/atoms/badge";
 export { Link } from "@components/atoms/link";
 export { DropdownMenu } from "@components/atoms/dropdownMenu";
@@ -14,3 +14,4 @@ export { Spinner } from "@components/atoms/spinner";
 export { Toggle } from "@components/atoms/toggle";
 export { LogoCatLarge } from "@components/atoms/logoCatLarge";
 export { Loader } from "@components/atoms/loader";
+export { Typography } from "@components/atoms/typography";

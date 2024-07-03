@@ -7,12 +7,11 @@ export { default as DefaultAvatar } from "@assets/image/avatar.png";
 export { default as Map } from "@assets/image/Map.svg?react";
 export { Minimize, PlusCircle, ArrowDown, ArrowUp, InfoIcon, SmallArrowDown, ThreeDots } from "@assets/image/icons";
 export {
-	Connections,
-	Dashboard,
+	ConnectionsIcon as Connections,
+	DashboardIcon as Dashboard,
 	NewProject,
-	IconNotification,
+	NotificationIcon as IconNotification,
 	ProjectsIcon,
-	Settings,
-	StatsBlack,
+	StatsBlackIcon as StatsBlack,
 } from "@assets/image/sidebar";
 export { Build, Deploy, FullScreen, More, Stats } from "@assets/image/topbar";

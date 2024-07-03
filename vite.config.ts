@@ -45,7 +45,7 @@ export default defineConfig({
 		port: 8000,
 		strictPort: true,
 		host: true,
-		origin: "http://0.0.0.0:8000",
+		origin: process.env.VITE_DOMAIN_URL,
 	},
 	build: {
 		rollupOptions: {

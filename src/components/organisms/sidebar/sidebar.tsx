@@ -1,14 +1,21 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { IconLogo, IconLogoName } from "@assets/image";
+import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
+import { Button, Loader } from "@components/atoms";
 import { Submenu, Menu } from "@components/molecules/menu";
+import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
+import { useUserStore } from "@store";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
+	const { logoutFunction } = useUserStore();
 	const location = useLocation();
+	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
 
 	const handleMouseLeave = () => {
 		setIsOpen(false);
@@ -25,7 +32,7 @@ export const Sidebar = () => {
 	};
 
 	return (
-		<Suspense fallback={<div>loading...</div>}>
+		<Suspense fallback={<Loader size="lg" />}>
 			<div className="w-main-nav-sidebar relative">
 				<div
 					className="absolute flex items-start h-full top-0 left-0 z-50"
@@ -52,6 +59,54 @@ export const Sidebar = () => {
 							</Link>
 							<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 						</div>
+						{isAuthEnabled ? (
+							<div className="flex flex-col gap-5 justify-end">
+								<Button className="hover:bg-transparent" href="#">
+									<img alt="avatar" className="w-8 h-8 rounded-full" src="https://via.placeholder.com/30" />
+									<AnimatePresence>
+										{isOpen ? (
+											<motion.span
+												animate="visible"
+												className="whitespace-nowrap overflow-hidden"
+												exit="hidden"
+												initial="hidden"
+												variants={animateVariant}
+											>
+												James L.
+											</motion.span>
+										) : null}
+									</AnimatePresence>
+								</Button>
+								<div>
+									<Button className="hover:bg-transparent" href="/settings">
+										<SettingsIcon className="w-8 h-8" fill="black" />
+										<AnimatePresence>
+											{isOpen ? (
+												<motion.span
+													animate="visible"
+													className="whitespace-nowrap overflow-hidden"
+													exit="hidden"
+													initial="hidden"
+													variants={animateVariant}
+												>
+													{t("settings")}
+												</motion.span>
+											) : null}
+										</AnimatePresence>
+									</Button>
+									<Button className="hover:bg-transparent" onClick={() => logoutFunction()}>
+										<LogoutIcon className="w-8 h-8" fill="black" />
+										<AnimatePresence>
+											{isOpen ? (
+												<motion.span animate="visible" exit="hidden" initial="hidden" variants={animateVariant}>
+													{t("logout")}
+												</motion.span>
+											) : null}
+										</AnimatePresence>
+									</Button>
+								</div>
+							</div>
+						) : null}
 					</div>
 					<AnimatePresence>
 						{submenuInfo.submenu && submenuInfo.submenu.length > 0 ? <Submenu submenuInfo={submenuInfo} /> : null}

@@ -1,0 +1,18 @@
+{
+	"menu": {
+		"advanced": "Advanced",
+		"billing": "Billing",
+		"myProfile": "My Profile",
+		"notifications": "Notifications",
+		"security": "Security"
+	},
+	"security": {
+		"creatTokenButton": "Create Token",
+		"creatTokenTextAreaPlaceholder": "Click the button below to create a token",
+		"howToUseTokenText": "Create, copy and use  the token in your application - using CLI or our VSCode Extension.",
+		"title": "Security"
+	},
+	"topbar": {
+		"title": "Settings"
+	}
+}
