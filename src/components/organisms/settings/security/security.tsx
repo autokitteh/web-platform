@@ -10,7 +10,6 @@ import { Trans, useTranslation } from "react-i18next";
 export const Security = () => {
 	const { t: tSettings } = useTranslation("settings");
 	const { t } = useTranslation("modals", { keyPrefix: "getToken" });
-	const { t: tErrors } = useTranslation("errors");
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const [token, setToken] = useState<string>("");
@@ -29,14 +28,12 @@ export const Security = () => {
 			addToast({
 				id: Date.now().toString(),
 				message: t("copySuccess"),
-				title: "Success",
 				type: "success",
 			});
 		} catch (err) {
 			addToast({
 				id: Date.now().toString(),
 				message: t("copyFailure"),
-				title: tErrors("error"),
 				type: "error",
 			});
 		}
