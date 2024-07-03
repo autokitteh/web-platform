@@ -137,7 +137,7 @@ export const TriggersTable = () => {
 										{trigger.data?.schedule?.string?.v ? <ClockIcon className="w-4 fill-white" /> : null} {trigger.name}
 									</div>
 								</Td>
-								<Td className="font-semibold">{trigger.connectionName}</Td>
+								<Td>{trigger.connectionName}</Td>
 								<Td>
 									{trigger.path}:{trigger.entryFunction}
 								</Td>
