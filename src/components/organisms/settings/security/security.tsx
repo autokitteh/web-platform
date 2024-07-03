@@ -68,7 +68,7 @@ export const Security = () => {
 				<div className="flex flex-row w-2/3">
 					{!token ? (
 						<Button className="flex border-2 border-black" onClick={createToken} variant="light">
-							<div className="flex ml-1 items-center">
+							<div className="flex items-center">
 								{!isLoading ? (
 									<IconSvg
 										alt="New Project"
