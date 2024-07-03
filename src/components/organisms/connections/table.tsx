@@ -104,7 +104,7 @@ export const ConnectionsTable = () => {
 				</Button>
 			</div>
 			{connections.length ? (
-				<Table className="mt-5">
+				<Table className="mt-3">
 					<THead>
 						<Tr>
 							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("name")}>

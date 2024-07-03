@@ -82,7 +82,7 @@ export const Project = () => {
 							</Tab>
 						))}
 					</div>
-					<div className="h-full pt-4">
+					<div className="h-full pt-2">
 						<Outlet />
 					</div>
 				</div>
