@@ -86,7 +86,7 @@ export const TriggersTable = () => {
 			<Loader />
 		</div>
 	) : (
-		<div className="pt-4">
+		<>
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
@@ -166,6 +166,6 @@ export const TriggersTable = () => {
 			)}
 
 			<DeleteTriggerModal onDelete={handleDeleteTrigger} triggerId={triggerId} />
-		</div>
+		</>
 	);
 };

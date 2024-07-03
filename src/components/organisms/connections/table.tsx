@@ -92,7 +92,7 @@ export const ConnectionsTable = () => {
 			<Loader />
 		</div>
 	) : (
-		<div className="pt-4">
+		<>
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
@@ -177,6 +177,6 @@ export const ConnectionsTable = () => {
 					onDelete={handleDeleteConnection}
 				/>
 			) : null}
-		</div>
+		</>
 	);
 };
