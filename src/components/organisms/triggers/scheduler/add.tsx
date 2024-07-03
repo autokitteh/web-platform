@@ -148,6 +148,7 @@ export const TriggerSchedulerForm = ({
 							<Select
 								{...field}
 								aria-label={t("placeholders.selectFile")}
+								dataTestid="select-file"
 								isError={!!errors.filePath}
 								noOptionsLabel={t("noFilesAvailable")}
 								onChange={(selected) => field.onChange(selected)}

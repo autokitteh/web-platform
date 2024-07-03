@@ -7,6 +7,7 @@ export interface SelectProps {
 	variant?: "black" | "white";
 	isError?: boolean;
 	noOptionsLabel?: string;
+	dataTestid?: string;
 	onChange: (value: SingleValue<SelectOption>) => void;
 	onBlur?: () => void;
 }
