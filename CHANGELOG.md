@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/autokitteh/web-platform/compare/v1.11.0...v1.11.1) (2024-07-03)
+
+
+### Bug Fixes
+
+* display descope login when axios request to login fails ([#168](https://github.com/autokitteh/web-platform/issues/168)) ([6d66564](https://github.com/autokitteh/web-platform/commit/6d665645e9930ca6032bc6116fcd3c07b2c79a53))
+
 # [1.11.0](https://github.com/autokitteh/web-platform/compare/v1.10.0...v1.11.0) (2024-07-03)
 
 
