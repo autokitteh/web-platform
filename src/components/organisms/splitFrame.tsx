@@ -15,7 +15,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 		"rounded-2xl": !children,
 	});
 
-	const leftFrameClass = cn(`flex-auto bg-gray-800 border-r border-gray-600 rounded-r-none ${heightFrameClass}`);
+	const leftFrameClass = cn(`flex-auto bg-gray-700 border-r border-gray-600 rounded-r-none ${heightFrameClass}`);
 
 	return (
 		<div className="flex justify-end w-full">

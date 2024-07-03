@@ -203,9 +203,9 @@ export const SessionsTable = () => {
 					<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 				</div>
 				{sessions.length ? (
-					<Table className="flex-1 mt-4 overflow-hidden border-transparent border-none">
+					<Table className="flex-1 mt-4 overflow-hidden">
 						<THead>
-							<Tr className="rounded-3xl">
+							<Tr>
 								<Th className="font-normal cursor-pointer group">{t("table.columns.activationTime")}</Th>
 								<Th className="font-normal cursor-pointer group">{t("table.columns.status")}</Th>
 								<Th className="font-normal border-0 cursor-pointer group">{t("table.columns.sessionId")}</Th>

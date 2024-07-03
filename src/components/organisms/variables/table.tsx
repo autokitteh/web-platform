@@ -134,7 +134,7 @@ export const VariablesTable = () => {
 										</div>
 									)}
 								</Td>
-								<Td className="max-w-20">
+								<Td className="pr-0 max-w-20">
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}

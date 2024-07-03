@@ -15,6 +15,9 @@ export default {
 			flex: {
 				5: "5 5 0%",
 			},
+			spacing: {
+				9.5: "2.375rem",
+			},
 			maxWidth: {
 				650: "650px",
 				420: "420px",
@@ -35,6 +38,7 @@ export default {
 				"default-icon": "1.625rem",
 			},
 			borderRadius: {
+				"14": "14px",
 				"4xl": "40px",
 			},
 		},

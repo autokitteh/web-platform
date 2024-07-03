@@ -137,11 +137,11 @@ export const TriggersTable = () => {
 										{trigger.data?.schedule?.string?.v ? <ClockIcon className="w-4 fill-white" /> : null} {trigger.name}
 									</div>
 								</Td>
-								<Td className="font-semibold">{trigger.connectionName}</Td>
+								<Td>{trigger.connectionName}</Td>
 								<Td>
 									{trigger.path}:{trigger.entryFunction}
 								</Td>
-								<Td className="max-w-20">
+								<Td className="pr-0 max-w-20">
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}

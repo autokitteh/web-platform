@@ -30,7 +30,7 @@ export const SessionsTableRow = memo(
 				style={style}
 			>
 				<Td>{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
-				<Td className="text-green-accent">
+				<Td>
 					<SessionsTableState sessionState={session.state} />
 				</Td>
 				<Td className="border-r-0">{session.sessionId}</Td>
