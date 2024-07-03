@@ -49,7 +49,6 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 				id: Date.now().toString(),
 				message: t("fileAddFailedExtended", { projectId, fileName: name }),
 				type: "error",
-				title: t("error"),
 			});
 		}
 		onSuccess();

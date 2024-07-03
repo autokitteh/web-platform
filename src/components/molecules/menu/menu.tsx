@@ -38,7 +38,6 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: t("error", { ns: "errors" }),
 			});
 			return;
 		}

@@ -17,7 +17,6 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		resetUserStore();
 		logout();
 	}, [resetProjectStore, resetUserStore, logout]);
-	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("login");
 	const benefits = Object.values(t("benefits", { returnObjects: true }));
@@ -40,7 +39,6 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 					id: Date.now().toString(),
 					message: `Error occurred during login: ${(error as Error).message}`,
 					type: "error",
-					title: tErrors("error"),
 				});
 			}
 		},

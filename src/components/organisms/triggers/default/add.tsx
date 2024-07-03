@@ -54,7 +54,6 @@ export const DefaultTriggerForm = ({
 				id: Date.now().toString(),
 				message: tErrors("connectionsFetchError"),
 				type: "error",
-				title: tErrors("error"),
 			});
 			LoggerService.error(
 				namespaces.triggerService,
@@ -109,7 +108,6 @@ export const DefaultTriggerForm = ({
 				id: Date.now().toString(),
 				message: tErrors("triggerNotCreated"),
 				type: "error",
-				title: tErrors("error"),
 			});
 			LoggerService.error(
 				namespaces.triggerService,
@@ -146,7 +144,6 @@ export const DefaultTriggerForm = ({
 				id: Date.now().toString(),
 				message: tErrors("emptyKeyExist"),
 				type: "error",
-				title: tErrors("error"),
 			});
 			return;
 		}

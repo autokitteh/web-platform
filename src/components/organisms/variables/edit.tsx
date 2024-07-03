@@ -11,7 +11,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const EditVariable = () => {
-	const { t } = useTranslation("errors");
 	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -30,7 +29,6 @@ export const EditVariable = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: t("error"),
 			});
 		}
 		if (!currentVar) return;
@@ -77,7 +75,6 @@ export const EditVariable = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: t("error"),
 			});
 
 		navigate(-1);

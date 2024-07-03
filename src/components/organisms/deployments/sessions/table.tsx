@@ -51,7 +51,6 @@ export const SessionsTable = () => {
 				id: Date.now().toString(),
 				message: tErrors("deploymentFetchError", { ns: "services" }),
 				type: "error",
-				title: tErrors("error"),
 			});
 			return;
 		}
@@ -84,7 +83,6 @@ export const SessionsTable = () => {
 					id: Date.now().toString(),
 					message: tErrors("sessionsFetchError"),
 					type: "error",
-					title: tErrors("error"),
 				});
 				LoggerService.error(
 					namespaces.sessionsService,
@@ -131,7 +129,6 @@ export const SessionsTable = () => {
 				id: Date.now().toString(),
 				message: tErrors("failedRemoveSession"),
 				type: "error",
-				title: tErrors("error"),
 			});
 			LoggerService.error(
 				namespaces.sessionsService,
