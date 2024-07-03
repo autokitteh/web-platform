@@ -16,7 +16,7 @@ export default {
 				5: "5 5 0%",
 			},
 			spacing: {
-				38: "38px",
+				9.5: "2.375rem",
 			},
 			maxWidth: {
 				650: "650px",
@@ -38,7 +38,7 @@ export default {
 				"default-icon": "1.625rem",
 			},
 			borderRadius: {
-				"14": "14px",
+				"1.5xl": "14px",
 				"4xl": "40px",
 			},
 		},

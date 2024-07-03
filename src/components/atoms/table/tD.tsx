@@ -3,7 +3,7 @@ import { TableProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Td = ({ className, children, onClick }: TableProps) => {
-	const tdStyle = cn("w-full overflow-hidden flex items-center px-4 h-38", className);
+	const tdStyle = cn("w-full overflow-hidden flex items-center px-4 h-9.5", className);
 
 	return (
 		<td className={tdStyle} onClick={onClick}>
