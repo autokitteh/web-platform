@@ -7,7 +7,7 @@ import { useProjectStore, useToastStore } from "@store";
 import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { redirect, useParams } from "react-router-dom";
 
 export const Topbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
@@ -124,16 +124,16 @@ export const Topbar = () => {
 				type: "error",
 				title: t("error", { ns: "errors" }),
 			});
-			return <div />;
+			return redirect("/404");
 		}
 		if (!project) {
 			addToast({
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: "Project not found",
+				title: t("projectNotFound"),
 			});
-			return <div />;
+			return redirect("/404");
 		}
 		setProject(project);
 	};

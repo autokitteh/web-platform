@@ -4,6 +4,7 @@
 		"success": "Success",
 		"buildProjectSuccess": "Project build completed successfully.",
 		"deployedProjectSuccess": "Project deploy completed successfully.",
+		"projectNotFound": "Project not found",
 		"buttons": {
 			"build": "Build",
 			"deploy": "Deploy",
