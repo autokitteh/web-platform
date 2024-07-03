@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { IconLogoAuth } from "@assets/image";
 import { Badge, Frame, LogoCatLarge } from "@components/atoms";
 import { baseUrl } from "@constants";
@@ -22,7 +22,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	const { t } = useTranslation("login");
 	const benefits = Object.values(t("benefits", { returnObjects: true }));
 
-	const [descopeRenderKey, setDescopeRenderKey] = React.useState(0);
+	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
 	useEffect(() => {
 		setLogoutFunction(handleLogout);
