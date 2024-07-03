@@ -64,7 +64,7 @@ export const Security = () => {
 						i18nKey={t("line")}
 					/>
 				</p>
-				<div className="flex flex-row w-2/3">
+				<div className="w-2/3">
 					{token ? (
 						<div className="flex w-full">
 							<Input
