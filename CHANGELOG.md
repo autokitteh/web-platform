@@ -1,3 +1,10 @@
+## [1.11.3](https://github.com/autokitteh/web-platform/compare/v1.11.2...v1.11.3) (2024-07-03)
+
+
+### Bug Fixes
+
+* get back missing padding in sessions ([#174](https://github.com/autokitteh/web-platform/issues/174)) ([61cebef](https://github.com/autokitteh/web-platform/commit/61cebefd9dd9c5dad6b896fb47ce78b7ec326301))
+
 ## [1.11.2](https://github.com/autokitteh/web-platform/compare/v1.11.1...v1.11.2) (2024-07-03)
 
 
