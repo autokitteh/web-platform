@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/autokitteh/web-platform/compare/v1.10.0...v1.11.0) (2024-07-03)
+
+
+### Features
+
+* handle bad urls - 404 page ([#150](https://github.com/autokitteh/web-platform/issues/150)) ([c7c2cce](https://github.com/autokitteh/web-platform/commit/c7c2cce066c05a308401a47c715ef496a1e1ccb9))
+
 # [1.10.0](https://github.com/autokitteh/web-platform/compare/v1.9.1...v1.10.0) (2024-07-03)
 
 

@@ -2,7 +2,7 @@
 	"name": "autokitteh",
 	"private": true,
 	"type": "module",
-	"version": "1.10.0",
+	"version": "1.11.0",
 	"scripts": {
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "npx playwright test --ui",
