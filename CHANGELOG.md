@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/autokitteh/web-platform/compare/v1.11.1...v1.11.2) (2024-07-03)
+
+
+### Bug Fixes
+
+* reduce spacing in tabs ([#172](https://github.com/autokitteh/web-platform/issues/172)) ([dcb49db](https://github.com/autokitteh/web-platform/commit/dcb49db1fcf059b6d4e0306e477106757638ecd7))
+
 ## [1.11.1](https://github.com/autokitteh/web-platform/compare/v1.11.0...v1.11.1) (2024-07-03)
 
 
