@@ -167,16 +167,15 @@ export const CodeTable = () => {
 						<THead>
 							<Tr>
 								<Th className="font-normal border-r-0 cursor-pointer group">{t("table.columns.name")}</Th>
-								<Th className="border-r-0 max-12" />
 							</Tr>
 						</THead>
 						<TBody>
 							{sortedResources.map(([name], idx) => (
 								<Tr className={activeBodyRow(name)} key={idx}>
-									<Td className="font-semibold border-r-0 cursor-pointer" onClick={() => updateEditorOpenedFiles(name)}>
+									<Td className="font-medium cursor-pointer" onClick={() => updateEditorOpenedFiles(name)}>
 										{name}
 									</Td>
-									<Td className="border-r-0 max-w-12">
+									<Td className="pr-0 max-w-12">
 										<IconButton onClick={() => openModal(ModalName.deleteFile, name)}>
 											<TrashIcon className="w-3 h-3 fill-white" />
 										</IconButton>
