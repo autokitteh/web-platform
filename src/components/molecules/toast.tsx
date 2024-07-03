@@ -34,37 +34,36 @@ export const Toast = () => {
 		hidden: { filter: "blur(4px)", x: "100%" },
 	};
 
-	return (
-		<>
-			{toasts.map(({ message, id, type }, index) => {
-				const title = t(`titles.${type}`);
-				return (
-					<AnimatePresence key={index}>
-						<motion.div
-							animate="visible"
-							aria-label={title}
-							className={baseStyle(type)}
-							exit="hidden"
-							initial="hidden"
-							transition={{ duration: 0.4 }}
-							variants={variants}
-						>
-							<div className="flex gap-2.5" role="alert" title={title}>
-								<div>
-									<p className={titleStyle(type)}>{title}</p>
-									{message}
-								</div>
-								<IconButton
-									className="bg-gray-600 p-0 w-default-icon h-default-icon group ml-auto"
-									onClick={() => removeToast(id)}
-								>
-									<Close className="transition fill-white w-3 h-3" />
-								</IconButton>
+	const renderToasts = () =>
+		toasts.map(({ message, id, type }) => {
+			const title = t(`titles.${type}`);
+			return (
+				<AnimatePresence key={id}>
+					<motion.div
+						animate="visible"
+						aria-label={title}
+						className={baseStyle(type)}
+						exit="hidden"
+						initial="hidden"
+						transition={{ duration: 0.4 }}
+						variants={variants}
+					>
+						<div className="flex gap-2.5" role="alert" title={title}>
+							<div>
+								<p className={titleStyle(type)}>{title}</p>
+								{message}
 							</div>
-						</motion.div>
-					</AnimatePresence>
-				);
-			})}
-		</>
-	);
+							<IconButton
+								className="p-0 ml-auto bg-gray-600 w-default-icon h-default-icon group"
+								onClick={() => removeToast(id)}
+							>
+								<Close className="w-3 h-3 transition fill-white" />
+							</IconButton>
+						</div>
+					</motion.div>
+				</AnimatePresence>
+			);
+		});
+
+	return toasts.length ? renderToasts() : null;
 };
