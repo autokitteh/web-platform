@@ -85,7 +85,7 @@ export const EditorTabs = () => {
 				<>
 					<div
 						className={
-							`absolute top-9 h-8 uppercase flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none ` +
+							`absolute top-5 h-8 uppercase flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none ` +
 							`overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar`
 						}
 					>
@@ -108,7 +108,7 @@ export const EditorTabs = () => {
 							</Tab>
 						))}
 					</div>
-					<div className="h-full mt-6">
+					<div className="h-full mt-1">
 						<Editor
 							aria-label={activeTab}
 							beforeMount={handleEditorWillMount}
