@@ -137,7 +137,7 @@ export const CodeTable = () => {
 		</div>
 	) : (
 		<div className="flex flex-col h-full">
-			<div className="flex justify-end gap-6 mb-5 mt-14">
+			<div className="flex justify-end gap-6 mb-3">
 				{!isEmpty(sortedResources) ? (
 					<label className="flex gap-1 p-0 font-semibold text-gray-300 cursor-pointer group hover:text-white">
 						<input accept={allowedExtensions} className="hidden" multiple onChange={handleFileSelect} type="file" />

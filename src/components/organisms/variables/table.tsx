@@ -83,7 +83,7 @@ export const VariablesTable = () => {
 			<Loader />
 		</div>
 	) : (
-		<div className="pt-14">
+		<>
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 				<Button
@@ -96,7 +96,7 @@ export const VariablesTable = () => {
 				</Button>
 			</div>
 			{sortedVariables.length ? (
-				<Table className="mt-5">
+				<Table className="mt-3">
 					<THead>
 						<Tr>
 							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("name")}>
@@ -159,6 +159,6 @@ export const VariablesTable = () => {
 			)}
 
 			<DeleteVariableModal onDelete={handleDeleteVariable} variable={deleteVariable!} />
-		</div>
+		</>
 	);
 };
