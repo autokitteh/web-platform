@@ -131,7 +131,7 @@ export const Topbar = () => {
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
-				title: "Project not found",
+				title: t("projectNotFound"),
 			});
 			return redirect("/404");
 		}
@@ -150,7 +150,7 @@ export const Topbar = () => {
 					role="textbox"
 					suppressContentEditableWarning={true}
 					tabIndex={0}
-					title={t("topbar.rename", { ns: "projects" })}
+					title={t("topbar.rename")}
 				>
 					{project?.name}
 				</span>
@@ -161,14 +161,14 @@ export const Topbar = () => {
 			</div>
 			<div className="flex items-stretch gap-3">
 				<Button
-					ariaLabel={t("topbar.buttons.ariaBuildProject", { ns: "projects" })}
+					ariaLabel={t("topbar.buttons.ariaBuildProject")}
 					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
 					disabled={loadingButton[TopbarButton.build]}
 					onClick={build}
 					variant="outline"
 				>
 					{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg className="max-w-5" src={Build} />}
-					{t("topbar.buttons.build", { ns: "projects" })}
+					{t("topbar.buttons.build")}
 				</Button>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
@@ -178,7 +178,7 @@ export const Topbar = () => {
 					variant="outline"
 				>
 					{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg className="max-w-5" src={Deploy} />}
-					{t("topbar.buttons.deploy", { ns: "projects" })}
+					{t("topbar.buttons.deploy")}
 				</Button>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaStats")}
@@ -187,7 +187,7 @@ export const Topbar = () => {
 					variant="outline"
 				>
 					<IconSvg className="max-w-5" src={Stats} />
-					{t("topbar.buttons.stats", { ns: "projects" })}
+					{t("topbar.buttons.stats")}
 				</Button>
 			</div>
 		</div>

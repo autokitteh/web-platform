@@ -15,4 +15,4 @@ export {
 	StatsBlackIcon as StatsBlack,
 } from "@assets/image/sidebar";
 export { Build, Deploy, FullScreen, More, Stats } from "@assets/image/topbar";
-export { default as Error404 } from "@assets/image/404.svg";
+export { default as Error404 } from "@assets/image/404.svg?react";
