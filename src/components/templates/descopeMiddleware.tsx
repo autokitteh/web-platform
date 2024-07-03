@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { IconLogoAuth } from "@assets/image";
 import { Badge, Frame, LogoCatLarge } from "@components/atoms";
 import { baseUrl } from "@constants";
@@ -22,6 +22,8 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	const { t } = useTranslation("login");
 	const benefits = Object.values(t("benefits", { returnObjects: true }));
 
+	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
+
 	useEffect(() => {
 		setLogoutFunction(handleLogout);
 	}, [handleLogout, setLogoutFunction]);
@@ -33,6 +35,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 				await getLoggedInUser();
 				await getProjectMenutItems();
 			} catch (error) {
+				setDescopeRenderKey((prevKey) => prevKey + 1);
 				addToast({
 					id: Date.now().toString(),
 					message: `Error occurred during login: ${(error as Error).message}`,
@@ -52,7 +55,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 				<div className="flex items-center justify-between flex-1">
 					<div className="px-8 py-10 rounded-2xl flex w-1/2 h-full justify-center items-center">
 						<div className="max-w-96">
-							<Descope flowId="sign-up-or-in" onSuccess={handleSuccess} />
+							<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
 						</div>
 					</div>
 					<Frame className="flex items-center w-1/2 h-full bg-gray-black-100 justify-center">
