@@ -129,9 +129,7 @@ export const CodeTable = () => {
 	};
 
 	return isLoading ? (
-		<div className="flex flex-col justify-center h-full">
-			<Loader />
-		</div>
+		<Loader isCenter size="xl" />
 	) : (
 		<div className="flex flex-col h-full">
 			<div className="flex justify-end gap-6 mb-3">
