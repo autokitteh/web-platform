@@ -1,3 +1,10 @@
+## [1.11.4](https://github.com/autokitteh/web-platform/compare/v1.11.3...v1.11.4) (2024-07-04)
+
+
+### Bug Fixes
+
+* in case we have more than 1 toasts display each one above the other ([#165](https://github.com/autokitteh/web-platform/issues/165)) ([bb0fae8](https://github.com/autokitteh/web-platform/commit/bb0fae8cca9a07e557790c8f28b0f3984d73c26f))
+
 ## [1.11.3](https://github.com/autokitteh/web-platform/compare/v1.11.2...v1.11.3) (2024-07-03)
 
 
