@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getSelectBlackStyles, getSelectWhiteStyles } from "@constants";
+import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
 import { SelectProps, SelectOption } from "@interfaces/components";
 import { useTranslation } from "react-i18next";
 import ReactSelect, { SingleValue } from "react-select";
@@ -34,11 +34,11 @@ export const Select = ({
 
 	let selectStyles;
 	switch (variant) {
-		case "white":
-			selectStyles = getSelectWhiteStyles(isError);
+		case "light":
+			selectStyles = getSelectLightStyles(isError);
 			break;
 		default:
-			selectStyles = getSelectBlackStyles(isError);
+			selectStyles = getSelectDarkStyles(isError);
 			break;
 	}
 

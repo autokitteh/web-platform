@@ -85,7 +85,7 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 										options={languageSelectOptions}
 										placeholder={t("addCodeAssets.selectExtension", { ns: "modals" })}
 										value={field.value}
-										variant="white"
+										variant="light"
 									/>
 								)}
 							/>

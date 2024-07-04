@@ -1,6 +1,6 @@
 export { namespaces } from "@constants/namespaces.logger.constants";
 export { baseUrl } from "@constants/api.constants";
-export { getSelectBlackStyles, getSelectWhiteStyles } from "@constants/forms";
+export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export {
 	fetchProjectsMenuItemsInterval,
 	fetchDeploymentsInterval,

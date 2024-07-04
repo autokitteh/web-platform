@@ -1,10 +1,11 @@
+import { ColorSchemes } from "@type";
 import { SingleValue } from "react-select";
 
 export interface SelectProps {
 	placeholder?: string;
 	value?: SelectOption;
 	options: SelectOption[];
-	variant?: "black" | "white";
+	variant?: ColorSchemes;
 	isError?: boolean;
 	noOptionsLabel?: string;
 	dataTestid?: string;
