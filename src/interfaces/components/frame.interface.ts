@@ -1,6 +1,6 @@
 export interface FrameProps {
-	className?: string;
 	children: React.ReactNode;
+	className?: string;
 }
 
 export interface SplitFrameProps {

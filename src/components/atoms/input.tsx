@@ -1,21 +1,21 @@
-import React, { forwardRef, useState, useCallback, useEffect, useId } from "react";
 import { InputVariant } from "@enums/components";
 import { InputProps } from "@interfaces/components";
 import { cn } from "@utilities";
+import React, { forwardRef, useCallback, useEffect, useId, useState } from "react";
 
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const {
+		classInput,
+		className,
+		disabled,
 		icon,
 		isError,
-		className,
-		classInput,
-		disabled,
-		type = "text",
-		placeholder,
 		isRequired,
-		variant,
-		value,
 		onChange,
+		placeholder,
+		type = "text",
+		value,
+		variant,
 		...rest
 	} = props;
 
@@ -31,7 +31,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 		(e: React.FocusEvent<HTMLInputElement>) => {
 			setIsFocused(false);
 			const newValue = !!e.target.value;
-			if (newValue !== hasValue) setHasValue(newValue);
+			if (newValue !== hasValue) {
+				setHasValue(newValue);
+			}
 		},
 		[hasValue]
 	);
@@ -39,7 +41,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const handleChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			const newValue = !!e.target.value;
-			if (newValue !== hasValue) setHasValue(newValue);
+			if (newValue !== hasValue) {
+				setHasValue(newValue);
+			}
 			onChange?.(e);
 		},
 		[hasValue, onChange]
@@ -91,10 +95,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 				type={type}
 				value={value}
 			/>
+
 			<label className={labelClass} htmlFor={id}>
 				<span className="relative z-10">{placeholderText}</span>
+
 				<span className={borderOverlayLabelClass} />
 			</label>
+
 			{icon}
 		</div>
 	);

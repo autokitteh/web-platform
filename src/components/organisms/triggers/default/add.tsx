@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-import { Select, ErrorMessage, Input, Button, IconButton, Loader } from "@components/atoms";
+import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
 import { namespaces } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
@@ -10,7 +9,8 @@ import { useProjectStore, useToastStore } from "@store";
 import { TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
 import { debounce, has } from "lodash";
-import { useForm, Controller } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -36,17 +36,19 @@ export const DefaultTriggerForm = ({
 	const fetchData = async () => {
 		try {
 			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-			if (connectionsError) throw connectionsError;
+			if (connectionsError) {
+				throw connectionsError;
+			}
 
 			const formattedConnections = connections?.map((item) => ({
-				value: item.connectionId,
 				label: item.name,
+				value: item.connectionId,
 			}));
 			setConnections(formattedConnections || []);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
-				value: name,
 				label: name,
+				value: name,
 			}));
 			setFilesNameList(formattedResources);
 		} catch (error) {
@@ -57,7 +59,7 @@ export const DefaultTriggerForm = ({
 			});
 			LoggerService.error(
 				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+				tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
 			);
 		} finally {
 			setIsLoading(false);
@@ -70,36 +72,36 @@ export const DefaultTriggerForm = ({
 	}, []);
 
 	const {
-		register,
-		handleSubmit,
-		formState: { errors, dirtyFields },
 		control,
+		formState: { dirtyFields, errors },
 		getValues,
+		handleSubmit,
+		register,
 	} = useForm({
-		resolver: zodResolver(defaultTriggerSchema),
 		defaultValues: {
-			name: "",
-			connection: { value: "", label: "" },
-			filePath: { value: "", label: "" },
+			connection: { label: "", value: "" },
 			entryFunction: "",
 			eventType: "",
+			filePath: { label: "", value: "" },
 			filter: "",
+			name: "",
 		},
+		resolver: zodResolver(defaultTriggerSchema),
 	});
 
 	const onSubmit = async () => {
-		const { name, connection, filePath, entryFunction, eventType, filter } = getValues();
+		const { connection, entryFunction, eventType, filePath, filter, name } = getValues();
 
 		setIsSaving(true);
 		const { error } = await TriggersService.create(projectId!, {
-			triggerId: undefined,
-			name,
 			connectionId: connection.value,
-			eventType,
-			path: filePath.value,
-			entryFunction,
-			filter,
 			data: triggerData,
+			entryFunction,
+			eventType,
+			filter,
+			name,
+			path: filePath.value,
+			triggerId: undefined,
 		});
 		setIsSaving(false);
 
@@ -111,8 +113,9 @@ export const DefaultTriggerForm = ({
 			});
 			LoggerService.error(
 				namespaces.triggerService,
-				tErrors("triggerNotCreatedExtended", { projectId, error: (error as Error).message })
+				tErrors("triggerNotCreatedExtended", { error: (error as Error).message, projectId })
 			);
+
 			return;
 		}
 		navigate(-1);
@@ -121,12 +124,15 @@ export const DefaultTriggerForm = ({
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
 	const updateTriggerDataKey = debounce((newKey, oldKey) => {
-		if (newKey === oldKey) return;
+		if (newKey === oldKey) {
+			return;
+		}
 
 		setTriggerData((prevData) => {
 			const updatedTriggerData = { ...prevData };
 			updatedTriggerData[newKey] = updatedTriggerData[oldKey];
 			delete updatedTriggerData[oldKey];
+
 			return updatedTriggerData;
 		});
 	}, 500);
@@ -145,6 +151,7 @@ export const DefaultTriggerForm = ({
 				message: tErrors("emptyKeyExist"),
 				type: "error",
 			});
+
 			return;
 		}
 
@@ -158,13 +165,15 @@ export const DefaultTriggerForm = ({
 		setTriggerData((prevData) => {
 			const updatedData = { ...prevData };
 			delete updatedData[key];
+
 			return updatedData;
 		});
 	};
+
 	return isLoading ? (
 		<Loader isCenter size="2xl" />
 	) : (
-		<form className="flex flex-col w-full gap-6" id={formId} onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex flex-col gap-6 w-full" id={formId} onSubmit={handleSubmit(onSubmit)}>
 			<div className="relative">
 				<Input
 					{...register("name")}
@@ -174,8 +183,10 @@ export const DefaultTriggerForm = ({
 					isRequired
 					placeholder={t("placeholders.name")}
 				/>
+
 				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 			</div>
+
 			<div className="relative">
 				<Controller
 					control={control}
@@ -194,8 +205,10 @@ export const DefaultTriggerForm = ({
 						/>
 					)}
 				/>
+
 				<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
 			</div>
+
 			<div className="relative">
 				<Controller
 					control={control}
@@ -213,8 +226,10 @@ export const DefaultTriggerForm = ({
 						/>
 					)}
 				/>
+
 				<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 			</div>
+
 			<div className="relative">
 				<Input
 					{...register("entryFunction")}
@@ -224,8 +239,10 @@ export const DefaultTriggerForm = ({
 					isRequired
 					placeholder={t("placeholders.functionName")}
 				/>
+
 				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 			</div>
+
 			<div className="relative">
 				<Input
 					{...register("eventType")}
@@ -234,8 +251,10 @@ export const DefaultTriggerForm = ({
 					isError={!!errors.eventType}
 					placeholder={t("placeholders.eventType")}
 				/>
+
 				<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
 			</div>
+
 			<div className="relative">
 				<Input
 					{...register("filter")}
@@ -244,20 +263,24 @@ export const DefaultTriggerForm = ({
 					isError={!!errors.filter}
 					placeholder={t("placeholders.filter")}
 				/>
+
 				<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
 			</div>
+
 			<div>
-				<div className="flex items-center gap-1 text-base text-gray-300">
+				<div className="flex gap-1 items-center text-base text-gray-300">
 					{t("titleData")}
+
 					<div className="cursor-pointer" title={t("titleInfo")}>
 						<InfoIcon className="fill-white" />
 					</div>
 				</div>
+
 				<div className="flex flex-col gap-2 mb-2">
 					{triggerData
 						? Object.entries(triggerData).map(([key, value]) => (
-								<div className="flex gap-1 align-center" key={key}>
-									<div className="flex w-full gap-6">
+								<div className="align-center flex gap-1" key={key}>
+									<div className="flex gap-6 w-full">
 										<Input
 											aria-label={t("placeholders.key")}
 											className="w-full"
@@ -265,6 +288,7 @@ export const DefaultTriggerForm = ({
 											onChange={(e) => updateTriggerDataKey(e.target.value, key)}
 											placeholder={t("placeholders.key")}
 										/>
+
 										<Input
 											aria-label={t("placeholders.value")}
 											className="w-full"
@@ -273,23 +297,26 @@ export const DefaultTriggerForm = ({
 											placeholder={t("placeholders.value")}
 										/>
 									</div>
+
 									<IconButton
 										ariaLabel={t("ariaDeleteData", { name: key })}
-										className="self-center hover:bg-black bg-black-900"
+										className="bg-black-900 hover:bg-black self-center"
 										onClick={() => handleDeleteData(key)}
 									>
-										<TrashIcon className="w-4 h-4 fill-white" />
+										<TrashIcon className="fill-white h-4 w-4" />
 									</IconButton>
 								</div>
 							))
 						: null}
 				</div>
+
 				<Button
-					className="w-auto gap-1 p-0 ml-auto font-semibold text-gray-300 group hover:text-white"
+					className="font-semibold gap-1 group hover:text-white ml-auto p-0 text-gray-300 w-auto"
 					onClick={handleAddNewData}
 					type="button"
 				>
-					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
+					<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+
 					{t("buttonAddNewData")}
 				</Button>
 			</div>

@@ -21,8 +21,6 @@ export { default as ExternalLinkIcon } from "@assets/image/icons/ExternalLink.sv
 export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?react";
 export { default as ClockIcon } from "@assets/image/icons/Clock.svg?react";
 export { default as RotateIcon } from "@assets/image/icons/Rotate.svg?react";
-export { default as GoogleIcon } from "@assets/image/icons/Google.png";
-export { default as GitHubIcon } from "@assets/image/icons/Github.png";
 export { default as UserIcon } from "@assets/image/icons/User.svg?react";
 export { default as BellIcon } from "@assets/image/icons/Bell.svg?react";
 export { default as SlidersIcon } from "@assets/image/icons/Sliders.svg?react";

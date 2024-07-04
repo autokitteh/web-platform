@@ -1,39 +1,42 @@
-import React from "react";
 import { ArrowLeft } from "@assets/image/icons";
-import { IconButton, Button } from "@components/atoms";
+import { Button, IconButton } from "@components/atoms";
 import { TabFormHeaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-export const TabFormHeader = ({ title, isLoading, form, className }: TabFormHeaderProps) => {
+export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
 	const baseStyle = cn("flex justify-between", className);
 
 	return (
 		<div className={baseStyle}>
-			<div className="flex items-center gap-1">
+			<div className="flex gap-1 items-center">
 				<IconButton
 					ariaLabel={t("ariaLabelReturnBack")}
-					className="w-8 h-8 p-0 hover:bg-black"
+					className="h-8 hover:bg-black p-0 w-8"
 					onClick={() => navigate(-1)}
 				>
 					<ArrowLeft />
 				</IconButton>
+
 				<p className="text-base text-gray-300">{title}</p>
 			</div>
-			<div className="flex items-center gap-6">
+
+			<div className="flex gap-6 items-center">
 				<Button
 					ariaLabel={t("cancel")}
-					className="p-0 font-semibold text-gray-300 hover:text-white"
+					className="font-semibold hover:text-white p-0 text-gray-300"
 					onClick={() => navigate(-1)}
 				>
 					{t("cancel")}
 				</Button>
+
 				<Button
 					ariaLabel={t("save")}
-					className="px-4 py-2 font-semibold text-white border-white hover:bg-black"
+					className="border-white font-semibold hover:bg-black px-4 py-2 text-white"
 					disabled={isLoading}
 					form={form}
 					type="submit"

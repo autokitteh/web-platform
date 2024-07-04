@@ -2,24 +2,24 @@ import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions
 import { SessionStateType } from "@enums";
 
 export type Session = {
-	sessionId: string;
-	deploymentId: string;
-	state: number;
 	createdAt: Date;
-	inputs: object;
+	deploymentId: string;
 	entrypoint: EntrypointTrigger;
+	inputs: object;
+	sessionId: string;
+	state: number;
 };
 
 export type EntrypointTrigger = {
-	symbol: string;
 	location: SessionEntrypoint;
+	symbol: string;
 };
 
 export type SessionEntrypoint = {
 	col: number;
-	row: number;
 	name: string;
 	path: string;
+	row: number;
 };
 
 export type Callstack = {

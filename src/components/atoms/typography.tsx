@@ -1,19 +1,19 @@
-import React, { ElementType } from "react";
 import { TypographyProps } from "@interfaces/components";
 import { cn } from "@utilities";
+import React, { ElementType } from "react";
 
 export const Typography = <E extends ElementType = "div">({
-	element,
 	children,
 	className,
+	element,
 	size = "medium",
 	...rest
 }: TypographyProps<E>) => {
 	const Element = element || "div";
 	const sizeClasses = {
-		small: "text-sm",
-		medium: "text-base",
 		large: "text-lg",
+		medium: "text-base",
+		small: "text-sm",
 	};
 
 	const typographyClass = cn(sizeClasses[size], className);

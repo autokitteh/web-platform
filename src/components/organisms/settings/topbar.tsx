@@ -1,5 +1,5 @@
-import React from "react";
 import { cn } from "@utilities";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
 export const SettingsTopbar = () => {
@@ -10,8 +10,8 @@ export const SettingsTopbar = () => {
 	);
 
 	return (
-		<div className="flex justify-between items-center bg-gray-800 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
-			<div className="flex items-end gap-3 relative font-fira-code text-gray-300">
+		<div className="bg-gray-800 flex gap-5 items-center justify-between pl-7 pr-3.5 py-3 rounded-b-xl">
+			<div className="flex font-fira-code gap-3 items-end relative text-gray-300">
 				<span className={styleInput}>{t("title")}</span>
 			</div>
 		</div>

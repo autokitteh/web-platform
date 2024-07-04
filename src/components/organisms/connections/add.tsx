@@ -1,10 +1,10 @@
-import React, { useState } from "react";
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { GithubIntegrationForm, GoogleIntegrationForm } from "@components/organisms/connections/integrations";
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
 import { IntegrationType } from "@type/components";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export const AddConnection = () => {
@@ -23,7 +23,8 @@ export const AddConnection = () => {
 	return (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" title={t("addNewConnection")} />
-			<div className="flex flex-col w-5/6 gap-6">
+
+			<div className="flex flex-col gap-6 w-5/6">
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
 					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
@@ -32,6 +33,7 @@ export const AddConnection = () => {
 					placeholder={t("placeholders.selectIntegration")}
 					value={selectedIntegration}
 				/>
+
 				{selectedIntegrationComponent}
 			</div>
 		</div>

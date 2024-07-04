@@ -11,14 +11,14 @@ import { convertTimestampToDate } from "@utilities";
  */
 export const convertDeploymentProtoToModel = (protoDeployment: ProtoDeployment): Deployment => {
 	return {
-		deploymentId: protoDeployment.deploymentId,
-		envId: protoDeployment.envId,
 		buildId: protoDeployment.buildId,
 		createdAt: convertTimestampToDate(protoDeployment.createdAt!),
-		state: protoDeployment.state,
+		deploymentId: protoDeployment.deploymentId,
+		envId: protoDeployment.envId,
 		sessionStats: protoDeployment.sessionsStats.map((sessionStat) => ({
-			state: sessionStateConverter(sessionStat.state),
 			count: sessionStat.count,
+			state: sessionStateConverter(sessionStat.state),
 		})),
+		state: protoDeployment.state,
 	};
 };

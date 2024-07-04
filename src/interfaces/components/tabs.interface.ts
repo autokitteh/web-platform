@@ -1,22 +1,22 @@
 export interface TabsProps {
-	defaultValue?: string;
-	className?: string;
 	children: React.ReactNode;
+	className?: string;
+	defaultValue?: string;
 	onChange?: (value: string) => void;
 }
 
 export interface TabProps {
 	activeTab?: string;
-	className?: string;
-	value: string;
 	ariaLabel?: string;
 	children: React.ReactNode;
+	className?: string;
 	onClick?: () => void;
+	value: string;
 }
 
 export interface TabListProps {
-	className?: string;
 	children: React.ReactNode;
+	className?: string;
 }
 
 export interface TabsContextProps {

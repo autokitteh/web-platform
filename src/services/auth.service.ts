@@ -17,9 +17,11 @@ export class AuthService {
 				return { data: undefined, error };
 			}
 			const convertedUser = convertUserProtoToModel(user);
+
 			return { data: convertedUser, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.authService, new Error(error).message);
+
 			return { data: undefined, error };
 		}
 	}

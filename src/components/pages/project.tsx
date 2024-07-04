@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
 import { Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { ProjectsService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { calculatePathDepth } from "@utilities";
+import React, { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 export const Project = () => {
@@ -26,8 +26,12 @@ export const Project = () => {
 	const fetchResources = async () => {
 		try {
 			const { data: resources, error } = await ProjectsService.getResources(projectId!);
-			if (error) throw error;
-			if (!resources) return;
+			if (error) {
+				throw error;
+			}
+			if (!resources) {
+				return;
+			}
 
 			getProjectResources(resources);
 		} catch (error) {
@@ -47,7 +51,9 @@ export const Project = () => {
 	}, [location]);
 
 	useEffect(() => {
-		if (!projectId) return;
+		if (!projectId) {
+			return;
+		}
 		fetchResources();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
@@ -59,7 +65,7 @@ export const Project = () => {
 	return (
 		<SplitFrame>
 			{displayTabs ? (
-				<div className="flex flex-col flex-1 h-full">
+				<div className="flex flex-1 flex-col h-full">
 					<div
 						className={
 							"flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none" +
@@ -70,7 +76,7 @@ export const Project = () => {
 							<Tab
 								activeTab={activeTab}
 								ariaLabel={singleTab.label}
-								className="flex items-center text-xs 3xl:text-sm"
+								className="3xl:text-sm flex items-center text-xs"
 								key={singleTab.value}
 								onClick={() => goTo(singleTab.value)}
 								value={singleTab.value}
@@ -79,6 +85,7 @@ export const Project = () => {
 							</Tab>
 						))}
 					</div>
+
 					<div className="h-full pt-2">
 						<Outlet />
 					</div>

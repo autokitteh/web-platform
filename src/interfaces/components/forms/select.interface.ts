@@ -1,19 +1,19 @@
 import { SingleValue } from "react-select";
 
 export interface SelectProps {
-	placeholder?: string;
-	value?: SelectOption;
-	options: SelectOption[];
-	variant?: "black" | "white";
+	dataTestid?: string;
 	isError?: boolean;
 	noOptionsLabel?: string;
-	dataTestid?: string;
-	onChange: (value: SingleValue<SelectOption>) => void;
 	onBlur?: () => void;
+	onChange: (value: SingleValue<SelectOption>) => void;
+	options: SelectOption[];
+	placeholder?: string;
+	value?: SelectOption;
+	variant?: "black" | "white";
 }
 
 export interface SelectOption {
-	value: string;
-	label: string;
 	disabled?: boolean;
+	label: string;
+	value: string;
 }

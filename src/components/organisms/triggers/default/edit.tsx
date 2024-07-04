@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-import { Select, ErrorMessage, Input, Button, IconButton, Loader } from "@components/atoms";
+import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { namespaces } from "@constants";
 import { TriggerFormIds } from "@enums/components";
@@ -12,12 +11,13 @@ import { useProjectStore, useToastStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
 import { debounce, has } from "lodash";
-import { useForm, Controller } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const DefaultEditTrigger = () => {
-	const { triggerId, projectId } = useParams();
+	const { projectId, triggerId } = useParams();
 	const navigate = useNavigate();
 	const { resources } = useProjectStore();
 	const { t: tErrors } = useTranslation("errors");
@@ -34,17 +34,19 @@ export const DefaultEditTrigger = () => {
 	const fetchData = async () => {
 		try {
 			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-			if (connectionsError) throw connectionsError;
+			if (connectionsError) {
+				throw connectionsError;
+			}
 
 			const formattedConnections = connections?.map((item) => ({
-				value: item.connectionId,
 				label: item.name,
+				value: item.connectionId,
 			}));
 			setConnections(formattedConnections || []);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
-				value: name,
 				label: name,
+				value: name,
 			}));
 			setFilesNameList(formattedResources);
 		} catch (error) {
@@ -55,7 +57,7 @@ export const DefaultEditTrigger = () => {
 			});
 			LoggerService.error(
 				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+				tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
 			);
 		} finally {
 			setIsLoadingData(false);
@@ -71,6 +73,7 @@ export const DefaultEditTrigger = () => {
 				type: "error",
 			});
 			LoggerService.error(namespaces.triggerService, tErrors("triggerNotFoundExtended", { triggerId }));
+
 			return;
 		}
 		setTrigger(data);
@@ -84,33 +87,33 @@ export const DefaultEditTrigger = () => {
 	}, []);
 
 	const {
-		register,
-		handleSubmit,
-		formState: { errors, dirtyFields },
 		control,
+		formState: { dirtyFields, errors },
 		getValues,
+		handleSubmit,
+		register,
 		reset,
 	} = useForm({
-		resolver: zodResolver(defaultTriggerSchema),
 		defaultValues: {
-			name: "",
-			connection: { value: "", label: "" },
-			filePath: { value: "", label: "" },
+			connection: { label: "", value: "" },
 			entryFunction: "",
 			eventType: "",
+			filePath: { label: "", value: "" },
 			filter: "",
+			name: "",
 		},
+		resolver: zodResolver(defaultTriggerSchema),
 	});
 
 	useEffect(() => {
 		const resetForm = () => {
 			reset({
-				name: trigger?.name,
-				connection: { value: trigger?.connectionId, label: trigger?.connectionName },
-				filePath: { value: trigger?.path, label: trigger?.path },
+				connection: { label: trigger?.connectionName, value: trigger?.connectionId },
 				entryFunction: trigger?.entryFunction,
 				eventType: trigger?.eventType,
+				filePath: { label: trigger?.path, value: trigger?.path },
 				filter: trigger?.filter,
+				name: trigger?.name,
 			});
 		};
 
@@ -119,18 +122,18 @@ export const DefaultEditTrigger = () => {
 	}, [trigger]);
 
 	const onSubmit = async () => {
-		const { connection, filePath, name, entryFunction, eventType, filter } = getValues();
+		const { connection, entryFunction, eventType, filePath, filter, name } = getValues();
 
 		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
-			triggerId: trigger?.triggerId,
 			connectionId: connection.value,
+			data: triggerData,
+			entryFunction,
 			eventType,
+			filter,
 			name,
 			path: filePath.value,
-			entryFunction,
-			filter,
-			data: triggerData,
+			triggerId: trigger?.triggerId,
 		});
 		setIsSaving(false);
 
@@ -140,6 +143,7 @@ export const DefaultEditTrigger = () => {
 				message: tErrors("triggerNotFound"),
 				type: "error",
 			});
+
 			return;
 		}
 
@@ -149,12 +153,15 @@ export const DefaultEditTrigger = () => {
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
 	const updateTriggerDataKey = debounce((newKey, oldKey) => {
-		if (newKey === oldKey) return;
+		if (newKey === oldKey) {
+			return;
+		}
 
 		setTriggerData((prevData) => {
 			const updatedTriggerData = { ...prevData };
 			updatedTriggerData[newKey] = updatedTriggerData[oldKey];
 			delete updatedTriggerData[oldKey];
+
 			return updatedTriggerData;
 		});
 	}, 500);
@@ -173,6 +180,7 @@ export const DefaultEditTrigger = () => {
 				message: tErrors("emptyKeyExist"),
 				type: "error",
 			});
+
 			return;
 		}
 
@@ -186,6 +194,7 @@ export const DefaultEditTrigger = () => {
 		setTriggerData((prevData) => {
 			const updatedData = { ...prevData };
 			delete updatedData[key];
+
 			return updatedData;
 		});
 	};
@@ -200,8 +209,9 @@ export const DefaultEditTrigger = () => {
 				isLoading={isSaving}
 				title={t("modifyTrigger")}
 			/>
-			<form className="flex items-start gap-10" id={TriggerFormIds.modifyDefaultForm} onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex flex-col w-full gap-6">
+
+			<form className="flex gap-10 items-start" id={TriggerFormIds.modifyDefaultForm} onSubmit={handleSubmit(onSubmit)}>
+				<div className="flex flex-col gap-6 w-full">
 					<div className="relative">
 						<Input
 							disabled
@@ -212,8 +222,10 @@ export const DefaultEditTrigger = () => {
 							isRequired
 							placeholder={t("placeholders.name")}
 						/>
+
 						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 					</div>
+
 					<div className="relative">
 						<Controller
 							control={control}
@@ -232,8 +244,10 @@ export const DefaultEditTrigger = () => {
 								/>
 							)}
 						/>
+
 						<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
 					</div>
+
 					<div className="relative">
 						<Controller
 							control={control}
@@ -251,8 +265,10 @@ export const DefaultEditTrigger = () => {
 								/>
 							)}
 						/>
+
 						<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 					</div>
+
 					<div className="relative">
 						<Input
 							{...register("entryFunction")}
@@ -262,8 +278,10 @@ export const DefaultEditTrigger = () => {
 							isRequired
 							placeholder={t("placeholders.functionName")}
 						/>
+
 						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 					</div>
+
 					<div className="relative">
 						<Input
 							{...register("eventType")}
@@ -272,8 +290,10 @@ export const DefaultEditTrigger = () => {
 							isError={!!errors.eventType}
 							placeholder={t("placeholders.eventType")}
 						/>
+
 						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
 					</div>
+
 					<div className="relative">
 						<Input
 							{...register("filter")}
@@ -282,20 +302,24 @@ export const DefaultEditTrigger = () => {
 							isError={!!errors.filter}
 							placeholder={t("placeholders.filter")}
 						/>
+
 						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
 					</div>
+
 					<div>
-						<div className="flex items-center gap-1 text-base text-gray-300">
+						<div className="flex gap-1 items-center text-base text-gray-300">
 							{t("titleData")}
+
 							<div className="cursor-pointer" title={t("titleInfo")}>
 								<InfoIcon className="fill-white" />
 							</div>
 						</div>
+
 						<div className="flex flex-col gap-2 mb-2">
 							{triggerData
 								? Object.entries(triggerData).map(([key, value]) => (
-										<div className="flex gap-1 align-center" key={key}>
-											<div className="flex w-full gap-6">
+										<div className="align-center flex gap-1" key={key}>
+											<div className="flex gap-6 w-full">
 												<Input
 													aria-label={t("placeholders.key")}
 													className="w-full"
@@ -303,6 +327,7 @@ export const DefaultEditTrigger = () => {
 													onChange={(e) => updateTriggerDataKey(e.target.value, key)}
 													placeholder={t("placeholders.key")}
 												/>
+
 												<Input
 													aria-label={t("placeholders.value")}
 													className="w-full"
@@ -311,22 +336,25 @@ export const DefaultEditTrigger = () => {
 													placeholder={t("placeholders.value")}
 												/>
 											</div>
+
 											<IconButton
 												ariaLabel={t("ariaDeleteData", { name: key })}
-												className="self-center hover:bg-black bg-black-900"
+												className="bg-black-900 hover:bg-black self-center"
 												onClick={() => handleDeleteData(key)}
 											>
-												<TrashIcon className="w-4 h-4 fill-white" />
+												<TrashIcon className="fill-white h-4 w-4" />
 											</IconButton>
 										</div>
 									))
 								: null}
 						</div>
+
 						<Button
-							className="w-auto gap-1 p-0 ml-auto font-semibold text-gray-300 group hover:text-white"
+							className="font-semibold gap-1 group hover:text-white ml-auto p-0 text-gray-300 w-auto"
 							onClick={handleAddNewData}
 						>
-							<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
+							<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+
 							{t("buttonAddNewData")}
 						</Button>
 					</div>

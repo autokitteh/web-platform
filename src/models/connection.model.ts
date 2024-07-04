@@ -3,7 +3,9 @@ import { Connection as ProtoConnection } from "@ak-proto-ts/connections/v1/conne
 import { Connection, ConnectionStatusType } from "@type/models";
 
 export const mapProtoStatusToConnectionStatus = (protoStatus?: Status): ConnectionStatusType => {
-	if (!protoStatus) return "ok";
+	if (!protoStatus) {
+		return "ok";
+	}
 
 	const temporaryStatusMapping = protoStatus.code === Status_Code.UNSPECIFIED ? Status_Code.OK : protoStatus.code;
 
@@ -20,9 +22,9 @@ export const mapProtoStatusToConnectionStatus = (protoStatus?: Status): Connecti
 export const convertConnectionProtoToModel = (protoConnection: ProtoConnection): Connection => {
 	return {
 		connectionId: protoConnection.connectionId,
+		initUrl: protoConnection.links?.init_url || "",
 		integrationId: protoConnection.integrationId,
 		name: protoConnection.name,
-		initUrl: protoConnection.links?.init_url || "",
 		status: mapProtoStatusToConnectionStatus(protoConnection.status),
 		statusInfoMessage: protoConnection.status?.message || "",
 	};

@@ -1,9 +1,9 @@
 import { ElementType, ReactNode } from "react";
 
 export interface TypographyProps<E extends ElementType = ElementType> {
-	element?: E;
+	[x: string]: any;
 	children: ReactNode;
 	className?: string;
+	element?: E;
 	size?: "small" | "medium" | "large";
-	[x: string]: any;
 }

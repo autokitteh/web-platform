@@ -1,8 +1,8 @@
-import React from "react";
 import { Button } from "@components/atoms";
 import { SubmenuProps } from "@interfaces/components";
 import { cn } from "@utilities";
 import { motion } from "framer-motion";
+import React from "react";
 import { useParams } from "react-router-dom";
 
 export const Submenu = ({ submenuInfo }: SubmenuProps) => {
@@ -10,19 +10,19 @@ export const Submenu = ({ submenuInfo }: SubmenuProps) => {
 
 	const submenuVariant = {
 		hidden: { opacity: 0, x: -100 },
-		visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: "easeOut" } },
+		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, x: 0 },
 	};
 
 	return (
 		<motion.div
 			animate="visible"
-			className="w-auto h-screen overflow-auto px-2 bg-gray-200 border-l border-r border-gray-300 mr-2.5 z-1 scrollbar"
+			className="bg-gray-200 border-gray-300 border-l border-r h-screen mr-2.5 overflow-auto px-2 scrollbar w-auto z-1"
 			exit="hidden"
 			initial="hidden"
 			style={{ paddingTop: submenuInfo.top }}
 			variants={submenuVariant}
 		>
-			{submenuInfo.submenu?.map(({ name, href, id }) => (
+			{submenuInfo.submenu?.map(({ href, id, name }) => (
 				<Button
 					className={cn("px-4 hover:bg-green-light text-fira-code text-gray-700 whitespace-nowrap", {
 						"bg-gray-700 hover:bg-gray-700 text-white": id === projectId,

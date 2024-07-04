@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
-import { TrashIcon, EditIcon, LockSolid } from "@assets/image/icons";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Loader } from "@components/atoms";
+import { EditIcon, LockSolid, TrashIcon } from "@assets/image/icons";
+import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteVariableModal } from "@components/organisms/variables";
 import { ModalName } from "@enums/components";
@@ -9,6 +8,7 @@ import { useSort } from "@hooks";
 import { EnvironmentsService, VariablesService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Environment, Variable } from "@type/models";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -21,20 +21,26 @@ export const VariablesTable = () => {
 
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const { openModal, closeModal } = useModalStore();
+	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { items: sortedVariables, sortConfig, requestSort } = useSort<Variable>(variables, "name");
+	const { items: sortedVariables, requestSort, sortConfig } = useSort<Variable>(variables, "name");
 
 	const fetchVariables = async () => {
 		try {
 			const { data: envs, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId!);
-			if (errorEnvs) throw errorEnvs;
+			if (errorEnvs) {
+				throw errorEnvs;
+			}
 
 			const envId = (envs as Environment[])[0].envId;
 			setEnvId(envId);
 			const { data: vars, error } = await VariablesService.list(envId);
-			if (error) throw error;
-			if (!vars) return;
+			if (error) {
+				throw error;
+			}
+			if (!vars) {
+				return;
+			}
 
 			setVariables(vars);
 		} catch (error) {
@@ -55,40 +61,43 @@ export const VariablesTable = () => {
 
 	const handleDeleteVariable = async () => {
 		const { error } = await VariablesService.delete({
-			scopeId: deleteVariable!.scopeId,
 			name: deleteVariable!.name,
+			scopeId: deleteVariable!.scopeId,
 		});
 		closeModal(ModalName.deleteVariable);
 
-		if (error)
+		if (error) {
 			return addToast({
 				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
+		}
 
 		fetchVariables();
 	};
 
 	const showDeleteModal = (variableName: string, variableValue: string, scopeId: string) => {
 		openModal(ModalName.deleteVariable);
-		setDeleteVariable({ name: variableName, value: variableValue, scopeId, isSecret: false });
+		setDeleteVariable({ isSecret: false, name: variableName, scopeId, value: variableValue });
 	};
 
 	return isLoadingVariables ? (
-		<div className="flex flex-col justify-center h-full">
+		<div className="flex flex-col h-full justify-center">
 			<Loader />
 		</div>
 	) : (
 		<>
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
+
 				<Button
 					ariaLabel={t("buttons.addNew")}
-					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
+					className="capitalize font-semibold gap-1 group hover:text-white p-0 text-gray-300 w-auto"
 					href="add"
 				>
-					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
+					<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+
 					{t("buttons.addNew")}
 				</Button>
 			</div>
@@ -96,54 +105,63 @@ export const VariablesTable = () => {
 				<Table className="mt-3">
 					<THead>
 						<Tr>
-							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("name")}>
+							<Th className="cursor-pointer font-normal group" onClick={() => requestSort("name")}>
 								{t("table.columns.name")}
+
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByName")}
-									className="opacity-0 group-hover:opacity-100"
+									className="group-hover:opacity-100 opacity-0"
 									isActive={"name" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("value")}>
+
+							<Th className="cursor-pointer font-normal group" onClick={() => requestSort("value")}>
 								{t("table.columns.value")}
+
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByValue")}
-									className="opacity-0 group-hover:opacity-100"
+									className="group-hover:opacity-100 opacity-0"
 									isActive={"value" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>
+
+							<Th className="font-normal max-w-20 text-right">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
+
 					<TBody>
-						{sortedVariables.map(({ name, value, scopeId, isSecret }, idx) => (
+						{sortedVariables.map(({ isSecret, name, scopeId, value }, idx) => (
 							<Tr className="group" key={idx}>
 								<Td className="font-semibold">{name}</Td>
+
 								<Td>
 									{!isSecret ? (
 										value
 									) : (
-										<div className="flex items-center gap-2 leading-none">
-											<LockSolid className="w-3 h-3 fill-white" />
+										<div className="flex gap-2 items-center leading-none">
+											<LockSolid className="fill-white h-3 w-3" />
+
 											<span className="pt-2">**********</span>
 										</div>
 									)}
 								</Td>
-								<Td className="pr-0 max-w-20">
+
+								<Td className="max-w-20 pr-0">
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
 											onClick={() => navigate(`edit/${envId}/${name}`)}
 										>
-											<EditIcon className="w-3 h-3 fill-white" />
+											<EditIcon className="fill-white h-3 w-3" />
 										</IconButton>
+
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
 											onClick={() => showDeleteModal(name, value, scopeId)}
 										>
-											<TrashIcon className="w-3 h-3 fill-white" />
+											<TrashIcon className="fill-white h-3 w-3" />
 										</IconButton>
 									</div>
 								</Td>
@@ -152,7 +170,7 @@ export const VariablesTable = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-xl font-semibold text-center text-gray-300"> {t("titleNoAvailable")}</div>
+				<div className="font-semibold mt-10 text-center text-gray-300 text-xl"> {t("titleNoAvailable")}</div>
 			)}
 
 			<DeleteVariableModal onDelete={handleDeleteVariable} variable={deleteVariable!} />

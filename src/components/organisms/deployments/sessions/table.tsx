@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { CatImage } from "@assets/image";
 import { ArrowLeft, RotateIcon } from "@assets/image/icons";
-import { IconButton, Frame, TBody, THead, Table, Th, Tr } from "@components/atoms";
+import { Frame, IconButton, TBody, THead, Table, Th, Tr } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal } from "@components/organisms/deployments/sessions";
 import { SessionsTableList } from "@components/organisms/deployments/sessions";
@@ -10,11 +9,12 @@ import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
 import { useInterval } from "@hooks";
 import { reverseSessionStateConverter } from "@models/utils";
-import { LoggerService, SessionsService, DeploymentsService } from "@services";
+import { DeploymentsService, LoggerService, SessionsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
-import { Session, SessionStateKeyType, DeploymentSession } from "@type/models";
+import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 import { debounce, isEqual, sumBy } from "lodash";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
@@ -24,7 +24,7 @@ export const SessionsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
 	const { startInterval, stopInterval } = useInterval();
-	const { projectId, deploymentId, sessionId } = useParams();
+	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -32,9 +32,9 @@ export const SessionsTable = () => {
 	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
-	const [tailState, seTailState] = useState({
-		live: false,
+	const [tailState, setTailState] = useState({
 		display: false,
+		live: false,
 	});
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 
@@ -44,7 +44,9 @@ export const SessionsTable = () => {
 	);
 
 	const fetchDeployments = useCallback(async () => {
-		if (!projectId) return;
+		if (!projectId) {
+			return;
+		}
 		const { data, error } = await DeploymentsService.listByProjectId(projectId!);
 		if (error) {
 			addToast({
@@ -52,16 +54,21 @@ export const SessionsTable = () => {
 				message: tErrors("deploymentFetchError", { ns: "services" }),
 				type: "error",
 			});
+
 			return;
 		}
-		if (!data?.length) return;
+		if (!data?.length) {
+			return;
+		}
 
 		const deployment = data.find((deployment) => deployment.deploymentId === deploymentId);
 
-		if (isEqual(deployment?.sessionStats, sessionStats) || !deployment?.sessionStats) return;
+		if (isEqual(deployment?.sessionStats, sessionStats) || !deployment?.sessionStats) {
+			return;
+		}
 
 		const deploymentState = deployment?.state === DeploymentStateVariant.active ? true : false;
-		seTailState({ live: deploymentState, display: deploymentState });
+		setTailState({ display: deploymentState, live: deploymentState });
 
 		setSessionStats(deployment?.sessionStats);
 		debouncedFetchSessions();
@@ -88,12 +95,18 @@ export const SessionsTable = () => {
 					namespaces.sessionsService,
 					tErrors("sessionsFetchErrorExtended", { error: (error as Error).message })
 				);
+
 				return;
 			}
 
-			if (!data?.sessions) return;
+			if (!data?.sessions) {
+				return;
+			}
 			setSessions((prevSessions) => {
-				if (!nextPageToken) return data.sessions;
+				if (!nextPageToken) {
+					return data.sessions;
+				}
+
 				return [...prevSessions, ...data.sessions];
 			});
 			setSessionsNextPageToken(data.nextPageToken);
@@ -112,8 +125,13 @@ export const SessionsTable = () => {
 	}, [sessionStateType]);
 
 	useEffect(() => {
-		if (tailState.live) startInterval("sessionsFetchIntervalId", debouncedFetchDeployments, fetchSessionsInterval);
-		if (!tailState.live) stopInterval("sessionsFetchIntervalId");
+		if (tailState.live) {
+			startInterval("sessionsFetchIntervalId", debouncedFetchDeployments, fetchSessionsInterval);
+		}
+		if (!tailState.live) {
+			stopInterval("sessionsFetchIntervalId");
+		}
+
 		return () => {
 			stopInterval("sessionsFetchIntervalId");
 			debouncedFetchDeployments.cancel();
@@ -122,7 +140,9 @@ export const SessionsTable = () => {
 	}, [tailState.live]);
 
 	const handleRemoveSession = async () => {
-		if (!selectedSessionId) return;
+		if (!selectedSessionId) {
+			return;
+		}
 		const { error } = await SessionsService.deleteSession(selectedSessionId);
 		if (error) {
 			addToast({
@@ -134,6 +154,7 @@ export const SessionsTable = () => {
 				namespaces.sessionsService,
 				tErrors("failedRemoveSessionExtended", { sessionId: selectedSessionId })
 			);
+
 			return;
 		}
 
@@ -160,11 +181,12 @@ export const SessionsTable = () => {
 
 	const handleScroll = useCallback(
 		({ scrollOffset }: ListOnScrollProps) => {
-			if (scrollOffset !== 0 && tailState.live)
-				seTailState((prevState) => ({
+			if (scrollOffset !== 0 && tailState.live) {
+				setTailState((prevState) => ({
 					...prevState,
 					live: !prevState.live,
 				}));
+			}
 		},
 		[tailState.live]
 	);
@@ -174,41 +196,50 @@ export const SessionsTable = () => {
 	}, [sessionStats]);
 
 	return (
-		<div className="flex w-full h-full py-2.5">
+		<div className="flex h-full py-2.5 w-full">
 			<Frame className={frameClass}>
-				<div className="flex items-center justify-between gap-2.5">
-					<div className="flex items-center flex-wrap gap-2.5">
+				<div className="flex gap-2.5 items-center justify-between">
+					<div className="flex flex-wrap gap-2.5 items-center">
 						<IconButton
 							ariaLabel={t("ariaLabelReturnBack")}
-							className="gap-2 text-sm text-white bg-gray-600 hover:bg-black min-w-20"
+							className="bg-gray-600 gap-2 hover:bg-black min-w-20 text-sm text-white"
 							onClick={() => navigate(`/projects/${projectId}/deployments`)}
 						>
 							<ArrowLeft className="h-4" />
+
 							{t("buttons.back")}
 						</IconButton>
-						<div className="text-base text-gray-300 font-mediumy">{t("totalSessions", { total: totalSessions })}</div>
+
+						<div className="font-mediumy text-base text-gray-300">{t("totalSessions", { total: totalSessions })}</div>
+
 						{tailState.display ? (
 							<IconButton
-								className="w-5 h-5 p-0 ml-3 cursor-pointer"
-								onClick={() => seTailState((prevState) => ({ ...prevState, live: !prevState.live }))}
+								className="cursor-pointer h-5 ml-3 p-0 w-5"
+								onClick={() => setTailState((prevState) => ({ ...prevState, live: !prevState.live }))}
 								title={tailState.live ? t("pauseLiveTail") : t("resumeLiveTail")}
 							>
 								<RotateIcon fill={tailState.live ? "green" : "gray"} />
 							</IconButton>
 						) : null}
 					</div>
+
 					<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 				</div>
+
 				{sessions.length ? (
 					<Table className="flex-1 mt-4 overflow-hidden">
 						<THead>
 							<Tr>
-								<Th className="font-normal cursor-pointer group">{t("table.columns.activationTime")}</Th>
-								<Th className="font-normal cursor-pointer group">{t("table.columns.status")}</Th>
-								<Th className="font-normal border-0 cursor-pointer group">{t("table.columns.sessionId")}</Th>
-								<Th className="font-normal border-0 max-w-20 mr-1.5">{t("table.columns.actions")}</Th>
+								<Th className="cursor-pointer font-normal group">{t("table.columns.activationTime")}</Th>
+
+								<Th className="cursor-pointer font-normal group">{t("table.columns.status")}</Th>
+
+								<Th className="border-0 cursor-pointer font-normal group">{t("table.columns.sessionId")}</Th>
+
+								<Th className="border-0 font-normal max-w-20 mr-1.5">{t("table.columns.actions")}</Th>
 							</Tr>
 						</THead>
+
 						<TBody>
 							<SessionsTableList
 								onItemsRendered={handleItemsRendered}
@@ -219,19 +250,22 @@ export const SessionsTable = () => {
 						</TBody>
 					</Table>
 				) : (
-					<div className="mt-10 text-xl font-semibold text-center">{t("noSessions")}</div>
+					<div className="font-semibold mt-10 text-center text-xl">{t("noSessions")}</div>
 				)}
 			</Frame>
+
 			{sessionId ? (
 				<Outlet />
 			) : (
-				<Frame className="w-3/5 pt-20 transition bg-gray-700 rounded-l-none">
+				<Frame className="bg-gray-700 pt-20 rounded-l-none transition w-3/5">
 					<div className="flex flex-col items-center mt-20">
-						<p className="mb-8 text-lg font-bold text-gray-400">{t("noSelectedSession")}</p>
+						<p className="font-bold mb-8 text-gray-400 text-lg">{t("noSelectedSession")}</p>
+
 						<CatImage className="border-b border-gray-400 fill-gray-400" />
 					</div>
 				</Frame>
 			)}
+
 			<DeleteSessionModal onDelete={handleRemoveSession} />
 		</div>
 	);

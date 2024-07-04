@@ -1,8 +1,7 @@
-import React, { useEffect, useCallback, useState } from "react";
 import { PlusCircle } from "@assets/image";
-import { TrashIcon, LinkIcon } from "@assets/image/icons";
-import { Table, THead, TBody, Tr, Td, Th, IconButton, Button, Loader } from "@components/atoms";
-import { SortButton, ConnectionTableStatus } from "@components/molecules";
+import { LinkIcon, TrashIcon } from "@assets/image/icons";
+import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { ConnectionTableStatus, SortButton } from "@components/molecules";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 import { baseUrl } from "@constants";
 import { ModalName } from "@enums/components";
@@ -10,13 +9,14 @@ import { useSort } from "@hooks";
 import { ConnectionService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Connection } from "@type/models";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 export const ConnectionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "connections" });
-	const { openModal, closeModal } = useModalStore();
+	const { closeModal, openModal } = useModalStore();
 	const { projectId } = useParams();
 
 	const navigate = useNavigate();
@@ -27,14 +27,18 @@ export const ConnectionsTable = () => {
 	const [connectionId, setConnectionId] = useState<string>();
 
 	const addToast = useToastStore((state) => state.addToast);
-	const { items: sortedConnections, sortConfig, requestSort } = useSort<Connection>(connections, "name");
+	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections, "name");
 
 	const fetchConnections = async () => {
 		setIsLoading(true);
 		try {
 			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
-			if (error) throw error;
-			if (!connections) return;
+			if (error) {
+				throw error;
+			}
+			if (!connections) {
+				return;
+			}
 
 			setConnections(connections);
 		} catch (err) {
@@ -63,7 +67,9 @@ export const ConnectionsTable = () => {
 	);
 
 	const handleDeleteConnection = async () => {
-		if (!connectionId) return;
+		if (!connectionId) {
+			return;
+		}
 		setIsLoadingDeleteConnection(true);
 		const { error } = await ConnectionService.delete(connectionId);
 		setIsLoadingDeleteConnection(false);
@@ -85,18 +91,20 @@ export const ConnectionsTable = () => {
 	}, []);
 
 	return isLoading ? (
-		<div className="flex flex-col justify-center h-full">
+		<div className="flex flex-col h-full justify-center">
 			<Loader />
 		</div>
 	) : (
 		<>
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
+
 				<Button
-					className="w-auto gap-1 p-0 font-semibold text-gray-300 capitalize group hover:text-white"
+					className="capitalize font-semibold gap-1 group hover:text-white p-0 text-gray-300 w-auto"
 					onClick={() => navigate("add")}
 				>
-					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
+					<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+
 					{t("buttons.addNew")}
 				</Button>
 			</div>
@@ -104,44 +112,56 @@ export const ConnectionsTable = () => {
 				<Table className="mt-3">
 					<THead>
 						<Tr>
-							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("name")}>
+							<Th className="cursor-pointer font-normal group" onClick={() => requestSort("name")}>
 								{t("table.columns.name")}
+
 								<SortButton
-									className="opacity-0 group-hover:opacity-100"
+									className="group-hover:opacity-100 opacity-0"
 									isActive={"name" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("integrationName")}>
+
+							<Th className="cursor-pointer font-normal group" onClick={() => requestSort("integrationName")}>
 								{t("table.columns.app")}
+
 								<SortButton
-									className="opacity-0 group-hover:opacity-100"
+									className="group-hover:opacity-100 opacity-0"
 									isActive={"integrationName" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group max-w-32" onClick={() => requestSort("status")}>
+
+							<Th className="cursor-pointer font-normal group max-w-32" onClick={() => requestSort("status")}>
 								{t("table.columns.status")}
+
 								<SortButton
-									className="opacity-0 group-hover:opacity-100"
+									className="group-hover:opacity-100 opacity-0"
 									isActive={"status" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="font-normal cursor-pointer group">{t("table.columns.information")}</Th>
-							<Th className="font-normal text-right max-w-20">{t("table.columns.actions")}</Th>
+
+							<Th className="cursor-pointer font-normal group">{t("table.columns.information")}</Th>
+
+							<Th className="font-normal max-w-20 text-right">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
+
 					<TBody>
-						{sortedConnections.map(({ name, integrationName, status, statusInfoMessage, connectionId, initUrl }) => (
+						{sortedConnections.map(({ connectionId, initUrl, integrationName, name, status, statusInfoMessage }) => (
 							<Tr className="group" key={connectionId}>
 								<Td className="font-semibold">{name}</Td>
+
 								<Td>{integrationName}</Td>
+
 								<Td className="max-w-32">
 									<ConnectionTableStatus status={status} />
 								</Td>
+
 								<Td>{statusInfoMessage}</Td>
-								<Td className="pr-0 max-w-20">
+
+								<Td className="max-w-20 pr-0">
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.titleInitConnection")}
@@ -149,14 +169,15 @@ export const ConnectionsTable = () => {
 											onClick={() => handleConnectionInitClick(initUrl)}
 											title={t("table.buttons.titleInitConnection")}
 										>
-											<LinkIcon className="w-4 h-4 fill-white" />
+											<LinkIcon className="fill-white h-4 w-4" />
 										</IconButton>
+
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
 											onClick={() => handleOpenModalDeleteConnection(connectionId)}
 											title={t("table.buttons.titleRemoveConnection")}
 										>
-											<TrashIcon className="w-3 h-3 fill-white" />
+											<TrashIcon className="fill-white h-3 w-3" />
 										</IconButton>
 									</div>
 								</Td>
@@ -165,7 +186,7 @@ export const ConnectionsTable = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-xl font-semibold text-center text-gray-300">{t("titleNoAvailable")}</div>
+				<div className="font-semibold mt-10 text-center text-gray-300 text-xl">{t("titleNoAvailable")}</div>
 			)}
 			{connectionId ? (
 				<DeleteConnectionModal

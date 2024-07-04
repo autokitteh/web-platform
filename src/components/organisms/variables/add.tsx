@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 import { LockSolid } from "@assets/image/icons";
-import { Input, ErrorMessage, Toggle } from "@components/atoms";
+import { ErrorMessage, Input, Toggle } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -20,26 +20,26 @@ export const AddVariable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
-		register,
-		handleSubmit,
-		formState: { errors, dirtyFields },
+		formState: { dirtyFields, errors },
 		getValues,
+		handleSubmit,
+		register,
 	} = useForm({
-		resolver: zodResolver(newVariableShema),
 		defaultValues: {
 			name: "",
 			value: "",
 		},
+		resolver: zodResolver(newVariableShema),
 	});
 
 	const onSubmit = async () => {
 		const { name, value } = getValues();
 		setIsLoading(true);
 		const { error } = await VariablesService.set(projectId!, {
-			scopeId: "",
-			name,
-			value,
 			isSecret,
+			name,
+			scopeId: "",
+			value,
 		});
 		setIsLoading(false);
 
@@ -49,6 +49,7 @@ export const AddVariable = () => {
 				message: t("variableNotCreated") + (error as Error).message,
 				type: "error",
 			});
+
 			return;
 		}
 		navigate(-1);
@@ -62,6 +63,7 @@ export const AddVariable = () => {
 				isLoading={isLoading}
 				title={tForm("addNewVariable")}
 			/>
+
 			<form className="flex flex-col gap-6" id="createNewVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
@@ -71,8 +73,10 @@ export const AddVariable = () => {
 						isError={!!errors.name}
 						placeholder={tForm("placeholders.name")}
 					/>
+
 					<ErrorMessage ariaLabel={tForm("ariaNameRequired")}>{errors.name?.message}</ErrorMessage>
 				</div>
+
 				<div className="relative">
 					<Input
 						{...register("value")}
@@ -81,10 +85,12 @@ export const AddVariable = () => {
 						isError={!!errors.value}
 						placeholder={tForm("placeholders.value")}
 					/>
+
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
-				<div className="flex items-center gap-2" title={tForm("isSecret")}>
-					<Toggle checked={isSecret} onChange={setIsSecret} /> <LockSolid className="w-4 h-4 fill-white" />
+
+				<div className="flex gap-2 items-center" title={tForm("isSecret")}>
+					<Toggle checked={isSecret} onChange={setIsSecret} /> <LockSolid className="fill-white h-4 w-4" />
 				</div>
 			</form>
 		</div>

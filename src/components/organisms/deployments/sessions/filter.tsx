@@ -1,12 +1,12 @@
-import React, { useState, useMemo } from "react";
 import { Button } from "@components/atoms";
 import { SessionStateType } from "@enums";
 import { SessionTableFilterProps } from "@interfaces/components";
 import { SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export const SessionsTableFilter = ({ sessionStats, onChange }: SessionTableFilterProps) => {
+export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilterProps) => {
 	const [activeState, setActiveState] = useState<SessionStateKeyType>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
 
@@ -41,6 +41,7 @@ export const SessionsTableFilter = ({ sessionStats, onChange }: SessionTableFilt
 				(acc, stat) => {
 					acc[stat.state!] = stat.count;
 					acc.total += stat.count;
+
 					return acc;
 				},
 				{ total: 0, ...initialSessionCounts }
@@ -50,25 +51,29 @@ export const SessionsTableFilter = ({ sessionStats, onChange }: SessionTableFilt
 	);
 
 	return (
-		<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+		<div className="flex flex-wrap gap-x-3 gap-y-2 items-center">
 			<Button className={buttonClass()} onClick={() => handleButtonClick()}>
 				{t("all")} ({sessionCounts.total})
 			</Button>
+
 			<Button
 				className={buttonClass(SessionStateType.running)}
 				onClick={() => handleButtonClick(SessionStateType.running)}
 			>
 				{t("running")} ({sessionCounts.running})
 			</Button>
+
 			<Button
 				className={buttonClass(SessionStateType.stopped)}
 				onClick={() => handleButtonClick(SessionStateType.stopped)}
 			>
 				{t("stopped")} ({sessionCounts.stopped})
 			</Button>
+
 			<Button className={buttonClass(SessionStateType.error)} onClick={() => handleButtonClick(SessionStateType.error)}>
 				{t("error")} ({sessionCounts.error})
 			</Button>
+
 			<Button
 				className={buttonClass(SessionStateType.completed)}
 				onClick={() => handleButtonClick(SessionStateType.completed)}

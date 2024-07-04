@@ -1,14 +1,14 @@
-import React, { useState } from "react";
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
-import { Select, Button, Link, Spinner, Textarea, ErrorMessage } from "@components/atoms";
+import { Button, ErrorMessage, Link, Select, Spinner, Textarea } from "@components/atoms";
 import { baseUrl, namespaces } from "@constants";
-import { selectIntegrationGoogle, infoGoogleUserLinks, infoGoogleAccountLinks } from "@constants/lists";
+import { infoGoogleAccountLinks, infoGoogleUserLinks, selectIntegrationGoogle } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoggerService, HttpService } from "@services";
+import { HttpService, LoggerService } from "@services";
 import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -21,15 +21,15 @@ export const GoogleIntegrationForm = () => {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
-		handleSubmit,
 		formState: { errors },
-		register,
 		getValues,
+		handleSubmit,
+		register,
 	} = useForm({
-		resolver: zodResolver(googleIntegrationSchema),
 		defaultValues: {
 			jsonKey: "",
 		},
+		resolver: zodResolver(googleIntegrationSchema),
 	});
 
 	const onSubmit = async () => {
@@ -48,6 +48,7 @@ export const GoogleIntegrationForm = () => {
 					namespaces.connectionService,
 					`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`
 				);
+
 				return;
 			}
 		} catch (error) {
@@ -70,22 +71,23 @@ export const GoogleIntegrationForm = () => {
 	const renderOAuthButton = () => (
 		<>
 			<p className="text-lg">{t("information")}:</p>
-			<div className="flex flex-col items-start gap-2 mt-2">
-				{infoGoogleUserLinks.map(({ url, text }, idx) => (
+			<div className="flex flex-col gap-2 items-start mt-2">
+				{infoGoogleUserLinks.map(({ text, url }, idx) => (
 					<Link
-						className="inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent"
+						className="gap-2.5 group hover:text-green-accent inline-flex items-center ml-2"
 						key={idx}
 						target="_blank"
 						to={url}
 					>
 						{text}
-						<ExternalLinkIcon className="w-3.5 h-3.5 duration-200 fill-white group-hover:fill-green-accent" />
+
+						<ExternalLinkIcon className="duration-200 fill-white group-hover:fill-green-accent h-3.5 w-3.5" />
 					</Link>
 				))}
 			</div>
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
-				className="px-3 ml-auto font-medium bg-white border-black hover:bg-gray-500 hover:text-white w-fit"
+				className="bg-white border-black font-medium hover:bg-gray-500 hover:text-white ml-auto px-3 w-fit"
 				onClick={handleGoogleOAuth}
 				variant="outline"
 			>
@@ -96,7 +98,7 @@ export const GoogleIntegrationForm = () => {
 
 	const renderServiceAccount = () => (
 		<div>
-			<div className="relative mb-3">
+			<div className="mb-3 relative">
 				<Textarea
 					rows={5}
 					{...register("jsonKey")}
@@ -104,29 +106,34 @@ export const GoogleIntegrationForm = () => {
 					isError={!!errors.jsonKey}
 					placeholder={t("google.placeholders.jsonKey")}
 				/>
+
 				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
 			</div>
+
 			<Button
 				aria-label={t("buttons.saveConnection")}
-				className="px-3 ml-auto font-medium text-white border-white hover:bg-black w-fit"
+				className="border-white font-medium hover:bg-black ml-auto px-3 text-white w-fit"
 				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="w-5 h-5 transition fill-white" />}{" "}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="fill-white h-5 transition w-5" />}{" "}
 				{t("buttons.saveConnection")}
 			</Button>
+
 			<p className="text-lg">{t("information")}:</p>
-			<div className="flex flex-col items-start gap-2 mt-2">
-				{infoGoogleAccountLinks.map(({ url, text }, idx) => (
+
+			<div className="flex flex-col gap-2 items-start mt-2">
+				{infoGoogleAccountLinks.map(({ text, url }, idx) => (
 					<Link
-						className="inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent"
+						className="gap-2.5 group hover:text-green-accent inline-flex items-center ml-2"
 						key={idx}
 						target="_blank"
 						to={url}
 					>
 						{text}
-						<ExternalLinkIcon className="w-3.5 h-3.5 duration-200 fill-white group-hover:fill-green-accent" />
+
+						<ExternalLinkIcon className="duration-200 fill-white group-hover:fill-green-accent h-3.5 w-3.5" />
 					</Link>
 				))}
 			</div>
@@ -134,8 +141,8 @@ export const GoogleIntegrationForm = () => {
 	);
 
 	return (
-		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
-			<div className="flex flex-col w-full gap-6">
+		<form className="flex gap-10 items-start" onSubmit={handleSubmit(onSubmit)}>
+			<div className="flex flex-col gap-6 w-full">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
 					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
@@ -147,7 +154,9 @@ export const GoogleIntegrationForm = () => {
 					options={selectIntegrationGoogle}
 					placeholder={t("placeholders.selectConnectionType")}
 				/>
+
 				{selectedConnectionType && selectedConnectionType === GoogleConnectionType.Oauth ? renderOAuthButton() : null}
+
 				{selectedConnectionType && selectedConnectionType === GoogleConnectionType.ServiceAccount
 					? renderServiceAccount()
 					: null}

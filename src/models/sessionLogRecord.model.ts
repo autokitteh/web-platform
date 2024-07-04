@@ -1,7 +1,7 @@
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Value } from "@ak-proto-ts/values/v1/values_pb";
 import { namespaces } from "@constants";
-import { SessionStateType, SessionLogRecordType } from "@enums";
+import { SessionLogRecordType, SessionStateType } from "@enums";
 import { convertErrorProtoToModel } from "@models/error.model";
 import { LoggerService } from "@services";
 import { Callstack } from "@type/models";
@@ -9,24 +9,25 @@ import { convertTimestampToDate } from "@utilities";
 import i18n from "i18next";
 
 export class SessionLogRecord {
-	type: SessionLogRecordType = SessionLogRecordType.unknown;
-	state?: SessionStateType;
 	callstackTrace: Callstack[] = [];
-	logs?: string;
-	error?: string;
 	dateTime?: Date;
 
+	error?: string;
+	logs?: string;
+	state?: SessionStateType;
+	type: SessionLogRecordType = SessionLogRecordType.unknown;
 	constructor(logRecord: ProtoSessionLogRecord) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { t, processId, ...props } = logRecord;
+		const { processId, t, ...props } = logRecord;
 
 		const logRecordType = this.getLogRecordType(props);
 
 		if (!logRecordType) {
 			LoggerService.error(
 				namespaces.sessionsHistory,
-				i18n.t("sessionLogRecordTypeNotFound", { props: Object.keys(props).join(", "), ns: "services" })
+				i18n.t("sessionLogRecordTypeNotFound", { ns: "services", props: Object.keys(props).join(", ") })
 			);
+
 			return;
 		}
 
@@ -57,15 +58,66 @@ export class SessionLogRecord {
 		}
 	}
 
+	isFinished(): boolean {
+		return (
+			this.state === SessionStateType.error ||
+			this.state === SessionStateType.completed ||
+			this.state === SessionStateType.stopped
+		);
+	}
 	private getLogRecordType(props: { [key: string]: any }): SessionLogRecordType | undefined {
 		const activeKey = Object.keys(props).find((key) => props[key] !== undefined);
 
 		if (activeKey && activeKey in SessionLogRecordType) {
 			return activeKey as SessionLogRecordType;
 		}
+
 		return undefined;
 	}
 
+	private handleCallAttemptComplete(logRecord: ProtoSessionLogRecord) {
+		this.type = SessionLogRecordType.callAttemptComplete;
+
+		const sessionLogRecord = logRecord[this.type];
+		if (sessionLogRecord?.result?.value?.time) {
+			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
+					${i18n.t("historyResult", { ns: "services" })}: ${i18n.t("historyTime", { ns: "services" })} - 
+						${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
+
+			return;
+		}
+		if (sessionLogRecord?.result?.value?.nothing) {
+			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
+				${i18n.t("historyResult", { ns: "services" })}: 
+				${i18n.t("historyNoOutput", { ns: "services" })}`;
+
+			return;
+		}
+
+		const functionResponse = sessionLogRecord?.result?.value?.struct?.fields?.body?.string?.v || "";
+		const functionName = sessionLogRecord?.result?.value?.struct?.ctor?.string?.v || "";
+
+		if (!functionName && !functionResponse) {
+			this.logs = undefined;
+
+			return;
+		}
+		this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
+			${i18n.t("historyResult", { ns: "services" })}: 
+			${functionName} - ${functionResponse}`;
+	}
+
+	private handleFuncCall(logRecord: ProtoSessionLogRecord) {
+		this.type = SessionLogRecordType.callSpec;
+		const sessionLogRecord = logRecord[this.type];
+
+		const functionName = sessionLogRecord?.function?.function?.name || "";
+		const args = (sessionLogRecord?.args || [])
+			.map((arg: Value) => arg.string?.v)
+			.join(", ")
+			.replace(/, ([^,]*)$/, "");
+		this.logs = `${i18n.t("historyFunction", { ns: "services" })}: ${functionName}(${args})`;
+	}
 	private handleStateRecord(logRecord: ProtoSessionLogRecord) {
 		this.type = SessionLogRecordType.state;
 		const activeKey = Object.keys(logRecord.state!).find(
@@ -100,54 +152,5 @@ export class SessionLogRecord {
 
 			this.logs = this.logs ? `${this.logs}${finishedMessagePrint}` : finishedMessagePrint;
 		}
-	}
-
-	private handleCallAttemptComplete(logRecord: ProtoSessionLogRecord) {
-		this.type = SessionLogRecordType.callAttemptComplete;
-
-		const sessionLogRecord = logRecord[this.type];
-		if (sessionLogRecord?.result?.value?.time) {
-			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
-					${i18n.t("historyResult", { ns: "services" })}: ${i18n.t("historyTime", { ns: "services" })} - 
-						${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
-			return;
-		}
-		if (sessionLogRecord?.result?.value?.nothing) {
-			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
-				${i18n.t("historyResult", { ns: "services" })}: 
-				${i18n.t("historyNoOutput", { ns: "services" })}`;
-			return;
-		}
-
-		const functionResponse = sessionLogRecord?.result?.value?.struct?.fields?.body?.string?.v || "";
-		const functionName = sessionLogRecord?.result?.value?.struct?.ctor?.string?.v || "";
-
-		if (!functionName && !functionResponse) {
-			this.logs = undefined;
-			return;
-		}
-		this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
-			${i18n.t("historyResult", { ns: "services" })}: 
-			${functionName} - ${functionResponse}`;
-	}
-
-	private handleFuncCall(logRecord: ProtoSessionLogRecord) {
-		this.type = SessionLogRecordType.callSpec;
-		const sessionLogRecord = logRecord[this.type];
-
-		const functionName = sessionLogRecord?.function?.function?.name || "";
-		const args = (sessionLogRecord?.args || [])
-			.map((arg: Value) => arg.string?.v)
-			.join(", ")
-			.replace(/, ([^,]*)$/, "");
-		this.logs = `${i18n.t("historyFunction", { ns: "services" })}: ${functionName}(${args})`;
-	}
-
-	isFinished(): boolean {
-		return (
-			this.state === SessionStateType.error ||
-			this.state === SessionStateType.completed ||
-			this.state === SessionStateType.stopped
-		);
 	}
 }

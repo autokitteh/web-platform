@@ -1,28 +1,31 @@
-import { useState, useMemo, useCallback } from "react";
 import { initialSortConfig } from "@constants";
 import { SortDirectionVariant } from "@enums/components";
 import { SortConfig } from "@type";
 import { orderBy } from "lodash";
+import { useCallback, useMemo, useState } from "react";
 
 export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 	const [sortConfig, setSortConfig] = useState<SortConfig<T>>(
-		initialSortKey ? { key: initialSortKey, direction: SortDirectionVariant.ASC } : initialSortConfig
+		initialSortKey ? { direction: SortDirectionVariant.ASC, key: initialSortKey } : initialSortConfig
 	);
 
 	const sortedItems = useMemo(() => {
-		if (!sortConfig.key) return items;
+		if (!sortConfig.key) {
+			return items;
+		}
+
 		return orderBy(items, [sortConfig.key], [sortConfig.direction]);
 	}, [items, sortConfig]);
 
 	const requestSort = useCallback((key: keyof T) => {
 		setSortConfig((prevConfig) => ({
-			key,
 			direction:
 				prevConfig.key === key && prevConfig.direction === SortDirectionVariant.ASC
 					? SortDirectionVariant.DESC
 					: SortDirectionVariant.ASC,
+			key,
 		}));
 	}, []);
 
-	return { items: sortedItems, sortConfig, requestSort };
+	return { items: sortedItems, requestSort, sortConfig };
 };

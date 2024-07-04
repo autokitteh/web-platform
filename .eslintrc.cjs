@@ -10,6 +10,7 @@ module.exports = {
 		"plugin:storybook/recommended",
 		"prettier",
 		"plugin:security/recommended-legacy",
+		"plugin:@liferay/react",
 	],
 	settings: {
 		"react": {
@@ -42,8 +43,19 @@ module.exports = {
 	},
 	ignorePatterns: ["dist", ".eslintrc.cjs", "src/stories"],
 	parser: "@typescript-eslint/parser",
-	plugins: ["react-refresh", "prettier", "unicorn", "import", "@typescript-eslint"],
+	plugins: ["react-refresh", "prettier", "unicorn", "import", "@typescript-eslint", "@liferay"],
 	rules: {
+		"@typescript-eslint/member-ordering": [
+			"error",
+			{
+			"default": [
+				"signature",
+				"field",
+				"constructor",
+				"method"
+			]
+			}
+		],
 		"@typescript-eslint/no-explicit-any": "off",
 		"prettier/prettier": [
 			"error",
@@ -85,6 +97,7 @@ module.exports = {
 		"react/react-in-jsx-scope": "off",
 		"react/jsx-one-expression-per-line": "off",
 		"react/prop-types": "off",
+
 		// TypeScript Rules
 		"@typescript-eslint/naming-convention": [
 			"warn",
@@ -121,35 +134,8 @@ module.exports = {
 				case: "camelCase",
 			},
 		],
-		"import/order": [
-			"error",
-			{
-				"alphabetize": {
-					caseInsensitive: true,
-					order: "asc",
-				},
-				"groups": ["external", "builtin", "parent", ["sibling", "index"]],
-				"newlines-between": "never",
-				"pathGroups": [
-					{
-						group: "external",
-						pattern: "react",
-						position: "before",
-					},
-					{
-						group: "builtin",
-						pattern: "**",
-						position: "after",
-					},
-					{
-						group: "external",
-						pattern: "./**",
-						position: "after",
-					},
-				],
-				"pathGroupsExcludedImportTypes": ["builtin"],
-			},
-		],
+		"@liferay/sort-class-names": "error",
 		"no-console": "error",
+		"@liferay/no-anonymous-exports": "off",
 	},
 };
