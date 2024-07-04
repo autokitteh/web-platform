@@ -140,8 +140,8 @@ export const SessionTableEditorFrame = () => {
 	return (
 		<Frame className="w-3/5 transition pt-20 ml-2.5">
 			{isLoading ? (
-				<div className="flex items-center h-full w-full">
-					<Loader />
+				<div className="flex items-center w-full h-full">
+					<Loader isCenter size="xl" />
 				</div>
 			) : (
 				<>
@@ -160,6 +160,7 @@ export const SessionTableEditorFrame = () => {
 							beforeMount={handleEditorWillMount}
 							className="-ml-6"
 							key={editorKey}
+							loading={<Loader isCenter size="lg" />}
 							onMount={handleEditorDidMount}
 							options={{
 								readOnly: true,

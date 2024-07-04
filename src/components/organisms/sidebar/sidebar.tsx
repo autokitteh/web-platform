@@ -32,14 +32,14 @@ export const Sidebar = () => {
 	};
 
 	return (
-		<Suspense fallback={<Loader size="lg" />}>
-			<div className="w-main-nav-sidebar relative">
+		<Suspense fallback={<Loader isCenter size="lg" />}>
+			<div className="relative w-main-nav-sidebar">
 				<div
-					className="absolute flex items-start h-full top-0 left-0 z-50"
+					className="absolute top-0 left-0 z-50 flex items-start h-full"
 					onMouseEnter={() => setIsOpen(true)}
 					onMouseLeave={handleMouseLeave}
 				>
-					<div className="h-full p-4 pt-6 pb-10 flex flex-col justify-between bg-white z-10">
+					<div className="z-10 flex flex-col justify-between h-full p-4 pt-6 pb-10 bg-white">
 						<div>
 							<Link className="flex items-center gap-2.5 ml-1" to="/">
 								<IconLogo className="w-8 h-8" />
@@ -47,7 +47,7 @@ export const Sidebar = () => {
 									{isOpen ? (
 										<motion.span
 											animate="visible"
-											className="whitespace-nowrap overflow-hidden"
+											className="overflow-hidden whitespace-nowrap"
 											exit="hidden"
 											initial="hidden"
 											variants={animateVariant}
@@ -60,14 +60,14 @@ export const Sidebar = () => {
 							<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 						</div>
 						{isAuthEnabled ? (
-							<div className="flex flex-col gap-5 justify-end">
+							<div className="flex flex-col justify-end gap-5">
 								<Button className="hover:bg-transparent" href="#">
 									<img alt="avatar" className="w-8 h-8 rounded-full" src="https://via.placeholder.com/30" />
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span
 												animate="visible"
-												className="whitespace-nowrap overflow-hidden"
+												className="overflow-hidden whitespace-nowrap"
 												exit="hidden"
 												initial="hidden"
 												variants={animateVariant}
@@ -84,7 +84,7 @@ export const Sidebar = () => {
 											{isOpen ? (
 												<motion.span
 													animate="visible"
-													className="whitespace-nowrap overflow-hidden"
+													className="overflow-hidden whitespace-nowrap"
 													exit="hidden"
 													initial="hidden"
 													variants={animateVariant}

@@ -76,9 +76,7 @@ export const VariablesTable = () => {
 	};
 
 	return isLoadingVariables ? (
-		<div className="flex flex-col justify-center h-full">
-			<Loader />
-		</div>
+		<Loader isCenter size="xl" />
 	) : (
 		<>
 			<div className="flex items-center justify-between">

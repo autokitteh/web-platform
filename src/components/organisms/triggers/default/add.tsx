@@ -162,7 +162,7 @@ export const DefaultTriggerForm = ({
 		});
 	};
 	return isLoading ? (
-		<Loader isCenter size="2xl" />
+		<Loader isCenter size="xl" />
 	) : (
 		<form className="flex flex-col w-full gap-6" id={formId} onSubmit={handleSubmit(onSubmit)}>
 			<div className="relative">

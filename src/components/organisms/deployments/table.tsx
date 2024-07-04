@@ -85,98 +85,101 @@ export const DeploymentsTable = () => {
 		openModal(ModalName.deleteDeployment);
 	};
 
-	if (isLoadingDeployments) return <Loader isCenter size="2xl" />;
-	if (!sortedDeployments.length)
-		return <div className="mt-10 text-xl font-semibold text-center text-black">{t("noDeployments")}</div>;
-
-	return (
+	return isLoadingDeployments ? (
+		<Loader isCenter size="xl" />
+	) : (
 		<div className="flex flex-col w-full">
 			<div className="flex items-center justify-between">
-				<h1 className="text-base text-black">
-					{t("tableTitle")} ({deployments.length})
-				</h1>
+				<div className="text-base text-black">
+					{t("tableTitle")} ({sortedDeployments.length})
+				</div>
 			</div>
-			<Table className="mt-4">
-				<THead>
-					<Tr>
-						<Th className="font-normal cursor-pointer group" onClick={() => requestSort("createdAt")}>
-							{t("table.columns.deploymentTime")}
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"createdAt" === sortConfig.key}
-								sortDirection={sortConfig.direction}
-							/>
-						</Th>
+			{!sortedDeployments.length ? (
+				<div className="mt-10 text-xl font-semibold text-center text-black">{t("noDeployments")}</div>
+			) : (
+				<Table className="mt-4">
+					<THead>
+						<Tr>
+							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("createdAt")}>
+								{t("table.columns.deploymentTime")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"createdAt" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
+							</Th>
 
-						<Th className="font-normal cursor-pointer group">{t("table.columns.sessions")}</Th>
-						<Th className="font-normal cursor-pointer group" onClick={() => requestSort("buildId")}>
-							{t("table.columns.buildId")}
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"buildId" === sortConfig.key}
-								sortDirection={sortConfig.direction}
-							/>
-						</Th>
-						<Th className="font-normal border-r-0 cursor-pointer group" onClick={() => requestSort("state")}>
-							{t("table.columns.status")}
-							<SortButton
-								className="opacity-0 group-hover:opacity-100"
-								isActive={"state" === sortConfig.key}
-								sortDirection={sortConfig.direction}
-							/>
-						</Th>
-						<Th className="font-normal text-right max-w-20">Actions</Th>
-					</Tr>
-				</THead>
-				<TBody className="bg-gray-700">
-					{sortedDeployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
-						<Tr
-							className="cursor-pointer group"
-							key={deploymentId}
-							onClick={() => navigate(`${deploymentId}/sessions`)}
-						>
-							<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
-							<Td>
-								<DeploymentSessionStats sessionStats={sessionStats} />
-							</Td>
-							<Td>{buildId}</Td>
-							<Td className="border-r-0">
-								<DeploymentState deploymentState={state} />
-							</Td>
-							<Td className="max-w-20">
-								<div className="flex space-x-1">
-									{state === DeploymentStateVariant.active ? (
-										<IconButton
-											ariaLabel={t("ariaDeactivateDeploy")}
-											className="p-1"
-											onClick={(e) => handleDeploymentAction(deploymentId, "deactivate", e)}
-											title={t("ariaDeactivateDeploy")}
-										>
-											<ActionStoppedIcon className="w-4 h-4 transition group-hover:fill-white" />
-										</IconButton>
-									) : (
-										<IconButton
-											ariaLabel={t("ariaActivateDeploy")}
-											className="p-1"
-											onClick={(e) => handleDeploymentAction(deploymentId, "activate", e)}
-										>
-											<ActionActiveIcon className="w-4 h-4 transition group-hover:fill-green-accent" />
-										</IconButton>
-									)}
-									<IconButton
-										ariaLabel={t("ariaDeleteDeploy")}
-										disabled={state === DeploymentStateVariant.active}
-										onClick={(e) => showDeleteModal(e, deploymentId)}
-										title={t("ariaDeleteDeploy")}
-									>
-										<TrashIcon className="w-3 h-3 fill-white" />
-									</IconButton>
-								</div>
-							</Td>
+							<Th className="font-normal cursor-pointer group">{t("table.columns.sessions")}</Th>
+							<Th className="font-normal cursor-pointer group" onClick={() => requestSort("buildId")}>
+								{t("table.columns.buildId")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"buildId" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
+							</Th>
+							<Th className="font-normal border-r-0 cursor-pointer group" onClick={() => requestSort("state")}>
+								{t("table.columns.status")}
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"state" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
+							</Th>
+							<Th className="font-normal text-right max-w-20">Actions</Th>
 						</Tr>
-					))}
-				</TBody>
-			</Table>
+					</THead>
+					<TBody className="bg-gray-700">
+						{sortedDeployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
+							<Tr
+								className="cursor-pointer group"
+								key={deploymentId}
+								onClick={() => navigate(`${deploymentId}/sessions`)}
+							>
+								<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
+								<Td>
+									<DeploymentSessionStats sessionStats={sessionStats} />
+								</Td>
+								<Td>{buildId}</Td>
+								<Td className="border-r-0">
+									<DeploymentState deploymentState={state} />
+								</Td>
+								<Td className="max-w-20">
+									<div className="flex space-x-1">
+										{state === DeploymentStateVariant.active ? (
+											<IconButton
+												ariaLabel={t("ariaDeactivateDeploy")}
+												className="p-1"
+												onClick={(e) => handleDeploymentAction(deploymentId, "deactivate", e)}
+												title={t("ariaDeactivateDeploy")}
+											>
+												<ActionStoppedIcon className="w-4 h-4 transition group-hover:fill-white" />
+											</IconButton>
+										) : (
+											<IconButton
+												ariaLabel={t("ariaActivateDeploy")}
+												className="p-1"
+												onClick={(e) => handleDeploymentAction(deploymentId, "activate", e)}
+											>
+												<ActionActiveIcon className="w-4 h-4 transition group-hover:fill-green-accent" />
+											</IconButton>
+										)}
+										<IconButton
+											ariaLabel={t("ariaDeleteDeploy")}
+											disabled={state === DeploymentStateVariant.active}
+											onClick={(e) => showDeleteModal(e, deploymentId)}
+											title={t("ariaDeleteDeploy")}
+										>
+											<TrashIcon className="w-3 h-3 fill-white" />
+										</IconButton>
+									</div>
+								</Td>
+							</Tr>
+						))}
+					</TBody>
+				</Table>
+			)}
+
 			<DeleteDeploymentModal onDelete={() => handleDeploymentAction(deploymentId!, "delete")} />
 		</div>
 	);

@@ -191,7 +191,7 @@ export const DefaultEditTrigger = () => {
 	};
 
 	return isLoadingData ? (
-		<Loader isCenter size="2xl" />
+		<Loader isCenter size="xl" />
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader
