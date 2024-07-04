@@ -60,24 +60,26 @@ export const Project = () => {
 		<SplitFrame>
 			{displayTabs ? (
 				<div className="flex flex-col flex-1 h-full">
-					<div
-						className={
-							"flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none z-20 " +
-							"overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar shrink-0 sticky -top-10 bg-gray-800 py-2 -my-2"
-						}
-					>
-						{projectTabs.map((singleTab) => (
-							<Tab
-								activeTab={activeTab}
-								ariaLabel={singleTab.label}
-								className="flex items-center text-xs 3xl:text-sm"
-								key={singleTab.value}
-								onClick={() => goTo(singleTab.value)}
-								value={singleTab.value}
-							>
-								{singleTab.label}
-							</Tab>
-						))}
+					<div className="sticky z-20 py-5 -my-5 bg-gray-800 -top-10">
+						<div
+							className={
+								"flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none " +
+								"overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar shrink-0 py-2"
+							}
+						>
+							{projectTabs.map((singleTab) => (
+								<Tab
+									activeTab={activeTab}
+									ariaLabel={singleTab.label}
+									className="flex items-center text-xs 3xl:text-sm"
+									key={singleTab.value}
+									onClick={() => goTo(singleTab.value)}
+									value={singleTab.value}
+								>
+									{singleTab.label}
+								</Tab>
+							))}
+						</div>
 					</div>
 					<div className="h-full pt-2">
 						<Outlet />
