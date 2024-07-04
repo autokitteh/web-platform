@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/autokitteh/web-platform/compare/v1.12.0...v1.13.0) (2024-07-04)
+
+
+### Features
+
+* add scroll inside frame ([#161](https://github.com/autokitteh/web-platform/issues/161)) ([8d4f2d5](https://github.com/autokitteh/web-platform/commit/8d4f2d5647c45553393ff69b046eeb5800ebaf9f))
+
 # [1.12.0](https://github.com/autokitteh/web-platform/compare/v1.11.4...v1.12.0) (2024-07-04)
 
 
