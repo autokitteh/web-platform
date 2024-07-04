@@ -10,7 +10,7 @@ export const Dashboard: React.FC = () => {
 	return (
 		<div>
 			<div className="flex w-full">
-				<h1 className="text-black w-full text-2xl font-averta-bold mt-6">
+				<h1 className="w-full mt-6 text-2xl text-black font-averta-bold">
 					Welcome {userName ? `, ${userName}` : null}
 				</h1>
 			</div>

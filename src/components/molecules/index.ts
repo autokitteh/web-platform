@@ -6,3 +6,4 @@ export { MapMenu } from "@components/molecules/mapMenu";
 export { TabFormHeader } from "@components/molecules/tabFormHeader";
 export { ConnectionTableStatus } from "@components/molecules/connectionTableStatus";
 export { Toast } from "@components/molecules/toast";
+export { Accordion } from "@components/molecules/accordion";
