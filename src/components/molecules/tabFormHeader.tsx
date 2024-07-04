@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 export const TabFormHeader = ({ title, isLoading, form, className }: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
-	const baseStyle = cn("flex justify-between sticky -top-10 z-20 bg-gray-800 py-1 -mt-1", className);
+	const baseStyle = cn("flex justify-between sticky -top-10 z-10 bg-gray-800 py-1 -mt-1", className);
 
 	return (
 		<div className={baseStyle}>
