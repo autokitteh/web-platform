@@ -27,7 +27,7 @@ export const AddTrigger = () => {
 	return (
 		<div className="min-w-80">
 			<TabFormHeader
-				className="mb-11"
+				className="mb-10"
 				form={FormTriggerComponent.props.formId}
 				isLoading={isSaving}
 				title={t("addNewTrigger")}
