@@ -21,7 +21,6 @@ export const DeploymentsTableContent = ({
 	deployments: Deployment[];
 	updateDeployments: () => void;
 }) => {
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const navigate = useNavigate();
 	const { items: sortedDeployments, sortConfig, requestSort } = useSort<Deployment>(deployments);
@@ -50,7 +49,6 @@ export const DeploymentsTableContent = ({
 					id: Date.now().toString(),
 					message: (error as Error).message,
 					type: "error",
-					title: tErrors("error"),
 				});
 				return;
 			}
