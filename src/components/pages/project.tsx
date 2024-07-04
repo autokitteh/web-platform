@@ -62,7 +62,7 @@ export const Project = () => {
 				<div className="flex flex-col flex-1 h-full">
 					<div
 						className={
-							"flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none z-[100] " +
+							"flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none z-20 " +
 							"overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar shrink-0 sticky -top-10 bg-gray-800 py-2 -my-2"
 						}
 					>
