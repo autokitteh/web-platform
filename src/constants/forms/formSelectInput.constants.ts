@@ -1,14 +1,16 @@
 import { formColors } from "@constants/forms/formColors.constants";
-import { ColorScheme, SelectOption } from "@interfaces/components";
+import { SelectOption } from "@interfaces/components";
+import { ColorSchemes } from "@type/theme.type";
 import { StylesConfig, GroupBase } from "react-select";
 
 const baseStyles = {
 	"fontSize": "16px",
-	"padding": "6px 11px 6px 16px",
 	"borderRadius": "8px",
 	"boxShadow": "none",
 	"cursor": "pointer",
 	"transition": "all 0.25s",
+	"padding": "6px 11px 6px 16px",
+
 	"::-webkit-scrollbar": {
 		width: "6px",
 		height: "6px",
@@ -27,16 +29,16 @@ const baseStyles = {
 
 const getSelectStyles = (
 	isError: boolean,
-	colorScheme: ColorScheme
+	colorScheme: ColorSchemes
 ): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
 	const defaultBorderColor = `0.5px solid ${isError ? formColors.error : formColors["gray-500"]}`;
-	const greenBorderColor = `0.5px solid ${colorScheme === "black" ? formColors["green-light"] : formColors["green-accent"]}`;
-	const hoverBorderColor = colorScheme === "black" ? formColors.white : formColors["gray-400"];
-	const backgroundColor = formColors[colorScheme];
-	const oppositeSchemeColor = formColors[colorScheme === "black" ? "white" : "black"];
+	const greenBorderColor = `0.5px solid ${colorScheme === "dark" ? formColors["green-light"] : formColors["green-accent"]}`;
+	const hoverBorderColor = colorScheme === "dark" ? formColors.white : formColors["gray-400"];
+	const backgroundColor = formColors[colorScheme === "dark" ? "black" : "white"];
+	const oppositeSchemeColor = formColors[colorScheme === "dark" ? "white" : "black"];
 	const hoverBackgroundColor = formColors["gray-800"];
-	const selectedBackgroundColor = colorScheme === "black" ? formColors.white : formColors.black;
-	const selectedTextColor = colorScheme === "black" ? formColors.black : formColors.white;
+	const selectedBackgroundColor = colorScheme === "dark" ? formColors.white : formColors.black;
+	const selectedTextColor = colorScheme === "dark" ? formColors.black : formColors.white;
 
 	return {
 		control: (provided, state) => ({
@@ -67,10 +69,10 @@ const getSelectStyles = (
 				left: 0,
 				right: 0,
 				bottom: 0,
-				width: "94%",
+				width: "calc(100% - 27px)",
 				margin: "auto",
 				height: state.menuIsOpen ? "1px" : "0",
-				backgroundColor: state.menuIsOpen ? formColors["gray-500"] : "transparent",
+				backgroundColor: state.menuIsOpen && colorScheme === "dark" ? formColors["gray-500"] : "transparent",
 				transition: "all 0.25s",
 			},
 		}),
@@ -134,10 +136,10 @@ const getSelectStyles = (
 	};
 };
 
-const getSelectBlackStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
-	getSelectStyles(isError, "black");
+const getSelectDarkStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
+	getSelectStyles(isError, "dark");
 
-const getSelectWhiteStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
-	getSelectStyles(isError, "white");
+const getSelectLightStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
+	getSelectStyles(isError, "light");
 
-export { getSelectBlackStyles, getSelectWhiteStyles };
+export { getSelectDarkStyles, getSelectLightStyles };

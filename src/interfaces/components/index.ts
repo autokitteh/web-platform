@@ -24,7 +24,7 @@ export type {
 	ModalDeleteConnectionProps,
 } from "@interfaces/components/modal.interface";
 export type { Toast } from "@interfaces/components/toast.interface";
-export type { SelectOption, SelectProps, InputProps, TextArea, ColorScheme } from "@interfaces/components/forms";
+export type { SelectOption, SelectProps, InputProps, TextArea } from "@interfaces/components/forms";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
