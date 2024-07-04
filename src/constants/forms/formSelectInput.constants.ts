@@ -8,7 +8,6 @@ const baseStyles = {
 	"borderRadius": "8px",
 	"boxShadow": "none",
 	"cursor": "pointer",
-	"transition": "all 0.25s",
 	"padding": "6px 11px 6px 16px",
 
 	"::-webkit-scrollbar": {
