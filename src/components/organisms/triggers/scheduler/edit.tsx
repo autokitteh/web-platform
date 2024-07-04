@@ -136,7 +136,7 @@ export const SchedulerEditTrigger = () => {
 	const { name, cron, entryFunction } = watch();
 
 	return isLoadingData ? (
-		<Loader isCenter size="2xl" />
+		<Loader isCenter size="xl" />
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader

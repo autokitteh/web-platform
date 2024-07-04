@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Close } from "@assets/image/icons";
-import { Tab, IconButton } from "@components/atoms";
+import { Tab, IconButton, Loader } from "@components/atoms";
 import { monacoLanguages } from "@constants";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
@@ -114,6 +114,7 @@ export const EditorTabs = () => {
 							beforeMount={handleEditorWillMount}
 							key={editorKey}
 							language={languageEditor}
+							loading={<Loader size="lg" />}
 							onChange={handleUpdateContent}
 							onMount={handleEditorDidMount}
 							options={{

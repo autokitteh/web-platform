@@ -83,9 +83,7 @@ export const EditVariable = () => {
 	const { name, value } = watch();
 
 	return isLoadingData ? (
-		<div className="flex flex-col justify-center h-full">
-			<Loader />
-		</div>
+		<Loader isCenter size="xl" />
 	) : (
 		<div className="min-w-80">
 			<TabFormHeader
