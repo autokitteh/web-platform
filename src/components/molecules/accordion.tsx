@@ -3,11 +3,19 @@ import { PlusAccordionIcon, MinusAccordionIcon } from "@assets/image/icons";
 import { Button } from "@components/atoms";
 import { motion } from "framer-motion";
 
-export const Accordion = ({ title, children }: { title: string; children: React.ReactNode }) => {
+export const Accordion = ({
+	title,
+	children,
+	className,
+}: {
+	title: string;
+	children: React.ReactNode;
+	className?: string;
+}) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
-		<div>
+		<div className={className}>
 			<Button
 				className="flex items-center justify-between gap-2.5 group cursor-pointer p-0 hover:bg-transparent text-base text-white"
 				onClick={() => setIsOpen(!isOpen)}
