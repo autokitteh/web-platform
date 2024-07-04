@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/autokitteh/web-platform/compare/v1.11.4...v1.12.0) (2024-07-04)
+
+
+### Features
+
+* add accordion component ([#171](https://github.com/autokitteh/web-platform/issues/171)) ([38702db](https://github.com/autokitteh/web-platform/commit/38702dba17d397812b852ef7ea9427c787b49d4d))
+
 ## [1.11.4](https://github.com/autokitteh/web-platform/compare/v1.11.3...v1.11.4) (2024-07-04)
 
 
