@@ -28,3 +28,7 @@ export { default as BellIcon } from "@assets/image/icons/Bell.svg?react";
 export { default as SlidersIcon } from "@assets/image/icons/Sliders.svg?react";
 export { default as ReceiptIcon } from "@assets/image/icons/Receipt.svg?react";
 export { default as SecurityIcon } from "@assets/image/icons/Security.svg?react";
+export { default as MinusAccordionIcon } from "@assets/image/icons/MinusAccordion.svg?react";
+export { default as PlusAccordionIcon } from "@assets/image/icons/PlusAccordion.svg?react";
+export { default as IconGoogle } from "@assets/image/icons/Google.png";
+export { default as IconGithub } from "@assets/image/icons/Github.png";
