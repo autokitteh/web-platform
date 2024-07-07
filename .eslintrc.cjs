@@ -10,6 +10,8 @@ module.exports = {
 		"plugin:storybook/recommended",
 		"prettier",
 		"plugin:security/recommended-legacy",
+		"plugin:promise/recommended",
+		"plugin:@liferay/react",
 	],
 	settings: {
 		"react": {
@@ -42,8 +44,21 @@ module.exports = {
 	},
 	ignorePatterns: ["dist", ".eslintrc.cjs", "src/stories"],
 	parser: "@typescript-eslint/parser",
-	plugins: ["react-refresh", "prettier", "unicorn", "import", "@typescript-eslint"],
+	plugins: ["react-refresh", "prettier", "unicorn", "import", "@typescript-eslint", "@liferay", "promise"],
 	rules: {
+		"@liferay/no-anonymous-exports": "off",
+		"@liferay/sort-class-names": "error",
+		"@typescript-eslint/member-ordering": [
+			"error",
+			{
+			"default": [
+				"signature",
+				"field",
+				"constructor",
+				"method"
+			]
+			}
+		],
 		"@typescript-eslint/no-explicit-any": "off",
 		"prettier/prettier": [
 			"error",
