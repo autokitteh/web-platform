@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { KeyboardEvent } from "react";
 
 import { TableProps } from "@interfaces/components";
@@ -8,14 +9,14 @@ export const Td = ({ children, className, onClick }: TableProps) => {
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
 		if (event.key === "Enter" || event.key === " ") {
-			event.preventDefault(); // Prevent default behavior for spacebar to avoid scrolling
+			event.preventDefault();
 			onClick?.();
 		}
 	};
 
 	return (
 		<td className={tdStyle}>
-			<div className="truncate" onClick={onClick} onKeyDown={handleKeyDown} role="button" tabIndex={0}>
+			<div className="truncate" onClick={onClick} onKeyDown={handleKeyDown}>
 				{children}
 			</div>
 		</td>
