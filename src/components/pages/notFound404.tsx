@@ -3,8 +3,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { Error404 } from "@assets/image";
 import { homepageURL } from "@constants/global.constants";
+
+import { Error404 } from "@assets/image";
 
 export const NotFound404 = () => {
 	const { t } = useTranslation(["notFound404"]);

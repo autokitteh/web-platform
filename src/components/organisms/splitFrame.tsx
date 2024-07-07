@@ -1,10 +1,11 @@
 import React from "react";
 
-import { Button, Frame, LogoCatLarge } from "@components/atoms";
-import { EditorTabs, OutputTabs } from "@components/organisms";
 import { useResize } from "@hooks";
 import { SplitFrameProps } from "@interfaces/components";
 import { cn } from "@utilities";
+
+import { Button, Frame, LogoCatLarge } from "@components/atoms";
+import { EditorTabs, OutputTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 70, min: 35 });

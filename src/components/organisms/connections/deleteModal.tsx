@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { Button, Spinner } from "@components/atoms";
-import { Modal } from "@components/molecules";
 import { ModalName } from "@enums/components";
 import { ModalDeleteConnectionProps } from "@interfaces/components";
 import { ConnectionService } from "@services";
 import { useModalStore } from "@store";
 import { Connection } from "@type/models";
+
+import { Button, Spinner } from "@components/atoms";
+import { Modal } from "@components/molecules";
 
 export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: ModalDeleteConnectionProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });

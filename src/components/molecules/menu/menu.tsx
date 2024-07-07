@@ -4,13 +4,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { NewProject, ProjectsIcon } from "@assets/image";
-import { Button, IconSvg } from "@components/atoms";
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
 import { useProjectStore, useToastStore } from "@store";
 import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
+
+import { Button, IconSvg } from "@components/atoms";
+
+import { NewProject, ProjectsIcon } from "@assets/image";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);

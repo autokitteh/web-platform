@@ -1,20 +1,22 @@
 import React, { useMemo, useState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
-import { Button, ErrorMessage, Input, Link, Select, Spinner } from "@components/atoms";
 import { baseUrl, namespaces } from "@constants";
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpService, LoggerService } from "@services";
 import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
+
+import { Button, ErrorMessage, Input, Link, Select, Spinner } from "@components/atoms";
+
+import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");

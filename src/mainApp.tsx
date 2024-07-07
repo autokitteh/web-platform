@@ -1,10 +1,10 @@
 import React from "react";
 
 import { App } from "./app";
+import { descopeProjectId, isAuthEnabled } from "@constants";
 
 import { Toast } from "@components/molecules";
 import { DescopeWrapper } from "@components/templates";
-import { descopeProjectId, isAuthEnabled } from "@constants";
 
 export const MainApp = () => {
 	return (

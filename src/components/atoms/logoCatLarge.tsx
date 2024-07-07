@@ -1,8 +1,9 @@
 import React from "react";
 
-import { LogoCatImage } from "@assets/image";
 import { LogoCatLargeProps } from "@interfaces/components";
 import { cn } from "@utilities";
+
+import { LogoCatImage } from "@assets/image";
 
 export const LogoCatLarge = ({ className }: LogoCatLargeProps) => {
 	const logoClass = cn(

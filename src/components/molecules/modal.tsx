@@ -3,11 +3,13 @@ import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
 
-import { Close } from "@assets/image/icons";
-import { IconButton } from "@components/atoms";
 import { ModalProps } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { cn } from "@utilities";
+
+import { IconButton } from "@components/atoms";
+
+import { Close } from "@assets/image/icons";
 
 const backdropVariants = {
 	hidden: { opacity: 0, transition: { duration: 0.2 } },

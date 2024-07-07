@@ -5,11 +5,6 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
 
-import { CatImage } from "@assets/image";
-import { ArrowLeft, RotateIcon } from "@assets/image/icons";
-import { Frame, IconButton, TBody, THead, Table, Th, Tr } from "@components/atoms";
-import { SessionsTableFilter } from "@components/organisms/deployments";
-import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 import { fetchSessionsInterval, namespaces } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
@@ -19,6 +14,13 @@ import { DeploymentsService, LoggerService, SessionsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
+
+import { Frame, IconButton, TBody, THead, Table, Th, Tr } from "@components/atoms";
+import { SessionsTableFilter } from "@components/organisms/deployments";
+import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
+
+import { CatImage } from "@assets/image";
+import { ArrowLeft, RotateIcon } from "@assets/image/icons";
 
 export const SessionsTable = () => {
 	const { t: tErrors } = useTranslation(["errors", "services"]);

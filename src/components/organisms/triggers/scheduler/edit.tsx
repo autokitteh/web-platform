@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ExternalLinkIcon } from "@assets/image/icons";
-import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
 import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } from "@constants";
 import { TriggerFormIds } from "@enums/components";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { Trigger } from "@type/models";
 import { schedulerTriggerSchema } from "@validations";
+
+import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
+import { TabFormHeader } from "@components/molecules";
+
+import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const SchedulerEditTrigger = () => {
 	const { projectId, triggerId } = useParams();

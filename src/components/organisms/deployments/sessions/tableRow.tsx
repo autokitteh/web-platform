@@ -3,11 +3,13 @@ import React, { CSSProperties, memo } from "react";
 import moment from "moment";
 import { areEqual } from "react-window";
 
-import { TrashIcon } from "@assets/image/icons";
-import { IconButton, Td, Tr } from "@components/atoms";
-import { SessionsTableState } from "@components/organisms/deployments";
 import { SessionsTableRowProps } from "@interfaces/components";
 import { cn } from "@utilities";
+
+import { IconButton, Td, Tr } from "@components/atoms";
+import { SessionsTableState } from "@components/organisms/deployments";
+
+import { TrashIcon } from "@assets/image/icons";
 
 export const SessionsTableRow = memo(
 	({ data, index, style }: { data: SessionsTableRowProps; index: number; style: CSSProperties }) => {

@@ -3,16 +3,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { PlusCircle } from "@assets/image";
-import { ClockIcon, EditIcon, TrashIcon } from "@assets/image/icons";
-import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { SortButton } from "@components/molecules";
-import { DeleteTriggerModal } from "@components/organisms/triggers";
 import { ModalName } from "@enums/components";
 import { useSort } from "@hooks";
 import { TriggersService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Trigger } from "@type/models";
+
+import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { SortButton } from "@components/molecules";
+import { DeleteTriggerModal } from "@components/organisms/triggers";
+
+import { PlusCircle } from "@assets/image";
+import { ClockIcon, EditIcon, TrashIcon } from "@assets/image/icons";
 
 export const TriggersTable = () => {
 	const { t: tError } = useTranslation("errors");

@@ -1,17 +1,18 @@
 import React from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { Button, ErrorMessage, Input, Select } from "@components/atoms";
-import { Modal } from "@components/molecules";
 import { defalutFileExtension, monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ModalAddCodeAssetsProps } from "@interfaces/components";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { codeAssetsSchema } from "@validations";
+
+import { Button, ErrorMessage, Input, Select } from "@components/atoms";
+import { Modal } from "@components/molecules";
 
 export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const { projectId } = useParams();

@@ -3,11 +3,13 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
-import { Close } from "@assets/image/icons";
-import { IconButton } from "@components/atoms";
 import { ToasterTypes } from "@interfaces/components/toast.interface";
 import { useToastStore } from "@store/useToastStore";
 import { cn } from "@utilities";
+
+import { IconButton } from "@components/atoms";
+
+import { Close } from "@assets/image/icons";
 
 export const Toast = () => {
 	const { removeToast, toasts } = useToastStore();

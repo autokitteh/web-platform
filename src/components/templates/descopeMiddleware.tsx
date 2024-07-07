@@ -1,14 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { Descope, useDescope } from "@descope/react-sdk";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 
-import { IconLogoAuth } from "@assets/image";
-import { Badge, Frame, LogoCatLarge } from "@components/atoms";
 import { baseUrl } from "@constants";
-import { Descope, useDescope } from "@descope/react-sdk";
 import { useProjectStore, useToastStore } from "@store";
 import { useUserStore } from "@store/useUserStore";
+
+import { Badge, Frame, LogoCatLarge } from "@components/atoms";
+
+import { IconLogoAuth } from "@assets/image";
 
 export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) => {
 	const { getProjectMenutItems, reset: resetProjectStore } = useProjectStore();

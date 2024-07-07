@@ -3,10 +3,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { ArrowLeft } from "@assets/image/icons";
-import { Button, IconButton } from "@components/atoms";
 import { TabFormHeaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
+
+import { Button, IconButton } from "@components/atoms";
+
+import { ArrowLeft } from "@assets/image/icons";
 
 export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");

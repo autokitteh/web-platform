@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce, has } from "lodash";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { InfoIcon, PlusCircle } from "@assets/image";
-import { TrashIcon } from "@assets/image/icons";
-import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
 import { namespaces } from "@constants";
 import { TriggerFormIds } from "@enums/components";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
+
+import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
+import { TabFormHeader } from "@components/molecules";
+
+import { InfoIcon, PlusCircle } from "@assets/image";
+import { TrashIcon } from "@assets/image/icons";
 
 export const DefaultEditTrigger = () => {
 	const { projectId, triggerId } = useParams();

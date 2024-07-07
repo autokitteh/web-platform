@@ -163,7 +163,22 @@ module.exports = {
 						position: "before",
 					},
 					{
-						pattern: "@{*,**/**}",
+						pattern: "@(enums|interfaces|types|utilities|constants|services|validations)/**",
+						group: "internal",
+						position: "after",
+					},
+					{
+						pattern: "@(hooks|store)/**",
+						group: "internal",
+						position: "after",
+					},
+					{
+						pattern: "@components/**",
+						group: "internal",
+						position: "after",
+					},
+					{
+						pattern: "@assets/**",
 						group: "internal",
 						position: "after",
 					},

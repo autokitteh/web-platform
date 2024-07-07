@@ -4,10 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
 
-import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 import { ModalName } from "@enums/components";
 import { SessionsTableListProps } from "@interfaces/components";
 import { useModalStore } from "@store";
+
+import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 
 export const SessionsTableList = ({
 	onItemsRendered,
@@ -28,6 +29,7 @@ export const SessionsTableList = ({
 	const showDeleteModal = useCallback((id: string) => {
 		onSelectedSessionId(id);
 		openModal(ModalName.deleteDeploymentSession);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

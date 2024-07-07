@@ -1,7 +1,6 @@
 import i18n from "i18next";
 
 import { ConnectionService } from "./connection.service";
-
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";

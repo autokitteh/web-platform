@@ -1,5 +1,6 @@
-import { expect, test } from "@e2e/fixtures";
 import { Page } from "@playwright/test";
+
+import { expect, test } from "@e2e/fixtures";
 
 async function createTriggerScheduler(
 	page: Page,

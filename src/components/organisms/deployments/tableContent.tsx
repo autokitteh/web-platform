@@ -4,16 +4,18 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { ActionActiveIcon, ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
-import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { SortButton } from "@components/molecules";
-import { DeleteDeploymentModal, DeploymentSessionStats, DeploymentState } from "@components/organisms/deployments";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
 import { useSort } from "@hooks";
 import { DeploymentsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Deployment } from "@type/models";
+
+import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { SortButton } from "@components/molecules";
+import { DeleteDeploymentModal, DeploymentSessionStats, DeploymentState } from "@components/organisms/deployments";
+
+import { ActionActiveIcon, ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
 
 export const DeploymentsTableContent = ({
 	deployments,

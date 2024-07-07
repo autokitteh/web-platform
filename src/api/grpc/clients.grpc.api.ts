@@ -1,3 +1,5 @@
+import { createPromiseClient } from "@connectrpc/connect";
+
 import { ApplyService } from "@ak-proto-ts/apply/v1/svc_connect";
 import { AuthService } from "@ak-proto-ts/auth/v1/svc_connect";
 import { BuildsService } from "@ak-proto-ts/builds/v1/svc_connect";
@@ -10,7 +12,6 @@ import { SessionsService } from "@ak-proto-ts/sessions/v1/svc_connect";
 import { TriggersService } from "@ak-proto-ts/triggers/v1/svc_connect";
 import { VarsService } from "@ak-proto-ts/vars/v1/svc_connect";
 import { grpcTransport } from "@api/grpc/transport.grpc.api";
-import { createPromiseClient } from "@connectrpc/connect";
 
 export const authClient = createPromiseClient(AuthService, grpcTransport);
 export const projectsClient = createPromiseClient(ProjectsService, grpcTransport);

@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
-import { Button, ErrorMessage, Link, Select, Spinner, Textarea } from "@components/atoms";
 import { baseUrl, namespaces } from "@constants";
 import { infoGoogleAccountLinks, infoGoogleUserLinks, selectIntegrationGoogle } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpService, LoggerService } from "@services";
 import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
+
+import { Button, ErrorMessage, Link, Select, Spinner, Textarea } from "@components/atoms";
+
+import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const GoogleIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
