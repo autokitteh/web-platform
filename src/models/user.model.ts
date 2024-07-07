@@ -3,7 +3,7 @@ import { User } from "@type/models";
 
 export function convertUserProtoToModel(protoUser: ProtoUser): User {
 	return {
-		name: protoUser.data?.name || "",
 		email: protoUser.data?.email || "",
+		name: protoUser.data?.name || "",
 	};
 }

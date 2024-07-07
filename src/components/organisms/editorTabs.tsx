@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
 import { Close } from "@assets/image/icons";
-import { Tab, IconButton, Loader } from "@components/atoms";
+import { IconButton, Loader, Tab } from "@components/atoms";
 import { monacoLanguages } from "@constants";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { get, last } from "lodash";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { resources, openedFiles, setUpdateFileContent, updateEditorOpenedFiles, updateEditorClosedFiles } =
+	const { openedFiles, resources, setUpdateFileContent, updateEditorClosedFiles, updateEditorOpenedFiles } =
 		useProjectStore();
 	const [editorKey, setEditorKey] = useState(0);
+	const [activeTab, setActiveTab] = useState("");
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
@@ -41,11 +42,11 @@ export const EditorTabs = () => {
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("myCustomTheme", {
 			base: "vs-dark",
-			inherit: true,
-			rules: [],
 			colors: {
 				"editor.background": "#000000",
 			},
+			inherit: true,
+			rules: [],
 		});
 	};
 
@@ -54,21 +55,23 @@ export const EditorTabs = () => {
 	};
 
 	const handleUpdateContent = (newContent?: string) => {
-		if (!projectId) return;
+		if (!projectId) {
+			return;
+		}
 		const contentUintArray = new TextEncoder().encode(newContent);
 		setUpdateFileContent(contentUintArray, projectId);
 	};
 
 	const activeCloseIcon = (fileName: string) =>
 		cn("w-4 h-4 p-0.5 hover:bg-gray-700 opacity-0 group-hover:opacity-100", {
-			"opacity-100": openedFiles.find(({ name, isActive }) => name === fileName && isActive),
+			"opacity-100": openedFiles.find(({ isActive, name }) => name === fileName && isActive),
 		});
 
 	const handleCloseButtonClick = (
-		e: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>,
+		event: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>,
 		name: string
 	): void => {
-		e.stopPropagation();
+		event.stopPropagation();
 		updateEditorClosedFiles(name);
 	};
 
@@ -77,10 +80,8 @@ export const EditorTabs = () => {
 		updateEditorOpenedFiles(value);
 	};
 
-	const [activeTab, setActiveTab] = useState("");
-
 	return (
-		<div className="flex flex-col flex-1 h-full pt-8">
+		<div className="flex flex-1 flex-col h-full pt-8">
 			{projectId ? (
 				<>
 					<div
@@ -92,18 +93,19 @@ export const EditorTabs = () => {
 						{openedFiles?.map(({ name }) => (
 							<Tab
 								activeTab={activeEditorFileName}
-								className="flex items-center gap-1 group"
+								className="flex gap-1 group items-center"
 								key={name}
 								onClick={() => onTabClick(name)}
 								value={name}
 							>
 								{name}
+
 								<IconButton
 									ariaLabel={t("buttons.ariaCloseFile")}
 									className={activeCloseIcon(name)}
-									onClick={(e) => handleCloseButtonClick(e, name)}
+									onClick={(event) => handleCloseButtonClick(event, name)}
 								>
-									<Close className="w-2 h-2 transition fill-gray-400 group-hover:fill-white" />
+									<Close className="fill-gray-400 group-hover:fill-white h-2 transition w-2" />
 								</IconButton>
 							</Tab>
 						))}
@@ -118,14 +120,14 @@ export const EditorTabs = () => {
 							onChange={handleUpdateContent}
 							onMount={handleEditorDidMount}
 							options={{
+								lineNumbers: "off",
 								minimap: {
 									enabled: false,
 								},
-								lineNumbers: "off",
-								renderLineHighlight: "none",
-								wordWrap: "on",
-								scrollBeyondLastLine: false,
 								readOnly: resource === null,
+								renderLineHighlight: "none",
+								scrollBeyondLastLine: false,
+								wordWrap: "on",
 							}}
 							theme="vs-dark"
 							value={content}

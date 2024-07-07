@@ -1,8 +1,9 @@
-import React from "react";
-import { App } from "./app";
 import { Toast } from "@components/molecules";
 import { DescopeWrapper } from "@components/templates";
-import { isAuthEnabled, descopeProjectId } from "@constants";
+import { descopeProjectId, isAuthEnabled } from "@constants";
+import React from "react";
+
+import { App } from "./app";
 
 export const MainApp = () => {
 	return (
@@ -14,6 +15,7 @@ export const MainApp = () => {
 			) : (
 				<App />
 			)}
+
 			<Toast />
 		</div>
 	);

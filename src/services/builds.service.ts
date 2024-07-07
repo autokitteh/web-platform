@@ -8,12 +8,14 @@ export class BuildsService {
 	static async getBuildDescription(buildId: string): Promise<ServiceResponse<string>> {
 		try {
 			const { descriptionJson } = await buildsClient.describe({ buildId });
+
 			return { data: descriptionJson, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.deploymentsService,
 				i18n.t("buildInfoFetchFailedForBuild", { buildId, error: (error as Error).message, ns: "services" })
 			);
+
 			return { data: undefined, error };
 		}
 	}

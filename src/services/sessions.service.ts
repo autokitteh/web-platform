@@ -18,9 +18,11 @@ export class SessionsService {
 		try {
 			const { sessions: sessionsResponse } = await sessionsClient.list({ envId: environmentId });
 			const sessions = sessionsResponse.map(convertSessionProtoToModel);
+
 			return { data: sessions, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);
+
 			return { data: undefined, error };
 		}
 	}
@@ -32,15 +34,15 @@ export class SessionsService {
 		pageSize?: number
 	): Promise<ServiceResponse<{ sessions: Session[]; nextPageToken: string }>> {
 		try {
-			const { sessions: sessionsResponse, nextPageToken } = await sessionsClient.list({
+			const { nextPageToken, sessions: sessionsResponse } = await sessionsClient.list({
 				deploymentId,
-				stateType: filter?.stateType,
-				pageToken,
 				pageSize: pageSize || defaultSessionsVisiblePageSize,
+				pageToken,
+				stateType: filter?.stateType,
 			});
 			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
 
-			return { data: { sessions, nextPageToken }, error: undefined };
+			return { data: { nextPageToken, sessions }, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);
 
@@ -64,6 +66,7 @@ export class SessionsService {
 			const sessionHistory = response.log?.records
 				.map((state: ProtoSessionLogRecord) => new SessionLogRecord(state))
 				.filter((record: SessionLogRecord) => record.logs);
+
 			return { data: sessionHistory, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);
@@ -83,8 +86,9 @@ export class SessionsService {
 			}
 
 			if (!environments?.length) {
-				const errorMessage = i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" });
+				const errorMessage = i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId });
 				LoggerService.error(namespaces.projectService, errorMessage);
+
 				return { data: undefined, error: new Error(errorMessage) };
 			}
 
@@ -94,10 +98,16 @@ export class SessionsService {
 				session: { ...startSessionArgs, envId: environment.envId },
 			} as unknown as StartRequest;
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
+
 			return { data: sessionId, error: undefined };
 		} catch (error) {
-			const log = i18n.t("sessionStartFailedExtended", { error, buildId: startSessionArgs.buildId, ns: "services" });
+			const log = i18n.t("sessionStartFailedExtended", {
+				buildId: startSessionArgs.buildId,
+				error,
+				ns: "services",
+			});
 			LoggerService.error(namespaces.sessionsService, log);
+
 			return { data: undefined, error };
 		}
 	}
@@ -114,6 +124,7 @@ export class SessionsService {
 			}
 			const sessionsPromises = (projecEnvironments || []).map(async (environment) => {
 				const sessions = await this.listByEnvironmentId(environment.envId);
+
 				return sessions;
 			});
 
@@ -122,7 +133,9 @@ export class SessionsService {
 			const sessions = flattenArray<Session>(
 				sessionsResponses
 					.filter((response) => response.status === "fulfilled")
-					.map((response) => get(response, "value.sessions", []).map((session) => convertSessionProtoToModel(session)))
+					.map((response) =>
+						get(response, "value.sessions", []).map((session) => convertSessionProtoToModel(session))
+					)
 			);
 
 			return { data: sessions, error: undefined };
@@ -139,6 +152,7 @@ export class SessionsService {
 	static async deleteSession(sessionId: string): Promise<ServiceResponse<void>> {
 		try {
 			await sessionsClient.delete({ sessionId });
+
 			return { data: undefined, error: undefined };
 		} catch (error) {
 			return { data: undefined, error };

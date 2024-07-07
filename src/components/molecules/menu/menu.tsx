@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { NewProject, ProjectsIcon } from "@assets/image";
 import { Button, IconSvg } from "@components/atoms";
 import { SidebarHrefMenu } from "@enums/components";
@@ -7,14 +6,15 @@ import { useProjectStore, useToastStore } from "@store";
 import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { menuList: projectsMenuList, createProject, addProjectToMenu, getProjectMenutItems } = useProjectStore();
+	const { addProjectToMenu, createProject, getProjectMenutItems, menuList: projectsMenuList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<ProjectMenuItem[]>([]);
 
@@ -27,7 +27,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
-		visible: { opacity: 1, width: "auto", transition: { duration: 0.35, ease: "easeOut" } },
+		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, width: "auto" },
 	};
 
 	const handleCreateProject = async () => {
@@ -39,13 +39,14 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 				message: (error as Error).message,
 				type: "error",
 			});
+
 			return;
 		}
 
 		const menuProject = {
+			href: `/${SidebarHrefMenu.projects}/${data?.projectId}`,
 			id: data!.projectId,
 			name: data!.name,
-			href: `/${SidebarHrefMenu.projects}/${data?.projectId}`,
 		};
 
 		addProjectToMenu(menuProject);
@@ -58,16 +59,16 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handleMouseEnter = (e: React.MouseEvent, submenu?: SubmenuInfo["submenu"]) => {
-		onSubmenu?.({ submenu, top: e.currentTarget.getBoundingClientRect().top + 5 });
+	const handleMouseEnter = (event: React.MouseEvent, submenu?: SubmenuInfo["submenu"]) => {
+		onSubmenu?.({ submenu, top: event.currentTarget.getBoundingClientRect().top + 5 });
 	};
 
 	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
 	const buttonMenuStyle = (href: string) =>
 		cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
-			"hover:bg-gray-700 text-white": isButtonActive(href),
 			"bg-gray-700": isButtonActive(href) && isOpen,
+			"hover:bg-gray-700 text-white": isButtonActive(href),
 		});
 
 	const buttonMenuIconStyle = (href: string) =>
@@ -83,15 +84,16 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	return (
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
 			<ul>
-				<li onMouseEnter={(e) => handleMouseEnter(e)}>
+				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
 						ariaLabel="New Project"
-						className="hover:bg-green-light gap-1.5 p-0.5 pl-1"
+						className="gap-1.5 hover:bg-green-light p-0.5 pl-1"
 						onClick={handleCreateProject}
 					>
-						<div className="flex items-center justify-center w-9 h-9">
-							<IconSvg alt="New Project" className="w-8 h-8 p-1" src={NewProject} />
+						<div className="flex h-9 items-center justify-center w-9">
+							<IconSvg alt="New Project" className="h-8 p-1 w-8" src={NewProject} />
 						</div>
+
 						<AnimatePresence>
 							{isOpen ? (
 								<motion.span
@@ -107,11 +109,13 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 						</AnimatePresence>
 					</Button>
 				</li>
-				<li onMouseEnter={(e) => handleMouseEnter(e, sortedProjectsList)}>
+
+				<li onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}>
 					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} href="#">
 						<div className={buttonMenuIconWrapperStyle("#")}>
 							<IconSvg alt={t("myProjects")} className={buttonMenuIconStyle("#")} src={ProjectsIcon} />
 						</div>
+
 						<AnimatePresence>
 							{isOpen ? (
 								<motion.span

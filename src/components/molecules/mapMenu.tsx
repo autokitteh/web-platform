@@ -1,15 +1,17 @@
-import React, { useRef, useEffect } from "react";
 import { Map } from "@assets/image";
+import React, { useEffect, useRef } from "react";
 
 export const MapMenu = () => {
-	const refMap = useRef<SVGSVGElement | null>(null);
+	const refMapRef = useRef<SVGSVGElement | null>(null);
 
 	useEffect(() => {
-		const map = refMap.current;
+		const map = refMapRef.current;
 		const pathIds = ["connections", "triggers", "variables", "code-assets"];
 
 		const handleClick = ({ target }: { target: EventTarget | null }) => {
-			if (!(target instanceof SVGElement)) return;
+			if (!(target instanceof SVGElement)) {
+				return;
+			}
 
 			if (pathIds.includes(target.id)) {
 				pathIds.forEach((id) => {
@@ -25,7 +27,7 @@ export const MapMenu = () => {
 		map?.addEventListener("click", handleClick);
 
 		return () => map?.removeEventListener("click", handleClick);
-	}, [refMap]);
+	}, [refMapRef]);
 
-	return <Map className="w-full" ref={refMap} />;
+	return <Map className="w-full" ref={refMapRef} />;
 };

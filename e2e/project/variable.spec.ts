@@ -1,6 +1,6 @@
-import { test, expect } from "@e2e/fixtures";
+import { expect, test } from "@e2e/fixtures";
 
-test.beforeEach(async ({ page, dashboardPage }) => {
+test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 
 	await page.getByRole("tab", { name: "variables" }).click();
@@ -12,8 +12,8 @@ test.beforeEach(async ({ page, dashboardPage }) => {
 	await page.getByLabel("Value").fill("valueVariable");
 	await page.getByRole("button", { name: "Save" }).click();
 
-	const variableInTable = page.getByRole("cell", { name: "nameVariable", exact: true });
-	const variableValueInTable = page.getByRole("cell", { name: "valueVariable", exact: true });
+	const variableInTable = page.getByRole("cell", { exact: true, name: "nameVariable" });
+	const variableValueInTable = page.getByRole("cell", { exact: true, name: "valueVariable" });
 	await expect(variableInTable).toBeVisible();
 	await expect(variableValueInTable).toBeVisible();
 });
@@ -34,7 +34,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Value").click();
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save" }).click();
-		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
+		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
 		await expect(newVariableInTable).toBeVisible();
 	});
 
@@ -50,7 +50,7 @@ test.describe("Project Variables Suite", () => {
 	test("Delete variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Delete nameVariable variable" }).click();
 		await page.getByRole("button", { name: "Yes, delete" }).click();
-		const newVariableInTable = page.getByRole("cell", { name: "newValueVariable", exact: true });
+		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
 		await expect(newVariableInTable).not.toBeVisible();
 	});
 });

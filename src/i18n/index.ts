@@ -8,15 +8,15 @@ const resources = {
 };
 
 i18n.use(initReactI18next).init({
-	resources,
-	fallbackLng: "en",
 	debug: isDevelopment,
+	fallbackLng: "en",
 	interpolation: {
 		escapeValue: false,
 	},
 	react: {
 		transKeepBasicHtmlNodesFor: ["br", "strong", "i", "p", "b"],
 	},
+	resources,
 });
 
 export default i18n;

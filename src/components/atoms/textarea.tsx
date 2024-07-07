@@ -1,9 +1,9 @@
-import React, { forwardRef } from "react";
 import { TextArea } from "@interfaces/components";
 import { cn } from "@utilities";
+import React, { forwardRef } from "react";
 
 export const Textarea = forwardRef<HTMLTextAreaElement, Partial<TextArea>>((props, ref) => {
-	const { placeholder = "Enter text", className, isError, disabled, ...rest } = props;
+	const { className, disabled, isError, placeholder = "Enter text", ...rest } = props;
 
 	const baseStyle = cn(
 		"text-base bg-black border border-gray-500",

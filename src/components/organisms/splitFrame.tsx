@@ -1,13 +1,13 @@
-import React from "react";
 import { Button, Frame, LogoCatLarge } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
 import { useResize } from "@hooks";
 import { SplitFrameProps } from "@interfaces/components";
 import { cn } from "@utilities";
+import React from "react";
 
 export const SplitFrame = ({ children }: SplitFrameProps) => {
-	const [leftSideWidth] = useResize({ min: 35, max: 70, initial: 50, direction: "horizontal" });
-	const [outputHeight] = useResize({ min: 20, max: 90, initial: 30, direction: "vertical" });
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 70, min: 35 });
+	const [outputHeight] = useResize({ direction: "vertical", initial: 30, max: 90, min: 20 });
 
 	const heightFrameClass = cn("h-[80vh] xl:h-[86vh] 2xl:h-[90vh]");
 	const rightFrameClass = cn(`rounded-l-none pb-0 overflow-hidden`, {
@@ -22,23 +22,28 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 			<div className="flex items-center" style={{ width: `${leftSideWidth}%` }}>
 				{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 			</div>
-			<div className="z-10 w-2 -ml-2 resize-handle-horizontal cursor-ew-resize" />
+
+			<div className="-ml-2 cursor-ew-resize resize-handle-horizontal w-2 z-10" />
+
 			<div
-				className="relative flex items-center overflow-hidden"
+				className="flex items-center overflow-hidden relative"
 				style={{ width: `${100 - (leftSideWidth as number)}%` }}
 			>
 				<Frame className={rightFrameClass}>
 					<div style={{ height: `${100 - (outputHeight as number)}%` }}>
 						<EditorTabs />
 					</div>
-					<Button className="z-0 p-0.5 -mx-8 transition bg-gray-700 rounded-none cursor-ns-resize resize-handle-vertical hover:bg-gray-400" />
+
+					<Button className="-mx-8 bg-gray-700 cursor-ns-resize hover:bg-gray-400 p-0.5 resize-handle-vertical rounded-none transition z-0" />
+
 					<div
-						className="z-0 px-8 pt-5 -mx-8 bg-black border-0 border-t border-t-gray-600"
+						className="-mx-8 bg-black border-0 border-t border-t-gray-600 pt-5 px-8 z-0"
 						style={{ height: `${outputHeight as number}%` }}
 					>
 						<OutputTabs />
 					</div>
 				</Frame>
+
 				<LogoCatLarge />
 			</div>
 		</div>

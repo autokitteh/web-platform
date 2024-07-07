@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
 import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
-import { SelectProps, SelectOption } from "@interfaces/components";
+import { SelectOption, SelectProps } from "@interfaces/components";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactSelect, { SingleValue } from "react-select";
 
 export const Select = ({
+	dataTestid,
+	isError = false,
+	noOptionsLabel,
+	onChange,
+	options,
 	placeholder = "Select",
 	value,
-	options,
-	isError = false,
 	variant,
-	onChange,
-	noOptionsLabel,
-	dataTestid,
 	...rest
 }: SelectProps) => {
 	const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>();

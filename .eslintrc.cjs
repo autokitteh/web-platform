@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
 	root: true,
 	env: { browser: true, es2020: true },
@@ -8,7 +10,7 @@ module.exports = {
 		"plugin:jsx-a11y/recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:storybook/recommended",
-		"prettier",
+		"plugin:prettier/recommended",
 		"plugin:security/recommended-legacy",
 		"plugin:promise/recommended",
 		"plugin:@liferay/react",
@@ -36,39 +38,37 @@ module.exports = {
 				extensions: [".js", ".jsx", ".ts", ".tsx"],
 			},
 			typescript: {
-				alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
-				// use an array of glob patterns
+				alwaysTryTypes: true,
 				project: ["./tsconfig.json"],
 			},
 		},
 	},
 	ignorePatterns: ["dist", ".eslintrc.cjs", "src/stories"],
 	parser: "@typescript-eslint/parser",
-	plugins: ["react-refresh", "prettier", "unicorn", "import", "@typescript-eslint", "@liferay", "promise"],
+	plugins: [
+		"react-refresh",
+		"prettier",
+		"unicorn",
+		"import",
+		"@typescript-eslint",
+		"promise",
+		"@liferay",
+		"eslint-plugin-local-rules",
+	],
 	rules: {
+		"local-rules/no-abbreviations": "error",
 		"@liferay/no-anonymous-exports": "off",
+		"sort-keys": "error",
 		"@liferay/sort-class-names": "error",
 		"@typescript-eslint/member-ordering": [
 			"error",
 			{
-			"default": [
-				"signature",
-				"field",
-				"constructor",
-				"method"
-			]
-			}
+				default: ["signature", "field", "constructor", "method"],
+			},
 		],
 		"@typescript-eslint/no-explicit-any": "off",
-		"prettier/prettier": [
-			"error",
-			{
-				endOfLine: "auto",
-			},
-			{ usePrettierrc: true },
-		],
+		"prettier/prettier": ["error", { endOfLine: "auto" }, { usePrettierrc: true }],
 		"security/detect-object-injection": "off",
-		// React Rules
 		"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 		"react/prefer-stateless-function": "error",
 		"react/no-unused-prop-types": "error",
@@ -100,7 +100,6 @@ module.exports = {
 		"react/react-in-jsx-scope": "off",
 		"react/jsx-one-expression-per-line": "off",
 		"react/prop-types": "off",
-		// TypeScript Rules
 		"@typescript-eslint/naming-convention": [
 			"warn",
 			{
@@ -110,7 +109,6 @@ module.exports = {
 			},
 			{
 				selector: "variable",
-				// Specify PascalCase for React components
 				format: ["PascalCase", "camelCase"],
 				leadingUnderscore: "allow",
 			},
@@ -130,41 +128,7 @@ module.exports = {
 			},
 		],
 		"no-throw-literal": "warn",
-		"unicorn/filename-case": [
-			"error",
-			{
-				case: "camelCase",
-			},
-		],
-		"import/order": [
-			"error",
-			{
-				"alphabetize": {
-					caseInsensitive: true,
-					order: "asc",
-				},
-				"groups": ["external", "builtin", "parent", ["sibling", "index"]],
-				"newlines-between": "never",
-				"pathGroups": [
-					{
-						group: "external",
-						pattern: "react",
-						position: "before",
-					},
-					{
-						group: "builtin",
-						pattern: "**",
-						position: "after",
-					},
-					{
-						group: "external",
-						pattern: "./**",
-						position: "after",
-					},
-				],
-				"pathGroupsExcludedImportTypes": ["builtin"],
-			},
-		],
+		"unicorn/filename-case": ["error", { case: "camelCase" }],
 		"no-console": "error",
 	},
 };

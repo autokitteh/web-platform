@@ -1,4 +1,3 @@
-import { ConnectionService } from "./connection.service";
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";
@@ -6,6 +5,8 @@ import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Trigger } from "@type/models";
 import i18n from "i18next";
+
+import { ConnectionService } from "./connection.service";
 
 export class TriggersService {
 	static async create(projectId: string, trigger: Trigger): Promise<ServiceResponse<string>> {
@@ -15,8 +16,9 @@ export class TriggersService {
 			if (error) {
 				LoggerService.error(
 					namespaces.triggerService,
-					i18n.t("defaulEnvironmentNotFoundExtended", { projectId, ns: "services" })
+					i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
 				);
+
 				return { data: undefined, error };
 			}
 
@@ -28,18 +30,18 @@ export class TriggersService {
 				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
 
-			const { connectionId, eventType, path, entryFunction, name, filter, data } = trigger;
+			const { connectionId, data, entryFunction, eventType, filter, name, path } = trigger;
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
-					triggerId: undefined,
-					name,
-					envId: environments[0].envId,
+					codeLocation: { name: entryFunction, path },
 					connectionId,
+					data,
+					envId: environments[0].envId,
 					eventType,
 					filter,
-					codeLocation: { path, name: entryFunction },
-					data,
+					name,
+					triggerId: undefined,
 				},
 			});
 
@@ -47,8 +49,9 @@ export class TriggersService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
-				i18n.t("triggerNotCreatedExtended", { projectId, error: (error as Error).message, ns: "services" })
+				i18n.t("triggerNotCreatedExtended", { error: (error as Error).message, ns: "services", projectId })
 			);
+
 			return { data: undefined, error };
 		}
 	}
@@ -63,9 +66,14 @@ export class TriggersService {
 				...convertedTrigger,
 				connectionName: connection?.name,
 			} as Trigger;
+
 			return { data: triggerData, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, i18n.t("triggerNotFoundExtended", { triggerId, ns: "services" }));
+			LoggerService.error(
+				namespaces.projectService,
+				i18n.t("triggerNotFoundExtended", { ns: "services", triggerId })
+			);
+
 			return { data: undefined, error };
 		}
 	}
@@ -79,6 +87,7 @@ export class TriggersService {
 					namespaces.triggerService,
 					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
 				);
+
 				return { data: undefined, error };
 			}
 
@@ -90,18 +99,18 @@ export class TriggersService {
 				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
 
-			const { triggerId, connectionId, eventType, path, entryFunction, name, filter, data } = trigger;
+			const { connectionId, data, entryFunction, eventType, filter, name, path, triggerId } = trigger;
 
 			await triggersClient.update({
 				trigger: {
-					triggerId,
+					codeLocation: { name: entryFunction, path },
 					connectionId,
-					name,
+					data,
 					envId: environments && environments[0].envId,
 					eventType,
 					filter,
-					codeLocation: { path, name: entryFunction },
-					data,
+					name,
+					triggerId,
 				},
 			});
 
@@ -110,11 +119,12 @@ export class TriggersService {
 			LoggerService.error(
 				namespaces.triggerService,
 				i18n.t("triggerNotUpdatedExtended", {
-					triggerId: trigger.triggerId,
 					error: (error as Error).message,
 					ns: "services",
+					triggerId: trigger.triggerId,
 				})
 			);
+
 			return { data: undefined, error };
 		}
 	}
@@ -128,6 +138,7 @@ export class TriggersService {
 					namespaces.triggerService,
 					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
 				);
+
 				return { data: undefined, error: errorEnvs };
 			}
 
@@ -137,11 +148,15 @@ export class TriggersService {
 			const { data: connectionsList, error } = await ConnectionService.list();
 			if (error) {
 				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
+
 				return { data: undefined, error };
 			}
 
 			const enrhichedTriggers = convertedTriggers.map((trigger) => {
-				const connection = connectionsList?.find((connection) => connection.connectionId === trigger.connectionId);
+				const connection = connectionsList?.find(
+					(connection) => connection.connectionId === trigger.connectionId
+				);
+
 				return {
 					...trigger,
 					connectionName: connection?.name || i18n.t("connectionNotFound", { ns: "services" }),
@@ -151,6 +166,7 @@ export class TriggersService {
 			return { data: enrhichedTriggers, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
+
 			return { data: undefined, error };
 		}
 	}
@@ -158,12 +174,14 @@ export class TriggersService {
 	static async delete(triggerId: string): Promise<ServiceResponse<void>> {
 		try {
 			await triggersClient.delete({ triggerId });
+
 			return { data: undefined, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
-				i18n.t("triggerRemoveFailedExtended", { triggerId, ns: "services" })
+				i18n.t("triggerRemoveFailedExtended", { ns: "services", triggerId })
 			);
+
 			return { data: undefined, error };
 		}
 	}

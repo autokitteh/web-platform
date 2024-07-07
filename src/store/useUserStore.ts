@@ -11,18 +11,11 @@ const defaultState = {
 
 const store: StateCreator<UserStore> = (set) => ({
 	...defaultState,
-	logoutFunction: () => {},
-	setLogoutFunction: (logoutFn) => {
-		set((state) => ({
-			...state,
-			logoutFunction: logoutFn,
-		}));
-	},
 	getLoggedInUser: async () => {
 		const { data, error } = await AuthService.whoAmI();
 
 		if (error) {
-			return { error, data: undefined };
+			return { data: undefined, error };
 		}
 
 		set((state) => ({
@@ -30,9 +23,16 @@ const store: StateCreator<UserStore> = (set) => ({
 			user: data,
 		}));
 
-		return { error: undefined, data };
+		return { data, error: undefined };
 	},
+	logoutFunction: () => {},
 	reset: () => set(defaultState),
+	setLogoutFunction: (logoutFn) => {
+		set((state) => ({
+			...state,
+			logoutFunction: logoutFn,
+		}));
+	},
 });
 
 export const useUserStore = create(persist(immer(store), { name: StoreName.user }));

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Loader } from "@components/atoms";
-import { DeleteFileModal, AddFileModal } from "@components/organisms/code";
+import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
 import { ProjectsService } from "@services";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { cn } from "@utilities";
-import { orderBy, isEmpty } from "lodash";
+import { isEmpty, orderBy } from "lodash";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -17,16 +17,16 @@ export const CodeTable = () => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation(["errors"]);
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
-	const { openModal, closeModal } = useModalStore();
+	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
-		openedFiles,
-		resources,
 		getProjectResources,
+		openedFiles,
+		removeProjectFile,
+		resources,
 		setProjectResources,
 		updateEditorOpenedFiles,
-		removeProjectFile,
 	} = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 
@@ -50,30 +50,51 @@ export const CodeTable = () => {
 			"opacity-1 pointer-events-auto": isEmpty(sortedResources),
 		}
 	);
-	const activeBodyRow = (fileName: string) => {
-		const isActiveFile = openedFiles?.find(({ name, isActive }) => name === fileName && isActive);
-		return cn({
-			"bg-black": isActiveFile,
-		});
-	};
 
 	const fetchResources = async () => {
 		setIsLoading(true);
 		try {
 			const { data: resources, error } = await ProjectsService.getResources(projectId!);
-			if (error) throw error;
-			if (!resources) return;
+			if (error) {
+				throw error;
+			}
+			if (!resources) {
+				return;
+			}
 
 			getProjectResources(resources);
-		} catch (err) {
+		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: (err as Error).message,
+				message: (error as Error).message,
 				type: "error",
 			});
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	const fileUpload = async (files: File[]) => {
+		const { error, fileName } = await setProjectResources(files, projectId!);
+
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("fileAddFailedExtended", { fileName, projectId }),
+				type: "error",
+			});
+
+			return;
+		}
+		fetchResources();
+	};
+
+	const activeBodyRow = (fileName: string) => {
+		const isActiveFile = openedFiles?.find(({ isActive, name }) => name === fileName && isActive);
+
+		return cn({
+			"bg-black": isActiveFile,
+		});
 	};
 
 	useEffect(() => {
@@ -91,26 +112,16 @@ export const CodeTable = () => {
 		setIsDragOver(false);
 
 		const droppedFiles = Array.from(event.dataTransfer.files);
-		if (droppedFiles) fileUpload(droppedFiles);
+		if (droppedFiles) {
+			fileUpload(droppedFiles);
+		}
 	};
 
 	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFile = Array.from(event.target.files || []);
-		if (selectedFile) fileUpload(selectedFile);
-	};
-
-	const fileUpload = async (files: File[]) => {
-		const { error, fileName } = await setProjectResources(files, projectId!);
-
-		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("fileAddFailedExtended", { projectId, fileName }),
-				type: "error",
-			});
-			return;
+		if (selectedFile) {
+			fileUpload(selectedFile);
 		}
-		fetchResources();
 	};
 
 	const handleRemoveFile = async () => {
@@ -123,6 +134,7 @@ export const CodeTable = () => {
 				message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }),
 				type: "error",
 			});
+
 			return;
 		}
 		fetchResources();
@@ -132,24 +144,34 @@ export const CodeTable = () => {
 		<Loader isCenter size="xl" />
 	) : (
 		<div className="flex flex-col h-full">
-			<div className="flex justify-end gap-6 mb-3">
+			<div className="flex gap-6 justify-end mb-3">
 				{!isEmpty(sortedResources) ? (
-					<label className="flex gap-1 p-0 font-semibold text-gray-300 cursor-pointer group hover:text-white">
-						<input accept={allowedExtensions} className="hidden" multiple onChange={handleFileSelect} type="file" />
-						<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
+					<label className="cursor-pointer flex font-semibold gap-1 group hover:text-white p-0 text-gray-300">
+						<input
+							accept={allowedExtensions}
+							className="hidden"
+							multiple
+							onChange={handleFileSelect}
+							type="file"
+						/>
+
+						<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+
 						{t("buttons.addNewFile")}
 					</label>
 				) : null}
 
 				<Button
 					ariaLabel={t("buttons.createNewFile")}
-					className="w-auto gap-1 p-0 font-semibold text-gray-300 group hover:text-white"
+					className="font-semibold gap-1 group hover:text-white p-0 text-gray-300 w-auto"
 					onClick={() => openModal(ModalName.addCodeAssets)}
 				>
-					<PlusCircle className="w-5 h-5 duration-300 stroke-gray-300 group-hover:stroke-white" />
+					<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+
 					{t("buttons.createNewFile")}
 				</Button>
 			</div>
+
 			<div
 				className={styleBase}
 				onDragEnter={handleDragOver}
@@ -161,18 +183,25 @@ export const CodeTable = () => {
 					<Table className="max-h-96">
 						<THead>
 							<Tr>
-								<Th className="font-normal border-r-0 cursor-pointer group">{t("table.columns.name")}</Th>
+								<Th className="border-r-0 cursor-pointer font-normal group">
+									{t("table.columns.name")}
+								</Th>
 							</Tr>
 						</THead>
+
 						<TBody>
-							{sortedResources.map(([name], idx) => (
-								<Tr className={activeBodyRow(name)} key={idx}>
-									<Td className="font-medium cursor-pointer" onClick={() => updateEditorOpenedFiles(name)}>
+							{sortedResources.map(([name], index) => (
+								<Tr className={activeBodyRow(name)} key={index}>
+									<Td
+										className="cursor-pointer font-medium"
+										onClick={() => updateEditorOpenedFiles(name)}
+									>
 										{name}
 									</Td>
-									<Td className="pr-0 max-w-12">
+
+									<Td className="max-w-12 pr-0">
 										<IconButton onClick={() => openModal(ModalName.deleteFile, name)}>
-											<TrashIcon className="w-3 h-3 fill-white" />
+											<TrashIcon className="fill-white h-3 w-3" />
 										</IconButton>
 									</Td>
 								</Tr>
@@ -180,22 +209,33 @@ export const CodeTable = () => {
 						</TBody>
 					</Table>
 				) : null}
+
 				<div className={styleFrame}>
-					<div className="flex flex-col items-center gap-2.5">
+					<div className="flex flex-col gap-2.5 items-center">
 						<label
 							className={cn(
 								"group flex flex-col items-center gap-2.5 cursor-pointer",
 								"text-center text-lg font-bold uppercase text-white"
 							)}
 						>
-							<input accept={allowedExtensions} className="hidden" multiple onChange={handleFileSelect} type="file" />
+							<input
+								accept={allowedExtensions}
+								className="hidden"
+								multiple
+								onChange={handleFileSelect}
+								type="file"
+							/>
+
 							<PlusCircle className={styleCircle} />
+
 							{t("buttons.addCodeAndAssets")}
 						</label>
 					</div>
 				</div>
 			</div>
+
 			<DeleteFileModal onDelete={handleRemoveFile} />
+
 			<AddFileModal onSuccess={fetchResources} />
 		</div>
 	);

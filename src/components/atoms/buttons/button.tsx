@@ -1,20 +1,20 @@
-import React from "react";
 import { Link } from "@components/atoms";
 import { ButtonVariant } from "@enums/components";
 import { ButtonProps } from "@interfaces/components";
 import { cn } from "@utilities";
+import React from "react";
 
 export const Button = ({
+	ariaLabel,
 	children,
 	className,
-	variant,
-	href,
 	disabled,
-	type = "button",
 	form,
-	ariaLabel,
-	title,
+	href,
 	onClick,
+	title,
+	type = "button",
+	variant,
 }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
 		"flex items-center gap-2.5 p-2 rounded-3xl transition",

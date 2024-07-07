@@ -1,5 +1,5 @@
-import React, { KeyboardEventHandler, MouseEventHandler } from "react";
 import { ButtonType, SortDirection } from "@type/components";
+import React, { KeyboardEventHandler, MouseEventHandler } from "react";
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, React.AriaAttributes {
 	className: string;

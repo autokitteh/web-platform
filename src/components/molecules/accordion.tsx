@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { PlusAccordionIcon, MinusAccordionIcon } from "@assets/image/icons";
+import { MinusAccordionIcon, PlusAccordionIcon } from "@assets/image/icons";
 import { Button } from "@components/atoms";
 import { motion } from "framer-motion";
+import React, { useState } from "react";
 
 export const Accordion = ({
-	title,
 	children,
 	className,
+	title,
 }: {
 	title: string;
 	children: React.ReactNode;
@@ -17,18 +17,20 @@ export const Accordion = ({
 	return (
 		<div className={className}>
 			<Button
-				className="flex items-center justify-between gap-2.5 group cursor-pointer p-0 hover:bg-transparent text-base text-white"
+				className="cursor-pointer flex gap-2.5 group hover:bg-transparent items-center justify-between p-0 text-base text-white"
 				onClick={() => setIsOpen(!isOpen)}
 			>
 				{!isOpen ? (
-					<PlusAccordionIcon className="transition fill-gray-300 group-hover:fill-green-accent" />
+					<PlusAccordionIcon className="fill-gray-300 group-hover:fill-green-accent transition" />
 				) : (
-					<MinusAccordionIcon className="transition fill-gray-300 group-hover:fill-green-accent" />
+					<MinusAccordionIcon className="fill-gray-300 group-hover:fill-green-accent transition" />
 				)}
+
 				{title}
 			</Button>
+
 			<motion.div animate={{ height: isOpen ? "auto" : 0 }} className="overflow-hidden" initial={false}>
-				<div className="py-3.5 text-base border-b border-gray-500">{children}</div>
+				<div className="border-b border-gray-500 py-3.5 text-base">{children}</div>
 			</motion.div>
 		</div>
 	);

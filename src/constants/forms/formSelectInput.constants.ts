@@ -1,18 +1,12 @@
 import { formColors } from "@constants/forms/formColors.constants";
 import { SelectOption } from "@interfaces/components";
 import { ColorSchemes } from "@type/theme.type";
-import { StylesConfig, GroupBase } from "react-select";
+import { GroupBase, StylesConfig } from "react-select";
 
 const baseStyles = {
-	"fontSize": "16px",
-	"borderRadius": "8px",
-	"boxShadow": "none",
-	"cursor": "pointer",
-	"padding": "6px 11px 6px 16px",
-
 	"::-webkit-scrollbar": {
-		width: "6px",
 		height: "6px",
+		width: "6px",
 	},
 	"::-webkit-scrollbar-thumb": {
 		borderRadius: "10px",
@@ -20,9 +14,15 @@ const baseStyles = {
 	"::-webkit-scrollbar-thumb:hover": {
 		background: formColors["gray-400"],
 	},
+	"borderRadius": "8px",
+	"boxShadow": "none",
+
+	"cursor": "pointer",
+	"fontSize": "16px",
+	"padding": "6px 11px 6px 16px",
 	"svg": {
-		width: "24px",
 		height: "24px",
+		width: "24px",
 	},
 };
 
@@ -43,53 +43,78 @@ const getSelectStyles = (
 		control: (provided, state) => ({
 			...provided,
 			...baseStyles,
-			"border": defaultBorderColor,
-			backgroundColor,
-			"fontWeight": state.menuIsOpen ? 500 : 400,
-			"color": oppositeSchemeColor,
-			"borderBottomLeftRadius": state.menuIsOpen ? "0px" : undefined,
-			"borderBottomRightRadius": state.menuIsOpen ? "0px" : undefined,
-			"borderBottom": state.menuIsOpen ? "transparent" : defaultBorderColor,
-			"borderTop": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
-			"borderLeft": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
-			"borderRight": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
-			"boxSizing": "border-box", // Ensure box-sizing is consistent
+
+			"&:after": {
+				backgroundColor: state.menuIsOpen && colorScheme === "dark" ? formColors["gray-500"] : "transparent",
+				bottom: 0,
+				content: '""',
+				height: state.menuIsOpen ? "1px" : "0",
+				left: 0,
+				margin: "auto",
+				position: "absolute",
+				right: 0,
+				transition: "all 0.25s",
+				width: "calc(100% - 27px)",
+			},
+
+			// Ensure box-sizing is consistent
+
 			"&:hover": {
-				fontWeight: 500,
-				borderColor: hoverBorderColor,
 				borderBottom: state.menuIsOpen ? "transparent" : `0.5px solid ${hoverBorderColor}`,
-				borderTop: state.menuIsOpen ? greenBorderColor : `0.5px solid ${hoverBorderColor}`,
+				borderColor: hoverBorderColor,
 				borderLeft: state.menuIsOpen ? greenBorderColor : `0.5px solid ${hoverBorderColor}`,
 				borderRight: state.menuIsOpen ? greenBorderColor : `0.5px solid ${hoverBorderColor}`,
+				borderTop: state.menuIsOpen ? greenBorderColor : `0.5px solid ${hoverBorderColor}`,
+				fontWeight: 500,
 			},
-			"&:after": {
-				content: '""',
-				position: "absolute",
-				left: 0,
-				right: 0,
-				bottom: 0,
-				width: "calc(100% - 27px)",
-				margin: "auto",
-				height: state.menuIsOpen ? "1px" : "0",
-				backgroundColor: state.menuIsOpen && colorScheme === "dark" ? formColors["gray-500"] : "transparent",
-				transition: "all 0.25s",
-			},
+
+			backgroundColor,
+
+			"border": defaultBorderColor,
+
+			"borderBottom": state.menuIsOpen ? "transparent" : defaultBorderColor,
+
+			"borderBottomLeftRadius": state.menuIsOpen ? "0px" : undefined,
+
+			"borderBottomRightRadius": state.menuIsOpen ? "0px" : undefined,
+
+			"borderLeft": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
+
+			"borderRight": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
+
+			"borderTop": state.menuIsOpen ? greenBorderColor : defaultBorderColor,
+
+			"boxSizing": "border-box",
+			"color": oppositeSchemeColor,
+			"fontWeight": state.menuIsOpen ? 500 : 400,
 		}),
-		singleValue: (provided) => ({
+		dropdownIndicator: (provided, state) => ({
+			...provided,
+			...baseStyles,
+			"&:hover": {
+				color: oppositeSchemeColor,
+			},
+			"color": oppositeSchemeColor,
+			"transform": state.selectProps.menuIsOpen ? "matrix(1,0,0,-1,0,0)" : "none",
+		}),
+		indicatorSeparator: () => ({
+			display: "none",
+		}),
+		input: (provided) => ({
 			...provided,
 			color: oppositeSchemeColor,
 		}),
 		menu: (provided) => ({
 			...provided,
 			backgroundColor,
-			borderRadius: "8px",
-			padding: "0px 7px 9px 0px",
-			borderRight: greenBorderColor,
-			borderLeft: greenBorderColor,
 			borderBottom: greenBorderColor,
-			borderTopRightRadius: "0px",
+			borderLeft: greenBorderColor,
+			borderRadius: "8px",
+			borderRight: greenBorderColor,
 			borderTopLeftRadius: "0px",
+			borderTopRightRadius: "0px",
 			marginTop: "0px",
+			padding: "0px 7px 9px 0px",
 		}),
 		menuList: (provided) => ({
 			...provided,
@@ -98,39 +123,31 @@ const getSelectStyles = (
 		}),
 		option: (provided, state) => ({
 			...provided,
-			"backgroundColor": state.isSelected ? selectedBackgroundColor : backgroundColor,
-			"color": state.isSelected ? selectedTextColor : state.isDisabled ? formColors["gray-400"] : oppositeSchemeColor,
-			"borderRadius": "8px",
-			"marginTop": "4px",
-			"cursor": state.isDisabled ? "not-allowed" : "pointer",
 			"&:hover": !state.isDisabled && {
 				backgroundColor: hoverBackgroundColor,
 				color: formColors.white,
 			},
-		}),
-		indicatorSeparator: () => ({
-			display: "none",
-		}),
-		valueContainer: (provided) => ({
-			...provided,
-			padding: "0px",
-		}),
-		dropdownIndicator: (provided, state) => ({
-			...provided,
-			...baseStyles,
-			"transform": state.selectProps.menuIsOpen ? "matrix(1,0,0,-1,0,0)" : "none",
-			"color": oppositeSchemeColor,
-			"&:hover": {
-				color: oppositeSchemeColor,
-			},
-		}),
-		input: (provided) => ({
-			...provided,
-			color: oppositeSchemeColor,
+			"backgroundColor": state.isSelected ? selectedBackgroundColor : backgroundColor,
+			"borderRadius": "8px",
+			"color": state.isSelected
+				? selectedTextColor
+				: state.isDisabled
+					? formColors["gray-400"]
+					: oppositeSchemeColor,
+			"cursor": state.isDisabled ? "not-allowed" : "pointer",
+			"marginTop": "4px",
 		}),
 		placeholder: (provided, state) => ({
 			...provided,
 			color: state.isFocused ? "transparent" : oppositeSchemeColor,
+		}),
+		singleValue: (provided) => ({
+			...provided,
+			color: oppositeSchemeColor,
+		}),
+		valueContainer: (provided) => ({
+			...provided,
+			padding: "0px",
 		}),
 	};
 };

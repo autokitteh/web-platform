@@ -1,10 +1,9 @@
-import { useState } from "react";
-import React from "react";
 import { NewProject } from "@assets/image";
 import { CopyIcon } from "@assets/image/icons";
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
 import { HttpService } from "@services";
 import { useToastStore } from "@store";
+import React, { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 export const Security = () => {
@@ -30,7 +29,7 @@ export const Security = () => {
 				message: t("copySuccess"),
 				type: "success",
 			});
-		} catch (err) {
+		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
 				message: t("copyFailure"),
@@ -41,7 +40,7 @@ export const Security = () => {
 
 	return (
 		<>
-			<Typography className="mb-4 text-settings-title font-bold" element="h1" size="large">
+			<Typography className="font-bold mb-4 text-settings-title" element="h1" size="large">
 				{tSettings("security.title")}
 			</Typography>
 			<div>
@@ -61,6 +60,7 @@ export const Security = () => {
 						i18nKey={t("line")}
 					/>
 				</p>
+
 				<div className="w-2/3">
 					{token ? (
 						<div className="flex w-full">
@@ -70,27 +70,30 @@ export const Security = () => {
 								disabled
 								value={token}
 							/>
+
 							<Button
 								aria-label={t("copyButton")}
-								className="px-3 font-semibold bg-white border-black rounded-md hover:bg-gray-300 ml-4"
+								className="bg-white border-black font-semibold hover:bg-gray-300 ml-4 px-3 rounded-md"
 								onClick={() => copyToClipboard(token)}
 								variant="outline"
 							>
-								<CopyIcon className="w-4.1 h-6 fill-black" />
+								<CopyIcon className="fill-black h-6 w-4.1" />
 							</Button>
 						</div>
 					) : (
-						<Button className="flex border-2 border-black" onClick={createToken} variant="light">
+						<Button className="border-2 border-black flex" onClick={createToken} variant="light">
 							<div className="flex items-center">
 								{!isLoading ? (
 									<IconSvg
 										alt="New Project"
-										className="w-4 before:w-2 before:h-2 after:w-2 after:h-2"
+										className="after:h-2 after:w-2 before:h-2 before:w-2 w-4"
 										src={NewProject}
 									/>
 								) : null}
+
 								{isLoading ? <Loader size="sm" /> : null}
 							</div>
+
 							<div className="flex mr-1">{tSettings("security.creatTokenButton")}</div>
 						</Button>
 					)}

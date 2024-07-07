@@ -10,9 +10,9 @@ const httpClient = axios.create({
 });
 
 export const HttpService = {
+	delete: httpClient.delete,
 	get: httpClient.get,
+	patch: httpClient.patch,
 	post: httpClient.post,
 	put: httpClient.put,
-	delete: httpClient.delete,
-	patch: httpClient.patch,
 };

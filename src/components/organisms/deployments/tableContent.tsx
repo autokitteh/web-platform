@@ -1,9 +1,7 @@
-import React, { useCallback, useState } from "react";
 import { ActionActiveIcon, ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
-import { Table, TBody, THead, Th, Tr, Td } from "@components/atoms";
-import { IconButton } from "@components/atoms";
+import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { DeploymentState, DeploymentSessionStats, DeleteDeploymentModal } from "@components/organisms/deployments";
+import { DeleteDeploymentModal, DeploymentSessionStats, DeploymentState } from "@components/organisms/deployments";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
 import { useSort } from "@hooks";
@@ -11,6 +9,7 @@ import { DeploymentsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Deployment } from "@type/models";
 import moment from "moment";
+import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -23,9 +22,9 @@ export const DeploymentsTableContent = ({
 }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const navigate = useNavigate();
-	const { items: sortedDeployments, sortConfig, requestSort } = useSort<Deployment>(deployments);
+	const { items: sortedDeployments, requestSort, sortConfig } = useSort<Deployment>(deployments);
 	const addToast = useToastStore((state) => state.addToast);
-	const { openModal, closeModal } = useModalStore();
+	const { closeModal, openModal } = useModalStore();
 	const [deploymentId, setDeploymentId] = useState<string>();
 
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
@@ -50,9 +49,12 @@ export const DeploymentsTableContent = ({
 					message: (error as Error).message,
 					type: "error",
 				});
+
 				return;
 			}
-			if (action === "delete") closeModal(ModalName.deleteDeployment);
+			if (action === "delete") {
+				closeModal(ModalName.deleteDeployment);
+			}
 			updateDeployments();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,77 +66,94 @@ export const DeploymentsTableContent = ({
 			<Table className="mt-4">
 				<THead>
 					<Tr>
-						<Th className="font-normal cursor-pointer group" onClick={() => requestSort("createdAt")}>
+						<Th className="cursor-pointer font-normal group" onClick={() => requestSort("createdAt")}>
 							{t("table.columns.deploymentTime")}
+
 							<SortButton
-								className="opacity-0 group-hover:opacity-100"
+								className="group-hover:opacity-100 opacity-0"
 								isActive={"createdAt" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
 						</Th>
 
-						<Th className="font-normal cursor-pointer group">{t("table.columns.sessions")}</Th>
-						<Th className="font-normal cursor-pointer group" onClick={() => requestSort("buildId")}>
+						<Th className="cursor-pointer font-normal group">{t("table.columns.sessions")}</Th>
+
+						<Th className="cursor-pointer font-normal group" onClick={() => requestSort("buildId")}>
 							{t("table.columns.buildId")}
+
 							<SortButton
-								className="opacity-0 group-hover:opacity-100"
+								className="group-hover:opacity-100 opacity-0"
 								isActive={"buildId" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
 						</Th>
-						<Th className="font-normal border-r-0 cursor-pointer group" onClick={() => requestSort("state")}>
+
+						<Th
+							className="border-r-0 cursor-pointer font-normal group"
+							onClick={() => requestSort("state")}
+						>
 							{t("table.columns.status")}
+
 							<SortButton
-								className="opacity-0 group-hover:opacity-100"
+								className="group-hover:opacity-100 opacity-0"
 								isActive={"state" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
 						</Th>
-						<Th className="font-normal text-right max-w-20">Actions</Th>
+
+						<Th className="font-normal max-w-20 text-right">Actions</Th>
 					</Tr>
 				</THead>
+
 				<TBody className="bg-gray-700">
-					{sortedDeployments.map(({ deploymentId, createdAt, state, buildId, sessionStats }) => (
+					{sortedDeployments.map(({ buildId, createdAt, deploymentId, sessionStats, state }) => (
 						<Tr
 							className="cursor-pointer group"
 							key={deploymentId}
 							onClick={() => navigate(`${deploymentId}/sessions`)}
 						>
 							<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
+
 							<Td>
 								<DeploymentSessionStats sessionStats={sessionStats} />
 							</Td>
+
 							<Td>{buildId}</Td>
+
 							<Td className="border-r-0">
 								<DeploymentState deploymentState={state} />
 							</Td>
+
 							<Td className="max-w-20">
 								<div className="flex space-x-1">
 									{state === DeploymentStateVariant.active ? (
 										<IconButton
 											ariaLabel={t("ariaDeactivateDeploy")}
 											className="p-1"
-											onClick={(e) => handleDeploymentAction(deploymentId, "deactivate", e)}
+											onClick={(event) =>
+												handleDeploymentAction(deploymentId, "deactivate", event)
+											}
 											title={t("ariaDeactivateDeploy")}
 										>
-											<ActionStoppedIcon className="w-4 h-4 transition group-hover:fill-white" />
+											<ActionStoppedIcon className="group-hover:fill-white h-4 transition w-4" />
 										</IconButton>
 									) : (
 										<IconButton
 											ariaLabel={t("ariaActivateDeploy")}
 											className="p-1"
-											onClick={(e) => handleDeploymentAction(deploymentId, "activate", e)}
+											onClick={(event) => handleDeploymentAction(deploymentId, "activate", event)}
 										>
-											<ActionActiveIcon className="w-4 h-4 transition group-hover:fill-green-accent" />
+											<ActionActiveIcon className="group-hover:fill-green-accent h-4 transition w-4" />
 										</IconButton>
 									)}
+
 									<IconButton
 										ariaLabel={t("ariaDeleteDeploy")}
 										disabled={state === DeploymentStateVariant.active}
-										onClick={(e) => showDeleteModal(e, deploymentId)}
+										onClick={(event) => showDeleteModal(event, deploymentId)}
 										title={t("ariaDeleteDeploy")}
 									>
-										<TrashIcon className="w-3 h-3 fill-white" />
+										<TrashIcon className="fill-white h-3 w-3" />
 									</IconButton>
 								</div>
 							</Td>

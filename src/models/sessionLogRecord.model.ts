@@ -1,7 +1,7 @@
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Value } from "@ak-proto-ts/values/v1/values_pb";
 import { namespaces } from "@constants";
-import { SessionStateType, SessionLogRecordType } from "@enums";
+import { SessionLogRecordType, SessionStateType } from "@enums";
 import { convertErrorProtoToModel } from "@models/error.model";
 import { LoggerService } from "@services";
 import { Callstack } from "@type/models";
@@ -18,15 +18,16 @@ export class SessionLogRecord {
 
 	constructor(logRecord: ProtoSessionLogRecord) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { t, processId, ...props } = logRecord;
+		const { processId, t, ...props } = logRecord;
 
 		const logRecordType = this.getLogRecordType(props);
 
 		if (!logRecordType) {
 			LoggerService.error(
 				namespaces.sessionsHistory,
-				i18n.t("sessionLogRecordTypeNotFound", { props: Object.keys(props).join(", "), ns: "services" })
+				i18n.t("sessionLogRecordTypeNotFound", { ns: "services", props: Object.keys(props).join(", ") })
 			);
+
 			return;
 		}
 
@@ -50,6 +51,7 @@ export class SessionLogRecord {
 					? `${i18n.t("historyPrint", { ns: "services" })}: ${logRecord.print.text}`
 					: undefined;
 				break;
+			default:
 		}
 
 		if (logRecordType !== SessionLogRecordType.callAttemptStart) {
@@ -63,6 +65,7 @@ export class SessionLogRecord {
 		if (activeKey && activeKey in SessionLogRecordType) {
 			return activeKey as SessionLogRecordType;
 		}
+
 		return undefined;
 	}
 
@@ -110,12 +113,14 @@ export class SessionLogRecord {
 			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
 					${i18n.t("historyResult", { ns: "services" })}: ${i18n.t("historyTime", { ns: "services" })} - 
 						${convertTimestampToDate(sessionLogRecord?.result?.value?.time?.v).toISOString()}`;
+
 			return;
 		}
 		if (sessionLogRecord?.result?.value?.nothing) {
 			this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 
 				${i18n.t("historyResult", { ns: "services" })}: 
 				${i18n.t("historyNoOutput", { ns: "services" })}`;
+
 			return;
 		}
 
@@ -124,6 +129,7 @@ export class SessionLogRecord {
 
 		if (!functionName && !functionResponse) {
 			this.logs = undefined;
+
 			return;
 		}
 		this.logs = `${i18n.t("historyFunction", { ns: "services" })} - 

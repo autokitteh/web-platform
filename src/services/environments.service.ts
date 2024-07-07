@@ -10,6 +10,7 @@ export class EnvironmentsService {
 			const { envs: environments } = await environmentsClient.list({
 				projectId,
 			});
+
 			return { data: environments, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.environmentsService, (error as Error).message);

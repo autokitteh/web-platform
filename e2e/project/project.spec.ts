@@ -1,4 +1,4 @@
-import { test, expect } from "@e2e/fixtures";
+import { expect, test } from "@e2e/fixtures";
 
 test.describe("Project Suite", () => {
 	test.beforeEach(async ({ dashboardPage }) => {
@@ -15,6 +15,6 @@ test.describe("Project Suite", () => {
 		await page.getByRole("button", { name: "Create new file" }).click();
 		await page.getByRole("textbox", { name: "new file name" }).click();
 		await page.getByRole("textbox", { name: "new file name" }).fill("newFile");
-		await page.getByRole("button", { name: "Create", exact: true }).click();
+		await page.getByRole("button", { exact: true, name: "Create" }).click();
 	});
 });

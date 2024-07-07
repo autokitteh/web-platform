@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
 import { ExternalLinkIcon } from "@assets/image/icons";
-import { Select, ErrorMessage, Input, Loader, Link } from "@components/atoms";
+import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } from "@constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { schedulerTriggerSchema } from "@validations";
-import { useForm, Controller } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -33,15 +33,21 @@ export const TriggerSchedulerForm = ({
 		const fetchData = async () => {
 			try {
 				const { data: connections, error: connectionsError } = await ConnectionService.list();
-				if (connectionsError) throw connectionsError;
+				if (connectionsError) {
+					throw connectionsError;
+				}
 
-				const connectionId = connections?.find((item) => item.name === schedulerTriggerConnectionName)?.connectionId;
-				if (!connectionId) throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
+				const connectionId = connections?.find(
+					(item) => item.name === schedulerTriggerConnectionName
+				)?.connectionId;
+				if (!connectionId) {
+					throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
+				}
 				setCronConnectionId(connectionId);
 
 				const formattedResources = Object.keys(resources).map((name) => ({
-					value: name,
 					label: name,
+					value: name,
 				}));
 				setFilesNameList(formattedResources);
 			} catch (error) {
@@ -52,7 +58,7 @@ export const TriggerSchedulerForm = ({
 				});
 				LoggerService.error(
 					namespaces.triggerService,
-					tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+					tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
 				);
 			} finally {
 				setIsLoading(false);
@@ -64,33 +70,33 @@ export const TriggerSchedulerForm = ({
 	}, []);
 
 	const {
-		register,
-		handleSubmit,
-		formState: { errors, dirtyFields },
 		control,
+		formState: { dirtyFields, errors },
 		getValues,
+		handleSubmit,
+		register,
 	} = useForm({
-		resolver: zodResolver(schedulerTriggerSchema),
 		defaultValues: {
-			name: "",
 			cron: "",
-			filePath: { value: "", label: "" },
 			entryFunction: "",
+			filePath: { label: "", value: "" },
+			name: "",
 		},
+		resolver: zodResolver(schedulerTriggerSchema),
 	});
 
 	const onSubmit = async () => {
-		const { name, cron, filePath, entryFunction } = getValues();
+		const { cron, entryFunction, filePath, name } = getValues();
 
 		setIsSaving(true);
 		const { error } = await TriggersService.create(projectId!, {
-			triggerId: undefined,
-			name,
 			connectionId: cronConnectionId!,
-			eventType: "",
-			path: filePath.value,
-			entryFunction,
 			data: { ["schedule"]: { string: { v: cron } } },
+			entryFunction,
+			eventType: "",
+			name,
+			path: filePath.value,
+			triggerId: undefined,
 		});
 		setIsSaving(false);
 
@@ -102,8 +108,9 @@ export const TriggerSchedulerForm = ({
 			});
 			LoggerService.error(
 				namespaces.triggerService,
-				tErrors("triggerNotCreatedExtended", { projectId, error: (error as Error).message })
+				tErrors("triggerNotCreatedExtended", { error: (error as Error).message, projectId })
 			);
+
 			return;
 		}
 		navigate(`/projects/${projectId}/triggers`);
@@ -115,7 +122,7 @@ export const TriggerSchedulerForm = ({
 		<Loader isCenter size="xl" />
 	) : (
 		<>
-			<form className="flex flex-col w-full gap-6" id={formId} onSubmit={handleSubmit(onSubmit)}>
+			<form className="flex flex-col gap-6 w-full" id={formId} onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
 						{...register("name")}
@@ -125,8 +132,10 @@ export const TriggerSchedulerForm = ({
 						isRequired
 						placeholder={t("placeholders.name")}
 					/>
+
 					<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 				</div>
+
 				<div className="relative">
 					<Input
 						{...register("cron")}
@@ -136,8 +145,10 @@ export const TriggerSchedulerForm = ({
 						isRequired
 						placeholder={t("placeholders.cron")}
 					/>
+
 					<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
 				</div>
+
 				<div className="relative">
 					<Controller
 						control={control}
@@ -156,8 +167,10 @@ export const TriggerSchedulerForm = ({
 							/>
 						)}
 					/>
+
 					<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 				</div>
+
 				<div className="relative">
 					<Input
 						{...register("entryFunction")}
@@ -167,21 +180,24 @@ export const TriggerSchedulerForm = ({
 						isRequired
 						placeholder={t("placeholders.functionName")}
 					/>
+
 					<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 				</div>
 			</form>
 			<div>
 				<p className="text-lg">{t("information")}:</p>
-				<div className="flex flex-col items-start gap-2 mt-2">
-					{infoCronExpressionsLinks.map(({ url, text }, idx) => (
+
+				<div className="flex flex-col gap-2 items-start mt-2">
+					{infoCronExpressionsLinks.map(({ text, url }, index) => (
 						<Link
-							className="inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent"
-							key={idx}
+							className="gap-2.5 group hover:text-green-accent inline-flex items-center ml-2"
+							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
-							<ExternalLinkIcon className="w-3.5 h-3.5 duration-200 fill-white group-hover:fill-green-accent" />
+
+							<ExternalLinkIcon className="duration-200 fill-white group-hover:fill-green-accent h-3.5 w-3.5" />
 						</Link>
 					))}
 				</div>

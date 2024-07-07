@@ -1,19 +1,19 @@
-import React, { useCallback, useState, useMemo } from "react";
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 import { ModalName } from "@enums/components";
 import { SessionsTableListProps } from "@interfaces/components";
 import { useModalStore } from "@store";
+import React, { useCallback, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
 
 export const SessionsTableList = ({
-	sessions,
 	onItemsRendered,
 	onScroll,
 	onSelectedSessionId,
+	sessions,
 }: SessionsTableListProps) => {
-	const { projectId, deploymentId, sessionId } = useParams();
+	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
 	const [scrollDisplayed, setScrollDisplayed] = useState(false);
@@ -31,10 +31,10 @@ export const SessionsTableList = ({
 
 	const itemData = useMemo(
 		() => ({
-			sessions,
-			selectedSessionId: sessionId,
-			scrollDisplayed,
 			openSessionLog,
+			scrollDisplayed,
+			selectedSessionId: sessionId,
+			sessions,
 			showDeleteModal,
 		}),
 		[sessions, sessionId, scrollDisplayed, openSessionLog, showDeleteModal]
@@ -60,9 +60,9 @@ export const SessionsTableList = ({
 						height={height}
 						itemCount={sessions.length}
 						itemData={itemData}
-						itemKey={(idx) => sessions[idx].sessionId}
+						itemKey={(index) => sessions[index].sessionId}
 						itemSize={38}
-						onItemsRendered={(e) => itemsRendered(e, height)}
+						onItemsRendered={(event) => itemsRendered(event, height)}
 						onScroll={onScroll}
 						width={width}
 					>

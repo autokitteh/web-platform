@@ -1,8 +1,8 @@
-import React from "react";
 import { Tab } from "@components/atoms";
 import { LoggerLevel } from "@enums";
 import { OutputTabsVariants } from "@enums/components";
 import { useLoggerStore } from "@store";
+import React from "react";
 
 export const OutputTabs: React.FC = () => {
 	const logs = useLoggerStore((state) => state.logs);
@@ -27,10 +27,12 @@ export const OutputTabs: React.FC = () => {
 					output
 				</Tab>
 			</div>
-			<div className="flex-auto h-48 pt-6 overflow-auto scrollbar">
-				{logs.map(({ id, timestamp, message, status }) => (
+
+			<div className="flex-auto h-48 overflow-auto pt-6 scrollbar">
+				{logs.map(({ id, message, status, timestamp }) => (
 					<div className="mb-4" key={id}>
 						<p className="font-medium text-gray-200">{timestamp}</p>
+
 						<p className={ouputTextStyle[status]}>{message}</p>
 					</div>
 				))}
