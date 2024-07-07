@@ -1,8 +1,9 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { IconSvg } from "@components/atoms";
 import { menuItems } from "@constants";
-import { useTranslation } from "react-i18next";
 
 export const SettingsMenu = () => {
 	const { t } = useTranslation("settings");

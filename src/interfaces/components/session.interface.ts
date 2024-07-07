@@ -1,5 +1,6 @@
-import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
+
+import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 
 export interface SessionTableFilterProps {
 	sessionStats: DeploymentSession[];

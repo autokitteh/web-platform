@@ -1,12 +1,13 @@
+import i18n from "i18next";
+
+import { ConnectionService } from "./connection.service";
+
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";
 import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Trigger } from "@type/models";
-import i18n from "i18next";
-
-import { ConnectionService } from "./connection.service";
 
 export class TriggersService {
 	static async create(projectId: string, trigger: Trigger): Promise<ServiceResponse<string>> {

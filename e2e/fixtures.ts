@@ -1,6 +1,6 @@
-import { expect, test as base } from "@playwright/test";
-
 import { DashboardPage } from "./pages/dashboard";
+
+import { expect, test as base } from "@playwright/test";
 
 const test = base.extend<{ dashboardPage: DashboardPage }>({
 	dashboardPage: async ({ page }, use) => {

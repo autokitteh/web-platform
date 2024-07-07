@@ -1,6 +1,7 @@
+import { get } from "lodash";
+
 import { Trigger as ProtoTrigger } from "@ak-proto-ts/triggers/v1/trigger_pb";
 import { Trigger, TriggerData } from "@type/models";
-import { get } from "lodash";
 
 /**
  * Converts a ProtoTrigger object to a TypeScript Trigger object.

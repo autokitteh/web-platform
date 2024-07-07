@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { LockSolid } from "@assets/image/icons";
 import { ErrorMessage, Input, Toggle } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -7,9 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { VariablesService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
-import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 
 export const AddVariable = () => {
 	const { t } = useTranslation("errors");

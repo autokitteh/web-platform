@@ -1,10 +1,11 @@
+import i18n from "i18next";
+
 import { variablesClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertVariableProtoToModel } from "@models/variable.model";
 import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Variable } from "@type/models";
-import i18n from "i18next";
 
 export class VariablesService {
 	static async set(projectId: string, singleVariable: Variable): Promise<ServiceResponse<string>> {

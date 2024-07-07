@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 
+import { isEmpty, orderBy } from "lodash";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -9,9 +13,6 @@ import { ModalName } from "@enums/components";
 import { ProjectsService } from "@services";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { cn } from "@utilities";
-import { isEmpty, orderBy } from "lodash";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 export const CodeTable = () => {
 	const [isLoading, setIsLoading] = useState(true);

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 
+import { useTranslation } from "react-i18next";
+import { redirect, useParams } from "react-router-dom";
+
 import { ProjectsIcon } from "@assets/image";
 import { Button, IconSvg } from "@components/atoms";
 import { useProjectStore } from "@store/useProjectStore";
 import { useToastStore } from "@store/useToastStore";
 import { ProjectMenuItem } from "@type/models";
-import { useTranslation } from "react-i18next";
-import { redirect, useParams } from "react-router-dom";
 
 export const StatsTopbar = () => {
 	const { t } = useTranslation(["projects", "errors"]);

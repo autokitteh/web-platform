@@ -1,5 +1,6 @@
-import { ToastStore } from "@interfaces/store";
 import { create } from "zustand";
+
+import { ToastStore } from "@interfaces/store";
 
 export const useToastStore = create<ToastStore>((set) => ({
 	addToast: (toast) =>

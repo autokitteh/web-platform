@@ -1,3 +1,9 @@
+import { cloneDeep, isEqual } from "lodash";
+import randomatic from "randomatic";
+import { StateCreator, create } from "zustand";
+import { persist } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
+
 import { namespaces } from "@constants";
 import { StoreName } from "@enums";
 import { ProjectStore } from "@interfaces/store";
@@ -5,11 +11,6 @@ import { convertProtoProjectToMenuItemModel } from "@models/project.model";
 import { LoggerService, ProjectsService } from "@services";
 import { ProjectMenuItem } from "@type/models";
 import { readFileAsUint8Array, updateOpenedFilesState } from "@utilities";
-import { cloneDeep, isEqual } from "lodash";
-import randomatic from "randomatic";
-import { StateCreator, create } from "zustand";
-import { persist } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
 
 const defaultState: Omit<
 	ProjectStore,

@@ -1,7 +1,8 @@
+import { GroupBase, StylesConfig } from "react-select";
+
 import { formColors } from "@constants/forms/formColors.constants";
 import { SelectOption } from "@interfaces/components";
 import { ColorSchemes } from "@type/theme.type";
-import { GroupBase, StylesConfig } from "react-select";
 
 const baseStyles = {
 	"::-webkit-scrollbar": {

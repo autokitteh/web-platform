@@ -25,13 +25,29 @@ module.exports = {
 		"import/resolver": {
 			alias: {
 				map: [
+					["@", "./src"],
+					["@ak-proto-ts", "./src/autokitteh/proto/gen/ts/autokitteh"],
+					["@api", "./src/api"],
 					["@assets", "./src/assets"],
 					["@components", "./src/components"],
-					["@api", "./src/api"],
+					["@constants", "./src/constants"],
+					["@e2e", "./e2e"],
+					["@enums", "./src/enums"],
+					["@hooks", "./src/hooks"],
+					["@i18n", "./src/i18n"],
+					["@interfaces", "./src/interfaces"],
+					["@locales", "./src/locales"],
+					["@models", "./src/models"],
 					["@routing", "./src/routing"],
+					["@services", "./src/services"],
+					["@store", "./src/store"],
+					["@type", "./src/types"],
+					["@utilities", "./src/utilities"],
 					["@utils", "./src/utils"],
 					["@validations", "./src/validations"],
+					["tailwind-config", "./tailwind.config.cjs"],
 				],
+				extensions: [".js", ".jsx", ".ts", ".tsx"],
 			},
 			node: {
 				paths: ["src"],
@@ -146,6 +162,11 @@ module.exports = {
 						group: "external",
 						position: "before",
 					},
+					{
+						pattern: "@{*,**/**}",
+						group: "internal",
+						position: "after",
+					},
 				],
 				"pathGroupsExcludedImportTypes": ["react"],
 				"newlines-between": "always",
@@ -158,12 +179,5 @@ module.exports = {
 		"import/first": "error",
 		"import/no-duplicates": "error",
 		"import/newline-after-import": "error",
-	},
-	settings: {
-		"import/resolver": {
-			node: {
-				extensions: [".js", ".jsx", ".ts", ".tsx"],
-			},
-		},
 	},
 };

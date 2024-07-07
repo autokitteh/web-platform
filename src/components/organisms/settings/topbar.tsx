@@ -1,7 +1,8 @@
 import React from "react";
 
-import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
+
+import { cn } from "@utilities";
 
 export const SettingsTopbar = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "topbar" });

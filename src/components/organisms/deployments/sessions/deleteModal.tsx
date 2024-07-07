@@ -1,11 +1,12 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { ModalName } from "@enums/components";
 import { ModalDeleteDeploymentSessionProps } from "@interfaces/components";
 import { useModalStore } from "@store";
-import { useTranslation } from "react-i18next";
 
 export const DeleteSessionModal = ({ onDelete }: ModalDeleteDeploymentSessionProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteDeploymentSession" });

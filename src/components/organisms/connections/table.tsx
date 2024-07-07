@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { PlusCircle } from "@assets/image";
 import { LinkIcon, TrashIcon } from "@assets/image/icons";
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -11,8 +14,6 @@ import { useSort } from "@hooks";
 import { ConnectionService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Connection } from "@type/models";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 
 export const ConnectionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");

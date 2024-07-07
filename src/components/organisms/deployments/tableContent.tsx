@@ -1,5 +1,9 @@
 import React, { useCallback, useState } from "react";
 
+import moment from "moment";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+
 import { ActionActiveIcon, ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
 import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
@@ -10,9 +14,6 @@ import { useSort } from "@hooks";
 import { DeploymentsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Deployment } from "@type/models";
-import moment from "moment";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 export const DeploymentsTableContent = ({
 	deployments,

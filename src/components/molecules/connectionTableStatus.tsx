@@ -1,8 +1,9 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { ConnectionStatus } from "@enums";
 import { ConnectionStatusType } from "@type/models";
-import { useTranslation } from "react-i18next";
 
 export const ConnectionTableStatus = ({ status }: { status: ConnectionStatusType }) => {
 	const { t } = useTranslation("tabs");

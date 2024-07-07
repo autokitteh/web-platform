@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
+import { Trans, useTranslation } from "react-i18next";
+
 import { NewProject } from "@assets/image";
 import { CopyIcon } from "@assets/image/icons";
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
 import { HttpService } from "@services";
 import { useToastStore } from "@store";
-import { Trans, useTranslation } from "react-i18next";
 
 export const Security = () => {
 	const { t: tSettings } = useTranslation("settings");

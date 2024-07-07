@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { DefaultTriggerForm, TriggerSchedulerForm } from "@components/organisms/triggers";
@@ -7,7 +9,6 @@ import { defaultTriggerType } from "@constants";
 import { triggerTypes } from "@constants/lists/connections";
 import { TriggerFormIds, TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
-import { useTranslation } from "react-i18next";
 
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });

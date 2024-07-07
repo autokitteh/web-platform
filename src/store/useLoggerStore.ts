@@ -1,9 +1,10 @@
-import { maxLogs } from "@constants";
-import { StoreName } from "@enums";
-import { LoggerStore } from "@interfaces/store";
 import randomatic from "randomatic";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
+
+import { maxLogs } from "@constants";
+import { StoreName } from "@enums";
+import { LoggerStore } from "@interfaces/store";
 
 const store: StateCreator<LoggerStore> = (set) => ({
 	addLog: (log) =>

@@ -1,5 +1,6 @@
-import { baseUrl } from "@constants";
 import axios from "axios";
+
+import { baseUrl } from "@constants";
 
 const httpClient = axios.create({
 	baseURL: baseUrl,

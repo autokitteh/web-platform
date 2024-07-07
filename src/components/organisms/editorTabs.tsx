@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 
+import { get, last } from "lodash";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+
 import { Close } from "@assets/image/icons";
 import { IconButton, Loader, Tab } from "@components/atoms";
 import { monacoLanguages } from "@constants";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
-import { get, last } from "lodash";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 export const EditorTabs = () => {
 	const { projectId } = useParams();

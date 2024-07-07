@@ -1,5 +1,7 @@
 import React from "react";
 
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
 import { DeploymentsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable } from "@components/organisms/connections";
@@ -12,7 +14,6 @@ import { Connections, Dashboard, NotFound404, Project, Sessions, Triggers, Varia
 import { Deployments } from "@components/pages/deployments";
 import { AppLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 export const App: React.FC = () => (
 	<BrowserRouter>

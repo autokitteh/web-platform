@@ -1,3 +1,5 @@
+import i18n from "i18next";
+
 import { SetResourcesResponse } from "@ak-proto-ts/projects/v1/svc_pb";
 import { projectsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -5,7 +7,6 @@ import { convertErrorProtoToModel, convertProjectProtoToModel } from "@models";
 import { DeploymentsService, EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Project } from "@type/models";
-import i18n from "i18next";
 
 export class ProjectsService {
 	static async create(projectName: string): Promise<ServiceResponse<string>> {

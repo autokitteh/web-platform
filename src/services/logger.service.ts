@@ -1,6 +1,7 @@
+import moment from "moment";
+
 import { LoggerLevel } from "@enums";
 import { useLoggerStore } from "@store";
-import moment from "moment";
 
 /* eslint-disable no-console */
 

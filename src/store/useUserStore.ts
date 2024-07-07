@@ -1,9 +1,10 @@
-import { StoreName } from "@enums";
-import { UserStore } from "@interfaces/store";
-import { AuthService } from "@services";
 import create, { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+
+import { StoreName } from "@enums";
+import { UserStore } from "@interfaces/store";
+import { AuthService } from "@services";
 
 const defaultState = {
 	user: undefined,

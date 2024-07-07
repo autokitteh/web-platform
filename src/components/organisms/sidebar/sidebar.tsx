@@ -1,5 +1,9 @@
 import React, { Suspense, useEffect, useState } from "react";
 
+import { AnimatePresence, motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import { Link, useLocation } from "react-router-dom";
+
 import { IconLogo, IconLogoName } from "@assets/image";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 import { Button, Loader } from "@components/atoms";
@@ -7,9 +11,6 @@ import { Menu, Submenu } from "@components/molecules/menu";
 import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 import { useUserStore } from "@store";
-import { AnimatePresence, motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
-import { Link, useLocation } from "react-router-dom";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);

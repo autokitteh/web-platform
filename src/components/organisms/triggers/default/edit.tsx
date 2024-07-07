@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 
+import { debounce, has } from "lodash";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
@@ -12,10 +17,6 @@ import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
-import { debounce, has } from "lodash";
-import { Controller, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 
 export const DefaultEditTrigger = () => {
 	const { projectId, triggerId } = useParams();

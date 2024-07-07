@@ -1,3 +1,6 @@
+import i18n from "i18next";
+import { get } from "lodash";
+
 import { ActivateResponse, ListResponse } from "@ak-proto-ts/deployments/v1/svc_pb";
 import { deploymentsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -7,8 +10,6 @@ import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Deployment } from "@type/models";
 import { flattenArray, getIds, sortArray } from "@utilities";
-import i18n from "i18next";
-import { get } from "lodash";
 
 export class DeploymentsService {
 	static async listByEnvironmentIds(environmentsIds: string[]): Promise<ServiceResponse<Deployment[]>> {

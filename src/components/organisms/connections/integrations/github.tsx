@@ -1,5 +1,10 @@
 import React, { useMemo, useState } from "react";
 
+import randomatic from "randomatic";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 import { Button, ErrorMessage, Input, Link, Select, Spinner } from "@components/atoms";
 import { baseUrl, namespaces } from "@constants";
@@ -10,10 +15,6 @@ import { HttpService, LoggerService } from "@services";
 import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
-import randomatic from "randomatic";
-import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");

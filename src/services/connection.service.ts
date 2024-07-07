@@ -1,10 +1,11 @@
+import i18n from "i18next";
+
 import { connectionsClient, integrationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
 import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Connection } from "@type/models";
-import i18n from "i18next";
 
 export class ConnectionService {
 	static async get(connectionId: string): Promise<ServiceResponse<Connection>> {

@@ -1,3 +1,5 @@
+import i18n from "i18next";
+
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Value } from "@ak-proto-ts/values/v1/values_pb";
 import { namespaces } from "@constants";
@@ -6,7 +8,6 @@ import { convertErrorProtoToModel } from "@models/error.model";
 import { LoggerService } from "@services";
 import { Callstack } from "@type/models";
 import { convertTimestampToDate } from "@utilities";
-import i18n from "i18next";
 
 export class SessionLogRecord {
 	type: SessionLogRecordType = SessionLogRecordType.unknown;

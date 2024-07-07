@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
+import { isEqual } from "lodash";
+import * as monaco from "monaco-editor";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { CatImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
 import { Button, Frame, IconButton, Loader, LogoCatLarge } from "@components/atoms";
@@ -8,10 +13,6 @@ import { SessionLogRecord } from "@models";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { SessionsService } from "@services";
 import { useToastStore } from "@store/useToastStore";
-import { isEqual } from "lodash";
-import * as monaco from "monaco-editor";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 
 export const SessionTableEditorFrame = () => {
 	const [editorKey, setEditorKey] = useState(0);

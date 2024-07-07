@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo, useState } from "react";
 
+import { useNavigate, useParams } from "react-router-dom";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
+
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 import { ModalName } from "@enums/components";
 import { SessionsTableListProps } from "@interfaces/components";
 import { useModalStore } from "@store";
-import { useNavigate, useParams } from "react-router-dom";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
 
 export const SessionsTableList = ({
 	onItemsRendered,

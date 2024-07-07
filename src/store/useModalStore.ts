@@ -1,5 +1,6 @@
-import { ModalStore } from "@interfaces/store";
 import { StateCreator, create } from "zustand";
+
+import { ModalStore } from "@interfaces/store";
 
 const store: StateCreator<ModalStore> = (set) => ({
 	closeModal: (name: string) =>

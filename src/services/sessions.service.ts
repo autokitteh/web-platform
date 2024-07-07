@@ -1,3 +1,6 @@
+import i18n from "i18next";
+import { get } from "lodash";
+
 import {
 	Session as ProtoSession,
 	SessionLogRecord as ProtoSessionLogRecord,
@@ -10,8 +13,6 @@ import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse, StartSessionArgsType } from "@type";
 import { Session, SessionFilter } from "@type/models";
 import { flattenArray } from "@utilities";
-import i18n from "i18next";
-import { get } from "lodash";
 
 export class SessionsService {
 	static async listByEnvironmentId(environmentId: string): Promise<ServiceResponse<Session[]>> {
