@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import { Close } from "@assets/image/icons";
 import { IconButton, Loader, Tab } from "@components/atoms";
 import { monacoLanguages } from "@constants";
@@ -5,7 +7,6 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { useProjectStore } from "@store";
 import { cn } from "@utilities";
 import { get, last } from "lodash";
-import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 

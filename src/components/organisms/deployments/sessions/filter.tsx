@@ -1,9 +1,10 @@
+import React, { useMemo, useState } from "react";
+
 import { Button } from "@components/atoms";
 import { SessionStateType } from "@enums";
 import { SessionTableFilterProps } from "@interfaces/components";
 import { SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
-import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilterProps) => {

@@ -1,7 +1,8 @@
+import React from "react";
+
 import { SessionStateType } from "@enums";
 import { DeploymentSession } from "@type/models";
 import { cn } from "@utilities";
-import React from "react";
 
 export const DeploymentSessionStats = ({ sessionStats }: { sessionStats?: DeploymentSession[] }) => {
 	const countStyle = (state?: SessionStateType) =>

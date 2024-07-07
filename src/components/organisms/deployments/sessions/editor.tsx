@@ -1,3 +1,5 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
+
 import { CatImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
 import { Button, Frame, IconButton, Loader, LogoCatLarge } from "@components/atoms";
@@ -8,7 +10,6 @@ import { SessionsService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { isEqual } from "lodash";
 import * as monaco from "monaco-editor";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 

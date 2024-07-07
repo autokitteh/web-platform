@@ -1,5 +1,6 @@
-import { cn } from "@utilities";
 import React from "react";
+
+import { cn } from "@utilities";
 import { useTranslation } from "react-i18next";
 
 export const SettingsTopbar = () => {

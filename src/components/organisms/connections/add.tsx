@@ -1,10 +1,11 @@
+import React, { useState } from "react";
+
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { GithubIntegrationForm, GoogleIntegrationForm } from "@components/organisms/connections/integrations";
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
 import { IntegrationType } from "@type/components";
-import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export const AddConnection = () => {

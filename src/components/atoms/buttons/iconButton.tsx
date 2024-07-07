@@ -1,8 +1,9 @@
+import React from "react";
+
 import { Button, Link } from "@components/atoms";
 import { ButtonVariant } from "@enums/components";
 import { IconButtonProps } from "@interfaces/components";
 import { cn } from "@utilities";
-import React from "react";
 
 export const IconButton = ({
 	ariaLabel,

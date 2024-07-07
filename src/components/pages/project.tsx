@@ -1,10 +1,11 @@
+import React, { useEffect, useState } from "react";
+
 import { Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { ProjectsService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { calculatePathDepth } from "@utilities";
-import React, { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 export const Project = () => {

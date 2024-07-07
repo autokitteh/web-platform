@@ -1,5 +1,6 @@
-import { Map } from "@assets/image";
 import React, { useEffect, useRef } from "react";
+
+import { Map } from "@assets/image";
 
 export const MapMenu = () => {
 	const refMapRef = useRef<SVGSVGElement | null>(null);

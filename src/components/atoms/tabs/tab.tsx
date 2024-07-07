@@ -1,7 +1,8 @@
+import React, { useContext } from "react";
+
 import { TabsContext } from "@components/atoms/tabs/tabsContext";
 import { TabProps } from "@interfaces/components";
 import { cn } from "@utilities";
-import React, { useContext } from "react";
 
 export const Tab = ({ activeTab, ariaLabel, children, className, onClick, value }: TabProps) => {
 	const { setActiveTab } = useContext(TabsContext);

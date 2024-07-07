@@ -1,7 +1,8 @@
+import React from "react";
+
 import { DropdownMenuProps } from "@interfaces/components/dropdown";
 import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
 import { createPortal } from "react-dom";
 
 export const DropdownMenu = ({

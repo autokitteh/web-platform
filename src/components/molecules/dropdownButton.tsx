@@ -1,7 +1,8 @@
+import React, { useRef, useState } from "react";
+
 import { DropdownMenu } from "@components/atoms";
 import { DropdownButtonProps, DropdownState } from "@interfaces/components";
 import { cn } from "@utilities";
-import React, { useRef, useState } from "react";
 
 export const DropdownButton = ({ ariaLabel, children, className, contentMenu }: DropdownButtonProps) => {
 	const parentRef = useRef<HTMLDivElement>(null);

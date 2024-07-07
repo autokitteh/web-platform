@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { ModalName } from "@enums/components";
@@ -5,7 +7,6 @@ import { ModalDeleteTriggerProps } from "@interfaces/components";
 import { TriggersService } from "@services";
 import { useModalStore } from "@store";
 import { Trigger } from "@type/models";
-import React, { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 export const DeleteTriggerModal = ({ onDelete, triggerId }: ModalDeleteTriggerProps) => {

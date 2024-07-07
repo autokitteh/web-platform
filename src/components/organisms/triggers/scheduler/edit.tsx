@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import { ExternalLinkIcon } from "@assets/image/icons";
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -9,7 +11,6 @@ import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { Trigger } from "@type/models";
 import { schedulerTriggerSchema } from "@validations";
-import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";

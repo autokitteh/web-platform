@@ -1,8 +1,9 @@
+import React from "react";
+
 import { Button } from "@components/atoms";
 import { SubmenuProps } from "@interfaces/components";
 import { cn } from "@utilities";
 import { motion } from "framer-motion";
-import React from "react";
 import { useParams } from "react-router-dom";
 
 export const Submenu = ({ submenuInfo }: SubmenuProps) => {

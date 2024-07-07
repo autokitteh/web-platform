@@ -1,6 +1,7 @@
+import React, { useEffect, useState } from "react";
+
 import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
 import { SelectOption, SelectProps } from "@interfaces/components";
-import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactSelect, { SingleValue } from "react-select";
 

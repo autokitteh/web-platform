@@ -1,6 +1,7 @@
+import React from "react";
+
 import { Error404 } from "@assets/image";
 import { homepageURL } from "@constants/global.constants";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 

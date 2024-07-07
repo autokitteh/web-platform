@@ -1,6 +1,7 @@
+import React from "react";
+
 import { IconSvg } from "@components/atoms";
 import { menuItems } from "@constants";
-import React from "react";
 import { useTranslation } from "react-i18next";
 
 export const SettingsMenu = () => {

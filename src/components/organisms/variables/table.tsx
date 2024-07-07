@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import { PlusCircle } from "@assets/image";
 import { EditIcon, LockSolid, TrashIcon } from "@assets/image/icons";
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -8,7 +10,6 @@ import { useSort } from "@hooks";
 import { EnvironmentsService, VariablesService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Environment, Variable } from "@type/models";
-import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 

@@ -1,7 +1,8 @@
+import React, { useState } from "react";
+
 import { MinusAccordionIcon, PlusAccordionIcon } from "@assets/image/icons";
 import { Button } from "@components/atoms";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
 
 export const Accordion = ({
 	children,

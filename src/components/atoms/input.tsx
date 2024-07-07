@@ -1,7 +1,8 @@
+import React, { forwardRef, useCallback, useEffect, useId, useState } from "react";
+
 import { InputVariant } from "@enums/components";
 import { InputProps } from "@interfaces/components";
 import { cn } from "@utilities";
-import React, { forwardRef, useCallback, useEffect, useId, useState } from "react";
 
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const {

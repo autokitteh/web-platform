@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
@@ -9,7 +11,6 @@ import { useProjectStore, useToastStore } from "@store";
 import { TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
 import { debounce, has } from "lodash";
-import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";

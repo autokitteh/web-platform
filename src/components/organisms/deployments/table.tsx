@@ -1,10 +1,11 @@
+import React, { useEffect, useState } from "react";
+
 import { Loader } from "@components/atoms";
 import { DeploymentsTableContent } from "@components/organisms/deployments";
 import { fetchDeploymentsInterval } from "@constants";
 import { DeploymentsService } from "@services";
 import { useToastStore } from "@store";
 import { Deployment } from "@type/models";
-import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 

@@ -1,6 +1,7 @@
+import React, { ElementType } from "react";
+
 import { TypographyProps } from "@interfaces/components";
 import { cn } from "@utilities";
-import React, { ElementType } from "react";
 
 export const Typography = <E extends ElementType = "div">({
 	children,

@@ -1,6 +1,7 @@
+import React from "react";
+
 import { ToggleProps } from "@interfaces/components";
 import { cn } from "@utilities";
-import React from "react";
 
 export const Toggle = ({ checked, label, onChange }: ToggleProps) => {
 	const baseStyle = cn(

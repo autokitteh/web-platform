@@ -1,7 +1,8 @@
+import React from "react";
+
 import { LogoCatLarge } from "@components/atoms";
 import { Sidebar } from "@components/organisms";
 import { SettingsMenu, SettingsTopbar } from "@components/organisms/settings";
-import React from "react";
 import { Outlet } from "react-router-dom";
 
 export const SettingsLayout = () => {

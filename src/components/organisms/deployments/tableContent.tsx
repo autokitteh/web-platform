@@ -1,3 +1,5 @@
+import React, { useCallback, useState } from "react";
+
 import { ActionActiveIcon, ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
 import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
@@ -9,7 +11,6 @@ import { DeploymentsService } from "@services";
 import { useModalStore, useToastStore } from "@store";
 import { Deployment } from "@type/models";
 import moment from "moment";
-import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 

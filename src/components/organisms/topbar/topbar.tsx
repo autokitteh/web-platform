@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import { Build, Deploy, Stats } from "@assets/image";
 import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
 import { TopbarButton } from "@enums/components";
@@ -5,7 +7,6 @@ import { ProjectsService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
-import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { redirect, useParams } from "react-router-dom";
 

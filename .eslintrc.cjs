@@ -47,13 +47,14 @@ module.exports = {
 	parser: "@typescript-eslint/parser",
 	plugins: [
 		"react-refresh",
-		"prettier",
 		"unicorn",
 		"import",
 		"@typescript-eslint",
 		"promise",
 		"@liferay",
 		"eslint-plugin-local-rules",
+		"prettier",
+		"import",
 	],
 	rules: {
 		"local-rules/no-abbreviations": "error",
@@ -130,5 +131,39 @@ module.exports = {
 		"no-throw-literal": "warn",
 		"unicorn/filename-case": ["error", { case: "camelCase" }],
 		"no-console": "error",
+		"@liferay/sort-imports": "off",
+		"@liferay/group-imports": "off",
+		"import/order": [
+			"error",
+			{
+				"groups": [
+					["builtin", "external"],
+					["internal", "parent", "sibling", "index"],
+				],
+				"pathGroups": [
+					{
+						pattern: "react",
+						group: "external",
+						position: "before",
+					},
+				],
+				"pathGroupsExcludedImportTypes": ["react"],
+				"newlines-between": "always",
+				"alphabetize": {
+					order: "asc",
+					caseInsensitive: true,
+				},
+			},
+		],
+		"import/first": "error",
+		"import/no-duplicates": "error",
+		"import/newline-after-import": "error",
+	},
+	settings: {
+		"import/resolver": {
+			node: {
+				extensions: [".js", ".jsx", ".ts", ".tsx"],
+			},
+		},
 	},
 };

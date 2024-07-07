@@ -1,9 +1,10 @@
+import React from "react";
+
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { ModalName } from "@enums/components";
 import { DeleteFile } from "@interfaces/components";
 import { useModalStore } from "@store";
-import React from "react";
 import { useTranslation } from "react-i18next";
 
 export const DeleteFileModal = ({ onDelete }: DeleteFile) => {

@@ -1,10 +1,11 @@
+import React, { CSSProperties, memo } from "react";
+
 import { TrashIcon } from "@assets/image/icons";
 import { IconButton, Td, Tr } from "@components/atoms";
 import { SessionsTableState } from "@components/organisms/deployments";
 import { SessionsTableRowProps } from "@interfaces/components";
 import { cn } from "@utilities";
 import moment from "moment";
-import React, { CSSProperties, memo } from "react";
 import { areEqual } from "react-window";
 
 export const SessionsTableRow = memo(

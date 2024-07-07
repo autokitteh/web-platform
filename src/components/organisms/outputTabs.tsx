@@ -1,8 +1,9 @@
+import React from "react";
+
 import { Tab } from "@components/atoms";
 import { LoggerLevel } from "@enums";
 import { OutputTabsVariants } from "@enums/components";
 import { useLoggerStore } from "@store";
-import React from "react";
 
 export const OutputTabs: React.FC = () => {
 	const logs = useLoggerStore((state) => state.logs);

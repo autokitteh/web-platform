@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import { Button, Spinner } from "@components/atoms";
 import { Modal } from "@components/molecules";
 import { ModalName } from "@enums/components";
@@ -5,7 +7,6 @@ import { ModalDeleteConnectionProps } from "@interfaces/components";
 import { ConnectionService } from "@services";
 import { useModalStore } from "@store";
 import { Connection } from "@type/models";
-import React, { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: ModalDeleteConnectionProps) => {

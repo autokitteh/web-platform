@@ -1,10 +1,11 @@
+import React, { useLayoutEffect, useRef, useState } from "react";
+
 import { Close } from "@assets/image/icons";
 import { IconButton } from "@components/atoms";
 import { ToasterTypes } from "@interfaces/components/toast.interface";
 import { useToastStore } from "@store/useToastStore";
 import { cn } from "@utilities";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export const Toast = () => {

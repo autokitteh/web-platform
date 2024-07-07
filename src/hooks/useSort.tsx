@@ -1,8 +1,9 @@
+import { useCallback, useMemo, useState } from "react";
+
 import { initialSortConfig } from "@constants";
 import { SortDirectionVariant } from "@enums/components";
 import { SortConfig } from "@type";
 import { orderBy } from "lodash";
-import { useCallback, useMemo, useState } from "react";
 
 export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 	const [sortConfig, setSortConfig] = useState<SortConfig<T>>(

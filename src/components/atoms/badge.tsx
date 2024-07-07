@@ -1,6 +1,7 @@
+import React from "react";
+
 import { BadgeProps } from "@interfaces/components";
 import { cn } from "@utilities";
-import React from "react";
 
 export const Badge = ({ children, className }: BadgeProps) => {
 	const badgeClasses = cn(

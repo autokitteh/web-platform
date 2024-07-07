@@ -1,6 +1,7 @@
+import React from "react";
+
 import { SpinnerProps } from "@interfaces/components";
 import { cn } from "@utilities";
-import React from "react";
 
 export const Spinner = ({ className }: SpinnerProps) => {
 	const baseStyle = cn("h-5 w-5 animate-spin rounded-full border-2 border-current", className);

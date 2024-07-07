@@ -1,3 +1,5 @@
+import React, { Suspense, useEffect, useState } from "react";
+
 import { IconLogo, IconLogoName } from "@assets/image";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 import { Button, Loader } from "@components/atoms";
@@ -6,7 +8,6 @@ import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 import { useUserStore } from "@store";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 

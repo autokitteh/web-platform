@@ -1,5 +1,6 @@
-import { ResizeHook } from "@interfaces/hooks";
 import { useEffect, useState } from "react";
+
+import { ResizeHook } from "@interfaces/hooks";
 
 export const useResize = ({ direction, initial, max, min }: ResizeHook) => {
 	const initialValue = initial ? Math.min(max, Math.max(min, initial)) : max;

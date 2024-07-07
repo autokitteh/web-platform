@@ -1,6 +1,7 @@
+import React from "react";
+
 import { SessionState } from "@enums";
 import i18n from "i18next";
-import React from "react";
 
 export const SessionsTableState = ({ sessionState }: { sessionState: SessionState }) => {
 	const sessionsTableStateStyle = {

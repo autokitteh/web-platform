@@ -1,5 +1,6 @@
-import { Sidebar, StatsTopbar, Topbar } from "@components/organisms";
 import React from "react";
+
+import { Sidebar, StatsTopbar, Topbar } from "@components/organisms";
 import { Outlet } from "react-router-dom";
 
 export const AppLayout = ({

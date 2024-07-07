@@ -1,6 +1,7 @@
+import React from "react";
+
 import { isAuthEnabled } from "@constants";
 import { useUserStore } from "@store";
-import React from "react";
 
 export const Dashboard: React.FC = () => {
 	const { logoutFunction, user } = useUserStore();

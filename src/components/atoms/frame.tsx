@@ -1,6 +1,7 @@
+import React from "react";
+
 import { FrameProps } from "@interfaces/components";
 import { cn } from "@utilities";
-import React from "react";
 
 export const Frame = ({ children, className }: FrameProps) => {
 	const frameStyle = cn(
