@@ -1,9 +1,9 @@
 export interface DropdownMenuProps {
-	isOpen: boolean;
-	className?: string;
 	children: React.ReactNode;
-	style?: React.CSSProperties;
+	className?: string;
 	container?: Element | DocumentFragment;
+	isOpen: boolean;
 	onMouseEnter?: () => void;
 	onMouseLeave?: () => void;
+	style?: React.CSSProperties;
 }

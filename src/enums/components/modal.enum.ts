@@ -1,10 +1,10 @@
 export enum ModalName {
-	deleteConnection = "deleteConnection",
-	deleteTrigger = "deleteTrigger",
 	addCodeAssets = "addCodeAssets",
-	deleteVariable = "deleteVariable",
-	deleteFile = "deleteFile",
-	getToken = "getToken",
+	deleteConnection = "deleteConnection",
 	deleteDeployment = "deleteDeployment",
 	deleteDeploymentSession = "deleteDeploymentSession",
+	deleteFile = "deleteFile",
+	deleteTrigger = "deleteTrigger",
+	deleteVariable = "deleteVariable",
+	getToken = "getToken",
 }

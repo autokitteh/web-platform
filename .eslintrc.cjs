@@ -1,5 +1,6 @@
 const path = require("path");
 
+
 module.exports = {
 	root: true,
 	env: { browser: true, es2020: true },
@@ -14,7 +15,7 @@ module.exports = {
 		"plugin:security/recommended-legacy",
 		"plugin:promise/recommended",
 		"plugin:@liferay/react",
-	],
+],
 	settings: {
 		"react": {
 			version: "detect",
@@ -59,7 +60,7 @@ module.exports = {
 			},
 		},
 	},
-	ignorePatterns: ["dist", ".eslintrc.cjs", "src/stories"],
+	ignorePatterns: ["dist", ".eslintrc.cjs"],
 	parser: "@typescript-eslint/parser",
 	plugins: ["react-refresh", "unicorn", "import", "@typescript-eslint", "promise", "@liferay", "eslint-plugin-local-rules", "prettier", "import"],
 	rules: {

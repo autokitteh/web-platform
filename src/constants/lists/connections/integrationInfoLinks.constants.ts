@@ -1,8 +1,8 @@
 import i18n from "i18next";
 
-let infoGithubLinks: { url: string; text: string }[] = [];
-let infoGoogleUserLinks: { url: string; text: string }[] = [];
-let infoGoogleAccountLinks: { url: string; text: string }[] = [];
+let infoGithubLinks: { text: string; url: string }[] = [];
+let infoGoogleUserLinks: { text: string; url: string }[] = [];
+let infoGoogleAccountLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [

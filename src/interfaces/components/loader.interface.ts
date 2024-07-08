@@ -1,10 +1,10 @@
 import { SystemSizes } from "@type";
 
 export interface LoaderProps {
-	size?: SystemSizes;
 	firstColor?: LoaderColorType;
-	secondColor?: LoaderColorType;
 	isCenter?: boolean;
+	secondColor?: LoaderColorType;
+	size?: SystemSizes;
 }
 
 type LoaderColorType = "dark-gray" | "gray";

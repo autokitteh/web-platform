@@ -1,6 +1,6 @@
 export type Variable = {
-	scopeId: string;
-	name: string;
-	value: string;
 	isSecret: boolean;
+	name: string;
+	scopeId: string;
+	value: string;
 };

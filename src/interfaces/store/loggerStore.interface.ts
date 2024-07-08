@@ -2,13 +2,13 @@ import { LoggerLevel } from "@enums";
 
 interface Log {
 	id: string;
-	timestamp: string;
 	message: string;
 	status: LoggerLevel;
+	timestamp: string;
 }
 
 export interface LoggerStore {
-	logs: Log[];
 	addLog: (log: Omit<Log, "id">) => void;
 	clearLogs: () => void;
+	logs: Log[];
 }

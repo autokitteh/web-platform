@@ -1,8 +1,8 @@
 export interface ModalStore<T = unknown> {
+	closeModal: (name: string) => void;
+	data?: T;
 	modals: {
 		[key: string]: boolean;
 	};
-	data?: T;
 	openModal: (name: string, data?: T) => void;
-	closeModal: (name: string) => void;
 }

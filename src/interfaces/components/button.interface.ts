@@ -3,18 +3,18 @@ import React, { KeyboardEventHandler, MouseEventHandler } from "react";
 import { ButtonType, SortDirection } from "@type/components";
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, React.AriaAttributes {
-	className: string;
 	ariaLabel: string;
-	variant: ButtonType;
-	href: string;
-	disabled: boolean;
 	children: React.ReactNode;
-	type?: "button" | "submit" | "reset";
+	className: string;
+	disabled: boolean;
 	form?: string;
+	href: string;
 	onClick: MouseEventHandler<HTMLButtonElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 	onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+	type?: "button" | "submit" | "reset";
+	variant: ButtonType;
 }
 
 export interface DropdownButtonProps extends Partial<ButtonProps> {
@@ -27,23 +27,23 @@ export interface DropdownState {
 }
 
 export interface IconButtonProps extends React.AriaAttributes, React.DOMAttributes<HTMLDivElement> {
-	className?: string;
 	ariaLabel?: string;
-	variant?: ButtonType;
-	href?: string;
-	disabled?: boolean;
 	children: React.ReactNode;
+	className?: string;
+	disabled?: boolean;
 	form?: string;
-	title?: string;
+	href?: string;
 	onClick?: MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLDivElement | HTMLButtonElement>;
 	onMouseEnter?: (event: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLButtonElement>) => void;
 	onMouseLeave?: (event: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLButtonElement>) => void;
+	title?: string;
+	variant?: ButtonType;
 }
 
 export interface SortButtonProps {
-	className?: string;
 	ariaLabel: string;
+	className?: string;
 	isActive: boolean;
 	sortDirection: SortDirection | undefined;
 }

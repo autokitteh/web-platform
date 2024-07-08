@@ -72,7 +72,7 @@ export class DeploymentsService {
 		}
 	}
 
-	static async create(deployment: { envId: string; buildId: string }): Promise<ServiceResponse<string>> {
+	static async create(deployment: { buildId: string; envId: string }): Promise<ServiceResponse<string>> {
 		try {
 			const createResponse = await deploymentsClient.create({ deployment });
 

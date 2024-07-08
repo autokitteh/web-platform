@@ -30,7 +30,7 @@ export class SessionsService {
 		filter?: SessionFilter,
 		pageToken?: string,
 		pageSize?: number
-	): Promise<ServiceResponse<{ sessions: Session[]; nextPageToken: string }>> {
+	): Promise<ServiceResponse<{ nextPageToken: string; sessions: Session[] }>> {
 		try {
 			const { nextPageToken, sessions: sessionsResponse } = await sessionsClient.list({
 				deploymentId,

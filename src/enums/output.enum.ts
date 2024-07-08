@@ -1,7 +1,7 @@
 export enum LoggerLevel {
-	info = "INFO",
-	log = "LOG",
 	debug = "DEBUG",
 	error = "ERROR",
+	info = "INFO",
+	log = "LOG",
 	warn = "WARNING",
 }

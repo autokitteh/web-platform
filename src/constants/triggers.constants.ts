@@ -5,7 +5,7 @@ import { triggerTypes } from "@constants/lists/connections";
 export const schedulerTriggerConnectionName = "cron";
 export const defaultTriggerType = triggerTypes[0];
 
-export let infoCronExpressionsLinks: { url: string; text: string }[] = [];
+export let infoCronExpressionsLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoCronExpressionsLinks = [

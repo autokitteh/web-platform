@@ -1,6 +1,6 @@
 export interface TabFormHeaderProps {
-	title: string;
+	className?: string;
 	form?: string;
 	isLoading?: boolean;
-	className?: string;
+	title: string;
 }

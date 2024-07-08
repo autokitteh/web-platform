@@ -1,8 +1,8 @@
 import { Variable } from "@type/models";
 
 export interface ModalProps {
-	className?: string;
 	children: React.ReactNode;
+	className?: string;
 	name: string;
 }
 
@@ -11,8 +11,8 @@ export interface ModalAddCodeAssetsProps {
 }
 
 export interface ModalDeleteTriggerProps {
-	triggerId?: string;
 	onDelete?: () => void;
+	triggerId?: string;
 }
 
 export interface ModalDeleteVariableProps {

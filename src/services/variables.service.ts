@@ -60,7 +60,7 @@ export class VariablesService {
 		}
 	}
 
-	static async delete({ name, scopeId }: { scopeId: string; name: string }): Promise<ServiceResponse<void>> {
+	static async delete({ name, scopeId }: { name: string; scopeId: string }): Promise<ServiceResponse<void>> {
 		try {
 			await variablesClient.delete({ names: [name], scopeId });
 
