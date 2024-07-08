@@ -62,7 +62,7 @@ export const EditorTabs: React.FC = () => {
 		});
 	};
 
-	const handleEditorDidMount = (_editor: any, monaco: Monaco) => {
+	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
