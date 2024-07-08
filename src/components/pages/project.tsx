@@ -60,7 +60,7 @@ export const Project = () => {
 		<SplitFrame>
 			{displayTabs ? (
 				<div className="flex flex-col flex-1 h-full">
-					<div className="sticky z-20 py-5 -mt-5  bg-gray-700 -top-10">
+					<div className="sticky z-20 pb-0 pt-3 -mt-5  bg-gray-700 -top-8">
 						<div
 							className={
 								"flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none " +
@@ -71,7 +71,7 @@ export const Project = () => {
 								<Tab
 									activeTab={activeTab}
 									ariaLabel={singleTab.label}
-									className="flex items-center text-xs 3xl:text-sm"
+									className="flex items-center text-md 2xl:text-sm"
 									key={singleTab.value}
 									onClick={() => goTo(singleTab.value)}
 									value={singleTab.value}
