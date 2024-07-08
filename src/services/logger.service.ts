@@ -6,6 +6,26 @@ import { useLoggerStore } from "@store";
 /* eslint-disable no-console */
 
 export class LoggerService {
+	public static debug(namespace: string, message: string): void {
+		this.output(namespace, message, LoggerLevel.debug);
+	}
+
+	public static error(namespace: string, message: string): void {
+		this.output(namespace, message, LoggerLevel.error);
+	}
+
+	public static info(namespace: string, message: string): void {
+		this.output(namespace, message, LoggerLevel.info);
+	}
+
+	public static print(namespace: string, message: string): void {
+		this.output(namespace, message, LoggerLevel.log);
+	}
+
+	public static warn(namespace: string, message: string): void {
+		this.output(namespace, message, LoggerLevel.warn);
+	}
+
 	private static output(namespace: string, message: string, level: LoggerLevel = LoggerLevel.info): void {
 		const timestamp = moment().format("YYYY-MM-DD HH:mm:ss");
 		const formattedMessage = `[${namespace}] [${level}] ${message}`;
@@ -27,25 +47,5 @@ export class LoggerService {
 		}
 
 		useLoggerStore.getState().addLog({ message: formattedMessage, status: level, timestamp });
-	}
-
-	public static info(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.info);
-	}
-
-	public static error(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.error);
-	}
-
-	public static debug(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.debug);
-	}
-
-	public static warn(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.warn);
-	}
-
-	public static print(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.log);
 	}
 }

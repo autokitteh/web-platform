@@ -70,7 +70,7 @@ export const EditorTabs = () => {
 			"opacity-100": openedFiles.find(({ isActive, name }) => name === fileName && isActive),
 		});
 
-	const handleCloseButtonClick = (event: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>, name: string): void => {
+	const handleCloseButtonClick = (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>, name: string): void => {
 		event.stopPropagation();
 		updateEditorClosedFiles(name);
 	};

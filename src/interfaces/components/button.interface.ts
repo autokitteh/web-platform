@@ -2,7 +2,7 @@ import React, { KeyboardEventHandler, MouseEventHandler } from "react";
 
 import { ButtonType, SortDirection } from "@type/components";
 
-export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>, React.AriaAttributes {
+export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, React.AriaAttributes {
 	ariaLabel: string;
 	children: React.ReactNode;
 	className: string;
@@ -13,7 +13,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement | HT
 	onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 	onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-	type?: "button" | "submit" | "reset";
+	type?: "button" | "reset" | "submit";
 	variant: ButtonType;
 }
 
@@ -33,10 +33,10 @@ export interface IconButtonProps extends React.AriaAttributes, React.DOMAttribut
 	disabled?: boolean;
 	form?: string;
 	href?: string;
-	onClick?: MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
-	onKeyDown?: KeyboardEventHandler<HTMLDivElement | HTMLButtonElement>;
-	onMouseEnter?: (event: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLButtonElement>) => void;
-	onMouseLeave?: (event: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLButtonElement>) => void;
+	onClick?: MouseEventHandler<HTMLButtonElement | HTMLDivElement>;
+	onKeyDown?: KeyboardEventHandler<HTMLButtonElement | HTMLDivElement>;
+	onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>) => void;
+	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>) => void;
 	title?: string;
 	variant?: ButtonType;
 }

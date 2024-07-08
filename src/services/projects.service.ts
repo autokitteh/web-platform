@@ -9,96 +9,6 @@ import { ServiceResponse } from "@type";
 import { Project } from "@type/models";
 
 export class ProjectsService {
-	static async create(projectName: string): Promise<ServiceResponse<string>> {
-		try {
-			const { projectId } = await projectsClient.create({
-				project: {
-					name: projectName,
-				},
-			});
-			if (!projectId) {
-				LoggerService.error(namespaces.projectService, i18n.t("projectNotCreated", { ns: "services" }));
-
-				return { data: undefined, error: new Error(i18n.t("projectNotCreated", { ns: "services" })) };
-			}
-
-			return { data: projectId, error: undefined };
-		} catch (error) {
-			LoggerService.error(`${namespaces.projectService} - Create: `, (error as Error).message);
-
-			return { data: undefined, error };
-		}
-	}
-
-	static async get(projectId: string): Promise<ServiceResponse<Project>> {
-		try {
-			const { project } = await projectsClient.get({ projectId });
-			if (!project) {
-				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
-
-				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
-			}
-
-			return { data: convertProjectProtoToModel(project), error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
-
-			return { data: undefined, error };
-		}
-	}
-	static async update(projectId: string, name: string): Promise<ServiceResponse<void>> {
-		try {
-			const project = await projectsClient.update({ project: { name, projectId } });
-			if (!project) {
-				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
-
-				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
-			}
-
-			return { data: undefined, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
-
-			return { data: undefined, error };
-		}
-	}
-	static async delete(projectId: string): Promise<ServiceResponse<undefined>> {
-		try {
-			await projectsClient.delete({ projectId });
-
-			return { data: undefined, error: undefined };
-		} catch (error) {
-			return { data: undefined, error };
-		}
-	}
-
-	static async list(): Promise<ServiceResponse<Project[]>> {
-		try {
-			const projects = (await projectsClient.listForOwner({ ownerId: "" })).projects.map(convertProjectProtoToModel);
-
-			return { data: projects, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
-
-			return { data: undefined, error };
-		}
-	}
-
-	static async setResources(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<SetResourcesResponse>> {
-		try {
-			await projectsClient.setResources({
-				projectId,
-				resources,
-			});
-
-			return { data: undefined, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.resourcesService, (error as Error).message);
-
-			return { data: undefined, error };
-		}
-	}
-
 	static async build(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
 		try {
 			await projectsClient.setResources({
@@ -120,16 +30,35 @@ export class ProjectsService {
 		}
 	}
 
-	static async getResources(projectId: string): Promise<ServiceResponse<Record<string, Uint8Array>>> {
+	static async create(projectName: string): Promise<ServiceResponse<string>> {
 		try {
-			const { resources } = await projectsClient.downloadResources({ projectId });
+			const { projectId } = await projectsClient.create({
+				project: {
+					name: projectName,
+				},
+			});
+			if (!projectId) {
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotCreated", { ns: "services" }));
 
-			return { data: resources, error: undefined };
+				return { data: undefined, error: new Error(i18n.t("projectNotCreated", { ns: "services" })) };
+			}
+
+			return { data: projectId, error: undefined };
+		} catch (error) {
+			LoggerService.error(`${namespaces.projectService} - Create: `, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+	static async delete(projectId: string): Promise<ServiceResponse<undefined>> {
+		try {
+			await projectsClient.delete({ projectId });
+
+			return { data: undefined, error: undefined };
 		} catch (error) {
 			return { data: undefined, error };
 		}
 	}
-
 	static async deploy(projectId: string, buildId: string): Promise<ServiceResponse<string>> {
 		const { data: environments, error: envError } = await EnvironmentsService.listByProjectId(projectId);
 		if (envError) {
@@ -159,6 +88,45 @@ export class ProjectsService {
 		return { data: deploymentId, error: undefined };
 	}
 
+	static async get(projectId: string): Promise<ServiceResponse<Project>> {
+		try {
+			const { project } = await projectsClient.get({ projectId });
+			if (!project) {
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
+
+				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
+			}
+
+			return { data: convertProjectProtoToModel(project), error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.projectService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async getResources(projectId: string): Promise<ServiceResponse<Record<string, Uint8Array>>> {
+		try {
+			const { resources } = await projectsClient.downloadResources({ projectId });
+
+			return { data: resources, error: undefined };
+		} catch (error) {
+			return { data: undefined, error };
+		}
+	}
+
+	static async list(): Promise<ServiceResponse<Project[]>> {
+		try {
+			const projects = (await projectsClient.listForOwner({ ownerId: "" })).projects.map(convertProjectProtoToModel);
+
+			return { data: projects, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.projectService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
 	static async run(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<string>> {
 		const { data: buildId, error: buildError } = await this.build(projectId, resources);
 		if (buildError) {
@@ -182,5 +150,37 @@ export class ProjectsService {
 		}
 
 		return { data: deploymentId, error: undefined };
+	}
+
+	static async setResources(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<SetResourcesResponse>> {
+		try {
+			await projectsClient.setResources({
+				projectId,
+				resources,
+			});
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.resourcesService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async update(projectId: string, name: string): Promise<ServiceResponse<void>> {
+		try {
+			const project = await projectsClient.update({ project: { name, projectId } });
+			if (!project) {
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
+
+				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
+			}
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.projectService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
 	}
 }

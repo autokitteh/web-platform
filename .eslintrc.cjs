@@ -1,6 +1,5 @@
 const path = require("path");
 
-
 module.exports = {
 	root: true,
 	env: { browser: true, es2020: true },
@@ -15,7 +14,8 @@ module.exports = {
 		"plugin:security/recommended-legacy",
 		"plugin:promise/recommended",
 		"plugin:@liferay/react",
-],
+		"plugin:perfectionist/recommended-natural",
+	],
 	settings: {
 		"react": {
 			version: "detect",
@@ -62,8 +62,20 @@ module.exports = {
 	},
 	ignorePatterns: ["dist", ".eslintrc.cjs"],
 	parser: "@typescript-eslint/parser",
-	plugins: ["react-refresh", "unicorn", "import", "@typescript-eslint", "promise", "@liferay", "eslint-plugin-local-rules", "prettier", "import"],
+	plugins: [
+		"react-refresh",
+		"unicorn",
+		"import",
+		"@typescript-eslint",
+		"promise",
+		"@liferay",
+		"eslint-plugin-local-rules",
+		"prettier",
+		"import",
+		"perfectionist",
+	],
 	rules: {
+		"perfectionist/sort-imports": "off",
 		"local-rules/no-abbreviations": "error",
 		"@liferay/no-anonymous-exports": "off",
 		"sort-keys": "error",

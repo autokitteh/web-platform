@@ -55,4 +55,4 @@ i18n.on("initialized", () => {
 	];
 });
 
-export { infoGithubLinks, infoGoogleUserLinks, infoGoogleAccountLinks };
+export { infoGithubLinks, infoGoogleAccountLinks, infoGoogleUserLinks };

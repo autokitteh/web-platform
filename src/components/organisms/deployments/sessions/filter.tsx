@@ -14,9 +14,9 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
 
 	const buttonClassText = {
-		[SessionStateType.running]: "",
-		[SessionStateType.error]: "text-red",
 		[SessionStateType.completed]: "text-green-accent",
+		[SessionStateType.error]: "text-red",
+		[SessionStateType.running]: "",
 		[SessionStateType.stopped]: "text-yellow-500",
 	} as const;
 
@@ -31,10 +31,10 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 	};
 
 	const initialSessionCounts = {
-		[SessionStateType.created]: 0,
-		[SessionStateType.running]: 0,
-		[SessionStateType.error]: 0,
 		[SessionStateType.completed]: 0,
+		[SessionStateType.created]: 0,
+		[SessionStateType.error]: 0,
+		[SessionStateType.running]: 0,
 		[SessionStateType.stopped]: 0,
 	};
 

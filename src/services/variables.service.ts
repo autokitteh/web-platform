@@ -8,6 +8,44 @@ import { ServiceResponse } from "@type";
 import { Variable } from "@type/models";
 
 export class VariablesService {
+	static async delete({ name, scopeId }: { name: string; scopeId: string }): Promise<ServiceResponse<void>> {
+		try {
+			await variablesClient.delete({ names: [name], scopeId });
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.variableService, i18n.t("variableRemoveFailedExtended", { name, ns: "services" }));
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async get(envId: string, name: string): Promise<ServiceResponse<Variable>> {
+		try {
+			const { data: environmentVariables } = await this.list(envId);
+			const variable = environmentVariables?.find((env) => env.name === name);
+
+			return { data: variable, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.variableService, i18n.t("variableGetFailedExtended", { error, name, ns: "services" }));
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async list(envId: string): Promise<ServiceResponse<Variable[]>> {
+		try {
+			const { vars } = await variablesClient.get({ scopeId: envId });
+			const variables = vars.map(convertVariableProtoToModel);
+
+			return { data: variables, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.projectService, i18n.t("variablesNotFoundExtended", { id: envId, ns: "services" }));
+
+			return { data: undefined, error };
+		}
+	}
+
 	static async set(projectId: string, singleVariable: Variable): Promise<ServiceResponse<string>> {
 		try {
 			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
@@ -42,44 +80,6 @@ export class VariablesService {
 					value: singleVariable.value,
 				})
 			);
-
-			return { data: undefined, error };
-		}
-	}
-
-	static async list(envId: string): Promise<ServiceResponse<Variable[]>> {
-		try {
-			const { vars } = await variablesClient.get({ scopeId: envId });
-			const variables = vars.map(convertVariableProtoToModel);
-
-			return { data: variables, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.projectService, i18n.t("variablesNotFoundExtended", { id: envId, ns: "services" }));
-
-			return { data: undefined, error };
-		}
-	}
-
-	static async delete({ name, scopeId }: { name: string; scopeId: string }): Promise<ServiceResponse<void>> {
-		try {
-			await variablesClient.delete({ names: [name], scopeId });
-
-			return { data: undefined, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.variableService, i18n.t("variableRemoveFailedExtended", { name, ns: "services" }));
-
-			return { data: undefined, error };
-		}
-	}
-
-	static async get(envId: string, name: string): Promise<ServiceResponse<Variable>> {
-		try {
-			const { data: environmentVariables } = await this.list(envId);
-			const variable = environmentVariables?.find((env) => env.name === name);
-
-			return { data: variable, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.variableService, i18n.t("variableGetFailedExtended", { error, name, ns: "services" }));
 
 			return { data: undefined, error };
 		}

@@ -5,20 +5,20 @@ import { ButtonVariant } from "@enums/components";
 import { Button } from "@components/atoms/buttons";
 
 const meta: Meta<typeof Button> = {
-	title: "Buttons/Button",
-	component: Button,
 	argTypes: {
+		children: { control: "text" },
 		className: { control: "text" },
+		color: {
+			control: "select",
+		},
+		onClick: { action: "clicked" },
 		variant: {
 			control: "select",
 			options: Object.values(ButtonVariant),
 		},
-		color: {
-			control: "select",
-		},
-		children: { control: "text" },
-		onClick: { action: "clicked" },
 	},
+	component: Button,
+	title: "Buttons/Button",
 };
 export default meta;
 
@@ -35,16 +35,16 @@ export const Default: Story = {
 export const Filled: Story = {
 	args: {
 		...Default.args,
-		variant: ButtonVariant.filled,
 		children: "Filled Button",
+		variant: ButtonVariant.filled,
 	},
 };
 
 export const Outline: Story = {
 	args: {
 		...Default.args,
-		variant: ButtonVariant.outline,
 		children: "Outline Button",
+		variant: ButtonVariant.outline,
 	},
 };
 

@@ -1,3 +1,4 @@
+// eslint-disable-next-line perfectionist/sort-named-imports
 import { expect, test as base } from "@playwright/test";
 
 import { DashboardPage } from "./pages/dashboard";
@@ -7,4 +8,4 @@ const test = base.extend<{ dashboardPage: DashboardPage }>({
 		await use(new DashboardPage(page));
 	},
 });
-export { test, expect };
+export { expect, test };

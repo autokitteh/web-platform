@@ -8,10 +8,10 @@ import { ConnectionStatusType } from "@type/models";
 export const ConnectionTableStatus = ({ status }: { status: ConnectionStatusType }) => {
 	const { t } = useTranslation("tabs");
 	const connectionTableStatusClass = {
-		[ConnectionStatus.unspecified]: "text-blue-500",
-		[ConnectionStatus.ok]: "text-green-accent",
-		[ConnectionStatus.warning]: "text-yellow-500",
 		[ConnectionStatus.error]: "text-red",
+		[ConnectionStatus.ok]: "text-green-accent",
+		[ConnectionStatus.unspecified]: "text-blue-500",
+		[ConnectionStatus.warning]: "text-yellow-500",
 	};
 	const baseClass = connectionTableStatusClass[ConnectionStatus[status]];
 	const statusName = t(`connections.table.statuses.${status}`);

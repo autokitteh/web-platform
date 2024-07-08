@@ -1,2 +1,2 @@
 export type ColorSchemes = "dark" | "light";
-export type SystemSizes = "sm" | "md" | "lg" | "xl" | "2xl";
+export type SystemSizes = "2xl" | "lg" | "md" | "sm" | "xl";

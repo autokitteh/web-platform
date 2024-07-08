@@ -14,19 +14,19 @@ import { readFileAsUint8Array, updateOpenedFilesState } from "@utilities";
 
 const defaultState: Omit<
 	ProjectStore,
-	| "getProjectMenutItems"
-	| "renameProject"
 	| "addProjectToMenu"
 	| "createProject"
-	| "setUpdateFileContent"
-	| "setProjectResources"
-	| "getProjectResources"
 	| "getProject"
-	| "setProjectEmptyResources"
-	| "updateEditorOpenedFiles"
-	| "reset"
-	| "updateEditorClosedFiles"
+	| "getProjectMenutItems"
+	| "getProjectResources"
 	| "removeProjectFile"
+	| "renameProject"
+	| "reset"
+	| "setProjectEmptyResources"
+	| "setProjectResources"
+	| "setUpdateFileContent"
+	| "updateEditorClosedFiles"
+	| "updateEditorOpenedFiles"
 > = {
 	menuList: [],
 	openedFiles: [],

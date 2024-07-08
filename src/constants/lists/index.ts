@@ -1,8 +1,8 @@
 export {
-	integrationTypes,
 	githubIntegrationAuthMethods,
-	selectIntegrationGoogle,
 	infoGithubLinks,
-	infoGoogleUserLinks,
 	infoGoogleAccountLinks,
+	infoGoogleUserLinks,
+	integrationTypes,
+	selectIntegrationGoogle,
 } from "@constants/lists/connections";

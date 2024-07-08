@@ -15,10 +15,10 @@ export enum SessionStateType {
 }
 
 export enum SessionState {
-	unspecified = 0,
-	created = 1,
-	running = 2,
-	error = 3,
 	completed = 4,
+	created = 1,
+	error = 3,
+	running = 2,
 	stopped = 5,
+	unspecified = 0,
 }

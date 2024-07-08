@@ -7,8 +7,8 @@ import { cn } from "@utilities";
 
 const deploymentStateStyles = {
 	[DeploymentStateVariant.active]: "text-white bg-gray-800 border",
-	[DeploymentStateVariant.inactive]: "text-gray-400 bg-gray-600",
 	[DeploymentStateVariant.draining]: "text-gray-300 border border-dashed",
+	[DeploymentStateVariant.inactive]: "text-gray-400 bg-gray-600",
 	[DeploymentStateVariant.testing]: "",
 };
 

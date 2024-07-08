@@ -23,7 +23,7 @@ export const SessionTableEditorFrame = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const navigate = useNavigate();
-	const sessionFetchIntervalIdRef = useRef<number | null>(null);
+	const sessionFetchIntervalIdRef = useRef<null | number>(null);
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [firstLoad, setFirstLoad] = useState(true);
