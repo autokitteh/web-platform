@@ -6,16 +6,16 @@
 
 ## Key Features 🔑
 
-- **Automation as Code**: Focus on writing automation scripts.
-- **Versatile Deployment**: Compatible with on-prem, cloud, and hybrid environments.
-- **Integrated Tools**: Includes API connectivity, debugging, monitoring, and error handling features.
+-   **Automation as Code**: Focus on writing automation scripts.
+-   **Versatile Deployment**: Compatible with on-prem, cloud, and hybrid environments.
+-   **Integrated Tools**: Includes API connectivity, debugging, monitoring, and error handling features.
 
 ## Use Cases 🚀
 
-- **DevOps Automation**: Automate workflows with tools like GitHub, Slack, Jira, etc.
-- **Cybersecurity - SOAR**: Develop Security Orchestration, Automation, and Response tools.
-- **Work and Marketing Automation**: Facilitate tasks using systems like Gmail, Docs, Slack, Calendar, etc.
-- **Corporate Operations Automation**: Enhance enterprise-specific procedures for HR, sales, etc.
+-   **DevOps Automation**: Automate workflows with tools like GitHub, Slack, Jira, etc.
+-   **Cybersecurity - SOAR**: Develop Security Orchestration, Automation, and Response tools.
+-   **Work and Marketing Automation**: Facilitate tasks using systems like Gmail, Docs, Slack, Calendar, etc.
+-   **Corporate Operations Automation**: Enhance enterprise-specific procedures for HR, sales, etc.
 
 ## Contact 📬
 
@@ -31,9 +31,9 @@ We'd love to get your input! We want to make contributing to this project as eas
 
 Ensure you have the following installed on your system:
 
-- **Node.js** (version 16.x or later)
-- **npm** (version 7.x or later)
-- **Git** (for version control and repository management)
+-   **Node.js** (version 16.x or later)
+-   **npm** (version 7.x or later)
+-   **Git** (for version control and repository management)
 
 ### Installation Steps 🚀
 

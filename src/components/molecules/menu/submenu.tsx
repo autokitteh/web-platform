@@ -1,31 +1,34 @@
 import React from "react";
-import { Button } from "@components/atoms";
-import { SubmenuProps } from "@interfaces/components";
-import { cn } from "@utilities";
+
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
+
+import { SubmenuProps } from "@interfaces/components";
+import { cn } from "@utilities";
+
+import { Button } from "@components/atoms";
 
 export const Submenu = ({ submenuInfo }: SubmenuProps) => {
 	const { projectId } = useParams();
 
 	const submenuVariant = {
 		hidden: { opacity: 0, x: -100 },
-		visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: "easeOut" } },
+		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, x: 0 },
 	};
 
 	return (
 		<motion.div
 			animate="visible"
-			className="w-auto h-screen overflow-auto px-2 bg-gray-200 border-l border-r border-gray-300 mr-2.5 z-1 scrollbar"
+			className="scrollbar z-1 mr-2.5 h-screen w-auto overflow-auto border-l border-r border-gray-300 bg-gray-200 px-2"
 			exit="hidden"
 			initial="hidden"
 			style={{ paddingTop: submenuInfo.top }}
 			variants={submenuVariant}
 		>
-			{submenuInfo.submenu?.map(({ name, href, id }) => (
+			{submenuInfo.submenu?.map(({ href, id, name }) => (
 				<Button
-					className={cn("px-4 hover:bg-green-light text-fira-code text-gray-700 whitespace-nowrap", {
-						"bg-gray-700 hover:bg-gray-700 text-white": id === projectId,
+					className={cn("text-fira-code whitespace-nowrap px-4 text-gray-700 hover:bg-green-light", {
+						"bg-gray-700 text-white hover:bg-gray-700": id === projectId,
 					})}
 					href={href}
 					key={id}

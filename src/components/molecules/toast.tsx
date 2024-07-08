@@ -1,14 +1,18 @@
-import React, { useState, useLayoutEffect, useRef } from "react";
-import { Close } from "@assets/image/icons";
-import { IconButton } from "@components/atoms";
+import React, { useLayoutEffect, useRef, useState } from "react";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+
 import { ToasterTypes } from "@interfaces/components/toast.interface";
 import { useToastStore } from "@store/useToastStore";
 import { cn } from "@utilities";
-import { motion, AnimatePresence } from "framer-motion";
-import { useTranslation } from "react-i18next";
+
+import { IconButton } from "@components/atoms";
+
+import { Close } from "@assets/image/icons";
 
 export const Toast = () => {
-	const { toasts, removeToast } = useToastStore();
+	const { removeToast, toasts } = useToastStore();
 	const { t } = useTranslation("toasts");
 	const toastRefs = useRef<(HTMLDivElement | null)[]>([]);
 	const timerRefs = useRef<{ [id: string]: NodeJS.Timeout }>({});
@@ -66,26 +70,27 @@ export const Toast = () => {
 
 	const baseStyle = (toastType: ToasterTypes, isHovered: boolean) =>
 		cn("fixed right-20 z-50 max-w-420 py-3 px-4 pl-6 border rounded-4xl transition-colors duration-200", {
-			"border-green-accent": toastType === "success",
-			"border-error": toastType === "error",
 			"bg-black": !isHovered,
 			"bg-gray-800": isHovered,
+			"border-error": toastType === "error",
+			"border-green-accent": toastType === "success",
 		});
 
 	const titleStyle = (toastType: ToasterTypes) =>
 		cn("font-semibold w-full", {
-			"text-green-accent": toastType === "success",
 			"text-error": toastType === "error",
+			"text-green-accent": toastType === "success",
 		});
 
 	const variants = {
-		visible: { opacity: 1, y: 0 },
 		hidden: { opacity: 0, y: 50 },
+		visible: { opacity: 1, y: 0 },
 	};
 
 	const renderToasts = () =>
-		toasts.map(({ message, id, type }, index) => {
+		toasts.map(({ id, message, type }, index) => {
 			const title = t(`titles.${type}`);
+
 			return (
 				<AnimatePresence key={id}>
 					<motion.div
@@ -96,20 +101,24 @@ export const Toast = () => {
 						key={id}
 						onMouseEnter={() => handleMouseEnter(id)}
 						onMouseLeave={() => handleMouseLeave(id)}
-						ref={(el) => (toastRefs.current[index] = el)}
+						ref={(element) => {
+							toastRefs.current[index] = element;
+						}}
 						transition={{ duration: 0.3 }}
 						variants={variants}
 					>
 						<div className="flex gap-2.5" role="alert" title={title}>
 							<div>
 								<p className={titleStyle(type)}>{title}</p>
+
 								{message}
 							</div>
+
 							<IconButton
-								className="p-0 ml-auto bg-gray-600 w-default-icon h-default-icon group"
+								className="group ml-auto h-default-icon w-default-icon bg-gray-600 p-0"
 								onClick={() => removeToast(id)}
 							>
-								<Close className="w-3 h-3 transition fill-white" />
+								<Close className="h-3 w-3 fill-white transition" />
 							</IconButton>
 						</div>
 					</motion.div>

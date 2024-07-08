@@ -1,9 +1,11 @@
 import React from "react";
-import { LinkProps } from "@interfaces/components";
-import { cn } from "@utilities";
+
 import { Link as LinkReact } from "react-router-dom";
 
-export const Link = ({ to, className, disabled, ariaLabel, target, children }: LinkProps) => {
+import { LinkProps } from "@interfaces/components";
+import { cn } from "@utilities";
+
+export const Link = ({ ariaLabel, children, className, disabled, target, to }: LinkProps) => {
 	const linkClass = cn(className, {
 		"cursor-not-allowed pointer-events-none select-none": disabled,
 	});

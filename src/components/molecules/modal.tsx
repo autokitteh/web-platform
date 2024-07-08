@@ -1,11 +1,15 @@
 import React from "react";
-import { Close } from "@assets/image/icons";
-import { IconButton } from "@components/atoms";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { createPortal } from "react-dom";
+
 import { ModalProps } from "@interfaces/components";
 import { useModalStore } from "@store";
 import { cn } from "@utilities";
-import { motion, AnimatePresence } from "framer-motion";
-import { createPortal } from "react-dom";
+
+import { IconButton } from "@components/atoms";
+
+import { Close } from "@assets/image/icons";
 
 const backdropVariants = {
 	hidden: { opacity: 0, transition: { duration: 0.2 } },
@@ -13,11 +17,11 @@ const backdropVariants = {
 };
 
 const modalVariants = {
-	hidden: { opacity: 0, scale: 0.95, transition: { duration: 0.2, delay: 0.1 } },
-	visible: { opacity: 1, scale: 1, transition: { duration: 0.2, delay: 0.1 } },
+	hidden: { opacity: 0, scale: 0.95, transition: { delay: 0.1, duration: 0.2 } },
+	visible: { opacity: 1, scale: 1, transition: { delay: 0.1, duration: 0.2 } },
 };
 
-export const Modal = ({ className, name, children }: ModalProps) => {
+export const Modal = ({ children, className, name }: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => ({
 		isOpen: state.modals[name],
 		onClose: state.closeModal,
@@ -38,6 +42,7 @@ export const Modal = ({ className, name, children }: ModalProps) => {
 						onClick={() => onClose(name)}
 						variants={backdropVariants}
 					/>
+
 					<motion.div
 						animate="visible"
 						className={modalClasses}
@@ -46,11 +51,12 @@ export const Modal = ({ className, name, children }: ModalProps) => {
 						variants={modalVariants}
 					>
 						<IconButton
-							className="bg-gray-200 p-0 w-default-icon h-default-icon group ml-auto"
+							className="group ml-auto h-default-icon w-default-icon bg-gray-200 p-0"
 							onClick={() => onClose(name)}
 						>
-							<Close className="transition fill-black w-3 h-3 group-hover:fill-white" />
+							<Close className="h-3 w-3 fill-black transition group-hover:fill-white" />
 						</IconButton>
+
 						{children}
 					</motion.div>
 				</div>

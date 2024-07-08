@@ -1,7 +1,9 @@
 import React from "react";
+
+import i18n from "i18next";
+
 import { DeploymentStateVariant } from "@enums";
 import { cn } from "@utilities";
-import i18n from "i18next";
 
 const deploymentStateStyles = {
 	[DeploymentStateVariant.active]: "text-white bg-gray-800 border",

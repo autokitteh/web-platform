@@ -3,21 +3,21 @@ import { TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 export const integrationTypes: SelectOption[] = [
-	{ value: "github", label: "Github", disabled: false },
-	{ value: "google", label: "Google (All APIs)", disabled: false },
+	{ disabled: false, label: "Github", value: "github" },
+	{ disabled: false, label: "Google (All APIs)", value: "google" },
 ];
 
 export const triggerTypes: SelectOption[] = [
-	{ value: TriggerFormType.default, label: "Default", disabled: false },
-	{ value: TriggerFormType.scheduler, label: "Scheduler", disabled: false },
+	{ disabled: false, label: "Default", value: TriggerFormType.default },
+	{ disabled: false, label: "Scheduler", value: TriggerFormType.scheduler },
 ];
 
 export const githubIntegrationAuthMethods: SelectOption[] = [
-	{ value: GithubConnectionType.Pat, label: "Personal Access Token (PAT)" },
-	{ value: GithubConnectionType.Oauth, label: "OAuth" },
+	{ label: "Personal Access Token (PAT)", value: GithubConnectionType.Pat },
+	{ label: "OAuth", value: GithubConnectionType.Oauth },
 ];
 
 export const selectIntegrationGoogle: SelectOption[] = [
-	{ value: GoogleConnectionType.Oauth, label: "User (OAuth v2)" },
-	{ value: GoogleConnectionType.ServiceAccount, label: "Service Account (JSON Key)" },
+	{ label: "User (OAuth v2)", value: GoogleConnectionType.Oauth },
+	{ label: "Service Account (JSON Key)", value: GoogleConnectionType.ServiceAccount },
 ];

@@ -17,8 +17,8 @@ export const convertProjectProtoToModel = (protoProject: ProtoProject): Project 
 
 export const convertProtoProjectToMenuItemModel = (protoProject: Project): ProjectMenuItem => {
 	return {
-		name: protoProject.name,
-		id: protoProject.projectId,
 		href: `/${SidebarHrefMenu.projects}/${protoProject.projectId}`,
+		id: protoProject.projectId,
+		name: protoProject.name,
 	};
 };

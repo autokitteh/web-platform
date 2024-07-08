@@ -1,13 +1,15 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import { ResizeHook } from "@interfaces/hooks";
 
-export const useResize = ({ min, max, direction, initial }: ResizeHook) => {
+export const useResize = ({ direction, initial, max, min }: ResizeHook) => {
 	const initialValue = initial ? Math.min(max, Math.max(min, initial)) : max;
 	const [value, setValue] = useState(initialValue);
 
 	const onMouseDown = (event: MouseEvent) => {
-		if (!(event.target instanceof HTMLElement) || !event.target.classList.contains(`resize-handle-${direction}`))
+		if (!(event.target instanceof HTMLElement) || !event.target.classList.contains(`resize-handle-${direction}`)) {
 			return;
+		}
 
 		const startCoordinate = direction === "horizontal" ? event.clientX : event.clientY;
 		const dimension = direction === "horizontal" ? window.innerWidth : window.innerHeight;

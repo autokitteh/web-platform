@@ -1,15 +1,18 @@
 import React from "react";
-import { Button, ErrorMessage, Input, Select } from "@components/atoms";
-import { Modal } from "@components/molecules";
-import { monacoLanguages, defalutFileExtension } from "@constants";
-import { ModalName } from "@enums/components";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+
+import { defalutFileExtension, monacoLanguages } from "@constants";
+import { ModalName } from "@enums/components";
 import { ModalAddCodeAssetsProps } from "@interfaces/components";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { codeAssetsSchema } from "@validations";
-import { useForm, Controller } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+
+import { Button, ErrorMessage, Input, Select } from "@components/atoms";
+import { Modal } from "@components/molecules";
 
 export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const { projectId } = useParams();
@@ -24,22 +27,22 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	}));
 
 	const {
-		register,
-		handleSubmit,
-		formState: { errors },
 		control,
+		formState: { errors },
 		getValues,
+		handleSubmit,
+		register,
 		reset,
 	} = useForm({
-		resolver: zodResolver(codeAssetsSchema),
 		defaultValues: {
+			extension: { label: defalutFileExtension, value: defalutFileExtension },
 			name: "",
-			extension: { value: defalutFileExtension, label: defalutFileExtension },
 		},
+		resolver: zodResolver(codeAssetsSchema),
 	});
 
 	const onSubmit = async () => {
-		const { name, extension } = getValues();
+		const { extension, name } = getValues();
 		const newFile = name + extension.value;
 		const { error } = await setProjectEmptyResources(newFile, projectId!);
 		closeModal(ModalName.addCodeAssets);
@@ -47,18 +50,19 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: t("fileAddFailedExtended", { projectId, fileName: name }),
+				message: t("fileAddFailedExtended", { fileName: name, projectId }),
 				type: "error",
 			});
 		}
 		onSuccess();
-		reset({ name: "", extension });
+		reset({ extension, name: "" });
 	};
 
 	return (
 		<Modal className="w-550" name={ModalName.addCodeAssets}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("addCodeAssets.title", { ns: "modals" })}</h3>
+
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<div className="flex gap-2">
 						<div className="relative w-full">
@@ -70,8 +74,10 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 								placeholder={t("addCodeAssets.placeholderName", { ns: "modals" })}
 								variant="light"
 							/>
+
 							<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
 						</div>
+
 						<div className="relative w-36 shrink-0">
 							<Controller
 								control={control}
@@ -89,10 +95,12 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 									/>
 								)}
 							/>
+
 							<ErrorMessage className="relative">{errors.extension?.message as string}</ErrorMessage>
 						</div>
 					</div>
-					<Button className="font-bold justify-center mt-3 rounded-lg py-2.5" type="submit" variant="filled">
+
+					<Button className="mt-3 justify-center rounded-lg py-2.5 font-bold" type="submit" variant="filled">
 						{t("create", { ns: "buttons" })}
 					</Button>
 				</form>

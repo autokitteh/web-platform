@@ -1,8 +1,9 @@
 import React from "react";
+
 import { ToggleProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Toggle = ({ label, checked, onChange }: ToggleProps) => {
+export const Toggle = ({ checked, label, onChange }: ToggleProps) => {
 	const baseStyle = cn(
 		"relative w-10 h-5 bg-gray-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-gray-300",
 		"after:content-[''] peer-checked:bg-green-accent after:absolute",
@@ -11,10 +12,17 @@ export const Toggle = ({ label, checked, onChange }: ToggleProps) => {
 	);
 
 	return (
-		<label className="inline-flex items-center cursor-pointer">
-			<input checked={checked} className="hidden peer" onChange={(e) => onChange(e.target.checked)} type="checkbox" />
+		<label className="inline-flex cursor-pointer items-center">
+			<input
+				checked={checked}
+				className="peer hidden"
+				onChange={(event) => onChange(event.target.checked)}
+				type="checkbox"
+			/>
+
 			<div className={baseStyle} />
-			{label ? <span className="text-sm font-medium text-white ms-3">{label}</span> : null}
+
+			{label ? <span className="ms-3 text-sm font-medium text-white">{label}</span> : null}
 		</label>
 	);
 };

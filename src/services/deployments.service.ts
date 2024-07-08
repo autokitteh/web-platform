@@ -1,3 +1,6 @@
+import i18n from "i18next";
+import { get } from "lodash";
+
 import { ActivateResponse, ListResponse } from "@ak-proto-ts/deployments/v1/svc_pb";
 import { deploymentsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
@@ -7,8 +10,6 @@ import { EnvironmentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Deployment } from "@type/models";
 import { flattenArray, getIds, sortArray } from "@utilities";
-import i18n from "i18next";
-import { get } from "lodash";
 
 export class DeploymentsService {
 	static async listByEnvironmentIds(environmentsIds: string[]): Promise<ServiceResponse<Deployment[]>> {
@@ -24,7 +25,9 @@ export class DeploymentsService {
 			const deploymentsResponses = await Promise.allSettled(deploymentsPromises);
 			const deploymentsSettled = flattenArray<Deployment>(
 				deploymentsResponses
-					.filter((response): response is PromiseFulfilledResult<ListResponse> => response.status === "fulfilled")
+					.filter(
+						(response): response is PromiseFulfilledResult<ListResponse> => response.status === "fulfilled"
+					)
 					.map((response) => get(response, "value.deployments", []).map(convertDeploymentProtoToModel))
 			);
 
@@ -34,7 +37,7 @@ export class DeploymentsService {
 
 			return {
 				data: deploymentsSettled,
-				error: unsettledResponses.length > 0 ? unsettledResponses : undefined,
+				error: unsettledResponses.length ? unsettledResponses : undefined,
 			};
 		} catch (error) {
 			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
@@ -45,7 +48,8 @@ export class DeploymentsService {
 
 	static async listByProjectId(projectId: string): Promise<ServiceResponse<Deployment[]>> {
 		try {
-			const { data: environments, error: lisEnvironmentsError } = await EnvironmentsService.listByProjectId(projectId);
+			const { data: environments, error: lisEnvironmentsError } =
+				await EnvironmentsService.listByProjectId(projectId);
 
 			if (lisEnvironmentsError) {
 				LoggerService.error(namespaces.deploymentsService, (lisEnvironmentsError as Error).message);
@@ -54,7 +58,8 @@ export class DeploymentsService {
 			}
 
 			const environmentIds = getIds(environments!, "envId");
-			const { data: projectDeployments, error: listDeploymentsError } = await this.listByEnvironmentIds(environmentIds);
+			const { data: projectDeployments, error: listDeploymentsError } =
+				await this.listByEnvironmentIds(environmentIds);
 
 			if (listDeploymentsError) {
 				LoggerService.error(namespaces.deploymentsService, (listDeploymentsError as Error).message);
@@ -66,6 +71,7 @@ export class DeploymentsService {
 			return { data: projectDeployments!, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
+
 			return { data: undefined, error: (error as Error).message };
 		}
 	}
@@ -77,6 +83,7 @@ export class DeploymentsService {
 			return { data: createResponse.deploymentId, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
+
 			return { data: undefined, error };
 		}
 	}
@@ -84,9 +91,11 @@ export class DeploymentsService {
 	static async activate(deploymentId: string): Promise<ServiceResponse<ActivateResponse>> {
 		try {
 			const activateResponse = await deploymentsClient.activate({ deploymentId });
+
 			return { data: activateResponse, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
+
 			return { data: undefined, error };
 		}
 	}
@@ -94,9 +103,11 @@ export class DeploymentsService {
 	static async deactivate(deploymentId: string): Promise<ServiceResponse<ActivateResponse>> {
 		try {
 			const deactivateResponse = await deploymentsClient.deactivate({ deploymentId });
+
 			return { data: deactivateResponse, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
+
 			return { data: undefined, error };
 		}
 	}
@@ -104,6 +115,7 @@ export class DeploymentsService {
 	static async delete(deploymentId: string): Promise<ServiceResponse<undefined>> {
 		try {
 			await deploymentsClient.delete({ deploymentId });
+
 			return { data: undefined, error: undefined };
 		} catch (error) {
 			const errorMessage = i18n.t("deleteFailedIdError", {
@@ -123,6 +135,7 @@ export class DeploymentsService {
 			if (!deployment) {
 				return { data: undefined, error: new Error(i18n.t("deploymentFetchError", { ns: "services" })) };
 			}
+
 			return { data: convertDeploymentProtoToModel(deployment), error: undefined };
 		} catch (error) {
 			const errorMessage = i18n.t("deploymentFetchErrorExtended", {

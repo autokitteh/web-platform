@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
 	root: true,
 	env: { browser: true, es2020: true },
@@ -8,8 +10,10 @@ module.exports = {
 		"plugin:jsx-a11y/recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:storybook/recommended",
-		"prettier",
+		"plugin:prettier/recommended",
 		"plugin:security/recommended-legacy",
+		"plugin:promise/recommended",
+		"plugin:@liferay/react",
 	],
 	settings: {
 		"react": {
@@ -21,39 +25,67 @@ module.exports = {
 		"import/resolver": {
 			alias: {
 				map: [
+					["@", "./src"],
+					["@ak-proto-ts", "./src/autokitteh/proto/gen/ts/autokitteh"],
+					["@api", "./src/api"],
 					["@assets", "./src/assets"],
 					["@components", "./src/components"],
-					["@api", "./src/api"],
+					["@constants", "./src/constants"],
+					["@e2e", "./e2e"],
+					["@enums", "./src/enums"],
+					["@hooks", "./src/hooks"],
+					["@i18n", "./src/i18n"],
+					["@interfaces", "./src/interfaces"],
+					["@locales", "./src/locales"],
+					["@models", "./src/models"],
 					["@routing", "./src/routing"],
+					["@services", "./src/services"],
+					["@store", "./src/store"],
+					["@type", "./src/types"],
+					["@utilities", "./src/utilities"],
 					["@utils", "./src/utils"],
 					["@validations", "./src/validations"],
+					["tailwind-config", "./tailwind.config.cjs"],
 				],
+				extensions: [".js", ".jsx", ".ts", ".tsx"],
 			},
 			node: {
 				paths: ["src"],
 				extensions: [".js", ".jsx", ".ts", ".tsx"],
 			},
 			typescript: {
-				alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
-				// use an array of glob patterns
+				alwaysTryTypes: true,
 				project: ["./tsconfig.json"],
 			},
 		},
 	},
 	ignorePatterns: ["dist", ".eslintrc.cjs", "src/stories"],
 	parser: "@typescript-eslint/parser",
-	plugins: ["react-refresh", "prettier", "unicorn", "import", "@typescript-eslint"],
+	plugins: [
+		"react-refresh",
+		"unicorn",
+		"import",
+		"@typescript-eslint",
+		"promise",
+		"@liferay",
+		"eslint-plugin-local-rules",
+		"prettier",
+		"import",
+	],
 	rules: {
-		"@typescript-eslint/no-explicit-any": "off",
-		"prettier/prettier": [
+		"local-rules/no-abbreviations": "error",
+		"@liferay/no-anonymous-exports": "off",
+		"sort-keys": "error",
+		"@liferay/sort-class-names": "off",
+		"@typescript-eslint/member-ordering": [
 			"error",
 			{
-				endOfLine: "auto",
+				default: ["signature", "field", "constructor", "method"],
 			},
-			{ usePrettierrc: true },
 		],
+		"@typescript-eslint/no-explicit-any": "off",
+		"prettier/prettier": ["error", { endOfLine: "auto" }, { usePrettierrc: true }],
 		"security/detect-object-injection": "off",
-		// React Rules
 		"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 		"react/prefer-stateless-function": "error",
 		"react/no-unused-prop-types": "error",
@@ -85,7 +117,6 @@ module.exports = {
 		"react/react-in-jsx-scope": "off",
 		"react/jsx-one-expression-per-line": "off",
 		"react/prop-types": "off",
-		// TypeScript Rules
 		"@typescript-eslint/naming-convention": [
 			"warn",
 			{
@@ -95,7 +126,6 @@ module.exports = {
 			},
 			{
 				selector: "variable",
-				// Specify PascalCase for React components
 				format: ["PascalCase", "camelCase"],
 				leadingUnderscore: "allow",
 			},
@@ -115,41 +145,54 @@ module.exports = {
 			},
 		],
 		"no-throw-literal": "warn",
-		"unicorn/filename-case": [
-			"error",
-			{
-				case: "camelCase",
-			},
-		],
+		"unicorn/filename-case": ["error", { case: "camelCase" }],
+		"no-console": "error",
+		"@liferay/sort-imports": "off",
+		"@liferay/group-imports": "off",
 		"import/order": [
 			"error",
 			{
-				"alphabetize": {
-					caseInsensitive: true,
-					order: "asc",
-				},
-				"groups": ["external", "builtin", "parent", ["sibling", "index"]],
-				"newlines-between": "never",
+				"groups": [
+					["builtin", "external"],
+					["internal", "parent", "sibling", "index"],
+				],
 				"pathGroups": [
 					{
-						group: "external",
 						pattern: "react",
+						group: "external",
 						position: "before",
 					},
 					{
-						group: "builtin",
-						pattern: "**",
+						pattern: "@(enums|interfaces|types|utilities|constants|services|validations)/**",
+						group: "internal",
 						position: "after",
 					},
 					{
-						group: "external",
-						pattern: "./**",
+						pattern: "@(hooks|store)/**",
+						group: "internal",
+						position: "after",
+					},
+					{
+						pattern: "@components/**",
+						group: "internal",
+						position: "after",
+					},
+					{
+						pattern: "@assets/**",
+						group: "internal",
 						position: "after",
 					},
 				],
-				"pathGroupsExcludedImportTypes": ["builtin"],
+				"pathGroupsExcludedImportTypes": ["react"],
+				"newlines-between": "always",
+				"alphabetize": {
+					order: "asc",
+					caseInsensitive: true,
+				},
 			},
 		],
-		"no-console": "error",
+		"import/first": "error",
+		"import/no-duplicates": "error",
+		"import/newline-after-import": "error",
 	},
 };

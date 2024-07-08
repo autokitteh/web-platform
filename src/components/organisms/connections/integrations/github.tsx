@@ -1,19 +1,22 @@
 import React, { useMemo, useState } from "react";
-import { FloppyDiskIcon, ExternalLinkIcon, CopyIcon } from "@assets/image/icons";
-import { Select, Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
-import { baseUrl, namespaces } from "@constants";
-import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
-import { GithubConnectionType } from "@enums";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoggerService } from "@services";
-import { HttpService } from "@services";
-import { useToastStore } from "@store";
-import { isConnectionType } from "@utilities";
-import { githubIntegrationSchema } from "@validations";
 import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+
+import { baseUrl, namespaces } from "@constants";
+import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
+import { GithubConnectionType } from "@enums";
+import { HttpService, LoggerService } from "@services";
+import { useToastStore } from "@store";
+import { isConnectionType } from "@utilities";
+import { githubIntegrationSchema } from "@validations";
+
+import { Button, ErrorMessage, Input, Link, Select, Spinner } from "@components/atoms";
+
+import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const GithubIntegrationForm = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -25,17 +28,17 @@ export const GithubIntegrationForm = () => {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
-		handleSubmit,
 		formState: { errors },
-		register,
 		getValues,
+		handleSubmit,
+		register,
 	} = useForm({
-		resolver: zodResolver(githubIntegrationSchema),
 		defaultValues: {
+			name: "",
 			pat: "",
 			webhookSercet: "",
-			name: "",
 		},
+		resolver: zodResolver(githubIntegrationSchema),
 	});
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,11 +46,11 @@ export const GithubIntegrationForm = () => {
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
 	const onSubmit = async () => {
-		const { pat, webhookSercet: secret, name } = getValues();
+		const { name, pat, webhookSercet: secret } = getValues();
 
 		setIsLoading(true);
 		try {
-			const { data } = await HttpService.post("/github/save", { pat, secret, webhook: webhookUrl, name });
+			const { data } = await HttpService.post("/github/save", { name, pat, secret, webhook: webhookUrl });
 			if (!data.url) {
 				addToast({
 					id: Date.now().toString(),
@@ -58,6 +61,7 @@ export const GithubIntegrationForm = () => {
 					namespaces.connectionService,
 					`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`
 				);
+
 				return;
 			}
 
@@ -86,7 +90,7 @@ export const GithubIntegrationForm = () => {
 				message: t("github.copySuccess"),
 				type: "success",
 			});
-		} catch (err) {
+		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
 				message: t("github.copyFailure"),
@@ -107,6 +111,7 @@ export const GithubIntegrationForm = () => {
 					isRequired
 					placeholder={t("github.placeholders.name")}
 				/>
+
 				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
@@ -117,6 +122,7 @@ export const GithubIntegrationForm = () => {
 					isRequired
 					placeholder={t("github.placeholders.pat")}
 				/>
+
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative flex gap-2">
@@ -127,13 +133,15 @@ export const GithubIntegrationForm = () => {
 					placeholder={t("github.placeholders.webhookUrl")}
 					value={webhookUrl}
 				/>
+
 				<Button
 					aria-label={t("buttons.copy")}
-					className="px-5 font-semibold bg-white border-black rounded-md hover:bg-gray-300 w-fit"
+					className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-300"
 					onClick={() => copyToClipboard(webhookUrl)}
 					variant="outline"
 				>
-					<CopyIcon className="w-3.5 h-3.5 fill-black" />
+					<CopyIcon className="h-3.5 w-3.5 fill-black" />
+
 					{t("buttons.copy")}
 				</Button>
 			</div>
@@ -145,30 +153,34 @@ export const GithubIntegrationForm = () => {
 					isRequired
 					placeholder={t("github.placeholders.webhookSecret")}
 				/>
+
 				<ErrorMessage>{errors.webhookSercet?.message as string}</ErrorMessage>
 			</div>
 			<Button
 				aria-label={t("buttons.saveConnection")}
-				className="px-3 ml-auto font-medium text-white border-white hover:bg-black w-fit"
+				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="w-5 h-5 transition fill-white" />}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-5 w-5 fill-white transition" />}
+
 				{t("buttons.saveConnection")}
 			</Button>
 			<div>
 				<p className="text-lg">{t("information")}:</p>
-				<div className="flex flex-col items-start gap-2 mt-2">
-					{infoGithubLinks.map(({ url, text }, idx) => (
+
+				<div className="mt-2 flex flex-col items-start gap-2">
+					{infoGithubLinks.map(({ text, url }, index) => (
 						<Link
-							className="inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent"
-							key={idx}
+							className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
+							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
-							<ExternalLinkIcon className="w-3.5 h-3.5 duration-200 fill-white group-hover:fill-green-accent" />
+
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
 						</Link>
 					))}
 				</div>
@@ -179,18 +191,22 @@ export const GithubIntegrationForm = () => {
 	const renderOAuthButton = () => (
 		<div>
 			<p className="text-lg">{t("information")}:</p>
+
 			<Link
-				className="mt-1 inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent text-md"
+				className="text-md group ml-2 mt-1 inline-flex items-center gap-2.5 hover:text-green-accent"
 				target="_blank"
 				to="https://docs.github.com/en/apps/using-github-apps/about-using-github-apps"
 			>
 				{t("github.aboutGitHubApps")}
-				<ExternalLinkIcon className="w-3.5 h-3.5 duration-200 fill-white group-hover:fill-green-accent" />
+
+				<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
 			</Link>
-			<p className="mt-1 ml-2">{t("github.clickButtonInstall")}</p>
+
+			<p className="ml-2 mt-1">{t("github.clickButtonInstall")}</p>
+
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
-				className="px-3 ml-auto font-medium bg-white border-black hover:bg-gray-500 hover:text-white w-fit"
+				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
 				onClick={handleGithubOAuth}
 				variant="outline"
 			>
@@ -201,7 +217,7 @@ export const GithubIntegrationForm = () => {
 
 	return (
 		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
-			<div className="flex flex-col w-full gap-6">
+			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
 					onChange={(selected) => {
@@ -212,8 +228,14 @@ export const GithubIntegrationForm = () => {
 					options={githubIntegrationAuthMethods}
 					placeholder={t("placeholders.selectConnectionType")}
 				/>
-				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat ? renderPATFields() : null}
-				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth ? renderOAuthButton() : null}
+
+				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat
+					? renderPATFields()
+					: null}
+
+				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth
+					? renderOAuthButton()
+					: null}
 			</div>
 		</form>
 	);

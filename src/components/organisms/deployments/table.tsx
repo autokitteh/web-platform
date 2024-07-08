@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Loader } from "@components/atoms";
-import { DeploymentsTableContent } from "@components/organisms/deployments";
+import React, { useEffect, useState } from "react";
+
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+
 import { fetchDeploymentsInterval } from "@constants";
 import { DeploymentsService } from "@services";
 import { useToastStore } from "@store";
 import { Deployment } from "@type/models";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+
+import { Loader } from "@components/atoms";
+import { DeploymentsTableContent } from "@components/organisms/deployments";
 
 export const DeploymentsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
@@ -18,7 +21,9 @@ export const DeploymentsTable = () => {
 	const { projectId } = useParams();
 
 	const fetchDeployments = async () => {
-		if (!projectId) return;
+		if (!projectId) {
+			return;
+		}
 
 		const { data, error } = await DeploymentsService.listByProjectId(projectId);
 		setIsLoadingDeployments(false);
@@ -28,9 +33,12 @@ export const DeploymentsTable = () => {
 				message: (error as Error).message,
 				type: "error",
 			});
+
 			return;
 		}
-		if (!data) return;
+		if (!data) {
+			return;
+		}
 		setDeployments(data);
 	};
 
@@ -38,6 +46,7 @@ export const DeploymentsTable = () => {
 		fetchDeployments();
 
 		const deploymentsFetchIntervalId = setInterval(fetchDeployments, fetchDeploymentsInterval);
+
 		return () => clearInterval(deploymentsFetchIntervalId);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -45,14 +54,15 @@ export const DeploymentsTable = () => {
 	return isLoadingDeployments ? (
 		<Loader isCenter size="xl" />
 	) : (
-		<div className="flex flex-col w-full">
+		<div className="flex w-full flex-col">
 			<div className="flex items-center justify-between">
 				<h1 className="text-base text-black">
 					{t("tableTitle")} ({deployments.length})
 				</h1>
 			</div>
+
 			{!deployments.length ? (
-				<div className="mt-10 text-xl font-semibold text-center text-black">{t("noDeployments")}</div>
+				<div className="mt-10 text-center text-xl font-semibold text-black">{t("noDeployments")}</div>
 			) : (
 				<DeploymentsTableContent deployments={deployments} updateDeployments={fetchDeployments} />
 			)}

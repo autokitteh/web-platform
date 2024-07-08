@@ -1,18 +1,19 @@
-import { ModalStore } from "@interfaces/store";
 import { StateCreator, create } from "zustand";
 
+import { ModalStore } from "@interfaces/store";
+
 const store: StateCreator<ModalStore> = (set) => ({
-	modals: {},
-	data: undefined,
-	openModal: (name, data) =>
-		set((state) => ({
-			modals: { ...state.modals, [name]: true },
-			data,
-		})),
 	closeModal: (name: string) =>
 		set((state) => ({
-			modals: { ...state.modals, [name]: false },
 			data: undefined,
+			modals: { ...state.modals, [name]: false },
+		})),
+	data: undefined,
+	modals: {},
+	openModal: (name, data) =>
+		set((state) => ({
+			data,
+			modals: { ...state.modals, [name]: true },
 		})),
 });
 

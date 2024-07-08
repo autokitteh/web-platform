@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { ExternalLinkIcon } from "@assets/image/icons";
-import { Select, ErrorMessage, Input, Loader, Link } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import React, { useEffect, useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } from "@constants";
 import { TriggerFormIds } from "@enums/components";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { Trigger } from "@type/models";
 import { schedulerTriggerSchema } from "@validations";
-import { useForm, Controller } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+
+import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
+import { TabFormHeader } from "@components/molecules";
+
+import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const SchedulerEditTrigger = () => {
-	const { triggerId, projectId } = useParams();
+	const { projectId, triggerId } = useParams();
 	const navigate = useNavigate();
 	const { resources } = useProjectStore();
 	const { t: tErrors } = useTranslation(["errors", "services"]);
@@ -31,15 +35,21 @@ export const SchedulerEditTrigger = () => {
 	const fetchData = async () => {
 		try {
 			const { data: connections, error: connectionsError } = await ConnectionService.list();
-			if (connectionsError) throw connectionsError;
+			if (connectionsError) {
+				throw connectionsError;
+			}
 
-			const connectionId = connections?.find((item) => item.name === schedulerTriggerConnectionName)?.connectionId;
-			if (!connectionId) throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
+			const connectionId = connections?.find(
+				(item) => item.name === schedulerTriggerConnectionName
+			)?.connectionId;
+			if (!connectionId) {
+				throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
+			}
 			setCronConnectionId(connectionId);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
-				value: name,
 				label: name,
+				value: name,
 			}));
 			setFilesNameList(formattedResources);
 		} catch (error) {
@@ -50,7 +60,7 @@ export const SchedulerEditTrigger = () => {
 			});
 			LoggerService.error(
 				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { projectId, error: (error as Error).message })
+				tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
 			);
 		} finally {
 			setIsLoadingData(false);
@@ -67,6 +77,7 @@ export const SchedulerEditTrigger = () => {
 					type: "error",
 				});
 				LoggerService.error(namespaces.triggerService, tErrors("triggerNotFoundExtended", { triggerId }));
+
 				return;
 			}
 			setTrigger(data);
@@ -78,44 +89,44 @@ export const SchedulerEditTrigger = () => {
 	}, []);
 
 	const {
-		register,
-		handleSubmit,
-		formState: { errors, dirtyFields },
 		control,
+		formState: { dirtyFields, errors },
 		getValues,
+		handleSubmit,
+		register,
 		reset,
 		watch,
 	} = useForm({
-		resolver: zodResolver(schedulerTriggerSchema),
 		defaultValues: {
-			name: "",
 			cron: "",
-			filePath: { value: "", label: "" },
 			entryFunction: "",
+			filePath: { label: "", value: "" },
+			name: "",
 		},
+		resolver: zodResolver(schedulerTriggerSchema),
 	});
 
 	useEffect(() => {
 		reset({
-			name: trigger?.name,
-			filePath: { value: trigger?.path, label: trigger?.path },
-			entryFunction: trigger?.entryFunction,
 			cron: trigger?.data?.schedule?.string?.v,
+			entryFunction: trigger?.entryFunction,
+			filePath: { label: trigger?.path, value: trigger?.path },
+			name: trigger?.name,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger]);
 
 	const onSubmit = async () => {
-		const { name, cron, filePath, entryFunction } = getValues();
+		const { cron, entryFunction, filePath, name } = getValues();
 		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
-			triggerId: triggerId!,
-			name,
 			connectionId: cronConnectionId!,
-			eventType: "",
-			path: filePath.value,
-			entryFunction,
 			data: { ["schedule"]: { string: { v: cron } } },
+			entryFunction,
+			eventType: "",
+			name,
+			path: filePath.value,
+			triggerId: triggerId!,
 		});
 		setIsSaving(false);
 
@@ -125,6 +136,7 @@ export const SchedulerEditTrigger = () => {
 				message: tErrors("triggerNotFound"),
 				type: "error",
 			});
+
 			return;
 		}
 
@@ -133,7 +145,7 @@ export const SchedulerEditTrigger = () => {
 
 	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
 
-	const { name, cron, entryFunction } = watch();
+	const { cron, entryFunction, name } = watch();
 
 	return isLoadingData ? (
 		<Loader isCenter size="xl" />
@@ -145,12 +157,13 @@ export const SchedulerEditTrigger = () => {
 				isLoading={isSaving}
 				title={t("modifyTrigger")}
 			/>
+
 			<form
 				className="flex items-start gap-10"
 				id={TriggerFormIds.modifySchedulerForm}
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<div className="flex flex-col w-full gap-6">
+				<div className="flex w-full flex-col gap-6">
 					<div className="relative">
 						<Input
 							{...register("name")}
@@ -162,8 +175,10 @@ export const SchedulerEditTrigger = () => {
 							placeholder={t("placeholders.name")}
 							value={name}
 						/>
+
 						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 					</div>
+
 					<div className="relative">
 						<Input
 							value={cron}
@@ -174,6 +189,7 @@ export const SchedulerEditTrigger = () => {
 							isRequired
 							placeholder={t("placeholders.cron")}
 						/>
+
 						<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
 					</div>
 
@@ -195,8 +211,10 @@ export const SchedulerEditTrigger = () => {
 								/>
 							)}
 						/>
+
 						<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 					</div>
+
 					<div className="relative">
 						<Input
 							value={entryFunction}
@@ -207,21 +225,25 @@ export const SchedulerEditTrigger = () => {
 							isRequired
 							placeholder={t("placeholders.functionName")}
 						/>
+
 						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 					</div>
 				</div>
 			</form>
+
 			<p className="mt-6 text-lg">{t("information")}:</p>
-			<div className="flex flex-col items-start gap-2 mt-2">
-				{infoCronExpressionsLinks.map(({ url, text }, idx) => (
+
+			<div className="mt-2 flex flex-col items-start gap-2">
+				{infoCronExpressionsLinks.map(({ text, url }, index) => (
 					<Link
-						className="inline-flex items-center ml-2 gap-2.5 group hover:text-green-accent"
-						key={idx}
+						className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
+						key={index}
 						target="_blank"
 						to={url}
 					>
 						{text}
-						<ExternalLinkIcon className="w-3.5 h-3.5 duration-200 fill-white group-hover:fill-green-accent" />
+
+						<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
 					</Link>
 				))}
 			</div>

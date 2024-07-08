@@ -1,11 +1,14 @@
-import { useState } from "react";
-import React from "react";
-import { NewProject } from "@assets/image";
-import { CopyIcon } from "@assets/image/icons";
-import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
+import React, { useState } from "react";
+
+import { Trans, useTranslation } from "react-i18next";
+
 import { HttpService } from "@services";
 import { useToastStore } from "@store";
-import { Trans, useTranslation } from "react-i18next";
+
+import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
+
+import { NewProject } from "@assets/image";
+import { CopyIcon } from "@assets/image/icons";
 
 export const Security = () => {
 	const { t: tSettings } = useTranslation("settings");
@@ -30,7 +33,7 @@ export const Security = () => {
 				message: t("copySuccess"),
 				type: "success",
 			});
-		} catch (err) {
+		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
 				message: t("copyFailure"),
@@ -61,18 +64,20 @@ export const Security = () => {
 						i18nKey={t("line")}
 					/>
 				</p>
+
 				<div className="w-2/3">
 					{token ? (
 						<div className="flex w-full">
 							<Input
 								aria-label={t("copyInputAriaLabel")}
-								className="flex-1 hover:border-gray-700 rounded-3xl"
+								className="flex-1 rounded-3xl hover:border-gray-700"
 								disabled
 								value={token}
 							/>
+
 							<Button
 								aria-label={t("copyButton")}
-								className="px-3 font-semibold bg-white border-black rounded-md hover:bg-gray-300 ml-4"
+								className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-300"
 								onClick={() => copyToClipboard(token)}
 								variant="outline"
 							>
@@ -85,13 +90,15 @@ export const Security = () => {
 								{!isLoading ? (
 									<IconSvg
 										alt="New Project"
-										className="w-4 before:w-2 before:h-2 after:w-2 after:h-2"
+										className="w-4 before:h-2 before:w-2 after:h-2 after:w-2"
 										src={NewProject}
 									/>
 								) : null}
+
 								{isLoading ? <Loader size="sm" /> : null}
 							</div>
-							<div className="flex mr-1">{tSettings("security.creatTokenButton")}</div>
+
+							<div className="mr-1 flex">{tSettings("security.creatTokenButton")}</div>
 						</Button>
 					)}
 				</div>

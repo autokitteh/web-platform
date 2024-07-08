@@ -1,8 +1,9 @@
 import React from "react";
+
 import { TableProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Table = ({ className, children }: TableProps) => {
+export const Table = ({ children, className }: TableProps) => {
 	const tableStyle = cn("overflow-y-auto rounded-t-14 scrollbar", className);
 
 	return (

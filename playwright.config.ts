@@ -10,13 +10,57 @@ import { defineConfig, devices } from "@playwright/test";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-	testDir: "e2e",
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
-	/* Retry on CI only */
-	retries: process.env.CI ? 3 : 0,
+
+	/* Configure projects for major browsers */
+	projects: [
+		// {
+		// 	name: "chromium",
+		// 	use: { ...devices["Desktop Chrome"] },
+		// },
+
+		{
+			name: "Firefox",
+			use: { ...devices["Desktop Firefox"] },
+		},
+
+		{
+			name: "Safari",
+			use: { ...devices["Desktop Safari"] },
+		},
+
+		// {
+		// 	name: "Mobile Chrome",
+		// 	use: { ...devices["Pixel 5"] },
+		// },
+		// {
+		// 	name: "Mobile Safari",
+		// 	use: { ...devices["iPhone 12"] },
+		// },
+
+		{
+			name: "Edge",
+			use: { ...devices["Desktop Edge"], channel: "msedge" },
+		},
+		{
+			name: "Chrome",
+			use: { ...devices["Desktop Chrome"], channel: "chrome" },
+		},
+	],
+
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: [["html"], ["list"]],
+
+	/* Retry on CI only */
+	retries: process.env.CI ? 3 : 0,
+
+	testDir: "e2e",
+
+	// test timeout set to 2 minutes
+
+	timeout: 2 * 60 * 1000,
+
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
@@ -27,46 +71,12 @@ export default defineConfig({
 		video: "retain-on-failure",
 	},
 
-	/* Configure projects for major browsers */
-	projects: [
-		// {
-		// 	name: "chromium",
-		// 	use: { ...devices["Desktop Chrome"] },
-		// },
-		{
-			name: "Firefox",
-			use: { ...devices["Desktop Firefox"] },
-		},
-
-		{
-			name: "Safari",
-			use: { ...devices["Desktop Safari"] },
-		},
-		// {
-		// 	name: "Mobile Chrome",
-		// 	use: { ...devices["Pixel 5"] },
-		// },
-		// {
-		// 	name: "Mobile Safari",
-		// 	use: { ...devices["iPhone 12"] },
-		// },
-		{
-			name: "Edge",
-			use: { ...devices["Desktop Edge"], channel: "msedge" },
-		},
-		{
-			name: "Chrome",
-			use: { ...devices["Desktop Chrome"], channel: "chrome" },
-		},
-	],
 	webServer: {
 		command: "npm run build && npm run preview",
 		port: 4173,
-		timeout: 60000,
 		reuseExistingServer: !process.env.CI,
-		stdout: "pipe",
 		stderr: "pipe",
+		stdout: "pipe",
+		timeout: 60000,
 	},
-	// test timeout set to 2 minutes
-	timeout: 2 * 60 * 1000,
 });

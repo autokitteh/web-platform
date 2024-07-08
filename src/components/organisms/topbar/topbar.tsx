@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Build, Deploy, Stats } from "@assets/image";
-import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
+
+import { useTranslation } from "react-i18next";
+import { redirect, useParams } from "react-router-dom";
+
 import { TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
-import { useTranslation } from "react-i18next";
-import { redirect, useParams } from "react-router-dom";
+
+import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
+
+import { Build, Deploy, Stats } from "@assets/image";
 
 export const Topbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const { projectId } = useParams();
-	const { resources, getProject, renameProject } = useProjectStore();
+	const { getProject, renameProject, resources } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [project, setProject] = useState<ProjectMenuItem>();
@@ -24,6 +28,30 @@ export const Topbar = () => {
 		}
 	);
 
+	const loadProject = async (projectId: string) => {
+		const { data: project, error } = await getProject(projectId);
+
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+			});
+
+			return redirect("/404");
+		}
+		if (!project) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+			});
+
+			return redirect("/404");
+		}
+		setProject(project);
+	};
+
 	useEffect(() => {
 		loadProject(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -31,16 +59,21 @@ export const Topbar = () => {
 
 	const validateName = (name: string): boolean => {
 		const nameLength = name.trim().length;
+
 		return nameLength > 0;
 	};
 
-	const handleInputChange = async (e: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => {
-		const newName = (e.target as HTMLSpanElement).textContent?.trim() || "";
+	const handleInputChange = async (
+		event: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>
+	) => {
+		const newName = (event.target as HTMLSpanElement).textContent?.trim() || "";
 		const isValidName = validateName(newName);
-		const isEnterKey = (e as React.KeyboardEvent<HTMLSpanElement>).key === "Enter";
-		const isBlur = e.type === "blur";
+		const isEnterKey = (event as React.KeyboardEvent<HTMLSpanElement>).key === "Enter";
+		const isBlur = event.type === "blur";
 
-		if (isEnterKey) e.preventDefault();
+		if (isEnterKey) {
+			event.preventDefault();
+		}
 
 		if ((isEnterKey || isBlur) && isValidName && projectId) {
 			const { error } = await ProjectsService.update(projectId, newName);
@@ -50,21 +83,24 @@ export const Topbar = () => {
 					message: (error as Error).message,
 					type: "error",
 				});
+
 				return <div />;
 			}
-			(e.target as HTMLSpanElement).blur();
+			(event.target as HTMLSpanElement).blur();
 			setIsNameValid(isValidName);
 			renameProject(projectId, newName);
 		}
 	};
 
-	const handleInput = (e: React.ChangeEvent<HTMLSpanElement>) => {
-		const newName = e.target.textContent?.trim() || "";
+	const handleInput = (event: React.ChangeEvent<HTMLSpanElement>) => {
+		const newName = event.target.textContent?.trim() || "";
 		setIsNameValid(validateName(newName));
 	};
 
 	const build = async () => {
-		if (!Object.keys(resources).length) return <div />;
+		if (!Object.keys(resources).length) {
+			return <div />;
+		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
 
@@ -87,7 +123,9 @@ export const Topbar = () => {
 	};
 
 	const deploy = async () => {
-		if (!Object.keys(resources).length) return <div />;
+		if (!Object.keys(resources).length) {
+			return <div />;
+		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
 
@@ -109,31 +147,9 @@ export const Topbar = () => {
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 	};
 
-	const loadProject = async (projectId: string) => {
-		const { data: project, error } = await getProject(projectId);
-
-		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-			});
-			return redirect("/404");
-		}
-		if (!project) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-			});
-			return redirect("/404");
-		}
-		setProject(project);
-	};
-
 	return (
-		<div className="flex justify-between items-center bg-gray-800 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
-			<div className="relative flex items-end gap-3 text-gray-300 font-fira-code">
+		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-800 py-3 pl-7 pr-3.5">
+			<div className="relative flex items-end gap-3 font-fira-code text-gray-300">
 				<span
 					className={inputClass}
 					contentEditable={true}
@@ -147,39 +163,47 @@ export const Topbar = () => {
 				>
 					{project?.name}
 				</span>
-				<ErrorMessage className="text-xs -bottom-5">
+
+				<ErrorMessage className="-bottom-5 text-xs">
 					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
 				</ErrorMessage>
+
 				<span className="text-sm font-semibold leading-tight">{project?.id}</span>
 			</div>
+
 			<div className="flex items-stretch gap-3">
 				<Button
 					ariaLabel={t("topbar.buttons.ariaBuildProject")}
-					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
+					className="whitespace-nowrap px-4 py-2 font-semibold text-white hover:bg-gray-700"
 					disabled={loadingButton[TopbarButton.build]}
 					onClick={build}
 					variant="outline"
 				>
 					{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg className="max-w-5" src={Build} />}
+
 					{t("topbar.buttons.build")}
 				</Button>
+
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
-					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
+					className="whitespace-nowrap px-4 py-2 font-semibold text-white hover:bg-gray-700"
 					disabled={loadingButton[TopbarButton.deploy]}
 					onClick={deploy}
 					variant="outline"
 				>
 					{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg className="max-w-5" src={Deploy} />}
+
 					{t("topbar.buttons.deploy")}
 				</Button>
+
 				<Button
 					ariaLabel={t("topbar.buttons.ariaStats")}
-					className="px-4 py-2 font-semibold text-white whitespace-nowrap hover:bg-gray-700"
+					className="whitespace-nowrap px-4 py-2 font-semibold text-white hover:bg-gray-700"
 					href={`/projects/${projectId}/deployments`}
 					variant="outline"
 				>
 					<IconSvg className="max-w-5" src={Stats} />
+
 					{t("topbar.buttons.stats")}
 				</Button>
 			</div>

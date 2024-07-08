@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { ProjectsIcon } from "@assets/image";
-import { Button, IconSvg } from "@components/atoms";
+
+import { useTranslation } from "react-i18next";
+import { redirect, useParams } from "react-router-dom";
+
 import { useProjectStore } from "@store/useProjectStore";
 import { useToastStore } from "@store/useToastStore";
 import { ProjectMenuItem } from "@type/models";
-import { useTranslation } from "react-i18next";
-import { useParams, redirect } from "react-router-dom";
+
+import { Button, IconSvg } from "@components/atoms";
+
+import { ProjectsIcon } from "@assets/image";
 
 export const StatsTopbar = () => {
 	const { t } = useTranslation(["projects", "errors"]);
@@ -15,11 +19,6 @@ export const StatsTopbar = () => {
 
 	const { getProject } = useProjectStore();
 
-	useEffect(() => {
-		loadProject(projectId!);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
-
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
 		if (error) {
@@ -28,6 +27,7 @@ export const StatsTopbar = () => {
 				message: (error as Error).message,
 				type: "error",
 			});
+
 			return redirect("/404");
 		}
 		if (!project) {
@@ -36,17 +36,25 @@ export const StatsTopbar = () => {
 				message: t("projectNotFound"),
 				type: "error",
 			});
+
 			return redirect("/404");
 		}
 		setProject(project);
 	};
 
+	useEffect(() => {
+		loadProject(projectId!);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
 	return (
-		<div className="flex justify-between items-center bg-gray-800 gap-5 pl-7 pr-3.5 py-3 rounded-b-xl">
-			<div className="flex items-end gap-3 relative font-fira-code text-gray-300">
-				<span className="font-bold text-xl leading-6">{project?.name}</span>
-				<span className="font-semibold leading-tight text-sm">{project?.id}</span>
+		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-800 py-3 pl-7 pr-3.5">
+			<div className="relative flex items-end gap-3 font-fira-code text-gray-300">
+				<span className="text-xl font-bold leading-6">{project?.name}</span>
+
+				<span className="text-sm font-semibold leading-tight">{project?.id}</span>
 			</div>
+
 			<div className="flex items-stretch gap-3">
 				<Button
 					ariaLabel={t("topbar.buttons.goToProject")}
@@ -54,7 +62,8 @@ export const StatsTopbar = () => {
 					href={`/projects/${projectId}`}
 					variant="outline"
 				>
-					<IconSvg className="fill-white w-6 h-6" src={ProjectsIcon} />
+					<IconSvg className="h-6 w-6 fill-white" src={ProjectsIcon} />
+
 					{t("topbar.buttons.goToProject")}
 				</Button>
 			</div>

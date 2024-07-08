@@ -1,27 +1,29 @@
 import React from "react";
-import { DropdownMenuProps } from "@interfaces/components/dropdown";
-import { cn } from "@utilities";
-import { motion, AnimatePresence } from "framer-motion";
+
+import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
 
+import { DropdownMenuProps } from "@interfaces/components/dropdown";
+import { cn } from "@utilities";
+
 export const DropdownMenu = ({
-	isOpen,
-	className,
 	children,
-	style,
+	className,
 	container = document.body,
+	isOpen,
 	onMouseEnter,
 	onMouseLeave,
+	style,
 }: DropdownMenuProps) => {
 	const dropdownVariants = {
-		opened: {
-			opacity: 1,
-			scale: 1,
-			transition: { duration: 0.3 },
-		},
 		closed: {
 			opacity: 0,
 			scale: 0.95,
+			transition: { duration: 0.3 },
+		},
+		opened: {
+			opacity: 1,
+			scale: 1,
 			transition: { duration: 0.3 },
 		},
 	};
@@ -45,8 +47,10 @@ export const DropdownMenu = ({
 					style={style}
 					variants={dropdownVariants}
 				>
-					<div className="absolute w-full left-0 h-2 -top-2" />
-					<div className="absolute w-full left-0 h-2 -bottom-2" />
+					<div className="absolute -top-2 left-0 h-2 w-full" />
+
+					<div className="absolute -bottom-2 left-0 h-2 w-full" />
+
 					{children}
 				</motion.div>
 			) : null}

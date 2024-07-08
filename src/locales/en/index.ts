@@ -15,24 +15,25 @@ import sidebar from "@locales/en/sidebar/translation.json";
 import tabs from "@locales/en/tabs/translation.json";
 import toasts from "@locales/en/toasts/translation.json";
 import validations from "@locales/en/validations/translation.json";
+
 export default {
-	errors,
-	menu,
-	modals,
 	buttons,
-	login,
-	global,
-	tabs,
-	projects,
-	services,
-	validations,
-	deployments,
-	toasts,
-	integrations,
 	components: {
 		select,
 	},
+	deployments,
+	errors,
+	global,
+	integrations,
+	login,
+	menu,
+	modals,
+	notFound404,
+	projects,
+	services,
 	settings,
 	sidebar,
-	notFound404,
+	tabs,
+	toasts,
+	validations,
 };

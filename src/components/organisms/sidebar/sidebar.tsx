@@ -1,14 +1,18 @@
-import React, { useEffect, useState, Suspense } from "react";
-import { IconLogo, IconLogoName } from "@assets/image";
-import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
-import { Button, Loader } from "@components/atoms";
-import { Submenu, Menu } from "@components/molecules/menu";
-import { isAuthEnabled } from "@constants";
-import { SubmenuInfo } from "@interfaces/components";
-import { useUserStore } from "@store";
+import React, { Suspense, useEffect, useState } from "react";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
+
+import { isAuthEnabled } from "@constants";
+import { SubmenuInfo } from "@interfaces/components";
+import { useUserStore } from "@store";
+
+import { Button, Loader } from "@components/atoms";
+import { Menu, Submenu } from "@components/molecules/menu";
+
+import { IconLogo, IconLogoName } from "@assets/image";
+import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -28,21 +32,22 @@ export const Sidebar = () => {
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
-		visible: { opacity: 1, width: "auto", transition: { duration: 0.35, ease: "easeOut" } },
+		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, width: "auto" },
 	};
 
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
 			<div className="relative w-main-nav-sidebar">
 				<div
-					className="absolute top-0 left-0 z-50 flex items-start h-full"
+					className="absolute left-0 top-0 z-50 flex h-full items-start"
 					onMouseEnter={() => setIsOpen(true)}
 					onMouseLeave={handleMouseLeave}
 				>
-					<div className="z-10 flex flex-col justify-between h-full p-4 pt-6 pb-10 bg-white">
+					<div className="z-10 flex h-full flex-col justify-between bg-white p-4 pb-10 pt-6">
 						<div>
-							<Link className="flex items-center gap-2.5 ml-1" to="/">
-								<IconLogo className="w-8 h-8" />
+							<Link className="ml-1 flex items-center gap-2.5" to="/">
+								<IconLogo className="h-8 w-8" />
+
 								<AnimatePresence>
 									{isOpen ? (
 										<motion.span
@@ -52,17 +57,24 @@ export const Sidebar = () => {
 											initial="hidden"
 											variants={animateVariant}
 										>
-											<IconLogoName className="w-20 h-3" />
+											<IconLogoName className="h-3 w-20" />
 										</motion.span>
 									) : null}
 								</AnimatePresence>
 							</Link>
+
 							<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 						</div>
+
 						{isAuthEnabled ? (
 							<div className="flex flex-col justify-end gap-5">
 								<Button className="hover:bg-transparent" href="#">
-									<img alt="avatar" className="w-8 h-8 rounded-full" src="https://via.placeholder.com/30" />
+									<img
+										alt="avatar"
+										className="h-8 w-8 rounded-full"
+										src="https://via.placeholder.com/30"
+									/>
+
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span
@@ -77,9 +89,11 @@ export const Sidebar = () => {
 										) : null}
 									</AnimatePresence>
 								</Button>
+
 								<div>
 									<Button className="hover:bg-transparent" href="/settings">
-										<SettingsIcon className="w-8 h-8" fill="black" />
+										<SettingsIcon className="h-8 w-8" fill="black" />
+
 										<AnimatePresence>
 											{isOpen ? (
 												<motion.span
@@ -94,11 +108,18 @@ export const Sidebar = () => {
 											) : null}
 										</AnimatePresence>
 									</Button>
+
 									<Button className="hover:bg-transparent" onClick={() => logoutFunction()}>
-										<LogoutIcon className="w-8 h-8" fill="black" />
+										<LogoutIcon className="h-8 w-8" fill="black" />
+
 										<AnimatePresence>
 											{isOpen ? (
-												<motion.span animate="visible" exit="hidden" initial="hidden" variants={animateVariant}>
+												<motion.span
+													animate="visible"
+													exit="hidden"
+													initial="hidden"
+													variants={animateVariant}
+												>
 													{t("logout")}
 												</motion.span>
 											) : null}
@@ -108,8 +129,11 @@ export const Sidebar = () => {
 							</div>
 						) : null}
 					</div>
+
 					<AnimatePresence>
-						{submenuInfo.submenu && submenuInfo.submenu.length > 0 ? <Submenu submenuInfo={submenuInfo} /> : null}
+						{submenuInfo.submenu && !!submenuInfo.submenu.length ? (
+							<Submenu submenuInfo={submenuInfo} />
+						) : null}
 					</AnimatePresence>
 				</div>
 			</div>

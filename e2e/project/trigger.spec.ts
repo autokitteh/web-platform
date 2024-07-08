@@ -1,5 +1,6 @@
-import { test, expect } from "@e2e/fixtures";
 import { Page } from "@playwright/test";
+
+import { expect, test } from "@e2e/fixtures";
 
 async function createTriggerScheduler(
 	page: Page,
@@ -13,7 +14,7 @@ async function createTriggerScheduler(
 	await page.getByTestId("select-trigger-type").click();
 	await page.getByRole("option", { name: "Scheduler" }).click();
 
-	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
+	const nameInput = page.getByRole("textbox", { exact: true, name: "Name" });
 	await nameInput.click();
 	await nameInput.fill(name);
 
@@ -45,14 +46,14 @@ async function modifyTrigger(page: Page, name: string, cronExpression: string, f
 	await page.getByRole("button", { name: "Save" }).click();
 }
 
-test.beforeEach(async ({ page, dashboardPage }) => {
+test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 
 	await page.getByRole("button", { name: "Create new file" }).click();
 	const newFileInput = page.getByRole("textbox", { name: "new file name" });
 	await newFileInput.click();
 	await newFileInput.fill("newFile");
-	await page.getByRole("button", { name: "Create", exact: true }).click();
+	await page.getByRole("button", { exact: true, name: "Create" }).click();
 	await expect(page.getByRole("row", { name: "newFile.star" })).toHaveCount(1);
 
 	await page.getByRole("tab", { name: "Triggers" }).click();
@@ -72,7 +73,7 @@ test.describe("Project Triggers Suite", () => {
 	test("Modify trigger with cron expression", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
 
-		const newRowInTable = page.getByRole("cell", { name: "triggerName", exact: true });
+		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newRowInTable).toBeVisible();
 
 		await modifyTrigger(page, "triggerName", "4 4 * * *", "newFunctionName");
@@ -84,12 +85,12 @@ test.describe("Project Triggers Suite", () => {
 	test("Delete trigger", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
 
-		const newRowInTable = page.getByRole("cell", { name: "triggerName", exact: true });
+		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newRowInTable).toBeVisible();
 
 		await page.getByRole("button", { name: "Delete triggerName trigger" }).click();
 		await page.getByRole("button", { name: "Yes, delete" }).click();
-		const newVariableInTable = page.getByRole("cell", { name: "triggerName", exact: true });
+		const newVariableInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newVariableInTable).not.toBeVisible();
 	});
 

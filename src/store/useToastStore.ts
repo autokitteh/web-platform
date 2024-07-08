@@ -1,8 +1,8 @@
-import { ToastStore } from "@interfaces/store";
 import { create } from "zustand";
 
+import { ToastStore } from "@interfaces/store";
+
 export const useToastStore = create<ToastStore>((set) => ({
-	toasts: [],
 	addToast: (toast) =>
 		set((state) => ({
 			toasts: [...state.toasts, toast],
@@ -11,4 +11,5 @@ export const useToastStore = create<ToastStore>((set) => ({
 		set((state) => ({
 			toasts: state.toasts.filter((toast) => toast.id !== id),
 		})),
+	toasts: [],
 }));

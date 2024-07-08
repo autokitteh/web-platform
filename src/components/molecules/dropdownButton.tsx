@@ -1,23 +1,27 @@
-import React, { useState, useRef } from "react";
-import { DropdownMenu } from "@components/atoms";
+import React, { useRef, useState } from "react";
+
 import { DropdownButtonProps, DropdownState } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const DropdownButton = ({ contentMenu, className, ariaLabel, children }: DropdownButtonProps) => {
+import { DropdownMenu } from "@components/atoms";
+
+export const DropdownButton = ({ ariaLabel, children, className, contentMenu }: DropdownButtonProps) => {
 	const parentRef = useRef<HTMLDivElement>(null);
 	const [dropdownState, setDropdownState] = useState<DropdownState>({ isOpen: false, style: {} });
 
 	const baseStyle = cn("relative shrink-0", className);
 
 	const handleMouseEnter = () => {
-		if (!parentRef.current) return;
+		if (!parentRef.current) {
+			return;
+		}
 
-		const { top, left, height, width } = parentRef.current.getBoundingClientRect();
+		const { height, left, top, width } = parentRef.current.getBoundingClientRect();
 		setDropdownState({
 			isOpen: true,
 			style: {
-				top: `${top + height}px`,
 				left: `${left + width / 2}px`,
+				top: `${top + height}px`,
 			},
 		});
 	};
@@ -33,6 +37,7 @@ export const DropdownButton = ({ contentMenu, className, ariaLabel, children }: 
 			ref={parentRef}
 		>
 			{children}
+
 			<DropdownMenu isOpen={dropdownState.isOpen} style={dropdownState.style}>
 				{contentMenu}
 			</DropdownMenu>

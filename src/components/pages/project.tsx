@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Tab } from "@components/atoms";
-import { SplitFrame } from "@components/organisms";
+
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { ProjectsService } from "@services";
 import { useProjectStore, useToastStore } from "@store";
 import { calculatePathDepth } from "@utilities";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+
+import { Tab } from "@components/atoms";
+import { SplitFrame } from "@components/organisms";
 
 export const Project = () => {
 	const { projectId } = useParams();
@@ -26,8 +29,12 @@ export const Project = () => {
 	const fetchResources = async () => {
 		try {
 			const { data: resources, error } = await ProjectsService.getResources(projectId!);
-			if (error) throw error;
-			if (!resources) return;
+			if (error) {
+				throw error;
+			}
+			if (!resources) {
+				return;
+			}
 
 			getProjectResources(resources);
 		} catch (error) {
@@ -47,7 +54,9 @@ export const Project = () => {
 	}, [location]);
 
 	useEffect(() => {
-		if (!projectId) return;
+		if (!projectId) {
+			return;
+		}
 		fetchResources();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
@@ -59,19 +68,19 @@ export const Project = () => {
 	return (
 		<SplitFrame>
 			{displayTabs ? (
-				<div className="flex flex-col flex-1 h-full">
-					<div className="sticky z-20 pb-0 pt-3 -mt-5  bg-gray-700 -top-8">
+				<div className="flex h-full flex-1 flex-col">
+					<div className="sticky -top-8 z-20 -mt-5 bg-gray-700 pb-0 pt-3">
 						<div
 							className={
-								"flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none " +
-								"overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar shrink-0 py-2"
+								"flex select-none items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 " +
+								"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2"
 							}
 						>
 							{projectTabs.map((singleTab) => (
 								<Tab
 									activeTab={activeTab}
 									ariaLabel={singleTab.label}
-									className="flex items-center text-md 2xl:text-sm"
+									className="text-md flex items-center"
 									key={singleTab.value}
 									onClick={() => goTo(singleTab.value)}
 									value={singleTab.value}
@@ -81,6 +90,7 @@ export const Project = () => {
 							))}
 						</div>
 					</div>
+
 					<div className="h-full">
 						<Outlet />
 					</div>

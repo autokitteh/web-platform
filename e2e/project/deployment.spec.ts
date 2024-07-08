@@ -1,14 +1,14 @@
-import { test, expect } from "@e2e/fixtures";
+import { expect, test } from "@e2e/fixtures";
 import { waitForToast } from "@e2e/utils";
 
-test.beforeEach(async ({ page, dashboardPage }) => {
+test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 
 	await page.getByRole("button", { name: "Create new file" }).click();
 	const newFileInput = page.getByRole("textbox", { name: "new file name" });
 	await newFileInput.click();
 	await newFileInput.fill("newFile");
-	await page.getByRole("button", { name: "Create", exact: true }).click();
+	await page.getByRole("button", { exact: true, name: "Create" }).click();
 	await expect(page.getByRole("row", { name: "newFile.star" })).toHaveCount(1);
 	await expect(page.getByText("// Start typing here...")).toBeVisible();
 	await page.getByRole("button", { name: "Deploy project" }).click();

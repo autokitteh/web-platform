@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+
+import { useTranslation } from "react-i18next";
+
+import { defaultTriggerType } from "@constants";
+import { triggerTypes } from "@constants/lists/connections";
+import { TriggerFormIds, TriggerFormType } from "@enums/components";
+import { SelectOption } from "@interfaces/components";
+
 import { Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { DefaultTriggerForm, TriggerSchedulerForm } from "@components/organisms/triggers";
-import { defaultTriggerType } from "@constants";
-import { triggerTypes } from "@constants/lists/connections";
-import { TriggerFormType, TriggerFormIds } from "@enums/components";
-import { SelectOption } from "@interfaces/components";
-import { useTranslation } from "react-i18next";
 
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -32,6 +35,7 @@ export const AddTrigger = () => {
 				isLoading={isSaving}
 				title={t("addNewTrigger")}
 			/>
+
 			<div className="flex flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectTriggerType")}
@@ -42,6 +46,7 @@ export const AddTrigger = () => {
 					placeholder={t("placeholders.selectTriggerType")}
 					value={selectedType}
 				/>
+
 				{FormTriggerComponent}
 			</div>
 		</div>

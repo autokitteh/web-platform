@@ -1,7 +1,9 @@
-/* eslint-disable no-console */
+import moment from "moment";
+
 import { LoggerLevel } from "@enums";
 import { useLoggerStore } from "@store";
-import moment from "moment";
+
+/* eslint-disable no-console */
 
 export class LoggerService {
 	private static output(namespace: string, message: string, level: LoggerLevel = LoggerLevel.info): void {
@@ -24,7 +26,7 @@ export class LoggerService {
 				break;
 		}
 
-		useLoggerStore.getState().addLog({ timestamp, message: formattedMessage, status: level });
+		useLoggerStore.getState().addLog({ message: formattedMessage, status: level, timestamp });
 	}
 
 	public static info(namespace: string, message: string): void {

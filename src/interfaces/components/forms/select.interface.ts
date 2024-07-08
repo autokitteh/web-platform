@@ -1,5 +1,6 @@
-import { ColorSchemes } from "@type";
 import { SingleValue } from "react-select";
+
+import { ColorSchemes } from "@type";
 
 export interface SelectProps {
 	placeholder?: string;
