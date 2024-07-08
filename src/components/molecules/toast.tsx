@@ -114,10 +114,7 @@ export const Toast = () => {
 								{message}
 							</div>
 
-							<IconButton
-								className="group ml-auto h-default-icon w-default-icon bg-gray-600 p-0"
-								onClick={() => removeToast(id)}
-							>
+							<IconButton className="group ml-auto h-default-icon w-default-icon bg-gray-600 p-0" onClick={() => removeToast(id)}>
 								<Close className="h-3 w-3 fill-white transition" />
 							</IconButton>
 						</div>

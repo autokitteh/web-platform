@@ -61,17 +61,7 @@ module.exports = {
 	},
 	ignorePatterns: ["dist", ".eslintrc.cjs", "src/stories"],
 	parser: "@typescript-eslint/parser",
-	plugins: [
-		"react-refresh",
-		"unicorn",
-		"import",
-		"@typescript-eslint",
-		"promise",
-		"@liferay",
-		"eslint-plugin-local-rules",
-		"prettier",
-		"import",
-	],
+	plugins: ["react-refresh", "unicorn", "import", "@typescript-eslint", "promise", "@liferay", "eslint-plugin-local-rules", "prettier", "import"],
 	rules: {
 		"local-rules/no-abbreviations": "error",
 		"@liferay/no-anonymous-exports": "off",

@@ -17,13 +17,7 @@ import { DeleteDeploymentModal, DeploymentSessionStats, DeploymentState } from "
 
 import { ActionActiveIcon, ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
 
-export const DeploymentsTableContent = ({
-	deployments,
-	updateDeployments,
-}: {
-	deployments: Deployment[];
-	updateDeployments: () => void;
-}) => {
+export const DeploymentsTableContent = ({ deployments, updateDeployments }: { deployments: Deployment[]; updateDeployments: () => void }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const navigate = useNavigate();
 	const { items: sortedDeployments, requestSort, sortConfig } = useSort<Deployment>(deployments);
@@ -92,10 +86,7 @@ export const DeploymentsTableContent = ({
 							/>
 						</Th>
 
-						<Th
-							className="group cursor-pointer border-r-0 font-normal"
-							onClick={() => requestSort("state")}
-						>
+						<Th className="group cursor-pointer border-r-0 font-normal" onClick={() => requestSort("state")}>
 							{t("table.columns.status")}
 
 							<SortButton
@@ -111,11 +102,7 @@ export const DeploymentsTableContent = ({
 
 				<TBody className="bg-gray-700">
 					{sortedDeployments.map(({ buildId, createdAt, deploymentId, sessionStats, state }) => (
-						<Tr
-							className="group cursor-pointer"
-							key={deploymentId}
-							onClick={() => navigate(`${deploymentId}/sessions`)}
-						>
+						<Tr className="group cursor-pointer" key={deploymentId} onClick={() => navigate(`${deploymentId}/sessions`)}>
 							<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
 
 							<Td>
@@ -134,9 +121,7 @@ export const DeploymentsTableContent = ({
 										<IconButton
 											ariaLabel={t("ariaDeactivateDeploy")}
 											className="p-1"
-											onClick={(event) =>
-												handleDeploymentAction(deploymentId, "deactivate", event)
-											}
+											onClick={(event) => handleDeploymentAction(deploymentId, "deactivate", event)}
 											title={t("ariaDeactivateDeploy")}
 										>
 											<ActionStoppedIcon className="h-4 w-4 transition group-hover:fill-white" />

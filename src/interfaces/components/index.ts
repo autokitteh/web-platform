@@ -1,10 +1,4 @@
-export type {
-	ButtonProps,
-	DropdownButtonProps,
-	IconButtonProps,
-	SortButtonProps,
-	DropdownState,
-} from "@interfaces/components/button.interface";
+export type { ButtonProps, DropdownButtonProps, IconButtonProps, SortButtonProps, DropdownState } from "@interfaces/components/button.interface";
 export type { BadgeProps } from "@interfaces/components/badge.interface";
 export type { FrameProps, SplitFrameProps } from "@interfaces/components/frame.interface";
 export type { LinkProps } from "@interfaces/components/link.interface";
@@ -29,11 +23,7 @@ export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
 export type { ToggleProps } from "@interfaces/components/toggle.interface";
-export type {
-	SessionTableFilterProps,
-	SessionsTableRowProps,
-	SessionsTableListProps,
-} from "@interfaces/components/session.interface";
+export type { SessionTableFilterProps, SessionsTableRowProps, SessionsTableListProps } from "@interfaces/components/session.interface";
 export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
 export type { LoaderProps } from "@interfaces/components/loader.interface";
 export type { TypographyProps } from "@interfaces/components/typography.interface";

@@ -40,11 +40,7 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 				<p>{t("line")}</p>
 
 				<div className="font-medium">
-					<Trans
-						i18nKey="line2"
-						t={t}
-						values={{ appName: connection?.integrationName, name: connection?.name }}
-					/>
+					<Trans i18nKey="line2" t={t} values={{ appName: connection?.integrationName, name: connection?.name }} />
 				</div>
 
 				<p className="mt-1">{t("line3")}</p>
@@ -53,20 +49,11 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 			</div>
 
 			<div className="mt-14 flex justify-end gap-1">
-				<Button
-					className="w-auto px-4 py-3 font-semibold hover:text-white"
-					disabled={loading}
-					onClick={() => closeModal(ModalName.deleteConnection)}
-				>
+				<Button className="w-auto px-4 py-3 font-semibold hover:text-white" disabled={loading} onClick={() => closeModal(ModalName.deleteConnection)}>
 					{t("cancelButton")}
 				</Button>
 
-				<Button
-					className="w-auto bg-gray-700 px-4 py-3 font-semibold"
-					disabled={loading}
-					onClick={onDelete}
-					variant="filled"
-				>
+				<Button className="w-auto bg-gray-700 px-4 py-3 font-semibold" disabled={loading} onClick={onDelete} variant="filled">
 					{loading ? <Spinner /> : null} {t("deleteButton")}
 				</Button>
 			</div>

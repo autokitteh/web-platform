@@ -17,24 +17,15 @@ export const AddTrigger = () => {
 	const [selectedType, setSelectedType] = useState<SelectOption>(defaultTriggerType);
 
 	const formTriggerComponents = {
-		[TriggerFormType.default]: (
-			<DefaultTriggerForm formId={TriggerFormIds.createNewDefaultForm} setIsSaving={setIsSaving} />
-		),
-		[TriggerFormType.scheduler]: (
-			<TriggerSchedulerForm formId={TriggerFormIds.createNewSchedulerForm} setIsSaving={setIsSaving} />
-		),
+		[TriggerFormType.default]: <DefaultTriggerForm formId={TriggerFormIds.createNewDefaultForm} setIsSaving={setIsSaving} />,
+		[TriggerFormType.scheduler]: <TriggerSchedulerForm formId={TriggerFormIds.createNewSchedulerForm} setIsSaving={setIsSaving} />,
 	};
 
 	const FormTriggerComponent = formTriggerComponents[selectedType.value as TriggerFormType];
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader
-				className="mb-10"
-				form={FormTriggerComponent.props.formId}
-				isLoading={isSaving}
-				title={t("addNewTrigger")}
-			/>
+			<TabFormHeader className="mb-10" form={FormTriggerComponent.props.formId} isLoading={isSaving} title={t("addNewTrigger")} />
 
 			<div className="flex flex-col gap-6">
 				<Select

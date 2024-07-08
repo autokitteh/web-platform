@@ -21,12 +21,9 @@ export const Topbar = () => {
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [project, setProject] = useState<ProjectMenuItem>();
 	const addToast = useToastStore((state) => state.addToast);
-	const inputClass = cn(
-		"font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight",
-		{
-			"outline-error outline-2": !isNameValid,
-		}
-	);
+	const inputClass = cn("font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight", {
+		"outline-error outline-2": !isNameValid,
+	});
 
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
@@ -63,9 +60,7 @@ export const Topbar = () => {
 		return nameLength > 0;
 	};
 
-	const handleInputChange = async (
-		event: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>
-	) => {
+	const handleInputChange = async (event: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>) => {
 		const newName = (event.target as HTMLSpanElement).textContent?.trim() || "";
 		const isValidName = validateName(newName);
 		const isEnterKey = (event as React.KeyboardEvent<HTMLSpanElement>).key === "Enter";
@@ -164,9 +159,7 @@ export const Topbar = () => {
 					{project?.name}
 				</span>
 
-				<ErrorMessage className="-bottom-5 text-xs">
-					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
-				</ErrorMessage>
+				<ErrorMessage className="-bottom-5 text-xs">{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}</ErrorMessage>
 
 				<span className="text-sm font-semibold leading-tight">{project?.id}</span>
 			</div>

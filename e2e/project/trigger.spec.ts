@@ -2,13 +2,7 @@ import { Page } from "@playwright/test";
 
 import { expect, test } from "@e2e/fixtures";
 
-async function createTriggerScheduler(
-	page: Page,
-	name: string,
-	cronExpression: string,
-	fileName: string,
-	functionName: string
-) {
+async function createTriggerScheduler(page: Page, name: string, cronExpression: string, fileName: string, functionName: string) {
 	await page.getByRole("link", { name: "Add new" }).click();
 
 	await page.getByTestId("select-trigger-type").click();

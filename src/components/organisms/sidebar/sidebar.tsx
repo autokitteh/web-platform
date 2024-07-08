@@ -38,11 +38,7 @@ export const Sidebar = () => {
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
 			<div className="relative w-main-nav-sidebar">
-				<div
-					className="absolute left-0 top-0 z-50 flex h-full items-start"
-					onMouseEnter={() => setIsOpen(true)}
-					onMouseLeave={handleMouseLeave}
-				>
+				<div className="absolute left-0 top-0 z-50 flex h-full items-start" onMouseEnter={() => setIsOpen(true)} onMouseLeave={handleMouseLeave}>
 					<div className="z-10 flex h-full flex-col justify-between bg-white p-4 pb-10 pt-6">
 						<div>
 							<Link className="ml-1 flex items-center gap-2.5" to="/">
@@ -69,11 +65,7 @@ export const Sidebar = () => {
 						{isAuthEnabled ? (
 							<div className="flex flex-col justify-end gap-5">
 								<Button className="hover:bg-transparent" href="#">
-									<img
-										alt="avatar"
-										className="h-8 w-8 rounded-full"
-										src="https://via.placeholder.com/30"
-									/>
+									<img alt="avatar" className="h-8 w-8 rounded-full" src="https://via.placeholder.com/30" />
 
 									<AnimatePresence>
 										{isOpen ? (
@@ -114,12 +106,7 @@ export const Sidebar = () => {
 
 										<AnimatePresence>
 											{isOpen ? (
-												<motion.span
-													animate="visible"
-													exit="hidden"
-													initial="hidden"
-													variants={animateVariant}
-												>
+												<motion.span animate="visible" exit="hidden" initial="hidden" variants={animateVariant}>
 													{t("logout")}
 												</motion.span>
 											) : null}
@@ -130,11 +117,7 @@ export const Sidebar = () => {
 						) : null}
 					</div>
 
-					<AnimatePresence>
-						{submenuInfo.submenu && !!submenuInfo.submenu.length ? (
-							<Submenu submenuInfo={submenuInfo} />
-						) : null}
-					</AnimatePresence>
+					<AnimatePresence>{submenuInfo.submenu && !!submenuInfo.submenu.length ? <Submenu submenuInfo={submenuInfo} /> : null}</AnimatePresence>
 				</div>
 			</div>
 		</Suspense>

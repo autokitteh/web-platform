@@ -6,15 +6,7 @@ import { Button } from "@components/atoms";
 
 import { MinusAccordionIcon, PlusAccordionIcon } from "@assets/image/icons";
 
-export const Accordion = ({
-	children,
-	className,
-	title,
-}: {
-	title: string;
-	children: React.ReactNode;
-	className?: string;
-}) => {
+export const Accordion = ({ children, className, title }: { title: string; children: React.ReactNode; className?: string }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (

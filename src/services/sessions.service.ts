@@ -1,10 +1,7 @@
 import i18n from "i18next";
 import { get } from "lodash";
 
-import {
-	Session as ProtoSession,
-	SessionLogRecord as ProtoSessionLogRecord,
-} from "@ak-proto-ts/sessions/v1/session_pb";
+import { Session as ProtoSession, SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
@@ -76,10 +73,7 @@ export class SessionsService {
 		}
 	}
 
-	static async startSession(
-		startSessionArgs: StartSessionArgsType,
-		projectId: string
-	): Promise<ServiceResponse<string>> {
+	static async startSession(startSessionArgs: StartSessionArgsType, projectId: string): Promise<ServiceResponse<string>> {
 		try {
 			const { data: environments, error: envError } = await EnvironmentsService.listByProjectId(projectId);
 			if (envError) {
@@ -115,8 +109,7 @@ export class SessionsService {
 
 	static async listByProjectId(projectId: string): Promise<ServiceResponse<Session[]>> {
 		try {
-			const { data: projecEnvironments, error: environmentsError } =
-				await EnvironmentsService.listByProjectId(projectId);
+			const { data: projecEnvironments, error: environmentsError } = await EnvironmentsService.listByProjectId(projectId);
 
 			if (environmentsError) {
 				LoggerService.error(namespaces.sessionsService, (environmentsError as Error).message);
@@ -134,9 +127,7 @@ export class SessionsService {
 			const sessions = flattenArray<Session>(
 				sessionsResponses
 					.filter((response) => response.status === "fulfilled")
-					.map((response) =>
-						get(response, "value.sessions", []).map((session) => convertSessionProtoToModel(session))
-					)
+					.map((response) => get(response, "value.sessions", []).map((session) => convertSessionProtoToModel(session)))
 			);
 
 			return { data: sessions, error: undefined };

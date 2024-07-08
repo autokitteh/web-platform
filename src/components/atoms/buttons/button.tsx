@@ -6,18 +6,7 @@ import { cn } from "@utilities";
 
 import { Link } from "@components/atoms";
 
-export const Button = ({
-	ariaLabel,
-	children,
-	className,
-	disabled,
-	form,
-	href,
-	onClick,
-	title,
-	type = "button",
-	variant,
-}: Partial<ButtonProps>) => {
+export const Button = ({ ariaLabel, children, className, disabled, form, href, onClick, title, type = "button", variant }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
 		"flex items-center gap-2.5 p-2 rounded-3xl transition",
 		"duration-300 text-gray-700 text-center hover:bg-gray-800 hover:text-current",
@@ -33,15 +22,7 @@ export const Button = ({
 	);
 
 	return !href ? (
-		<button
-			aria-label={ariaLabel}
-			className={buttonClass}
-			disabled={disabled}
-			form={form}
-			onClick={onClick}
-			title={title}
-			type={type}
-		>
+		<button aria-label={ariaLabel} className={buttonClass} disabled={disabled} form={form} onClick={onClick} title={title} type={type}>
 			{children}
 		</button>
 	) : (

@@ -1,0 +1,13 @@
+{
+	"files.autoSave": "onFocusChange",
+	"editor.codeActionsOnSave": {
+		"source.addMissingImports": "always",
+		"source.fixAll.eslint": "always"
+	},
+	"eslint.format.enable": true,
+	"prettier.bracketSameLine": true,
+	"prettier.configPath": ".prettierrc",
+	"editor.formatOnSave": true,
+	"eslint.codeActionsOnSave.rules": [],
+	"prettier.printWidth": 160
+}

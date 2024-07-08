@@ -12,11 +12,7 @@ export {
 	maxLogs,
 } from "@constants/global.constants";
 export { monacoLanguages, defalutFileExtension } from "@constants/monacoLanguages.constants.ts";
-export {
-	schedulerTriggerConnectionName,
-	defaultTriggerType,
-	infoCronExpressionsLinks,
-} from "@constants/triggers.constants";
+export { schedulerTriggerConnectionName, defaultTriggerType, infoCronExpressionsLinks } from "@constants/triggers.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { defaultProjectTab, projectTabs } from "@constants/project.constants";
 export { sessionsEditorLineHeight } from "@constants/sessionsTable.constants";

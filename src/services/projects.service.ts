@@ -74,9 +74,7 @@ export class ProjectsService {
 
 	static async list(): Promise<ServiceResponse<Project[]>> {
 		try {
-			const projects = (await projectsClient.listForOwner({ ownerId: "" })).projects.map(
-				convertProjectProtoToModel
-			);
+			const projects = (await projectsClient.listForOwner({ ownerId: "" })).projects.map(convertProjectProtoToModel);
 
 			return { data: projects, error: undefined };
 		} catch (error) {
@@ -86,10 +84,7 @@ export class ProjectsService {
 		}
 	}
 
-	static async setResources(
-		projectId: string,
-		resources: Record<string, Uint8Array>
-	): Promise<ServiceResponse<SetResourcesResponse>> {
+	static async setResources(projectId: string, resources: Record<string, Uint8Array>): Promise<ServiceResponse<SetResourcesResponse>> {
 		try {
 			await projectsClient.setResources({
 				projectId,
@@ -112,20 +107,14 @@ export class ProjectsService {
 			});
 			const { buildId, error } = await projectsClient.build({ projectId });
 			if (error) {
-				LoggerService.error(
-					`${namespaces.projectService} - Build: `,
-					convertErrorProtoToModel(error.value, projectId).message
-				);
+				LoggerService.error(`${namespaces.projectService} - Build: `, convertErrorProtoToModel(error.value, projectId).message);
 
 				return { data: undefined, error };
 			}
 
 			return { data: buildId, error: undefined };
 		} catch (error) {
-			LoggerService.error(
-				namespaces.projectService,
-				i18n.t("buildProjectError", { error: (error as Error).message, ns: "services", projectId })
-			);
+			LoggerService.error(namespaces.projectService, i18n.t("buildProjectError", { error: (error as Error).message, ns: "services", projectId }));
 
 			return { data: undefined, error };
 		}

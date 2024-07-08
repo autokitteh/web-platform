@@ -20,7 +20,7 @@
 		"tsc": "tsc",
 		"type-check": "tsc --pretty --noEmit",
 		"check-format:staged": "prettier . --check",
-		"fixed-format:staged": "prettier . --write",
+		"fix-format:staged": "prettier . --write",
 		"validate-env": "node ./validateEnv"
 	},
 	"dependencies": {

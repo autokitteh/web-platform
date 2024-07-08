@@ -18,13 +18,7 @@ import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@compon
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
-export const DefaultTriggerForm = ({
-	formId,
-	setIsSaving,
-}: {
-	formId: string;
-	setIsSaving: (event: boolean) => void;
-}) => {
+export const DefaultTriggerForm = ({ formId, setIsSaving }: { formId: string; setIsSaving: (event: boolean) => void }) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { resources } = useProjectStore();
@@ -61,10 +55,7 @@ export const DefaultTriggerForm = ({
 				message: tErrors("connectionsFetchError"),
 				type: "error",
 			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
-			);
+			LoggerService.error(namespaces.triggerService, tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId }));
 		} finally {
 			setIsLoading(false);
 		}
@@ -115,10 +106,7 @@ export const DefaultTriggerForm = ({
 				message: tErrors("triggerNotCreated"),
 				type: "error",
 			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("triggerNotCreatedExtended", { error: (error as Error).message, projectId })
-			);
+			LoggerService.error(namespaces.triggerService, tErrors("triggerNotCreatedExtended", { error: (error as Error).message, projectId }));
 
 			return;
 		}
@@ -314,11 +302,7 @@ export const DefaultTriggerForm = ({
 						: null}
 				</div>
 
-				<Button
-					className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-300 hover:text-white"
-					onClick={handleAddNewData}
-					type="button"
-				>
+				<Button className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-300 hover:text-white" onClick={handleAddNewData} type="button">
 					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 					{t("buttonAddNewData")}

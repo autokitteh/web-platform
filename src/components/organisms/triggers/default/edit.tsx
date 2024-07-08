@@ -59,10 +59,7 @@ export const DefaultEditTrigger = () => {
 				message: tErrors("connectionsFetchError"),
 				type: "error",
 			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
-			);
+			LoggerService.error(namespaces.triggerService, tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId }));
 		} finally {
 			setIsLoadingData(false);
 		}
@@ -207,18 +204,9 @@ export const DefaultEditTrigger = () => {
 		<Loader isCenter size="xl" />
 	) : (
 		<div className="min-w-80">
-			<TabFormHeader
-				className="mb-11"
-				form={TriggerFormIds.modifyDefaultForm}
-				isLoading={isSaving}
-				title={t("modifyTrigger")}
-			/>
+			<TabFormHeader className="mb-11" form={TriggerFormIds.modifyDefaultForm} isLoading={isSaving} title={t("modifyTrigger")} />
 
-			<form
-				className="flex items-start gap-10"
-				id={TriggerFormIds.modifyDefaultForm}
-				onSubmit={handleSubmit(onSubmit)}
-			>
+			<form className="flex items-start gap-10" id={TriggerFormIds.modifyDefaultForm} onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex w-full flex-col gap-6">
 					<div className="relative">
 						<Input
@@ -340,9 +328,7 @@ export const DefaultEditTrigger = () => {
 													aria-label={t("placeholders.value")}
 													className="w-full"
 													defaultValue={value.string.v}
-													onChange={(event) =>
-														updateTriggerDataValue(key, event.target.value)
-													}
+													onChange={(event) => updateTriggerDataValue(key, event.target.value)}
 													placeholder={t("placeholders.value")}
 												/>
 											</div>
@@ -359,10 +345,7 @@ export const DefaultEditTrigger = () => {
 								: null}
 						</div>
 
-						<Button
-							className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-300 hover:text-white"
-							onClick={handleAddNewData}
-						>
+						<Button className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-300 hover:text-white" onClick={handleAddNewData}>
 							<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 							{t("buttonAddNewData")}
