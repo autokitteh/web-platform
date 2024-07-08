@@ -39,13 +39,13 @@ export const Sidebar = () => {
 		<Suspense fallback={<Loader isCenter size="lg" />}>
 			<div className="relative w-main-nav-sidebar">
 				<div
-					className="absolute flex h-full items-start left-0 top-0 z-50"
+					className="absolute left-0 top-0 z-50 flex h-full items-start"
 					onMouseEnter={() => setIsOpen(true)}
 					onMouseLeave={handleMouseLeave}
 				>
-					<div className="bg-white flex flex-col h-full justify-between p-4 pb-10 pt-6 z-10">
+					<div className="z-10 flex h-full flex-col justify-between bg-white p-4 pb-10 pt-6">
 						<div>
-							<Link className="flex gap-2.5 items-center ml-1" to="/">
+							<Link className="ml-1 flex items-center gap-2.5" to="/">
 								<IconLogo className="h-8 w-8" />
 
 								<AnimatePresence>
@@ -67,11 +67,11 @@ export const Sidebar = () => {
 						</div>
 
 						{isAuthEnabled ? (
-							<div className="flex flex-col gap-5 justify-end">
+							<div className="flex flex-col justify-end gap-5">
 								<Button className="hover:bg-transparent" href="#">
 									<img
 										alt="avatar"
-										className="h-8 rounded-full w-8"
+										className="h-8 w-8 rounded-full"
 										src="https://via.placeholder.com/30"
 									/>
 

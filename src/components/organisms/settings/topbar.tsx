@@ -12,8 +12,8 @@ export const SettingsTopbar = () => {
 	);
 
 	return (
-		<div className="bg-gray-800 flex gap-5 items-center justify-between pl-7 pr-3.5 py-3 rounded-b-xl">
-			<div className="flex font-fira-code gap-3 items-end relative text-gray-300">
+		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-800 py-3 pl-7 pr-3.5">
+			<div className="relative flex items-end gap-3 font-fira-code text-gray-300">
 				<span className={styleInput}>{t("title")}</span>
 			</div>
 		</div>

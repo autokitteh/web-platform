@@ -102,10 +102,10 @@ export const ConnectionsTable = () => {
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 
 				<Button
-					className="capitalize font-semibold gap-1 group hover:text-white p-0 text-gray-300 w-auto"
+					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white"
 					onClick={() => navigate("add")}
 				>
-					<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}
 				</Button>
@@ -114,45 +114,45 @@ export const ConnectionsTable = () => {
 				<Table className="mt-3">
 					<THead>
 						<Tr>
-							<Th className="cursor-pointer font-normal group" onClick={() => requestSort("name")}>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("name")}>
 								{t("table.columns.name")}
 
 								<SortButton
-									className="group-hover:opacity-100 opacity-0"
+									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
 							<Th
-								className="cursor-pointer font-normal group"
+								className="group cursor-pointer font-normal"
 								onClick={() => requestSort("integrationName")}
 							>
 								{t("table.columns.app")}
 
 								<SortButton
-									className="group-hover:opacity-100 opacity-0"
+									className="opacity-0 group-hover:opacity-100"
 									isActive={"integrationName" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
 							<Th
-								className="cursor-pointer font-normal group max-w-32"
+								className="group max-w-32 cursor-pointer font-normal"
 								onClick={() => requestSort("status")}
 							>
 								{t("table.columns.status")}
 
 								<SortButton
-									className="group-hover:opacity-100 opacity-0"
+									className="opacity-0 group-hover:opacity-100"
 									isActive={"status" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
-							<Th className="cursor-pointer font-normal group">{t("table.columns.information")}</Th>
+							<Th className="group cursor-pointer font-normal">{t("table.columns.information")}</Th>
 
-							<Th className="font-normal max-w-20 text-right">{t("table.columns.actions")}</Th>
+							<Th className="max-w-20 text-right font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
@@ -178,7 +178,7 @@ export const ConnectionsTable = () => {
 												onClick={() => handleConnectionInitClick(initUrl)}
 												title={t("table.buttons.titleInitConnection")}
 											>
-												<LinkIcon className="fill-white h-4 w-4" />
+												<LinkIcon className="h-4 w-4 fill-white" />
 											</IconButton>
 
 											<IconButton
@@ -186,7 +186,7 @@ export const ConnectionsTable = () => {
 												onClick={() => handleOpenModalDeleteConnection(connectionId)}
 												title={t("table.buttons.titleRemoveConnection")}
 											>
-												<TrashIcon className="fill-white h-3 w-3" />
+												<TrashIcon className="h-3 w-3 fill-white" />
 											</IconButton>
 										</div>
 									</Td>
@@ -196,7 +196,7 @@ export const ConnectionsTable = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="font-semibold mt-10 text-center text-gray-300 text-xl">{t("titleNoAvailable")}</div>
+				<div className="mt-10 text-center text-xl font-semibold text-gray-300">{t("titleNoAvailable")}</div>
 			)}
 			{connectionId ? (
 				<DeleteConnectionModal

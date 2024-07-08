@@ -200,13 +200,13 @@ export const SessionsTable = () => {
 	}, [sessionStats]);
 
 	return (
-		<div className="flex h-full py-2.5 w-full">
+		<div className="flex h-full w-full py-2.5">
 			<Frame className={frameClass}>
-				<div className="flex gap-2.5 items-center justify-between">
-					<div className="flex flex-wrap gap-2.5 items-center">
+				<div className="flex items-center justify-between gap-2.5">
+					<div className="flex flex-wrap items-center gap-2.5">
 						<IconButton
 							ariaLabel={t("ariaLabelReturnBack")}
-							className="bg-gray-600 gap-2 hover:bg-black min-w-20 text-sm text-white"
+							className="min-w-20 gap-2 bg-gray-600 text-sm text-white hover:bg-black"
 							onClick={() => navigate(`/projects/${projectId}/deployments`)}
 						>
 							<ArrowLeft className="h-4" />
@@ -220,7 +220,7 @@ export const SessionsTable = () => {
 
 						{tailState.display ? (
 							<IconButton
-								className="cursor-pointer h-5 ml-3 p-0 w-5"
+								className="ml-3 h-5 w-5 cursor-pointer p-0"
 								onClick={() => setTailState((prevState) => ({ ...prevState, live: !prevState.live }))}
 								title={tailState.live ? t("pauseLiveTail") : t("resumeLiveTail")}
 							>
@@ -233,20 +233,20 @@ export const SessionsTable = () => {
 				</div>
 
 				{sessions.length ? (
-					<Table className="flex-1 mt-4 overflow-hidden">
+					<Table className="mt-4 flex-1 overflow-hidden">
 						<THead>
 							<Tr>
-								<Th className="cursor-pointer font-normal group">
+								<Th className="group cursor-pointer font-normal">
 									{t("table.columns.activationTime")}
 								</Th>
 
-								<Th className="cursor-pointer font-normal group">{t("table.columns.status")}</Th>
+								<Th className="group cursor-pointer font-normal">{t("table.columns.status")}</Th>
 
-								<Th className="border-0 cursor-pointer font-normal group">
+								<Th className="group cursor-pointer border-0 font-normal">
 									{t("table.columns.sessionId")}
 								</Th>
 
-								<Th className="border-0 font-normal max-w-20 mr-1.5">{t("table.columns.actions")}</Th>
+								<Th className="mr-1.5 max-w-20 border-0 font-normal">{t("table.columns.actions")}</Th>
 							</Tr>
 						</THead>
 
@@ -260,16 +260,16 @@ export const SessionsTable = () => {
 						</TBody>
 					</Table>
 				) : (
-					<div className="font-semibold mt-10 text-center text-xl">{t("noSessions")}</div>
+					<div className="mt-10 text-center text-xl font-semibold">{t("noSessions")}</div>
 				)}
 			</Frame>
 
 			{sessionId ? (
 				<Outlet />
 			) : (
-				<Frame className="bg-gray-700 pt-20 rounded-l-none transition w-3/5">
-					<div className="flex flex-col items-center mt-20">
-						<p className="font-bold mb-8 text-gray-400 text-lg">{t("noSelectedSession")}</p>
+				<Frame className="w-3/5 rounded-l-none bg-gray-700 pt-20 transition">
+					<div className="mt-20 flex flex-col items-center">
+						<p className="mb-8 text-lg font-bold text-gray-400">{t("noSelectedSession")}</p>
 
 						<CatImage className="border-b border-gray-400 fill-gray-400" />
 					</div>

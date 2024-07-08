@@ -147,10 +147,10 @@ export const CodeTable = () => {
 	return isLoading ? (
 		<Loader isCenter size="xl" />
 	) : (
-		<div className="flex flex-col h-full">
-			<div className="flex gap-6 justify-end mb-3">
+		<div className="flex h-full flex-col">
+			<div className="mb-3 flex justify-end gap-6">
 				{!isEmpty(sortedResources) ? (
-					<label className="cursor-pointer flex font-semibold gap-1 group hover:text-white p-0 text-gray-300">
+					<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-gray-300 hover:text-white">
 						<input
 							accept={allowedExtensions}
 							className="hidden"
@@ -159,7 +159,7 @@ export const CodeTable = () => {
 							type="file"
 						/>
 
-						<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+						<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 						{t("buttons.addNewFile")}
 					</label>
@@ -167,10 +167,10 @@ export const CodeTable = () => {
 
 				<Button
 					ariaLabel={t("buttons.createNewFile")}
-					className="font-semibold gap-1 group hover:text-white p-0 text-gray-300 w-auto"
+					className="group w-auto gap-1 p-0 font-semibold text-gray-300 hover:text-white"
 					onClick={() => openModal(ModalName.addCodeAssets)}
 				>
-					<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.createNewFile")}
 				</Button>
@@ -187,7 +187,7 @@ export const CodeTable = () => {
 					<Table className="max-h-96">
 						<THead>
 							<Tr>
-								<Th className="border-r-0 cursor-pointer font-normal group">
+								<Th className="group cursor-pointer border-r-0 font-normal">
 									{t("table.columns.name")}
 								</Th>
 							</Tr>
@@ -205,7 +205,7 @@ export const CodeTable = () => {
 
 									<Td className="max-w-12 pr-0">
 										<IconButton onClick={() => openModal(ModalName.deleteFile, name)}>
-											<TrashIcon className="fill-white h-3 w-3" />
+											<TrashIcon className="h-3 w-3 fill-white" />
 										</IconButton>
 									</Td>
 								</Tr>
@@ -215,10 +215,10 @@ export const CodeTable = () => {
 				) : null}
 
 				<div className={styleFrame}>
-					<div className="flex flex-col gap-2.5 items-center">
+					<div className="flex flex-col items-center gap-2.5">
 						<label
 							className={cn(
-								"group flex flex-col items-center gap-2.5 cursor-pointer",
+								"group flex cursor-pointer flex-col items-center gap-2.5",
 								"text-center text-lg font-bold uppercase text-white"
 							)}
 						>

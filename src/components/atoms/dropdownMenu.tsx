@@ -47,9 +47,9 @@ export const DropdownMenu = ({
 					style={style}
 					variants={dropdownVariants}
 				>
-					<div className="-top-2 absolute h-2 left-0 w-full" />
+					<div className="absolute -top-2 left-0 h-2 w-full" />
 
-					<div className="-bottom-2 absolute h-2 left-0 w-full" />
+					<div className="absolute -bottom-2 left-0 h-2 w-full" />
 
 					{children}
 				</motion.div>

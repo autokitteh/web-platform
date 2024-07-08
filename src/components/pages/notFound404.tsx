@@ -11,12 +11,12 @@ export const NotFound404 = () => {
 	const { t } = useTranslation(["notFound404"]);
 
 	return (
-		<div className="flex flex-col h-full items-center justify-center w-full">
+		<div className="flex h-full w-full flex-col items-center justify-center">
 			<Error404 className="w-1/3" />
 
-			<div className="font-fira-code mt-16 text-black text-lg">{t("pageNotFound404")}</div>
+			<div className="mt-16 font-fira-code text-lg text-black">{t("pageNotFound404")}</div>
 
-			<Link className="font-bold font-fira-code mt-4 text-black text-lg" to={homepageURL}>
+			<Link className="mt-4 font-fira-code text-lg font-bold text-black" to={homepageURL}>
 				{t("goToHomepage")}
 			</Link>
 		</div>

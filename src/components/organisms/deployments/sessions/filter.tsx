@@ -54,7 +54,7 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 	);
 
 	return (
-		<div className="flex flex-wrap gap-x-3 gap-y-2 items-center">
+		<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
 			<Button className={buttonClass()} onClick={() => handleButtonClick()}>
 				{t("all")} ({sessionCounts.total})
 			</Button>

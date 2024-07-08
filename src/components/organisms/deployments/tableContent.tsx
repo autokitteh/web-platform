@@ -70,49 +70,49 @@ export const DeploymentsTableContent = ({
 			<Table className="mt-4">
 				<THead>
 					<Tr>
-						<Th className="cursor-pointer font-normal group" onClick={() => requestSort("createdAt")}>
+						<Th className="group cursor-pointer font-normal" onClick={() => requestSort("createdAt")}>
 							{t("table.columns.deploymentTime")}
 
 							<SortButton
-								className="group-hover:opacity-100 opacity-0"
+								className="opacity-0 group-hover:opacity-100"
 								isActive={"createdAt" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
 						</Th>
 
-						<Th className="cursor-pointer font-normal group">{t("table.columns.sessions")}</Th>
+						<Th className="group cursor-pointer font-normal">{t("table.columns.sessions")}</Th>
 
-						<Th className="cursor-pointer font-normal group" onClick={() => requestSort("buildId")}>
+						<Th className="group cursor-pointer font-normal" onClick={() => requestSort("buildId")}>
 							{t("table.columns.buildId")}
 
 							<SortButton
-								className="group-hover:opacity-100 opacity-0"
+								className="opacity-0 group-hover:opacity-100"
 								isActive={"buildId" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
 						</Th>
 
 						<Th
-							className="border-r-0 cursor-pointer font-normal group"
+							className="group cursor-pointer border-r-0 font-normal"
 							onClick={() => requestSort("state")}
 						>
 							{t("table.columns.status")}
 
 							<SortButton
-								className="group-hover:opacity-100 opacity-0"
+								className="opacity-0 group-hover:opacity-100"
 								isActive={"state" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
 						</Th>
 
-						<Th className="font-normal max-w-20 text-right">Actions</Th>
+						<Th className="max-w-20 text-right font-normal">Actions</Th>
 					</Tr>
 				</THead>
 
 				<TBody className="bg-gray-700">
 					{sortedDeployments.map(({ buildId, createdAt, deploymentId, sessionStats, state }) => (
 						<Tr
-							className="cursor-pointer group"
+							className="group cursor-pointer"
 							key={deploymentId}
 							onClick={() => navigate(`${deploymentId}/sessions`)}
 						>
@@ -139,7 +139,7 @@ export const DeploymentsTableContent = ({
 											}
 											title={t("ariaDeactivateDeploy")}
 										>
-											<ActionStoppedIcon className="group-hover:fill-white h-4 transition w-4" />
+											<ActionStoppedIcon className="h-4 w-4 transition group-hover:fill-white" />
 										</IconButton>
 									) : (
 										<IconButton
@@ -147,7 +147,7 @@ export const DeploymentsTableContent = ({
 											className="p-1"
 											onClick={(event) => handleDeploymentAction(deploymentId, "activate", event)}
 										>
-											<ActionActiveIcon className="group-hover:fill-green-accent h-4 transition w-4" />
+											<ActionActiveIcon className="h-4 w-4 transition group-hover:fill-green-accent" />
 										</IconButton>
 									)}
 
@@ -157,7 +157,7 @@ export const DeploymentsTableContent = ({
 										onClick={(event) => showDeleteModal(event, deploymentId)}
 										title={t("ariaDeleteDeploy")}
 									>
-										<TrashIcon className="fill-white h-3 w-3" />
+										<TrashIcon className="h-3 w-3 fill-white" />
 									</IconButton>
 								</div>
 							</Td>

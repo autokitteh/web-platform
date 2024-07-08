@@ -162,19 +162,19 @@ export const SessionTableEditorFrame = () => {
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
 	return (
-		<Frame className="ml-2.5 pt-20 transition w-3/5">
+		<Frame className="ml-2.5 w-3/5 pt-20 transition">
 			{isLoading ? (
 				<Loader isCenter size="xl" />
 			) : (
 				<>
-					<div className="-mt-10 flex font-bold items-center justify-between">
+					<div className="-mt-10 flex items-center justify-between font-bold">
 						{t("output")}:{/* eslint-disable @liferay/empty-line-between-elements */}
 						<IconButton
 							ariaLabel={t("buttons.ariaCloseEditor")}
-							className="bg-gray-700 h-7 p-0.5 w-7"
+							className="h-7 w-7 bg-gray-700 p-0.5"
 							onClick={closeEditor}
 						>
-							<Close className="fill-white h-3 transition w-3" />
+							<Close className="h-3 w-3 fill-white transition" />
 						</IconButton>
 					</div>
 					{cachedSessionLogs?.length ? (
@@ -197,15 +197,15 @@ export const SessionTableEditorFrame = () => {
 							value={sessionLogsAsStringForOutput}
 						/>
 					) : (
-						<div className="flex flex-col items-center mt-20">
-							<p className="font-bold mb-8 text-gray-400 text-lg">{t("noData")}</p>
+						<div className="mt-20 flex flex-col items-center">
+							<p className="mb-8 text-lg font-bold text-gray-400">{t("noData")}</p>
 
 							<CatImage className="border-b border-gray-400 fill-gray-400" />
 						</div>
 					)}
 
 					{isScrolledDown ? (
-						<div className="-translate-x-1/2 absolute bottom-2 left-1/2 m-auto transform">
+						<div className="absolute bottom-2 left-1/2 m-auto -translate-x-1/2 transform">
 							<Button className="justify-center" onClick={scrollToTop} variant="filled">
 								{t("buttons.scrollToTop")}
 							</Button>

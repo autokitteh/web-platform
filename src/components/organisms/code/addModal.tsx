@@ -61,7 +61,7 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	return (
 		<Modal className="w-550" name={ModalName.addCodeAssets}>
 			<div className="mx-6">
-				<h3 className="font-bold mb-5 text-xl">{t("addCodeAssets.title", { ns: "modals" })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("addCodeAssets.title", { ns: "modals" })}</h3>
 
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<div className="flex gap-2">
@@ -78,7 +78,7 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 							<ErrorMessage className="relative">{errors.name?.message as string}</ErrorMessage>
 						</div>
 
-						<div className="relative shrink-0 w-36">
+						<div className="relative w-36 shrink-0">
 							<Controller
 								control={control}
 								name="extension"
@@ -100,7 +100,7 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 						</div>
 					</div>
 
-					<Button className="font-bold justify-center mt-3 py-2.5 rounded-lg" type="submit" variant="filled">
+					<Button className="mt-3 justify-center rounded-lg py-2.5 font-bold" type="submit" variant="filled">
 						{t("create", { ns: "buttons" })}
 					</Button>
 				</form>

@@ -12,17 +12,17 @@ export const Toggle = ({ checked, label, onChange }: ToggleProps) => {
 	);
 
 	return (
-		<label className="cursor-pointer inline-flex items-center">
+		<label className="inline-flex cursor-pointer items-center">
 			<input
 				checked={checked}
-				className="hidden peer"
+				className="peer hidden"
 				onChange={(event) => onChange(event.target.checked)}
 				type="checkbox"
 			/>
 
 			<div className={baseStyle} />
 
-			{label ? <span className="font-medium ms-3 text-sm text-white">{label}</span> : null}
+			{label ? <span className="ms-3 text-sm font-medium text-white">{label}</span> : null}
 		</label>
 	);
 };

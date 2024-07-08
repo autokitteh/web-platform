@@ -95,10 +95,10 @@ export const VariablesTable = () => {
 
 				<Button
 					ariaLabel={t("buttons.addNew")}
-					className="capitalize font-semibold gap-1 group hover:text-white p-0 text-gray-300 w-auto"
+					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white"
 					href="add"
 				>
-					<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}
 				</Button>
@@ -107,29 +107,29 @@ export const VariablesTable = () => {
 				<Table className="mt-3">
 					<THead>
 						<Tr>
-							<Th className="cursor-pointer font-normal group" onClick={() => requestSort("name")}>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("name")}>
 								{t("table.columns.name")}
 
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByName")}
-									className="group-hover:opacity-100 opacity-0"
+									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
-							<Th className="cursor-pointer font-normal group" onClick={() => requestSort("value")}>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("value")}>
 								{t("table.columns.value")}
 
 								<SortButton
 									ariaLabel={t("table.buttons.ariaSortByValue")}
-									className="group-hover:opacity-100 opacity-0"
+									className="opacity-0 group-hover:opacity-100"
 									isActive={"value" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
-							<Th className="font-normal max-w-20 text-right">{t("table.columns.actions")}</Th>
+							<Th className="max-w-20 text-right font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
@@ -142,8 +142,8 @@ export const VariablesTable = () => {
 									{!isSecret ? (
 										value
 									) : (
-										<div className="flex gap-2 items-center leading-none">
-											<LockSolid className="fill-white h-3 w-3" />
+										<div className="flex items-center gap-2 leading-none">
+											<LockSolid className="h-3 w-3 fill-white" />
 
 											<span className="pt-2">**********</span>
 										</div>
@@ -156,14 +156,14 @@ export const VariablesTable = () => {
 											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
 											onClick={() => navigate(`edit/${envId}/${name}`)}
 										>
-											<EditIcon className="fill-white h-3 w-3" />
+											<EditIcon className="h-3 w-3 fill-white" />
 										</IconButton>
 
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
 											onClick={() => showDeleteModal(name, value, scopeId)}
 										>
-											<TrashIcon className="fill-white h-3 w-3" />
+											<TrashIcon className="h-3 w-3 fill-white" />
 										</IconButton>
 									</div>
 								</Td>
@@ -172,7 +172,7 @@ export const VariablesTable = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="font-semibold mt-10 text-center text-gray-300 text-xl"> {t("titleNoAvailable")}</div>
+				<div className="mt-10 text-center text-xl font-semibold text-gray-300"> {t("titleNoAvailable")}</div>
 			)}
 
 			<DeleteVariableModal onDelete={handleDeleteVariable} variable={deleteVariable!} />

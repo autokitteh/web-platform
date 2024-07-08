@@ -16,12 +16,12 @@ export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHead
 	const baseStyle = cn("flex justify-between bg-gray-700 py-2.5", className);
 
 	return (
-		<div className="-my-2.5 -top-10 sticky z-20">
+		<div className="sticky -top-10 z-20 -my-2.5">
 			<div className={baseStyle}>
-				<div className="flex gap-1 items-center">
+				<div className="flex items-center gap-1">
 					<IconButton
 						ariaLabel={t("ariaLabelReturnBack")}
-						className="h-8 hover:bg-black p-0 w-8"
+						className="h-8 w-8 p-0 hover:bg-black"
 						onClick={() => navigate(-1)}
 					>
 						<ArrowLeft />
@@ -30,10 +30,10 @@ export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHead
 					<p className="text-base text-gray-300">{title}</p>
 				</div>
 
-				<div className="flex gap-6 items-center">
+				<div className="flex items-center gap-6">
 					<Button
 						ariaLabel={t("cancel")}
-						className="font-semibold hover:text-white p-0 text-gray-300"
+						className="p-0 font-semibold text-gray-300 hover:text-white"
 						onClick={() => navigate(-1)}
 					>
 						{t("cancel")}
@@ -41,7 +41,7 @@ export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHead
 
 					<Button
 						ariaLabel={t("save")}
-						className="border-white font-semibold hover:bg-black px-4 py-2 text-white"
+						className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
 						disabled={isLoading}
 						form={form}
 						type="submit"

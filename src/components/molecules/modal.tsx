@@ -51,10 +51,10 @@ export const Modal = ({ children, className, name }: ModalProps) => {
 						variants={modalVariants}
 					>
 						<IconButton
-							className="bg-gray-200 group h-default-icon ml-auto p-0 w-default-icon"
+							className="group ml-auto h-default-icon w-default-icon bg-gray-200 p-0"
 							onClick={() => onClose(name)}
 						>
-							<Close className="fill-black group-hover:fill-white h-3 transition w-3" />
+							<Close className="h-3 w-3 fill-black transition group-hover:fill-white" />
 						</IconButton>
 
 						{children}

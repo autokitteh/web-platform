@@ -148,8 +148,8 @@ export const Topbar = () => {
 	};
 
 	return (
-		<div className="bg-gray-800 flex gap-5 items-center justify-between pl-7 pr-3.5 py-3 rounded-b-xl">
-			<div className="flex font-fira-code gap-3 items-end relative text-gray-300">
+		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-800 py-3 pl-7 pr-3.5">
+			<div className="relative flex items-end gap-3 font-fira-code text-gray-300">
 				<span
 					className={inputClass}
 					contentEditable={true}
@@ -168,13 +168,13 @@ export const Topbar = () => {
 					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
 				</ErrorMessage>
 
-				<span className="font-semibold leading-tight text-sm">{project?.id}</span>
+				<span className="text-sm font-semibold leading-tight">{project?.id}</span>
 			</div>
 
-			<div className="flex gap-3 items-stretch">
+			<div className="flex items-stretch gap-3">
 				<Button
 					ariaLabel={t("topbar.buttons.ariaBuildProject")}
-					className="font-semibold hover:bg-gray-700 px-4 py-2 text-white whitespace-nowrap"
+					className="whitespace-nowrap px-4 py-2 font-semibold text-white hover:bg-gray-700"
 					disabled={loadingButton[TopbarButton.build]}
 					onClick={build}
 					variant="outline"
@@ -186,7 +186,7 @@ export const Topbar = () => {
 
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
-					className="font-semibold hover:bg-gray-700 px-4 py-2 text-white whitespace-nowrap"
+					className="whitespace-nowrap px-4 py-2 font-semibold text-white hover:bg-gray-700"
 					disabled={loadingButton[TopbarButton.deploy]}
 					onClick={deploy}
 					variant="outline"
@@ -198,7 +198,7 @@ export const Topbar = () => {
 
 				<Button
 					ariaLabel={t("topbar.buttons.ariaStats")}
-					className="font-semibold hover:bg-gray-700 px-4 py-2 text-white whitespace-nowrap"
+					className="whitespace-nowrap px-4 py-2 font-semibold text-white hover:bg-gray-700"
 					href={`/projects/${projectId}/deployments`}
 					variant="outline"
 				>

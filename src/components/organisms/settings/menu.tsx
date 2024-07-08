@@ -10,11 +10,11 @@ export const SettingsMenu = () => {
 	const { t } = useTranslation("settings");
 
 	return (
-		<div className="bg-black flex flex-1 flex-col h-full pl-6 pt-10 rounded-bl-lg rounded-tl-lg text-lg">
+		<div className="flex h-full flex-1 flex-col rounded-bl-lg rounded-tl-lg bg-black pl-6 pt-10 text-lg">
 			{menuItems.map((item, index) => (
-				<div className="cursor-pointer flex group items-center mb-4" key={index} role="link">
-					<div className="bg-gray-500 mr-2 p-2 rounded-full">
-						<IconSvg className="fill-white group-hover:fill-green-accent h-3 w-3" src={item.icon} />
+				<div className="group mb-4 flex cursor-pointer items-center" key={index} role="link">
+					<div className="mr-2 rounded-full bg-gray-500 p-2">
+						<IconSvg className="h-3 w-3 fill-white group-hover:fill-green-accent" src={item.icon} />
 					</div>
 
 					<div>{t(item.label)}</div>

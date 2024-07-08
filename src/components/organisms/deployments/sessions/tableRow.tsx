@@ -45,7 +45,7 @@ export const SessionsTableRow = memo(
 
 				<Td className={sessionLastTdClass}>
 					<IconButton onClick={handleDeleteClick}>
-						<TrashIcon className="fill-white h-3 w-3" />
+						<TrashIcon className="h-3 w-3 fill-white" />
 					</IconButton>
 				</Td>
 			</Tr>

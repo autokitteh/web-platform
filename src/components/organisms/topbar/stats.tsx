@@ -48,21 +48,21 @@ export const StatsTopbar = () => {
 	}, [projectId]);
 
 	return (
-		<div className="bg-gray-800 flex gap-5 items-center justify-between pl-7 pr-3.5 py-3 rounded-b-xl">
-			<div className="flex font-fira-code gap-3 items-end relative text-gray-300">
-				<span className="font-bold leading-6 text-xl">{project?.name}</span>
+		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-800 py-3 pl-7 pr-3.5">
+			<div className="relative flex items-end gap-3 font-fira-code text-gray-300">
+				<span className="text-xl font-bold leading-6">{project?.name}</span>
 
-				<span className="font-semibold leading-tight text-sm">{project?.id}</span>
+				<span className="text-sm font-semibold leading-tight">{project?.id}</span>
 			</div>
 
-			<div className="flex gap-3 items-stretch">
+			<div className="flex items-stretch gap-3">
 				<Button
 					ariaLabel={t("topbar.buttons.goToProject")}
-					className="font-semibold hover:bg-gray-700 px-4 py-2 text-white"
+					className="px-4 py-2 font-semibold text-white hover:bg-gray-700"
 					href={`/projects/${projectId}`}
 					variant="outline"
 				>
-					<IconSvg className="fill-white h-6 w-6" src={ProjectsIcon} />
+					<IconSvg className="h-6 w-6 fill-white" src={ProjectsIcon} />
 
 					{t("topbar.buttons.goToProject")}
 				</Button>

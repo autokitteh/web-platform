@@ -17,15 +17,15 @@ export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 	return (
 		<Modal name={ModalName.deleteFile}>
 			<div className="mx-6">
-				<h3 className="font-bold mb-5 text-xl">{t("title", { name: fileName })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title", { name: fileName })}</h3>
 
 				<p>{t("line")}</p>
 			</div>
 
-			<div className="flex gap-1 justify-end mt-14">
+			<div className="mt-14 flex justify-end gap-1">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="font-semibold hover:text-white px-4 py-3 w-auto"
+					className="w-auto px-4 py-3 font-semibold hover:text-white"
 					onClick={() => closeModal(ModalName.deleteFile)}
 				>
 					{t("cancelButton")}
@@ -33,7 +33,7 @@ export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="bg-gray-700 font-semibold px-4 py-3 w-auto"
+					className="w-auto bg-gray-700 px-4 py-3 font-semibold"
 					onClick={onDelete}
 					variant="filled"
 				>

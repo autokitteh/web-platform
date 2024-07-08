@@ -54,7 +54,7 @@ export const DeploymentsTable = () => {
 	return isLoadingDeployments ? (
 		<Loader isCenter size="xl" />
 	) : (
-		<div className="flex flex-col w-full">
+		<div className="flex w-full flex-col">
 			<div className="flex items-center justify-between">
 				<h1 className="text-base text-black">
 					{t("tableTitle")} ({deployments.length})
@@ -62,7 +62,7 @@ export const DeploymentsTable = () => {
 			</div>
 
 			{!deployments.length ? (
-				<div className="font-semibold mt-10 text-black text-center text-xl">{t("noDeployments")}</div>
+				<div className="mt-10 text-center text-xl font-semibold text-black">{t("noDeployments")}</div>
 			) : (
 				<DeploymentsTableContent deployments={deployments} updateDeployments={fetchDeployments} />
 			)}

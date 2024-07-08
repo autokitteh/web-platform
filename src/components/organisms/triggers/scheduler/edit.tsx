@@ -159,11 +159,11 @@ export const SchedulerEditTrigger = () => {
 			/>
 
 			<form
-				className="flex gap-10 items-start"
+				className="flex items-start gap-10"
 				id={TriggerFormIds.modifySchedulerForm}
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<div className="flex flex-col gap-6 w-full">
+				<div className="flex w-full flex-col gap-6">
 					<div className="relative">
 						<Input
 							{...register("name")}
@@ -233,17 +233,17 @@ export const SchedulerEditTrigger = () => {
 
 			<p className="mt-6 text-lg">{t("information")}:</p>
 
-			<div className="flex flex-col gap-2 items-start mt-2">
+			<div className="mt-2 flex flex-col items-start gap-2">
 				{infoCronExpressionsLinks.map(({ text, url }, index) => (
 					<Link
-						className="gap-2.5 group hover:text-green-accent inline-flex items-center ml-2"
+						className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
 						key={index}
 						target="_blank"
 						to={url}
 					>
 						{text}
 
-						<ExternalLinkIcon className="duration-200 fill-white group-hover:fill-green-accent h-3.5 w-3.5" />
+						<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
 					</Link>
 				))}
 			</div>

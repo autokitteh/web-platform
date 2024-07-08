@@ -115,10 +115,10 @@ export const Toast = () => {
 							</div>
 
 							<IconButton
-								className="bg-gray-600 group h-default-icon ml-auto p-0 w-default-icon"
+								className="group ml-auto h-default-icon w-default-icon bg-gray-600 p-0"
 								onClick={() => removeToast(id)}
 							>
-								<Close className="fill-white h-3 transition w-3" />
+								<Close className="h-3 w-3 fill-white transition" />
 							</IconButton>
 						</div>
 					</motion.div>

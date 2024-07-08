@@ -12,7 +12,7 @@ export const AppLayout = ({
 	displayStatsTopbar?: boolean;
 }) => {
 	return (
-		<div className="h-screen pr-5 w-screen">
+		<div className="h-screen w-screen pr-5">
 			<div className="flex h-full">
 				<Sidebar />
 
@@ -22,7 +22,7 @@ export const AppLayout = ({
 					{displayStatsTopbar ? <StatsTopbar /> : null}
 
 					<div className="h-full">
-						<div className="flex gap-6 h-full">
+						<div className="flex h-full gap-6">
 							<Outlet />
 						</div>
 					</div>

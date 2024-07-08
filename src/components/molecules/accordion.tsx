@@ -20,13 +20,13 @@ export const Accordion = ({
 	return (
 		<div className={className}>
 			<Button
-				className="cursor-pointer flex gap-2.5 group hover:bg-transparent items-center justify-between p-0 text-base text-white"
+				className="group flex cursor-pointer items-center justify-between gap-2.5 p-0 text-base text-white hover:bg-transparent"
 				onClick={() => setIsOpen(!isOpen)}
 			>
 				{!isOpen ? (
-					<PlusAccordionIcon className="fill-gray-300 group-hover:fill-green-accent transition" />
+					<PlusAccordionIcon className="fill-gray-300 transition group-hover:fill-green-accent" />
 				) : (
-					<MinusAccordionIcon className="fill-gray-300 group-hover:fill-green-accent transition" />
+					<MinusAccordionIcon className="fill-gray-300 transition group-hover:fill-green-accent" />
 				)}
 
 				{title}

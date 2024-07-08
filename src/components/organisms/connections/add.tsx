@@ -27,7 +27,7 @@ export const AddConnection = () => {
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" title={t("addNewConnection")} />
 
-			<div className="flex flex-col gap-6 w-5/6">
+			<div className="flex w-5/6 flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
 					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}

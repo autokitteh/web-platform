@@ -93,8 +93,8 @@ export const AddVariable = () => {
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
 
-				<div className="flex gap-2 items-center" title={tForm("isSecret")}>
-					<Toggle checked={isSecret} onChange={setIsSecret} /> <LockSolid className="fill-white h-4 w-4" />
+				<div className="flex items-center gap-2" title={tForm("isSecret")}>
+					<Toggle checked={isSecret} onChange={setIsSecret} /> <LockSolid className="h-4 w-4 fill-white" />
 				</div>
 			</form>
 		</div>

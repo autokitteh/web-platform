@@ -215,11 +215,11 @@ export const DefaultEditTrigger = () => {
 			/>
 
 			<form
-				className="flex gap-10 items-start"
+				className="flex items-start gap-10"
 				id={TriggerFormIds.modifyDefaultForm}
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<div className="flex flex-col gap-6 w-full">
+				<div className="flex w-full flex-col gap-6">
 					<div className="relative">
 						<Input
 							disabled
@@ -315,7 +315,7 @@ export const DefaultEditTrigger = () => {
 					</div>
 
 					<div>
-						<div className="flex gap-1 items-center text-base text-gray-300">
+						<div className="flex items-center gap-1 text-base text-gray-300">
 							{t("titleData")}
 
 							<div className="cursor-pointer" title={t("titleInfo")}>
@@ -323,11 +323,11 @@ export const DefaultEditTrigger = () => {
 							</div>
 						</div>
 
-						<div className="flex flex-col gap-2 mb-2">
+						<div className="mb-2 flex flex-col gap-2">
 							{triggerData
 								? Object.entries(triggerData).map(([key, value]) => (
 										<div className="align-center flex gap-1" key={key}>
-											<div className="flex gap-6 w-full">
+											<div className="flex w-full gap-6">
 												<Input
 													aria-label={t("placeholders.key")}
 													className="w-full"
@@ -349,10 +349,10 @@ export const DefaultEditTrigger = () => {
 
 											<IconButton
 												ariaLabel={t("ariaDeleteData", { name: key })}
-												className="bg-black-900 hover:bg-black self-center"
+												className="self-center bg-black-900 hover:bg-black"
 												onClick={() => handleDeleteData(key)}
 											>
-												<TrashIcon className="fill-white h-4 w-4" />
+												<TrashIcon className="h-4 w-4 fill-white" />
 											</IconButton>
 										</div>
 									))
@@ -360,10 +360,10 @@ export const DefaultEditTrigger = () => {
 						</div>
 
 						<Button
-							className="font-semibold gap-1 group hover:text-white ml-auto p-0 text-gray-300 w-auto"
+							className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-300 hover:text-white"
 							onClick={handleAddNewData}
 						>
-							<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+							<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 							{t("buttonAddNewData")}
 						</Button>

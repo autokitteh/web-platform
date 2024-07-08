@@ -44,7 +44,7 @@ export const Security = () => {
 
 	return (
 		<>
-			<Typography className="font-bold mb-4 text-settings-title" element="h1" size="large">
+			<Typography className="mb-4 text-settings-title font-bold" element="h1" size="large">
 				{tSettings("security.title")}
 			</Typography>
 			<div>
@@ -70,27 +70,27 @@ export const Security = () => {
 						<div className="flex w-full">
 							<Input
 								aria-label={t("copyInputAriaLabel")}
-								className="flex-1 hover:border-gray-700 rounded-3xl"
+								className="flex-1 rounded-3xl hover:border-gray-700"
 								disabled
 								value={token}
 							/>
 
 							<Button
 								aria-label={t("copyButton")}
-								className="bg-white border-black font-semibold hover:bg-gray-300 ml-4 px-3 rounded-md"
+								className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-300"
 								onClick={() => copyToClipboard(token)}
 								variant="outline"
 							>
-								<CopyIcon className="fill-black h-6 w-4.1" />
+								<CopyIcon className="w-4.1 h-6 fill-black" />
 							</Button>
 						</div>
 					) : (
-						<Button className="border-2 border-black flex" onClick={createToken} variant="light">
+						<Button className="flex border-2 border-black" onClick={createToken} variant="light">
 							<div className="flex items-center">
 								{!isLoading ? (
 									<IconSvg
 										alt="New Project"
-										className="after:h-2 after:w-2 before:h-2 before:w-2 w-4"
+										className="w-4 before:h-2 before:w-2 after:h-2 after:w-2"
 										src={NewProject}
 									/>
 								) : null}
@@ -98,7 +98,7 @@ export const Security = () => {
 								{isLoading ? <Loader size="sm" /> : null}
 							</div>
 
-							<div className="flex mr-1">{tSettings("security.creatTokenButton")}</div>
+							<div className="mr-1 flex">{tSettings("security.creatTokenButton")}</div>
 						</Button>
 					)}
 				</div>

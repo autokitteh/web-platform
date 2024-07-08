@@ -18,11 +18,11 @@ export const OutputTabs: React.FC = () => {
 	} as const;
 
 	return (
-		<div className="flex flex-col h-full pb-3">
+		<div className="flex h-full flex-col pb-3">
 			<div
 				className={
-					`static top-4 h-8 uppercase flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none ` +
-					`overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar`
+					`static top-4 flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
+					`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
 				}
 			>
 				<Tab activeTab={OutputTabsVariants.output} value={OutputTabsVariants.output}>
@@ -30,7 +30,7 @@ export const OutputTabs: React.FC = () => {
 				</Tab>
 			</div>
 
-			<div className="flex-auto h-48 overflow-auto pt-6 scrollbar">
+			<div className="scrollbar h-48 flex-auto overflow-auto pt-6">
 				{logs.map(({ id, message, status, timestamp }) => (
 					<div className="mb-4" key={id}>
 						<p className="font-medium text-gray-200">{timestamp}</p>

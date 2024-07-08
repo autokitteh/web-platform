@@ -20,15 +20,15 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const leftFrameClass = cn(`flex-auto bg-gray-700 border-r border-gray-600 rounded-r-none ${heightFrameClass}`);
 
 	return (
-		<div className="flex justify-end w-full">
+		<div className="flex w-full justify-end">
 			<div className="flex items-center" style={{ width: `${leftSideWidth}%` }}>
 				{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 			</div>
 
-			<div className="-ml-2 cursor-ew-resize resize-handle-horizontal w-2 z-10" />
+			<div className="resize-handle-horizontal z-10 -ml-2 w-2 cursor-ew-resize" />
 
 			<div
-				className="flex items-center overflow-hidden relative"
+				className="relative flex items-center overflow-hidden"
 				style={{ width: `${100 - (leftSideWidth as number)}%` }}
 			>
 				<Frame className={rightFrameClass}>
@@ -36,10 +36,10 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 						<EditorTabs />
 					</div>
 
-					<Button className="-mx-8 bg-gray-700 cursor-ns-resize hover:bg-gray-400 p-0.5 resize-handle-vertical rounded-none transition z-0" />
+					<Button className="resize-handle-vertical z-0 -mx-8 cursor-ns-resize rounded-none bg-gray-700 p-0.5 transition hover:bg-gray-400" />
 
 					<div
-						className="-mx-8 bg-black border-0 border-t border-t-gray-600 pt-5 px-8 z-0"
+						className="z-0 -mx-8 border-0 border-t border-t-gray-600 bg-black px-8 pt-5"
 						style={{ height: `${outputHeight as number}%` }}
 					>
 						<OutputTabs />

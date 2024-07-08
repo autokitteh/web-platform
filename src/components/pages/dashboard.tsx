@@ -11,7 +11,7 @@ export const Dashboard: React.FC = () => {
 	return (
 		<div>
 			<div className="flex w-full">
-				<h1 className="font-averta-bold mt-6 text-2xl text-black w-full">
+				<h1 className="font-averta-bold mt-6 w-full text-2xl text-black">
 					Welcome {userName ? `, ${userName}` : null}
 				</h1>
 			</div>

@@ -16,15 +16,15 @@ export const DeleteSessionModal = ({ onDelete }: ModalDeleteDeploymentSessionPro
 	return (
 		<Modal name={ModalName.deleteDeploymentSession}>
 			<div className="mx-6">
-				<h3 className="font-bold mb-5 text-xl">{t("title")}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
 				<p>{t("content")}</p>
 			</div>
 
-			<div className="flex gap-1 justify-end mt-10">
+			<div className="mt-10 flex justify-end gap-1">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="font-semibold hover:text-white px-4 py-3 w-auto"
+					className="w-auto px-4 py-3 font-semibold hover:text-white"
 					onClick={() => closeModal(ModalName.deleteDeploymentSession)}
 				>
 					{t("cancelButton")}
@@ -32,7 +32,7 @@ export const DeleteSessionModal = ({ onDelete }: ModalDeleteDeploymentSessionPro
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="bg-gray-700 font-semibold px-4 py-3 w-auto"
+					className="w-auto bg-gray-700 px-4 py-3 font-semibold"
 					onClick={onDelete}
 					variant="filled"
 				>

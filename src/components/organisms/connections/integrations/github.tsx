@@ -125,7 +125,7 @@ export const GithubIntegrationForm = () => {
 
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
-			<div className="flex gap-2 relative">
+			<div className="relative flex gap-2">
 				<Input
 					aria-label={t("github.placeholders.webhookUrl")}
 					className="w-full"
@@ -136,11 +136,11 @@ export const GithubIntegrationForm = () => {
 
 				<Button
 					aria-label={t("buttons.copy")}
-					className="bg-white border-black font-semibold hover:bg-gray-300 px-5 rounded-md w-fit"
+					className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-300"
 					onClick={() => copyToClipboard(webhookUrl)}
 					variant="outline"
 				>
-					<CopyIcon className="fill-black h-3.5 w-3.5" />
+					<CopyIcon className="h-3.5 w-3.5 fill-black" />
 
 					{t("buttons.copy")}
 				</Button>
@@ -158,29 +158,29 @@ export const GithubIntegrationForm = () => {
 			</div>
 			<Button
 				aria-label={t("buttons.saveConnection")}
-				className="border-white font-medium hover:bg-black ml-auto px-3 text-white w-fit"
+				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="fill-white h-5 transition w-5" />}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-5 w-5 fill-white transition" />}
 
 				{t("buttons.saveConnection")}
 			</Button>
 			<div>
 				<p className="text-lg">{t("information")}:</p>
 
-				<div className="flex flex-col gap-2 items-start mt-2">
+				<div className="mt-2 flex flex-col items-start gap-2">
 					{infoGithubLinks.map(({ text, url }, index) => (
 						<Link
-							className="gap-2.5 group hover:text-green-accent inline-flex items-center ml-2"
+							className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
 							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
 
-							<ExternalLinkIcon className="duration-200 fill-white group-hover:fill-green-accent h-3.5 w-3.5" />
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
 						</Link>
 					))}
 				</div>
@@ -193,20 +193,20 @@ export const GithubIntegrationForm = () => {
 			<p className="text-lg">{t("information")}:</p>
 
 			<Link
-				className="gap-2.5 group hover:text-green-accent inline-flex items-center ml-2 mt-1 text-md"
+				className="text-md group ml-2 mt-1 inline-flex items-center gap-2.5 hover:text-green-accent"
 				target="_blank"
 				to="https://docs.github.com/en/apps/using-github-apps/about-using-github-apps"
 			>
 				{t("github.aboutGitHubApps")}
 
-				<ExternalLinkIcon className="duration-200 fill-white group-hover:fill-green-accent h-3.5 w-3.5" />
+				<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
 			</Link>
 
 			<p className="ml-2 mt-1">{t("github.clickButtonInstall")}</p>
 
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
-				className="bg-white border-black font-medium hover:bg-gray-500 hover:text-white ml-auto px-3 w-fit"
+				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
 				onClick={handleGithubOAuth}
 				variant="outline"
 			>
@@ -216,8 +216,8 @@ export const GithubIntegrationForm = () => {
 	);
 
 	return (
-		<form className="flex gap-10 items-start" onSubmit={handleSubmit(onSubmit)}>
-			<div className="flex flex-col gap-6 w-full">
+		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
+			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
 					onChange={(selected) => {

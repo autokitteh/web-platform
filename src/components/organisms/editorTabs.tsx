@@ -85,19 +85,19 @@ export const EditorTabs = () => {
 	};
 
 	return (
-		<div className="flex flex-1 flex-col h-full pt-8">
+		<div className="flex h-full flex-1 flex-col pt-8">
 			{projectId ? (
 				<>
 					<div
 						className={
-							`absolute top-5 h-8 uppercase flex items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 select-none ` +
-							`overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar`
+							`absolute top-5 flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
+							`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
 						}
 					>
 						{openedFiles?.map(({ name }) => (
 							<Tab
 								activeTab={activeEditorFileName}
-								className="flex gap-1 group items-center"
+								className="group flex items-center gap-1"
 								key={name}
 								onClick={() => onTabClick(name)}
 								value={name}
@@ -109,12 +109,12 @@ export const EditorTabs = () => {
 									className={activeCloseIcon(name)}
 									onClick={(event) => handleCloseButtonClick(event, name)}
 								>
-									<Close className="fill-gray-400 group-hover:fill-white h-2 transition w-2" />
+									<Close className="h-2 w-2 fill-gray-400 transition group-hover:fill-white" />
 								</IconButton>
 							</Tab>
 						))}
 					</div>
-					<div className="h-full mt-1">
+					<div className="mt-1 h-full">
 						<Editor
 							aria-label={activeTab}
 							beforeMount={handleEditorWillMount}

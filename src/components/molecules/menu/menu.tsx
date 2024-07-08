@@ -91,11 +91,11 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
 						ariaLabel="New Project"
-						className="gap-1.5 hover:bg-green-light p-0.5 pl-1"
+						className="gap-1.5 p-0.5 pl-1 hover:bg-green-light"
 						onClick={handleCreateProject}
 					>
-						<div className="flex h-9 items-center justify-center w-9">
-							<IconSvg alt="New Project" className="h-8 p-1 w-8" src={NewProject} />
+						<div className="flex h-9 w-9 items-center justify-center">
+							<IconSvg alt="New Project" className="h-8 w-8 p-1" src={NewProject} />
 						</div>
 
 						<AnimatePresence>

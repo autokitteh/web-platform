@@ -75,23 +75,23 @@ export const GoogleIntegrationForm = () => {
 	const renderOAuthButton = () => (
 		<>
 			<p className="text-lg">{t("information")}:</p>
-			<div className="flex flex-col gap-2 items-start mt-2">
+			<div className="mt-2 flex flex-col items-start gap-2">
 				{infoGoogleUserLinks.map(({ text, url }, index) => (
 					<Link
-						className="gap-2.5 group hover:text-green-accent inline-flex items-center ml-2"
+						className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
 						key={index}
 						target="_blank"
 						to={url}
 					>
 						{text}
 
-						<ExternalLinkIcon className="duration-200 fill-white group-hover:fill-green-accent h-3.5 w-3.5" />
+						<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
 					</Link>
 				))}
 			</div>
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
-				className="bg-white border-black font-medium hover:bg-gray-500 hover:text-white ml-auto px-3 w-fit"
+				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
 				onClick={handleGoogleOAuth}
 				variant="outline"
 			>
@@ -102,7 +102,7 @@ export const GoogleIntegrationForm = () => {
 
 	const renderServiceAccount = () => (
 		<div>
-			<div className="mb-3 relative">
+			<div className="relative mb-3">
 				<Textarea
 					rows={5}
 					{...register("jsonKey")}
@@ -116,29 +116,29 @@ export const GoogleIntegrationForm = () => {
 
 			<Button
 				aria-label={t("buttons.saveConnection")}
-				className="border-white font-medium hover:bg-black ml-auto px-3 text-white w-fit"
+				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="fill-white h-5 transition w-5" />}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-5 w-5 fill-white transition" />}
 
 				{t("buttons.saveConnection")}
 			</Button>
 
 			<p className="text-lg">{t("information")}:</p>
 
-			<div className="flex flex-col gap-2 items-start mt-2">
+			<div className="mt-2 flex flex-col items-start gap-2">
 				{infoGoogleAccountLinks.map(({ text, url }, index) => (
 					<Link
-						className="gap-2.5 group hover:text-green-accent inline-flex items-center ml-2"
+						className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
 						key={index}
 						target="_blank"
 						to={url}
 					>
 						{text}
 
-						<ExternalLinkIcon className="duration-200 fill-white group-hover:fill-green-accent h-3.5 w-3.5" />
+						<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
 					</Link>
 				))}
 			</div>
@@ -146,8 +146,8 @@ export const GoogleIntegrationForm = () => {
 	);
 
 	return (
-		<form className="flex gap-10 items-start" onSubmit={handleSubmit(onSubmit)}>
-			<div className="flex flex-col gap-6 w-full">
+		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
+			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
 					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}

@@ -35,7 +35,7 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 	return (
 		<Modal name={ModalName.deleteConnection}>
 			<div className="mx-6">
-				<h3 className="font-bold mb-5 text-xl">{t("title", { name: connection?.name })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title", { name: connection?.name })}</h3>
 
 				<p>{t("line")}</p>
 
@@ -52,9 +52,9 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 				<p className="mt-1">{t("line4")}</p>
 			</div>
 
-			<div className="flex gap-1 justify-end mt-14">
+			<div className="mt-14 flex justify-end gap-1">
 				<Button
-					className="font-semibold hover:text-white px-4 py-3 w-auto"
+					className="w-auto px-4 py-3 font-semibold hover:text-white"
 					disabled={loading}
 					onClick={() => closeModal(ModalName.deleteConnection)}
 				>
@@ -62,7 +62,7 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 				</Button>
 
 				<Button
-					className="bg-gray-700 font-semibold px-4 py-3 w-auto"
+					className="w-auto bg-gray-700 px-4 py-3 font-semibold"
 					disabled={loading}
 					onClick={onDelete}
 					variant="filled"

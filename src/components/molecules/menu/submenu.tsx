@@ -19,7 +19,7 @@ export const Submenu = ({ submenuInfo }: SubmenuProps) => {
 	return (
 		<motion.div
 			animate="visible"
-			className="bg-gray-200 border-gray-300 border-l border-r h-screen mr-2.5 overflow-auto px-2 scrollbar w-auto z-1"
+			className="scrollbar z-1 mr-2.5 h-screen w-auto overflow-auto border-l border-r border-gray-300 bg-gray-200 px-2"
 			exit="hidden"
 			initial="hidden"
 			style={{ paddingTop: submenuInfo.top }}
@@ -27,8 +27,8 @@ export const Submenu = ({ submenuInfo }: SubmenuProps) => {
 		>
 			{submenuInfo.submenu?.map(({ href, id, name }) => (
 				<Button
-					className={cn("px-4 hover:bg-green-light text-fira-code text-gray-700 whitespace-nowrap", {
-						"bg-gray-700 hover:bg-gray-700 text-white": id === projectId,
+					className={cn("text-fira-code whitespace-nowrap px-4 text-gray-700 hover:bg-green-light", {
+						"bg-gray-700 text-white hover:bg-gray-700": id === projectId,
 					})}
 					href={href}
 					key={id}

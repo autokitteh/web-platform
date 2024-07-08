@@ -76,7 +76,7 @@ module.exports = {
 		"local-rules/no-abbreviations": "error",
 		"@liferay/no-anonymous-exports": "off",
 		"sort-keys": "error",
-		"@liferay/sort-class-names": "error",
+		"@liferay/sort-class-names": "off",
 		"@typescript-eslint/member-ordering": [
 			"error",
 			{

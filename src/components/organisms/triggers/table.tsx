@@ -99,10 +99,10 @@ export const TriggersTable = () => {
 
 				<Button
 					ariaLabel={t("buttons.addNew")}
-					className="capitalize font-semibold gap-1 group hover:text-white p-0 text-gray-300 w-auto"
+					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white"
 					href="add"
 				>
-					<PlusCircle className="duration-300 group-hover:stroke-white h-5 stroke-gray-300 w-5" />
+					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}
 				</Button>
@@ -111,40 +111,40 @@ export const TriggersTable = () => {
 				<Table className="mt-3">
 					<THead>
 						<Tr>
-							<Th className="cursor-pointer font-normal group" onClick={() => requestSort("name")}>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("name")}>
 								{t("table.columns.name")}
 
 								<SortButton
-									className="group-hover:opacity-100 opacity-0"
+									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
 							<Th
-								className="cursor-pointer font-normal group"
+								className="group cursor-pointer font-normal"
 								onClick={() => requestSort("connectionName")}
 							>
 								{t("table.columns.connection")}
 
 								<SortButton
-									className="group-hover:opacity-100 opacity-0"
+									className="opacity-0 group-hover:opacity-100"
 									isActive={"connectionName" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
-							<Th className="cursor-pointer font-normal group" onClick={() => requestSort("path")}>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("path")}>
 								{t("table.columns.call")}
 
 								<SortButton
-									className="group-hover:opacity-100 opacity-0"
+									className="opacity-0 group-hover:opacity-100"
 									isActive={"path" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
-							<Th className="font-normal max-w-20 text-right">{t("table.columns.actions")}</Th>
+							<Th className="max-w-20 text-right font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
@@ -154,7 +154,7 @@ export const TriggersTable = () => {
 								<Td className="font-semibold">
 									<div className="flex gap-3">
 										{trigger.data?.schedule?.string?.v ? (
-											<ClockIcon className="fill-white w-4" />
+											<ClockIcon className="w-4 fill-white" />
 										) : null}
 
 										<div>{trigger.name}</div>
@@ -173,14 +173,14 @@ export const TriggersTable = () => {
 											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
 											onClick={() => handleNavigate(trigger.triggerId!, !!trigger.data?.schedule)}
 										>
-											<EditIcon className="fill-white h-3 w-3" />
+											<EditIcon className="h-3 w-3 fill-white" />
 										</IconButton>
 
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
 											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
 										>
-											<TrashIcon className="fill-white h-3 w-3" />
+											<TrashIcon className="h-3 w-3 fill-white" />
 										</IconButton>
 									</div>
 								</Td>
@@ -189,7 +189,7 @@ export const TriggersTable = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="font-semibold mt-10 text-center text-gray-300 text-xl">{t("titleNoAvailable")}</div>
+				<div className="mt-10 text-center text-xl font-semibold text-gray-300">{t("titleNoAvailable")}</div>
 			)}
 
 			<DeleteTriggerModal onDelete={handleDeleteTrigger} triggerId={triggerId} />
