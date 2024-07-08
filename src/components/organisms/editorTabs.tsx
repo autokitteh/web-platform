@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
-import { get, last } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { byteArrayToString, getFile, openDatabase, saveFile } from "./files.utility";
 import { monacoLanguages } from "@constants";
 import { cn } from "@utilities";
 
@@ -14,8 +14,8 @@ import { IconButton, Loader, Tab } from "@components/atoms";
 
 import { Close } from "@assets/image/icons";
 
-export const EditorTabs = () => {
-	const { projectId } = useParams();
+export const EditorTabs: React.FC = () => {
+	const { projectId } = useParams<{ projectId: string }>();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { openedFiles, resources, setUpdateFileContent, updateEditorClosedFiles, updateEditorOpenedFiles } =
 		useProjectStore();
@@ -23,22 +23,29 @@ export const EditorTabs = () => {
 	const [activeTab, setActiveTab] = useState("");
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
-	const fileExtension = "." + last(activeEditorFileName.split("."));
+	const fileExtension = "." + activeEditorFileName.split(".").pop();
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
-	const resource = get(resources, [activeEditorFileName], null);
-	let content;
+	const resource = resources ? resources[activeEditorFileName] : null;
+	const [content, setContent] = useState<string>(t("initialContentForNewFile"));
 
-	if (resource === null) {
-		content = t("noFileText");
-	} else {
-		const byteArray = Object.values(resource);
-		content = String.fromCharCode.apply(null, byteArray) || t("initialContentForNewFile");
-	}
+	useEffect(() => {
+		const fetchFileContent = async () => {
+			if (resource !== null) {
+				const byteArray = Object.values(resource);
+				const db = await openDatabase();
+				const fileContent = byteArrayToString(byteArray as unknown as Uint8Array);
+				await saveFile(db, activeEditorFileName, fileContent);
+				const retrievedContent = await getFile(db, activeEditorFileName);
+				setContent(retrievedContent || t("initialContentForNewFile"));
+			}
+		};
+		fetchFileContent();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeEditorFileName, resource]);
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
-
 		window.addEventListener("resize", handleResize);
 
 		return () => window.removeEventListener("resize", handleResize);
@@ -55,16 +62,19 @@ export const EditorTabs = () => {
 		});
 	};
 
-	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
+	const handleEditorDidMount = (_editor: any, monaco: Monaco) => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const handleUpdateContent = (newContent?: string) => {
+	const handleUpdateContent = async (newContent?: string) => {
 		if (!projectId) {
 			return;
 		}
 		const contentUintArray = new TextEncoder().encode(newContent);
 		setUpdateFileContent(contentUintArray, projectId);
+
+		const db = await openDatabase();
+		await saveFile(db, activeEditorFileName, newContent || "");
 	};
 
 	const activeCloseIcon = (fileName: string) =>
