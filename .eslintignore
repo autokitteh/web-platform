@@ -2,3 +2,5 @@ node_modules/
 dist/
 env.d.ts
 /src/autokitteh
+playwright-report/
+test-results/

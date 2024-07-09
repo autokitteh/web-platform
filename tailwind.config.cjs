@@ -97,7 +97,7 @@ export default {
 		},
 	},
 	plugins: [
-		plugin(function ({ addBase }) {
+		plugin(({ addBase }) => {
 			addBase({
 				body: {
 					fontSize: "14px",
