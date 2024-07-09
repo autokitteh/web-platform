@@ -69,7 +69,7 @@
 				"aboutCron": "About cronjob expressions",
 				"schedules": "Predefined schedules or intervals"
 			},
-			"information": "Information",
+			"information": "More Information",
 			"loading": "Loading",
 			"modifyTrigger": "Modify trigger",
 			"noConnectionsAvailable": "No connections available",

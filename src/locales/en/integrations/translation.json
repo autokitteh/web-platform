@@ -36,7 +36,7 @@
 			"jsonKey": "JSON Key"
 		}
 	},
-	"information": "Information",
+	"information": "More Information",
 	"placeholders": {
 		"noConnectionTypesAvailable": "No connection types available",
 		"noIntegrationsAvailable": "No integrations available",
