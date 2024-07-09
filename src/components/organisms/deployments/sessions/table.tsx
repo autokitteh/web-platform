@@ -41,7 +41,7 @@ export const SessionsTable = () => {
 	});
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 
-	const frameClass = useMemo(() => cn("pl-7 bg-gray-700 transition-all w-1/2", { "w-3/4 rounded-r-none": !sessionId }), [sessionId]);
+	const frameClass = useMemo(() => cn("w-1/2 bg-gray-700 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }), [sessionId]);
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {

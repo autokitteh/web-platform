@@ -4,7 +4,7 @@ import { TableProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Th = ({ children, className, onClick }: TableProps) => {
-	const thStyle = cn("w-full truncate flex items-center gap-1 px-4 h-9.5", className);
+	const thStyle = cn("flex h-9.5 w-full items-center gap-1 truncate px-4", className);
 
 	return (
 		<th className={thStyle} onClick={onClick}>

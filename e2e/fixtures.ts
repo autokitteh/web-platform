@@ -1,4 +1,3 @@
-// eslint-disable-next-line perfectionist/sort-named-imports
 import { expect, test as base } from "@playwright/test";
 
 import { DashboardPage } from "./pages/dashboard";

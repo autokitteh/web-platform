@@ -7,7 +7,7 @@ import { cn } from "@utilities";
 export const SettingsTopbar = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "topbar" });
 
-	const styleInput = cn("font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight");
+	const styleInput = cn("min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0");
 
 	return (
 		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-800 py-3 pl-7 pr-3.5">

@@ -1,13 +1,18 @@
 {
 	"files.autoSave": "onFocusChange",
-	"editor.codeActionsOnSave": {
-		"source.addMissingImports": "always",
-		"source.fixAll.eslint": "always"
-	},
 	"eslint.format.enable": true,
 	"prettier.bracketSameLine": true,
 	"prettier.configPath": ".prettierrc",
 	"editor.formatOnSave": true,
-	"eslint.codeActionsOnSave.rules": [],
-	"prettier.printWidth": 160
+	"prettier.printWidth": 160,
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	},
+	"editor.codeActionsOnSave": [
+	  "source.fixAll.eslint"
+	],
+	"eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"]
 }

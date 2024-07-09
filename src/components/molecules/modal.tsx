@@ -26,9 +26,9 @@ export const Modal = ({ children, className, name }: ModalProps) => {
 		isOpen: state.modals[name],
 		onClose: state.closeModal,
 	}));
-	const wrapperClass = cn("fixed w-full h-full top-0 left-0 flex items-center justify-center z-40");
-	const modalClasses = cn("rounded-2xl bg-white border border-gray-500 p-3.5 text-gray-800 w-500", className);
-	const bgClass = cn("absolute w-full h-full top-0 left-0 bg-gray-black/50 -z-10");
+	const wrapperClass = cn("fixed left-0 top-0 z-40 flex h-full w-full items-center justify-center");
+	const modalClasses = cn("w-500 rounded-2xl border border-gray-500 bg-white p-3.5 text-gray-800", className);
+	const bgClass = cn("absolute left-0 top-0 -z-10 h-full w-full bg-gray-black/50");
 
 	return createPortal(
 		<AnimatePresence>

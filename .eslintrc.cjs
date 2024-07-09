@@ -10,11 +10,10 @@ module.exports = {
 		"plugin:jsx-a11y/recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:storybook/recommended",
-		"plugin:prettier/recommended",
 		"plugin:security/recommended-legacy",
 		"plugin:promise/recommended",
 		"plugin:@liferay/react",
-		"plugin:perfectionist/recommended-natural",
+		"plugin:prettier/recommended"
 	],
 	settings: {
 		"react": {
@@ -75,6 +74,14 @@ module.exports = {
 		"perfectionist",
 	],
 	rules: {
+		"perfectionist/sort-object-types": [
+			"error",
+			{
+				type: "alphabetical",
+				order: "asc",
+			},
+		],
+		"@typescript-eslint/adjacent-overload-signatures": "off",
 		"perfectionist/sort-imports": "off",
 		"local-rules/no-abbreviations": "error",
 		"@liferay/no-anonymous-exports": "off",
@@ -87,7 +94,7 @@ module.exports = {
 			},
 		],
 		"@typescript-eslint/no-explicit-any": "off",
-		"prettier/prettier": ["error", { endOfLine: "auto" }, { usePrettierrc: true }],
+		"prettier/prettier": "error",
 		"security/detect-object-injection": "off",
 		"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 		"react/prefer-stateless-function": "error",

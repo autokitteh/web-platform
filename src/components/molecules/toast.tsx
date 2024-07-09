@@ -69,7 +69,7 @@ export const Toast = () => {
 	}, [toasts]);
 
 	const baseStyle = (toastType: ToasterTypes, isHovered: boolean) =>
-		cn("fixed right-20 z-50 max-w-420 py-3 px-4 pl-6 border rounded-4xl transition-colors duration-200", {
+		cn("fixed right-20 z-50 max-w-420 rounded-4xl border px-4 py-3 pl-6 transition-colors duration-200", {
 			"bg-black": !isHovered,
 			"bg-gray-800": isHovered,
 			"border-error": toastType === "error",
@@ -77,7 +77,7 @@ export const Toast = () => {
 		});
 
 	const titleStyle = (toastType: ToasterTypes) =>
-		cn("font-semibold w-full", {
+		cn("w-full font-semibold", {
 			"text-error": toastType === "error",
 			"text-green-accent": toastType === "success",
 		});

@@ -21,8 +21,8 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 	} as const;
 
 	const buttonClass = (state?: keyof typeof buttonClassText) =>
-		cn("w-auto border border-gray-500 px-2.5 py-1.5 rounded-lg text-white", state && buttonClassText[state], {
-			"bg-gray-800 border-white": activeState === state,
+		cn("w-auto rounded-lg border border-gray-500 px-2.5 py-1.5 text-white", state && buttonClassText[state], {
+			"border-white bg-gray-800": activeState === state,
 		});
 
 	const handleButtonClick = (state?: SessionStateKeyType) => {

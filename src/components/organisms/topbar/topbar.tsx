@@ -21,8 +21,8 @@ export const Topbar = () => {
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [project, setProject] = useState<ProjectMenuItem>();
 	const addToast = useToastStore((state) => state.addToast);
-	const inputClass = cn("font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight", {
-		"outline-error outline-2": !isNameValid,
+	const inputClass = cn("min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0", {
+		"outline-2 outline-error": !isNameValid,
 	});
 
 	const loadProject = async (projectId: string) => {

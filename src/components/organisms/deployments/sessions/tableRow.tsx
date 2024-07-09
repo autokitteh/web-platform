@@ -16,7 +16,7 @@ export const SessionsTableRow = memo(({ data, index, style }: { data: SessionsTa
 	const session = sessions[index];
 
 	const sessionRowClass = (id: string) => cn("group cursor-pointer hover:bg-gray-800", { "bg-black": id === selectedSessionId });
-	const sessionLastTdClass = cn("justify-end border-0 max-w-20", { "mr-1.5": !scrollDisplayed });
+	const sessionLastTdClass = cn("max-w-20 justify-end border-0", { "mr-1.5": !scrollDisplayed });
 
 	if (!session) {
 		return null;

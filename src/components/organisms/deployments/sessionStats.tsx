@@ -6,7 +6,7 @@ import { cn } from "@utilities";
 
 export const DeploymentSessionStats = ({ sessionStats }: { sessionStats?: DeploymentSession[] }) => {
 	const countStyle = (state?: SessionStateType) =>
-		cn("font-medium text-sm p-0 border-0 2xl:w-22 w-14 inline-block", {
+		cn("2xl:w-22 inline-block w-14 border-0 p-0 text-sm font-medium", {
 			"hidden": SessionStateType.created === state,
 			"text-gray-black": SessionStateType.stopped === state,
 			"text-green-accent": SessionStateType.completed === state,

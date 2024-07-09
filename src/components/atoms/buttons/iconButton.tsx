@@ -20,14 +20,14 @@ export const IconButton = ({
 	variant,
 }: IconButtonProps) => {
 	const iconButtonClass = cn(
-		"p-2 flex items-center justify-center rounded-full transition duration-300 hover:bg-gray-700 shrink-0 outline-0",
+		"flex shrink-0 items-center justify-center rounded-full p-2 outline-0 transition duration-300 hover:bg-gray-700",
 		{
 			"bg-black": variant === ButtonVariant.filled,
 			"border border-gray-400 hover:border-transparent": variant === ButtonVariant.outline,
 		},
 		{
+			"cursor-not-allowed opacity-40": disabled,
 			"hover:border-gray-400": disabled && variant === ButtonVariant.outline,
-			"opacity-40 cursor-not-allowed": disabled,
 		},
 		className
 	);
