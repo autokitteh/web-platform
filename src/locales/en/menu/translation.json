@@ -1,8 +1,8 @@
 {
-	"newProject": "New Project",
-	"myProjects": "My Projects",
-	"dashboard": "Dashboard",
-	"connections": "Connections",
-	"stats": "Stats",
-	"settings": "Settings"
+    "connections": "Connections",
+    "dashboard": "Dashboard",
+    "myProjects": "My Projects",
+    "newProject": "New Project",
+    "settings": "Settings",
+    "stats": "Stats"
 }

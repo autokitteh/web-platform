@@ -7,7 +7,7 @@ import { cn } from "@utilities";
 
 export const Link = ({ ariaLabel, children, className, disabled, target, to }: LinkProps) => {
 	const linkClass = cn(className, {
-		"cursor-not-allowed pointer-events-none select-none": disabled,
+		"pointer-events-none cursor-not-allowed select-none": disabled,
 	});
 
 	return (

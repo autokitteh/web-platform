@@ -11,9 +11,9 @@ export const Accordion = ({
 	className,
 	title,
 }: {
-	title: string;
 	children: React.ReactNode;
 	className?: string;
+	title: string;
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 

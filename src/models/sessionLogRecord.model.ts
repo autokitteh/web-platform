@@ -10,12 +10,12 @@ import { Callstack } from "@type/models";
 import { convertTimestampToDate } from "@utilities";
 
 export class SessionLogRecord {
-	type: SessionLogRecordType = SessionLogRecordType.unknown;
-	state?: SessionStateType;
 	callstackTrace: Callstack[] = [];
-	logs?: string;
-	error?: string;
 	dateTime?: Date;
+	error?: string;
+	logs?: string;
+	state?: SessionStateType;
+	type: SessionLogRecordType = SessionLogRecordType.unknown;
 
 	constructor(logRecord: ProtoSessionLogRecord) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -70,42 +70,6 @@ export class SessionLogRecord {
 		return undefined;
 	}
 
-	private handleStateRecord(logRecord: ProtoSessionLogRecord) {
-		this.type = SessionLogRecordType.state;
-		const activeKey = Object.keys(logRecord.state!).find(
-			(key) =>
-				logRecord.state?.[key as unknown as SessionStateType] !== undefined &&
-				typeof logRecord.state?.[key as unknown as SessionStateType] === "object"
-		);
-		this.state = activeKey as SessionStateType;
-		if (this.state === SessionStateType.running) {
-			const functionRunning = logRecord.state?.running?.call?.function?.name;
-			this.logs = functionRunning
-				? `${i18n.t("historyInitFunction", { ns: "services" })}: ${functionRunning}`
-				: undefined;
-		}
-		if (this.state === SessionStateType.error) {
-			this.error = convertErrorProtoToModel(
-				logRecord.state?.error?.error?.value,
-				i18n.t("sessionLogMissingOnErrorType", { ns: "errors" })
-			)?.message;
-			this.logs = `Error: ${this.error}\n`;
-			this.callstackTrace = (logRecord?.state?.error?.error?.callstack || []) as Callstack[];
-			this.logs += `Callstack:\n`;
-			this.callstackTrace.map(({ location: { col, name, path, row } }) => {
-				this.logs += `\t${path}: ${row}.${col}: ${name}\n`;
-			});
-		}
-		if (this.isFinished()) {
-			const finishedMessagePrint = `\n\n${i18n.t("lastPrintForSessionLog", {
-				ns: "services",
-				sessionState: this.state || "unknown",
-			})}`;
-
-			this.logs = this.logs ? `${this.logs}${finishedMessagePrint}` : finishedMessagePrint;
-		}
-	}
-
 	private handleCallAttemptComplete(logRecord: ProtoSessionLogRecord) {
 		this.type = SessionLogRecordType.callAttemptComplete;
 
@@ -148,6 +112,42 @@ export class SessionLogRecord {
 			.join(", ")
 			.replace(/, ([^,]*)$/, "");
 		this.logs = `${i18n.t("historyFunction", { ns: "services" })}: ${functionName}(${args})`;
+	}
+
+	private handleStateRecord(logRecord: ProtoSessionLogRecord) {
+		this.type = SessionLogRecordType.state;
+		const activeKey = Object.keys(logRecord.state!).find(
+			(key) =>
+				logRecord.state?.[key as unknown as SessionStateType] !== undefined &&
+				typeof logRecord.state?.[key as unknown as SessionStateType] === "object"
+		);
+		this.state = activeKey as SessionStateType;
+		if (this.state === SessionStateType.running) {
+			const functionRunning = logRecord.state?.running?.call?.function?.name;
+			this.logs = functionRunning
+				? `${i18n.t("historyInitFunction", { ns: "services" })}: ${functionRunning}`
+				: undefined;
+		}
+		if (this.state === SessionStateType.error) {
+			this.error = convertErrorProtoToModel(
+				logRecord.state?.error?.error?.value,
+				i18n.t("sessionLogMissingOnErrorType", { ns: "errors" })
+			)?.message;
+			this.logs = `Error: ${this.error}\n`;
+			this.callstackTrace = (logRecord?.state?.error?.error?.callstack || []) as Callstack[];
+			this.logs += `Callstack:\n`;
+			this.callstackTrace.map(({ location: { col, name, path, row } }) => {
+				this.logs += `\t${path}: ${row}.${col}: ${name}\n`;
+			});
+		}
+		if (this.isFinished()) {
+			const finishedMessagePrint = `\n\n${i18n.t("lastPrintForSessionLog", {
+				ns: "services",
+				sessionState: this.state || "unknown",
+			})}`;
+
+			this.logs = this.logs ? `${this.logs}${finishedMessagePrint}` : finishedMessagePrint;
+		}
 	}
 
 	isFinished(): boolean {

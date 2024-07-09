@@ -7,4 +7,4 @@ const test = base.extend<{ dashboardPage: DashboardPage }>({
 		await use(new DashboardPage(page));
 	},
 });
-export { test, expect };
+export { expect, test };

@@ -8,8 +8,8 @@ export const AppLayout = ({
 	displayStatsTopbar,
 	displayTopbar,
 }: {
-	displayTopbar?: boolean;
 	displayStatsTopbar?: boolean;
+	displayTopbar?: boolean;
 }) => {
 	return (
 		<div className="h-screen w-screen pr-5">

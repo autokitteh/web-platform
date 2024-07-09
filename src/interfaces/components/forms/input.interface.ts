@@ -3,12 +3,12 @@ import { ReactNode } from "react";
 import { InputType } from "@type/components";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-	icon?: ReactNode;
-	placeholder?: string;
-	className?: string;
 	classInput?: string;
+	className?: string;
+	disabled?: boolean;
+	icon?: ReactNode;
 	isError?: boolean;
 	isRequired?: boolean;
-	disabled?: boolean;
+	placeholder?: string;
 	variant?: InputType;
 }

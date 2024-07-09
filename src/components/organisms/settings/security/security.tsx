@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import { HttpService } from "@services";
+
 import { useToastStore } from "@store";
 
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";

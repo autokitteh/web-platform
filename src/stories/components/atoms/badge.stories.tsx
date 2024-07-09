@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { Badge } from "@components/atoms";
 
 const meta: Meta<typeof Badge> = {
-	title: "Core/Badge",
-	component: Badge,
 	argTypes: {
 		children: { control: "text" },
 		className: { control: "text" },
 	},
+	component: Badge,
+	title: "Core/Badge",
 };
 export default meta;
 

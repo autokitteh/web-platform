@@ -14,15 +14,15 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
 
 	const buttonClassText = {
-		[SessionStateType.running]: "",
-		[SessionStateType.error]: "text-red",
 		[SessionStateType.completed]: "text-green-accent",
+		[SessionStateType.error]: "text-red",
+		[SessionStateType.running]: "",
 		[SessionStateType.stopped]: "text-yellow-500",
 	} as const;
 
 	const buttonClass = (state?: keyof typeof buttonClassText) =>
-		cn("w-auto border border-gray-500 px-2.5 py-1.5 rounded-lg text-white", state && buttonClassText[state], {
-			"bg-gray-800 border-white": activeState === state,
+		cn("w-auto rounded-lg border border-gray-500 px-2.5 py-1.5 text-white", state && buttonClassText[state], {
+			"border-white bg-gray-800": activeState === state,
 		});
 
 	const handleButtonClick = (state?: SessionStateKeyType) => {
@@ -31,10 +31,10 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 	};
 
 	const initialSessionCounts = {
-		[SessionStateType.created]: 0,
-		[SessionStateType.running]: 0,
-		[SessionStateType.error]: 0,
 		[SessionStateType.completed]: 0,
+		[SessionStateType.created]: 0,
+		[SessionStateType.error]: 0,
+		[SessionStateType.running]: 0,
 		[SessionStateType.stopped]: 0,
 	};
 

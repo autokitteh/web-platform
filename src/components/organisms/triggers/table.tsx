@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { useSort } from "@hooks";
 import { TriggersService } from "@services";
-import { useModalStore, useToastStore } from "@store";
 import { Trigger } from "@type/models";
+
+import { useSort } from "@hooks";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
@@ -170,14 +171,18 @@ export const TriggersTable = () => {
 								<Td className="max-w-20 pr-0">
 									<div className="flex space-x-1">
 										<IconButton
-											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
+											ariaLabel={t("table.buttons.ariaModifyTrigger", {
+												name: trigger.name,
+											})}
 											onClick={() => handleNavigate(trigger.triggerId!, !!trigger.data?.schedule)}
 										>
 											<EditIcon className="h-3 w-3 fill-white" />
 										</IconButton>
 
 										<IconButton
-											ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
+											ariaLabel={t("table.buttons.ariaDeleteTrigger", {
+												name: trigger.name,
+											})}
 											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
 										>
 											<TrashIcon className="h-3 w-3 fill-white" />

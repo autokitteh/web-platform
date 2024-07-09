@@ -1,3 +1,4 @@
+/* eslint-disable local-rules/no-abbreviations */
 module.exports = {
 	"no-abbreviations": {
 		meta: {

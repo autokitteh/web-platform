@@ -6,8 +6,9 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { monacoLanguages } from "@constants";
-import { useProjectStore } from "@store";
 import { cn } from "@utilities";
+
+import { useProjectStore } from "@store";
 
 import { IconButton, Loader, Tab } from "@components/atoms";
 
@@ -67,12 +68,12 @@ export const EditorTabs = () => {
 	};
 
 	const activeCloseIcon = (fileName: string) =>
-		cn("w-4 h-4 p-0.5 hover:bg-gray-700 opacity-0 group-hover:opacity-100", {
+		cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-700 group-hover:opacity-100", {
 			"opacity-100": openedFiles.find(({ isActive, name }) => name === fileName && isActive),
 		});
 
 	const handleCloseButtonClick = (
-		event: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>,
+		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
 		name: string
 	): void => {
 		event.stopPropagation();

@@ -1,10 +1,10 @@
 export type Project = {
-	projectId: string;
 	name: string;
+	projectId: string;
 };
 
 export type ProjectMenuItem = {
+	href: string;
 	id: string;
 	name: string;
-	href: string;
 };

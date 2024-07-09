@@ -8,8 +8,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } from "@constants";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
-import { useProjectStore, useToastStore } from "@store";
 import { schedulerTriggerSchema } from "@validations";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 

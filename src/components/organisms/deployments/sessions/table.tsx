@@ -8,12 +8,13 @@ import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
 import { fetchSessionsInterval, namespaces } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
-import { useInterval } from "@hooks";
 import { reverseSessionStateConverter } from "@models/utils";
 import { DeploymentsService, LoggerService, SessionsService } from "@services";
-import { useModalStore, useToastStore } from "@store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
+
+import { useInterval } from "@hooks";
+import { useModalStore, useToastStore } from "@store";
 
 import { Frame, IconButton, TBody, THead, Table, Th, Tr } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
@@ -42,7 +43,7 @@ export const SessionsTable = () => {
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 
 	const frameClass = useMemo(
-		() => cn("pl-7 bg-gray-700 transition-all w-1/2", { "w-3/4 rounded-r-none": !sessionId }),
+		() => cn("w-1/2 bg-gray-700 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
 		[sessionId]
 	);
 

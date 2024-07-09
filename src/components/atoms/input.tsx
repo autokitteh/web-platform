@@ -53,16 +53,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const placeholderText = isRequired ? `${placeholder} *` : placeholder;
 
 	const baseClass = cn(
-		"relative flex items-center pr-2.5 text-base bg-black border border-gray-500",
-		"rounded-lg transition focus-within:border-white hover:border-white ",
-		{ "bg-white hover:border-gray-700 focus-within:border-gray-700": variant === InputVariant.light },
+		"relative flex items-center border border-gray-500 bg-black pr-2.5 text-base",
+		"rounded-lg transition focus-within:border-white hover:border-white",
+		{ "bg-white focus-within:border-gray-700 hover:border-gray-700": variant === InputVariant.light },
 		{ "pointer-events-none select-none": disabled },
 		className,
 		{ "border-error": isError }
 	);
 
 	const inputClass = cn(
-		"w-full h-12 py-2.5 px-4 bg-transparent outline-none",
+		"h-12 w-full bg-transparent px-4 py-2.5 outline-none",
 		{ "text-gray-400": disabled },
 		{ "autofill-black": variant === InputVariant.light && !disabled },
 		{ "autofill-gray-700": variant === InputVariant.light && disabled },
@@ -70,13 +70,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	);
 
 	const labelClass = cn(
-		"absolute left-4 transition-all pointer-events-none",
+		"pointer-events-none absolute left-4 transition-all",
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
-		{ "-top-2 left-3 text-xs  before:bg-gray-500 px-1": isFocused || hasValue },
-		{ "-top-2 left-3 text-xs  before:bg-white px-1": (isFocused || hasValue) && variant === InputVariant.light }
+		{ "-top-2 left-3 px-1 text-xs before:bg-gray-500": isFocused || hasValue },
+		{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light }
 	);
 
-	const borderOverlayLabelClass = cn("absolute left-0 z-0 w-full h-0.5 -translate-y-1/2 top-1/2 bg-black", {
+	const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
 		"bg-white": variant === InputVariant.light,
 	});
 

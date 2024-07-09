@@ -1,11 +1,11 @@
 import React from "react";
 
 export interface IconProps {
-	className?: string;
 	alt?: string;
-	src: string;
-	isVisible?: boolean;
+	className?: string;
 	disabled?: boolean;
+	isVisible?: boolean;
+	src: string;
 }
 
 export interface IconSvgProps extends Omit<IconProps, "src"> {

@@ -4,10 +4,10 @@ export interface Toast {
 	type: ToasterTypes;
 }
 
-export type ToasterTypes = "success" | "error" | "info";
+export type ToasterTypes = "error" | "info" | "success";
 
 export interface ToastStore {
-	toasts: Toast[];
 	addToast: (toast: Toast) => void;
 	removeToast: (id: string) => void;
+	toasts: Toast[];
 }

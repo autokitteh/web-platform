@@ -1,9 +1,9 @@
 export enum GithubConnectionType {
-	Pat = "pat",
 	Oauth = "oauth",
+	Pat = "pat",
 }
 
 export enum GoogleConnectionType {
-	ServiceAccount = "serviceAccount",
 	Oauth = "oauth",
+	ServiceAccount = "serviceAccount",
 }

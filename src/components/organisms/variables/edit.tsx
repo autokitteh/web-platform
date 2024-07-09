@@ -15,7 +15,9 @@ import { TabFormHeader } from "@components/molecules";
 import { LockSolid } from "@assets/image/icons";
 
 export const EditVariable = () => {
-	const { t: tForm } = useTranslation("tabs", { keyPrefix: "variables.form" });
+	const { t: tForm } = useTranslation("tabs", {
+		keyPrefix: "variables.form",
+	});
 	const addToast = useToastStore((state) => state.addToast);
 
 	const { environmentId, projectId, variableName } = useParams();

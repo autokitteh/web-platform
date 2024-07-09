@@ -56,6 +56,21 @@ export class TriggersService {
 		}
 	}
 
+	static async delete(triggerId: string): Promise<ServiceResponse<void>> {
+		try {
+			await triggersClient.delete({ triggerId });
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.triggerService,
+				i18n.t("triggerRemoveFailedExtended", { ns: "services", triggerId })
+			);
+
+			return { data: undefined, error };
+		}
+	}
+
 	static async get(triggerId: string): Promise<ServiceResponse<Trigger>> {
 		try {
 			const { trigger } = await triggersClient.get({ triggerId });
@@ -73,6 +88,48 @@ export class TriggersService {
 				namespaces.projectService,
 				i18n.t("triggerNotFoundExtended", { ns: "services", triggerId })
 			);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async listByProjectId(projectId: string): Promise<ServiceResponse<Trigger[]>> {
+		try {
+			const { data: environments, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
+
+			if (errorEnvs) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
+				);
+
+				return { data: undefined, error: errorEnvs };
+			}
+
+			const { triggers } = await triggersClient.list({ envId: environments && environments[0].envId });
+
+			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
+			const { data: connectionsList, error } = await ConnectionService.list();
+			if (error) {
+				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
+
+				return { data: undefined, error };
+			}
+
+			const enrhichedTriggers = convertedTriggers.map((trigger) => {
+				const connection = connectionsList?.find(
+					(connection) => connection.connectionId === trigger.connectionId
+				);
+
+				return {
+					...trigger,
+					connectionName: connection?.name || i18n.t("connectionNotFound", { ns: "services" }),
+				};
+			});
+
+			return { data: enrhichedTriggers, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
 
 			return { data: undefined, error };
 		}
@@ -123,63 +180,6 @@ export class TriggersService {
 					ns: "services",
 					triggerId: trigger.triggerId,
 				})
-			);
-
-			return { data: undefined, error };
-		}
-	}
-
-	static async listByProjectId(projectId: string): Promise<ServiceResponse<Trigger[]>> {
-		try {
-			const { data: environments, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
-
-			if (errorEnvs) {
-				LoggerService.error(
-					namespaces.triggerService,
-					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
-				);
-
-				return { data: undefined, error: errorEnvs };
-			}
-
-			const { triggers } = await triggersClient.list({ envId: environments && environments[0].envId });
-
-			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
-			const { data: connectionsList, error } = await ConnectionService.list();
-			if (error) {
-				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
-
-				return { data: undefined, error };
-			}
-
-			const enrhichedTriggers = convertedTriggers.map((trigger) => {
-				const connection = connectionsList?.find(
-					(connection) => connection.connectionId === trigger.connectionId
-				);
-
-				return {
-					...trigger,
-					connectionName: connection?.name || i18n.t("connectionNotFound", { ns: "services" }),
-				};
-			});
-
-			return { data: enrhichedTriggers, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
-
-			return { data: undefined, error };
-		}
-	}
-
-	static async delete(triggerId: string): Promise<ServiceResponse<void>> {
-		try {
-			await triggersClient.delete({ triggerId });
-
-			return { data: undefined, error: undefined };
-		} catch (error) {
-			LoggerService.error(
-				namespaces.triggerService,
-				i18n.t("triggerRemoveFailedExtended", { ns: "services", triggerId })
 			);
 
 			return { data: undefined, error };

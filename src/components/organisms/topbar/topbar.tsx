@@ -5,9 +5,10 @@ import { redirect, useParams } from "react-router-dom";
 
 import { TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
-import { useProjectStore, useToastStore } from "@store";
 import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
 
@@ -22,9 +23,9 @@ export const Topbar = () => {
 	const [project, setProject] = useState<ProjectMenuItem>();
 	const addToast = useToastStore((state) => state.addToast);
 	const inputClass = cn(
-		"font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight",
+		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0",
 		{
-			"outline-error outline-2": !isNameValid,
+			"outline-2 outline-error": !isNameValid,
 		}
 	);
 

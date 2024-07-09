@@ -1,0 +1,12 @@
+{
+	"eslint.format.enable": true,
+	"prettier.bracketSameLine": true,
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": ["source.fixAll.eslint"],
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	]
+}

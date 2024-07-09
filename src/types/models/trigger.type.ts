@@ -1,13 +1,13 @@
 export type Trigger = {
-	triggerId?: string;
 	connectionId: string;
-	name: string;
-	filter?: string;
-	eventType: string;
-	path: string;
-	entryFunction: string;
 	connectionName?: string;
 	data?: TriggerData;
+	entryFunction: string;
+	eventType: string;
+	filter?: string;
+	name: string;
+	path: string;
+	triggerId?: string;
 };
 
 export type TriggerData = { [key: string]: { string: { v: string } } };

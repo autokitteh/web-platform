@@ -2,6 +2,7 @@ import React from "react";
 
 import { LoggerLevel } from "@enums";
 import { OutputTabsVariants } from "@enums/components";
+
 import { useLoggerStore } from "@store";
 
 import { Tab } from "@components/atoms";
@@ -10,11 +11,11 @@ export const OutputTabs: React.FC = () => {
 	const logs = useLoggerStore((state) => state.logs);
 
 	const ouputTextStyle = {
-		[LoggerLevel.error]: "text-error-200",
-		[LoggerLevel.warn]: "text-yellow-500",
 		[LoggerLevel.debug]: "",
+		[LoggerLevel.error]: "text-error-200",
 		[LoggerLevel.info]: "",
 		[LoggerLevel.log]: "",
+		[LoggerLevel.warn]: "text-yellow-500",
 	} as const;
 
 	return (

@@ -1,1 +1,1 @@
-export type ToastType = "success" | "error";
+export type ToastType = "error" | "success";

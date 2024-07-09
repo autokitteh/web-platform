@@ -1,6 +1,6 @@
 export interface TableProps {
-	className?: string;
 	children?: React.ReactNode;
-	style?: React.CSSProperties;
+	className?: string;
 	onClick?: () => void;
+	style?: React.CSSProperties;
 }

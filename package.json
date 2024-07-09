@@ -9,8 +9,8 @@
 		"test:e2e:report": "npx playwright show-report",
 		"dev": "npm run validate-env && vite",
 		"build": "npm run validate-env && tsc && vite build",
-		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings=0",
-		"lint-fix": "eslint . --ext ts,tsx --report-unused-disable-directives --fix",
+		"lint": "eslint . --ext ts,tsx,json --report-unused-disable-directives --max-warnings=0",
+		"lint-fix": "eslint . --ext ts,tsx,json --report-unused-disable-directives --fix",
 		"preview": "vite preview",
 		"test": "vitest",
 		"storybook": "storybook dev",
@@ -20,7 +20,7 @@
 		"tsc": "tsc",
 		"type-check": "tsc --pretty --noEmit",
 		"check-format:staged": "prettier . --check",
-		"fixed-format:staged": "prettier . --write",
+		"fix-format:staged": "prettier . --write",
 		"validate-env": "node ./validateEnv"
 	},
 	"dependencies": {
@@ -90,6 +90,7 @@
 		"eslint-import-resolver-alias": "^1.1.2",
 		"eslint-import-resolver-typescript": "^3.6.1",
 		"eslint-plugin-local-rules": "^3.0.2",
+		"eslint-plugin-perfectionist": "^2.11.0",
 		"eslint-plugin-prettier": "^5.1.3",
 		"eslint-plugin-promise": "^6.4.0",
 		"eslint-plugin-react-hooks": "^4.6.2",

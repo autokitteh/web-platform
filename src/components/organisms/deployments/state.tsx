@@ -7,14 +7,14 @@ import { cn } from "@utilities";
 
 const deploymentStateStyles = {
 	[DeploymentStateVariant.active]: "text-white bg-gray-800 border",
-	[DeploymentStateVariant.inactive]: "text-gray-400 bg-gray-600",
 	[DeploymentStateVariant.draining]: "text-gray-300 border border-dashed",
+	[DeploymentStateVariant.inactive]: "text-gray-400 bg-gray-600",
 	[DeploymentStateVariant.testing]: "",
 };
 
 export const DeploymentState = ({ deploymentState }: { deploymentState: DeploymentStateVariant }) => {
 	const baseClass = cn(
-		"text-xs text-center rounded py-1 px-1.5 font-semibold min-w-14",
+		"min-w-14 rounded px-1.5 py-1 text-center text-xs font-semibold",
 		deploymentStateStyles[deploymentState as keyof typeof deploymentStateStyles]
 	);
 

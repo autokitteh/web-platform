@@ -7,8 +7,8 @@ import { LogoCatImage } from "@assets/image";
 
 export const LogoCatLarge = ({ className }: LogoCatLargeProps) => {
 	const logoClass = cn(
-		"absolute fill-white opacity-10 pointer-events-none",
-		"max-w-72 2xl:max-w-80 3xl:max-w-420 -bottom-10 2xl:bottom-7 right-2 2xl:right-7",
+		"pointer-events-none absolute fill-white opacity-10",
+		"-bottom-10 right-2 max-w-72 2xl:bottom-7 2xl:right-7 2xl:max-w-80 3xl:max-w-420",
 		className
 	);
 

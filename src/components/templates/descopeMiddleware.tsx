@@ -5,8 +5,9 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 
 import { baseUrl } from "@constants";
-import { useProjectStore, useToastStore } from "@store";
 import { useUserStore } from "@store/useUserStore";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Badge, Frame, LogoCatLarge } from "@components/atoms";
 

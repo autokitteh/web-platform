@@ -8,7 +8,7 @@ export const SettingsTopbar = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "topbar" });
 
 	const styleInput = cn(
-		"font-bold p-0 text-xl leading-6 bg-transparent min-w-3 outline outline-0 rounded leading-tight"
+		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0"
 	);
 
 	return (

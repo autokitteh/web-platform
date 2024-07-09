@@ -8,9 +8,9 @@ export enum SidebarMenu {
 }
 
 export enum SidebarHrefMenu {
-	projects = "projects",
-	dashboard = "dashboard",
 	connections = "connections",
-	stats = "stats",
+	dashboard = "dashboard",
+	projects = "projects",
 	settings = "settings",
+	stats = "stats",
 }

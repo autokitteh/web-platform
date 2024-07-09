@@ -1,15 +1,15 @@
 import { SessionStateType } from "@enums";
 
 export type Deployment = {
-	deploymentId: string;
-	envId: string;
 	buildId: string;
 	createdAt: Date;
-	state: number;
+	deploymentId: string;
+	envId: string;
 	sessionStats?: DeploymentSession[];
+	state: number;
 };
 
 export type DeploymentSession = {
-	state?: SessionStateType;
 	count: number;
+	state?: SessionStateType;
 };

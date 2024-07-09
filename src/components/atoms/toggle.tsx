@@ -5,9 +5,9 @@ import { cn } from "@utilities";
 
 export const Toggle = ({ checked, label, onChange }: ToggleProps) => {
 	const baseStyle = cn(
-		"relative w-10 h-5 bg-gray-300 rounded-full peer-checked:after:translate-x-full peer-checked:after:border-gray-300",
-		"after:content-[''] peer-checked:bg-green-accent after:absolute",
-		"after:top-[2px] after:start-[4px] after:bg-white after:border after:rounded-full",
+		"relative h-5 w-10 rounded-full bg-gray-300 peer-checked:after:translate-x-full peer-checked:after:border-gray-300",
+		"after:absolute after:content-[''] peer-checked:bg-green-accent",
+		"after:start-[4px] after:top-[2px] after:rounded-full after:border after:bg-white",
 		"after:h-4 after:w-4 after:transition-all"
 	);
 

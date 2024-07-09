@@ -6,9 +6,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
-import { useProjectStore, useToastStore } from "@store";
 import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg } from "@components/atoms";
 
@@ -70,9 +71,9 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
 	const buttonMenuStyle = (href: string) =>
-		cn("hover:bg-green-light gap-1.5 p-0.5 pl-1", {
+		cn("gap-1.5 p-0.5 pl-1 hover:bg-green-light", {
 			"bg-gray-700": isButtonActive(href) && isOpen,
-			"hover:bg-gray-700 text-white": isButtonActive(href),
+			"text-white hover:bg-gray-700": isButtonActive(href),
 		});
 
 	const buttonMenuIconStyle = (href: string) =>
@@ -81,7 +82,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		});
 
 	const buttonMenuIconWrapperStyle = (href: string) =>
-		cn("w-9 h-9 flex items-center justify-center rounded-full duration-500", {
+		cn("flex h-9 w-9 items-center justify-center rounded-full duration-500", {
 			"bg-gray-700 hover:bg-gray-700": isButtonActive(href) && !isOpen,
 		});
 

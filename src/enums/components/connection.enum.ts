@@ -1,8 +1,8 @@
 export enum ConnectionStatus {
-	unspecified = 0,
-	ok = 1,
-	warning = 2,
 	error = 3,
+	ok = 1,
+	unspecified = 0,
+	warning = 2,
 }
 
 export enum Integrations {

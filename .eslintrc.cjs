@@ -10,10 +10,10 @@ module.exports = {
 		"plugin:jsx-a11y/recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:storybook/recommended",
-		"plugin:prettier/recommended",
 		"plugin:security/recommended-legacy",
 		"plugin:promise/recommended",
 		"plugin:@liferay/react",
+		"plugin:prettier/recommended"
 	],
 	settings: {
 		"react": {
@@ -59,7 +59,7 @@ module.exports = {
 			},
 		},
 	},
-	ignorePatterns: ["dist", ".eslintrc.cjs", "src/stories"],
+	ignorePatterns: ["dist", ".eslintrc.cjs"],
 	parser: "@typescript-eslint/parser",
 	plugins: [
 		"react-refresh",
@@ -69,13 +69,21 @@ module.exports = {
 		"promise",
 		"@liferay",
 		"eslint-plugin-local-rules",
-		"prettier",
 		"import",
+		"perfectionist"
 	],
 	rules: {
+		"perfectionist/sort-object-types": [
+			"error",
+			{
+				type: "alphabetical",
+				order: "asc",
+			},
+		],
+		"@typescript-eslint/adjacent-overload-signatures": "off",
+		"perfectionist/sort-imports": "off",
 		"local-rules/no-abbreviations": "error",
 		"@liferay/no-anonymous-exports": "off",
-		"sort-keys": "error",
 		"@liferay/sort-class-names": "off",
 		"@typescript-eslint/member-ordering": [
 			"error",
@@ -84,7 +92,23 @@ module.exports = {
 			},
 		],
 		"@typescript-eslint/no-explicit-any": "off",
-		"prettier/prettier": ["error", { endOfLine: "auto" }, { usePrettierrc: true }],
+		"prettier/prettier": [
+			"error",
+			{
+				"arrowParens": "always",
+				"bracketSpacing": true,
+				"jsxSingleQuote": false,
+				"printWidth": 120,
+				"quoteProps": "consistent",
+				"semi": true,
+				"singleQuote": false,
+				"tabWidth": 4,
+				"trailingComma": "es5",
+				"useTabs": true,
+				"plugins": ["prettier-plugin-tailwindcss"],
+				"tailwindFunctions": ["cn"],
+			},
+		],
 		"security/detect-object-injection": "off",
 		"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 		"react/prefer-stateless-function": "error",
@@ -168,7 +192,7 @@ module.exports = {
 						position: "after",
 					},
 					{
-						pattern: "@(hooks|store)/**",
+						pattern: "{@hooks,@store}",
 						group: "internal",
 						position: "after",
 					},
@@ -195,4 +219,12 @@ module.exports = {
 		"import/no-duplicates": "error",
 		"import/newline-after-import": "error",
 	},
+	"overrides": [
+	  {
+		"files": ["*.json"],
+		"rules": {
+		  "no-unused-expressions": "off"
+		}
+	  }
+	]
 };

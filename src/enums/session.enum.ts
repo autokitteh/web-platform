@@ -1,24 +1,24 @@
 export enum SessionLogRecordType {
-	print = "print",
-	unknown = "unknown",
-	state = "state",
-	callSpec = "callSpec",
-	callAttemptStart = "callAttemptStart",
 	callAttemptComplete = "callAttemptComplete",
+	callAttemptStart = "callAttemptStart",
+	callSpec = "callSpec",
+	print = "print",
+	state = "state",
+	unknown = "unknown",
 }
 export enum SessionStateType {
+	completed = "completed",
 	created = "created",
+	error = "error",
 	running = "running",
 	stopped = "stopped",
-	error = "error",
-	completed = "completed",
 }
 
 export enum SessionState {
-	unspecified = 0,
-	created = 1,
-	running = 2,
-	error = 3,
 	completed = 4,
+	created = 1,
+	error = 3,
+	running = 2,
 	stopped = 5,
+	unspecified = 0,
 }

@@ -7,8 +7,9 @@ import { useParams } from "react-router-dom";
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
 import { ProjectsService } from "@services";
-import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { cn } from "@utilities";
+
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
@@ -40,17 +41,17 @@ export const CodeTable = () => {
 	const resourcesEntries = Object.entries(resources);
 	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
 
-	const styleCircle = cn("duration-300 stroke-gray-400 group-hover:stroke-green-accent", {
+	const styleCircle = cn("stroke-gray-400 duration-300 group-hover:stroke-green-accent", {
 		"stroke-green-accent": isDragOver,
 	});
-	const styleBase = cn("duration-300 rounded-xl relative flex-1", {
-		"mt-auto mb-auto flex justify-center items-center": isEmpty(sortedResources),
+	const styleBase = cn("relative flex-1 rounded-xl duration-300", {
+		"mb-auto mt-auto flex items-center justify-center": isEmpty(sortedResources),
 	});
 	const styleFrame = cn(
-		"absolute duration-300 top-0 h-full w-full rounded-lg z-10 flex justify-center items-center",
-		"opacity-0 select-none pointer-events-none",
+		"absolute top-0 z-10 flex h-full w-full items-center justify-center rounded-lg duration-300",
+		"pointer-events-none select-none opacity-0",
 		{
-			"bg-white/40 border-2 opacity-1": isDragOver,
+			"opacity-1 border-2 bg-white/40": isDragOver,
 			"opacity-1 pointer-events-auto": isEmpty(sortedResources),
 		}
 	);

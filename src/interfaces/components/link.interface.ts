@@ -1,8 +1,8 @@
 export interface LinkProps {
-	to: string;
-	className?: string;
 	ariaLabel?: string;
+	children: React.ReactNode;
+	className?: string;
 	disabled?: boolean;
 	target?: React.HTMLAttributeAnchorTarget;
-	children: React.ReactNode;
+	to: string;
 }
