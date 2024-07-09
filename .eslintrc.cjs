@@ -73,6 +73,7 @@ module.exports = {
 		"perfectionist"
 	],
 	rules: {
+		"sort-keys": "off",
 		"perfectionist/sort-object-types": [
 			"error",
 			{
