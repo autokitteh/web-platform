@@ -21,7 +21,8 @@ export const SessionsTableRow = memo(
 		const { t: tErrors } = useTranslation("errors");
 		const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 		const addToast = useToastStore((state) => state.addToast);
-		const { openSessionLog, scrollDisplayed, selectedSessionId, sessions, showDeleteModal } = data;
+		const { onUpdateSessions, openSessionLog, scrollDisplayed, selectedSessionId, sessions, showDeleteModal } =
+			data;
 		const session = sessions[index];
 
 		const sessionRowClass = (id: string) =>
@@ -39,11 +40,6 @@ export const SessionsTableRow = memo(
 
 		const handleStopSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
 			event.stopPropagation();
-
-			if (session.state !== SessionState.running) {
-				return;
-			}
-
 			const { error } = await SessionsService.stop(session.sessionId);
 			if (error) {
 				addToast({
@@ -54,6 +50,7 @@ export const SessionsTableRow = memo(
 
 				return;
 			}
+			onUpdateSessions();
 		};
 
 		const actionStoppedIconClass =
@@ -75,12 +72,7 @@ export const SessionsTableRow = memo(
 
 				<Td className={sessionLastTdClass}>
 					<div className="flex space-x-1">
-						<IconButton
-							className="p-1"
-							disabled={session.state !== SessionState.running}
-							onClick={handleStopSession}
-							title={t("table.stopSession")}
-						>
+						<IconButton className="p-1" onClick={handleStopSession} title={t("table.stopSession")}>
 							<ActionStoppedIcon className={actionStoppedIconClass} />
 						</IconButton>
 
