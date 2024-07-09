@@ -13,7 +13,7 @@ module.exports = {
 		"plugin:security/recommended-legacy",
 		"plugin:promise/recommended",
 		"plugin:@liferay/react",
-		"plugin:prettier/recommended"
+		"plugin:prettier/recommended",
 	],
 	settings: {
 		"react": {
