@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import * as Sentry from "@sentry/react";
+import {
+	BrowserRouter,
+	Navigate,
+	Route,
+	Routes,
+	createRoutesFromChildren,
+	matchRoutes,
+	useLocation,
+	useNavigationType,
+} from "react-router-dom";
 
 import { DeploymentsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
@@ -15,9 +25,35 @@ import { Deployments } from "@components/pages/deployments";
 import { AppLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
+Sentry.init({
+	dsn: import.meta.env.SENTRY_DSN,
+	integrations: [
+		// See docs for support of different versions of variation of react router
+		// https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
+		Sentry.reactRouterV6BrowserTracingIntegration({
+			useEffect,
+			useLocation,
+			useNavigationType,
+			createRoutesFromChildren,
+			matchRoutes,
+		}),
+		Sentry.replayIntegration(),
+	],
+	// Set tracesSampleRate to 1.0 to capture 100%
+	// of transactions for tracing.
+	tracesSampleRate: 1.0,
+	// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
+	tracePropagationTargets: ["localhost", /^https:\/\/staging.autokitteh\.cloud/],
+	// Capture Replay for 10% of all sessions,
+	// plus for 100% of sessions with an error
+	replaysSessionSampleRate: 0.1,
+	replaysOnErrorSampleRate: 1.0,
+});
+const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
+
 export const App: React.FC = () => (
 	<BrowserRouter>
-		<Routes>
+		<SentryRoutes>
 			<Route element={<AppLayout />} path="/">
 				<Route element={<Dashboard />} index />
 
@@ -91,6 +127,6 @@ export const App: React.FC = () => (
 			</Route>
 
 			<Route element={<Navigate replace to="/404" />} path="*" />
-		</Routes>
+		</SentryRoutes>
 	</BrowserRouter>
 );
