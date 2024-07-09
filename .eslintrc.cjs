@@ -108,9 +108,6 @@ module.exports = {
 				"plugins": ["prettier-plugin-tailwindcss"],
 				"tailwindFunctions": ["cn"],
 			},
-			{
-				usePrettierrc: true,
-			},
 		],
 		"security/detect-object-injection": "off",
 		"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],

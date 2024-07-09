@@ -1,25 +1,7 @@
 {
-	"files.autoSave": "onFocusChange",
 	"eslint.format.enable": true,
 	"prettier.bracketSameLine": true,
-	"prettier.configPath": ".prettierrc",
 	"editor.formatOnSave": true,
-	"prettier.printWidth": 120,
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-	},
-	"[typescript]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-	},
-	"[json]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-	},
-	"[javascript]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-	},
-	"[javascriptreact]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-	},
 	"editor.codeActionsOnSave": ["source.fixAll.eslint"],
 	"eslint.validate": [
 		"javascript",
