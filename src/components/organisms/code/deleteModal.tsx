@@ -31,7 +31,12 @@ export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 					{t("cancelButton")}
 				</Button>
 
-				<Button ariaLabel={t("deleteButton")} className="w-auto bg-gray-700 px-4 py-3 font-semibold" onClick={onDelete} variant="filled">
+				<Button
+					ariaLabel={t("deleteButton")}
+					className="w-auto bg-gray-700 px-4 py-3 font-semibold"
+					onClick={onDelete}
+					variant="filled"
+				>
 					{t("deleteButton")}
 				</Button>
 			</div>

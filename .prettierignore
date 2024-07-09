@@ -4,3 +4,9 @@ dist/
 tsconfig.json
 CHANGELOG.md
 .github/workflows/*
+env.d.ts
+playwright-report/
+test-results/
+*.json
+.prettierrc
+*.cjs

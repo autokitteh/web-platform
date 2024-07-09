@@ -4,3 +4,7 @@ env.d.ts
 /src/autokitteh
 playwright-report/
 test-results/
+tsconfig.json
+CHANGELOG.md
+.github/workflows/*
+env.d.ts

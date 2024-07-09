@@ -29,7 +29,13 @@ export const DropdownButton = ({ ariaLabel, children, className, contentMenu }: 
 	const handleMouseLeave = () => setDropdownState((prev) => ({ ...prev, isOpen: false }));
 
 	return (
-		<div aria-label={ariaLabel} className={baseStyle} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} ref={parentRef}>
+		<div
+			aria-label={ariaLabel}
+			className={baseStyle}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
+			ref={parentRef}
+		>
 			{children}
 
 			<DropdownMenu isOpen={dropdownState.isOpen} style={dropdownState.style}>

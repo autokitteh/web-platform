@@ -13,7 +13,7 @@ module.exports = {
 		"plugin:security/recommended-legacy",
 		"plugin:promise/recommended",
 		"plugin:@liferay/react",
-		"prettier",
+		"plugin:prettier/recommended"
 	],
 	settings: {
 		"react": {
@@ -69,9 +69,8 @@ module.exports = {
 		"promise",
 		"@liferay",
 		"eslint-plugin-local-rules",
-		"prettier",
 		"import",
-		"perfectionist",
+		"perfectionist"
 	],
 	rules: {
 		"perfectionist/sort-object-types": [
@@ -96,21 +95,10 @@ module.exports = {
 		"@typescript-eslint/no-explicit-any": "off",
 		"prettier/prettier": [
 			"error",
-			{
-				arrowParens: "always",
-				bracketSpacing: true,
-				jsxSingleQuote: false,
-				printWidth: 120,
-				quoteProps: "consistent",
-				semi: true,
-				singleQuote: false,
-				tabWidth: 4,
-				trailingComma: "es5",
-				useTabs: true,
-				plugins: ["prettier-plugin-tailwindcss"],
-				tailwindFunctions: ["cn"],
-			},
 			{},
+			{
+				usePrettierrc: true,
+			},
 		],
 		"security/detect-object-injection": "off",
 		"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],

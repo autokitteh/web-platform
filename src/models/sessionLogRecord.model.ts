@@ -24,7 +24,10 @@ export class SessionLogRecord {
 		const logRecordType = this.getLogRecordType(props);
 
 		if (!logRecordType) {
-			LoggerService.error(namespaces.sessionsHistory, i18n.t("sessionLogRecordTypeNotFound", { ns: "services", props: Object.keys(props).join(", ") }));
+			LoggerService.error(
+				namespaces.sessionsHistory,
+				i18n.t("sessionLogRecordTypeNotFound", { ns: "services", props: Object.keys(props).join(", ") })
+			);
 
 			return;
 		}
@@ -45,7 +48,9 @@ export class SessionLogRecord {
 				break;
 			case SessionLogRecordType.print:
 				this.type = SessionLogRecordType.print;
-				this.logs = logRecord.print?.text ? `${i18n.t("historyPrint", { ns: "services" })}: ${logRecord.print.text}` : undefined;
+				this.logs = logRecord.print?.text
+					? `${i18n.t("historyPrint", { ns: "services" })}: ${logRecord.print.text}`
+					: undefined;
 				break;
 			default:
 		}
@@ -113,15 +118,21 @@ export class SessionLogRecord {
 		this.type = SessionLogRecordType.state;
 		const activeKey = Object.keys(logRecord.state!).find(
 			(key) =>
-				logRecord.state?.[key as unknown as SessionStateType] !== undefined && typeof logRecord.state?.[key as unknown as SessionStateType] === "object"
+				logRecord.state?.[key as unknown as SessionStateType] !== undefined &&
+				typeof logRecord.state?.[key as unknown as SessionStateType] === "object"
 		);
 		this.state = activeKey as SessionStateType;
 		if (this.state === SessionStateType.running) {
 			const functionRunning = logRecord.state?.running?.call?.function?.name;
-			this.logs = functionRunning ? `${i18n.t("historyInitFunction", { ns: "services" })}: ${functionRunning}` : undefined;
+			this.logs = functionRunning
+				? `${i18n.t("historyInitFunction", { ns: "services" })}: ${functionRunning}`
+				: undefined;
 		}
 		if (this.state === SessionStateType.error) {
-			this.error = convertErrorProtoToModel(logRecord.state?.error?.error?.value, i18n.t("sessionLogMissingOnErrorType", { ns: "errors" }))?.message;
+			this.error = convertErrorProtoToModel(
+				logRecord.state?.error?.error?.value,
+				i18n.t("sessionLogMissingOnErrorType", { ns: "errors" })
+			)?.message;
 			this.logs = `Error: ${this.error}\n`;
 			this.callstackTrace = (logRecord?.state?.error?.error?.callstack || []) as Callstack[];
 			this.logs += `Callstack:\n`;
@@ -140,6 +151,10 @@ export class SessionLogRecord {
 	}
 
 	isFinished(): boolean {
-		return this.state === SessionStateType.error || this.state === SessionStateType.completed || this.state === SessionStateType.stopped;
+		return (
+			this.state === SessionStateType.error ||
+			this.state === SessionStateType.completed ||
+			this.state === SessionStateType.stopped
+		);
 	}
 }

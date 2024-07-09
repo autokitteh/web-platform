@@ -97,7 +97,11 @@ export const TriggersTable = () => {
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 
-				<Button ariaLabel={t("buttons.addNew")} className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white" href="add">
+				<Button
+					ariaLabel={t("buttons.addNew")}
+					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white"
+					href="add"
+				>
 					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}
@@ -117,7 +121,10 @@ export const TriggersTable = () => {
 								/>
 							</Th>
 
-							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("connectionName")}>
+							<Th
+								className="group cursor-pointer font-normal"
+								onClick={() => requestSort("connectionName")}
+							>
 								{t("table.columns.connection")}
 
 								<SortButton
@@ -146,7 +153,9 @@ export const TriggersTable = () => {
 							<Tr className="group" key={trigger.triggerId}>
 								<Td className="font-semibold">
 									<div className="flex gap-3">
-										{trigger.data?.schedule?.string?.v ? <ClockIcon className="w-4 fill-white" /> : null}
+										{trigger.data?.schedule?.string?.v ? (
+											<ClockIcon className="w-4 fill-white" />
+										) : null}
 
 										<div>{trigger.name}</div>
 									</div>
@@ -161,14 +170,18 @@ export const TriggersTable = () => {
 								<Td className="max-w-20 pr-0">
 									<div className="flex space-x-1">
 										<IconButton
-											ariaLabel={t("table.buttons.ariaModifyTrigger", { name: trigger.name })}
+											ariaLabel={t("table.buttons.ariaModifyTrigger", {
+												name: trigger.name,
+											})}
 											onClick={() => handleNavigate(trigger.triggerId!, !!trigger.data?.schedule)}
 										>
 											<EditIcon className="h-3 w-3 fill-white" />
 										</IconButton>
 
 										<IconButton
-											ariaLabel={t("table.buttons.ariaDeleteTrigger", { name: trigger.name })}
+											ariaLabel={t("table.buttons.ariaDeleteTrigger", {
+												name: trigger.name,
+											})}
 											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
 										>
 											<TrashIcon className="h-3 w-3 fill-white" />

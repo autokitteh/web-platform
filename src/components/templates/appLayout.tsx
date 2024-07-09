@@ -4,7 +4,13 @@ import { Outlet } from "react-router-dom";
 
 import { Sidebar, StatsTopbar, Topbar } from "@components/organisms";
 
-export const AppLayout = ({ displayStatsTopbar, displayTopbar }: { displayStatsTopbar?: boolean; displayTopbar?: boolean }) => {
+export const AppLayout = ({
+	displayStatsTopbar,
+	displayTopbar,
+}: {
+	displayStatsTopbar?: boolean;
+	displayTopbar?: boolean;
+}) => {
 	return (
 		<div className="h-screen w-screen pr-5">
 			<div className="flex h-full">

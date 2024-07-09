@@ -89,7 +89,11 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
 			<ul>
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
-					<Button ariaLabel="New Project" className="gap-1.5 p-0.5 pl-1 hover:bg-green-light" onClick={handleCreateProject}>
+					<Button
+						ariaLabel="New Project"
+						className="gap-1.5 p-0.5 pl-1 hover:bg-green-light"
+						onClick={handleCreateProject}
+					>
 						<div className="flex h-9 w-9 items-center justify-center">
 							<IconSvg alt="New Project" className="h-8 w-8 p-1" src={NewProject} />
 						</div>

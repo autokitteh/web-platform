@@ -21,7 +21,10 @@ export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 
 	const requestSort = useCallback((key: keyof T) => {
 		setSortConfig((prevConfig) => ({
-			direction: prevConfig.key === key && prevConfig.direction === SortDirectionVariant.ASC ? SortDirectionVariant.DESC : SortDirectionVariant.ASC,
+			direction:
+				prevConfig.key === key && prevConfig.direction === SortDirectionVariant.ASC
+					? SortDirectionVariant.DESC
+					: SortDirectionVariant.ASC,
 			key,
 		}));
 	}, []);

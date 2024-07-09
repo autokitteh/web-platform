@@ -48,7 +48,9 @@ export class ConnectionService {
 			}
 
 			const convertedConnection = convertConnectionProtoToModel(connection);
-			const integration = integrations.find((integration) => integration.integrationId === connection.integrationId);
+			const integration = integrations.find(
+				(integration) => integration.integrationId === connection.integrationId
+			);
 			convertedConnection.integrationName = integration?.displayName;
 
 			return { data: convertedConnection, error: undefined };
@@ -80,7 +82,9 @@ export class ConnectionService {
 				};
 			}
 			convertedConnections.map((connection) => {
-				const integration = integrations.find((integration) => integration.integrationId === connection.integrationId);
+				const integration = integrations.find(
+					(integration) => integration.integrationId === connection.integrationId
+				);
 				if (integration) {
 					connection.integrationName = integration.displayName;
 				}
@@ -115,7 +119,9 @@ export class ConnectionService {
 				};
 			}
 			convertedConnections.map((connection) => {
-				const integration = integrations.find((integration) => integration.integrationId === connection.integrationId);
+				const integration = integrations.find(
+					(integration) => integration.integrationId === connection.integrationId
+				);
 				if (integration) {
 					connection.integrationName = integration.displayName;
 				}

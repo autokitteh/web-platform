@@ -16,7 +16,8 @@ import { Close } from "@assets/image/icons";
 export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { openedFiles, resources, setUpdateFileContent, updateEditorClosedFiles, updateEditorOpenedFiles } = useProjectStore();
+	const { openedFiles, resources, setUpdateFileContent, updateEditorClosedFiles, updateEditorOpenedFiles } =
+		useProjectStore();
 	const [editorKey, setEditorKey] = useState(0);
 	const [activeTab, setActiveTab] = useState("");
 
@@ -70,7 +71,10 @@ export const EditorTabs = () => {
 			"opacity-100": openedFiles.find(({ isActive, name }) => name === fileName && isActive),
 		});
 
-	const handleCloseButtonClick = (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>, name: string): void => {
+	const handleCloseButtonClick = (
+		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
+		name: string
+	): void => {
 		event.stopPropagation();
 		updateEditorClosedFiles(name);
 	};

@@ -33,7 +33,9 @@ i18n.on("initialized", () => {
 	});
 
 	schedulerTriggerSchema = z.object({
-		cron: z.string().regex(new RegExp(cronFormat), { message: i18n.t("cronExpressionsFormat", { ns: "validations" }) }),
+		cron: z.string().regex(new RegExp(cronFormat), {
+			message: i18n.t("cronExpressionsFormat", { ns: "validations" }),
+		}),
 		entryFunction: z.string().min(1, i18n.t("functionNameIsRequired", { ns: "validations" })),
 		filePath: selectItemSchema.refine((value: { label: any }) => value.label, {
 			message: i18n.t("fileNameIsRequired", { ns: "validations" }),

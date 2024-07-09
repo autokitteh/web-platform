@@ -41,7 +41,10 @@ export const SessionsTable = () => {
 	});
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 
-	const frameClass = useMemo(() => cn("w-1/2 bg-gray-700 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }), [sessionId]);
+	const frameClass = useMemo(
+		() => cn("w-1/2 bg-gray-700 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
+		[sessionId]
+	);
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
@@ -59,7 +62,10 @@ export const SessionsTable = () => {
 					message: tErrors("sessionsFetchError"),
 					type: "error",
 				});
-				LoggerService.error(namespaces.sessionsService, tErrors("sessionsFetchErrorExtended", { error: (error as Error).message }));
+				LoggerService.error(
+					namespaces.sessionsService,
+					tErrors("sessionsFetchErrorExtended", { error: (error as Error).message })
+				);
 
 				return;
 			}
@@ -152,7 +158,10 @@ export const SessionsTable = () => {
 				message: tErrors("failedRemoveSession"),
 				type: "error",
 			});
-			LoggerService.error(namespaces.sessionsService, tErrors("failedRemoveSessionExtended", { sessionId: selectedSessionId }));
+			LoggerService.error(
+				namespaces.sessionsService,
+				tErrors("failedRemoveSessionExtended", { sessionId: selectedSessionId })
+			);
 
 			return;
 		}
@@ -205,7 +214,9 @@ export const SessionsTable = () => {
 							{t("buttons.back")}
 						</IconButton>
 
-						<div className="font-mediumy text-base text-gray-300">{t("totalSessions", { total: totalSessions })}</div>
+						<div className="font-mediumy text-base text-gray-300">
+							{t("totalSessions", { total: totalSessions })}
+						</div>
 
 						{tailState.display ? (
 							<IconButton
@@ -225,11 +236,15 @@ export const SessionsTable = () => {
 					<Table className="mt-4 flex-1 overflow-hidden">
 						<THead>
 							<Tr>
-								<Th className="group cursor-pointer font-normal">{t("table.columns.activationTime")}</Th>
+								<Th className="group cursor-pointer font-normal">
+									{t("table.columns.activationTime")}
+								</Th>
 
 								<Th className="group cursor-pointer font-normal">{t("table.columns.status")}</Th>
 
-								<Th className="group cursor-pointer border-0 font-normal">{t("table.columns.sessionId")}</Th>
+								<Th className="group cursor-pointer border-0 font-normal">
+									{t("table.columns.sessionId")}
+								</Th>
 
 								<Th className="mr-1.5 max-w-20 border-0 font-normal">{t("table.columns.actions")}</Th>
 							</Tr>

@@ -21,5 +21,11 @@
 		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
 	},
 	"editor.codeActionsOnSave": ["source.fixAll.eslint"],
-	"eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"]
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	],
+	"editor.insertSpaces": false
 }
