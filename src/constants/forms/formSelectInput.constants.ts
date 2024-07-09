@@ -44,7 +44,6 @@ const getSelectStyles = (
 		control: (provided, state) => ({
 			...provided,
 			...baseStyles,
-
 			"&:after": {
 				backgroundColor: state.menuIsOpen && colorScheme === "dark" ? formThemes["gray-500"] : "transparent",
 				bottom: 0,
