@@ -4,6 +4,7 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { ModalDeleteVariableProps } from "@interfaces/components";
+
 import { useModalStore } from "@store";
 
 import { Button } from "@components/atoms";

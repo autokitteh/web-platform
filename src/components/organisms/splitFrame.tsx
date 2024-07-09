@@ -1,8 +1,9 @@
 import React from "react";
 
-import { useResize } from "@hooks";
 import { SplitFrameProps } from "@interfaces/components";
 import { cn } from "@utilities";
+
+import { useResize } from "@hooks";
 
 import { Button, Frame, LogoCatLarge } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";

@@ -6,9 +6,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
-import { useProjectStore, useToastStore } from "@store";
 import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg } from "@components/atoms";
 

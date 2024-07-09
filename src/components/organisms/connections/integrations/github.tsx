@@ -10,9 +10,10 @@ import { baseUrl, namespaces } from "@constants";
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { HttpService, LoggerService } from "@services";
-import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
+
+import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Link, Select, Spinner } from "@components/atoms";
 

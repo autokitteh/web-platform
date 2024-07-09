@@ -2,6 +2,7 @@ import React from "react";
 
 import { LoggerLevel } from "@enums";
 import { OutputTabsVariants } from "@enums/components";
+
 import { useLoggerStore } from "@store";
 
 import { Tab } from "@components/atoms";

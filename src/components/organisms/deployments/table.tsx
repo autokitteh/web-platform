@@ -5,8 +5,9 @@ import { useParams } from "react-router-dom";
 
 import { fetchDeploymentsInterval } from "@constants";
 import { DeploymentsService } from "@services";
-import { useToastStore } from "@store";
 import { Deployment } from "@type/models";
+
+import { useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { DeploymentsTableContent } from "@components/organisms/deployments";

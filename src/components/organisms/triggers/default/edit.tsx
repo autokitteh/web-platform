@@ -10,9 +10,10 @@ import { namespaces } from "@constants";
 import { TriggerFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
-import { useProjectStore, useToastStore } from "@store";
 import { Trigger, TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";

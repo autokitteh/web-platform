@@ -5,8 +5,9 @@ import { Trans, useTranslation } from "react-i18next";
 import { ModalName } from "@enums/components";
 import { ModalDeleteTriggerProps } from "@interfaces/components";
 import { TriggersService } from "@services";
-import { useModalStore } from "@store";
 import { Trigger } from "@type/models";
+
+import { useModalStore } from "@store";
 
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";

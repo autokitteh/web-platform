@@ -9,9 +9,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { namespaces } from "@constants";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
-import { useProjectStore, useToastStore } from "@store";
 import { TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
 

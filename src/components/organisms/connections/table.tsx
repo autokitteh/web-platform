@@ -5,10 +5,11 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { baseUrl } from "@constants";
 import { ModalName } from "@enums/components";
-import { useSort } from "@hooks";
 import { ConnectionService } from "@services";
-import { useModalStore, useToastStore } from "@store";
 import { Connection } from "@type/models";
+
+import { useSort } from "@hooks";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ConnectionTableStatus, SortButton } from "@components/molecules";

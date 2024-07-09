@@ -8,8 +8,9 @@ import { useParams } from "react-router-dom";
 import { defalutFileExtension, monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
 import { ModalAddCodeAssetsProps } from "@interfaces/components";
-import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { codeAssetsSchema } from "@validations";
+
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Select } from "@components/atoms";
 import { Modal } from "@components/molecules";

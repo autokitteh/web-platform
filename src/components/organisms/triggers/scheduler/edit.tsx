@@ -9,9 +9,10 @@ import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } 
 import { TriggerFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
-import { useProjectStore, useToastStore } from "@store";
 import { Trigger } from "@type/models";
 import { schedulerTriggerSchema } from "@validations";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";

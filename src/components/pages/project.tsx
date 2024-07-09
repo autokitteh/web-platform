@@ -4,8 +4,9 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { ProjectsService } from "@services";
-import { useProjectStore, useToastStore } from "@store";
 import { calculatePathDepth } from "@utilities";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";

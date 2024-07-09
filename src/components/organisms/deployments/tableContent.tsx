@@ -6,10 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
-import { useSort } from "@hooks";
 import { DeploymentsService } from "@services";
-import { useModalStore, useToastStore } from "@store";
 import { Deployment } from "@type/models";
+
+import { useSort } from "@hooks";
+import { useModalStore, useToastStore } from "@store";
 
 import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";

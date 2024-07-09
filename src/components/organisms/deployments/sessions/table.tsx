@@ -8,12 +8,13 @@ import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
 import { fetchSessionsInterval, namespaces } from "@constants";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
-import { useInterval } from "@hooks";
 import { reverseSessionStateConverter } from "@models/utils";
 import { DeploymentsService, LoggerService, SessionsService } from "@services";
-import { useModalStore, useToastStore } from "@store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
+
+import { useInterval } from "@hooks";
+import { useModalStore, useToastStore } from "@store";
 
 import { Frame, IconButton, TBody, THead, Table, Th, Tr } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";

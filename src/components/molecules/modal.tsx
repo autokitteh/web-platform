@@ -4,8 +4,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
 
 import { ModalProps } from "@interfaces/components";
-import { useModalStore } from "@store";
 import { cn } from "@utilities";
+
+import { useModalStore } from "@store";
 
 import { IconButton } from "@components/atoms";
 

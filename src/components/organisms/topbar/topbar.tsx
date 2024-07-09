@@ -5,9 +5,10 @@ import { redirect, useParams } from "react-router-dom";
 
 import { TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
-import { useProjectStore, useToastStore } from "@store";
 import { ProjectMenuItem } from "@type/models";
 import { cn } from "@utilities";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
 

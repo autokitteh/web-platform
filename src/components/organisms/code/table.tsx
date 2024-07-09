@@ -7,8 +7,9 @@ import { useParams } from "react-router-dom";
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
 import { ProjectsService } from "@services";
-import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { cn } from "@utilities";
+
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";

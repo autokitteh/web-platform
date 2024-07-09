@@ -192,7 +192,7 @@ module.exports = {
 						position: "after",
 					},
 					{
-						pattern: "@(hooks|store)/**",
+						pattern: "{@hooks,@store}",
 						group: "internal",
 						position: "after",
 					},

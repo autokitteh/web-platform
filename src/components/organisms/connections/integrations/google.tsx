@@ -8,9 +8,10 @@ import { baseUrl, namespaces } from "@constants";
 import { infoGoogleAccountLinks, infoGoogleUserLinks, selectIntegrationGoogle } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
 import { HttpService, LoggerService } from "@services";
-import { useToastStore } from "@store";
 import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
+
+import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, Link, Select, Spinner, Textarea } from "@components/atoms";
 

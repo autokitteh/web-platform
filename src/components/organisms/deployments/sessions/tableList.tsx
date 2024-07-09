@@ -6,6 +6,7 @@ import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
 
 import { ModalName } from "@enums/components";
 import { SessionsTableListProps } from "@interfaces/components";
+
 import { useModalStore } from "@store";
 
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
