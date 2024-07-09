@@ -34,8 +34,8 @@ const getSelectStyles = (
 	const defaultBorderColor = `0.5px solid ${isError ? formThemes.error : formThemes["gray-500"]}`;
 	const greenBorderColor = `0.5px solid ${colorScheme === "dark" ? formThemes["green-light"] : formThemes["green-accent"]}`;
 	const hoverBorderColor = colorScheme === "dark" ? formThemes.white : formThemes["gray-400"];
-	const backgroundColor = formThemes[colorScheme === "dark" ? "dark" : "light"];
-	const oppositeSchemeColor = formThemes[colorScheme === "dark" ? "light" : "dark"];
+	const backgroundColor = formThemes[colorScheme === "dark" ? "dark" : "white"];
+	const oppositeSchemeColor = formThemes[colorScheme === "dark" ? "white" : "dark"];
 	const hoverBackgroundColor = formThemes["gray-800"];
 	const selectedBackgroundColor = colorScheme === "dark" ? formThemes.white : formThemes.dark;
 	const selectedTextColor = colorScheme === "dark" ? formThemes.dark : formThemes.white;
