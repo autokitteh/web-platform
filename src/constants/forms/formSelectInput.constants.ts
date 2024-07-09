@@ -1,6 +1,6 @@
 import { GroupBase, StylesConfig } from "react-select";
 
-import { formColors } from "@constants/forms/formColors.constants";
+import { formThemes } from "@constants/forms/formThemes.constants";
 import { SelectOption } from "@interfaces/components";
 import { ColorSchemes } from "@type/theme.type";
 
@@ -13,7 +13,7 @@ const baseStyles = {
 		borderRadius: "10px",
 	},
 	"::-webkit-scrollbar-thumb:hover": {
-		background: formColors["gray-400"],
+		background: formThemes["gray-400"],
 	},
 	"borderRadius": "8px",
 	"boxShadow": "none",
@@ -31,22 +31,21 @@ const getSelectStyles = (
 	isError: boolean,
 	colorScheme: ColorSchemes
 ): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
-	const defaultBorderColor = `0.5px solid ${isError ? formColors.error : formColors["gray-500"]}`;
-	const greenBorderColor = `0.5px solid ${colorScheme === "dark" ? formColors["green-light"] : formColors["green-accent"]}`;
-	const hoverBorderColor = colorScheme === "dark" ? formColors.white : formColors["gray-400"];
-	const backgroundColor = formColors[colorScheme === "dark" ? "black" : "white"];
-	const oppositeSchemeColor = formColors[colorScheme === "dark" ? "white" : "black"];
-	const hoverBackgroundColor = formColors["gray-800"];
-	const selectedBackgroundColor = colorScheme === "dark" ? formColors.white : formColors.black;
-	const selectedTextColor = colorScheme === "dark" ? formColors.black : formColors.white;
+	const defaultBorderColor = `0.5px solid ${isError ? formThemes.error : formThemes["gray-500"]}`;
+	const greenBorderColor = `0.5px solid ${colorScheme === "dark" ? formThemes["green-light"] : formThemes["green-accent"]}`;
+	const hoverBorderColor = colorScheme === "dark" ? formThemes.white : formThemes["gray-400"];
+	const backgroundColor = formThemes[colorScheme === "dark" ? "dark" : "white"];
+	const oppositeSchemeColor = formThemes[colorScheme === "dark" ? "white" : "dark"];
+	const hoverBackgroundColor = formThemes["gray-800"];
+	const selectedBackgroundColor = colorScheme === "dark" ? formThemes.white : formThemes.dark;
+	const selectedTextColor = colorScheme === "dark" ? formThemes.dark : formThemes.white;
 
 	return {
 		control: (provided, state) => ({
 			...provided,
 			...baseStyles,
-
 			"&:after": {
-				backgroundColor: state.menuIsOpen && colorScheme === "dark" ? formColors["gray-500"] : "transparent",
+				backgroundColor: state.menuIsOpen && colorScheme === "dark" ? formThemes["gray-500"] : "transparent",
 				bottom: 0,
 				content: '""',
 				height: state.menuIsOpen ? "1px" : "0",
@@ -126,14 +125,14 @@ const getSelectStyles = (
 			...provided,
 			"&:hover": !state.isDisabled && {
 				backgroundColor: hoverBackgroundColor,
-				color: formColors.white,
+				color: formThemes.white,
 			},
 			"backgroundColor": state.isSelected ? selectedBackgroundColor : backgroundColor,
 			"borderRadius": "8px",
 			"color": state.isSelected
 				? selectedTextColor
 				: state.isDisabled
-					? formColors["gray-400"]
+					? formThemes["gray-400"]
 					: oppositeSchemeColor,
 			"cursor": state.isDisabled ? "not-allowed" : "pointer",
 			"marginTop": "4px",

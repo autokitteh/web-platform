@@ -4,8 +4,8 @@ import tailwindConfig from "tailwind-config";
 
 const twConfig = resolveConfig(tailwindConfig);
 
-export const formColors = {
-	"black": twConfig.theme.colors.black["DEFAULT"],
+export const formThemes = {
+	"dark": twConfig.theme.colors.black["DEFAULT"],
 	"error": twConfig.theme.colors.error["DEFAULT"],
 	"gray-300": twConfig.theme.colors.gray[300],
 	"gray-400": twConfig.theme.colors.gray[400],
@@ -13,5 +13,6 @@ export const formColors = {
 	"gray-800": twConfig.theme.colors.gray[800],
 	"green-accent": twConfig.theme.colors["green-accent"]["DEFAULT"],
 	"green-light": twConfig.theme.colors["green-light"]["DEFAULT"],
+	"light": twConfig.theme.colors.white["DEFAULT"],
 	"white": twConfig.theme.colors.white["DEFAULT"],
 };

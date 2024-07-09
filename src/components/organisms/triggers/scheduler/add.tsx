@@ -77,10 +77,11 @@ export const TriggerSchedulerForm = ({
 
 	const {
 		control,
-		formState: { dirtyFields, errors },
+		formState: { errors },
 		getValues,
 		handleSubmit,
 		register,
+		watch,
 	} = useForm({
 		defaultValues: {
 			cron: "",
@@ -122,7 +123,7 @@ export const TriggerSchedulerForm = ({
 		navigate(`/projects/${projectId}/triggers`);
 	};
 
-	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
+	const { cron, entryFunction, name } = watch();
 
 	return isLoading ? (
 		<Loader isCenter size="xl" />
@@ -133,10 +134,10 @@ export const TriggerSchedulerForm = ({
 					<Input
 						{...register("name")}
 						aria-label={t("placeholders.name")}
-						className={inputClass("name")}
 						isError={!!errors.name}
 						isRequired
 						placeholder={t("placeholders.name")}
+						value={name}
 					/>
 
 					<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
@@ -146,10 +147,10 @@ export const TriggerSchedulerForm = ({
 					<Input
 						{...register("cron")}
 						aria-label={t("placeholders.cron")}
-						className={inputClass("cron")}
 						isError={!!errors.cron}
 						isRequired
 						placeholder={t("placeholders.cron")}
+						value={cron}
 					/>
 
 					<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
@@ -181,10 +182,10 @@ export const TriggerSchedulerForm = ({
 					<Input
 						{...register("entryFunction")}
 						aria-label={t("placeholders.functionName")}
-						className={inputClass("entryFunction")}
 						isError={!!errors.entryFunction}
 						isRequired
 						placeholder={t("placeholders.functionName")}
+						value={entryFunction}
 					/>
 
 					<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>

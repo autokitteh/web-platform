@@ -8,6 +8,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const {
 		classInput,
 		className,
+		defaultValue,
 		disabled,
 		icon,
 		isError,
@@ -24,8 +25,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const [hasValue, setHasValue] = useState<boolean>();
 
 	useEffect(() => {
-		setHasValue(!!value);
-	}, [value]);
+		setHasValue(!!value || !!defaultValue);
+	}, [value, defaultValue]);
 
 	const handleFocus = useCallback(() => setIsFocused(true), []);
 	const handleBlur = useCallback(
@@ -56,7 +57,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 		"relative flex items-center border border-gray-500 bg-black pr-2.5 text-base",
 		"rounded-lg transition focus-within:border-white hover:border-white",
 		{ "bg-white focus-within:border-gray-700 hover:border-gray-700": variant === InputVariant.light },
-		{ "pointer-events-none select-none": disabled },
+		{ "border-white": hasValue && variant !== InputVariant.light },
+		{ "pointer-events-none select-none border-gray-500": disabled },
 		className,
 		{ "border-error": isError }
 	);
@@ -87,6 +89,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 			<input
 				{...rest}
 				className={inputClass}
+				defaultValue={defaultValue}
 				disabled={disabled}
 				id={id}
 				onBlur={handleBlur}
