@@ -4,7 +4,7 @@
 	"prettier.bracketSameLine": true,
 	"prettier.configPath": ".prettierrc",
 	"editor.formatOnSave": true,
-	"prettier.printWidth": 160,
+	"prettier.printWidth": 120,
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
 	},
