@@ -39,7 +39,6 @@
 		"resumeLiveTail": "Resume live tail",
 		"sessionsName": "Sessions",
 		"table": {
-			"stopSession": "Stop session",
 			"columns": {
 				"actions": "Actions",
 				"activationTime": "Activation time",
@@ -54,7 +53,8 @@
 				"running": "Running",
 				"stopped": "Stopped",
 				"unspecified": "Unspecified"
-			}
+			},
+			"stopSession": "Stop session"
 		},
 		"totalSessions": "Total {{total}}"
 	}
