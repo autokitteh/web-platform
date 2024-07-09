@@ -4,7 +4,7 @@ import { ButtonVariant } from "@enums/components";
 import { IconButtonProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-import { Button, Link } from "@components/atoms";
+import { Link } from "@components/atoms";
 
 export const IconButton = ({
 	ariaLabel,
@@ -32,23 +32,24 @@ export const IconButton = ({
 		className
 	);
 
-	return !href ? (
-		<Button
-			ariaLabel={ariaLabel}
+	const Component = href ? Link : "div";
+	const linkHref = href ? { to: href } : { to: "" };
+
+	return (
+		<Component
+			aria-label={ariaLabel}
 			className={iconButtonClass}
 			disabled={disabled}
 			onClick={onClick}
 			onKeyDown={onKeyDown}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
+			role="button"
 			tabIndex={0}
 			title={title}
+			{...linkHref}
 		>
 			{children}
-		</Button>
-	) : (
-		<Link ariaLabel={ariaLabel} className={iconButtonClass} disabled={disabled} to={href}>
-			{children}
-		</Link>
+		</Component>
 	);
 };

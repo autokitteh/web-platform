@@ -1,4 +1,4 @@
-import create, { StateCreator } from "zustand";
+import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
