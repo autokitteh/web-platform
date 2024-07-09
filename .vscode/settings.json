@@ -26,6 +26,5 @@
 		"javascriptreact",
 		"typescript",
 		"typescriptreact"
-	],
-	"editor.insertSpaces": false
+	]
 }
