@@ -14,10 +14,7 @@ export class TriggersService {
 			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
 
 			if (error) {
-				LoggerService.error(
-					namespaces.triggerService,
-					i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
-				);
+				LoggerService.error(namespaces.triggerService, i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId }));
 
 				return { data: undefined, error };
 			}
@@ -47,10 +44,7 @@ export class TriggersService {
 
 			return { data: triggerId, error: undefined };
 		} catch (error) {
-			LoggerService.error(
-				namespaces.triggerService,
-				i18n.t("triggerNotCreatedExtended", { error: (error as Error).message, ns: "services", projectId })
-			);
+			LoggerService.error(namespaces.triggerService, i18n.t("triggerNotCreatedExtended", { error: (error as Error).message, ns: "services", projectId }));
 
 			return { data: undefined, error };
 		}
@@ -62,10 +56,7 @@ export class TriggersService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			LoggerService.error(
-				namespaces.triggerService,
-				i18n.t("triggerRemoveFailedExtended", { ns: "services", triggerId })
-			);
+			LoggerService.error(namespaces.triggerService, i18n.t("triggerRemoveFailedExtended", { ns: "services", triggerId }));
 
 			return { data: undefined, error };
 		}
@@ -84,10 +75,7 @@ export class TriggersService {
 
 			return { data: triggerData, error: undefined };
 		} catch (error) {
-			LoggerService.error(
-				namespaces.projectService,
-				i18n.t("triggerNotFoundExtended", { ns: "services", triggerId })
-			);
+			LoggerService.error(namespaces.projectService, i18n.t("triggerNotFoundExtended", { ns: "services", triggerId }));
 
 			return { data: undefined, error };
 		}
@@ -98,10 +86,7 @@ export class TriggersService {
 			const { data: environments, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
 
 			if (errorEnvs) {
-				LoggerService.error(
-					namespaces.triggerService,
-					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
-				);
+				LoggerService.error(namespaces.triggerService, i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId }));
 
 				return { data: undefined, error: errorEnvs };
 			}
@@ -117,9 +102,7 @@ export class TriggersService {
 			}
 
 			const enrhichedTriggers = convertedTriggers.map((trigger) => {
-				const connection = connectionsList?.find(
-					(connection) => connection.connectionId === trigger.connectionId
-				);
+				const connection = connectionsList?.find((connection) => connection.connectionId === trigger.connectionId);
 
 				return {
 					...trigger,
@@ -140,10 +123,7 @@ export class TriggersService {
 			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
 
 			if (error) {
-				LoggerService.error(
-					namespaces.triggerService,
-					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
-				);
+				LoggerService.error(namespaces.triggerService, i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId }));
 
 				return { data: undefined, error };
 			}

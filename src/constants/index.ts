@@ -16,8 +16,4 @@ export { namespaces } from "@constants/namespaces.logger.constants";
 export { defaultProjectTab, projectTabs } from "@constants/project.constants";
 export { sessionsEditorLineHeight } from "@constants/sessionsTable.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
-export {
-	defaultTriggerType,
-	infoCronExpressionsLinks,
-	schedulerTriggerConnectionName,
-} from "@constants/triggers.constants";
+export { defaultTriggerType, infoCronExpressionsLinks, schedulerTriggerConnectionName } from "@constants/triggers.constants";

@@ -15,13 +15,7 @@ import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const TriggerSchedulerForm = ({
-	formId,
-	setIsSaving,
-}: {
-	formId: string;
-	setIsSaving: (event: boolean) => void;
-}) => {
+export const TriggerSchedulerForm = ({ formId, setIsSaving }: { formId: string; setIsSaving: (event: boolean) => void }) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { resources } = useProjectStore();
@@ -41,9 +35,7 @@ export const TriggerSchedulerForm = ({
 					throw connectionsError;
 				}
 
-				const connectionId = connections?.find(
-					(item) => item.name === schedulerTriggerConnectionName
-				)?.connectionId;
+				const connectionId = connections?.find((item) => item.name === schedulerTriggerConnectionName)?.connectionId;
 				if (!connectionId) {
 					throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
 				}
@@ -60,10 +52,7 @@ export const TriggerSchedulerForm = ({
 					message: tErrors("connectionsFetchError"),
 					type: "error",
 				});
-				LoggerService.error(
-					namespaces.triggerService,
-					tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
-				);
+				LoggerService.error(namespaces.triggerService, tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId }));
 			} finally {
 				setIsLoading(false);
 			}
@@ -110,10 +99,7 @@ export const TriggerSchedulerForm = ({
 				message: tErrors("triggerNotCreated"),
 				type: "error",
 			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("triggerNotCreatedExtended", { error: (error as Error).message, projectId })
-			);
+			LoggerService.error(namespaces.triggerService, tErrors("triggerNotCreatedExtended", { error: (error as Error).message, projectId }));
 
 			return;
 		}
@@ -193,12 +179,7 @@ export const TriggerSchedulerForm = ({
 
 				<div className="mt-2 flex flex-col items-start gap-2">
 					{infoCronExpressionsLinks.map(({ text, url }, index) => (
-						<Link
-							className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
-							key={index}
-							target="_blank"
-							to={url}
-						>
+						<Link className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent" key={index} target="_blank" to={url}>
 							{text}
 
 							<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />

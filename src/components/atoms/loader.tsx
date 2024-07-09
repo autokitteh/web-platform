@@ -3,12 +3,7 @@ import React from "react";
 import { LoaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Loader = ({
-	firstColor = "dark-gray",
-	isCenter = false,
-	secondColor = "gray",
-	size = "md",
-}: LoaderProps) => {
+export const Loader = ({ firstColor = "dark-gray", isCenter = false, secondColor = "gray", size = "md" }: LoaderProps) => {
 	const sizeClass = cn("loader-cycle-disks flex items-center", {
 		"w-4 before:h-2 before:w-2 after:h-2 after:w-2": size === "sm",
 		"w-6 before:h-6 before:w-6 after:h-6 after:w-6": size === "lg",

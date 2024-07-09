@@ -6,17 +6,7 @@ import ReactSelect, { SingleValue } from "react-select";
 import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
 import { SelectOption, SelectProps } from "@interfaces/components";
 
-export const Select = ({
-	dataTestid,
-	isError = false,
-	noOptionsLabel,
-	onChange,
-	options,
-	placeholder = "Select",
-	value,
-	variant,
-	...rest
-}: SelectProps) => {
+export const Select = ({ dataTestid, isError = false, noOptionsLabel, onChange, options, placeholder = "Select", value, variant, ...rest }: SelectProps) => {
 	const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>();
 	const { t } = useTranslation("components", { keyPrefix: "select" });
 

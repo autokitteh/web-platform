@@ -95,12 +95,7 @@ export const EditVariable = () => {
 		<Loader isCenter size="xl" />
 	) : (
 		<div className="min-w-80">
-			<TabFormHeader
-				className="mb-11"
-				form="modifyVariableForm"
-				isLoading={isLoading}
-				title={tForm("modifyVariable")}
-			/>
+			<TabFormHeader className="mb-11" form="modifyVariableForm" isLoading={isLoading} title={tForm("modifyVariable")} />
 
 			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">

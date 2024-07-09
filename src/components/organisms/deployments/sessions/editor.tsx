@@ -169,11 +169,7 @@ export const SessionTableEditorFrame = () => {
 				<>
 					<div className="-mt-10 flex items-center justify-between font-bold">
 						{t("output")}:{/* eslint-disable @liferay/empty-line-between-elements */}
-						<IconButton
-							ariaLabel={t("buttons.ariaCloseEditor")}
-							className="h-7 w-7 bg-gray-700 p-0.5"
-							onClick={closeEditor}
-						>
+						<IconButton ariaLabel={t("buttons.ariaCloseEditor")} className="h-7 w-7 bg-gray-700 p-0.5" onClick={closeEditor}>
 							<Close className="h-3 w-3 fill-white transition" />
 						</IconButton>
 					</div>

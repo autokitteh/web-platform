@@ -98,9 +98,7 @@ export class DeploymentsService {
 			const deploymentsResponses = await Promise.allSettled(deploymentsPromises);
 			const deploymentsSettled = flattenArray<Deployment>(
 				deploymentsResponses
-					.filter(
-						(response): response is PromiseFulfilledResult<ListResponse> => response.status === "fulfilled"
-					)
+					.filter((response): response is PromiseFulfilledResult<ListResponse> => response.status === "fulfilled")
 					.map((response) => get(response, "value.deployments", []).map(convertDeploymentProtoToModel))
 			);
 
@@ -121,8 +119,7 @@ export class DeploymentsService {
 
 	static async listByProjectId(projectId: string): Promise<ServiceResponse<Deployment[]>> {
 		try {
-			const { data: environments, error: lisEnvironmentsError } =
-				await EnvironmentsService.listByProjectId(projectId);
+			const { data: environments, error: lisEnvironmentsError } = await EnvironmentsService.listByProjectId(projectId);
 
 			if (lisEnvironmentsError) {
 				LoggerService.error(namespaces.deploymentsService, (lisEnvironmentsError as Error).message);
@@ -131,8 +128,7 @@ export class DeploymentsService {
 			}
 
 			const environmentIds = getIds(environments!, "envId");
-			const { data: projectDeployments, error: listDeploymentsError } =
-				await this.listByEnvironmentIds(environmentIds);
+			const { data: projectDeployments, error: listDeploymentsError } = await this.listByEnvironmentIds(environmentIds);
 
 			if (listDeploymentsError) {
 				LoggerService.error(namespaces.deploymentsService, (listDeploymentsError as Error).message);

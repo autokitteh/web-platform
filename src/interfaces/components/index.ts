@@ -1,11 +1,5 @@
 export type { BadgeProps } from "@interfaces/components/badge.interface";
-export type {
-	ButtonProps,
-	DropdownButtonProps,
-	DropdownState,
-	IconButtonProps,
-	SortButtonProps,
-} from "@interfaces/components/button.interface";
+export type { ButtonProps, DropdownButtonProps, DropdownState, IconButtonProps, SortButtonProps } from "@interfaces/components/button.interface";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { InputProps, SelectOption, SelectProps, TextArea } from "@interfaces/components/forms";
 export type { FrameProps, SplitFrameProps } from "@interfaces/components/frame.interface";
@@ -25,11 +19,7 @@ export type {
 	ModalModifyVariableProps,
 	ModalProps,
 } from "@interfaces/components/modal.interface";
-export type {
-	SessionTableFilterProps,
-	SessionsTableListProps,
-	SessionsTableRowProps,
-} from "@interfaces/components/session.interface";
+export type { SessionTableFilterProps, SessionsTableListProps, SessionsTableRowProps } from "@interfaces/components/session.interface";
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
 export type { TableProps } from "@interfaces/components/table.interface";

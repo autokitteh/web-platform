@@ -43,17 +43,8 @@ export const Modal = ({ children, className, name }: ModalProps) => {
 						variants={backdropVariants}
 					/>
 
-					<motion.div
-						animate="visible"
-						className={modalClasses}
-						exit="hidden"
-						initial="hidden"
-						variants={modalVariants}
-					>
-						<IconButton
-							className="group ml-auto h-default-icon w-default-icon bg-gray-200 p-0"
-							onClick={() => onClose(name)}
-						>
+					<motion.div animate="visible" className={modalClasses} exit="hidden" initial="hidden" variants={modalVariants}>
+						<IconButton className="group ml-auto h-default-icon w-default-icon bg-gray-200 p-0" onClick={() => onClose(name)}>
 							<Close className="h-3 w-3 fill-black transition group-hover:fill-white" />
 						</IconButton>
 

@@ -16,8 +16,7 @@ export const useResize = ({ direction, initial, max, min }: ResizeHook) => {
 
 		const onMouseMove = (moveEvent: MouseEvent) => {
 			const currentCoordinate = direction === "horizontal" ? moveEvent.clientX : moveEvent.clientY;
-			const delta =
-				direction === "horizontal" ? currentCoordinate - startCoordinate : startCoordinate - currentCoordinate;
+			const delta = direction === "horizontal" ? currentCoordinate - startCoordinate : startCoordinate - currentCoordinate;
 			const newValue = (delta / dimension) * 100 + value;
 
 			setValue(Math.max(min, Math.min(max, newValue)));

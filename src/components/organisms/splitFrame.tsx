@@ -27,10 +27,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 
 			<div className="resize-handle-horizontal z-10 -ml-2 w-2 cursor-ew-resize" />
 
-			<div
-				className="relative flex items-center overflow-hidden"
-				style={{ width: `${100 - (leftSideWidth as number)}%` }}
-			>
+			<div className="relative flex items-center overflow-hidden" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				<Frame className={rightFrameClass}>
 					<div style={{ height: `${100 - (outputHeight as number)}%` }}>
 						<EditorTabs />
@@ -38,10 +35,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 
 					<Button className="resize-handle-vertical z-0 -mx-8 cursor-ns-resize rounded-none bg-gray-700 p-0.5 transition hover:bg-gray-400" />
 
-					<div
-						className="z-0 -mx-8 border-0 border-t border-t-gray-600 bg-black px-8 pt-5"
-						style={{ height: `${outputHeight as number}%` }}
-					>
+					<div className="z-0 -mx-8 border-0 border-t border-t-gray-600 bg-black px-8 pt-5" style={{ height: `${outputHeight as number}%` }}>
 						<OutputTabs />
 					</div>
 				</Frame>

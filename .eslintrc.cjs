@@ -95,7 +95,20 @@ module.exports = {
 		"@typescript-eslint/no-explicit-any": "off",
 		"prettier/prettier": [
 			"error",
-			{},
+			{
+				"arrowParens": "always",
+				"bracketSpacing": true,
+				"jsxSingleQuote": false,
+				"printWidth": 160,
+				"quoteProps": "consistent",
+				"semi": true,
+				"singleQuote": false,
+				"tabWidth": 4,
+				"trailingComma": "es5",
+				"useTabs": true,
+				"plugins": ["prettier-plugin-tailwindcss"],
+				"tailwindFunctions": ["cn"],
+			},
 			{
 				usePrettierrc: true,
 			},

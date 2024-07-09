@@ -57,10 +57,7 @@ export const DeleteTriggerModal = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 			</div>
 
 			<div className="mt-14 flex justify-end gap-1">
-				<Button
-					className="w-auto px-4 py-3 font-semibold hover:text-white"
-					onClick={() => closeModal(ModalName.deleteTrigger)}
-				>
+				<Button className="w-auto px-4 py-3 font-semibold hover:text-white" onClick={() => closeModal(ModalName.deleteTrigger)}>
 					{t("cancelButton")}
 				</Button>
 

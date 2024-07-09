@@ -61,12 +61,7 @@ export const AddVariable = () => {
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader
-				className="mb-11"
-				form="createNewVariableForm"
-				isLoading={isLoading}
-				title={tForm("addNewVariable")}
-			/>
+			<TabFormHeader className="mb-11" form="createNewVariableForm" isLoading={isLoading} title={tForm("addNewVariable")} />
 
 			<form className="flex flex-col gap-6" id="createNewVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">

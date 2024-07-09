@@ -93,11 +93,7 @@ export const VariablesTable = () => {
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 
-				<Button
-					ariaLabel={t("buttons.addNew")}
-					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white"
-					href="add"
-				>
+				<Button ariaLabel={t("buttons.addNew")} className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white" href="add">
 					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}

@@ -68,12 +68,7 @@ export const Security = () => {
 				<div className="w-2/3">
 					{token ? (
 						<div className="flex w-full">
-							<Input
-								aria-label={t("copyInputAriaLabel")}
-								className="flex-1 rounded-3xl hover:border-gray-700"
-								disabled
-								value={token}
-							/>
+							<Input aria-label={t("copyInputAriaLabel")} className="flex-1 rounded-3xl hover:border-gray-700" disabled value={token} />
 
 							<Button
 								aria-label={t("copyButton")}
@@ -87,13 +82,7 @@ export const Security = () => {
 					) : (
 						<Button className="flex border-2 border-black" onClick={createToken} variant="light">
 							<div className="flex items-center">
-								{!isLoading ? (
-									<IconSvg
-										alt="New Project"
-										className="w-4 before:h-2 before:w-2 after:h-2 after:w-2"
-										src={NewProject}
-									/>
-								) : null}
+								{!isLoading ? <IconSvg alt="New Project" className="w-4 before:h-2 before:w-2 after:h-2 after:w-2" src={NewProject} /> : null}
 
 								{isLoading ? <Loader size="sm" /> : null}
 							</div>

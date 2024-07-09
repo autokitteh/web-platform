@@ -10,12 +10,7 @@ import { useModalStore } from "@store";
 
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 
-export const SessionsTableList = ({
-	onItemsRendered,
-	onScroll,
-	onSelectedSessionId,
-	sessions,
-}: SessionsTableListProps) => {
+export const SessionsTableList = ({ onItemsRendered, onScroll, onSelectedSessionId, sessions }: SessionsTableListProps) => {
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();

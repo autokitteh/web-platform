@@ -39,9 +39,7 @@ export const SchedulerEditTrigger = () => {
 				throw connectionsError;
 			}
 
-			const connectionId = connections?.find(
-				(item) => item.name === schedulerTriggerConnectionName
-			)?.connectionId;
+			const connectionId = connections?.find((item) => item.name === schedulerTriggerConnectionName)?.connectionId;
 			if (!connectionId) {
 				throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
 			}
@@ -58,10 +56,7 @@ export const SchedulerEditTrigger = () => {
 				message: tErrors("connectionsFetchError"),
 				type: "error",
 			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
-			);
+			LoggerService.error(namespaces.triggerService, tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId }));
 		} finally {
 			setIsLoadingData(false);
 		}
@@ -151,18 +146,9 @@ export const SchedulerEditTrigger = () => {
 		<Loader isCenter size="xl" />
 	) : (
 		<div className="min-w-80">
-			<TabFormHeader
-				className="mb-11"
-				form={TriggerFormIds.modifySchedulerForm}
-				isLoading={isSaving}
-				title={t("modifyTrigger")}
-			/>
+			<TabFormHeader className="mb-11" form={TriggerFormIds.modifySchedulerForm} isLoading={isSaving} title={t("modifyTrigger")} />
 
-			<form
-				className="flex items-start gap-10"
-				id={TriggerFormIds.modifySchedulerForm}
-				onSubmit={handleSubmit(onSubmit)}
-			>
+			<form className="flex items-start gap-10" id={TriggerFormIds.modifySchedulerForm} onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex w-full flex-col gap-6">
 					<div className="relative">
 						<Input
@@ -235,12 +221,7 @@ export const SchedulerEditTrigger = () => {
 
 			<div className="mt-2 flex flex-col items-start gap-2">
 				{infoCronExpressionsLinks.map(({ text, url }, index) => (
-					<Link
-						className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
-						key={index}
-						target="_blank"
-						to={url}
-					>
+					<Link className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent" key={index} target="_blank" to={url}>
 						{text}
 
 						<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />

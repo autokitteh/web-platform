@@ -59,31 +59,19 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 				{t("all")} ({sessionCounts.total})
 			</Button>
 
-			<Button
-				className={buttonClass(SessionStateType.running)}
-				onClick={() => handleButtonClick(SessionStateType.running)}
-			>
+			<Button className={buttonClass(SessionStateType.running)} onClick={() => handleButtonClick(SessionStateType.running)}>
 				{t("running")} ({sessionCounts.running})
 			</Button>
 
-			<Button
-				className={buttonClass(SessionStateType.stopped)}
-				onClick={() => handleButtonClick(SessionStateType.stopped)}
-			>
+			<Button className={buttonClass(SessionStateType.stopped)} onClick={() => handleButtonClick(SessionStateType.stopped)}>
 				{t("stopped")} ({sessionCounts.stopped})
 			</Button>
 
-			<Button
-				className={buttonClass(SessionStateType.error)}
-				onClick={() => handleButtonClick(SessionStateType.error)}
-			>
+			<Button className={buttonClass(SessionStateType.error)} onClick={() => handleButtonClick(SessionStateType.error)}>
 				{t("error")} ({sessionCounts.error})
 			</Button>
 
-			<Button
-				className={buttonClass(SessionStateType.completed)}
-				onClick={() => handleButtonClick(SessionStateType.completed)}
-			>
+			<Button className={buttonClass(SessionStateType.completed)} onClick={() => handleButtonClick(SessionStateType.completed)}>
 				{t("completed")} ({sessionCounts.completed})
 			</Button>
 		</div>

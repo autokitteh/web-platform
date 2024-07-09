@@ -13,12 +13,7 @@ export const Toggle = ({ checked, label, onChange }: ToggleProps) => {
 
 	return (
 		<label className="inline-flex cursor-pointer items-center">
-			<input
-				checked={checked}
-				className="peer hidden"
-				onChange={(event) => onChange(event.target.checked)}
-				type="checkbox"
-			/>
+			<input checked={checked} className="peer hidden" onChange={(event) => onChange(event.target.checked)} type="checkbox" />
 
 			<div className={baseStyle} />
 

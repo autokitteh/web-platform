@@ -19,11 +19,7 @@ export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHead
 		<div className="sticky -top-10 z-20 -my-2.5">
 			<div className={baseStyle}>
 				<div className="flex items-center gap-1">
-					<IconButton
-						ariaLabel={t("ariaLabelReturnBack")}
-						className="h-8 w-8 p-0 hover:bg-black"
-						onClick={() => navigate(-1)}
-					>
+					<IconButton ariaLabel={t("ariaLabelReturnBack")} className="h-8 w-8 p-0 hover:bg-black" onClick={() => navigate(-1)}>
 						<ArrowLeft />
 					</IconButton>
 
@@ -31,11 +27,7 @@ export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHead
 				</div>
 
 				<div className="flex items-center gap-6">
-					<Button
-						ariaLabel={t("cancel")}
-						className="p-0 font-semibold text-gray-300 hover:text-white"
-						onClick={() => navigate(-1)}
-					>
+					<Button ariaLabel={t("cancel")} className="p-0 font-semibold text-gray-300 hover:text-white" onClick={() => navigate(-1)}>
 						{t("cancel")}
 					</Button>
 
