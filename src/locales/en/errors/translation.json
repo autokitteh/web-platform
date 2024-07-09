@@ -26,5 +26,6 @@
 	"triggerNotFound": "Couldn't fetch the trigger",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
 	"triggerRemoveFailed": "Trigger remove failed",
-	"variableNotCreated": "There was an issue creating the variable"
+	"variableNotCreated": "There was an issue creating the variable",
+	"failedStopSession": "Failed to stop session"
 }

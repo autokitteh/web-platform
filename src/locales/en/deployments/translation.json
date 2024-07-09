@@ -39,6 +39,7 @@
 		"resumeLiveTail": "Resume live tail",
 		"sessionsName": "Sessions",
 		"table": {
+			"stopSession": "Stop session",
 			"columns": {
 				"actions": "Actions",
 				"activationTime": "Activation time",
