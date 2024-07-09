@@ -1,13 +1,13 @@
 {
-	"whyDevelopersLove": "Why developers love Autokitteh",
-	"benefits": {
-		"lowerDevelopmentCosts": "Lower development costs",
-		"reliability": "Reliability",
-		"longRunning": "Long-running",
-		"flexibility": "Flexibility",
-		"versatility": "Versatility",
-		"fastDeployment": "Fast deployment",
-		"easyToMaintain": "Easy to maintain",
-		"efficientManagementTools": "Efficient management tools"
-	}
+    "benefits": {
+        "easyToMaintain": "Easy to maintain",
+        "efficientManagementTools": "Efficient management tools",
+        "fastDeployment": "Fast deployment",
+        "flexibility": "Flexibility",
+        "longRunning": "Long-running",
+        "lowerDevelopmentCosts": "Lower development costs",
+        "reliability": "Reliability",
+        "versatility": "Versatility"
+    },
+    "whyDevelopersLove": "Why developers love Autokitteh"
 }

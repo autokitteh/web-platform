@@ -1,18 +1,18 @@
 {
-	"topbar": {
-		"rename": "Rename",
-		"success": "Success",
-		"buildProjectSuccess": "Project build completed successfully.",
-		"deployedProjectSuccess": "Project deploy completed successfully.",
-		"projectNotFound": "Project not found",
-		"buttons": {
-			"build": "Build",
-			"deploy": "Deploy",
-			"stats": "View Stats",
-			"ariaBuildProject": "Build project",
-			"ariaDeployProject": "Deploy project",
-			"ariaStats": "View project stats",
-			"goToProject": "Go to project"
-		}
-	}
+    "topbar": {
+        "buildProjectSuccess": "Project build completed successfully.",
+        "buttons": {
+            "ariaBuildProject": "Build project",
+            "ariaDeployProject": "Deploy project",
+            "ariaStats": "View project stats",
+            "build": "Build",
+            "deploy": "Deploy",
+            "goToProject": "Go to project",
+            "stats": "View Stats"
+        },
+        "deployedProjectSuccess": "Project deploy completed successfully.",
+        "projectNotFound": "Project not found",
+        "rename": "Rename",
+        "success": "Success"
+    }
 }

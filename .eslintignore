@@ -5,6 +5,9 @@ env.d.ts
 playwright-report/
 test-results/
 tsconfig.json
+tsconfig.node.json
 CHANGELOG.md
 .github/workflows/*
 env.d.ts
+package.json
+package-lock.json

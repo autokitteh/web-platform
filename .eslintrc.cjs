@@ -84,7 +84,6 @@ module.exports = {
 		"perfectionist/sort-imports": "off",
 		"local-rules/no-abbreviations": "error",
 		"@liferay/no-anonymous-exports": "off",
-		"sort-keys": "off",
 		"@liferay/sort-class-names": "off",
 		"@typescript-eslint/member-ordering": [
 			"error",
@@ -223,4 +222,12 @@ module.exports = {
 		"import/no-duplicates": "error",
 		"import/newline-after-import": "error",
 	},
+	"overrides": [
+	  {
+		"files": ["*.json"],
+		"rules": {
+		  "no-unused-expressions": "off"
+		}
+	  }
+	]
 };
