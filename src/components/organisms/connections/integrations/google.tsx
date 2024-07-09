@@ -14,6 +14,7 @@ import { googleIntegrationSchema } from "@validations";
 import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, Link, Select, Spinner, Textarea } from "@components/atoms";
+import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
@@ -75,21 +76,22 @@ export const GoogleIntegrationForm = () => {
 
 	const renderOAuthButton = () => (
 		<>
-			<p className="text-lg">{t("information")}:</p>
-			<div className="mt-2 flex flex-col items-start gap-2">
-				{infoGoogleUserLinks.map(({ text, url }, index) => (
-					<Link
-						className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
-						key={index}
-						target="_blank"
-						to={url}
-					>
-						{text}
+			<Accordion title={t("information")}>
+				<div className="flex flex-col items-start gap-2">
+					{infoGoogleUserLinks.map(({ text, url }, index) => (
+						<Link
+							className="inline-flex items-center gap-2.5 text-green-accent"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
 
-						<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
-					</Link>
-				))}
-			</div>
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
@@ -127,22 +129,22 @@ export const GoogleIntegrationForm = () => {
 				{t("buttons.saveConnection")}
 			</Button>
 
-			<p className="text-lg">{t("information")}:</p>
+			<Accordion title={t("information")}>
+				<div className="flex flex-col items-start gap-2">
+					{infoGoogleAccountLinks.map(({ text, url }, index) => (
+						<Link
+							className="inline-flex items-center gap-2.5 text-green-accent"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
 
-			<div className="mt-2 flex flex-col items-start gap-2">
-				{infoGoogleAccountLinks.map(({ text, url }, index) => (
-					<Link
-						className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
-						key={index}
-						target="_blank"
-						to={url}
-					>
-						{text}
-
-						<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
-					</Link>
-				))}
-			</div>
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
 		</div>
 	);
 

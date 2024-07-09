@@ -13,6 +13,7 @@ import { schedulerTriggerSchema } from "@validations";
 import { useProjectStore, useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
+import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
@@ -189,24 +190,22 @@ export const TriggerSchedulerForm = ({
 					<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 				</div>
 			</form>
-			<div>
-				<p className="text-lg">{t("information")}:</p>
-
-				<div className="mt-2 flex flex-col items-start gap-2">
+			<Accordion title={t("information")}>
+				<div className="flex flex-col items-start gap-2">
 					{infoCronExpressionsLinks.map(({ text, url }, index) => (
 						<Link
-							className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
+							className="inline-flex items-center gap-2.5 text-green-accent"
 							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
 
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
 						</Link>
 					))}
 				</div>
-			</div>
+			</Accordion>
 		</>
 	);
 };

@@ -15,7 +15,7 @@ import { schedulerTriggerSchema } from "@validations";
 import { useProjectStore, useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { Accordion, TabFormHeader } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
@@ -232,22 +232,22 @@ export const SchedulerEditTrigger = () => {
 				</div>
 			</form>
 
-			<p className="mt-6 text-lg">{t("information")}:</p>
+			<Accordion className="mt-2" title={t("information")}>
+				<div className="flex flex-col items-start gap-2">
+					{infoCronExpressionsLinks.map(({ text, url }, index) => (
+						<Link
+							className="inline-flex items-center gap-2.5 text-green-accent"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
 
-			<div className="mt-2 flex flex-col items-start gap-2">
-				{infoCronExpressionsLinks.map(({ text, url }, index) => (
-					<Link
-						className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
-						key={index}
-						target="_blank"
-						to={url}
-					>
-						{text}
-
-						<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
-					</Link>
-				))}
-			</div>
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+						</Link>
+					))}
+				</div>
+			</Accordion>
 		</div>
 	);
 };
