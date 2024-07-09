@@ -93,11 +93,12 @@ export const DefaultEditTrigger = () => {
 
 	const {
 		control,
-		formState: { dirtyFields, errors },
+		formState: { errors },
 		getValues,
 		handleSubmit,
 		register,
 		reset,
+		watch,
 	} = useForm({
 		defaultValues: {
 			connection: { label: "", value: "" },
@@ -155,8 +156,6 @@ export const DefaultEditTrigger = () => {
 		navigate(-1);
 	};
 
-	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
-
 	const updateTriggerDataKey = debounce((newKey, oldKey) => {
 		if (newKey === oldKey) {
 			return;
@@ -204,6 +203,8 @@ export const DefaultEditTrigger = () => {
 		});
 	};
 
+	const { entryFunction, eventType, filter, name } = watch();
+
 	return isLoadingData ? (
 		<Loader isCenter size="xl" />
 	) : (
@@ -226,10 +227,10 @@ export const DefaultEditTrigger = () => {
 							disabled
 							{...register("name")}
 							aria-label={t("placeholders.name")}
-							className={inputClass("name")}
 							isError={!!errors.name}
 							isRequired
 							placeholder={t("placeholders.name")}
+							value={name}
 						/>
 
 						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
@@ -282,10 +283,10 @@ export const DefaultEditTrigger = () => {
 						<Input
 							{...register("entryFunction")}
 							aria-label={t("placeholders.functionName")}
-							className={inputClass("entryFunction")}
 							isError={!!errors.entryFunction}
 							isRequired
 							placeholder={t("placeholders.functionName")}
+							value={entryFunction}
 						/>
 
 						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
@@ -295,9 +296,9 @@ export const DefaultEditTrigger = () => {
 						<Input
 							{...register("eventType")}
 							aria-label={t("placeholders.eventType")}
-							className={inputClass("eventType")}
 							isError={!!errors.eventType}
 							placeholder={t("placeholders.eventType")}
+							value={eventType}
 						/>
 
 						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
@@ -307,9 +308,9 @@ export const DefaultEditTrigger = () => {
 						<Input
 							{...register("filter")}
 							aria-label={t("placeholders.filter")}
-							className={inputClass("filter")}
 							isError={!!errors.filter}
 							placeholder={t("placeholders.filter")}
+							value={filter}
 						/>
 
 						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>

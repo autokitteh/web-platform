@@ -91,7 +91,7 @@ export const SchedulerEditTrigger = () => {
 
 	const {
 		control,
-		formState: { dirtyFields, errors },
+		formState: { errors },
 		getValues,
 		handleSubmit,
 		register,
@@ -144,8 +144,6 @@ export const SchedulerEditTrigger = () => {
 		navigate(`/projects/${projectId}/triggers`);
 	};
 
-	const inputClass = (field: keyof typeof dirtyFields) => (dirtyFields[field] ? "border-white" : "");
-
 	const { cron, entryFunction, name } = watch();
 
 	return isLoadingData ? (
@@ -169,7 +167,6 @@ export const SchedulerEditTrigger = () => {
 						<Input
 							{...register("name")}
 							aria-label={t("placeholders.name")}
-							className={inputClass("name")}
 							disabled
 							isError={!!errors.name}
 							isRequired
@@ -185,7 +182,6 @@ export const SchedulerEditTrigger = () => {
 							value={cron}
 							{...register("cron")}
 							aria-label={t("placeholders.cron")}
-							className={inputClass("cron")}
 							isError={!!errors.cron}
 							isRequired
 							placeholder={t("placeholders.cron")}
@@ -221,7 +217,6 @@ export const SchedulerEditTrigger = () => {
 							value={entryFunction}
 							{...register("entryFunction")}
 							aria-label={t("placeholders.functionName")}
-							className={inputClass("entryFunction")}
 							isError={!!errors.entryFunction}
 							isRequired
 							placeholder={t("placeholders.functionName")}
