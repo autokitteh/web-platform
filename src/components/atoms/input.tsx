@@ -5,7 +5,20 @@ import { InputProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-	const { classInput, className, disabled, icon, isError, isRequired, onChange, placeholder, type = "text", value, variant, ...rest } = props;
+	const {
+		classInput,
+		className,
+		disabled,
+		icon,
+		isError,
+		isRequired,
+		onChange,
+		placeholder,
+		type = "text",
+		value,
+		variant,
+		...rest
+	} = props;
 
 	const [isFocused, setIsFocused] = useState(false);
 	const [hasValue, setHasValue] = useState<boolean>();

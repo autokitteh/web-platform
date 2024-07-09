@@ -24,7 +24,14 @@ export const CodeTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const { getProjectResources, openedFiles, removeProjectFile, resources, setProjectResources, updateEditorOpenedFiles } = useProjectStore();
+	const {
+		getProjectResources,
+		openedFiles,
+		removeProjectFile,
+		resources,
+		setProjectResources,
+		updateEditorOpenedFiles,
+	} = useProjectStore();
 	const [isDragOver, setIsDragOver] = useState(false);
 
 	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
@@ -144,7 +151,13 @@ export const CodeTable = () => {
 			<div className="mb-3 flex justify-end gap-6">
 				{!isEmpty(sortedResources) ? (
 					<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-gray-300 hover:text-white">
-						<input accept={allowedExtensions} className="hidden" multiple onChange={handleFileSelect} type="file" />
+						<input
+							accept={allowedExtensions}
+							className="hidden"
+							multiple
+							onChange={handleFileSelect}
+							type="file"
+						/>
 
 						<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
@@ -163,19 +176,30 @@ export const CodeTable = () => {
 				</Button>
 			</div>
 
-			<div className={styleBase} onDragEnter={handleDragOver} onDragLeave={() => setIsDragOver(false)} onDragOver={handleDragOver} onDrop={handleDrop}>
+			<div
+				className={styleBase}
+				onDragEnter={handleDragOver}
+				onDragLeave={() => setIsDragOver(false)}
+				onDragOver={handleDragOver}
+				onDrop={handleDrop}
+			>
 				{!isEmpty(sortedResources) ? (
 					<Table className="max-h-96">
 						<THead>
 							<Tr>
-								<Th className="group cursor-pointer border-r-0 font-normal">{t("table.columns.name")}</Th>
+								<Th className="group cursor-pointer border-r-0 font-normal">
+									{t("table.columns.name")}
+								</Th>
 							</Tr>
 						</THead>
 
 						<TBody>
 							{sortedResources.map(([name], index) => (
 								<Tr className={activeBodyRow(name)} key={index}>
-									<Td className="cursor-pointer font-medium" onClick={() => updateEditorOpenedFiles(name)}>
+									<Td
+										className="cursor-pointer font-medium"
+										onClick={() => updateEditorOpenedFiles(name)}
+									>
 										{name}
 									</Td>
 
@@ -192,8 +216,19 @@ export const CodeTable = () => {
 
 				<div className={styleFrame}>
 					<div className="flex flex-col items-center gap-2.5">
-						<label className={cn("group flex cursor-pointer flex-col items-center gap-2.5", "text-center text-lg font-bold uppercase text-white")}>
-							<input accept={allowedExtensions} className="hidden" multiple onChange={handleFileSelect} type="file" />
+						<label
+							className={cn(
+								"group flex cursor-pointer flex-col items-center gap-2.5",
+								"text-center text-lg font-bold uppercase text-white"
+							)}
+						>
+							<input
+								accept={allowedExtensions}
+								className="hidden"
+								multiple
+								onChange={handleFileSelect}
+								type="file"
+							/>
 
 							<PlusCircle className={styleCircle} />
 

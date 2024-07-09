@@ -6,7 +6,15 @@ import { createPortal } from "react-dom";
 import { DropdownMenuProps } from "@interfaces/components/dropdown";
 import { cn } from "@utilities";
 
-export const DropdownMenu = ({ children, className, container = document.body, isOpen, onMouseEnter, onMouseLeave, style }: DropdownMenuProps) => {
+export const DropdownMenu = ({
+	children,
+	className,
+	container = document.body,
+	isOpen,
+	onMouseEnter,
+	onMouseLeave,
+	style,
+}: DropdownMenuProps) => {
 	const dropdownVariants = {
 		closed: {
 			opacity: 0,
@@ -20,7 +28,11 @@ export const DropdownMenu = ({ children, className, container = document.body, i
 		},
 	};
 
-	const menuStyle = cn("absolute z-40 mt-1 rounded-lg border border-gray-500 bg-black p-2.5 shadow-xl", "left-1/2 -translate-x-1/2 !transform", className);
+	const menuStyle = cn(
+		"absolute z-40 mt-1 rounded-lg border border-gray-500 bg-black p-2.5 shadow-xl",
+		"left-1/2 -translate-x-1/2 !transform",
+		className
+	);
 
 	return createPortal(
 		<AnimatePresence>

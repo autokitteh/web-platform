@@ -19,7 +19,9 @@ export const AddConnection = () => {
 		google: <GoogleIntegrationForm />,
 	};
 
-	const selectedIntegrationComponent = selectedIntegration ? integrationComponents[selectedIntegration.value as IntegrationType] : null;
+	const selectedIntegrationComponent = selectedIntegration
+		? integrationComponents[selectedIntegration.value as IntegrationType]
+		: null;
 
 	return (
 		<div className="min-w-80">

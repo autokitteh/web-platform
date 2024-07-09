@@ -223,7 +223,9 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			const newOpenedFiles = state.openedFiles.filter(({ name }) => name !== fileName);
 
 			if (newOpenedFiles.length) {
-				const activeFileIndex = state.openedFiles.findIndex(({ name }) => name === fileName && state.openedFiles[fileIndex]?.isActive);
+				const activeFileIndex = state.openedFiles.findIndex(
+					({ name }) => name === fileName && state.openedFiles[fileIndex]?.isActive
+				);
 
 				if (activeFileIndex !== -1) {
 					const newActiveIndex = Math.min(activeFileIndex, newOpenedFiles.length - 1);

@@ -101,7 +101,10 @@ export const ConnectionsTable = () => {
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
 
-				<Button className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white" onClick={() => navigate("add")}>
+				<Button
+					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white"
+					onClick={() => navigate("add")}
+				>
 					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}
@@ -121,7 +124,10 @@ export const ConnectionsTable = () => {
 								/>
 							</Th>
 
-							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("integrationName")}>
+							<Th
+								className="group cursor-pointer font-normal"
+								onClick={() => requestSort("integrationName")}
+							>
 								{t("table.columns.app")}
 
 								<SortButton
@@ -131,7 +137,10 @@ export const ConnectionsTable = () => {
 								/>
 							</Th>
 
-							<Th className="group max-w-32 cursor-pointer font-normal" onClick={() => requestSort("status")}>
+							<Th
+								className="group max-w-32 cursor-pointer font-normal"
+								onClick={() => requestSort("status")}
+							>
 								{t("table.columns.status")}
 
 								<SortButton
@@ -148,46 +157,54 @@ export const ConnectionsTable = () => {
 					</THead>
 
 					<TBody>
-						{sortedConnections.map(({ connectionId, initUrl, integrationName, name, status, statusInfoMessage }) => (
-							<Tr className="group" key={connectionId}>
-								<Td className="font-semibold">{name}</Td>
+						{sortedConnections.map(
+							({ connectionId, initUrl, integrationName, name, status, statusInfoMessage }) => (
+								<Tr className="group" key={connectionId}>
+									<Td className="font-semibold">{name}</Td>
 
-								<Td>{integrationName}</Td>
+									<Td>{integrationName}</Td>
 
-								<Td className="max-w-32">
-									<ConnectionTableStatus status={status} />
-								</Td>
+									<Td className="max-w-32">
+										<ConnectionTableStatus status={status} />
+									</Td>
 
-								<Td>{statusInfoMessage}</Td>
+									<Td>{statusInfoMessage}</Td>
 
-								<Td className="max-w-20 pr-0">
-									<div className="flex space-x-1">
-										<IconButton
-											ariaLabel={t("table.buttons.titleInitConnection")}
-											className="p-1.5"
-											onClick={() => handleConnectionInitClick(initUrl)}
-											title={t("table.buttons.titleInitConnection")}
-										>
-											<LinkIcon className="h-4 w-4 fill-white" />
-										</IconButton>
+									<Td className="max-w-20 pr-0">
+										<div className="flex space-x-1">
+											<IconButton
+												ariaLabel={t("table.buttons.titleInitConnection")}
+												className="p-1.5"
+												onClick={() => handleConnectionInitClick(initUrl)}
+												title={t("table.buttons.titleInitConnection")}
+											>
+												<LinkIcon className="h-4 w-4 fill-white" />
+											</IconButton>
 
-										<IconButton
-											ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
-											onClick={() => handleOpenModalDeleteConnection(connectionId)}
-											title={t("table.buttons.titleRemoveConnection")}
-										>
-											<TrashIcon className="h-3 w-3 fill-white" />
-										</IconButton>
-									</div>
-								</Td>
-							</Tr>
-						))}
+											<IconButton
+												ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
+												onClick={() => handleOpenModalDeleteConnection(connectionId)}
+												title={t("table.buttons.titleRemoveConnection")}
+											>
+												<TrashIcon className="h-3 w-3 fill-white" />
+											</IconButton>
+										</div>
+									</Td>
+								</Tr>
+							)
+						)}
 					</TBody>
 				</Table>
 			) : (
 				<div className="mt-10 text-center text-xl font-semibold text-gray-300">{t("titleNoAvailable")}</div>
 			)}
-			{connectionId ? <DeleteConnectionModal connectionId={connectionId} loading={isLoadingDeleteConnection} onDelete={handleDeleteConnection} /> : null}
+			{connectionId ? (
+				<DeleteConnectionModal
+					connectionId={connectionId}
+					loading={isLoadingDeleteConnection}
+					onDelete={handleDeleteConnection}
+				/>
+			) : null}
 		</>
 	);
 };

@@ -72,7 +72,10 @@ export const GithubIntegrationForm = () => {
 				message: tErrors("errorCreatingNewConnection"),
 				type: "error",
 			});
-			LoggerService.error(namespaces.connectionService, `${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`);
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`
+			);
 		} finally {
 			setIsLoading(false);
 		}
@@ -169,7 +172,12 @@ export const GithubIntegrationForm = () => {
 
 				<div className="mt-2 flex flex-col items-start gap-2">
 					{infoGithubLinks.map(({ text, url }, index) => (
-						<Link className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent" key={index} target="_blank" to={url}>
+						<Link
+							className="group ml-2 inline-flex items-center gap-2.5 hover:text-green-accent"
+							key={index}
+							target="_blank"
+							to={url}
+						>
 							{text}
 
 							<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200 group-hover:fill-green-accent" />
@@ -221,9 +229,13 @@ export const GithubIntegrationForm = () => {
 					placeholder={t("placeholders.selectConnectionType")}
 				/>
 
-				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat ? renderPATFields() : null}
+				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat
+					? renderPATFields()
+					: null}
 
-				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth ? renderOAuthButton() : null}
+				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth
+					? renderOAuthButton()
+					: null}
 			</div>
 		</form>
 	);

@@ -99,7 +99,7 @@ module.exports = {
 				"arrowParens": "always",
 				"bracketSpacing": true,
 				"jsxSingleQuote": false,
-				"printWidth": 160,
+				"printWidth": 120,
 				"quoteProps": "consistent",
 				"semi": true,
 				"singleQuote": false,

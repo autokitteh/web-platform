@@ -27,7 +27,10 @@ const baseStyles = {
 	},
 };
 
-const getSelectStyles = (isError: boolean, colorScheme: ColorSchemes): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
+const getSelectStyles = (
+	isError: boolean,
+	colorScheme: ColorSchemes
+): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
 	const defaultBorderColor = `0.5px solid ${isError ? formColors.error : formColors["gray-500"]}`;
 	const greenBorderColor = `0.5px solid ${colorScheme === "dark" ? formColors["green-light"] : formColors["green-accent"]}`;
 	const hoverBorderColor = colorScheme === "dark" ? formColors.white : formColors["gray-400"];
@@ -127,7 +130,11 @@ const getSelectStyles = (isError: boolean, colorScheme: ColorSchemes): StylesCon
 			},
 			"backgroundColor": state.isSelected ? selectedBackgroundColor : backgroundColor,
 			"borderRadius": "8px",
-			"color": state.isSelected ? selectedTextColor : state.isDisabled ? formColors["gray-400"] : oppositeSchemeColor,
+			"color": state.isSelected
+				? selectedTextColor
+				: state.isDisabled
+					? formColors["gray-400"]
+					: oppositeSchemeColor,
 			"cursor": state.isDisabled ? "not-allowed" : "pointer",
 			"marginTop": "4px",
 		}),
@@ -146,8 +153,10 @@ const getSelectStyles = (isError: boolean, colorScheme: ColorSchemes): StylesCon
 	};
 };
 
-const getSelectDarkStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => getSelectStyles(isError, "dark");
+const getSelectDarkStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
+	getSelectStyles(isError, "dark");
 
-const getSelectLightStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => getSelectStyles(isError, "light");
+const getSelectLightStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
+	getSelectStyles(isError, "light");
 
 export { getSelectDarkStyles, getSelectLightStyles };

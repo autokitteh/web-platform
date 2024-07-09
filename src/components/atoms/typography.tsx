@@ -3,7 +3,13 @@ import React, { ElementType } from "react";
 import { TypographyProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Typography = <E extends ElementType = "div">({ children, className, element, size = "medium", ...rest }: TypographyProps<E>) => {
+export const Typography = <E extends ElementType = "div">({
+	children,
+	className,
+	element,
+	size = "medium",
+	...rest
+}: TypographyProps<E>) => {
 	const Element = element || "div";
 	const sizeClasses = {
 		large: "text-lg",

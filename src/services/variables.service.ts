@@ -14,7 +14,10 @@ export class VariablesService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.variableService, i18n.t("variableRemoveFailedExtended", { name, ns: "services" }));
+			LoggerService.error(
+				namespaces.variableService,
+				i18n.t("variableRemoveFailedExtended", { name, ns: "services" })
+			);
 
 			return { data: undefined, error };
 		}
@@ -27,7 +30,10 @@ export class VariablesService {
 
 			return { data: variable, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.variableService, i18n.t("variableGetFailedExtended", { error, name, ns: "services" }));
+			LoggerService.error(
+				namespaces.variableService,
+				i18n.t("variableGetFailedExtended", { error, name, ns: "services" })
+			);
 
 			return { data: undefined, error };
 		}
@@ -40,7 +46,10 @@ export class VariablesService {
 
 			return { data: variables, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, i18n.t("variablesNotFoundExtended", { id: envId, ns: "services" }));
+			LoggerService.error(
+				namespaces.projectService,
+				i18n.t("variablesNotFoundExtended", { id: envId, ns: "services" })
+			);
 
 			return { data: undefined, error };
 		}
@@ -51,19 +60,28 @@ export class VariablesService {
 			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
 
 			if (error) {
-				LoggerService.error(namespaces.triggerService, i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId }));
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
+				);
 
 				return { data: undefined, error };
 			}
 
 			if (!environments?.length) {
-				LoggerService.error(namespaces.triggerService, i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId }));
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
+				);
 
 				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
 			}
 
 			if (environments.length !== 1) {
-				LoggerService.error(namespaces.triggerService, i18n.t("multipleEnvironmentsFoundExtended", { ns: "services", projectId }));
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("multipleEnvironmentsFoundExtended", { ns: "services", projectId })
+				);
 
 				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
