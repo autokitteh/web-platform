@@ -14,14 +14,16 @@ const options: SelectOption[] = [
 	{ value: "option3", label: "Option 3", disabled: true },
 ];
 
-const SelectWrapper = (props: SelectProps) => {
+const SelectWrapper = ({ emptyList = false, ...props }: SelectProps & { emptyList?: boolean }) => {
 	const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>();
 
 	const handleChange = (selected: SingleValue<SelectOption>) => {
 		setSelectedOption(selected);
 	};
 
-	return <Select {...props} onChange={handleChange} options={options} value={selectedOption as SelectOption} />;
+	const optionsList = emptyList ? [] : options;
+
+	return <Select {...props} onChange={handleChange} options={optionsList} value={selectedOption as SelectOption} />;
 };
 
 const meta: Meta<typeof SelectWrapper> = {
@@ -39,6 +41,7 @@ const meta: Meta<typeof SelectWrapper> = {
 			control: "inline-radio",
 			options: Object.values(InputVariant),
 		},
+		emptyList: { control: "boolean" },
 		dataTestid: { control: false },
 	},
 };
@@ -51,6 +54,7 @@ export const Primary: Story = {
 	args: {
 		variant: InputVariant.light,
 		isError: false,
+		emptyList: false,
 		placeholder: "Select an option",
 		noOptionsLabel: "No options available",
 		dataTestid: "",

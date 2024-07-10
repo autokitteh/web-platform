@@ -29,7 +29,10 @@ const meta: Meta<typeof InputWrapper> = {
 		},
 		className: { control: "text" },
 		classInput: { control: "text" },
-		icon: { control: false },
+		icon: {
+			control: "boolean",
+			description: "Show icon",
+		},
 	},
 	parameters: {
 		actions: { disable: true },
@@ -45,11 +48,12 @@ export const Primary: Story = {
 	args: {
 		variant: InputVariant.light,
 		placeholder: "Enter text",
+		className: "",
+		classInput: "",
 		isError: false,
 		isRequired: false,
 		disabled: false,
-		className: "",
-		classInput: "",
-		icon: <Eye className="fill-gray-400" />,
+		icon: true,
 	},
+	render: (args) => <InputWrapper {...args} icon={args.icon ? <Eye className="fill-gray-400" /> : null} />,
 };

@@ -18,11 +18,11 @@ const meta = {
 		interactions: { disable: true },
 	},
 	argTypes: {
-		children: { control: false },
 		className: { control: "text" },
 		variant: { control: "inline-radio", options: ButtonVariantOptions, labels: { inline: true } },
-		ariaLabel: { control: "text" },
 		disabled: { control: "boolean" },
+		children: { control: false },
+		ariaLabel: { control: false },
 		onClick: { control: false },
 		onKeyDown: { control: false },
 		onMouseEnter: { control: false },
@@ -40,7 +40,6 @@ export const Primary = {
 	args: {
 		variant: ButtonVariant.filled,
 		className: "",
-		ariaLabel: "",
 		disabled: false,
 		title: "",
 		children: <Close className="h-2 w-2 fill-gray-300 transition group-hover:fill-white" />,
