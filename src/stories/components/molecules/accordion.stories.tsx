@@ -1,19 +1,21 @@
 import React from "react";
+
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { Accordion } from "@components/molecules";
 
 const AccordionWrapper = ({
-	title,
 	children,
 	className,
+	title,
 }: {
-	title: string;
 	children: React.ReactNode;
 	className?: string;
+	title: string;
 }) => {
 	return (
 		<div className="inline-block rounded bg-gray-600 p-2 pt-1.5">
-			<Accordion title={title} className={className}>
+			<Accordion className={className} title={title}>
 				{children}
 			</Accordion>
 		</div>
@@ -31,6 +33,7 @@ const meta = {
 	decorators: [
 		(_, context) => {
 			const { args } = context;
+
 			return <AccordionWrapper {...args} />;
 		},
 	],

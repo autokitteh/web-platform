@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { IconSvg } from "@components/atoms";
+
 import { EditIcon } from "@assets/image/icons";
 
 const meta = {

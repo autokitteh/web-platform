@@ -221,11 +221,17 @@ module.exports = {
 		"import/newline-after-import": "error",
 	},
 	"overrides": [
-	  {
-		"files": ["*.json"],
-		"rules": {
-		  "no-unused-expressions": "off"
+		{
+			"files": ["*.json"],
+			"rules": {
+				"no-unused-expressions": "off"
+			}
+		},
+		{
+			"files": ["*.stories.js", "*.stories.jsx", "*.stories.ts", "*.stories.tsx"],
+			"rules": {
+				"sort-keys": "off"
+			}
 		}
-	  }
 	]
 };

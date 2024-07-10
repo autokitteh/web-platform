@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react";
-import { Toggle } from "@components/atoms";
+
 import { action } from "@storybook/addon-actions";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import { ToggleProps } from "@interfaces/components";
 
-const ToggleWrapper = ({ label, checked: initialChecked, onChange }: ToggleProps) => {
+import { Toggle } from "@components/atoms";
+
+const ToggleWrapper = ({ checked: initialChecked, label, onChange }: ToggleProps) => {
 	const [checked, setChecked] = useState(initialChecked);
 
 	const handleChange = (checked: boolean) => {
@@ -14,7 +17,7 @@ const ToggleWrapper = ({ label, checked: initialChecked, onChange }: ToggleProps
 
 	return (
 		<div className="inline-block rounded bg-gray-500 p-2">
-			<Toggle label={label} checked={checked} onChange={handleChange} />
+			<Toggle checked={checked} label={label} onChange={handleChange} />
 		</div>
 	);
 };
@@ -23,13 +26,14 @@ const meta = {
 	title: "Display/Toggle",
 	component: Toggle,
 	argTypes: {
-		label: { control: "text" },
 		checked: { control: false },
+		label: { control: "text" },
 		onChange: { action: "changed" },
 	},
 	decorators: [
 		(_, context) => {
 			const { args } = context;
+
 			return <ToggleWrapper {...args} />;
 		},
 	],

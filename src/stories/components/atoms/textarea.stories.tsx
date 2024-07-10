@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { Textarea } from "@components/atoms";
+
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { TextArea } from "@interfaces/components";
+
+import { Textarea } from "@components/atoms";
 
 const TextareaWrapper = (props: Partial<TextArea>) => {
 	const [value, setValue] = useState("");
 
-	return <Textarea {...props} value={value} onChange={(e) => setValue(e.target.value)} />;
+	return <Textarea {...props} onChange={(event) => setValue(event.target.value)} value={value} />;
 };
 
 const meta: Meta<typeof TextareaWrapper> = {

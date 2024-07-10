@@ -1,9 +1,12 @@
 import React from "react";
-import { Toast } from "@components/molecules";
-import { Button } from "@components/atoms";
-import { useToastStore } from "@store/useToastStore";
+
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { ToasterTypes } from "@interfaces/components";
+import { useToastStore } from "@store/useToastStore";
+
+import { Button } from "@components/atoms";
+import { Toast } from "@components/molecules";
 
 const ToastWrapper = () => {
 	const { addToast } = useToastStore();
@@ -14,12 +17,14 @@ const ToastWrapper = () => {
 
 	return (
 		<div className="flex gap-2">
-			<Button variant="filled" className="pt-1 font-medium" onClick={() => handleAddToast("success")}>
+			<Button className="pt-1 font-medium" onClick={() => handleAddToast("success")} variant="filled">
 				Show Success Toast
 			</Button>
-			<Button variant="filled" className="pt-1 font-medium" onClick={() => handleAddToast("error")}>
+
+			<Button className="pt-1 font-medium" onClick={() => handleAddToast("error")} variant="filled">
 				Show Error Toast
 			</Button>
+
 			<Toast />
 		</div>
 	);

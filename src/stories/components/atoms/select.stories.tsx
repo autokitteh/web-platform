@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { SingleValue } from "react-select";
+
 import type { Meta, StoryObj } from "@storybook/react";
+import { SingleValue } from "react-select";
+
+import { InputVariant } from "@enums/components";
+import { SelectOption, SelectProps } from "@interfaces/components";
 
 import { Select } from "@components/atoms";
-import { SelectProps, SelectOption } from "@interfaces/components";
-import { InputVariant } from "@enums/components";
 
 const options: SelectOption[] = [
 	{ value: "option1", label: "Option 1" },
@@ -19,7 +21,7 @@ const SelectWrapper = (props: SelectProps) => {
 		setSelectedOption(selected);
 	};
 
-	return <Select {...props} value={selectedOption as SelectOption} options={options} onChange={handleChange} />;
+	return <Select {...props} onChange={handleChange} options={options} value={selectedOption as SelectOption} />;
 };
 
 const meta: Meta<typeof SelectWrapper> = {

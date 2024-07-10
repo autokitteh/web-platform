@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import { Input } from "@components/atoms";
+
 import type { Meta, StoryObj } from "@storybook/react";
-import { InputProps } from "@interfaces/components";
+
 import { InputVariant } from "@enums/components";
+import { InputProps } from "@interfaces/components";
+
+import { Input } from "@components/atoms";
+
 import { Eye } from "@assets/image/icons";
 
 const InputWrapper = (props: InputProps) => {
 	const [value, setValue] = useState("");
 
-	return <Input {...props} value={value} onChange={(e) => setValue(e.target.value)} />;
+	return <Input {...props} onChange={(event) => setValue(event.target.value)} value={value} />;
 };
 
 const meta: Meta<typeof InputWrapper> = {

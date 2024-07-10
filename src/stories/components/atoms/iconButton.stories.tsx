@@ -1,7 +1,11 @@
 import React from "react";
+
 import type { Meta, StoryObj } from "@storybook/react";
-import { IconButton } from "@components/atoms";
+
 import { ButtonVariant } from "@enums/components";
+
+import { IconButton } from "@components/atoms";
+
 import { Close } from "@assets/image/icons";
 
 const ButtonVariantOptions = Object.values(ButtonVariant);

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "@components/atoms";
+
 import { ButtonVariant } from "@enums/components";
+
+import { Button } from "@components/atoms";
 
 const ButtonVariantOptions = Object.values(ButtonVariant);
 
