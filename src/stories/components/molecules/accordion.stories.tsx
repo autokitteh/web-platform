@@ -24,19 +24,12 @@ const AccordionWrapper = ({
 
 const meta = {
 	title: "Display/Accordion",
-	component: Accordion,
+	component: AccordionWrapper,
 	argTypes: {
 		title: { control: "text" },
 		children: { control: "text" },
 		className: { control: "text" },
 	},
-	decorators: [
-		(_, context) => {
-			const { args } = context;
-
-			return <AccordionWrapper {...args} />;
-		},
-	],
 } satisfies Meta<typeof Accordion>;
 
 export default meta;

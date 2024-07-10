@@ -103,6 +103,7 @@ export default {
           fontSize: "14px",
           lineHeight: "20px",
         },
+        // TODO: add tags for h1-h6
       });
     }),
   ],

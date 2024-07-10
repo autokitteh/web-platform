@@ -50,10 +50,10 @@ export const Primary: Story = {
 		placeholder: "Enter text",
 		className: "",
 		classInput: "",
+		icon: true,
 		isError: false,
 		isRequired: false,
 		disabled: false,
-		icon: true,
 	},
 	render: (args) => <InputWrapper {...args} icon={args.icon ? <Eye className="fill-gray-400" /> : null} />,
 };
