@@ -27,90 +27,82 @@ import { Deployments } from "@components/pages/deployments";
 import { AppLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
-Sentry.init({
-	dsn: isProduction ? import.meta.env.SENTRY_DSN : "",
-	integrations: [
-		// See docs for support of different versions of variation of react router
-		// https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
-		Sentry.reactRouterV6BrowserTracingIntegration({
-			useEffect,
-			useLocation,
-			useNavigationType,
-			createRoutesFromChildren,
-			matchRoutes,
-		}),
-		Sentry.replayIntegration(),
-	],
-	// Set tracesSampleRate to 1.0 to capture 100%
-	// of transactions for tracing.
-	tracesSampleRate: 1.0,
-	// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
-	tracePropagationTargets: ["localhost", /^https:\/\/staging.autokitteh\.cloud/, /^https:\/\/ak-cloud.netlify\.app/],
-	// Capture Replay for 10% of all sessions,
-	// plus for 100% of sessions with an error
-	replaysSessionSampleRate: 0.1,
-	replaysOnErrorSampleRate: 1.0,
-});
-const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
+export const App: React.FC = () => {
+	let AKRoutes = Routes;
 
-export const App: React.FC = () => (
-	<BrowserRouter>
-		<SentryRoutes>
-			<Route element={<AppLayout />} path="/">
-				<Route element={<Dashboard />} index />
+	if (isProduction) {
+		Sentry.init({
+			dsn: import.meta.env.VITE_SENTRY_DSN,
+			integrations: [
+				// See docs for support of different versions of variation of react router
+				// https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
+				Sentry.reactRouterV6BrowserTracingIntegration({
+					useEffect,
+					useLocation,
+					useNavigationType,
+					createRoutesFromChildren,
+					matchRoutes,
+				}),
+				Sentry.replayIntegration(),
+			],
+			// Set tracesSampleRate to 1.0 to capture 100%
+			// of transactions for tracing.
+			tracesSampleRate: 1.0,
+			// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
+			tracePropagationTargets: [
+				"localhost",
+				/^https:\/\/staging.autokitteh\.cloud/,
+				/^https:\/\/ak-cloud.netlify\.app/,
+			],
+			// Capture Replay for 10% of all sessions,
+			// plus for 100% of sessions with an error
+			replaysSessionSampleRate: 0.1,
+			replaysOnErrorSampleRate: 1.0,
+		});
+		AKRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
+	}
 
-				<Route element={<NotFound404 />} path="404" />
-			</Route>
+	return (
+		<BrowserRouter>
+			<AKRoutes>
+				<Route element={<AppLayout />} path="/">
+					<Route element={<Dashboard />} index />
 
-			<Route element={<AppLayout displayTopbar />} path="projects">
-				<Route element={<Project />} path=":projectId">
-					<Route element={<Navigate replace to="code" />} index />
-
-					<Route element={<Connections />} path="connections">
-						<Route element={<ConnectionsTable />} index />
-
-						<Route element={<AddConnection />} path="add" />
-
-						<Route element={<Navigate replace to="/404" />} path="*" />
-					</Route>
-
-					<Route element={<CodeTable />} path="code" />
-
-					<Route element={<Triggers />} path="triggers">
-						<Route element={<TriggersTable />} index />
-
-						<Route element={<AddTrigger />} path="add" />
-
-						<Route element={<DefaultEditTrigger />} path=":triggerId/edit" />
-
-						<Route element={<SchedulerEditTrigger />} path=":triggerId/edit-scheduler" />
-
-						<Route element={<Navigate replace to="/404" />} path="*" />
-					</Route>
-
-					<Route element={<Variables />} path="variables">
-						<Route element={<VariablesTable />} index />
-
-						<Route element={<AddVariable />} path="add" />
-
-						<Route element={<EditVariable />} path="edit/:environmentId/:variableName" />
-
-						<Route element={<Navigate replace to="/404" />} path="*" />
-					</Route>
-
-					<Route element={<Navigate replace to="/404" />} path="*" />
+					<Route element={<NotFound404 />} path="404" />
 				</Route>
 
-				<Route element={<Navigate replace to="/404" />} path="*" />
-			</Route>
+				<Route element={<AppLayout displayTopbar />} path="projects">
+					<Route element={<Project />} path=":projectId">
+						<Route element={<Navigate replace to="code" />} index />
 
-			<Route element={<AppLayout displayStatsTopbar />} path="projects/:projectId">
-				<Route element={<Deployments />} path="deployments">
-					<Route element={<DeploymentsTable />} index />
+						<Route element={<Connections />} path="connections">
+							<Route element={<ConnectionsTable />} index />
 
-					<Route element={<Sessions />} path=":deploymentId">
-						<Route element={<SessionsTable />} path="sessions">
-							<Route element={<SessionTableEditorFrame />} path=":sessionId" />
+							<Route element={<AddConnection />} path="add" />
+
+							<Route element={<Navigate replace to="/404" />} path="*" />
+						</Route>
+
+						<Route element={<CodeTable />} path="code" />
+
+						<Route element={<Triggers />} path="triggers">
+							<Route element={<TriggersTable />} index />
+
+							<Route element={<AddTrigger />} path="add" />
+
+							<Route element={<DefaultEditTrigger />} path=":triggerId/edit" />
+
+							<Route element={<SchedulerEditTrigger />} path=":triggerId/edit-scheduler" />
+
+							<Route element={<Navigate replace to="/404" />} path="*" />
+						</Route>
+
+						<Route element={<Variables />} path="variables">
+							<Route element={<VariablesTable />} index />
+
+							<Route element={<AddVariable />} path="add" />
+
+							<Route element={<EditVariable />} path="edit/:environmentId/:variableName" />
 
 							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>
@@ -120,15 +112,33 @@ export const App: React.FC = () => (
 
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
-			</Route>
 
-			<Route element={<SettingsLayout />} path="settings">
-				<Route element={<Security />} index />
+				<Route element={<AppLayout displayStatsTopbar />} path="projects/:projectId">
+					<Route element={<Deployments />} path="deployments">
+						<Route element={<DeploymentsTable />} index />
+
+						<Route element={<Sessions />} path=":deploymentId">
+							<Route element={<SessionsTable />} path="sessions">
+								<Route element={<SessionTableEditorFrame />} path=":sessionId" />
+
+								<Route element={<Navigate replace to="/404" />} path="*" />
+							</Route>
+
+							<Route element={<Navigate replace to="/404" />} path="*" />
+						</Route>
+
+						<Route element={<Navigate replace to="/404" />} path="*" />
+					</Route>
+				</Route>
+
+				<Route element={<SettingsLayout />} path="settings">
+					<Route element={<Security />} index />
+
+					<Route element={<Navigate replace to="/404" />} path="*" />
+				</Route>
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
-			</Route>
-
-			<Route element={<Navigate replace to="/404" />} path="*" />
-		</SentryRoutes>
-	</BrowserRouter>
-);
+			</AKRoutes>
+		</BrowserRouter>
+	);
+};

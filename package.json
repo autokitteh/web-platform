@@ -6,7 +6,6 @@
 	"scripts": {
 		"build": "vite build",
 		"build-storybook": "storybook build",
-		"build:netlify": "npm install && npm run build:prod",
 		"build:prod": "NODE_ENV=production npm run build",
 		"check-format:staged": "prettier . --check",
 		"dev": "npm run validate-env && vite",

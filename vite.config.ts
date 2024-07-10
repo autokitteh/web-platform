@@ -8,6 +8,25 @@ import { defineConfig } from "vitest/config";
 dotenv.config();
 
 export default defineConfig({
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks(id) {
+					if (id.includes("node_modules") && !id.includes("node_modules/@sentry")) {
+						return id.toString().split("node_modules/")[1].split("/")[0].toString();
+					}
+				},
+			},
+		},
+	},
+	define: {
+		"import.meta.env.VITE_NODE_ENV": JSON.stringify(process.env.VITE_NODE_ENV),
+		"import.meta.env.VITE_AUTH_ENABLED": JSON.stringify(process.env.VITE_AUTH_ENABLED),
+		"import.meta.env.VITE_DESCOPE_PROJECT_ID": JSON.stringify(process.env.VITE_DESCOPE_PROJECT_ID),
+		"import.meta.env.VITE_HOST_URL": JSON.stringify(process.env.VITE_HOST_URL),
+		"import.meta.env.SENTRY_AUTH_TOKEN": JSON.stringify(process.env.SENTRY_AUTH_TOKEN),
+		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
+	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
 	},
