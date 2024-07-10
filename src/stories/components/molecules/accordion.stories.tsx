@@ -12,7 +12,7 @@ const AccordionWrapper = ({
 	className?: string;
 }) => {
 	return (
-		<div className="bg-gray-600 inline-block p-2 pt-1.5 rounded">
+		<div className="inline-block rounded bg-gray-600 p-2 pt-1.5">
 			<Accordion title={title} className={className}>
 				{children}
 			</Accordion>
@@ -43,7 +43,8 @@ type Story = StoryObj<typeof meta>;
 export const Primary = {
 	args: {
 		title: "Accordion Title",
-		children: "This is the content of the accordion. It is initially hidden and can be revealed by clicking the title.",
+		children:
+			"This is the content of the accordion. It is initially hidden and can be revealed by clicking the title.",
 		className: "text-white",
 	},
 } satisfies Story;

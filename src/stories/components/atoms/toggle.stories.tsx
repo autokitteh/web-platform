@@ -13,7 +13,7 @@ const ToggleWrapper = ({ label, checked: initialChecked, onChange }: ToggleProps
 	};
 
 	return (
-		<div className="bg-gray-500 inline-block p-2 rounded">
+		<div className="inline-block rounded bg-gray-500 p-2">
 			<Toggle label={label} checked={checked} onChange={handleChange} />
 		</div>
 	);

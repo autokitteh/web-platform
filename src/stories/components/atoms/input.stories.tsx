@@ -25,7 +25,7 @@ const meta: Meta<typeof InputWrapper> = {
 		},
 		className: { control: "text" },
 		classInput: { control: "text" },
-		icon: { control: "none" },
+		icon: { control: false },
 	},
 	parameters: {
 		actions: { disable: true },

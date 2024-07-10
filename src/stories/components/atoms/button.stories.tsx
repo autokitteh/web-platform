@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "@components/atoms";
 import { ButtonVariant } from "@enums/components";
 
+const ButtonVariantOptions = Object.values(ButtonVariant);
+
 const meta = {
 	title: "Buttons/Button",
 	component: Button,
@@ -12,7 +14,7 @@ const meta = {
 	argTypes: {
 		children: { control: "text" },
 		className: { control: "text" },
-		variant: { control: "inline-radio", options: ButtonVariant, labels: { inline: true } },
+		variant: { control: "inline-radio", options: ButtonVariantOptions, labels: { inline: true } },
 		ariaLabel: { control: "text" },
 		disabled: { control: "boolean" },
 		type: { control: "inline-radio", options: ["button", "submit", "reset"] },

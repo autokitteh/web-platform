@@ -4,6 +4,8 @@ import { IconButton } from "@components/atoms";
 import { ButtonVariant } from "@enums/components";
 import { Close } from "@assets/image/icons";
 
+const ButtonVariantOptions = Object.values(ButtonVariant);
+
 const meta = {
 	title: "Buttons/IconButton",
 	component: IconButton,
@@ -14,7 +16,7 @@ const meta = {
 	argTypes: {
 		children: { control: false },
 		className: { control: "text" },
-		variant: { control: "inline-radio", options: ButtonVariant, labels: { inline: true } },
+		variant: { control: "inline-radio", options: ButtonVariantOptions, labels: { inline: true } },
 		ariaLabel: { control: "text" },
 		disabled: { control: "boolean" },
 		onClick: { control: false },
@@ -37,6 +39,6 @@ export const Primary = {
 		ariaLabel: "",
 		disabled: false,
 		title: "",
-		children: <Close className="w-2 h-2 transition fill-gray-300 group-hover:fill-white" />,
+		children: <Close className="h-2 w-2 fill-gray-300 transition group-hover:fill-white" />,
 	},
 } satisfies Story;

@@ -37,7 +37,7 @@ const meta: Meta<typeof SelectWrapper> = {
 			control: "inline-radio",
 			options: Object.values(InputVariant),
 		},
-		dataTestid: { control: "none" },
+		dataTestid: { control: false },
 	},
 };
 

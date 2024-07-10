@@ -19,7 +19,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default = {
+export const Primary = {
 	args: {
 		children: "Badge",
 	},

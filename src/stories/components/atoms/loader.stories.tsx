@@ -10,11 +10,11 @@ const meta = {
 			options: ["sm", "md", "lg", "xl", "2xl"],
 		},
 		firstColor: {
-			control: { type: "radio" },
+			control: { type: "inline-radio" },
 			options: ["dark-gray", "gray"],
 		},
 		secondColor: {
-			control: { type: "radio" },
+			control: { type: "inline-radio" },
 			options: ["dark-gray", "gray"],
 		},
 		isCenter: {
