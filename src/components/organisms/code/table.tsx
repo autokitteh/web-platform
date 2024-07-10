@@ -145,6 +145,11 @@ export const CodeTable = () => {
 		fetchResources();
 	};
 
+	const handleTrashIconClick = (event: React.MouseEvent, name: string) => {
+		event.stopPropagation();
+		openModal(ModalName.deleteFile, name);
+	};
+
 	return isLoading ? (
 		<Loader isCenter size="xl" />
 	) : (
@@ -196,16 +201,15 @@ export const CodeTable = () => {
 
 						<TBody>
 							{sortedResources.map(([name], index) => (
-								<Tr className={activeBodyRow(name)} key={index}>
-									<Td
-										className="cursor-pointer font-medium"
-										onClick={() => updateEditorOpenedFiles(name)}
-									>
-										{name}
-									</Td>
+								<Tr
+									className={activeBodyRow(name)}
+									key={index}
+									onClick={() => updateEditorOpenedFiles(name)}
+								>
+									<Td className="cursor-pointer font-medium">{name}</Td>
 
 									<Td className="max-w-12 pr-0">
-										<IconButton onClick={() => openModal(ModalName.deleteFile, name)}>
+										<IconButton onClick={(event) => handleTrashIconClick(event, name)}>
 											<TrashIcon className="h-3 w-3 fill-white" />
 										</IconButton>
 									</Td>
