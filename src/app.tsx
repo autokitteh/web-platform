@@ -45,7 +45,7 @@ Sentry.init({
 	// of transactions for tracing.
 	tracesSampleRate: 1.0,
 	// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
-	tracePropagationTargets: ["localhost", /^https:\/\/staging.autokitteh\.cloud/],
+	tracePropagationTargets: ["localhost", /^https:\/\/staging.autokitteh\.cloud/, /^https:\/\/ak-cloud.netlify\.app/],
 	// Capture Replay for 10% of all sessions,
 	// plus for 100% of sessions with an error
 	replaysSessionSampleRate: 0.1,
