@@ -18,6 +18,9 @@ const InputWrapper = (props: InputProps) => {
 const meta: Meta<typeof InputWrapper> = {
 	title: "Form/Input",
 	component: InputWrapper,
+	parameters: {
+		actions: { disable: true },
+	},
 	argTypes: {
 		placeholder: { control: "text" },
 		isError: { control: "boolean" },
@@ -33,10 +36,6 @@ const meta: Meta<typeof InputWrapper> = {
 			control: "boolean",
 			description: "Show icon",
 		},
-	},
-	parameters: {
-		actions: { disable: true },
-		interactions: { disable: true },
 	},
 };
 

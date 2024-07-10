@@ -21,6 +21,9 @@ const BadgeWrapper = ({ content }: { content: string }) => (
 const meta = {
 	title: "Display/Badge",
 	component: BadgeWrapper,
+	parameters: {
+		actions: { disable: true },
+	},
 	argTypes: {
 		content: { control: "text" },
 	},

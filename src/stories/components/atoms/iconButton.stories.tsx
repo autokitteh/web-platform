@@ -15,7 +15,6 @@ const meta = {
 	component: IconButton,
 	parameters: {
 		actions: { disable: true },
-		interactions: { disable: true },
 	},
 	argTypes: {
 		className: { control: "text" },
@@ -39,9 +38,9 @@ type Story = StoryObj<typeof meta>;
 export const Primary = {
 	args: {
 		variant: ButtonVariant.filled,
-		className: "",
+		className: "w-8 h-8",
 		disabled: false,
 		title: "",
-		children: <Close className="h-2 w-2 fill-gray-300 transition group-hover:fill-white" />,
+		children: <Close className="h-3 w-3 fill-gray-300 transition group-hover:fill-white" />,
 	},
 } satisfies Story;

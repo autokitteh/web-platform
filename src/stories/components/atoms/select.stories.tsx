@@ -31,7 +31,6 @@ const meta: Meta<typeof SelectWrapper> = {
 	component: SelectWrapper,
 	parameters: {
 		actions: { disable: true },
-		interactions: { disable: true },
 	},
 	argTypes: {
 		placeholder: { control: "text" },

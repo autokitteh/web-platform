@@ -5,6 +5,9 @@ import { Spinner } from "@components/atoms";
 const meta = {
 	title: "Display/Spinner",
 	component: Spinner,
+	parameters: {
+		actions: { disable: true },
+	},
 	argTypes: {
 		className: { control: false },
 	},

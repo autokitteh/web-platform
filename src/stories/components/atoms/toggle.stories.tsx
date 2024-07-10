@@ -24,19 +24,15 @@ const ToggleWrapper = ({ checked: initialChecked, label, onChange }: ToggleProps
 
 const meta = {
 	title: "Display/Toggle",
-	component: Toggle,
+	component: ToggleWrapper,
+	parameters: {
+		actions: { disable: true },
+	},
 	argTypes: {
 		checked: { control: false },
 		label: { control: "text" },
 		onChange: { action: "changed" },
 	},
-	decorators: [
-		(_, context) => {
-			const { args } = context;
-
-			return <ToggleWrapper {...args} />;
-		},
-	],
 } satisfies Meta<typeof Toggle>;
 
 export default meta;

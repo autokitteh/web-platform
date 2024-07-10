@@ -5,6 +5,9 @@ import { Loader } from "@components/atoms";
 const meta = {
 	title: "Display/Loader",
 	component: Loader,
+	parameters: {
+		actions: { disable: true },
+	},
 	argTypes: {
 		size: {
 			control: { type: "inline-radio" },

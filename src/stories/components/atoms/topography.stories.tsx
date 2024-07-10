@@ -7,7 +7,6 @@ const meta = {
 	component: Typography,
 	parameters: {
 		actions: { disable: true },
-		interactions: { disable: true },
 	},
 	argTypes: {
 		element: {

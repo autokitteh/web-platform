@@ -15,6 +15,9 @@ const TextareaWrapper = (props: Partial<TextArea>) => {
 const meta: Meta<typeof TextareaWrapper> = {
 	title: "Form/Textarea",
 	component: TextareaWrapper,
+	parameters: {
+		actions: { disable: true },
+	},
 	argTypes: {
 		placeholder: { control: "text" },
 		isError: { control: "boolean" },

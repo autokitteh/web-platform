@@ -11,7 +11,6 @@ const meta = {
 	component: Button,
 	parameters: {
 		actions: { disable: true },
-		interactions: { disable: true },
 	},
 	argTypes: {
 		children: { control: "text" },
