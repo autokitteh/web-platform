@@ -6,7 +6,7 @@ const meta = {
 	component: Loader,
 	argTypes: {
 		size: {
-			control: { type: "select" },
+			control: { type: "inline-radio" },
 			options: ["sm", "md", "lg", "xl", "2xl"],
 		},
 		firstColor: {

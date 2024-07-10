@@ -10,13 +10,13 @@ const meta = {
 	},
 	argTypes: {
 		element: {
-			control: "radio",
+			control: "inline-radio",
 			options: ["div", "i", "b", "u"],
 		},
 		children: { control: "text" },
 		className: { control: "text" },
 		size: {
-			control: "radio",
+			control: "inline-radio",
 			options: ["small", "medium", "large"],
 		},
 	},

@@ -14,7 +14,7 @@ const meta = {
 	argTypes: {
 		children: { control: false },
 		className: { control: "text" },
-		variant: { control: "radio", options: ButtonVariant, labels: { inline: true } },
+		variant: { control: "inline-radio", options: ButtonVariant, labels: { inline: true } },
 		ariaLabel: { control: "text" },
 		disabled: { control: "boolean" },
 		onClick: { control: false },

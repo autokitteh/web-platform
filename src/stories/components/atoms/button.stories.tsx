@@ -12,10 +12,10 @@ const meta = {
 	argTypes: {
 		children: { control: "text" },
 		className: { control: "text" },
-		variant: { control: "radio", options: ButtonVariant, labels: { inline: true } },
+		variant: { control: "inline-radio", options: ButtonVariant, labels: { inline: true } },
 		ariaLabel: { control: "text" },
 		disabled: { control: "boolean" },
-		type: { control: "select", options: ["button", "submit", "reset"] },
+		type: { control: "inline-radio", options: ["button", "submit", "reset"] },
 		onClick: { control: false },
 		onKeyDown: { control: false },
 		onMouseEnter: { control: false },
