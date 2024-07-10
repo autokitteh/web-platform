@@ -12,6 +12,8 @@ import {
 	useNavigationType,
 } from "react-router-dom";
 
+import { isProduction } from "@constants";
+
 import { DeploymentsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable } from "@components/organisms/connections";
@@ -26,7 +28,7 @@ import { AppLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
 Sentry.init({
-	dsn: import.meta.env.SENTRY_DSN,
+	dsn: isProduction ? import.meta.env.SENTRY_DSN : "",
 	integrations: [
 		// See docs for support of different versions of variation of react router
 		// https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/

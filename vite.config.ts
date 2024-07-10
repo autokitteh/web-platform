@@ -8,9 +8,6 @@ import { defineConfig } from "vitest/config";
 dotenv.config();
 
 export default defineConfig({
-	define: {
-		"process.env": {},
-	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
 	},
