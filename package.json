@@ -4,7 +4,6 @@
 	"type": "module",
 	"version": "1.13.0",
 	"scripts": {
-		"build:local": "npm run validate-env && tsc && vite build",
 		"build": "vite build",
 		"build-storybook": "storybook build",
 		"check-format:staged": "prettier . --check",
