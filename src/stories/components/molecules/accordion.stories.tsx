@@ -4,6 +4,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Accordion } from "@components/molecules";
 
+import { ExternalLinkIcon } from "@assets/image/icons";
+
 const AccordionWrapper = ({
 	children,
 	className,
@@ -30,7 +32,7 @@ const meta = {
 		children: { control: "text" },
 		className: { control: "text" },
 	},
-} satisfies Meta<typeof Accordion>;
+} satisfies Meta<typeof AccordionWrapper>;
 
 export default meta;
 
@@ -39,8 +41,29 @@ type Story = StoryObj<typeof meta>;
 export const Primary = {
 	args: {
 		title: "Accordion Title",
-		children:
-			"This is the content of the accordion. It is initially hidden and can be revealed by clicking the title.",
+		children: "This is the content of the accordion.",
 		className: "text-white",
 	},
+} satisfies Story;
+
+export const WithLink = {
+	args: {
+		title: "With Link",
+		children: "This is the content of the accordion.",
+		className: "text-white",
+	},
+	render: ({ children, className, title }) => (
+		<AccordionWrapper className={className} title={title}>
+			<a
+				className="group inline-flex items-center gap-2.5 text-green-accent"
+				href={window.location.href}
+				rel="noreferrer"
+				target="_blank"
+			>
+				{children}
+
+				<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+			</a>
+		</AccordionWrapper>
+	),
 } satisfies Story;
