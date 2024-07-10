@@ -91,7 +91,8 @@ export const Security = () => {
 								{!isLoading ? (
 									<IconSvg
 										alt="New Project"
-										className="w-4 before:h-2 before:w-2 after:h-2 after:w-2"
+										className="before:h-2 before:w-2 after:h-2 after:w-2"
+										size="md"
 										src={NewProject}
 									/>
 								) : null}
