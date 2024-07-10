@@ -10,6 +10,7 @@
 	"failedRemoveFile": "Failed to remove file: {{fileName}}",
 	"failedRemoveSession": "Failed to remove session",
 	"failedRemoveSessionExtended": "Failed to remove session, ID: {{sessionId}}",
+	"failedStopSession": "Failed to stop session",
 	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}",
 	"nameRequired": "Name is required",
 	"noDataReturnedFromServer": "No data returned from the server",

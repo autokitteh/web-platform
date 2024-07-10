@@ -13,11 +13,13 @@ export interface SessionsTableRowProps {
 	selectedSessionId?: string;
 	sessions: Session[];
 	showDeleteModal: (id: string) => void;
+	onSessionRemoved: () => void;
 }
 
 export interface SessionsTableListProps {
 	onItemsRendered: (props: ListOnItemsRenderedProps) => void;
 	onScroll: (props: ListOnScrollProps) => void;
 	onSelectedSessionId: (id: string) => void;
+	onSessionRemoved: () => void;
 	sessions: Session[];
 }

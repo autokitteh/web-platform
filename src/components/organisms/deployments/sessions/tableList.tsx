@@ -15,6 +15,7 @@ export const SessionsTableList = ({
 	onItemsRendered,
 	onScroll,
 	onSelectedSessionId,
+	onSessionRemoved,
 	sessions,
 }: SessionsTableListProps) => {
 	const { deploymentId, projectId, sessionId } = useParams();
@@ -36,13 +37,14 @@ export const SessionsTableList = ({
 
 	const itemData = useMemo(
 		() => ({
+			onSessionRemoved,
 			openSessionLog,
 			scrollDisplayed,
 			selectedSessionId: sessionId,
 			sessions,
 			showDeleteModal,
 		}),
-		[sessions, sessionId, scrollDisplayed, openSessionLog, showDeleteModal]
+		[sessions, sessionId, scrollDisplayed, openSessionLog, showDeleteModal, onSessionRemoved]
 	);
 
 	const itemsRendered = useCallback(

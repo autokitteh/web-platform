@@ -53,7 +53,8 @@
 				"running": "Running",
 				"stopped": "Stopped",
 				"unspecified": "Unspecified"
-			}
+			},
+			"stopSession": "Stop session"
 		},
 		"totalSessions": "Total {{total}}"
 	}

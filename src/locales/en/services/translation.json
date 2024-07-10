@@ -26,6 +26,7 @@
 	"projectNotFound": "Couldn't fetch the project details",
 	"sessionLogMissingError": "Session error log value is missing",
 	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}",
+	"sessionStopFailedExtended": "Error stopping session execution: {{error}} for session id: {{sessionId}}",
 	"tokenFetchFailed": "Token authentication failed",
 	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
