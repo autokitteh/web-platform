@@ -180,7 +180,7 @@ export const Topbar = () => {
 					onClick={build}
 					variant="outline"
 				>
-					{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg className="max-w-5" src={Build} />}
+					{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg size="lg" src={Build} />}
 
 					{t("topbar.buttons.build")}
 				</Button>
@@ -192,7 +192,7 @@ export const Topbar = () => {
 					onClick={deploy}
 					variant="outline"
 				>
-					{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg className="max-w-5" src={Deploy} />}
+					{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg size="lg" src={Deploy} />}
 
 					{t("topbar.buttons.deploy")}
 				</Button>
@@ -203,7 +203,7 @@ export const Topbar = () => {
 					href={`/projects/${projectId}/deployments`}
 					variant="outline"
 				>
-					<IconSvg className="max-w-5" src={Stats} />
+					<IconSvg size="lg" src={Stats} />
 
 					{t("topbar.buttons.stats")}
 				</Button>

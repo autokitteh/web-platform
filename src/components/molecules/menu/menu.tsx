@@ -96,7 +96,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 						onClick={handleCreateProject}
 					>
 						<div className="flex h-9 w-9 items-center justify-center">
-							<IconSvg alt="New Project" className="h-8 w-8 p-1" src={NewProject} />
+							<IconSvg alt="New Project" size="xl" src={NewProject} />
 						</div>
 
 						<AnimatePresence>
@@ -118,7 +118,12 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 				<li onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}>
 					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} href="#">
 						<div className={buttonMenuIconWrapperStyle("#")}>
-							<IconSvg alt={t("myProjects")} className={buttonMenuIconStyle("#")} src={ProjectsIcon} />
+							<IconSvg
+								alt={t("myProjects")}
+								className={buttonMenuIconStyle("#")}
+								size="xl"
+								src={ProjectsIcon}
+							/>
 						</div>
 
 						<AnimatePresence>

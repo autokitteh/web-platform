@@ -62,7 +62,7 @@ export const StatsTopbar = () => {
 					href={`/projects/${projectId}`}
 					variant="outline"
 				>
-					<IconSvg className="h-6 w-6 fill-white" src={ProjectsIcon} />
+					<IconSvg className="fill-white" size="xl" src={ProjectsIcon} />
 
 					{t("topbar.buttons.goToProject")}
 				</Button>

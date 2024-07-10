@@ -5,6 +5,7 @@ export interface IconProps {
 	className?: string;
 	disabled?: boolean;
 	isVisible?: boolean;
+	size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 	src: string;
 }
 

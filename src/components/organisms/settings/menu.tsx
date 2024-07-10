@@ -14,7 +14,7 @@ export const SettingsMenu = () => {
 			{menuItems.map((item, index) => (
 				<div className="group mb-4 flex cursor-pointer items-center" key={index} role="link">
 					<div className="mr-2 rounded-full bg-gray-500 p-2">
-						<IconSvg className="h-3 w-3 fill-white group-hover:fill-green-accent" src={item.icon} />
+						<IconSvg className="fill-white group-hover:fill-green-accent" size="sm" src={item.icon} />
 					</div>
 
 					<div>{t(item.label)}</div>
