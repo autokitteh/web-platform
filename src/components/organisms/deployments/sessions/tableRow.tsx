@@ -21,7 +21,7 @@ export const SessionsTableRow = memo(
 		const { t: tErrors } = useTranslation("errors");
 		const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 		const addToast = useToastStore((state) => state.addToast);
-		const { onUpdateSessions, openSessionLog, scrollDisplayed, selectedSessionId, sessions, showDeleteModal } =
+		const { onSessionRemoved, openSessionLog, scrollDisplayed, selectedSessionId, sessions, showDeleteModal } =
 			data;
 		const session = sessions[index];
 
@@ -52,7 +52,7 @@ export const SessionsTableRow = memo(
 
 				return;
 			}
-			onUpdateSessions();
+			onSessionRemoved();
 		};
 
 		const actionStoppedIconClass =

@@ -256,7 +256,7 @@ export const SessionsTable = () => {
 								onItemsRendered={handleItemsRendered}
 								onScroll={handleScroll}
 								onSelectedSessionId={setSelectedSessionId}
-								onUpdateSessions={debouncedFetchDeployments}
+								onSessionRemoved={debouncedFetchDeployments}
 								sessions={sessions}
 							/>
 						</TBody>
