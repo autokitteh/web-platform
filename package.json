@@ -28,6 +28,8 @@
 		"@descope/react-sdk": "^2.0.30",
 		"@hookform/resolvers": "^3.3.4",
 		"@monaco-editor/react": "^4.6.0",
+		"@sentry/react": "^8.15.0",
+		"@sentry/vite-plugin": "^2.20.1",
 		"@types/lodash": "^4.14.202",
 		"axios": "^1.6.7",
 		"clsx": "^2.1.0",
