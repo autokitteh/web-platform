@@ -31,3 +31,6 @@ dist-ssr
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Storybook Static Build
+/storybook-static/
