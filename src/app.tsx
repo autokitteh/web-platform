@@ -40,6 +40,7 @@ Sentry.init({
 			matchRoutes,
 		}),
 		Sentry.replayIntegration(),
+		Sentry.browserProfilingIntegration(),
 	],
 	// Set tracesSampleRate to 1.0 to capture 100%
 	// of transactions for tracing.
