@@ -12,13 +12,13 @@ const meta = {
 	argTypes: {
 		element: {
 			control: "inline-radio",
-			options: ["div", "i", "b", "u"],
+			options: ["h1", "h2", "h3", "h4", "h5", "h6", "p", "div", "i", "b", "u"],
 		},
 		children: { control: "text" },
 		className: { control: "text" },
 		size: {
 			control: "inline-radio",
-			options: ["small", "medium", "large"],
+			options: ["default", "small", "medium", "large"],
 		},
 	},
 } satisfies Meta<typeof Typography>;
@@ -29,9 +29,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary = {
 	args: {
-		element: "div",
 		children: "Sample text",
+		element: "b",
+		size: "default",
 		className: "",
-		size: "medium",
 	},
 } satisfies Story;
