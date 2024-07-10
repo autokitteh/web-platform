@@ -21,8 +21,15 @@ export const Tab = ({ activeTab, ariaLabel, children, className, onClick, value 
 	};
 
 	return (
-		<button aria-label={ariaLabel} className={tabStyle} onClick={handleActive} onKeyDown={handleActive} role="tab">
+		<div
+			aria-label={ariaLabel}
+			className={tabStyle}
+			onClick={handleActive}
+			onKeyDown={handleActive}
+			role="tab"
+			tabIndex={0}
+		>
 			{children}
-		</button>
+		</div>
 	);
 };
