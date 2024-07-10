@@ -32,7 +32,7 @@ export const IconButton = ({
 		className
 	);
 
-	const Component = href ? Link : "div";
+	const Component = href ? Link : "button";
 	const linkHref = href ? { to: href } : { to: "" };
 
 	return (
