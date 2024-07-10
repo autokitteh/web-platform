@@ -121,6 +121,9 @@
 		"vite-plugin-svgr": "^4.2.0",
 		"vitest": "^1.2.2"
 	},
+	"optionalDependencies": {
+	  "@rollup/rollup-linux-x64-gnu": "4.9.5"
+	},
 	"overrides": {
 		"vite": {
 			"rollup": "npm:@rollup/wasm-node"
