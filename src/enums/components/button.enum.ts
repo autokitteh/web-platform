@@ -1,5 +1,4 @@
 export enum ButtonVariant {
-	default = "default",
 	filled = "filled",
 	light = "light",
 	outline = "outline",

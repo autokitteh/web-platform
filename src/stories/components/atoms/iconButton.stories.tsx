@@ -1,21 +1,22 @@
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "@components/atoms";
+import { IconButton } from "@components/atoms";
 import { ButtonVariant } from "@enums/components";
+import { Close } from "@assets/image/icons";
 
 const meta = {
-	title: "Buttons/Button",
-	component: Button,
+	title: "Buttons/IconButton",
+	component: IconButton,
 	parameters: {
 		actions: { disable: true },
 		interactions: { disable: true },
 	},
 	argTypes: {
-		children: { control: "text" },
+		children: { control: false },
 		className: { control: "text" },
 		variant: { control: "radio", options: ButtonVariant, labels: { inline: true } },
 		ariaLabel: { control: "text" },
 		disabled: { control: "boolean" },
-		type: { control: "select", options: ["button", "submit", "reset"] },
 		onClick: { control: false },
 		onKeyDown: { control: false },
 		onMouseEnter: { control: false },
@@ -23,7 +24,7 @@ const meta = {
 		form: { control: false },
 		href: { control: false },
 	},
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof IconButton>;
 
 export default meta;
 
@@ -31,12 +32,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary = {
 	args: {
-		children: "Button",
 		variant: ButtonVariant.filled,
 		className: "",
 		ariaLabel: "",
 		disabled: false,
 		title: "",
-		type: "button",
+		children: <Close className="w-2 h-2 transition fill-gray-300 group-hover:fill-white" />,
 	},
 } satisfies Story;
