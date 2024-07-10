@@ -108,7 +108,7 @@ export const Toast = () => {
 						variants={variants}
 					>
 						<div className="flex gap-2.5" role="alert" title={title}>
-							<div>
+							<div className="text-white">
 								<p className={titleStyle(type)}>{title}</p>
 
 								{message}

@@ -34,6 +34,6 @@ export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
 export type { TableProps } from "@interfaces/components/table.interface";
 export type { TabListProps, TabProps, TabsContextProps, TabsProps } from "@interfaces/components/tabs.interface";
-export type { Toast } from "@interfaces/components/toast.interface";
+export type { Toast, ToasterTypes } from "@interfaces/components/toast.interface";
 export type { ToggleProps } from "@interfaces/components/toggle.interface";
 export type { TypographyProps } from "@interfaces/components/typography.interface";

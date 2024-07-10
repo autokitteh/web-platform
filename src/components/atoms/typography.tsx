@@ -12,6 +12,7 @@ export const Typography = <E extends ElementType = "div">({
 }: TypographyProps<E>) => {
 	const Element = element || "div";
 	const sizeClasses = {
+		default: "",
 		large: "text-lg",
 		medium: "text-base",
 		small: "text-sm",

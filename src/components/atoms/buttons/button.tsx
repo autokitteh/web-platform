@@ -19,12 +19,12 @@ export const Button = ({
 	variant,
 }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
-		"flex items-center gap-2.5 rounded-3xl p-2 transition",
+		"flex items-center gap-2.5 rounded-3xl p-2 pt-1.5 transition",
 		"hover:text-current text-center text-gray-700 duration-300 hover:bg-gray-800",
 		{
 			"bg-black text-white": variant === ButtonVariant.filled,
 			"bg-white text-gray-800 hover:bg-gray-300 hover:text-black": variant === ButtonVariant.light,
-			"border border-gray-400": variant === ButtonVariant.outline,
+			"border border-gray-400 hover:text-white": variant === ButtonVariant.outline,
 		},
 		{
 			"pointer-events-none opacity-30": disabled,
