@@ -1,7 +1,8 @@
-import plugin from "tailwindcss/plugin";
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const plugin = require('tailwindcss/plugin');
 
 // eslint-disable-next-line no-undef
-export default {
+module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontFamily: {
