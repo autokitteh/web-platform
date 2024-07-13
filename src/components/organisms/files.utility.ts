@@ -1,10 +1,5 @@
-// Type for the file data stored in IndexedDB
-interface FileData {
-	name: string;
-	content: string;
-}
+import { FileData } from "@interfaces/utilities";
 
-// Open the IndexedDB database
 export const openDatabase = (): Promise<IDBDatabase> => {
 	return new Promise((resolve, reject) => {
 		const request = indexedDB.open("ProjectStore", 1);
@@ -17,18 +12,16 @@ export const openDatabase = (): Promise<IDBDatabase> => {
 	});
 };
 
-// Save file content to IndexedDB
 export const saveFile = (db: IDBDatabase, fileName: string, content: string): Promise<void> => {
 	return new Promise((resolve, reject) => {
 		const transaction = db.transaction(["files"], "readwrite");
 		const store = transaction.objectStore("files");
-		const request = store.put({ name: fileName, content } as FileData);
+		const request = store.put({ content, name: fileName } as FileData);
 		request.onsuccess = () => resolve();
 		request.onerror = (event: Event) => reject((event.target as IDBRequest).error);
 	});
 };
 
-// Get file content from IndexedDB
 export const getFile = (db: IDBDatabase, fileName: string): Promise<string | null> => {
 	return new Promise((resolve, reject) => {
 		const transaction = db.transaction(["files"], "readonly");
@@ -39,12 +32,12 @@ export const getFile = (db: IDBDatabase, fileName: string): Promise<string | nul
 	});
 };
 
-// Convert byte array to string
 export const byteArrayToString = (byteArray: Uint8Array): string => {
 	let result = "";
 	const chunkSize = 8192;
 	for (let i = 0; i < byteArray.length; i += chunkSize) {
 		result += String.fromCharCode.apply(null, Array.from(byteArray.slice(i, i + chunkSize)));
 	}
+
 	return result;
 };
