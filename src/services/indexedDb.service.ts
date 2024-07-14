@@ -8,7 +8,7 @@ class IndexedDBService {
 		this.storeName = storeName;
 	}
 
-	async initDB() {
+	async InitDB() {
 		return new Promise<void>((resolve, reject) => {
 			const request = indexedDB.open(this.dbName, 1);
 			request.onupgradeneeded = (event) => {
@@ -25,14 +25,14 @@ class IndexedDBService {
 		});
 	}
 
-	async ensureDBInitialized() {
+	async EnsureDBInitialized() {
 		if (!this.db) {
-			await this.initDB();
+			await this.InitDB();
 		}
 	}
 
 	async getAll() {
-		await this.ensureDBInitialized();
+		await this.EnsureDBInitialized();
 
 		return new Promise<Record<string, Uint8Array>>((resolve, reject) => {
 			const transaction = this.db!.transaction(this.storeName, "readonly");
@@ -49,7 +49,7 @@ class IndexedDBService {
 	}
 
 	async put(name: string, content: Uint8Array) {
-		await this.ensureDBInitialized();
+		await this.EnsureDBInitialized();
 
 		return new Promise<void>((resolve, reject) => {
 			const transaction = this.db!.transaction(this.storeName, "readwrite");
@@ -61,7 +61,7 @@ class IndexedDBService {
 	}
 
 	async delete(name: string) {
-		await this.ensureDBInitialized();
+		await this.EnsureDBInitialized();
 
 		return new Promise<void>((resolve, reject) => {
 			const transaction = this.db!.transaction(this.storeName, "readwrite");

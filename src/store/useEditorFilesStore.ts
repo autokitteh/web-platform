@@ -31,14 +31,12 @@ const useFileStore = create<FileState>(
 								file.name === fileName ? { ...file, isActive: true } : { ...file, isActive: false }
 							);
 						}
-						console.log("updateOpenedFiles:", JSON.stringify(state.openedFiles));
 					})
 				),
 			closeOpenedFile: (fileName: string) =>
 				set(
 					produce((state: FileState) => {
 						state.openedFiles = state.openedFiles.filter((file) => file.name !== fileName);
-						console.log("closeOpenedFile:", JSON.stringify(state.openedFiles));
 					})
 				),
 			openFileAsActive: (fileName: string) =>
@@ -51,7 +49,6 @@ const useFileStore = create<FileState>(
 						if (!fileExists) {
 							state.openedFiles.push({ name: fileName, isActive: true });
 						}
-						console.log("openFileAsActive:", JSON.stringify(state.openedFiles));
 					})
 				),
 		}),
