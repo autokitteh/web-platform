@@ -1,23 +1,17 @@
 import React, { useEffect, useState } from "react";
 
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { ProjectsService } from "@services";
 import { calculatePathDepth } from "@utilities";
-
-import { useProjectStore, useToastStore } from "@store";
 
 import { Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
 
 export const Project = () => {
-	const { projectId } = useParams();
-	const { getProjectResources } = useProjectStore();
 	const navigate = useNavigate();
 	const [displayTabs, setDisplayTabs] = useState(false);
 	const location = useLocation();
-	const addToast = useToastStore((state) => state.addToast);
 
 	const [activeTab, setActiveTab] = useState(defaultProjectTab);
 
@@ -27,40 +21,12 @@ export const Project = () => {
 		setActiveTab(activeTabIndex);
 	}, [location]);
 
-	const fetchResources = async () => {
-		try {
-			const { data: resources, error } = await ProjectsService.getResources(projectId!);
-			if (error) {
-				throw error;
-			}
-			if (!resources) {
-				return;
-			}
-
-			getProjectResources(resources);
-		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-			});
-		}
-	};
-
 	useEffect(() => {
 		if (location?.pathname) {
 			const isProjectsMainView = calculatePathDepth(location.pathname) < 4;
 			setDisplayTabs(isProjectsMainView);
 		}
 	}, [location]);
-
-	useEffect(() => {
-		if (!projectId) {
-			return;
-		}
-		fetchResources();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
 
 	const goTo = (path: string) => {
 		navigate(path.toLowerCase());
