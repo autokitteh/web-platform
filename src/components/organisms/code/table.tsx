@@ -7,15 +7,19 @@ import { useParams } from "react-router-dom";
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
 import { ProjectsService } from "@services";
+import IndexedDBService from "@services/indexedDb.service";
+import useFileStore from "@store/useEditorFilesStore";
 import { cn } from "@utilities";
 
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
 
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
+
+const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export const CodeTable = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -24,15 +28,9 @@ export const CodeTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
+	const { openFileAsActive, openedFiles } = useFileStore();
 
-	const {
-		getProjectResources,
-		openedFiles,
-		removeProjectFile,
-		resources,
-		setProjectResources,
-		updateEditorOpenedFiles,
-	} = useProjectStore();
+	const [resources, setResources] = useState<Record<string, Uint8Array>>({});
 	const [isDragOver, setIsDragOver] = useState(false);
 
 	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
@@ -59,15 +57,21 @@ export const CodeTable = () => {
 	const fetchResources = async () => {
 		setIsLoading(true);
 		try {
-			const { data: resources, error } = await ProjectsService.getResources(projectId!);
+			// Fetch resources from the ProjectsService
+			const { data: resourcesFromService, error } = await ProjectsService.getResources(projectId!);
 			if (error) {
 				throw error;
 			}
-			if (!resources) {
-				return;
+			if (resourcesFromService) {
+				// Store resources in IndexedDB
+				for (const [name, content] of Object.entries(resourcesFromService)) {
+					await dbService.put(name, content);
+				}
 			}
 
-			getProjectResources(resources);
+			// Get all resources from IndexedDB
+			const resources = await dbService.getAll();
+			setResources(resources);
 		} catch (error) {
 			getProjectResources({});
 			addToast({
@@ -81,31 +85,29 @@ export const CodeTable = () => {
 	};
 
 	const fileUpload = async (files: File[]) => {
-		const { error, fileName } = await setProjectResources(files, projectId!);
-
-		if (error) {
+		try {
+			for (const file of files) {
+				const fileContent = await file.arrayBuffer();
+				await dbService.put(file.name, new Uint8Array(fileContent));
+			}
+			fetchResources();
+		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: tErrors("fileAddFailedExtended", { fileName, projectId }),
+				message: tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId }),
 				type: "error",
 			});
-
-			return;
 		}
-		fetchResources();
 	};
 
 	const activeBodyRow = (fileName: string) => {
-		const isActiveFile = openedFiles?.find(({ isActive, name }) => name === fileName && isActive);
+		const isActiveFile = openedFiles.find(({ isActive, name }) => name === fileName && isActive);
 
-		return cn({
-			"bg-black": isActiveFile,
-		});
+		return cn({ "bg-black": isActiveFile });
 	};
 
 	useEffect(() => {
 		fetchResources();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
 	const handleDragOver = (event: React.DragEvent) => {
@@ -116,7 +118,6 @@ export const CodeTable = () => {
 	const handleDrop = (event: React.DragEvent<HTMLInputElement>) => {
 		event.preventDefault();
 		setIsDragOver(false);
-
 		const droppedFiles = Array.from(event.dataTransfer.files);
 		if (droppedFiles) {
 			fileUpload(droppedFiles);
@@ -132,23 +133,25 @@ export const CodeTable = () => {
 
 	const handleRemoveFile = async () => {
 		closeModal(ModalName.deleteFile);
-		const { error } = await removeProjectFile(selectedRemoveFileName, projectId!);
-
-		if (error) {
+		try {
+			await dbService.delete(selectedRemoveFileName);
+			fetchResources();
+		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
 				message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }),
 				type: "error",
 			});
-
-			return;
 		}
-		fetchResources();
 	};
 
 	const handleTrashIconClick = (event: React.MouseEvent, name: string) => {
 		event.stopPropagation();
 		openModal(ModalName.deleteFile, name);
+	};
+
+	const handleFileClick = (name: string) => {
+		openFileAsActive(name);
 	};
 
 	return isLoading ? (
@@ -202,11 +205,7 @@ export const CodeTable = () => {
 
 						<TBody>
 							{sortedResources.map(([name], index) => (
-								<Tr
-									className={activeBodyRow(name)}
-									key={index}
-									onClick={() => updateEditorOpenedFiles(name)}
-								>
+								<Tr className={activeBodyRow(name)} key={index} onClick={() => handleFileClick(name)}>
 									<Td className="cursor-pointer font-medium">{name}</Td>
 
 									<Td className="max-w-12 pr-0">
