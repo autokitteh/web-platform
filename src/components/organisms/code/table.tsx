@@ -152,6 +152,7 @@ export const CodeTable = () => {
 
 	const handleFileClick = (name: string) => {
 		openFileAsActive(name);
+		console.log("File clicked:", name);
 	};
 
 	return isLoading ? (

@@ -19,7 +19,7 @@ const dbService = new IndexedDBService("ProjectDB", "resources");
 export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, openedFiles, updateOpenedFiles } = useFileStore();
+	const { closeOpenedFile, openFileAsActive, openedFiles } = useFileStore();
 	const [editorKey, setEditorKey] = useState(0);
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
@@ -85,7 +85,7 @@ export const EditorTabs = () => {
 	};
 
 	const onTabClick = (value: string) => {
-		updateOpenedFiles(value);
+		openFileAsActive(value);
 	};
 
 	return (
