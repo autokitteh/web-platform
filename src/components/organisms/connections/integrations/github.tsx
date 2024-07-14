@@ -4,12 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { baseUrl, namespaces } from "@constants";
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
-import { HttpService, LoggerService } from "@services";
+import { ConnectionFormIds } from "@enums/components";
+import { ConnectionService, HttpService, LoggerService } from "@services";
 import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
 
@@ -20,11 +21,20 @@ import { Accordion } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GithubIntegrationForm = () => {
+export const GithubIntegrationForm = ({
+	connectionName,
+	isConnectionNameValid,
+	triggerParentFormSubmit,
+}: {
+	connectionName?: string;
+	isConnectionNameValid?: boolean;
+	triggerParentFormSubmit: () => void;
+}) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
 	const { projectId } = useParams();
+	const navigate = useNavigate();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
@@ -35,12 +45,11 @@ export const GithubIntegrationForm = () => {
 		handleSubmit,
 		register,
 	} = useForm({
+		resolver: zodResolver(githubIntegrationSchema),
 		defaultValues: {
-			name: "",
 			pat: "",
 			webhookSercet: "",
 		},
-		resolver: zodResolver(githubIntegrationSchema),
 	});
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,30 +57,41 @@ export const GithubIntegrationForm = () => {
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
 	const onSubmit = async () => {
-		const { name, pat, webhookSercet: secret } = getValues();
+		if (!isConnectionNameValid) {
+			triggerParentFormSubmit();
+
+			return;
+		}
+		const { pat, webhookSercet: secret } = getValues();
 
 		setIsLoading(true);
 		try {
-			const { data } = await HttpService.post("/github/save", { name, pat, secret, webhook: webhookUrl });
-			if (!data.url) {
-				addToast({
-					id: Date.now().toString(),
-					message: tErrors("errorCreatingNewConnection"),
-					type: "error",
-				});
-				LoggerService.error(
-					namespaces.connectionService,
-					`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`
-				);
+			debugger;
 
-				return;
+			const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
+
+			debugger;
+
+			const data = await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
+				pat,
+				secret,
+				webhook: webhookUrl,
+			});
+			debugger;
+
+			if (data.request.responseURL.includes("error=")) {
+				const errorMsg = new URL(data.request.responseURL).searchParams.get("error");
+				throw new Error(errorMsg!);
+			} else {
+				const msg = new URL(data.request.responseURL).searchParams.get("msg") || "";
+				if (msg.includes("Connection initialized")) {
+					navigate(`/projects/${projectId}/connections`);
+				}
 			}
-
-			window.location.href = `${baseUrl}/${data.url}`;
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: tErrors("errorCreatingNewConnection"),
+				message: error.message,
 				type: "error",
 			});
 			LoggerService.error(
@@ -101,21 +121,33 @@ export const GithubIntegrationForm = () => {
 		}
 	};
 
-	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
+	const handleGithubOAuth = async () => {
+		try {
+			if (!isConnectionNameValid) {
+				triggerParentFormSubmit();
+
+				return;
+			}
+			const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
+
+			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}`, "_blank");
+		} catch (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("errorCreatingNewConnection"),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	const renderPATFields = () => (
 		<>
-			<div className="relative">
-				<Input
-					{...register("name")}
-					aria-label={t("github.placeholders.name")}
-					isError={!!errors.name}
-					isRequired
-					placeholder={t("github.placeholders.name")}
-				/>
-
-				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
-			</div>
 			<div className="relative">
 				<Input
 					{...register("pat")}
@@ -162,6 +194,7 @@ export const GithubIntegrationForm = () => {
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
+				id={ConnectionFormIds.createGithub}
 				type="submit"
 				variant="outline"
 			>
@@ -216,7 +249,7 @@ export const GithubIntegrationForm = () => {
 	);
 
 	return (
-		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex items-start gap-10" id={ConnectionFormIds.createGithub} onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}

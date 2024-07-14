@@ -7,3 +7,4 @@ export { ReadOnlyFile } from "@enums/components/readOnlyFile.enum";
 export { SortDirectionVariant } from "@enums/components/table.enum";
 export { OutputTabsVariants } from "@enums/components/tabs.enum";
 export { TriggerFormIds, TriggerFormType } from "@enums/components/trigger.enum";
+export { ConnectionFormIds } from "@enums/components/connections.enum";

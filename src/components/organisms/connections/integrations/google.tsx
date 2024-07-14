@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { baseUrl, namespaces } from "@constants";
 import { infoGoogleAccountLinks, infoGoogleUserLinks, selectIntegrationGoogle } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
-import { HttpService, LoggerService } from "@services";
+import { ConnectionService, HttpService, LoggerService } from "@services";
 import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
 
@@ -18,10 +19,20 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GoogleIntegrationForm = () => {
+export const GoogleIntegrationForm = ({
+	connectionName,
+	isConnectionNameValid,
+	triggerParentFormSubmit,
+}: {
+	connectionName?: string;
+	isConnectionNameValid: boolean;
+	triggerParentFormSubmit: () => void;
+}) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GoogleConnectionType>();
+	const { projectId } = useParams();
+	const navigate = useNavigate();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
@@ -32,30 +43,35 @@ export const GoogleIntegrationForm = () => {
 		handleSubmit,
 		register,
 	} = useForm({
+		resolver: zodResolver(googleIntegrationSchema),
 		defaultValues: {
 			jsonKey: "",
 		},
-		resolver: zodResolver(googleIntegrationSchema),
 	});
 
 	const onSubmit = async () => {
+		if (!isConnectionNameValid) {
+			triggerParentFormSubmit();
+
+			return;
+		}
+
 		const { jsonKey } = getValues();
 
 		setIsLoading(true);
 		try {
-			const { data } = await HttpService.post("/google/save", { jsonKey });
-			if (!data.url) {
-				addToast({
-					id: Date.now().toString(),
-					message: tErrors("errorCreatingNewConnection"),
-					type: "error",
-				});
-				LoggerService.error(
-					namespaces.connectionService,
-					`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`
-				);
+			await ConnectionService.create(projectId!, "google", connectionName!);
 
-				return;
+			const data = await HttpService.post("/google/save", { jsonKey });
+
+			if (data.request.responseURL.includes("error=")) {
+				const errorMsg = new URL(data.request.responseURL).searchParams.get("error");
+				throw new Error(errorMsg!);
+			} else {
+				const msg = new URL(data.request.responseURL).searchParams.get("msg") || "";
+				if (msg.includes("Connection initialized")) {
+					navigate(`/projects/${projectId}/connections`);
+				}
 			}
 		} catch (error) {
 			addToast({
@@ -72,7 +88,16 @@ export const GoogleIntegrationForm = () => {
 		}
 	};
 
-	const handleGoogleOAuth = () => window.open(`${baseUrl}/oauth/start/google`, "_blank");
+	const handleGoogleOAuth = async () => {
+		if (!isConnectionNameValid) {
+			triggerParentFormSubmit();
+
+			return;
+		}
+		const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
+
+		window.open(`${baseUrl}/oauth/start/google?cid=${connectionId}`, "_blank");
+	};
 
 	const renderOAuthButton = () => (
 		<>
