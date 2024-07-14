@@ -61,6 +61,57 @@ export class ConnectionService {
 		}
 	}
 
+	static async create(
+		projectId: string,
+		integrationName: string = "github",
+		connectionName: string
+	): Promise<ServiceResponse<string>> {
+		try {
+			debugger;
+			const { integrations } = await integrationsClient.list({});
+			if (!integrations || !integrations.length) {
+				const errorMessage = i18n.t("intergrationsNotFoundExtended", {
+					projectId,
+					ns: "services",
+				});
+				LoggerService.error(namespaces.triggerService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const integration = integrations.find((integration) => integration.uniqueName === integrationName);
+			if (!integration) {
+				return { data: undefined, error: undefined };
+			}
+
+			debugger;
+
+			const { connectionId } = await connectionsClient.create({
+				connection: {
+					projectId,
+					name: connectionName,
+					integrationId: integration.integrationId,
+				},
+			});
+			debugger;
+
+			if (!connectionId) {
+				LoggerService.error(namespaces.triggerService, i18n.t("connectionNotFound", { ns: "services" }));
+
+				return { data: undefined, error: new Error(i18n.t("connectionNotFound", { ns: "services" })) };
+			}
+
+			return { data: connectionId, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.connectionService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
 	static async list(): Promise<ServiceResponse<Connection[]>> {
 		try {
 			const { connections } = await connectionsClient.list({});
