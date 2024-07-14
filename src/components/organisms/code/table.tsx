@@ -57,19 +57,16 @@ export const CodeTable = () => {
 	const fetchResources = async () => {
 		setIsLoading(true);
 		try {
-			// Fetch resources from the ProjectsService
 			const { data: resourcesFromService, error } = await ProjectsService.getResources(projectId!);
 			if (error) {
 				throw error;
 			}
 			if (resourcesFromService) {
-				// Store resources in IndexedDB
 				for (const [name, content] of Object.entries(resourcesFromService)) {
 					await dbService.put(name, content);
 				}
 			}
 
-			// Get all resources from IndexedDB
 			const resources = await dbService.getAll();
 			setResources(resources);
 		} catch (error) {
