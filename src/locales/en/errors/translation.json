@@ -32,5 +32,7 @@
 	"triggerNotFound": "Couldn't fetch the trigger",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
 	"triggerRemoveFailed": "Trigger remove failed",
-	"variableNotCreated": "There was an issue creating the variable"
+	"variableNotCreated": "There was an issue creating the variable",
+	"couldntUpdateFile": "Couldn't update the file",
+	"couldntUpdateFileExtended": "Couldn't update the file: {{fileName}}, Error: {{error}}"
 }

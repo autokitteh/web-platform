@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
-import { last } from "lodash";
+import { debounce, last } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { monacoLanguages } from "@constants";
+import { monacoLanguages, namespaces } from "@constants";
+import { LoggerService, ProjectsService } from "@services";
 import IndexedDBService from "@services/indexedDb.service";
 import useFileStore from "@store/useEditorFilesStore";
 import { cn } from "@utilities";
+
+import { useToastStore } from "@store";
 
 import { IconButton, Loader, Tab } from "@components/atoms";
 
@@ -25,6 +28,8 @@ export const EditorTabs = () => {
 	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
+	const addToast = useToastStore((state) => state.addToast);
+	const { t: tErrors } = useTranslation(["errors"]);
 
 	const [content, setContent] = useState<string>("");
 
@@ -64,11 +69,43 @@ export const EditorTabs = () => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const handleUpdateContent = async (newContent?: string) => {
+	const updateContent = async (newContent?: string) => {
 		if (!projectId || !activeEditorFileName) return;
 		const contentUintArray = new TextEncoder().encode(newContent);
+
 		await dbService.put(activeEditorFileName, contentUintArray);
+
+		const resources = await dbService.getAll();
+		const { error } = await ProjectsService.setResources(projectId, {
+			...resources,
+			[activeEditorFileName]: contentUintArray,
+		});
+
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("couldntUpdateFile"),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.projectService,
+				tErrors("couldntUpdateFileExtended", {
+					error: (error as Error).message,
+					fileName: activeEditorFileName,
+				})
+			);
+
+			return;
+		}
+
 		setContent(newContent || "");
+	};
+
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
+
+	const handleUpdateContent = (newContent?: string) => {
+		debouncedUpdateContent(newContent);
 	};
 
 	const activeCloseIcon = (fileName: string) =>
