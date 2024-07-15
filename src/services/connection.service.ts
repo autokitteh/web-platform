@@ -67,7 +67,6 @@ export class ConnectionService {
 		connectionName: string
 	): Promise<ServiceResponse<string>> {
 		try {
-			debugger;
 			const { integrations } = await integrationsClient.list({});
 			if (!integrations || !integrations.length) {
 				const errorMessage = i18n.t("intergrationsNotFoundExtended", {
@@ -87,8 +86,6 @@ export class ConnectionService {
 				return { data: undefined, error: undefined };
 			}
 
-			debugger;
-
 			const { connectionId } = await connectionsClient.create({
 				connection: {
 					projectId,
@@ -96,7 +93,6 @@ export class ConnectionService {
 					integrationId: integration.integrationId,
 				},
 			});
-			debugger;
 
 			if (!connectionId) {
 				LoggerService.error(namespaces.triggerService, i18n.t("connectionNotFound", { ns: "services" }));
