@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { integrationTypes } from "@constants/lists";
+import { namespaces } from "@constants/namespaces.logger.constants";
 import { SelectOption } from "@interfaces/components";
+import { ConnectionService, LoggerService } from "@services/index";
+import { useToastStore } from "@store/index";
 import { IntegrationType } from "@type/components";
 import { connectionSchema } from "@validations/index";
 
@@ -37,21 +41,37 @@ export const AddConnection = () => {
 
 	const connectionName: string = watch("connectionName");
 	const selectedIntegration: SelectOption = watch("integration");
+	const { t: tErrors } = useTranslation("errors");
 
-	const onSubmit = () => {};
+	const [connectionId, setConnectionId] = useState<string | undefined>(undefined);
+	const { projectId } = useParams();
+	const addToast = useToastStore((state) => state.addToast);
+
+	const onSubmit = async () => {
+		try {
+			const { data } = await ConnectionService.create(projectId!, "github", connectionName!);
+			setConnectionId(data);
+		} catch (error) {
+			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
+
+			addToast({
+				id: Date.now().toString(),
+				message: errorMessage,
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
+			);
+		}
+	};
 
 	const handleIntegrationChange = (option: SingleValue<SelectOption>): void => {
 		setValue("integration", option as SelectOption);
 	};
 
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
-		github: (
-			<GithubIntegrationForm
-				connectionName={connectionName}
-				isConnectionNameValid={connectionName ? isValid : false}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-			/>
-		),
+		github: <GithubIntegrationForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
 		google: (
 			<GoogleIntegrationForm
 				connectionName={connectionName}
@@ -74,6 +94,7 @@ export const AddConnection = () => {
 					<Input
 						aria-label={t("github.placeholders.name")}
 						{...register("connectionName", { required: "Connection name is required" })}
+						disabled={!!connectionId}
 						isError={!!errors.connectionName}
 						placeholder={t("github.placeholders.name")}
 					/>
