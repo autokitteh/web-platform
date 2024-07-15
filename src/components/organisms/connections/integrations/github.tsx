@@ -66,37 +66,35 @@ export const GithubIntegrationForm = ({
 
 		setIsLoading(true);
 		try {
-			debugger;
-
 			const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
 
-			debugger;
-
-			const data = await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
+			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
 				pat,
 				secret,
 				webhook: webhookUrl,
 			});
-			debugger;
 
-			if (data.request.responseURL.includes("error=")) {
-				const errorMsg = new URL(data.request.responseURL).searchParams.get("error");
-				throw new Error(errorMsg!);
-			} else {
-				const msg = new URL(data.request.responseURL).searchParams.get("msg") || "";
-				if (msg.includes("Connection initialized")) {
-					navigate(`/projects/${projectId}/connections`);
-				}
-			}
-		} catch (error) {
+			const successMessage = t("connectionCreatedSuccessfully");
+
 			addToast({
 				id: Date.now().toString(),
-				message: error.message,
+				message: successMessage,
+				type: "success",
+			});
+
+			LoggerService.error(namespaces.connectionService, successMessage);
+
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
+			addToast({
+				id: Date.now().toString(),
+				message: errorMessage,
 				type: "error",
 			});
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`
+				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
 			);
 		} finally {
 			setIsLoading(false);
@@ -122,15 +120,15 @@ export const GithubIntegrationForm = ({
 	};
 
 	const handleGithubOAuth = async () => {
+		if (!isConnectionNameValid) {
+			triggerParentFormSubmit();
+
+			return;
+		}
+
 		try {
-			if (!isConnectionNameValid) {
-				triggerParentFormSubmit();
-
-				return;
-			}
 			const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
-
-			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}`, "_blank");
+			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_self");
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
