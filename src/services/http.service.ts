@@ -7,7 +7,7 @@ const httpClient = axios.create({
 	headers: {
 		"Content-Type": "application/x-www-form-urlencoded",
 	},
-	withCredentials: true,
+	withCredentials: import.meta.env.VITE_AUTH_ENABLED === "true",
 });
 
 export const HttpService = {
