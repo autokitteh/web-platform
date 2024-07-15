@@ -1,3 +1,30 @@
+# [1.14.0](https://github.com/autokitteh/web-platform/compare/v1.13.0...v1.14.0) (2024-07-15)
+
+
+### Bug Fixes
+
+* add prod url to sentry initiation ([#191](https://github.com/autokitteh/web-platform/issues/191)) ([804eff8](https://github.com/autokitteh/web-platform/commit/804eff89379c7f2fa597128e1ccaf02b135d165c))
+* add rule ignore of sort-keys to make perfectionist work and sort instead ([#186](https://github.com/autokitteh/web-platform/issues/186)) ([0da8ff6](https://github.com/autokitteh/web-platform/commit/0da8ff6af15d492f0b066fbc31bda5bf01a272c8))
+* change build script for netlify prod deployment ([#195](https://github.com/autokitteh/web-platform/issues/195)) ([233533b](https://github.com/autokitteh/web-platform/commit/233533b8313bb833f5a50f1c43514612d1f7ad59))
+* change build script to avoid unnecessary commands ([#194](https://github.com/autokitteh/web-platform/issues/194)) ([01aae6e](https://github.com/autokitteh/web-platform/commit/01aae6e053ec51bf2159789c4f52a9adad7b2e77))
+* change prepare and postinstall scripts for prod deployment ([#193](https://github.com/autokitteh/web-platform/issues/193)) ([6854839](https://github.com/autokitteh/web-platform/commit/685483962b075efdfd6208bf44bef73ccd38a540))
+* fix DOM errors of some components ([#184](https://github.com/autokitteh/web-platform/issues/184)) ([19fbe78](https://github.com/autokitteh/web-platform/commit/19fbe7840492b3f5e80c1303733836e7c59d26c2))
+* fixed tailwind config file to run tailwind-config-viewer ([#199](https://github.com/autokitteh/web-platform/issues/199)) ([573cf6d](https://github.com/autokitteh/web-platform/commit/573cf6d46c7973a563ffc622090337d42aa1d281))
+* manipulate env variables to work ([#196](https://github.com/autokitteh/web-platform/issues/196)) ([9670d0d](https://github.com/autokitteh/web-platform/commit/9670d0d6c9e49e64f1400fff2621df7551af1c5b))
+* missing deps in package.json ([#197](https://github.com/autokitteh/web-platform/issues/197)) ([929f6a5](https://github.com/autokitteh/web-platform/commit/929f6a5425ec2d576d8950b32a19e8c54bcdde29))
+* move husky to deps from dev-deps to build in prod ([#192](https://github.com/autokitteh/web-platform/issues/192)) ([19a4788](https://github.com/autokitteh/web-platform/commit/19a47886abbd908e8a0e1b22bbe3cd59508a237d))
+* tab fonts and height ([#177](https://github.com/autokitteh/web-platform/issues/177)) ([02bfe1e](https://github.com/autokitteh/web-platform/commit/02bfe1e047a36bf13ad77e549534e17348dce41a))
+
+
+### Features
+
+* ability to stop session ([#183](https://github.com/autokitteh/web-platform/issues/183)) ([cddfef8](https://github.com/autokitteh/web-platform/commit/cddfef8223bf42b3a1e347e33f770e804c762d90))
+* add new eslint rules for better code standards ([#178](https://github.com/autokitteh/web-platform/issues/178)) ([ed22f4a](https://github.com/autokitteh/web-platform/commit/ed22f4a70c80e63cf04eb692f5b672221c24ee30))
+* add size prop to IconSvg component ([#188](https://github.com/autokitteh/web-platform/issues/188)) ([30a64fc](https://github.com/autokitteh/web-platform/commit/30a64fc26f1e2c0b7addff3c1ccce4c42b6a2d01))
+* add to storybook components ([#180](https://github.com/autokitteh/web-platform/issues/180)) ([da86bdb](https://github.com/autokitteh/web-platform/commit/da86bdb1811e86f0c9ac8290688f87d6d3249829))
+* sentry monitoring setup ([#185](https://github.com/autokitteh/web-platform/issues/185)) ([6a04fee](https://github.com/autokitteh/web-platform/commit/6a04fee48a891aae745d1d2d78f875a2fd400d49))
+* update information text in connections & triggers form ([#179](https://github.com/autokitteh/web-platform/issues/179)) ([3b58a03](https://github.com/autokitteh/web-platform/commit/3b58a03d4ce554075ccf4d8558bf88e5a96f3569))
+
 # [1.13.0](https://github.com/autokitteh/web-platform/compare/v1.12.0...v1.13.0) (2024-07-04)
 
 
