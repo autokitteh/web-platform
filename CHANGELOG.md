@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/autokitteh/web-platform/compare/v1.14.0...v1.14.1) (2024-07-15)
+
+
+### Bug Fixes
+
+* fix connectivity when auth disabled ([#202](https://github.com/autokitteh/web-platform/issues/202)) ([ecacbed](https://github.com/autokitteh/web-platform/commit/ecacbed51e11d200caa741d9084a3810e5cfbc97))
+
 # [1.14.0](https://github.com/autokitteh/web-platform/compare/v1.13.0...v1.14.0) (2024-07-15)
 
 
