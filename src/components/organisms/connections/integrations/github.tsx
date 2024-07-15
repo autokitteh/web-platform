@@ -10,7 +10,7 @@ import { baseUrl, namespaces } from "@constants";
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { ConnectionFormIds } from "@enums/components";
-import { ConnectionService, HttpService, LoggerService } from "@services";
+import { HttpService, LoggerService } from "@services";
 import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
 
@@ -22,12 +22,10 @@ import { Accordion } from "@components/molecules";
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const GithubIntegrationForm = ({
-	connectionName,
-	isConnectionNameValid,
+	connectionId,
 	triggerParentFormSubmit,
 }: {
-	connectionName?: string;
-	isConnectionNameValid?: boolean;
+	connectionId?: string;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t: tErrors } = useTranslation("errors");
@@ -57,7 +55,7 @@ export const GithubIntegrationForm = ({
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
 	const onSubmit = async () => {
-		if (!isConnectionNameValid) {
+		if (!connectionId) {
 			triggerParentFormSubmit();
 
 			return;
@@ -66,8 +64,6 @@ export const GithubIntegrationForm = ({
 
 		setIsLoading(true);
 		try {
-			const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
-
 			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
 				pat,
 				secret,
@@ -82,11 +78,12 @@ export const GithubIntegrationForm = ({
 				type: "success",
 			});
 
-			LoggerService.error(namespaces.connectionService, successMessage);
+			LoggerService.info(namespaces.connectionService, successMessage);
 
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
+
 			addToast({
 				id: Date.now().toString(),
 				message: errorMessage,
@@ -120,15 +117,14 @@ export const GithubIntegrationForm = ({
 	};
 
 	const handleGithubOAuth = async () => {
-		if (!isConnectionNameValid) {
+		if (!connectionId) {
 			triggerParentFormSubmit();
 
 			return;
 		}
 
 		try {
-			const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
-			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_self");
+			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
