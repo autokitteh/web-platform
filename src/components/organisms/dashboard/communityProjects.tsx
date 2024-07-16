@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
-import { communityProjectTabs, defaultCommunityProjectTab } from "@constants";
+import { communityProjectTabs } from "@constants";
 
 import { Frame, IconSvg, SearchInput, Tab, Typography } from "@components/atoms";
 
@@ -17,12 +17,12 @@ export const CommunityProjects = () => {
 
 	useEffect(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
-		const activeTabIndex = pathParts[2];
-		setActiveTab(activeTabIndex || defaultCommunityProjectTab);
+		const activeTabIndex = pathParts[1];
+		setActiveTab(activeTabIndex);
 	}, [location]);
 
 	const goTo = (path: string) => {
-		navigate(path.toLowerCase());
+		navigate(`dashboard/${path.toLowerCase()}`);
 	};
 
 	return (
@@ -36,7 +36,11 @@ export const CommunityProjects = () => {
 				{t("title")}
 			</Typography>
 
-			<SearchInput className="my-7 h-16 rounded-3xl bg-transparent" placeholder="Explore" variant="light" />
+			<SearchInput
+				className="my-7 h-16 max-w-550 rounded-3xl bg-transparent"
+				placeholder="Explore"
+				variant="light"
+			/>
 
 			<div className="flex h-full flex-1 flex-col">
 				<div className="sticky -top-8 z-20 -mt-5 bg-gray-black-300 pb-0 pt-3">
