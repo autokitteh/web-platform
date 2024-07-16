@@ -86,6 +86,7 @@ module.exports = {
         DEFAULT: "#898989",
         100: "#F6F6F6",
         300: "#F8F8F8",
+        500: "#5B5B5B",
         600: "#626262",
         900: "#A9A9A9",
       },
@@ -98,6 +99,8 @@ module.exports = {
         600: "#454343",
         700: "#2D2D2D",
         800: "#1B1B1B",
+        "stroke": "#D3D5DC",
+        "light": "#E8E8EB",
       },
       error: {
         DEFAULT: "#FF6B61",

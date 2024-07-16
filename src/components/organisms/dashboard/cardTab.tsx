@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IconSvg } from "@components/atoms";
+import { IconSvg, Status } from "@components/atoms";
 
 import { IconLogo } from "@assets/image";
 import { GithubIcon, MenuCircleIcon } from "@assets/image/icons";
@@ -22,7 +22,9 @@ export const DashboardCardTab = () => {
 				Automation includes using various equipment and control systems such as factory processes
 			</div>
 
-			<div>
+			<div className="flex items-center gap-4">
+				<Status>CI/CD</Status>
+
 				<div className="flex items-center gap-1">
 					<IconSvg size="lg" src={IconLogo} />
 

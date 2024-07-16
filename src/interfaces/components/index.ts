@@ -37,3 +37,4 @@ export type { TabListProps, TabProps, TabsContextProps, TabsProps } from "@inter
 export type { Toast, ToasterTypes } from "@interfaces/components/toast.interface";
 export type { ToggleProps } from "@interfaces/components/toggle.interface";
 export type { TypographyProps } from "@interfaces/components/typography.interface";
+export type { StatusProps } from "@interfaces/components/status.interface";

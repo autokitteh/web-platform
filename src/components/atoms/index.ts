@@ -16,3 +16,4 @@ export { Tab } from "@components/atoms/tabs";
 export { Textarea } from "@components/atoms/textarea";
 export { Toggle } from "@components/atoms/toggle";
 export { Typography } from "@components/atoms/typography";
+export { Status } from "@components/atoms/status";
