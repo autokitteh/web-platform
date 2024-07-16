@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 
-export const DashboardTableProjects = () => {
+export const TableProjects = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 
 	return (
@@ -16,36 +16,45 @@ export const DashboardTableProjects = () => {
 				<THead className="bg-white">
 					<Tr className="border-none pl-6 hover:bg-transparent">
 						<Th className="group h-11 cursor-pointer font-normal text-gray-dark">
-							Project Name
+							{t("table.columns.projectName")}
+
 							<SortButton className="opacity-0 group-hover:opacity-100" />
 						</Th>
 
 						<Th className="group h-11 cursor-pointer font-normal text-gray-dark">
-							Last Version <SortButton className="opacity-0 group-hover:opacity-100" />
+							{t("table.columns.lastVersion")}
+
+							<SortButton className="opacity-0 group-hover:opacity-100" />
 						</Th>
 
 						<Th className="group relative h-11 max-w-24 cursor-pointer font-normal text-gray-dark">
 							<span className="absolute left-0 top-1/2 h-[80%] -translate-y-1/2 border-r border-black-300" />
-							Running
+
+							{t("table.columns.running")}
+
 							<SortButton className="opacity-0 group-hover:opacity-100" />
 						</Th>
 
 						<Th className="group h-11 max-w-28 cursor-pointer font-normal text-gray-dark">
-							Completed <SortButton className="opacity-0 group-hover:opacity-100" />
+							{t("table.columns.completed")} <SortButton className="opacity-0 group-hover:opacity-100" />
 						</Th>
 
 						<Th className="group relative h-11 max-w-24 cursor-pointer font-normal text-gray-dark">
 							<span className="absolute right-2 top-1/2 h-[80%] -translate-y-1/2 border-r border-black-300" />
-							Errors
+
+							{t("table.columns.errors")}
+
 							<SortButton className="opacity-0 group-hover:opacity-100" />
 						</Th>
 
 						<Th className="group h-11 cursor-pointer font-normal text-gray-dark">
-							Last Run Time <SortButton className="opacity-0 group-hover:opacity-100" />
+							{t("table.columns.lastRun")} <SortButton className="opacity-0 group-hover:opacity-100" />
 						</Th>
 
 						<Th className="group h-11 cursor-pointer font-normal text-gray-dark">
-							Deployment Time <SortButton className="opacity-0 group-hover:opacity-100" />
+							{t("table.columns.deploymentTime")}
+
+							<SortButton className="opacity-0 group-hover:opacity-100" />
 						</Th>
 					</Tr>
 				</THead>

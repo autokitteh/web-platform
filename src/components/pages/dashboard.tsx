@@ -4,7 +4,7 @@ import { isAuthEnabled } from "@constants";
 
 import { useUserStore } from "@store";
 
-import { CommunityProjects, DashboardTableProjects, DashboardTopbar } from "@components/organisms";
+import { CommunityProjects, DashboardTopbar, TableProjects } from "@components/organisms";
 
 export const Dashboard: React.FC = () => {
 	const { logoutFunction } = useUserStore();
@@ -15,7 +15,7 @@ export const Dashboard: React.FC = () => {
 				<div className="w-2/3">
 					<DashboardTopbar />
 
-					<DashboardTableProjects />
+					<TableProjects />
 				</div>
 
 				<CommunityProjects />
