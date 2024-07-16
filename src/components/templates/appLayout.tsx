@@ -2,17 +2,23 @@ import React from "react";
 
 import { Outlet } from "react-router-dom";
 
+import { cn } from "@utilities";
+
 import { Sidebar, StatsTopbar, Topbar } from "@components/organisms";
 
 export const AppLayout = ({
+	classnName,
 	displayStatsTopbar,
 	displayTopbar,
 }: {
+	classnName?: string;
 	displayStatsTopbar?: boolean;
 	displayTopbar?: boolean;
 }) => {
+	const appLayoutClasses = cn("h-screen w-screen pr-5", classnName);
+
 	return (
-		<div className="h-screen w-screen pr-5">
+		<div className={appLayoutClasses}>
 			<div className="flex h-full">
 				<Sidebar />
 

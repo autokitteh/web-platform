@@ -43,6 +43,9 @@ module.exports = {
         14: "14px",
         "4xl": "40px",
       },
+      gridTemplateColumns: {
+        'auto-fit-305': 'repeat(auto-fit, minmax(290px, 1fr))',
+      }
     },
     screens: {
       sm: "640px",

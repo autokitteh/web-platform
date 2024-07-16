@@ -66,7 +66,7 @@ export const App: React.FC = () => {
 	return (
 		<BrowserRouter>
 			<AKRoutes>
-				<Route element={<AppLayout />} path="/">
+				<Route element={<AppLayout classnName="pr-0" />} path="/">
 					<Route element={<Dashboard />} path="/">
 						<Route element={<CiCd />} path="dashboard/ci-cd" />
 					</Route>

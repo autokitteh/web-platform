@@ -26,7 +26,7 @@ export const CommunityProjects = () => {
 	};
 
 	return (
-		<Frame className="w-1/3 rounded-none bg-gray-black-300">
+		<Frame className="w-5/12 rounded-none bg-gray-black-300">
 			<Typography
 				className="font-averta-bold flex w-full items-center gap-3 text-3xl font-semibold text-black"
 				element="h2"
