@@ -4,14 +4,20 @@ import { isAuthEnabled } from "@constants";
 
 import { useUserStore } from "@store";
 
-import { DashboardTopbar } from "@components/organisms";
+import { CommunityProjects, DashboardTopbar } from "@components/organisms";
 
 export const Dashboard: React.FC = () => {
 	const { logoutFunction } = useUserStore();
 
 	return (
 		<div className="w-full">
-			<DashboardTopbar />
+			<div className="flex h-full gap-7">
+				<div className="w-2/3">
+					<DashboardTopbar />
+				</div>
+
+				<CommunityProjects />
+			</div>
 
 			{isAuthEnabled ? (
 				<button className="text-black" onClick={() => logoutFunction()}>

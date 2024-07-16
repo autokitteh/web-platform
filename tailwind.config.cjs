@@ -80,6 +80,9 @@ module.exports = {
       "gray-black": {
         DEFAULT: "#898989",
         100: "#F6F6F6",
+        300: "#F8F8F8",
+        600: "#626262",
+        900: "#A9A9A9",
       },
       gray: {
         DEFAULT: "#D9D9D9",

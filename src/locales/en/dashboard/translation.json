@@ -5,5 +5,8 @@
 		"buttons":{
 			"newProject": "New Project"
 		}
+	},
+	"comunityProjects": {
+		"title": "Comunity Projects"
 	}
 }

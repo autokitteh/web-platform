@@ -5,6 +5,7 @@ export { ErrorMessage } from "@components/atoms/errorMessage";
 export { Frame } from "@components/atoms/frame";
 export { IconSvg } from "@components/atoms/icons";
 export { Input } from "@components/atoms/input";
+export { SearchInput } from "@components/atoms/searchInput";
 export { Link } from "@components/atoms/link";
 export { Loader } from "@components/atoms/loader";
 export { LogoCatLarge } from "@components/atoms/logoCatLarge";
