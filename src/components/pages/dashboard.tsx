@@ -4,18 +4,14 @@ import { isAuthEnabled } from "@constants";
 
 import { useUserStore } from "@store";
 
-export const Dashboard: React.FC = () => {
-	const { logoutFunction, user } = useUserStore();
+import { DashboardTopbar } from "@components/organisms";
 
-	const userName = user?.name || "";
+export const Dashboard: React.FC = () => {
+	const { logoutFunction } = useUserStore();
 
 	return (
-		<div>
-			<div className="flex w-full">
-				<h1 className="font-averta-bold mt-6 w-full text-2xl text-black">
-					Welcome {userName ? `, ${userName}` : null}
-				</h1>
-			</div>
+		<div className="w-full">
+			<DashboardTopbar />
 
 			{isAuthEnabled ? (
 				<button className="text-black" onClick={() => logoutFunction()}>

@@ -1,0 +1,9 @@
+{
+	"topbar": {
+		"hello": "Hello",
+		"logout": "Logout",
+		"buttons":{
+			"newProject": "New Project"
+		}
+	}
+}
