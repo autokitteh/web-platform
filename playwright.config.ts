@@ -50,7 +50,11 @@ export default defineConfig({
 	],
 
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: [["html"], ["list"]],
+	reporter: [
+		["html"],
+		["list", { printSteps: true }],
+		["@estruyf/github-actions-reporter", { useDetails: true, showError: true }],
+	],
 
 	/* Retry on CI only */
 	retries: process.env.CI ? 3 : 0,
