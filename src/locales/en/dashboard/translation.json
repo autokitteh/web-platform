@@ -8,5 +8,8 @@
 	},
 	"comunityProjects": {
 		"title": "Comunity Projects"
+	},
+	"projects": {
+		"title": "All projects"
 	}
 }

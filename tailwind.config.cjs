@@ -18,6 +18,7 @@ module.exports = {
       },
       spacing: {
         9.5: "2.375rem",
+        '3px': '3px'
       },
       maxWidth: {
         650: "650px",
@@ -41,6 +42,7 @@ module.exports = {
       },
       borderRadius: {
         14: "14px",
+        20: "20px",
         "4xl": "40px",
       },
       gridTemplateColumns: {
@@ -72,6 +74,7 @@ module.exports = {
         300: "#BEC3D1",
         500: "#515151",
         900: "#101010",
+        'text': "#232E3F"
       },
       blue: {
         500: "#3b82f6",
@@ -88,6 +91,7 @@ module.exports = {
       "gray-black": {
         DEFAULT: "#898989",
         100: "#F6F6F6",
+        200: "#F3F3F6",
         300: "#F8F8F8",
         500: "#5B5B5B",
         600: "#626262",
@@ -104,6 +108,7 @@ module.exports = {
         800: "#1B1B1B",
         "stroke": "#D3D5DC",
         "light": "#E8E8EB",
+        "dark": "#707081",
       },
       error: {
         DEFAULT: "#FF6B61",

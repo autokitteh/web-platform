@@ -38,7 +38,7 @@ export const CommunityProjects = () => {
 
 			<SearchInput
 				className="my-7 h-16 max-w-550 rounded-3xl bg-transparent"
-				placeholder="Explore"
+				placeholder="Explore community"
 				variant="light"
 			/>
 
