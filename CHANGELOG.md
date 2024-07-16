@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/autokitteh/web-platform/compare/v1.14.1...v1.14.2) (2024-07-16)
+
+
+### Bug Fixes
+
+* e2e tests after ak upgrade to 0.8.5 ([#204](https://github.com/autokitteh/web-platform/issues/204)) ([b3b2f46](https://github.com/autokitteh/web-platform/commit/b3b2f4638637979d3d26ffc0b1964404570fcf09))
+
 ## [1.14.1](https://github.com/autokitteh/web-platform/compare/v1.14.0...v1.14.1) (2024-07-15)
 
 
