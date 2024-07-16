@@ -18,7 +18,6 @@ import { DeploymentsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
-import { CiCd } from "@components/organisms/dashboard";
 import { SessionTableEditorFrame } from "@components/organisms/deployments";
 import { Security } from "@components/organisms/settings";
 import { AddTrigger, DefaultEditTrigger, SchedulerEditTrigger, TriggersTable } from "@components/organisms/triggers";
@@ -67,9 +66,7 @@ export const App: React.FC = () => {
 		<BrowserRouter>
 			<AKRoutes>
 				<Route element={<AppLayout classnName="pr-0" />} path="/">
-					<Route element={<Dashboard />} path="/">
-						<Route element={<CiCd />} path="dashboard/ci-cd" />
-					</Route>
+					<Route element={<Dashboard />} index />
 
 					<Route element={<NotFound404 />} path="404" />
 				</Route>
