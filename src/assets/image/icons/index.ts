@@ -30,3 +30,7 @@ export { default as TestIcon } from "@assets/image/icons/Test.svg?react";
 export { default as ThreeDots } from "@assets/image/icons/ThreeDots.svg?react";
 export { default as TrashIcon } from "@assets/image/icons/Trash.svg?react";
 export { default as UserIcon } from "@assets/image/icons/User.svg?react";
+export { default as SearchIcon } from "@assets/image/icons/Search.svg?react";
+export { default as ArrowZigzagIcon } from "@assets/image/icons/ArrowZigzag.svg?react";
+export { default as MenuCircleIcon } from "@assets/image/icons/MenuCircle.svg?react";
+export { default as GithubIcon } from "@assets/image/icons/Github.svg?react";

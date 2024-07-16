@@ -18,11 +18,13 @@ module.exports = {
       },
       spacing: {
         9.5: "2.375rem",
+        '3px': '3px'
       },
       maxWidth: {
         650: "650px",
         420: "420px",
         680: "680px",
+        550: "550px",
         485: "485px",
       },
       minWidth: {
@@ -40,8 +42,12 @@ module.exports = {
       },
       borderRadius: {
         14: "14px",
+        20: "20px",
         "4xl": "40px",
       },
+      gridTemplateColumns: {
+        'auto-fit-305': 'repeat(auto-fit, minmax(290px, 1fr))',
+      }
     },
     screens: {
       sm: "640px",
@@ -61,9 +67,15 @@ module.exports = {
       white: {
         DEFAULT: "#ffffff",
       },
+      // TODO: move colors to gray, except DEFAULT
       black: {
         DEFAULT: "#000000",
+        100: "#CDCDCD",
+        200: "#2C2C2C",
+        300: "#BEC3D1",
+        500: "#515151",
         900: "#101010",
+        'text': "#232E3F"
       },
       blue: {
         500: "#3b82f6",
@@ -71,15 +83,23 @@ module.exports = {
       yellow: {
         500: "#eab308",
       },
+      // TODO: move colors to gray
       "green-light": {
         DEFAULT: "#E8FFCA",
       },
+      // TODO: move colors to gray
       "green-accent": {
         DEFAULT: "#BCF870",
       },
+      // TODO: move colors to gray, except DEFAULT
       "gray-black": {
         DEFAULT: "#898989",
         100: "#F6F6F6",
+        200: "#F3F3F6",
+        300: "#F8F8F8",
+        500: "#5B5B5B",
+        600: "#626262",
+        900: "#A9A9A9",
       },
       gray: {
         DEFAULT: "#D9D9D9",
@@ -90,6 +110,9 @@ module.exports = {
         600: "#454343",
         700: "#2D2D2D",
         800: "#1B1B1B",
+        "stroke": "#D3D5DC",
+        "light": "#E8E8EB",
+        "dark": "#707081",
       },
       error: {
         DEFAULT: "#FF6B61",

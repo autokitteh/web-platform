@@ -15,6 +15,7 @@ export { menuItems } from "@constants/menuItems.constants";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
 export { defaultProjectTab, projectTabs } from "@constants/project.constants";
+export { communityProjectCategories, defaultCommunityProjectCategory } from "@constants/dashboard.constants";
 export { sessionsEditorLineHeight } from "@constants/sessionsTable.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export {

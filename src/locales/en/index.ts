@@ -1,5 +1,6 @@
 import buttons from "@locales/en/buttons/translation.json";
 import select from "@locales/en/components/select/translation.json";
+import dashboard from "@locales/en/dashboard/translation.json";
 import deployments from "@locales/en/deployments/translation.json";
 import errors from "@locales/en/errors/translation.json";
 import global from "@locales/en/global/translation.json";
@@ -36,4 +37,5 @@ export default {
 	tabs,
 	toasts,
 	validations,
+	dashboard,
 };

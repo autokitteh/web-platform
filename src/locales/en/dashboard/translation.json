@@ -1,0 +1,28 @@
+{
+	"topbar": {
+		"hello": "Hello",
+		"logout": "Logout",
+		"buttons":{
+			"newProject": "New Project",
+			"logout": "Logout"
+		}
+	},
+	"comunityProjects": {
+		"title": "Comunity Projects",
+		"explore": "Explore community"
+	},
+	"projects": {
+		"title": "All projects",
+		"table": {
+			"columns": {
+				"projectName": "Project Name",
+				"lastVersion": "Last Version",
+				"running": "Running",
+				"completed": "Completed",
+				"errors": "Errors",
+				"lastRun": "Last Run Time",
+				"deploymentTime": "Deployment Time"
+			}
+		}
+	}
+}

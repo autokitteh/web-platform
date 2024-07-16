@@ -10,6 +10,7 @@ export const IconSvg = ({
 	isVisible = true,
 	size = "md",
 	src: Svg,
+	withCircle,
 }: IconSvgProps) => {
 	const sizeClasses = {
 		"xs": "w-2 h-2",
@@ -18,11 +19,13 @@ export const IconSvg = ({
 		"lg": "w-5 h-5",
 		"xl": "w-6 h-6",
 		"2xl": "w-8 h-8",
+		"3xl": "w-10 h-10",
 	};
 
 	const iconClasses = cn(
 		"transition",
 		{ "hidden opacity-0": !isVisible, "opacity-40": disabled },
+		{ "rounded-full border border-black-100 p-1": withCircle },
 		sizeClasses[size],
 		className
 	);
