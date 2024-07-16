@@ -5,7 +5,7 @@ import { communityProjectCategories, defaultCommunityProjectCategory } from "@co
 import { Tab } from "@components/atoms";
 import { CommunityProjectCard } from "@components/organisms/dashboard";
 
-export const CommunityProjectTabs = () => {
+export const CommunityProjectsTabs = () => {
 	const [activeTab, setActiveTab] = useState<string>(defaultCommunityProjectCategory);
 
 	const activeCategory = useMemo(

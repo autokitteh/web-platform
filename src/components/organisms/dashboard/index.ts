@@ -1,4 +1,4 @@
 export { CommunityProjects } from "@components/organisms/dashboard/communityProjects";
-export { CommunityProjectTabs } from "@components/organisms/dashboard/communityProjectTabs";
-export { CommunityProjectCard } from "@components/organisms/dashboard/cardTab";
+export { CommunityProjectsTabs } from "@components/organisms/dashboard/communityProjectsTabs";
+export { CommunityProjectCard } from "@components/organisms/dashboard/communityProjectsCard";
 export { ProjectsTable } from "@components/organisms/dashboard/projectsTable";

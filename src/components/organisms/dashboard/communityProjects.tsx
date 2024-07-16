@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { Frame, IconSvg, SearchInput, Typography } from "@components/atoms";
-import { CommunityProjectTabs } from "@components/organisms/dashboard";
+import { CommunityProjectsTabs } from "@components/organisms/dashboard";
 
 import { ArrowZigzagIcon } from "@assets/image/icons";
 
@@ -27,7 +27,7 @@ export const CommunityProjects = () => {
 				variant="light"
 			/>
 
-			<CommunityProjectTabs />
+			<CommunityProjectsTabs />
 		</Frame>
 	);
 };
