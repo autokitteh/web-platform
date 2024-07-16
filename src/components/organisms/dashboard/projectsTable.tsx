@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 
-export const TableProjects = () => {
+export const ProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 
 	return (

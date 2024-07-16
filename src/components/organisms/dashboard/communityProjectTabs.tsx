@@ -3,13 +3,13 @@ import React, { useCallback, useMemo, useState } from "react";
 import { communityProjectCategories, defaultCommunityProjectCategory } from "@constants";
 
 import { Tab } from "@components/atoms";
-import { Card } from "@components/organisms/dashboard";
+import { CommunityProjectCard } from "@components/organisms/dashboard";
 
 export const CommunityProjectTabs = () => {
 	const [activeTab, setActiveTab] = useState<string>(defaultCommunityProjectCategory);
 
 	const activeCategory = useMemo(
-		() => communityProjectCategories.find((category) => category.category === activeTab),
+		() => communityProjectCategories.find((category) => category.name === activeTab),
 		[activeTab]
 	);
 
@@ -26,17 +26,17 @@ export const CommunityProjectTabs = () => {
 						"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2"
 					}
 				>
-					{communityProjectCategories.map((singleTab) => (
+					{communityProjectCategories.map(({ name }) => (
 						<Tab
 							activeTab={activeTab}
-							ariaLabel={singleTab.category}
+							ariaLabel={name}
 							className="border-b-4 pb-0 text-lg normal-case"
-							key={singleTab.category}
-							onClick={() => handleTabClick(singleTab.category)}
-							value={singleTab.category}
+							key={name}
+							onClick={() => handleTabClick(name)}
+							value={name}
 							variant="dark"
 						>
-							{singleTab.category}
+							{name}
 						</Tab>
 					))}
 				</div>
@@ -45,7 +45,7 @@ export const CommunityProjectTabs = () => {
 			<div className="mt-6 grid grid-cols-auto-fit-305 gap-x-4 gap-y-5 text-black">
 				{activeCategory
 					? activeCategory.cards.map((card, index) => (
-							<Card card={card} category={activeCategory.category} key={index} />
+							<CommunityProjectCard card={card} category={activeCategory.name} key={index} />
 						))
 					: null}
 			</div>

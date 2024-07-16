@@ -65,7 +65,7 @@ export const App: React.FC = () => {
 	return (
 		<BrowserRouter>
 			<AKRoutes>
-				<Route element={<AppLayout classnName="pr-0" />} path="/">
+				<Route element={<AppLayout className="pr-0" />} path="/">
 					<Route element={<Dashboard />} index />
 
 					<Route element={<NotFound404 />} path="404" />

@@ -3,11 +3,13 @@
 		"hello": "Hello",
 		"logout": "Logout",
 		"buttons":{
-			"newProject": "New Project"
+			"newProject": "New Project",
+			"logout": "Logout"
 		}
 	},
 	"comunityProjects": {
-		"title": "Comunity Projects"
+		"title": "Comunity Projects",
+		"explore": "Explore community"
 	},
 	"projects": {
 		"title": "All projects",

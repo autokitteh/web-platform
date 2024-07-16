@@ -1,21 +1,23 @@
 import React from "react";
 
-import { CommunityProjectCard } from "@type/components";
+import { CommunityProjectCardType } from "@type/components";
 
 import { IconSvg, Status } from "@components/atoms";
 
 import { IconLogo } from "@assets/image";
 import { MenuCircleIcon } from "@assets/image/icons";
 
-export const Card = ({ card, category }: { card: CommunityProjectCard; category: string }) => {
+export const CommunityProjectCard = ({ card, category }: { card: CommunityProjectCardType; category: string }) => {
 	return (
 		<div className="border-gray-50 flex flex-col gap-4 rounded-md border border-black-300 bg-white px-5 pb-7 pt-4">
 			<div className="flex items-center gap-1.5">
 				<IconSvg size="3xl" src={MenuCircleIcon} />
 
 				<div className="flex gap-1">
-					{card.integrations.map((icon, index) => (
-						<IconSvg key={index} size="2xl" src={icon} withCircle />
+					{card.integrations.map(({ icon, title }, index) => (
+						<div key={index} title={title}>
+							<IconSvg size="2xl" src={icon} withCircle />
+						</div>
 					))}
 				</div>
 			</div>
@@ -28,7 +30,7 @@ export const Card = ({ card, category }: { card: CommunityProjectCard; category:
 				<div className="flex items-center gap-1">
 					<IconSvg size="lg" src={IconLogo} />
 
-					<span className="text-black-500">{card.akCounter}</span>
+					<span className="text-black-500">{card.counter}</span>
 				</div>
 			</div>
 		</div>

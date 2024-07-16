@@ -6,63 +6,69 @@ export const defaultCommunityProjectCategory = "CI/CD";
 
 export const communityProjectCategories: CommunityProjectCategory[] = [
 	{
-		category: "CI/CD",
+		name: "CI/CD",
 		cards: [
 			{
-				integrations: [GithubIcon, GithubIcon],
+				integrations: [{ icon: GithubIcon, title: "Github" }],
 				description:
 					"Automation includes using various equipment and control systems such as factory processes",
-				akCounter: 235,
+				counter: 235,
 			},
 			{
-				integrations: [GithubIcon],
+				integrations: [{ icon: GithubIcon, title: "Github" }],
 				description: "Jenkins integrates with version control systems and provides CI/CD pipelines",
-				akCounter: 150,
+				counter: 150,
 			},
 		],
 	},
 	{
-		category: "DevOps",
+		name: "DevOps",
 		cards: [
 			{
-				integrations: [GithubIcon, GithubIcon],
+				integrations: [
+					{ icon: GithubIcon, title: "Github" },
+					{ icon: GithubIcon, title: "Github" },
+				],
 				description: "DevOps tools for containerization and orchestration",
-				akCounter: 300,
+				counter: 300,
 			},
 			{
-				integrations: [GithubIcon, GithubIcon],
+				integrations: [{ icon: GithubIcon, title: "Github" }],
 				description: "Infrastructure as Code (IaC) tools for automated provisioning",
-				akCounter: 120,
+				counter: 120,
 			},
 		],
 	},
 	{
-		category: "Dev Processes",
+		name: "Dev Processes",
 		cards: [
 			{
-				integrations: [GithubIcon, GithubIcon],
+				integrations: [{ icon: GithubIcon, title: "Github" }],
 				description: "Tools for managing development processes and documentation",
-				akCounter: 200,
+				counter: 200,
 			},
 		],
 	},
 	{
-		category: "Office Automations",
+		name: "Office Automations",
 		cards: [
 			{
-				integrations: [GithubIcon, GithubIcon],
+				integrations: [
+					{ icon: GithubIcon, title: "Github" },
+					{ icon: GithubIcon, title: "Github" },
+				],
 				description: "Automation tools for office productivity and collaboration",
-				akCounter: 180,
+				counter: 180,
 			},
 		],
 	},
 	{
-		category: "Ops",
+		name: "Ops",
 		cards: [
 			{
-				integrations: [GithubIcon, GithubIcon],
+				integrations: [{ icon: GithubIcon, title: "Github" }],
 				description: "Operations tools for monitoring and incident management",
-				akCounter: 220,
+				counter: 220,
 			},
 		],
 	},

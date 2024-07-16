@@ -7,15 +7,15 @@ import { cn } from "@utilities";
 import { Sidebar, StatsTopbar, Topbar } from "@components/organisms";
 
 export const AppLayout = ({
-	classnName,
+	className,
 	displayStatsTopbar,
 	displayTopbar,
 }: {
-	classnName?: string;
+	className?: string;
 	displayStatsTopbar?: boolean;
 	displayTopbar?: boolean;
 }) => {
-	const appLayoutClasses = cn("h-screen w-screen pr-5", classnName);
+	const appLayoutClasses = cn("h-screen w-screen pr-5", className);
 
 	return (
 		<div className={appLayoutClasses}>

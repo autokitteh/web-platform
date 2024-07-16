@@ -67,6 +67,7 @@ module.exports = {
       white: {
         DEFAULT: "#ffffff",
       },
+      // TODO: move colors to gray, except DEFAULT
       black: {
         DEFAULT: "#000000",
         100: "#CDCDCD",
@@ -82,12 +83,15 @@ module.exports = {
       yellow: {
         500: "#eab308",
       },
+      // TODO: move colors to gray
       "green-light": {
         DEFAULT: "#E8FFCA",
       },
+      // TODO: move colors to gray
       "green-accent": {
         DEFAULT: "#BCF870",
       },
+      // TODO: move colors to gray, except DEFAULT
       "gray-black": {
         DEFAULT: "#898989",
         100: "#F6F6F6",
