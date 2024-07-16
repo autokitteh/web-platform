@@ -103,7 +103,7 @@ jobs:
 
       - name: Run AutoKitteh
         env:
-          AK_AUTHHTTMIDDLEWARE__REQUIRED: false
+          AK_AUTHHTTPMIDDLEWARE__REQUIRED: false
           AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED: false
           AK_AUTHLOGINHTTPSVC__ALLOWED_LOGINS: "*"
           AK_HTTP__CORS__ALLOWED_ORIGINS: "http://localhost:4173"
