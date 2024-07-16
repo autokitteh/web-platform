@@ -3,7 +3,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { isAuthEnabled } from "@constants";
 import { SidebarHrefMenu } from "@enums/components";
 
 import { useProjectStore, useToastStore, useUserStore } from "@store";
@@ -13,7 +12,6 @@ import { Button, IconSvg, Typography } from "@components/atoms";
 import { PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardTopbar = () => {
-	const { logoutFunction } = useUserStore();
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
 	const { user } = useUserStore();
 	const { addProjectToMenu, createProject } = useProjectStore();
@@ -60,16 +58,6 @@ export const DashboardTopbar = () => {
 
 				{t("buttons.newProject")}
 			</Button>
-
-			{isAuthEnabled ? (
-				<Button
-					className="ml-2 gap-5 whitespace-nowrap rounded-xl py-2.5"
-					onClick={logoutFunction}
-					variant="filled"
-				>
-					{t("buttons.logout")}
-				</Button>
-			) : null}
 		</div>
 	);
 };
