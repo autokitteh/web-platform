@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/autokitteh/web-platform/compare/v1.14.2...v1.15.0) (2024-07-16)
+
+
+### Features
+
+* add dashboard ui ([#198](https://github.com/autokitteh/web-platform/issues/198)) ([3ff53f0](https://github.com/autokitteh/web-platform/commit/3ff53f0cf35e36d23e9fa0d42902d8a99f2de38d))
+
 ## [1.14.2](https://github.com/autokitteh/web-platform/compare/v1.14.1...v1.14.2) (2024-07-16)
 
 
