@@ -7,9 +7,8 @@ import { immer } from "zustand/middleware/immer";
 import { namespaces } from "@constants";
 import { StoreName } from "@enums";
 import { ProjectStore } from "@interfaces/store";
-import { convertProtoProjectToMenuItemModel } from "@models/project.model";
 import { LoggerService, ProjectsService } from "@services";
-import { ProjectMenuItem } from "@type/models";
+import { Project } from "@type/models";
 import { readFileAsUint8Array, updateOpenedFilesState } from "@utilities";
 
 const defaultState: Omit<
@@ -17,7 +16,7 @@ const defaultState: Omit<
 	| "addProjectToMenu"
 	| "createProject"
 	| "getProject"
-	| "getProjectMenutItems"
+	| "getProjectsList"
 	| "getProjectResources"
 	| "removeProjectFile"
 	| "renameProject"
@@ -28,7 +27,7 @@ const defaultState: Omit<
 	| "updateEditorClosedFiles"
 	| "updateEditorOpenedFiles"
 > = {
-	menuList: [],
+	projectsList: [],
 	openedFiles: [],
 	resources: {},
 };
@@ -36,9 +35,9 @@ const defaultState: Omit<
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 
-	addProjectToMenu: (project: ProjectMenuItem) => {
+	addProjectToMenu: (project: Project) => {
 		set((state) => {
-			state.menuList.push(project);
+			state.projectsList.push(project);
 
 			return state;
 		});
@@ -59,7 +58,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	getProject: async (projectId: string) => {
-		const project = get().menuList.find(({ id }) => id === projectId);
+		const project = get().projectsList.find(({ id }) => id === projectId);
 		if (project) {
 			return { data: project, error: undefined };
 		}
@@ -72,21 +71,19 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			return { data: undefined, error: new Error("Project not found") };
 		}
 
-		return { data: convertProtoProjectToMenuItemModel(responseProject), error };
+		return { data: responseProject, error };
 	},
 
-	getProjectMenutItems: async () => {
+	getProjectsList: async () => {
 		const { data: projects, error } = await ProjectsService.list();
 
 		if (error) {
 			return { data: undefined, error };
 		}
 
-		const convertedProjectsMenuItems = projects?.map(convertProtoProjectToMenuItemModel);
+		set((state) => ({ ...state, projectsList: projects }));
 
-		set((state) => ({ ...state, menuList: convertedProjectsMenuItems }));
-
-		return { data: convertedProjectsMenuItems, error: undefined };
+		return { data: projects, error: undefined };
 	},
 
 	getProjectResources: async (resources) => {
@@ -136,11 +133,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	renameProject: async (projectId: string, newProjectName: string) => {
 		set((state) => {
-			const projectIndex = state.menuList.findIndex(({ id }) => id === projectId);
+			const projectIndex = state.projectsList.findIndex(({ id }) => id === projectId);
 			if (projectIndex === -1) {
 				return state;
 			}
-			state.menuList[projectIndex].name = newProjectName;
+			state.projectsList[projectIndex].name = newProjectName;
 
 			return state;
 		});

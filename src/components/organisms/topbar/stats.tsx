@@ -5,7 +5,7 @@ import { redirect, useParams } from "react-router-dom";
 
 import { useProjectStore } from "@store/useProjectStore";
 import { useToastStore } from "@store/useToastStore";
-import { ProjectMenuItem } from "@type/models";
+import { Project } from "@type/models";
 
 import { Button, IconSvg } from "@components/atoms";
 
@@ -14,7 +14,7 @@ import { ProjectsIcon } from "@assets/image";
 export const StatsTopbar = () => {
 	const { t } = useTranslation(["projects", "errors"]);
 	const { projectId } = useParams();
-	const [project, setProject] = useState<ProjectMenuItem>();
+	const [project, setProject] = useState<Project>();
 	const addToast = useToastStore((state) => state.addToast);
 
 	const { getProject } = useProjectStore();

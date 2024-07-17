@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
-import { ProjectMenuItem } from "@type/models";
+import { Project } from "@type/models";
 import { cn } from "@utilities";
 
 import { useProjectStore, useToastStore } from "@store";
@@ -19,16 +19,16 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { addProjectToMenu, createProject, getProjectMenutItems, menuList: projectsMenuList } = useProjectStore();
+	const { addProjectToMenu, createProject, getProjectsList, projectsList: projectsprojectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const [sortedProjectsList, setSortedProjectsList] = useState<ProjectMenuItem[]>([]);
+	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 
 	useEffect(() => {
-		if (projectsMenuList.length) {
-			const sortedProjects = projectsMenuList.slice().sort((a, b) => a.name.localeCompare(b.name));
+		if (projectsprojectsList.length) {
+			const sortedProjects = projectsprojectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
 			setSortedProjectsList(sortedProjects);
 		}
-	}, [projectsMenuList]);
+	}, [projectsprojectsList]);
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
@@ -60,7 +60,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	};
 
 	useEffect(() => {
-		getProjectMenutItems();
+		getProjectsList();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

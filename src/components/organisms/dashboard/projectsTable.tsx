@@ -1,56 +1,21 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { SidebarHrefMenu } from "@enums/components";
-import { ProjectsService } from "@services";
-import { Project } from "@type/models";
+import { useProjectStore } from "@store";
 
-import { useToastStore } from "@store";
-
-import { Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 
 export const ProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
-	const addToast = useToastStore((state) => state.addToast);
-	const [isLoading, setIsLoading] = useState(true);
-	const [projects, setProjects] = useState<Project[]>([]);
+	const { projectsList: projects } = useProjectStore();
 	const navigate = useNavigate();
-
-	const fetchProjectsList = async () => {
-		setIsLoading(true);
-		try {
-			const { data: projects, error } = await ProjectsService.list();
-			if (error) {
-				throw error;
-			}
-			if (!projects) {
-				return;
-			}
-			setProjects(projects);
-		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-			});
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		fetchProjectsList();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const itemData = useMemo(() => projects, [projects]);
 
-	return isLoading ? (
-		<Loader isCenter size="xl" />
-	) : (
+	return (
 		<div className="relative mb-3 mt-7">
 			<div className="text-2xl font-bold text-black">{t("title")}</div>
 
@@ -67,15 +32,12 @@ export const ProjectsTable = () => {
 					</THead>
 
 					<TBody className="bg-gray-black-200">
-						{itemData.map(({ name, projectId }) => (
+						{itemData.map(({ href, id, name }) => (
 							<Tr
 								className="group cursor-pointer border-none pl-6 text-black-text hover:bg-transparent"
-								key={projectId}
+								key={id}
 							>
-								<Td
-									className="group-hover:font-bold"
-									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${projectId}`)}
-								>
+								<Td className="group-hover:font-bold" onClick={() => navigate(href)}>
 									{name}
 								</Td>
 							</Tr>
