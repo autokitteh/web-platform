@@ -38,8 +38,8 @@ export const EditorTabs = () => {
 			const resources = await dbService.getAll();
 			const resource = resources[activeEditorFileName];
 			if (resource) {
-				const byteArray = Object.values(resource);
-				setContent(String.fromCharCode.apply(null, byteArray));
+				const byteArray = Array.from(resource);
+				setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
 			} else {
 				setContent(t("noFileText"));
 			}
@@ -71,7 +71,7 @@ export const EditorTabs = () => {
 
 	const updateContent = async (newContent?: string) => {
 		if (!projectId || !activeEditorFileName) return;
-		const contentUintArray = new TextEncoder().encode(newContent);
+		const contentUintArray = new TextEncoder().encode(newContent || "");
 
 		await dbService.put(activeEditorFileName, contentUintArray);
 

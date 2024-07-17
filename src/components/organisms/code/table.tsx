@@ -28,7 +28,7 @@ export const CodeTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { openFileAsActive, openedFiles } = useFileStore();
+	const { openFileAsActive, openedFiles, setOpenedFiles } = useFileStore();
 
 	const [resources, setResources] = useState<Record<string, Uint8Array>>({});
 	const [isDragOver, setIsDragOver] = useState(false);
@@ -57,6 +57,7 @@ export const CodeTable = () => {
 	const fetchResources = async () => {
 		setIsLoading(true);
 		try {
+			setOpenedFiles([]);
 			const { data: resourcesFromService, error } = await ProjectsService.getResources(projectId!);
 			if (error) {
 				throw error;
@@ -70,7 +71,7 @@ export const CodeTable = () => {
 			const resources = await dbService.getAll();
 			setResources(resources);
 		} catch (error) {
-			getProjectResources({});
+			setOpenedFiles([]);
 			addToast({
 				id: Date.now().toString(),
 				message: (error as Error).message,
