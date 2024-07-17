@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/autokitteh/web-platform/compare/v1.15.0...v1.15.1) (2024-07-17)
+
+
+### Bug Fixes
+
+* clean files tabs and editor when moving between projects or when cant get project from backend ([#206](https://github.com/autokitteh/web-platform/issues/206)) ([d48e123](https://github.com/autokitteh/web-platform/commit/d48e1239e1c0dffde37d8ea1a6494960a9762cc4))
+
 # [1.15.0](https://github.com/autokitteh/web-platform/compare/v1.14.2...v1.15.0) (2024-07-16)
 
 
