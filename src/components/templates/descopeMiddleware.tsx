@@ -35,7 +35,9 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
 			try {
-				await axios.get(`${baseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`);
+				await axios.get(`${baseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
+					withCredentials: true,
+				});
 				await getLoggedInUser();
 				await getProjectsList();
 			} catch (error) {
