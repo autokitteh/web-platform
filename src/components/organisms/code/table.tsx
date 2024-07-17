@@ -36,51 +36,47 @@ export const CodeTable = () => {
 	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
 	const selectedRemoveFileName = useModalStore((state) => state.data as string);
 
-	const resourcesEntries = Object.entries(resources);
-	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
-
 	const styleCircle = cn("stroke-gray-750 duration-300 group-hover:stroke-green-800", {
 		"stroke-green-800": isDragOver,
 	});
-	const styleBase = cn("relative flex-1 rounded-xl duration-300", {
-		"mb-auto mt-auto flex items-center justify-center": isEmpty(sortedResources),
-	});
-	const styleFrame = cn(
-		"absolute top-0 z-10 flex h-full w-full items-center justify-center rounded-lg duration-300",
-		"pointer-events-none select-none opacity-0",
-		{
-			"opacity-1 border-2 bg-white/40": isDragOver,
-			"opacity-1 pointer-events-auto": isEmpty(sortedResources),
-		}
-	);
 
 	const fetchResources = async () => {
 		setIsLoading(true);
 		try {
+			const clearPromise = await dbService.clearStore();
+			console.log("All resources have been cleared successfully.");
 			setOpenedFiles([]);
+
 			const { data: resourcesFromService, error } = await ProjectsService.getResources(projectId!);
 			if (error) {
-				throw error;
+				addToast({
+					id: Date.now().toString(),
+					message: (error as Error).message,
+					type: "error",
+				});
 			}
-			if (resourcesFromService) {
-				for (const [name, content] of Object.entries(resourcesFromService)) {
-					await dbService.put(name, content);
-				}
+			for (const [name, content] of Object.entries(resourcesFromService || {})) {
+				await dbService.put(name, new Uint8Array(content));
 			}
-
-			const resources = await dbService.getAll();
-			setResources(resources);
+			const loadedResources = await dbService.getAll();
+			setResources(loadedResources);
 		} catch (error) {
-			setOpenedFiles([]);
+			console.log("Error occurred while fetching resources:", error);
+
 			addToast({
 				id: Date.now().toString(),
-				message: (error as Error).message,
+				message: error.message,
 				type: "error",
 			});
 		} finally {
 			setIsLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		fetchResources();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const fileUpload = async (files: File[]) => {
 		try {
@@ -103,11 +99,6 @@ export const CodeTable = () => {
 
 		return cn({ "bg-black": isActiveFile });
 	};
-
-	useEffect(() => {
-		fetchResources();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
 
 	const handleDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
@@ -152,6 +143,21 @@ export const CodeTable = () => {
 	const handleFileClick = (name: string) => {
 		openFileAsActive(name);
 	};
+
+	const resourcesEntries = Object.entries(resources);
+	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
+
+	const styleBase = cn("relative flex-1 rounded-xl duration-300", {
+		"mb-auto mt-auto flex items-center justify-center": isEmpty(sortedResources),
+	});
+	const styleFrame = cn(
+		"absolute top-0 z-10 flex h-full w-full items-center justify-center rounded-lg duration-300",
+		"pointer-events-none select-none opacity-0",
+		{
+			"opacity-1 border-2 bg-white/40": isDragOver,
+			"opacity-1 pointer-events-auto": isEmpty(sortedResources),
+		}
+	);
 
 	return isLoading ? (
 		<Loader isCenter size="xl" />

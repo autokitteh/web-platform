@@ -47,6 +47,13 @@ class IndexedDBService {
 		await this.EnsureDBInitialized();
 		await this.db.delete(this.storeName, name);
 	}
+
+	async clearStore() {
+		await this.EnsureDBInitialized();
+		const tx = this.db.transaction(this.storeName, "readwrite");
+		await tx.objectStore(this.storeName).clear();
+		await tx.done;
+	}
 }
 
 export default IndexedDBService;
