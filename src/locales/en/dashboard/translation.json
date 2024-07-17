@@ -13,6 +13,7 @@
 	},
 	"projects": {
 		"title": "All projects",
+		"noProjects": "No projects found",
 		"table": {
 			"columns": {
 				"projectName": "Project Name"
