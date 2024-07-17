@@ -69,6 +69,7 @@ export const CodeTable = () => {
 
 			getProjectResources(resources);
 		} catch (error) {
+			getProjectResources({});
 			addToast({
 				id: Date.now().toString(),
 				message: (error as Error).message,

@@ -97,6 +97,8 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			}
 
 			if (!resources) {
+				state.openedFiles = [];
+
 				return state;
 			}
 
