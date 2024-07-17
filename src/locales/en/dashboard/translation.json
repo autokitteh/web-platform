@@ -15,13 +15,7 @@
 		"title": "All projects",
 		"table": {
 			"columns": {
-				"projectName": "Project Name",
-				"lastVersion": "Last Version",
-				"running": "Running",
-				"completed": "Completed",
-				"errors": "Errors",
-				"lastRun": "Last Run Time",
-				"deploymentTime": "Deployment Time"
+				"projectName": "Project Name"
 			}
 		}
 	}

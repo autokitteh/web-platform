@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 
+import { SidebarHrefMenu } from "@enums/components";
 import { ProjectsService } from "@services";
 import { Project } from "@type/models";
 
@@ -9,6 +13,27 @@ import { useToastStore } from "@store";
 
 import { Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
+
+const ProjectRow = ({ data, index, style }: { data: { projects: Project[] }; index: number; style: CSSProperties }) => {
+	const { projects } = data;
+	const project = projects[index];
+	const navigate = useNavigate();
+
+	if (!project) {
+		return null;
+	}
+
+	return (
+		<Tr className="group cursor-pointer border-none pl-6 text-black-text hover:bg-transparent" style={style}>
+			<Td
+				className="group-hover:font-bold"
+				onClick={() => navigate(`/${SidebarHrefMenu.projects}/${project?.projectId}`)}
+			>
+				{project.name}
+			</Td>
+		</Tr>
+	);
+};
 
 export const ProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
@@ -26,7 +51,6 @@ export const ProjectsTable = () => {
 			if (!projects) {
 				return;
 			}
-
 			setProjects(projects);
 		} catch (error) {
 			addToast({
@@ -44,13 +68,20 @@ export const ProjectsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const itemData = useMemo(
+		() => ({
+			projects,
+		}),
+		[projects]
+	);
+
 	return isLoading ? (
 		<Loader isCenter size="xl" />
 	) : (
-		<div className="relative mt-7">
+		<div className="relative mb-3 mt-7 flex flex-1 flex-col">
 			<div className="text-2xl font-bold text-black">{t("title")}</div>
 
-			<Table className="mt-2.5 max-h-500 rounded-t-20 border border-black-300">
+			<Table className="mt-2.5 flex-1 overflow-hidden rounded-t-20 border border-black-300">
 				<THead className="bg-white">
 					<Tr className="border-none pl-6 hover:bg-transparent">
 						<Th className="group h-11 cursor-pointer font-normal text-gray-dark">
@@ -62,14 +93,20 @@ export const ProjectsTable = () => {
 				</THead>
 
 				<TBody className="bg-gray-black-200">
-					{projects.map(({ name, projectId }) => (
-						<Tr
-							className="group cursor-pointer border-none pl-6 text-black-text hover:bg-transparent"
-							key={projectId}
-						>
-							<Td className="h-12">{name}</Td>
-						</Tr>
-					))}
+					<AutoSizer>
+						{({ height, width }) => (
+							<List
+								className="scrollbar"
+								height={height}
+								itemCount={projects.length}
+								itemData={itemData}
+								itemSize={40}
+								width={width}
+							>
+								{ProjectRow}
+							</List>
+						)}
+					</AutoSizer>
 				</TBody>
 			</Table>
 		</div>

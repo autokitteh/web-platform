@@ -17,7 +17,7 @@ export const Td = ({ children, className, onClick }: TableProps) => {
 
 	return (
 		<td className={tdStyle}>
-			<div className="truncate" onClick={onClick} onKeyDown={handleKeyDown}>
+			<div className="w-full truncate" onClick={onClick} onKeyDown={handleKeyDown}>
 				{children}
 			</div>
 		</td>
