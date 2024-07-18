@@ -8,5 +8,6 @@
 		"javascriptreact",
 		"typescript",
 		"typescriptreact"
-	]
+	],
+	"editor.defaultFormatter": "dbaeumer.vscode-eslint"
 }

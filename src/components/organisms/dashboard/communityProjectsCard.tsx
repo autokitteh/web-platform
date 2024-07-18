@@ -5,6 +5,7 @@ import { CommunityProjectCardType } from "@type/components";
 import { IconSvg, Status } from "@components/atoms";
 
 import { IconLogo } from "@assets/image";
+import { PipeCircleIcon } from "@assets/image/icons";
 
 export const CommunityProjectCard = ({ card, category }: { card: CommunityProjectCardType; category: string }) => {
 	return (
@@ -20,7 +21,7 @@ export const CommunityProjectCard = ({ card, category }: { card: CommunityProjec
 							<IconSvg className="z-10" size="lg" src={icon} />
 
 							{index < card.integrations.length - 1 ? (
-								<span className="absolute -right-8 top-1/2 h-2 w-8 -translate-y-1/2 bg-gray-550" />
+								<PipeCircleIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-500" />
 							) : null}
 						</div>
 					))}

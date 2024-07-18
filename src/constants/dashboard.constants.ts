@@ -9,7 +9,10 @@ export const communityProjectCategories: CommunityProjectCategory[] = [
 		name: "CI/CD",
 		cards: [
 			{
-				integrations: [{ icon: GithubIcon, title: "Github" }],
+				integrations: [
+					{ icon: GithubIcon, title: "Github" },
+					{ icon: GithubIcon, title: "Github" },
+				],
 				title: "Name of Project",
 				description:
 					"Automation includes using various equipment and control systems such as factory processes",
@@ -28,6 +31,8 @@ export const communityProjectCategories: CommunityProjectCategory[] = [
 		cards: [
 			{
 				integrations: [
+					{ icon: GithubIcon, title: "Github" },
+					{ icon: GithubIcon, title: "Github" },
 					{ icon: GithubIcon, title: "Github" },
 					{ icon: GithubIcon, title: "Github" },
 				],
