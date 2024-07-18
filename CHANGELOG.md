@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/autokitteh/web-platform/compare/v1.15.1...v1.16.0) (2024-07-18)
+
+
+### Features
+
+* add fetch projects list to table ([#205](https://github.com/autokitteh/web-platform/issues/205)) ([d1fefad](https://github.com/autokitteh/web-platform/commit/d1fefadbdb11fe4e1281cba94dc28a119cb6c40e))
+
 ## [1.15.1](https://github.com/autokitteh/web-platform/compare/v1.15.0...v1.15.1) (2024-07-17)
 
 
