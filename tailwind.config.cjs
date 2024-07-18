@@ -18,22 +18,17 @@ module.exports = {
       },
       spacing: {
         9.5: "2.375rem",
-        '3px': '3px'
-      },
-      maxWidth: {
-        650: "650px",
-        420: "420px",
-        680: "680px",
-        550: "550px",
-        485: "485px",
-      },
-      minWidth: {
-        550: "550px",
-        650: "650px",
-      },
-      width: {
+        '3px': '3px',
         500: "500px",
         550: "550px",
+        650: "650px",
+      },
+      maxWidth: {
+        420: "420px",
+        680: "680px",
+        485: "485px",
+      },
+      width: {
         "default-icon": "1.625rem",
         "main-nav-sidebar": "85px",
       },

@@ -5,7 +5,7 @@ import { redirect, useParams } from "react-router-dom";
 
 import { TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
-import { ProjectMenuItem } from "@type/models";
+import { Project } from "@type/models";
 import { cn } from "@utilities";
 
 import { useProjectStore, useToastStore } from "@store";
@@ -20,7 +20,7 @@ export const Topbar = () => {
 	const { getProject, renameProject, resources } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
-	const [project, setProject] = useState<ProjectMenuItem>();
+	const [project, setProject] = useState<Project>();
 	const addToast = useToastStore((state) => state.addToast);
 	const inputClass = cn(
 		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0",

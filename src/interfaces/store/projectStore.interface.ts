@@ -1,4 +1,4 @@
-import { ProjectMenuItem } from "@type/models";
+import { Project } from "@type/models";
 import { ServiceResponse } from "@type/services.types";
 
 interface ProjectStoreResponse {
@@ -11,12 +11,12 @@ interface FilesResponse {
 }
 
 export interface ProjectStore {
-	addProjectToMenu: (project: ProjectMenuItem) => void;
+	addProjectToMenu: (project: Project) => void;
 	createProject: () => ServiceResponse<{ name: string; projectId: string }>;
-	getProject: (projectId: string) => ServiceResponse<ProjectMenuItem>;
-	getProjectMenutItems: () => ServiceResponse<ProjectMenuItem[]>;
+	getProject: (projectId: string) => ServiceResponse<Project>;
+	getProjectsList: () => ServiceResponse<Project[]>;
 	getProjectResources: (resources: Record<string, Uint8Array>) => void;
-	menuList: ProjectMenuItem[];
+	projectsList: Project[];
 	openedFiles: { isActive: boolean; name: string }[];
 	removeProjectFile: (fileName: string, projectId: string) => Promise<ProjectStoreResponse>;
 	renameProject: (projectId: string, projectName: string) => void;

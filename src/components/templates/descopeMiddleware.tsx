@@ -14,7 +14,7 @@ import { Badge, Frame, LogoCatLarge } from "@components/atoms";
 import { IconLogoAuth } from "@assets/image";
 
 export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) => {
-	const { getProjectMenutItems, reset: resetProjectStore } = useProjectStore();
+	const { getProjectsList, reset: resetProjectStore } = useProjectStore();
 	const { getLoggedInUser, reset: resetUserStore, setLogoutFunction, user } = useUserStore();
 	const { logout } = useDescope();
 	const handleLogout = useCallback(() => {
@@ -39,7 +39,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 					withCredentials: true,
 				});
 				await getLoggedInUser();
-				await getProjectMenutItems();
+				await getProjectsList();
 			} catch (error) {
 				setDescopeRenderKey((prevKey) => prevKey + 1);
 				addToast({
@@ -50,7 +50,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[getLoggedInUser, getProjectMenutItems]
+		[getLoggedInUser, getProjectsList]
 	);
 
 	if (!user) {
