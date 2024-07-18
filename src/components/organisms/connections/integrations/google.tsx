@@ -1,39 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { baseUrl, namespaces } from "@constants";
-import { infoGoogleAccountLinks, infoGoogleUserLinks, selectIntegrationGoogle } from "@constants/lists";
-import { GoogleConnectionType } from "@enums";
-import { ConnectionService, HttpService, LoggerService } from "@services";
+import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
+import { GithubConnectionType } from "@enums";
+import { ConnectionFormIds } from "@enums/components";
+import { SelectOption } from "@interfaces/components";
+import { HttpService, LoggerService } from "@services";
+import { Connection } from "@type/models";
 import { isConnectionType } from "@utilities";
-import { googleIntegrationSchema } from "@validations";
+import { githubIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
-import { Button, ErrorMessage, Link, Select, Spinner, Textarea } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, Select, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
-import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
+import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GoogleIntegrationForm = ({
-	connectionName,
-	isConnectionNameValid,
+export const GithubIntegrationForm = ({
+	connection,
+	connectionId,
+	setChildFormSubmitRef,
 	triggerParentFormSubmit,
 }: {
-	connectionName?: string;
-	isConnectionNameValid: boolean;
+	connection?: Connection;
+	connectionId?: string;
+	editMode?: boolean;
+	setChildFormSubmitRef: React.MutableRefObject<(() => void) | null>;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const [selectedConnectionType, setSelectedConnectionType] = useState<GoogleConnectionType>();
+	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
 	const { projectId } = useParams();
 	const navigate = useNavigate();
-
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -43,36 +49,80 @@ export const GoogleIntegrationForm = ({
 		handleSubmit,
 		register,
 	} = useForm({
-		resolver: zodResolver(googleIntegrationSchema),
+		resolver: zodResolver(githubIntegrationSchema),
 		defaultValues: {
-			jsonKey: "",
+			pat: "",
+			webhookSercet: "",
 		},
 	});
 
+	const randomForPATWebhook = useMemo(() => randomatic("Aa0", 8), [projectId]);
+	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
+
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const onSubmit = async () => {
-		if (!isConnectionNameValid) {
+		if (!connectionId) {
 			triggerParentFormSubmit();
 
 			return;
 		}
-
-		const { jsonKey } = getValues();
-
+		const { pat, webhookSercet: secret } = getValues();
 		setIsLoading(true);
 		try {
-			await ConnectionService.create(projectId!, "google", connectionName!);
+			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
+				pat,
+				secret,
+				webhook: webhookUrl,
+			});
+			const successMessage = t("connectionCreatedSuccessfully");
+			addToast({
+				id: Date.now().toString(),
+				message: successMessage,
+				type: "success",
+			});
+			LoggerService.info(namespaces.connectionService, successMessage);
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
+			addToast({
+				id: Date.now().toString(),
+				message: errorMessage,
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-			const data = await HttpService.post("/google/save", { jsonKey });
+	const copyToClipboard = async (text: string) => {
+		try {
+			await navigator.clipboard.writeText(text);
+			addToast({
+				id: Date.now().toString(),
+				message: t("github.copySuccess"),
+				type: "success",
+			});
+		} catch (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: t("github.copyFailure"),
+				type: "error",
+			});
+		}
+	};
 
-			if (data.request.responseURL.includes("error=")) {
-				const errorMsg = new URL(data.request.responseURL).searchParams.get("error");
-				throw new Error(errorMsg!);
-			} else {
-				const msg = new URL(data.request.responseURL).searchParams.get("msg") || "";
-				if (msg.includes("Connection initialized")) {
-					navigate(`/projects/${projectId}/connections`);
-				}
-			}
+	const handleGithubOAuth = async () => {
+		if (!connectionId) {
+			triggerParentFormSubmit();
+
+			return;
+		}
+		try {
+			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -88,64 +138,55 @@ export const GoogleIntegrationForm = ({
 		}
 	};
 
-	const handleGoogleOAuth = async () => {
-		if (!isConnectionNameValid) {
-			triggerParentFormSubmit();
-
-			return;
-		}
-		const { data: connectionId } = await ConnectionService.create(projectId!, "github", connectionName!);
-
-		window.open(`${baseUrl}/oauth/start/google?cid=${connectionId}`, "_blank");
-	};
-
-	const renderOAuthButton = () => (
+	const renderPATFields = () => (
 		<>
-			<Accordion title={t("information")}>
-				<div className="flex flex-col items-start gap-2">
-					{infoGoogleUserLinks.map(({ text, url }, index) => (
-						<Link
-							className="inline-flex items-center gap-2.5 text-green-accent"
-							key={index}
-							target="_blank"
-							to={url}
-						>
-							{text}
-
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
-						</Link>
-					))}
-				</div>
-			</Accordion>
-			<Button
-				aria-label={t("buttons.startOAuthFlow")}
-				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
-				onClick={handleGoogleOAuth}
-				variant="outline"
-			>
-				{t("buttons.startOAuthFlow")}
-			</Button>
-		</>
-	);
-
-	const renderServiceAccount = () => (
-		<div>
-			<div className="relative mb-3">
-				<Textarea
-					rows={5}
-					{...register("jsonKey")}
-					aria-label={t("google.placeholders.jsonKey")}
-					isError={!!errors.jsonKey}
-					placeholder={t("google.placeholders.jsonKey")}
+			<div className="relative">
+				<Input
+					{...register("pat")}
+					aria-label={t("github.placeholders.pat")}
+					isError={!!errors.pat}
+					isRequired
+					placeholder={t("github.placeholders.pat")}
 				/>
 
-				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
+			<div className="relative flex gap-2">
+				<Input
+					aria-label={t("github.placeholders.webhookUrl")}
+					className="w-full"
+					disabled
+					placeholder={t("github.placeholders.webhookUrl")}
+					value={webhookUrl}
+				/>
 
+				<Button
+					aria-label={t("buttons.copy")}
+					className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-300"
+					onClick={() => copyToClipboard(webhookUrl)}
+					variant="outline"
+				>
+					<CopyIcon className="h-3.5 w-3.5 fill-black" />
+
+					{t("buttons.copy")}
+				</Button>
+			</div>
+			<div className="relative">
+				<Input
+					{...register("webhookSercet")}
+					aria-label={t("github.placeholders.webhookSecret")}
+					isError={!!errors.webhookSercet}
+					isRequired
+					placeholder={t("github.placeholders.webhookSecret")}
+				/>
+
+				<ErrorMessage>{errors.webhookSercet?.message as string}</ErrorMessage>
+			</div>
 			<Button
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
+				id={ConnectionFormIds.createGithub}
 				type="submit"
 				variant="outline"
 			>
@@ -153,12 +194,11 @@ export const GoogleIntegrationForm = ({
 
 				{t("buttons.saveConnection")}
 			</Button>
-
 			<Accordion title={t("information")}>
-				<div className="flex flex-col items-start gap-2">
-					{infoGoogleAccountLinks.map(({ text, url }, index) => (
+				<div className="flex flex-col gap-2">
+					{infoGithubLinks.map(({ text, url }, index) => (
 						<Link
-							className="inline-flex items-center gap-2.5 text-green-accent"
+							className="group inline-flex items-center gap-2.5 text-green-accent"
 							key={index}
 							target="_blank"
 							to={url}
@@ -170,30 +210,66 @@ export const GoogleIntegrationForm = ({
 					))}
 				</div>
 			</Accordion>
+		</>
+	);
+
+	const renderOAuthButton = () => (
+		<div>
+			<Accordion title={t("information")}>
+				<Link
+					className="text-md inline-flex items-center gap-2.5 text-green-accent"
+					target="_blank"
+					to="https://docs.github.com/en/apps/using-github-apps/about-using-github-apps"
+				>
+					{t("github.aboutGitHubApps")}
+
+					<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+				</Link>
+			</Accordion>
+
+			<p className="mt-2">{t("github.clickButtonInstall")}</p>
+
+			<Button
+				aria-label={t("buttons.startOAuthFlow")}
+				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
+				onClick={handleGithubOAuth}
+				variant="outline"
+			>
+				{t("buttons.startOAuthFlow")}
+			</Button>
 		</div>
 	);
 
+	useEffect(() => {
+		setChildFormSubmitRef.current = handleSubmit(onSubmit);
+	}, [handleSubmit, onSubmit, setChildFormSubmitRef]);
+
+	const selectedIntegrationType = {
+		label: connection?.integrationName,
+		value: connection?.integrationUniqueName,
+	} as SelectOption;
+
 	return (
-		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex items-start gap-10" id={ConnectionFormIds.createGithub} onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
-					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
 					onChange={(selected) => {
-						if (selected?.value && isConnectionType(selected.value, GoogleConnectionType)) {
+						if (selected?.value && isConnectionType(selected.value, GithubConnectionType)) {
 							setSelectedConnectionType(selected.value);
 						}
 					}}
-					options={selectIntegrationGoogle}
+					options={githubIntegrationAuthMethods}
 					placeholder={t("placeholders.selectConnectionType")}
+					value={selectedIntegrationType}
 				/>
 
-				{selectedConnectionType && selectedConnectionType === GoogleConnectionType.Oauth
-					? renderOAuthButton()
+				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat
+					? renderPATFields()
 					: null}
 
-				{selectedConnectionType && selectedConnectionType === GoogleConnectionType.ServiceAccount
-					? renderServiceAccount()
+				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth
+					? renderOAuthButton()
 					: null}
 			</div>
 		</form>
