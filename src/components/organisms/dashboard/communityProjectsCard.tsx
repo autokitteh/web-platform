@@ -5,11 +5,11 @@ import { CommunityProjectCardType } from "@type/components";
 import { IconSvg, Status } from "@components/atoms";
 
 import { IconLogo } from "@assets/image";
-import { PipeCircleIcon } from "@assets/image/icons";
+import { GithubShadowIcon, PipeCircleIcon } from "@assets/image/icons";
 
 export const CommunityProjectCard = ({ card, category }: { card: CommunityProjectCardType; category: string }) => {
 	return (
-		<div className="flex flex-col rounded-md border border-black-300 bg-white p-5 pr-3.5 shadow-community-card">
+		<div className="relative flex flex-col rounded-md border border-black-300 bg-white p-5 pr-3.5 shadow-community-card">
 			<div className="flex items-center justify-between gap-1.5">
 				<div className="flex gap-3">
 					{card.integrations.map(({ icon, title }, index) => (
@@ -39,6 +39,8 @@ export const CommunityProjectCard = ({ card, category }: { card: CommunityProjec
 
 				<span className="rounded-full text-xs font-bold text-gray-black-500">+{card.counter}</span>
 			</div>
+
+			<GithubShadowIcon className="absolute -bottom-5 right-8" />
 		</div>
 	);
 };
