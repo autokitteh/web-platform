@@ -11,6 +11,7 @@ import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists"
 import { GithubConnectionType } from "@enums";
 import { ConnectionFormIds } from "@enums/components";
 import { HttpService, LoggerService } from "@services";
+import { Connection } from "@type/models";
 import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
 
@@ -22,10 +23,14 @@ import { Accordion } from "@components/molecules";
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const GithubIntegrationForm = ({
+	connection,
 	connectionId,
+	editMode,
 	triggerParentFormSubmit,
 }: {
+	connection?: Connection;
 	connectionId?: string;
+	editMode: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t: tErrors } = useTranslation("errors");
@@ -241,6 +246,13 @@ export const GithubIntegrationForm = ({
 			</Button>
 		</div>
 	);
+
+	console.log("connection", connection);
+
+	const selectedIntegrationType = {
+		label: connection?.integrationName,
+		value: connection?.integrationUniqueName,
+	} as SelectOption;
 
 	return (
 		<form className="flex items-start gap-10" id={ConnectionFormIds.createGithub} onSubmit={handleSubmit(onSubmit)}>

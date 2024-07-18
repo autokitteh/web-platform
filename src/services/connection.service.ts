@@ -52,12 +52,13 @@ export class ConnectionService {
 				(integration) => integration.integrationId === connection.integrationId
 			);
 			convertedConnection.integrationName = integration?.displayName;
+			convertedConnection.integrationUniqueName = integration?.uniqueName;
 
 			return { data: convertedConnection, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.connectionService, (error as Error).message);
 
-			return { data: undefined, error };
+			return { data: undefined, error: new Error(error) };
 		}
 	}
 
