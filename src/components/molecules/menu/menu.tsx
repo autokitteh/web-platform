@@ -19,16 +19,16 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { addProjectToMenu, createProject, getProjectsList, projectsList: projectsprojectsList } = useProjectStore();
+	const { addProjectToMenu, createProject, getProjectsList, projectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 
 	useEffect(() => {
-		if (projectsprojectsList.length) {
-			const sortedProjects = projectsprojectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
+		if (projectsList.length) {
+			const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
 			setSortedProjectsList(sortedProjects);
 		}
-	}, [projectsprojectsList]);
+	}, [projectsList]);
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },

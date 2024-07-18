@@ -10,16 +10,16 @@ import { SortButton } from "@components/molecules";
 
 export const ProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
-	const { projectsList: projects } = useProjectStore();
+	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 
-	const itemData = useMemo(() => projects, [projects]);
+	const itemData = useMemo(() => projectsList, [projectsList]);
 
 	return (
 		<div className="relative mb-3 mt-7">
 			<div className="text-2xl font-bold text-black">{t("title")}</div>
 
-			{projects.length ? (
+			{projectsList.length ? (
 				<Table className="mt-2.5 max-h-96 rounded-t-20 border border-black-300">
 					<THead className="bg-white">
 						<Tr className="border-none pl-6 hover:bg-transparent">
