@@ -35,9 +35,10 @@ export const EditConnection = () => {
 		resolver: zodResolver(connectionSchema),
 		mode: "onChange",
 	});
+
 	const fetchConnection = async (connectionId: string) => {
 		try {
-			const { data: conectionResponse, error } = await ConnectionService.get(connectionId);
+			const { data: connectionResponse, error } = await ConnectionService.get(connectionId);
 
 			if (error) {
 				const errorMessage = tErrors("errorFetchingConnection");
@@ -54,7 +55,7 @@ export const EditConnection = () => {
 
 				return;
 			}
-			if (!conectionResponse) {
+			if (!connectionResponse) {
 				const errorMessage = tErrors("connectionNotFound");
 
 				addToast({
@@ -70,7 +71,12 @@ export const EditConnection = () => {
 				return;
 			}
 
-			setConnection(conectionResponse);
+			setConnection(connectionResponse);
+			setValue("connectionName", connectionResponse.name);
+			setValue("integration", {
+				label: connectionResponse.integrationName,
+				value: connectionResponse.integrationUniqueName,
+			});
 		} catch (error) {
 			const errorMessage = tErrors("errorFetchingConnection");
 
@@ -88,13 +94,18 @@ export const EditConnection = () => {
 
 	useEffect(() => {
 		fetchConnection(connectionId!);
-	}, []);
+	}, [connectionId]);
 
-	const onSubmit = async () => {
+	const onSubmit = async (data: any) => {
 		try {
-			// const { data } = await ConnectionService.(projectId!, "github", connectionName!);
+			await ConnectionService.update(connectionId!, data);
+			addToast({
+				id: Date.now().toString(),
+				message: t("connectionUpdatedSuccessfully"),
+				type: "success",
+			});
 		} catch (error) {
-			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
+			const errorMessage = error?.response?.data || tErrors("errorUpdatingConnection");
 
 			addToast({
 				id: Date.now().toString(),
@@ -103,7 +114,7 @@ export const EditConnection = () => {
 			});
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
+				`${tErrors("errorUpdatingConnectionExtended", { error: errorMessage })}`
 			);
 		}
 	};
@@ -135,7 +146,7 @@ export const EditConnection = () => {
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" title={t("addNewConnection")} />
+			<TabFormHeader className="mb-11" title={t("editConnection")} />
 
 			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative mb-6">
@@ -145,7 +156,6 @@ export const EditConnection = () => {
 						disabled={!!connectionId}
 						isError={!!errors.connectionName}
 						placeholder={t("github.placeholders.name")}
-						value={connection?.name}
 					/>
 				</div>
 
