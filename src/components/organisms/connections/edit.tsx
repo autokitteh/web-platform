@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -27,14 +27,15 @@ export const EditConnection = () => {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
-		formState: { errors, isValid },
-		handleSubmit,
+		formState: { errors },
 		register,
 		setValue,
 	} = useForm({
 		resolver: zodResolver(connectionSchema),
 		mode: "onChange",
 	});
+
+	const childFormSubmitRef = useRef<(() => void) | null>(null);
 
 	const fetchConnection = async (connectionId: string) => {
 		try {
@@ -96,42 +97,26 @@ export const EditConnection = () => {
 		fetchConnection(connectionId!);
 	}, [connectionId]);
 
-	const onSubmit = async (data: any) => {
-		try {
-			// await ConnectionService.update(connectionId!, data);
-			addToast({
-				id: Date.now().toString(),
-				message: t("connectionUpdatedSuccessfully"),
-				type: "success",
-			});
-		} catch (error) {
-			const errorMessage = error?.response?.data || tErrors("errorUpdatingConnection");
-
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("errorUpdatingConnectionExtended", { error: errorMessage })}`
-			);
-		}
-	};
-
 	const handleIntegrationChange = (option: SingleValue<SelectOption>): void => {
 		setValue("integration", option as SelectOption);
 	};
 
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
 		github: (
-			<GithubIntegrationForm connection={connection} editMode triggerParentFormSubmit={handleSubmit(onSubmit)} />
+			<GithubIntegrationForm
+				connection={connection}
+				connectionId={connectionId}
+				editMode
+				setChildFormSubmitRef={childFormSubmitRef}
+				triggerParentFormSubmit={() => {}}
+			/>
 		),
 		google: (
 			<GoogleIntegrationForm
 				connectionName={connection?.name}
-				isConnectionNameValid={connection?.name ? isValid : false}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
+				isConnectionNameValid={connection?.name ? true : false}
+				setChildFormSubmitRef={childFormSubmitRef}
+				triggerParentFormSubmit={() => {}}
 			/>
 		),
 	};
@@ -148,12 +133,12 @@ export const EditConnection = () => {
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" title={t("editConnection")} />
 
-			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
+			<form className="mb-6 flex w-5/6 flex-col">
 				<div className="relative mb-6">
 					<Input
 						aria-label={t("github.placeholders.name")}
 						{...register("connectionName", { required: "Connection name is required" })}
-						disabled={!!connectionId}
+						disabled
 						isError={!!errors.connectionName}
 						placeholder={t("github.placeholders.name")}
 					/>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -47,22 +47,30 @@ export const AddConnection = () => {
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const onSubmit = async () => {
-		try {
-			const { data } = await ConnectionService.create(projectId!, "github", connectionName!);
-			setConnectionId(data);
-		} catch (error) {
-			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
+	const childFormSubmitRef = useRef<(() => void) | null>(null);
 
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
-			);
+	const onSubmit = async (data: any) => {
+		if (!connectionId) {
+			try {
+				const { data } = await ConnectionService.create(projectId!, selectedIntegration.value, connectionName!);
+				setConnectionId(data);
+				// After successfully creating the connection, trigger the child form submission
+				if (childFormSubmitRef.current) {
+					childFormSubmitRef.current();
+				}
+			} catch (error) {
+				const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
+
+				addToast({
+					id: Date.now().toString(),
+					message: errorMessage,
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.connectionService,
+					`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
+				);
+			}
 		}
 	};
 
@@ -71,11 +79,18 @@ export const AddConnection = () => {
 	};
 
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
-		github: <GithubIntegrationForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
+		github: (
+			<GithubIntegrationForm
+				connectionId={connectionId}
+				setChildFormSubmitRef={childFormSubmitRef}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
+			/>
+		),
 		google: (
 			<GoogleIntegrationForm
 				connectionName={connectionName}
 				isConnectionNameValid={connectionName ? isValid : false}
+				setChildFormSubmitRef={childFormSubmitRef}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 			/>
 		),

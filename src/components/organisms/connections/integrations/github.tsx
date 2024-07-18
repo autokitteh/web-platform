@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
@@ -27,11 +27,13 @@ export const GithubIntegrationForm = ({
 	connection,
 	connectionId,
 	editMode,
+	setChildFormSubmitRef,
 	triggerParentFormSubmit,
 }: {
 	connection?: Connection;
 	connectionId?: string;
 	editMode?: boolean;
+	setChildFormSubmitRef: React.MutableRefObject<(() => void) | null>;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t: tErrors } = useTranslation("errors");
@@ -39,7 +41,6 @@ export const GithubIntegrationForm = ({
 	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
 	const { projectId } = useParams();
 	const navigate = useNavigate();
-
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -56,7 +57,6 @@ export const GithubIntegrationForm = ({
 		},
 	});
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const randomForPATWebhook = useMemo(() => randomatic("Aa0", 8), [projectId]);
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
@@ -67,7 +67,6 @@ export const GithubIntegrationForm = ({
 			return;
 		}
 		const { pat, webhookSercet: secret } = getValues();
-
 		setIsLoading(true);
 		try {
 			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
@@ -75,21 +74,16 @@ export const GithubIntegrationForm = ({
 				secret,
 				webhook: webhookUrl,
 			});
-
 			const successMessage = t("connectionCreatedSuccessfully");
-
 			addToast({
 				id: Date.now().toString(),
 				message: successMessage,
 				type: "success",
 			});
-
 			LoggerService.info(namespaces.connectionService, successMessage);
-
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
-
 			addToast({
 				id: Date.now().toString(),
 				message: errorMessage,
@@ -107,7 +101,6 @@ export const GithubIntegrationForm = ({
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-
 			addToast({
 				id: Date.now().toString(),
 				message: t("github.copySuccess"),
@@ -128,7 +121,6 @@ export const GithubIntegrationForm = ({
 
 			return;
 		}
-
 		try {
 			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
 		} catch (error) {
@@ -248,7 +240,9 @@ export const GithubIntegrationForm = ({
 		</div>
 	);
 
-	console.log("connection", connection);
+	useEffect(() => {
+		setChildFormSubmitRef.current = handleSubmit(onSubmit);
+	}, [handleSubmit, onSubmit, setChildFormSubmitRef]);
 
 	const selectedIntegrationType = {
 		label: connection?.integrationName,
