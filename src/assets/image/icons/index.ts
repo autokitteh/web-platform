@@ -34,3 +34,5 @@ export { default as SearchIcon } from "@assets/image/icons/Search.svg?react";
 export { default as ArrowZigzagIcon } from "@assets/image/icons/ArrowZigzag.svg?react";
 export { default as MenuCircleIcon } from "@assets/image/icons/MenuCircle.svg?react";
 export { default as GithubIcon } from "@assets/image/icons/Github.svg?react";
+export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
+export { default as PipeCircleIcon } from "@assets/image/icons/PipeCircle.svg?react";

@@ -22,7 +22,7 @@ export const CommunityProjectsTabs = () => {
 			<div className="sticky -top-8 z-20 -mt-5 bg-gray-black-300 pb-0 pt-3">
 				<div
 					className={
-						"flex select-none items-center gap-1 xl:gap-4 2xl:gap-5 3xl:gap-6 " +
+						"flex select-none items-center gap-2 xl:gap-4 2xl:gap-5 3xl:gap-6 " +
 						"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2"
 					}
 				>
@@ -42,7 +42,7 @@ export const CommunityProjectsTabs = () => {
 				</div>
 			</div>
 
-			<div className="mt-6 grid grid-cols-auto-fit-305 gap-x-4 gap-y-5 text-black">
+			<div className="mt-4 grid grid-cols-auto-fit-305 gap-x-4 gap-y-5 text-black">
 				{activeCategory
 					? activeCategory.cards.map((card, index) => (
 							<CommunityProjectCard card={card} category={activeCategory.name} key={index} />
