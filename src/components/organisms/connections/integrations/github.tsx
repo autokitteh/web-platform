@@ -10,6 +10,7 @@ import { baseUrl, namespaces } from "@constants";
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { ConnectionFormIds } from "@enums/components";
+import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
 import { Connection } from "@type/models";
 import { isConnectionType } from "@utilities";
@@ -30,7 +31,7 @@ export const GithubIntegrationForm = ({
 }: {
 	connection?: Connection;
 	connectionId?: string;
-	editMode: boolean;
+	editMode?: boolean;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t: tErrors } = useTranslation("errors");
@@ -266,6 +267,7 @@ export const GithubIntegrationForm = ({
 					}}
 					options={githubIntegrationAuthMethods}
 					placeholder={t("placeholders.selectConnectionType")}
+					value={selectedIntegrationType}
 				/>
 
 				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat
