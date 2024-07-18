@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
@@ -56,7 +56,7 @@ export const GithubIntegrationForm = ({
 		},
 	});
 
-	const randomForPATWebhook = useMemo(() => randomatic("Aa0", 8), [projectId]);
+	const randomForPATWebhook = () => randomatic("Aa0", 8);
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps

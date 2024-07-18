@@ -15,7 +15,7 @@ import { IntegrationType } from "@type/components";
 import { Connection } from "@type/models";
 import { connectionSchema } from "@validations/index";
 
-import { ErrorMessage, Input, Select } from "@components/atoms";
+import { Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { GithubIntegrationForm, GoogleIntegrationForm } from "@components/organisms/connections/integrations";
 
@@ -106,7 +106,6 @@ export const EditConnection = () => {
 			<GithubIntegrationForm
 				connection={connection}
 				connectionId={connectionId}
-				editMode
 				setChildFormSubmitRef={childFormSubmitRef}
 				triggerParentFormSubmit={() => {}}
 			/>

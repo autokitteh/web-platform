@@ -49,7 +49,7 @@ export const AddConnection = () => {
 
 	const childFormSubmitRef = useRef<(() => void) | null>(null);
 
-	const onSubmit = async (data: any) => {
+	const onSubmit = async () => {
 		if (!connectionId) {
 			try {
 				const { data } = await ConnectionService.create(projectId!, selectedIntegration.value, connectionName!);

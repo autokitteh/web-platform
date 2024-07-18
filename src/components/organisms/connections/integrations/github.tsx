@@ -26,13 +26,11 @@ import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons"
 export const GithubIntegrationForm = ({
 	connection,
 	connectionId,
-	editMode,
 	setChildFormSubmitRef,
 	triggerParentFormSubmit,
 }: {
 	connection?: Connection;
 	connectionId?: string;
-	editMode?: boolean;
 	setChildFormSubmitRef: React.MutableRefObject<(() => void) | null>;
 	triggerParentFormSubmit: () => void;
 }) => {
