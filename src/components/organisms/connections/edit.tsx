@@ -98,7 +98,7 @@ export const EditConnection = () => {
 
 	const onSubmit = async (data: any) => {
 		try {
-			await ConnectionService.update(connectionId!, data);
+			// await ConnectionService.update(connectionId!, data);
 			addToast({
 				id: Date.now().toString(),
 				message: t("connectionUpdatedSuccessfully"),
