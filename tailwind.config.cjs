@@ -12,6 +12,7 @@ module.exports = {
     extend: {
       fontSize: {
         "settings-title": "1.3rem",
+        10: "10px",
       },
       flex: {
         5: "5 5 0%",
@@ -42,7 +43,10 @@ module.exports = {
       },
       gridTemplateColumns: {
         'auto-fit-305': 'repeat(auto-fit, minmax(290px, 1fr))',
-      }
+      },
+      boxShadow: {
+        'community-card': '0px 9px 27px -3px rgba(0, 0, 0, 0.11)',
+      },
     },
     screens: {
       sm: "640px",
@@ -101,7 +105,9 @@ module.exports = {
         200: "#f1f1f1",
         300: "#d2d2d7",
         400: "#818181",
+        450: "#EFECE7",
         500: "#535353",
+        550: "#EDEDED",
         600: "#454343",
         700: "#2D2D2D",
         800: "#1B1B1B",

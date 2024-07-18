@@ -9,6 +9,7 @@ export type CommunityProjectCardType = {
 	counter: number;
 	description: string;
 	integrations: Integration[];
+	title: string;
 };
 
 export type CommunityProjectCategory = {
