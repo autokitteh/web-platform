@@ -92,6 +92,7 @@ export const ConnectionsTable = () => {
 
 	const handleConnectionEditClick = useCallback((connectionId: string) => {
 		navigate(`${connectionId}/edit`);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return isLoading ? (
