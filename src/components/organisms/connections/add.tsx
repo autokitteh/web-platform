@@ -22,7 +22,7 @@ export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
 
 	const {
-		formState: { errors, isValid },
+		formState: { errors },
 		handleSubmit,
 		register,
 		setValue,
@@ -81,19 +81,12 @@ export const AddConnection = () => {
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
 		github: (
 			<GithubIntegrationForm
-				connectionId={connectionId}
+				connection={undefined}
 				setChildFormSubmitRef={childFormSubmitRef}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 			/>
 		),
-		google: (
-			<GoogleIntegrationForm
-				connectionName={connectionName}
-				isConnectionNameValid={connectionName ? isValid : false}
-				setChildFormSubmitRef={childFormSubmitRef}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-			/>
-		),
+		google: <GoogleIntegrationForm />,
 	};
 
 	const selectedIntegrationComponent: JSX.Element | null = selectedIntegration

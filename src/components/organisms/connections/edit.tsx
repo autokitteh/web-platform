@@ -25,14 +25,19 @@ export const EditConnection = () => {
 	const [connection, setConnection] = useState<Connection | undefined>();
 	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
-
 	const {
 		formState: { errors },
 		register,
+		reset,
 		setValue,
+		watch,
 	} = useForm({
 		resolver: zodResolver(connectionSchema),
 		mode: "onChange",
+		defaultValues: {
+			connectionName: "",
+			integration: {},
+		},
 	});
 
 	const childFormSubmitRef = useRef<(() => void) | null>(null);
@@ -78,6 +83,14 @@ export const EditConnection = () => {
 				label: connectionResponse.integrationName,
 				value: connectionResponse.integrationUniqueName,
 			});
+
+			const resetForm = () => {
+				reset({
+					connectionName: connection?.name,
+				});
+			};
+
+			resetForm();
 		} catch (error) {
 			const errorMessage = tErrors("errorFetchingConnection");
 
@@ -93,9 +106,12 @@ export const EditConnection = () => {
 		}
 	};
 
+	const { connectionName } = watch();
+
 	useEffect(() => {
 		fetchConnection(connectionId!);
-	}, [connectionId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleIntegrationChange = (option: SingleValue<SelectOption>): void => {
 		setValue("integration", option as SelectOption);
@@ -105,19 +121,12 @@ export const EditConnection = () => {
 		github: (
 			<GithubIntegrationForm
 				connection={connection}
-				connectionId={connectionId}
+				editMode
 				setChildFormSubmitRef={childFormSubmitRef}
 				triggerParentFormSubmit={() => {}}
 			/>
 		),
-		google: (
-			<GoogleIntegrationForm
-				connectionName={connection?.name}
-				isConnectionNameValid={connection?.name ? true : false}
-				setChildFormSubmitRef={childFormSubmitRef}
-				triggerParentFormSubmit={() => {}}
-			/>
-		),
+		google: <GoogleIntegrationForm />,
 	};
 
 	const selectedIntegration = {
@@ -137,6 +146,7 @@ export const EditConnection = () => {
 					<Input
 						aria-label={t("github.placeholders.name")}
 						{...register("connectionName", { required: "Connection name is required" })}
+						defaultValue={connectionName}
 						disabled
 						isError={!!errors.connectionName}
 						placeholder={t("github.placeholders.name")}
