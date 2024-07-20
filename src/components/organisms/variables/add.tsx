@@ -9,7 +9,7 @@ import { VariablesService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
-import { ErrorMessage, Input, Toggle } from "@components/atoms";
+import { ErrorMessage, Input, SecretInput, Toggle } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 
 import { LockSolid } from "@assets/image/icons";
@@ -95,6 +95,12 @@ export const AddVariable = () => {
 
 				<div className="flex items-center gap-2" title={tForm("isSecret")}>
 					<Toggle checked={isSecret} onChange={setIsSecret} /> <LockSolid className="h-4 w-4 fill-white" />
+				</div>
+
+				<div className="relative">
+					<SecretInput isLocked />
+
+					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
 			</form>
 		</div>
