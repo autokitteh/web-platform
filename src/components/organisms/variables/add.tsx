@@ -98,7 +98,7 @@ export const AddVariable = () => {
 				</div>
 
 				<div className="relative">
-					<SecretInput isLocked />
+					<SecretInput isLockedDisabled />
 
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>

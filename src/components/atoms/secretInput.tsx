@@ -16,6 +16,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		disabled,
 		isError,
 		isLocked,
+		isLockedDisabled,
 		isRequired,
 		onChange,
 		onLockClick,
@@ -97,6 +98,8 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const inputType = isLocked ? "password" : "text";
 
+	const lockedIcon = isLocked ? UnlockedLockIcon : LockIcon;
+
 	return (
 		<div className="flex flex-row">
 			<div className={wrapperClass}>
@@ -120,16 +123,16 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					<span className={borderOverlayLabelClass} />
 				</label>
 
-				{isLocked ? (
+				{isLockedDisabled ? (
 					<button onClick={onLockClick} type="button">
 						<IconSvg className="mr-2" size="md" src={LockIcon} />
 					</button>
 				) : null}
 			</div>
 
-			{!isLocked ? (
+			{!isLockedDisabled ? (
 				<button className={iconClass} onClick={onLockClick} type="button">
-					<IconSvg size="md" src={UnlockedLockIcon} />{" "}
+					<IconSvg size="md" src={lockedIcon} />
 				</button>
 			) : null}
 		</div>
