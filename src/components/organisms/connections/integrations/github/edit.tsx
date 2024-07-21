@@ -58,13 +58,7 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 
 			return;
 		}
-		if (!vars) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-			});
-
+		if (!vars?.length) {
 			return;
 		}
 

@@ -83,11 +83,7 @@ export const AddConnection = () => {
 
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
 		github: (
-			<GithubIntegrationAddForm
-				connectionId={connectionId}
-				setChildFormSubmitRef={childFormSubmitRef}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-			/>
+			<GithubIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		google: <GoogleIntegrationForm />,
 	};
