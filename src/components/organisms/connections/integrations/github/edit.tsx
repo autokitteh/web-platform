@@ -13,7 +13,6 @@ import { GithubConnectionType } from "@enums";
 import { ConnectionFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService, VariablesService } from "@services";
-import { Connection } from "@type/models";
 import { githubIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
@@ -23,15 +22,7 @@ import { Accordion } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GithubIntegrationEditForm = ({
-	connection,
-	setChildFormSubmitRef,
-	triggerParentFormSubmit,
-}: {
-	connection?: Connection;
-	setChildFormSubmitRef: React.MutableRefObject<(() => void) | null>;
-	triggerParentFormSubmit: () => void;
-}) => {
+export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: string }) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
 	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
@@ -57,7 +48,7 @@ export const GithubIntegrationEditForm = ({
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
 	const fetchVariables = async () => {
-		const { data: vars, error } = await VariablesService.list(connection!.connectionId);
+		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -101,14 +92,9 @@ export const GithubIntegrationEditForm = ({
 
 	const onSubmit = useCallback(async () => {
 		const { pat, webhookSercet: secret } = getValues();
-		if (!connection) {
-			triggerParentFormSubmit();
-
-			return;
-		}
 		setIsLoading(true);
 		try {
-			await HttpService.post(`/github/save?cid=${connection!.connectionId}&origin=web`, {
+			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
 				pat,
 				secret,
 				webhook: webhookUrl,
@@ -156,13 +142,8 @@ export const GithubIntegrationEditForm = ({
 	};
 
 	const handleGithubOAuth = async () => {
-		if (!connection?.connectionId) {
-			triggerParentFormSubmit();
-
-			return;
-		}
 		try {
-			window.open(`${baseUrl}/oauth/start/github?cid=${connection?.connectionId}&origin=web`, "_blank");
+			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -279,10 +260,6 @@ export const GithubIntegrationEditForm = ({
 			</Button>
 		</div>
 	);
-
-	useEffect(() => {
-		setChildFormSubmitRef.current = handleSubmit(onSubmit);
-	}, [handleSubmit, onSubmit, setChildFormSubmitRef]);
 
 	const selectConnectionType = (option: SingleValue<SelectOption>) => {
 		setSelectedConnectionType(option as SelectOption);
