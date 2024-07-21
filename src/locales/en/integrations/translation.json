@@ -1,5 +1,6 @@
 {
 	"addNewConnection": "Add new connection",
+	"editConnection": "Edit connection",
 	"connectionCreatedSuccessfully": "Connection created successfully",
 	"buttons": {
 		"copy": "Copy",

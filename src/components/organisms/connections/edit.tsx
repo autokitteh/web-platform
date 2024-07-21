@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,7 +23,7 @@ import { GithubIntegrationEditForm } from "@components/organisms/connections/int
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");
 	const { connectionId } = useParams();
-	const [connection, setConnection] = useState<Connection | undefined>();
+	const [connection, setConnection] = useState<Connection>();
 	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
 	const {
@@ -40,8 +40,6 @@ export const EditConnection = () => {
 			integration: {},
 		},
 	});
-
-	const childFormSubmitRef = useRef<(() => void) | null>(null);
 
 	const fetchConnection = async (connectionId: string) => {
 		try {
@@ -87,7 +85,7 @@ export const EditConnection = () => {
 
 			const resetForm = () => {
 				reset({
-					connectionName: connection?.name,
+					connectionName: connectionResponse.name,
 				});
 			};
 
@@ -119,13 +117,7 @@ export const EditConnection = () => {
 	};
 
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
-		github: (
-			<GithubIntegrationEditForm
-				connection={connection}
-				setChildFormSubmitRef={childFormSubmitRef}
-				triggerParentFormSubmit={() => {}}
-			/>
-		),
+		github: <GithubIntegrationEditForm connectionId={connectionId!} />,
 		google: <GoogleIntegrationForm />,
 	};
 
