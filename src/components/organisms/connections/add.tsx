@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -55,10 +55,6 @@ export const AddConnection = () => {
 			try {
 				const { data } = await ConnectionService.create(projectId!, selectedIntegration.value, connectionName!);
 				setConnectionId(data);
-				// After successfully creating the connection, trigger the child form submission
-				if (childFormSubmitRef.current) {
-					childFormSubmitRef.current();
-				}
 			} catch (error) {
 				const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
 
@@ -75,6 +71,12 @@ export const AddConnection = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (connectionId && childFormSubmitRef.current) {
+			childFormSubmitRef.current();
+		}
+	}, [connectionId]);
+
 	const handleIntegrationChange = (option: SingleValue<SelectOption>): void => {
 		setValue("integration", option as SelectOption);
 	};
@@ -82,6 +84,7 @@ export const AddConnection = () => {
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
 		github: (
 			<GithubIntegrationAddForm
+				connectionId={connectionId}
 				setChildFormSubmitRef={childFormSubmitRef}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 			/>
