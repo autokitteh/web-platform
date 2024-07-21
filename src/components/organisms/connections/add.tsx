@@ -88,7 +88,7 @@ export const AddConnection = () => {
 		google: <GoogleIntegrationForm />,
 	};
 
-	const selectedIntegrationComponent: JSX.Element | null = selectedIntegration
+	const selectedIntegrationComponent = selectedIntegration
 		? integrationComponents[selectedIntegration.value as IntegrationType]
 		: null;
 
