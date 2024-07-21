@@ -10,8 +10,7 @@ import { Tab } from "@components/atoms";
 import { TrashCanIcon } from "@assets/image/icons";
 
 export const OutputTabs: React.FC = () => {
-	const logs = useLoggerStore((state) => state.logs);
-	const clearLogs = useLoggerStore((state) => state.clearLogs);
+	const { clearLogs, logs } = useLoggerStore((state) => state);
 
 	const ouputTextStyle = {
 		[LoggerLevel.debug]: "",
