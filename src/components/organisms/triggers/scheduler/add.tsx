@@ -8,14 +8,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } from "@constants";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
+import IndexedDBService from "@services/indexedDb.service";
 import { schedulerTriggerSchema } from "@validations";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
+
+const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export const TriggerSchedulerForm = ({
 	formId,
@@ -26,7 +29,6 @@ export const TriggerSchedulerForm = ({
 }) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const { resources } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation(["errors", "services"]);
@@ -50,6 +52,8 @@ export const TriggerSchedulerForm = ({
 					throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
 				}
 				setCronConnectionId(connectionId);
+
+				const resources = await dbService.getAll();
 
 				const formattedResources = Object.keys(resources).map((name) => ({
 					label: name,

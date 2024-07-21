@@ -10,10 +10,11 @@ import { namespaces } from "@constants";
 import { TriggerFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
+import IndexedDBService from "@services/indexedDb.service";
 import { Trigger, TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -21,10 +22,11 @@ import { TabFormHeader } from "@components/molecules";
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
+const dbService = new IndexedDBService("ProjectDB", "resources");
+
 export const DefaultEditTrigger = () => {
 	const { projectId, triggerId } = useParams();
 	const navigate = useNavigate();
-	const { resources } = useProjectStore();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isSaving, setIsSaving] = useState(false);
@@ -48,6 +50,8 @@ export const DefaultEditTrigger = () => {
 				value: item.connectionId,
 			}));
 			setConnections(formattedConnections || []);
+
+			const resources = dbService.getAll();
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				label: name,

@@ -36,7 +36,16 @@ const useFileStore = create<FileState>(
 			closeOpenedFile: (fileName: string) =>
 				set(
 					produce((state: FileState) => {
-						state.openedFiles = state.openedFiles.filter((file) => file.name !== fileName);
+						const fileRemoved = state.openedFiles.filter((file) => file.name !== fileName);
+						if (!fileRemoved.length) {
+							state.openedFiles = [];
+
+							return;
+						}
+						const firstFile = { ...fileRemoved[0], isActive: true };
+						fileRemoved.shift();
+
+						state.openedFiles = [firstFile, ...fileRemoved];
 					})
 				),
 			openFileAsActive: (fileName: string) =>

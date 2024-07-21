@@ -9,15 +9,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { namespaces } from "@constants";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
+import IndexedDBService from "@services/indexedDb.service";
 import { TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
 
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
+
+const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export const DefaultTriggerForm = ({
 	formId,
@@ -28,7 +31,6 @@ export const DefaultTriggerForm = ({
 }) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const { resources } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
@@ -50,6 +52,7 @@ export const DefaultTriggerForm = ({
 				value: item.connectionId,
 			}));
 			setConnections(formattedConnections || []);
+			const resources = await dbService.getAll();
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				label: name,

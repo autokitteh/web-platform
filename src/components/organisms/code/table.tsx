@@ -43,8 +43,7 @@ export const CodeTable = () => {
 	const fetchResources = async () => {
 		setIsLoading(true);
 		try {
-			const clearPromise = await dbService.clearStore();
-			console.log("All resources have been cleared successfully.");
+			await dbService.clearStore();
 			setOpenedFiles([]);
 
 			const { data: resourcesFromService, error } = await ProjectsService.getResources(projectId!);
@@ -61,8 +60,6 @@ export const CodeTable = () => {
 			const loadedResources = await dbService.getAll();
 			setResources(loadedResources);
 		} catch (error) {
-			console.log("Error occurred while fetching resources:", error);
-
 			addToast({
 				id: Date.now().toString(),
 				message: error.message,

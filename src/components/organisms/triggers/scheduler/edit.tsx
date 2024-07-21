@@ -9,20 +9,22 @@ import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } 
 import { TriggerFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
+import IndexedDBService from "@services/indexedDb.service";
 import { Trigger } from "@type/models";
 import { schedulerTriggerSchema } from "@validations";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 import { Accordion, TabFormHeader } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
+const dbService = new IndexedDBService("ProjectDB", "resources");
+
 export const SchedulerEditTrigger = () => {
 	const { projectId, triggerId } = useParams();
 	const navigate = useNavigate();
-	const { resources } = useProjectStore();
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const addToast = useToastStore((state) => state.addToast);
@@ -47,6 +49,8 @@ export const SchedulerEditTrigger = () => {
 				throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
 			}
 			setCronConnectionId(connectionId);
+
+			const resources = await dbService.getAll();
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				label: name,
