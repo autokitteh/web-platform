@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
@@ -24,11 +24,9 @@ import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons"
 
 export const GithubIntegrationAddForm = ({
 	connectionId,
-	setChildFormSubmitRef,
 	triggerParentFormSubmit,
 }: {
 	connectionId?: string;
-	setChildFormSubmitRef: React.MutableRefObject<(() => void) | null>;
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t: tErrors } = useTranslation("errors");
@@ -55,13 +53,9 @@ export const GithubIntegrationAddForm = ({
 	const randomForPATWebhook = randomatic("Aa0", 8);
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
-	const onSubmit = useCallback(async () => {
+	const createPatConnection = async () => {
 		const { pat, webhookSercet: secret } = getValues();
-		if (!connectionId) {
-			triggerParentFormSubmit();
 
-			return;
-		}
 		setIsLoading(true);
 		try {
 			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
@@ -78,7 +72,7 @@ export const GithubIntegrationAddForm = ({
 			LoggerService.info(namespaces.connectionService, successMessage);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
+			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
 			addToast({
 				id: Date.now().toString(),
 				message: errorMessage,
@@ -91,8 +85,7 @@ export const GithubIntegrationAddForm = ({
 		} finally {
 			setIsLoading(false);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	};
 
 	const copyToClipboard = async (text: string) => {
 		try {
@@ -112,11 +105,6 @@ export const GithubIntegrationAddForm = ({
 	};
 
 	const handleGithubOAuth = async () => {
-		if (!connectionId) {
-			triggerParentFormSubmit();
-
-			return;
-		}
 		try {
 			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
@@ -132,6 +120,14 @@ export const GithubIntegrationAddForm = ({
 			);
 		} finally {
 			setIsLoading(false);
+		}
+	};
+
+	const onSubmit = () => {
+		if (connectionId) {
+			createPatConnection();
+		} else {
+			triggerParentFormSubmit();
 		}
 	};
 
@@ -229,7 +225,7 @@ export const GithubIntegrationAddForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
-				onClick={handleGithubOAuth}
+				onClick={() => triggerParentFormSubmit()}
 				variant="outline"
 			>
 				{t("buttons.startOAuthFlow")}
@@ -237,14 +233,23 @@ export const GithubIntegrationAddForm = ({
 		</div>
 	);
 
+	useEffect(() => {
+		if (!selectedConnectionType) {
+			return;
+		}
+		if (selectedConnectionType.value === GithubConnectionType.Pat) {
+			createPatConnection();
+
+			return;
+		}
+		if (selectedConnectionType.value === GithubConnectionType.Oauth) {
+			handleGithubOAuth();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
+
 	const selectConnectionType = (option: SingleValue<SelectOption>) => {
 		setSelectedConnectionType(option as SelectOption);
-		setChildFormSubmitRef.current =
-			option?.value === GithubConnectionType.Pat
-				? handleSubmit(onSubmit)
-				: option?.value === GithubConnectionType.Oauth
-					? handleGithubOAuth
-					: null;
 	};
 
 	return (
