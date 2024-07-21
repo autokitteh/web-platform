@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
@@ -12,8 +12,8 @@ import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists"
 import { GithubConnectionType } from "@enums";
 import { ConnectionFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
-import { HttpService, LoggerService, VariablesService } from "@services";
-import { Connection, Variable } from "@type/models";
+import { HttpService, LoggerService } from "@services";
+import { Connection } from "@type/models";
 import { githubIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
@@ -23,14 +23,12 @@ import { Accordion } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GithubIntegrationForm = ({
+export const GithubIntegrationAddForm = ({
 	connection,
-	editMode,
 	setChildFormSubmitRef,
 	triggerParentFormSubmit,
 }: {
 	connection?: Connection;
-	editMode?: boolean;
 	setChildFormSubmitRef: React.MutableRefObject<(() => void) | null>;
 	triggerParentFormSubmit: () => void;
 }) => {
@@ -57,48 +55,6 @@ export const GithubIntegrationForm = ({
 
 	const randomForPATWebhook = randomatic("Aa0", 8);
 	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
-
-	const [_variables, setVariables] = useState<Variable[]>([]);
-
-	const fetchVariables = async () => {
-		const { data: vars, error } = await VariablesService.list(connection!.connectionId);
-		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-			});
-
-			return;
-		}
-		if (!vars) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-			});
-
-			return;
-		}
-
-		const isConnectionTypePat = vars.some((variable) => variable.name === "pat");
-		if (isConnectionTypePat) {
-			const connectionType = githubIntegrationAuthMethods.find(
-				(connectionMethod) => connectionMethod.value === GithubConnectionType.Pat
-			);
-			setSelectedConnectionType(connectionType!);
-			setVariables(vars);
-
-			return;
-		}
-	};
-
-	useEffect(() => {
-		if (editMode) {
-			fetchVariables();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const onSubmit = useCallback(async () => {
 		const { pat, webhookSercet: secret } = getValues();
@@ -164,6 +120,7 @@ export const GithubIntegrationForm = ({
 		}
 		try {
 			window.open(`${baseUrl}/oauth/start/github?cid=${connection?.connectionId}&origin=web`, "_blank");
+			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -281,12 +238,15 @@ export const GithubIntegrationForm = ({
 		</div>
 	);
 
-	useEffect(() => {
-		setChildFormSubmitRef.current = handleSubmit(onSubmit);
-	}, [handleSubmit, onSubmit, setChildFormSubmitRef]);
-
 	const selectConnectionType = (option: SingleValue<SelectOption>) => {
 		setSelectedConnectionType(option as SelectOption);
+
+		setChildFormSubmitRef.current =
+			selectedConnectionType?.value === GithubConnectionType.Pat
+				? handleSubmit(onSubmit)
+				: selectedConnectionType?.value === GithubConnectionType.Oauth
+					? handleGithubOAuth
+					: null;
 	};
 
 	return (

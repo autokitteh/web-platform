@@ -17,7 +17,8 @@ import { connectionSchema } from "@validations/index";
 
 import { Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { GithubIntegrationForm, GoogleIntegrationForm } from "@components/organisms/connections/integrations";
+import { GoogleIntegrationForm } from "@components/organisms/connections/integrations";
+import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
 
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");
@@ -119,9 +120,8 @@ export const EditConnection = () => {
 
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
 		github: (
-			<GithubIntegrationForm
+			<GithubIntegrationEditForm
 				connection={connection}
-				editMode
 				setChildFormSubmitRef={childFormSubmitRef}
 				triggerParentFormSubmit={() => {}}
 			/>
