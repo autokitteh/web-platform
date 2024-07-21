@@ -13,7 +13,6 @@ import { GithubConnectionType } from "@enums";
 import { ConnectionFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
-import { Connection } from "@type/models";
 import { githubIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
@@ -24,11 +23,11 @@ import { Accordion } from "@components/molecules";
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const GithubIntegrationAddForm = ({
-	connection,
+	connectionId,
 	setChildFormSubmitRef,
 	triggerParentFormSubmit,
 }: {
-	connection?: Connection;
+	connectionId?: string;
 	setChildFormSubmitRef: React.MutableRefObject<(() => void) | null>;
 	triggerParentFormSubmit: () => void;
 }) => {
@@ -58,14 +57,14 @@ export const GithubIntegrationAddForm = ({
 
 	const onSubmit = useCallback(async () => {
 		const { pat, webhookSercet: secret } = getValues();
-		if (!connection) {
+		if (!connectionId) {
 			triggerParentFormSubmit();
 
 			return;
 		}
 		setIsLoading(true);
 		try {
-			await HttpService.post(`/github/save?cid=${connection!.connectionId}&origin=web`, {
+			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
 				pat,
 				secret,
 				webhook: webhookUrl,
@@ -113,13 +112,13 @@ export const GithubIntegrationAddForm = ({
 	};
 
 	const handleGithubOAuth = async () => {
-		if (!connection?.connectionId) {
+		if (!connectionId) {
 			triggerParentFormSubmit();
 
 			return;
 		}
 		try {
-			window.open(`${baseUrl}/oauth/start/github?cid=${connection?.connectionId}&origin=web`, "_blank");
+			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
@@ -240,11 +239,10 @@ export const GithubIntegrationAddForm = ({
 
 	const selectConnectionType = (option: SingleValue<SelectOption>) => {
 		setSelectedConnectionType(option as SelectOption);
-
 		setChildFormSubmitRef.current =
-			selectedConnectionType?.value === GithubConnectionType.Pat
+			option?.value === GithubConnectionType.Pat
 				? handleSubmit(onSubmit)
-				: selectedConnectionType?.value === GithubConnectionType.Oauth
+				: option?.value === GithubConnectionType.Oauth
 					? handleGithubOAuth
 					: null;
 	};
