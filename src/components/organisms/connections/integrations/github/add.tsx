@@ -36,6 +36,7 @@ export const GithubIntegrationAddForm = ({
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
+	const [webhookUrl, setWebhookUrl] = useState<string>("");
 
 	const {
 		formState: { errors },
@@ -49,9 +50,6 @@ export const GithubIntegrationAddForm = ({
 			webhookSercet: "",
 		},
 	});
-
-	const randomForPATWebhook = randomatic("Aa0", 8);
-	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
 	const createPatConnection = async () => {
 		const { pat, webhookSercet: secret } = getValues();
@@ -247,6 +245,13 @@ export const GithubIntegrationAddForm = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
+
+	useEffect(() => {
+		const randomForPATWebhook = randomatic("Aa0", 8);
+		const webhookURL = `${baseUrl}/${randomForPATWebhook}`;
+
+		setWebhookUrl(webhookURL);
+	}, []);
 
 	const selectConnectionType = (option: SingleValue<SelectOption>) => {
 		setSelectedConnectionType(option as SelectOption);

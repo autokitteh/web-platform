@@ -30,7 +30,7 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
-
+	const [webhookUrl, setWebhookUrl] = useState<string>("");
 	const {
 		formState: { errors },
 		getValues,
@@ -43,9 +43,6 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 			webhookSercet: "",
 		},
 	});
-
-	const randomForPATWebhook = randomatic("Aa0", 8);
-	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
 
 	const fetchVariables = async () => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
@@ -81,6 +78,10 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 	useEffect(() => {
 		fetchVariables();
 
+		const randomForPATWebhook = randomatic("Aa0", 8);
+		const webhookURL = `${baseUrl}/${randomForPATWebhook}`;
+
+		setWebhookUrl(webhookURL);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
