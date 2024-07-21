@@ -16,7 +16,7 @@ import { isProduction } from "@constants";
 
 import { DeploymentsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
-import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
+import { ConnectionsTable } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
 import { SessionTableEditorFrame } from "@components/organisms/deployments";
 import { Security } from "@components/organisms/settings";
@@ -79,8 +79,6 @@ export const App: React.FC = () => {
 							<Route element={<ConnectionsTable />} index />
 
 							<Route element={<AddConnection />} path="add" />
-
-							<Route element={<EditConnection />} path=":connectionId/edit" />
 
 							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>
