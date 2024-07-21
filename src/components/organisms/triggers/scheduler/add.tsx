@@ -53,7 +53,7 @@ export const TriggerSchedulerForm = ({
 				}
 				setCronConnectionId(connectionId);
 
-				const resources = await dbService.getAll();
+				const resources = await dbService.fetchResources(projectId!);
 
 				const formattedResources = Object.keys(resources).map((name) => ({
 					label: name,

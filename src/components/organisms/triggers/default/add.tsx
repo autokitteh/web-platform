@@ -52,7 +52,7 @@ export const DefaultTriggerForm = ({
 				value: item.connectionId,
 			}));
 			setConnections(formattedConnections || []);
-			const resources = await dbService.getAll();
+			const resources = await dbService.fetchResources(projectId!);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				label: name,

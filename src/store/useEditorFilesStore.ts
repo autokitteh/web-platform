@@ -8,16 +8,21 @@ interface FileState {
 	updateOpenedFiles: (fileName: string) => void;
 	closeOpenedFile: (fileName: string) => void;
 	openFileAsActive: (fileName: string) => void;
+	openProjectId: string;
+	setOpenProjectId: (projectId: string) => void;
 }
 
 const fileStorePersist: PersistOptions<FileState> = {
 	name: "file-store",
 };
 
-const useFileStore = create<FileState>(
+export const useFileStore = create<FileState>(
 	(persist as any)(
 		(set: any) => ({
 			openedFiles: [],
+			openProjectId: "",
+			setOpenProjectId: (projectId: string) =>
+				set((state: FileState) => ({ ...state, openProjectId: projectId })),
 			setOpenedFiles: (files: { isActive: boolean; name: string }[]) =>
 				set((state: FileState) => ({ ...state, openedFiles: files })),
 			updateOpenedFiles: (fileName: string) =>
@@ -64,5 +69,3 @@ const useFileStore = create<FileState>(
 		fileStorePersist
 	)
 );
-
-export default useFileStore;

@@ -51,7 +51,7 @@ export const DefaultEditTrigger = () => {
 			}));
 			setConnections(formattedConnections || []);
 
-			const resources = dbService.getAll();
+			const resources = await dbService.fetchResources(projectId!);
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				label: name,

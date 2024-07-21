@@ -5,13 +5,11 @@ import { debounce, last } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { monacoLanguages, namespaces } from "@constants";
-import { LoggerService, ProjectsService } from "@services";
+import { monacoLanguages } from "@constants";
 import IndexedDBService from "@services/indexedDb.service";
-import useFileStore from "@store/useEditorFilesStore";
 import { cn } from "@utilities";
 
-import { useToastStore } from "@store";
+import { useFileStore } from "@store";
 
 import { IconButton, Loader, Tab } from "@components/atoms";
 
@@ -25,27 +23,28 @@ export const EditorTabs = () => {
 	const { closeOpenedFile, openFileAsActive, openedFiles } = useFileStore();
 	const [editorKey, setEditorKey] = useState(0);
 
-	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
+	const activeEditorFileName = openedFiles?.find(({ isActive }: { isActive: boolean }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
-	const addToast = useToastStore((state) => state.addToast);
-	const { t: tErrors } = useTranslation(["errors"]);
 
 	const [content, setContent] = useState<string>("");
 
+	const loadContent = async () => {
+		const resources = await dbService.getAll();
+
+		const resource = resources[activeEditorFileName];
+		if (resource) {
+			const byteArray = Array.from(resource);
+			setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
+		} else {
+			setContent(t("noFileText"));
+		}
+	};
+
 	useEffect(() => {
-		const loadContent = async () => {
-			const resources = await dbService.getAll();
-			const resource = resources[activeEditorFileName];
-			if (resource) {
-				const byteArray = Array.from(resource);
-				setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
-			} else {
-				setContent(t("noFileText"));
-			}
-		};
 		loadContent();
-	}, [activeEditorFileName, t]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeEditorFileName, projectId]);
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
@@ -70,39 +69,15 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
-		if (!projectId || !activeEditorFileName) return;
+		if (!projectId || !activeEditorFileName || newContent === t("noFileText")) return;
 		const contentUintArray = new TextEncoder().encode(newContent || "");
 
-		await dbService.put(activeEditorFileName, contentUintArray);
-
-		const resources = await dbService.getAll();
-		const { error } = await ProjectsService.setResources(projectId, {
-			...resources,
-			[activeEditorFileName]: contentUintArray,
-		});
-
-		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("couldntUpdateFile"),
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.projectService,
-				tErrors("couldntUpdateFileExtended", {
-					error: (error as Error).message,
-					fileName: activeEditorFileName,
-				})
-			);
-
-			return;
-		}
-
+		await dbService.put(activeEditorFileName, contentUintArray, projectId);
 		setContent(newContent || "");
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
+	const debouncedUpdateContent = useCallback(debounce(updateContent, 2000), [projectId, activeEditorFileName]);
 
 	const handleUpdateContent = (newContent?: string) => {
 		debouncedUpdateContent(newContent);

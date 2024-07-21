@@ -4,16 +4,19 @@ import { useTranslation } from "react-i18next";
 import { redirect, useParams } from "react-router-dom";
 
 import { ProjectsService } from "@services";
+import IndexedDBService from "@services/indexedDb.service";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useFileStore, useProjectStore, useToastStore } from "@store";
 
 import { ErrorMessage } from "@components/atoms";
 import { ProjectTopbarButtons } from "@components/organisms/topbar/project";
 
+const dbService = new IndexedDBService("ProjectDB", "resources");
+
 export const ProjectTopbar = () => {
-	const { t } = useTranslation(["projects", "buttons"]);
+	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const { projectId } = useParams();
 	const { getProject, renameProject } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
@@ -25,6 +28,8 @@ export const ProjectTopbar = () => {
 			"outline-2 outline-error": !isNameValid,
 		}
 	);
+
+	const { openProjectId, setOpenProjectId, setOpenedFiles } = useFileStore();
 
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
@@ -50,8 +55,21 @@ export const ProjectTopbar = () => {
 		setProject(project);
 	};
 
+	const loadResources = async (clearResources?: boolean) => {
+		if (clearResources) {
+			await dbService.clearStore();
+		}
+	};
+
 	useEffect(() => {
-		loadProject(projectId!);
+		if (projectId) {
+			loadProject(projectId);
+			if (projectId !== openProjectId) {
+				setOpenProjectId(projectId);
+				loadResources(true);
+				setOpenedFiles([]);
+			}
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 

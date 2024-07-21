@@ -6,12 +6,10 @@ import { useParams } from "react-router-dom";
 
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
-import { ProjectsService } from "@services";
 import IndexedDBService from "@services/indexedDb.service";
-import useFileStore from "@store/useEditorFilesStore";
 import { cn } from "@utilities";
 
-import { useModalStore, useToastStore } from "@store";
+import { useFileStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
@@ -28,7 +26,7 @@ export const CodeTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { openFileAsActive, openedFiles, setOpenedFiles } = useFileStore();
+	const { openFileAsActive, openedFiles } = useFileStore();
 
 	const [resources, setResources] = useState<Record<string, Uint8Array>>({});
 	const [isDragOver, setIsDragOver] = useState(false);
@@ -42,44 +40,28 @@ export const CodeTable = () => {
 
 	const fetchResources = async () => {
 		setIsLoading(true);
-		try {
-			await dbService.clearStore();
-			setOpenedFiles([]);
+		const resources = await dbService.fetchResources(projectId!);
+		setResources(resources);
+		setIsLoading(false);
+	};
 
-			const { data: resourcesFromService, error } = await ProjectsService.getResources(projectId!);
-			if (error) {
-				addToast({
-					id: Date.now().toString(),
-					message: (error as Error).message,
-					type: "error",
-				});
-			}
-			for (const [name, content] of Object.entries(resourcesFromService || {})) {
-				await dbService.put(name, new Uint8Array(content));
-			}
-			const loadedResources = await dbService.getAll();
-			setResources(loadedResources);
-		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: error.message,
-				type: "error",
-			});
-		} finally {
-			setIsLoading(false);
-		}
+	const getResources = async () => {
+		setIsLoading(true);
+		const resources = await dbService.getAll();
+		setResources(resources);
+		setIsLoading(false);
 	};
 
 	useEffect(() => {
 		fetchResources();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	}, []);
 
 	const fileUpload = async (files: File[]) => {
 		try {
 			for (const file of files) {
 				const fileContent = await file.arrayBuffer();
-				await dbService.put(file.name, new Uint8Array(fileContent));
+				await dbService.put(file.name, new Uint8Array(fileContent), projectId!);
 			}
 			fetchResources();
 		} catch (error) {
@@ -122,7 +104,7 @@ export const CodeTable = () => {
 		closeModal(ModalName.deleteFile);
 		try {
 			await dbService.delete(selectedRemoveFileName);
-			fetchResources();
+			getResources();
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),

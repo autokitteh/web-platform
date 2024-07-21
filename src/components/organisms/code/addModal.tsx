@@ -8,18 +8,20 @@ import { useParams } from "react-router-dom";
 import { defalutFileExtension, monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
 import { ModalAddCodeAssetsProps } from "@interfaces/components";
+import IndexedDBService from "@services/indexedDb.service";
 import { codeAssetsSchema } from "@validations";
 
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Select } from "@components/atoms";
 import { Modal } from "@components/molecules";
+
+const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
 	const { closeModal } = useModalStore();
-	const { setProjectEmptyResources } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 
 	const languageSelectOptions = Object.keys(monacoLanguages).map((key) => ({
@@ -45,16 +47,17 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const onSubmit = async () => {
 		const { extension, name } = getValues();
 		const newFile = name + extension.value;
-		const { error } = await setProjectEmptyResources(newFile, projectId!);
-		closeModal(ModalName.addCodeAssets);
-
-		if (error) {
+		try {
+			await dbService.addFile(newFile, projectId!);
+		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
 				message: t("fileAddFailedExtended", { fileName: name, projectId }),
 				type: "error",
 			});
 		}
+		closeModal(ModalName.addCodeAssets);
+
 		onSuccess();
 		reset({ extension, name: "" });
 	};
