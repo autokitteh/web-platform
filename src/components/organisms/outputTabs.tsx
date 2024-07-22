@@ -1,16 +1,19 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { LoggerLevel } from "@enums";
 import { OutputTabsVariants } from "@enums/components";
 
 import { useLoggerStore } from "@store";
 
-import { Tab } from "@components/atoms";
+import { Button, Tab } from "@components/atoms";
 
 import { TrashCanIcon } from "@assets/image/icons";
 
 export const OutputTabs: React.FC = () => {
 	const { clearLogs, logs } = useLoggerStore((state) => state);
+	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
 	const ouputTextStyle = {
 		[LoggerLevel.debug]: "",
@@ -25,7 +28,7 @@ export const OutputTabs: React.FC = () => {
 			<div
 				className={
 					`static top-4 flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
-					`scrollbar w-full overflow-x-auto overflow-y-hidden whitespace-nowrap`
+					`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
 				}
 			>
 				<Tab activeTab={OutputTabsVariants.output} value={OutputTabsVariants.output}>
@@ -33,12 +36,9 @@ export const OutputTabs: React.FC = () => {
 				</Tab>
 
 				<div className="mb-1 flex w-full items-center justify-end">
-					<button
-						className="h-5 w-5 cursor-pointer fill-white hover:h-6 hover:w-6 hover:rounded-full hover:border-4 hover:border-white hover:bg-gray-black-200 hover:fill-gray-black-500"
-						onClick={() => clearLogs()}
-					>
+					<Button className="fill-white" onClick={() => clearLogs()} title={t("clear")}>
 						<TrashCanIcon className="h-4 w-4" />
-					</button>
+					</Button>
 				</div>
 			</div>
 
