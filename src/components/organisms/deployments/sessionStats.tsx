@@ -8,8 +8,8 @@ export const DeploymentSessionStats = ({ sessionStats }: { sessionStats?: Deploy
 	const countStyle = (state?: SessionStateType) =>
 		cn("2xl:w-22 inline-block w-14 border-0 p-0 text-sm font-medium", {
 			"hidden": SessionStateType.created === state,
-			"text-gray-black": SessionStateType.stopped === state,
-			"text-green-accent": SessionStateType.completed === state,
+			"text-gray-650": SessionStateType.stopped === state,
+			"text-green-800": SessionStateType.completed === state,
 			"text-red": SessionStateType.error === state,
 		});
 

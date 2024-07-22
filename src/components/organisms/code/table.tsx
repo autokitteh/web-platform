@@ -41,8 +41,8 @@ export const CodeTable = () => {
 	const resourcesEntries = Object.entries(resources);
 	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
 
-	const styleCircle = cn("stroke-gray-400 duration-300 group-hover:stroke-green-accent", {
-		"stroke-green-accent": isDragOver,
+	const styleCircle = cn("stroke-gray-750 duration-300 group-hover:stroke-green-800", {
+		"stroke-green-800": isDragOver,
 	});
 	const styleBase = cn("relative flex-1 rounded-xl duration-300", {
 		"mb-auto mt-auto flex items-center justify-center": isEmpty(sortedResources),
@@ -157,7 +157,7 @@ export const CodeTable = () => {
 		<div className="flex h-full flex-col">
 			<div className="mb-3 flex justify-end gap-6">
 				{!isEmpty(sortedResources) ? (
-					<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-gray-300 hover:text-white">
+					<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-gray-500 hover:text-white">
 						<input
 							accept={allowedExtensions}
 							className="hidden"
@@ -166,7 +166,7 @@ export const CodeTable = () => {
 							type="file"
 						/>
 
-						<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
+						<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 						{t("buttons.addNewFile")}
 					</label>
@@ -174,10 +174,10 @@ export const CodeTable = () => {
 
 				<Button
 					ariaLabel={t("buttons.createNewFile")}
-					className="group w-auto gap-1 p-0 font-semibold text-gray-300 hover:text-white"
+					className="group w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
 					onClick={() => openModal(ModalName.addCodeAssets)}
 				>
-					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
+					<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.createNewFile")}
 				</Button>

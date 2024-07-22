@@ -24,16 +24,16 @@ export const Accordion = ({
 				onClick={() => setIsOpen(!isOpen)}
 			>
 				{!isOpen ? (
-					<PlusAccordionIcon className="fill-gray-300 transition group-hover:fill-green-accent" />
+					<PlusAccordionIcon className="fill-gray-500 transition group-hover:fill-green-800" />
 				) : (
-					<MinusAccordionIcon className="fill-gray-300 transition group-hover:fill-green-accent" />
+					<MinusAccordionIcon className="fill-gray-500 transition group-hover:fill-green-800" />
 				)}
 
 				{title}
 			</Button>
 
 			<motion.div animate={{ height: isOpen ? "auto" : 0 }} className="overflow-hidden" initial={false}>
-				<div className="border-b border-gray-500 py-3.5 text-base">{children}</div>
+				<div className="border-b border-gray-950 py-3.5 text-base">{children}</div>
 			</motion.div>
 		</div>
 	);

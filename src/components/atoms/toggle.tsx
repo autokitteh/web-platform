@@ -5,8 +5,8 @@ import { cn } from "@utilities";
 
 export const Toggle = ({ checked, label, onChange }: ToggleProps) => {
 	const baseStyle = cn(
-		"relative h-5 w-10 rounded-full bg-gray-300 peer-checked:after:translate-x-full peer-checked:after:border-gray-300",
-		"after:absolute after:content-[''] peer-checked:bg-green-accent",
+		"relative h-5 w-10 rounded-full bg-gray-500 peer-checked:after:translate-x-full peer-checked:after:border-gray-500",
+		"after:absolute after:content-[''] peer-checked:bg-green-800",
 		"after:start-[4px] after:top-[2px] after:rounded-full after:border after:bg-white",
 		"after:h-4 after:w-4 after:transition-all"
 	);

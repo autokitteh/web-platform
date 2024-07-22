@@ -20,10 +20,10 @@ export const Loader = ({
 	const spinnerClass = cn(
 		sizeClass,
 		{
-			"after:bg-gray-500": secondColor === "gray",
-			"after:bg-gray-700": secondColor === "dark-gray",
-			"before:bg-gray-500": firstColor === "gray",
-			"before:bg-gray-700": firstColor === "dark-gray",
+			"after:bg-gray-950": secondColor === "gray",
+			"after:bg-gray-1100": secondColor === "dark-gray",
+			"before:bg-gray-950": firstColor === "gray",
+			"before:bg-gray-1100": firstColor === "dark-gray",
 		},
 		{
 			"absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2": isCenter,

@@ -100,13 +100,13 @@ export const ConnectionsTable = () => {
 	) : (
 		<>
 			<div className="flex items-center justify-between">
-				<div className="text-base text-gray-300">{t("titleAvailable")}</div>
+				<div className="text-base text-gray-500">{t("titleAvailable")}</div>
 
 				<Button
-					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-300 hover:text-white"
+					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-500 hover:text-white"
 					onClick={() => navigate("add")}
 				>
-					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
+					<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}
 				</Button>
@@ -195,7 +195,7 @@ export const ConnectionsTable = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-center text-xl font-semibold text-gray-300">{t("titleNoAvailable")}</div>
+				<div className="mt-10 text-center text-xl font-semibold text-gray-500">{t("titleNoAvailable")}</div>
 			)}
 			{connectionId ? (
 				<DeleteConnectionModal

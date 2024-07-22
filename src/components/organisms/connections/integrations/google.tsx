@@ -80,21 +80,21 @@ export const GoogleIntegrationForm = () => {
 				<div className="flex flex-col items-start gap-2">
 					{infoGoogleUserLinks.map(({ text, url }, index) => (
 						<Link
-							className="inline-flex items-center gap-2.5 text-green-accent"
+							className="inline-flex items-center gap-2.5 text-green-800"
 							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
 
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
 				</div>
 			</Accordion>
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
-				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
+				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
 				onClick={handleGoogleOAuth}
 				variant="outline"
 			>
@@ -133,14 +133,14 @@ export const GoogleIntegrationForm = () => {
 				<div className="flex flex-col items-start gap-2">
 					{infoGoogleAccountLinks.map(({ text, url }, index) => (
 						<Link
-							className="inline-flex items-center gap-2.5 text-green-accent"
+							className="inline-flex items-center gap-2.5 text-green-800"
 							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
 
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
 				</div>

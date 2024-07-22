@@ -231,14 +231,14 @@ export const SchedulerEditTrigger = () => {
 				<div className="flex flex-col items-start gap-2">
 					{infoCronExpressionsLinks.map(({ text, url }, index) => (
 						<Link
-							className="inline-flex items-center gap-2.5 text-green-accent"
+							className="inline-flex items-center gap-2.5 text-green-800"
 							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
 
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
 				</div>

@@ -274,7 +274,7 @@ export const DefaultTriggerForm = ({
 			</div>
 
 			<div>
-				<div className="flex items-center gap-1 text-base text-gray-300">
+				<div className="flex items-center gap-1 text-base text-gray-500">
 					{t("titleData")}
 
 					<div className="cursor-pointer" title={t("titleInfo")}>
@@ -306,7 +306,7 @@ export const DefaultTriggerForm = ({
 
 									<IconButton
 										ariaLabel={t("ariaDeleteData", { name: key })}
-										className="self-center bg-black-900 hover:bg-black"
+										className="self-center bg-gray-1300 hover:bg-black"
 										onClick={() => handleDeleteData(key)}
 									>
 										<TrashIcon className="h-4 w-4 fill-white" />
@@ -317,11 +317,11 @@ export const DefaultTriggerForm = ({
 				</div>
 
 				<Button
-					className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-300 hover:text-white"
+					className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
 					onClick={handleAddNewData}
 					type="button"
 				>
-					<PlusCircle className="h-5 w-5 stroke-gray-300 duration-300 group-hover:stroke-white" />
+					<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 					{t("buttonAddNewData")}
 				</Button>

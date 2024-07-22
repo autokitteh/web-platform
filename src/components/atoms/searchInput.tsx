@@ -57,30 +57,30 @@ export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref)
 	const placeholderText = isRequired ? `${placeholder} *` : placeholder;
 
 	const baseClass = cn(
-		"relative flex items-center border border-gray-500 bg-black pr-2.5 text-base",
+		"relative flex items-center border border-gray-950 bg-black pr-2.5 text-base",
 		"rounded-lg transition focus-within:border-white hover:border-white",
 		{
-			"border-gray-black-900 bg-white text-black focus-within:border-gray-800 hover:border-gray-800":
+			"border-gray-650 bg-white text-black focus-within:border-gray-1250 hover:border-gray-1250":
 				variant === InputVariant.light,
 		},
 		{ "border-white": hasValue && variant !== InputVariant.light },
-		{ "pointer-events-none select-none border-gray-500": disabled },
+		{ "pointer-events-none select-none border-gray-950": disabled },
 		className,
 		{ "border-error": isError }
 	);
 
 	const inputClass = cn(
 		"h-12 w-full bg-transparent px-4 py-2.5 outline-none",
-		{ "text-gray-400": disabled },
+		{ "text-gray-750": disabled },
 		{ "autofill-black": variant === InputVariant.light && !disabled },
-		{ "autofill-gray-700": variant === InputVariant.light && disabled },
+		{ "autofill-gray-1100": variant === InputVariant.light && disabled },
 		classInput
 	);
 
 	const labelClass = cn(
-		"pointer-events-none absolute left-12 font-semibold text-gray-black-600 transition-all",
+		"pointer-events-none absolute left-12 font-semibold text-gray-850 transition-all",
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
-		{ "-top-2 left-6 px-1 text-xs before:bg-gray-500": isFocused || hasValue },
+		{ "-top-2 left-6 px-1 text-xs before:bg-gray-950": isFocused || hasValue },
 		{ "-top-2 left-6 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light }
 	);
 

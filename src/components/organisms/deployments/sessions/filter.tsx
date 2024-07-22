@@ -14,15 +14,15 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
 
 	const buttonClassText = {
-		[SessionStateType.completed]: "text-green-accent",
+		[SessionStateType.completed]: "text-green-800",
 		[SessionStateType.error]: "text-red",
 		[SessionStateType.running]: "",
 		[SessionStateType.stopped]: "text-yellow-500",
 	} as const;
 
 	const buttonClass = (state?: keyof typeof buttonClassText) =>
-		cn("w-auto rounded-lg border border-gray-500 px-2.5 py-1.5 text-white", state && buttonClassText[state], {
-			"border-white bg-gray-800": activeState === state,
+		cn("w-auto rounded-lg border border-gray-950 px-2.5 py-1.5 text-white", state && buttonClassText[state], {
+			"border-white bg-gray-1250": activeState === state,
 		});
 
 	const handleButtonClick = (state?: SessionStateKeyType) => {

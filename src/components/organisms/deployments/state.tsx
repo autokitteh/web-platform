@@ -6,9 +6,9 @@ import { DeploymentStateVariant } from "@enums";
 import { cn } from "@utilities";
 
 const deploymentStateStyles = {
-	[DeploymentStateVariant.active]: "text-white bg-gray-800 border",
-	[DeploymentStateVariant.draining]: "text-gray-300 border border-dashed",
-	[DeploymentStateVariant.inactive]: "text-gray-400 bg-gray-600",
+	[DeploymentStateVariant.active]: "text-white bg-gray-1250 border",
+	[DeploymentStateVariant.draining]: "text-gray-500 border border-dashed",
+	[DeploymentStateVariant.inactive]: "text-gray-750 bg-gray-1050",
 	[DeploymentStateVariant.testing]: "",
 };
 

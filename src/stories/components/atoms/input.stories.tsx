@@ -54,5 +54,5 @@ export const Primary: Story = {
 		isRequired: false,
 		disabled: false,
 	},
-	render: (args) => <InputWrapper {...args} icon={args.icon ? <Eye className="fill-gray-400" /> : null} />,
+	render: (args) => <InputWrapper {...args} icon={args.icon ? <Eye className="fill-gray-750" /> : null} />,
 };

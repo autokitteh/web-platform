@@ -71,15 +71,15 @@ export const Toast = () => {
 	const baseStyle = (toastType: ToasterTypes, isHovered: boolean) =>
 		cn("fixed right-20 z-50 max-w-420 rounded-4xl border px-4 py-3 pl-6 transition-colors duration-200", {
 			"bg-black": !isHovered,
-			"bg-gray-800": isHovered,
+			"bg-gray-1250": isHovered,
 			"border-error": toastType === "error",
-			"border-green-accent": toastType === "success",
+			"border-green-800": toastType === "success",
 		});
 
 	const titleStyle = (toastType: ToasterTypes) =>
 		cn("w-full font-semibold", {
 			"text-error": toastType === "error",
-			"text-green-accent": toastType === "success",
+			"text-green-800": toastType === "success",
 		});
 
 	const variants = {
@@ -115,7 +115,7 @@ export const Toast = () => {
 							</div>
 
 							<IconButton
-								className="group ml-auto h-default-icon w-default-icon bg-gray-600 p-0"
+								className="group ml-auto h-default-icon w-default-icon bg-gray-1050 p-0"
 								onClick={() => removeToast(id)}
 							>
 								<Close className="h-3 w-3 fill-white transition" />

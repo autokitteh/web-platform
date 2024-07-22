@@ -49,12 +49,12 @@ body {
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-	@apply bg-gray-300;
+	@apply bg-gray-950;
 	@apply rounded-xl;
 }
 
 .scrollbar::-webkit-scrollbar-thumb:hover {
-	@apply bg-gray-400;
+	@apply bg-gray-750;
 }
 
 textarea {

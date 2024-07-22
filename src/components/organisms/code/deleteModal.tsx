@@ -34,7 +34,7 @@ export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="w-auto bg-gray-700 px-4 py-3 font-semibold"
+					className="w-auto bg-gray-1100 px-4 py-3 font-semibold"
 					onClick={onDelete}
 					variant="filled"
 				>

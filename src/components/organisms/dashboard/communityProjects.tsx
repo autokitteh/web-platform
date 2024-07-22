@@ -11,7 +11,7 @@ export const CommunityProjects = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "comunityProjects" });
 
 	return (
-		<Frame className="w-5/12 rounded-none bg-gray-black-300">
+		<Frame className="w-5/12 rounded-none bg-gray-100">
 			<Typography
 				className="font-averta-bold flex w-full items-center gap-3 text-3xl font-semibold text-black"
 				element="h2"

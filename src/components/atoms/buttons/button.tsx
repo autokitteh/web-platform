@@ -20,11 +20,11 @@ export const Button = ({
 }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
 		"flex items-center gap-2.5 rounded-3xl p-2 transition",
-		"hover:text-current text-center text-gray-700 duration-300 hover:bg-gray-800",
+		"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",
 		{
 			"bg-black text-white": variant === ButtonVariant.filled,
-			"bg-white text-gray-800 hover:bg-gray-300 hover:text-black": variant === ButtonVariant.light,
-			"border border-gray-400 hover:text-white": variant === ButtonVariant.outline,
+			"bg-white text-gray-1250 hover:bg-gray-500 hover:text-black": variant === ButtonVariant.light,
+			"border border-gray-750 hover:text-white": variant === ButtonVariant.outline,
 		},
 		{
 			"pointer-events-none opacity-30": disabled,
