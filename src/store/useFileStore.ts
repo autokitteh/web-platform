@@ -4,7 +4,7 @@ import { PersistOptions, persist } from "zustand/middleware";
 
 interface FileState {
 	openedFiles: { isActive: boolean; name: string }[];
-	setOpenedFiles: (files: { isActive: boolean; name: string }[]) => void;
+	setOpenFiles: (files: { isActive: boolean; name: string }[]) => void;
 	updateOpenedFiles: (fileName: string) => void;
 	closeOpenedFile: (fileName: string) => void;
 	openFileAsActive: (fileName: string) => void;
@@ -23,9 +23,9 @@ export const useFileStore = create<FileState>(
 			openProjectId: "",
 			setOpenProjectId: (projectId: string) =>
 				set((state: FileState) => ({ ...state, openProjectId: projectId })),
-			setOpenedFiles: (files: { isActive: boolean; name: string }[]) =>
+			setOpenFiles: (files: { isActive: boolean; name: string }[]) =>
 				set((state: FileState) => ({ ...state, openedFiles: files })),
-			updateOpenedFiles: (fileName: string) =>
+			updateOpenFiles: (fileName: string) =>
 				set(
 					produce((state: FileState) => {
 						const fileExists = state.openedFiles.find((file) => file.name === fileName);
@@ -38,7 +38,7 @@ export const useFileStore = create<FileState>(
 						}
 					})
 				),
-			closeOpenedFile: (fileName: string) =>
+			closeOpenFile: (fileName: string) =>
 				set(
 					produce((state: FileState) => {
 						const fileRemoved = state.openedFiles.filter((file) => file.name !== fileName);

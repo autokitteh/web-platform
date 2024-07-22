@@ -4,16 +4,14 @@ import { useTranslation } from "react-i18next";
 import { redirect, useParams } from "react-router-dom";
 
 import { ProjectsService } from "@services";
-import IndexedDBService from "@services/indexedDb.service";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
-import { useFileStore, useProjectStore, useToastStore } from "@store";
+import { useFileOperations } from "@hooks";
+import { useProjectStore, useToastStore } from "@store";
 
 import { ErrorMessage } from "@components/atoms";
 import { ProjectTopbarButtons } from "@components/organisms/topbar/project";
-
-const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export const ProjectTopbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
@@ -22,6 +20,7 @@ export const ProjectTopbar = () => {
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [project, setProject] = useState<Project>();
 	const addToast = useToastStore((state) => state.addToast);
+
 	const inputClass = cn(
 		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0",
 		{
@@ -29,7 +28,7 @@ export const ProjectTopbar = () => {
 		}
 	);
 
-	const { openProjectId, setOpenProjectId, setOpenedFiles } = useFileStore();
+	const { openProjectId, setOpenFiles, setOpenProjectId } = useFileOperations(projectId!);
 
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
@@ -55,19 +54,12 @@ export const ProjectTopbar = () => {
 		setProject(project);
 	};
 
-	const loadResources = async (clearResources?: boolean) => {
-		if (clearResources) {
-			await dbService.clearStore();
-		}
-	};
-
 	useEffect(() => {
 		if (projectId) {
 			loadProject(projectId);
 			if (projectId !== openProjectId) {
 				setOpenProjectId(projectId);
-				loadResources(true);
-				setOpenedFiles([]);
+				setOpenFiles([]);
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,7 +92,7 @@ export const ProjectTopbar = () => {
 					type: "error",
 				});
 
-				return <div />;
+				return;
 			}
 			(event.target as HTMLSpanElement).blur();
 			setIsNameValid(isValidName);

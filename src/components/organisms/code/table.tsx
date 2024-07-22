@@ -6,18 +6,16 @@ import { useParams } from "react-router-dom";
 
 import { monacoLanguages } from "@constants";
 import { ModalName } from "@enums/components";
-import IndexedDBService from "@services/indexedDb.service";
 import { cn } from "@utilities";
 
-import { useFileStore, useModalStore, useToastStore } from "@store";
+import { useFileOperations } from "@hooks";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
 
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-
-const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export const CodeTable = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +24,15 @@ export const CodeTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { openFileAsActive, openedFiles } = useFileStore();
+
+	const {
+		deleteFile,
+		fetchFiles,
+		fetchResources: fetchResourcesFromServer,
+		openFileAsActive,
+		openedFiles,
+		saveFile,
+	} = useFileOperations(projectId!);
 
 	const [resources, setResources] = useState<Record<string, Uint8Array>>({});
 	const [isDragOver, setIsDragOver] = useState(false);
@@ -40,14 +46,14 @@ export const CodeTable = () => {
 
 	const fetchResources = async () => {
 		setIsLoading(true);
-		const resources = await dbService.fetchResources(projectId!);
+		const resources = await fetchResourcesFromServer();
 		setResources(resources);
 		setIsLoading(false);
 	};
 
 	const getResources = async () => {
 		setIsLoading(true);
-		const resources = await dbService.getAll();
+		const resources = await fetchFiles();
 		setResources(resources);
 		setIsLoading(false);
 	};
@@ -60,8 +66,8 @@ export const CodeTable = () => {
 	const fileUpload = async (files: File[]) => {
 		try {
 			for (const file of files) {
-				const fileContent = await file.arrayBuffer();
-				await dbService.put(file.name, new Uint8Array(fileContent), projectId!);
+				const fileContent = await file.text();
+				await saveFile(file.name, fileContent);
 			}
 			fetchResources();
 		} catch (error) {
@@ -103,7 +109,7 @@ export const CodeTable = () => {
 	const handleRemoveFile = async () => {
 		closeModal(ModalName.deleteFile);
 		try {
-			await dbService.delete(selectedRemoveFileName);
+			await deleteFile(selectedRemoveFileName);
 			getResources();
 		} catch (error) {
 			addToast({

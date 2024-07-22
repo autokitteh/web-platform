@@ -6,22 +6,21 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { monacoLanguages } from "@constants";
-import IndexedDBService from "@services/indexedDb.service";
 import { cn } from "@utilities";
 
-import { useFileStore } from "@store";
+import { useFileOperations } from "@hooks";
 
 import { IconButton, Loader, Tab } from "@components/atoms";
 
 import { Close } from "@assets/image/icons";
 
-const dbService = new IndexedDBService("ProjectDB", "resources");
-
 export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, openFileAsActive, openedFiles } = useFileStore();
+	const { closeOpenedFile, openFileAsActive, openedFiles, saveFile } = useFileOperations(projectId!);
 	const [editorKey, setEditorKey] = useState(0);
+
+	const { fetchFiles } = useFileOperations(projectId!);
 
 	const activeEditorFileName = openedFiles?.find(({ isActive }: { isActive: boolean }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
@@ -30,7 +29,7 @@ export const EditorTabs = () => {
 	const [content, setContent] = useState<string>("");
 
 	const loadContent = async () => {
-		const resources = await dbService.getAll();
+		const resources = await fetchFiles();
 
 		const resource = resources[activeEditorFileName];
 		if (resource) {
@@ -69,11 +68,9 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
-		if (!projectId || !activeEditorFileName || newContent === t("noFileText")) return;
-		const contentUintArray = new TextEncoder().encode(newContent || "");
-
-		await dbService.put(activeEditorFileName, contentUintArray, projectId);
-		setContent(newContent || "");
+		if (!projectId || !activeEditorFileName || newContent === t("noFileText") || newContent === undefined) return;
+		await saveFile(activeEditorFileName, newContent);
+		setContent(newContent);
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps

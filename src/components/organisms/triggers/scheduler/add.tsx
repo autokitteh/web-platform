@@ -8,17 +8,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } from "@constants";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
-import IndexedDBService from "@services/indexedDb.service";
 import { schedulerTriggerSchema } from "@validations";
 
+import { useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
-
-const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export const TriggerSchedulerForm = ({
 	formId,
@@ -32,6 +30,7 @@ export const TriggerSchedulerForm = ({
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation(["errors", "services"]);
+	const { fetchResources } = useFileOperations(projectId!);
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [cronConnectionId, setCronConnectionId] = useState<string>();
@@ -53,7 +52,7 @@ export const TriggerSchedulerForm = ({
 				}
 				setCronConnectionId(connectionId);
 
-				const resources = await dbService.fetchResources(projectId!);
+				const resources = await fetchResources();
 
 				const formattedResources = Object.keys(resources).map((name) => ({
 					label: name,

@@ -10,10 +10,10 @@ import { namespaces } from "@constants";
 import { TriggerFormIds } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
-import IndexedDBService from "@services/indexedDb.service";
 import { Trigger, TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
 
+import { useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
@@ -21,8 +21,6 @@ import { TabFormHeader } from "@components/molecules";
 
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-
-const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export const DefaultEditTrigger = () => {
 	const { projectId, triggerId } = useParams();
@@ -32,6 +30,7 @@ export const DefaultEditTrigger = () => {
 	const [isSaving, setIsSaving] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
+	const { fetchResources } = useFileOperations(projectId!);
 
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
@@ -51,7 +50,7 @@ export const DefaultEditTrigger = () => {
 			}));
 			setConnections(formattedConnections || []);
 
-			const resources = await dbService.fetchResources(projectId!);
+			const resources = await fetchResources();
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				label: name,
