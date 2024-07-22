@@ -11,10 +11,8 @@ import { newVariableShema } from "@validations";
 
 import { useSecretInput } from "@hooks";
 
-import { ErrorMessage, Input, SecretInput, Toggle } from "@components/atoms";
+import { ErrorMessage, Input, SecretInput } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-
-import { LockSolid } from "@assets/image/icons";
 
 export const AddVariable = () => {
 	const { t } = useTranslation("errors");
@@ -22,7 +20,6 @@ export const AddVariable = () => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const [isLoading, setIsLoading] = useState(false);
-	const [isSecret, setIsSecret] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
@@ -30,6 +27,7 @@ export const AddVariable = () => {
 		getValues,
 		handleSubmit,
 		register,
+		setValue,
 	} = useForm({
 		defaultValues: {
 			name: "",
@@ -38,13 +36,13 @@ export const AddVariable = () => {
 		resolver: zodResolver(newVariableShema),
 	});
 
-	const { isLocked, toggleLock } = useSecretInput(false); // Initialize the hook with default unlocked state
+	const { isLocked, toggleLock } = useSecretInput(false);
 
 	const onSubmit = async () => {
 		const { name, value } = getValues();
 		setIsLoading(true);
 		const { error } = await VariablesService.set(projectId!, {
-			isSecret,
+			isSecret: isLocked,
 			name,
 			scopeId: "",
 			value,
@@ -75,7 +73,7 @@ export const AddVariable = () => {
 			<form className="flex flex-col gap-6" id="createNewVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
-						{...register("name")}
+						{...register("name", { required: t("nameRequired") })}
 						aria-label={tForm("placeholders.name")}
 						className={dirtyFields["name"] ? "border-white" : ""}
 						isError={!!errors.name}
@@ -86,23 +84,15 @@ export const AddVariable = () => {
 				</div>
 
 				<div className="relative">
-					<Input
-						{...register("value")}
-						aria-label={tForm("placeholders.value")}
-						className={dirtyFields["value"] ? "border-white" : ""}
-						isError={!!errors.value}
-						placeholder={tForm("placeholders.value")}
+					<SecretInput
+						isLocked={isLocked}
+						onChange={(event) => {
+							setValue("value", event.target.value);
+						}}
+						onLockClick={toggleLock}
+						placeholder={tForm("placeholders.value")} // Use the correct placeholder text
+						register={register("value", { required: t("valueRequired") })} // Pass register method here
 					/>
-
-					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
-				</div>
-
-				<div className="flex items-center gap-2" title={tForm("isSecret")}>
-					<Toggle checked={isSecret} onChange={setIsSecret} /> <LockSolid className="h-4 w-4 fill-white" />
-				</div>
-
-				<div className="relative">
-					<SecretInput isLocked={isLocked} onLockClick={toggleLock} placeholder="Value" />
 
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>

@@ -9,10 +9,10 @@ import { VariablesService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
-import { ErrorMessage, Input, Loader, Toggle } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { useSecretInput } from "@hooks";
 
-import { LockSolid } from "@assets/image/icons";
+import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
+import { TabFormHeader } from "@components/molecules";
 
 export const EditVariable = () => {
 	const { t: tForm } = useTranslation("tabs", {
@@ -24,6 +24,7 @@ export const EditVariable = () => {
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [firstFocus, setFirstFocus] = useState(true);
 
 	const {
 		formState: { dirtyFields, errors },
@@ -31,6 +32,7 @@ export const EditVariable = () => {
 		handleSubmit,
 		register,
 		reset,
+		setValue,
 		watch,
 	} = useForm({
 		defaultValues: {
@@ -40,6 +42,9 @@ export const EditVariable = () => {
 		resolver: zodResolver(newVariableShema),
 	});
 	const [isSecret, setIsSecret] = useState(false);
+
+	const { isLocked, setIsLocked, toggleLock } = useSecretInput(true);
+	const { name, value } = watch();
 
 	const fetchVariable = async () => {
 		const { data: currentVar, error } = await VariablesService.get(environmentId!, variableName!);
@@ -56,11 +61,14 @@ export const EditVariable = () => {
 			return;
 		}
 
+		setIsLocked(currentVar.isSecret);
+
+		setIsSecret(currentVar.isSecret);
+
 		reset({
 			name: currentVar.name,
-			value: currentVar.isSecret ? "" : currentVar.value,
+			value: currentVar.isSecret ? "**********" : value,
 		});
-		setIsSecret(currentVar.isSecret);
 	};
 
 	useEffect(() => {
@@ -70,12 +78,13 @@ export const EditVariable = () => {
 
 	const onSubmit = async () => {
 		const { name, value } = getValues();
+		const secretValue = value === "**********" ? "" : value;
 		setIsLoading(true);
 		const { error } = await VariablesService.set(projectId!, {
 			isSecret,
 			name,
 			scopeId: "",
-			value,
+			value: secretValue,
 		});
 
 		if (error) {
@@ -89,7 +98,12 @@ export const EditVariable = () => {
 		navigate(-1);
 	};
 
-	const { name, value } = watch();
+	const handleFocus = () => {
+		if (isSecret && firstFocus) {
+			setValue("value", "");
+			setFirstFocus(false);
+		}
+	};
 
 	return isLoadingData ? (
 		<Loader isCenter size="xl" />
@@ -106,7 +120,7 @@ export const EditVariable = () => {
 				<div className="relative">
 					<Input
 						value={name}
-						{...register("name")}
+						{...register("name", { required: tForm("placeholders.name") })}
 						aria-label={tForm("placeholders.name")}
 						className={dirtyFields["name"] ? "border-white" : ""}
 						isError={!!errors.name}
@@ -117,20 +131,19 @@ export const EditVariable = () => {
 				</div>
 
 				<div className="relative">
-					<Input
+					<SecretInput
+						isLocked={isLocked}
+						onChange={(event) => {
+							setValue("value", event.target.value);
+						}}
+						onFocus={handleFocus}
+						onLockClick={toggleLock}
+						placeholder={tForm("placeholders.value")}
+						register={register("value", { required: tForm("valueRequired") })}
 						value={value}
-						{...register("value")}
-						aria-label={tForm("placeholders.value")}
-						className={dirtyFields["value"] ? "border-white" : ""}
-						isError={!!errors.value}
-						placeholder={isSecret ? "**********" : tForm("placeholders.value")}
 					/>
 
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
-				</div>
-
-				<div className="flex items-center gap-2" title={tForm("isSecret")}>
-					<Toggle checked={isSecret} onChange={setIsSecret} /> <LockSolid className="h-4 w-4 fill-white" />
 				</div>
 			</form>
 		</div>

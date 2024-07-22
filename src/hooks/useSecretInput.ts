@@ -7,5 +7,5 @@ export const useSecretInput = (initialState: boolean = false) => {
 		setIsLocked((prevState) => !prevState);
 	}, []);
 
-	return { isLocked, toggleLock };
+	return { isLocked, toggleLock, setIsLocked };
 };

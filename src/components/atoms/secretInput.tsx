@@ -19,8 +19,10 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		isLockedDisabled,
 		isRequired,
 		onChange,
+		onFocus,
 		onLockClick,
 		placeholder,
+		register,
 		value,
 		variant,
 		...rest
@@ -33,7 +35,11 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		setHasValue(!!value || !!defaultValue);
 	}, [value, defaultValue]);
 
-	const handleFocus = useCallback(() => setIsFocused(true), []);
+	const handleFocus = useCallback(() => {
+		setIsFocused(true);
+		onFocus?.();
+	}, [onFocus]);
+
 	const handleBlur = useCallback(
 		(event: React.FocusEvent<HTMLInputElement>) => {
 			setIsFocused(false);
@@ -106,6 +112,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 			<div className={wrapperClass}>
 				<input
 					{...rest}
+					{...register} // Spread the register object here
 					className={inputClass}
 					defaultValue={defaultValue}
 					disabled={disabled}
@@ -113,6 +120,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					onBlur={handleBlur}
 					onChange={handleChange}
 					onFocus={handleFocus}
+					placeholder={placeholderText}
 					ref={ref}
 					type={inputType}
 					value={value}
