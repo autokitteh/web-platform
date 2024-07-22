@@ -1,3 +1,11 @@
+## [1.18.1](https://github.com/autokitteh/web-platform/compare/v1.18.0...v1.18.1) (2024-07-22)
+
+
+### Bug Fixes
+
+* fix cicd ([#217](https://github.com/autokitteh/web-platform/issues/217)) ([c933266](https://github.com/autokitteh/web-platform/commit/c9332663f87844dd32fe283a9583a8915ce80247))
+* update version in package-lock ([#216](https://github.com/autokitteh/web-platform/issues/216)) ([bdd53fa](https://github.com/autokitteh/web-platform/commit/bdd53fa92e7a0859ac2d1c729aec214ea1094b8f))
+
 # [1.18.0](https://github.com/autokitteh/web-platform/compare/v1.17.0...v1.18.0) (2024-07-22)
 
 
