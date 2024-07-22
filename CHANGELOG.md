@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/autokitteh/web-platform/compare/v1.17.0...v1.18.0) (2024-07-22)
+
+
+### Features
+
+* connection creation - refactor add ([#213](https://github.com/autokitteh/web-platform/issues/213)) ([f38c0b8](https://github.com/autokitteh/web-platform/commit/f38c0b8ebc82f9251520289166004c8b0d7702dd))
+
 # [1.17.0](https://github.com/autokitteh/web-platform/compare/v1.16.0...v1.17.0) (2024-07-22)
 
 
