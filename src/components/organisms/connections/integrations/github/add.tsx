@@ -155,7 +155,7 @@ export const GithubIntegrationAddForm = ({
 
 				<Button
 					aria-label={t("buttons.copy")}
-					className="hover:bg-gray-950 w-fit rounded-md border-black bg-white px-5 font-semibold"
+					className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
 					onClick={() => copyToClipboard(webhookUrl)}
 					variant="outline"
 				>
@@ -191,14 +191,14 @@ export const GithubIntegrationAddForm = ({
 				<div className="flex flex-col gap-2">
 					{infoGithubLinks.map(({ text, url }, index) => (
 						<Link
-							className="text-green-800 group inline-flex items-center gap-2.5"
+							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
 
-							<ExternalLinkIcon className="fill-green-800 h-3.5 w-3.5 duration-200" />
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
 				</div>
@@ -210,13 +210,13 @@ export const GithubIntegrationAddForm = ({
 		<div>
 			<Accordion title={t("information")}>
 				<Link
-					className="text-md text-green-800 inline-flex items-center gap-2.5"
+					className="text-md inline-flex items-center gap-2.5 text-green-800"
 					target="_blank"
 					to="https://docs.github.com/en/apps/using-github-apps/about-using-github-apps"
 				>
 					{t("github.aboutGitHubApps")}
 
-					<ExternalLinkIcon className="fill-green-800 h-3.5 w-3.5 duration-200" />
+					<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
 				</Link>
 			</Accordion>
 
@@ -224,7 +224,7 @@ export const GithubIntegrationAddForm = ({
 
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
-				className="hover:bg-gray-950 ml-auto w-fit border-black bg-white px-3 font-medium hover:text-white"
+				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
 				onClick={triggerParentFormSubmit}
 				variant="outline"
 			>
