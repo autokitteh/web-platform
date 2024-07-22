@@ -9,6 +9,8 @@ import { VariablesService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
+import { useSecretInput } from "@hooks";
+
 import { ErrorMessage, Input, SecretInput, Toggle } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 
@@ -35,6 +37,8 @@ export const AddVariable = () => {
 		},
 		resolver: zodResolver(newVariableShema),
 	});
+
+	const { isLocked, toggleLock } = useSecretInput(false); // Initialize the hook with default unlocked state
 
 	const onSubmit = async () => {
 		const { name, value } = getValues();
@@ -98,7 +102,7 @@ export const AddVariable = () => {
 				</div>
 
 				<div className="relative">
-					<SecretInput isLockedDisabled />
+					<SecretInput isLocked={isLocked} onLockClick={toggleLock} placeholder="Value" />
 
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>

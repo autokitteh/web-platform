@@ -82,10 +82,11 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	);
 
 	const labelClass = cn(
-		"pointer-events-none absolute left-12 font-semibold text-gray-black-600 transition-all",
+		"pointer-events-none absolute left-4 text-white transition-all",
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
-		{ "-top-2 left-6 px-1 text-xs before:bg-gray-500": isFocused || hasValue },
-		{ "-top-2 left-6 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light }
+		{ "-top-2 left-3 px-1 text-xs before:bg-gray-500": isFocused || hasValue },
+		{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light },
+		{ "text-black": variant === InputVariant.light }
 	);
 
 	const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
