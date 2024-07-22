@@ -91,7 +91,7 @@ export const ConnectionsTable = () => {
 	};
 
 	const handleConnectionEditClick = useCallback((connectionId: string) => {
-		navigate(`${connectionId}/edit`);
+		navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -173,16 +173,16 @@ export const ConnectionsTable = () => {
 								<Td className="max-w-20 pr-0">
 									<div className="flex space-x-1">
 										<IconButton
-											ariaLabel={t("table.buttons.titleInitConnection")}
+											ariaLabel={t("table.buttons.titleEditConnection")}
 											className="p-1.5"
 											onClick={() => handleConnectionEditClick(connectionId)}
-											title={t("table.buttons.titleInitConnection")}
+											title={t("table.buttons.titleEditConnection")}
 										>
 											<EditIcon className="h-3 w-3 fill-white" />
 										</IconButton>
 
 										<IconButton
-											ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
+											ariaLabel={t("table.buttons.titleRemoveConnection", { name })}
 											onClick={() => handleOpenModalDeleteConnection(connectionId)}
 											title={t("table.buttons.titleRemoveConnection")}
 										>

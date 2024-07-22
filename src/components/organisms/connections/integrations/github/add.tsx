@@ -124,9 +124,10 @@ export const GithubIntegrationAddForm = ({
 	const onSubmit = () => {
 		if (connectionId) {
 			createPatConnection();
-		} else {
-			triggerParentFormSubmit();
+
+			return;
 		}
+		triggerParentFormSubmit();
 	};
 
 	const renderPATFields = () => (
@@ -223,7 +224,7 @@ export const GithubIntegrationAddForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
-				onClick={() => triggerParentFormSubmit()}
+				onClick={triggerParentFormSubmit}
 				variant="outline"
 			>
 				{t("buttons.startOAuthFlow")}
@@ -232,16 +233,17 @@ export const GithubIntegrationAddForm = ({
 	);
 
 	useEffect(() => {
-		if (!selectedConnectionType) {
-			return;
-		}
-		if (selectedConnectionType.value === GithubConnectionType.Pat) {
-			createPatConnection();
+		switch (selectedConnectionType?.value) {
+			case GithubConnectionType.Pat:
+				createPatConnection();
+				break;
 
-			return;
-		}
-		if (selectedConnectionType.value === GithubConnectionType.Oauth) {
-			handleGithubOAuth();
+			case GithubConnectionType.Oauth:
+				handleGithubOAuth();
+				break;
+
+			default:
+				break;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
@@ -257,6 +259,17 @@ export const GithubIntegrationAddForm = ({
 		setSelectedConnectionType(option as SelectOption);
 	};
 
+	const renderConnectionFields = () => {
+		switch (selectedConnectionType?.value) {
+			case GithubConnectionType.Pat:
+				return renderPATFields();
+			case GithubConnectionType.Oauth:
+				return renderOAuthButton();
+			default:
+				return null;
+		}
+	};
+
 	return (
 		<form className="flex items-start gap-10" id={ConnectionFormIds.createGithub} onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex w-full flex-col gap-6">
@@ -268,13 +281,7 @@ export const GithubIntegrationAddForm = ({
 					value={selectedConnectionType}
 				/>
 
-				{selectedConnectionType && selectedConnectionType.value === GithubConnectionType.Pat
-					? renderPATFields()
-					: null}
-
-				{selectedConnectionType && selectedConnectionType.value === GithubConnectionType.Oauth
-					? renderOAuthButton()
-					: null}
+				{renderConnectionFields()}
 			</div>
 		</form>
 	);

@@ -64,7 +64,7 @@ export class ConnectionService {
 
 	static async create(
 		projectId: string,
-		integrationName: string = "github",
+		integrationName = "github",
 		connectionName: string
 	): Promise<ServiceResponse<string>> {
 		try {

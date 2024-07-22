@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -6,13 +6,14 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
+import { namespaces } from "@constants";
 import { integrationTypes } from "@constants/lists";
-import { namespaces } from "@constants/namespaces.logger.constants";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, LoggerService } from "@services/index";
-import { useToastStore } from "@store/index";
+import { ConnectionService, LoggerService } from "@services";
 import { IntegrationType } from "@type/components";
-import { connectionSchema } from "@validations/index";
+import { connectionSchema } from "@validations";
+
+import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -40,15 +41,13 @@ export const AddConnection = () => {
 		},
 	});
 
-	const connectionName: string = watch("connectionName");
+	const connectionName = watch("connectionName");
 	const selectedIntegration: SelectOption = watch("integration");
 	const { t: tErrors } = useTranslation("errors");
 
 	const [connectionId, setConnectionId] = useState<string | undefined>(undefined);
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
-
-	const childFormSubmitRef = useRef<(() => void) | null>(null);
 
 	const onSubmit = async () => {
 		if (!connectionId) {
@@ -70,12 +69,6 @@ export const AddConnection = () => {
 			}
 		}
 	};
-
-	useEffect(() => {
-		if (connectionId && childFormSubmitRef.current) {
-			childFormSubmitRef.current();
-		}
-	}, [connectionId]);
 
 	const handleIntegrationChange = (option: SingleValue<SelectOption>): void => {
 		setValue("integration", option as SelectOption);
@@ -100,9 +93,10 @@ export const AddConnection = () => {
 				<div className="relative mb-6">
 					<Input
 						aria-label={t("github.placeholders.name")}
-						{...register("connectionName", { required: "Connection name is required" })}
+						{...register("connectionName")}
 						disabled={!!connectionId}
 						isError={!!errors.connectionName}
+						isRequired
 						placeholder={t("github.placeholders.name")}
 					/>
 
