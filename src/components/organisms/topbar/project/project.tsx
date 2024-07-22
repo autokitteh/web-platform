@@ -20,7 +20,6 @@ export const ProjectTopbar = () => {
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [project, setProject] = useState<Project>();
 	const addToast = useToastStore((state) => state.addToast);
-
 	const inputClass = cn(
 		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0",
 		{

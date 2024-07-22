@@ -19,9 +19,10 @@ import { Modal } from "@components/molecules";
 export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
+	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { addFile } = useFileOperations(projectId!);
+	const { addFile, openFileAsActive } = useFileOperations(projectId!);
 
 	const languageSelectOptions = Object.keys(monacoLanguages).map((key) => ({
 		label: key,
@@ -47,7 +48,9 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 		const { extension, name } = getValues();
 		const newFile = name + extension.value;
 		try {
-			await addFile(newFile);
+			const newFileContent = new TextEncoder().encode(tTabsEditor("initialContentForNewFile"));
+			await addFile(newFile, newFileContent);
+			openFileAsActive(newFile);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),

@@ -24,7 +24,7 @@ export const useFileStore = create<FileState>(
 			setOpenProjectId: (projectId: string) =>
 				set((state: FileState) => ({ ...state, openProjectId: projectId })),
 			setOpenFiles: (files: { isActive: boolean; name: string }[]) =>
-				set((state: FileState) => ({ ...state, openedFiles: files })),
+				set((state: FileState) => ({ ...state, openFiles: files })),
 			updateOpenFiles: (fileName: string) =>
 				set(
 					produce((state: FileState) => {

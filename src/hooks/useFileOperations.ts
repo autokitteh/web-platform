@@ -31,28 +31,12 @@ export function useFileOperations(projectId: string) {
 				await dbService.put(name, new Uint8Array(content));
 			}
 
-			return await dbService.getAll();
+			return await fetchFiles();
 		} catch (error) {
 			console.error("Failed to sync resources from server:", error);
 			throw error;
 		}
 	};
-
-	// Fetch files from the server and update the local IndexedDB
-	const fetchFilesFromServer = useCallback(async () => {
-		const { data, error } = await ProjectsService.getResources(projectId);
-		if (error) {
-			console.error("Failed to fetch resources from server:", error);
-
-			return;
-		}
-
-		for (const [name, content] of Object.entries(data || {})) {
-			await dbService.put(name, new Uint8Array(content));
-		}
-
-		fetchFiles(); // Update local files from IndexedDB after syncing
-	}, [projectId, fetchFiles]);
 
 	const saveFile = useCallback(
 		async (name: string, content: string) => {
@@ -61,9 +45,8 @@ export function useFileOperations(projectId: string) {
 			const resources = await dbService.getAll();
 
 			await ProjectsService.setResources(projectId, resources);
-			fetchFiles();
 		},
-		[projectId, fetchFiles]
+		[projectId]
 	);
 
 	const deleteFile = useCallback(
@@ -71,33 +54,30 @@ export function useFileOperations(projectId: string) {
 			await dbService.delete(name);
 			closeOpenedFile(name);
 			await ProjectsService.setResources(projectId, {});
-			fetchFiles();
 		},
-		[projectId, closeOpenedFile, fetchFiles]
+		[projectId, closeOpenedFile]
 	);
 
 	const addFile = useCallback(
-		async (name: string) => {
+		async (name: string, fileContent: Uint8Array) => {
 			const resources = await dbService.getAll();
 			const resourcesWithAddedFile = {
 				...resources,
-				[name]: new Uint8Array(),
+				[name]: fileContent,
 			};
 			const { error } = await ProjectsService.setResources(projectId, resourcesWithAddedFile);
 			if (error) {
 				throw error;
 			}
-			dbService.put(name, new Uint8Array());
-			fetchFiles();
+			dbService.put(name, fileContent);
 		},
-		[projectId, fetchFiles]
+		[projectId]
 	);
 
 	return {
 		fetchFiles,
 		saveFile,
 		deleteFile,
-		fetchFilesFromServer,
 		fetchResources,
 		openProjectId,
 		setOpenProjectId,

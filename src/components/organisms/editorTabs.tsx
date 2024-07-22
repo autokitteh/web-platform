@@ -19,6 +19,7 @@ export const EditorTabs = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const [editorKey, setEditorKey] = useState(0);
+	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 
 	const { fetchFiles } = useFileOperations(projectId!);
 
@@ -68,13 +69,20 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
-		if (!projectId || !activeEditorFileName || newContent === t("noFileText") || newContent === undefined) return;
+		if (
+			!projectId ||
+			!activeEditorFileName ||
+			newContent === t("noFileText") ||
+			newContent === undefined ||
+			newContent === tTabsEditor("initialContentForNewFile")
+		)
+			return;
 		await saveFile(activeEditorFileName, newContent);
 		setContent(newContent);
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedUpdateContent = useCallback(debounce(updateContent, 2000), [projectId, activeEditorFileName]);
+	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 
 	const handleUpdateContent = (newContent?: string) => {
 		debouncedUpdateContent(newContent);
