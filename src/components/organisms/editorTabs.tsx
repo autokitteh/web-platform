@@ -17,12 +17,12 @@ import { Close } from "@assets/image/icons";
 export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, openFileAsActive, openedFiles, saveFile } = useFileOperations(projectId!);
+	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const [editorKey, setEditorKey] = useState(0);
 
 	const { fetchFiles } = useFileOperations(projectId!);
 
-	const activeEditorFileName = openedFiles?.find(({ isActive }: { isActive: boolean }) => isActive)?.name || "";
+	const activeEditorFileName = openFiles?.find(({ isActive }: { isActive: boolean }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
@@ -82,7 +82,7 @@ export const EditorTabs = () => {
 
 	const activeCloseIcon = (fileName: string) =>
 		cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
-			"opacity-100": openedFiles.find(({ isActive, name }) => name === fileName && isActive),
+			"opacity-100": openFiles.find(({ isActive, name }) => name === fileName && isActive),
 		});
 
 	const handleCloseButtonClick = (
@@ -107,7 +107,7 @@ export const EditorTabs = () => {
 							`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
 						}
 					>
-						{openedFiles?.map(({ name }) => (
+						{openFiles?.map(({ name }) => (
 							<Tab
 								activeTab={activeEditorFileName}
 								className="group flex items-center gap-1"

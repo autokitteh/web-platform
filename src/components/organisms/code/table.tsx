@@ -30,7 +30,7 @@ export const CodeTable = () => {
 		fetchFiles,
 		fetchResources: fetchResourcesFromServer,
 		openFileAsActive,
-		openedFiles,
+		openFiles,
 		saveFile,
 	} = useFileOperations(projectId!);
 
@@ -80,7 +80,7 @@ export const CodeTable = () => {
 	};
 
 	const activeBodyRow = (fileName: string) => {
-		const isActiveFile = openedFiles.find(({ isActive, name }) => name === fileName && isActive);
+		const isActiveFile = openFiles.find(({ isActive, name }) => name === fileName && isActive);
 
 		return cn({ "bg-black": isActiveFile });
 	};

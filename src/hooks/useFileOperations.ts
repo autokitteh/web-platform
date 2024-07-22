@@ -8,13 +8,13 @@ import { useFileStore } from "@store";
 const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export function useFileOperations(projectId: string) {
-	const { closeOpenedFile, openFileAsActive, openProjectId, openedFiles, setOpenFiles, setOpenProjectId } =
+	const { closeOpenedFile, openFileAsActive, openFiles, openProjectId, setOpenFiles, setOpenProjectId } =
 		useFileStore((state) => ({
 			setOpenFiles: state.setOpenFiles,
 			closeOpenedFile: state.closeOpenedFile,
 			openProjectId: state.openProjectId,
 			setOpenProjectId: state.setOpenProjectId,
-			openedFiles: state.openedFiles,
+			openFiles: state.openFiles,
 			openFileAsActive: state.openFileAsActive,
 		}));
 
@@ -102,7 +102,7 @@ export function useFileOperations(projectId: string) {
 		openProjectId,
 		setOpenProjectId,
 		setOpenFiles,
-		openedFiles,
+		openFiles,
 		openFileAsActive,
 		closeOpenedFile,
 		addFile,
