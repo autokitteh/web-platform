@@ -14,7 +14,7 @@ export const convertTriggerProtoToModel = (protoTrigger: ProtoTrigger): Trigger 
 	const data: TriggerData = {};
 
 	keyData.forEach((key: string) => {
-		const valueData = get(protoTrigger, ["data", key, "string", "v"]);
+		const valueData = get(protoTrigger, ["data", key, "string", "v"], "");
 		data[key] = { string: { v: valueData } };
 	});
 
