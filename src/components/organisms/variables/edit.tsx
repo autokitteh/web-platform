@@ -41,7 +41,6 @@ export const EditVariable = () => {
 		},
 		resolver: zodResolver(newVariableShema),
 	});
-	const [isSecret, setIsSecret] = useState(false);
 
 	const { isLocked, setIsLocked, toggleLock } = useSecretInput(true);
 	const { name, value } = watch();
@@ -63,8 +62,6 @@ export const EditVariable = () => {
 
 		setIsLocked(currentVar.isSecret);
 
-		setIsSecret(currentVar.isSecret);
-
 		reset({
 			name: currentVar.name,
 			value: currentVar.isSecret ? "**********" : value,
@@ -81,7 +78,7 @@ export const EditVariable = () => {
 		const secretValue = value === "**********" ? "" : value;
 		setIsLoading(true);
 		const { error } = await VariablesService.set(projectId!, {
-			isSecret,
+			isSecret: isLocked,
 			name,
 			scopeId: "",
 			value: secretValue,
@@ -99,7 +96,7 @@ export const EditVariable = () => {
 	};
 
 	const handleFocus = () => {
-		if (isSecret && firstFocus) {
+		if (isLocked && firstFocus) {
 			setValue("value", "");
 			setFirstFocus(false);
 		}
