@@ -25,7 +25,6 @@
 				"ariaDeleteConnection": "Delete {{name}} connection",
 				"ariaModifyConnection": "Modify {{name}} connection",
 				"titleEditConnection": "Edit connection",
-				"titleInitConnection": "Initialize Connection",
 				"titleRemoveConnection": "Remove connection",
 				"titleTestConnection": "Test Connection"
 			},

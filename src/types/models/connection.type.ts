@@ -7,6 +7,7 @@ export type Connection = {
 	initUrl: string;
 	integrationId?: string;
 	integrationName?: string;
+	integrationUniqueName?: string;
 	name: string;
 	status: ConnectionStatusType;
 	statusInfoMessage: string;

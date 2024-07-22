@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { baseUrl } from "@constants";
 import { ModalName } from "@enums/components";
 import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
@@ -16,7 +15,7 @@ import { ConnectionTableStatus, SortButton } from "@components/molecules";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 
 import { PlusCircle } from "@assets/image";
-import { LinkIcon, TrashIcon } from "@assets/image/icons";
+import { EditIcon, TrashIcon } from "@assets/image/icons";
 
 export const ConnectionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -91,8 +90,9 @@ export const ConnectionsTable = () => {
 		fetchConnections();
 	};
 
-	const handleConnectionInitClick = useCallback((url: string) => {
-		window.open(`${baseUrl}/${url}`, "_blank");
+	const handleConnectionEditClick = useCallback((connectionId: string) => {
+		navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return isLoading ? (
@@ -158,42 +158,40 @@ export const ConnectionsTable = () => {
 					</THead>
 
 					<TBody>
-						{sortedConnections.map(
-							({ connectionId, initUrl, integrationName, name, status, statusInfoMessage }) => (
-								<Tr className="group" key={connectionId}>
-									<Td className="font-semibold">{name}</Td>
+						{sortedConnections.map(({ connectionId, integrationName, name, status, statusInfoMessage }) => (
+							<Tr className="group" key={connectionId}>
+								<Td className="font-semibold">{name}</Td>
 
-									<Td>{integrationName}</Td>
+								<Td>{integrationName}</Td>
 
-									<Td className="max-w-32">
-										<ConnectionTableStatus status={status} />
-									</Td>
+								<Td className="max-w-32">
+									<ConnectionTableStatus status={status} />
+								</Td>
 
-									<Td>{statusInfoMessage}</Td>
+								<Td>{statusInfoMessage}</Td>
 
-									<Td className="max-w-20 pr-0">
-										<div className="flex space-x-1">
-											<IconButton
-												ariaLabel={t("table.buttons.titleInitConnection")}
-												className="p-1.5"
-												onClick={() => handleConnectionInitClick(initUrl)}
-												title={t("table.buttons.titleInitConnection")}
-											>
-												<LinkIcon className="h-4 w-4 fill-white" />
-											</IconButton>
+								<Td className="max-w-20 pr-0">
+									<div className="flex space-x-1">
+										<IconButton
+											ariaLabel={t("table.buttons.titleEditConnection")}
+											className="p-1.5"
+											onClick={() => handleConnectionEditClick(connectionId)}
+											title={t("table.buttons.titleEditConnection")}
+										>
+											<EditIcon className="h-3 w-3 fill-white" />
+										</IconButton>
 
-											<IconButton
-												ariaLabel={t("table.buttons.ariaDeleteConnection", { name })}
-												onClick={() => handleOpenModalDeleteConnection(connectionId)}
-												title={t("table.buttons.titleRemoveConnection")}
-											>
-												<TrashIcon className="h-3 w-3 fill-white" />
-											</IconButton>
-										</div>
-									</Td>
-								</Tr>
-							)
-						)}
+										<IconButton
+											ariaLabel={t("table.buttons.titleRemoveConnection", { name })}
+											onClick={() => handleOpenModalDeleteConnection(connectionId)}
+											title={t("table.buttons.titleRemoveConnection")}
+										>
+											<TrashIcon className="h-3 w-3 fill-white" />
+										</IconButton>
+									</div>
+								</Td>
+							</Tr>
+						))}
 					</TBody>
 				</Table>
 			) : (

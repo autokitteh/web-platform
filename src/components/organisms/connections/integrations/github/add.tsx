@@ -1,16 +1,18 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { SingleValue } from "react-select";
 
 import { baseUrl, namespaces } from "@constants";
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
+import { ConnectionFormIds } from "@enums/components";
+import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
-import { isConnectionType } from "@utilities";
 import { githubIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
@@ -20,14 +22,21 @@ import { Accordion } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GithubIntegrationForm = () => {
+export const GithubIntegrationAddForm = ({
+	connectionId,
+	triggerParentFormSubmit,
+}: {
+	connectionId?: string;
+	triggerParentFormSubmit: () => void;
+}) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const [selectedConnectionType, setSelectedConnectionType] = useState<GithubConnectionType>();
+	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
 	const { projectId } = useParams();
-
+	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
+	const [webhookUrl, setWebhookUrl] = useState<string>("");
 
 	const {
 		formState: { errors },
@@ -35,39 +44,67 @@ export const GithubIntegrationForm = () => {
 		handleSubmit,
 		register,
 	} = useForm({
+		resolver: zodResolver(githubIntegrationSchema),
 		defaultValues: {
-			name: "",
 			pat: "",
 			webhookSercet: "",
 		},
-		resolver: zodResolver(githubIntegrationSchema),
 	});
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const randomForPATWebhook = useMemo(() => randomatic("Aa0", 8), [projectId]);
-	const webhookUrl = `${baseUrl}/${randomForPATWebhook}`;
+	const createPatConnection = async () => {
+		const { pat, webhookSercet: secret } = getValues();
 
-	const onSubmit = async () => {
-		const { name, pat, webhookSercet: secret } = getValues();
-
-		setIsLoading(true);
 		try {
-			const { data } = await HttpService.post("/github/save", { name, pat, secret, webhook: webhookUrl });
-			if (!data.url) {
-				addToast({
-					id: Date.now().toString(),
-					message: tErrors("errorCreatingNewConnection"),
-					type: "error",
-				});
-				LoggerService.error(
-					namespaces.connectionService,
-					`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`
-				);
+			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
+				pat,
+				secret,
+				webhook: webhookUrl,
+			});
+			const successMessage = t("connectionCreatedSuccessfully");
+			addToast({
+				id: Date.now().toString(),
+				message: successMessage,
+				type: "success",
+			});
+			LoggerService.info(namespaces.connectionService, successMessage);
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
+			addToast({
+				id: Date.now().toString(),
+				message: errorMessage,
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-				return;
-			}
+	const copyToClipboard = async (text: string) => {
+		try {
+			await navigator.clipboard.writeText(text);
+			addToast({
+				id: Date.now().toString(),
+				message: t("github.copySuccess"),
+				type: "success",
+			});
+		} catch (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: t("github.copyFailure"),
+				type: "error",
+			});
+		}
+	};
 
-			window.location.href = `${baseUrl}/${data.url}`;
+	const handleGithubOAuth = async () => {
+		try {
+			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
+			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -83,39 +120,19 @@ export const GithubIntegrationForm = () => {
 		}
 	};
 
-	const copyToClipboard = async (text: string) => {
-		try {
-			await navigator.clipboard.writeText(text);
+	const onSubmit = () => {
+		setIsLoading(true);
 
-			addToast({
-				id: Date.now().toString(),
-				message: t("github.copySuccess"),
-				type: "success",
-			});
-		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: t("github.copyFailure"),
-				type: "error",
-			});
+		if (connectionId) {
+			createPatConnection();
+
+			return;
 		}
+		triggerParentFormSubmit();
 	};
-
-	const handleGithubOAuth = () => window.open(`${baseUrl}/oauth/start/github`, "_blank");
 
 	const renderPATFields = () => (
 		<>
-			<div className="relative">
-				<Input
-					{...register("name")}
-					aria-label={t("github.placeholders.name")}
-					isError={!!errors.name}
-					isRequired
-					placeholder={t("github.placeholders.name")}
-				/>
-
-				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
-			</div>
 			<div className="relative">
 				<Input
 					{...register("pat")}
@@ -162,6 +179,7 @@ export const GithubIntegrationForm = () => {
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
+				id={ConnectionFormIds.createGithub}
 				type="submit"
 				variant="outline"
 			>
@@ -207,7 +225,7 @@ export const GithubIntegrationForm = () => {
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
-				onClick={handleGithubOAuth}
+				onClick={triggerParentFormSubmit}
 				variant="outline"
 			>
 				{t("buttons.startOAuthFlow")}
@@ -215,27 +233,56 @@ export const GithubIntegrationForm = () => {
 		</div>
 	);
 
+	useEffect(() => {
+		switch (selectedConnectionType?.value) {
+			case GithubConnectionType.Pat:
+				createPatConnection();
+				break;
+
+			case GithubConnectionType.Oauth:
+				handleGithubOAuth();
+				break;
+
+			default:
+				break;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
+
+	useEffect(() => {
+		const randomForPATWebhook = randomatic("Aa0", 8);
+		const webhookURL = `${baseUrl}/${randomForPATWebhook}`;
+
+		setWebhookUrl(webhookURL);
+	}, []);
+
+	const selectConnectionType = (option: SingleValue<SelectOption>) => {
+		setSelectedConnectionType(option as SelectOption);
+	};
+
+	const renderConnectionFields = () => {
+		switch (selectedConnectionType?.value) {
+			case GithubConnectionType.Pat:
+				return renderPATFields();
+			case GithubConnectionType.Oauth:
+				return renderOAuthButton();
+			default:
+				return null;
+		}
+	};
+
 	return (
-		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex items-start gap-10" id={ConnectionFormIds.createGithub} onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
-					onChange={(selected) => {
-						if (selected?.value && isConnectionType(selected.value, GithubConnectionType)) {
-							setSelectedConnectionType(selected.value);
-						}
-					}}
+					onChange={selectConnectionType}
 					options={githubIntegrationAuthMethods}
 					placeholder={t("placeholders.selectConnectionType")}
+					value={selectedConnectionType}
 				/>
 
-				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Pat
-					? renderPATFields()
-					: null}
-
-				{selectedConnectionType && selectedConnectionType === GithubConnectionType.Oauth
-					? renderOAuthButton()
-					: null}
+				{renderConnectionFields()}
 			</div>
 		</form>
 	);
