@@ -7,7 +7,7 @@ import { OutputTabsVariants } from "@enums/components";
 
 import { useLoggerStore } from "@store";
 
-import { Button, Tab } from "@components/atoms";
+import { Button, IconSvg, Tab } from "@components/atoms";
 
 import { TrashCanIcon } from "@assets/image/icons";
 
@@ -35,8 +35,8 @@ export const OutputTabs: React.FC = () => {
 					output
 				</Tab>
 
-				<Button className="ml-auto fill-white" onClick={() => clearLogs()} title={t("clear")}>
-					<TrashCanIcon className="h-4 w-4" />
+				<Button className="ml-auto" onClick={() => clearLogs()} title={t("clear")}>
+					<IconSvg className="fill-white" src={TrashCanIcon} />
 				</Button>
 			</div>
 
