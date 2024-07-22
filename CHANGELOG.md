@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/autokitteh/web-platform/compare/v1.16.0...v1.17.0) (2024-07-22)
+
+
+### Features
+
+* clear logs button ([#212](https://github.com/autokitteh/web-platform/issues/212)) ([8710a3e](https://github.com/autokitteh/web-platform/commit/8710a3e946218b39024a87ff260749384b56f6ad))
+
 # [1.16.0](https://github.com/autokitteh/web-platform/compare/v1.15.1...v1.16.0) (2024-07-18)
 
 
