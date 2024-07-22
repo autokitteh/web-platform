@@ -35,11 +35,9 @@ export const OutputTabs: React.FC = () => {
 					output
 				</Tab>
 
-				<div className="mb-1 flex w-full items-center justify-end">
-					<Button className="fill-white" onClick={() => clearLogs()} title={t("clear")}>
-						<TrashCanIcon className="h-4 w-4" />
-					</Button>
-				</div>
+				<Button className="ml-auto fill-white" onClick={() => clearLogs()} title={t("clear")}>
+					<TrashCanIcon className="h-4 w-4" />
+				</Button>
 			</div>
 
 			<div className="scrollbar h-48 flex-auto overflow-auto pt-6">
