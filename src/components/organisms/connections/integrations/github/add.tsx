@@ -54,7 +54,6 @@ export const GithubIntegrationAddForm = ({
 	const createPatConnection = async () => {
 		const { pat, webhookSercet: secret } = getValues();
 
-		setIsLoading(true);
 		try {
 			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
 				pat,
@@ -122,6 +121,8 @@ export const GithubIntegrationAddForm = ({
 	};
 
 	const onSubmit = () => {
+		setIsLoading(true);
+
 		if (connectionId) {
 			createPatConnection();
 
