@@ -66,15 +66,8 @@ module.exports = {
       white: {
         DEFAULT: "#ffffff",
       },
-      // TODO: move colors to gray, except DEFAULT
       black: {
         DEFAULT: "#000000",
-        100: "#CDCDCD",
-        200: "#2C2C2C",
-        300: "#BEC3D1",
-        500: "#515151",
-        900: "#101010",
-        'text': "#232E3F"
       },
       blue: {
         500: "#3b82f6",
@@ -82,38 +75,36 @@ module.exports = {
       yellow: {
         500: "#eab308",
       },
-      // TODO: move colors to gray
-      "green-light": {
-        DEFAULT: "#E8FFCA",
-      },
-      // TODO: move colors to gray
-      "green-accent": {
-        DEFAULT: "#BCF870",
-      },
-      // TODO: move colors to gray, except DEFAULT
-      "gray-black": {
-        DEFAULT: "#898989",
-        100: "#F6F6F6",
-        200: "#F3F3F6",
-        300: "#F8F8F8",
-        500: "#5B5B5B",
-        600: "#626262",
-        900: "#A9A9A9",
+      green: {
+        200: "#E8FFCA",
+        800: "#BCF870",
       },
       gray: {
-        DEFAULT: "#D9D9D9",
-        200: "#f1f1f1",
-        300: "#d2d2d7",
-        400: "#818181",
-        450: "#EFECE7",
-        500: "#535353",
-        550: "#EDEDED",
-        600: "#454343",
-        700: "#2D2D2D",
-        800: "#1B1B1B",
-        "stroke": "#D3D5DC",
-        "light": "#E8E8EB",
-        "dark": "#707081",
+        DEFAULT: "#d9d9d9",
+        100: "#f8f8f8",
+        150: "#f6f6f6", 
+        200: "#f3f3f6", 
+        250: "#f1f1f1", 
+        300: "#ededed",
+        400: "#e8e8eb", 
+        450: "#d3d5dc",
+        500: "#d2d2d7",
+        550: "#cdcdcd", 
+        600: "#bec3d1",
+        650: "#a9a9a9", 
+        700: "#898989", 
+        750: "#818181", 
+        800: "#707081", 
+        850: "#626262", 
+        900: "#5b5b5b", 
+        950: "#535353", 
+        1000: "#515151", 
+        1050: "#454343", 
+        1100: "#2d2d2d", 
+        1150: "#232e3f", 
+        1200: "#2c2c2c",
+        1250: "#1b1b1b",
+        1300: "#101010", 
       },
       error: {
         DEFAULT: "#FF6B61",

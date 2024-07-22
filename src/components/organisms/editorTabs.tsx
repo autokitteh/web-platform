@@ -68,7 +68,7 @@ export const EditorTabs = () => {
 	};
 
 	const activeCloseIcon = (fileName: string) =>
-		cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-700 group-hover:opacity-100", {
+		cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
 			"opacity-100": openedFiles.find(({ isActive, name }) => name === fileName && isActive),
 		});
 
@@ -110,7 +110,7 @@ export const EditorTabs = () => {
 									className={activeCloseIcon(name)}
 									onClick={(event) => handleCloseButtonClick(event, name)}
 								>
-									<Close className="h-2 w-2 fill-gray-400 transition group-hover:fill-white" />
+									<Close className="h-2 w-2 fill-gray-750 transition group-hover:fill-white" />
 								</IconButton>
 							</Tab>
 						))}

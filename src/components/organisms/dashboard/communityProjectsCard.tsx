@@ -9,12 +9,12 @@ import { GithubShadowIcon, PipeCircleIcon } from "@assets/image/icons";
 
 export const CommunityProjectCard = ({ card, category }: { card: CommunityProjectCardType; category: string }) => {
 	return (
-		<div className="relative flex flex-col rounded-md border border-black-300 bg-white p-5 pr-3.5 shadow-community-card">
+		<div className="relative flex flex-col rounded-md border border-gray-600 bg-white p-5 pr-3.5 shadow-community-card">
 			<div className="flex items-center justify-between gap-1.5">
 				<div className="flex gap-3">
 					{card.integrations.map(({ icon, title }, index) => (
 						<div
-							className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gray-550 p-1"
+							className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gray-400 p-1"
 							key={index}
 							title={title}
 						>
@@ -37,7 +37,7 @@ export const CommunityProjectCard = ({ card, category }: { card: CommunityProjec
 			<div className="mt-auto flex items-center gap-2">
 				<IconSvg size="lg" src={IconLogo} />
 
-				<span className="rounded-full text-xs font-bold text-gray-black-500">+{card.counter}</span>
+				<span className="rounded-full text-xs font-semibold text-gray-1000">+{card.counter}</span>
 			</div>
 
 			<GithubShadowIcon className="absolute -bottom-5 right-8" />

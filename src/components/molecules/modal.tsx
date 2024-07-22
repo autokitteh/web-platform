@@ -28,8 +28,8 @@ export const Modal = ({ children, className, name }: ModalProps) => {
 		onClose: state.closeModal,
 	}));
 	const wrapperClass = cn("fixed left-0 top-0 z-40 flex h-full w-full items-center justify-center");
-	const modalClasses = cn("w-500 rounded-2xl border border-gray-500 bg-white p-3.5 text-gray-800", className);
-	const bgClass = cn("absolute left-0 top-0 -z-10 h-full w-full bg-gray-black/50");
+	const modalClasses = cn("w-500 rounded-2xl border border-gray-950 bg-white p-3.5 text-gray-1250", className);
+	const bgClass = cn("absolute left-0 top-0 -z-10 h-full w-full bg-gray-1100/50");
 
 	return createPortal(
 		<AnimatePresence>
@@ -52,7 +52,7 @@ export const Modal = ({ children, className, name }: ModalProps) => {
 						variants={modalVariants}
 					>
 						<IconButton
-							className="group ml-auto h-default-icon w-default-icon bg-gray-200 p-0"
+							className="group ml-auto h-default-icon w-default-icon bg-gray-250 p-0"
 							onClick={() => onClose(name)}
 						>
 							<Close className="h-3 w-3 fill-black transition group-hover:fill-white" />

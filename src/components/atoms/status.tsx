@@ -7,7 +7,7 @@ export const Status = ({ children, className, color = "gray" }: StatusProps) => 
 	const statusClasses = cn(
 		"rounded border px-1.5 py-1 text-xs font-bold",
 		{
-			"border-gray-stroke bg-gray-light text-gray-black-500": color === "gray",
+			"border-gray-450 bg-gray-400 text-gray-900": color === "gray",
 		},
 		className
 	);

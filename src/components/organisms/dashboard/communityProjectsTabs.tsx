@@ -19,7 +19,7 @@ export const CommunityProjectsTabs = () => {
 
 	return (
 		<div className="flex h-full flex-1 flex-col">
-			<div className="sticky -top-8 z-20 -mt-5 bg-gray-black-300 pb-0 pt-3">
+			<div className="sticky -top-8 z-20 -mt-5 bg-gray-100 pb-0 pt-3">
 				<div
 					className={
 						"flex select-none items-center gap-2 xl:gap-4 2xl:gap-5 3xl:gap-6 " +

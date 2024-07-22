@@ -70,7 +70,7 @@ export const Project = () => {
 		<SplitFrame>
 			{displayTabs ? (
 				<div className="flex h-full flex-1 flex-col">
-					<div className="sticky -top-8 z-20 -mt-5 bg-gray-700 pb-0 pt-3">
+					<div className="sticky -top-8 z-20 -mt-5 bg-gray-1100 pb-0 pt-3">
 						<div
 							className={
 								"flex select-none items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 " +

@@ -11,8 +11,8 @@ export const Tab = ({ activeTab, ariaLabel, children, className, onClick, value,
 		"cursor-pointer border-b-2 border-transparent pb-1 uppercase tracking-tight text-white hover:font-bold",
 		{
 			"border-white font-bold": activeTab === value,
-			"text-black-200": variant === "dark",
-			"border-black-200 font-bold": activeTab === value && variant === "dark",
+			"text-gray-1200": variant === "dark",
+			"border-gray-1200 font-bold": activeTab === value && variant === "dark",
 		},
 		className
 	);

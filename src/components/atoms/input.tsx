@@ -54,27 +54,27 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const placeholderText = isRequired ? `${placeholder} *` : placeholder;
 
 	const baseClass = cn(
-		"relative flex items-center border border-gray-500 bg-black pr-2.5 text-base",
+		"relative flex items-center border border-gray-950 bg-black pr-2.5 text-base",
 		"rounded-lg transition focus-within:border-white hover:border-white",
-		{ "bg-white focus-within:border-gray-700 hover:border-gray-700": variant === InputVariant.light },
+		{ "bg-white focus-within:border-gray-1100 hover:border-gray-1100": variant === InputVariant.light },
 		{ "border-white": hasValue && variant !== InputVariant.light },
-		{ "pointer-events-none select-none border-gray-500": disabled },
+		{ "pointer-events-none select-none border-gray-950": disabled },
 		className,
 		{ "border-error": isError }
 	);
 
 	const inputClass = cn(
 		"h-12 w-full bg-transparent px-4 py-2.5 outline-none",
-		{ "text-gray-400": disabled },
+		{ "text-gray-750": disabled },
 		{ "autofill-black": variant === InputVariant.light && !disabled },
-		{ "autofill-gray-700": variant === InputVariant.light && disabled },
+		{ "autofill-gray-1100": variant === InputVariant.light && disabled },
 		classInput
 	);
 
 	const labelClass = cn(
 		"pointer-events-none absolute left-4 text-white transition-all",
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
-		{ "-top-2 left-3 px-1 text-xs before:bg-gray-500": isFocused || hasValue },
+		{ "-top-2 left-3 px-1 text-xs before:bg-gray-950": isFocused || hasValue },
 		{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light },
 		{ "text-black": variant === InputVariant.light }
 	);

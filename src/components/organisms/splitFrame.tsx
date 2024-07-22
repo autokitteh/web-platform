@@ -18,7 +18,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 		"rounded-2xl": !children,
 	});
 
-	const leftFrameClass = cn(`flex-auto rounded-r-none border-r border-gray-600 bg-gray-700 ${heightFrameClass}`);
+	const leftFrameClass = cn(`flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100 ${heightFrameClass}`);
 
 	return (
 		<div className="flex w-full justify-end">
@@ -37,10 +37,10 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 						<EditorTabs />
 					</div>
 
-					<Button className="resize-handle-vertical z-0 -mx-8 cursor-ns-resize rounded-none bg-gray-700 p-0.5 transition hover:bg-gray-400" />
+					<Button className="resize-handle-vertical z-0 -mx-8 cursor-ns-resize rounded-none bg-gray-1100 p-0.5 transition hover:bg-gray-750" />
 
 					<div
-						className="z-0 -mx-8 border-0 border-t border-t-gray-600 bg-black px-8 pt-5"
+						className="z-0 -mx-8 border-0 border-t border-t-gray-1050 bg-black px-8 pt-5"
 						style={{ height: `${outputHeight as number}%` }}
 					>
 						<OutputTabs />

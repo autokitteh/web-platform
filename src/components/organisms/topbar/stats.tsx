@@ -48,8 +48,8 @@ export const StatsTopbar = () => {
 	}, [projectId]);
 
 	return (
-		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-800 py-3 pl-7 pr-3.5">
-			<div className="relative flex items-end gap-3 font-fira-code text-gray-300">
+		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-1250 py-3 pl-7 pr-3.5">
+			<div className="relative flex items-end gap-3 font-fira-code text-gray-500">
 				<span className="text-xl font-bold leading-6">{project?.name}</span>
 
 				<span className="text-sm font-semibold leading-tight">{project?.id}</span>
@@ -58,7 +58,7 @@ export const StatsTopbar = () => {
 			<div className="flex items-stretch gap-3">
 				<Button
 					ariaLabel={t("topbar.buttons.goToProject")}
-					className="px-4 py-2 font-semibold text-white hover:bg-gray-700"
+					className="px-4 py-2 font-semibold text-white hover:bg-gray-1100"
 					href={`/projects/${projectId}`}
 					variant="outline"
 				>

@@ -16,7 +16,7 @@ const AccordionWrapper = ({
 	title: string;
 }) => {
 	return (
-		<div className="inline-block rounded bg-gray-600 p-2 pt-1.5">
+		<div className="inline-block rounded bg-gray-1050 p-2 pt-1.5">
 			<Accordion className={className} title={title}>
 				{children}
 			</Accordion>
@@ -55,14 +55,14 @@ export const WithLink = {
 	render: ({ children, className, title }) => (
 		<AccordionWrapper className={className} title={title}>
 			<a
-				className="group inline-flex items-center gap-2.5 text-green-accent"
+				className="group inline-flex items-center gap-2.5 text-green-800"
 				href={window.location.href}
 				rel="noreferrer"
 				target="_blank"
 			>
 				{children}
 
-				<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+				<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
 			</a>
 		</AccordionWrapper>
 	),

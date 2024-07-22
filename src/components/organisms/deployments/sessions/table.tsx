@@ -43,7 +43,7 @@ export const SessionsTable = () => {
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 
 	const frameClass = useMemo(
-		() => cn("w-1/2 bg-gray-700 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
+		() => cn("w-1/2 bg-gray-1100 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
 		[sessionId]
 	);
 
@@ -207,7 +207,7 @@ export const SessionsTable = () => {
 					<div className="flex flex-wrap items-center gap-2.5">
 						<IconButton
 							ariaLabel={t("ariaLabelReturnBack")}
-							className="min-w-20 gap-2 bg-gray-600 text-sm text-white hover:bg-black"
+							className="min-w-20 gap-2 bg-gray-1050 text-sm text-white hover:bg-black"
 							onClick={() => navigate(`/projects/${projectId}/deployments`)}
 						>
 							<ArrowLeft className="h-4" />
@@ -215,7 +215,7 @@ export const SessionsTable = () => {
 							{t("buttons.back")}
 						</IconButton>
 
-						<div className="font-mediumy text-base text-gray-300">
+						<div className="font-mediumy text-base text-gray-500">
 							{t("totalSessions", { total: totalSessions })}
 						</div>
 
@@ -269,11 +269,11 @@ export const SessionsTable = () => {
 			{sessionId ? (
 				<Outlet />
 			) : (
-				<Frame className="w-3/5 rounded-l-none bg-gray-700 pt-20 transition">
+				<Frame className="w-3/5 rounded-l-none bg-gray-1100 pt-20 transition">
 					<div className="mt-20 flex flex-col items-center">
-						<p className="mb-8 text-lg font-bold text-gray-400">{t("noSelectedSession")}</p>
+						<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
 
-						<CatImage className="border-b border-gray-400 fill-gray-400" />
+						<CatImage className="border-b border-gray-750 fill-gray-750" />
 					</div>
 				</Frame>
 			)}

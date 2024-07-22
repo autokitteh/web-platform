@@ -71,19 +71,19 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
 	const buttonMenuStyle = (href: string) =>
-		cn("gap-1.5 p-0.5 pl-1 hover:bg-green-light", {
-			"bg-gray-700": isButtonActive(href) && isOpen,
-			"text-white hover:bg-gray-700": isButtonActive(href),
+		cn("gap-1.5 p-0.5 pl-1 hover:bg-green-200", {
+			"bg-gray-1100": isButtonActive(href) && isOpen,
+			"text-white hover:bg-gray-1100": isButtonActive(href),
 		});
 
 	const buttonMenuIconStyle = (href: string) =>
-		cn("fill-gray-700", {
+		cn("fill-gray-1100", {
 			"fill-white p-0.5": isButtonActive(href),
 		});
 
 	const buttonMenuIconWrapperStyle = (href: string) =>
 		cn("flex h-9 w-9 items-center justify-center rounded-full duration-500", {
-			"bg-gray-700 hover:bg-gray-700": isButtonActive(href) && !isOpen,
+			"bg-gray-1100 hover:bg-gray-1100": isButtonActive(href) && !isOpen,
 		});
 
 	return (
@@ -92,7 +92,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
 						ariaLabel="New Project"
-						className="gap-1.5 p-0.5 pl-1 hover:bg-green-light"
+						className="gap-1.5 p-0.5 pl-1 hover:bg-green-200"
 						onClick={handleCreateProject}
 					>
 						<div className="flex h-9 w-9 items-center justify-center">

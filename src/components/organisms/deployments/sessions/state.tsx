@@ -6,7 +6,7 @@ import { SessionState } from "@enums";
 
 export const SessionsTableState = ({ sessionState }: { sessionState: SessionState }) => {
 	const sessionsTableStateStyle = {
-		[SessionState.completed]: "text-green-accent",
+		[SessionState.completed]: "text-green-800",
 		[SessionState.created]: "text-white",
 		[SessionState.error]: "text-red",
 		[SessionState.running]: "text-blue-500",

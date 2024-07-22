@@ -63,7 +63,7 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 				</Button>
 
 				<Button
-					className="w-auto bg-gray-700 px-4 py-3 font-semibold"
+					className="w-auto bg-gray-1100 px-4 py-3 font-semibold"
 					disabled={loading}
 					onClick={onDelete}
 					variant="filled"

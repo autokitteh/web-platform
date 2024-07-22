@@ -13,7 +13,7 @@ import { ArrowLeft } from "@assets/image/icons";
 export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
-	const baseStyle = cn("flex justify-between bg-gray-700 py-2.5", className);
+	const baseStyle = cn("flex justify-between bg-gray-1100 py-2.5", className);
 
 	return (
 		<div className="sticky -top-10 z-20 -my-2.5">
@@ -27,13 +27,13 @@ export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHead
 						<ArrowLeft />
 					</IconButton>
 
-					<p className="text-base text-gray-300">{title}</p>
+					<p className="text-base text-gray-500">{title}</p>
 				</div>
 
 				<div className="flex items-center gap-6">
 					<Button
 						ariaLabel={t("cancel")}
-						className="p-0 font-semibold text-gray-300 hover:text-white"
+						className="p-0 font-semibold text-gray-500 hover:text-white"
 						onClick={() => navigate(-1)}
 					>
 						{t("cancel")}

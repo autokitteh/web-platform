@@ -20,10 +20,10 @@ export const ProjectsTable = () => {
 			<div className="text-2xl font-bold text-black">{t("title")}</div>
 
 			{projectsList.length ? (
-				<Table className="mt-2.5 max-h-96 rounded-t-20 border border-black-300">
+				<Table className="mt-2.5 max-h-96 rounded-t-20 border border-gray-600">
 					<THead className="bg-white">
 						<Tr className="border-none pl-6 hover:bg-transparent">
-							<Th className="group h-11 cursor-pointer font-normal text-gray-dark">
+							<Th className="group h-11 cursor-pointer font-normal text-gray-1250">
 								{t("table.columns.projectName")}
 
 								<SortButton className="opacity-0 group-hover:opacity-100" />
@@ -31,10 +31,10 @@ export const ProjectsTable = () => {
 						</Tr>
 					</THead>
 
-					<TBody className="bg-gray-black-200">
+					<TBody className="bg-gray-250">
 						{itemData.map(({ href, id, name }) => (
 							<Tr
-								className="group cursor-pointer border-none pl-6 text-black-text hover:bg-transparent"
+								className="group cursor-pointer border-none pl-6 text-gray-1150 hover:bg-transparent"
 								key={id}
 							>
 								<Td className="group-hover:font-bold" onClick={() => navigate(href)}>

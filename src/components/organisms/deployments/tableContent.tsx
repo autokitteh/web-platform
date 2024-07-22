@@ -110,7 +110,7 @@ export const DeploymentsTableContent = ({
 					</Tr>
 				</THead>
 
-				<TBody className="bg-gray-700">
+				<TBody className="bg-gray-1100">
 					{sortedDeployments.map(({ buildId, createdAt, deploymentId, sessionStats, state }) => (
 						<Tr
 							className="group cursor-pointer"
@@ -129,7 +129,7 @@ export const DeploymentsTableContent = ({
 								<DeploymentState deploymentState={state} />
 							</Td>
 
-							<Td className="max-w-20">
+							<Td className="max-w-20 pr-0">
 								<div className="flex space-x-1">
 									{state === DeploymentStateVariant.active ? (
 										<IconButton
@@ -148,7 +148,7 @@ export const DeploymentsTableContent = ({
 											className="p-1"
 											onClick={(event) => handleDeploymentAction(deploymentId, "activate", event)}
 										>
-											<ActionActiveIcon className="h-4 w-4 transition group-hover:fill-green-accent" />
+											<ActionActiveIcon className="h-4 w-4 transition group-hover:fill-green-800" />
 										</IconButton>
 									)}
 

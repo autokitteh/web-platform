@@ -71,14 +71,14 @@ export const Security = () => {
 						<div className="flex w-full">
 							<Input
 								aria-label={t("copyInputAriaLabel")}
-								className="flex-1 rounded-3xl hover:border-gray-700"
+								className="flex-1 rounded-3xl hover:border-gray-1100"
 								disabled
 								value={token}
 							/>
 
 							<Button
 								aria-label={t("copyButton")}
-								className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-300"
+								className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
 								onClick={() => copyToClipboard(token)}
 								variant="outline"
 							>

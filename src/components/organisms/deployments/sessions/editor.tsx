@@ -171,7 +171,7 @@ export const SessionTableEditorFrame = () => {
 						{t("output")}:{/* eslint-disable @liferay/empty-line-between-elements */}
 						<IconButton
 							ariaLabel={t("buttons.ariaCloseEditor")}
-							className="h-7 w-7 bg-gray-700 p-0.5"
+							className="h-7 w-7 bg-gray-1100 p-0.5"
 							onClick={closeEditor}
 						>
 							<Close className="h-3 w-3 fill-white transition" />
@@ -198,9 +198,9 @@ export const SessionTableEditorFrame = () => {
 						/>
 					) : (
 						<div className="mt-20 flex flex-col items-center">
-							<p className="mb-8 text-lg font-bold text-gray-400">{t("noData")}</p>
+							<p className="mb-8 text-lg font-bold text-gray-750">{t("noData")}</p>
 
-							<CatImage className="border-b border-gray-400 fill-gray-400" />
+							<CatImage className="border-b border-gray-750 fill-gray-750" />
 						</div>
 					)}
 

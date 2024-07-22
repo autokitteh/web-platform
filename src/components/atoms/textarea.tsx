@@ -7,7 +7,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Partial<TextArea>>((prop
 	const { className, disabled, isError, placeholder = "Enter text", ...rest } = props;
 
 	const baseStyle = cn(
-		"border border-gray-500 bg-black text-base text-white",
+		"border border-gray-950 bg-black text-base text-white",
 		"w-full pb-2 pl-4 pr-1.5 pt-3.5",
 		"placeholder:font-light placeholder:text-white hover:placeholder:font-medium",
 		"scrollbar rounded-lg transition hover:border-white focus:border-white",
