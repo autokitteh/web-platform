@@ -36,3 +36,4 @@ export { default as MenuCircleIcon } from "@assets/image/icons/MenuCircle.svg?re
 export { default as GithubIcon } from "@assets/image/icons/Github.svg?react";
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
 export { default as PipeCircleIcon } from "@assets/image/icons/PipeCircle.svg?react";
+export { default as TrashCanIcon } from "@assets/image/icons/TrashCan.svg?react";

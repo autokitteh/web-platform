@@ -1,14 +1,19 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { LoggerLevel } from "@enums";
 import { OutputTabsVariants } from "@enums/components";
 
 import { useLoggerStore } from "@store";
 
-import { Tab } from "@components/atoms";
+import { Button, IconSvg, Tab } from "@components/atoms";
+
+import { TrashCanIcon } from "@assets/image/icons";
 
 export const OutputTabs: React.FC = () => {
-	const logs = useLoggerStore((state) => state.logs);
+	const { clearLogs, logs } = useLoggerStore((state) => state);
+	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
 	const ouputTextStyle = {
 		[LoggerLevel.debug]: "",
@@ -29,6 +34,10 @@ export const OutputTabs: React.FC = () => {
 				<Tab activeTab={OutputTabsVariants.output} value={OutputTabsVariants.output}>
 					output
 				</Tab>
+
+				<Button className="ml-auto" onClick={() => clearLogs()} title={t("clear")}>
+					<IconSvg className="fill-white" src={TrashCanIcon} />
+				</Button>
 			</div>
 
 			<div className="scrollbar h-48 flex-auto overflow-auto pt-6">
