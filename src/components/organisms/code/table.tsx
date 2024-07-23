@@ -47,7 +47,7 @@ export const CodeTable = () => {
 
 	const fetchResources = async () => {
 		setIsLoading(true);
-		const resources = await fetchResourcesFromServer();
+		const resources = await fetchResourcesFromServer(true);
 		setResources(resources);
 		setIsLoading(false);
 	};
