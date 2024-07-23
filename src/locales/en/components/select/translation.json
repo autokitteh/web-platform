@@ -1,3 +1,7 @@
 {
-	"noOptionsAvailable": "No options available"
+	"noOptionsAvailable": "No options available",
+	"secretInput": {
+		"lock": "Make Secret",
+		"unlock": "Reveal Secret"
+	}
 }

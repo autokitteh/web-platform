@@ -1,5 +1,7 @@
 import React, { forwardRef, useCallback, useEffect, useId, useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { InputVariant } from "@enums/components";
 import { SecretInputProps } from "@interfaces/components";
 import { cn } from "@utilities";
@@ -27,6 +29,8 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		variant,
 		...rest
 	} = props;
+
+	const { t } = useTranslation("components", { keyPrefix: "secretInput" });
 
 	const [isFocused, setIsFocused] = useState(false);
 	const [hasValue, setHasValue] = useState<boolean>();
@@ -107,6 +111,8 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const lockedIcon = isLocked ? UnlockedLockIcon : LockIcon;
 
+	const inputTitle = isLocked ? t("unlock") : t("lock");
+
 	return (
 		<div className="flex flex-row">
 			<div className={wrapperClass}>
@@ -122,6 +128,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					onFocus={handleFocus}
 					placeholder={placeholderText}
 					ref={ref}
+					title={inputTitle}
 					type={inputType}
 					value={value}
 				/>
