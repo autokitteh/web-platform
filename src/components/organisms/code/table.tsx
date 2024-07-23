@@ -72,13 +72,15 @@ export const CodeTable = () => {
 			}
 			fetchResources();
 		} catch (error) {
-			const errorMessage = tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId });
 			addToast({
 				id: Date.now().toString(),
-				message: errorMessage,
+				message: tErrors("fileAddFailed", { fileName: files[0]?.name }),
 				type: "error",
 			});
-			LoggerService.error(namespaces.projectUICode, errorMessage);
+			LoggerService.error(
+				namespaces.projectUICode,
+				tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId })
+			);
 		}
 	};
 
@@ -126,10 +128,6 @@ export const CodeTable = () => {
 	const handleTrashIconClick = (event: React.MouseEvent, name: string) => {
 		event.stopPropagation();
 		openModal(ModalName.deleteFile, name);
-	};
-
-	const handleFileClick = (name: string) => {
-		openFileAsActive(name);
 	};
 
 	const resourcesEntries = Object.entries(resources);
@@ -198,7 +196,7 @@ export const CodeTable = () => {
 
 						<TBody>
 							{sortedResources.map(([name], index) => (
-								<Tr className={activeBodyRow(name)} key={index} onClick={() => handleFileClick(name)}>
+								<Tr className={activeBodyRow(name)} key={index} onClick={() => openFileAsActive(name)}>
 									<Td className="cursor-pointer font-medium">{name}</Td>
 
 									<Td className="max-w-12 pr-0">

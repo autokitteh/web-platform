@@ -16,6 +16,7 @@
 	"failedRemoveSessionExtended": "Failed to remove session, ID: {{sessionId}}",
 	"failedStopSession": "Failed to stop session",
 	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}",
+	"fileAddFailed": "File creation failed for: {{fileName}}",
 	"nameRequired": "Name is required",
 	"noDataReturnedFromServer": "No data returned from the server",
 	"projectIdNotFound": "Project ID not found",

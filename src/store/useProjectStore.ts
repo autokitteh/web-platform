@@ -10,14 +10,7 @@ import { ProjectsService } from "@services";
 
 const defaultState: Omit<
 	ProjectStore,
-	| "addProjectToMenu"
-	| "createProject"
-	| "getProject"
-	| "getProjectsList"
-	| "renameProject"
-	| "reset"
-	| "projectList"
-	| "deleteProject"
+	"createProject" | "getProject" | "getProjectsList" | "renameProject" | "reset" | "projectList" | "deleteProject"
 > = {
 	projectsList: [],
 };

@@ -101,10 +101,6 @@ export const EditorTabs = () => {
 		closeOpenedFile(name);
 	};
 
-	const onTabClick = (value: string) => {
-		openFileAsActive(value);
-	};
-
 	return (
 		<div className="flex h-full flex-1 flex-col pt-8">
 			{projectId ? (
@@ -120,7 +116,7 @@ export const EditorTabs = () => {
 								activeTab={activeEditorFileName}
 								className="group flex items-center gap-1"
 								key={name}
-								onClick={() => onTabClick(name)}
+								onClick={() => openFileAsActive(name)}
 								value={name}
 							>
 								{name}

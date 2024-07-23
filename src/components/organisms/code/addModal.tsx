@@ -53,14 +53,13 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 			await addFile(newFile, newFileContent);
 			openFileAsActive(newFile);
 		} catch (error) {
-			const errorMessage = t("fileAddFailedExtended", { fileName: name, projectId });
 			addToast({
 				id: Date.now().toString(),
-				message: errorMessage,
+				message: t("fileAddFailed", { fileName: name }),
 				type: "error",
 			});
 
-			LoggerService.error(namespaces.projectUICode, errorMessage);
+			LoggerService.error(namespaces.projectUICode, t("fileAddFailedExtended", { fileName: name, projectId }));
 		}
 		closeModal(ModalName.addCodeAssets);
 
