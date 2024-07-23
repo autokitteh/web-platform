@@ -4,17 +4,11 @@ import { InputType } from "@type/components";
 
 export interface SecretInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	classInput?: string;
-	className?: string;
-	defaultValue?: string;
-	disabled?: boolean;
 	isError?: boolean;
 	isLocked?: boolean;
 	isLockedDisabled?: boolean;
 	isRequired?: boolean;
-	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	onLockClick?: () => void;
-	placeholder?: string;
-	value?: string;
+	onLock?: () => void;
 	variant?: InputType;
 	register: UseFormRegisterReturn;
 	onFocus?: () => void;

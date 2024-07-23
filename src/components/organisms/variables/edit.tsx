@@ -134,7 +134,7 @@ export const EditVariable = () => {
 							setValue("value", event.target.value);
 						}}
 						onFocus={handleFocus}
-						onLockClick={toggleLock}
+						onLock={toggleLock}
 						placeholder={tForm("placeholders.value")}
 						register={register("value", { required: tForm("valueRequired") })}
 						value={value}

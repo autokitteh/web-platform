@@ -89,9 +89,9 @@ export const AddVariable = () => {
 						onChange={(event) => {
 							setValue("value", event.target.value);
 						}}
-						onLockClick={toggleLock}
-						placeholder={tForm("placeholders.value")} // Use the correct placeholder text
-						register={register("value", { required: t("valueRequired") })} // Pass register method here
+						onLock={toggleLock}
+						placeholder={tForm("placeholders.value")}
+						register={register("value")}
 					/>
 
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>

@@ -20,7 +20,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		isRequired,
 		onChange,
 		onFocus,
-		onLockClick,
+		onLock,
 		placeholder,
 		register,
 		value,
@@ -133,14 +133,14 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 				</label>
 
 				{isLockedDisabled ? (
-					<button onClick={onLockClick} type="button">
+					<button onClick={onLock} type="button">
 						<IconSvg className="mr-2" size="md" src={LockIcon} />
 					</button>
 				) : null}
 			</div>
 
 			{!isLockedDisabled ? (
-				<button className={iconClass} onClick={onLockClick} type="button">
+				<button className={iconClass} onClick={onLock} type="button">
 					<IconSvg size="md" src={lockedIcon} />
 				</button>
 			) : null}
