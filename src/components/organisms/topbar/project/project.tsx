@@ -54,12 +54,12 @@ export const ProjectTopbar = () => {
 	};
 
 	useEffect(() => {
-		if (projectId) {
-			loadProject(projectId);
-			if (projectId !== openProjectId) {
-				setOpenProjectId(projectId);
-				setOpenFiles([]);
-			}
+		if (!projectId) return;
+
+		loadProject(projectId);
+		if (projectId !== openProjectId) {
+			setOpenProjectId(projectId);
+			setOpenFiles([]);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);

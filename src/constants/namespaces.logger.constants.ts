@@ -6,6 +6,7 @@ export const namespaces = {
 	manifestService: "Manifest Service",
 	projectService: "Project Service",
 	projectUI: "Project UI",
+	projectUICode: "Project UI - Code",
 	resourcesService: "Resources Service",
 	sessionsHistory: "Sessions History",
 	sessionsService: "Sessions Service",

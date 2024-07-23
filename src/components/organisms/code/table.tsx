@@ -4,8 +4,9 @@ import { isEmpty, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { monacoLanguages } from "@constants";
+import { monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
+import { LoggerService } from "@services";
 import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
@@ -71,11 +72,13 @@ export const CodeTable = () => {
 			}
 			fetchResources();
 		} catch (error) {
+			const errorMessage = tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId });
 			addToast({
 				id: Date.now().toString(),
-				message: tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId }),
+				message: errorMessage,
 				type: "error",
 			});
+			LoggerService.error(namespaces.projectUICode, errorMessage);
 		}
 	};
 

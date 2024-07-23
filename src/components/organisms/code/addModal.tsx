@@ -5,9 +5,10 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { defalutFileExtension, monacoLanguages } from "@constants";
+import { defalutFileExtension, monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { ModalAddCodeAssetsProps } from "@interfaces/components";
+import { LoggerService } from "@services";
 import { codeAssetsSchema } from "@validations";
 
 import { useFileOperations } from "@hooks";
@@ -52,11 +53,14 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 			await addFile(newFile, newFileContent);
 			openFileAsActive(newFile);
 		} catch (error) {
+			const errorMessage = t("fileAddFailedExtended", { fileName: name, projectId });
 			addToast({
 				id: Date.now().toString(),
-				message: t("fileAddFailedExtended", { fileName: name, projectId }),
+				message: errorMessage,
 				type: "error",
 			});
+
+			LoggerService.error(namespaces.projectUICode, errorMessage);
 		}
 		closeModal(ModalName.addCodeAssets);
 
