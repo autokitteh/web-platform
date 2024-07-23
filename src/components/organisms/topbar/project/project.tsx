@@ -17,7 +17,7 @@ import { DeleteProjectModal } from "@components/organisms";
 import { BuildIcon, DeployIcon, MoreIcon, StatsIcon } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
-export const Topbar = () => {
+export const ProjectTopbar = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
 	const { t: tError } = useTranslation("errors");
 	const { projectId } = useParams();
