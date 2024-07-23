@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/autokitteh/web-platform/compare/v1.19.0...v1.19.1) (2024-07-23)
+
+
+### Bug Fixes
+
+* add husky execution file ([#219](https://github.com/autokitteh/web-platform/issues/219)) ([73f1e97](https://github.com/autokitteh/web-platform/commit/73f1e97fd800cbedad6eb2dd742a6931c62d331f))
+
 # [1.19.0](https://github.com/autokitteh/web-platform/compare/v1.18.1...v1.19.0) (2024-07-23)
 
 
