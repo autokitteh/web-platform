@@ -108,7 +108,7 @@ export const ProjectTopbarButtons = () => {
 		<div className="flex items-stretch gap-3">
 			<Button
 				ariaLabel={t("topbar.buttons.ariaBuildProject")}
-				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white hover:bg-gray-700"
+				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white"
 				disabled={loadingButton[TopbarButton.build]}
 				onClick={build}
 				variant="outline"
@@ -120,7 +120,7 @@ export const ProjectTopbarButtons = () => {
 
 			<Button
 				ariaLabel={t("topbar.buttons.ariaDeployProject")}
-				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white hover:bg-gray-700"
+				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white"
 				disabled={loadingButton[TopbarButton.deploy]}
 				onClick={deploy}
 				variant="outline"
@@ -132,7 +132,7 @@ export const ProjectTopbarButtons = () => {
 
 			<Button
 				ariaLabel={t("topbar.buttons.ariaStats")}
-				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white hover:bg-gray-700"
+				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white"
 				href={`/projects/${projectId}/deployments`}
 				variant="outline"
 			>
@@ -155,7 +155,7 @@ export const ProjectTopbarButtons = () => {
 					</Button>
 				}
 			>
-				<Button className="h-full px-4 text-white hover:bg-gray-700" variant="outline">
+				<Button className="h-full px-4 text-white" variant="outline">
 					<IconSvg size="lg" src={MoreIcon} />
 
 					{t("more", { ns: "buttons" })}
