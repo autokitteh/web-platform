@@ -11,8 +11,8 @@ interface FilesResponse {
 }
 
 export interface ProjectStore {
-	addProjectToMenu: (project: Project) => void;
 	createProject: () => ServiceResponse<{ name: string; projectId: string }>;
+	deleteProject: (projectId: string) => ServiceResponse<Project>;
 	getProject: (projectId: string) => ServiceResponse<Project>;
 	getProjectsList: () => ServiceResponse<Project[]>;
 	getProjectResources: (resources: Record<string, Uint8Array>) => void;

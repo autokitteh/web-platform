@@ -19,7 +19,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { addProjectToMenu, createProject, getProjectsList, projectsList } = useProjectStore();
+	const { createProject, getProjectsList, projectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 
@@ -45,14 +45,6 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 
 			return;
 		}
-
-		const menuProject = {
-			href: `/${SidebarHrefMenu.projects}/${data?.projectId}`,
-			id: data!.projectId,
-			name: data!.name,
-		};
-
-		addProjectToMenu(menuProject);
 
 		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
 	};

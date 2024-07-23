@@ -21,7 +21,7 @@ export const ProjectTopbarButtons = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
-	const { getProjectsList, resources } = useProjectStore();
+	const { deleteProject, resources } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = React.useState<Record<string, boolean>>({});
 
@@ -80,7 +80,7 @@ export const ProjectTopbarButtons = () => {
 			return;
 		}
 
-		const { error } = await ProjectsService.delete(projectId);
+		const { error } = await deleteProject(projectId);
 		closeModal(ModalName.deleteProject);
 		if (error) {
 			addToast({
@@ -91,7 +91,11 @@ export const ProjectTopbarButtons = () => {
 
 			return;
 		}
-		await getProjectsList();
+		addToast({
+			id: Date.now().toString(),
+			message: t("topbar.deleteProjectSuccess"),
+			type: "success",
+		});
 		navigate("/");
 	};
 

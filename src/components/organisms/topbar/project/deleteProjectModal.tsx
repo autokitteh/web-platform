@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { ModalDeleteTriggerProps } from "@interfaces/components";
-import { ProjectsService } from "@services";
-import { Project } from "@type/models";
 
-import { useModalStore } from "@store";
+import { useModalStore, useProjectStore } from "@store";
 
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
@@ -16,36 +14,22 @@ import { Modal } from "@components/molecules";
 export const DeleteProjectModal = ({ onDelete }: ModalDeleteTriggerProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteProject" });
 	const { closeModal } = useModalStore();
+	const { projectsList } = useProjectStore();
 	const { projectId } = useParams();
-	const [project, setProject] = useState<Project>();
 
-	const fetchProject = async () => {
-		if (!projectId) {
-			return;
-		}
-		const { data } = await ProjectsService.get(projectId);
-		if (!data) {
-			return;
-		}
-		setProject(data);
-	};
-
-	useEffect(() => {
-		fetchProject();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	const projectName = projectsList.find(({ id }) => id === projectId)?.name;
 
 	return (
 		<Modal name={ModalName.deleteProject}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("title", { name: project?.name })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title", { name: projectName })}</h3>
 
 				<div className="font-medium">
 					<Trans
 						i18nKey="line"
 						t={t}
 						values={{
-							name: project?.name,
+							name: projectName,
 							projectId,
 						}}
 					/>

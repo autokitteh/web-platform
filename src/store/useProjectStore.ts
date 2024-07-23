@@ -6,15 +6,15 @@ import { immer } from "zustand/middleware/immer";
 
 import { namespaces } from "@constants";
 import { StoreName } from "@enums";
+import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { LoggerService, ProjectsService } from "@services";
-import { Project } from "@type/models";
 import { readFileAsUint8Array, updateOpenedFilesState } from "@utilities";
 
 const defaultState: Omit<
 	ProjectStore,
-	| "addProjectToMenu"
 	| "createProject"
+	| "deleteProject"
 	| "getProject"
 	| "getProjectsList"
 	| "getProjectResources"
@@ -35,14 +35,6 @@ const defaultState: Omit<
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 
-	addProjectToMenu: (project: Project) => {
-		set((state) => {
-			state.projectsList.push(project);
-
-			return state;
-		});
-	},
-
 	createProject: async () => {
 		const projectName = randomatic("Aa", 8);
 		const { data: projectId, error } = await ProjectsService.create(projectName);
@@ -54,7 +46,35 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			return { data: undefined, error: new Error("Project not created") };
 		}
 
+		const menuItem = {
+			href: `/${SidebarHrefMenu.projects}/${projectId}`,
+			id: projectId,
+			name: projectName,
+		};
+
+		set((state) => {
+			state.projectsList.push(menuItem);
+
+			return state;
+		});
+
 		return { data: { name: projectName, projectId }, error: undefined };
+	},
+
+	deleteProject: async (projectId: string) => {
+		const { error } = await ProjectsService.delete(projectId);
+
+		if (error) {
+			return { data: undefined, error };
+		}
+
+		set((state) => {
+			const updatedProjectsList = state.projectsList.filter(({ id }) => id !== projectId);
+
+			return { projectsList: updatedProjectsList };
+		});
+
+		return { data: undefined, error: undefined };
 	},
 
 	getProject: async (projectId: string) => {
