@@ -9,7 +9,7 @@ import { VariablesService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
-import { useSecretInput } from "@hooks";
+import { useSecretInputs } from "@hooks";
 
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -42,7 +42,7 @@ export const EditVariable = () => {
 		resolver: zodResolver(newVariableShema),
 	});
 
-	const { isLocked, setIsLocked, toggleLock } = useSecretInput(true);
+	const { locks, toggleLock } = useSecretInputs({ value: false });
 	const { name, value } = watch();
 
 	const fetchVariable = async () => {
@@ -60,7 +60,7 @@ export const EditVariable = () => {
 			return;
 		}
 
-		setIsLocked(currentVar.isSecret);
+		toggleLock(currentVar.value);
 
 		reset({
 			name: currentVar.name,
@@ -78,7 +78,7 @@ export const EditVariable = () => {
 		const secretValue = value === "**********" ? "" : value;
 		setIsLoading(true);
 		const { error } = await VariablesService.set(projectId!, {
-			isSecret: isLocked,
+			isSecret: locks.value,
 			name,
 			scopeId: "",
 			value: secretValue,
@@ -96,7 +96,7 @@ export const EditVariable = () => {
 	};
 
 	const handleFocus = () => {
-		if (isLocked && firstFocus) {
+		if (locks.value && firstFocus) {
 			setValue("value", "");
 			setFirstFocus(false);
 		}
@@ -129,12 +129,12 @@ export const EditVariable = () => {
 
 				<div className="relative">
 					<SecretInput
-						isLocked={isLocked}
+						isLocked={locks.value}
 						onChange={(event) => {
 							setValue("value", event.target.value);
 						}}
 						onFocus={handleFocus}
-						onLock={toggleLock}
+						onLock={() => toggleLock("value")}
 						placeholder={tForm("placeholders.value")}
 						register={register("value", { required: tForm("valueRequired") })}
 						value={value}

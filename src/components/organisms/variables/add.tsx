@@ -9,7 +9,7 @@ import { VariablesService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
-import { useSecretInput } from "@hooks";
+import { useSecretInputs } from "@hooks";
 
 import { ErrorMessage, Input, SecretInput } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -36,13 +36,13 @@ export const AddVariable = () => {
 		resolver: zodResolver(newVariableShema),
 	});
 
-	const { isLocked, toggleLock } = useSecretInput(false);
+	const { locks, toggleLock } = useSecretInputs({ value: false });
 
 	const onSubmit = async () => {
 		const { name, value } = getValues();
 		setIsLoading(true);
 		const { error } = await VariablesService.set(projectId!, {
-			isSecret: isLocked,
+			isSecret: locks.value,
 			name,
 			scopeId: "",
 			value,
@@ -85,11 +85,11 @@ export const AddVariable = () => {
 
 				<div className="relative">
 					<SecretInput
-						isLocked={isLocked}
+						isLocked={locks.value}
 						onChange={(event) => {
 							setValue("value", event.target.value);
 						}}
-						onLock={toggleLock}
+						onLock={() => toggleLock("value")}
 						placeholder={tForm("placeholders.value")}
 						register={register("value")}
 					/>
