@@ -69,7 +69,14 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}
 
 		set((state) => {
-			const updatedProjectsList = state.projectsList.filter(({ id }) => id !== projectId);
+			const projectIndex = state.projectsList.findIndex(({ id }) => id === projectId);
+
+			if (projectIndex === -1) {
+				return state;
+			}
+
+			const updatedProjectsList = [...state.projectsList];
+			updatedProjectsList.splice(projectIndex, 1);
 
 			return { projectsList: updatedProjectsList };
 		});
