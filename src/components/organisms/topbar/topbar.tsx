@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { redirect, useParams } from "react-router-dom";
+import { redirect, useNavigate, useParams } from "react-router-dom";
 
 import { ModalName, TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
@@ -18,9 +18,11 @@ import { BuildIcon, DeployIcon, MoreIcon, StatsIcon } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
 export const Topbar = () => {
-	const { t } = useTranslation(["projects", "errors", "buttons"]);
+	const { t } = useTranslation(["projects", "buttons"]);
+	const { t: tError } = useTranslation("errors");
 	const { projectId } = useParams();
-	const { openModal } = useModalStore();
+	const navigate = useNavigate();
+	const { closeModal, openModal } = useModalStore();
 	const { getProject, renameProject, resources } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
@@ -152,6 +154,25 @@ export const Topbar = () => {
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 	};
 
+	const handleDeleteProject = async () => {
+		if (!projectId) {
+			return;
+		}
+
+		const { error } = await ProjectsService.delete(projectId);
+		closeModal(ModalName.deleteProject);
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: tError("projectRemoveFailed"),
+				type: "error",
+			});
+
+			return;
+		}
+		navigate("/");
+	};
+
 	const handleOpenModalDeletePrject = useCallback(() => {
 		openModal(ModalName.deleteProject);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -239,7 +260,7 @@ export const Topbar = () => {
 				</DropdownButton>
 			</div>
 
-			<DeleteProjectModal />
+			<DeleteProjectModal onDelete={handleDeleteProject} />
 		</div>
 	);
 };

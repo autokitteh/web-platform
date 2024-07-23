@@ -20,6 +20,7 @@
 	"noDataReturnedFromServer": "No data returned from the server",
 	"projectIdNotFound": "Project ID not found",
 	"projectIdNotFoundExtended": "Project ID {{triggerId}} not found",
+	"projectRemoveFailed": "Project remove failed",
 	"sessionLogMissingOnErrorType": "Session History - No error",
 	"sessionLogRecordMultipleProps": "More than one session log record type found: {{props}}",
 	"sessionLogRecordTypeNotFound": "Session log record type not found: {{props}}",
