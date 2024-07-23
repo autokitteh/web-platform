@@ -11,8 +11,10 @@ import { cn } from "@utilities";
 import { useProjectStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
+import { DropdownButton } from "@components/molecules";
 
-import { Build, Deploy, Stats } from "@assets/image";
+import { BuildIcon, DeployIcon, MoreIcon, StatsIcon } from "@assets/image";
+import { TrashIcon } from "@assets/image/icons";
 
 export const Topbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
@@ -180,7 +182,7 @@ export const Topbar = () => {
 					onClick={build}
 					variant="outline"
 				>
-					{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg size="lg" src={Build} />}
+					{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg size="lg" src={BuildIcon} />}
 
 					{t("topbar.buttons.build")}
 				</Button>
@@ -192,7 +194,7 @@ export const Topbar = () => {
 					onClick={deploy}
 					variant="outline"
 				>
-					{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg size="lg" src={Deploy} />}
+					{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg size="lg" src={DeployIcon} />}
 
 					{t("topbar.buttons.deploy")}
 				</Button>
@@ -203,10 +205,27 @@ export const Topbar = () => {
 					href={`/projects/${projectId}/deployments`}
 					variant="outline"
 				>
-					<IconSvg size="lg" src={Stats} />
+					<IconSvg size="lg" src={StatsIcon} />
 
 					{t("topbar.buttons.stats")}
 				</Button>
+
+				<DropdownButton
+					className="font-semibold text-white"
+					contentMenu={
+						<Button className="whitespace-nowrap px-4 py-2 font-semibold text-white" variant="outline">
+							<IconSvg className="fill-white" size="md" src={TrashIcon} />
+
+							{t("topbar.buttons.delete")}
+						</Button>
+					}
+				>
+					<Button className="h-full px-4 text-white hover:bg-gray-700" variant="outline">
+						<IconSvg size="lg" src={MoreIcon} />
+
+						{t("more", { ns: "buttons" })}
+					</Button>
+				</DropdownButton>
 			</div>
 		</div>
 	);
