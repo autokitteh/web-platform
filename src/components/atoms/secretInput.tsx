@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useEffect, useId, useState } from "reac
 
 import { useTranslation } from "react-i18next";
 
+import { Button } from "./buttons";
 import { InputVariant } from "@enums/components";
 import { SecretInputProps } from "@interfaces/components";
 import { cn } from "@utilities";
@@ -139,16 +140,16 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 				</label>
 
 				{isLockedDisabled ? (
-					<button onClick={onLock} type="button">
+					<Button onClick={onLock} type="button">
 						<IconSvg className="mr-2" size="md" src={LockIcon} />
-					</button>
+					</Button>
 				) : null}
 			</div>
 
 			{!isLockedDisabled ? (
-				<button className={iconClass} onClick={onLock} title={buttonTitle} type="button">
+				<Button className={iconClass} onClick={onLock} title={buttonTitle} type="button">
 					<IconSvg size="md" src={lockedIcon} />
-				</button>
+				</Button>
 			) : null}
 		</div>
 	);
