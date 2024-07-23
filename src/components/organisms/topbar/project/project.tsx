@@ -7,13 +7,14 @@ import { ProjectsService } from "@services";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
+import { useFileOperations } from "@hooks";
 import { useProjectStore, useToastStore } from "@store";
 
 import { ErrorMessage } from "@components/atoms";
 import { ProjectTopbarButtons } from "@components/organisms/topbar/project";
 
 export const ProjectTopbar = () => {
-	const { t } = useTranslation(["projects", "buttons"]);
+	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const { projectId } = useParams();
 	const { getProject, renameProject } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
@@ -25,6 +26,8 @@ export const ProjectTopbar = () => {
 			"outline-2 outline-error": !isNameValid,
 		}
 	);
+
+	const { openProjectId, setOpenFiles, setOpenProjectId } = useFileOperations(projectId!);
 
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
@@ -51,7 +54,13 @@ export const ProjectTopbar = () => {
 	};
 
 	useEffect(() => {
-		loadProject(projectId!);
+		if (!projectId) return;
+
+		loadProject(projectId);
+		if (projectId !== openProjectId) {
+			setOpenProjectId(projectId);
+			setOpenFiles([]);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
@@ -82,7 +91,7 @@ export const ProjectTopbar = () => {
 					type: "error",
 				});
 
-				return <div />;
+				return;
 			}
 			(event.target as HTMLSpanElement).blur();
 			setIsNameValid(isValidName);

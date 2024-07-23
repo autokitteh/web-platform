@@ -4,12 +4,13 @@ import { isEmpty, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { monacoLanguages } from "@constants";
+import { monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
-import { ProjectsService } from "@services";
+import { LoggerService } from "@services";
 import { cn } from "@utilities";
 
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useFileOperations } from "@hooks";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
@@ -26,87 +27,68 @@ export const CodeTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
-		getProjectResources,
-		openedFiles,
-		removeProjectFile,
-		resources,
-		setProjectResources,
-		updateEditorOpenedFiles,
-	} = useProjectStore();
+		deleteFile,
+		fetchFiles,
+		fetchResources: fetchResourcesFromServer,
+		openFileAsActive,
+		openFiles,
+		saveFile,
+	} = useFileOperations(projectId!);
+
+	const [resources, setResources] = useState<Record<string, Uint8Array>>({});
 	const [isDragOver, setIsDragOver] = useState(false);
 
 	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
 	const selectedRemoveFileName = useModalStore((state) => state.data as string);
 
-	const resourcesEntries = Object.entries(resources);
-	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
-
 	const styleCircle = cn("stroke-gray-750 duration-300 group-hover:stroke-green-800", {
 		"stroke-green-800": isDragOver,
 	});
-	const styleBase = cn("relative flex-1 rounded-xl duration-300", {
-		"mb-auto mt-auto flex items-center justify-center": isEmpty(sortedResources),
-	});
-	const styleFrame = cn(
-		"absolute top-0 z-10 flex h-full w-full items-center justify-center rounded-lg duration-300",
-		"pointer-events-none select-none opacity-0",
-		{
-			"opacity-1 border-2 bg-white/40": isDragOver,
-			"opacity-1 pointer-events-auto": isEmpty(sortedResources),
-		}
-	);
 
 	const fetchResources = async () => {
 		setIsLoading(true);
-		try {
-			const { data: resources, error } = await ProjectsService.getResources(projectId!);
-			if (error) {
-				throw error;
-			}
-			if (!resources) {
-				return;
-			}
-
-			getProjectResources(resources);
-		} catch (error) {
-			getProjectResources({});
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-			});
-		} finally {
-			setIsLoading(false);
-		}
+		const resources = await fetchResourcesFromServer(true);
+		setResources(resources);
+		setIsLoading(false);
 	};
 
-	const fileUpload = async (files: File[]) => {
-		const { error, fileName } = await setProjectResources(files, projectId!);
-
-		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("fileAddFailedExtended", { fileName, projectId }),
-				type: "error",
-			});
-
-			return;
-		}
-		fetchResources();
-	};
-
-	const activeBodyRow = (fileName: string) => {
-		const isActiveFile = openedFiles?.find(({ isActive, name }) => name === fileName && isActive);
-
-		return cn({
-			"bg-black": isActiveFile,
-		});
+	const getResources = async () => {
+		setIsLoading(true);
+		const resources = await fetchFiles();
+		setResources(resources);
+		setIsLoading(false);
 	};
 
 	useEffect(() => {
 		fetchResources();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	}, []);
+
+	const fileUpload = async (files: File[]) => {
+		try {
+			for (const file of files) {
+				const fileContent = await file.text();
+				await saveFile(file.name, fileContent);
+			}
+			fetchResources();
+		} catch (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("fileAddFailed", { fileName: files[0]?.name }),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.projectUICode,
+				tErrors("fileAddFailedExtended", { fileName: files[0]?.name, projectId })
+			);
+		}
+	};
+
+	const activeBodyRow = (fileName: string) => {
+		const isActiveFile = openFiles.find(({ isActive, name }) => name === fileName && isActive);
+
+		return cn({ "bg-black": isActiveFile });
+	};
 
 	const handleDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
@@ -116,7 +98,6 @@ export const CodeTable = () => {
 	const handleDrop = (event: React.DragEvent<HTMLInputElement>) => {
 		event.preventDefault();
 		setIsDragOver(false);
-
 		const droppedFiles = Array.from(event.dataTransfer.files);
 		if (droppedFiles) {
 			fileUpload(droppedFiles);
@@ -132,24 +113,37 @@ export const CodeTable = () => {
 
 	const handleRemoveFile = async () => {
 		closeModal(ModalName.deleteFile);
-		const { error } = await removeProjectFile(selectedRemoveFileName, projectId!);
-
-		if (error) {
+		try {
+			await deleteFile(selectedRemoveFileName);
+			getResources();
+		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
 				message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }),
 				type: "error",
 			});
-
-			return;
 		}
-		fetchResources();
 	};
 
 	const handleTrashIconClick = (event: React.MouseEvent, name: string) => {
 		event.stopPropagation();
 		openModal(ModalName.deleteFile, name);
 	};
+
+	const resourcesEntries = Object.entries(resources);
+	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
+
+	const styleBase = cn("relative flex-1 rounded-xl duration-300", {
+		"mb-auto mt-auto flex items-center justify-center": isEmpty(sortedResources),
+	});
+	const styleFrame = cn(
+		"absolute top-0 z-10 flex h-full w-full items-center justify-center rounded-lg duration-300",
+		"pointer-events-none select-none opacity-0",
+		{
+			"opacity-1 border-2 bg-white/40": isDragOver,
+			"opacity-1 pointer-events-auto": isEmpty(sortedResources),
+		}
+	);
 
 	return isLoading ? (
 		<Loader isCenter size="xl" />
@@ -202,11 +196,7 @@ export const CodeTable = () => {
 
 						<TBody>
 							{sortedResources.map(([name], index) => (
-								<Tr
-									className={activeBodyRow(name)}
-									key={index}
-									onClick={() => updateEditorOpenedFiles(name)}
-								>
+								<Tr className={activeBodyRow(name)} key={index} onClick={() => openFileAsActive(name)}>
 									<Td className="cursor-pointer font-medium">{name}</Td>
 
 									<Td className="max-w-12 pr-0">

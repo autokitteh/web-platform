@@ -12,7 +12,8 @@ import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useFileOperations } from "@hooks";
+import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
 
@@ -28,10 +29,10 @@ export const DefaultTriggerForm = ({
 }) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const { resources } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
+	const { fetchResources } = useFileOperations(projectId!);
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
@@ -50,6 +51,7 @@ export const DefaultTriggerForm = ({
 				value: item.connectionId,
 			}));
 			setConnections(formattedConnections || []);
+			const resources = await fetchResources();
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				label: name,

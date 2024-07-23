@@ -10,7 +10,8 @@ import { SelectOption } from "@interfaces/components";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { schedulerTriggerSchema } from "@validations";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useFileOperations } from "@hooks";
+import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -26,10 +27,10 @@ export const TriggerSchedulerForm = ({
 }) => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
-	const { resources } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation(["errors", "services"]);
+	const { fetchResources } = useFileOperations(projectId!);
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [cronConnectionId, setCronConnectionId] = useState<string>();
@@ -50,6 +51,8 @@ export const TriggerSchedulerForm = ({
 					throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
 				}
 				setCronConnectionId(connectionId);
+
+				const resources = await fetchResources();
 
 				const formattedResources = Object.keys(resources).map((name) => ({
 					label: name,

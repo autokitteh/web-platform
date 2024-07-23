@@ -13,7 +13,8 @@ import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { Trigger, TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useFileOperations } from "@hooks";
+import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -24,12 +25,12 @@ import { TrashIcon } from "@assets/image/icons";
 export const DefaultEditTrigger = () => {
 	const { projectId, triggerId } = useParams();
 	const navigate = useNavigate();
-	const { resources } = useProjectStore();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isSaving, setIsSaving] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
+	const { fetchResources } = useFileOperations(projectId!);
 
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
@@ -48,6 +49,8 @@ export const DefaultEditTrigger = () => {
 				value: item.connectionId,
 			}));
 			setConnections(formattedConnections || []);
+
+			const resources = await fetchResources();
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				label: name,

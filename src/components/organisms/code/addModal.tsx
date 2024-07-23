@@ -5,12 +5,14 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { defalutFileExtension, monacoLanguages } from "@constants";
+import { defalutFileExtension, monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { ModalAddCodeAssetsProps } from "@interfaces/components";
+import { LoggerService } from "@services";
 import { codeAssetsSchema } from "@validations";
 
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useFileOperations } from "@hooks";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Select } from "@components/atoms";
 import { Modal } from "@components/molecules";
@@ -18,9 +20,10 @@ import { Modal } from "@components/molecules";
 export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
+	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeModal } = useModalStore();
-	const { setProjectEmptyResources } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
+	const { addFile, openFileAsActive } = useFileOperations(projectId!);
 
 	const languageSelectOptions = Object.keys(monacoLanguages).map((key) => ({
 		label: key,
@@ -45,16 +48,21 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const onSubmit = async () => {
 		const { extension, name } = getValues();
 		const newFile = name + extension.value;
-		const { error } = await setProjectEmptyResources(newFile, projectId!);
-		closeModal(ModalName.addCodeAssets);
-
-		if (error) {
+		try {
+			const newFileContent = new TextEncoder().encode(tTabsEditor("initialContentForNewFile"));
+			await addFile(newFile, newFileContent);
+			openFileAsActive(newFile);
+		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
-				message: t("fileAddFailedExtended", { fileName: name, projectId }),
+				message: t("fileAddFailed", { fileName: name }),
 				type: "error",
 			});
+
+			LoggerService.error(namespaces.projectUICode, t("fileAddFailedExtended", { fileName: name, projectId }));
 		}
+		closeModal(ModalName.addCodeAssets);
+
 		onSuccess();
 		reset({ extension, name: "" });
 	};

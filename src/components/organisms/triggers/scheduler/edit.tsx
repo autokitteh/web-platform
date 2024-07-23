@@ -12,7 +12,8 @@ import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { Trigger } from "@type/models";
 import { schedulerTriggerSchema } from "@validations";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useFileOperations } from "@hooks";
+import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
 import { Accordion, TabFormHeader } from "@components/molecules";
@@ -22,10 +23,10 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 export const SchedulerEditTrigger = () => {
 	const { projectId, triggerId } = useParams();
 	const navigate = useNavigate();
-	const { resources } = useProjectStore();
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const addToast = useToastStore((state) => state.addToast);
+	const { fetchResources } = useFileOperations(projectId!);
 
 	const [isSaving, setIsSaving] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
@@ -47,6 +48,8 @@ export const SchedulerEditTrigger = () => {
 				throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
 			}
 			setCronConnectionId(connectionId);
+
+			const resources = await fetchResources();
 
 			const formattedResources = Object.keys(resources).map((name) => ({
 				label: name,

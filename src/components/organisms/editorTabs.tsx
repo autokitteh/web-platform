@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
-import { get, last } from "lodash";
+import { debounce, last } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { monacoLanguages } from "@constants";
 import { cn } from "@utilities";
 
-import { useProjectStore } from "@store";
+import { useFileOperations } from "@hooks";
 
 import { IconButton, Loader, Tab } from "@components/atoms";
 
@@ -17,28 +17,37 @@ import { Close } from "@assets/image/icons";
 export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { openedFiles, resources, setUpdateFileContent, updateEditorClosedFiles, updateEditorOpenedFiles } =
-		useProjectStore();
+	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const [editorKey, setEditorKey] = useState(0);
-	const [activeTab, setActiveTab] = useState("");
+	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 
-	const activeEditorFileName = openedFiles?.find(({ isActive }) => isActive)?.name || "";
+	const { fetchFiles } = useFileOperations(projectId!);
+
+	const activeEditorFileName = openFiles?.find(({ isActive }: { isActive: boolean }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
-	const resource = get(resources, [activeEditorFileName], null);
-	let content;
+	const [content, setContent] = useState<string>("");
 
-	if (resource === null) {
-		content = t("noFileText");
-	} else {
-		const byteArray = Object.values(resource);
-		content = String.fromCharCode.apply(null, byteArray) || t("initialContentForNewFile");
-	}
+	const loadContent = async () => {
+		const resources = await fetchFiles();
+
+		const resource = resources[activeEditorFileName];
+		if (resource) {
+			const byteArray = Array.from(resource);
+			setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
+		} else {
+			setContent(t("noFileText"));
+		}
+	};
+
+	useEffect(() => {
+		loadContent();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeEditorFileName, projectId]);
 
 	useEffect(() => {
 		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
-
 		window.addEventListener("resize", handleResize);
 
 		return () => window.removeEventListener("resize", handleResize);
@@ -59,17 +68,29 @@ export const EditorTabs = () => {
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const handleUpdateContent = (newContent?: string) => {
-		if (!projectId) {
+	const updateContent = async (newContent?: string) => {
+		if (
+			!projectId ||
+			!activeEditorFileName ||
+			newContent === t("noFileText") ||
+			newContent === undefined ||
+			newContent === tTabsEditor("initialContentForNewFile")
+		)
 			return;
-		}
-		const contentUintArray = new TextEncoder().encode(newContent);
-		setUpdateFileContent(contentUintArray, projectId);
+		await saveFile(activeEditorFileName, newContent);
+		setContent(newContent);
+	};
+
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
+
+	const handleUpdateContent = (newContent?: string) => {
+		debouncedUpdateContent(newContent);
 	};
 
 	const activeCloseIcon = (fileName: string) =>
 		cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
-			"opacity-100": openedFiles.find(({ isActive, name }) => name === fileName && isActive),
+			"opacity-100": openFiles.find(({ isActive, name }) => name === fileName && isActive),
 		});
 
 	const handleCloseButtonClick = (
@@ -77,12 +98,7 @@ export const EditorTabs = () => {
 		name: string
 	): void => {
 		event.stopPropagation();
-		updateEditorClosedFiles(name);
-	};
-
-	const onTabClick = (value: string) => {
-		setActiveTab(value);
-		updateEditorOpenedFiles(value);
+		closeOpenedFile(name);
 	};
 
 	return (
@@ -95,12 +111,12 @@ export const EditorTabs = () => {
 							`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
 						}
 					>
-						{openedFiles?.map(({ name }) => (
+						{openFiles?.map(({ name }) => (
 							<Tab
 								activeTab={activeEditorFileName}
 								className="group flex items-center gap-1"
 								key={name}
-								onClick={() => onTabClick(name)}
+								onClick={() => openFileAsActive(name)}
 								value={name}
 							>
 								{name}
@@ -117,7 +133,7 @@ export const EditorTabs = () => {
 					</div>
 					<div className="mt-1 h-full">
 						<Editor
-							aria-label={activeTab}
+							aria-label={activeEditorFileName}
 							beforeMount={handleEditorWillMount}
 							key={editorKey}
 							language={languageEditor}
@@ -129,7 +145,7 @@ export const EditorTabs = () => {
 								minimap: {
 									enabled: false,
 								},
-								readOnly: resource === null,
+								readOnly: content === t("noFileText"),
 								renderLineHighlight: "none",
 								scrollBeyondLastLine: false,
 								wordWrap: "on",
