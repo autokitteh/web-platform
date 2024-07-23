@@ -24,10 +24,8 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 
 	useEffect(() => {
-		if (projectsList.length) {
-			const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
-			setSortedProjectsList(sortedProjects);
-		}
+		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
+		setSortedProjectsList(sortedProjects);
 	}, [projectsList]);
 
 	const animateVariant = {

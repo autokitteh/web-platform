@@ -23,7 +23,7 @@ export const Topbar = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
-	const { getProject, renameProject, resources } = useProjectStore();
+	const { getProject, getProjectsList, renameProject, resources } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const [project, setProject] = useState<Project>();
@@ -170,6 +170,7 @@ export const Topbar = () => {
 
 			return;
 		}
+		await getProjectsList();
 		navigate("/");
 	};
 
