@@ -3,7 +3,7 @@ import React, { forwardRef, useCallback, useEffect, useId, useState } from "reac
 import { useTranslation } from "react-i18next";
 
 import { Button } from "./buttons";
-import { InputVariant } from "@enums/components";
+import { ButtonVariant, InputVariant } from "@enums/components";
 import { SecretInputProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
@@ -113,6 +113,9 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	const lockedIcon = isLocked ? UnlockedLockIcon : LockIcon;
 
 	const buttonTitle = isLocked ? t("secretInput.unlock") : t("secretInput.lock");
+	const buttonVariant = (variant === InputVariant.light ? "light" : "dark") as ButtonVariant;
+	const iconFill = variant === InputVariant.light ? "fill-black" : "fill-white";
+	const disabledButtonClass = cn("mr-2", iconFill);
 
 	return (
 		<div className="flex flex-row">
@@ -140,15 +143,21 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 				</label>
 
 				{isLockedDisabled ? (
-					<Button onClick={onLock} type="button">
-						<IconSvg className="mr-2" size="md" src={LockIcon} />
+					<Button onClick={onLock} type="button" variant={buttonVariant}>
+						<IconSvg className={disabledButtonClass} size="md" src={LockIcon} />
 					</Button>
 				) : null}
 			</div>
 
 			{!isLockedDisabled ? (
-				<Button className={iconClass} onClick={onLock} title={buttonTitle} type="button">
-					<IconSvg size="md" src={lockedIcon} />
+				<Button
+					className={iconClass}
+					onClick={onLock}
+					title={buttonTitle}
+					type="button"
+					variant={buttonVariant}
+				>
+					<IconSvg className={iconFill} size="md" src={lockedIcon} />
 				</Button>
 			) : null}
 		</div>

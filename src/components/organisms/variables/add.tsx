@@ -92,6 +92,7 @@ export const AddVariable = () => {
 						onLock={() => toggleLock("value")}
 						placeholder={tForm("placeholders.value")}
 						register={register("value")}
+						variant="light"
 					/>
 
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
