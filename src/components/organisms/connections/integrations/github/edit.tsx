@@ -214,14 +214,14 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 				<div className="flex flex-col gap-2">
 					{infoGithubLinks.map(({ text, url }, index) => (
 						<Link
-							className="group inline-flex items-center gap-2.5 text-green-accent"
+							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}
 							target="_blank"
 							to={url}
 						>
 							{text}
 
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
 				</div>
@@ -233,13 +233,13 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 		<div>
 			<Accordion title={t("information")}>
 				<Link
-					className="text-md inline-flex items-center gap-2.5 text-green-accent"
+					className="text-md inline-flex items-center gap-2.5 text-green-800"
 					target="_blank"
 					to="https://docs.github.com/en/apps/using-github-apps/about-using-github-apps"
 				>
 					{t("github.aboutGitHubApps")}
 
-					<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-accent duration-200" />
+					<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
 				</Link>
 			</Accordion>
 
