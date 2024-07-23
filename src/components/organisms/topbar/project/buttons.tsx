@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 
+import { useFileOperations } from "@hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
@@ -21,13 +22,15 @@ export const ProjectTopbarButtons = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
-	const { deleteProject, resources } = useProjectStore();
+	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = React.useState<Record<string, boolean>>({});
+	const { fetchResources } = useFileOperations(projectId!);
 
 	const build = async () => {
+		const resources = await fetchResources();
 		if (!Object.keys(resources).length) {
-			return <div />;
+			return;
 		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
@@ -51,8 +54,10 @@ export const ProjectTopbarButtons = () => {
 	};
 
 	const deploy = async () => {
+		const resources = await fetchResources();
+
 		if (!Object.keys(resources).length) {
-			return <div />;
+			return;
 		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
