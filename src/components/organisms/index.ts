@@ -6,3 +6,4 @@ export { Sidebar } from "@components/organisms/sidebar/sidebar";
 export { SplitFrame } from "@components/organisms/splitFrame";
 export { StatsTopbar, Topbar, DashboardTopbar } from "@components/organisms/topbar";
 export { CommunityProjects, ProjectsTable } from "@components/organisms/dashboard";
+export { DeleteProjectModal } from "@components/organisms/modals";

@@ -59,5 +59,12 @@
 		"copySuccess": "Token copied to clipboard",
 		"line": "Create, copy and use  the token in your application - using CLI or our VSCode Extension <anchor>(click here to get the extension)</anchor> - to connect to the platform.",
 		"title": "Connection Token"
+	},
+	"deleteProject": {
+		"cancelButton": "Cancel",
+		"deleteButton": "Yes, delete",
+		"line": "Name - <strong>{{name}}</strong> <br /> ID - <strong>{{projectId}}</strong>",
+		"line2": "You will not be able to recover it",
+		"title": "Delete {{name}} project?"
 	}
 }

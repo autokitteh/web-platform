@@ -7,4 +7,5 @@ export enum ModalName {
 	deleteTrigger = "deleteTrigger",
 	deleteVariable = "deleteVariable",
 	getToken = "getToken",
+	deleteProject = "deleteProject",
 }

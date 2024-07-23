@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { redirect, useParams } from "react-router-dom";
 
-import { TopbarButton } from "@enums/components";
+import { ModalName, TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
+import { DeleteProjectModal } from "@components/organisms";
 
 import { BuildIcon, DeployIcon, MoreIcon, StatsIcon } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
@@ -19,6 +20,7 @@ import { TrashIcon } from "@assets/image/icons";
 export const Topbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const { projectId } = useParams();
+	const { openModal } = useModalStore();
 	const { getProject, renameProject, resources } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState<boolean>(true);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
@@ -150,6 +152,11 @@ export const Topbar = () => {
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 	};
 
+	const handleOpenModalDeletePrject = useCallback(() => {
+		openModal(ModalName.deleteProject);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	return (
 		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-1250 py-3 pl-7 pr-3.5">
 			<div className="relative flex items-end gap-3 font-fira-code text-gray-500">
@@ -213,7 +220,11 @@ export const Topbar = () => {
 				<DropdownButton
 					className="font-semibold text-white"
 					contentMenu={
-						<Button className="whitespace-nowrap px-4 py-2 font-semibold text-white" variant="outline">
+						<Button
+							className="whitespace-nowrap px-4 py-2 font-semibold text-white"
+							onClick={handleOpenModalDeletePrject}
+							variant="outline"
+						>
 							<IconSvg className="fill-white" size="md" src={TrashIcon} />
 
 							{t("topbar.buttons.delete")}
@@ -227,6 +238,8 @@ export const Topbar = () => {
 					</Button>
 				</DropdownButton>
 			</div>
+
+			<DeleteProjectModal />
 		</div>
 	);
 };
