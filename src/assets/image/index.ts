@@ -15,4 +15,4 @@ export {
 	ProjectsIcon,
 	StatsBlackIcon as StatsBlack,
 } from "@assets/image/sidebar";
-export { Build, Deploy, FullScreen, More, Stats } from "@assets/image/topbar";
+export { BuildIcon, DeployIcon, FullScreenIcon, MoreIcon, StatsIcon } from "@assets/image/topbar";

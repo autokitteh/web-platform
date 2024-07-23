@@ -14,7 +14,7 @@ import { PlusAccordionIcon } from "@assets/image/icons";
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
 	const { user } = useUserStore();
-	const { addProjectToMenu, createProject } = useProjectStore();
+	const { createProject } = useProjectStore();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const userName = user?.name || "";
@@ -31,14 +31,6 @@ export const DashboardTopbar = () => {
 
 			return;
 		}
-
-		const menuProject = {
-			href: `/${SidebarHrefMenu.projects}/${data?.projectId}`,
-			id: data!.projectId,
-			name: data!.name,
-		};
-
-		addProjectToMenu(menuProject);
 
 		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
 	};

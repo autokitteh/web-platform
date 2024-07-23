@@ -19,15 +19,13 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { addProjectToMenu, createProject, getProjectsList, projectsList } = useProjectStore();
+	const { createProject, getProjectsList, projectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 
 	useEffect(() => {
-		if (projectsList.length) {
-			const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
-			setSortedProjectsList(sortedProjects);
-		}
+		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
+		setSortedProjectsList(sortedProjects);
 	}, [projectsList]);
 
 	const animateVariant = {
@@ -47,14 +45,6 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 
 			return;
 		}
-
-		const menuProject = {
-			href: `/${SidebarHrefMenu.projects}/${data?.projectId}`,
-			id: data!.projectId,
-			name: data!.name,
-		};
-
-		addProjectToMenu(menuProject);
 
 		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
 	};

@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 import { cn } from "@utilities";
 
-import { Sidebar, StatsTopbar, Topbar } from "@components/organisms";
+import { ProjectTopbar, Sidebar, StatsTopbar } from "@components/organisms";
 
 export const AppLayout = ({
 	className,
@@ -23,7 +23,7 @@ export const AppLayout = ({
 				<Sidebar />
 
 				<div className="-ml-7 flex flex-1 flex-col overflow-auto pl-7 transition">
-					{displayTopbar ? <Topbar /> : null}
+					{displayTopbar ? <ProjectTopbar /> : null}
 
 					{displayStatsTopbar ? <StatsTopbar /> : null}
 

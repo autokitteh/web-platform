@@ -1,6 +1,7 @@
 {
     "topbar": {
         "buildProjectSuccess": "Project build completed successfully.",
+        "deleteProjectSuccess": "Delete project completed successfully.",
         "buttons": {
             "ariaBuildProject": "Build project",
             "ariaDeployProject": "Deploy project",
@@ -8,7 +9,8 @@
             "build": "Build",
             "deploy": "Deploy",
             "goToProject": "Go to project",
-            "stats": "View Stats"
+            "stats": "View Stats",
+            "delete": "Delete"
         },
         "deployedProjectSuccess": "Project deploy completed successfully.",
         "projectNotFound": "Project not found",

@@ -62,6 +62,11 @@ export class ProjectsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
+			LoggerService.error(
+				namespaces.triggerService,
+				i18n.t("projectRemoveFailedExtended", { ns: "services", projectId, error: (error as Error).message })
+			);
+
 			return { data: undefined, error };
 		}
 	}
