@@ -12,7 +12,7 @@ interface FilesResponse {
 
 export interface ProjectStore {
 	createProject: () => ServiceResponse<{ name: string; projectId: string }>;
-	deleteProject: (projectId: string) => ServiceResponse<Project>;
+	deleteProject: (projectId: string) => ServiceResponse<undefined>;
 	getProject: (projectId: string) => ServiceResponse<Project>;
 	getProjectsList: () => ServiceResponse<Project[]>;
 	getProjectResources: (resources: Record<string, Uint8Array>) => void;
