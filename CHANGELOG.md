@@ -1,3 +1,10 @@
+## [1.19.2](https://github.com/autokitteh/web-platform/compare/v1.19.1...v1.19.2) (2024-07-23)
+
+
+### Bug Fixes
+
+* work on editor files in indexDB ([#200](https://github.com/autokitteh/web-platform/issues/200)) ([f0a34ba](https://github.com/autokitteh/web-platform/commit/f0a34ba11d46a3b2ac77d8465ad14718023bfc09))
+
 ## [1.19.1](https://github.com/autokitteh/web-platform/compare/v1.19.0...v1.19.1) (2024-07-23)
 
 
