@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/autokitteh/web-platform/compare/v1.18.1...v1.19.0) (2024-07-23)
+
+
+### Features
+
+* add dropdown menu with delete project in topbar ([#208](https://github.com/autokitteh/web-platform/issues/208)) ([82481eb](https://github.com/autokitteh/web-platform/commit/82481eb16085d75dd71d08a57c2346a2e56adc4e))
+
 ## [1.18.1](https://github.com/autokitteh/web-platform/compare/v1.18.0...v1.18.1) (2024-07-22)
 
 
