@@ -65,14 +65,14 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	const placeholderText = isRequired ? `${placeholder} *` : placeholder;
 
 	const baseClass = cn(
-		"relative flex items-center border border-gray-500 bg-black text-base",
+		"relative flex items-center border border-gray-950 bg-black text-base",
 		"w-full rounded-lg transition focus-within:border-white hover:border-white",
 		{
 			"border-gray-black-900 bg-white text-black focus-within:border-gray-800 hover:border-gray-800":
 				variant === InputVariant.light,
 		},
 		{ "border-white": hasValue && variant !== InputVariant.light },
-		{ "pointer-events-none select-none border-gray-500": disabled },
+		{ "pointer-events-none select-none border-gray-950": disabled },
 		className,
 		{ "border-error": isError }
 	);
@@ -90,7 +90,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	const labelClass = cn(
 		"pointer-events-none absolute left-4 text-white transition-all",
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
-		{ "-top-2 left-3 px-1 text-xs before:bg-gray-500": isFocused || hasValue },
+		{ "-top-2 left-3 px-1 text-xs before:border-gray-950": isFocused || hasValue },
 		{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light },
 		{ "text-black": variant === InputVariant.light }
 	);
