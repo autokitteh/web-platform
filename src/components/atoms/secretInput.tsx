@@ -30,7 +30,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		...rest
 	} = props;
 
-	const { t } = useTranslation("components", { keyPrefix: "secretInput" });
+	const { t } = useTranslation("components", { keyPrefix: "inputs" });
 
 	const [isFocused, setIsFocused] = useState(false);
 	const [hasValue, setHasValue] = useState<boolean>();
@@ -111,7 +111,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const lockedIcon = isLocked ? UnlockedLockIcon : LockIcon;
 
-	const inputTitle = isLocked ? t("unlock") : t("lock");
+	const buttonTitle = isLocked ? t("secretInput.unlock") : t("secretInput.lock");
 
 	return (
 		<div className="flex flex-row">
@@ -128,7 +128,6 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					onFocus={handleFocus}
 					placeholder={placeholderText}
 					ref={ref}
-					title={inputTitle}
 					type={inputType}
 					value={value}
 				/>
@@ -147,7 +146,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 			</div>
 
 			{!isLockedDisabled ? (
-				<button className={iconClass} onClick={onLock} type="button">
+				<button className={iconClass} onClick={onLock} title={buttonTitle} type="button">
 					<IconSvg size="md" src={lockedIcon} />
 				</button>
 			) : null}
