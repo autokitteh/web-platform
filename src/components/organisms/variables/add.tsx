@@ -26,6 +26,7 @@ export const AddVariable = () => {
 		handleSubmit,
 		register,
 		setValue,
+		watch,
 	} = useForm({
 		defaultValues: {
 			name: "",
@@ -35,8 +36,10 @@ export const AddVariable = () => {
 		resolver: zodResolver(newVariableShema),
 	});
 
+	const { isSecret } = watch();
+
 	const onSubmit = async () => {
-		const { isSecret, name, value } = getValues();
+		const { name, value } = getValues();
 		setIsLoading(true);
 		const { error } = await VariablesService.set(projectId!, {
 			isSecret,
@@ -85,6 +88,7 @@ export const AddVariable = () => {
 						handleLockAction={(newState) => {
 							setValue("isSecret", newState);
 						}}
+						isLocked={isSecret}
 						placeholder={tForm("placeholders.value")}
 						{...register("value")}
 						handleInputChange={(newValue) => setValue("value", newValue)}

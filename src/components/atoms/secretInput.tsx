@@ -20,12 +20,11 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		handleInputChange,
 		handleLockAction,
 		isError,
-		isLocked,
+		isLocked = false,
 		isLockedDisabled,
 		isRequired,
 		onFocus,
 		placeholder,
-		resetOnFocus,
 		value,
 		variant,
 		...rest
@@ -33,15 +32,16 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const { t } = useTranslation("components", { keyPrefix: "inputs" });
 
-	const [isFocused, setIsFocused] = useState(false);
+	const [isFocused, setIsFocused] = useState<boolean>(false);
 	const [hasValue, setHasValue] = useState<boolean>();
-	const [isLockedState, setIsLockedState] = useState(isLocked);
-	const [isFirstFocus, setIsFirstFocus] = useState(true);
+
+	const [isFirstFocus, setIsFirstFocus] = useState<boolean>(true);
+	const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
 
 	const handleFocus = () => {
-		setIsFocused(true);
+		setIsButtonClicked(true);
 
-		if (resetOnFocus && isFirstFocus) {
+		if (isFirstFocus && !isButtonClicked && isLocked) {
 			setIsFirstFocus(false);
 			onFocus?.();
 
@@ -69,6 +69,8 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const handleChange = useCallback(
 		(event: React.ChangeEvent<HTMLInputElement>) => {
+			setIsButtonClicked(true);
+
 			const newValue = !!event.target.value;
 			if (newValue !== hasValue) {
 				setHasValue(newValue);
@@ -121,18 +123,24 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const id = useId();
 
-	const inputType = isLockedState ? "password" : "text";
+	const inputType = isLocked ? "password" : "text";
 
-	const lockedIcon = isLockedState ? UnlockedLockIcon : LockIcon;
+	const lockedIcon = isLocked ? UnlockedLockIcon : LockIcon;
 
-	const buttonTitle = isLockedState ? t("secretInput.unlock") : t("secretInput.lock");
+	const buttonTitle = isLocked ? t("secretInput.unlock") : t("secretInput.lock");
 	const buttonVariant = (variant === InputVariant.light ? "light" : "dark") as ButtonVariant;
 	const iconFill = variant === InputVariant.light ? "fill-black" : "fill-white";
 	const disabledButtonClass = cn("mr-2", iconFill);
 
 	const handleLockedStateAction = () => {
-		setIsLockedState(!isLockedState);
-		handleLockAction?.(!isLockedState);
+		setIsButtonClicked(true);
+		handleLockAction?.(!isLocked);
+
+		if (!isButtonClicked) {
+			handleInputChange?.("");
+
+			return;
+		}
 	};
 
 	return (

@@ -22,7 +22,6 @@ export const EditVariable = () => {
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
-	const [isSecretOnInit, setIsSecretOnInit] = useState(false);
 
 	const {
 		formState: { dirtyFields, errors },
@@ -41,7 +40,7 @@ export const EditVariable = () => {
 		resolver: zodResolver(newVariableShema),
 	});
 
-	const { name, value } = watch();
+	const { isSecret, name, value } = watch();
 
 	const fetchVariable = async () => {
 		const { data: currentVar, error } = await VariablesService.get(environmentId!, variableName!);
@@ -58,11 +57,9 @@ export const EditVariable = () => {
 			return;
 		}
 
-		setIsSecretOnInit(currentVar.isSecret);
-
 		reset({
 			name: currentVar.name,
-			value: currentVar.isSecret ? "**********" : value,
+			value: currentVar.value,
 			isSecret: currentVar.isSecret,
 		});
 	};
@@ -74,13 +71,12 @@ export const EditVariable = () => {
 
 	const onSubmit = async () => {
 		const { isSecret, name, value } = getValues();
-		const secretValue = value === "**********" ? "" : value;
 		setIsLoading(true);
 		const { error } = await VariablesService.set(projectId!, {
 			isSecret,
 			name,
 			scopeId: "",
-			value: secretValue,
+			value,
 		});
 
 		if (error) {
@@ -127,8 +123,7 @@ export const EditVariable = () => {
 							required: tForm("valueRequired"),
 						})}
 						handleInputChange={(newValue) => setValue("value", newValue)}
-						isLocked={isSecretOnInit}
-						resetOnFocus={isSecretOnInit}
+						isLocked={isSecret}
 						value={value}
 					/>
 

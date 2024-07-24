@@ -10,7 +10,6 @@ import { SecretInput } from "@components/atoms";
 const InputWrapper = ({
 	isLocked: initialIsLocked,
 	isLockedDisabled,
-	resetOnFocus,
 	...rest
 }: SecretInputProps & { icon?: React.ReactNode }) => {
 	const [value, setValue] = useState("");
@@ -29,7 +28,6 @@ const InputWrapper = ({
 			isLocked={isLocked}
 			isLockedDisabled={isLockedDisabled}
 			onChange={(event) => setValue(event.target.value)}
-			resetOnFocus={resetOnFocus}
 			value={value}
 		/>
 	);
@@ -52,7 +50,6 @@ const meta: Meta<typeof InputWrapper> = {
 		},
 		isLocked: { control: "boolean" },
 		isLockedDisabled: { control: "boolean" },
-		resetOnFocus: { control: "boolean" },
 		className: { control: "text" },
 		classInput: { control: "text" },
 	},
@@ -80,7 +77,6 @@ const baseArgs = {
 	disabled: false,
 	isLocked: false,
 	isLockedDisabled: false,
-	resetOnFocus: false,
 };
 
 export const DefaultDark: StoryObj<typeof InputWrapper> = {
@@ -142,21 +138,5 @@ export const LockToggleDisabledLight: StoryObj<typeof InputWrapper> = {
 		...baseArgs,
 		variant: InputVariant.light,
 		isLockedDisabled: true,
-	},
-};
-
-export const ResetOnFocusDark: StoryObj<typeof InputWrapper> = {
-	args: {
-		...baseArgs,
-		variant: InputVariant.dark,
-		resetOnFocus: true,
-	},
-};
-
-export const ResetOnFocusLight: StoryObj<typeof InputWrapper> = {
-	args: {
-		...baseArgs,
-		variant: InputVariant.light,
-		resetOnFocus: true,
 	},
 };
