@@ -9,8 +9,6 @@ import { VariablesService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
-import { useSecretInputs } from "@hooks";
-
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 
@@ -24,6 +22,7 @@ export const EditVariable = () => {
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [isSecretOnInit, setIsSecretOnInit] = useState(false);
 
 	const {
 		formState: { dirtyFields, errors },
@@ -42,7 +41,6 @@ export const EditVariable = () => {
 		resolver: zodResolver(newVariableShema),
 	});
 
-	const { locks, toggleLock } = useSecretInputs({ value: false });
 	const { name, value } = watch();
 
 	const fetchVariable = async () => {
@@ -60,7 +58,7 @@ export const EditVariable = () => {
 			return;
 		}
 
-		toggleLock(currentVar.value);
+		setIsSecretOnInit(currentVar.isSecret);
 
 		reset({
 			name: currentVar.name,
@@ -75,11 +73,11 @@ export const EditVariable = () => {
 	}, []);
 
 	const onSubmit = async () => {
-		const { name, value } = getValues();
+		const { isSecret, name, value } = getValues();
 		const secretValue = value === "**********" ? "" : value;
 		setIsLoading(true);
 		const { error } = await VariablesService.set(projectId!, {
-			isSecret: locks.value,
+			isSecret,
 			name,
 			scopeId: "",
 			value: secretValue,
@@ -124,12 +122,12 @@ export const EditVariable = () => {
 				<div className="relative">
 					<SecretInput
 						handleLockAction={(newState: boolean) => setValue("isSecret", newState)}
-						isLocked={locks.value}
 						onChange={(event) => {
 							setValue("value", event.target.value);
 						}}
 						placeholder={tForm("placeholders.value")}
 						register={register("value", { required: tForm("valueRequired") })}
+						resetOnFocus={isSecretOnInit}
 						value={value}
 					/>
 
