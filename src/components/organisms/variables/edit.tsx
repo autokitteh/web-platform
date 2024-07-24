@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -24,13 +24,13 @@ export const EditVariable = () => {
 	const [isLoadingData, setIsLoadingData] = useState(true);
 
 	const {
+		control,
 		formState: { dirtyFields, errors },
 		getValues,
 		handleSubmit,
 		register,
 		reset,
 		setValue,
-		watch,
 	} = useForm({
 		defaultValues: {
 			name: "",
@@ -40,7 +40,9 @@ export const EditVariable = () => {
 		resolver: zodResolver(newVariableShema),
 	});
 
-	const { isSecret, name, value } = watch();
+	const isSecret = useWatch({ control, name: "isSecret" });
+	const name = useWatch({ control, name: "name" });
+	const value = useWatch({ control, name: "value" });
 
 	const fetchVariable = async () => {
 		const { data: currentVar, error } = await VariablesService.get(environmentId!, variableName!);

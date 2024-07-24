@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -21,12 +21,12 @@ export const AddVariable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
+		control,
 		formState: { dirtyFields, errors },
 		getValues,
 		handleSubmit,
 		register,
 		setValue,
-		watch,
 	} = useForm({
 		defaultValues: {
 			name: "",
@@ -36,7 +36,7 @@ export const AddVariable = () => {
 		resolver: zodResolver(newVariableShema),
 	});
 
-	const { isSecret } = watch();
+	const isSecret = useWatch({ control, name: "isSecret" });
 
 	const onSubmit = async () => {
 		const { name, value } = getValues();
