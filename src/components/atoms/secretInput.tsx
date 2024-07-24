@@ -39,17 +39,16 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
 
 	const handleFocus = () => {
+		onFocus?.();
 		setIsButtonClicked(true);
 
 		if (isFirstFocus && !isButtonClicked && isLocked) {
 			setIsFirstFocus(false);
-			onFocus?.();
 
 			handleInputChange?.("");
 
 			return;
 		}
-		onFocus?.();
 	};
 
 	useEffect(() => {
