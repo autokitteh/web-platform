@@ -17,15 +17,16 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		className,
 		defaultValue,
 		disabled,
+		handleLockAction,
 		isError,
 		isLocked,
 		isLockedDisabled,
 		isRequired,
 		onChange,
 		onFocus,
-		onLock,
 		placeholder,
 		register,
+		resetOnFocus,
 		value,
 		variant,
 		...rest
@@ -35,15 +36,33 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const [isFocused, setIsFocused] = useState(false);
 	const [hasValue, setHasValue] = useState<boolean>();
+	const [isLockedState, setIsLockedState] = useState(isLocked);
+	const [isFirstFocus, setIsFirstFocus] = useState(true);
+
+	useEffect(() => {
+		if (resetOnFocus) {
+			onChange?.({ target: { value: "********" } } as React.ChangeEvent<HTMLInputElement>);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const handleFocus = useCallback(
+		(event: React.FocusEvent<HTMLInputElement>) => {
+			setIsFocused(true);
+			onFocus?.();
+
+			if (resetOnFocus && isFirstFocus) {
+				setIsFirstFocus(false);
+				event.target.value = "";
+				onChange?.({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
+			}
+		},
+		[onFocus, onChange, resetOnFocus, isFirstFocus]
+	);
 
 	useEffect(() => {
 		setHasValue(!!value || !!defaultValue);
 	}, [value, defaultValue]);
-
-	const handleFocus = useCallback(() => {
-		setIsFocused(true);
-		onFocus?.();
-	}, [onFocus]);
 
 	const handleBlur = useCallback(
 		(event: React.FocusEvent<HTMLInputElement>) => {
@@ -87,6 +106,8 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	const inputClass = cn(
 		"h-12 w-full bg-transparent px-4 py-2.5 outline-none",
 		{ "text-gray-400": disabled },
+		{ "text-white": variant === InputVariant.dark },
+		{ "placeholder-gray-1000": variant === InputVariant.light },
 		{ "autofill-black": variant === InputVariant.light && !disabled },
 		{ "autofill-gray-700": variant === InputVariant.light && disabled },
 		classInput
@@ -108,14 +129,19 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const id = useId();
 
-	const inputType = isLocked ? "password" : "text";
+	const inputType = isLockedState ? "password" : "text";
 
-	const lockedIcon = isLocked ? UnlockedLockIcon : LockIcon;
+	const lockedIcon = isLockedState ? UnlockedLockIcon : LockIcon;
 
-	const buttonTitle = isLocked ? t("secretInput.unlock") : t("secretInput.lock");
+	const buttonTitle = isLockedState ? t("secretInput.unlock") : t("secretInput.lock");
 	const buttonVariant = (variant === InputVariant.light ? "light" : "dark") as ButtonVariant;
 	const iconFill = variant === InputVariant.light ? "fill-black" : "fill-white";
 	const disabledButtonClass = cn("mr-2", iconFill);
+
+	const handleLockedStateAction = () => {
+		setIsLockedState(!isLockedState);
+		handleLockAction?.(!isLockedState);
+	};
 
 	return (
 		<div className="flex flex-row">
@@ -143,7 +169,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 				</label>
 
 				{isLockedDisabled ? (
-					<Button onClick={onLock} type="button" variant={buttonVariant}>
+					<Button onClick={handleLockedStateAction} type="button" variant={buttonVariant}>
 						<IconSvg className={disabledButtonClass} size="md" src={LockIcon} />
 					</Button>
 				) : null}
@@ -152,7 +178,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 			{!isLockedDisabled ? (
 				<Button
 					className={iconClass}
-					onClick={onLock}
+					onClick={handleLockedStateAction}
 					title={buttonTitle}
 					type="button"
 					variant={buttonVariant}

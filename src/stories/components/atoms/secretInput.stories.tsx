@@ -10,6 +10,7 @@ import { SecretInput } from "@components/atoms";
 const InputWrapper = ({
 	isLocked: initialIsLocked,
 	isLockedDisabled,
+	resetOnFocus,
 	...rest
 }: SecretInputProps & { icon?: React.ReactNode }) => {
 	const [value, setValue] = useState("");
@@ -24,10 +25,11 @@ const InputWrapper = ({
 	return (
 		<SecretInput
 			{...rest}
+			handleLockAction={handleLockToggle}
 			isLocked={isLocked}
 			isLockedDisabled={isLockedDisabled}
 			onChange={(event) => setValue(event.target.value)}
-			onLock={handleLockToggle}
+			resetOnFocus={resetOnFocus}
 			value={value}
 		/>
 	);
@@ -50,6 +52,7 @@ const meta: Meta<typeof InputWrapper> = {
 		},
 		isLocked: { control: "boolean" },
 		isLockedDisabled: { control: "boolean" },
+		resetOnFocus: { control: "boolean" },
 		className: { control: "text" },
 		classInput: { control: "text" },
 	},
@@ -59,6 +62,7 @@ const meta: Meta<typeof InputWrapper> = {
 				style={{
 					backgroundColor: context.args.variant === InputVariant.light ? "#333" : "white",
 					padding: "20px",
+					color: context.args.variant === InputVariant.light ? "white" : "black", // Ensuring text color is visible
 				}}
 			>
 				<Story />
@@ -69,67 +73,90 @@ const meta: Meta<typeof InputWrapper> = {
 
 export default meta;
 
-// Stories for Default state
+const baseArgs = {
+	placeholder: "Enter Secret",
+	isError: false,
+	isRequired: false,
+	disabled: false,
+	isLocked: false,
+	isLockedDisabled: false,
+	resetOnFocus: false,
+};
+
 export const DefaultDark: StoryObj<typeof InputWrapper> = {
 	args: {
-		placeholder: "Enter Secret",
-		isError: false,
-		isRequired: false,
-		disabled: false,
+		...baseArgs,
 		variant: InputVariant.dark,
-		isLocked: false,
-		isLockedDisabled: false,
 	},
 };
 
 export const DefaultLight: StoryObj<typeof InputWrapper> = {
 	args: {
-		...DefaultDark.args,
+		...baseArgs,
 		variant: InputVariant.light,
 	},
 };
 
-// Stories for Locked state
 export const LockedDark: StoryObj<typeof InputWrapper> = {
 	args: {
-		...DefaultDark.args,
+		...baseArgs,
+		variant: InputVariant.dark,
 		isLocked: true,
 	},
 };
 
 export const LockedLight: StoryObj<typeof InputWrapper> = {
 	args: {
-		...DefaultLight.args,
+		...baseArgs,
+		variant: InputVariant.light,
 		isLocked: true,
 	},
 };
 
-// Stories for Error state
 export const ErrorDark: StoryObj<typeof InputWrapper> = {
 	args: {
-		...DefaultDark.args,
+		...baseArgs,
+		variant: InputVariant.dark,
 		isError: true,
 	},
 };
 
 export const ErrorLight: StoryObj<typeof InputWrapper> = {
 	args: {
-		...DefaultLight.args,
+		...baseArgs,
+		variant: InputVariant.light,
 		isError: true,
 	},
 };
 
-// Stories for Lock Toggle Disabled state
 export const LockToggleDisabledDark: StoryObj<typeof InputWrapper> = {
 	args: {
-		...DefaultDark.args,
+		...baseArgs,
+		variant: InputVariant.dark,
 		isLockedDisabled: true,
 	},
 };
 
 export const LockToggleDisabledLight: StoryObj<typeof InputWrapper> = {
 	args: {
-		...DefaultLight.args,
+		...baseArgs,
+		variant: InputVariant.light,
 		isLockedDisabled: true,
+	},
+};
+
+export const ResetOnFocusDark: StoryObj<typeof InputWrapper> = {
+	args: {
+		...baseArgs,
+		variant: InputVariant.dark,
+		resetOnFocus: true,
+	},
+};
+
+export const ResetOnFocusLight: StoryObj<typeof InputWrapper> = {
+	args: {
+		...baseArgs,
+		variant: InputVariant.light,
+		resetOnFocus: true,
 	},
 };
