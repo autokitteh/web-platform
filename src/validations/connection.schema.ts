@@ -12,3 +12,11 @@ export const googleIntegrationSchema = z.object({
 export const connectionSchema = z.object({
 	connectionName: z.string().min(5, "Name is required"),
 });
+
+export const httpBasicIntegrationSchema = z.object({
+	username: z.string().min(2, "Username is required"),
+	password: z.string().min(2, "Password is required"),
+});
+export const httpBearerIntegrationSchema = z.object({
+	token: z.string().min(2, "Personal Access Token is required"),
+});

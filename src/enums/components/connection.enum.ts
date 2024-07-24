@@ -8,4 +8,5 @@ export enum ConnectionStatus {
 export enum Integrations {
 	github = "github",
 	google = "google",
+	http = "http",
 }

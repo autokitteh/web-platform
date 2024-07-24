@@ -19,6 +19,7 @@ import { ErrorMessage, Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { GoogleIntegrationForm } from "@components/organisms/connections/integrations";
 import { GithubIntegrationAddForm } from "@components/organisms/connections/integrations/github";
+import { HttpIntegrationAddForm } from "@components/organisms/connections/integrations/http";
 
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
@@ -79,6 +80,7 @@ export const AddConnection = () => {
 			<GithubIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		google: <GoogleIntegrationForm />,
+		http: <HttpIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
 	};
 
 	const selectedIntegrationComponent = selectedIntegration
