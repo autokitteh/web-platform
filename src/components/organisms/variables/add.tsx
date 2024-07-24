@@ -85,11 +85,8 @@ export const AddVariable = () => {
 						handleLockAction={(newState) => {
 							setValue("isSecret", newState);
 						}}
-						onChange={(event) => {
-							setValue("value", event.target.value);
-						}}
 						placeholder={tForm("placeholders.value")}
-						register={register("value")}
+						{...register("value")}
 					/>
 
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>

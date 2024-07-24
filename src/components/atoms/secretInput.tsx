@@ -25,7 +25,6 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		onChange,
 		onFocus,
 		placeholder,
-		register,
 		resetOnFocus,
 		value,
 		variant,
@@ -148,7 +147,6 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 			<div className={wrapperClass}>
 				<input
 					{...rest}
-					{...register} // Spread the register object here
 					className={inputClass}
 					defaultValue={defaultValue}
 					disabled={disabled}

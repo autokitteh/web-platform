@@ -122,11 +122,8 @@ export const EditVariable = () => {
 				<div className="relative">
 					<SecretInput
 						handleLockAction={(newState: boolean) => setValue("isSecret", newState)}
-						onChange={(event) => {
-							setValue("value", event.target.value);
-						}}
 						placeholder={tForm("placeholders.value")}
-						register={register("value", { required: tForm("valueRequired") })}
+						{...register("value", { required: tForm("valueRequired") })}
 						resetOnFocus={isSecretOnInit}
 						value={value}
 					/>
