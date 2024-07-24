@@ -17,12 +17,12 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		className,
 		defaultValue,
 		disabled,
+		handleInputChange,
 		handleLockAction,
 		isError,
 		isLocked,
 		isLockedDisabled,
 		isRequired,
-		onChange,
 		onFocus,
 		placeholder,
 		resetOnFocus,
@@ -38,26 +38,19 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	const [isLockedState, setIsLockedState] = useState(isLocked);
 	const [isFirstFocus, setIsFirstFocus] = useState(true);
 
-	useEffect(() => {
-		if (resetOnFocus) {
-			onChange?.({ target: { value: "********" } } as React.ChangeEvent<HTMLInputElement>);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const handleFocus = () => {
+		setIsFocused(true);
 
-	const handleFocus = useCallback(
-		(event: React.FocusEvent<HTMLInputElement>) => {
-			setIsFocused(true);
+		if (resetOnFocus && isFirstFocus) {
+			setIsFirstFocus(false);
 			onFocus?.();
 
-			if (resetOnFocus && isFirstFocus) {
-				setIsFirstFocus(false);
-				event.target.value = "";
-				onChange?.({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
-			}
-		},
-		[onFocus, onChange, resetOnFocus, isFirstFocus]
-	);
+			handleInputChange?.("");
+
+			return;
+		}
+		onFocus?.();
+	};
 
 	useEffect(() => {
 		setHasValue(!!value || !!defaultValue);
@@ -80,9 +73,9 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 			if (newValue !== hasValue) {
 				setHasValue(newValue);
 			}
-			onChange?.(event);
+			handleInputChange?.(event.target.value);
 		},
-		[hasValue, onChange]
+		[hasValue, handleInputChange]
 	);
 
 	const placeholderText = isRequired ? `${placeholder} *` : placeholder;

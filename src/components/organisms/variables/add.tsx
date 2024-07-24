@@ -87,6 +87,7 @@ export const AddVariable = () => {
 						}}
 						placeholder={tForm("placeholders.value")}
 						{...register("value")}
+						handleInputChange={(newValue) => setValue("value", newValue)}
 					/>
 
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>

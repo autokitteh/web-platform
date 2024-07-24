@@ -7,6 +7,7 @@ export interface SecretInputProps extends React.InputHTMLAttributes<HTMLInputEle
 	isLockedDisabled?: boolean;
 	isRequired?: boolean;
 	handleLockAction?: (newLockState: boolean) => void;
+	handleInputChange: (newLockState: string) => void;
 	variant?: InputType;
 	onFocus?: () => void;
 	resetOnFocus?: boolean;
