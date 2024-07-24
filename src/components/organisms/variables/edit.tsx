@@ -11,7 +11,7 @@ import { newVariableShema } from "@validations";
 
 import { useSecretInputs } from "@hooks";
 
-import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
+import { ErrorMessage, Input, Loader } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 
 export const EditVariable = () => {
@@ -24,7 +24,7 @@ export const EditVariable = () => {
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
-	const [firstFocus, setFirstFocus] = useState(true);
+	// const [firstFocus, setFirstFocus] = useState(true);
 
 	const {
 		formState: { dirtyFields, errors },
@@ -32,12 +32,13 @@ export const EditVariable = () => {
 		handleSubmit,
 		register,
 		reset,
-		setValue,
+		// setValue,
 		watch,
 	} = useForm({
 		defaultValues: {
 			name: "",
 			value: "",
+			isSecret: false,
 		},
 		resolver: zodResolver(newVariableShema),
 	});
@@ -65,6 +66,7 @@ export const EditVariable = () => {
 		reset({
 			name: currentVar.name,
 			value: currentVar.isSecret ? "**********" : value,
+			isSecret: currentVar.isSecret,
 		});
 	};
 
@@ -95,12 +97,12 @@ export const EditVariable = () => {
 		navigate(-1);
 	};
 
-	const handleFocus = () => {
-		if (locks.value && firstFocus) {
-			setValue("value", "");
-			setFirstFocus(false);
-		}
-	};
+	// const handleFocus = () => {
+	// 	if (locks.value && firstFocus) {
+	// 		setValue("value", "");
+	// 		setFirstFocus(false);
+	// 	}
+	// };
 
 	return isLoadingData ? (
 		<Loader isCenter size="xl" />
@@ -128,17 +130,17 @@ export const EditVariable = () => {
 				</div>
 
 				<div className="relative">
-					<SecretInput
+					{/* <SecretInput
 						isLocked={locks.value}
 						onChange={(event) => {
 							setValue("value", event.target.value);
 						}}
 						onFocus={handleFocus}
-						onLock={() => toggleLock("value")}
+						onLock={(event: boolean) => setValue("isSecret", event)}
 						placeholder={tForm("placeholders.value")}
 						register={register("value", { required: tForm("valueRequired") })}
 						value={value}
-					/>
+					/> */}
 
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
