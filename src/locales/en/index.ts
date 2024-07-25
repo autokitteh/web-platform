@@ -1,4 +1,5 @@
 import buttons from "@locales/en/buttons/translation.json";
+import inputs from "@locales/en/components/inputs/translation.json";
 import select from "@locales/en/components/select/translation.json";
 import dashboard from "@locales/en/dashboard/translation.json";
 import deployments from "@locales/en/deployments/translation.json";
@@ -21,6 +22,7 @@ export default {
 	buttons,
 	components: {
 		select,
+		inputs,
 	},
 	deployments,
 	errors,
