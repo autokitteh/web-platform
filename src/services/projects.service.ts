@@ -185,7 +185,11 @@ export class ProjectsService {
 
 	static async update(projectId: string, name: string): Promise<ServiceResponse<void>> {
 		try {
-			const project = await projectsClient.update({ project: { name, projectId } });
+			const project = await projectsClient.update({
+				project: { name, projectId },
+				fieldMask: { paths: ["name"] },
+			});
+
 			if (!project) {
 				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
 
