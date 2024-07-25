@@ -10,7 +10,7 @@ import { Button, IconButton } from "@components/atoms";
 
 import { ArrowLeft } from "@assets/image/icons";
 
-export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHeaderProps) => {
+export const TabFormHeader = ({ className, form, isHiddenButtons, isLoading, title }: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
 	const baseStyle = cn("flex justify-between bg-gray-1100 py-2.5", className);
@@ -30,26 +30,28 @@ export const TabFormHeader = ({ className, form, isLoading, title }: TabFormHead
 					<p className="text-base text-gray-500">{title}</p>
 				</div>
 
-				<div className="flex items-center gap-6">
-					<Button
-						ariaLabel={t("cancel")}
-						className="p-0 font-semibold text-gray-500 hover:text-white"
-						onClick={() => navigate(-1)}
-					>
-						{t("cancel")}
-					</Button>
+				{!isHiddenButtons ? (
+					<div className="flex items-center gap-6">
+						<Button
+							ariaLabel={t("cancel")}
+							className="p-0 font-semibold text-gray-500 hover:text-white"
+							onClick={() => navigate(-1)}
+						>
+							{t("cancel")}
+						</Button>
 
-					<Button
-						ariaLabel={t("save")}
-						className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
-						disabled={isLoading}
-						form={form}
-						type="submit"
-						variant="outline"
-					>
-						{isLoading ? t("loading") + "..." : t("save")}
-					</Button>
-				</div>
+						<Button
+							ariaLabel={t("save")}
+							className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
+							disabled={isLoading}
+							form={form}
+							type="submit"
+							variant="outline"
+						>
+							{isLoading ? t("loading") + "..." : t("save")}
+						</Button>
+					</div>
+				) : null}
 			</div>
 		</div>
 	);

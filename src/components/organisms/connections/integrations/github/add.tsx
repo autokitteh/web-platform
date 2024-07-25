@@ -52,6 +52,7 @@ export const GithubIntegrationAddForm = ({
 	});
 
 	const createPatConnection = async () => {
+		setIsLoading(true);
 		const { pat, webhookSercet: secret } = getValues();
 
 		try {
@@ -118,17 +119,6 @@ export const GithubIntegrationAddForm = ({
 		} finally {
 			setIsLoading(false);
 		}
-	};
-
-	const onSubmit = () => {
-		setIsLoading(true);
-
-		if (connectionId) {
-			createPatConnection();
-
-			return;
-		}
-		triggerParentFormSubmit();
 	};
 
 	const renderPATFields = () => (
@@ -269,6 +259,25 @@ export const GithubIntegrationAddForm = ({
 			default:
 				return null;
 		}
+	};
+
+	const onSubmit = () => {
+		if (connectionId) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("connectionExists"),
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("connectionExistsExtended", { connectionId })}`
+			);
+
+			return;
+		}
+
+		triggerParentFormSubmit();
 	};
 
 	return (

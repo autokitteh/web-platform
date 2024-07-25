@@ -216,7 +216,22 @@ export const SlackIntegrationAddForm = ({
 	};
 
 	const onSubmit = () => {
-		connectionId ? createConnection() : triggerParentFormSubmit();
+		if (connectionId) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("connectionExists"),
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("connectionExistsExtended", { connectionId })}`
+			);
+
+			return;
+		}
+
+		triggerParentFormSubmit();
 	};
 
 	return (

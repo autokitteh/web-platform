@@ -9,6 +9,8 @@
 	"errorFetchingConnection": "Error while fetching connection",
 	"connectionNotFound": "Error while fetching connection",
 	"connectionNotFoundExtended": "Error while fetching connection, connectionId: {{connectionId}}",
+	"connectionExists": "Connection already exists",
+	"connectionExistsExtended": "Connection already exists, connectionId: {{connectionId}}",
 	"errorFetchingConnectionExtended": "Error while fetching connection, error: {{error}}",
 	"errorOccured": "An error occurred",
 	"failedRemoveFile": "Failed to remove file: {{fileName}}",
