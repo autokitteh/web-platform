@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
@@ -17,7 +17,7 @@ import { githubIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
-import { Button, ErrorMessage, Input, Link, Select, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, SecretInput, Select, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
@@ -32,15 +32,19 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 	const addToast = useToastStore((state) => state.addToast);
 	const [webhookUrl, setWebhookUrl] = useState<string>("");
 	const {
+		control,
 		formState: { errors },
 		getValues,
 		handleSubmit,
 		register,
+		setValue,
 	} = useForm({
 		resolver: zodResolver(githubIntegrationSchema),
 		defaultValues: {
 			pat: "",
-			webhookSercet: "",
+			webhookSecret: "",
+			patIsSecret: true,
+			webhookSecretIsSecret: true,
 		},
 	});
 
@@ -59,17 +63,21 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 			return;
 		}
 
+		let connectionType;
+
 		const isConnectionTypePat = vars.some((variable) => variable.name === "pat");
 		if (isConnectionTypePat) {
-			const connectionType = githubIntegrationAuthMethods.find(
+			connectionType = githubIntegrationAuthMethods.find(
 				(connectionMethod) => connectionMethod.value === GithubConnectionType.Pat
 			);
 			setSelectedConnectionType(connectionType!);
+			setValue("pat", "***********");
+			setValue("webhookSecret", "***********");
 
 			return;
 		}
 
-		const connectionType = githubIntegrationAuthMethods.find(
+		connectionType = githubIntegrationAuthMethods.find(
 			(connectionMethod) => connectionMethod.value === GithubConnectionType.Oauth
 		);
 		setSelectedConnectionType(connectionType!);
@@ -86,7 +94,7 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 	}, []);
 
 	const onSubmit = useCallback(async () => {
-		const { pat, webhookSercet: secret } = getValues();
+		const { pat, webhookSecret: secret } = getValues();
 		setIsLoading(true);
 		try {
 			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
@@ -154,15 +162,24 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 		}
 	};
 
+	const pat = useWatch({ control, name: "pat" });
+	const patIsSecret = useWatch({ control, name: "patIsSecret" });
+	const webhookSecret = useWatch({ control, name: "webhookSecret" });
+	const webhookSecretIsSecret = useWatch({ control, name: "webhookSecretIsSecret" });
+
 	const renderPATFields = () => (
 		<>
 			<div className="relative">
-				<Input
+				<SecretInput
 					{...register("pat")}
 					aria-label={t("github.placeholders.pat")}
+					handleInputChange={(newValue) => setValue("pat", newValue)}
+					handleLockAction={(newState: boolean) => setValue("patIsSecret", newState)}
 					isError={!!errors.pat}
+					isLocked={patIsSecret}
 					isRequired
 					placeholder={t("github.placeholders.pat")}
+					value={pat}
 				/>
 
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
@@ -188,15 +205,19 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 				</Button>
 			</div>
 			<div className="relative">
-				<Input
-					{...register("webhookSercet")}
+				<SecretInput
+					{...register("webhookSecret")}
 					aria-label={t("github.placeholders.webhookSecret")}
-					isError={!!errors.webhookSercet}
+					handleInputChange={(newValue) => setValue("webhookSecret", newValue)}
+					handleLockAction={(newState: boolean) => setValue("webhookSecretIsSecret", newState)}
+					isError={!!errors.webhookSecret}
+					isLocked={webhookSecretIsSecret}
 					isRequired
 					placeholder={t("github.placeholders.webhookSecret")}
+					value={webhookSecret}
 				/>
 
-				<ErrorMessage>{errors.webhookSercet?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.webhookSecret?.message as string}</ErrorMessage>
 			</div>
 			<Button
 				aria-label={t("buttons.saveConnection")}
