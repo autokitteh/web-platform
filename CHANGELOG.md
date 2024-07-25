@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/autokitteh/web-platform/compare/v1.19.2...v1.20.0) (2024-07-25)
+
+
+### Features
+
+* secret input text field component ([#211](https://github.com/autokitteh/web-platform/issues/211)) ([183e4bf](https://github.com/autokitteh/web-platform/commit/183e4bf3b08356b9d8c13ef5428cc2b34d5928eb))
+
 ## [1.19.2](https://github.com/autokitteh/web-platform/compare/v1.19.1...v1.19.2) (2024-07-23)
 
 
