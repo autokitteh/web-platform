@@ -107,6 +107,7 @@ export const AddConnection = () => {
 
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
+					disabled={!!connectionId}
 					onChange={handleIntegrationChange}
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}

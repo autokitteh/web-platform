@@ -10,6 +10,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
 	(
 		{
 			dataTestid,
+			disabled = false,
 			isError = false,
 			noOptionsLabel,
 			onChange,
@@ -42,10 +43,10 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
 		let selectStyles;
 		switch (variant) {
 			case "light":
-				selectStyles = getSelectLightStyles(isError);
+				selectStyles = getSelectLightStyles(isError, disabled);
 				break;
 			default:
-				selectStyles = getSelectDarkStyles(isError);
+				selectStyles = getSelectDarkStyles(isError, disabled);
 				break;
 		}
 
@@ -53,6 +54,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
 			<div data-testid={dataTestid} ref={ref}>
 				<ReactSelect
 					{...rest}
+					isDisabled={disabled}
 					isOptionDisabled={(option) => !!option.disabled}
 					noOptionsMessage={() => noOptionsMessage}
 					onChange={handleChange}
