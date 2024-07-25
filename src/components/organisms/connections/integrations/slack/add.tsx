@@ -98,9 +98,21 @@ export const SlackIntegrationAddForm = ({
 		}
 	};
 
-	const onSubmit = () => {
-		connectionId ? createConnection() : triggerParentFormSubmit();
-	};
+	useEffect(() => {
+		switch (selectedConnectionType?.value) {
+			case SlackConnectionType.Mode:
+				createConnection();
+				break;
+
+			case SlackConnectionType.Oauth:
+				handleSlackOAuth();
+				break;
+
+			default:
+				break;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
 
 	const renderSocketMode = () => (
 		<>
@@ -180,13 +192,17 @@ export const SlackIntegrationAddForm = ({
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
-				onClick={handleSlackOAuth}
+				onClick={triggerParentFormSubmit}
 				variant="outline"
 			>
 				{t("buttons.startOAuthFlow")}
 			</Button>
 		</div>
 	);
+
+	const selectConnectionType = (option: SingleValue<SelectOption>) => {
+		setSelectedConnectionType(option as SelectOption);
+	};
 
 	const renderConnectionFields = () => {
 		switch (selectedConnectionType?.value) {
@@ -199,13 +215,8 @@ export const SlackIntegrationAddForm = ({
 		}
 	};
 
-	useEffect(() => {
-		renderConnectionFields();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
-
-	const selectConnectionType = (option: SingleValue<SelectOption>) => {
-		setSelectedConnectionType(option as SelectOption);
+	const onSubmit = () => {
+		connectionId ? createConnection() : triggerParentFormSubmit();
 	};
 
 	return (
