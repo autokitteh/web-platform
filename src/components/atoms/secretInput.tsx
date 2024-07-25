@@ -161,13 +161,11 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					value={value}
 				/>
 
-				{isFocused ? (
-					<label className={labelClass} htmlFor={id}>
-						<span className="relative z-10">{placeholderText}</span>
+				<label className={labelClass} htmlFor={id}>
+					<span className="relative z-10">{placeholderText}</span>
 
-						<span className={borderOverlayLabelClass} />
-					</label>
-				) : null}
+					<span className={borderOverlayLabelClass} />
+				</label>
 
 				{isLockedDisabled ? (
 					<Button onClick={handleLockedStateAction} type="button" variant={buttonVariant}>
