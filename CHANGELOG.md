@@ -1,3 +1,10 @@
+## [1.21.1](https://github.com/autokitteh/web-platform/compare/v1.21.0...v1.21.1) (2024-07-25)
+
+
+### Bug Fixes
+
+* improve favicon quality ([#226](https://github.com/autokitteh/web-platform/issues/226)) ([14d272d](https://github.com/autokitteh/web-platform/commit/14d272d7bed0f69a494e3bfc1d90596ba153de3f))
+
 # [1.21.0](https://github.com/autokitteh/web-platform/compare/v1.20.1...v1.21.0) (2024-07-25)
 
 
