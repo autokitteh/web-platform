@@ -19,9 +19,15 @@ import { ErrorMessage, Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { GoogleIntegrationForm } from "@components/organisms/connections/integrations";
 import { GithubIntegrationAddForm } from "@components/organisms/connections/integrations/github";
+import { SlackIntegrationAddForm } from "@components/organisms/connections/integrations/slack";
 
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
+	const { t: tErrors } = useTranslation("errors");
+
+	const [connectionId, setConnectionId] = useState<string | undefined>(undefined);
+	const { projectId } = useParams();
+	const addToast = useToastStore((state) => state.addToast);
 
 	const {
 		formState: { errors },
@@ -43,11 +49,6 @@ export const AddConnection = () => {
 
 	const connectionName = watch("connectionName");
 	const selectedIntegration: SelectOption = watch("integration");
-	const { t: tErrors } = useTranslation("errors");
-
-	const [connectionId, setConnectionId] = useState<string | undefined>(undefined);
-	const { projectId } = useParams();
-	const addToast = useToastStore((state) => state.addToast);
 
 	const onSubmit = async () => {
 		if (!connectionId) {
@@ -79,6 +80,7 @@ export const AddConnection = () => {
 			<GithubIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		google: <GoogleIntegrationForm />,
+		slack: <SlackIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
 	};
 
 	const selectedIntegrationComponent = selectedIntegration
