@@ -3,4 +3,5 @@ export interface TabFormHeaderProps {
 	form?: string;
 	isLoading?: boolean;
 	title: string;
+	isHiddenButtons?: boolean;
 }

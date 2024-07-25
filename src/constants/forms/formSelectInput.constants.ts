@@ -29,13 +29,18 @@ const baseStyles = {
 
 const getSelectStyles = (
 	isError: boolean,
-	colorScheme: ColorSchemes
+	colorScheme: ColorSchemes,
+	isDisable: boolean
 ): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => {
 	const defaultBorderColor = `0.5px solid ${isError ? formThemes.error : formThemes["gray-950"]}`;
 	const greenBorderColor = `0.5px solid ${colorScheme === "dark" ? formThemes["green-200"] : formThemes["green-800"]}`;
 	const hoverBorderColor = colorScheme === "dark" ? formThemes.light : formThemes["gray-750"];
 	const backgroundColor = formThemes[colorScheme === "dark" ? "dark" : "light"];
-	const oppositeSchemeColor = formThemes[colorScheme === "dark" ? "light" : "dark"];
+	const oppositeSchemeColor = isDisable
+		? formThemes["gray-750"]
+		: colorScheme === "dark"
+			? formThemes["light"]
+			: formThemes["dark"];
 	const hoverBackgroundColor = formThemes["gray-1250"];
 	const selectedBackgroundColor = colorScheme === "dark" ? formThemes.light : formThemes.dark;
 	const selectedTextColor = colorScheme === "dark" ? formThemes.dark : formThemes.light;
@@ -153,10 +158,14 @@ const getSelectStyles = (
 	};
 };
 
-const getSelectDarkStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
-	getSelectStyles(isError, "dark");
+const getSelectDarkStyles = (
+	isError: boolean,
+	isDisable: boolean
+): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => getSelectStyles(isError, "dark", isDisable);
 
-const getSelectLightStyles = (isError: boolean): StylesConfig<SelectOption, false, GroupBase<SelectOption>> =>
-	getSelectStyles(isError, "light");
+const getSelectLightStyles = (
+	isError: boolean,
+	isDisable: boolean
+): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => getSelectStyles(isError, "light", isDisable);
 
 export { getSelectDarkStyles, getSelectLightStyles };

@@ -12,3 +12,8 @@ export const googleIntegrationSchema = z.object({
 export const connectionSchema = z.object({
 	connectionName: z.string().min(5, "Name is required"),
 });
+
+export const slackIntegrationSchema = z.object({
+	botToken: z.string().min(5, "Bot Token is required"),
+	appToken: z.string().min(5, "App-Level Token is required"),
+});

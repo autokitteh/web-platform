@@ -19,9 +19,15 @@ import { ErrorMessage, Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { GoogleIntegrationForm } from "@components/organisms/connections/integrations";
 import { GithubIntegrationAddForm } from "@components/organisms/connections/integrations/github";
+import { SlackIntegrationAddForm } from "@components/organisms/connections/integrations/slack";
 
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
+	const { t: tErrors } = useTranslation("errors");
+
+	const [connectionId, setConnectionId] = useState<string | undefined>(undefined);
+	const { projectId } = useParams();
+	const addToast = useToastStore((state) => state.addToast);
 
 	const {
 		formState: { errors },
@@ -43,11 +49,6 @@ export const AddConnection = () => {
 
 	const connectionName = watch("connectionName");
 	const selectedIntegration: SelectOption = watch("integration");
-	const { t: tErrors } = useTranslation("errors");
-
-	const [connectionId, setConnectionId] = useState<string | undefined>(undefined);
-	const { projectId } = useParams();
-	const addToast = useToastStore((state) => state.addToast);
 
 	const onSubmit = async () => {
 		if (!connectionId) {
@@ -79,6 +80,7 @@ export const AddConnection = () => {
 			<GithubIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		google: <GoogleIntegrationForm />,
+		slack: <SlackIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
 	};
 
 	const selectedIntegrationComponent = selectedIntegration
@@ -87,7 +89,7 @@ export const AddConnection = () => {
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" title={t("addNewConnection")} />
+			<TabFormHeader className="mb-11" isHiddenButtons title={t("addNewConnection")} />
 
 			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative mb-6">
@@ -105,6 +107,7 @@ export const AddConnection = () => {
 
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
+					disabled={!!connectionId}
 					onChange={handleIntegrationChange}
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}

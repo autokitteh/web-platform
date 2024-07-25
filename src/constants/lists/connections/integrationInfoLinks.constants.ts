@@ -3,6 +3,8 @@ import i18n from "i18next";
 let infoGithubLinks: { text: string; url: string }[] = [];
 let infoGoogleUserLinks: { text: string; url: string }[] = [];
 let infoGoogleAccountLinks: { text: string; url: string }[] = [];
+let infoSlackModeLinks: { text: string; url: string }[] = [];
+let infoSlackOAuthLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -53,6 +55,27 @@ i18n.on("initialized", () => {
 			url: "https://cloud.google.com/iam/docs/best-practices-for-managing-service-account-keys",
 		},
 	];
+
+	infoSlackModeLinks = [
+		{
+			url: "https://docs.autokitteh.com/tutorials/new_connections/slack",
+			text: i18n.t("slack.information.AKGuide", { ns: "integrations" }),
+		},
+		{
+			url: "https://api.slack.com/apis/connections/socket",
+			text: i18n.t("slack.information.aboutMode", { ns: "integrations" }),
+		},
+	];
+	infoSlackOAuthLinks = [
+		{
+			url: "https://docs.autokitteh.com/config/integrations/slack",
+			text: i18n.t("slack.information.configSlack", { ns: "integrations" }),
+		},
+		{
+			url: "https://api.slack.com/authentication/oauth-v2",
+			text: i18n.t("slack.information.aboutInitSlack", { ns: "integrations" }),
+		},
+	];
 });
 
-export { infoGithubLinks, infoGoogleAccountLinks, infoGoogleUserLinks };
+export { infoGithubLinks, infoGoogleAccountLinks, infoGoogleUserLinks, infoSlackModeLinks, infoSlackOAuthLinks };

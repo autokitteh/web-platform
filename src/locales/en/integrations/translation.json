@@ -2,6 +2,14 @@
 	"addNewConnection": "Add new connection",
 	"editConnection": "Edit connection",
 	"connectionCreatedSuccessfully": "Connection created successfully",
+	"information": "More Information",
+	"placeholders": {
+		"noConnectionTypesAvailable": "No connection types available",
+		"noIntegrationsAvailable": "No integrations available",
+		"selectConnectionType": "Select connection type",
+		"selectIntegration": "Select integration"
+	},
+	"success": "Success",
 	"buttons": {
 		"copy": "Copy",
 		"saveConnection": "Save Connection",
@@ -38,12 +46,17 @@
 			"jsonKey": "JSON Key"
 		}
 	},
-	"information": "More Information",
-	"placeholders": {
-		"noConnectionTypesAvailable": "No connection types available",
-		"noIntegrationsAvailable": "No integrations available",
-		"selectConnectionType": "Select connection type",
-		"selectIntegration": "Select integration"
-	},
-	"success": "Success"
+	"slack": {
+		"clickButtonInstall": "Click the button below to install and authorize the autokitteh app in your Slack workspace",
+		"placeholders": {
+			"botToken": "Bot Token ('xoxb')",
+			"appToken": "App-Level Token ('xapp')"
+		},
+		"information": {
+			"AKGuide": "AutoKitteh guide: creating a Socket-Mode Slack connection",
+			"aboutMode": "Details about Slack's Socket Mode",
+			"configSlack": "AutoKitteh guide: configuring the Slack integration",
+			"aboutInitSlack": "Background about installing Slack apps with OAuth"
+		}
+	}
 }

@@ -7,3 +7,8 @@ export enum GoogleConnectionType {
 	Oauth = "oauth",
 	ServiceAccount = "serviceAccount",
 }
+
+export enum SlackConnectionType {
+	Mode = "mode",
+	Oauth = "oauth",
+}

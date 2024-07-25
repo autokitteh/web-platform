@@ -12,6 +12,7 @@ export interface SelectProps {
 	placeholder?: string;
 	value?: SelectOption;
 	variant?: ColorSchemes;
+	disabled?: boolean;
 }
 
 export interface SelectOption {
