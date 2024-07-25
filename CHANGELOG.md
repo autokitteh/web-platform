@@ -1,3 +1,10 @@
+## [1.20.1](https://github.com/autokitteh/web-platform/compare/v1.20.0...v1.20.1) (2024-07-25)
+
+
+### Bug Fixes
+
+* rename project functionality ([#225](https://github.com/autokitteh/web-platform/issues/225)) ([6b40002](https://github.com/autokitteh/web-platform/commit/6b4000281d672902094c769c9ba5e26d0b3c1a18))
+
 # [1.20.0](https://github.com/autokitteh/web-platform/compare/v1.19.2...v1.20.0) (2024-07-25)
 
 
