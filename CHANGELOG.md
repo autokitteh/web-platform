@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/autokitteh/web-platform/compare/v1.20.1...v1.21.0) (2024-07-25)
+
+
+### Features
+
+* add slack integration ([#221](https://github.com/autokitteh/web-platform/issues/221)) ([9b7a005](https://github.com/autokitteh/web-platform/commit/9b7a0058421c6c310bd8441d9f96135f988bbaea))
+
 ## [1.20.1](https://github.com/autokitteh/web-platform/compare/v1.20.0...v1.20.1) (2024-07-25)
 
 
