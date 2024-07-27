@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
+import { SlackIntegrationAddForm } from "./integrations/slack";
 import { integrationTypes } from "@constants/lists";
 import { namespaces } from "@constants/namespaces.logger.constants";
 import { SelectOption } from "@interfaces/components";
@@ -120,6 +121,7 @@ export const EditConnection = () => {
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
 		github: <GithubIntegrationEditForm connectionId={connectionId!} />,
 		google: <GoogleIntegrationForm />,
+		slack: <SlackIntegrationAddForm triggerParentFormSubmit={() => {}} />,
 	};
 
 	const selectedIntegration = {
