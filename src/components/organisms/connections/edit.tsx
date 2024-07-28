@@ -6,20 +6,23 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { SlackIntegrationAddForm } from "./integrations/slack";
+import { namespaces } from "@constants";
 import { integrationTypes } from "@constants/lists";
-import { namespaces } from "@constants/namespaces.logger.constants";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, LoggerService } from "@services/index";
-import { useToastStore } from "@store/index";
+import { ConnectionService, LoggerService } from "@services";
 import { IntegrationType } from "@type/components";
 import { Connection } from "@type/models";
-import { connectionSchema } from "@validations/index";
+import { connectionSchema } from "@validations";
+
+import { useToastStore } from "@store";
 
 import { Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { GoogleIntegrationForm } from "@components/organisms/connections/integrations";
-import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
+import {
+	GithubIntegrationEditForm,
+	GoogleIntegrationForm,
+	SlackIntegrationAddForm,
+} from "@components/organisms/connections/integrations";
 
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");
@@ -49,30 +52,20 @@ export const EditConnection = () => {
 
 			if (error) {
 				const errorMessage = tErrors("errorFetchingConnection");
-
-				addToast({
-					id: Date.now().toString(),
-					message: errorMessage,
-					type: "error",
-				});
+				addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
 				LoggerService.error(
 					namespaces.connectionService,
-					`${tErrors("errorFetchingConnectionExtended", { error: (error as Error).message })}`
+					tErrors("errorFetchingConnectionExtended", { error: (error as Error).message })
 				);
 
 				return;
 			}
 			if (!connectionResponse) {
 				const errorMessage = tErrors("connectionNotFound");
-
-				addToast({
-					id: Date.now().toString(),
-					message: errorMessage,
-					type: "error",
-				});
+				addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
 				LoggerService.error(
 					namespaces.connectionService,
-					`${tErrors("connectionNotFoundExtended", { connectionId })}`
+					tErrors("connectionNotFoundExtended", { connectionId })
 				);
 
 				return;
@@ -85,24 +78,13 @@ export const EditConnection = () => {
 				value: connectionResponse.integrationUniqueName,
 			});
 
-			const resetForm = () => {
-				reset({
-					connectionName: connectionResponse.name,
-				});
-			};
-
-			resetForm();
+			reset({ connectionName: connectionResponse.name });
 		} catch (error) {
 			const errorMessage = tErrors("errorFetchingConnection");
-
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
+			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorFetchingConnectionExtended", { error: error?.response?.data })}`
+				tErrors("errorFetchingConnectionExtended", { error: error?.response?.data })
 			);
 		}
 	};

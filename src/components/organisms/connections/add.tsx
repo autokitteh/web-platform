@@ -32,10 +32,10 @@ import {
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
 	const { t: tErrors } = useTranslation("errors");
-
-	const [connectionId, setConnectionId] = useState<string | undefined>(undefined);
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
+
+	const [connectionId, setConnectionId] = useState<string | undefined>(undefined);
 
 	const {
 		formState: { errors },
@@ -48,10 +48,7 @@ export const AddConnection = () => {
 		mode: "onChange",
 		defaultValues: {
 			connectionName: "",
-			integration: {
-				label: "",
-				value: "",
-			},
+			integration: { label: "", value: "" },
 		},
 	});
 
@@ -80,15 +77,10 @@ export const AddConnection = () => {
 				setConnectionId(data);
 			} catch (error) {
 				const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
-
-				addToast({
-					id: Date.now().toString(),
-					message: errorMessage,
-					type: "error",
-				});
+				addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
 				LoggerService.error(
 					namespaces.connectionService,
-					`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
+					tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
 				);
 			}
 		}

@@ -31,11 +31,12 @@ export const GithubIntegrationAddForm = ({
 }) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
 	const { projectId } = useParams();
 	const navigate = useNavigate();
-	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
+
+	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
+	const [isLoading, setIsLoading] = useState(false);
 	const [webhookUrl, setWebhookUrl] = useState<string>("");
 
 	const {
@@ -45,10 +46,7 @@ export const GithubIntegrationAddForm = ({
 		register,
 	} = useForm({
 		resolver: zodResolver(githubIntegrationSchema),
-		defaultValues: {
-			pat: "",
-			webhookSercet: "",
-		},
+		defaultValues: { pat: "", webhookSercet: "" },
 	});
 
 	const createPatConnection = async () => {
@@ -56,29 +54,17 @@ export const GithubIntegrationAddForm = ({
 		const { pat, webhookSercet: secret } = getValues();
 
 		try {
-			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
-				pat,
-				secret,
-				webhook: webhookUrl,
-			});
+			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, { pat, secret, webhook: webhookUrl });
 			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({
-				id: Date.now().toString(),
-				message: successMessage,
-				type: "success",
-			});
+			addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
 			LoggerService.info(namespaces.connectionService, successMessage);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
+			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
+				tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
 			);
 		} finally {
 			setIsLoading(false);
@@ -88,17 +74,9 @@ export const GithubIntegrationAddForm = ({
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-			addToast({
-				id: Date.now().toString(),
-				message: t("github.copySuccess"),
-				type: "success",
-			});
+			addToast({ id: Date.now().toString(), message: t("github.copySuccess"), type: "success" });
 		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: t("github.copyFailure"),
-				type: "error",
-			});
+			addToast({ id: Date.now().toString(), message: t("github.copyFailure"), type: "error" });
 		}
 	};
 
@@ -107,14 +85,10 @@ export const GithubIntegrationAddForm = ({
 			window.open(`${apiBaseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("errorCreatingNewConnection"),
-				type: "error",
-			});
+			addToast({ id: Date.now().toString(), message: tErrors("errorCreatingNewConnection"), type: "error" });
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`
+				tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })
 			);
 		} finally {
 			setIsLoading(false);
@@ -228,11 +202,9 @@ export const GithubIntegrationAddForm = ({
 			case GithubConnectionType.Pat:
 				createPatConnection();
 				break;
-
 			case GithubConnectionType.Oauth:
 				handleGithubOAuth();
 				break;
-
 			default:
 				break;
 		}
@@ -263,20 +235,11 @@ export const GithubIntegrationAddForm = ({
 
 	const onSubmit = () => {
 		if (connectionId) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionExists"),
-				type: "error",
-			});
-
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("connectionExistsExtended", { connectionId })}`
-			);
+			addToast({ id: Date.now().toString(), message: tErrors("connectionExists"), type: "error" });
+			LoggerService.error(namespaces.connectionService, tErrors("connectionExistsExtended", { connectionId }));
 
 			return;
 		}
-
 		triggerParentFormSubmit();
 	};
 

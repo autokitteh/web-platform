@@ -25,12 +25,14 @@ import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons"
 export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: string }) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
 	const { projectId } = useParams();
 	const navigate = useNavigate();
-	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
+
+	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
+	const [isLoading, setIsLoading] = useState(false);
 	const [webhookUrl, setWebhookUrl] = useState<string>("");
+
 	const {
 		control,
 		formState: { errors },
@@ -51,11 +53,7 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 	const fetchVariables = async () => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: (error as Error).message,
-				type: "error",
-			});
+			addToast({ id: Date.now().toString(), message: (error as Error).message, type: "error" });
 
 			return;
 		}
@@ -64,8 +62,8 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 		}
 
 		let connectionType;
-
 		const isConnectionTypePat = vars.some((variable) => variable.name === "pat");
+
 		if (isConnectionTypePat) {
 			connectionType = githubIntegrationAuthMethods.find(
 				(connectionMethod) => connectionMethod.value === GithubConnectionType.Pat
@@ -85,10 +83,8 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 
 	useEffect(() => {
 		fetchVariables();
-
 		const randomForPATWebhook = randomatic("Aa0", 8);
 		const webhookURL = `${baseUrl}/${randomForPATWebhook}`;
-
 		setWebhookUrl(webhookURL);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -97,29 +93,17 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 		const { pat, webhookSecret: secret } = getValues();
 		setIsLoading(true);
 		try {
-			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, {
-				pat,
-				secret,
-				webhook: webhookUrl,
-			});
+			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, { pat, secret, webhook: webhookUrl });
 			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({
-				id: Date.now().toString(),
-				message: successMessage,
-				type: "success",
-			});
+			addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
 			LoggerService.info(namespaces.connectionService, successMessage);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
+			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
+				tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
 			);
 		} finally {
 			setIsLoading(false);
@@ -130,17 +114,9 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-			addToast({
-				id: Date.now().toString(),
-				message: t("github.copySuccess"),
-				type: "success",
-			});
+			addToast({ id: Date.now().toString(), message: t("github.copySuccess"), type: "success" });
 		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: t("github.copyFailure"),
-				type: "error",
-			});
+			addToast({ id: Date.now().toString(), message: t("github.copyFailure"), type: "error" });
 		}
 	};
 
@@ -148,14 +124,10 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 		try {
 			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
 		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("errorCreatingNewConnection"),
-				type: "error",
-			});
+			addToast({ id: Date.now().toString(), message: tErrors("errorCreatingNewConnection"), type: "error" });
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`
+				tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })
 			);
 		} finally {
 			setIsLoading(false);
