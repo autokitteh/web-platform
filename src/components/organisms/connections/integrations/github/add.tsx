@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
@@ -23,19 +24,21 @@ export const GithubIntegrationAddForm = ({
 	triggerParentFormSubmit: () => void;
 }) => {
 	const { t } = useTranslation("integrations");
+	const { projectId } = useParams();
+	const navigate = useNavigate();
 
 	const {
 		copyToClipboard,
-		createPatConnection,
 		errors,
 		handleGithubOAuth,
+		handlePatConnection,
 		handleSubmit,
 		isLoading,
 		register,
 		setValue,
 		watch,
 		webhookUrl,
-	} = useConnectionForm({ pat: "", webhookSecret: "" }, githubIntegrationSchema);
+	} = useConnectionForm({ pat: "", webhookSecret: "" }, githubIntegrationSchema, "create");
 
 	const selectedConnectionType = watch("selectedConnectionType");
 
@@ -145,18 +148,27 @@ export const GithubIntegrationAddForm = ({
 		setValue("selectedConnectionType", option as SelectOption);
 	};
 
+	const configureConnection = async (connectionId: string) => {
+		switch (selectedConnectionType?.value) {
+			case GithubConnectionType.Pat:
+				{
+					const connectionCreationResult = await handlePatConnection(connectionId);
+					if (connectionCreationResult) {
+						navigate(`/projects/${projectId}/connections`);
+					}
+				}
+				break;
+			case GithubConnectionType.Oauth:
+				await handleGithubOAuth(connectionId);
+				break;
+			default:
+				break;
+		}
+	};
+
 	useEffect(() => {
 		if (connectionId) {
-			switch (selectedConnectionType?.value) {
-				case GithubConnectionType.Pat:
-					createPatConnection(connectionId);
-					break;
-				case GithubConnectionType.Oauth:
-					handleGithubOAuth(connectionId);
-					break;
-				default:
-					break;
-			}
+			configureConnection(connectionId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

@@ -2,6 +2,7 @@ import React from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
@@ -18,6 +19,7 @@ import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons"
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
+	const { connectionId } = useParams();
 
 	const {
 		control,
@@ -33,7 +35,8 @@ export const GithubIntegrationEditForm = () => {
 		webhookUrl,
 	} = useConnectionForm(
 		{ pat: "", webhookSecret: "", patIsSecret: true, webhookSecretIsSecret: true },
-		githubIntegrationSchema
+		githubIntegrationSchema,
+		"update"
 	);
 
 	const pat = useWatch({ control, name: "pat" });
@@ -145,7 +148,7 @@ export const GithubIntegrationEditForm = () => {
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
-				onClick={handleGithubOAuth}
+				onClick={() => handleGithubOAuth(connectionId!)}
 				variant="outline"
 			>
 				{t("buttons.startOAuthFlow")}

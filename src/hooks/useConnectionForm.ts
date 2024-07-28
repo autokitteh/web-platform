@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { baseUrl, namespaces } from "@constants";
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
@@ -12,11 +12,10 @@ import { Connection } from "@type/models";
 
 import { useToastStore } from "@store";
 
-export const useConnectionForm = (initialValues: any, validationSchema: any) => {
+export const useConnectionForm = (initialValues: any, validationSchema: any, mode: "create" | "update") => {
 	const { t: tErrors } = useTranslation("errors");
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
-	const navigate = useNavigate();
 
 	const {
 		control,
@@ -33,7 +32,7 @@ export const useConnectionForm = (initialValues: any, validationSchema: any) => 
 	});
 	const { t } = useTranslation("integrations");
 
-	const [connectionId, setConnectionId] = useState<string>();
+	const [connectionId, setConnectionId] = useState<string | undefined>();
 	const [_connection, setConnection] = useState<Connection>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [webhookUrl, setWebhookUrl] = useState<string>("");
@@ -72,10 +71,11 @@ export const useConnectionForm = (initialValues: any, validationSchema: any) => 
 	};
 
 	const onSubmit = async () => {
-		if (!connectionId) {
+		if (!connectionId && mode === "create") {
 			try {
+				setIsLoading(true);
 				const { connectionName, integration } = getValues();
-				const { data: connectionId, error } = await ConnectionService.create(
+				const { data: responseConnectionId, error } = await ConnectionService.create(
 					projectId!,
 					integration.value,
 					connectionName
@@ -91,15 +91,12 @@ export const useConnectionForm = (initialValues: any, validationSchema: any) => 
 
 					return;
 				}
-				if (!connectionId) {
+				if (!responseConnectionId) {
 					const errorMessage = tErrors("errorCreatingNewConnection");
 					addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
 					LoggerService.error(namespaces.connectionService, errorMessage);
-
-					return;
 				}
-
-				setConnectionId(connectionId);
+				setConnectionId(responseConnectionId);
 			} catch (error) {
 				const errorMessage = tErrors("errorCreatingNewConnection");
 				addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
@@ -107,11 +104,22 @@ export const useConnectionForm = (initialValues: any, validationSchema: any) => 
 					namespaces.connectionService,
 					tErrors("errorCreatingNewConnectionExtended", { error })
 				);
+				setIsLoading(false);
+			} finally {
+				setIsLoading(false);
 			}
+
+			return;
+		}
+		if (connectionId && mode === "create") {
+			setConnectionId(undefined);
+			setTimeout(() => {
+				setConnectionId(connectionId);
+			}, 0);
 		}
 	};
 
-	const createPatConnection = async (patConnectionId: string) => {
+	const handlePatConnection = async (patConnectionId: string): Promise<boolean> => {
 		setIsLoading(true);
 		const { pat, webhookSecret: secret } = getValues();
 
@@ -124,7 +132,8 @@ export const useConnectionForm = (initialValues: any, validationSchema: any) => 
 			const successMessage = t("connectionCreatedSuccessfully");
 			addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
 			LoggerService.info(namespaces.connectionService, successMessage);
-			navigate(`/projects/${projectId}/connections`);
+
+			return true;
 		} catch (error) {
 			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
 			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
@@ -132,15 +141,15 @@ export const useConnectionForm = (initialValues: any, validationSchema: any) => 
 				namespaces.connectionService,
 				tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
 			);
-		} finally {
 			setIsLoading(false);
+
+			return false;
 		}
 	};
 
 	const handleGithubOAuth = async (oauthConnectionId: string) => {
 		try {
 			window.open(`${baseUrl}/oauth/start/github?cid=${oauthConnectionId}&origin=web`, "_blank");
-			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
 			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
@@ -196,7 +205,7 @@ export const useConnectionForm = (initialValues: any, validationSchema: any) => 
 		isLoading,
 		webhookUrl,
 		copyToClipboard,
-		createPatConnection,
+		handlePatConnection,
 		handleGithubOAuth,
 		onSubmit,
 		setValue,

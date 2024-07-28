@@ -29,7 +29,8 @@ export const AddConnection = () => {
 
 	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch } = useConnectionForm(
 		{ connectionName: "", integration: { label: "", value: "" } },
-		connectionSchema
+		connectionSchema,
+		"create"
 	);
 
 	const selectedIntegration: SelectOption = watch("integration");
@@ -112,6 +113,7 @@ export const AddConnection = () => {
 					<Input
 						aria-label={t("github.placeholders.name")}
 						{...register("connectionName")}
+						disabled={!!connectionId}
 						isError={!!errors.connectionName}
 						isRequired
 						placeholder={t("github.placeholders.name")}
