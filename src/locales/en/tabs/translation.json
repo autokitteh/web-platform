@@ -58,6 +58,7 @@
 			"loading": "Loading"
 		},
 		"form": {
+			"cronSchedulerConnectionTitle": "Cron Scheduler Connection",
 			"addNewTrigger": "Add new trigger",
 			"ariaDeleteData": "Delete {{name}} data",
 			"buttonAddNewData": "Add new data",
