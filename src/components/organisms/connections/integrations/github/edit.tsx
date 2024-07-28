@@ -1,143 +1,47 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import randomatic from "randomatic";
-import { useForm, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { baseUrl, namespaces } from "@constants";
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
-import { GithubConnectionType } from "@enums";
 import { ConnectionFormIds } from "@enums/components";
+import { GithubConnectionType } from "@enums/connections";
+import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
-import { HttpService, LoggerService, VariablesService } from "@services";
 import { githubIntegrationSchema } from "@validations";
-
-import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Select, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: string }) => {
-	const { t: tErrors } = useTranslation("errors");
+export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const { projectId } = useParams();
-	const navigate = useNavigate();
-	const addToast = useToastStore((state) => state.addToast);
-
-	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
-	const [isLoading, setIsLoading] = useState(false);
-	const [webhookUrl, setWebhookUrl] = useState<string>("");
 
 	const {
 		control,
-		formState: { errors },
-		getValues,
+		copyToClipboard,
+		errors,
+		handleGithubOAuth,
 		handleSubmit,
+		isLoading,
+		onSubmit,
 		register,
 		setValue,
-	} = useForm({
-		resolver: zodResolver(githubIntegrationSchema),
-		defaultValues: {
-			pat: "",
-			webhookSecret: "",
-			patIsSecret: true,
-			webhookSecretIsSecret: true,
-		},
-	});
-
-	const fetchVariables = async () => {
-		const { data: vars, error } = await VariablesService.list(connectionId);
-		if (error) {
-			addToast({ id: Date.now().toString(), message: (error as Error).message, type: "error" });
-
-			return;
-		}
-		if (!vars?.length) {
-			return;
-		}
-
-		let connectionType;
-		const isConnectionTypePat = vars.some((variable) => variable.name === "pat");
-
-		if (isConnectionTypePat) {
-			connectionType = githubIntegrationAuthMethods.find(
-				(connectionMethod) => connectionMethod.value === GithubConnectionType.Pat
-			);
-			setSelectedConnectionType(connectionType!);
-			setValue("pat", "***********");
-			setValue("webhookSecret", "***********");
-
-			return;
-		}
-
-		connectionType = githubIntegrationAuthMethods.find(
-			(connectionMethod) => connectionMethod.value === GithubConnectionType.Oauth
-		);
-		setSelectedConnectionType(connectionType!);
-	};
-
-	useEffect(() => {
-		fetchVariables();
-		const randomForPATWebhook = randomatic("Aa0", 8);
-		const webhookURL = `${baseUrl}/${randomForPATWebhook}`;
-		setWebhookUrl(webhookURL);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	const onSubmit = useCallback(async () => {
-		const { pat, webhookSecret: secret } = getValues();
-		setIsLoading(true);
-		try {
-			await HttpService.post(`/github/save?cid=${connectionId}&origin=web`, { pat, secret, webhook: webhookUrl });
-			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
-			LoggerService.info(namespaces.connectionService, successMessage);
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
-			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-			LoggerService.error(
-				namespaces.connectionService,
-				tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
-			);
-		} finally {
-			setIsLoading(false);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	const copyToClipboard = async (text: string) => {
-		try {
-			await navigator.clipboard.writeText(text);
-			addToast({ id: Date.now().toString(), message: t("github.copySuccess"), type: "success" });
-		} catch (error) {
-			addToast({ id: Date.now().toString(), message: t("github.copyFailure"), type: "error" });
-		}
-	};
-
-	const handleGithubOAuth = async () => {
-		try {
-			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
-		} catch (error) {
-			addToast({ id: Date.now().toString(), message: tErrors("errorCreatingNewConnection"), type: "error" });
-			LoggerService.error(
-				namespaces.connectionService,
-				tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })
-			);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+		watch,
+		webhookUrl,
+	} = useConnectionForm(
+		{ pat: "", webhookSecret: "", patIsSecret: true, webhookSecretIsSecret: true },
+		githubIntegrationSchema
+	);
 
 	const pat = useWatch({ control, name: "pat" });
 	const patIsSecret = useWatch({ control, name: "patIsSecret" });
 	const webhookSecret = useWatch({ control, name: "webhookSecret" });
 	const webhookSecretIsSecret = useWatch({ control, name: "webhookSecretIsSecret" });
+
+	const selectedConnectionType = watch("selectedConnectionType");
 
 	const renderPATFields = () => (
 		<>
@@ -250,7 +154,7 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 	);
 
 	const selectConnectionType = (option: SingleValue<SelectOption>) => {
-		setSelectedConnectionType(option as SelectOption);
+		setValue("selectedConnectionType", option as SelectOption);
 	};
 
 	return (
@@ -264,13 +168,9 @@ export const GithubIntegrationEditForm = ({ connectionId }: { connectionId: stri
 					value={selectedConnectionType}
 				/>
 
-				{selectedConnectionType && selectedConnectionType.value === GithubConnectionType.Pat
-					? renderPATFields()
-					: null}
+				{selectedConnectionType?.value === GithubConnectionType.Pat ? renderPATFields() : null}
 
-				{selectedConnectionType && selectedConnectionType.value === GithubConnectionType.Oauth
-					? renderOAuthButton()
-					: null}
+				{selectedConnectionType?.value === GithubConnectionType.Oauth ? renderOAuthButton() : null}
 			</div>
 		</form>
 	);

@@ -1,19 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { namespaces } from "@constants";
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, LoggerService } from "@services";
 import { IntegrationType } from "@type/components";
-import { connectionSchema } from "@validations";
+import { connectionSchema } from "@validations/connection.schema";
 
-import { useToastStore } from "@store";
+import { useConnectionForm } from "@hooks";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select, TabFormHeader } from "@components/molecules";
@@ -31,63 +26,16 @@ import {
 
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
-	const { t: tErrors } = useTranslation("errors");
-	const { projectId } = useParams();
-	const addToast = useToastStore((state) => state.addToast);
 
-	const [connectionId, setConnectionId] = useState<string | undefined>(undefined);
+	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch } = useConnectionForm(
+		{ connectionName: "", integration: { label: "", value: "" } },
+		connectionSchema
+	);
 
-	const {
-		formState: { errors },
-		handleSubmit,
-		register,
-		setValue,
-		watch,
-	} = useForm({
-		resolver: zodResolver(connectionSchema),
-		mode: "onChange",
-		defaultValues: {
-			connectionName: "",
-			integration: { label: "", value: "" },
-		},
-	});
-
-	const connectionName = watch("connectionName");
 	const selectedIntegration: SelectOption = watch("integration");
 
-	const onSubmit = async () => {
-		if (!connectionId) {
-			try {
-				const { data, error } = await ConnectionService.create(
-					projectId!,
-					selectedIntegration.value,
-					connectionName!
-				);
-
-				if (error) {
-					addToast({
-						id: Date.now().toString(),
-						message: (error as Error).message,
-						type: "error",
-					});
-
-					return;
-				}
-
-				setConnectionId(data);
-			} catch (error) {
-				const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
-				addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-				LoggerService.error(
-					namespaces.connectionService,
-					tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
-				);
-			}
-		}
-	};
-
-	const handleIntegrationChange = (option: SingleValue<SelectOption>): void => {
-		setValue("integration", option as SelectOption);
+	const handleIntegrationChange = (option: SingleValue<SelectOption>) => {
+		setValue("integration", option);
 	};
 
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
@@ -164,13 +112,12 @@ export const AddConnection = () => {
 					<Input
 						aria-label={t("github.placeholders.name")}
 						{...register("connectionName")}
-						disabled={!!connectionId}
 						isError={!!errors.connectionName}
 						isRequired
 						placeholder={t("github.placeholders.name")}
 					/>
 
-					<ErrorMessage>{errors?.connectionName?.message}</ErrorMessage>
+					<ErrorMessage>{errors?.connectionName?.message as string}</ErrorMessage>
 				</div>
 
 				<Select
