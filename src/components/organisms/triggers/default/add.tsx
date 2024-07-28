@@ -8,7 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { namespaces } from "@constants";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, LoggerService, TriggersService } from "@services";
+import { LoggerService, TriggersService } from "@services";
 import { TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
 
@@ -21,10 +21,16 @@ import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
 export const DefaultTriggerForm = ({
+	connectionId,
 	formId,
+	isSaving,
+	name,
 	setIsSaving,
 }: {
+	connectionId: string;
 	formId: string;
+	isSaving: boolean;
+	name: string;
 	setIsSaving: (event: boolean) => void;
 }) => {
 	const navigate = useNavigate();
@@ -34,23 +40,11 @@ export const DefaultTriggerForm = ({
 	const { t: tErrors } = useTranslation("errors");
 	const { fetchResources } = useFileOperations(projectId!);
 
-	const [isLoading, setIsLoading] = useState(true);
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
-	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 
 	const fetchData = async () => {
 		try {
-			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-			if (connectionsError) {
-				throw connectionsError;
-			}
-
-			const formattedConnections = connections?.map((item) => ({
-				label: item.name,
-				value: item.connectionId,
-			}));
-			setConnections(formattedConnections || []);
 			const resources = await fetchResources();
 
 			const formattedResources = Object.keys(resources).map((name) => ({
@@ -69,11 +63,12 @@ export const DefaultTriggerForm = ({
 				tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
 			);
 		} finally {
-			setIsLoading(false);
+			setIsSaving(false);
 		}
 	};
 
 	useEffect(() => {
+		setIsSaving(true);
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -87,29 +82,27 @@ export const DefaultTriggerForm = ({
 		watch,
 	} = useForm({
 		defaultValues: {
-			connection: { label: "", value: "" },
 			entryFunction: "",
 			eventType: "",
 			filePath: { label: "", value: "" },
 			filter: "",
-			name: "",
 		},
 		resolver: zodResolver(defaultTriggerSchema),
 	});
 
 	const onSubmit = async () => {
-		const { connection, entryFunction, eventType, filePath, filter, name } = getValues();
+		const { entryFunction, eventType, filePath, filter } = getValues();
 
 		setIsSaving(true);
 		const { error } = await TriggersService.create(projectId!, {
-			connectionId: connection.value,
+			connectionId,
 			data: triggerData,
 			entryFunction,
 			eventType,
 			filter,
-			name,
 			path: filePath.value,
 			triggerId: undefined,
+			name,
 		});
 		setIsSaving(false);
 
@@ -176,47 +169,12 @@ export const DefaultTriggerForm = ({
 		});
 	};
 
-	const { entryFunction, eventType, filter, name } = watch();
+	const { entryFunction, eventType, filter } = watch();
 
-	return isLoading ? (
+	return isSaving ? (
 		<Loader isCenter size="xl" />
 	) : (
 		<form className="flex w-full flex-col gap-6" id={formId} onSubmit={handleSubmit(onSubmit)}>
-			<div className="relative">
-				<Input
-					{...register("name")}
-					aria-label={t("placeholders.name")}
-					isError={!!errors.name}
-					isRequired
-					placeholder={t("placeholders.name")}
-					value={name}
-				/>
-
-				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
-			</div>
-
-			<div className="relative">
-				<Controller
-					control={control}
-					name="connection"
-					render={({ field }) => (
-						<Select
-							{...field}
-							aria-label={t("placeholders.selectConnection")}
-							dataTestid="select-trigger-connection"
-							isError={!!errors.connection}
-							noOptionsLabel={t("noConnectionsAvailable")}
-							onChange={(selected) => field.onChange(selected)}
-							options={connections}
-							placeholder={t("placeholders.selectConnection")}
-							value={field.value}
-						/>
-					)}
-				/>
-
-				<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
-			</div>
-
 			<div className="relative">
 				<Controller
 					control={control}

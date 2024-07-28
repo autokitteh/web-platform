@@ -5,9 +5,9 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } from "@constants";
+import { infoCronExpressionsLinks, namespaces } from "@constants";
 import { SelectOption } from "@interfaces/components";
-import { ConnectionService, LoggerService, TriggersService } from "@services";
+import { LoggerService, TriggersService } from "@services";
 import { schedulerTriggerSchema } from "@validations";
 
 import { useFileOperations } from "@hooks";
@@ -19,10 +19,16 @@ import { Accordion } from "@components/molecules";
 import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const TriggerSchedulerForm = ({
+	connectionId,
 	formId,
+	isSaving,
+	name,
 	setIsSaving,
 }: {
+	connectionId: string;
 	formId: string;
+	isSaving: boolean;
+	name: string;
 	setIsSaving: (event: boolean) => void;
 }) => {
 	const navigate = useNavigate();
@@ -32,26 +38,11 @@ export const TriggerSchedulerForm = ({
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { fetchResources } = useFileOperations(projectId!);
 
-	const [isLoading, setIsLoading] = useState(true);
-	const [cronConnectionId, setCronConnectionId] = useState<string>();
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const { data: connections, error: connectionsError } = await ConnectionService.list();
-				if (connectionsError) {
-					throw connectionsError;
-				}
-
-				const connectionId = connections?.find(
-					(item) => item.name === schedulerTriggerConnectionName
-				)?.connectionId;
-				if (!connectionId) {
-					throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
-				}
-				setCronConnectionId(connectionId);
-
 				const resources = await fetchResources();
 
 				const formattedResources = Object.keys(resources).map((name) => ({
@@ -70,9 +61,10 @@ export const TriggerSchedulerForm = ({
 					tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
 				);
 			} finally {
-				setIsLoading(false);
+				setIsSaving(false);
 			}
 		};
+		setIsSaving(true);
 
 		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,17 +82,16 @@ export const TriggerSchedulerForm = ({
 			cron: "",
 			entryFunction: "",
 			filePath: { label: "", value: "" },
-			name: "",
 		},
 		resolver: zodResolver(schedulerTriggerSchema),
 	});
 
 	const onSubmit = async () => {
-		const { cron, entryFunction, filePath, name } = getValues();
+		const { cron, entryFunction, filePath } = getValues();
 
 		setIsSaving(true);
 		const { error } = await TriggersService.create(projectId!, {
-			connectionId: cronConnectionId!,
+			connectionId,
 			data: { ["schedule"]: { string: { v: cron } } },
 			entryFunction,
 			eventType: "",
@@ -126,26 +117,13 @@ export const TriggerSchedulerForm = ({
 		navigate(`/projects/${projectId}/triggers`);
 	};
 
-	const { cron, entryFunction, name } = watch();
+	const { cron, entryFunction } = watch();
 
-	return isLoading ? (
+	return isSaving ? (
 		<Loader isCenter size="xl" />
 	) : (
 		<>
 			<form className="flex w-full flex-col gap-6" id={formId} onSubmit={handleSubmit(onSubmit)}>
-				<div className="relative">
-					<Input
-						{...register("name")}
-						aria-label={t("placeholders.name")}
-						isError={!!errors.name}
-						isRequired
-						placeholder={t("placeholders.name")}
-						value={name}
-					/>
-
-					<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
-				</div>
-
 				<div className="relative">
 					<Input
 						{...register("cron")}
