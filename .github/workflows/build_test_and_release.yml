@@ -89,8 +89,6 @@ jobs:
           AK_AUTHSESSIONS__COOKIE_KEYS: "78d85f1c9fd9df7d3d459a75f1db315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5"
           AK_AUTHJWTTOKENS__SIGN_KEY: "183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154"
           AK_SECRETS__PROVIDER: db
-          AK_DB__TYPE: "postgres"
-          AK_DB__DSN: "host=localhost user=pguser password=pgpassword dbname=pgdb port=5432"
         run: ak up --mode=test &
   
       - name: Wait for Backend to Start
