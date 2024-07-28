@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { OauthForm } from "./authMethods/add/oauth";
-import { PatForm } from "./authMethods/add/pat";
 import { githubIntegrationAuthMethods } from "@constants/lists";
 import { ConnectionFormIds } from "@enums/components";
 import { GithubConnectionType } from "@enums/connections";
@@ -14,6 +12,7 @@ import { SelectOption } from "@interfaces/components";
 import { githubIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
+import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods/add";
 
 export const GithubIntegrationAddForm = ({
 	connectionId,
