@@ -186,7 +186,10 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 			const isConnectionTypePat = vars.some((variable) => variable.name === "pat");
 			if (isConnectionTypePat) {
 				setValue("selectedConnectionType", { value: "pat" });
+
+				return;
 			}
+			setValue("selectedConnectionType", { value: "oauth" });
 		}
 	};
 
