@@ -65,11 +65,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "21.2.0"
-
-      - name: Start a local Temporal server
-        shell: bash
-        run: ./temporal_cli/temporal server start-dev --headless &          
+          node-version: "21.2.0"         
       
       - name: Download AutoKitteh executable
         run: |
