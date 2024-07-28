@@ -70,6 +70,34 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 		}
 	};
 
+	const handlePatConnection = async (patConnectionId: string): Promise<boolean> => {
+		setIsLoading(true);
+		const { pat, webhookSecret: secret } = getValues();
+
+		try {
+			await HttpService.post(`/github/save?cid=${patConnectionId}&origin=web`, {
+				pat,
+				secret,
+				webhook: webhookUrl,
+			});
+			const successMessage = t("connectionCreatedSuccessfully");
+			addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
+			LoggerService.info(namespaces.connectionService, successMessage);
+
+			return true;
+		} catch (error) {
+			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
+			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
+			LoggerService.error(
+				namespaces.connectionService,
+				tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
+			);
+			setIsLoading(false);
+
+			return false;
+		}
+	};
+
 	const onSubmit = async () => {
 		if (!connectionId && mode === "create") {
 			try {
@@ -116,35 +144,10 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 			setTimeout(() => {
 				setConnectionId(connectionId);
 			}, 0);
+
+			return;
 		}
-	};
-
-	const handlePatConnection = async (patConnectionId: string): Promise<boolean> => {
-		setIsLoading(true);
-		const { pat, webhookSecret: secret } = getValues();
-
-		try {
-			await HttpService.post(`/github/save?cid=${patConnectionId}&origin=web`, {
-				pat,
-				secret,
-				webhook: webhookUrl,
-			});
-			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
-			LoggerService.info(namespaces.connectionService, successMessage);
-
-			return true;
-		} catch (error) {
-			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-			LoggerService.error(
-				namespaces.connectionService,
-				tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
-			);
-			setIsLoading(false);
-
-			return false;
-		}
+		handlePatConnection(connectionId!);
 	};
 
 	const handleGithubOAuth = async (oauthConnectionId: string) => {
@@ -181,8 +184,9 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 
 		if (vars?.length) {
 			const isConnectionTypePat = vars.some((variable) => variable.name === "pat");
-			setValue("pat", isConnectionTypePat ? "***********" : "");
-			setValue("webhookSecret", isConnectionTypePat ? "***********" : "");
+			if (isConnectionTypePat) {
+				setValue("selectedConnectionType", { value: "pat" });
+			}
 		}
 	};
 
@@ -190,7 +194,6 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 		if (connectionId) {
 			fetchConnection(connectionId);
 			fetchVariables(connectionId);
-			setValue("selectedConnectionType", { value: "pat" });
 		}
 		const randomForPATWebhook = randomatic("Aa0", 8);
 		setWebhookUrl(`${baseUrl}/${randomForPATWebhook}`);
