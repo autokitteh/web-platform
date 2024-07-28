@@ -51,6 +51,8 @@ export const EditConnection = () => {
 		? integrationComponents[selectedIntegration.value as IntegrationType]
 		: null;
 
+	const connectionName = watch("connectionName");
+
 	return (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" title={t("editConnection")} />
@@ -63,6 +65,7 @@ export const EditConnection = () => {
 						disabled
 						isError={!!errors.connectionName}
 						placeholder={t("github.placeholders.name")}
+						value={connectionName}
 					/>
 				</div>
 

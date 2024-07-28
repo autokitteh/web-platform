@@ -14,7 +14,7 @@ import { useToastStore } from "@store";
 
 export const useConnectionForm = (initialValues: any, validationSchema: any, mode: "create" | "update") => {
 	const { t: tErrors } = useTranslation("errors");
-	const { projectId } = useParams();
+	const { connectionId: paramConnectionId, projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 
 	const {
@@ -32,7 +32,7 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 	});
 	const { t } = useTranslation("integrations");
 
-	const [connectionId, setConnectionId] = useState<string | undefined>();
+	const [connectionId, setConnectionId] = useState<string | undefined>(paramConnectionId);
 	const [_connection, setConnection] = useState<Connection>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [webhookUrl, setWebhookUrl] = useState<string>("");
@@ -54,7 +54,7 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 
 			if (connectionResponse) {
 				setConnection(connectionResponse);
-				setValue("connectionName", connectionResponse.name);
+				setValue("connectionName", connectionResponse.name); // This should properly set the value
 				setValue("integration", {
 					label: connectionResponse.integrationName,
 					value: connectionResponse.integrationUniqueName,
@@ -190,6 +190,7 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 		if (connectionId) {
 			fetchConnection(connectionId);
 			fetchVariables(connectionId);
+			setValue("selectedConnectionType", { value: "pat" });
 		}
 		const randomForPATWebhook = randomatic("Aa0", 8);
 		setWebhookUrl(`${baseUrl}/${randomForPATWebhook}`);
