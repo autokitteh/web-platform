@@ -6,6 +6,7 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Github", value: "github" },
 	{ disabled: false, label: "Google (All APIs)", value: "google" },
 	{ disabled: false, label: "Slack", value: "slack" },
+	{ disabled: false, label: "Gmail", value: "gmail" },
 ];
 
 export const triggerTypes: SelectOption[] = [

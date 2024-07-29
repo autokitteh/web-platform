@@ -9,4 +9,5 @@ export enum Integrations {
 	github = "github",
 	google = "google",
 	slack = "slack",
+	gmail = "gmail",
 }
