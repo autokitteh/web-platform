@@ -17,8 +17,7 @@ import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { GoogleIntegrationForm } from "@components/organisms/connections/integrations";
-import { GithubIntegrationAddForm } from "@components/organisms/connections/integrations/github";
+import { GithubIntegrationAddForm, GoogleIntegrationAddForm } from "@components/organisms/connections/integrations";
 import { SlackIntegrationAddForm } from "@components/organisms/connections/integrations/slack";
 
 export const AddConnection = () => {
@@ -79,8 +78,10 @@ export const AddConnection = () => {
 		github: (
 			<GithubIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
-		google: <GoogleIntegrationForm />,
 		slack: <SlackIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
+		google: (
+			<GoogleIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
+		),
 	};
 
 	const selectedIntegrationComponent = selectedIntegration

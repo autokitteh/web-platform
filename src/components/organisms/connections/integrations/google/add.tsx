@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { SingleValue } from "react-select";
 
 import { baseUrl, namespaces } from "@constants";
 import { infoGoogleAccountLinks, infoGoogleUserLinks, selectIntegrationGoogle } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
+import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
-import { isConnectionType } from "@utilities";
 import { googleIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
@@ -18,11 +20,18 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GoogleIntegrationForm = () => {
+export const GoogleIntegrationAddForm = ({
+	connectionId,
+	triggerParentFormSubmit,
+}: {
+	connectionId?: string;
+	triggerParentFormSubmit: () => void;
+}) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const [selectedConnectionType, setSelectedConnectionType] = useState<GoogleConnectionType>();
-
+	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
+	const { projectId } = useParams();
+	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -38,25 +47,42 @@ export const GoogleIntegrationForm = () => {
 		resolver: zodResolver(googleIntegrationSchema),
 	});
 
-	const onSubmit = async () => {
+	const createPatConnection = async () => {
+		setIsLoading(false);
 		const { jsonKey } = getValues();
 
-		setIsLoading(true);
 		try {
-			const { data } = await HttpService.post("/google/save", { jsonKey });
-			if (!data.url) {
-				addToast({
-					id: Date.now().toString(),
-					message: tErrors("errorCreatingNewConnection"),
-					type: "error",
-				});
-				LoggerService.error(
-					namespaces.connectionService,
-					`${tErrors("errorCreatingNewConnectionExtended", { error: tErrors("noDataReturnedFromServer") })}`
-				);
+			await HttpService.post(`/google/save?cid=${connectionId}&origin=web`, {
+				jsonKey,
+			});
+			const successMessage = t("connectionCreatedSuccessfully");
+			addToast({
+				id: Date.now().toString(),
+				message: successMessage,
+				type: "success",
+			});
+			LoggerService.info(namespaces.connectionService, successMessage);
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
+			addToast({
+				id: Date.now().toString(),
+				message: errorMessage,
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-				return;
-			}
+	const handleGoogleOAuth = async () => {
+		try {
+			window.open(`${baseUrl}/oauth/start/google?cid=${connectionId}&origin=web`, "_blank");
+			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -71,8 +97,6 @@ export const GoogleIntegrationForm = () => {
 			setIsLoading(false);
 		}
 	};
-
-	const handleGoogleOAuth = () => window.open(`${baseUrl}/oauth/start/google`, "_blank");
 
 	const renderOAuthButton = () => (
 		<>
@@ -148,28 +172,69 @@ export const GoogleIntegrationForm = () => {
 		</div>
 	);
 
+	useEffect(() => {
+		switch (selectedConnectionType?.value) {
+			case GoogleConnectionType.ServiceAccount:
+				createPatConnection();
+				break;
+
+			case GoogleConnectionType.Oauth:
+				handleGoogleOAuth();
+				break;
+
+			default:
+				break;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
+
+	const renderConnectionFields = () => {
+		switch (selectedConnectionType?.value) {
+			case GoogleConnectionType.ServiceAccount:
+				return renderServiceAccount();
+			case GoogleConnectionType.Oauth:
+				return renderOAuthButton();
+			default:
+				return null;
+		}
+	};
+
+	const selectConnectionType = (option: SingleValue<SelectOption>) => {
+		setSelectedConnectionType(option as SelectOption);
+	};
+
+	const onSubmit = () => {
+		if (connectionId) {
+			addToast({
+				id: Date.now().toString(),
+				message: tErrors("connectionExists"),
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.connectionService,
+				`${tErrors("connectionExistsExtended", { connectionId })}`
+			);
+
+			return;
+		}
+
+		triggerParentFormSubmit();
+	};
+
 	return (
 		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
 					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
-					onChange={(selected) => {
-						if (selected?.value && isConnectionType(selected.value, GoogleConnectionType)) {
-							setSelectedConnectionType(selected.value);
-						}
-					}}
+					onChange={selectConnectionType}
 					options={selectIntegrationGoogle}
 					placeholder={t("placeholders.selectConnectionType")}
+					value={selectedConnectionType}
 				/>
 
-				{selectedConnectionType && selectedConnectionType === GoogleConnectionType.Oauth
-					? renderOAuthButton()
-					: null}
-
-				{selectedConnectionType && selectedConnectionType === GoogleConnectionType.ServiceAccount
-					? renderServiceAccount()
-					: null}
+				{renderConnectionFields()}
 			</div>
 		</form>
 	);
