@@ -17,7 +17,11 @@ import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { GithubIntegrationAddForm, GoogleIntegrationAddForm } from "@components/organisms/connections/integrations";
+import {
+	AwsIntegrationAddForm,
+	GithubIntegrationAddForm,
+	GoogleIntegrationAddForm,
+} from "@components/organisms/connections/integrations";
 import { SlackIntegrationAddForm } from "@components/organisms/connections/integrations/slack";
 
 export const AddConnection = () => {
@@ -121,6 +125,7 @@ export const AddConnection = () => {
 				type={selectedIntegration.value}
 			/>
 		),
+		aws: <AwsIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
 	};
 
 	const selectedIntegrationComponent = selectedIntegration

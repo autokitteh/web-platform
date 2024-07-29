@@ -58,5 +58,13 @@
 			"configSlack": "AutoKitteh guide: configuring the Slack integration",
 			"aboutInitSlack": "Background about installing Slack apps with OAuth"
 		}
+	},
+	"aws": {
+		"placeholders": {
+			"region": "Region",
+			"accessKey": "Access Key",
+			"secretKey": "Secret Key",
+			"token": "Token"
+		}
 	}
 }
