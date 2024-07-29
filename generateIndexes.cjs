@@ -10,6 +10,22 @@ const escapeContent = (content) => {
   return content.replace(/`/g, '\\`').replace(/\$/g, '\\$');
 };
 
+const toPascalCase = (str) => {
+  return str.replace(/(^\w|_\w)/g, (matches) => matches.replace('_', '').toUpperCase());
+};
+
+const removeExistingIndexFiles = (directoryPath) => {
+  const files = fs.readdirSync(directoryPath);
+  files.forEach(file => {
+    const filePath = path.join(directoryPath, file);
+    if (fs.lstatSync(filePath).isDirectory()) {
+      removeExistingIndexFiles(filePath);
+    } else if (file === 'index.js') {
+      fs.unlinkSync(filePath);
+    }
+  });
+};
+
 const generateIndex = (directoryPath) => {
   const files = fs.readdirSync(directoryPath)
     .filter(file => fs.lstatSync(path.join(directoryPath, file)).isFile())
@@ -24,7 +40,7 @@ const generateIndex = (directoryPath) => {
     }
 
     return `export const ${exportName} = \`${escapeContent(content)}\`;`;
-  }).join('\n');
+  }).filter(Boolean).join('\n');
 
   const indexPath = path.join(directoryPath, 'index.js');
   fs.writeFileSync(indexPath, exports);
@@ -40,7 +56,7 @@ const generateTopLevelIndex = (basePath) => {
   const yamlImports = directories.map(dir => {
     const yamlFilePath = path.join(basePath, dir, 'autokitteh.yaml');
     if (fs.existsSync(yamlFilePath)) {
-      return `import ${dir} from '@assets/templates/${dir}/autokitteh.yaml';`;
+      return `import ${toPascalCase(dir)} from '@assets/templates/${dir}/autokitteh.yaml';`;
     }
 
     return '';
@@ -53,7 +69,7 @@ const generateTopLevelIndex = (basePath) => {
   const yamlExports = directories.map(dir => {
     const yamlFilePath = path.join(basePath, dir, 'autokitteh.yaml');
     if (fs.existsSync(yamlFilePath)) {
-      return `${dir}`;
+      return `${toPascalCase(dir)}`;
     }
 
     return '';
@@ -65,6 +81,7 @@ const generateTopLevelIndex = (basePath) => {
 };
 
 const generateIndexes = (basePath) => {
+  removeExistingIndexFiles(basePath);
   const directories = fs.readdirSync(basePath).filter(file => fs.lstatSync(path.join(basePath, file)).isDirectory());
   directories.forEach(dir => generateIndex(path.join(basePath, dir)));
   generateTopLevelIndex(basePath);

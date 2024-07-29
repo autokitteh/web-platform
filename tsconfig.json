@@ -62,6 +62,7 @@
 	"references": [{ "path": "./tsconfig.node.json" }],
 	"include": [
 	  "src",
-	  "src/assets/templates/index.d.ts"
+	  "src/assets/templates/index.d.ts",
+	  "src/images.d.ts"
 	]
 }

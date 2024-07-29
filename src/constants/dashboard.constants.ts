@@ -23,7 +23,7 @@ import {
 	JiraAssigneeFromCalendar,
 	JiraToGoogleCalendar,
 	Purrr,
-	ReviewKitteh,
+	Reviewkitteh,
 } from "@assets/templates";
 
 export const defaultCommunityProjectCategory = "CI/CD";
@@ -197,7 +197,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GithubIcon, title: "GitHub" },
 					{ icon: SheetsIcon, title: "Sheets" },
 				],
-				manifest: ReviewKitteh,
+				manifest: Reviewkitteh,
 				asset_directory: "reviewkitteh",
 			},
 		],

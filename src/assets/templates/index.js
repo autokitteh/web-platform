@@ -16,7 +16,7 @@ import GoogleFormsToJira from "@assets/templates/google_forms_to_jira/autokitteh
 import JiraAssigneeFromCalendar from "@assets/templates/jira_assignee_from_calendar/autokitteh.yaml";
 import JiraToGoogleCalendar from "@assets/templates/jira_to_google_calendar/autokitteh.yaml";
 import Purrr from "@assets/templates/purrr/autokitteh.yaml";
-import ReviewKitteh from "@assets/templates/reviewkitteh/autokitteh.yaml";
+import Reviewkitteh from "@assets/templates/reviewkitteh/autokitteh.yaml";
 
 export {
 	aws_health_to_slack,
@@ -36,5 +36,5 @@ export {
 	JiraAssigneeFromCalendar,
 	JiraToGoogleCalendar,
 	Purrr,
-	ReviewKitteh,
+	Reviewkitteh,
 };

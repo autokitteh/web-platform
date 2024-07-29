@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import { namespaces } from "@constants/index";
 import { LoggerService } from "@services/index";
 import { ManifestService } from "@services/manifest.service";
+import { useSaveFilesToProject } from "@src/hooks";
 import { TemplateCardType } from "@type/components";
 
 import { useProjectStore, useToastStore } from "@store";
@@ -13,25 +13,21 @@ import { useProjectStore, useToastStore } from "@store";
 import { Button, IconSvg, Status } from "@components/atoms";
 
 import { PipeCircleIcon, PlusIcon } from "@assets/image/icons";
-import * as files from "@assets/templates";
 
 export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType; category: string }) => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("manifest");
 	const { getProjectsList } = useProjectStore();
-	const navigate = useNavigate();
-	// const { saveFile } = useFileOperations(projectId!);
 
-	const fetchFiles = () => {
-		console.log("Files", files);
+	const [projectId, setProjectId] = React.useState<string | null>(null);
+	const saveFilesToProject = useSaveFilesToProject(projectId!);
 
-		const data = files["purrr"];
-		console.log(data);
-	};
-
-	useEffect(() => {
-		fetchFiles();
-	}, []);
+	React.useEffect(() => {
+		if (projectId) {
+			saveFilesToProject(card.asset_directory);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const createProjectFromAsset = async () => {
 		try {
@@ -55,8 +51,9 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 				type: "success",
 			});
 
+			setProjectId(projectId!);
+
 			getProjectsList();
-			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),

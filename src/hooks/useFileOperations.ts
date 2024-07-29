@@ -1,9 +1,14 @@
 import { useCallback } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import IndexedDBService from "@services/indexedDb.service";
 import { ProjectsService } from "@services/projects.service";
+import { FilesType } from "@src/types";
 
 import { useFileStore } from "@store";
+
+import * as files from "@assets/templates";
 
 const dbService = new IndexedDBService("ProjectDB", "resources");
 
@@ -88,3 +93,25 @@ export function useFileOperations(projectId: string) {
 		addFile,
 	};
 }
+
+export const useSaveFilesToProject = (projectId: string) => {
+	const navigate = useNavigate();
+
+	const { saveFile } = useFileOperations(projectId);
+
+	const saveFiles = async (assetDirectory: string) => {
+		const directory = assetDirectory as keyof FilesType;
+		const filesInDirectory = files[directory];
+
+		if (filesInDirectory) {
+			for (const fileName in filesInDirectory) {
+				const setExtension = fileName.replace(/_(?=[^_]*$)/, ".");
+				await saveFile(setExtension, filesInDirectory[fileName]);
+			}
+		}
+
+		navigate(`/projects/${projectId}/connections`);
+	};
+
+	return saveFiles;
+};
