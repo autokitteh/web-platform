@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/autokitteh/web-platform/compare/v1.23.0...v1.24.0) (2024-07-29)
+
+
+### Features
+
+* add openai integration ([#231](https://github.com/autokitteh/web-platform/issues/231)) ([7bdf61c](https://github.com/autokitteh/web-platform/commit/7bdf61c2e516439a805bc84c01750c40b37b6746))
+
 # [1.23.0](https://github.com/autokitteh/web-platform/compare/v1.22.0...v1.23.0) (2024-07-29)
 
 
