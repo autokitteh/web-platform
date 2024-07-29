@@ -50,7 +50,7 @@ export default defineConfig({
 	],
 	resolve: {
 		alias: {
-			"@": path.resolve(__dirname, "./src"),
+			"@src": path.resolve(__dirname, "./src"),
 			"@ak-proto-ts": path.resolve(__dirname, "./src/autokitteh/proto/gen/ts/autokitteh"),
 			"@api": path.resolve(__dirname, "./src/api"),
 			"@assets": path.resolve(__dirname, "./src/assets"),

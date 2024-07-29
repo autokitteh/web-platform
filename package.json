@@ -23,7 +23,8 @@
 		"test:e2e:ui": "npx playwright test --ui",
 		"tsc": "tsc",
 		"type-check": "tsc --pretty --noEmit",
-		"validate-env": "node ./validateEnv"
+		"validate-env": "node ./validateEnv",
+		"generate-indexes": "node generateIndexes.cjs"
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.7.2",

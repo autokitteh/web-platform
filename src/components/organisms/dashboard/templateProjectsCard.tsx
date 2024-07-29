@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -13,12 +13,25 @@ import { useProjectStore, useToastStore } from "@store";
 import { Button, IconSvg, Status } from "@components/atoms";
 
 import { PipeCircleIcon, PlusIcon } from "@assets/image/icons";
+import * as files from "@assets/templates";
 
 export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType; category: string }) => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("manifest");
 	const { getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
+	// const { saveFile } = useFileOperations(projectId!);
+
+	const fetchFiles = () => {
+		console.log("Files", files);
+
+		const data = files["purrr"];
+		console.log(data);
+	};
+
+	useEffect(() => {
+		fetchFiles();
+	}, []);
 
 	const createProjectFromAsset = async () => {
 		try {
@@ -41,6 +54,7 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 				message: successMessage,
 				type: "success",
 			});
+
 			getProjectsList();
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
