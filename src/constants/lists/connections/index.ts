@@ -4,6 +4,7 @@ export {
 	infoGoogleUserLinks,
 	infoSlackModeLinks,
 	infoSlackOAuthLinks,
+	infoOpenAiLinks,
 } from "@constants/lists/connections/integrationInfoLinks.constants";
 export {
 	githubIntegrationAuthMethods,

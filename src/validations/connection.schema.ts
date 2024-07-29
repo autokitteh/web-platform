@@ -30,3 +30,7 @@ export const awsIntegrationSchema = z.object({
 	secretKey: z.string().min(1, "Secret Key is required"),
 	token: z.string().min(1, "Token is required"),
 });
+
+export const openAiIntegrationSchema = z.object({
+	key: z.string().min(5, "Key is required"),
+});

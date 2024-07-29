@@ -24,4 +24,5 @@ export enum Integrations {
 	googleDrive = "googleDrive",
 	googleForms = "googleForms",
 	aws = "aws",
+	openAi = "openAi",
 }

@@ -66,5 +66,14 @@
 			"secretKey": "Secret Key",
 			"token": "Token"
 		}
+	},
+	"openAi": {
+		"placeholders": {
+			"apiKey": "Secret API Key"
+		},
+		"information": {
+			"openAI": "OpenAI developer platform",
+			"apiKeys": "API keys"
+		}
 	}
 }
