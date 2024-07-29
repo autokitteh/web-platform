@@ -136,6 +136,8 @@ export const App: React.FC = () => {
 
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
+
+				<Route element={<Navigate replace to="/404" />} path="*" />
 			</AKRoutes>
 		</BrowserRouter>
 	);

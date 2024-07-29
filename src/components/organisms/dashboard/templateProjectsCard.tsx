@@ -3,9 +3,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { namespaces } from "@constants/index";
-import { LoggerService } from "@services/index";
+import { HttpService, LoggerService } from "@services/index";
 import { ManifestService } from "@services/manifest.service";
-import { useSaveFilesToProject } from "@src/hooks";
+// import { useSaveFilesToProject } from "@src/hooks";
 import { TemplateCardType } from "@type/components";
 
 import { useProjectStore, useToastStore } from "@store";
@@ -19,19 +19,24 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 	const { t } = useTranslation("manifest");
 	const { getProjectsList } = useProjectStore();
 
-	const [projectId, setProjectId] = React.useState<string | null>(null);
-	const saveFilesToProject = useSaveFilesToProject(projectId!);
+	// const [projectId, setProjectId] = React.useState<string | null>(null);
+	// const saveFilesToProject = useSaveFilesToProject(projectId!);
 
-	React.useEffect(() => {
-		if (projectId) {
-			saveFilesToProject(card.asset_directory);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	// React.useEffect(() => {
+	// 	if (projectId) {
+	// 		saveFilesToProject(card.asset_directory);
+	// 	}
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [projectId]);
 
 	const createProjectFromAsset = async () => {
 		try {
-			const { data: projectId, error } = await ManifestService.applyManifest(card.manifest);
+			const manifestURL = `/assets/templates/${card.asset_directory}/autokitteh.yaml`;
+			const { data: projectYamlManifest } = await HttpService.get(manifestURL, {
+				responseType: "text",
+			});
+
+			const { data: _projectId, error } = await ManifestService.applyManifest(projectYamlManifest);
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
@@ -51,7 +56,7 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 				type: "success",
 			});
 
-			setProjectId(projectId!);
+			// setProjectId(projectId!);
 
 			getProjectsList();
 		} catch (error) {

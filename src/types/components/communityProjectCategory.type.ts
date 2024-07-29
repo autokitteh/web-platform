@@ -16,7 +16,6 @@ export type TemplateCardType = {
 	asset_directory: string;
 	description: string;
 	integrations: Integration[];
-	manifest: string;
 	title: string;
 };
 

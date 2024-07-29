@@ -2,6 +2,7 @@ import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 import { defineConfig } from "vitest/config";
 
@@ -24,6 +25,7 @@ export default defineConfig({
 		"import.meta.env.VITE_AUTH_ENABLED": JSON.stringify(process.env.VITE_AUTH_ENABLED),
 		"import.meta.env.VITE_DESCOPE_PROJECT_ID": JSON.stringify(process.env.VITE_DESCOPE_PROJECT_ID),
 		"import.meta.env.VITE_HOST_URL": JSON.stringify(process.env.VITE_HOST_URL),
+		"import.meta.env.VITE_BASE_URL": JSON.stringify(process.env.VITE_BASE_URL),
 		"import.meta.env.SENTRY_AUTH_TOKEN": JSON.stringify(process.env.SENTRY_AUTH_TOKEN),
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 	},
@@ -39,14 +41,14 @@ export default defineConfig({
 			reactComponentAnnotation: { enabled: true },
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 		}),
-		{
-			name: "raw-yaml-loader",
-			transform(code, id) {
-				if (id.endsWith(".yaml")) {
-					return `export default ${JSON.stringify(code)}`;
-				}
-			},
-		},
+		viteStaticCopy({
+			targets: [
+				{
+					src: "src/assets/templates/**/*",
+					dest: "assets/templates",
+				},
+			],
+		}),
 	],
 	resolve: {
 		alias: {

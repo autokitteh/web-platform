@@ -14,17 +14,6 @@ import {
 	SheetsIcon,
 	SlackIcon,
 } from "@assets/image/icons";
-import {
-	AwsHealthToSlack,
-	CategorizeNotify,
-	ConfluenceToSlack,
-	CreateJiraIssue,
-	GoogleFormsToJira,
-	JiraAssigneeFromCalendar,
-	JiraToGoogleCalendar,
-	Purrr,
-	Reviewkitteh,
-} from "@assets/templates";
 
 export const defaultCommunityProjectCategory = "CI/CD";
 export const defaultTemplateProjectCategory = "DevOps";
@@ -123,7 +112,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SlackIcon, title: "Slack" },
 					{ icon: SheetsIcon, title: "Sheets" },
 				],
-				manifest: AwsHealthToSlack,
 				asset_directory: "aws_health_to_slack",
 			},
 			{
@@ -133,7 +121,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: ConfluenceIcon, title: "Confluence" },
 					{ icon: SlackIcon, title: "Slack" },
 				],
-				manifest: ConfluenceToSlack,
 				asset_directory: "confluence_to_slack",
 			},
 			{
@@ -143,7 +130,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: HttpIcon, title: "HTTP" },
 					{ icon: JiraIcon, title: "Jira" },
 				],
-				manifest: CreateJiraIssue,
 				asset_directory: "create_jira_issue",
 			},
 			{
@@ -155,7 +141,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: HttpIcon, title: "HTTP" },
 					{ icon: JiraIcon, title: "Jira" },
 				],
-				manifest: GoogleFormsToJira,
 				asset_directory: "google_forms_to_jira",
 			},
 			{
@@ -165,7 +150,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: JiraIcon, title: "Jira" },
 					{ icon: GoogleCalendarIcon, title: "Google Calendar" },
 				],
-				manifest: JiraAssigneeFromCalendar,
 				asset_directory: "jira_assignee_from_calendar",
 			},
 			{
@@ -175,7 +159,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GoogleCalendarIcon, title: "Google Calendar" },
 					{ icon: JiraIcon, title: "Jira" },
 				],
-				manifest: JiraToGoogleCalendar,
 				asset_directory: "jira_to_google_calendar",
 			},
 			{
@@ -186,7 +169,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GithubIcon, title: "GitHub" },
 					{ icon: SlackIcon, title: "Slack" },
 				],
-				manifest: Purrr,
 				asset_directory: "purrr",
 			},
 			{
@@ -197,7 +179,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GithubIcon, title: "GitHub" },
 					{ icon: SheetsIcon, title: "Sheets" },
 				],
-				manifest: Reviewkitteh,
 				asset_directory: "reviewkitteh",
 			},
 		],
@@ -214,7 +195,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SlackIcon, title: "Slack" },
 					{ icon: ChatGptIcon, title: "ChatGPT" },
 				],
-				manifest: CategorizeNotify,
 				asset_directory: "categorize_notify",
 			},
 		],
