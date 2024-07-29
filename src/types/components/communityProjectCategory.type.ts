@@ -12,7 +12,19 @@ export type CommunityProjectCardType = {
 	title: string;
 };
 
+export type TemplateCardType = {
+	asset: string;
+	description: string;
+	integrations: Integration[];
+	title: string;
+};
+
 export type CommunityProjectCategory = {
 	cards: CommunityProjectCardType[];
+	name: string;
+};
+
+export type TemplateCategory = {
+	cards: TemplateCardType[];
 	name: string;
 };

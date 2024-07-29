@@ -11,6 +11,10 @@
 		"title": "Comunity Projects",
 		"explore": "Explore community"
 	},
+	"templates":{ 
+		"title": "Templates",
+		"explore": "Explore templates"
+	},
 	"projects": {
 		"title": "All projects",
 		"noProjects": "No projects found",

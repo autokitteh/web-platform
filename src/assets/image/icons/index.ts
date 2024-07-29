@@ -39,3 +39,14 @@ export { default as PipeCircleIcon } from "@assets/image/icons/PipeCircle.svg?re
 export { default as TrashCanIcon } from "@assets/image/icons/TrashCan.svg?react";
 export { default as UnlockedLockIcon } from "@assets/image/icons/Lock.svg?react";
 export { default as LockIcon } from "@assets/image/icons/UnlockedLock.svg?react";
+export { default as AwsIcon } from "@assets/image/icons/Aws.svg?react";
+export { default as SlackIcon } from "@assets/image/icons/Slack.svg?react";
+export { default as SheetsIcon } from "@assets/image/icons/Sheets.svg?react";
+export { default as HttpIcon } from "@assets/image/icons/Http.svg?react";
+export { default as GmailIcon } from "@assets/image/icons/Gmail.svg?react";
+export { default as ChatGptIcon } from "@assets/image/icons/ChatGpt.svg?react";
+export { default as GoogleCalendarIcon } from "@assets/image/icons/GoogleCalendar.svg?react";
+export { default as JiraIcon } from "@assets/image/icons/Jira.svg?react";
+export { default as GoogleFormsIcon } from "@assets/image/icons/GoogleForms.svg?react";
+export { default as ConfluenceIcon } from "@assets/image/icons/Confluence.svg?react";
+export { default as PlusIcon } from "@assets/image/icons/Plus.svg?react";

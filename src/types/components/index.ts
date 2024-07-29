@@ -7,3 +7,4 @@ export type {
 	CommunityProjectCategory,
 	CommunityProjectCardType,
 } from "@type/components/communityProjectCategory.type";
+export type { TemplateCategory, TemplateCardType } from "@type/components/communityProjectCategory.type";
