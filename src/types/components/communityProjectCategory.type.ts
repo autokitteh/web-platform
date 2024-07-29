@@ -13,9 +13,9 @@ export type CommunityProjectCardType = {
 };
 
 export type TemplateCardType = {
-	asset: string;
 	description: string;
 	integrations: Integration[];
+	manifest: string;
 	title: string;
 };
 

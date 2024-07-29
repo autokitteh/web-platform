@@ -21,6 +21,6 @@ declare module "tailwind-config" {
 }
 
 declare module "*.yaml" {
-	const content: any;
+	const content: string;
 	export default content;
 }

@@ -8,24 +8,14 @@ import JiraToGoogleCalendarYaml from "@assets/templates/jira_to_google_calendar/
 import PurrrYaml from "@assets/templates/purrr/autokitteh.yaml";
 import ReviewKittehYaml from "@assets/templates/reviewkitteh/autokitteh.yaml";
 
-const AwsHealthToSlack = JSON.stringify(AwsHealthToSlackYaml);
-const CategorizeNotify = JSON.stringify(CategorizeNotifyYaml);
-const ConfluenceToSlack = JSON.stringify(ConfluenceToSlackYaml);
-const CreateJiraIssue = JSON.stringify(CreateJiraIssueYaml);
-const GoogleFormsToJira = JSON.stringify(GoogleFormsToJiraYaml);
-const JiraAssigneeFromCalendar = JSON.stringify(JiraAssigneeFromCalendarYaml);
-const JiraToGoogleCalendar = JSON.stringify(JiraToGoogleCalendarYaml);
-const Purrr = JSON.stringify(PurrrYaml);
-const ReviewKitteh = JSON.stringify(ReviewKittehYaml);
-
 export {
-	AwsHealthToSlack,
-	CategorizeNotify,
-	ConfluenceToSlack,
-	CreateJiraIssue,
-	GoogleFormsToJira,
-	JiraAssigneeFromCalendar,
-	JiraToGoogleCalendar,
-	Purrr,
-	ReviewKitteh,
+	AwsHealthToSlackYaml as AwsHealthToSlack,
+	CategorizeNotifyYaml as CategorizeNotify,
+	ConfluenceToSlackYaml as ConfluenceToSlack,
+	CreateJiraIssueYaml as CreateJiraIssue,
+	GoogleFormsToJiraYaml as GoogleFormsToJira,
+	JiraAssigneeFromCalendarYaml as JiraAssigneeFromCalendar,
+	JiraToGoogleCalendarYaml as JiraToGoogleCalendar,
+	PurrrYaml as Purrr,
+	ReviewKittehYaml as ReviewKitteh,
 };

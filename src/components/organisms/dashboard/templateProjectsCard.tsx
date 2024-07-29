@@ -1,13 +1,58 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+
+import { namespaces } from "@constants/index";
+import { LoggerService } from "@services/index";
+import { ManifestService } from "@services/manifest.service";
 import { TemplateCardType } from "@type/components";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Status } from "@components/atoms";
 
 import { PipeCircleIcon, PlusIcon } from "@assets/image/icons";
 
 export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType; category: string }) => {
-	const createProjectFromAsset = () => {};
+	const addToast = useToastStore((state) => state.addToast);
+	const { t } = useTranslation("manifest");
+	const { getProjectsList } = useProjectStore();
+	const navigate = useNavigate();
+
+	const createProjectFromAsset = async () => {
+		try {
+			const { data: projectId, error } = await ManifestService.applyManifest(card.manifest);
+			if (error) {
+				addToast({
+					id: Date.now().toString(),
+					message: t("projectCreationFailed"),
+					type: "error",
+				});
+
+				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+
+				return;
+			}
+
+			const successMessage = t("projectCreatedSuccessfully");
+			addToast({
+				id: Date.now().toString(),
+				message: successMessage,
+				type: "success",
+			});
+			getProjectsList();
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: t("projectCreationFailed"),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+		}
+	};
 
 	return (
 		<div className="relative flex flex-col rounded-md border border-gray-600 bg-white p-5 pr-3.5 shadow-community-card">
@@ -35,7 +80,7 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 
 			<div className="mb-4 mt-1 text-base">{card.description}</div>
 
-			<Button onClick={createProjectFromAsset}>
+			<Button className="hover:bg-white" onClick={createProjectFromAsset}>
 				<PlusIcon className="absolute bottom-2 right-2 h-10 w-10" />
 			</Button>
 		</div>

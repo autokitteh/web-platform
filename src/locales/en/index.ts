@@ -7,6 +7,7 @@ import errors from "@locales/en/errors/translation.json";
 import global from "@locales/en/global/translation.json";
 import integrations from "@locales/en/integrations/translation.json";
 import login from "@locales/en/login/translation.json";
+import manifest from "@locales/en/manifest/translation.json";
 import menu from "@locales/en/menu/translation.json";
 import modals from "@locales/en/modals/translation.json";
 import notFound404 from "@locales/en/notFound404/translation.json";
@@ -40,4 +41,5 @@ export default {
 	toasts,
 	validations,
 	dashboard,
+	manifest,
 };

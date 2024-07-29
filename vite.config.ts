@@ -1,4 +1,3 @@
-import yaml from "@rollup/plugin-yaml";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
@@ -40,7 +39,14 @@ export default defineConfig({
 			reactComponentAnnotation: { enabled: true },
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 		}),
-		yaml(),
+		{
+			name: "raw-yaml-loader",
+			transform(code, id) {
+				if (id.endsWith(".yaml")) {
+					return `export default ${JSON.stringify(code)}`;
+				}
+			},
+		},
 	],
 	resolve: {
 		alias: {
