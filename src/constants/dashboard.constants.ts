@@ -124,6 +124,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SheetsIcon, title: "Sheets" },
 				],
 				manifest: AwsHealthToSlack,
+				asset_directory: "aws_health_to_slack",
 			},
 			{
 				title: "Slack notify on Confluence page created",
@@ -133,6 +134,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SlackIcon, title: "Slack" },
 				],
 				manifest: ConfluenceToSlack,
+				asset_directory: "confluence_to_slack",
 			},
 			{
 				title: "Create Jira Ticket on HTTP request",
@@ -142,6 +144,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: JiraIcon, title: "Jira" },
 				],
 				manifest: CreateJiraIssue,
+				asset_directory: "create_jira_issue",
 			},
 			{
 				title: "Create Jira ticket from form",
@@ -153,6 +156,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: JiraIcon, title: "Jira" },
 				],
 				manifest: GoogleFormsToJira,
+				asset_directory: "google_forms_to_jira",
 			},
 			{
 				title: "JIRA Assignee From Google Calendar Workflow",
@@ -162,6 +166,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GoogleCalendarIcon, title: "Google Calendar" },
 				],
 				manifest: JiraAssigneeFromCalendar,
+				asset_directory: "jira_assignee_from_calendar",
 			},
 			{
 				title: "Create calendar due date event for Jira ticket",
@@ -171,6 +176,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: JiraIcon, title: "Jira" },
 				],
 				manifest: JiraToGoogleCalendar,
+				asset_directory: "jira_to_google_calendar",
 			},
 			{
 				title: "Pull Request Review Reminder (Purrr)",
@@ -181,6 +187,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SlackIcon, title: "Slack" },
 				],
 				manifest: Purrr,
+				asset_directory: "purrr",
 			},
 			{
 				title: "Monitor PR until completion in Slack",
@@ -191,6 +198,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SheetsIcon, title: "Sheets" },
 				],
 				manifest: ReviewKitteh,
+				asset_directory: "reviewkitteh",
 			},
 		],
 	},
@@ -207,6 +215,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: ChatGptIcon, title: "ChatGPT" },
 				],
 				manifest: CategorizeNotify,
+				asset_directory: "categorize_notify",
 			},
 		],
 	},
