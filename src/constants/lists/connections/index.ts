@@ -11,4 +11,5 @@ export {
 	selectIntegrationGoogle,
 	triggerTypes,
 	selectIntegrationSlack,
+	selectIntegrationAws,
 } from "@constants/lists/connections/options.constants";

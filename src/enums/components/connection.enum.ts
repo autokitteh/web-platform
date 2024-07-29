@@ -16,11 +16,12 @@ export enum IntegrationsGoogle {
 
 export enum Integrations {
 	github = "github",
-	google = "google",
 	slack = "slack",
 	gmail = "gmail",
+	google = "google",
 	googleSheets = "googleSheets",
 	googleCalendar = "googleCalendar",
 	googleDrive = "googleDrive",
 	googleForms = "googleForms",
+	aws = "aws",
 }

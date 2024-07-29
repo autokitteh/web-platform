@@ -5,4 +5,5 @@ export {
 	infoGoogleUserLinks,
 	integrationTypes,
 	selectIntegrationGoogle,
+	selectIntegrationAws,
 } from "@constants/lists/connections";
