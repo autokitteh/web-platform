@@ -4,6 +4,7 @@ export {
 	connectionSchema,
 	slackIntegrationSchema,
 	awsIntegrationSchema,
+	openAiIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { defaultTriggerSchema, schedulerTriggerSchema } from "@validations/newTrigger.schema";

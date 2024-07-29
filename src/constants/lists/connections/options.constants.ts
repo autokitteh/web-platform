@@ -1,17 +1,18 @@
 import { GithubConnectionType, GoogleConnectionType, SlackConnectionType } from "@enums";
-import { TriggerFormType } from "@enums/components";
+import { Integrations, TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 export const integrationTypes: SelectOption[] = [
-	{ disabled: false, label: "Github", value: "github" },
-	{ disabled: false, label: "Slack", value: "slack" },
-	{ disabled: false, label: "Gmail", value: "gmail" },
-	{ disabled: false, label: "Google (All APIs)", value: "google" },
-	{ disabled: false, label: "Google Sheets", value: "googleSheets" },
-	{ disabled: false, label: "Google Calendar", value: "googleCalendar" },
-	{ disabled: false, label: "Google Drive", value: "googleDrive" },
-	{ disabled: false, label: "Google Forms", value: "googleForms" },
-	{ disabled: false, label: "AWS", value: "aws" },
+	{ disabled: false, label: "Github", value: Integrations.github },
+	{ disabled: false, label: "Slack", value: Integrations.slack },
+	{ disabled: false, label: "Gmail", value: Integrations.gmail },
+	{ disabled: false, label: "Google (All APIs)", value: Integrations.google },
+	{ disabled: false, label: "Google Sheets", value: Integrations.googleSheets },
+	{ disabled: false, label: "Google Calendar", value: Integrations.googleCalendar },
+	{ disabled: false, label: "Google Drive", value: Integrations.googleDrive },
+	{ disabled: false, label: "Google Forms", value: Integrations.googleForms },
+	{ disabled: false, label: "AWS", value: Integrations.aws },
+	{ disabled: false, label: "OpenAI ChatGPT", value: Integrations.openAi },
 ];
 
 export const triggerTypes: SelectOption[] = [

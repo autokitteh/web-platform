@@ -5,6 +5,7 @@ let infoGoogleUserLinks: { text: string; url: string }[] = [];
 let infoGoogleAccountLinks: { text: string; url: string }[] = [];
 let infoSlackModeLinks: { text: string; url: string }[] = [];
 let infoSlackOAuthLinks: { text: string; url: string }[] = [];
+let infoOpenAiLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -76,6 +77,24 @@ i18n.on("initialized", () => {
 			text: i18n.t("slack.information.aboutInitSlack", { ns: "integrations" }),
 		},
 	];
+
+	infoOpenAiLinks = [
+		{
+			url: "https://platform.openai.com/",
+			text: i18n.t("openAi.information.openAI", { ns: "integrations" }),
+		},
+		{
+			url: "https://platform.openai.com/api-keys",
+			text: i18n.t("openAi.information.apiKeys", { ns: "integrations" }),
+		},
+	];
 });
 
-export { infoGithubLinks, infoGoogleAccountLinks, infoGoogleUserLinks, infoSlackModeLinks, infoSlackOAuthLinks };
+export {
+	infoGithubLinks,
+	infoGoogleAccountLinks,
+	infoGoogleUserLinks,
+	infoSlackModeLinks,
+	infoSlackOAuthLinks,
+	infoOpenAiLinks,
+};
