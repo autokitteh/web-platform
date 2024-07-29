@@ -87,6 +87,9 @@ export const AddConnection = () => {
 			<GoogleIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		gmail: <GmailIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
+		googleSheets: (
+			<GoogleIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
+		),
 	};
 
 	const selectedIntegrationComponent = selectedIntegration

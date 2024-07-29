@@ -20,7 +20,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const GmailIntegrationAddForm = ({
+export const GoogleSheetsIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 }: {

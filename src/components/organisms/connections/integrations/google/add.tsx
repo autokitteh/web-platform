@@ -47,7 +47,7 @@ export const GoogleIntegrationAddForm = ({
 		resolver: zodResolver(googleIntegrationSchema),
 	});
 
-	const createPatConnection = async () => {
+	const createConnection = async () => {
 		setIsLoading(false);
 		const { jsonKey } = getValues();
 
@@ -175,7 +175,7 @@ export const GoogleIntegrationAddForm = ({
 	useEffect(() => {
 		switch (selectedConnectionType?.value) {
 			case GoogleConnectionType.ServiceAccount:
-				createPatConnection();
+				createConnection();
 				break;
 
 			case GoogleConnectionType.Oauth:

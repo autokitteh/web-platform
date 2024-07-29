@@ -10,4 +10,5 @@ export enum Integrations {
 	google = "google",
 	slack = "slack",
 	gmail = "gmail",
+	googleSheets = "googleSheets",
 }
