@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/autokitteh/web-platform/compare/v1.22.0...v1.23.0) (2024-07-29)
+
+
+### Features
+
+* add aws integration ([#233](https://github.com/autokitteh/web-platform/issues/233)) ([d0121d0](https://github.com/autokitteh/web-platform/commit/d0121d08b9eba075f37b771b89693ce8b7a55939))
+
 # [1.22.0](https://github.com/autokitteh/web-platform/compare/v1.21.1...v1.22.0) (2024-07-29)
 
 
