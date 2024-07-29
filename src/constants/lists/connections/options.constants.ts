@@ -4,10 +4,13 @@ import { SelectOption } from "@interfaces/components";
 
 export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Github", value: "github" },
-	{ disabled: false, label: "Google (All APIs)", value: "google" },
 	{ disabled: false, label: "Slack", value: "slack" },
 	{ disabled: false, label: "Gmail", value: "gmail" },
+	{ disabled: false, label: "Google (All APIs)", value: "google" },
 	{ disabled: false, label: "Google Sheets", value: "googleSheets" },
+	{ disabled: false, label: "Google Calendar", value: "googleCalendar" },
+	{ disabled: false, label: "Google Drive", value: "googleDrive" },
+	{ disabled: false, label: "Google Forms", value: "googleForms" },
 ];
 
 export const triggerTypes: SelectOption[] = [

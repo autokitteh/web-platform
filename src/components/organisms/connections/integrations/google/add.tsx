@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { baseUrl, namespaces } from "@constants";
-import { infoGoogleAccountLinks, infoGoogleUserLinks, selectIntegrationGoogle } from "@constants/lists";
+import { selectIntegrationGoogle } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
@@ -15,17 +15,17 @@ import { googleIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
-import { Button, ErrorMessage, Link, Select, Spinner, Textarea } from "@components/atoms";
-import { Accordion } from "@components/molecules";
-
-import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
+import { Select } from "@components/atoms";
+import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connections/integrations/google";
 
 export const GoogleIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	type,
 }: {
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
+	type: string;
 }) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
@@ -35,20 +35,16 @@ export const GoogleIntegrationAddForm = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 
-	const {
-		formState: { errors },
-		getValues,
-		handleSubmit,
-		register,
-	} = useForm({
+	const methods = useForm({
 		defaultValues: {
 			jsonKey: "",
 		},
 		resolver: zodResolver(googleIntegrationSchema),
 	});
+	const { getValues, handleSubmit, reset } = methods;
 
 	const createConnection = async () => {
-		setIsLoading(false);
+		setIsLoading(true);
 		const { jsonKey } = getValues();
 
 		try {
@@ -98,109 +94,39 @@ export const GoogleIntegrationAddForm = ({
 		}
 	};
 
-	const renderOAuthButton = () => (
-		<>
-			<Accordion title={t("information")}>
-				<div className="flex flex-col items-start gap-2">
-					{infoGoogleUserLinks.map(({ text, url }, index) => (
-						<Link
-							className="inline-flex items-center gap-2.5 text-green-800"
-							key={index}
-							target="_blank"
-							to={url}
-						>
-							{text}
-
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
-						</Link>
-					))}
-				</div>
-			</Accordion>
-			<Button
-				aria-label={t("buttons.startOAuthFlow")}
-				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
-				onClick={handleGoogleOAuth}
-				variant="outline"
-			>
-				{t("buttons.startOAuthFlow")}
-			</Button>
-		</>
-	);
-
-	const renderServiceAccount = () => (
-		<div>
-			<div className="relative mb-3">
-				<Textarea
-					rows={5}
-					{...register("jsonKey")}
-					aria-label={t("google.placeholders.jsonKey")}
-					isError={!!errors.jsonKey}
-					placeholder={t("google.placeholders.jsonKey")}
-				/>
-
-				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
-			</div>
-
-			<Button
-				aria-label={t("buttons.saveConnection")}
-				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
-				disabled={isLoading}
-				type="submit"
-				variant="outline"
-			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-5 w-5 fill-white transition" />}
-
-				{t("buttons.saveConnection")}
-			</Button>
-
-			<Accordion title={t("information")}>
-				<div className="flex flex-col items-start gap-2">
-					{infoGoogleAccountLinks.map(({ text, url }, index) => (
-						<Link
-							className="inline-flex items-center gap-2.5 text-green-800"
-							key={index}
-							target="_blank"
-							to={url}
-						>
-							{text}
-
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
-						</Link>
-					))}
-				</div>
-			</Accordion>
-		</div>
-	);
+	const selectConnectionType = (option?: SingleValue<SelectOption>) => {
+		setSelectedConnectionType(option as SelectOption);
+	};
 
 	useEffect(() => {
 		switch (selectedConnectionType?.value) {
 			case GoogleConnectionType.ServiceAccount:
 				createConnection();
 				break;
-
 			case GoogleConnectionType.Oauth:
 				handleGoogleOAuth();
 				break;
-
 			default:
 				break;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
+	useEffect(() => {
+		selectConnectionType();
+		reset({ jsonKey: "" });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [type]);
+
 	const renderConnectionFields = () => {
 		switch (selectedConnectionType?.value) {
 			case GoogleConnectionType.ServiceAccount:
-				return renderServiceAccount();
+				return <JsonKeyGoogleForm isLoading={isLoading} />;
 			case GoogleConnectionType.Oauth:
-				return renderOAuthButton();
+				return <OauthGoogleForm triggerParentFormSubmit={triggerParentFormSubmit} />;
 			default:
 				return null;
 		}
-	};
-
-	const selectConnectionType = (option: SingleValue<SelectOption>) => {
-		setSelectedConnectionType(option as SelectOption);
 	};
 
 	const onSubmit = () => {
@@ -223,8 +149,8 @@ export const GoogleIntegrationAddForm = ({
 	};
 
 	return (
-		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
-			<div className="flex w-full flex-col gap-6">
+		<FormProvider {...methods}>
+			<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
 					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
@@ -235,7 +161,7 @@ export const GoogleIntegrationAddForm = ({
 				/>
 
 				{renderConnectionFields()}
-			</div>
-		</form>
+			</form>
+		</FormProvider>
 	);
 };

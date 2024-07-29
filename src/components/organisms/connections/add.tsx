@@ -17,11 +17,7 @@ import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import {
-	GithubIntegrationAddForm,
-	GmailIntegrationAddForm,
-	GoogleIntegrationAddForm,
-} from "@components/organisms/connections/integrations";
+import { GithubIntegrationAddForm, GoogleIntegrationAddForm } from "@components/organisms/connections/integrations";
 import { SlackIntegrationAddForm } from "@components/organisms/connections/integrations/slack";
 
 export const AddConnection = () => {
@@ -83,12 +79,47 @@ export const AddConnection = () => {
 			<GithubIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		slack: <SlackIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
-		google: (
-			<GoogleIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
+		gmail: (
+			<GoogleIntegrationAddForm
+				connectionId={connectionId}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
+				type={selectedIntegration.value}
+			/>
 		),
-		gmail: <GmailIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
+		google: (
+			<GoogleIntegrationAddForm
+				connectionId={connectionId}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
+				type={selectedIntegration.value}
+			/>
+		),
 		googleSheets: (
-			<GoogleIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
+			<GoogleIntegrationAddForm
+				connectionId={connectionId}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
+				type={selectedIntegration.value}
+			/>
+		),
+		googleCalendar: (
+			<GoogleIntegrationAddForm
+				connectionId={connectionId}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
+				type={selectedIntegration.value}
+			/>
+		),
+		googleDrive: (
+			<GoogleIntegrationAddForm
+				connectionId={connectionId}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
+				type={selectedIntegration.value}
+			/>
+		),
+		googleForms: (
+			<GoogleIntegrationAddForm
+				connectionId={connectionId}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
+				type={selectedIntegration.value}
+			/>
 		),
 	};
 
