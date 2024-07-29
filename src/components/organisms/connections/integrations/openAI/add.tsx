@@ -76,7 +76,9 @@ export const OpenAiIntegrationAddForm = ({
 	};
 
 	useEffect(() => {
-		connectionId && createConnection();
+		if (connectionId) {
+			createConnection();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
