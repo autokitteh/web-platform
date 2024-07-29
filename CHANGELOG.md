@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/autokitteh/web-platform/compare/v1.21.1...v1.22.0) (2024-07-29)
+
+
+### Features
+
+* add google integration ([#224](https://github.com/autokitteh/web-platform/issues/224)) ([d9d9925](https://github.com/autokitteh/web-platform/commit/d9d9925e0458e427744e13ce39ef8caa237dfe5d))
+
 ## [1.21.1](https://github.com/autokitteh/web-platform/compare/v1.21.0...v1.21.1) (2024-07-25)
 
 
