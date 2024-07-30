@@ -10,7 +10,7 @@ import { namespaces } from "@constants";
 import { selectIntegrationHttp } from "@constants/lists/connections";
 import { HttpConnectionType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { HttpService, LoggerService } from "@services";
+import { LoggerService } from "@services";
 import { httpBasicIntegrationSchema, httpBearerIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
@@ -30,8 +30,11 @@ export const HttpIntegrationAddForm = ({
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
-	const [selectedConnectionType, setSelectedConnectionType] = useState<SingleValue<SelectOption>>();
-	const [isLoading, setIsLoading] = useState(false);
+	const [selectedConnectionType, setSelectedConnectionType] = useState<SingleValue<SelectOption>>({
+		value: HttpConnectionType.NoAuth,
+		label: t("http.noAuth"),
+	});
+	const [isLoading] = useState(false);
 
 	const formSchema = useMemo(() => {
 		if (selectedConnectionType?.value === HttpConnectionType.Basic) return httpBasicIntegrationSchema;
@@ -47,62 +50,11 @@ export const HttpIntegrationAddForm = ({
 		},
 	});
 
-	const { getValues, handleSubmit } = methods;
-
-	const requestPayload = useMemo(() => {
-		const { password, token, username } = getValues();
-		if (selectedConnectionType?.value === HttpConnectionType.Basic) {
-			return {
-				basic_username: username,
-				basic_password: password,
-			};
-		}
-		if (selectedConnectionType?.value === HttpConnectionType.Bearer) {
-			return {
-				bearer_access_token: token,
-			};
-		}
-	}, [getValues, selectedConnectionType]);
-
-	const createConnection = async () => {
-		setIsLoading(true);
-
-		try {
-			await HttpService.post("/i/http/save?cid=${connectionId}&origin=web", requestPayload);
-			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({
-				id: Date.now().toString(),
-				message: successMessage,
-				type: "success",
-			});
-			LoggerService.info(namespaces.connectionService, successMessage);
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
-			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
-			);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	const { handleSubmit } = methods;
 
 	useEffect(() => {
 		if (!connectionId) return;
-		switch (selectedConnectionType?.value) {
-			case HttpConnectionType.NoAuth:
-				navigate(`/projects/${projectId}/connections`);
-				break;
-			default:
-				createConnection();
-				break;
-		}
+		navigate(`/projects/${projectId}/connections`);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
