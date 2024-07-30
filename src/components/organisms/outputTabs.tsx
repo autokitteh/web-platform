@@ -11,7 +11,7 @@ import { Button, IconSvg, Tab } from "@components/atoms";
 
 import { TrashCanIcon } from "@assets/image/icons";
 
-export const OutputTabs: React.FC = () => {
+export const OutputTabs = () => {
 	const { clearLogs, logs } = useLoggerStore((state) => state);
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
