@@ -4,6 +4,7 @@ export {
 	GoogleConnectionType,
 	SlackConnectionType,
 	HttpConnectionType,
+	TwilioConnectionType,
 } from "@enums/connections";
 export { DeploymentStateVariant } from "@enums/deploymentState.enum";
 export { LoggerLevel } from "@enums/output.enum";

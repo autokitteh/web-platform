@@ -18,3 +18,8 @@ export enum HttpConnectionType {
 	Basic = "basic",
 	Bearer = "bearer",
 }
+
+export enum TwilioConnectionType {
+	AuthToken = "oauth",
+	ApiKey = "apiKey",
+}

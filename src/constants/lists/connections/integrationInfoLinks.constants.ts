@@ -8,6 +8,7 @@ let infoSlackOAuthLinks: { text: string; url: string }[] = [];
 let infoOpenAiLinks: { text: string; url: string }[] = [];
 let infoHttpBasicLinks: { text: string; url: string }[] = [];
 let infoHttpBearerLinks: { text: string; url: string }[] = [];
+let infoTwilioLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -103,6 +104,17 @@ i18n.on("initialized", () => {
 			text: i18n.t("openAi.information.apiKeys", { ns: "integrations" }),
 		},
 	];
+
+	infoTwilioLinks = [
+		{
+			url: "https://www.twilio.com/docs/glossary/what-is-an-api-key",
+			text: i18n.t("twilio.information.aboutAuth", { ns: "integrations" }),
+		},
+		{
+			url: "https://www.twilio.com/docs/iam/api-keys",
+			text: i18n.t("twilio.information.apiOverview", { ns: "integrations" }),
+		},
+	];
 });
 
 export {
@@ -114,4 +126,5 @@ export {
 	infoOpenAiLinks,
 	infoHttpBasicLinks,
 	infoHttpBearerLinks,
+	infoTwilioLinks,
 };

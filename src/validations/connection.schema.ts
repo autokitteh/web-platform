@@ -42,3 +42,13 @@ export const httpBasicIntegrationSchema = z.object({
 export const httpBearerIntegrationSchema = z.object({
 	token: z.string().min(1, "Personal Access Token is required"),
 });
+
+export const twilioTokenIntegrationSchema = z.object({
+	sid: z.string().min(1, "Account SID is required"),
+	token: z.string().min(1, "Auth Token is required"),
+});
+export const twilioApiKeyIntegrationSchema = z.object({
+	sid: z.string().min(1, "Account SID is required"),
+	key: z.string().min(1, "API Key is required"),
+	secret: z.string().min(1, "API Secret is required"),
+});
