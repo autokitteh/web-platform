@@ -1,3 +1,10 @@
+## [1.26.1](https://github.com/autokitteh/web-platform/compare/v1.26.0...v1.26.1) (2024-07-30)
+
+
+### Bug Fixes
+
+* husky on commit ([#235](https://github.com/autokitteh/web-platform/issues/235)) ([a3d1ba2](https://github.com/autokitteh/web-platform/commit/a3d1ba27ffadc29b3a587b8557a0ddfc8d5e26fb))
+
 # [1.26.0](https://github.com/autokitteh/web-platform/compare/v1.25.0...v1.26.0) (2024-07-30)
 
 

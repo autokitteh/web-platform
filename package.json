@@ -2,7 +2,7 @@
 	"name": "autokitteh",
 	"private": true,
 	"type": "module",
-	"version": "1.26.0",
+	"version": "1.26.1",
 	"scripts": {
 		"build": "vite build",
 		"build-storybook": "storybook build",
@@ -133,6 +133,9 @@
 		"@rollup/rollup-linux-x64-musl": "^4.19.1"
 	},
 	"lint-staged": {
-		"*.{ts,tsx,json}": ["eslint --cache --fix", "prettier --write"]
+		"*.{ts,tsx,json}": [
+			"eslint --cache --fix",
+			"prettier --write"
+		]
 	}
 }
