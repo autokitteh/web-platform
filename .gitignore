@@ -34,3 +34,6 @@ dist-ssr
 
 # Storybook Static Build
 /storybook-static/
+
+# ESLint Cache
+.eslintcache
