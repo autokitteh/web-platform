@@ -58,7 +58,7 @@
 			"@ak-proto-ts/*": ["./src/autokitteh/proto/gen/ts/autokitteh/*"]
 		}
 	},
-	"exclude": ["node_modules"],
+	"exclude": ["node_modules", "./dist/**/*"],
 	"references": [{ "path": "./tsconfig.node.json" }],
 	"include": [
 	  "src",
