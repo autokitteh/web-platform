@@ -1,19 +1,26 @@
-import { GithubConnectionType, GoogleConnectionType, HttpConnectionType, SlackConnectionType } from "@enums";
+import {
+	GithubConnectionType,
+	GoogleConnectionType,
+	HttpConnectionType,
+	SlackConnectionType,
+	TwilioConnectionType,
+} from "@enums";
 import { Integrations, TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Github", value: Integrations.github },
 	{ disabled: false, label: "Slack", value: Integrations.slack },
+	{ disabled: false, label: "AWS", value: Integrations.aws },
+	{ disabled: false, label: "OpenAI ChatGPT", value: Integrations.openAi },
+	{ disabled: false, label: "HTTP", value: Integrations.http },
+	{ disabled: false, label: "Twilio", value: Integrations.twilio },
 	{ disabled: false, label: "Gmail", value: Integrations.gmail },
 	{ disabled: false, label: "Google (All APIs)", value: Integrations.google },
 	{ disabled: false, label: "Google Sheets", value: Integrations.googleSheets },
 	{ disabled: false, label: "Google Calendar", value: Integrations.googleCalendar },
 	{ disabled: false, label: "Google Drive", value: Integrations.googleDrive },
 	{ disabled: false, label: "Google Forms", value: Integrations.googleForms },
-	{ disabled: false, label: "AWS", value: Integrations.aws },
-	{ disabled: false, label: "OpenAI ChatGPT", value: Integrations.openAi },
-	{ disabled: false, label: "HTTP", value: Integrations.http },
 ];
 
 export const triggerTypes: SelectOption[] = [
@@ -60,4 +67,9 @@ export const selectIntegrationHttp: SelectOption[] = [
 	{ label: "No Auth", value: HttpConnectionType.NoAuth },
 	{ label: "Basic", value: HttpConnectionType.Basic, disabled: true },
 	{ label: "Bearer", value: HttpConnectionType.Bearer, disabled: true },
+];
+
+export const selectIntegrationTwilio: SelectOption[] = [
+	{ label: "Auth Token", value: TwilioConnectionType.AuthToken },
+	{ label: "API Key", value: TwilioConnectionType.ApiKey },
 ];

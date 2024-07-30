@@ -7,6 +7,7 @@ export {
 	infoOpenAiLinks,
 	infoHttpBasicLinks,
 	infoHttpBearerLinks,
+	infoTwilioLinks,
 } from "@constants/lists/connections/integrationInfoLinks.constants";
 export {
 	githubIntegrationAuthMethods,
@@ -16,4 +17,5 @@ export {
 	selectIntegrationSlack,
 	selectIntegrationAws,
 	selectIntegrationHttp,
+	selectIntegrationTwilio,
 } from "@constants/lists/connections/options.constants";

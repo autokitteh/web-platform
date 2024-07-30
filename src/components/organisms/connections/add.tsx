@@ -23,8 +23,9 @@ import {
 	GoogleIntegrationAddForm,
 	HttpIntegrationAddForm,
 	OpenAiIntegrationAddForm,
+	SlackIntegrationAddForm,
+	TwilioIntegrationAddForm,
 } from "@components/organisms/connections/integrations";
-import { SlackIntegrationAddForm } from "@components/organisms/connections/integrations/slack";
 
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
@@ -147,6 +148,9 @@ export const AddConnection = () => {
 			<OpenAiIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		http: <HttpIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
+		twilio: (
+			<TwilioIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
+		),
 	};
 
 	const selectedIntegrationComponent = selectedIntegration
