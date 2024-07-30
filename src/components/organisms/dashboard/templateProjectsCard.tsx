@@ -19,7 +19,7 @@ import { filesPerProject } from "@assets/templates";
 
 export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType; category: string }) => {
 	const addToast = useToastStore((state) => state.addToast);
-	const { t } = useTranslation("manifest");
+	const { t } = useTranslation(["manifest", "templates"]);
 	const { getProjectsList } = useProjectStore();
 	const [projectId, setProjectId] = React.useState<string | null>(null);
 	const navigate = useNavigate();
@@ -95,7 +95,7 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 							key={index}
 							title={title}
 						>
-							<IconSvg className="z-10" size="lg" src={icon} />
+							<IconSvg className="z-10 rounded-full bg-white p-1" size="xl" src={icon} />
 
 							{index < card.integrations.length - 1 ? (
 								<PipeCircleIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-500" />
@@ -111,8 +111,12 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 
 			<div className="mb-4 mt-1 text-base">{card.description}</div>
 
-			<Button className="hover:bg-white" onClick={createProjectFromAsset}>
-				<PlusIcon className="absolute bottom-2 right-2 h-10 w-10" />
+			<Button
+				className="border-1 absolute bottom-2 right-2 rounded-full border border-solid border-black p-1 hover:bg-white"
+				onClick={createProjectFromAsset}
+				title={t("createProject")}
+			>
+				<IconSvg size="md" src={PlusIcon} />
 			</Button>
 		</div>
 	);

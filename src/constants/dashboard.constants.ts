@@ -3,17 +3,17 @@ import { TemplateCategory } from "@type/components/communityProjectCategory.type
 
 import {
 	AwsIcon,
-	ChatGptIcon,
 	ConfluenceIcon,
 	GithubIcon,
-	GmailIcon,
 	GoogleCalendarIcon,
 	GoogleFormsIcon,
+	GoogleGmailIcon,
+	GoogleSheetsIcon,
 	HttpIcon,
 	JiraIcon,
-	SheetsIcon,
+	OpenAiIcon,
 	SlackIcon,
-} from "@assets/image/icons";
+} from "@assets/image/icons/connections";
 
 export const defaultCommunityProjectCategory = "CI/CD";
 export const defaultTemplateProjectCategory = "DevOps";
@@ -110,7 +110,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				integrations: [
 					{ icon: AwsIcon, title: "AWS" },
 					{ icon: SlackIcon, title: "Slack" },
-					{ icon: SheetsIcon, title: "Sheets" },
+					{ icon: GoogleSheetsIcon, title: "Sheets" },
 				],
 				asset_directory: "aws_health_to_slack",
 			},
@@ -177,7 +177,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				integrations: [
 					{ icon: SlackIcon, title: "Slack" },
 					{ icon: GithubIcon, title: "GitHub" },
-					{ icon: SheetsIcon, title: "Sheets" },
+					{ icon: GoogleSheetsIcon, title: "Sheets" },
 				],
 				asset_directory: "reviewkitteh",
 			},
@@ -191,9 +191,9 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description:
 					"Categorizing incoming emails and notifying relevant Slack channels by integrating Gmail, ChatGPT, and Slack",
 				integrations: [
-					{ icon: GmailIcon, title: "Gmail" },
+					{ icon: GoogleGmailIcon, title: "Gmail" },
 					{ icon: SlackIcon, title: "Slack" },
-					{ icon: ChatGptIcon, title: "ChatGPT" },
+					{ icon: OpenAiIcon, title: "ChatGPT" },
 				],
 				asset_directory: "categorize_notify",
 			},

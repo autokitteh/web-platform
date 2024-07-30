@@ -16,6 +16,7 @@ import services from "@locales/en/services/translation.json";
 import settings from "@locales/en/settings/translation.json";
 import sidebar from "@locales/en/sidebar/translation.json";
 import tabs from "@locales/en/tabs/translation.json";
+import templates from "@locales/en/templates/translation.json";
 import toasts from "@locales/en/toasts/translation.json";
 import validations from "@locales/en/validations/translation.json";
 
@@ -42,4 +43,5 @@ export default {
 	validations,
 	dashboard,
 	manifest,
+	templates,
 };
