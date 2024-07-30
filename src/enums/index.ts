@@ -1,5 +1,10 @@
 export { ConnectionStatus } from "@enums/components";
-export { GithubConnectionType, GoogleConnectionType, SlackConnectionType } from "@enums/connections";
+export {
+	GithubConnectionType,
+	GoogleConnectionType,
+	SlackConnectionType,
+	HttpConnectionType,
+} from "@enums/connections";
 export { DeploymentStateVariant } from "@enums/deploymentState.enum";
 export { LoggerLevel } from "@enums/output.enum";
 export { ProjectIntervalTypes } from "@enums/projectIntervals.enum";

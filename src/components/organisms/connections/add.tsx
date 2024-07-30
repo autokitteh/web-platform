@@ -21,6 +21,7 @@ import {
 	AwsIntegrationAddForm,
 	GithubIntegrationAddForm,
 	GoogleIntegrationAddForm,
+	HttpIntegrationAddForm,
 	OpenAiIntegrationAddForm,
 } from "@components/organisms/connections/integrations";
 import { SlackIntegrationAddForm } from "@components/organisms/connections/integrations/slack";
@@ -130,6 +131,7 @@ export const AddConnection = () => {
 		openAi: (
 			<OpenAiIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
+		http: <HttpIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
 	};
 
 	const selectedIntegrationComponent = selectedIntegration

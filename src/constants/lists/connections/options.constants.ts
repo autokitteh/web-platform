@@ -1,4 +1,4 @@
-import { GithubConnectionType, GoogleConnectionType, SlackConnectionType } from "@enums";
+import { GithubConnectionType, GoogleConnectionType, HttpConnectionType, SlackConnectionType } from "@enums";
 import { Integrations, TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
@@ -13,6 +13,7 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Google Forms", value: Integrations.googleForms },
 	{ disabled: false, label: "AWS", value: Integrations.aws },
 	{ disabled: false, label: "OpenAI ChatGPT", value: Integrations.openAi },
+	{ disabled: false, label: "HTTP", value: Integrations.http },
 ];
 
 export const triggerTypes: SelectOption[] = [
@@ -53,4 +54,10 @@ export const selectIntegrationAws: SelectOption[] = [
 	{ value: "us-east-2", label: "us-east-2" },
 	{ value: "us-west-1", label: "us-west-1" },
 	{ value: "us-west-2", label: "us-west-2" },
+];
+
+export const selectIntegrationHttp: SelectOption[] = [
+	{ label: "No Auth", value: HttpConnectionType.NoAuth },
+	{ label: "Basic", value: HttpConnectionType.Basic },
+	{ label: "Bearer", value: HttpConnectionType.Bearer },
 ];

@@ -12,3 +12,9 @@ export enum SlackConnectionType {
 	Mode = "mode",
 	Oauth = "oauth",
 }
+
+export enum HttpConnectionType {
+	NoAuth = "oauth",
+	Basic = "basic",
+	Bearer = "bearer",
+}
