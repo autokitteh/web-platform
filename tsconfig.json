@@ -6,7 +6,6 @@
 		"module": "ESNext",
 		"skipLibCheck": true,
 		"useUnknownInCatchVariables": false,
-		"esModuleInterop": true,
 
 		/* Bundler mode */
 		"moduleResolution": "bundler",
