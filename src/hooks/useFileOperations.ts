@@ -49,6 +49,16 @@ export function useFileOperations(projectId: string) {
 		[projectId]
 	);
 
+	const saveAllFiles = useCallback(
+		async (filesUint8ArrayContent: Record<string, Uint8Array>) => {
+			for (const [name, content] of Object.entries(filesUint8ArrayContent)) {
+				await dbService.put(name, content);
+			}
+			await ProjectsService.setResources(projectId, filesUint8ArrayContent);
+		},
+		[projectId]
+	);
+
 	const deleteFile = useCallback(
 		async (name: string) => {
 			await dbService.delete(name);
@@ -77,6 +87,7 @@ export function useFileOperations(projectId: string) {
 	return {
 		fetchFiles,
 		saveFile,
+		saveAllFiles,
 		deleteFile,
 		fetchResources,
 		openProjectId,

@@ -3,7 +3,4 @@ export type { IntegrationType, IntegrationGoogleType } from "@type/components/co
 export type { InputType } from "@type/components/input.type";
 export type { SortDirection } from "@type/components/table.type";
 export type { ToastType } from "@type/components/toast.type";
-export type {
-	CommunityProjectCategory,
-	CommunityProjectCardType,
-} from "@type/components/communityProjectCategory.type";
+export type { TemplateCategory, TemplateCardType } from "@src/types/components/projectTemplates.type";

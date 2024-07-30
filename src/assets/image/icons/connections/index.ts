@@ -1,0 +1,13 @@
+export { default as AwsIcon } from "@assets/image/icons/connections/Aws.svg?react";
+export { default as ConfluenceIcon } from "@assets/image/icons/connections/Confluence.svg?react";
+export { default as SlackIcon } from "@assets/image/icons/connections/Slack.svg?react";
+export { default as GithubIcon } from "@assets/image/icons/connections/Github.svg?react";
+export { default as GoogleSheetsIcon } from "@assets/image/icons/connections/GoogleSheets.svg?react";
+export { default as GoogleGmailIcon } from "@assets/image/icons/connections/GoogleGmail.svg?react";
+export { default as GoogleCalendarIcon } from "@assets/image/icons/connections/GoogleCalendar.svg?react";
+export { default as GoogleIcon } from "@assets/image/icons/connections/Google.svg?react";
+export { default as HttpIcon } from "@assets/image/icons/connections/Http.svg?react";
+export { default as OpenAiIcon } from "@assets/image/icons/connections/OpenAi.svg?react";
+export { default as JiraIcon } from "@assets/image/icons/connections/Jira.svg?react";
+export { default as GoogleFormsIcon } from "@assets/image/icons/connections/GoogleForms.svg?react";
+export { default as TwilioIcon } from "@assets/image/icons/connections/Twilio.svg?react";

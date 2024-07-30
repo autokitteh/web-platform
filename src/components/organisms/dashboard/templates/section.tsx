@@ -3,12 +3,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { Frame, IconSvg, SearchInput, Typography } from "@components/atoms";
-import { CommunityProjectsTabs } from "@components/organisms/dashboard";
+import { ProjectTemplatesTabs } from "@components/molecules/dashboard/templates";
 
 import { ArrowZigzagIcon } from "@assets/image/icons";
 
-export const CommunityProjects = () => {
-	const { t } = useTranslation("dashboard", { keyPrefix: "comunityProjects" });
+export const ProjectTemplatesSection = () => {
+	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 
 	return (
 		<Frame className="w-5/12 rounded-none bg-gray-100">
@@ -27,7 +27,7 @@ export const CommunityProjects = () => {
 				variant="light"
 			/>
 
-			<CommunityProjectsTabs />
+			<ProjectTemplatesTabs />
 		</Frame>
 	);
 };

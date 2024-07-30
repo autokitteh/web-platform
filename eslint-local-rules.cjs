@@ -1,4 +1,6 @@
+/* eslint-disable unicorn/filename-case */
 /* eslint-disable local-rules/no-abbreviations */
+// eslint-disable-next-line no-undef
 module.exports = {
 	"no-abbreviations": {
 		meta: {

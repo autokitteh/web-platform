@@ -7,6 +7,7 @@ interface ImportMetaEnv {
 	readonly VITE_AUTH_ENABLED: string;
 	readonly VITE_DESCOPE_PROJECT_ID: string;
 	readonly VITE_HOST_URL: string;
+	readonly VITE_BASE_URL: string;
 	readonly VITE_SENTRY_AUTH_TOKEN: string;
 	readonly VITE_SENTRY_DSN: string;
 }
@@ -18,4 +19,9 @@ interface ImportMeta {
 declare module "tailwind-config" {
 	const config: Config;
 	export default config;
+}
+
+declare module "*.yaml" {
+	const content: string;
+	export default content;
 }

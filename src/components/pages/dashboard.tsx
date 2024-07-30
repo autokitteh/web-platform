@@ -1,6 +1,7 @@
 import React from "react";
 
-import { CommunityProjects, DashboardTopbar, ProjectsTable } from "@components/organisms";
+import { DashboardTopbar, ProjectsTable } from "@components/organisms";
+import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
 
 export const Dashboard: React.FC = () => {
 	return (
@@ -12,7 +13,7 @@ export const Dashboard: React.FC = () => {
 					<ProjectsTable />
 				</div>
 
-				<CommunityProjects />
+				<ProjectTemplatesSection />
 			</div>
 		</div>
 	);

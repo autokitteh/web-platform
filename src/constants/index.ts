@@ -1,4 +1,4 @@
-export { baseUrl } from "@constants/api.constants";
+export { baseUrl, hostUrl } from "@constants/api.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export {
 	defaultSessionsVisiblePageSize,
@@ -15,7 +15,7 @@ export { menuItems } from "@constants/menuItems.constants";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
 export { defaultProjectTab, projectTabs } from "@constants/project.constants";
-export { communityProjectCategories, defaultCommunityProjectCategory } from "@constants/dashboard.constants";
+export { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants/dashboard.constants";
 export { sessionsEditorLineHeight } from "@constants/sessionsTable.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export {

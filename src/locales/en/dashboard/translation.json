@@ -7,9 +7,17 @@
 			"logout": "Logout"
 		}
 	},
-	"comunityProjects": {
-		"title": "Comunity Projects",
-		"explore": "Explore community"
+	"templates":{ 
+		"title": "Templates",
+		"explore": "Explore templates",
+		"projectCreatedSuccessfully": "Project created successfully",
+		"projectCreationFailed": "Project creation failed",
+		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
+		"projectNameExist": "Project name already exists",
+		"projectTemplateNotFound": "Project template not found",
+		"projectTemplateNotFoundExtended": "Project template not found, error: {{error}}",
+		"projectFilesNotFound": "Project files not found",
+		"projectFilesNotFoundExtended": "Project files not found, error: {{error}}"
 	},
 	"projects": {
 		"title": "All projects",

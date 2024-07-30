@@ -37,5 +37,7 @@
 	"variableGetFailedExtended": "Variable fetch failed, Name: {{name}}, error: {{error}}",
 	"variableNotCreatedExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}",
 	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}",
-	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}, Name: {{name}}"
+	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}, Name: {{name}}",
+	"projectNameExist": "Project name already exists"
+
 }
