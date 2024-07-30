@@ -8,7 +8,7 @@ import { Button, IconSvg, Loader, Status } from "@components/atoms";
 
 import { PipeCircleIcon, PlusIcon } from "@assets/image/icons";
 
-export const TemplateProjectCard = ({
+export const ProjectTemplateCard = ({
 	card,
 	category,
 	isCreating,

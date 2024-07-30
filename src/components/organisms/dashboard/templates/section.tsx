@@ -3,11 +3,11 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { Frame, IconSvg, SearchInput, Typography } from "@components/atoms";
-import { TemplateProjectsTabs } from "@components/organisms/dashboard";
+import { ProjectTemplatesTabs } from "@components/molecules/dashboard/templates";
 
 import { ArrowZigzagIcon } from "@assets/image/icons";
 
-export const TemplateProjects = () => {
+export const ProjectTemplatesSection = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 
 	return (
@@ -27,7 +27,7 @@ export const TemplateProjects = () => {
 				variant="light"
 			/>
 
-			<TemplateProjectsTabs />
+			<ProjectTemplatesTabs />
 		</Frame>
 	);
 };

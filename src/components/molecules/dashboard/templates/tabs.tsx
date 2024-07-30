@@ -11,11 +11,11 @@ import { fetchAllFilesContent, fetchFileContent } from "@src/utilities";
 import { useProjectStore, useToastStore } from "@store";
 
 import { Tab } from "@components/atoms";
-import { TemplateProjectCard } from "@components/organisms/dashboard";
+import { ProjectTemplateCard } from "@components/molecules/dashboard/templates";
 
 import { filesPerProject } from "@assets/templates";
 
-export const TemplateProjectsTabs = () => {
+export const ProjectTemplatesTabs = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
@@ -169,7 +169,7 @@ export const TemplateProjectsTabs = () => {
 			<div className="mt-4 grid grid-cols-auto-fit-305 gap-x-4 gap-y-5 pb-5 text-black">
 				{activeCategory
 					? activeCategory.cards.map((card, index) => (
-							<TemplateProjectCard
+							<ProjectTemplateCard
 								card={card}
 								category={activeCategory.name}
 								isCreating={isCreating}
