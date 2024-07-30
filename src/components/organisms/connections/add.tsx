@@ -22,6 +22,7 @@ import {
 	GithubIntegrationAddForm,
 	GoogleIntegrationAddForm,
 	HttpIntegrationAddForm,
+	JiraIntegrationAddForm,
 	OpenAiIntegrationAddForm,
 	SlackIntegrationAddForm,
 	TwilioIntegrationAddForm,
@@ -151,6 +152,7 @@ export const AddConnection = () => {
 		twilio: (
 			<TwilioIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
+		jira: <JiraIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
 	};
 
 	const selectedIntegrationComponent = selectedIntegration

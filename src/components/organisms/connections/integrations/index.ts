@@ -5,3 +5,4 @@ export { HttpIntegrationAddForm } from "@components/organisms/connections/integr
 export { GithubIntegrationAddForm } from "@components/organisms/connections/integrations/github";
 export { SlackIntegrationAddForm } from "@components/organisms/connections/integrations/slack";
 export { TwilioIntegrationAddForm } from "@components/organisms/connections/integrations/twilio";
+export { JiraIntegrationAddForm } from "@components/organisms/connections/integrations/jira";

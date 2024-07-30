@@ -98,5 +98,18 @@
 			"aboutAuth": "Auth tokens and API keys",
 			"apiOverview": "API keys overview"
 		}
+	},
+	"jira": {
+		"clickButtonAuthorize": "Click the button below to authorize the Atlassian AutoKitteh app",
+		"placeholders": {
+			"baseUrl": "Base URL",
+			"pat": "API Token / Personal Access Token (PAT)",
+			"email": "User email address (API tokens only, not PATs!)"
+		},
+		"information": {
+			"oauth": "Jira Cloud platform: OAuth 2.0 (3LO) apps",
+			"apiTokens": "Jira Cloud: API tokens",
+			"accessTokens": "Jira Data Center: Personal Access Tokens"
+		}
 	}
 }

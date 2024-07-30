@@ -9,6 +9,7 @@ export {
 	httpBearerIntegrationSchema,
 	twilioTokenIntegrationSchema,
 	twilioApiKeyIntegrationSchema,
+	jiraIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { defaultTriggerSchema, schedulerTriggerSchema } from "@validations/newTrigger.schema";

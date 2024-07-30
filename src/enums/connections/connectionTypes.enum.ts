@@ -23,3 +23,8 @@ export enum TwilioConnectionType {
 	AuthToken = "oauth",
 	ApiKey = "apiKey",
 }
+
+export enum JiraConnectionType {
+	Oauth = "oauth",
+	ApiToken = "apiToken",
+}

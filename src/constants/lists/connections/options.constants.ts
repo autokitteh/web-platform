@@ -2,6 +2,7 @@ import {
 	GithubConnectionType,
 	GoogleConnectionType,
 	HttpConnectionType,
+	JiraConnectionType,
 	SlackConnectionType,
 	TwilioConnectionType,
 } from "@enums";
@@ -16,6 +17,7 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "HTTP", value: Integrations.http },
 	{ disabled: false, label: "Twilio", value: Integrations.twilio },
 	{ disabled: false, label: "Gmail", value: Integrations.gmail },
+	{ disabled: false, label: "Jira", value: Integrations.jira },
 	{ disabled: false, label: "Google (All APIs)", value: Integrations.google },
 	{ disabled: false, label: "Google Sheets", value: Integrations.googleSheets },
 	{ disabled: false, label: "Google Calendar", value: Integrations.googleCalendar },
@@ -72,4 +74,9 @@ export const selectIntegrationHttp: SelectOption[] = [
 export const selectIntegrationTwilio: SelectOption[] = [
 	{ label: "Auth Token", value: TwilioConnectionType.AuthToken },
 	{ label: "API Key", value: TwilioConnectionType.ApiKey },
+];
+
+export const selectIntegrationJira: SelectOption[] = [
+	{ label: "User API Token / PAT", value: JiraConnectionType.ApiToken },
+	{ label: "OAuth 2.0 App", value: JiraConnectionType.Oauth },
 ];
