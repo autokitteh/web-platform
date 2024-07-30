@@ -45,7 +45,7 @@ module.exports = {
         'auto-fit-305': 'repeat(auto-fit, minmax(290px, 1fr))',
       },
       boxShadow: {
-        'template-card': '0px 9px 27px -3px rgba(0, 0, 0, 0.11)',
+        'card': '0px 9px 27px -3px rgba(0, 0, 0, 0.11)',
       },
     },
     screens: {
