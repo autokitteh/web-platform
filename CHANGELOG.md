@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/autokitteh/web-platform/compare/v1.24.1...v1.25.0) (2024-07-30)
+
+
+### Features
+
+* add http integration ([#223](https://github.com/autokitteh/web-platform/issues/223)) ([fee4d6a](https://github.com/autokitteh/web-platform/commit/fee4d6a2d7e3e39975da5648eb058124cf6bb48e))
+
 ## [1.24.1](https://github.com/autokitteh/web-platform/compare/v1.24.0...v1.24.1) (2024-07-30)
 
 
