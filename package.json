@@ -1,31 +1,31 @@
 {
-	"name": "autokitteh",
-	"private": true,
-	"type": "module",
-	"version": "1.29.1",
-	"scripts": {
-		"build": "vite build",
-		"build-storybook": "storybook build",
-		"build:prod": "NODE_ENV=production npm run build",
-		"check-format:staged": "prettier . --check",
-		"dev": "npm run validate-env && vite",
-		"fix-format:staged": "prettier . --write",
-		"lint": "eslint . --ext ts,tsx,json --report-unused-disable-directives --max-warnings=0",
-		"lint-fix": "npm run lint -- --fix",
-		"postinstall": "husky",
-		"prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
-		"preview": "vite preview",
-		"storybook": "storybook dev",
-		"tailwind-config-viewer": "tailwind-config-viewer -o --config tailwind.config.cjs",
-		"test:e2e": "playwright test",
-		"test:e2e:report": "npx playwright show-report",
-		"test:e2e:ui": "npx playwright test --ui",
-		"tsc": "tsc",
-		"type-check": "tsc --pretty --noEmit",
-		"validate-env": "node ./validateEnv",
-		"generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts"
-	},
-	"dependencies": {
+    "name": "autokitteh",
+    "private": true,
+    "type": "module",
+    "version": "1.29.1",
+    "scripts": {
+        "build": "vite build",
+        "build-storybook": "storybook build",
+        "build:prod": "NODE_ENV=production npm run build",
+        "check-format:staged": "prettier . --check",
+        "dev": "npm run validate-env && vite",
+        "fix-format:staged": "prettier . --write",
+        "generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts",
+        "lint": "eslint . --ext ts,tsx,json --report-unused-disable-directives --max-warnings=0",
+        "lint-fix": "npm run lint -- --fix",
+        "postinstall": "husky",
+        "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky; fi",
+        "preview": "vite preview",
+        "storybook": "storybook dev",
+        "tailwind-config-viewer": "tailwind-config-viewer -o --config tailwind.config.cjs",
+        "test:e2e": "playwright test",
+        "test:e2e:report": "npx playwright show-report",
+        "test:e2e:ui": "npx playwright test --ui",
+        "tsc": "tsc",
+        "type-check": "tsc --pretty --noEmit",
+        "validate-env": "node ./validateEnv"
+    },
+    "dependencies": {
         "@bufbuild/protobuf": "^1.10.0",
         "@descope/react-sdk": "^2.0.60",
         "@estruyf/github-actions-reporter": "^1.8.0",
@@ -115,10 +115,10 @@
         "vite-plugin-static-copy": "^1.0.6",
         "vite-plugin-svgr": "^4.2.0"
     },
-	"engines" : {
-    "npm" : ">=10.6.0",
-    "node" : ">=21.7.1"
-	},
+    "engines": {
+        "node": ">=21.7.1",
+        "npm": ">=10.6.0"
+    },
     "lint-staged": {
         "*.{ts,tsx,js}": [
             "npm run lint"
