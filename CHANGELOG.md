@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/autokitteh/web-platform/compare/v1.26.2...v1.27.0) (2024-07-30)
+
+
+### Features
+
+* project templates ([#232](https://github.com/autokitteh/web-platform/issues/232)) ([e5fda16](https://github.com/autokitteh/web-platform/commit/e5fda16ca93386b2b37af3d00e2c16aa9660cc9b))
+
 ## [1.26.2](https://github.com/autokitteh/web-platform/compare/v1.26.1...v1.26.2) (2024-07-30)
 
 
