@@ -1,3 +1,10 @@
+## [1.26.2](https://github.com/autokitteh/web-platform/compare/v1.26.1...v1.26.2) (2024-07-30)
+
+
+### Bug Fixes
+
+* change lint-staged commands to avoid conflicts between eslint and prettier ([#236](https://github.com/autokitteh/web-platform/issues/236)) ([6ea04f0](https://github.com/autokitteh/web-platform/commit/6ea04f0a677fcd2ccbbdc229273a55648fdff7b4))
+
 ## [1.26.1](https://github.com/autokitteh/web-platform/compare/v1.26.0...v1.26.1) (2024-07-30)
 
 
