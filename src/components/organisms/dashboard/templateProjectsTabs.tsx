@@ -124,8 +124,6 @@ export const TemplateProjectsTabs = () => {
 					message: t("projectCreationFailedExtended", { error: t("projectNameExist") }),
 					type: "error",
 				});
-
-				LoggerService.error(namespaces.projectService, `${t("projectCreationFailedExtended", { error })}`);
 			}
 
 			setProjectId(projectId!);

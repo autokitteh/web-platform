@@ -208,12 +208,12 @@ export class ProjectsService {
 		try {
 			const { projectIds } = await manifestApplyClient.apply({ manifest: manifestYaml, path: "path" });
 			if (!projectIds || !projectIds.length) {
-				return { data: undefined, error: new Error("No projectIds returned") };
+				return { data: undefined, error: new Error(i18n.t("projectNameExist", { ns: "services" })) };
 			}
 
 			return { data: projectIds[0], error: undefined };
 		} catch (error: unknown) {
-			LoggerService.error(namespaces.manifestService, (error as Error).message);
+			LoggerService.error(namespaces.projectService, `${i18n.t("projectCreationFailedExtended", { error })}`);
 
 			return { data: undefined, error };
 		}
