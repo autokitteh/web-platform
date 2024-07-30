@@ -58,7 +58,22 @@ export const AddConnection = () => {
 	const onSubmit = async () => {
 		if (!connectionId) {
 			try {
-				const { data } = await ConnectionService.create(projectId!, selectedIntegration.value, connectionName!);
+				const { data, error } = await ConnectionService.create(
+					projectId!,
+					selectedIntegration.value,
+					connectionName!
+				);
+
+				if (error) {
+					addToast({
+						id: Date.now().toString(),
+						message: (error as Error).message,
+						type: "error",
+					});
+
+					return;
+				}
+
 				setConnectionId(data);
 			} catch (error) {
 				const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
