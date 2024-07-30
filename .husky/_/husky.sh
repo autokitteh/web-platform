@@ -1,7 +1,9 @@
 #!/bin/sh
 if [ -z "$husky_skip_init" ]; then
-  debug() {
-    [ "$HUSKY_DEBUG" = "1" ] && echo "husky:debug $1"
+  debug () {
+    if [ "$HUSKY_DEBUG" = "1" ]; then
+      echo "husky (debug) - $1"
+    fi
   }
 
   readonly hook_name="$(basename "$0")"
@@ -13,7 +15,7 @@ if [ -z "$husky_skip_init" ]; then
   fi
 
   if [ -f ~/.huskyrc ]; then
-    debug "source ~/.huskyrc"
+    debug "sourcing ~/.huskyrc"
     . ~/.huskyrc
   fi
 
@@ -22,7 +24,7 @@ if [ -z "$husky_skip_init" ]; then
   exitCode="$?"
 
   if [ $exitCode != 0 ]; then
-    echo "husky - $hook_name hook exited with code $exitCode (error)" >&2
+    echo "husky - $hook_name hook exited with code $exitCode (error)"
   fi
 
   exit $exitCode
