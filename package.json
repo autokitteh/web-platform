@@ -133,9 +133,9 @@
 		"@rollup/rollup-linux-x64-musl": "^4.19.1"
 	},
 	"lint-staged": {
-		"*.{ts,tsx,json}": [
-			"eslint --cache --fix",
-			"prettier --write"
+		"*.{ts,tsx,js}": [
+			"npm run lint",
+			"npm run type-check"
 		]
 	}
 }
