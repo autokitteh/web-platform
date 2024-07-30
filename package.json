@@ -17,7 +17,6 @@
 		"preview": "vite preview",
 		"storybook": "storybook dev",
 		"tailwind-config-viewer": "tailwind-config-viewer -o --config tailwind.config.cjs",
-		"test": "vitest",
 		"test:e2e": "playwright test",
 		"test:e2e:report": "npx playwright show-report",
 		"test:e2e:ui": "npx playwright test --ui",
@@ -129,8 +128,7 @@
 		"typescript": "^5.5.4",
 		"vite": "^5.3.5",
 		"vite-plugin-static-copy": "^1.0.6",
-		"vite-plugin-svgr": "^4.2.0",
-		"vitest": "^2.0.4"
+		"vite-plugin-svgr": "^4.2.0"
 	},
 	"overrides": {
 		"vite": {
