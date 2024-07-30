@@ -52,7 +52,7 @@ export const TemplateProjectCard = ({
 				onClick={onCreateClick}
 				title={t("createProject")}
 			>
-				{!isCreating ? (
+				{isCreating ? (
 					<div className="flex h-4 w-4 items-center">
 						<Loader size="sm" />
 					</div>
