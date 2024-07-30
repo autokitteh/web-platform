@@ -24,7 +24,7 @@
 		"tsc": "tsc",
 		"type-check": "tsc --pretty --noEmit",
 		"validate-env": "node ./validateEnv",
-		"generate-indexes": "node generateIndexes.cjs"
+		"generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts"
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.7.2",

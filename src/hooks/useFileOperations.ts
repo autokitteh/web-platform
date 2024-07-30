@@ -1,7 +1,5 @@
 import { useCallback } from "react";
 
-// import { useNavigate } from "react-router-dom";
-
 import IndexedDBService from "@services/indexedDb.service";
 import { ProjectsService } from "@services/projects.service";
 
@@ -51,6 +49,16 @@ export function useFileOperations(projectId: string) {
 		[projectId]
 	);
 
+	const saveAllFiles = useCallback(
+		async (filesUint8ArrayContent: Record<string, Uint8Array>) => {
+			for (const [name, content] of Object.entries(filesUint8ArrayContent)) {
+				await dbService.put(name, content);
+			}
+			await ProjectsService.setResources(projectId, filesUint8ArrayContent);
+		},
+		[projectId]
+	);
+
 	const deleteFile = useCallback(
 		async (name: string) => {
 			await dbService.delete(name);
@@ -79,6 +87,7 @@ export function useFileOperations(projectId: string) {
 	return {
 		fetchFiles,
 		saveFile,
+		saveAllFiles,
 		deleteFile,
 		fetchResources,
 		openProjectId,
@@ -90,22 +99,3 @@ export function useFileOperations(projectId: string) {
 		addFile,
 	};
 }
-
-export const useSaveFilesToProject = (projectId: string) => {
-	// const navigate = useNavigate();
-	// const { saveFile } = useFileOperations(projectId);
-	// const saveFiles = async (assetDirectory: string) => {
-	// 	const directory = assetDirectory as keyof FilesType;
-	// 	const filesInDirectory = files[directory];
-	// 	if (filesInDirectory) {
-	// 		for (const fileName in filesInDirectory) {
-	// 			const setExtension = fileName.replace(/_(?=[^_]*$)/, ".");
-	// 			await saveFile(setExtension, filesInDirectory[fileName]);
-	// 		}
-	// 	}
-	// 	navigate(`/projects/${projectId}/connections`);
-	// };
-	// return saveFiles;
-
-	return projectId;
-};
