@@ -3,7 +3,7 @@ import React from "react";
 import { DashboardTopbar, ProjectsTable } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
 
-export const Dashboard: React.FC = () => {
+export const Dashboard = () => {
 	return (
 		<div className="w-full">
 			<div className="flex h-full gap-7">
