@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/autokitteh/web-platform/compare/v1.25.0...v1.26.0) (2024-07-30)
+
+
+### Features
+
+* add twilio integration ([#227](https://github.com/autokitteh/web-platform/issues/227)) ([60f51df](https://github.com/autokitteh/web-platform/commit/60f51dfc76135345062a7c6a4178e2fcd98bde58))
+
 # [1.25.0](https://github.com/autokitteh/web-platform/compare/v1.24.1...v1.25.0) (2024-07-30)
 
 
