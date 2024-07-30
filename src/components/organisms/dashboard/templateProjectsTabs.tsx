@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ export const TemplateProjectsTabs = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
+	const [isCreating, setIsCreating] = useState<boolean>(false);
 
 	const activeCategory = useMemo(
 		() => templateProjectsCategories.find((category) => category.name === activeTab),
@@ -32,14 +33,15 @@ export const TemplateProjectsTabs = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { getProjectsList } = useProjectStore();
 
-	const [projectId, setProjectId] = React.useState<string | null>(null);
-	const [projectTemplateDirectory, setProjectTemplateDirectory] = React.useState<string>();
+	const [projectId, setProjectId] = useState<string | null>(null);
+	const [projectTemplateDirectory, setProjectTemplateDirectory] = useState<string>();
 	const navigate = useNavigate();
 
 	const { saveAllFiles } = useFileOperations(projectId || "");
 	const { createProjectFromManifest } = useProjectStore();
 
 	const getAndSaveFiles = async () => {
+		setIsCreating(true);
 		if (!projectTemplateDirectory) {
 			addToast({
 				id: Date.now().toString(),
@@ -51,6 +53,7 @@ export const TemplateProjectsTabs = () => {
 				namespaces.manifestService,
 				`${t("projectCreationFailedExtended", { error: t("projectFilesNotFound") })}`
 			);
+			setIsCreating(false);
 
 			return;
 		}
@@ -61,6 +64,7 @@ export const TemplateProjectsTabs = () => {
 				message: t("projectCreationFailed"),
 				type: "error",
 			});
+			setIsCreating(false);
 
 			return;
 		}
@@ -77,11 +81,12 @@ export const TemplateProjectsTabs = () => {
 			message: t("projectCreatedSuccessfully"),
 			type: "success",
 		});
+		setIsCreating(false);
 
 		navigate(`/projects/${projectId}/connections`);
 	};
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (projectId) {
 			getAndSaveFiles();
 		}
@@ -89,6 +94,7 @@ export const TemplateProjectsTabs = () => {
 	}, [projectId]);
 
 	const createProjectFromAsset = async (assetDirectory: string) => {
+		setIsCreating(true);
 		try {
 			const manifestURL = `/assets/templates/${assetDirectory}/autokitteh.yaml`;
 			const manifestData = await fetchFileContent(manifestURL);
@@ -124,12 +130,14 @@ export const TemplateProjectsTabs = () => {
 
 			setProjectId(projectId!);
 			getProjectsList();
+			setIsCreating(false);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
 				message: t("projectCreationFailed"),
 				type: "error",
 			});
+			setIsCreating(false);
 
 			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
 		}
@@ -160,12 +168,13 @@ export const TemplateProjectsTabs = () => {
 				</div>
 			</div>
 
-			<div className="mt-4 grid grid-cols-auto-fit-305 gap-x-4 gap-y-5 text-black">
+			<div className="mt-4 grid grid-cols-auto-fit-305 gap-x-4 gap-y-5 pb-5 text-black">
 				{activeCategory
 					? activeCategory.cards.map((card, index) => (
 							<TemplateProjectCard
 								card={card}
 								category={activeCategory.name}
+								isCreating={isCreating}
 								key={index}
 								onCreateClick={() => createProjectFromAsset(card.asset_directory)}
 							/>

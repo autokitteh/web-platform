@@ -4,17 +4,19 @@ import { useTranslation } from "react-i18next";
 
 import { TemplateCardType } from "@type/components";
 
-import { Button, IconSvg, Status } from "@components/atoms";
+import { Button, IconSvg, Loader, Status } from "@components/atoms";
 
 import { PipeCircleIcon, PlusIcon } from "@assets/image/icons";
 
 export const TemplateProjectCard = ({
 	card,
 	category,
+	isCreating,
 	onCreateClick,
 }: {
 	card: TemplateCardType;
 	category: string;
+	isCreating: boolean;
 	onCreateClick: () => void;
 }) => {
 	const { t } = useTranslation(["manifest", "templates"]);
@@ -50,7 +52,13 @@ export const TemplateProjectCard = ({
 				onClick={onCreateClick}
 				title={t("createProject")}
 			>
-				<IconSvg size="md" src={PlusIcon} />
+				{!isCreating ? (
+					<div className="flex h-4 w-4 items-center">
+						<Loader size="sm" />
+					</div>
+				) : (
+					<IconSvg size="md" src={PlusIcon} />
+				)}
 			</Button>
 		</div>
 	);
