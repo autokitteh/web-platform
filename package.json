@@ -132,7 +132,5 @@
         "vite": {
             "rollup": "npm:@rollup/wasm-node"
         }
-    },
-    "type": "module",
-    "version": "1.28.0"
+    }
 }
