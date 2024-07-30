@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/autokitteh/web-platform/compare/v1.24.0...v1.24.1) (2024-07-30)
+
+
+### Bug Fixes
+
+* docker setup on mac and linux machines ([#234](https://github.com/autokitteh/web-platform/issues/234)) ([82a42eb](https://github.com/autokitteh/web-platform/commit/82a42ebcb8100d136ca2504547af45b14254295d))
+
 # [1.24.0](https://github.com/autokitteh/web-platform/compare/v1.23.0...v1.24.0) (2024-07-29)
 
 
