@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { baseUrl, hostUrl } from "@constants";
+import { apiBaseUrl, baseUrl } from "@constants";
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 	axios.create({
@@ -11,7 +11,7 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 		withCredentials,
 	});
 
-const httpClient = createAxiosInstance(hostUrl, import.meta.env.VITE_AUTH_ENABLED === "true");
+const httpClient = createAxiosInstance(apiBaseUrl, import.meta.env.VITE_AUTH_ENABLED === "true");
 const selfRequestsClient = createAxiosInstance(baseUrl);
 
 export const HttpService = httpClient;

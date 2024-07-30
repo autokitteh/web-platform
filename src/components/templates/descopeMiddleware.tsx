@@ -4,7 +4,7 @@ import { Descope, useDescope } from "@descope/react-sdk";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 
-import { hostUrl } from "@constants";
+import { apiBaseUrl } from "@constants";
 import { useUserStore } from "@store/useUserStore";
 
 import { useProjectStore, useToastStore } from "@store";
@@ -35,7 +35,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
 			try {
-				await axios.get(`${hostUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
+				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
 					withCredentials: true,
 				});
 				await getLoggedInUser();
