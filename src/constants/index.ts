@@ -1,4 +1,4 @@
-export { baseUrl, apiBaseUrl } from "@constants/api.constants";
+export { apiBaseUrl } from "@constants/api.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export {
 	defaultSessionsVisiblePageSize,

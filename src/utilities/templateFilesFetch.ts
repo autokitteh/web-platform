@@ -1,8 +1,8 @@
-import { SelfRequestsService } from "@services/http.service";
+import { LocalDomainHttpService } from "@services/http.service";
 
 export const fetchFileContent = async (fileUrl: string): Promise<string | null> => {
 	try {
-		const response = await SelfRequestsService.get(fileUrl, { responseType: "text" });
+		const response = await LocalDomainHttpService.get(fileUrl, { responseType: "text" });
 
 		return response.data;
 	} catch (error) {

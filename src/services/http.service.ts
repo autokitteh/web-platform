@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { apiBaseUrl, baseUrl } from "@constants";
+import { apiBaseUrl } from "@constants";
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 	axios.create({
@@ -11,8 +11,11 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 		withCredentials,
 	});
 
+// Axios instance for API requests
 const httpClient = createAxiosInstance(apiBaseUrl, import.meta.env.VITE_AUTH_ENABLED === "true");
-const selfRequestsClient = createAxiosInstance(baseUrl);
+
+// Axios instance for local domain requests (same domain as the app)
+const localDomainHttpClient = createAxiosInstance("/");
 
 export const HttpService = httpClient;
-export const SelfRequestsService = selfRequestsClient;
+export const LocalDomainHttpService = localDomainHttpClient;
