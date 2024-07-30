@@ -222,7 +222,7 @@ module.exports = {
 	},
 	"overrides": [
 		{
-			"files": ["*.json"],
+			"files": ['*.ts', '*.tsx', '*.json'],
 			"rules": {
 				"no-unused-expressions": "off"
 			}
