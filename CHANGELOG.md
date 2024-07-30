@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/autokitteh/web-platform/compare/v1.27.0...v1.28.0) (2024-07-30)
+
+
+### Features
+
+* add jira integration ([#237](https://github.com/autokitteh/web-platform/issues/237)) ([819ebc2](https://github.com/autokitteh/web-platform/commit/819ebc2e12fed5e3480117c900eeb9caa2e09f09))
+
 # [1.27.0](https://github.com/autokitteh/web-platform/compare/v1.26.2...v1.27.0) (2024-07-30)
 
 
