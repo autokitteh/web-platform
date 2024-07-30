@@ -27,7 +27,10 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 	const { saveAllFiles } = useFileOperations(projectId || "");
 
 	const getAndSaveFiles = async () => {
-		const filesData = await fetchAllFilesContent(card.asset_directory, filesPerProject[card.asset_directory]);
+		const filesData = await fetchAllFilesContent(
+			`/assets/templates/${card.asset_directory}/`,
+			filesPerProject[card.asset_directory]
+		);
 
 		if (projectId) {
 			await saveAllFiles(filesData);
