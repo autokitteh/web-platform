@@ -1,3 +1,10 @@
+## [1.28.1](https://github.com/autokitteh/web-platform/compare/v1.28.0...v1.28.1) (2024-07-30)
+
+
+### Bug Fixes
+
+* split http service to frontend requests and backend ([#241](https://github.com/autokitteh/web-platform/issues/241)) ([6b17c76](https://github.com/autokitteh/web-platform/commit/6b17c76f876b099db723380c5f1167da5cda61ca))
+
 # [1.28.0](https://github.com/autokitteh/web-platform/compare/v1.27.0...v1.28.0) (2024-07-30)
 
 
