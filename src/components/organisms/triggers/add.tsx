@@ -16,7 +16,7 @@ import { ErrorMessage, Input } from "@components/atoms";
 import { Select, TabFormHeader } from "@components/molecules";
 import { DefaultTriggerForm, TriggerSchedulerForm } from "@components/organisms/triggers";
 
-export const AddTrigger: React.FC = () => {
+export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isSaving, setIsSaving] = useState(false);
 	const [connections, setConnections] = useState<SelectOption[]>([]);
@@ -40,8 +40,8 @@ export const AddTrigger: React.FC = () => {
 	const childFormRef = useRef<ChildFormRef>(null);
 
 	const fetchConnections = async () => {
-		const { data: allConnections, error: allConnectionsError } = await ConnectionService.list();
-		if (!allConnections || !allConnections.length) {
+		const { data: allConnectionsPerCustomer, error: allConnectionsError } = await ConnectionService.list();
+		if (!allConnectionsPerCustomer || !allConnectionsPerCustomer.length) {
 			addToast({
 				id: Date.now().toString(),
 				message: tErrors("connectionCronNotFound", { ns: "services" }),
@@ -64,7 +64,7 @@ export const AddTrigger: React.FC = () => {
 
 			return;
 		}
-		const cronConnection = allConnections.find((item) => item.name === schedulerTriggerConnectionName);
+		const cronConnection = allConnectionsPerCustomer.find((item) => item.name === schedulerTriggerConnectionName);
 		if (!cronConnection) {
 			addToast({
 				id: Date.now().toString(),
@@ -80,8 +80,10 @@ export const AddTrigger: React.FC = () => {
 			value: cronConnection.connectionId,
 		};
 		setCronConnectionId(cronConnection.connectionId);
-		const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-		if (connectionsError || !connections) {
+		const { data: allConnectionsPerProject, error: connectionsError } = await ConnectionService.listByProjectId(
+			projectId!
+		);
+		if (connectionsError || !allConnectionsPerProject) {
 			addToast({
 				id: Date.now().toString(),
 				message: tErrors("connectionsFetchError"),
@@ -94,7 +96,7 @@ export const AddTrigger: React.FC = () => {
 
 			return;
 		}
-		const formattedConnections = connections.map((item) => ({
+		const formattedConnections = allConnectionsPerProject.map((item) => ({
 			label: item.name,
 			value: item.connectionId,
 		}));
