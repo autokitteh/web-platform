@@ -131,5 +131,8 @@
 	"optionalDependencies": {
 		"@rollup/rollup-linux-x64-gnu": "^4.19.1",
 		"@rollup/rollup-linux-x64-musl": "^4.19.1"
+	},
+	"lint-staged": {
+		"*.{ts,tsx,json}": ["eslint --cache --fix", "prettier --write"]
 	}
 }
