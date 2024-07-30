@@ -1,19 +1,21 @@
 import axios from "axios";
 
-import { baseUrl } from "@constants";
+import { apiBaseUrl } from "@constants";
 
-const httpClient = axios.create({
-	baseURL: baseUrl,
-	headers: {
-		"Content-Type": "application/x-www-form-urlencoded",
-	},
-	withCredentials: import.meta.env.VITE_AUTH_ENABLED === "true",
-});
+const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
+	axios.create({
+		baseURL: baseAddress,
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		},
+		withCredentials,
+	});
 
-export const HttpService = {
-	delete: httpClient.delete,
-	get: httpClient.get,
-	patch: httpClient.patch,
-	post: httpClient.post,
-	put: httpClient.put,
-};
+// Axios instance for API requests
+const httpClient = createAxiosInstance(apiBaseUrl, import.meta.env.VITE_AUTH_ENABLED === "true");
+
+// Axios instance for local domain requests (same domain as the app)
+const localDomainHttpClient = createAxiosInstance("/");
+
+export const HttpService = httpClient;
+export const LocalDomainHttpService = localDomainHttpClient;

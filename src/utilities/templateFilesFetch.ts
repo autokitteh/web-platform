@@ -1,8 +1,8 @@
-import { HttpService } from "@services/http.service";
+import { LocalDomainHttpService } from "@services/http.service";
 
 export const fetchFileContent = async (fileUrl: string): Promise<string | null> => {
 	try {
-		const response = await HttpService.get(fileUrl, { responseType: "text" });
+		const response = await LocalDomainHttpService.get(fileUrl, { responseType: "text" });
 
 		return response.data;
 	} catch (error) {
@@ -13,14 +13,14 @@ export const fetchFileContent = async (fileUrl: string): Promise<string | null> 
 };
 
 export const fetchAllFilesContent = async (
-	baseUrl: string,
+	folderUrl: string,
 	filesOfProject: string[]
 ): Promise<Record<string, Uint8Array>> => {
 	const filesContent: Record<string, Uint8Array> = {};
 	const nonYamlFiles = filesOfProject.filter((fileName) => !fileName.endsWith(".yaml"));
 
 	for (const fileName of nonYamlFiles) {
-		const fileUrl = `${baseUrl}${fileName}`;
+		const fileUrl = `${folderUrl}${fileName}`;
 		const content = await fetchFileContent(fileUrl);
 		if (content) {
 			filesContent[fileName] = new TextEncoder().encode(content);
