@@ -22,7 +22,7 @@
 		"test:e2e:report": "npx playwright show-report",
 		"test:e2e:ui": "npx playwright test --ui",
 		"tsc": "tsc",
-		"type-check": "tsc --pretty --noEmit",
+		"type-check": "npx tsc --pretty --noEmit",
 		"validate-env": "node ./validateEnv",
 		"generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts"
 	},
