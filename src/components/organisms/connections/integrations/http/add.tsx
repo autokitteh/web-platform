@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { baseUrl, namespaces } from "@constants";
+import { namespaces } from "@constants";
 import { infoHttpBasicLinks, infoHttpBearerLinks, selectIntegrationHttp } from "@constants/lists/connections";
 import { HttpConnectionType } from "@enums";
 import { SelectOption } from "@interfaces/components";
@@ -88,37 +88,36 @@ export const HttpIntegrationAddForm = ({
 		}
 	};
 
-	const handleHttpOAuth = async () => {
-		try {
-			window.open(`${baseUrl}/oauth/start/http?cid=${connectionId}&origin=web`, "_blank");
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
+	const onSubmit = () => {
+		if (connectionId) {
 			addToast({
 				id: Date.now().toString(),
-				message: tErrors("errorCreatingNewConnection"),
+				message: tErrors("connectionExists"),
 				type: "error",
 			});
+
 			LoggerService.error(
 				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: (error as Error).message })}`
+				`${tErrors("connectionExistsExtended", { connectionId })}`
 			);
-		}
-	};
 
-	const onSubmit = () => {
-		connectionId ? createConnection() : triggerParentFormSubmit();
+			return;
+		}
+
+		triggerParentFormSubmit();
 	};
 
 	const renderNoAuth = () => (
 		<Button
-			aria-label={t("buttons.startOAuthFlow")}
+			aria-label={t("buttons.saveConnection")}
 			className="ml-auto w-fit bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
 			disabled={isLoading}
 			onClick={triggerParentFormSubmit}
 		>
-			{t("buttons.startOAuthFlow")}
+			{t("buttons.saveConnection")}
 		</Button>
 	);
+
 	const renderBasic = () => (
 		<>
 			<div className="relative">
@@ -220,7 +219,7 @@ export const HttpIntegrationAddForm = ({
 
 		switch (selectedConnectionType?.value) {
 			case HttpConnectionType.NoAuth:
-				handleHttpOAuth();
+				navigate(`/projects/${projectId}/connections`);
 				break;
 
 			default:
