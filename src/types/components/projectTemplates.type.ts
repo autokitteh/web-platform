@@ -1,7 +1,7 @@
 import { FunctionComponent, SVGProps } from "react";
 
 export type TemplateCardType = {
-	asset_directory: string;
+	assetDirectory: string;
 	description: string;
 	integrations: Integration[];
 	title: string;

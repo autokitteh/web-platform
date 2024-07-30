@@ -174,7 +174,7 @@ export const ProjectTemplatesTabs = () => {
 								category={activeCategory.name}
 								isCreating={isCreating}
 								key={index}
-								onCreateClick={() => createProjectFromAsset(card.asset_directory)}
+								onCreateClick={() => createProjectFromAsset(card.assetDirectory)}
 							/>
 						))
 					: null}

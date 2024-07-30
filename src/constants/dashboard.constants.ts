@@ -28,7 +28,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SlackIcon, title: "Slack" },
 					{ icon: GoogleSheetsIcon, title: "Sheets" },
 				],
-				asset_directory: "aws_health_to_slack",
+				assetDirectory: "aws_health_to_slack",
 			},
 			{
 				title: "Slack notify on Confluence page created",
@@ -37,7 +37,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: ConfluenceIcon, title: "Confluence" },
 					{ icon: SlackIcon, title: "Slack" },
 				],
-				asset_directory: "confluence_to_slack",
+				assetDirectory: "confluence_to_slack",
 			},
 			{
 				title: "Create Jira Ticket on HTTP request",
@@ -46,7 +46,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: HttpIcon, title: "HTTP" },
 					{ icon: JiraIcon, title: "Jira" },
 				],
-				asset_directory: "create_jira_issue",
+				assetDirectory: "create_jira_issue",
 			},
 			{
 				title: "Create Jira ticket from form",
@@ -57,7 +57,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: HttpIcon, title: "HTTP" },
 					{ icon: JiraIcon, title: "Jira" },
 				],
-				asset_directory: "google_forms_to_jira",
+				assetDirectory: "google_forms_to_jira",
 			},
 			{
 				title: "JIRA Assignee From Google Calendar Workflow",
@@ -66,7 +66,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: JiraIcon, title: "Jira" },
 					{ icon: GoogleCalendarIcon, title: "Google Calendar" },
 				],
-				asset_directory: "jira_assignee_from_calendar",
+				assetDirectory: "jira_assignee_from_calendar",
 			},
 			{
 				title: "Create calendar due date event for Jira ticket",
@@ -75,7 +75,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GoogleCalendarIcon, title: "Google Calendar" },
 					{ icon: JiraIcon, title: "Jira" },
 				],
-				asset_directory: "jira_to_google_calendar",
+				assetDirectory: "jira_to_google_calendar",
 			},
 			{
 				title: "Pull Request Review Reminder (Purrr)",
@@ -85,7 +85,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GithubIcon, title: "GitHub" },
 					{ icon: SlackIcon, title: "Slack" },
 				],
-				asset_directory: "purrr",
+				assetDirectory: "purrr",
 			},
 			{
 				title: "Monitor PR until completion in Slack",
@@ -95,7 +95,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GithubIcon, title: "GitHub" },
 					{ icon: GoogleSheetsIcon, title: "Sheets" },
 				],
-				asset_directory: "reviewkitteh",
+				assetDirectory: "reviewkitteh",
 			},
 		],
 	},
@@ -111,7 +111,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SlackIcon, title: "Slack" },
 					{ icon: OpenAiIcon, title: "ChatGPT" },
 				],
-				asset_directory: "categorize_notify",
+				assetDirectory: "categorize_notify",
 			},
 		],
 	},
