@@ -69,7 +69,7 @@ i18n.on("initialized", () => {
 			text: i18n.t("slack.information.aboutMode", { ns: "integrations" }),
 		},
 	];
-	(infoSlackOAuthLinks = [
+	infoSlackOAuthLinks = [
 		{
 			url: "https://docs.autokitteh.com/config/integrations/slack",
 			text: i18n.t("slack.information.configSlack", { ns: "integrations" }),
@@ -78,14 +78,14 @@ i18n.on("initialized", () => {
 			url: "https://api.slack.com/authentication/oauth-v2",
 			text: i18n.t("slack.information.aboutInitSlack", { ns: "integrations" }),
 		},
-	]),
-		(infoHttpBasicLinks = [
-			{
-				url: "https://datatracker.ietf.org/doc/html/rfc7617",
-				text: i18n.t("http.information.rfc7617", { ns: "integrations" }),
-			},
-		]);
+	];
 
+	infoHttpBasicLinks = [
+		{
+			url: "https://datatracker.ietf.org/doc/html/rfc7617",
+			text: i18n.t("http.information.rfc7617", { ns: "integrations" }),
+		},
+	];
 	infoHttpBearerLinks = [
 		{
 			url: "https://datatracker.ietf.org/doc/html/rfc6750",

@@ -30,7 +30,7 @@ export const HttpIntegrationAddForm = ({
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
-	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
+	const [selectedConnectionType, setSelectedConnectionType] = useState<SingleValue<SelectOption>>();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const formSchema = useMemo(() => {
@@ -143,17 +143,13 @@ export const HttpIntegrationAddForm = ({
 		triggerParentFormSubmit();
 	};
 
-	const selectConnectionType = (option: SingleValue<SelectOption>) => {
-		setSelectedConnectionType(option as SelectOption);
-	};
-
 	return (
 		<FormProvider {...methods}>
 			<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex w-full flex-col gap-6">
 					<Select
 						aria-label={t("placeholders.selectConnectionType")}
-						onChange={selectConnectionType}
+						onChange={setSelectedConnectionType}
 						options={selectIntegrationHttp}
 						placeholder={t("placeholders.selectConnectionType")}
 						value={selectedConnectionType}
