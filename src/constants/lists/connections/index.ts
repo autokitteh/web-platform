@@ -18,4 +18,5 @@ export {
 	selectIntegrationAws,
 	selectIntegrationHttp,
 	selectIntegrationTwilio,
+	selectIntegrationJira,
 } from "@constants/lists/connections/options.constants";
