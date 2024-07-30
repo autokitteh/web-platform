@@ -6,6 +6,8 @@ let infoGoogleAccountLinks: { text: string; url: string }[] = [];
 let infoSlackModeLinks: { text: string; url: string }[] = [];
 let infoSlackOAuthLinks: { text: string; url: string }[] = [];
 let infoOpenAiLinks: { text: string; url: string }[] = [];
+let infoHttpBasicLinks: { text: string; url: string }[] = [];
+let infoHttpBearerLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -78,6 +80,19 @@ i18n.on("initialized", () => {
 		},
 	];
 
+	infoHttpBasicLinks = [
+		{
+			url: "https://datatracker.ietf.org/doc/html/rfc7617",
+			text: i18n.t("http.information.rfc7617", { ns: "integrations" }),
+		},
+	];
+	infoHttpBearerLinks = [
+		{
+			url: "https://datatracker.ietf.org/doc/html/rfc6750",
+			text: i18n.t("http.information.rfc6750", { ns: "integrations" }),
+		},
+	];
+
 	infoOpenAiLinks = [
 		{
 			url: "https://platform.openai.com/",
@@ -97,4 +112,6 @@ export {
 	infoSlackModeLinks,
 	infoSlackOAuthLinks,
 	infoOpenAiLinks,
+	infoHttpBasicLinks,
+	infoHttpBearerLinks,
 };

@@ -5,6 +5,8 @@ export {
 	infoSlackModeLinks,
 	infoSlackOAuthLinks,
 	infoOpenAiLinks,
+	infoHttpBasicLinks,
+	infoHttpBearerLinks,
 } from "@constants/lists/connections/integrationInfoLinks.constants";
 export {
 	githubIntegrationAuthMethods,
@@ -13,4 +15,5 @@ export {
 	triggerTypes,
 	selectIntegrationSlack,
 	selectIntegrationAws,
+	selectIntegrationHttp,
 } from "@constants/lists/connections/options.constants";

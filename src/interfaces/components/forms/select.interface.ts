@@ -10,7 +10,7 @@ export interface SelectProps {
 	onChange: (value: SingleValue<SelectOption>) => void;
 	options: SelectOption[];
 	placeholder?: string;
-	value?: SelectOption;
+	value?: SelectOption | null;
 	variant?: ColorSchemes;
 	disabled?: boolean;
 }

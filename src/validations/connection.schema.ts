@@ -34,3 +34,11 @@ export const awsIntegrationSchema = z.object({
 export const openAiIntegrationSchema = z.object({
 	key: z.string().min(5, "Key is required"),
 });
+
+export const httpBasicIntegrationSchema = z.object({
+	username: z.string().min(1, "Username is required"),
+	password: z.string().min(1, "Password is required"),
+});
+export const httpBearerIntegrationSchema = z.object({
+	token: z.string().min(1, "Personal Access Token is required"),
+});
