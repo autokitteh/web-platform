@@ -1,6 +1,0 @@
-{
-    "projectCreatedSuccessfully": "Project created successfully",
-    "projectCreationFailed": "Project creation failed",
-    "projectCreationFailedExtended": "Project creation failed, error: {{error}}",
-    "projectNameExist": "Project name already exists"
-}

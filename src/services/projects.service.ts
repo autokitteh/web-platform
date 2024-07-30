@@ -1,7 +1,7 @@
 import i18n from "i18next";
 
 import { SetResourcesResponse } from "@ak-proto-ts/projects/v1/svc_pb";
-import { projectsClient } from "@api/grpc/clients.grpc.api";
+import { manifestApplyClient, projectsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertErrorProtoToModel, convertProjectProtoToModel } from "@models";
 import { DeploymentsService, EnvironmentsService, LoggerService } from "@services";
@@ -199,6 +199,21 @@ export class ProjectsService {
 			return { data: undefined, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.projectService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async createFromManifest(manifestYaml: string): Promise<ServiceResponse<string>> {
+		try {
+			const { projectIds } = await manifestApplyClient.apply({ manifest: manifestYaml, path: "path" });
+			if (!projectIds || !projectIds.length) {
+				return { data: undefined, error: new Error("No projectIds returned") };
+			}
+
+			return { data: projectIds[0], error: undefined };
+		} catch (error: unknown) {
+			LoggerService.error(namespaces.manifestService, (error as Error).message);
 
 			return { data: undefined, error };
 		}

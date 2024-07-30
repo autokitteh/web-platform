@@ -1,89 +1,23 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
-import { namespaces } from "@constants/index";
-import { HttpService, LoggerService } from "@services/index";
-import { ManifestService } from "@services/manifest.service";
-import { useFileOperations } from "@src/hooks";
-import { fetchAllFilesContent } from "@src/utilities";
 import { TemplateCardType } from "@type/components";
-
-import { useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Status } from "@components/atoms";
 
 import { PipeCircleIcon, PlusIcon } from "@assets/image/icons";
-import { filesPerProject } from "@assets/templates";
 
-export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType; category: string }) => {
-	const addToast = useToastStore((state) => state.addToast);
+export const TemplateProjectCard = ({
+	card,
+	category,
+	onCreateClick,
+}: {
+	card: TemplateCardType;
+	category: string;
+	onCreateClick: () => void;
+}) => {
 	const { t } = useTranslation(["manifest", "templates"]);
-	const { getProjectsList } = useProjectStore();
-	const [projectId, setProjectId] = React.useState<string | null>(null);
-	const navigate = useNavigate();
-
-	const { saveAllFiles } = useFileOperations(projectId || "");
-
-	const getAndSaveFiles = async () => {
-		const filesData = await fetchAllFilesContent(
-			`/assets/templates/${card.asset_directory}/`,
-			filesPerProject[card.asset_directory]
-		);
-
-		if (projectId) {
-			await saveAllFiles(filesData);
-			navigate(`/projects/${projectId}/connections`);
-		}
-	};
-
-	React.useEffect(() => {
-		if (projectId) {
-			getAndSaveFiles();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
-
-	const createProjectFromAsset = async () => {
-		try {
-			const manifestURL = `/assets/templates/${card.asset_directory}/autokitteh.yaml`;
-			const { data: projectYamlManifest } = await HttpService.get(manifestURL, {
-				responseType: "text",
-			});
-
-			const { data: newProjectId, error } = await ManifestService.applyManifest(projectYamlManifest);
-			if (error) {
-				addToast({
-					id: Date.now().toString(),
-					message: t("projectCreationFailedExtended", { error: t("projectNameExist") }),
-					type: "error",
-				});
-
-				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
-
-				return;
-			}
-
-			const successMessage = t("projectCreatedSuccessfully");
-			addToast({
-				id: Date.now().toString(),
-				message: successMessage,
-				type: "success",
-			});
-
-			setProjectId(newProjectId!);
-			getProjectsList();
-		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: t("projectCreationFailed"),
-				type: "error",
-			});
-
-			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
-		}
-	};
 
 	return (
 		<div className="relative flex flex-col rounded-md border border-gray-600 bg-white p-5 pr-3.5 shadow-community-card">
@@ -113,7 +47,7 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 
 			<Button
 				className="border-1 absolute bottom-2 right-2 rounded-full border border-solid border-black p-1 hover:bg-white"
-				onClick={createProjectFromAsset}
+				onClick={onCreateClick}
 				title={t("createProject")}
 			>
 				<IconSvg size="md" src={PlusIcon} />

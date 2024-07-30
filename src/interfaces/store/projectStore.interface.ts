@@ -6,6 +6,7 @@ export interface ProjectStore {
 	deleteProject: (projectId: string) => ServiceResponse<undefined>;
 	getProject: (projectId: string) => ServiceResponse<Project>;
 	getProjectsList: () => ServiceResponse<Project[]>;
+	createProjectFromManifest: (manifest: string) => ServiceResponse<string>;
 	projectsList: Project[];
 	renameProject: (projectId: string, projectName: string) => void;
 	reset: () => void;

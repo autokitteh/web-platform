@@ -1,11 +1,23 @@
 import React, { useCallback, useMemo, useState } from "react";
 
-import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+
+import { defaultTemplateProjectCategory, namespaces, templateProjectsCategories } from "@constants";
+import { LoggerService } from "@services";
+import { useFileOperations } from "@src/hooks";
+import { fetchAllFilesContent, fetchFileContent } from "@src/utilities";
+
+import { useProjectStore, useToastStore } from "@store";
 
 import { Tab } from "@components/atoms";
 import { TemplateProjectCard } from "@components/organisms/dashboard";
 
+import { filesPerProject } from "@assets/templates";
+
 export const TemplateProjectsTabs = () => {
+	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
+
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
 
 	const activeCategory = useMemo(
@@ -16,6 +28,112 @@ export const TemplateProjectsTabs = () => {
 	const handleTabClick = useCallback((category: string) => {
 		setActiveTab(category);
 	}, []);
+
+	const addToast = useToastStore((state) => state.addToast);
+	const { getProjectsList } = useProjectStore();
+
+	const [projectId, setProjectId] = React.useState<string | null>(null);
+	const [projectTemplateDirectory, setProjectTemplateDirectory] = React.useState<string>();
+	const navigate = useNavigate();
+
+	const { saveAllFiles } = useFileOperations(projectId || "");
+	const { createProjectFromManifest } = useProjectStore();
+
+	const getAndSaveFiles = async () => {
+		if (!projectTemplateDirectory) {
+			addToast({
+				id: Date.now().toString(),
+				message: t("projectCreationFailed"),
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.manifestService,
+				`${t("projectCreationFailedExtended", { error: t("projectFilesNotFound") })}`
+			);
+
+			return;
+		}
+
+		if (!projectId) {
+			addToast({
+				id: Date.now().toString(),
+				message: t("projectCreationFailed"),
+				type: "error",
+			});
+
+			return;
+		}
+
+		const filesData = await fetchAllFilesContent(
+			`/assets/templates/${projectTemplateDirectory}/`,
+			filesPerProject[projectTemplateDirectory!]
+		);
+
+		await saveAllFiles(filesData);
+
+		addToast({
+			id: Date.now().toString(),
+			message: t("projectCreatedSuccessfully"),
+			type: "success",
+		});
+
+		navigate(`/projects/${projectId}/connections`);
+	};
+
+	React.useEffect(() => {
+		if (projectId) {
+			getAndSaveFiles();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
+	const createProjectFromAsset = async (assetDirectory: string) => {
+		try {
+			const manifestURL = `/assets/templates/${assetDirectory}/autokitteh.yaml`;
+			const manifestData = await fetchFileContent(manifestURL);
+
+			if (!manifestData) {
+				addToast({
+					id: Date.now().toString(),
+					message: t("projectCreationFailed"),
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.manifestService,
+					`${t("projectCreationFailedExtended", { error: t("projectTemplateNotFound") })}`
+				);
+
+				return;
+			}
+
+			setProjectTemplateDirectory(assetDirectory);
+
+			const { data: projectId, error } = await createProjectFromManifest(manifestData);
+
+			if (error) {
+				addToast({
+					id: Date.now().toString(),
+					message: t("projectCreationFailedExtended", { error: t("projectNameExist") }),
+					type: "error",
+				});
+
+				LoggerService.error(namespaces.projectService, `${t("projectCreationFailedExtended", { error })}`);
+			}
+
+			setProjectId(projectId!);
+			getProjectsList();
+		} catch (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: t("projectCreationFailed"),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+		}
+	};
 
 	return (
 		<div className="flex h-full flex-1 flex-col">
@@ -45,7 +163,12 @@ export const TemplateProjectsTabs = () => {
 			<div className="mt-4 grid grid-cols-auto-fit-305 gap-x-4 gap-y-5 text-black">
 				{activeCategory
 					? activeCategory.cards.map((card, index) => (
-							<TemplateProjectCard card={card} category={activeCategory.name} key={index} />
+							<TemplateProjectCard
+								card={card}
+								category={activeCategory.name}
+								key={index}
+								onCreateClick={() => createProjectFromAsset(card.asset_directory)}
+							/>
 						))
 					: null}
 			</div>

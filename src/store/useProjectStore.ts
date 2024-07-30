@@ -10,7 +10,14 @@ import { ProjectsService } from "@services";
 
 const defaultState: Omit<
 	ProjectStore,
-	"createProject" | "getProject" | "getProjectsList" | "renameProject" | "reset" | "projectList" | "deleteProject"
+	| "createProject"
+	| "getProject"
+	| "getProjectsList"
+	| "renameProject"
+	| "reset"
+	| "projectList"
+	| "deleteProject"
+	| "createProjectFromManifest"
 > = {
 	projectsList: [],
 };
@@ -42,6 +49,15 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 
 		return { data: { name: projectName, projectId }, error: undefined };
+	},
+
+	createProjectFromManifest: async (projectManifest: string) => {
+		const { data: newProjectId, error } = await ProjectsService.createFromManifest(projectManifest);
+		if (error) {
+			return { data: undefined, error };
+		}
+
+		return { data: newProjectId, error: undefined };
 	},
 
 	deleteProject: async (projectId: string) => {
