@@ -7,10 +7,6 @@
 			"logout": "Logout"
 		}
 	},
-	"comunityProjects": {
-		"title": "Comunity Projects",
-		"explore": "Explore community"
-	},
 	"templates":{ 
 		"title": "Templates",
 		"explore": "Explore templates",

@@ -5,4 +5,4 @@ export { OutputTabs } from "@components/organisms/outputTabs";
 export { Sidebar } from "@components/organisms/sidebar/sidebar";
 export { SplitFrame } from "@components/organisms/splitFrame";
 export { StatsTopbar, ProjectTopbar, DashboardTopbar, DeleteProjectModal } from "@components/organisms/topbar";
-export { CommunityProjects, ProjectsTable } from "@components/organisms/dashboard";
+export { ProjectsTable } from "@components/organisms/dashboard";

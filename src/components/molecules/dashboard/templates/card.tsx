@@ -22,7 +22,7 @@ export const ProjectTemplateCard = ({
 	const { t } = useTranslation(["manifest", "templates"]);
 
 	return (
-		<div className="relative flex flex-col rounded-md border border-gray-600 bg-white p-5 pr-3.5 shadow-community-card">
+		<div className="shadow-template-card relative flex flex-col rounded-md border border-gray-600 bg-white p-5 pr-3.5">
 			<div className="flex items-center justify-between gap-1.5">
 				<div className="flex gap-3">
 					{card.integrations.map(({ icon, title }, index) => (
