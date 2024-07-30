@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { baseUrl, namespaces } from "@constants";
+import { hostUrl, namespaces } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { GoogleConnectionType } from "@enums";
 import { SelectOption } from "@interfaces/components";
@@ -77,7 +77,7 @@ export const GoogleIntegrationAddForm = ({
 
 	const handleGoogleOAuth = async () => {
 		try {
-			window.open(`${baseUrl}/oauth/start/google?cid=${connectionId}&origin=web`, "_blank");
+			window.open(`${hostUrl}/oauth/start/google?cid=${connectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({

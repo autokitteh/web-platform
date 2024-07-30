@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { baseUrl, namespaces } from "@constants";
+import { hostUrl, namespaces } from "@constants";
 import { githubIntegrationAuthMethods, infoGithubLinks } from "@constants/lists";
 import { GithubConnectionType } from "@enums";
 import { ConnectionFormIds } from "@enums/components";
@@ -104,7 +104,7 @@ export const GithubIntegrationAddForm = ({
 
 	const handleGithubOAuth = async () => {
 		try {
-			window.open(`${baseUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
+			window.open(`${hostUrl}/oauth/start/github?cid=${connectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
@@ -241,7 +241,7 @@ export const GithubIntegrationAddForm = ({
 
 	useEffect(() => {
 		const randomForPATWebhook = randomatic("Aa0", 8);
-		const webhookURL = `${baseUrl}/${randomForPATWebhook}`;
+		const webhookURL = `${hostUrl}/${randomForPATWebhook}`;
 
 		setWebhookUrl(webhookURL);
 	}, []);

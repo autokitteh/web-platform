@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { baseUrl, namespaces } from "@constants";
+import { hostUrl, namespaces } from "@constants";
 import { infoSlackModeLinks, infoSlackOAuthLinks, selectIntegrationSlack } from "@constants/lists/connections";
 import { SlackConnectionType } from "@enums";
 import { SelectOption } from "@interfaces/components";
@@ -83,7 +83,7 @@ export const SlackIntegrationAddForm = ({
 
 	const handleSlackOAuth = async () => {
 		try {
-			window.open(`${baseUrl}/oauth/start/slack?cid=${connectionId}&origin=web`, "_blank");
+			window.open(`${hostUrl}/oauth/start/slack?cid=${connectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
