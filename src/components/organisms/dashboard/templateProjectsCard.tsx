@@ -53,7 +53,7 @@ export const TemplateProjectCard = ({ card, category }: { card: TemplateCardType
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: t("projectCreationFailed"),
+					message: t("projectCreationFailedExtended", { error: t("projectNameExist") }),
 					type: "error",
 				});
 
