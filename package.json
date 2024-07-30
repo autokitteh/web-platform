@@ -115,6 +115,10 @@
         "vite-plugin-static-copy": "^1.0.6",
         "vite-plugin-svgr": "^4.2.0"
     },
+	"engines" : {
+    "npm" : ">=10.6.0",
+    "node" : ">=21.7.1"
+	},
     "lint-staged": {
         "*.{ts,tsx,js}": [
             "npm run lint"
