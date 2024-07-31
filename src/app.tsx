@@ -27,7 +27,7 @@ import { Deployments } from "@components/pages/deployments";
 import { AppLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
-export const App: React.FC = () => {
+export const App = () => {
 	let AKRoutes = Routes;
 
 	if (isProduction) {

@@ -65,7 +65,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 						</div>
 					</div>
 
-					<Frame className="flex h-full w-1/2 items-center justify-center bg-gray-150">
+					<Frame className="flex h-full w-1/2 items-center justify-center overflow-hidden bg-gray-150">
 						<h2 className="text-3xl font-bold text-black">{t("whyDevelopersLove")}</h2>
 
 						<div className="mt-8 flex max-w-485 flex-wrap gap-3.5">
