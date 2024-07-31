@@ -141,7 +141,6 @@ export const AddTrigger = () => {
 		if (childFormRef.current) {
 			await childFormRef.current.onSubmit();
 		}
-		// Handle parent form submission...
 	};
 
 	return (
