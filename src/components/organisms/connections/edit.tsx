@@ -12,11 +12,7 @@ import { connectionSchema } from "@validations";
 
 import { Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import {
-	GithubIntegrationEditForm,
-	GoogleIntegrationForm,
-	SlackIntegrationAddForm,
-} from "@components/organisms/connections/integrations";
+import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
 
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");
@@ -43,8 +39,6 @@ export const EditConnection = () => {
 
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
 		github: <GithubIntegrationEditForm />,
-		google: <GoogleIntegrationForm />,
-		slack: <SlackIntegrationAddForm triggerParentFormSubmit={() => {}} />,
 	};
 
 	const selectedIntegrationComponent = selectedIntegration
