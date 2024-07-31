@@ -38,7 +38,7 @@ export const useConnectionForm = (
 	});
 	const { t } = useTranslation("integrations");
 
-	const [connectionId, setConnectionId] = useState<string | undefined>(paramConnectionId);
+	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [isLoading, setIsLoading] = useState(false);
 	const [webhook, setWebhook] = useState<string>("");
 

@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
-import { ConnectionFormIds, Integrations } from "@enums/components";
+import { Integrations } from "@enums/components";
 import { GithubConnectionType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
@@ -56,7 +56,7 @@ export const GithubIntegrationAddForm = ({
 				break;
 			case GithubConnectionType.Oauth:
 				await handleOAuth(connectionId, Integrations.github);
-				navigate(`/projects/${projectId}/connections`);
+				navigate(`/${projectId}/connections`);
 				break;
 			default:
 				break;
@@ -74,8 +74,27 @@ export const GithubIntegrationAddForm = ({
 		triggerParentFormSubmit();
 	};
 
+	const renderConnectionFields = () => {
+		switch (selectedConnectionType?.value) {
+			case GithubConnectionType.Pat:
+				return (
+					<PatForm
+						copyToClipboard={copyToClipboard}
+						errors={errors}
+						isLoading={isLoading}
+						register={register}
+						webhook={webhook}
+					/>
+				);
+			case GithubConnectionType.Oauth:
+				return <OauthForm triggerParentFormSubmit={triggerParentFormSubmit} />;
+			default:
+				return null;
+		}
+	};
+
 	return (
-		<form className="flex items-start gap-10" id={ConnectionFormIds.createGithub} onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
@@ -86,19 +105,7 @@ export const GithubIntegrationAddForm = ({
 					value={selectedConnectionType}
 				/>
 
-				{selectedConnectionType?.value === GithubConnectionType.Pat ? (
-					<PatForm
-						copyToClipboard={copyToClipboard}
-						errors={errors}
-						isLoading={isLoading}
-						register={register}
-						webhook={webhook}
-					/>
-				) : null}
-
-				{selectedConnectionType?.value === GithubConnectionType.Oauth ? (
-					<OauthForm triggerParentFormSubmit={triggerParentFormSubmit} />
-				) : null}
+				{renderConnectionFields()}
 			</div>
 		</form>
 	);

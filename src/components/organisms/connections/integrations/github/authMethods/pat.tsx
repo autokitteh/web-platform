@@ -4,7 +4,6 @@ import { FieldErrors } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoGithubLinks } from "@constants/lists";
-import { ConnectionFormIds } from "@enums/components";
 
 import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -64,7 +63,6 @@ export const PatForm = ({
 					{...register("secret")}
 					aria-label={t("github.placeholders.secret")}
 					isError={!!errors.secret}
-					isRequired
 					placeholder={t("github.placeholders.secret")}
 				/>
 
@@ -74,7 +72,6 @@ export const PatForm = ({
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
-				id={ConnectionFormIds.createGithub}
 				type="submit"
 				variant="outline"
 			>
