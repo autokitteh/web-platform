@@ -1,20 +1,20 @@
 import { z } from "zod";
 
 export const githubIntegrationSchema = z.object({
-	pat: z.string().min(5, "Personal Access Token is required"),
+	pat: z.string().min(1, "Personal Access Token is required"),
 });
 
 export const googleIntegrationSchema = z.object({
-	jsonKey: z.string().min(5, "Json Key is required"),
+	jsonKey: z.string().min(1, "Json Key is required"),
 });
 
 export const connectionSchema = z.object({
-	connectionName: z.string().min(5, "Name is required"),
+	connectionName: z.string().min(1, "Name is required"),
 });
 
 export const slackIntegrationSchema = z.object({
-	botToken: z.string().min(5, "Bot Token is required"),
-	appToken: z.string().min(5, "App-Level Token is required"),
+	botToken: z.string().min(1, "Bot Token is required"),
+	appToken: z.string().min(1, "App-Level Token is required"),
 });
 
 export const selectRegionSchema = z.object({
@@ -31,7 +31,7 @@ export const awsIntegrationSchema = z.object({
 });
 
 export const openAiIntegrationSchema = z.object({
-	key: z.string().min(5, "Key is required"),
+	key: z.string().min(1, "Key is required"),
 });
 
 export const httpBasicIntegrationSchema = z.object({
