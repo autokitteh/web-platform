@@ -58,3 +58,7 @@ export const jiraIntegrationSchema = z.object({
 	token: z.string().min(1, "Token is required"),
 	email: z.string(),
 });
+
+export const discordIntegrationSchema = z.object({
+	botToken: z.string().min(1, "Bot token is required"),
+});

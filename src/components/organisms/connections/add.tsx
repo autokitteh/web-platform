@@ -19,6 +19,7 @@ import { ErrorMessage, Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import {
 	AwsIntegrationAddForm,
+	DiscordIntegrationAddForm,
 	GithubIntegrationAddForm,
 	GoogleIntegrationAddForm,
 	HttpIntegrationAddForm,
@@ -153,6 +154,9 @@ export const AddConnection = () => {
 			<TwilioIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		jira: <JiraIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
+		discord: (
+			<DiscordIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
+		),
 	};
 
 	const selectedIntegrationComponent = selectedIntegration

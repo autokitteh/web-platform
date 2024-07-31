@@ -10,6 +10,7 @@ export {
 	twilioTokenIntegrationSchema,
 	twilioApiKeyIntegrationSchema,
 	jiraIntegrationSchema,
+	discordIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { defaultTriggerSchema, schedulerTriggerSchema } from "@validations/newTrigger.schema";
