@@ -18,22 +18,12 @@ export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const { connectionId } = useParams();
 
-	const {
-		copyToClipboard,
-		errors,
-		handleOAuth,
-		handleSubmit,
-		isLoading,
-		onSubmit,
-		register,
-		setValue,
-		watch,
-		webhook,
-	} = useConnectionForm(
-		{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true },
-		githubIntegrationSchema,
-		"edit"
-	);
+	const { copyToClipboard, errors, handleOAuth, handleSubmit, isLoading, onSubmit, register, setValue, watch } =
+		useConnectionForm(
+			{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true },
+			githubIntegrationSchema,
+			"edit"
+		);
 
 	const selectedConnectionType = watch("selectedConnectionType");
 
@@ -54,7 +44,7 @@ export const GithubIntegrationEditForm = () => {
 						errors={errors}
 						isLoading={isLoading}
 						register={register}
-						webhook={webhook}
+						setValue={setValue}
 					/>
 				);
 			case GithubConnectionType.Oauth:
@@ -65,7 +55,7 @@ export const GithubIntegrationEditForm = () => {
 	};
 
 	return (
-		<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex items-start gap-10" id="connectionForm" onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}

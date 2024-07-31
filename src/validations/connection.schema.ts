@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const githubIntegrationSchema = z.object({
 	pat: z.string().min(1, "Personal Access Token is required"),
+	webhook: z.string(),
 	secret: z.string(),
 });
 

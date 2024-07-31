@@ -5,6 +5,8 @@
 	"emptyKeyExist": "Empty key is not allowed",
 	"error": "Error",
 	"errorCreatingNewConnection": "Error while creating a new connection",
+	"errorFetchingVariabls": "Error fetching variables",
+	"errorFetchingVariablsExtended": "Error fetching variables, error: {{error}}",
 	"errorCreatingNewConnectionExtended": "Error while creating a new connection, error: {{error}}",
 	"errorFetchingConnection": "Error while fetching connection",
 	"connectionNotFound": "Error while fetching connection",

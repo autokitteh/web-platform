@@ -35,7 +35,6 @@ export const GithubIntegrationAddForm = ({
 		register,
 		setValue,
 		watch,
-		webhook,
 	} = useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create");
 
 	const selectedConnectionType = watch("selectedConnectionType");
@@ -83,7 +82,7 @@ export const GithubIntegrationAddForm = ({
 						errors={errors}
 						isLoading={isLoading}
 						register={register}
-						webhook={webhook}
+						setValue={setValue}
 					/>
 				);
 			case GithubConnectionType.Oauth:

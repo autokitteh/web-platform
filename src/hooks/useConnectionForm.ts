@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import randomatic from "randomatic";
 import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -9,7 +8,6 @@ import { ZodSchema } from "zod";
 
 import { apiBaseUrl, namespaces } from "@constants";
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
-import { Integrations } from "@src/enums/components";
 import { FormMode } from "@src/types/components";
 
 import { useToastStore } from "@store";
@@ -29,6 +27,7 @@ export const useConnectionForm = (
 		getValues,
 		handleSubmit,
 		register,
+		reset,
 		setValue,
 		watch,
 	} = useForm({
@@ -40,7 +39,6 @@ export const useConnectionForm = (
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [isLoading, setIsLoading] = useState(false);
-	const [webhook, setWebhook] = useState<string>("");
 
 	const handleError = (errorKey: string, error: any, skipLogger: boolean = false) => {
 		const errorMessage = tErrors(errorKey);
@@ -55,9 +53,12 @@ export const useConnectionForm = (
 		);
 	};
 
-	const handleSuccess = (successKey: string) => {
+	const handleSuccess = (successKey: string, skipLogger: boolean = false) => {
 		const successMessage = t(successKey);
 		addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
+		if (skipLogger) {
+			return;
+		}
 		LoggerService.info(namespaces.connectionService, successMessage);
 	};
 
@@ -108,17 +109,13 @@ export const useConnectionForm = (
 
 	const resetConnectionId = () => {
 		setConnectionId(undefined);
-		setTimeout(() => setConnectionId(paramConnectionId), 0);
+		setTimeout(() => setConnectionId(paramConnectionId || connectionId), 0);
 	};
 
 	const handleConnection = async (connectionId: string, integrationName: string): Promise<boolean> => {
 		setIsLoading(true);
 
 		const connectionData = getValues();
-
-		if (integrationName === Integrations.github) {
-			connectionData.webhook = webhook;
-		}
 
 		try {
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
@@ -162,16 +159,16 @@ export const useConnectionForm = (
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-			addToast({ id: Date.now().toString(), message: t("copySuccess"), type: "success" });
+			handleSuccess("copySuccess", true);
 		} catch (error) {
-			addToast({ id: Date.now().toString(), message: t("copyFailure"), type: "error" });
+			handleError("copySuccess", true);
 		}
 	};
 
 	const fetchVariables = async (id: string) => {
 		const { data: vars, error } = await VariablesService.list(id);
 		if (error) {
-			addToast({ id: Date.now().toString(), message: (error as Error).message, type: "error" });
+			handleError("errorFetchingVariables", error);
 
 			return;
 		}
@@ -187,8 +184,6 @@ export const useConnectionForm = (
 			fetchConnection(connectionId);
 			fetchVariables(connectionId);
 		}
-		const randomForPATWebhook = randomatic("Aa0", 8);
-		setWebhook(`${apiBaseUrl}/${randomForPATWebhook}`);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
@@ -199,12 +194,12 @@ export const useConnectionForm = (
 		register,
 		watch,
 		isLoading,
-		webhook,
 		copyToClipboard,
 		handleConnection,
 		handleOAuth,
 		setValue,
 		connectionId,
 		fetchConnection,
+		reset,
 	};
 };

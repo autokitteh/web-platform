@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { FieldErrors } from "react-hook-form";
+import randomatic from "randomatic";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoGithubLinks } from "@constants/lists";
+import { apiBaseUrl } from "@src/constants";
 
 import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -15,15 +17,21 @@ export const PatForm = ({
 	errors,
 	isLoading,
 	register,
-	webhook,
+	setValue,
 }: {
 	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
-	register: any;
-	webhook: string;
+	register: UseFormRegister<{ [x: string]: any }>;
+	setValue: any;
 }) => {
 	const { t } = useTranslation("integrations");
+	const [webhook, setWebhook] = useState("");
+
+	useEffect(() => {
+		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+		setValue("webhook", webhook); // Update the react-hook-form state when webhook changes
+	}, []);
 
 	return (
 		<>
@@ -40,6 +48,7 @@ export const PatForm = ({
 			</div>
 			<div className="relative flex gap-2">
 				<Input
+					{...register("webhook")}
 					aria-label={t("github.placeholders.webhookUrl")}
 					className="w-full"
 					disabled
@@ -72,6 +81,7 @@ export const PatForm = ({
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
+				id="connectionForm"
 				type="submit"
 				variant="outline"
 			>
