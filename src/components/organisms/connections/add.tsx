@@ -6,7 +6,7 @@ import { SingleValue } from "react-select";
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
 import { IntegrationType } from "@type/components";
-import { connectionSchema } from "@validations/connection.schema";
+import { connectionSchema } from "@validations";
 
 import { useConnectionForm } from "@hooks";
 
