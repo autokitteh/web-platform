@@ -2,9 +2,9 @@ import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
+import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
-import { defineConfig } from "vitest/config";
 
 dotenv.config();
 
