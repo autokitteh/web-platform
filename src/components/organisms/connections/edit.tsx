@@ -7,7 +7,6 @@ import { SingleValue } from "react-select";
 import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
-import { IntegrationType } from "@type/components";
 import { connectionSchema } from "@validations";
 
 import { Input, Select } from "@components/atoms";
@@ -36,14 +35,7 @@ export const EditConnection = () => {
 	const handleIntegrationChange = (option: SingleValue<SelectOption>): void => {
 		setValue("integration", option as SelectOption);
 	};
-
-	const integrationComponents: Record<IntegrationType, JSX.Element> = {
-		github: <GithubIntegrationEditForm />,
-	};
-
-	const selectedIntegrationComponent = selectedIntegration
-		? integrationComponents[selectedIntegration.value as IntegrationType]
-		: null;
+	const selectedIntegrationComponent = selectedIntegration ? <GithubIntegrationEditForm /> : null;
 
 	const connectionName = watch("connectionName");
 
