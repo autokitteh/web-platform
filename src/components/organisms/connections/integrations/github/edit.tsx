@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
-import { ConnectionFormIds } from "@enums/components";
+import { ConnectionFormIds, Integrations } from "@enums/components";
 import { GithubConnectionType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
@@ -21,7 +21,7 @@ export const GithubIntegrationEditForm = () => {
 	const {
 		copyToClipboard,
 		errors,
-		handleGithubOAuth,
+		handleOAuth,
 		handleSubmit,
 		isLoading,
 		onSubmit,
@@ -32,7 +32,7 @@ export const GithubIntegrationEditForm = () => {
 	} = useConnectionForm(
 		{ pat: "", webhookSecret: "", patIsSecret: true, webhookSecretIsSecret: true },
 		githubIntegrationSchema,
-		"update"
+		"edit"
 	);
 
 	const navigate = useNavigate();
@@ -44,7 +44,7 @@ export const GithubIntegrationEditForm = () => {
 	};
 
 	const initOAuth = () => {
-		handleGithubOAuth(connectionId!);
+		handleOAuth(connectionId!, Integrations.github);
 		navigate(`/projects/${projectId}/connections`);
 	};
 

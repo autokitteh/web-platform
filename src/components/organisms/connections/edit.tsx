@@ -20,7 +20,7 @@ export const EditConnection = () => {
 	const { errors, fetchConnection, register, setValue, watch } = useConnectionForm(
 		{ connectionName: "", integration: {} },
 		connectionSchema,
-		"update"
+		"edit"
 	);
 
 	useEffect(() => {

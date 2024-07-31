@@ -2,20 +2,26 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import randomatic from "randomatic";
-import { useForm } from "react-hook-form";
+import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { ZodSchema } from "zod";
 
 import { apiBaseUrl, namespaces } from "@constants";
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
-import { Connection } from "@type/models";
+import { FormMode } from "@src/types/components";
 
 import { useToastStore } from "@store";
 
-export const useConnectionForm = (initialValues: any, validationSchema: any, mode: "create" | "update") => {
+export const useConnectionForm = (
+	initialValues: DefaultValues<FieldValues> | undefined,
+	validationSchema: ZodSchema,
+	mode: FormMode
+) => {
 	const { t: tErrors } = useTranslation("errors");
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
+	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 
 	const {
 		control,
@@ -33,133 +39,120 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 	const { t } = useTranslation("integrations");
 
 	const [connectionId, setConnectionId] = useState<string | undefined>(paramConnectionId);
-	const [_connection, setConnection] = useState<Connection>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [webhookUrl, setWebhookUrl] = useState<string>("");
+
+	const handleError = (errorKey: string, error: any, skipLogger: boolean = false) => {
+		const errorMessage = tErrors(errorKey);
+		addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
+
+		if (skipLogger) {
+			return;
+		}
+		LoggerService.error(
+			namespaces.connectionService,
+			tErrors(`${errorKey}Extended`, { error: error?.response?.data || error.message })
+		);
+	};
+
+	const handleSuccess = (successKey: string) => {
+		const successMessage = t(successKey);
+		addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
+		LoggerService.info(namespaces.connectionService, successMessage);
+	};
 
 	const fetchConnection = async (id: string) => {
 		try {
 			const { data: connectionResponse, error } = await ConnectionService.get(id);
 
 			if (error) {
-				const errorMessage = tErrors("errorFetchingConnection");
-				addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-				LoggerService.error(
-					namespaces.connectionService,
-					tErrors("errorFetchingConnectionExtended", { error: (error as Error).message })
-				);
+				handleError("errorFetchingConnection", error, true);
 
 				return;
 			}
 
-			if (connectionResponse) {
-				setConnection(connectionResponse);
-				setValue("connectionName", connectionResponse.name); // This should properly set the value
-				setValue("integration", {
-					label: connectionResponse.integrationName,
-					value: connectionResponse.integrationUniqueName,
-				});
-			}
+			setConnectionIntegrationName(connectionResponse!.integrationName);
+			setValue("connectionName", connectionResponse!.name);
+			setValue("integration", {
+				label: connectionResponse!.integrationName,
+				value: connectionResponse!.integrationUniqueName,
+			});
 		} catch (error) {
-			const errorMessage = tErrors("errorFetchingConnection");
-			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-			LoggerService.error(
-				namespaces.connectionService,
-				tErrors("errorFetchingConnectionExtended", { error: error?.response?.data })
-			);
+			handleError("errorFetchingConnection", error);
 		}
 	};
 
-	const handlePatConnection = async (patConnectionId: string): Promise<boolean> => {
+	const createNewConnection = async () => {
+		try {
+			setIsLoading(true);
+			const { connectionName, integration } = getValues();
+			const { data: responseConnectionId, error } = await ConnectionService.create(
+				projectId!,
+				integration.value,
+				connectionName
+			);
+
+			if (error) {
+				handleError("errorCreatingNewConnection", error, true);
+
+				return;
+			}
+
+			setConnectionId(responseConnectionId);
+		} catch (error) {
+			handleError("errorCreatingNewConnection", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const resetConnectionId = () => {
+		setConnectionId(undefined);
+		setTimeout(() => setConnectionId(paramConnectionId), 0);
+	};
+
+	const handleConnection = async (connectionId: string, integrationName: string): Promise<boolean> => {
 		setIsLoading(true);
 		const { pat, webhookSecret: secret } = getValues();
 
 		try {
-			await HttpService.post(`/github/save?cid=${patConnectionId}&origin=web`, {
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, {
 				pat,
 				secret,
 				webhook: webhookUrl,
 			});
-			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
-			LoggerService.info(namespaces.connectionService, successMessage);
+			handleSuccess("connectionCreatedSuccessfully");
 
 			return true;
 		} catch (error) {
-			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-			LoggerService.error(
-				namespaces.connectionService,
-				tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
-			);
+			handleError("errorCreatingNewConnection", error);
 			setIsLoading(false);
 
 			return false;
 		}
 	};
 
-	const onSubmit = async () => {
-		if (!connectionId && mode === "create") {
-			try {
-				setIsLoading(true);
-				const { connectionName, integration } = getValues();
-				const { data: responseConnectionId, error } = await ConnectionService.create(
-					projectId!,
-					integration.value,
-					connectionName
-				);
-
-				if (error) {
-					const errorMessage = tErrors("errorCreatingNewConnection");
-					addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-					LoggerService.error(
-						namespaces.connectionService,
-						tErrors("errorCreatingNewConnectionExtended", { error })
-					);
-
-					return;
-				}
-				if (!responseConnectionId) {
-					const errorMessage = tErrors("errorCreatingNewConnection");
-					addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-					LoggerService.error(namespaces.connectionService, errorMessage);
-				}
-				setConnectionId(responseConnectionId);
-			} catch (error) {
-				const errorMessage = tErrors("errorCreatingNewConnection");
-				addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-				LoggerService.error(
-					namespaces.connectionService,
-					tErrors("errorCreatingNewConnectionExtended", { error })
-				);
-				setIsLoading(false);
-			} finally {
-				setIsLoading(false);
-			}
-
-			return;
+	const handleCreateMode = async () => {
+		if (!connectionId) {
+			await createNewConnection();
+		} else {
+			resetConnectionId();
 		}
-		if (connectionId && mode === "create") {
-			setConnectionId(undefined);
-			setTimeout(() => {
-				setConnectionId(connectionId);
-			}, 0);
-
-			return;
-		}
-		handlePatConnection(connectionId!);
 	};
 
-	const handleGithubOAuth = async (oauthConnectionId: string) => {
+	const onSubmit = async () => {
+		if (mode === "create") {
+			await handleCreateMode();
+		} else {
+			await handleConnection(connectionId!, connectionIntegrationName!);
+		}
+	};
+
+	const handleOAuth = async (oauthConnectionId: string, integrationName: string) => {
 		try {
-			window.open(`${apiBaseUrl}/oauth/start/github?cid=${oauthConnectionId}&origin=web`, "_blank");
+			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
 		} catch (error) {
-			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-			LoggerService.error(
-				namespaces.connectionService,
-				tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })
-			);
+			handleError("errorCreatingNewConnection", error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -168,9 +161,9 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-			addToast({ id: Date.now().toString(), message: t("github.copySuccess"), type: "success" });
+			addToast({ id: Date.now().toString(), message: t("copySuccess"), type: "success" });
 		} catch (error) {
-			addToast({ id: Date.now().toString(), message: t("github.copyFailure"), type: "error" });
+			addToast({ id: Date.now().toString(), message: t("copyFailure"), type: "error" });
 		}
 	};
 
@@ -184,12 +177,7 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 
 		if (vars?.length) {
 			const isConnectionTypePat = vars.some((variable) => variable.name === "pat");
-			if (isConnectionTypePat) {
-				setValue("selectedConnectionType", { value: "pat" });
-
-				return;
-			}
-			setValue("selectedConnectionType", { value: "oauth" });
+			setValue("selectedConnectionType", { value: isConnectionTypePat ? "pat" : "oauth" });
 		}
 	};
 
@@ -212,8 +200,8 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 		isLoading,
 		webhookUrl,
 		copyToClipboard,
-		handlePatConnection,
-		handleGithubOAuth,
+		handleConnection,
+		handleOAuth,
 		onSubmit,
 		setValue,
 		connectionId,

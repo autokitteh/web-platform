@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
-import { ConnectionFormIds } from "@enums/components";
+import { ConnectionFormIds, Integrations } from "@enums/components";
 import { GithubConnectionType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
@@ -28,8 +28,8 @@ export const GithubIntegrationAddForm = ({
 	const {
 		copyToClipboard,
 		errors,
-		handleGithubOAuth,
-		handlePatConnection,
+		handleConnection,
+		handleOAuth,
 		handleSubmit,
 		isLoading,
 		register,
@@ -48,14 +48,14 @@ export const GithubIntegrationAddForm = ({
 		switch (selectedConnectionType?.value) {
 			case GithubConnectionType.Pat:
 				{
-					const connectionCreationResult = await handlePatConnection(connectionId);
+					const connectionCreationResult = await handleConnection(connectionId, Integrations.github);
 					if (connectionCreationResult) {
 						navigate(`/projects/${projectId}/connections`);
 					}
 				}
 				break;
 			case GithubConnectionType.Oauth:
-				await handleGithubOAuth(connectionId);
+				await handleOAuth(connectionId, Integrations.github);
 				navigate(`/projects/${projectId}/connections`);
 				break;
 			default:
