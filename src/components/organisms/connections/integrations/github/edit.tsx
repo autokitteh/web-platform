@@ -1,12 +1,9 @@
 import React from "react";
 
-import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { OauthForm } from "./authMethods/add/oauth";
-import { EditPatForm } from "./authMethods/edit/pat";
 import { githubIntegrationAuthMethods } from "@constants/lists";
 import { ConnectionFormIds } from "@enums/components";
 import { GithubConnectionType } from "@enums/connections";
@@ -15,13 +12,13 @@ import { SelectOption } from "@interfaces/components";
 import { githubIntegrationSchema } from "@validations";
 
 import { Select } from "@components/atoms";
+import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const { connectionId, projectId } = useParams();
 
 	const {
-		control,
 		copyToClipboard,
 		errors,
 		handleGithubOAuth,
@@ -39,11 +36,6 @@ export const GithubIntegrationEditForm = () => {
 	);
 
 	const navigate = useNavigate();
-
-	const pat = useWatch({ control, name: "pat" });
-	const patIsSecret = useWatch({ control, name: "patIsSecret" });
-	const webhookSecret = useWatch({ control, name: "webhookSecret" });
-	const webhookSecretIsSecret = useWatch({ control, name: "webhookSecretIsSecret" });
 
 	const selectedConnectionType = watch("selectedConnectionType");
 
@@ -68,16 +60,11 @@ export const GithubIntegrationEditForm = () => {
 				/>
 
 				{selectedConnectionType?.value === GithubConnectionType.Pat ? (
-					<EditPatForm
+					<PatForm
 						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}
-						pat={pat}
-						patIsSecret={patIsSecret}
 						register={register}
-						setValue={setValue}
-						webhookSecret={webhookSecret}
-						webhookSecretIsSecret={webhookSecretIsSecret}
 						webhookUrl={webhookUrl}
 					/>
 				) : null}

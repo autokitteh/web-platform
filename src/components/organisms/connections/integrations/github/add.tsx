@@ -12,7 +12,7 @@ import { SelectOption } from "@interfaces/components";
 import { githubIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
-import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods/add";
+import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 
 export const GithubIntegrationAddForm = ({
 	connectionId,
