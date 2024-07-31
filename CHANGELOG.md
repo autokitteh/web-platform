@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/autokitteh/web-platform/compare/v1.28.1...v1.29.0) (2024-07-31)
+
+
+### Features
+
+* add discord integration ([#240](https://github.com/autokitteh/web-platform/issues/240)) ([92af92f](https://github.com/autokitteh/web-platform/commit/92af92fb335db6eb800ba60353d9f5c0a33a1ad7))
+
 ## [1.28.1](https://github.com/autokitteh/web-platform/compare/v1.28.0...v1.28.1) (2024-07-30)
 
 
