@@ -1,3 +1,10 @@
+## [1.29.1](https://github.com/autokitteh/web-platform/compare/v1.29.0...v1.29.1) (2024-07-31)
+
+
+### Bug Fixes
+
+* remove scroll in frame ([#242](https://github.com/autokitteh/web-platform/issues/242)) ([b9c3c7f](https://github.com/autokitteh/web-platform/commit/b9c3c7f033605a604fc9cc0e07567a8313dc34db))
+
 # [1.29.0](https://github.com/autokitteh/web-platform/compare/v1.28.1...v1.29.0) (2024-07-31)
 
 
