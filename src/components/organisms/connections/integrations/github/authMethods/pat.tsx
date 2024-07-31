@@ -18,7 +18,7 @@ export const PatForm = ({
 	register,
 	webhookUrl,
 }: {
-	copyToClipboard: (text: string) => void;
+	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	register: any;

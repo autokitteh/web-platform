@@ -9,7 +9,7 @@ import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { connectionSchema } from "@validations";
 
-import { Input, Select } from "@components/atoms";
+import { ErrorMessage, Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
 
@@ -47,12 +47,15 @@ export const EditConnection = () => {
 				<div className="relative mb-6">
 					<Input
 						aria-label={t("github.placeholders.name")}
-						{...register("connectionName", { required: "Connection name is required" })}
+						{...register("connectionName")}
 						disabled
 						isError={!!errors.connectionName}
+						isRequired
 						placeholder={t("github.placeholders.name")}
 						value={connectionName}
 					/>
+
+					<ErrorMessage>{errors?.connectionName?.message as string}</ErrorMessage>
 				</div>
 
 				<Select
