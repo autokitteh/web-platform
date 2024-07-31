@@ -28,4 +28,5 @@ export enum Integrations {
 	http = "http",
 	twilio = "twilio",
 	jira = "jira",
+	discord = "discord",
 }

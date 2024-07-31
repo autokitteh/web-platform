@@ -111,5 +111,13 @@
 			"apiTokens": "Jira Cloud: API tokens",
 			"accessTokens": "Jira Data Center: Personal Access Tokens"
 		}
+	},
+	"discord": {
+		"placeholders": {
+			"botToken": "Bot Token"
+		},
+		"information": {
+			"devPlatform": "Discord developer platform"
+		}
 	}
 }

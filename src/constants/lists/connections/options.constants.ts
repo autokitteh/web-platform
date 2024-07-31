@@ -18,6 +18,7 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Twilio", value: Integrations.twilio },
 	{ disabled: false, label: "Gmail", value: Integrations.gmail },
 	{ disabled: false, label: "Jira", value: Integrations.jira },
+	{ disabled: false, label: "Discord", value: Integrations.discord },
 	{ disabled: false, label: "Google (All APIs)", value: Integrations.google },
 	{ disabled: false, label: "Google Sheets", value: Integrations.googleSheets },
 	{ disabled: false, label: "Google Calendar", value: Integrations.googleCalendar },
