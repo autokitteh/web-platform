@@ -16,13 +16,13 @@ export const PatForm = ({
 	errors,
 	isLoading,
 	register,
-	webhookUrl,
+	webhook,
 }: {
 	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	register: any;
-	webhookUrl: string;
+	webhook: string;
 }) => {
 	const { t } = useTranslation("integrations");
 
@@ -45,13 +45,13 @@ export const PatForm = ({
 					className="w-full"
 					disabled
 					placeholder={t("github.placeholders.webhookUrl")}
-					value={webhookUrl}
+					value={webhook}
 				/>
 
 				<Button
 					aria-label={t("buttons.copy")}
 					className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
-					onClick={() => copyToClipboard(webhookUrl)}
+					onClick={() => copyToClipboard(webhook)}
 					variant="outline"
 				>
 					<CopyIcon className="h-3.5 w-3.5 fill-black" />
@@ -61,14 +61,14 @@ export const PatForm = ({
 			</div>
 			<div className="relative">
 				<Input
-					{...register("webhookSecret")}
-					aria-label={t("github.placeholders.webhookSecret")}
-					isError={!!errors.webhookSecret}
+					{...register("secret")}
+					aria-label={t("github.placeholders.secret")}
+					isError={!!errors.secret}
 					isRequired
-					placeholder={t("github.placeholders.webhookSecret")}
+					placeholder={t("github.placeholders.secret")}
 				/>
 
-				<ErrorMessage>{errors.webhookSecret?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.secret?.message as string}</ErrorMessage>
 			</div>
 			<Button
 				aria-label={t("buttons.saveConnection")}

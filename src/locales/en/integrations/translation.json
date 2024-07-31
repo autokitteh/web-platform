@@ -31,7 +31,7 @@
 		"placeholders": {
 			"name": "Name",
 			"pat": "Personal Access Token (PAT) - fine-grained or classic",
-			"webhookSecret": "Webhook Secret",
+			"secret": "Webhook Secret",
 			"webhookUrl": "Webhook URL"
 		}
 	},

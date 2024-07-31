@@ -28,9 +28,9 @@ export const GithubIntegrationEditForm = () => {
 		register,
 		setValue,
 		watch,
-		webhookUrl,
+		webhook,
 	} = useConnectionForm(
-		{ pat: "", webhookSecret: "", patIsSecret: true, webhookSecretIsSecret: true },
+		{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true },
 		githubIntegrationSchema,
 		"edit"
 	);
@@ -65,7 +65,7 @@ export const GithubIntegrationEditForm = () => {
 						errors={errors}
 						isLoading={isLoading}
 						register={register}
-						webhookUrl={webhookUrl}
+						webhook={webhook}
 					/>
 				) : null}
 

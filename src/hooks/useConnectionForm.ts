@@ -9,6 +9,7 @@ import { ZodSchema } from "zod";
 
 import { apiBaseUrl, namespaces } from "@constants";
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
+import { Integrations } from "@src/enums/components";
 import { FormMode } from "@src/types/components";
 
 import { useToastStore } from "@store";
@@ -24,7 +25,6 @@ export const useConnectionForm = (
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 
 	const {
-		control,
 		formState: { errors },
 		getValues,
 		handleSubmit,
@@ -40,7 +40,7 @@ export const useConnectionForm = (
 
 	const [connectionId, setConnectionId] = useState<string | undefined>(paramConnectionId);
 	const [isLoading, setIsLoading] = useState(false);
-	const [webhookUrl, setWebhookUrl] = useState<string>("");
+	const [webhook, setWebhook] = useState<string>("");
 
 	const handleError = (errorKey: string, error: any, skipLogger: boolean = false) => {
 		const errorMessage = tErrors(errorKey);
@@ -113,14 +113,15 @@ export const useConnectionForm = (
 
 	const handleConnection = async (connectionId: string, integrationName: string): Promise<boolean> => {
 		setIsLoading(true);
-		const { pat, webhookSecret: secret } = getValues();
+
+		const connectionData = getValues();
+
+		if (integrationName === Integrations.github) {
+			connectionData.webhook = webhook;
+		}
 
 		try {
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, {
-				pat,
-				secret,
-				webhook: webhookUrl,
-			});
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			handleSuccess("connectionCreatedSuccessfully");
 
 			return true;
@@ -187,22 +188,21 @@ export const useConnectionForm = (
 			fetchVariables(connectionId);
 		}
 		const randomForPATWebhook = randomatic("Aa0", 8);
-		setWebhookUrl(`${apiBaseUrl}/${randomForPATWebhook}`);
+		setWebhook(`${apiBaseUrl}/${randomForPATWebhook}`);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
 	return {
 		errors,
-		control,
 		handleSubmit,
+		onSubmit,
 		register,
 		watch,
 		isLoading,
-		webhookUrl,
+		webhook,
 		copyToClipboard,
 		handleConnection,
 		handleOAuth,
-		onSubmit,
 		setValue,
 		connectionId,
 		fetchConnection,
