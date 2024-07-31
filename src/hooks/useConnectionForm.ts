@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { baseUrl, namespaces } from "@constants";
+import { apiBaseUrl, namespaces } from "@constants";
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { Connection } from "@type/models";
 
@@ -152,7 +152,7 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 
 	const handleGithubOAuth = async (oauthConnectionId: string) => {
 		try {
-			window.open(`${baseUrl}/oauth/start/github?cid=${oauthConnectionId}&origin=web`, "_blank");
+			window.open(`${apiBaseUrl}/oauth/start/github?cid=${oauthConnectionId}&origin=web`, "_blank");
 		} catch (error) {
 			const errorMessage = error?.response?.data || tErrors("errorCreatingNewConnection");
 			addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
@@ -199,7 +199,7 @@ export const useConnectionForm = (initialValues: any, validationSchema: any, mod
 			fetchVariables(connectionId);
 		}
 		const randomForPATWebhook = randomatic("Aa0", 8);
-		setWebhookUrl(`${baseUrl}/${randomForPATWebhook}`);
+		setWebhookUrl(`${apiBaseUrl}/${randomForPATWebhook}`);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
