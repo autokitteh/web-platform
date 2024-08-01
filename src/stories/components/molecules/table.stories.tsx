@@ -2,6 +2,9 @@ import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { ColorSchemes } from "@src/types";
+import { cn } from "@src/utilities";
+
 import { useSort } from "@hooks";
 
 import { TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -13,57 +16,53 @@ const list = [
 	{ id: "3", name: "Project3" },
 ];
 
-const DarkTable = () => (
-	<Table className="max-h-96">
-		<THead>
-			<Tr>
-				<Th className="group max-w-40 cursor-pointer border-r-0 font-normal">Id</Th>
-
-				<Th className="group cursor-pointer border-r-0 font-normal">Name</Th>
-			</Tr>
-		</THead>
-
-		<TBody>
-			{list.map(({ id, name }) => (
-				<Tr key={id}>
-					<Td className="max-w-40 cursor-pointer font-medium">{id}</Td>
-
-					<Td className="group cursor-pointer font-medium">{name}</Td>
-				</Tr>
-			))}
-		</TBody>
-	</Table>
-);
-
-const LightTable = () => (
-	<Table className="mt-2.5 max-h-96 rounded-t-20" variant="light">
-		<THead>
-			<Tr className="border-none pl-6">
-				<Th className="group max-w-40 cursor-pointer border-r-0 font-normal">Id</Th>
-
-				<Th className="group cursor-pointer border-r-0 font-normal">Name</Th>
-			</Tr>
-		</THead>
-
-		<TBody>
-			{list.map(({ id, name }) => (
-				<Tr className="group cursor-pointer border-none pl-6" key={id}>
-					<Td className="max-w-40 cursor-pointer font-medium">{id}</Td>
-
-					<Td className="cursor-pointer font-medium">{name}</Td>
-				</Tr>
-			))}
-		</TBody>
-	</Table>
-);
-
-const SortTable = () => {
-	const { items, requestSort, sortConfig } = useSort<(typeof list)[number]>(list, "id");
+const PrimaryTable = ({ variant = "dark" }: { variant?: ColorSchemes }) => {
+	const trClass = cn({
+		"border-none": variant === "light",
+	});
+	const bodyTrClass = cn({
+		"group cursor-pointer border-none": variant === "light",
+	});
+	const variantProp = variant === "dark" ? undefined : "light";
 
 	return (
-		<Table className="mt-2.5 max-h-96 rounded-t-20" variant="light">
+		<Table variant={variantProp}>
 			<THead>
-				<Tr className="border-none pl-6">
+				<Tr className={trClass}>
+					<Th className="group max-w-40 cursor-pointer border-r-0 font-normal">Id</Th>
+
+					<Th className="group cursor-pointer border-r-0 font-normal">Name</Th>
+				</Tr>
+			</THead>
+
+			<TBody>
+				{list.map(({ id, name }) => (
+					<Tr className={bodyTrClass} key={id}>
+						<Td className="max-w-40 cursor-pointer font-medium">{id}</Td>
+
+						<Td className="group cursor-pointer font-medium">{name}</Td>
+					</Tr>
+				))}
+			</TBody>
+		</Table>
+	);
+};
+
+const SortTable = ({ variant = "light" }: { variant?: ColorSchemes }) => {
+	const { items, requestSort, sortConfig } = useSort<(typeof list)[number]>(list, "id");
+	const trClass = cn({
+		"border-none": variant === "light",
+	});
+	const bodyTrClass = cn({
+		"group cursor-pointer border-none": variant === "light",
+	});
+
+	const variantProp = variant === "dark" ? undefined : "light";
+
+	return (
+		<Table variant={variantProp}>
+			<THead>
+				<Tr className={trClass}>
 					<Th
 						className="group max-w-40 cursor-pointer border-r-0 font-normal"
 						onClick={() => requestSort("id")}
@@ -73,7 +72,7 @@ const SortTable = () => {
 							className="mt-0.5 opacity-0 group-hover:opacity-80"
 							isActive={"id" === sortConfig.key}
 							sortDirection={sortConfig.direction}
-							variant="light"
+							variant={variant}
 						/>
 					</Th>
 
@@ -83,7 +82,7 @@ const SortTable = () => {
 							className="mt-0.5 opacity-0 group-hover:opacity-100"
 							isActive={"name" === sortConfig.key}
 							sortDirection={sortConfig.direction}
-							variant="light"
+							variant={variant}
 						/>
 					</Th>
 				</Tr>
@@ -91,10 +90,10 @@ const SortTable = () => {
 
 			<TBody>
 				{items.map(({ id, name }) => (
-					<Tr className="group cursor-pointer border-none pl-6" key={id}>
+					<Tr className={bodyTrClass} key={id}>
 						<Td className="max-w-40 cursor-pointer font-medium">{id}</Td>
 
-						<Td className="cursor-pointer font-medium">{name}</Td>
+						<Td className="group cursor-pointer font-medium">{name}</Td>
 					</Tr>
 				))}
 			</TBody>
@@ -104,22 +103,29 @@ const SortTable = () => {
 
 const meta = {
 	title: "Display/Table",
-	component: DarkTable,
-	argTypes: {},
-} satisfies Meta<typeof DarkTable>;
+	component: PrimaryTable,
+	argTypes: {
+		variant: {
+			control: "inline-radio",
+			options: ["light", "dark"],
+		},
+	},
+} satisfies Meta<typeof PrimaryTable>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Dark = {
-	render: () => <DarkTable />,
-} satisfies Story;
-
-export const Light = {
-	render: () => <LightTable />,
+export const Primary = {
+	render: (args) => <PrimaryTable {...args} />,
+	args: {
+		variant: "dark",
+	},
 } satisfies Story;
 
 export const WithSort = {
-	render: () => <SortTable />,
+	render: (args) => <SortTable {...args} />,
+	args: {
+		variant: "light",
+	},
 } satisfies Story;
