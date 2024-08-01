@@ -46,7 +46,7 @@ export const DeleteProjectModal = ({ onDelete }: ModalDeleteTriggerProps) => {
 					{t("cancelButton")}
 				</Button>
 
-				<Button className="w-auto bg-gray-700 px-4 py-3 font-semibold" onClick={onDelete} variant="filled">
+				<Button className="w-auto px-4 py-3 font-semibold" onClick={onDelete} variant="filled">
 					{t("deleteButton")}
 				</Button>
 			</div>
