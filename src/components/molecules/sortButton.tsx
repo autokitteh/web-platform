@@ -8,10 +8,16 @@ import { IconButton } from "@components/atoms";
 
 import { SmallArrowDown } from "@assets/image";
 
-export const SortButton = ({ ariaLabel, className, isActive, sortDirection }: Partial<SortButtonProps>) => {
-	const iconClass = isActive && sortDirection === SortDirectionVariant.DESC ? "rotate-180" : "";
+export const SortButton = ({ ariaLabel, className, isActive, sortDirection, variant }: Partial<SortButtonProps>) => {
+	const iconClass = cn("fill-gray", {
+		"rotate-180": isActive && sortDirection === SortDirectionVariant.DESC,
+		"fill-black": variant === "light",
+	});
 
-	const buttonClass = cn("w-auto p-1 hover:bg-gray-1100", className, { "bg-gray-1100 opacity-100": isActive });
+	const buttonClass = cn("w-auto p-1 hover:bg-gray-1100", className, {
+		"bg-gray-1100 opacity-100": isActive,
+		"bg-gray-300 hover:bg-gray-450": variant === "light",
+	});
 
 	return (
 		<IconButton ariaLabel={ariaLabel} className={buttonClass}>

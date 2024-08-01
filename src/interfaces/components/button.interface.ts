@@ -45,5 +45,6 @@ export interface SortButtonProps {
 	ariaLabel: string;
 	className?: string;
 	isActive: boolean;
+	variant?: "dark" | "light";
 	sortDirection: SortDirection | undefined;
 }
