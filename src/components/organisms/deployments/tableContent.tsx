@@ -110,7 +110,7 @@ export const DeploymentsTableContent = ({
 					</Tr>
 				</THead>
 
-				<TBody className="bg-gray-1100">
+				<TBody>
 					{sortedDeployments.map(({ buildId, createdAt, deploymentId, sessionStats, state }) => (
 						<Tr
 							className="group cursor-pointer"

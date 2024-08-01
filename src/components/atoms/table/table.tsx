@@ -3,8 +3,12 @@ import React from "react";
 import { TableProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Table = ({ children, className }: TableProps) => {
-	const tableStyle = cn("scrollbar overflow-y-auto rounded-t-14", className);
+export const Table = ({ children, className, variant }: TableProps) => {
+	const tableStyle = cn(
+		"scrollbar overflow-y-auto rounded-t-14",
+		{ "border border-gray-600": variant === "light" },
+		className
+	);
 
 	return (
 		<div className={tableStyle}>
