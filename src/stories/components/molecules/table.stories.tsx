@@ -72,7 +72,6 @@ const SortTable = ({ variant = "light" }: { variant?: ColorSchemes }) => {
 							className="mt-0.5 opacity-0 group-hover:opacity-80"
 							isActive={"id" === sortConfig.key}
 							sortDirection={sortConfig.direction}
-							variant={variant}
 						/>
 					</Th>
 
@@ -82,7 +81,6 @@ const SortTable = ({ variant = "light" }: { variant?: ColorSchemes }) => {
 							className="mt-0.5 opacity-0 group-hover:opacity-100"
 							isActive={"name" === sortConfig.key}
 							sortDirection={sortConfig.direction}
-							variant={variant}
 						/>
 					</Th>
 				</Tr>

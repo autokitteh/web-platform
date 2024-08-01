@@ -5,10 +5,13 @@ import { SortButtonProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 import { IconButton } from "@components/atoms";
+import { useTableVariant } from "@components/atoms/table";
 
 import { SmallArrowDown } from "@assets/image";
 
-export const SortButton = ({ ariaLabel, className, isActive, sortDirection, variant }: Partial<SortButtonProps>) => {
+export const SortButton = ({ ariaLabel, className, isActive, sortDirection }: Partial<SortButtonProps>) => {
+	const { variant } = useTableVariant();
+
 	const iconClass = cn("fill-gray", {
 		"rotate-180": isActive && sortDirection === SortDirectionVariant.DESC,
 		"fill-black": variant === "light",

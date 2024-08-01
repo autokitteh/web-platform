@@ -1,6 +1,5 @@
 import React, { KeyboardEventHandler, MouseEventHandler } from "react";
 
-import { ColorSchemes } from "@src/types";
 import { ButtonType, SortDirection } from "@type/components";
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, React.AriaAttributes {
@@ -46,6 +45,5 @@ export interface SortButtonProps {
 	ariaLabel: string;
 	className?: string;
 	isActive: boolean;
-	variant?: ColorSchemes;
 	sortDirection: SortDirection | undefined;
 }

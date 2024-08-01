@@ -33,7 +33,6 @@ export const ProjectsTable = () => {
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sortConfig.key}
 									sortDirection={sortConfig.direction}
-									variant="light"
 								/>
 							</Th>
 						</Tr>
