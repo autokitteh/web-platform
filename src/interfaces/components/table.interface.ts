@@ -1,3 +1,5 @@
+import { ColorSchemes } from "@src/types";
+
 export interface TableProps {
 	children?: React.ReactNode;
 	className?: string;
@@ -6,5 +8,5 @@ export interface TableProps {
 }
 
 export interface TableVariantContextType {
-	variant: "light" | "dark";
+	variant: ColorSchemes;
 }

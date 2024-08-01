@@ -1,6 +1,7 @@
 import React from "react";
 
 import { TableProps } from "@interfaces/components";
+import { ColorSchemes } from "@src/types";
 import { cn } from "@utilities";
 
 import { TableVariantProvider } from "@components/atoms/table";
@@ -10,7 +11,7 @@ export const Table = ({
 	className,
 	variant,
 }: TableProps & {
-	variant?: "light" | "dark";
+	variant?: ColorSchemes;
 }) => {
 	const tableStyle = cn(
 		"scrollbar overflow-y-auto rounded-t-14 text-white",
