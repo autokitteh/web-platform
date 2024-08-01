@@ -24,8 +24,8 @@ export const ProjectsTable = () => {
 
 			{sortedProjects.length ? (
 				<Table className="mt-2.5 max-h-96 rounded-t-20" variant="light">
-					<THead variant="light">
-						<Tr className="border-none pl-6" variant="light">
+					<THead>
+						<Tr className="border-none pl-6">
 							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("name")}>
 								{t("table.columns.projectName")}
 
@@ -38,9 +38,9 @@ export const ProjectsTable = () => {
 						</Tr>
 					</THead>
 
-					<TBody variant="light">
+					<TBody>
 						{sortedProjects.map(({ href, id, name }) => (
-							<Tr className="group cursor-pointer border-none pl-6" key={id} variant="light">
+							<Tr className="group cursor-pointer border-none pl-6" key={id}>
 								<Td className="group-hover:font-bold" onClick={() => navigate(href)}>
 									{name}
 								</Td>

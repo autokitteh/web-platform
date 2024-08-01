@@ -3,7 +3,15 @@ import React from "react";
 import { TableProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Table = ({ children, className, variant }: TableProps) => {
+import { TableVariantProvider } from "@components/atoms/table";
+
+export const Table = ({
+	children,
+	className,
+	variant,
+}: TableProps & {
+	variant?: "light" | "dark";
+}) => {
 	const tableStyle = cn(
 		"scrollbar overflow-y-auto rounded-t-14 text-white",
 		{ "border border-gray-600": variant === "light" },
@@ -11,8 +19,10 @@ export const Table = ({ children, className, variant }: TableProps) => {
 	);
 
 	return (
-		<div className={tableStyle}>
-			<table className="h-full min-w-full">{children}</table>
-		</div>
+		<TableVariantProvider variant={variant}>
+			<div className={tableStyle}>
+				<table className="h-full min-w-full">{children}</table>
+			</div>
+		</TableVariantProvider>
 	);
 };

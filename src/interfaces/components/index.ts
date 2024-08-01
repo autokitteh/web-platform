@@ -32,7 +32,7 @@ export type {
 } from "@interfaces/components/session.interface";
 export type { SpinnerProps } from "@interfaces/components/spinner.interface";
 export type { TabFormHeaderProps } from "@interfaces/components/tabFormHeader.interface";
-export type { TableProps } from "@interfaces/components/table.interface";
+export type { TableProps, TableVariantContextType } from "@interfaces/components/table.interface";
 export type { TabListProps, TabProps, TabsContextProps, TabsProps } from "@interfaces/components/tabs.interface";
 export type { Toast, ToasterTypes } from "@interfaces/components/toast.interface";
 export type { ToggleProps } from "@interfaces/components/toggle.interface";

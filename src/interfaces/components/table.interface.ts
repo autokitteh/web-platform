@@ -3,5 +3,8 @@ export interface TableProps {
 	className?: string;
 	onClick?: () => void;
 	style?: React.CSSProperties;
-	variant?: "light" | "dark";
+}
+
+export interface TableVariantContextType {
+	variant: "light" | "dark";
 }

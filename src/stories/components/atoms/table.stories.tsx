@@ -34,17 +34,17 @@ const DarkTable = () => (
 
 const LightTable = () => (
 	<Table className="mt-2.5 max-h-96 rounded-t-20" variant="light">
-		<THead variant="light">
-			<Tr className="border-none pl-6" variant="light">
+		<THead>
+			<Tr className="border-none pl-6">
 				<Th className="group max-w-40 cursor-pointer border-r-0 font-normal">Id</Th>
 
 				<Th className="group cursor-pointer border-r-0 font-normal">Name</Th>
 			</Tr>
 		</THead>
 
-		<TBody variant="light">
+		<TBody>
 			{list.map(({ id, name }) => (
-				<Tr className="group cursor-pointer border-none pl-6" key={id} variant="light">
+				<Tr className="group cursor-pointer border-none pl-6" key={id}>
 					<Td className="max-w-40 cursor-pointer font-medium">{id}</Td>
 
 					<Td className="cursor-pointer font-medium">{name}</Td>
