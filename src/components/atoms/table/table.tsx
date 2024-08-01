@@ -5,7 +5,7 @@ import { cn } from "@utilities";
 
 export const Table = ({ children, className, variant }: TableProps) => {
 	const tableStyle = cn(
-		"scrollbar overflow-y-auto rounded-t-14",
+		"scrollbar overflow-y-auto rounded-t-14 text-white",
 		{ "border border-gray-600": variant === "light" },
 		className
 	);
