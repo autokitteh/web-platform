@@ -8,7 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TriggersService } from "@services";
 import { infoCronExpressionsLinks, schedulerTriggerConnectionName } from "@src/constants";
 import { TriggerFormIds } from "@src/enums/components";
-import { SelectItem } from "@src/types/components";
+import { SelectOption } from "@src/interfaces/components";
 import { schedulerTriggerSchema } from "@validations";
 
 import { useFetchConnections, useFetchTrigger, useFileOperations } from "@hooks";
@@ -34,7 +34,7 @@ export const SchedulerEditTrigger = () => {
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const [isSaving, setIsSaving] = useState(false);
 
-	const [filesNameList, setFilesNameList] = useState<SelectItem>([]);
+	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 
 	useEffect(() => {
 		const fetchResourcesData = async () => {

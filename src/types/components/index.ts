@@ -5,4 +5,3 @@ export type { SortDirection } from "@type/components/table.type";
 export type { ToastType } from "@type/components/toast.type";
 export type { TemplateCategory, TemplateCardType } from "@src/types/components/projectTemplates.type";
 export type { FormMode } from "@src/types/components/form.type";
-export type { SelectItem } from "@src/types/components/select.type";
