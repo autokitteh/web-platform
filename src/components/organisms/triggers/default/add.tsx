@@ -178,7 +178,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 						)}
 					/>
 
-					<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
+					<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
 				</div>
 
 				<div className="relative">
@@ -191,7 +191,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 						value={entryFunction}
 					/>
 
-					<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
+					<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
 				</div>
 
 				<div className="relative">
@@ -225,7 +225,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 						value={eventType}
 					/>
 
-					<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
+					<ErrorMessage>{errors.eventType?.message}</ErrorMessage>
 				</div>
 
 				<div className="relative">
