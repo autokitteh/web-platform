@@ -25,6 +25,10 @@ export const GithubIntegrationAddForm = ({
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 
+	const onSuccess = () => {
+		navigate(`/projects/${projectId}/connections`);
+	};
+
 	const {
 		copyToClipboard,
 		errors,
@@ -35,7 +39,7 @@ export const GithubIntegrationAddForm = ({
 		register,
 		setValue,
 		watch,
-	} = useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create");
+	} = useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create", onSuccess);
 
 	const selectedConnectionType = watch("selectedConnectionType");
 
@@ -52,7 +56,7 @@ export const GithubIntegrationAddForm = ({
 				break;
 			case GithubConnectionType.Oauth:
 				await handleOAuth(connectionId, Integrations.github);
-				navigate(`/${projectId}/connections`);
+				onSuccess();
 				break;
 			default:
 				break;

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
@@ -16,13 +16,19 @@ import { OauthForm, PatForm } from "@components/organisms/connections/integratio
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionId } = useParams();
+	const { connectionId, projectId } = useParams();
+	const navigate = useNavigate();
+
+	const onSuccess = () => {
+		navigate(`/projects/${projectId}/connections`);
+	};
 
 	const { copyToClipboard, errors, handleOAuth, handleSubmit, isLoading, onSubmit, register, setValue, watch } =
 		useConnectionForm(
 			{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true },
 			githubIntegrationSchema,
-			"edit"
+			"edit",
+			onSuccess
 		);
 
 	const selectedConnectionType = watch("selectedConnectionType");

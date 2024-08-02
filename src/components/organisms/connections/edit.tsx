@@ -15,18 +15,11 @@ import { GithubIntegrationEditForm } from "@components/organisms/connections/int
 
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionId, projectId } = useParams();
-	const navigate = useNavigate();
-
-	const onSuccess = () => {
-		navigate(`/projects/${projectId}/connections`);
-	};
-
+	const { connectionId } = useParams();
 	const { errors, fetchConnection, register, setValue, watch } = useConnectionForm(
 		{ connectionName: "", integration: {} },
 		connectionSchema,
-		"edit",
-		onSuccess
+		"edit"
 	);
 
 	useEffect(() => {
