@@ -31,6 +31,7 @@ export const PatForm = ({
 	useEffect(() => {
 		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
 		setValue("webhook", webhook); // Update the react-hook-form state when webhook changes
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { integrationTypes } from "@constants/lists";
