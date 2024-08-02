@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { infoCronExpressionsLinks, namespaces } from "@constants";
 import { SelectOption } from "@interfaces/components";
-import { ChildFormRef } from "@interfaces/components/forms";
+import { ChildFormRef, TriggerSchedulerFormProps } from "@interfaces/components/forms";
 import { LoggerService, TriggersService } from "@services";
 import { schedulerTriggerSchema } from "@validations";
 
@@ -18,13 +18,6 @@ import { ErrorMessage, Input, Link, Loader } from "@components/atoms";
 import { Accordion, Select } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
-
-interface TriggerSchedulerFormProps {
-	connectionId: string;
-	isSaving: boolean;
-	name: string;
-	setIsSaving: (isSaving: boolean) => void;
-}
 
 export const TriggerSchedulerForm = forwardRef<ChildFormRef, TriggerSchedulerFormProps>(
 	({ connectionId, isSaving, name, setIsSaving }, ref) => {
