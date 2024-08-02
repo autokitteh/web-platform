@@ -99,10 +99,6 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 					message: tErrors("triggerNotCreated"),
 					type: "error",
 				});
-				LoggerService.error(
-					namespaces.triggerService,
-					tErrors("triggerNotCreatedExtended", { error: (error as Error).message, projectId })
-				);
 
 				return;
 			}
