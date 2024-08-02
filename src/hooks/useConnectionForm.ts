@@ -2,24 +2,21 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DefaultValues, FieldValues, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { ZodSchema } from "zod";
 
-import { apiBaseUrl, namespaces } from "@constants";
-import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
+import { apiBaseUrl } from "@constants";
+import { ConnectionService, HttpService, VariablesService } from "@services";
 import { FormMode } from "@src/types/components";
 
-import { useToastStore } from "@store";
+import { useToastAndLog } from "@hooks";
 
 export const useConnectionForm = (
 	initialValues: DefaultValues<FieldValues> | undefined,
 	validationSchema: ZodSchema,
 	mode: FormMode
 ) => {
-	const { t: tErrors } = useTranslation("errors");
 	const { connectionId: paramConnectionId, projectId } = useParams();
-	const addToast = useToastStore((state) => state.addToast);
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 
 	const {
@@ -35,39 +32,17 @@ export const useConnectionForm = (
 		mode: "onChange",
 		defaultValues: initialValues,
 	});
-	const { t } = useTranslation("integrations");
+	const toastAndLog = useToastAndLog(); // Initialize the utility function
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [isLoading, setIsLoading] = useState(false);
-
-	const handleError = (errorKey: string, error: any, skipLogger: boolean = false) => {
-		const errorMessage = tErrors(errorKey);
-		addToast({ id: Date.now().toString(), message: errorMessage, type: "error" });
-
-		if (skipLogger) {
-			return;
-		}
-		LoggerService.error(
-			namespaces.connectionService,
-			tErrors(`${errorKey}Extended`, { error: error?.response?.data || error.message })
-		);
-	};
-
-	const handleSuccess = (successKey: string, skipLogger: boolean = false) => {
-		const successMessage = t(successKey);
-		addToast({ id: Date.now().toString(), message: successMessage, type: "success" });
-		if (skipLogger) {
-			return;
-		}
-		LoggerService.info(namespaces.connectionService, successMessage);
-	};
 
 	const fetchConnection = async (id: string) => {
 		try {
 			const { data: connectionResponse, error } = await ConnectionService.get(id);
 
 			if (error) {
-				handleError("errorFetchingConnection", error, true);
+				toastAndLog("error", "errorFetchingConnection", error, true);
 
 				return;
 			}
@@ -79,7 +54,7 @@ export const useConnectionForm = (
 				value: connectionResponse!.integrationUniqueName,
 			});
 		} catch (error) {
-			handleError("errorFetchingConnection", error);
+			toastAndLog("error", "errorFetchingConnection", error);
 		}
 	};
 
@@ -94,14 +69,14 @@ export const useConnectionForm = (
 			);
 
 			if (error) {
-				handleError("errorCreatingNewConnection", error, true);
+				toastAndLog("error", "errorCreatingNewConnection", error, true);
 
 				return;
 			}
 
 			setConnectionId(responseConnectionId);
 		} catch (error) {
-			handleError("errorCreatingNewConnection", error);
+			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -119,11 +94,11 @@ export const useConnectionForm = (
 
 		try {
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
-			handleSuccess("connectionCreatedSuccessfully");
+			toastAndLog("success", "connectionCreatedSuccessfully");
 
 			return true;
 		} catch (error) {
-			handleError("errorCreatingNewConnection", error);
+			toastAndLog("error", "errorCreatingNewConnection", error);
 			setIsLoading(false);
 
 			return false;
@@ -150,7 +125,7 @@ export const useConnectionForm = (
 		try {
 			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
 		} catch (error) {
-			handleError("errorCreatingNewConnection", error);
+			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -159,16 +134,16 @@ export const useConnectionForm = (
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-			handleSuccess("copySuccess", true);
+			toastAndLog("success", "copySuccess", true);
 		} catch (error) {
-			handleError("copySuccess", true);
+			toastAndLog("error", "copyError", true);
 		}
 	};
 
 	const fetchVariables = async (id: string) => {
 		const { data: vars, error } = await VariablesService.list(id);
 		if (error) {
-			handleError("errorFetchingVariables", error);
+			toastAndLog("error", "errorFetchingVariables", error);
 
 			return;
 		}
