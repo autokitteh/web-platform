@@ -1,3 +1,10 @@
+# [1.30.0](https://github.com/autokitteh/web-platform/compare/v1.29.1...v1.30.0) (2024-08-02)
+
+
+### Features
+
+* update table components to support light and dark variants and add storybook ([#218](https://github.com/autokitteh/web-platform/issues/218)) ([6439a99](https://github.com/autokitteh/web-platform/commit/6439a99a616effb0bce38ff11e56d83eb97be9d6))
+
 ## [1.29.1](https://github.com/autokitteh/web-platform/compare/v1.29.0...v1.29.1) (2024-07-31)
 
 
