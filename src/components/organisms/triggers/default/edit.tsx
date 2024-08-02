@@ -236,7 +236,7 @@ export const DefaultEditTrigger = () => {
 							value={name}
 						/>
 
-						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.name?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -248,6 +248,7 @@ export const DefaultEditTrigger = () => {
 									{...field}
 									aria-label={t("placeholders.selectConnection")}
 									dataTestid="select-trigger-connection"
+									disabled
 									isError={!!errors.connection}
 									label={t("placeholders.connection")}
 									noOptionsLabel={t("noConnectionsAvailable")}
@@ -259,7 +260,7 @@ export const DefaultEditTrigger = () => {
 							)}
 						/>
 
-						<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.connection?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -281,7 +282,7 @@ export const DefaultEditTrigger = () => {
 							)}
 						/>
 
-						<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -294,7 +295,7 @@ export const DefaultEditTrigger = () => {
 							value={entryFunction}
 						/>
 
-						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -306,7 +307,7 @@ export const DefaultEditTrigger = () => {
 							value={eventType}
 						/>
 
-						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.eventType?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -318,7 +319,7 @@ export const DefaultEditTrigger = () => {
 							value={filter}
 						/>
 
-						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.filter?.message}</ErrorMessage>
 					</div>
 
 					<div>

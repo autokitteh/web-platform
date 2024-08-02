@@ -33,21 +33,76 @@ export const SchedulerEditTrigger = () => {
 	const [cronConnectionId, setCronConnectionId] = useState<string>();
 	const [trigger, setTrigger] = useState<Trigger>();
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
+	const [connections, setConnections] = useState<SelectOption[]>([]);
 
 	const fetchData = async () => {
 		try {
-			const { data: connections, error: connectionsError } = await ConnectionService.list();
-			if (connectionsError) {
-				throw connectionsError;
-			}
+			const { data: allConnectionsPerCustomer, error: allConnectionsError } = await ConnectionService.list();
+			if (!allConnectionsPerCustomer || !allConnectionsPerCustomer.length) {
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("connectionsNotFound", { ns: "services" }),
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.connectionService,
+					tErrors("connectionsNotFoundExtended", { ns: "services", projectId })
+				);
 
-			const connectionId = connections?.find(
-				(item) => item.name === schedulerTriggerConnectionName
-			)?.connectionId;
-			if (!connectionId) {
-				throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
+				return;
 			}
-			setCronConnectionId(connectionId);
+			if (allConnectionsError) {
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("connectionsFetchError"),
+					type: "error",
+				});
+
+				return;
+			}
+			const cronConnection = allConnectionsPerCustomer.find(
+				(item) => item.name === schedulerTriggerConnectionName
+			);
+			if (!cronConnection) {
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("connectionCronNotFound", { ns: "services" }),
+					type: "error",
+				});
+				LoggerService.error(namespaces.triggersUI, tErrors("connectionCronNotFound", { ns: "services" }));
+
+				return;
+			}
+			const cronConnectionFormatted = {
+				label: t("cronSchedulerConnectionTitle"),
+				value: cronConnection.connectionId,
+			};
+			setCronConnectionId(cronConnection.connectionId);
+			const { data: allConnectionsPerProject, error: connectionsError } = await ConnectionService.listByProjectId(
+				projectId!
+			);
+			if (connectionsError || !allConnectionsPerProject) {
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("connectionsFetchError"),
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.triggerService,
+					tErrors("connectionsFetchErrorExtended", {
+						error: (allConnectionsError as Error).message,
+						projectId,
+					})
+				);
+
+				return;
+			}
+			const formattedConnections = allConnectionsPerProject.map((item) => ({
+				label: item.name,
+				value: item.connectionId,
+			}));
+			const allConnectionsFormatted = [cronConnectionFormatted, ...formattedConnections];
+			setConnections(allConnectionsFormatted || []);
 
 			const resources = await fetchResources();
 
@@ -102,6 +157,7 @@ export const SchedulerEditTrigger = () => {
 		watch,
 	} = useForm({
 		defaultValues: {
+			connection: { label: "", value: "" },
 			cron: "",
 			entryFunction: "",
 			filePath: { label: "", value: "" },
@@ -111,14 +167,16 @@ export const SchedulerEditTrigger = () => {
 	});
 
 	useEffect(() => {
+		const selectedConnection = connections.find((item) => item.value === trigger?.connectionId);
 		reset({
 			cron: trigger?.data?.schedule?.string?.v,
 			entryFunction: trigger?.entryFunction,
 			filePath: { label: trigger?.path, value: trigger?.path },
 			name: trigger?.name,
+			connection: selectedConnection,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [trigger]);
+	}, [trigger, connections]);
 
 	const onSubmit = async () => {
 		const { cron, entryFunction, filePath, name } = getValues();
@@ -166,6 +224,29 @@ export const SchedulerEditTrigger = () => {
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<div className="flex w-full flex-col gap-6">
+					<div className="relative">
+						<Controller
+							control={control}
+							name="connection"
+							render={({ field }) => (
+								<Select
+									{...field}
+									aria-label={t("placeholders.selectConnection")}
+									dataTestid="select-trigger-connection"
+									disabled
+									isError={!!errors.connection}
+									noOptionsLabel={t("noConnectionsAvailable")}
+									onChange={(selected) => field.onChange(selected)}
+									options={connections}
+									placeholder={t("placeholders.selectConnection")}
+									value={field.value}
+								/>
+							)}
+						/>
+
+						<ErrorMessage>{errors.connection?.message}</ErrorMessage>
+					</div>
+
 					<div className="relative">
 						<Input
 							{...register("name")}
