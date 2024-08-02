@@ -116,6 +116,7 @@ export const AwsIntegrationAddForm = ({
 					render={({ field }) => (
 						<Select
 							aria-label={t("aws.placeholders.region")}
+							dataTestid="select-aws-region"
 							isError={!!errors.region}
 							onChange={(selected) => field.onChange(selected)}
 							options={selectIntegrationAws}
@@ -165,7 +166,7 @@ export const AwsIntegrationAddForm = ({
 			</div>
 
 			<Button
-				aria-label={t("buttons.saveConnection")}
+				ariaLabel={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
 				type="submit"
