@@ -138,7 +138,7 @@ export const AddTrigger = () => {
 						placeholder={t("placeholders.name")}
 					/>
 
-					<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
+					<ErrorMessage>{errors.name?.message}</ErrorMessage>
 				</div>
 
 				<div className="relative">
@@ -165,7 +165,7 @@ export const AddTrigger = () => {
 						}}
 					/>
 
-					<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
+					<ErrorMessage>{errors.connection?.message}</ErrorMessage>
 				</div>
 			</form>
 
