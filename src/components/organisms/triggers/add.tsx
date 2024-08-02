@@ -174,5 +174,4 @@ export const AddTrigger = () => {
 	);
 };
 
-AddTrigger.displayName = "AddTrigger";
 export default AddTrigger;
