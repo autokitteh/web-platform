@@ -4,3 +4,4 @@ export { Th } from "@components/atoms/table/tH";
 export { THead } from "@components/atoms/table/tHead";
 export { Tr } from "@components/atoms/table/tR";
 export { Table } from "@components/atoms/table/table";
+export { TableVariantProvider, useTableVariant } from "@components/atoms/table/tableVariantProvider";

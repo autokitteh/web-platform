@@ -1,8 +1,11 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { Project } from "@type/models";
+
+import { useSort } from "@hooks";
 import { useProjectStore } from "@store";
 
 import { TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -13,30 +16,31 @@ export const ProjectsTable = () => {
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 
-	const itemData = useMemo(() => projectsList, [projectsList]);
+	const { items: sortedProjects, requestSort, sortConfig } = useSort<Project>(projectsList);
 
 	return (
 		<div className="relative mb-3 mt-7">
 			<div className="text-2xl font-bold text-black">{t("title")}</div>
 
-			{projectsList.length ? (
-				<Table className="mt-2.5 max-h-96 rounded-t-20 border border-gray-600">
-					<THead className="bg-white">
-						<Tr className="border-none pl-6 hover:bg-transparent">
-							<Th className="group h-11 cursor-pointer font-normal text-gray-1250">
+			{sortedProjects.length ? (
+				<Table className="mt-2.5 max-h-96 rounded-t-20" variant="light">
+					<THead>
+						<Tr className="border-none pl-6">
+							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("name")}>
 								{t("table.columns.projectName")}
 
-								<SortButton className="opacity-0 group-hover:opacity-100" />
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"name" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
 							</Th>
 						</Tr>
 					</THead>
 
-					<TBody className="bg-gray-250">
-						{itemData.map(({ href, id, name }) => (
-							<Tr
-								className="group cursor-pointer border-none pl-6 text-gray-1150 hover:bg-transparent"
-								key={id}
-							>
+					<TBody>
+						{sortedProjects.map(({ href, id, name }) => (
+							<Tr className="group cursor-pointer border-none pl-6" key={id}>
 								<Td className="group-hover:font-bold" onClick={() => navigate(href)}>
 									{name}
 								</Td>

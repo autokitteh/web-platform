@@ -1,3 +1,5 @@
+import { ColorSchemes } from "@src/types";
+
 export interface TabsProps {
 	children: React.ReactNode;
 	className?: string;
@@ -10,7 +12,7 @@ export interface TabProps {
 	ariaLabel?: string;
 	children: React.ReactNode;
 	className?: string;
-	variant?: "light" | "dark";
+	variant?: ColorSchemes;
 	onClick?: () => void;
 	value: string;
 }
