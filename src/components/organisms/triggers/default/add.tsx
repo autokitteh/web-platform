@@ -237,7 +237,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 						value={filter}
 					/>
 
-					<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
+					<ErrorMessage>{errors.filter?.message}</ErrorMessage>
 				</div>
 
 				<div>
