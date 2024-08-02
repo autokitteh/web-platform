@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { integrationTypes } from "@constants/lists";
@@ -15,12 +15,18 @@ import { GithubIntegrationEditForm } from "@components/organisms/connections/int
 
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionId } = useParams();
+	const { connectionId, projectId } = useParams();
+	const navigate = useNavigate();
+
+	const onSuccess = () => {
+		navigate(`/projects/${projectId}/connections`);
+	};
 
 	const { errors, fetchConnection, register, setValue, watch } = useConnectionForm(
 		{ connectionName: "", integration: {} },
 		connectionSchema,
-		"edit"
+		"edit",
+		onSuccess
 	);
 
 	useEffect(() => {

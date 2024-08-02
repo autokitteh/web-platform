@@ -14,7 +14,7 @@ export const useToastAndLog = () => {
 	const handleErrorDetails = (error: any): string => {
 		if (axios.isAxiosError(error)) {
 			if (error.response) {
-				return error.response.data.message;
+				return error.response.data.message || error.response.data;
 			} else if (error.request) {
 				return tErrors("axiosNoResponse");
 			} else {

@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
 import { integrationTypes } from "@constants/lists";
@@ -27,10 +28,19 @@ import {
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
 
+	const { projectId } = useParams();
+
+	const navigate = useNavigate();
+
+	const onSuccess = () => {
+		navigate(`/projects/${projectId}/connections`);
+	};
+
 	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch } = useConnectionForm(
 		{ connectionName: "", integration: { label: "", value: "" } },
 		connectionSchema,
-		"create"
+		"create",
+		onSuccess
 	);
 
 	const selectedIntegration: SelectOption = watch("integration");

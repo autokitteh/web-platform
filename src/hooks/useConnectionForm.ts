@@ -14,7 +14,8 @@ import { useToastAndLog } from "@hooks";
 export const useConnectionForm = (
 	initialValues: DefaultValues<FieldValues> | undefined,
 	validationSchema: ZodSchema,
-	mode: FormMode
+	mode: FormMode,
+	onSuccess?: () => void // Add this line
 ) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
@@ -47,7 +48,7 @@ export const useConnectionForm = (
 				return;
 			}
 
-			setConnectionIntegrationName(connectionResponse!.integrationName);
+			setConnectionIntegrationName(connectionResponse!.integrationUniqueName);
 			setValue("connectionName", connectionResponse!.name);
 			setValue("integration", {
 				label: connectionResponse!.integrationName,
@@ -87,7 +88,7 @@ export const useConnectionForm = (
 		setTimeout(() => setConnectionId(paramConnectionId || connectionId), 0);
 	};
 
-	const handleConnection = async (connectionId: string, integrationName: string): Promise<boolean> => {
+	const handleConnection = async (connectionId: string, integrationName: string): Promise<void> => {
 		setIsLoading(true);
 
 		const connectionData = getValues();
@@ -96,12 +97,10 @@ export const useConnectionForm = (
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 
-			return true;
+			onSuccess?.();
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
 			setIsLoading(false);
-
-			return false;
 		}
 	};
 

@@ -47,10 +47,7 @@ export const GithubIntegrationAddForm = ({
 		switch (selectedConnectionType?.value) {
 			case GithubConnectionType.Pat:
 				{
-					const connectionCreationResult = await handleConnection(connectionId, Integrations.github);
-					if (connectionCreationResult) {
-						navigate(`/projects/${projectId}/connections`);
-					}
+					await handleConnection(connectionId, Integrations.github);
 				}
 				break;
 			case GithubConnectionType.Oauth:
