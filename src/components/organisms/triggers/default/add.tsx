@@ -163,7 +163,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 		return isSaving ? (
 			<Loader isCenter size="xl" />
 		) : (
-			<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+			<form className="flex w-full flex-col gap-6">
 				<div className="relative">
 					<Controller
 						control={control}
