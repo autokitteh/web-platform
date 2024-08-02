@@ -1,15 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { namespaces, schedulerTriggerConnectionName } from "@constants";
-import { SelectOption } from "@interfaces/components";
+import { schedulerTriggerConnectionName } from "@constants";
 import { ChildFormRef } from "@interfaces/components/forms";
-import { ConnectionService, LoggerService } from "@services";
 
-import { useToastStore } from "@store";
+import { useFetchConnections } from "@hooks";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select, TabFormHeader } from "@components/molecules";
@@ -18,11 +16,12 @@ import { DefaultTriggerForm, TriggerSchedulerForm } from "@components/organisms/
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const [isSaving, setIsSaving] = useState(false);
-	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const { projectId } = useParams<{ projectId: string }>();
-	const { t: tErrors } = useTranslation("errors");
-	const addToast = useToastStore((state) => state.addToast);
-	const [cronConnectionId, setCronConnectionId] = useState<string>();
+
+	const { connections, cronConnectionId, isLoading } = useFetchConnections(
+		projectId!,
+		schedulerTriggerConnectionName
+	);
 	const {
 		control,
 		formState: { errors },
@@ -37,76 +36,6 @@ export const AddTrigger = () => {
 	});
 
 	const childFormRef = useRef<ChildFormRef>(null);
-
-	const fetchConnections = async () => {
-		const { data: allConnectionsPerCustomer, error: allConnectionsError } = await ConnectionService.list();
-		if (!allConnectionsPerCustomer || !allConnectionsPerCustomer.length) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionsNotFound", { ns: "services" }),
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.connectionService,
-				tErrors("connectionsNotFoundExtended", { ns: "services", projectId })
-			);
-
-			return;
-		}
-		if (allConnectionsError) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionsFetchError"),
-				type: "error",
-			});
-
-			return;
-		}
-		const cronConnection = allConnectionsPerCustomer.find((item) => item.name === schedulerTriggerConnectionName);
-		if (!cronConnection) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionCronNotFound", { ns: "services" }),
-				type: "error",
-			});
-			LoggerService.error(namespaces.triggersUI, tErrors("connectionCronNotFound", { ns: "services" }));
-
-			return;
-		}
-		const cronConnectionFormatted = {
-			label: t("cronSchedulerConnectionTitle"),
-			value: cronConnection.connectionId,
-		};
-		setCronConnectionId(cronConnection.connectionId);
-		const { data: allConnectionsPerProject, error: connectionsError } = await ConnectionService.listByProjectId(
-			projectId!
-		);
-		if (connectionsError || !allConnectionsPerProject) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionsFetchError"),
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { error: (allConnectionsError as Error).message, projectId })
-			);
-
-			return;
-		}
-		const formattedConnections = allConnectionsPerProject.map((item) => ({
-			label: item.name,
-			value: item.connectionId,
-		}));
-		const allConnectionsFormatted = [cronConnectionFormatted, ...formattedConnections];
-		setConnections(allConnectionsFormatted || []);
-	};
-
-	useEffect(() => {
-		fetchConnections();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	const { connection, name } = watch();
 
 	const isCronConnection = connection.value === cronConnectionId;
@@ -118,7 +47,12 @@ export const AddTrigger = () => {
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-10" form="addTriggerForm" isLoading={isSaving} title={t("addNewTrigger")} />
+			<TabFormHeader
+				className="mb-10"
+				form="addTriggerForm"
+				isLoading={isSaving || isLoading}
+				title={t("addNewTrigger")}
+			/>
 
 			<form className="mb-6 flex w-full flex-col gap-6" id="addTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
