@@ -8,7 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { namespaces } from "@constants";
 import { SelectOption } from "@interfaces/components";
-import { ChildFormRef } from "@interfaces/components/forms";
+import { ChildFormRef, DefaultTriggerFormProps } from "@interfaces/components/forms";
 import { LoggerService, TriggersService } from "@services";
 import { TriggerData } from "@type/models";
 import { defaultTriggerSchema } from "@validations";
@@ -21,13 +21,6 @@ import { Select } from "@components/molecules";
 
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
-
-interface DefaultTriggerFormProps {
-	connectionId: string;
-	isSaving: boolean;
-	name: string;
-	setIsSaving: (isSaving: boolean) => void;
-}
 
 export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormProps>(
 	({ connectionId, isSaving, name, setIsSaving }, ref) => {

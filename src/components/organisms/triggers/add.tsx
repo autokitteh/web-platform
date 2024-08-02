@@ -111,15 +111,6 @@ export const AddTrigger = () => {
 
 	const isCronConnection = connection.value === cronConnectionId;
 	const TriggerFormComponent = isCronConnection ? TriggerSchedulerForm : DefaultTriggerForm;
-	const FormTriggerComponent = (
-		<TriggerFormComponent
-			connectionId={connection.value}
-			isSaving={isSaving}
-			name={name}
-			ref={childFormRef}
-			setIsSaving={setIsSaving}
-		/>
-	);
 
 	const onSubmit = async () => {
 		await childFormRef.current?.onSubmit();
@@ -169,7 +160,13 @@ export const AddTrigger = () => {
 				</div>
 			</form>
 
-			{FormTriggerComponent}
+			<TriggerFormComponent
+				connectionId={connection.value}
+				isSaving={isSaving}
+				name={name}
+				ref={childFormRef}
+				setIsSaving={setIsSaving}
+			/>
 		</div>
 	);
 };
