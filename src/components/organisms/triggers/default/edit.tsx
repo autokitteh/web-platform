@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce, has } from "lodash";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { TriggersService } from "@services";
+import { schedulerTriggerConnectionName } from "@src/constants";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { TriggerData } from "@src/types/models";
@@ -27,7 +28,10 @@ export const DefaultEditTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useFileOperations(projectId!);
-	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!, "");
+	const { connections, isLoading: isLoadingConnections } = useFetchConnections(
+		projectId!,
+		schedulerTriggerConnectionName
+	);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
@@ -61,7 +65,6 @@ export const DefaultEditTrigger = () => {
 		handleSubmit,
 		register,
 		reset,
-		watch,
 	} = useForm({
 		defaultValues: {
 			connection: { label: "", value: "" },
@@ -162,7 +165,10 @@ export const DefaultEditTrigger = () => {
 		});
 	};
 
-	const { entryFunction, eventType, filter, name } = watch();
+	const entryFunction = useWatch({ control, name: "entryFunction" });
+	const eventType = useWatch({ control, name: "eventType" });
+	const filter = useWatch({ control, name: "filter" });
+	const name = useWatch({ control, name: "name" });
 
 	return isLoadingConnections || isLoadingTrigger ? (
 		<Loader isCenter size="xl" />

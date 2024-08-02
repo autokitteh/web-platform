@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { TriggersService } from "@services";
-import { infoCronExpressionsLinks } from "@src/constants";
+import { infoCronExpressionsLinks, schedulerTriggerConnectionName } from "@src/constants";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectItem } from "@src/types/components";
 import { schedulerTriggerSchema } from "@validations";
@@ -30,7 +30,7 @@ export const SchedulerEditTrigger = () => {
 		connections,
 		cronConnectionId,
 		isLoading: isLoadingConnections,
-	} = useFetchConnections(projectId!, "schedulerTriggerConnectionName");
+	} = useFetchConnections(projectId!, schedulerTriggerConnectionName);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const [isSaving, setIsSaving] = useState(false);
 
@@ -54,7 +54,8 @@ export const SchedulerEditTrigger = () => {
 			}
 		};
 		fetchResourcesData();
-	}, [fetchResources, tErrors, addToast]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const {
 		control,
@@ -63,7 +64,6 @@ export const SchedulerEditTrigger = () => {
 		handleSubmit,
 		register,
 		reset,
-		watch,
 	} = useForm({
 		defaultValues: {
 			connection: { label: "", value: "" },
@@ -86,7 +86,8 @@ export const SchedulerEditTrigger = () => {
 				connection: selectedConnection,
 			});
 		}
-	}, [trigger, connections, reset]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [trigger, connections]);
 
 	const onSubmit = async () => {
 		const { cron, entryFunction, filePath, name } = getValues();
@@ -115,7 +116,9 @@ export const SchedulerEditTrigger = () => {
 		navigate(`/projects/${projectId!}/triggers`);
 	};
 
-	const { cron, entryFunction, name } = watch();
+	const cron = useWatch({ control, name: "cron" });
+	const entryFunction = useWatch({ control, name: "entryFunction" });
+	const name = useWatch({ control, name: "name" });
 
 	return isLoadingConnections || isLoadingTrigger ? (
 		<Loader isCenter size="xl" />
