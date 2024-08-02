@@ -231,7 +231,7 @@ export const SchedulerEditTrigger = () => {
 				</div>
 			</form>
 
-			<Accordion className="mt-2" title={t("information")}>
+			<Accordion className="mt-6" title={t("information")}>
 				<div className="flex flex-col items-start gap-2">
 					{infoCronExpressionsLinks.map(({ text, url }, index) => (
 						<Link
