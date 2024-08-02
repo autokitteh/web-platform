@@ -1,6 +1,7 @@
 export const namespaces = {
 	authService: "Authorization Service",
 	connectionService: "Connection Service",
+	triggersUI: "Triggers UI",
 	deploymentsService: "Deployments Service",
 	environmentsService: "Environments Service",
 	manifestService: "Manifest Service",

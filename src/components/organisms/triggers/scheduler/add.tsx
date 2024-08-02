@@ -99,10 +99,6 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, TriggerSchedulerFor
 					message: tErrors("triggerNotCreated"),
 					type: "error",
 				});
-				LoggerService.error(
-					namespaces.triggerService,
-					tErrors("triggerNotCreatedExtended", { error: (error as Error).message, projectId })
-				);
 
 				return;
 			}
@@ -130,7 +126,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, TriggerSchedulerFor
 							value={cron}
 						/>
 
-						<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.cron?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -153,7 +149,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, TriggerSchedulerFor
 							)}
 						/>
 
-						<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -166,10 +162,10 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, TriggerSchedulerFor
 							value={entryFunction}
 						/>
 
-						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
 					</div>
 				</form>
-				<Accordion title={t("information")}>
+				<Accordion className="mt-6" title={t("information")}>
 					<div className="flex flex-col items-start gap-2">
 						{infoCronExpressionsLinks.map(({ text, url }, index) => (
 							<Link

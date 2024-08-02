@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { namespaces, schedulerTriggerConnectionName } from "@constants";
-import { TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 import { ChildFormRef } from "@interfaces/components/forms";
 import { ConnectionService, LoggerService } from "@services";
@@ -44,10 +43,13 @@ export const AddTrigger = () => {
 		if (!allConnectionsPerCustomer || !allConnectionsPerCustomer.length) {
 			addToast({
 				id: Date.now().toString(),
-				message: tErrors("connectionCronNotFound", { ns: "services" }),
+				message: tErrors("connectionsNotFound", { ns: "services" }),
 				type: "error",
 			});
-			LoggerService.error(namespaces.triggerService, tErrors("connectionCronNotFound", { ns: "services" }));
+			LoggerService.error(
+				namespaces.connectionService,
+				tErrors("connectionsNotFoundExtended", { ns: "services", projectId })
+			);
 
 			return;
 		}
@@ -57,10 +59,6 @@ export const AddTrigger = () => {
 				message: tErrors("connectionsFetchError"),
 				type: "error",
 			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { error: (allConnectionsError as Error).message, projectId })
-			);
 
 			return;
 		}
@@ -71,7 +69,7 @@ export const AddTrigger = () => {
 				message: tErrors("connectionCronNotFound", { ns: "services" }),
 				type: "error",
 			});
-			LoggerService.error(namespaces.triggerService, tErrors("connectionCronNotFound", { ns: "services" }));
+			LoggerService.error(namespaces.triggersUI, tErrors("connectionCronNotFound", { ns: "services" }));
 
 			return;
 		}
@@ -111,36 +109,20 @@ export const AddTrigger = () => {
 
 	const { connection, name } = watch();
 
-	const formTriggerComponents = {
-		[TriggerFormType.default]: (
-			<DefaultTriggerForm
-				connectionId={connection.value}
-				isSaving={isSaving}
-				name={name}
-				ref={childFormRef}
-				setIsSaving={setIsSaving}
-			/>
-		),
-		[TriggerFormType.scheduler]: (
-			<TriggerSchedulerForm
-				connectionId={connection.value}
-				isSaving={isSaving}
-				name={name}
-				ref={childFormRef}
-				setIsSaving={setIsSaving}
-			/>
-		),
-	};
-
-	const FormTriggerComponent =
-		connection.value === cronConnectionId
-			? formTriggerComponents[TriggerFormType.scheduler]
-			: formTriggerComponents[TriggerFormType.default];
+	const isCronConnection = connection.value === cronConnectionId;
+	const TriggerFormComponent = isCronConnection ? TriggerSchedulerForm : DefaultTriggerForm;
+	const FormTriggerComponent = (
+		<TriggerFormComponent
+			connectionId={connection.value}
+			isSaving={isSaving}
+			name={name}
+			ref={childFormRef}
+			setIsSaving={setIsSaving}
+		/>
+	);
 
 	const onSubmit = async () => {
-		if (childFormRef.current) {
-			await childFormRef.current.onSubmit();
-		}
+		await childFormRef.current?.onSubmit();
 	};
 
 	return (
@@ -179,7 +161,7 @@ export const AddTrigger = () => {
 						)}
 						rules={{
 							required: t("placeholders.selectConnection"),
-							validate: (value) => value?.value !== "" || t("placeholders.selectConnection"),
+							validate: ({ value }) => value !== "" || t("placeholders.selectConnection"),
 						}}
 					/>
 
