@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { SingleValue } from "react-select";
 
 import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
@@ -16,7 +15,7 @@ import { GithubIntegrationEditForm } from "@components/organisms/connections/int
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");
 	const { connectionId } = useParams();
-	const { errors, fetchConnection, register, setValue, watch } = useConnectionForm(
+	const { errors, fetchConnection, register, watch } = useConnectionForm(
 		{ connectionName: "", integration: {} },
 		connectionSchema,
 		"edit"
@@ -31,9 +30,6 @@ export const EditConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	const handleIntegrationChange = (option: SingleValue<SelectOption>): void => {
-		setValue("integration", option as SelectOption);
-	};
 	const selectedIntegrationComponent = selectedIntegration ? <GithubIntegrationEditForm /> : null;
 
 	const connectionName = watch("connectionName");
@@ -60,7 +56,7 @@ export const EditConnection = () => {
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
 					disabled
-					onChange={handleIntegrationChange}
+					onChange={() => {}}
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}
 					value={selectedIntegration}
