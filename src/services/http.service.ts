@@ -1,6 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 
+<<<<<<< HEAD
 import { apiAuthCookieName, apiBaseUrl, apiRequestTimeout } from "@constants";
+=======
+import { apiBaseUrl, isLoggedInCookie } from "@constants";
+>>>>>>> 62fd916b (refactor: rename constant)
 import { deleteCookie } from "@src/utilities";
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
@@ -23,7 +27,7 @@ httpClient.interceptors.response.use(
 	function (error: AxiosError) {
 		const status = error?.response?.status || 0;
 		if (status === 401) {
-			deleteCookie(apiAuthCookieName);
+			deleteCookie(isLoggedInCookie);
 
 			localStorage.clear();
 			window.location.reload();

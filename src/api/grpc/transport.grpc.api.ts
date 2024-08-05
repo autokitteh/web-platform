@@ -9,7 +9,7 @@ import {
 } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 
-import { apiAuthCookieName, apiBaseUrl, apiRequestTimeout, isAuthEnabled } from "@constants";
+import { apiBaseUrl, apiRequestTimeout, isAuthEnabled, isLoggedInCookie } from "@constants";
 import { deleteCookie } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
@@ -22,7 +22,7 @@ const authInterceptor: Interceptor =
 			return await next(req);
 		} catch (error) {
 			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
-				deleteCookie(apiAuthCookieName);
+				deleteCookie(isLoggedInCookie);
 				localStorage.clear();
 				window.location.reload();
 			}
