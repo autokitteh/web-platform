@@ -23,13 +23,23 @@ export const GithubIntegrationEditForm = () => {
 		navigate(`/projects/${projectId}/connections`);
 	};
 
-	const { copyToClipboard, errors, handleOAuth, handleSubmit, isLoading, onSubmit, register, setValue, watch } =
-		useConnectionForm(
-			{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true },
-			githubIntegrationSchema,
-			"edit",
-			onSuccess
-		);
+	const {
+		copyToClipboard,
+		errors,
+		getValues,
+		handleOAuth,
+		handleSubmit,
+		isLoading,
+		onSubmit,
+		register,
+		setValue,
+		watch,
+	} = useConnectionForm(
+		{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true, webhook: "" },
+		githubIntegrationSchema,
+		"edit",
+		onSuccess
+	);
 
 	const selectedConnectionType = watch("selectedConnectionType");
 
@@ -48,7 +58,9 @@ export const GithubIntegrationEditForm = () => {
 					<PatForm
 						copyToClipboard={copyToClipboard}
 						errors={errors}
+						getValues={getValues}
 						isLoading={isLoading}
+						mode="edit"
 						register={register}
 						setValue={setValue}
 					/>

@@ -32,6 +32,7 @@ export const GithubIntegrationAddForm = ({
 	const {
 		copyToClipboard,
 		errors,
+		getValues,
 		handleConnection,
 		handleOAuth,
 		handleSubmit,
@@ -51,7 +52,7 @@ export const GithubIntegrationAddForm = ({
 		switch (selectedConnectionType?.value) {
 			case GithubConnectionType.Pat:
 				{
-					await handleConnection(connectionId, Integrations.github);
+					await handleConnection(connectionId, Integrations.github, GithubConnectionType.Pat);
 				}
 				break;
 			case GithubConnectionType.Oauth:
@@ -81,7 +82,9 @@ export const GithubIntegrationAddForm = ({
 					<PatForm
 						copyToClipboard={copyToClipboard}
 						errors={errors}
+						getValues={getValues}
 						isLoading={isLoading}
+						mode="edit"
 						register={register}
 						setValue={setValue}
 					/>

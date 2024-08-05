@@ -15,13 +15,17 @@ import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons"
 export const PatForm = ({
 	copyToClipboard,
 	errors,
+	getValues,
 	isLoading,
+	mode,
 	register,
 	setValue,
 }: {
 	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
+	getValues: any;
 	isLoading: boolean;
+	mode: "create" | "edit";
 	register: UseFormRegister<{ [x: string]: any }>;
 	setValue: any;
 }) => {
@@ -29,10 +33,20 @@ export const PatForm = ({
 	const [webhook, setWebhook] = useState("");
 
 	useEffect(() => {
-		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
-		setValue("webhook", webhook); // Update the react-hook-form state when webhook changes
+		if (mode === "edit") {
+			setWebhook(`${apiBaseUrl}/${getValues()["webhook"]}`);
+		} else {
+			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		if (webhook) {
+			setValue("webhook", webhook);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [webhook]);
 
 	return (
 		<>

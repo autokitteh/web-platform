@@ -7,6 +7,7 @@ import { ZodSchema } from "zod";
 
 import { apiBaseUrl } from "@constants";
 import { ConnectionService, HttpService, VariablesService } from "@services";
+import { GithubConnectionType } from "@src/enums";
 import { FormMode } from "@src/types/components";
 
 import { useToastAndLog } from "@hooks";
@@ -88,13 +89,27 @@ export const useConnectionForm = (
 		setTimeout(() => setConnectionId(paramConnectionId || connectionId), 0);
 	};
 
-	const handleConnection = async (connectionId: string, integrationName: string): Promise<void> => {
+	const handleConnection = async (
+		connectionId: string,
+		integrationName: string,
+		connectionAuthType: GithubConnectionType
+	): Promise<void> => {
 		setIsLoading(true);
 
 		const connectionData = getValues();
 
 		try {
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			VariablesService.set(
+				connectionId!,
+				{
+					name: "auth_type",
+					value: connectionAuthType,
+					isSecret: false,
+					scopeId: connectionId,
+				},
+				true
+			);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 
 			onSuccess?.();
@@ -116,7 +131,8 @@ export const useConnectionForm = (
 		if (mode === "create") {
 			await handleCreateMode();
 		} else {
-			await handleConnection(connectionId!, connectionIntegrationName!);
+			const { value: selectedConnectionType } = getValues("selectedConnectionType");
+			await handleConnection(connectionId!, connectionIntegrationName!, selectedConnectionType);
 		}
 	};
 
@@ -139,12 +155,17 @@ export const useConnectionForm = (
 		}
 	};
 
-	const fetchVariables = async (id: string) => {
-		const { data: vars, error } = await VariablesService.list(id);
+	const fetchVariables = async (connectionId: string) => {
+		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
 			toastAndLog("error", "errorFetchingVariables", error);
 
 			return;
+		}
+
+		const githubWebhook = vars?.find((variable) => variable.name === "pat_key");
+		if (githubWebhook) {
+			setValue("webhook", githubWebhook.value);
 		}
 
 		if (vars?.length) {
@@ -171,6 +192,7 @@ export const useConnectionForm = (
 		copyToClipboard,
 		handleConnection,
 		handleOAuth,
+		getValues,
 		setValue,
 		connectionId,
 		fetchConnection,
