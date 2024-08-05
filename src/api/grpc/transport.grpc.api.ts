@@ -25,7 +25,6 @@ const authInterceptor: Interceptor =
 				deleteCookie(apiAuthCookieName);
 				localStorage.clear();
 				window.location.reload();
-				throw error;
 			}
 			throw error;
 		}
