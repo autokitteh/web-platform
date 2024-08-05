@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import Cookies from "js-cookie";
 
 import { apiAuthCookieName, apiBaseUrl, apiRequestTimeout } from "@constants";
+import { deleteCookie } from "@src/utilities";
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 	axios.create({
@@ -23,7 +23,7 @@ httpClient.interceptors.response.use(
 	function (error: AxiosError) {
 		const status = error?.response?.status || 0;
 		if (status === 401) {
-			Cookies.remove(apiAuthCookieName);
+			deleteCookie(apiAuthCookieName);
 
 			localStorage.clear();
 			window.location.reload();

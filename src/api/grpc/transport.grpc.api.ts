@@ -8,9 +8,9 @@ import {
 	UnaryResponse,
 } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
-import Cookies from "js-cookie";
 
 import { apiAuthCookieName, apiBaseUrl, apiRequestTimeout, isAuthEnabled } from "@constants";
+import { deleteCookie } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -22,7 +22,7 @@ const responseInterceptor: Interceptor =
 			return await next(req);
 		} catch (error) {
 			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
-				Cookies.remove(apiAuthCookieName);
+				deleteCookie(apiAuthCookieName);
 				localStorage.clear();
 				window.location.reload();
 				throw error;
