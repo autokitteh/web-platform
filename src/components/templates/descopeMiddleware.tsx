@@ -15,16 +15,14 @@ import { Badge, Frame, LogoCatLarge } from "@components/atoms";
 import { IconLogoAuth } from "@assets/image";
 
 export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) => {
-	const { getProjectsList, reset: resetProjectStore } = useProjectStore();
-	const { getLoggedInUser, reset: resetUserStore, setLogoutFunction } = useUserStore();
+	const { getProjectsList } = useProjectStore();
+	const { getLoggedInUser, setLogoutFunction } = useUserStore();
 	const { logout } = useDescope();
 
 	const handleLogout = useCallback(() => {
 		deleteCookie(apiAuthCookieName);
-		resetProjectStore();
-		resetUserStore();
 		logout();
-	}, [resetProjectStore, resetUserStore, logout]);
+	}, [logout]);
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("login");
 	const benefits = Object.values(t("benefits", { returnObjects: true }));

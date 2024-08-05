@@ -15,7 +15,7 @@ import { deleteCookie } from "@src/utilities";
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
 
-const responseInterceptor: Interceptor =
+const authInterceptor: Interceptor =
 	(next) =>
 	async (req: RequestType): Promise<ResponseType> => {
 		try {
@@ -36,5 +36,5 @@ export const grpcTransport = createConnectTransport({
 	baseUrl: apiBaseUrl,
 	credentials,
 	defaultTimeoutMs: apiRequestTimeout,
-	interceptors: [responseInterceptor],
+	interceptors: [authInterceptor],
 });
