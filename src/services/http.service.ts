@@ -1,11 +1,18 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import i18n from "i18next";
+import Cookies from "js-cookie";
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 import { apiAuthCookieName, apiBaseUrl, apiRequestTimeout } from "@constants";
 =======
 import { apiBaseUrl, isLoggedInCookie } from "@constants";
 >>>>>>> 62fd916b (refactor: rename constant)
 import { deleteCookie } from "@src/utilities";
+=======
+import { apiBaseUrl, isLoggedInCookie, namespaces } from "@constants";
+import { LoggerService } from "@services";
+>>>>>>> bcaace5c (refactor: add cookies library instead of native js)
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 	axios.create({
@@ -27,9 +34,11 @@ httpClient.interceptors.response.use(
 	function (error: AxiosError) {
 		const status = error?.response?.status || 0;
 		if (status === 401) {
-			deleteCookie(isLoggedInCookie);
+			Cookies.remove(isLoggedInCookie);
 
 			localStorage.clear();
+			LoggerService.error(namespaces.axiosHTTPClient, i18n.t("unauthenticated", { ns: "global", error }));
+
 			window.location.reload();
 		}
 

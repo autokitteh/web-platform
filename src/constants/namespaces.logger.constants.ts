@@ -13,4 +13,6 @@ export const namespaces = {
 	sessionsService: "Sessions Service",
 	triggerService: "Trigger Service",
 	variableService: "Variable Service",
+	grpcTransporter: "gRPC Transporter",
+	axiosHTTPClient: "Axios HTTP Client",
 };
