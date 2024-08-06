@@ -54,7 +54,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		[getLoggedInUser, getProjectsList]
 	);
 
-	if (!!authBearer || user) {
+	if (authBearer || user) {
 		return children;
 	}
 
