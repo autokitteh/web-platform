@@ -245,8 +245,8 @@ export const SessionsTable = () => {
 						</Table>
 
 						{isLoading ? (
-							<div className="flex w-full">
-								<Loader firstColor="gray" size="xl" />
+							<div className="flex h-10 w-full items-center">
+								<Loader firstColor="light-gray" size="md" />
 							</div>
 						) : null}
 					</div>

@@ -7,4 +7,4 @@ export interface LoaderProps {
 	size?: SystemSizes;
 }
 
-type LoaderColorType = "dark-gray" | "gray";
+type LoaderColorType = "dark-gray" | "gray" | "light-gray";
