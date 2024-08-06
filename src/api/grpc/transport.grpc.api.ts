@@ -8,6 +8,7 @@ import {
 	UnaryResponse,
 } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
+import i18n from "i18next";
 
 import { apiBaseUrl, apiRequestTimeout, isAuthEnabled, isLoggedInCookie } from "@constants";
 import { deleteCookie } from "@src/utilities";
@@ -24,6 +25,7 @@ const authInterceptor: Interceptor =
 			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
 				deleteCookie(isLoggedInCookie);
 				localStorage.clear();
+				console.error(i18n.t("unauthenticated", { ns: "global" }), error);
 				window.location.reload();
 			}
 			throw error;

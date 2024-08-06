@@ -1,3 +1,4 @@
 {
-	"success": "Success"
+	"success": "Success",
+	"unauthenticated": "Unauthenticated, reloading page... More information regarding the error: {{error}}"
 }
