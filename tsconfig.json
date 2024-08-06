@@ -62,6 +62,7 @@
 	"references": [{ "path": "./tsconfig.node.json" }],
 	"include": [
 	  "src",
+	  "e2e",
 	  "src/images.d.ts"
 	]
 }

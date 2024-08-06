@@ -5,6 +5,7 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 
 import { apiBaseUrl } from "@constants";
+import { authBearer } from "@src/constants/global.constants";
 import { useUserStore } from "@store/useUserStore";
 
 import { useProjectStore, useToastStore } from "@store";
@@ -53,35 +54,35 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		[getLoggedInUser, getProjectsList]
 	);
 
-	if (!user) {
-		return (
-			<div className="flex h-screen w-screen flex-col pb-10 pl-10 pr-9 pt-5">
-				<IconLogoAuth />
-
-				<div className="flex flex-1 items-center justify-between">
-					<div className="flex h-full w-1/2 items-center justify-center rounded-2xl px-8 py-10">
-						<div className="max-w-96">
-							<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
-						</div>
-					</div>
-
-					<Frame className="flex h-full w-1/2 items-center justify-center overflow-hidden bg-gray-150">
-						<h2 className="text-3xl font-bold text-black">{t("whyDevelopersLove")}</h2>
-
-						<div className="mt-8 flex max-w-485 flex-wrap gap-3.5">
-							{benefits.map((name, index) => (
-								<Badge className="z-10 bg-white px-4 py-2 text-base font-normal" key={index}>
-									{t(name)}
-								</Badge>
-							))}
-						</div>
-
-						<LogoCatLarge className="!-bottom-5 !-right-5 opacity-100" />
-					</Frame>
-				</div>
-			</div>
-		);
+	if (!!authBearer || user) {
+		return children;
 	}
 
-	return children;
+	return (
+		<div className="flex h-screen w-screen flex-col pb-10 pl-10 pr-9 pt-5">
+			<IconLogoAuth />
+
+			<div className="flex flex-1 items-center justify-between">
+				<div className="flex h-full w-1/2 items-center justify-center rounded-2xl px-8 py-10">
+					<div className="max-w-96">
+						<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
+					</div>
+				</div>
+
+				<Frame className="flex h-full w-1/2 items-center justify-center overflow-hidden bg-gray-150">
+					<h2 className="text-3xl font-bold text-black">{t("whyDevelopersLove")}</h2>
+
+					<div className="mt-8 flex max-w-485 flex-wrap gap-3.5">
+						{benefits.map((name, index) => (
+							<Badge className="z-10 bg-white px-4 py-2 text-base font-normal" key={index}>
+								{t(name)}
+							</Badge>
+						))}
+					</div>
+
+					<LogoCatLarge className="!-bottom-5 !-right-5 opacity-100" />
+				</Frame>
+			</div>
+		</div>
+	);
 };

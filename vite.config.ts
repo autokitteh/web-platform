@@ -28,6 +28,7 @@ export default defineConfig({
 		"import.meta.env.VITE_BASE_URL": JSON.stringify(process.env.VITE_BASE_URL),
 		"import.meta.env.SENTRY_AUTH_TOKEN": JSON.stringify(process.env.SENTRY_AUTH_TOKEN),
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
+		"import.meta.env.VITE_AUTH_BEARER_TOKEN": JSON.stringify(process.env.VITE_AUTH_BEARER_TOKEN),
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
@@ -80,10 +81,5 @@ export default defineConfig({
 		origin: process.env.VITE_DOMAIN_URL,
 		port: 8000,
 		strictPort: true,
-	},
-	test: {
-		environment: "jsdom",
-		globals: true,
-		setupFiles: ["./setupTests.ts"],
 	},
 });
