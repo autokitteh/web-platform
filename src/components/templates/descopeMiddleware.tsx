@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { Descope, useDescope } from "@descope/react-sdk";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 
 import { apiBaseUrl, authBearer, isLoggedInCookie } from "@constants";
-import { deleteCookie, getCookie } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
 import { useProjectStore, useToastStore } from "@store";
@@ -20,7 +20,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	const { logout } = useDescope();
 
 	const handleLogout = useCallback(() => {
-		deleteCookie(isLoggedInCookie);
+		Cookies.remove(isLoggedInCookie);
 		logout();
 	}, [logout]);
 	const addToast = useToastStore((state) => state.addToast);
@@ -54,7 +54,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		[getLoggedInUser, getProjectsList]
 	);
 
-	const authCookieExist = !!getCookie(isLoggedInCookie);
+	const authCookieExist = Cookies.get(isLoggedInCookie);
 
 	if (authBearer || authCookieExist) {
 		return children;
