@@ -6,6 +6,7 @@ interface ImportMetaEnv {
 	readonly VITE_NODE_ENV: "development" | "production";
 	readonly VITE_AUTH_ENABLED: string;
 	readonly VITE_DESCOPE_PROJECT_ID: string;
+	readonly TESTS_JWT_AUTH_TOKEN: string;
 	readonly VITE_API_BASE_URL: string;
 	readonly VITE_BASE_URL: string;
 	readonly VITE_SENTRY_AUTH_TOKEN: string;
