@@ -28,7 +28,7 @@ export default defineConfig({
 		"import.meta.env.VITE_BASE_URL": JSON.stringify(process.env.VITE_BASE_URL),
 		"import.meta.env.SENTRY_AUTH_TOKEN": JSON.stringify(process.env.SENTRY_AUTH_TOKEN),
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
-		"import.meta.env.VITE_AUTH_BEARER_TOKEN": JSON.stringify(process.env.VITE_AUTH_BEARER_TOKEN),
+		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],

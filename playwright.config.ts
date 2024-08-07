@@ -76,7 +76,7 @@ export default defineConfig({
 		trace: "on",
 		video: "retain-on-failure",
 		extraHTTPHeaders: {
-			Authorization: `Bearer ${process.env.VITE_AUTH_BEARER_TOKEN}`,
+			Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}`,
 		},
 	},
 
