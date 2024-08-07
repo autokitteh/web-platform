@@ -23,7 +23,7 @@ const authInterceptor: Interceptor =
 		} catch (error) {
 			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
 				Cookies.remove(isLoggedInCookie);
-				localStorage.clear();
+				window.localStorage.clear();
 				window.location.reload();
 			}
 			throw error;

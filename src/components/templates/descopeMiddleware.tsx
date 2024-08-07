@@ -22,6 +22,8 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	const handleLogout = useCallback(() => {
 		Cookies.remove(isLoggedInCookie);
 		logout();
+		window.localStorage.clear();
+		window.location.reload();
 	}, [logout]);
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("login");

@@ -38,9 +38,7 @@ httpClient.interceptors.response.use(
 		const status = error?.response?.status || 0;
 		if (status === 401) {
 			Cookies.remove(isLoggedInCookie);
-
-			localStorage.clear();
-
+			window.localStorage.clear();
 			window.location.reload();
 		}
 
