@@ -161,6 +161,10 @@ export const useConnectionForm = (
 		createNewConnection();
 	};
 
+	const onSubmitEdit = async () => {
+		handleConnection(connectionId!, connectionType as ConnectionAuthType, connectionIntegrationName);
+	};
+
 	const handleOAuth = async (oauthConnectionId: string, integrationName: Integrations) => {
 		try {
 			await VariablesService.set(
@@ -216,5 +220,6 @@ export const useConnectionForm = (
 		reset,
 		connectionType,
 		connectionVariables,
+		onSubmitEdit,
 	};
 };

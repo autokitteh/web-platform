@@ -8,7 +8,7 @@ import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { connectionSchema } from "@validations";
 
-import { ErrorMessage, Input, Select } from "@components/atoms";
+import { Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
 import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
 
@@ -49,8 +49,6 @@ export const EditConnection = () => {
 						placeholder={t("github.placeholders.name")}
 						value={connectionName}
 					/>
-
-					<ErrorMessage>{errors?.connectionName?.message as string}</ErrorMessage>
 				</div>
 
 				<Select

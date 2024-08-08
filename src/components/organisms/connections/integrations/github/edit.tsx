@@ -20,7 +20,7 @@ export const GithubIntegrationEditForm = () => {
 		errors,
 		handleSubmit,
 		isLoading,
-		onSubmit,
+		onSubmitEdit,
 		register,
 		setValue,
 	} = useConnectionForm(
@@ -58,7 +58,7 @@ export const GithubIntegrationEditForm = () => {
 	const selectConnectionTypeValue = githubIntegrationAuthMethods.find((method) => method.value === connectionType);
 
 	return (
-		<form className="flex items-start gap-10" id="connectionForm" onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex items-start gap-10" id="connectionForm" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
