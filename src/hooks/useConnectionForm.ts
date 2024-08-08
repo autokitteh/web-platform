@@ -164,7 +164,7 @@ export const useConnectionForm = (
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: Integrations) => {
 		try {
-			VariablesService.set(
+			await VariablesService.set(
 				oauthConnectionId!,
 				{
 					name: "auth_type",
