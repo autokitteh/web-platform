@@ -15,17 +15,17 @@ import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons"
 export const PatForm = ({
 	copyToClipboard,
 	errors,
-	getValues,
 	isLoading,
 	mode,
+	patWebhookKey,
 	register,
 	setValue,
 }: {
 	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
-	getValues: any;
 	isLoading: boolean;
 	mode: "create" | "edit";
+	patWebhookKey?: string;
 	register: UseFormRegister<{ [x: string]: any }>;
 	setValue: any;
 }) => {
@@ -34,7 +34,7 @@ export const PatForm = ({
 
 	useEffect(() => {
 		if (mode === "edit") {
-			setWebhook(`${apiBaseUrl}/${getValues()["webhook"]}`);
+			setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
 		} else {
 			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
 		}

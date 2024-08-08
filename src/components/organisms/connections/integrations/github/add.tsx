@@ -22,7 +22,7 @@ export const GithubIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { copyToClipboard, errors, getValues, handleConnection, handleOAuth, isLoading, register, setValue, watch } =
+	const { copyToClipboard, errors, handleConnection, handleOAuth, isLoading, register, setValue, watch } =
 		useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create");
 
 	const selectedConnectionType = watch("selectedConnectionType");
@@ -57,7 +57,6 @@ export const GithubIntegrationAddForm = ({
 					<PatForm
 						copyToClipboard={copyToClipboard}
 						errors={errors}
-						getValues={getValues}
 						isLoading={isLoading}
 						mode="create"
 						register={register}

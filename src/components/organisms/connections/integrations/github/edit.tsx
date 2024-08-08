@@ -15,9 +15,9 @@ export const GithubIntegrationEditForm = () => {
 
 	const {
 		connectionType,
+		connectionVariables,
 		copyToClipboard,
 		errors,
-		getValues,
 		handleSubmit,
 		isLoading,
 		onSubmit,
@@ -29,6 +29,11 @@ export const GithubIntegrationEditForm = () => {
 		"edit"
 	);
 
+	let patWebhookKey: string | undefined;
+	if (connectionType === ConnectionAuthType.Pat && connectionVariables) {
+		patWebhookKey = connectionVariables.find((variable) => variable.name === "pat_key")?.value;
+	}
+
 	const renderConnectionFields = () => {
 		switch (connectionType) {
 			case ConnectionAuthType.Pat:
@@ -36,9 +41,9 @@ export const GithubIntegrationEditForm = () => {
 					<PatForm
 						copyToClipboard={copyToClipboard}
 						errors={errors}
-						getValues={getValues}
 						isLoading={isLoading}
 						mode="edit"
+						patWebhookKey={patWebhookKey}
 						register={register}
 						setValue={setValue}
 					/>

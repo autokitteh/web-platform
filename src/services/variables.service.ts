@@ -61,6 +61,7 @@ export class VariablesService {
 		isConnection: boolean = false
 	): Promise<ServiceResponse<string>> {
 		try {
+			const { data: vars } = await this.list(projectId);
 			if (!isConnection) {
 				const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
 
@@ -96,7 +97,7 @@ export class VariablesService {
 				return { data: undefined, error: undefined };
 			}
 
-			await variablesClient.set({ vars: [{ ...singleVariable, scopeId: projectId }] });
+			await variablesClient.set({ vars: [...(vars || []), { ...singleVariable, scopeId: projectId }] });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
