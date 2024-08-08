@@ -3,12 +3,14 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { Button } from "@components/atoms";
+import { ConnectionAuthType } from "@src/enums/connections/connectionTypes.enum";
+
+import { Button, Input } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const OauthForm = ({ triggerParentFormSubmit }: { triggerParentFormSubmit: () => void }) => {
+export const OauthForm = () => {
 	const { t } = useTranslation("integrations");
 
 	return (
@@ -26,11 +28,12 @@ export const OauthForm = ({ triggerParentFormSubmit }: { triggerParentFormSubmit
 			</Accordion>
 
 			<p className="mt-2">{t("github.clickButtonInstall")}</p>
+			<Input name="connectionAuthType" type="hidden" value={ConnectionAuthType.Oauth} />
 
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
-				onClick={triggerParentFormSubmit}
+				type="submit"
 				variant="outline"
 			>
 				{t("buttons.startOAuthFlow")}

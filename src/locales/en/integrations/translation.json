@@ -11,7 +11,8 @@
 		"selectConnectionType": "Select connection type",
 		"connectionType": "Connection type",
 		"selectIntegration": "Select integration",
-		"integration": "Integration"
+		"integration": "Integration",
+		"name": "Name"
 	},
 	"success": "Success",
 	"buttons": {

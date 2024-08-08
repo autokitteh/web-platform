@@ -6,7 +6,7 @@ import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
 import { Integrations } from "@enums/components";
-import { GithubConnectionType } from "@enums/connections";
+import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { githubIntegrationSchema } from "@validations";
@@ -53,7 +53,7 @@ export const GithubIntegrationEditForm = () => {
 
 	const renderConnectionFields = () => {
 		switch (selectedConnectionType?.value) {
-			case GithubConnectionType.Pat:
+			case ConnectionAuthType.Pat:
 				return (
 					<PatForm
 						copyToClipboard={copyToClipboard}
@@ -65,7 +65,7 @@ export const GithubIntegrationEditForm = () => {
 						setValue={setValue}
 					/>
 				);
-			case GithubConnectionType.Oauth:
+			case ConnectionAuthType.Oauth:
 				return <OauthForm triggerParentFormSubmit={initOAuth} />;
 			default:
 				return null;

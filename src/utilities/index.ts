@@ -9,3 +9,4 @@ export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils"
 export { sortArray } from "@utilities/sortArray.utils";
 export { ValidateURL } from "@utilities/validateUrl.utils";
 export { fetchAllFilesContent, fetchFileContent } from "@utilities/templateFilesFetch";
+export { getEnumKeyByEnumValue } from "@utilities/getEnumByValue.utils";

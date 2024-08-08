@@ -8,7 +8,7 @@ import { SingleValue } from "react-select";
 
 import { apiBaseUrl, namespaces } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
-import { GoogleConnectionType } from "@enums";
+import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
 import { googleIntegrationSchema } from "@validations";
@@ -100,10 +100,10 @@ export const GoogleIntegrationAddForm = ({
 
 	useEffect(() => {
 		switch (selectedConnectionType?.value) {
-			case GoogleConnectionType.ServiceAccount:
+			case ConnectionAuthType.ServiceAccount:
 				createConnection();
 				break;
-			case GoogleConnectionType.Oauth:
+			case ConnectionAuthType.Oauth:
 				handleGoogleOAuth();
 				break;
 			default:
@@ -120,9 +120,9 @@ export const GoogleIntegrationAddForm = ({
 
 	const renderConnectionFields = () => {
 		switch (selectedConnectionType?.value) {
-			case GoogleConnectionType.ServiceAccount:
+			case ConnectionAuthType.ServiceAccount:
 				return <JsonKeyGoogleForm isLoading={isLoading} />;
-			case GoogleConnectionType.Oauth:
+			case ConnectionAuthType.Oauth:
 				return <OauthGoogleForm triggerParentFormSubmit={triggerParentFormSubmit} />;
 			default:
 				return null;

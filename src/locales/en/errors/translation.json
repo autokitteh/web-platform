@@ -9,6 +9,8 @@
 	"errorFetchingVariablsExtended": "Error fetching variables, error: {{error}}",
 	"errorCreatingNewConnectionExtended": "Error while creating a new connection, error: {{error}}",
 	"errorFetchingConnection": "Error while fetching connection",
+	"errorFetchingConnectionType": "Error while fetching connection authentication type",
+	"errorFetchingVariables": "Error while fetching connection variables",
 	"connectionNotFound": "Error while fetching connection",
 	"connectionNotFoundExtended": "Error while fetching connection, connectionId: {{connectionId}}",
 	"connectionExists": "Connection already exists",

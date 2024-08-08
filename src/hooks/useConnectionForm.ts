@@ -7,8 +7,10 @@ import { ZodSchema } from "zod";
 
 import { apiBaseUrl } from "@constants";
 import { ConnectionService, HttpService, VariablesService } from "@services";
-import { GithubConnectionType } from "@src/enums";
+import { ConnectionAuthType } from "@src/enums";
 import { FormMode } from "@src/types/components";
+import { Variable } from "@src/types/models";
+import { getEnumKeyByEnumValue } from "@src/utilities";
 
 import { useToastAndLog } from "@hooks";
 
@@ -37,26 +39,66 @@ export const useConnectionForm = (
 	const toastAndLog = useToastAndLog(); // Initialize the utility function
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
+	const [connectionType, setConnectionType] = useState<ConnectionAuthType | undefined>();
+	const [connectionVariables, setConnectionVariables] = useState<Variable[] | undefined>();
 	const [isLoading, setIsLoading] = useState(false);
 
-	const fetchConnection = async (id: string) => {
+	const getConnectionAuthType = async (connectionId: string) => {
+		const { data: vars, error } = await VariablesService.list(connectionId);
+		if (error) {
+			toastAndLog("error", "errorFetchingVariables");
+
+			return;
+		}
+
+		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
+		if (!connectionAuthType) {
+			toastAndLog("error", "errorFetchingConnectionType");
+
+			return;
+		}
+		const connectionAuthenticationType = getEnumKeyByEnumValue(ConnectionAuthType, connectionAuthType.value);
+
+		if (!connectionAuthenticationType) {
+			toastAndLog("error", "errorFetchingConnectionType");
+
+			return;
+		}
+
+		setConnectionType(connectionAuthenticationType as ConnectionAuthType);
+	};
+
+	const getConnectionVariables = async (connectionId: string) => {
+		const { data: vars, error } = await VariablesService.list(connectionId);
+		if (error) {
+			toastAndLog("error", "errorFetchingVariables", error);
+
+			return;
+		}
+
+		setConnectionVariables(vars);
+	};
+
+	const fetchConnection = async (connId: string) => {
 		try {
-			const { data: connectionResponse, error } = await ConnectionService.get(id);
+			const { data: connectionResponse, error } = await ConnectionService.get(connId);
 
 			if (error) {
-				toastAndLog("error", "errorFetchingConnection", error, true);
+				toastAndLog("error", "errorFetchingConnectionExtended", error, true);
 
 				return;
 			}
 
-			setConnectionIntegrationName(connectionResponse!.integrationUniqueName);
+			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
 			setValue("connectionName", connectionResponse!.name);
 			setValue("integration", {
 				label: connectionResponse!.integrationName,
 				value: connectionResponse!.integrationUniqueName,
 			});
+			getConnectionAuthType(connId);
+			getConnectionVariables(connId);
 		} catch (error) {
-			toastAndLog("error", "errorFetchingConnection", error);
+			toastAndLog("error", "errorFetchingConnectionExtended", error);
 		}
 	};
 
@@ -91,8 +133,8 @@ export const useConnectionForm = (
 
 	const handleConnection = async (
 		connectionId: string,
-		integrationName: string,
-		connectionAuthType: GithubConnectionType
+		connectionAuthType: ConnectionAuthType,
+		integrationName?: string
 	): Promise<void> => {
 		setIsLoading(true);
 
@@ -132,12 +174,22 @@ export const useConnectionForm = (
 			await handleCreateMode();
 		} else {
 			const { value: selectedConnectionType } = getValues("selectedConnectionType");
-			await handleConnection(connectionId!, connectionIntegrationName!, selectedConnectionType);
+			await handleConnection(connectionId!, selectedConnectionType, connectionIntegrationName!);
 		}
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: string) => {
 		try {
+			VariablesService.set(
+				connectionId!,
+				{
+					name: "auth_type",
+					value: ConnectionAuthType.Oauth,
+					isSecret: false,
+					scopeId: connectionId,
+				},
+				true
+			);
 			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
@@ -155,29 +207,9 @@ export const useConnectionForm = (
 		}
 	};
 
-	const fetchVariables = async (connectionId: string) => {
-		const { data: vars, error } = await VariablesService.list(connectionId);
-		if (error) {
-			toastAndLog("error", "errorFetchingVariables", error);
-
-			return;
-		}
-
-		const githubWebhook = vars?.find((variable) => variable.name === "pat_key");
-		if (githubWebhook) {
-			setValue("webhook", githubWebhook.value);
-		}
-
-		if (vars?.length) {
-			const isConnectionTypePat = vars.some((variable) => variable.name === "pat");
-			setValue("selectedConnectionType", { value: isConnectionTypePat ? "pat" : "oauth" });
-		}
-	};
-
 	useEffect(() => {
 		if (connectionId) {
 			fetchConnection(connectionId);
-			fetchVariables(connectionId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
@@ -197,5 +229,7 @@ export const useConnectionForm = (
 		connectionId,
 		fetchConnection,
 		reset,
+		connectionType,
+		connectionVariables,
 	};
 };

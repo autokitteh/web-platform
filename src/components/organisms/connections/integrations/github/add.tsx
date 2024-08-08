@@ -6,7 +6,7 @@ import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
 import { Integrations } from "@enums/components";
-import { GithubConnectionType } from "@enums/connections";
+import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { githubIntegrationSchema } from "@validations";
@@ -29,18 +29,8 @@ export const GithubIntegrationAddForm = ({
 		navigate(`/projects/${projectId}/connections`);
 	};
 
-	const {
-		copyToClipboard,
-		errors,
-		getValues,
-		handleConnection,
-		handleOAuth,
-		handleSubmit,
-		isLoading,
-		register,
-		setValue,
-		watch,
-	} = useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create", onSuccess);
+	const { copyToClipboard, errors, getValues, handleConnection, handleSubmit, isLoading, register, setValue, watch } =
+		useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create", onSuccess);
 
 	const selectedConnectionType = watch("selectedConnectionType");
 
@@ -50,13 +40,13 @@ export const GithubIntegrationAddForm = ({
 
 	const configureConnection = async (connectionId: string) => {
 		switch (selectedConnectionType?.value) {
-			case GithubConnectionType.Pat:
+			case ConnectionAuthType.Pat:
 				{
-					await handleConnection(connectionId, Integrations.github, GithubConnectionType.Pat);
+					await handleConnection(connectionId, ConnectionAuthType.Pat, Integrations.github);
 				}
 				break;
-			case GithubConnectionType.Oauth:
-				await handleOAuth(connectionId, Integrations.github);
+			case ConnectionAuthType.Oauth:
+				await handleConnection(connectionId, ConnectionAuthType.Oauth);
 				onSuccess();
 				break;
 			default:
@@ -75,22 +65,22 @@ export const GithubIntegrationAddForm = ({
 		triggerParentFormSubmit();
 	};
 
-	const renderConnectionFields = () => {
+	const renderConnectionType = () => {
 		switch (selectedConnectionType?.value) {
-			case GithubConnectionType.Pat:
+			case ConnectionAuthType.Pat:
 				return (
 					<PatForm
 						copyToClipboard={copyToClipboard}
 						errors={errors}
 						getValues={getValues}
 						isLoading={isLoading}
-						mode="edit"
+						mode="create"
 						register={register}
 						setValue={setValue}
 					/>
 				);
-			case GithubConnectionType.Oauth:
-				return <OauthForm triggerParentFormSubmit={triggerParentFormSubmit} />;
+			case ConnectionAuthType.Oauth:
+				return <OauthForm />;
 			default:
 				return null;
 		}
@@ -108,7 +98,7 @@ export const GithubIntegrationAddForm = ({
 					value={selectedConnectionType}
 				/>
 
-				{renderConnectionFields()}
+				{renderConnectionType()}
 			</div>
 		</form>
 	);

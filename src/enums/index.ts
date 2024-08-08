@@ -1,11 +1,11 @@
 export { ConnectionStatus } from "@enums/components";
 export {
-	GithubConnectionType,
-	GoogleConnectionType,
-	SlackConnectionType,
-	HttpConnectionType,
-	TwilioConnectionType,
-	JiraConnectionType,
+	ConnectionAuthType,
+	ConnectionAuthType,
+	ConnectionAuthType,
+	ConnectionAuthType,
+	ConnectionAuthType,
+	ConnectionAuthType,
 } from "@enums/connections";
 export { DeploymentStateVariant } from "@enums/deploymentState.enum";
 export { LoggerLevel } from "@enums/output.enum";

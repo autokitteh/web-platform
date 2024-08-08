@@ -110,12 +110,12 @@ export const AddConnection = () => {
 			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative mb-6">
 					<Input
-						aria-label={t("github.placeholders.name")}
+						aria-label={t("placeholders.name")}
 						{...register("connectionName")}
 						disabled={!!connectionId}
 						isError={!!errors.connectionName}
 						isRequired
-						placeholder={t("github.placeholders.name")}
+						placeholder={t("placeholders.name")}
 					/>
 
 					<ErrorMessage>{errors?.connectionName?.message as string}</ErrorMessage>
