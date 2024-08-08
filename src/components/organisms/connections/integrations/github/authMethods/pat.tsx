@@ -54,14 +54,6 @@ export const PatForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [webhook]);
 
-	useEffect(() => {
-		if (isEditMode) {
-			setValue("pat", "XXXXXXXXXXXXXXXXX");
-			setValue("secret", "XXXXXXXXXXXXXXXXX");
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	return (
 		<>
 			<div className="relative">

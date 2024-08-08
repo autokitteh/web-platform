@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "./buttons";
 import { ButtonVariant, InputVariant } from "@enums/components";
 import { SecretInputProps } from "@interfaces/components";
+import { secretString } from "@src/constants/forms";
 import { cn } from "@utilities";
 
 import { IconSvg } from "@components/atoms/icons";
@@ -32,6 +33,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	} = props;
 
 	const { t } = useTranslation("components", { keyPrefix: "inputs" });
+	const [innerValue, setInnerValue] = useState(resetOnFirstFocus ? secretString : value);
 
 	const [isFocused, setIsFocused] = useState<boolean>(false);
 	const [hasValue, setHasValue] = useState<boolean>();
@@ -48,6 +50,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 			setIsFirstFocus(false);
 
 			handleInputChange?.("");
+			setInnerValue("");
 
 			return;
 		}
@@ -77,6 +80,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 			if (newValue !== hasValue) {
 				setHasValue(newValue);
 			}
+			setInnerValue(event.target.value);
 			handleInputChange?.(event.target.value);
 		},
 		[hasValue, handleInputChange]
@@ -137,12 +141,6 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	const handleLockedStateAction = () => {
 		setIsButtonClicked(true);
 		handleLockAction?.(!isLocked);
-
-		if (!isButtonClicked) {
-			handleInputChange?.("");
-
-			return;
-		}
 	};
 
 	return (
@@ -159,6 +157,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					onFocus={handleFocus}
 					ref={ref}
 					type={inputType}
+					value={innerValue}
 				/>
 
 				{isFocused ? (
