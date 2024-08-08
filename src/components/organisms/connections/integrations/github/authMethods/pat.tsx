@@ -124,7 +124,7 @@ export const PatForm = ({
 						isError={!!errors.secret}
 						isLocked={lockState.secret}
 						isRequired
-						placeholder={t("github.placeholders.psecretat")}
+						placeholder={t("github.placeholders.secret")}
 						resetOnFirstFocus
 					/>
 				) : (
