@@ -2,13 +2,10 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { SingleValue } from "react-select";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
-import { Integrations } from "@enums/components";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
-import { SelectOption } from "@interfaces/components";
 import { githubIntegrationSchema } from "@validations";
 
 import { Select } from "@components/atoms";
@@ -16,40 +13,22 @@ import { OauthForm, PatForm } from "@components/organisms/connections/integratio
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionId, projectId } = useParams();
+	const { projectId } = useParams();
 	const navigate = useNavigate();
 
 	const onSuccess = () => {
 		navigate(`/projects/${projectId}/connections`);
 	};
 
-	const {
-		copyToClipboard,
-		errors,
-		getValues,
-		handleOAuth,
-		handleSubmit,
-		isLoading,
-		onSubmit,
-		register,
-		setValue,
-		watch,
-	} = useConnectionForm(
-		{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true, webhook: "" },
-		githubIntegrationSchema,
-		"edit",
-		onSuccess
-	);
+	const { copyToClipboard, errors, getValues, handleSubmit, isLoading, onSubmit, register, setValue, watch } =
+		useConnectionForm(
+			{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true, webhook: "" },
+			githubIntegrationSchema,
+			"edit",
+			onSuccess
+		);
 
 	const selectedConnectionType = watch("selectedConnectionType");
-
-	const selectConnectionType = (option: SingleValue<SelectOption>) => {
-		setValue("selectedConnectionType", option as SelectOption);
-	};
-
-	const initOAuth = () => {
-		handleOAuth(connectionId!, Integrations.github);
-	};
 
 	const renderConnectionFields = () => {
 		switch (selectedConnectionType?.value) {
@@ -66,7 +45,7 @@ export const GithubIntegrationEditForm = () => {
 					/>
 				);
 			case ConnectionAuthType.Oauth:
-				return <OauthForm triggerParentFormSubmit={initOAuth} />;
+				return <OauthForm />;
 			default:
 				return null;
 		}
@@ -77,7 +56,8 @@ export const GithubIntegrationEditForm = () => {
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
-					onChange={selectConnectionType}
+					disabled
+					onChange={() => {}}
 					options={githubIntegrationAuthMethods}
 					placeholder={t("placeholders.selectConnectionType")}
 					value={selectedConnectionType}

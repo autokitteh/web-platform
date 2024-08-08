@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DefaultValues, FieldValues, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ZodSchema } from "zod";
 
 import { apiBaseUrl } from "@constants";
 import { ConnectionService, HttpService, VariablesService } from "@services";
 import { ConnectionAuthType } from "@src/enums";
+import { Integrations } from "@src/enums/components";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { getEnumKeyByEnumValue } from "@src/utilities";
@@ -17,11 +18,11 @@ import { useToastAndLog } from "@hooks";
 export const useConnectionForm = (
 	initialValues: DefaultValues<FieldValues> | undefined,
 	validationSchema: ZodSchema,
-	mode: FormMode,
-	onSuccess?: () => void // Add this line
+	mode: FormMode
 ) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
+	const navigate = useNavigate();
 
 	const {
 		formState: { errors },
@@ -60,7 +61,7 @@ export const useConnectionForm = (
 		const connectionAuthenticationType = getEnumKeyByEnumValue(ConnectionAuthType, connectionAuthType.value);
 
 		if (!connectionAuthenticationType) {
-			toastAndLog("error", "errorFetchingConnectionType");
+			toastAndLog("error", "errorFetchingConnectionTypeUnknown");
 
 			return;
 		}
@@ -79,6 +80,36 @@ export const useConnectionForm = (
 		setConnectionVariables(vars);
 	};
 
+	const handleConnection = async (
+		connectionId: string,
+		connectionAuthType: ConnectionAuthType,
+		integrationName?: string
+	): Promise<void> => {
+		setIsLoading(true);
+
+		const connectionData = getValues();
+
+		try {
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			VariablesService.set(
+				connectionId!,
+				{
+					name: "auth_type",
+					value: connectionAuthType,
+					isSecret: false,
+					scopeId: connectionId,
+				},
+				true
+			);
+			toastAndLog("success", "connectionCreatedSuccessfully");
+
+			navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+		} catch (error) {
+			toastAndLog("error", "errorCreatingNewConnection", error);
+			setIsLoading(false);
+		}
+	};
+
 	const fetchConnection = async (connId: string) => {
 		try {
 			const { data: connectionResponse, error } = await ConnectionService.get(connId);
@@ -95,6 +126,7 @@ export const useConnectionForm = (
 				label: connectionResponse!.integrationName,
 				value: connectionResponse!.integrationUniqueName,
 			});
+
 			getConnectionAuthType(connId);
 			getConnectionVariables(connId);
 		} catch (error) {
@@ -126,71 +158,24 @@ export const useConnectionForm = (
 		}
 	};
 
-	const resetConnectionId = () => {
-		setConnectionId(undefined);
-		setTimeout(() => setConnectionId(paramConnectionId || connectionId), 0);
-	};
-
-	const handleConnection = async (
-		connectionId: string,
-		connectionAuthType: ConnectionAuthType,
-		integrationName?: string
-	): Promise<void> => {
-		setIsLoading(true);
-
-		const connectionData = getValues();
-
-		try {
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
-			VariablesService.set(
-				connectionId!,
-				{
-					name: "auth_type",
-					value: connectionAuthType,
-					isSecret: false,
-					scopeId: connectionId,
-				},
-				true
-			);
-			toastAndLog("success", "connectionCreatedSuccessfully");
-
-			onSuccess?.();
-		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnection", error);
-			setIsLoading(false);
-		}
-	};
-
-	const handleCreateMode = async () => {
-		if (!connectionId) {
-			await createNewConnection();
-		} else {
-			resetConnectionId();
-		}
-	};
-
 	const onSubmit = async () => {
-		if (mode === "create") {
-			await handleCreateMode();
-		} else {
-			const { value: selectedConnectionType } = getValues("selectedConnectionType");
-			await handleConnection(connectionId!, selectedConnectionType, connectionIntegrationName!);
-		}
+		createNewConnection();
 	};
 
-	const handleOAuth = async (oauthConnectionId: string, integrationName: string) => {
+	const handleOAuth = async (oauthConnectionId: string, integrationName: Integrations) => {
 		try {
 			VariablesService.set(
-				connectionId!,
+				oauthConnectionId!,
 				{
 					name: "auth_type",
 					value: ConnectionAuthType.Oauth,
 					isSecret: false,
-					scopeId: connectionId,
+					scopeId: oauthConnectionId,
 				},
 				true
 			);
 			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
+			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
@@ -208,7 +193,7 @@ export const useConnectionForm = (
 	};
 
 	useEffect(() => {
-		if (connectionId) {
+		if (connectionId && mode === "edit") {
 			fetchConnection(connectionId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -228,6 +213,7 @@ export const useConnectionForm = (
 		setValue,
 		connectionId,
 		fetchConnection,
+		connectionIntegrationName,
 		reset,
 		connectionType,
 		connectionVariables,

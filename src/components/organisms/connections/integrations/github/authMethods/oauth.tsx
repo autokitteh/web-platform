@@ -3,9 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { ConnectionAuthType } from "@src/enums/connections/connectionTypes.enum";
-
-import { Button, Input } from "@components/atoms";
+import { Button } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
@@ -28,7 +26,6 @@ export const OauthForm = () => {
 			</Accordion>
 
 			<p className="mt-2">{t("github.clickButtonInstall")}</p>
-			<Input name="connectionAuthType" type="hidden" value={ConnectionAuthType.Oauth} />
 
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
