@@ -1,7 +1,6 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
 import { ConnectionAuthType } from "@enums/connections";
@@ -13,25 +12,25 @@ import { OauthForm, PatForm } from "@components/organisms/connections/integratio
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const { projectId } = useParams();
-	const navigate = useNavigate();
 
-	const onSuccess = () => {
-		navigate(`/projects/${projectId}/connections`);
-	};
-
-	const { copyToClipboard, errors, getValues, handleSubmit, isLoading, onSubmit, register, setValue, watch } =
-		useConnectionForm(
-			{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true, webhook: "" },
-			githubIntegrationSchema,
-			"edit",
-			onSuccess
-		);
-
-	const selectedConnectionType = watch("selectedConnectionType");
+	const {
+		connectionType,
+		copyToClipboard,
+		errors,
+		getValues,
+		handleSubmit,
+		isLoading,
+		onSubmit,
+		register,
+		setValue,
+	} = useConnectionForm(
+		{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true, webhook: "" },
+		githubIntegrationSchema,
+		"edit"
+	);
 
 	const renderConnectionFields = () => {
-		switch (selectedConnectionType?.value) {
+		switch (connectionType) {
 			case ConnectionAuthType.Pat:
 				return (
 					<PatForm
@@ -51,6 +50,8 @@ export const GithubIntegrationEditForm = () => {
 		}
 	};
 
+	const selectConnectionTypeValue = githubIntegrationAuthMethods.find((method) => method.value === connectionType);
+
 	return (
 		<form className="flex items-start gap-10" id="connectionForm" onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex w-full flex-col gap-6">
@@ -60,7 +61,7 @@ export const GithubIntegrationEditForm = () => {
 					onChange={() => {}}
 					options={githubIntegrationAuthMethods}
 					placeholder={t("placeholders.selectConnectionType")}
-					value={selectedConnectionType}
+					value={selectConnectionTypeValue}
 				/>
 
 				{renderConnectionFields()}

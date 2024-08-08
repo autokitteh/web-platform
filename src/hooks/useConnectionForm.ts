@@ -11,7 +11,6 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
-import { getEnumKeyByEnumValue } from "@src/utilities";
 
 import { useToastAndLog } from "@hooks";
 
@@ -40,7 +39,7 @@ export const useConnectionForm = (
 	const toastAndLog = useToastAndLog(); // Initialize the utility function
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
-	const [connectionType, setConnectionType] = useState<ConnectionAuthType | undefined>();
+	const [connectionType, setConnectionType] = useState<string | undefined>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[] | undefined>();
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -58,15 +57,7 @@ export const useConnectionForm = (
 
 			return;
 		}
-		const connectionAuthenticationType = getEnumKeyByEnumValue(ConnectionAuthType, connectionAuthType.value);
-
-		if (!connectionAuthenticationType) {
-			toastAndLog("error", "errorFetchingConnectionTypeUnknown");
-
-			return;
-		}
-
-		setConnectionType(connectionAuthenticationType as ConnectionAuthType);
+		setConnectionType(connectionAuthType.value);
 	};
 
 	const getConnectionVariables = async (connectionId: string) => {
@@ -90,7 +81,6 @@ export const useConnectionForm = (
 		const connectionData = getValues();
 
 		try {
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			VariablesService.set(
 				connectionId!,
 				{
@@ -101,9 +91,9 @@ export const useConnectionForm = (
 				},
 				true
 			);
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
-
-			navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
 			setIsLoading(false);
@@ -159,6 +149,15 @@ export const useConnectionForm = (
 	};
 
 	const onSubmit = async () => {
+		if (connectionId) {
+			const connId = connectionId;
+			setConnectionId(undefined);
+			setTimeout(() => {
+				setConnectionId(connId);
+			}, 100);
+
+			return;
+		}
 		createNewConnection();
 	};
 
