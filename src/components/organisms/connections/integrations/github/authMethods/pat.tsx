@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { infoGithubLinks } from "@constants/lists";
 import { apiBaseUrl } from "@src/constants";
 
-import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
@@ -29,11 +29,17 @@ export const PatForm = ({
 	register: UseFormRegister<{ [x: string]: any }>;
 	setValue: any;
 }) => {
+	const [lockState, setLockState] = useState<{ pat: boolean; secret: boolean }>({
+		pat: true,
+		secret: true,
+	});
+
 	const { t } = useTranslation("integrations");
 	const [webhook, setWebhook] = useState("");
+	const isEditMode = mode === "edit";
 
 	useEffect(() => {
-		if (mode === "edit") {
+		if (isEditMode) {
 			setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
 		} else {
 			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
@@ -48,16 +54,40 @@ export const PatForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [webhook]);
 
+	useEffect(() => {
+		if (mode === "edit") {
+			setValue("pat", "XXXXXXXXXXXXXXXXX");
+			setValue("secret", "XXXXXXXXXXXXXXXXX");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	return (
 		<>
 			<div className="relative">
-				<Input
-					{...register("pat")}
-					aria-label={t("github.placeholders.pat")}
-					isError={!!errors.pat}
-					isRequired
-					placeholder={t("github.placeholders.pat")}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						{...register("pat")}
+						aria-label={t("github.placeholders.pat")}
+						handleInputChange={(newPatValue) => setValue("pat", newPatValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, pat: newLockState }))
+						}
+						isError={!!errors.pat}
+						isLocked={lockState.pat}
+						isRequired
+						placeholder={t("github.placeholders.pat")}
+						resetOnFirstFocus
+					/>
+				) : (
+					<Input
+						{...register("pat")}
+						aria-label={t("github.placeholders.pat")}
+						isError={!!errors.pat}
+						isRequired
+						placeholder={t("github.placeholders.pat")}
+					/>
+				)}
 
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
@@ -83,12 +113,28 @@ export const PatForm = ({
 				</Button>
 			</div>
 			<div className="relative">
-				<Input
-					{...register("secret")}
-					aria-label={t("github.placeholders.secret")}
-					isError={!!errors.secret}
-					placeholder={t("github.placeholders.secret")}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						{...register("secret")}
+						aria-label={t("github.placeholders.secret")}
+						handleInputChange={(newSecretValue) => setValue("secret", newSecretValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, secret: newLockState }))
+						}
+						isError={!!errors.secret}
+						isLocked={lockState.secret}
+						isRequired
+						placeholder={t("github.placeholders.psecretat")}
+						resetOnFirstFocus
+					/>
+				) : (
+					<Input
+						{...register("secret")}
+						aria-label={t("github.placeholders.secret")}
+						isError={!!errors.secret}
+						placeholder={t("github.placeholders.secret")}
+					/>
+				)}
 
 				<ErrorMessage>{errors.secret?.message as string}</ErrorMessage>
 			</div>

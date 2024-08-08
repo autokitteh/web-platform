@@ -25,6 +25,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		isRequired,
 		onFocus,
 		placeholder,
+		resetOnFirstFocus,
 		value,
 		variant,
 		...rest
@@ -43,7 +44,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		setIsButtonClicked(true);
 		setIsFocused(true);
 
-		if (isFirstFocus && !isButtonClicked && isLocked) {
+		if (isFirstFocus && !isButtonClicked && isLocked && resetOnFirstFocus) {
 			setIsFirstFocus(false);
 
 			handleInputChange?.("");
@@ -158,7 +159,6 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					onFocus={handleFocus}
 					ref={ref}
 					type={inputType}
-					value={value}
 				/>
 
 				{isFocused ? (
