@@ -55,7 +55,7 @@ export const PatForm = ({
 	}, [webhook]);
 
 	useEffect(() => {
-		if (mode === "edit") {
+		if (isEditMode) {
 			setValue("pat", "XXXXXXXXXXXXXXXXX");
 			setValue("secret", "XXXXXXXXXXXXXXXXX");
 		}
