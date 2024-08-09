@@ -54,7 +54,6 @@ export const EditConnection = () => {
 				<Select
 					aria-label={t("placeholders.selectIntegration")}
 					disabled
-					onChange={() => {}}
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}
 					value={selectedIntegration}
