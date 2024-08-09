@@ -63,6 +63,7 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 				</Button>
 
 				<Button
+					ariaLabel={t("deleteButton")}
 					className="w-auto bg-gray-1100 px-4 py-3 font-semibold"
 					disabled={loading}
 					onClick={onDelete}
