@@ -1,18 +1,7 @@
 import { expect, test } from "@e2e/fixtures";
 
-test.beforeEach(async ({ dashboardPage, page }) => {
-	await dashboardPage.createProjectFromMenu();
-
-	await page.getByRole("tab", { name: "Connections" }).click();
-
-	await page.getByRole("button", { name: "Add new" }).click();
-
-	const nameInput = page.getByRole("textbox", { exact: true, name: "Name" });
-	await nameInput.click();
-	await nameInput.fill("NewHTTP");
-
-	await page.getByTestId("select-connection-type").click();
-	await page.getByRole("option", { name: "HTTP" }).click();
+test.beforeEach(async ({ connectionPage }) => {
+	await connectionPage.startCreateConnection("NewHTTP", "HTTP");
 });
 
 test.describe("Project Connection HTTP", () => {
