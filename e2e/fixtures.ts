@@ -1,10 +1,13 @@
 import { expect, test as base } from "@playwright/test";
 
-import { DashboardPage } from "./pages/dashboard";
+import { ConnectionPage, DashboardPage } from "./pages";
 
-const test = base.extend<{ dashboardPage: DashboardPage }>({
+const test = base.extend<{ connectionPage: ConnectionPage; dashboardPage: DashboardPage }>({
 	dashboardPage: async ({ page }, use) => {
 		await use(new DashboardPage(page));
+	},
+	connectionPage: async ({ page }, use) => {
+		await use(new ConnectionPage(page));
 	},
 });
 export { expect, test };

@@ -103,6 +103,7 @@ export const ConnectionsTable = () => {
 				<div className="text-base text-gray-500">{t("titleAvailable")}</div>
 
 				<Button
+					ariaLabel={t("buttons.addNew")}
 					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-500 hover:text-white"
 					onClick={() => navigate("add")}
 				>

@@ -60,7 +60,7 @@ export const HttpIntegrationAddForm = ({
 
 	const renderNoAuth = () => (
 		<Button
-			aria-label={t("buttons.saveConnection")}
+			ariaLabel={t("buttons.saveConnection")}
 			className="ml-auto w-fit bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
 			disabled={isLoading}
 			onClick={triggerParentFormSubmit}
