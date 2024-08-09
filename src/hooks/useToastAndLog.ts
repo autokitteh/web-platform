@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
+import { ErrorType } from "@src/types/hooks";
 
 import { useToastStore } from "@store";
 
@@ -11,27 +12,30 @@ export const useToastAndLog = () => {
 	const { t } = useTranslation("integrations");
 	const addToast = useToastStore((state) => state.addToast);
 
-	const handleErrorDetails = (error: any): string => {
+	const handleErrorDetails = (error: ErrorType): string => {
 		if (axios.isAxiosError(error)) {
 			if (error.response) {
 				return error.response.data.message || error.response.data;
-			} else if (error.request) {
-				return tErrors("axiosNoResponse");
-			} else {
-				return error.message;
 			}
-		} else if (error instanceof Error) {
-			return error.message;
-		} else if (typeof error === "string") {
-			return error;
-		} else {
-			console.error(tErrors("unknownError"), error);
+			if (error.request) {
+				return tErrors("axiosNoResponse");
+			}
 
-			return tErrors("unknownError");
+			return error.message;
 		}
+
+		if (error instanceof Error) {
+			return error.message;
+		}
+
+		if (typeof error === "string") {
+			return error;
+		}
+
+		return tErrors("unknownError");
 	};
 
-	const toastAndLog = (type: "error" | "success", key: string, error?: any, skipLogger: boolean = false) => {
+	const toastAndLog = (type: "error" | "success", key: string, error?: ErrorType, skipLogger: boolean = false) => {
 		const message = type === "error" ? tErrors(key) : t(key);
 		addToast({ id: Date.now().toString(), message, type });
 

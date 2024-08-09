@@ -1,7 +1,6 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { SingleValue } from "react-select";
 
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
@@ -33,10 +32,6 @@ export const AddConnection = () => {
 	);
 
 	const selectedIntegration: SelectOption = watch("integration");
-
-	const handleIntegrationChange = (option: SingleValue<SelectOption>) => {
-		setValue("integration", option);
-	};
 
 	const integrationComponents: Record<IntegrationType, JSX.Element> = {
 		github: (
@@ -126,7 +121,7 @@ export const AddConnection = () => {
 					dataTestid="select-connection-type"
 					disabled={!!connectionId}
 					label={t("placeholders.integration")}
-					onChange={handleIntegrationChange}
+					onChange={(selectedIntegration) => setValue("integration", selectedIntegration)}
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}
 					value={selectedIntegration}
