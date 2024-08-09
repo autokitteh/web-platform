@@ -20,7 +20,7 @@ import { Accordion, Select } from "@components/molecules";
 import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFormProps>(
-	({ connectionId, isSaving, name, setIsSaving }, ref) => {
+	({ connectionId, name, setIsSaving }, ref) => {
 		const navigate = useNavigate();
 		const { projectId } = useParams<{ projectId: string }>();
 		const addToast = useToastStore((state) => state.addToast);
@@ -28,6 +28,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 		const { t: tErrors } = useTranslation(["errors", "services"]);
 		const { fetchResources } = useFileOperations(projectId!);
 		const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
+		const [isLoading, setIsLoading] = useState(false);
 
 		useEffect(() => {
 			const fetchData = async () => {
@@ -49,10 +50,10 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 						tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
 					);
 				} finally {
-					setIsSaving(false);
+					setIsLoading(false);
 				}
 			};
-			setIsSaving(true);
+			setIsLoading(true);
 			fetchData();
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
@@ -104,7 +105,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 
 		const { cron, entryFunction } = watch();
 
-		return isSaving ? (
+		return isLoading ? (
 			<Loader isCenter size="xl" />
 		) : (
 			<>
