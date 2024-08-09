@@ -67,7 +67,7 @@ export const VariablesTable = () => {
 	const handleDeleteVariable = async () => {
 		const { error } = await VariablesService.delete({
 			name: deleteVariable!.name,
-			scopeId: deleteVariable!.scopeId,
+			scopeId: deleteVariable!.scopeId!,
 		});
 		closeModal(ModalName.deleteVariable);
 
@@ -162,7 +162,7 @@ export const VariablesTable = () => {
 
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
-											onClick={() => showDeleteModal(name, value, scopeId)}
+											onClick={() => showDeleteModal(name, value, scopeId!)}
 										>
 											<TrashIcon className="h-3 w-3 fill-white" />
 										</IconButton>
