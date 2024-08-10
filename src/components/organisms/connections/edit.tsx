@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
+import { Integrations } from "@src/enums/components";
 import { connectionSchema } from "@validations";
 
 import { Input, Select } from "@components/atoms";
@@ -30,7 +31,14 @@ export const EditConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	const selectedIntegrationComponent = selectedIntegration ? <GithubIntegrationEditForm /> : null;
+	let selectedIntegrationComponent = null;
+	switch (selectedIntegration.value) {
+		case Integrations.github:
+			selectedIntegrationComponent = <GithubIntegrationEditForm />;
+			break;
+		default:
+			break;
+	}
 
 	const connectionName = watch("connectionName");
 
