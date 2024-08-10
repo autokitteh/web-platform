@@ -44,7 +44,9 @@ export const SessionsTable = () => {
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
-			setIsLoading(true);
+			const loaderTimeout = setTimeout(() => {
+				setIsLoading(true);
+			}, 1000);
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
 				{
@@ -52,7 +54,9 @@ export const SessionsTable = () => {
 				},
 				nextPageToken
 			);
+			clearTimeout(loaderTimeout);
 			setIsLoading(false);
+
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
