@@ -147,7 +147,7 @@ jobs:
         run: npx playwright test --project=${{ matrix.browser }}
 
       - name: List test-results directory
-        run: ls -alh /home/runner/work/web-platform/web-platform/test-results/
+        run: ls -alh test-results/
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
