@@ -151,7 +151,7 @@ jobs:
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ !cancelled() }}
         with:
           name: playwright-artifacts-${{ matrix.browser }}-${{ github.run_id }}
           path: playwright-report/
