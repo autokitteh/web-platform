@@ -145,9 +145,6 @@ jobs:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
         run: npx playwright test --project=${{ matrix.browser }}
 
-      - name: List test-results directory
-        run: ls -alh test-results/
-
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: always()
