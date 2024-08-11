@@ -143,7 +143,6 @@ jobs:
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
-          DEBUG: "pw:browser"
         run: npx playwright test --project=${{ matrix.browser }}
 
       - name: List test-results directory
