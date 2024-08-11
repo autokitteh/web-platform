@@ -151,7 +151,7 @@ jobs:
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+        if: always()
         with:
           name: playwright-artifacts-${{ matrix.browser }}-${{ github.run_id }}
           path: playwright-report/
@@ -159,7 +159,7 @@ jobs:
 
       - name: Upload Playwright Test Results
         uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+        if: always()
         with:
           name: playwright-test-results-${{ matrix.browser }}-${{ github.run_id }}
           path: test-results/
