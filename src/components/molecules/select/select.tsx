@@ -28,45 +28,53 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
 	) => {
 		const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>(null);
 		const [isFocused, setIsFocused] = useState(false);
-		const [hasValue, setHasValue] = useState(false);
 		const { t } = useTranslation("components", { keyPrefix: "select" });
 		const { Option, SingleValue } = components;
 
 		useEffect(() => {
 			const valueSelected = options.find((option) => option.value === value?.value) || null;
 			setSelectedOption(valueSelected);
-			setHasValue(!!valueSelected);
 		}, [value, options]);
 
-		const handleChange = (selected: SingleValue<SelectOption>) => {
-			setSelectedOption(selected);
-			setHasValue(!!selected?.value);
-			onChange?.(selected);
-		};
+		const handleChange = useCallback(
+			(selected: SingleValue<SelectOption>) => {
+				setSelectedOption(selected);
+				onChange?.(selected);
+			},
+			[onChange]
+		);
 
 		const handleFocus = useCallback(() => setIsFocused(true), []);
 		const handleBlur = useCallback(() => setIsFocused(false), []);
 
-		const noOptionsMessage = useMemo(() => noOptionsLabel || t("noOptionsAvailable"), [noOptionsLabel, t]);
+		const noOptionsMessage = useMemo(() => () => noOptionsLabel || t("noOptionsAvailable"), [noOptionsLabel, t]);
 		const selectStyles = useMemo(
 			() =>
 				variant === "light" ? getSelectLightStyles(isError, disabled) : getSelectDarkStyles(isError, disabled),
 			[variant, isError, disabled]
 		);
 
-		const labelClass = cn(
-			"pointer-events-none absolute left-4 top-0 text-base text-gray-600 opacity-0 transition-all",
-			{ "-top-2 left-3 px-1 text-xs opacity-100 before:bg-gray-950": isFocused || hasValue },
-			{
-				"-top-2 left-3 px-1 text-xs opacity-100 before:bg-white":
-					(isFocused || hasValue) && variant === "light",
-			},
-			{ "text-gray-900": variant === "light" }
+		const labelClass = useMemo(
+			() =>
+				cn(
+					"pointer-events-none absolute left-4 top-0 text-base text-gray-600 opacity-0 transition-all",
+					{ "-top-2 left-3 px-1 text-xs opacity-100 before:bg-gray-950": isFocused || !!selectedOption },
+					{
+						"-top-2 left-3 px-1 text-xs opacity-100 before:bg-white":
+							(isFocused || !!selectedOption) && variant === "light",
+					},
+					{ "text-gray-900": variant === "light" }
+				),
+			[isFocused, selectedOption, variant]
 		);
 
-		const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
-			"bg-white": variant === "light",
-		});
+		const borderOverlayLabelClass = useMemo(
+			() =>
+				cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
+					"bg-white": variant === "light",
+				}),
+			[variant]
+		);
 
 		const id = useId();
 
@@ -98,7 +106,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
 					id={id}
 					isDisabled={disabled}
 					isOptionDisabled={(option) => !!option.disabled}
-					noOptionsMessage={() => noOptionsMessage}
+					noOptionsMessage={noOptionsMessage}
 					onBlur={handleBlur}
 					onChange={handleChange}
 					onFocus={handleFocus}
