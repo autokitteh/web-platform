@@ -1,3 +1,10 @@
+# [1.31.0](https://github.com/autokitteh/web-platform/compare/v1.30.0...v1.31.0) (2024-08-12)
+
+
+### Features
+
+* add icon support for Select ([#243](https://github.com/autokitteh/web-platform/issues/243)) ([60bad12](https://github.com/autokitteh/web-platform/commit/60bad12f95a93b0efbf1c622a6d174ad8bf2ca3d))
+
 # [1.30.0](https://github.com/autokitteh/web-platform/compare/v1.29.1...v1.30.0) (2024-08-02)
 
 
