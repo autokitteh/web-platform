@@ -8,10 +8,10 @@ export enum ConnectionStatus {
 export enum IntegrationsGoogle {
 	google = "google",
 	gmail = "gmail",
-	googleSheets = "googleSheets",
-	googleCalendar = "googleCalendar",
-	googleDrive = "googleDrive",
-	googleForms = "googleForms",
+	googleSheets = "googlesheets",
+	googleCalendar = "googlecalendar",
+	googleDrive = "googledrive",
+	googleForms = "googleforms",
 }
 
 export enum Integrations {
@@ -19,10 +19,10 @@ export enum Integrations {
 	slack = "slack",
 	gmail = "gmail",
 	google = "google",
-	googleSheets = "googleSheets",
-	googleCalendar = "googleCalendar",
-	googleDrive = "googleDrive",
-	googleForms = "googleForms",
+	googlesheets = "googlesheets",
+	googlecalendar = "googlecalendar",
+	googledrive = "googledrive",
+	googleforms = "googleforms",
 	aws = "aws",
 	openAi = "openAi",
 	http = "http",

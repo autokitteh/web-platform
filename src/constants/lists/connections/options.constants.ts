@@ -37,11 +37,28 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Jira", value: Integrations.jira, icon: JiraIcon },
 	{ disabled: false, label: "Discord", value: Integrations.discord, icon: DiscordIcon },
 	{ disabled: false, label: "Google (All APIs)", value: Integrations.google, icon: GoogleIcon },
-	{ disabled: false, label: "Google Sheets", value: Integrations.googleSheets, icon: GoogleSheetsIcon },
-	{ disabled: false, label: "Google Calendar", value: Integrations.googleCalendar, icon: GoogleCalendarIcon },
-	{ disabled: false, label: "Google Drive", value: Integrations.googleDrive, icon: GoogleDriveIcon },
-	{ disabled: false, label: "Google Forms", value: Integrations.googleForms, icon: GoogleFormsIcon },
+	{ disabled: false, label: "Google Sheets", value: Integrations.googlesheets, icon: GoogleSheetsIcon },
+	{ disabled: false, label: "Google Calendar", value: Integrations.googlecalendar, icon: GoogleCalendarIcon },
+	{ disabled: false, label: "Google Drive", value: Integrations.googledrive, icon: GoogleDriveIcon },
+	{ disabled: false, label: "Google Forms", value: Integrations.googleforms, icon: GoogleFormsIcon },
 ];
+
+export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+	[Integrations.github]: GithubIcon,
+	[Integrations.slack]: SlackIcon,
+	[Integrations.aws]: AwsIcon,
+	[Integrations.openAi]: OpenAiIcon,
+	[Integrations.http]: HttpIcon,
+	[Integrations.twilio]: TwilioIcon,
+	[Integrations.gmail]: GoogleGmailIcon,
+	[Integrations.jira]: JiraIcon,
+	[Integrations.discord]: DiscordIcon,
+	[Integrations.google]: GoogleIcon,
+	[Integrations.googlesheets]: GoogleSheetsIcon,
+	[Integrations.googlecalendar]: GoogleCalendarIcon,
+	[Integrations.googledrive]: GoogleDriveIcon,
+	[Integrations.googleforms]: GoogleFormsIcon,
+};
 
 export const triggerTypes: SelectOption[] = [
 	{ disabled: false, label: "Default", value: TriggerFormType.default },

@@ -117,28 +117,28 @@ export const AddConnection = () => {
 				type={selectedIntegration.value}
 			/>
 		),
-		googleSheets: (
+		googlesheets: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 				type={selectedIntegration.value}
 			/>
 		),
-		googleCalendar: (
+		googlecalendar: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 				type={selectedIntegration.value}
 			/>
 		),
-		googleDrive: (
+		googledrive: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 				type={selectedIntegration.value}
 			/>
 		),
-		googleForms: (
+		googleforms: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}

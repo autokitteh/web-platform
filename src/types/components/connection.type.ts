@@ -1,10 +1,4 @@
-import { Integrations } from "@enums/components";
+import { Integrations, IntegrationsGoogle } from "@enums/components";
 
 export type IntegrationType = keyof typeof Integrations;
-export type IntegrationGoogleType =
-	| "gmail"
-	| "google"
-	| "googleSheets"
-	| "googleCalendar"
-	| "googleDrive"
-	| "googleForms";
+export type IntegrationGoogleType = keyof typeof IntegrationsGoogle;

@@ -9,7 +9,7 @@ import { Connection } from "@type/models";
 
 import { useModalStore } from "@store";
 
-import { Button, Spinner } from "@components/atoms";
+import { Button, IconSvg, Spinner } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
 export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: ModalDeleteConnectionProps) => {
@@ -42,6 +42,9 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 
 				<div className="font-medium">
 					<Trans
+						components={{
+							icon: <IconSvg className="-mt-1 inline-block" size="lg" src={connection?.logo} />,
+						}}
 						i18nKey="line2"
 						t={t}
 						values={{ appName: connection?.integrationName, name: connection?.name }}

@@ -9,7 +9,7 @@
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete",
 		"line": "This connection you are about to delete uses:",
-		"line2": "Connection name - <strong>{{name}}</strong> <br /> App name - <strong>{{appName}}</strong>",
+		"line2": "Connection name - <strong>{{name}}</strong> <br /> App name - <icon /> <strong>{{appName}}</strong>",
 		"line3": "Deleting the connection may cause failure of projects.",
 		"line4": "Are you sure you want to delete this connection?",
 		"title": "Delete  {{name}} Connection"

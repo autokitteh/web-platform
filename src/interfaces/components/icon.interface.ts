@@ -11,5 +11,5 @@ export interface IconProps {
 }
 
 export interface IconSvgProps extends Omit<IconProps, "src"> {
-	src: React.FC<React.SVGProps<SVGSVGElement>>;
+	src?: React.FC<React.SVGProps<SVGSVGElement>>;
 }

@@ -10,7 +10,7 @@ import { Connection } from "@type/models";
 import { useSort } from "@hooks";
 import { useModalStore, useToastStore } from "@store";
 
-import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ConnectionTableStatus, SortButton } from "@components/molecules";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 
@@ -166,7 +166,7 @@ export const ConnectionsTable = () => {
 
 									<Td>
 										<div className="flex items-center gap-2">
-											<img
+											<IconSvg
 												alt={integrationName}
 												className="h-6 w-6 rounded-full bg-white p-0.5"
 												src={logo}
