@@ -209,7 +209,7 @@ export const DefaultEditTrigger = () => {
 								<Select
 									{...field}
 									aria-label={t("placeholders.selectConnection")}
-									dataTestid="select-trigger-connection"
+									dataTestid="select-trigger-type"
 									disabled
 									isError={!!errors.connection}
 									label={t("placeholders.connection")}

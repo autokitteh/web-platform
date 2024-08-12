@@ -32,5 +32,5 @@ export const Loader = ({
 		}
 	);
 
-	return <div className={spinnerClass} />;
+	return <div className={spinnerClass} data-testid="loader" />;
 };

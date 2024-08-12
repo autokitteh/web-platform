@@ -145,7 +145,7 @@ export const SchedulerEditTrigger = () => {
 								<Select
 									{...field}
 									aria-label={t("placeholders.selectConnection")}
-									dataTestid="select-trigger-connection"
+									dataTestid="select-trigger-type"
 									disabled
 									isError={!!errors.connection}
 									noOptionsLabel={t("noConnectionsAvailable")}
@@ -195,7 +195,7 @@ export const SchedulerEditTrigger = () => {
 								<Select
 									{...field}
 									aria-label={t("placeholders.selectFile")}
-									dataTestid="select-trigger-file"
+									dataTestid="select-file"
 									isError={!!errors.filePath}
 									label={t("placeholders.file")}
 									noOptionsLabel={t("noFilesAvailable")}

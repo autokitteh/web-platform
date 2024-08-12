@@ -15,6 +15,7 @@ import { DefaultTriggerForm, TriggerSchedulerForm } from "@components/organisms/
 
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
+	const { t: tErrors } = useTranslation("errors");
 	const [isSaving, setIsSaving] = useState(false);
 	const { projectId } = useParams<{ projectId: string }>();
 
@@ -57,7 +58,7 @@ export const AddTrigger = () => {
 			<form className="mb-6 flex w-full flex-col gap-6" id="addTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
-						{...register("name", { required: t("placeholders.name") })}
+						{...register("name", { required: tErrors("nameRequired") })}
 						aria-label={t("placeholders.name")}
 						isError={!!errors.name}
 						placeholder={t("placeholders.name")}
@@ -74,7 +75,7 @@ export const AddTrigger = () => {
 							<Select
 								{...field}
 								aria-label={t("placeholders.selectConnection")}
-								dataTestid="select-trigger-connection"
+								dataTestid="select-trigger-type"
 								isError={!!errors.connection}
 								label={t("placeholders.connection")}
 								noOptionsLabel={t("noConnectionsAvailable")}
