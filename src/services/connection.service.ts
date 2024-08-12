@@ -157,6 +157,7 @@ export class ConnectionService {
 
 			const convertedConnections = connections.map(convertConnectionProtoToModel);
 			const { integrations } = await integrationsClient.list({});
+
 			if (!integrations) {
 				const errorMessage = i18n.t("intergrationsNotFoundExtended", { ns: "services", projectId });
 				LoggerService.error(namespaces.triggerService, errorMessage);
@@ -172,6 +173,7 @@ export class ConnectionService {
 				);
 				if (integration) {
 					connection.integrationName = integration.displayName;
+					connection.logo = integration.logoUrl;
 				}
 			});
 

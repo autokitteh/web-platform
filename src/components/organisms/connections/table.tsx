@@ -159,40 +159,52 @@ export const ConnectionsTable = () => {
 					</THead>
 
 					<TBody>
-						{sortedConnections.map(({ connectionId, integrationName, name, status, statusInfoMessage }) => (
-							<Tr className="group" key={connectionId}>
-								<Td className="font-semibold">{name}</Td>
+						{sortedConnections.map(
+							({ connectionId, integrationName, logo, name, status, statusInfoMessage }) => (
+								<Tr className="group" key={connectionId}>
+									<Td className="font-semibold">{name}</Td>
 
-								<Td>{integrationName}</Td>
+									<Td>
+										<div className="flex items-center gap-2">
+											<img
+												alt={integrationName}
+												className="h-6 w-6 rounded-full bg-white p-0.5"
+												src={`/public${logo}`}
+											/>
 
-								<Td className="max-w-32">
-									<ConnectionTableStatus status={status} />
-								</Td>
+											{integrationName}
+										</div>
+									</Td>
 
-								<Td>{statusInfoMessage}</Td>
+									<Td className="max-w-32">
+										<ConnectionTableStatus status={status} />
+									</Td>
 
-								<Td className="max-w-20 pr-0">
-									<div className="flex space-x-1">
-										<IconButton
-											ariaLabel={t("table.buttons.titleEditConnection")}
-											className="p-1.5"
-											onClick={() => handleConnectionEditClick(connectionId)}
-											title={t("table.buttons.titleEditConnection")}
-										>
-											<EditIcon className="h-3 w-3 fill-white" />
-										</IconButton>
+									<Td>{statusInfoMessage}</Td>
 
-										<IconButton
-											ariaLabel={t("table.buttons.titleRemoveConnection", { name })}
-											onClick={() => handleOpenModalDeleteConnection(connectionId)}
-											title={t("table.buttons.titleRemoveConnection")}
-										>
-											<TrashIcon className="h-3 w-3 fill-white" />
-										</IconButton>
-									</div>
-								</Td>
-							</Tr>
-						))}
+									<Td className="max-w-20 pr-0">
+										<div className="flex space-x-1">
+											<IconButton
+												ariaLabel={t("table.buttons.titleEditConnection")}
+												className="p-1.5"
+												onClick={() => handleConnectionEditClick(connectionId)}
+												title={t("table.buttons.titleEditConnection")}
+											>
+												<EditIcon className="h-3 w-3 fill-white" />
+											</IconButton>
+
+											<IconButton
+												ariaLabel={t("table.buttons.titleRemoveConnection", { name })}
+												onClick={() => handleOpenModalDeleteConnection(connectionId)}
+												title={t("table.buttons.titleRemoveConnection")}
+											>
+												<TrashIcon className="h-3 w-3 fill-white" />
+											</IconButton>
+										</div>
+									</Td>
+								</Tr>
+							)
+						)}
 					</TBody>
 				</Table>
 			) : (
