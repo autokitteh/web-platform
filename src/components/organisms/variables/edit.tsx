@@ -61,7 +61,7 @@ export const EditVariable = () => {
 
 		reset({
 			name: currentVar.name,
-			value: currentVar.value,
+			value: currentVar.isSecret ? "" : currentVar.value,
 			isSecret: currentVar.isSecret,
 		});
 	};
@@ -126,6 +126,7 @@ export const EditVariable = () => {
 						})}
 						handleInputChange={(newValue) => setValue("value", newValue)}
 						isLocked={isSecret}
+						resetOnFirstFocus
 						value={value}
 					/>
 
