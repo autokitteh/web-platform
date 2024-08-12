@@ -169,7 +169,7 @@ export const ConnectionsTable = () => {
 											<img
 												alt={integrationName}
 												className="h-6 w-6 rounded-full bg-white p-0.5"
-												src={`/public${logo}`}
+												src={logo}
 											/>
 
 											{integrationName}
