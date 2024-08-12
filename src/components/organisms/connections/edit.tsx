@@ -31,12 +31,9 @@ export const EditConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	let SelectedIntegrationComponent = null;
-
-	if (selectedIntegration?.value as keyof typeof Integrations) {
-		SelectedIntegrationComponent =
-			integrationToEditComponent[selectedIntegration?.value as keyof typeof Integrations];
-	}
+	const SelectedIntegrationComponent = selectedIntegration
+		? integrationToEditComponent[selectedIntegration.value as keyof typeof Integrations]
+		: null;
 
 	const connectionName = watch("connectionName");
 
