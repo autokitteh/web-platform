@@ -11,23 +11,10 @@ import { Trigger } from "@type/models";
 export class TriggersService {
 	static async create(projectId: string, trigger: Trigger): Promise<ServiceResponse<string>> {
 		try {
-			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
+			const { data: defaultEnvironment, error } = await EnvironmentsService.getDefaultEnvironment(projectId);
 
 			if (error) {
-				LoggerService.error(
-					namespaces.triggerService,
-					i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
-				);
-
 				return { data: undefined, error };
-			}
-
-			if (!environments?.length) {
-				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
-			}
-
-			if (environments.length !== 1) {
-				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
 
 			const { connectionId, data, entryFunction, eventType, filter, name, path } = trigger;
@@ -37,7 +24,7 @@ export class TriggersService {
 					codeLocation: { name: entryFunction, path },
 					connectionId,
 					data,
-					envId: environments[0].envId,
+					envId: defaultEnvironment!.envId,
 					eventType,
 					filter,
 					name,

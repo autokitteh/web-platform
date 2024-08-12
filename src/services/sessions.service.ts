@@ -121,22 +121,14 @@ export class SessionsService {
 		projectId: string
 	): Promise<ServiceResponse<string>> {
 		try {
-			const { data: environments, error: envError } = await EnvironmentsService.listByProjectId(projectId);
+			const { data: defaultEnvironment, error: envError } =
+				await EnvironmentsService.getDefaultEnvironment(projectId);
 			if (envError) {
 				return { data: undefined, error: envError };
 			}
 
-			if (!environments?.length) {
-				const errorMessage = i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId });
-				LoggerService.error(namespaces.projectService, errorMessage);
-
-				return { data: undefined, error: new Error(errorMessage) };
-			}
-
-			const environment = environments[0];
-
 			const sessionAsStartRequest = {
-				session: { ...startSessionArgs, envId: environment.envId },
+				session: { ...startSessionArgs, envId: defaultEnvironment!.envId },
 			} as unknown as StartRequest;
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
 
