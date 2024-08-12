@@ -200,6 +200,15 @@ export const SessionsTable = () => {
 		return sumBy(sessionStats, "count");
 	}, [sessionStats]);
 
+	const rotateIconClass = useMemo(
+		() =>
+			cn({
+				"fill-green-800": tailState.live,
+				"fill-gray-600": !tailState.live,
+			}),
+		[tailState.live]
+	);
+
 	return (
 		<div className="flex h-full w-full py-2.5">
 			<Frame className={frameClass}>
@@ -225,7 +234,7 @@ export const SessionsTable = () => {
 								onClick={() => setTailState((prevState) => ({ ...prevState, live: !prevState.live }))}
 								title={tailState.live ? t("pauseLiveTail") : t("resumeLiveTail")}
 							>
-								<RotateIcon fill={tailState.live ? "green" : "gray"} />
+								<RotateIcon className={rotateIconClass} />
 							</IconButton>
 						) : null}
 					</div>
