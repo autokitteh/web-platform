@@ -23,3 +23,4 @@ export {
 	infoCronExpressionsLinks,
 	schedulerTriggerConnectionName,
 } from "@constants/triggers.constants";
+export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";

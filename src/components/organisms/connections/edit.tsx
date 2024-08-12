@@ -6,12 +6,11 @@ import { useParams } from "react-router-dom";
 import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
-import { Integrations } from "@src/enums/components";
+import { integrationToEditComponent } from "@src/constants";
 import { connectionSchema } from "@validations";
 
 import { Input, Select } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
 
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");
@@ -31,14 +30,7 @@ export const EditConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	let selectedIntegrationComponent = null;
-	switch (selectedIntegration.value) {
-		case Integrations.github:
-			selectedIntegrationComponent = <GithubIntegrationEditForm />;
-			break;
-		default:
-			break;
-	}
+	const SelectedIntegrationComponent = integrationToEditComponent[selectedIntegration?.value];
 
 	const connectionName = watch("connectionName");
 
@@ -68,7 +60,7 @@ export const EditConnection = () => {
 				/>
 			</form>
 
-			<div className="w-5/6">{selectedIntegrationComponent}</div>
+			<div className="w-5/6"> {SelectedIntegrationComponent ? <SelectedIntegrationComponent /> : null}</div>
 		</div>
 	);
 };
