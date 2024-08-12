@@ -5,8 +5,13 @@
 	"emptyKeyExist": "Empty key is not allowed",
 	"error": "Error",
 	"errorCreatingNewConnection": "Error while creating a new connection",
+	"errorFetchingVariabls": "Error fetching variables",
+	"errorFetchingVariablsExtended": "Error fetching variables, error: {{error}}",
 	"errorCreatingNewConnectionExtended": "Error while creating a new connection, error: {{error}}",
 	"errorFetchingConnection": "Error while fetching connection",
+	"errorFetchingConnectionType": "Error while fetching connection authentication type",
+	"errorFetchingConnectionTypeUnknown": "Unknown connection authentication type",
+	"errorFetchingVariables": "Error while fetching connection variables",
 	"connectionNotFound": "Error while fetching connection",
 	"connectionNotFoundExtended": "Error while fetching connection, connectionId: {{connectionId}}",
 	"connectionExists": "Connection already exists",
@@ -37,5 +42,7 @@
 	"triggerRemoveFailed": "Trigger remove failed",
 	"variableNotCreated": "There was an issue creating the variable",
 	"couldntUpdateFile": "Couldn't update the file",
-	"couldntUpdateFileExtended": "Couldn't update the file: {{fileName}}, Error: {{error}}"
+	"couldntUpdateFileExtended": "Couldn't update the file: {{fileName}}, Error: {{error}}",
+	"axiosNoResponse": "No response received from server. Please try again later",
+	"unknownError": "Unknown Error. Please try again later"
 }

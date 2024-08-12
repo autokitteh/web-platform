@@ -145,13 +145,16 @@ jobs:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
         run: npx playwright test --project=${{ matrix.browser }}
 
+      - name: List test-results directory
+        run: ls -alh test-results/
+
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-artifacts-${{ matrix.browser }}-${{ github.run_id }}
           path: playwright-report/
-          retention-days: 3
+          retention-days: 2
 
       - name: Upload Playwright Test Results
         uses: actions/upload-artifact@v4
@@ -159,7 +162,7 @@ jobs:
         with:
           name: playwright-test-results-${{ matrix.browser }}-${{ github.run_id }}
           path: test-results/
-          retention-days: 3
+          retention-days: 2
 
 
   build:

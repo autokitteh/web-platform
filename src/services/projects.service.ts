@@ -71,28 +71,19 @@ export class ProjectsService {
 		}
 	}
 	static async deploy(projectId: string, buildId: string): Promise<ServiceResponse<string>> {
-		const { data: environments, error: envError } = await EnvironmentsService.listByProjectId(projectId);
+		const { data: defaultEnvironment, error: envError } =
+			await EnvironmentsService.getDefaultEnvironment(projectId);
+
 		if (envError) {
 			return { data: undefined, error: envError };
 		}
 
-		if (!environments?.length) {
-			const errorMessage = i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId });
-			LoggerService.error(namespaces.projectService, errorMessage);
-
-			return { data: undefined, error: new Error(errorMessage) };
-		}
-
-		const environment = environments[0];
-
 		const { data: deploymentId, error } = await DeploymentsService.create({
 			buildId: buildId!,
-			envId: environment.envId,
+			envId: defaultEnvironment!.envId,
 		});
 
 		if (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
-
 			return { data: undefined, error };
 		}
 

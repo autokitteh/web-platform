@@ -8,7 +8,7 @@ import { SingleValue } from "react-select";
 
 import { apiBaseUrl, namespaces } from "@constants";
 import { selectIntegrationJira } from "@constants/lists/connections";
-import { JiraConnectionType } from "@enums";
+import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
 import { jiraIntegrationSchema } from "@validations";
@@ -100,10 +100,10 @@ export const JiraIntegrationAddForm = ({
 		if (!connectionId) return;
 
 		switch (selectedConnectionType?.value) {
-			case JiraConnectionType.ApiToken:
+			case ConnectionAuthType.ApiToken:
 				createConnection();
 				break;
-			case JiraConnectionType.Oauth:
+			case ConnectionAuthType.Oauth:
 				handleJiraOAuth();
 				break;
 			default:
@@ -114,9 +114,9 @@ export const JiraIntegrationAddForm = ({
 
 	const renderConnectionFields = () => {
 		switch (selectedConnectionType?.value) {
-			case JiraConnectionType.ApiToken:
+			case ConnectionAuthType.ApiToken:
 				return <ApiTokenJiraForm isLoading={isLoading} />;
-			case JiraConnectionType.Oauth:
+			case ConnectionAuthType.Oauth:
 				return <OauthJiraForm triggerParentFormSubmit={triggerParentFormSubmit} />;
 			default:
 				return null;

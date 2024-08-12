@@ -8,7 +8,7 @@ import { SingleValue } from "react-select";
 
 import { namespaces } from "@constants";
 import { selectIntegrationHttp } from "@constants/lists/connections";
-import { HttpConnectionType } from "@enums";
+import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { LoggerService } from "@services";
 import { httpBasicIntegrationSchema, httpBearerIntegrationSchema } from "@validations";
@@ -32,14 +32,14 @@ export const HttpIntegrationAddForm = ({
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const [selectedConnectionType, setSelectedConnectionType] = useState<SingleValue<SelectOption>>({
-		value: HttpConnectionType.NoAuth,
+		value: ConnectionAuthType.NoAuth,
 		label: t("http.noAuth"),
 	});
 	const [isLoading] = useState(false);
 
 	const formSchema = useMemo(() => {
-		if (selectedConnectionType?.value === HttpConnectionType.Basic) return httpBasicIntegrationSchema;
-		if (selectedConnectionType?.value === HttpConnectionType.Bearer) return httpBearerIntegrationSchema;
+		if (selectedConnectionType?.value === ConnectionAuthType.Basic) return httpBasicIntegrationSchema;
+		if (selectedConnectionType?.value === ConnectionAuthType.Bearer) return httpBearerIntegrationSchema;
 	}, [selectedConnectionType]);
 
 	const methods = useForm({
@@ -72,11 +72,11 @@ export const HttpIntegrationAddForm = ({
 
 	const renderConnectionFields = () => {
 		switch (selectedConnectionType?.value) {
-			case HttpConnectionType.NoAuth:
+			case ConnectionAuthType.NoAuth:
 				return renderNoAuth();
-			case HttpConnectionType.Basic:
+			case ConnectionAuthType.Basic:
 				return <HttpBasicForm isLoading={isLoading} />;
-			case HttpConnectionType.Bearer:
+			case ConnectionAuthType.Bearer:
 				return <HttpBearerForm isLoading={isLoading} />;
 			default:
 				return null;

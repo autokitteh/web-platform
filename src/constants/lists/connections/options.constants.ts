@@ -1,11 +1,4 @@
-import {
-	GithubConnectionType,
-	GoogleConnectionType,
-	HttpConnectionType,
-	JiraConnectionType,
-	SlackConnectionType,
-	TwilioConnectionType,
-} from "@enums";
+import { ConnectionAuthType } from "@enums";
 import { Integrations, TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
@@ -66,18 +59,18 @@ export const triggerTypes: SelectOption[] = [
 ];
 
 export const githubIntegrationAuthMethods: SelectOption[] = [
-	{ label: "Personal Access Token (PAT)", value: GithubConnectionType.Pat },
-	{ label: "OAuth", value: GithubConnectionType.Oauth },
+	{ label: "Personal Access Token (PAT)", value: ConnectionAuthType.Pat },
+	{ label: "OAuth", value: ConnectionAuthType.Oauth },
 ];
 
 export const selectIntegrationGoogle: SelectOption[] = [
-	{ label: "Service Account (JSON Key)", value: GoogleConnectionType.ServiceAccount },
-	{ label: "User (OAuth v2)", value: GoogleConnectionType.Oauth },
+	{ label: "Service Account (JSON Key)", value: ConnectionAuthType.ServiceAccount },
+	{ label: "User (OAuth v2)", value: ConnectionAuthType.Oauth },
 ];
 
 export const selectIntegrationSlack: SelectOption[] = [
-	{ label: "Socket Mode", value: SlackConnectionType.Mode },
-	{ label: "OAuth v2", value: SlackConnectionType.Oauth },
+	{ label: "Socket Mode", value: ConnectionAuthType.Mode },
+	{ label: "OAuth v2", value: ConnectionAuthType.Oauth },
 ];
 
 export const selectIntegrationAws: SelectOption[] = [
@@ -101,17 +94,17 @@ export const selectIntegrationAws: SelectOption[] = [
 ];
 
 export const selectIntegrationHttp: SelectOption[] = [
-	{ label: "No Auth", value: HttpConnectionType.NoAuth },
-	{ label: "Basic", value: HttpConnectionType.Basic, disabled: true },
-	{ label: "Bearer", value: HttpConnectionType.Bearer, disabled: true },
+	{ label: "No Auth", value: ConnectionAuthType.NoAuth },
+	{ label: "Basic", value: ConnectionAuthType.Basic, disabled: true },
+	{ label: "Bearer", value: ConnectionAuthType.Bearer, disabled: true },
 ];
 
 export const selectIntegrationTwilio: SelectOption[] = [
-	{ label: "Auth Token", value: TwilioConnectionType.AuthToken },
-	{ label: "API Key", value: TwilioConnectionType.ApiKey },
+	{ label: "Auth Token", value: ConnectionAuthType.AuthToken },
+	{ label: "API Key", value: ConnectionAuthType.ApiKey },
 ];
 
 export const selectIntegrationJira: SelectOption[] = [
-	{ label: "User API Token / PAT", value: JiraConnectionType.ApiToken },
-	{ label: "OAuth 2.0 App", value: JiraConnectionType.Oauth },
+	{ label: "User API Token / PAT", value: ConnectionAuthType.ApiToken },
+	{ label: "OAuth 2.0 App", value: ConnectionAuthType.Oauth },
 ];

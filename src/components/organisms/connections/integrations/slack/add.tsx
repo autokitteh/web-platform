@@ -8,7 +8,7 @@ import { SingleValue } from "react-select";
 
 import { apiBaseUrl, namespaces } from "@constants";
 import { infoSlackModeLinks, infoSlackOAuthLinks, selectIntegrationSlack } from "@constants/lists/connections";
-import { SlackConnectionType } from "@enums";
+import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
 import { slackIntegrationSchema } from "@validations";
@@ -100,11 +100,11 @@ export const SlackIntegrationAddForm = ({
 
 	useEffect(() => {
 		switch (selectedConnectionType?.value) {
-			case SlackConnectionType.Mode:
+			case ConnectionAuthType.Mode:
 				createConnection();
 				break;
 
-			case SlackConnectionType.Oauth:
+			case ConnectionAuthType.Oauth:
 				handleSlackOAuth();
 				break;
 
@@ -206,9 +206,9 @@ export const SlackIntegrationAddForm = ({
 
 	const renderConnectionFields = () => {
 		switch (selectedConnectionType?.value) {
-			case SlackConnectionType.Mode:
+			case ConnectionAuthType.Mode:
 				return renderSocketMode();
-			case SlackConnectionType.Oauth:
+			case ConnectionAuthType.Oauth:
 				return renderOAuthButton();
 			default:
 				return null;

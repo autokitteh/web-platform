@@ -3,13 +3,16 @@
 	"editConnection": "Edit connection",
 	"connectionCreatedSuccessfully": "Connection created successfully",
 	"information": "More Information",
+	"copyFailure": "Could not copy",
+	"copySuccess": "Copied to clipboard successfully",
 	"placeholders": {
 		"noConnectionTypesAvailable": "No connection types available",
 		"noIntegrationsAvailable": "No integrations available",
 		"selectConnectionType": "Select connection type",
 		"connectionType": "Connection type",
 		"selectIntegration": "Select integration",
-		"integration": "Integration"
+		"integration": "Integration",
+		"name": "Name"
 	},
 	"success": "Success",
 	"buttons": {
@@ -20,8 +23,6 @@
 	"github": {
 		"aboutGitHubApps": "About using GitHub Apps",
 		"clickButtonInstall": "Click the button below to install and authorize the autokitteh GitHub apps",
-		"copyFailure": "Could not copy webhook URL",
-		"copySuccess": "Copied webhook URL to clipboard successfully!",
 		"informationPat": {
 			"auth": "Authenticating with a personal access token",
 			"endpoints": "Endpoints available for fine-grained PATs",
@@ -31,7 +32,7 @@
 		"placeholders": {
 			"name": "Name",
 			"pat": "Personal Access Token (PAT) - fine-grained or classic",
-			"webhookSecret": "Webhook Secret",
+			"secret": "Webhook Secret",
 			"webhookUrl": "Webhook URL"
 		}
 	},

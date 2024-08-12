@@ -8,7 +8,7 @@ import { SingleValue } from "react-select";
 
 import { namespaces } from "@constants";
 import { selectIntegrationTwilio } from "@constants/lists/connections";
-import { TwilioConnectionType } from "@enums";
+import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
 import { twilioApiKeyIntegrationSchema, twilioTokenIntegrationSchema } from "@validations";
@@ -34,8 +34,8 @@ export const TwilioIntegrationAddForm = ({
 	const [isLoading, setIsLoading] = useState(false);
 
 	const formSchema = useMemo(() => {
-		if (selectedConnectionType?.value === TwilioConnectionType.AuthToken) return twilioTokenIntegrationSchema;
-		if (selectedConnectionType?.value === TwilioConnectionType.ApiKey) return twilioApiKeyIntegrationSchema;
+		if (selectedConnectionType?.value === ConnectionAuthType.AuthToken) return twilioTokenIntegrationSchema;
+		if (selectedConnectionType?.value === ConnectionAuthType.ApiKey) return twilioApiKeyIntegrationSchema;
 	}, [selectedConnectionType]);
 
 	const methods = useForm({
@@ -52,13 +52,13 @@ export const TwilioIntegrationAddForm = ({
 
 	const requestPayload = useMemo(() => {
 		const { key, secret, sid, token } = getValues();
-		if (selectedConnectionType?.value === TwilioConnectionType.AuthToken) {
+		if (selectedConnectionType?.value === ConnectionAuthType.AuthToken) {
 			return {
 				account_sid: sid,
 				auth_token: token,
 			};
 		}
-		if (selectedConnectionType?.value === TwilioConnectionType.ApiKey) {
+		if (selectedConnectionType?.value === ConnectionAuthType.ApiKey) {
 			return {
 				account_sid: sid,
 				api_key: key,
@@ -109,9 +109,9 @@ export const TwilioIntegrationAddForm = ({
 
 	const renderConnectionFields = () => {
 		switch (selectedConnectionType?.value) {
-			case TwilioConnectionType.AuthToken:
+			case ConnectionAuthType.AuthToken:
 				return <AuthTokenTwilioForm isLoading={isLoading} />;
-			case TwilioConnectionType.ApiKey:
+			case ConnectionAuthType.ApiKey:
 				return <ApiKeyTwilioForm isLoading={isLoading} />;
 			default:
 				return null;

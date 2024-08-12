@@ -61,7 +61,7 @@ export const EditVariable = () => {
 
 		reset({
 			name: currentVar.name,
-			value: currentVar.value,
+			value: currentVar.isSecret ? "" : currentVar.value,
 			isSecret: currentVar.isSecret,
 		});
 	};
@@ -74,7 +74,7 @@ export const EditVariable = () => {
 	const onSubmit = async () => {
 		const { isSecret, name, value } = getValues();
 		setIsLoading(true);
-		const { error } = await VariablesService.set(projectId!, {
+		const { error } = await VariablesService.setByProjectId(projectId!, {
 			isSecret,
 			name,
 			scopeId: "",
@@ -126,6 +126,7 @@ export const EditVariable = () => {
 						})}
 						handleInputChange={(newValue) => setValue("value", newValue)}
 						isLocked={isSecret}
+						resetOnFirstFocus
 						value={value}
 					/>
 
