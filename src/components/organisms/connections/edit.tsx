@@ -7,6 +7,7 @@ import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { integrationToEditComponent } from "@src/constants";
+import { Integrations } from "@src/enums/components";
 import { connectionSchema } from "@validations";
 
 import { Input, Select } from "@components/atoms";
@@ -30,7 +31,12 @@ export const EditConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	const SelectedIntegrationComponent = integrationToEditComponent[selectedIntegration?.value];
+	let SelectedIntegrationComponent = null;
+
+	if (selectedIntegration?.value as keyof typeof Integrations) {
+		SelectedIntegrationComponent =
+			integrationToEditComponent[selectedIntegration?.value as keyof typeof Integrations];
+	}
 
 	const connectionName = watch("connectionName");
 
