@@ -4,7 +4,7 @@ import { isEmpty, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { fileSizeUploadFile, monacoLanguages, namespaces } from "@constants";
+import { fileSizeUploadLimit, monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { LoggerService } from "@services";
 import { cn } from "@utilities";
@@ -67,7 +67,7 @@ export const CodeTable = () => {
 	const fileUpload = async (files: File[]) => {
 		try {
 			for (const file of files) {
-				if (file.size > fileSizeUploadFile) {
+				if (file.size > fileSizeUploadLimit) {
 					addToast({
 						id: Date.now().toString(),
 						message: tErrors("fileTooLarge"),
@@ -77,7 +77,7 @@ export const CodeTable = () => {
 						namespaces.projectUICode,
 						tErrors("fileTooLargeExtended", {
 							fileName: file.name,
-							maxSize: fileSizeUploadFile / 1024 + "KB",
+							maxSize: fileSizeUploadLimit / 1024 + "KB",
 							projectId,
 						})
 					);
