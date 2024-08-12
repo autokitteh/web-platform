@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { debounce, isEqual, sumBy } from "lodash";
+import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
@@ -196,10 +196,6 @@ export const SessionsTable = () => {
 		[tailState.live]
 	);
 
-	const totalSessions = useMemo(() => {
-		return sumBy(sessionStats, "count");
-	}, [sessionStats]);
-
 	const rotateIconClass = useMemo(
 		() =>
 			cn({
@@ -223,10 +219,6 @@ export const SessionsTable = () => {
 
 							{t("buttons.back")}
 						</IconButton>
-
-						<div className="font-mediumy text-base text-gray-500">
-							{t("totalSessions", { total: totalSessions })}
-						</div>
 
 						{tailState.display ? (
 							<IconButton
