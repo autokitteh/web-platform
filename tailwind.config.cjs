@@ -109,7 +109,7 @@ module.exports = {
       },
     },
     animation: {
-      'spin-middle': 'spin 2s linear infinite',
+      'spin-slow': 'spin 10s linear infinite',
     }
   },
   plugins: [

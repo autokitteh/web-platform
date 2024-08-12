@@ -72,11 +72,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	);
 
 	const labelClass = cn(
-		"pointer-events-none absolute left-4 text-white transition-all",
+		"pointer-events-none absolute left-4 text-gray-600 transition-all",
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
 		{ "-top-2 left-3 px-1 text-xs before:bg-gray-950": isFocused || hasValue },
 		{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light },
-		{ "text-black": variant === InputVariant.light }
+		{ "text-gray-900": variant === InputVariant.light }
 	);
 
 	const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
