@@ -15,8 +15,8 @@ import { slackIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
-import { Button, ErrorMessage, Input, Link, Select, Spinner } from "@components/atoms";
-import { Accordion } from "@components/molecules";
+import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
+import { Accordion, Select } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 

@@ -1,10 +1,12 @@
 import React, { forwardRef, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import ReactSelect, { SingleValue } from "react-select";
+import ReactSelect, { OptionProps, SingleValue, SingleValueProps, components } from "react-select";
 
 import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
 import { SelectOption, SelectProps } from "@interfaces/components";
+
+import { IconLabel } from "@components/molecules/select";
 
 const Select = forwardRef<HTMLDivElement, SelectProps>(
 	(
@@ -24,6 +26,7 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
 	) => {
 		const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>(null);
 		const { t } = useTranslation("components", { keyPrefix: "select" });
+		const { Option, SingleValue } = components;
 
 		useEffect(() => {
 			setSelectedOption(options.find((option) => option.value === value?.value) || null);
@@ -50,10 +53,31 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
 				break;
 		}
 
+		const iconOption = (props: OptionProps<SelectOption>) => {
+			const { icon, label } = props.data;
+
+			return (
+				<Option {...props}>
+					<IconLabel icon={icon} label={label} />
+				</Option>
+			);
+		};
+
+		const iconSingleValue = (props: SingleValueProps<SelectOption>) => {
+			const { icon, label } = props.data;
+
+			return (
+				<SingleValue {...props}>
+					<IconLabel icon={icon} label={label} />
+				</SingleValue>
+			);
+		};
+
 		return (
 			<div data-testid={dataTestid} ref={ref}>
 				<ReactSelect
 					{...rest}
+					components={{ Option: iconOption, SingleValue: iconSingleValue }}
 					isDisabled={disabled}
 					isOptionDisabled={(option) => !!option.disabled}
 					noOptionsMessage={() => noOptionsMessage}

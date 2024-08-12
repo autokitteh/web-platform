@@ -12,7 +12,8 @@ import { awsIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
-import { Button, ErrorMessage, Input, Select, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
+import { Select } from "@components/molecules";
 
 import { FloppyDiskIcon } from "@assets/image/icons";
 

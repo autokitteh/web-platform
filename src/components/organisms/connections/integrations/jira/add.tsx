@@ -15,7 +15,7 @@ import { jiraIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
-import { Select } from "@components/atoms";
+import { Select } from "@components/molecules";
 import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connections/integrations/jira";
 
 export const JiraIntegrationAddForm = ({

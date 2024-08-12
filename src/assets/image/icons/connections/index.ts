@@ -11,3 +11,6 @@ export { default as OpenAiIcon } from "@assets/image/icons/connections/OpenAi.sv
 export { default as JiraIcon } from "@assets/image/icons/connections/Jira.svg?react";
 export { default as GoogleFormsIcon } from "@assets/image/icons/connections/GoogleForms.svg?react";
 export { default as TwilioIcon } from "@assets/image/icons/connections/Twilio.svg?react";
+export { default as DiscordIcon } from "@assets/image/icons/connections/Discord.svg?react";
+export { default as GoogleDriveIcon } from "@assets/image/icons/connections/GoogleDrive.svg?react";
+export { default as RedisIcon } from "@assets/image/icons/connections/Redis.svg?react";

@@ -15,8 +15,8 @@ import { connectionSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
-import { ErrorMessage, Input, Select } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { ErrorMessage, Input } from "@components/atoms";
+import { Select, TabFormHeader } from "@components/molecules";
 import {
 	AwsIntegrationAddForm,
 	DiscordIntegrationAddForm,
@@ -117,28 +117,28 @@ export const AddConnection = () => {
 				type={selectedIntegration.value}
 			/>
 		),
-		googleSheets: (
+		googlesheets: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 				type={selectedIntegration.value}
 			/>
 		),
-		googleCalendar: (
+		googlecalendar: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 				type={selectedIntegration.value}
 			/>
 		),
-		googleDrive: (
+		googledrive: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 				type={selectedIntegration.value}
 			/>
 		),
-		googleForms: (
+		googleforms: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
@@ -146,7 +146,7 @@ export const AddConnection = () => {
 			/>
 		),
 		aws: <AwsIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
-		openAi: (
+		chatgpt: (
 			<OpenAiIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		http: <HttpIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,

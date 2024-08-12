@@ -15,7 +15,7 @@ import { googleIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
-import { Select } from "@components/atoms";
+import { Select } from "@components/molecules";
 import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connections/integrations/google";
 
 export const GoogleIntegrationAddForm = ({

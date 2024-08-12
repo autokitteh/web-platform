@@ -14,8 +14,8 @@ import { codeAssetsSchema } from "@validations";
 import { useFileOperations } from "@hooks";
 import { useModalStore, useToastStore } from "@store";
 
-import { Button, ErrorMessage, Input, Select } from "@components/atoms";
-import { Modal } from "@components/molecules";
+import { Button, ErrorMessage, Input } from "@components/atoms";
+import { Modal, Select } from "@components/molecules";
 
 export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const { projectId } = useParams();

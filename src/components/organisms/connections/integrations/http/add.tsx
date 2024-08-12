@@ -15,7 +15,8 @@ import { httpBasicIntegrationSchema, httpBearerIntegrationSchema } from "@valida
 
 import { useToastStore } from "@store";
 
-import { Button, Select } from "@components/atoms";
+import { Button } from "@components/atoms";
+import { Select } from "@components/molecules";
 import { HttpBasicForm, HttpBearerForm } from "@components/organisms/connections/integrations/http";
 
 export const HttpIntegrationAddForm = ({

@@ -5,26 +5,17 @@ export enum ConnectionStatus {
 	warning = 2,
 }
 
-export enum IntegrationsGoogle {
-	google = "google",
-	gmail = "gmail",
-	googleSheets = "googleSheets",
-	googleCalendar = "googleCalendar",
-	googleDrive = "googleDrive",
-	googleForms = "googleForms",
-}
-
 export enum Integrations {
 	github = "github",
 	slack = "slack",
 	gmail = "gmail",
 	google = "google",
-	googleSheets = "googleSheets",
-	googleCalendar = "googleCalendar",
-	googleDrive = "googleDrive",
-	googleForms = "googleForms",
+	googlesheets = "googlesheets",
+	googlecalendar = "googlecalendar",
+	googledrive = "googledrive",
+	googleforms = "googleforms",
 	aws = "aws",
-	openAi = "openAi",
+	chatgpt = "chatgpt",
 	http = "http",
 	twilio = "twilio",
 	jira = "jira",

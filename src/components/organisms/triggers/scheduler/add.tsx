@@ -13,8 +13,8 @@ import { schedulerTriggerSchema } from "@validations";
 import { useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
-import { ErrorMessage, Input, Link, Loader, Select } from "@components/atoms";
-import { Accordion } from "@components/molecules";
+import { ErrorMessage, Input, Link, Loader } from "@components/atoms";
+import { Accordion, Select } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 

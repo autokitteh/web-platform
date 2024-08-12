@@ -15,7 +15,7 @@ import { twilioApiKeyIntegrationSchema, twilioTokenIntegrationSchema } from "@va
 
 import { useToastStore } from "@store";
 
-import { Select } from "@components/atoms";
+import { Select } from "@components/molecules";
 import { ApiKeyTwilioForm, AuthTokenTwilioForm } from "@components/organisms/connections/integrations/twilio";
 
 export const TwilioIntegrationAddForm = ({

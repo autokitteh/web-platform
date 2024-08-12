@@ -7,3 +7,4 @@ export { Modal } from "@components/molecules/modal";
 export { SortButton } from "@components/molecules/sortButton";
 export { TabFormHeader } from "@components/molecules/tabFormHeader";
 export { Toast } from "@components/molecules/toast";
+export { Select } from "@components/molecules/select";

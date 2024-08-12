@@ -4,6 +4,7 @@ import { connectionsClient, integrationsClient } from "@api/grpc/clients.grpc.ap
 import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
 import { LoggerService } from "@services";
+import { integrationIcons } from "@src/constants/lists/connections";
 import { ServiceResponse } from "@type";
 import { Connection } from "@type/models";
 
@@ -51,8 +52,11 @@ export class ConnectionService {
 			const integration = integrations.find(
 				(integration) => integration.integrationId === connection.integrationId
 			);
-			convertedConnection.integrationName = integration?.displayName;
-			convertedConnection.integrationUniqueName = integration?.uniqueName;
+			if (integration) {
+				convertedConnection.integrationName = integration.displayName;
+				convertedConnection.integrationUniqueName = integration.uniqueName;
+				convertedConnection.logo = integrationIcons[integration.uniqueName];
+			}
 
 			return { data: convertedConnection, error: undefined };
 		} catch (error) {
@@ -135,6 +139,7 @@ export class ConnectionService {
 				);
 				if (integration) {
 					connection.integrationName = integration.displayName;
+					connection.logo = integrationIcons[integration.uniqueName];
 				}
 			});
 
@@ -157,6 +162,7 @@ export class ConnectionService {
 
 			const convertedConnections = connections.map(convertConnectionProtoToModel);
 			const { integrations } = await integrationsClient.list({});
+
 			if (!integrations) {
 				const errorMessage = i18n.t("intergrationsNotFoundExtended", { ns: "services", projectId });
 				LoggerService.error(namespaces.triggerService, errorMessage);
@@ -170,8 +176,10 @@ export class ConnectionService {
 				const integration = integrations.find(
 					(integration) => integration.integrationId === connection.integrationId
 				);
+
 				if (integration) {
 					connection.integrationName = integration.displayName;
+					connection.logo = integrationIcons[integration.uniqueName];
 				}
 			});
 

@@ -6,7 +6,7 @@ import { SingleValue } from "react-select";
 import { InputVariant } from "@enums/components";
 import { SelectOption, SelectProps } from "@interfaces/components";
 
-import { Select } from "@components/atoms";
+import { Select } from "@components/molecules";
 
 const options: SelectOption[] = [
 	{ value: "option1", label: "Option 1" },

@@ -9,22 +9,56 @@ import {
 import { Integrations, TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
+import {
+	AwsIcon,
+	DiscordIcon,
+	GithubIcon,
+	GoogleCalendarIcon,
+	GoogleDriveIcon,
+	GoogleFormsIcon,
+	GoogleGmailIcon,
+	GoogleIcon,
+	GoogleSheetsIcon,
+	HttpIcon,
+	JiraIcon,
+	OpenAiIcon,
+	SlackIcon,
+	TwilioIcon,
+} from "@assets/image/icons/connections";
+
 export const integrationTypes: SelectOption[] = [
-	{ disabled: false, label: "Github", value: Integrations.github },
-	{ disabled: false, label: "Slack", value: Integrations.slack },
-	{ disabled: false, label: "AWS", value: Integrations.aws },
-	{ disabled: false, label: "OpenAI ChatGPT", value: Integrations.openAi },
-	{ disabled: false, label: "HTTP", value: Integrations.http },
-	{ disabled: false, label: "Twilio", value: Integrations.twilio },
-	{ disabled: false, label: "Gmail", value: Integrations.gmail },
-	{ disabled: false, label: "Jira", value: Integrations.jira },
-	{ disabled: false, label: "Discord", value: Integrations.discord },
-	{ disabled: false, label: "Google (All APIs)", value: Integrations.google },
-	{ disabled: false, label: "Google Sheets", value: Integrations.googleSheets },
-	{ disabled: false, label: "Google Calendar", value: Integrations.googleCalendar },
-	{ disabled: false, label: "Google Drive", value: Integrations.googleDrive },
-	{ disabled: false, label: "Google Forms", value: Integrations.googleForms },
+	{ disabled: false, label: "Github", value: Integrations.github, icon: GithubIcon },
+	{ disabled: false, label: "Slack", value: Integrations.slack, icon: SlackIcon },
+	{ disabled: false, label: "AWS", value: Integrations.aws, icon: AwsIcon },
+	{ disabled: false, label: "OpenAI ChatGPT", value: Integrations.chatgpt, icon: OpenAiIcon },
+	{ disabled: false, label: "HTTP", value: Integrations.http, icon: HttpIcon },
+	{ disabled: false, label: "Twilio", value: Integrations.twilio, icon: TwilioIcon },
+	{ disabled: false, label: "Gmail", value: Integrations.gmail, icon: GoogleGmailIcon },
+	{ disabled: false, label: "Jira", value: Integrations.jira, icon: JiraIcon },
+	{ disabled: false, label: "Discord", value: Integrations.discord, icon: DiscordIcon },
+	{ disabled: false, label: "Google (All APIs)", value: Integrations.google, icon: GoogleIcon },
+	{ disabled: false, label: "Google Sheets", value: Integrations.googlesheets, icon: GoogleSheetsIcon },
+	{ disabled: false, label: "Google Calendar", value: Integrations.googlecalendar, icon: GoogleCalendarIcon },
+	{ disabled: false, label: "Google Drive", value: Integrations.googledrive, icon: GoogleDriveIcon },
+	{ disabled: false, label: "Google Forms", value: Integrations.googleforms, icon: GoogleFormsIcon },
 ];
+
+export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+	[Integrations.github]: GithubIcon,
+	[Integrations.slack]: SlackIcon,
+	[Integrations.aws]: AwsIcon,
+	[Integrations.chatgpt]: OpenAiIcon,
+	[Integrations.http]: HttpIcon,
+	[Integrations.twilio]: TwilioIcon,
+	[Integrations.gmail]: GoogleGmailIcon,
+	[Integrations.jira]: JiraIcon,
+	[Integrations.discord]: DiscordIcon,
+	[Integrations.google]: GoogleIcon,
+	[Integrations.googlesheets]: GoogleSheetsIcon,
+	[Integrations.googlecalendar]: GoogleCalendarIcon,
+	[Integrations.googledrive]: GoogleDriveIcon,
+	[Integrations.googleforms]: GoogleFormsIcon,
+};
 
 export const triggerTypes: SelectOption[] = [
 	{ disabled: false, label: "Default", value: TriggerFormType.default },

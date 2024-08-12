@@ -30,5 +30,5 @@ export const IconSvg = ({
 		className
 	);
 
-	return <Svg aria-label={alt} className={iconClasses} />;
+	return Svg ? <Svg aria-label={alt} className={iconClasses} /> : null;
 };

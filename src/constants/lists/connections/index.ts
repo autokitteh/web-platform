@@ -19,4 +19,5 @@ export {
 	selectIntegrationHttp,
 	selectIntegrationTwilio,
 	selectIntegrationJira,
+	integrationIcons,
 } from "@constants/lists/connections/options.constants";

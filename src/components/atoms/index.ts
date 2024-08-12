@@ -9,7 +9,6 @@ export { SearchInput } from "@components/atoms/searchInput";
 export { Link } from "@components/atoms/link";
 export { Loader } from "@components/atoms/loader";
 export { LogoCatLarge } from "@components/atoms/logoCatLarge";
-export { Select } from "@components/atoms/select";
 export { Spinner } from "@components/atoms/spinner";
 export { TBody, THead, Table, Td, Th, Tr } from "@components/atoms/table";
 export { Tab } from "@components/atoms/tabs";
