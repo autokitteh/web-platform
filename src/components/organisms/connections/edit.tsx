@@ -10,8 +10,8 @@ import { integrationToEditComponent } from "@src/constants";
 import { Integrations } from "@src/enums/components";
 import { connectionSchema } from "@validations";
 
-import { Input, Select } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { Input } from "@components/atoms";
+import { Select, TabFormHeader } from "@components/molecules";
 
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");

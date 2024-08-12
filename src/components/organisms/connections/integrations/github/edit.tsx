@@ -7,7 +7,7 @@ import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { githubIntegrationSchema } from "@validations";
 
-import { Select } from "@components/atoms";
+import { Select } from "@components/molecules";
 import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 
 export const GithubIntegrationEditForm = () => {
