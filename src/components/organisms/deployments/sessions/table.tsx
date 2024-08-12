@@ -202,9 +202,9 @@ export const SessionsTable = () => {
 
 	const rotateIconClass = useMemo(
 		() =>
-			cn("animate-spin-slow transition duration-500", {
-				"animation-running fill-green-800": tailState.live,
-				"animation-paused fill-gray-600": !tailState.live,
+			cn({
+				"fill-green-800": tailState.live,
+				"fill-gray-600": !tailState.live,
 			}),
 		[tailState.live]
 	);

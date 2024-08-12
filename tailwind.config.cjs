@@ -108,9 +108,6 @@ module.exports = {
         200: "#FF7438",
       },
     },
-    animation: {
-      'spin-slow': 'spin 10s linear infinite',
-    }
   },
   plugins: [
     plugin(({ addBase }) => {
