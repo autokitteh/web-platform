@@ -44,5 +44,7 @@
 	"couldntUpdateFile": "Couldn't update the file",
 	"couldntUpdateFileExtended": "Couldn't update the file: {{fileName}}, Error: {{error}}",
 	"axiosNoResponse": "No response received from server. Please try again later",
-	"unknownError": "Unknown Error. Please try again later"
+	"unknownError": "Unknown Error. Please try again later",
+	"fileTooLarge": "File is too large",
+	"fileTooLargeExtended": "File is too large, maximum file size: {{maxSize}} for the project ID: {{projectId}}"
 }
