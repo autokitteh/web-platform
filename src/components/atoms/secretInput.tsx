@@ -120,7 +120,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		{ "text-gray-900": variant === InputVariant.light },
 		{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light },
 		{ "text-black": variant === InputVariant.light },
-		{ "left-3 top-0 px-1 text-xs": !isFocused && resetOnFirstFocus && isFirstFocus }
+		{ "-top-2 left-3 translate-y-0 px-1 text-xs text-white": !isFocused && resetOnFirstFocus && isFirstFocus }
 	);
 
 	const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
