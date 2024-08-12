@@ -1,3 +1,10 @@
+# [1.32.0](https://github.com/autokitteh/web-platform/compare/v1.31.0...v1.32.0) (2024-08-12)
+
+
+### Features
+
+* add label placeholder to select component ([#250](https://github.com/autokitteh/web-platform/issues/250)) ([2468469](https://github.com/autokitteh/web-platform/commit/246846928b3a521a8943ad94f16ceffacd20a23a))
+
 # [1.31.0](https://github.com/autokitteh/web-platform/compare/v1.30.0...v1.31.0) (2024-08-12)
 
 
