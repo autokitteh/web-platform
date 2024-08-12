@@ -6,6 +6,7 @@ export interface SelectProps {
 	dataTestid?: string;
 	isError?: boolean;
 	noOptionsLabel?: string;
+	label?: string;
 	onBlur?: () => void;
 	onChange: (value: SingleValue<SelectOption>) => void;
 	options: SelectOption[];

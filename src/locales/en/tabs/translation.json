@@ -82,8 +82,11 @@
 				"name": "Name",
 				"noTriggerTypesAvailable": "No trigger types available",
 				"selectConnection": "Select connection",
+				"connection": "Connection",
 				"selectFile": "Select file",
+				"file": "File",
 				"selectTriggerType": "Select trigger type",
+				"triggerType": "Trigger type",
 				"value": "Value"
 			},
 			"titleData": "Data",

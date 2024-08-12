@@ -203,6 +203,7 @@ export const SchedulerEditTrigger = () => {
 									aria-label={t("placeholders.selectFile")}
 									dataTestid="select-trigger-file"
 									isError={!!errors.filePath}
+									label={t("placeholders.file")}
 									noOptionsLabel={t("noFilesAvailable")}
 									onChange={(selected) => field.onChange(selected)}
 									options={filesNameList}

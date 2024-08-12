@@ -7,7 +7,9 @@
 		"noConnectionTypesAvailable": "No connection types available",
 		"noIntegrationsAvailable": "No integrations available",
 		"selectConnectionType": "Select connection type",
-		"selectIntegration": "Select integration"
+		"connectionType": "Connection type",
+		"selectIntegration": "Select integration",
+		"integration": "Integration"
 	},
 	"success": "Success",
 	"buttons": {

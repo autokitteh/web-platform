@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useId, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import ReactSelect, { OptionProps, SingleValue, SingleValueProps, components } from "react-select";
@@ -15,6 +15,7 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
 			dataTestid,
 			disabled = false,
 			isError = false,
+			label,
 			noOptionsLabel,
 			onChange,
 			options,
@@ -46,17 +47,21 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
 		const handleFocus = useCallback(() => setIsFocused(true), []);
 		const handleBlur = useCallback(() => setIsFocused(false), []);
 
-		const noOptionsMessage = noOptionsLabel || t("noOptionsAvailable");
-
-		const selectStyles =
-			variant === "light" ? getSelectLightStyles(isError, disabled) : getSelectDarkStyles(isError, disabled);
+		const noOptionsMessage = useMemo(() => noOptionsLabel || t("noOptionsAvailable"), [noOptionsLabel, t]);
+		const selectStyles = useMemo(
+			() =>
+				variant === "light" ? getSelectLightStyles(isError, disabled) : getSelectDarkStyles(isError, disabled),
+			[variant, isError, disabled]
+		);
 
 		const labelClass = cn(
-			"pointer-events-none absolute left-4 text-base text-white transition-all",
-			{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
-			{ "-top-2 left-3 px-1 text-xs before:bg-gray-950": isFocused || hasValue },
-			{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === "light" },
-			{ "text-black": variant === "light" }
+			"pointer-events-none absolute left-4 top-0 text-base text-gray-600 opacity-0 transition-all",
+			{ "-top-2 left-3 px-1 text-xs opacity-100 before:bg-gray-950": isFocused || hasValue },
+			{
+				"-top-2 left-3 px-1 text-xs opacity-100 before:bg-white":
+					(isFocused || hasValue) && variant === "light",
+			},
+			{ "text-gray-900": variant === "light" }
 		);
 
 		const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
@@ -98,13 +103,13 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
 					onChange={handleChange}
 					onFocus={handleFocus}
 					options={options}
-					placeholder=""
+					placeholder={placeholder}
 					styles={selectStyles}
 					value={selectedOption}
 				/>
 
 				<label className={labelClass} htmlFor={id}>
-					<span className="relative z-10">{placeholder}</span>
+					<span className="relative z-10">{label}</span>
 
 					<span className={borderOverlayLabelClass} />
 				</label>
