@@ -47,7 +47,7 @@ export class VariablesService {
 			return { data: variables, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.projectService,
+				namespaces.variableService,
 				i18n.t("variablesNotFoundExtended", { id: envId, ns: "services" })
 			);
 
@@ -55,58 +55,74 @@ export class VariablesService {
 		}
 	}
 
-	static async set(
-		projectId: string,
-		singleVariable: Variable,
-		isConnection: boolean = false
-	): Promise<ServiceResponse<string>> {
+	static async setByConnectiontId(
+		connectionId: string,
+		singleVariable: Variable
+	): Promise<ServiceResponse<undefined>> {
 		try {
-			const { data: vars } = await this.list(projectId);
-			if (!isConnection) {
-				const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
-
-				if (error) {
-					LoggerService.error(
-						namespaces.triggerService,
-						i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
-					);
-
-					return { data: undefined, error };
-				}
-
-				if (!environments?.length) {
-					LoggerService.error(
-						namespaces.triggerService,
-						i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
-					);
-
-					return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
-				}
-
-				if (environments.length !== 1) {
-					LoggerService.error(
-						namespaces.triggerService,
-						i18n.t("multipleEnvironmentsFoundExtended", { ns: "services", projectId })
-					);
-
-					return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
-				}
-
-				await variablesClient.set({ vars: [{ ...singleVariable, scopeId: environments[0].envId }] });
-
-				return { data: undefined, error: undefined };
-			}
-
-			await variablesClient.set({ vars: [...(vars || []), { ...singleVariable, scopeId: projectId }] });
+			const { data: vars } = await this.list(connectionId);
+			await variablesClient.set({ vars: [...(vars || []), { ...singleVariable, scopeId: connectionId }] });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.projectService,
-				i18n.t("variableNotCreatedExtended", {
+				namespaces.variableService,
+				i18n.t("variableNotCreatedByConnectionIdExtended", {
 					name: singleVariable.name,
 					ns: "services",
 					value: singleVariable.value,
+					connectionId,
+					error,
+				})
+			);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async setByProjectId(projectId: string, singleVariable: Variable): Promise<ServiceResponse<undefined>> {
+		try {
+			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
+
+			if (error) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
+				);
+
+				return { data: undefined, error };
+			}
+
+			if (!environments?.length) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
+				);
+
+				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
+			}
+
+			if (environments.length !== 1) {
+				LoggerService.error(
+					namespaces.triggerService,
+					i18n.t("multipleEnvironmentsFoundExtended", { ns: "services", projectId })
+				);
+
+				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
+			}
+
+			await variablesClient.set({ vars: [{ ...singleVariable, scopeId: environments[0].envId }] });
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.variableService,
+				i18n.t("variableNotCreatedByProjectIdExtended", {
+					name: singleVariable.name,
+					ns: "services",
+					value: singleVariable.value,
+					projectId,
+					error,
 				})
 			);
 

@@ -81,16 +81,12 @@ export const useConnectionForm = (
 		const connectionData = getValues();
 
 		try {
-			VariablesService.set(
-				connectionId!,
-				{
-					name: "auth_type",
-					value: connectionAuthType,
-					isSecret: false,
-					scopeId: connectionId,
-				},
-				true
-			);
+			VariablesService.setByConnectiontId(connectionId!, {
+				name: "auth_type",
+				value: connectionAuthType,
+				isSecret: false,
+				scopeId: connectionId,
+			});
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
@@ -167,16 +163,12 @@ export const useConnectionForm = (
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: Integrations) => {
 		try {
-			await VariablesService.set(
-				oauthConnectionId!,
-				{
-					name: "auth_type",
-					value: ConnectionAuthType.Oauth,
-					isSecret: false,
-					scopeId: oauthConnectionId,
-				},
-				true
-			);
+			await VariablesService.setByConnectiontId(oauthConnectionId!, {
+				name: "auth_type",
+				value: ConnectionAuthType.Oauth,
+				isSecret: false,
+				scopeId: oauthConnectionId,
+			});
 			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {

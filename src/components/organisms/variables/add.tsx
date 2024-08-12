@@ -41,7 +41,7 @@ export const AddVariable = () => {
 	const onSubmit = async () => {
 		const { name, value } = getValues();
 		setIsLoading(true);
-		const { error } = await VariablesService.set(projectId!, {
+		const { error } = await VariablesService.setByProjectId(projectId!, {
 			isSecret,
 			name,
 			scopeId: "",
