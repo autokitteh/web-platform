@@ -249,6 +249,7 @@ export const DefaultEditTrigger = () => {
 									aria-label={t("placeholders.selectConnection")}
 									dataTestid="select-trigger-connection"
 									isError={!!errors.connection}
+									label={t("placeholders.connection")}
 									noOptionsLabel={t("noConnectionsAvailable")}
 									onChange={(selected) => field.onChange(selected)}
 									options={connections}
@@ -270,6 +271,7 @@ export const DefaultEditTrigger = () => {
 									{...field}
 									aria-label={t("placeholders.selectFile")}
 									isError={!!errors.filePath}
+									label={t("placeholders.file")}
 									noOptionsLabel={t("noFilesAvailable")}
 									onChange={(selected) => field.onChange(selected)}
 									options={filesNameList}

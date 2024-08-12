@@ -153,6 +153,7 @@ export const GoogleIntegrationAddForm = ({
 			<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
+					label={t("placeholders.connectionType")}
 					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
 					onChange={selectConnectionType}
 					options={selectIntegrationGoogle}

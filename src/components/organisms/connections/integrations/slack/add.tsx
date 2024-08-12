@@ -239,6 +239,7 @@ export const SlackIntegrationAddForm = ({
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
+					label={t("placeholders.connectionType")}
 					onChange={selectConnectionType}
 					options={selectIntegrationSlack}
 					placeholder={t("placeholders.selectConnectionType")}

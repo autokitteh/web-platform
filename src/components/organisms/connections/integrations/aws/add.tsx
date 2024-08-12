@@ -118,6 +118,7 @@ export const AwsIntegrationAddForm = ({
 						<Select
 							aria-label={t("aws.placeholders.region")}
 							isError={!!errors.region}
+							label={t("aws.placeholders.region")}
 							onChange={(selected) => field.onChange(selected)}
 							options={selectIntegrationAws}
 							placeholder={t("aws.placeholders.region")}

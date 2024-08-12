@@ -185,6 +185,7 @@ export const AddConnection = () => {
 					aria-label={t("placeholders.selectIntegration")}
 					dataTestid="select-connection-type"
 					disabled={!!connectionId}
+					label={t("placeholders.integration")}
 					onChange={handleIntegrationChange}
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}

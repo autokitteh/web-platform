@@ -39,6 +39,7 @@ export const AddTrigger = () => {
 				<Select
 					aria-label={t("placeholders.selectTriggerType")}
 					dataTestid="select-trigger-type"
+					label={t("placeholders.triggerType")}
 					noOptionsLabel={t("placeholders.noTriggerTypesAvailable")}
 					onChange={(option) => setSelectedType(option as SelectOption)}
 					options={triggerTypes}

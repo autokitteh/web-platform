@@ -147,6 +147,7 @@ export const JiraIntegrationAddForm = ({
 			<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
+					label={t("placeholders.connectionType")}
 					onChange={setSelectedConnectionType}
 					options={selectIntegrationJira}
 					placeholder={t("placeholders.selectConnectionType")}

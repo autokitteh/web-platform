@@ -1,19 +1,21 @@
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import ReactSelect, { OptionProps, SingleValue, SingleValueProps, components } from "react-select";
 
 import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
 import { SelectOption, SelectProps } from "@interfaces/components";
+import { cn } from "@utilities";
 
 import { IconLabel } from "@components/molecules/select";
 
-const Select = forwardRef<HTMLDivElement, SelectProps>(
+export const Select = forwardRef<HTMLDivElement, SelectProps>(
 	(
 		{
 			dataTestid,
 			disabled = false,
 			isError = false,
+			label,
 			noOptionsLabel,
 			onChange,
 			options,
@@ -25,33 +27,56 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
 		ref
 	) => {
 		const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>(null);
+		const [isFocused, setIsFocused] = useState(false);
 		const { t } = useTranslation("components", { keyPrefix: "select" });
 		const { Option, SingleValue } = components;
 
 		useEffect(() => {
-			setSelectedOption(options.find((option) => option.value === value?.value) || null);
+			const valueSelected = options.find((option) => option.value === value?.value) || null;
+			setSelectedOption(valueSelected);
 		}, [value, options]);
 
-		const handleChange = (selected: SingleValue<SelectOption>) => {
-			setSelectedOption(selected);
-			onChange(selected);
-		};
+		const handleChange = useCallback(
+			(selected: SingleValue<SelectOption>) => {
+				setSelectedOption(selected);
+				onChange?.(selected);
+			},
+			[onChange]
+		);
 
-		const noOptionsMessage = noOptionsLabel || t("noOptionsAvailable");
+		const handleFocus = useCallback(() => setIsFocused(true), []);
+		const handleBlur = useCallback(() => setIsFocused(false), []);
 
-		const handleMenuClose = () => {
-			(document.activeElement as HTMLElement).blur();
-		};
+		const noOptionsMessage = useMemo(() => () => noOptionsLabel || t("noOptionsAvailable"), [noOptionsLabel, t]);
+		const selectStyles = useMemo(
+			() =>
+				variant === "light" ? getSelectLightStyles(isError, disabled) : getSelectDarkStyles(isError, disabled),
+			[variant, isError, disabled]
+		);
 
-		let selectStyles;
-		switch (variant) {
-			case "light":
-				selectStyles = getSelectLightStyles(isError, disabled);
-				break;
-			default:
-				selectStyles = getSelectDarkStyles(isError, disabled);
-				break;
-		}
+		const labelClass = useMemo(
+			() =>
+				cn(
+					"pointer-events-none absolute -top-1 left-4 text-base opacity-0 transition-all",
+					{ "-top-2 left-3 px-1 text-xs opacity-100 before:bg-gray-950": isFocused || !!selectedOption },
+					{
+						"-top-2 left-3 px-1 text-xs opacity-100 before:bg-white":
+							(isFocused || !!selectedOption) && variant === "light",
+					},
+					{ "text-gray-900": variant === "light" }
+				),
+			[isFocused, selectedOption, variant]
+		);
+
+		const borderOverlayLabelClass = useMemo(
+			() =>
+				cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
+					"bg-white": variant === "light",
+				}),
+			[variant]
+		);
+
+		const id = useId();
 
 		const iconOption = (props: OptionProps<SelectOption>) => {
 			const { icon, label } = props.data;
@@ -74,25 +99,31 @@ const Select = forwardRef<HTMLDivElement, SelectProps>(
 		};
 
 		return (
-			<div data-testid={dataTestid} ref={ref}>
+			<div className="relative" data-testid={dataTestid} ref={ref}>
 				<ReactSelect
 					{...rest}
 					components={{ Option: iconOption, SingleValue: iconSingleValue }}
+					id={id}
 					isDisabled={disabled}
 					isOptionDisabled={(option) => !!option.disabled}
-					noOptionsMessage={() => noOptionsMessage}
+					noOptionsMessage={noOptionsMessage}
+					onBlur={handleBlur}
 					onChange={handleChange}
-					onMenuClose={handleMenuClose}
+					onFocus={handleFocus}
 					options={options}
 					placeholder={placeholder}
 					styles={selectStyles}
 					value={selectedOption}
 				/>
+
+				<label className={labelClass} htmlFor={id}>
+					<span className="relative z-10">{label}</span>
+
+					<span className={borderOverlayLabelClass} />
+				</label>
 			</div>
 		);
 	}
 );
 
 Select.displayName = "Select";
-
-export { Select };

@@ -11,9 +11,10 @@ const baseStyles = {
 	},
 	"::-webkit-scrollbar-thumb": {
 		borderRadius: "10px",
+		background: formThemes["gray-750"],
 	},
 	"::-webkit-scrollbar-thumb:hover": {
-		background: formThemes["gray-750"],
+		background: formThemes["gray-950"],
 	},
 	"borderRadius": "8px",
 	"boxShadow": "none",
@@ -145,7 +146,7 @@ const getSelectStyles = (
 		}),
 		placeholder: (provided, state) => ({
 			...provided,
-			color: state.isFocused ? "transparent" : oppositeSchemeColor,
+			color: state.isFocused ? "transparent" : formThemes["gray-600"],
 		}),
 		singleValue: (provided) => ({
 			...provided,

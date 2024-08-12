@@ -285,6 +285,7 @@ export const GithubIntegrationAddForm = ({
 			<div className="flex w-full flex-col gap-6">
 				<Select
 					aria-label={t("placeholders.selectConnectionType")}
+					label={t("placeholders.connectionType")}
 					onChange={selectConnectionType}
 					options={githubIntegrationAuthMethods}
 					placeholder={t("placeholders.selectConnectionType")}
