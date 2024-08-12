@@ -15,8 +15,8 @@ import { connectionSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
-import { ErrorMessage, Input, Select } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { ErrorMessage, Input } from "@components/atoms";
+import { Select, TabFormHeader } from "@components/molecules";
 import {
 	AwsIntegrationAddForm,
 	DiscordIntegrationAddForm,

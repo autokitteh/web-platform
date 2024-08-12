@@ -15,7 +15,8 @@ import { defaultTriggerSchema } from "@validations";
 import { useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
-import { Button, ErrorMessage, IconButton, Input, Loader, Select } from "@components/atoms";
+import { Button, ErrorMessage, IconButton, Input, Loader } from "@components/atoms";
+import { Select } from "@components/molecules";
 
 import { InfoIcon, PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";

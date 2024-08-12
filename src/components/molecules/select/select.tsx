@@ -6,7 +6,7 @@ import ReactSelect, { OptionProps, SingleValue, SingleValueProps, components } f
 import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
 import { SelectOption, SelectProps } from "@interfaces/components";
 
-import { IconLabel } from "@components/atoms/select";
+import { IconLabel } from "@components/molecules/select";
 
 const Select = forwardRef<HTMLDivElement, SelectProps>(
 	(
