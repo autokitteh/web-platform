@@ -48,7 +48,7 @@ export const OpenAiIntegrationAddForm = ({
 		const { key } = getValues();
 
 		try {
-			await HttpService.post(`/openAi/save?cid=${connectionId}&origin=web`, {
+			await HttpService.post(`/chatgpt/save?cid=${connectionId}&origin=web`, {
 				key,
 			});
 			const successMessage = t("connectionCreatedSuccessfully");
