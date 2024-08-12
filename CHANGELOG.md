@@ -1,3 +1,10 @@
+# [1.33.0](https://github.com/autokitteh/web-platform/compare/v1.32.0...v1.33.0) (2024-08-12)
+
+
+### Features
+
+* github connection edit functionality ([#215](https://github.com/autokitteh/web-platform/issues/215)) ([d0ecd7c](https://github.com/autokitteh/web-platform/commit/d0ecd7c8080e897d72b7489381715309ef97dbb0))
+
 # [1.32.0](https://github.com/autokitteh/web-platform/compare/v1.31.0...v1.32.0) (2024-08-12)
 
 
