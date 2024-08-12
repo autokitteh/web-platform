@@ -1,5 +1,5 @@
 export { ButtonVariant, TopbarButton } from "@enums/components/button.enum";
-export { ConnectionStatus, Integrations, IntegrationsGoogle } from "@enums/components/connection.enum";
+export { ConnectionStatus, Integrations } from "@enums/components/connection.enum";
 export { InputVariant } from "@enums/components/input.enum";
 export { SidebarHrefMenu, SidebarMenu } from "@enums/components/menu.enum";
 export { ModalName } from "@enums/components/modal.enum";

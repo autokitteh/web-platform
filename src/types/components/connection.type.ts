@@ -1,4 +1,3 @@
-import { Integrations, IntegrationsGoogle } from "@enums/components";
+import { Integrations } from "@enums/components";
 
 export type IntegrationType = keyof typeof Integrations;
-export type IntegrationGoogleType = keyof typeof IntegrationsGoogle;
