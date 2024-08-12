@@ -1,3 +1,10 @@
+# [1.34.0](https://github.com/autokitteh/web-platform/compare/v1.33.0...v1.34.0) (2024-08-12)
+
+
+### Features
+
+* add file size validation for uploaded files ([#253](https://github.com/autokitteh/web-platform/issues/253)) ([6604825](https://github.com/autokitteh/web-platform/commit/6604825c7b1897f6e6716dcc36386706bf9f0b8c))
+
 # [1.33.0](https://github.com/autokitteh/web-platform/compare/v1.32.0...v1.33.0) (2024-08-12)
 
 
