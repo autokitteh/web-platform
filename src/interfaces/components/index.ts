@@ -7,7 +7,7 @@ export type {
 	SortButtonProps,
 } from "@interfaces/components/button.interface";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
-export type { InputProps, SelectOption, SelectProps, TextArea } from "@interfaces/components/forms";
+export type { InputProps, SelectOption, SelectProps, TextArea, SelectIconLabel } from "@interfaces/components/forms";
 export type { FrameProps, SplitFrameProps } from "@interfaces/components/frame.interface";
 export type { IconProps, IconSvgProps } from "@interfaces/components/icon.interface";
 export type { LinkProps } from "@interfaces/components/link.interface";

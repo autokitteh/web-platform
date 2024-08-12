@@ -19,4 +19,10 @@ export interface SelectOption {
 	disabled?: boolean;
 	label: string;
 	value: string;
+	icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+}
+
+export interface SelectIconLabel {
+	label: string;
+	icon?: React.FC<React.SVGProps<SVGSVGElement>>;
 }
