@@ -15,7 +15,8 @@ export const useFetchConnections = (projectId: string, schedulerTriggerConnectio
 	const [cronConnectionId, setCronConnectionId] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
-	const { t: tErrors } = useTranslation(["errors", "services"]);
+	const { t: tErrors } = useTranslation("errors");
+	const { t: tServices } = useTranslation("services");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 
 	const handleErrors = (
@@ -45,9 +46,9 @@ export const useFetchConnections = (projectId: string, schedulerTriggerConnectio
 				if (!allConnectionsPerCustomer || !allConnectionsPerCustomer.length || allConnectionsError) {
 					handleErrors(
 						allConnectionsError,
-						"connectionsNotFound",
-						"connectionsFetchError",
-						"connectionsFetchErrorExtended"
+						tServices("connectionsNotFound"),
+						tErrors("connectionsFetchError"),
+						tErrors("connectionsFetchErrorExtended")
 					);
 
 					return;
@@ -57,7 +58,7 @@ export const useFetchConnections = (projectId: string, schedulerTriggerConnectio
 					(item) => item.name === schedulerTriggerConnectionName
 				);
 				if (!cronConnection) {
-					handleErrors(null, "connectionCronNotFound");
+					handleErrors(null, tServices("connectionCronNotFound"));
 
 					return;
 				}
