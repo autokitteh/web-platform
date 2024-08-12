@@ -86,7 +86,7 @@ export class VariablesService {
 
 			if (error) {
 				LoggerService.error(
-					namespaces.triggerService,
+					namespaces.variableService,
 					i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
 				);
 
@@ -95,7 +95,7 @@ export class VariablesService {
 
 			if (!environments?.length) {
 				LoggerService.error(
-					namespaces.triggerService,
+					namespaces.variableService,
 					i18n.t("defaulEnvironmentNotFoundExtended", { ns: "services", projectId })
 				);
 
@@ -104,7 +104,7 @@ export class VariablesService {
 
 			if (environments.length !== 1) {
 				LoggerService.error(
-					namespaces.triggerService,
+					namespaces.variableService,
 					i18n.t("multipleEnvironmentsFoundExtended", { ns: "services", projectId })
 				);
 
