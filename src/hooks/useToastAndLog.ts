@@ -41,7 +41,7 @@ export const useToastAndLog = () => {
 
 		if (!skipLogger) {
 			const extendedMessage =
-				type === "error" ? tErrors(`${key}Extended`, { error: handleErrorDetails(error) }) : message;
+				type === "error" && error ? tErrors(`${key}Extended`, { error: handleErrorDetails(error) }) : message;
 
 			if (type === "error") {
 				LoggerService.error(namespaces.connectionService, extendedMessage);
