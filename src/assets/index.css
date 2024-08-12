@@ -79,3 +79,11 @@ textarea:focus::placeholder {
 a {
 	transition: var(--transition);
 }
+
+.animation-paused {
+	animation-play-state: paused;
+}
+
+.animation-running {
+	animation-play-state: running;
+}
