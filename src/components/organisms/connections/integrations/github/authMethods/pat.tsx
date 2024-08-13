@@ -5,7 +5,7 @@ import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoGithubLinks } from "@constants/lists";
-import { apiBaseUrl } from "@src/constants";
+import { getApiBaseUrl } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -33,6 +33,8 @@ export const PatForm = ({
 		pat: true,
 		secret: true,
 	});
+
+	const apiBaseUrl = getApiBaseUrl();
 
 	const { t } = useTranslation("integrations");
 	const [webhook, setWebhook] = useState("");
