@@ -19,11 +19,10 @@ module.exports = {
       },
       spacing: {
         9.5: "2.375rem",
-        8.5: "2.125rem",
         '3px': '3px',
         500: "500px",
         550: "550px",
-        650: "650px",
+        650: "650px"
       },
       maxWidth: {
         420: "420px",
@@ -32,10 +31,10 @@ module.exports = {
       },
       width: {
         "default-icon": "1.625rem",
-        "main-nav-sidebar": "85px",
+        "main-nav-sidebar": "85px"
       },
       height: {
-        "default-icon": "1.625rem",
+        "default-icon": "1.625rem"
       },
       borderRadius: {
         14: "14px",

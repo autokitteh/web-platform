@@ -14,7 +14,7 @@ import { cn } from "@utilities";
 
 import { useModalStore, useToastStore } from "@store";
 
-import { Frame, IconButton, IconSvg, TBody, THead, Table, Th, Tr } from "@components/atoms";
+import { Frame, IconButton, IconSvg, Loader, TBody, THead, Table, Th, Tr } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
@@ -35,6 +35,7 @@ export const SessionsTable = () => {
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 	const [isRefreshing, setIsRefreshing] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const frameClass = useMemo(
 		() => cn("w-1/2 bg-gray-1100 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
@@ -43,6 +44,9 @@ export const SessionsTable = () => {
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
+			const loaderTimeout = setTimeout(() => {
+				setIsLoading(true);
+			}, 1000);
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
 				{
@@ -50,6 +54,9 @@ export const SessionsTable = () => {
 				},
 				nextPageToken
 			);
+			clearTimeout(loaderTimeout);
+			setIsLoading(false);
+
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
@@ -198,7 +205,7 @@ export const SessionsTable = () => {
 						</IconButton>
 
 						<IconButton
-							className="group h-8.5 w-8.5 rounded-md bg-gray-1050 hover:bg-gray-1250"
+							className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
 							disabled={isRefreshing}
 							onClick={handleRefreshClick}
 							title={t("refresh")}
@@ -211,32 +218,42 @@ export const SessionsTable = () => {
 				</div>
 
 				{sessions.length ? (
-					<Table className="mt-4 flex-1 overflow-hidden">
-						<THead>
-							<Tr>
-								<Th className="group cursor-pointer font-normal">
-									{t("table.columns.activationTime")}
-								</Th>
+					<div className="relative flex h-full flex-col">
+						<Table className="mt-4 flex-1 overflow-hidden">
+							<THead>
+								<Tr>
+									<Th className="group cursor-pointer font-normal">
+										{t("table.columns.activationTime")}
+									</Th>
 
-								<Th className="group cursor-pointer font-normal">{t("table.columns.status")}</Th>
+									<Th className="group cursor-pointer font-normal">{t("table.columns.status")}</Th>
 
-								<Th className="group cursor-pointer border-0 font-normal">
-									{t("table.columns.sessionId")}
-								</Th>
+									<Th className="group cursor-pointer border-0 font-normal">
+										{t("table.columns.sessionId")}
+									</Th>
 
-								<Th className="mr-1.5 max-w-20 border-0 font-normal">{t("table.columns.actions")}</Th>
-							</Tr>
-						</THead>
+									<Th className="mr-1.5 max-w-20 border-0 font-normal">
+										{t("table.columns.actions")}
+									</Th>
+								</Tr>
+							</THead>
 
-						<TBody>
-							<SessionsTableList
-								onItemsRendered={handleItemsRendered}
-								onSelectedSessionId={setSelectedSessionId}
-								onSessionRemoved={debouncedFetchDeployments}
-								sessions={sessions}
-							/>
-						</TBody>
-					</Table>
+							<TBody>
+								<SessionsTableList
+									onItemsRendered={handleItemsRendered}
+									onSelectedSessionId={setSelectedSessionId}
+									onSessionRemoved={debouncedFetchDeployments}
+									sessions={sessions}
+								/>
+							</TBody>
+						</Table>
+
+						{isLoading ? (
+							<div className="flex h-10 w-full items-center">
+								<Loader firstColor="light-gray" size="md" />
+							</div>
+						) : null}
+					</div>
 				) : (
 					<div className="mt-10 text-center text-xl font-semibold">{t("noSessions")}</div>
 				)}

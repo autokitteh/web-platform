@@ -4,7 +4,7 @@ import { LoaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Loader = ({
-	firstColor = "dark-gray",
+	firstColor = "light-gray",
 	isCenter = false,
 	secondColor = "gray",
 	size = "md",
@@ -21,9 +21,11 @@ export const Loader = ({
 		sizeClass,
 		{
 			"after:bg-gray-950": secondColor === "gray",
-			"after:bg-gray-1100": secondColor === "dark-gray",
 			"before:bg-gray-950": firstColor === "gray",
+			"after:bg-gray-1100": secondColor === "dark-gray",
 			"before:bg-gray-1100": firstColor === "dark-gray",
+			"after:bg-gray-300": secondColor === "light-gray",
+			"before:bg-gray-500": firstColor === "light-gray",
 		},
 		{
 			"absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2": isCenter,
