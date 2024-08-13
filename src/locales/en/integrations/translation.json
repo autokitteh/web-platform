@@ -2,6 +2,7 @@
 	"addNewConnection": "Add new connection",
 	"editConnection": "Edit connection",
 	"connectionCreatedSuccessfully": "Connection created successfully",
+	"connectionEditedSuccessfully": "Connection edited successfully",
 	"information": "More Information",
 	"copyFailure": "Could not copy",
 	"copySuccess": "Copied to clipboard successfully",

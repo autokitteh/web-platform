@@ -78,8 +78,6 @@ export const useConnectionForm = (
 	): Promise<void> => {
 		setIsLoading(true);
 
-		const connectionData = getValues();
-
 		try {
 			VariablesService.setByConnectiontId(connectionId!, {
 				name: "auth_type",
@@ -87,11 +85,41 @@ export const useConnectionForm = (
 				isSecret: false,
 				scopeId: connectionId,
 			});
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+
+			const { pat, secret, webhook } = getValues();
+
+			const connectionRelevantData = {
+				secret: secret ? secret : undefined,
+				pat: pat ? pat : undefined,
+				webhook: webhook ? webhook : undefined,
+			};
+
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionRelevantData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
+			setIsLoading(false);
+		}
+	};
+
+	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
+		setIsLoading(true);
+
+		try {
+			const { pat, secret, webhook } = getValues();
+
+			const connectionRelevantData = {
+				secret: secret ? secret : undefined,
+				pat: pat ? pat : undefined,
+				webhook: webhook ? webhook : undefined,
+			};
+
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionRelevantData);
+			toastAndLog("success", "connectionEditedSuccessfully");
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			toastAndLog("error", "errorEditingNewConnection", error);
 			setIsLoading(false);
 		}
 	};
@@ -158,7 +186,7 @@ export const useConnectionForm = (
 	};
 
 	const onSubmitEdit = async () => {
-		handleConnection(connectionId!, connectionType as ConnectionAuthType, connectionIntegrationName);
+		editConnection(connectionId!, connectionIntegrationName);
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: Integrations) => {
