@@ -38,7 +38,7 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const frameClass = useMemo(
-		() => cn("w-1/2 bg-gray-1100 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
+		() => cn("w-2/4 bg-gray-1100 pl-7 transition-all", { "rounded-r-none": !sessionId }),
 		[sessionId]
 	);
 
@@ -259,7 +259,7 @@ export const SessionsTable = () => {
 			{sessionId ? (
 				<Outlet />
 			) : (
-				<Frame className="w-3/5 rounded-l-none bg-gray-1100 pt-20 transition">
+				<Frame className="w-2/4 rounded-l-none bg-gray-1100 pt-20 transition">
 					<div className="mt-20 flex flex-col items-center">
 						<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
 
