@@ -3,17 +3,15 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
+import { ListOnItemsRenderedProps } from "react-window";
 
-import { fetchSessionsInterval, namespaces } from "@constants";
-import { DeploymentStateVariant } from "@enums";
+import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { DeploymentsService, LoggerService, SessionsService } from "@services";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
-import { useInterval } from "@hooks";
 import { useModalStore, useToastStore } from "@store";
 
 import { Frame, IconButton, TBody, THead, Table, Th, Tr } from "@components/atoms";
@@ -27,7 +25,6 @@ export const SessionsTable = () => {
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
-	const { startInterval, stopInterval } = useInterval();
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
@@ -36,10 +33,6 @@ export const SessionsTable = () => {
 	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
-	const [tailState, setTailState] = useState({
-		display: false,
-		live: false,
-	});
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 
 	const frameClass = useMemo(
@@ -113,9 +106,6 @@ export const SessionsTable = () => {
 			return;
 		}
 
-		const deploymentState = deployment?.state === DeploymentStateVariant.active ? true : false;
-		setTailState({ display: deploymentState, live: deploymentState });
-
 		setSessionStats(deployment?.sessionStats);
 		debouncedFetchSessions();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,21 +118,6 @@ export const SessionsTable = () => {
 		debouncedFetchSessions();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionStateType]);
-
-	useEffect(() => {
-		if (tailState.live) {
-			startInterval("sessionsFetchIntervalId", debouncedFetchDeployments, fetchSessionsInterval);
-		}
-		if (!tailState.live) {
-			stopInterval("sessionsFetchIntervalId");
-		}
-
-		return () => {
-			stopInterval("sessionsFetchIntervalId");
-			debouncedFetchDeployments.cancel();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [tailState.live]);
 
 	const closeSessionLog = useCallback(() => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
@@ -184,27 +159,6 @@ export const SessionsTable = () => {
 		}
 	};
 
-	const handleScroll = useCallback(
-		({ scrollOffset }: ListOnScrollProps) => {
-			if (scrollOffset !== 0 && tailState.live) {
-				setTailState((prevState) => ({
-					...prevState,
-					live: !prevState.live,
-				}));
-			}
-		},
-		[tailState.live]
-	);
-
-	const rotateIconClass = useMemo(
-		() =>
-			cn({
-				"fill-green-800": tailState.live,
-				"fill-gray-600": !tailState.live,
-			}),
-		[tailState.live]
-	);
-
 	return (
 		<div className="flex h-full w-full py-2.5">
 			<Frame className={frameClass}>
@@ -220,15 +174,13 @@ export const SessionsTable = () => {
 							{t("buttons.back")}
 						</IconButton>
 
-						{tailState.display ? (
-							<IconButton
-								className="ml-3 h-5 w-5 cursor-pointer p-0"
-								onClick={() => setTailState((prevState) => ({ ...prevState, live: !prevState.live }))}
-								title={tailState.live ? t("pauseLiveTail") : t("resumeLiveTail")}
-							>
-								<RotateIcon className={rotateIconClass} />
-							</IconButton>
-						) : null}
+						<IconButton
+							className="ml-3 h-5 w-5 cursor-pointer p-0"
+							onClick={debouncedFetchDeployments}
+							title={t("refresh")}
+						>
+							<RotateIcon fill="green" />
+						</IconButton>
 					</div>
 
 					<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
@@ -255,7 +207,6 @@ export const SessionsTable = () => {
 						<TBody>
 							<SessionsTableList
 								onItemsRendered={handleItemsRendered}
-								onScroll={handleScroll}
 								onSelectedSessionId={setSelectedSessionId}
 								onSessionRemoved={debouncedFetchDeployments}
 								sessions={sessions}

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { fetchDeploymentsInterval } from "@constants";
 import { DeploymentsService } from "@services";
 import { Deployment } from "@type/models";
 
@@ -45,10 +44,6 @@ export const DeploymentsTable = () => {
 
 	useEffect(() => {
 		fetchDeployments();
-
-		const deploymentsFetchIntervalId = setInterval(fetchDeployments, fetchDeploymentsInterval);
-
-		return () => clearInterval(deploymentsFetchIntervalId);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

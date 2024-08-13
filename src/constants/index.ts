@@ -3,7 +3,6 @@ export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export {
 	defaultSessionsVisiblePageSize,
 	descopeProjectId,
-	fetchDeploymentsInterval,
 	fetchProjectsMenuItemsInterval,
 	fetchSessionsInterval,
 	isAuthEnabled,
