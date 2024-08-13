@@ -10,7 +10,8 @@ import {
 import { createConnectTransport } from "@connectrpc/connect-web";
 import Cookies from "js-cookie";
 
-import { apiBaseUrl, apiRequestTimeout, isAuthEnabled, isLoggedInCookie } from "@constants";
+import { apiRequestTimeout, isAuthEnabled, isLoggedInCookie } from "@constants";
+import { getApiBaseUrl } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -32,7 +33,7 @@ const authInterceptor: Interceptor =
 
 const credentials = isAuthEnabled ? "include" : undefined;
 export const grpcTransport = createConnectTransport({
-	baseUrl: apiBaseUrl,
+	baseUrl: getApiBaseUrl(),
 	credentials,
 	defaultTimeoutMs: apiRequestTimeout,
 	interceptors: [authInterceptor],

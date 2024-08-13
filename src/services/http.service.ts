@@ -1,7 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
-import { apiBaseUrl, apiRequestTimeout, isLoggedInCookie } from "@constants";
+import { apiRequestTimeout, isLoggedInCookie } from "@constants";
+import { getApiBaseUrl } from "@src/utilities";
+
+const apiBaseUrl = getApiBaseUrl();
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 	axios.create({

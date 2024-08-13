@@ -6,11 +6,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { apiBaseUrl, namespaces } from "@constants";
+import { namespaces } from "@constants";
 import { selectIntegrationJira } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
+import { getApiBaseUrl } from "@src/utilities";
 import { jiraIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
@@ -79,6 +80,8 @@ export const JiraIntegrationAddForm = ({
 
 	const handleJiraOAuth = async () => {
 		try {
+			const apiBaseUrl = getApiBaseUrl();
+
 			window.open(`${apiBaseUrl}/oauth/start/jira?cid=${connectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
