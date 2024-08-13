@@ -5,8 +5,9 @@ import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { ZodSchema } from "zod";
 
+import { filterConnectionValues } from "@hooks/utils/filterConnectionsFormFields";
 import { ConnectionService, HttpService, VariablesService } from "@services";
-import { apiBaseUrl, connectionsFormFieldsFilters } from "@src/constants";
+import { apiBaseUrl } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { FormMode } from "@src/types/components";
@@ -88,15 +89,9 @@ export const useConnectionForm = (
 
 			const connectionData = getValues();
 
-			const integration = Integrations[integrationName! as keyof typeof Integrations];
+			const filtereConnectionValues = filterConnectionValues(connectionData, (integrationName as Integrations)!);
 
-			const connectionValuesFiltered: Partial<Record<keyof typeof Integrations, any>> = {};
-
-			connectionsFormFieldsFilters[integration]?.forEach((field: string) => {
-				connectionValuesFiltered[field as keyof typeof Integrations] = connectionData[field];
-			});
-
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionValuesFiltered);
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -111,16 +106,9 @@ export const useConnectionForm = (
 		const connectionData = getValues();
 
 		try {
-			const integration = Integrations[integrationName! as keyof typeof Integrations];
+			const filtereConnectionValues = filterConnectionValues(connectionData, (integrationName as Integrations)!);
 
-			const connectionValuesFiltered: Partial<Record<keyof typeof Integrations, any>> = {};
-
-			connectionsFormFieldsFilters[integration]?.forEach((field: string) => {
-				if (connectionData[field])
-					connectionValuesFiltered[field as keyof typeof Integrations] = connectionData[field];
-			});
-
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionValuesFiltered);
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
 			toastAndLog("success", "connectionEditedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
