@@ -14,7 +14,7 @@ import { cn } from "@utilities";
 
 import { useModalStore, useToastStore } from "@store";
 
-import { Frame, IconButton, TBody, THead, Table, Th, Tr } from "@components/atoms";
+import { Frame, IconButton, IconSvg, TBody, THead, Table, Th, Tr } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
@@ -34,6 +34,7 @@ export const SessionsTable = () => {
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
+	const [isRefreshing, setIsRefreshing] = useState(true);
 
 	const frameClass = useMemo(
 		() => cn("w-1/2 bg-gray-1100 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
@@ -42,6 +43,7 @@ export const SessionsTable = () => {
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
+			setIsRefreshing(true);
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
 				{
@@ -49,7 +51,7 @@ export const SessionsTable = () => {
 				},
 				nextPageToken
 			);
-
+			setIsRefreshing(false);
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
@@ -159,6 +161,15 @@ export const SessionsTable = () => {
 		}
 	};
 
+	const rotateIconClass = useMemo(
+		() =>
+			cn("animate-spin-medium fill-white transition group-hover:fill-green-800", {
+				"animation-running": isRefreshing,
+				"animation-paused": !isRefreshing,
+			}),
+		[isRefreshing]
+	);
+
 	return (
 		<div className="flex h-full w-full py-2.5">
 			<Frame className={frameClass}>
@@ -175,11 +186,11 @@ export const SessionsTable = () => {
 						</IconButton>
 
 						<IconButton
-							className="ml-3 h-5 w-5 cursor-pointer p-0"
+							className="group rounded-md bg-gray-1050 hover:bg-gray-1250"
 							onClick={debouncedFetchDeployments}
 							title={t("refresh")}
 						>
-							<RotateIcon fill="green" />
+							<IconSvg className={rotateIconClass} size="lg" src={RotateIcon} />
 						</IconButton>
 					</div>
 
