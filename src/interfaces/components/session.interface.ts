@@ -1,4 +1,4 @@
-import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
+import { ListOnItemsRenderedProps } from "react-window";
 
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 
@@ -18,7 +18,6 @@ export interface SessionsTableRowProps {
 
 export interface SessionsTableListProps {
 	onItemsRendered: (props: ListOnItemsRenderedProps) => void;
-	onScroll: (props: ListOnScrollProps) => void;
 	onSelectedSessionId: (id: string) => void;
 	onSessionRemoved: () => void;
 	sessions: Session[];

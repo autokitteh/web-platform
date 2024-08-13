@@ -35,9 +35,10 @@
 		"noSelectedSession": "No session selected",
 		"noSessions": "No sessions found",
 		"output": "Output",
-		"pauseLiveTail": "Pause live tail",
-		"resumeLiveTail": "Resume live tail",
+		"refresh": "Refresh",
 		"sessionsName": "Sessions",
+		"sessionsRefreshed": "Sessions refreshed successfully",
+		"sessionsStillOld": "Sessions are still old",
 		"table": {
 			"columns": {
 				"actions": "Actions",

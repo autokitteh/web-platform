@@ -13,7 +13,6 @@ import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 
 export const SessionsTableList = ({
 	onItemsRendered,
-	onScroll,
 	onSelectedSessionId,
 	onSessionRemoved,
 	sessions,
@@ -70,7 +69,6 @@ export const SessionsTableList = ({
 						itemKey={(index) => sessions[index].sessionId}
 						itemSize={38}
 						onItemsRendered={(event) => itemsRendered(event, height)}
-						onScroll={onScroll}
 						width={width}
 					>
 						{SessionsTableRow}

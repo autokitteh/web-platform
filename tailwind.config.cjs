@@ -19,6 +19,7 @@ module.exports = {
       },
       spacing: {
         9.5: "2.375rem",
+        8.5: "2.125rem",
         '3px': '3px',
         500: "500px",
         550: "550px",
@@ -108,6 +109,9 @@ module.exports = {
         200: "#FF7438",
       },
     },
+    animation: {
+      'spin-medium': 'spin 4s linear infinite',
+    }
   },
   plugins: [
     plugin(({ addBase }) => {

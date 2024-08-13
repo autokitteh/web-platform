@@ -3,20 +3,18 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { ListOnItemsRenderedProps, ListOnScrollProps } from "react-window";
+import { ListOnItemsRenderedProps } from "react-window";
 
-import { fetchSessionsInterval, namespaces } from "@constants";
-import { DeploymentStateVariant } from "@enums";
+import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { DeploymentsService, LoggerService, SessionsService } from "@services";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
-import { useInterval } from "@hooks";
 import { useModalStore, useToastStore } from "@store";
 
-import { Frame, IconButton, TBody, THead, Table, Th, Tr } from "@components/atoms";
+import { Frame, IconButton, IconSvg, TBody, THead, Table, Th, Tr } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
@@ -27,7 +25,6 @@ export const SessionsTable = () => {
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
-	const { startInterval, stopInterval } = useInterval();
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
@@ -36,11 +33,8 @@ export const SessionsTable = () => {
 	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
-	const [tailState, setTailState] = useState({
-		display: false,
-		live: false,
-	});
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
+	const [isRefreshing, setIsRefreshing] = useState(false);
 
 	const frameClass = useMemo(
 		() => cn("w-1/2 bg-gray-1100 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
@@ -56,7 +50,6 @@ export const SessionsTable = () => {
 				},
 				nextPageToken
 			);
-
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
@@ -70,7 +63,6 @@ export const SessionsTable = () => {
 
 				return;
 			}
-
 			if (!data?.sessions) {
 				return;
 			}
@@ -93,6 +85,7 @@ export const SessionsTable = () => {
 		if (!projectId) {
 			return;
 		}
+
 		const { data, error } = await DeploymentsService.listByProjectId(projectId!);
 		if (error) {
 			addToast({
@@ -113,36 +106,18 @@ export const SessionsTable = () => {
 			return;
 		}
 
-		const deploymentState = deployment?.state === DeploymentStateVariant.active ? true : false;
-		setTailState({ display: deploymentState, live: deploymentState });
-
 		setSessionStats(deployment?.sessionStats);
-		debouncedFetchSessions();
+		await debouncedFetchSessions();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionStats]);
 
-	const debouncedFetchDeployments = debounce(fetchDeployments, 100);
+	const debouncedFetchDeployments = debounce(fetchDeployments, 200);
 
 	useEffect(() => {
 		debouncedFetchDeployments();
 		debouncedFetchSessions();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionStateType]);
-
-	useEffect(() => {
-		if (tailState.live) {
-			startInterval("sessionsFetchIntervalId", debouncedFetchDeployments, fetchSessionsInterval);
-		}
-		if (!tailState.live) {
-			stopInterval("sessionsFetchIntervalId");
-		}
-
-		return () => {
-			stopInterval("sessionsFetchIntervalId");
-			debouncedFetchDeployments.cancel();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [tailState.live]);
 
 	const closeSessionLog = useCallback(() => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
@@ -184,25 +159,27 @@ export const SessionsTable = () => {
 		}
 	};
 
-	const handleScroll = useCallback(
-		({ scrollOffset }: ListOnScrollProps) => {
-			if (scrollOffset !== 0 && tailState.live) {
-				setTailState((prevState) => ({
-					...prevState,
-					live: !prevState.live,
-				}));
-			}
-		},
-		[tailState.live]
-	);
+	const handleRefreshClick = async () => {
+		setIsRefreshing(true);
+		try {
+			await fetchDeployments();
+			addToast({
+				id: Date.now().toString(),
+				message: t("sessionsRefreshed"),
+				type: "success",
+			});
+		} finally {
+			setIsRefreshing(false);
+		}
+	};
 
 	const rotateIconClass = useMemo(
 		() =>
-			cn({
-				"fill-green-800": tailState.live,
-				"fill-gray-600": !tailState.live,
+			cn("animate-spin-medium fill-white transition group-hover:fill-green-800", {
+				"animation-running": isRefreshing,
+				"animation-paused": !isRefreshing,
 			}),
-		[tailState.live]
+		[isRefreshing]
 	);
 
 	return (
@@ -220,15 +197,14 @@ export const SessionsTable = () => {
 							{t("buttons.back")}
 						</IconButton>
 
-						{tailState.display ? (
-							<IconButton
-								className="ml-3 h-5 w-5 cursor-pointer p-0"
-								onClick={() => setTailState((prevState) => ({ ...prevState, live: !prevState.live }))}
-								title={tailState.live ? t("pauseLiveTail") : t("resumeLiveTail")}
-							>
-								<RotateIcon className={rotateIconClass} />
-							</IconButton>
-						) : null}
+						<IconButton
+							className="group h-8.5 w-8.5 rounded-md bg-gray-1050 hover:bg-gray-1250"
+							disabled={isRefreshing}
+							onClick={handleRefreshClick}
+							title={t("refresh")}
+						>
+							<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
+						</IconButton>
 					</div>
 
 					<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
@@ -255,7 +231,6 @@ export const SessionsTable = () => {
 						<TBody>
 							<SessionsTableList
 								onItemsRendered={handleItemsRendered}
-								onScroll={handleScroll}
 								onSelectedSessionId={setSelectedSessionId}
 								onSessionRemoved={debouncedFetchDeployments}
 								sessions={sessions}
