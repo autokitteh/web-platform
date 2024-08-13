@@ -205,7 +205,7 @@ export const SessionsTable = () => {
 						</IconButton>
 
 						<IconButton
-							className="h-8.5 w-8.5 group rounded-md bg-gray-1050 hover:bg-gray-1250"
+							className="group h-icon w-icon rounded-md bg-gray-1050 hover:bg-gray-1250"
 							disabled={isRefreshing}
 							onClick={handleRefreshClick}
 							title={t("refresh")}
