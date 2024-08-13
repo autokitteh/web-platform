@@ -32,7 +32,10 @@ export const GithubIntegrationEditForm = () => {
 
 	let patWebhookKey: string | undefined;
 	if (connectionType === ConnectionAuthType.Pat && connectionVariables) {
-		patWebhookKey = connectionVariables.find((variable) => variable.name === "pat_key")?.value;
+		const patWebhookKeyVariable = connectionVariables.find((variable) => variable.name === "pat_key");
+		if (patWebhookKeyVariable) {
+			patWebhookKey = patWebhookKeyVariable.value;
+		}
 	}
 
 	const ConnectionTypeComponent =

@@ -116,12 +116,11 @@ export const useConnectionForm = (
 			const connectionValuesFiltered: Partial<Record<keyof typeof Integrations, any>> = {};
 
 			connectionsFormFieldsFilters[integration]?.forEach((field: string) => {
-				connectionValuesFiltered[field as keyof typeof Integrations] = connectionData[field];
+				if (connectionData[field])
+					connectionValuesFiltered[field as keyof typeof Integrations] = connectionData[field];
 			});
 
-			const connectionRelevantData = connectionsFormFieldsFilters;
-
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionRelevantData);
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionValuesFiltered);
 			toastAndLog("success", "connectionEditedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -147,8 +146,8 @@ export const useConnectionForm = (
 				value: connectionResponse!.integrationUniqueName,
 			});
 
-			getConnectionAuthType(connId);
-			getConnectionVariables(connId);
+			await getConnectionAuthType(connId);
+			await getConnectionVariables(connId);
 		} catch (error) {
 			toastAndLog("error", "errorFetchingConnectionExtended", error);
 		}
