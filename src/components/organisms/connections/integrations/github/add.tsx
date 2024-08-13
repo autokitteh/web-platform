@@ -22,7 +22,7 @@ export const GithubIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { copyToClipboard, errors, handleConnection, handleOAuth, isLoading, register, setValue, watch } =
+	const { copyToClipboard, createConnection, errors, handleOAuth, isLoading, register, setValue, watch } =
 		useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create");
 
 	const selectedConnectionType = watch("selectedConnectionType");
@@ -34,7 +34,7 @@ export const GithubIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (selectedConnectionType?.value) {
 			case ConnectionAuthType.Pat:
-				await handleConnection(connectionId, ConnectionAuthType.Pat, Integrations.github);
+				await createConnection(connectionId, ConnectionAuthType.Pat, Integrations.github);
 				break;
 			case ConnectionAuthType.Oauth:
 				await handleOAuth(connectionId, Integrations.github);

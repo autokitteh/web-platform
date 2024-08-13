@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ZodSchema } from "zod";
 
 import { ConnectionService, HttpService, VariablesService } from "@services";
-import { apiBaseUrl } from "@src/constants";
+import { apiBaseUrl, connectionsFormFieldsFilters } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { FormMode } from "@src/types/components";
@@ -71,7 +71,7 @@ export const useConnectionForm = (
 		setConnectionVariables(vars);
 	};
 
-	const handleConnection = async (
+	const createConnection = async (
 		connectionId: string,
 		connectionAuthType: ConnectionAuthType,
 		integrationName?: string
@@ -86,15 +86,17 @@ export const useConnectionForm = (
 				scopeId: connectionId,
 			});
 
-			const { pat, secret, webhook } = getValues();
+			const connectionData = getValues();
 
-			const connectionRelevantData = {
-				secret: secret ? secret : undefined,
-				pat: pat ? pat : undefined,
-				webhook: webhook ? webhook : undefined,
-			};
+			const integration = Integrations[integrationName! as keyof typeof Integrations];
 
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionRelevantData);
+			const connectionValuesFiltered: Partial<Record<keyof typeof Integrations, any>> = {};
+
+			connectionsFormFieldsFilters[integration]?.forEach((field: string) => {
+				connectionValuesFiltered[field as keyof typeof Integrations] = connectionData[field];
+			});
+
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionValuesFiltered);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -106,14 +108,18 @@ export const useConnectionForm = (
 	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
 		setIsLoading(true);
 
-		try {
-			const { pat, secret, webhook } = getValues();
+		const connectionData = getValues();
 
-			const connectionRelevantData = {
-				secret: secret ? secret : undefined,
-				pat: pat ? pat : undefined,
-				webhook: webhook ? webhook : undefined,
-			};
+		try {
+			const integration = Integrations[integrationName! as keyof typeof Integrations];
+
+			const connectionValuesFiltered: Partial<Record<keyof typeof Integrations, any>> = {};
+
+			connectionsFormFieldsFilters[integration]?.forEach((field: string) => {
+				connectionValuesFiltered[field as keyof typeof Integrations] = connectionData[field];
+			});
+
+			const connectionRelevantData = connectionsFormFieldsFilters;
 
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionRelevantData);
 			toastAndLog("success", "connectionEditedSuccessfully");
@@ -230,7 +236,7 @@ export const useConnectionForm = (
 		watch,
 		isLoading,
 		copyToClipboard,
-		handleConnection,
+		createConnection,
 		handleOAuth,
 		getValues,
 		setValue,
