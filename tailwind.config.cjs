@@ -22,8 +22,7 @@ module.exports = {
         '3px': '3px',
         500: "500px",
         550: "550px",
-        650: "650px",
-        'icon': "2.125rem"
+        650: "650px"
       },
       maxWidth: {
         420: "420px",
