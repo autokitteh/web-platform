@@ -5,8 +5,9 @@ import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { ZodSchema } from "zod";
 
-import { apiBaseUrl } from "@constants";
+import { filterConnectionValues } from "@hooks/utils/filterConnectionsFormFields";
 import { ConnectionService, HttpService, VariablesService } from "@services";
+import { apiBaseUrl } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { FormMode } from "@src/types/components";
@@ -36,7 +37,7 @@ export const useConnectionForm = (
 		mode: "onChange",
 		defaultValues: initialValues,
 	});
-	const toastAndLog = useToastAndLog(); // Initialize the utility function
+	const toastAndLog = useToastAndLog();
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [connectionType, setConnectionType] = useState<string | undefined>();
@@ -71,14 +72,12 @@ export const useConnectionForm = (
 		setConnectionVariables(vars);
 	};
 
-	const handleConnection = async (
+	const createConnection = async (
 		connectionId: string,
 		connectionAuthType: ConnectionAuthType,
 		integrationName?: string
 	): Promise<void> => {
 		setIsLoading(true);
-
-		const connectionData = getValues();
 
 		try {
 			VariablesService.setByConnectiontId(connectionId!, {
@@ -87,11 +86,33 @@ export const useConnectionForm = (
 				isSecret: false,
 				scopeId: connectionId,
 			});
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+
+			const connectionData = getValues();
+
+			const filtereConnectionValues = filterConnectionValues(connectionData, (integrationName as Integrations)!);
+
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
+			setIsLoading(false);
+		}
+	};
+
+	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
+		setIsLoading(true);
+
+		const connectionData = getValues();
+
+		try {
+			const filtereConnectionValues = filterConnectionValues(connectionData, (integrationName as Integrations)!);
+
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
+			toastAndLog("success", "connectionEditedSuccessfully");
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			toastAndLog("error", "errorEditingNewConnection", error);
 			setIsLoading(false);
 		}
 	};
@@ -113,8 +134,8 @@ export const useConnectionForm = (
 				value: connectionResponse!.integrationUniqueName,
 			});
 
-			getConnectionAuthType(connId);
-			getConnectionVariables(connId);
+			await getConnectionAuthType(connId);
+			await getConnectionVariables(connId);
 		} catch (error) {
 			toastAndLog("error", "errorFetchingConnectionExtended", error);
 		}
@@ -158,7 +179,7 @@ export const useConnectionForm = (
 	};
 
 	const onSubmitEdit = async () => {
-		handleConnection(connectionId!, connectionType as ConnectionAuthType, connectionIntegrationName);
+		editConnection(connectionId!, connectionIntegrationName);
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: Integrations) => {
@@ -202,7 +223,7 @@ export const useConnectionForm = (
 		watch,
 		isLoading,
 		copyToClipboard,
-		handleConnection,
+		createConnection,
 		handleOAuth,
 		getValues,
 		setValue,

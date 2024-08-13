@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
 import { githubIntegrationAuthMethods } from "@constants/lists";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
+import { formsPerIntegrationsMapping } from "@src/constants";
+import { Integrations } from "@src/enums/components";
 import { githubIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
-import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
+	const [webhook, setWebhook] = useState<string | undefined>(undefined);
 
 	const {
 		connectionType,
@@ -29,31 +31,16 @@ export const GithubIntegrationEditForm = () => {
 		"edit"
 	);
 
-	let patWebhookKey: string | undefined;
-	if (connectionType === ConnectionAuthType.Pat && connectionVariables) {
-		patWebhookKey = connectionVariables.find((variable) => variable.name === "pat_key")?.value;
-	}
+	useEffect(() => {
+		const patWebhookKey: string | undefined = connectionVariables?.find(
+			(variable) => variable.name === "pat_key"
+		)?.value;
 
-	const renderConnectionFields = () => {
-		switch (connectionType) {
-			case ConnectionAuthType.Pat:
-				return (
-					<PatForm
-						copyToClipboard={copyToClipboard}
-						errors={errors}
-						isLoading={isLoading}
-						mode="edit"
-						patWebhookKey={patWebhookKey}
-						register={register}
-						setValue={setValue}
-					/>
-				);
-			case ConnectionAuthType.Oauth:
-				return <OauthForm />;
-			default:
-				return null;
-		}
-	};
+		setWebhook(patWebhookKey);
+	}, [connectionVariables]);
+
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[Integrations.github]?.[connectionType as ConnectionAuthType];
 
 	const selectConnectionTypeValue = githubIntegrationAuthMethods.find((method) => method.value === connectionType);
 
@@ -69,7 +56,17 @@ export const GithubIntegrationEditForm = () => {
 					value={selectConnectionTypeValue}
 				/>
 
-				{renderConnectionFields()}
+				{ConnectionTypeComponent ? (
+					<ConnectionTypeComponent
+						copyToClipboard={copyToClipboard}
+						errors={errors}
+						isLoading={isLoading}
+						mode="edit"
+						patWebhookKey={webhook}
+						register={register}
+						setValue={setValue}
+					/>
+				) : null}
 			</div>
 		</form>
 	);
