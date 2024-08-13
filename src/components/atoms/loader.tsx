@@ -4,7 +4,7 @@ import { LoaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Loader = ({
-	firstColor = "dark-gray",
+	firstColor = "light-gray",
 	isCenter = false,
 	secondColor = "gray",
 	size = "md",
