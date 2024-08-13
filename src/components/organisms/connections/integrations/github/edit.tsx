@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -13,7 +13,7 @@ import { Select } from "@components/molecules";
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [webhook, setWebhook] = React.useState<string | undefined>(undefined);
+	const [webhook, setWebhook] = useState<string | undefined>(undefined);
 
 	const {
 		connectionType,
