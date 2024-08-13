@@ -4,7 +4,7 @@
 	"connectionDeleteFailedExtended": "Connection deletion failed - connection ID: {{connectionId}}, error: {{error}}",
 	"connectionNotFound": "Couldn't fetch the connection details",
 	"connectionNotFoundExtended": "Failed to fetch the connection for the project {{projectId}}. Error: {{error}}",
-	"defaulEnvironmentNotFound": "Default environment not found, project ID: {{projectId}}",
+	"defaultEnvironmentNotFound": "Default environment not found, project ID: {{projectId}}",
 	"issueFetchingDefaultEnvironment": "Couldn't fetch the default environment, project ID: {{projectId}}, error: {{error}}",
 	"connectionsNotFound": "Couldn't fetch the connections details",
 	"connectionsNotFoundExtended": "Failed to fetch the connections for the project {{projectId}}",

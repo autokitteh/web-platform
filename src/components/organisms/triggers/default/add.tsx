@@ -169,6 +169,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 								{...field}
 								aria-label={t("placeholders.selectFile")}
 								isError={!!errors.filePath}
+								label={t("placeholders.file")}
 								noOptionsLabel={t("noFilesAvailable")}
 								onChange={(selected) => field.onChange(selected)}
 								options={filesNameList}
@@ -178,7 +179,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 						)}
 					/>
 
-					<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
+					<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 				</div>
 
 				<div className="relative">
@@ -192,28 +193,6 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 					/>
 
 					<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
-				</div>
-
-				<div className="relative">
-					<Controller
-						control={control}
-						name="filePath"
-						render={({ field }) => (
-							<Select
-								{...field}
-								aria-label={t("placeholders.selectFile")}
-								isError={!!errors.filePath}
-								label={t("placeholders.file")}
-								noOptionsLabel={t("noFilesAvailable")}
-								onChange={(selected) => field.onChange(selected)}
-								options={filesNameList}
-								placeholder={t("placeholders.selectFile")}
-								value={field.value}
-							/>
-						)}
-					/>
-
-					<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 				</div>
 
 				<div className="relative">
