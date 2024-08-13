@@ -1,3 +1,10 @@
+# [1.35.0](https://github.com/autokitteh/web-platform/compare/v1.34.0...v1.35.0) (2024-08-13)
+
+
+### Features
+
+* loader on sessions infinite scroll loader ([#248](https://github.com/autokitteh/web-platform/issues/248)) ([7ce5c3f](https://github.com/autokitteh/web-platform/commit/7ce5c3f016def8358068247a622f13d4ecabae36))
+
 # [1.34.0](https://github.com/autokitteh/web-platform/compare/v1.33.0...v1.34.0) (2024-08-12)
 
 
