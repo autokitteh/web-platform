@@ -3,7 +3,7 @@ import { Integrations } from "@src/enums/components";
 
 import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 
-export const integrationToAddComponent: Partial<
+export const formsPerIntegrationsMapping: Partial<
 	Record<Integrations, Partial<Record<ConnectionAuthType, React.ComponentType<any>>>>
 > = {
 	[Integrations.github]: {

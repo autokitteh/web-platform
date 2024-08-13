@@ -5,10 +5,12 @@ import { useTranslation } from "react-i18next";
 import { githubIntegrationAuthMethods } from "@constants/lists";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
+import { formsPerIntegrationsMapping } from "@src/constants";
+import { Integrations } from "@src/enums/components";
+import { isComponentDefined } from "@src/utilities";
 import { githubIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
-import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
@@ -34,26 +36,8 @@ export const GithubIntegrationEditForm = () => {
 		patWebhookKey = connectionVariables.find((variable) => variable.name === "pat_key")?.value;
 	}
 
-	const renderConnectionFields = () => {
-		switch (connectionType) {
-			case ConnectionAuthType.Pat:
-				return (
-					<PatForm
-						copyToClipboard={copyToClipboard}
-						errors={errors}
-						isLoading={isLoading}
-						mode="edit"
-						patWebhookKey={patWebhookKey}
-						register={register}
-						setValue={setValue}
-					/>
-				);
-			case ConnectionAuthType.Oauth:
-				return <OauthForm />;
-			default:
-				return null;
-		}
-	};
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[Integrations.github]?.[connectionType as ConnectionAuthType];
 
 	const selectConnectionTypeValue = githubIntegrationAuthMethods.find((method) => method.value === connectionType);
 
@@ -69,7 +53,17 @@ export const GithubIntegrationEditForm = () => {
 					value={selectConnectionTypeValue}
 				/>
 
-				{renderConnectionFields()}
+				{isComponentDefined(ConnectionTypeComponent) ? (
+					<ConnectionTypeComponent
+						copyToClipboard={copyToClipboard}
+						errors={errors}
+						isLoading={isLoading}
+						mode="edit"
+						patWebhookKey={patWebhookKey}
+						register={register}
+						setValue={setValue}
+					/>
+				) : null}
 			</div>
 		</form>
 	);

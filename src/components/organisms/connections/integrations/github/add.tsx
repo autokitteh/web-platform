@@ -8,7 +8,7 @@ import { Integrations } from "@enums/components";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
-import { integrationToAddComponent } from "@src/constants";
+import { formsPerIntegrationsMapping } from "@src/constants";
 import { isComponentDefined } from "@src/utilities";
 import { githubIntegrationSchema } from "@validations";
 
@@ -53,7 +53,7 @@ export const GithubIntegrationAddForm = ({
 	}, [connectionId]);
 
 	const ConnectionTypeComponent =
-		integrationToAddComponent[Integrations.github]?.[selectedConnectionType?.value as ConnectionAuthType];
+		formsPerIntegrationsMapping[Integrations.github]?.[selectedConnectionType?.value as ConnectionAuthType];
 
 	return (
 		<form className="flex items-start gap-10" onSubmit={triggerParentFormSubmit}>
