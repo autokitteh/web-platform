@@ -5,8 +5,8 @@ import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { ZodSchema } from "zod";
 
-import { apiBaseUrl } from "@constants";
 import { ConnectionService, HttpService, VariablesService } from "@services";
+import { apiBaseUrl } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { FormMode } from "@src/types/components";
@@ -36,7 +36,7 @@ export const useConnectionForm = (
 		mode: "onChange",
 		defaultValues: initialValues,
 	});
-	const toastAndLog = useToastAndLog(); // Initialize the utility function
+	const toastAndLog = useToastAndLog();
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [connectionType, setConnectionType] = useState<string | undefined>();

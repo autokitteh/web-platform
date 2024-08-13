@@ -24,3 +24,4 @@ export {
 	schedulerTriggerConnectionName,
 } from "@constants/triggers.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
+export { integrationToAddComponent } from "@constants/connections/addComponentsMapping.constants";

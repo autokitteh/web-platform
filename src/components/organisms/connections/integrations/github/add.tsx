@@ -8,10 +8,11 @@ import { Integrations } from "@enums/components";
 import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
+import { integrationToAddComponent } from "@src/constants";
+import { isComponentDefined } from "@src/utilities";
 import { githubIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
-import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 
 export const GithubIntegrationAddForm = ({
 	connectionId,
@@ -50,25 +51,9 @@ export const GithubIntegrationAddForm = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
-	const renderConnectionType = () => {
-		switch (selectedConnectionType?.value) {
-			case ConnectionAuthType.Pat:
-				return (
-					<PatForm
-						copyToClipboard={copyToClipboard}
-						errors={errors}
-						isLoading={isLoading}
-						mode="create"
-						register={register}
-						setValue={setValue}
-					/>
-				);
-			case ConnectionAuthType.Oauth:
-				return <OauthForm />;
-			default:
-				return null;
-		}
-	};
+
+	const ConnectionTypeComponent =
+		integrationToAddComponent[Integrations.github]?.[selectedConnectionType?.value as ConnectionAuthType];
 
 	return (
 		<form className="flex items-start gap-10" onSubmit={triggerParentFormSubmit}>
@@ -82,7 +67,16 @@ export const GithubIntegrationAddForm = ({
 					value={selectedConnectionType}
 				/>
 
-				{renderConnectionType()}
+				{isComponentDefined(ConnectionTypeComponent) ? (
+					<ConnectionTypeComponent
+						copyToClipboard={copyToClipboard}
+						errors={errors}
+						isLoading={isLoading}
+						mode="create"
+						register={register}
+						setValue={setValue}
+					/>
+				) : null}
 			</div>
 		</form>
 	);
