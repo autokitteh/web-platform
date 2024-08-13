@@ -9,7 +9,6 @@ import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants";
-import { isComponentDefined } from "@src/utilities";
 import { githubIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
@@ -67,7 +66,7 @@ export const GithubIntegrationAddForm = ({
 					value={selectedConnectionType}
 				/>
 
-				{isComponentDefined(ConnectionTypeComponent) ? (
+				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						copyToClipboard={copyToClipboard}
 						errors={errors}
