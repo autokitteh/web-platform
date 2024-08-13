@@ -37,6 +37,8 @@
 		"output": "Output",
 		"refresh": "Refresh",
 		"sessionsName": "Sessions",
+		"sessionsRefreshed": "Sessions refreshed successfully",
+		"sessionsStillOld": "Sessions are still old",
 		"table": {
 			"columns": {
 				"actions": "Actions",

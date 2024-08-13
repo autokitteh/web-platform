@@ -34,7 +34,7 @@ export const SessionsTable = () => {
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
-	const [isRefreshing, setIsRefreshing] = useState(true);
+	const [isRefreshing, setIsRefreshing] = useState(false);
 
 	const frameClass = useMemo(
 		() => cn("w-1/2 bg-gray-1100 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
@@ -43,7 +43,6 @@ export const SessionsTable = () => {
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
-			setIsRefreshing(true);
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
 				{
@@ -51,7 +50,6 @@ export const SessionsTable = () => {
 				},
 				nextPageToken
 			);
-			setIsRefreshing(false);
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
@@ -65,7 +63,6 @@ export const SessionsTable = () => {
 
 				return;
 			}
-
 			if (!data?.sessions) {
 				return;
 			}
@@ -88,6 +85,7 @@ export const SessionsTable = () => {
 		if (!projectId) {
 			return;
 		}
+
 		const { data, error } = await DeploymentsService.listByProjectId(projectId!);
 		if (error) {
 			addToast({
@@ -109,11 +107,11 @@ export const SessionsTable = () => {
 		}
 
 		setSessionStats(deployment?.sessionStats);
-		debouncedFetchSessions();
+		await debouncedFetchSessions();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionStats]);
 
-	const debouncedFetchDeployments = debounce(fetchDeployments, 100);
+	const debouncedFetchDeployments = debounce(fetchDeployments, 200);
 
 	useEffect(() => {
 		debouncedFetchDeployments();
@@ -161,6 +159,20 @@ export const SessionsTable = () => {
 		}
 	};
 
+	const handleRefreshClick = async () => {
+		setIsRefreshing(true);
+		try {
+			await fetchDeployments();
+			addToast({
+				id: Date.now().toString(),
+				message: t("sessionsRefreshed"),
+				type: "success",
+			});
+		} finally {
+			setIsRefreshing(false);
+		}
+	};
+
 	const rotateIconClass = useMemo(
 		() =>
 			cn("animate-spin-medium fill-white transition group-hover:fill-green-800", {
@@ -186,11 +198,12 @@ export const SessionsTable = () => {
 						</IconButton>
 
 						<IconButton
-							className="group rounded-md bg-gray-1050 hover:bg-gray-1250"
-							onClick={debouncedFetchDeployments}
+							className="group h-8.5 w-8.5 rounded-md bg-gray-1050 hover:bg-gray-1250"
+							disabled={isRefreshing}
+							onClick={handleRefreshClick}
 							title={t("refresh")}
 						>
-							<IconSvg className={rotateIconClass} size="lg" src={RotateIcon} />
+							<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
 						</IconButton>
 					</div>
 
