@@ -4,25 +4,22 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { isEqual } from "lodash";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { fetchSessionsInterval, sessionsEditorLineHeight } from "@constants";
 import { SessionLogRecord } from "@models";
 import { SessionsService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 
-import { Button, Frame, IconButton, Loader, LogoCatLarge } from "@components/atoms";
+import { Button, Frame, Loader } from "@components/atoms";
 
 import { CatImage } from "@assets/image";
-import { Close } from "@assets/image/icons";
 
-export const SessionTableEditorFrame = () => {
-	const [editorKey, setEditorKey] = useState(0);
+export const SessionOutputs = () => {
 	const [cachedSessionLogs, setCachedSessionLogs] = useState<SessionLogRecord[]>([]);
-	const { deploymentId, projectId, sessionId } = useParams();
+	const { sessionId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
-	const navigate = useNavigate();
 	const sessionFetchIntervalIdRef = useRef<null | number>(null);
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +36,7 @@ export const SessionTableEditorFrame = () => {
 			setFirstLoad(false);
 			setIsLoading(false);
 		}
+
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -78,11 +76,19 @@ export const SessionTableEditorFrame = () => {
 	}, [fetchSessionLog]);
 
 	const handleEditorWillMount = (monaco: Monaco) => {
+		monaco.languages.register({ id: "outputLogs" });
+
+		monaco.languages.setMonarchTokensProvider("outputLogs", {
+			tokenizer: {
+				root: [[/\b\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}\b/, "dateTime"]],
+			},
+		});
+
 		monaco.editor.defineTheme("sessionEditorTheme", {
 			base: "vs-dark",
 			colors: { "editor.background": "#000000" },
+			rules: [{ token: "dateTime", foreground: "FFA500" }],
 			inherit: true,
-			rules: [],
 		});
 	};
 
@@ -119,12 +125,21 @@ export const SessionTableEditorFrame = () => {
 		setIsScrolledDown(scrollPosition > 0);
 	};
 
+	useEffect(() => {
+		return () => {
+			const editor = editorRef.current;
+			if (editor) {
+				const disposable = editor.onDidScrollChange(checkScrollPosition);
+				disposable.dispose();
+			}
+		};
+	}, []);
+
 	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("sessionEditorTheme");
 		editorRef.current = _editor;
 
 		// Add scroll listener
-
 		_editor.onDidScrollChange(checkScrollPosition);
 
 		if (checkIfLogsOverflowsEditor()) {
@@ -145,44 +160,19 @@ export const SessionTableEditorFrame = () => {
 		}
 	}, [cachedSessionLogs]);
 
-	useEffect(() => {
-		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
-		window.addEventListener("resize", handleResize);
-
-		return () => {
-			const editor = editorRef.current;
-			if (editor) {
-				const disposable = editor.onDidScrollChange(checkScrollPosition);
-				disposable.dispose();
-			}
-			window.removeEventListener("resize", handleResize);
-		};
-	}, []);
-
 	const sessionLogsAsStringForOutput = cachedSessionLogs?.map(({ logs }) => logs).join("\n");
-	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
 	return (
-		<Frame className="h-full w-full pt-20 transition">
+		<Frame className="h-full transition">
 			{isLoading ? (
 				<Loader isCenter size="xl" />
 			) : (
-				<>
-					<div className="-mt-10 flex items-center justify-between font-bold">
-						{t("output")}:{/* eslint-disable @liferay/empty-line-between-elements */}
-						<IconButton
-							ariaLabel={t("buttons.ariaCloseEditor")}
-							className="h-7 w-7 bg-gray-1100 p-0.5"
-							onClick={closeEditor}
-						>
-							<Close className="h-3 w-3 fill-white transition" />
-						</IconButton>
-					</div>
+				<div className="h-full">
 					{cachedSessionLogs?.length ? (
 						<Editor
 							beforeMount={handleEditorWillMount}
-							className="-ml-6"
-							key={editorKey}
+							className="absolute -ml-6 h-full"
+							language="outputLogs"
 							loading={<Loader isCenter size="lg" />}
 							onMount={handleEditorDidMount}
 							options={{
@@ -193,8 +183,9 @@ export const SessionTableEditorFrame = () => {
 								renderLineHighlight: "none",
 								scrollBeyondLastLine: false,
 								wordWrap: "on",
+								contextmenu: false,
 							}}
-							theme="vs-dark"
+							theme="sessionEditorTheme"
 							value={sessionLogsAsStringForOutput}
 						/>
 					) : (
@@ -212,10 +203,8 @@ export const SessionTableEditorFrame = () => {
 							</Button>
 						</div>
 					) : null}
-				</>
+				</div>
 			)}
-
-			<LogoCatLarge />
 		</Frame>
 	);
 };

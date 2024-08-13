@@ -18,7 +18,12 @@ export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguage
 export { namespaces } from "@constants/namespaces.logger.constants";
 export { defaultProjectTab, projectTabs } from "@constants/project.constants";
 export { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants/dashboard.constants";
-export { sessionsEditorLineHeight, defaultSessionLogRecordsPageSize } from "@src/constants/sessions.constants";
+export {
+	sessionsEditorLineHeight,
+	defaultSessionLogRecordsPageSize,
+	sessionTabs,
+	defaultSessionTab,
+} from "@src/constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export {
 	defaultTriggerType,

@@ -40,7 +40,10 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const frameClass = useMemo(
-		() => cn("h-full w-full bg-gray-1100 pl-7 transition-all", { "rounded-r-none": !sessionId }),
+		() =>
+			cn("h-full w-full overflow-hidden bg-gray-1100 pb-3 pl-7 transition-all", {
+				"rounded-r-none": !sessionId,
+			}),
 		[sessionId]
 	);
 
@@ -200,7 +203,7 @@ export const SessionsTable = () => {
 	);
 
 	return (
-		<div className="flex h-full w-full py-2.5">
+		<div className="flex w-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center justify-between gap-2.5">
@@ -229,19 +232,19 @@ export const SessionsTable = () => {
 					</div>
 
 					{sessions.length ? (
-						<div className="relative flex h-full flex-col">
+						<div className="relative flex h-full flex-col overflow-hidden">
 							<Table className="mt-6 overflow-hidden">
 								<THead>
 									<Tr>
-										<Th className="w-1/4 font-normal" hasFixedWidth>
-											{t("table.columns.activationTime")}
+										<Th className="group w-1/4 cursor-pointer font-normal" hasFixedWidth>
+											{t("table.columns.startTime")}
 										</Th>
 
 										<Th className="w-1/8 font-normal" hasFixedWidth>
 											{t("table.columns.status")}
 										</Th>
 
-										<Th className="w-1/2 font-normal" hasFixedWidth>
+										<Th className="w-1/4 font-normal" hasFixedWidth>
 											{t("table.columns.sessionId")}
 										</Th>
 
@@ -277,10 +280,12 @@ export const SessionsTable = () => {
 				{sessionId ? (
 					<Outlet />
 				) : (
-					<Frame className="flex h-full w-full flex-col items-center rounded-l-none bg-gray-1100 pt-40 transition">
-						<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
+					<Frame className="w-full rounded-l-none bg-gray-1100 pt-20 transition">
+						<div className="mt-20 flex flex-col items-center">
+							<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
 
-						<CatImage className="border-b border-gray-750 fill-gray-750" />
+							<CatImage className="border-b border-gray-750 fill-gray-750" />
+						</div>
 					</Frame>
 				)}
 			</div>

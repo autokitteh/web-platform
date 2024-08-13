@@ -48,7 +48,7 @@ export const DeploymentsAndSessionsTopbar = () => {
 	}, [projectId]);
 
 	return (
-		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-1250 py-2 pl-7 pr-3.5">
+		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-1250 py-3 pl-7 pr-3.5">
 			<div className="relative flex items-end gap-3 font-fira-code text-gray-500">
 				<span className="text-xl font-bold leading-6">{project?.name}</span>
 
