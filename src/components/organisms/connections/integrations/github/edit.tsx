@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -13,6 +13,7 @@ import { Select } from "@components/molecules";
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
+	const [webhook, setWebhook] = React.useState<string | undefined>(undefined);
 
 	const {
 		connectionType,
@@ -30,13 +31,13 @@ export const GithubIntegrationEditForm = () => {
 		"edit"
 	);
 
-	let patWebhookKey: string | undefined;
-	if (connectionType === ConnectionAuthType.Pat && connectionVariables) {
-		const patWebhookKeyVariable = connectionVariables.find((variable) => variable.name === "pat_key");
-		if (patWebhookKeyVariable) {
-			patWebhookKey = patWebhookKeyVariable.value;
-		}
-	}
+	useEffect(() => {
+		const patWebhookKey: string | undefined = connectionVariables?.find(
+			(variable) => variable.name === "pat_key"
+		)?.value;
+
+		setWebhook(patWebhookKey);
+	}, [connectionVariables]);
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.github]?.[connectionType as ConnectionAuthType];
@@ -61,7 +62,7 @@ export const GithubIntegrationEditForm = () => {
 						errors={errors}
 						isLoading={isLoading}
 						mode="edit"
-						patWebhookKey={patWebhookKey}
+						patWebhookKey={webhook}
 						register={register}
 						setValue={setValue}
 					/>
