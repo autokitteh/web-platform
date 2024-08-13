@@ -1,7 +1,5 @@
 {
 	"connectionRemoveFailed": "Connection remove failed",
-	"connectionsFetchError": "Couldn't fetch the connections details",
-	"connectionsFetchErrorExtended": "Failed to fetch the connections for the project {{projectId}}. Error: {{error}}",
 	"emptyKeyExist": "Empty key is not allowed",
 	"error": "Error",
 	"errorCreatingNewConnection": "Error while creating a new connection",
@@ -48,5 +46,12 @@
 	"axiosNoResponse": "No response received from server. Please try again later",
 	"unknownError": "Unknown Error. Please try again later",
 	"fileTooLarge": "File is too large",
-	"fileTooLargeExtended": "File is too large, maximum file size: {{maxSize}} for the project ID: {{projectId}}"
+	"fileTooLargeExtended": "File is too large, maximum file size: {{maxSize}} for the project ID: {{projectId}}",
+	"connectionsFetchError": "Couldn't fetch the connections details",
+	"connectionsFetchErrorExtended": "Failed to fetch the connections for the project {{projectId}}. Error: {{error}}",
+	"resourcesFetchError": "Couldn't fetch resources data for the project",
+	"resourcesFetchErrorExtended": "Failed to fetch the resources for the project {{projectId}}. Error: {{error}}",
+	"connectionCronNotFound": "Couldn't fetch the connection with cron name details",
+	"connectionCronNotFounExtended": "Couldn't fetch the connection with cron name details"
+	
 }

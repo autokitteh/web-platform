@@ -44,12 +44,12 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 			} catch (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: tErrors("connectionsFetchError"),
+					message: tErrors("resourcesFetchError"),
 					type: "error",
 				});
 				LoggerService.error(
 					namespaces.triggerService,
-					tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
+					tErrors("cresourcesFetchErrorExtended", { error: (error as Error).message, projectId })
 				);
 			} finally {
 				setIsSaving(false);

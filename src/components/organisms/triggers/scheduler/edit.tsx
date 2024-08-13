@@ -48,7 +48,7 @@ export const SchedulerEditTrigger = () => {
 			} catch (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: tErrors("connectionsFetchError"),
+					message: tErrors("resourcesFetchError"),
 					type: "error",
 				});
 			}

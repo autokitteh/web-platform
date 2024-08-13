@@ -3,53 +3,24 @@ import { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { namespaces } from "@constants";
-import { ConnectionService, LoggerService } from "@services";
+import { ConnectionService } from "@services";
 import { SelectOption } from "@src/interfaces/components";
-import { ServiceResponseError } from "@src/types";
 
-import { useToastStore } from "@store";
+import { useToastAndLog } from "@hooks";
 
 export const useFetchConnections = (projectId: string, schedulerTriggerConnectionName: string) => {
 	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [cronConnectionId, setCronConnectionId] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
-	const addToast = useToastStore((state) => state.addToast);
-	const { t: tErrors } = useTranslation("errors");
-	const { t: tServices } = useTranslation("services");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
-
-	const handleErrors = (
-		error: ServiceResponseError,
-		toastMessage: string,
-		logMessage = toastMessage,
-		logExtendedMessage = logMessage
-	) => {
-		addToast({
-			id: Date.now().toString(),
-			message: tErrors(toastMessage),
-			type: "error",
-		});
-		if (!error) {
-			return;
-		}
-		LoggerService.error(
-			namespaces.connectionService,
-			tErrors(logExtendedMessage, { projectId, error: (error as Error)?.message })
-		);
-	};
+	const toastAndLog = useToastAndLog("errors", "services");
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const { data: allConnectionsPerCustomer, error: allConnectionsError } = await ConnectionService.list();
 				if (!allConnectionsPerCustomer || !allConnectionsPerCustomer.length || allConnectionsError) {
-					handleErrors(
-						allConnectionsError,
-						tServices("connectionsNotFound"),
-						tErrors("connectionsFetchError"),
-						tErrors("connectionsFetchErrorExtended")
-					);
+					toastAndLog("error", "connectionsFetchError", allConnectionsError);
 
 					return;
 				}
@@ -58,7 +29,7 @@ export const useFetchConnections = (projectId: string, schedulerTriggerConnectio
 					(item) => item.name === schedulerTriggerConnectionName
 				);
 				if (!cronConnection) {
-					handleErrors(null, tServices("connectionCronNotFound"));
+					toastAndLog("error", "connectionCronNotFound");
 
 					return;
 				}
@@ -67,7 +38,7 @@ export const useFetchConnections = (projectId: string, schedulerTriggerConnectio
 				const { data: allConnectionsPerProject, error: connectionsError } =
 					await ConnectionService.listByProjectId(projectId);
 				if (!allConnectionsPerProject || connectionsError) {
-					handleErrors(connectionsError, "connectionsFetchError", "connectionsFetchErrorExtended");
+					toastAndLog("error", "connectionsFetchError", connectionsError);
 
 					return;
 				}
@@ -82,7 +53,7 @@ export const useFetchConnections = (projectId: string, schedulerTriggerConnectio
 					...formattedConnections,
 				]);
 			} catch (error) {
-				handleErrors(error, "connectionsFetchError", "connectionsFetchErrorExtended");
+				toastAndLog("error", "connectionsFetchError", error);
 			} finally {
 				setIsLoading(false);
 			}

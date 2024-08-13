@@ -42,12 +42,12 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 				} catch (error) {
 					addToast({
 						id: Date.now().toString(),
-						message: tErrors("connectionsFetchError"),
+						message: tErrors("resourcesFetchError"),
 						type: "error",
 					});
 					LoggerService.error(
 						namespaces.triggerService,
-						tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
+						tErrors("resourcesFetchErrorExtended", { error: (error as Error).message, projectId })
 					);
 				} finally {
 					setIsLoading(false);
