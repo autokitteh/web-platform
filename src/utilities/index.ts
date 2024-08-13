@@ -13,3 +13,4 @@ export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.uti
 export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";
 export { getCookieDomain } from "@utilities/getCookieDomain.utils";
 export { openPopup } from "@utilities/openPopup.utils";
+export { convertTimestampToEpoch } from "@utilities/convertTimestampToDate.utils";

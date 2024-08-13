@@ -64,9 +64,7 @@ export const SessionsTableRow = memo(
 				onClick={() => openSessionLog(session.sessionId)}
 				style={style}
 			>
-				<Td className="w-1/4" hasFixedWidth>
-					{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}
-				</Td>
+				<Td hasFixedWidth> {moment(session.createdAt).format("YYYY-MM-DD HH:mm:ss")}</Td>
 
 				<Td className="w-1/8" hasFixedWidth>
 					<SessionsTableState sessionState={session.state} />
@@ -74,6 +72,10 @@ export const SessionsTableRow = memo(
 
 				<Td className="w-1/2 border-r-0" hasFixedWidth>
 					{session.sessionId}
+				</Td>
+
+				<Td className="border-r-0" hasFixedWidth>
+					{session.connectionName}
 				</Td>
 
 				<Td className={sessionLastTdClass} hasFixedWidth>

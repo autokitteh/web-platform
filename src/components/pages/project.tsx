@@ -40,14 +40,13 @@ export const Project = () => {
 						<div
 							className={
 								"flex select-none items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 " +
-								"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2"
+								"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-1"
 							}
 						>
 							{projectTabs.map((singleTab) => (
 								<Tab
 									activeTab={activeTab}
 									ariaLabel={singleTab.label}
-									className="text-md flex items-center"
 									key={singleTab.value}
 									onClick={() => goTo(singleTab.value)}
 									value={singleTab.value}

@@ -1,6 +1,8 @@
 import i18n from "i18next";
 import { get } from "lodash";
+import moment from "moment";
 
+import { EventsService } from "./events.service";
 import {
 	Session as ProtoSession,
 	SessionLogRecord as ProtoSessionLogRecord,
@@ -8,8 +10,11 @@ import {
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
-import { SessionLogRecord, convertSessionProtoToModel } from "@models";
-import { EnvironmentsService, LoggerService } from "@services";
+import { SessionLogRecord, convertSessionLogRecordsProtoToActivitiesModel, convertSessionProtoToModel } from "@models";
+import { ConnectionService, EnvironmentsService, LoggerService } from "@services";
+import { SessionLogRecordType } from "@src/enums";
+import { convertSessionProtoToViewerModel } from "@src/models/session.model";
+import { ViewerSession } from "@src/types/models/session.type";
 import { ServiceResponse, StartSessionArgsType } from "@type";
 import { Session, SessionFilter } from "@type/models";
 import { flattenArray } from "@utilities";
@@ -43,6 +48,106 @@ export class SessionsService {
 		}
 	}
 
+	static async getSessionActivitiesBySessionId(sessionId: string): Promise<ServiceResponse<Array<any>>> {
+		try {
+			const response = await sessionsClient.getLog({ sessionId });
+
+			const activities = convertSessionLogRecordsProtoToActivitiesModel(response.log!.records);
+
+			return { data: activities, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.sessionsService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async getLogPrintsBySessionId(sessionId: string): Promise<ServiceResponse<Array<SessionLogRecord>>> {
+		try {
+			const response = await sessionsClient.getLog({ sessionId });
+			const sessionHistory = response.log?.records
+				.map((state: ProtoSessionLogRecord) => {
+					const record = new SessionLogRecord(state);
+
+					if (record.logs && record.dateTime) {
+						const formattedDateTime = moment(record.dateTime).format("MM-DD-YYYY HH:mm:ss");
+						record.logs = `${formattedDateTime} ${record.logs}`;
+					}
+
+					return record;
+				})
+				.filter((record: SessionLogRecord) => record.type === SessionLogRecordType.print && record.logs);
+
+			return { data: sessionHistory, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.sessionsService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async getSessionInfo(sessionId: string): Promise<ServiceResponse<ViewerSession>> {
+		try {
+			const { session } = await sessionsClient.get({ sessionId });
+
+			if (!session?.eventId) {
+				const errorMessage = i18n.t("eventNotFoundForSession", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.sessionsService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const { data: event, error: eventError } = await EventsService.get(session?.eventId);
+			if (eventError) {
+				return { data: undefined, error: eventError };
+			}
+
+			if (!event) {
+				const errorMessage = i18n.t("eventsNotFound", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const { data: connections, error: connectionsError } = await ConnectionService.list();
+			if (connectionsError) {
+				return { data: undefined, error: connectionsError };
+			}
+
+			if (!connections) {
+				const errorMessage = i18n.t("connectionsNotFound", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const connectionName =
+				connections?.find((connection) => connection.connectionId === event?.connectionId)?.name || "";
+			const sessionConverted = convertSessionProtoToViewerModel(session!, connectionName);
+
+			return { data: sessionConverted, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.sessionsService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
 	static async listByDeploymentId(
 		deploymentId: string,
 		filter?: SessionFilter,
@@ -56,7 +161,44 @@ export class SessionsService {
 				pageToken,
 				stateType: filter?.stateType,
 			});
-			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
+
+			const { data: events, error: eventsError } = await EventsService.list();
+			if (eventsError) {
+				return { data: undefined, error: eventsError };
+			}
+
+			if (!events) {
+				const errorMessage = i18n.t("eventsNotFound", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const { data: connections, error: connectionsError } = await ConnectionService.list();
+			if (connectionsError) {
+				return { data: undefined, error: connectionsError };
+			}
+
+			if (!connections) {
+				const errorMessage = i18n.t("connectionsNotFound", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const sessions = sessionsResponse.map((session: ProtoSession) =>
+				convertSessionProtoToModel(session, connections, events)
+			);
 
 			return { data: { nextPageToken, sessions }, error: undefined };
 		} catch (error) {
@@ -69,7 +211,44 @@ export class SessionsService {
 	static async listByEnvironmentId(environmentId: string): Promise<ServiceResponse<Session[]>> {
 		try {
 			const { sessions: sessionsResponse } = await sessionsClient.list({ envId: environmentId });
-			const sessions = sessionsResponse.map(convertSessionProtoToModel);
+
+			const { data: events, error: eventsError } = await EventsService.list();
+			if (eventsError) {
+				return { data: undefined, error: eventsError };
+			}
+
+			if (!events) {
+				const errorMessage = i18n.t("eventsNotFound", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const { data: connections, error: connectionsError } = await ConnectionService.list();
+			if (connectionsError) {
+				return { data: undefined, error: connectionsError };
+			}
+
+			if (!connections) {
+				const errorMessage = i18n.t("connectionsNotFound", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const sessions = sessionsResponse.map((session) =>
+				convertSessionProtoToModel(session, connections, events)
+			);
 
 			return { data: sessions, error: undefined };
 		} catch (error) {
@@ -97,11 +276,47 @@ export class SessionsService {
 
 			const sessionsResponses = await Promise.allSettled(sessionsPromises);
 
+			const { data: events, error: eventsError } = await EventsService.list();
+			if (eventsError) {
+				return { data: undefined, error: eventsError };
+			}
+
+			if (!events) {
+				const errorMessage = i18n.t("eventsNotFound", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
+			const { data: connections, error: connectionsError } = await ConnectionService.list();
+			if (connectionsError) {
+				return { data: undefined, error: connectionsError };
+			}
+
+			if (!connections) {
+				const errorMessage = i18n.t("connectionsNotFound", {
+					ns: "services",
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return {
+					data: undefined,
+					error: new Error(errorMessage),
+				};
+			}
+
 			const sessions = flattenArray<Session>(
 				sessionsResponses
 					.filter((response) => response.status === "fulfilled")
 					.map((response) =>
-						get(response, "value.sessions", []).map((session) => convertSessionProtoToModel(session))
+						get(response, "value.sessions", []).map((session) =>
+							convertSessionProtoToModel(session, connections, events)
+						)
 					)
 			);
 

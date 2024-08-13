@@ -200,7 +200,7 @@ export const SessionsTable = () => {
 	);
 
 	return (
-		<div className="flex h-full w-full py-2.5">
+		<div className="m-4 flex w-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center justify-between gap-2.5">
@@ -233,8 +233,8 @@ export const SessionsTable = () => {
 							<Table className="mt-6 overflow-hidden">
 								<THead>
 									<Tr>
-										<Th className="w-1/4 font-normal" hasFixedWidth>
-											{t("table.columns.activationTime")}
+										<Th className="group cursor-pointer font-normal" hasFixedWidth>
+											{t("table.columns.startTime")}
 										</Th>
 
 										<Th className="w-1/8 font-normal" hasFixedWidth>
@@ -243,6 +243,10 @@ export const SessionsTable = () => {
 
 										<Th className="w-1/2 font-normal" hasFixedWidth>
 											{t("table.columns.sessionId")}
+										</Th>
+
+										<Th className="group cursor-pointer font-normal">
+											{t("table.columns.connectionName")}
 										</Th>
 
 										<Th className="w-1/8 font-normal" hasFixedWidth>
@@ -277,10 +281,12 @@ export const SessionsTable = () => {
 				{sessionId ? (
 					<Outlet />
 				) : (
-					<Frame className="flex h-full w-full flex-col items-center rounded-l-none bg-gray-1100 pt-40 transition">
-						<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
+					<Frame className="w-full rounded-l-none bg-gray-1100 pt-20 transition">
+						<div className="mt-20 flex flex-col items-center">
+							<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
 
-						<CatImage className="border-b border-gray-750 fill-gray-750" />
+							<CatImage className="border-b border-gray-750 fill-gray-750" />
+						</div>
 					</Frame>
 				)}
 			</div>
