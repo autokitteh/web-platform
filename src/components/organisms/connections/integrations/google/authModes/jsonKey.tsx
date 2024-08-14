@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useFormContext } from "react-hook-form";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoGoogleAccountLinks } from "@constants/lists";
@@ -10,12 +10,16 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const JsonKeyGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
+export const JsonKeyGoogleForm = ({
+	errors,
+	isLoading,
+	register,
+}: {
+	errors: FieldErrors<any>;
+	isLoading: boolean;
+	register: UseFormRegister<{ [x: string]: any }>;
+}) => {
 	const { t } = useTranslation("integrations");
-	const {
-		formState: { errors },
-		register,
-	} = useFormContext();
 
 	return (
 		<div>
