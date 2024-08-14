@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
@@ -22,17 +22,16 @@ export const GithubIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { copyToClipboard, createConnection, errors, handleOAuth, isLoading, register, setValue, watch } =
-		useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create");
+	const { copyToClipboard, createConnection, errors, handleOAuth, isLoading, register, setValue } = useConnectionForm(
+		{ pat: "", secret: "" },
+		githubIntegrationSchema,
+		"create"
+	);
 
-	const selectedConnectionType = watch("selectedConnectionType");
-
-	const selectConnectionType = (option: SingleValue<SelectOption>) => {
-		setValue("selectedConnectionType", option as SelectOption);
-	};
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const configureConnection = async (connectionId: string) => {
-		switch (selectedConnectionType?.value) {
+		switch (connectionType?.value) {
 			case ConnectionAuthType.Pat:
 				await createConnection(connectionId, ConnectionAuthType.Pat, Integrations.github);
 				break;
@@ -52,31 +51,32 @@ export const GithubIntegrationAddForm = ({
 	}, [connectionId]);
 
 	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.github]?.[selectedConnectionType?.value as ConnectionAuthType];
+		formsPerIntegrationsMapping[Integrations.github]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
-		<form className="flex items-start gap-10" onSubmit={triggerParentFormSubmit}>
-			<div className="flex w-full flex-col gap-6">
-				<Select
-					aria-label={t("placeholders.selectConnectionType")}
-					label={t("placeholders.connectionType")}
-					onChange={selectConnectionType}
-					options={githubIntegrationAuthMethods}
-					placeholder={t("placeholders.selectConnectionType")}
-					value={selectedConnectionType}
-				/>
-
-				{ConnectionTypeComponent ? (
-					<ConnectionTypeComponent
-						copyToClipboard={copyToClipboard}
-						errors={errors}
-						isLoading={isLoading}
-						mode="create"
-						register={register}
-						setValue={setValue}
-					/>
-				) : null}
-			</div>
-		</form>
+		<>
+			<Select
+				aria-label={t("placeholders.selectConnectionType")}
+				label={t("placeholders.connectionType")}
+				onChange={(option) => setConnectionType(option)}
+				options={githubIntegrationAuthMethods}
+				placeholder={t("placeholders.selectConnectionType")}
+				value={connectionType}
+			/>
+			<form className="mt-6 flex items-start gap-6" onSubmit={triggerParentFormSubmit}>
+				<div className="flex w-full flex-col gap-6">
+					{ConnectionTypeComponent ? (
+						<ConnectionTypeComponent
+							copyToClipboard={copyToClipboard}
+							errors={errors}
+							isLoading={isLoading}
+							mode="create"
+							register={register}
+							setValue={setValue}
+						/>
+					) : null}
+				</div>
+			</form>
+		</>
 	);
 };

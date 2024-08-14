@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
+import { SingleValue } from "react-select";
 import { ZodSchema } from "zod";
 
-import { filterConnectionValues } from "@hooks/utils/filterConnectionsFormFields";
 import { ConnectionService, HttpService, VariablesService } from "@services";
 import { apiBaseUrl } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
+import { SelectOption } from "@src/interfaces/components";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 
@@ -43,6 +44,8 @@ export const useConnectionForm = (
 	const [connectionType, setConnectionType] = useState<string | undefined>();
 	const [connectionVariables, setConnectionVariables] = useState<Variable[] | undefined>();
 	const [isLoading, setIsLoading] = useState(false);
+	const [connectionName, setConnectionName] = useState<string | undefined>();
+	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 
 	const getConnectionAuthType = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
@@ -89,9 +92,7 @@ export const useConnectionForm = (
 
 			const connectionData = getValues();
 
-			const filtereConnectionValues = filterConnectionValues(connectionData, validationSchema);
-
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -106,9 +107,7 @@ export const useConnectionForm = (
 		const connectionData = getValues();
 
 		try {
-			const filtereConnectionValues = filterConnectionValues(connectionData, validationSchema);
-
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionEditedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -128,10 +127,10 @@ export const useConnectionForm = (
 			}
 
 			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
-			setValue("connectionName", connectionResponse!.name);
-			setValue("integration", {
-				label: connectionResponse!.integrationName,
-				value: connectionResponse!.integrationUniqueName,
+			setConnectionName(connectionResponse!.name);
+			setIntegration({
+				label: connectionResponse!.integrationName!,
+				value: connectionResponse!.integrationUniqueName!,
 			});
 
 			await getConnectionAuthType(connId);
@@ -144,10 +143,13 @@ export const useConnectionForm = (
 	const createNewConnection = async () => {
 		try {
 			setIsLoading(true);
-			const { connectionName, integration } = getValues();
+			const {
+				connectionName,
+				integration: { value: integrationName },
+			} = getValues();
 			const { data: responseConnectionId, error } = await ConnectionService.create(
 				projectId!,
-				integration.value,
+				integrationName,
 				connectionName
 			);
 
@@ -234,5 +236,7 @@ export const useConnectionForm = (
 		connectionType,
 		connectionVariables,
 		onSubmitEdit,
+		integration,
+		connectionName,
 	};
 };
