@@ -1,19 +1,31 @@
 import { FieldValues } from "react-hook-form";
+import type { ZodSchema, z } from "zod";
 
-import { connectionsFormFieldsFilters } from "@src/constants";
 import { Integrations } from "@src/enums/components";
+
+export function getZodSchemaFieldsShallow(schema: ZodSchema) {
+	const fields: string[] = [];
+	const proxy = new Proxy(fields, {
+		get(_, key) {
+			if (key === "then" || typeof key !== "string") {
+				return;
+			}
+			fields.push(key);
+		},
+	});
+	schema.safeParse(proxy);
+
+	return fields;
+}
 
 export const filterConnectionValues = (
 	connectionData: FieldValues,
-	integrationName?: keyof typeof Integrations
+	validationSchema: z.ZodTypeAny
 ): Partial<Record<keyof typeof Integrations, any>> => {
-	if (!integrationName) return {};
-
-	const integration = Integrations[integrationName];
-	const fieldsToFilter = connectionsFormFieldsFilters[integration];
+	const connectionKeys = getZodSchemaFieldsShallow(validationSchema);
 	const filteredValues: Partial<Record<keyof typeof Integrations, any>> = {};
 
-	fieldsToFilter?.forEach((field) => {
+	connectionKeys?.forEach((field) => {
 		if (connectionData[field]) {
 			filteredValues[field as keyof typeof Integrations] = connectionData[field];
 		}

@@ -25,4 +25,3 @@ export {
 } from "@constants/triggers.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
-export { connectionsFormFieldsFilters } from "@constants/connections/formFieldsFilters";

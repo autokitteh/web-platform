@@ -89,7 +89,7 @@ export const useConnectionForm = (
 
 			const connectionData = getValues();
 
-			const filtereConnectionValues = filterConnectionValues(connectionData, (integrationName as Integrations)!);
+			const filtereConnectionValues = filterConnectionValues(connectionData, validationSchema);
 
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
 			toastAndLog("success", "connectionCreatedSuccessfully");
@@ -106,7 +106,7 @@ export const useConnectionForm = (
 		const connectionData = getValues();
 
 		try {
-			const filtereConnectionValues = filterConnectionValues(connectionData, (integrationName as Integrations)!);
+			const filtereConnectionValues = filterConnectionValues(connectionData, validationSchema);
 
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
 			toastAndLog("success", "connectionEditedSuccessfully");
