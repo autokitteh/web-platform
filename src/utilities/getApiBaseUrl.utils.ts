@@ -4,10 +4,9 @@ export const getApiBaseUrl = (): string => {
 		return "https://api.autokitteh.cloud";
 	}
 	if (hostname.endsWith(".autokitteh.cloud")) {
-		const customerName = hostname.split(".")[0];
-		const env = hostname.includes("dev") ? "dev." : "";
+		const [env, ...rest] = hostname.split(".");
 
-		return `https://${customerName}-api.${env}autokitteh.cloud`;
+		return `https://${env}-api.${rest}`;
 	}
 
 	return "http://localhost:9980";
