@@ -57,6 +57,7 @@ export const PatForm = ({
 			return;
 		}
 		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [webhook, patWebhookKey]);
 
