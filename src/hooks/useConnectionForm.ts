@@ -5,6 +5,7 @@ import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { ZodSchema } from "zod";
 
+import { filterConnectionValues } from "@hooks/utils/filterConnectionsFormFields";
 import { ConnectionService, HttpService, VariablesService } from "@services";
 import { apiBaseUrl } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
