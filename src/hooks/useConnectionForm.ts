@@ -80,7 +80,7 @@ export const useConnectionForm = (
 		setIsLoading(true);
 
 		try {
-			VariablesService.setByConnectiontId(newConnectionId!, {
+			VariablesService.setByConnectiontId(newConnectionId, {
 				name: "auth_type",
 				value: connectionAuthType,
 				isSecret: false,
@@ -187,7 +187,7 @@ export const useConnectionForm = (
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: Integrations) => {
 		try {
-			await VariablesService.setByConnectiontId(oauthConnectionId!, {
+			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
 				value: ConnectionAuthType.Oauth,
 				isSecret: false,
