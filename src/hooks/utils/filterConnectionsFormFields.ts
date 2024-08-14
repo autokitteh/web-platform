@@ -27,7 +27,7 @@ export const filterConnectionValues = (
 	const connectionKeys = getZodKeys(validationSchema);
 	const filteredValues: Partial<Record<keyof typeof Integrations, any>> = {};
 
-	connectionKeys?.forEach((field) => {
+	connectionKeys.forEach((field) => {
 		if (connectionData[field]) {
 			filteredValues[field as keyof typeof Integrations] = connectionData[field];
 		}
