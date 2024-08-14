@@ -1,7 +1,7 @@
 export { DeleteDeploymentModal } from "@components/organisms/deployments/deleteModal";
 export { DeploymentSessionStats } from "@components/organisms/deployments/sessionStats";
 export {
-	SessionTableEditorFrame,
+	SessionViewer,
 	SessionsTable,
 	SessionsTableFilter,
 	SessionsTableState,
