@@ -14,8 +14,6 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const SocketForm = ({
 	errors,
 	isLoading,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	mode,
 	register,
 }: {
 	copyToClipboard: (webhookUrlPath: string) => void;
