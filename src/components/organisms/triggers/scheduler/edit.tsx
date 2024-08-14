@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { infoCronExpressionsLinks, namespaces, schedulerTriggerConnectionName } from "@constants";
-import { TriggerFormIds } from "@enums/components";
-import { SelectOption } from "@interfaces/components";
-import { ConnectionService, LoggerService, TriggersService } from "@services";
-import { Trigger } from "@type/models";
+import { TriggersService } from "@services";
+import { infoCronExpressionsLinks, schedulerTriggerConnectionName } from "@src/constants";
+import { TriggerFormIds } from "@src/enums/components";
+import { SelectOption } from "@src/interfaces/components";
 import { schedulerTriggerSchema } from "@validations";
 
-import { useFileOperations } from "@hooks";
+import { useFetchConnections, useFetchTrigger, useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
 import { ErrorMessage, Input, Link, Loader } from "@components/atoms";
@@ -27,68 +26,34 @@ export const SchedulerEditTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useFileOperations(projectId!);
-
+	const {
+		connections,
+		cronConnectionId,
+		isLoading: isLoadingConnections,
+	} = useFetchConnections(projectId!, schedulerTriggerConnectionName);
+	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const [isSaving, setIsSaving] = useState(false);
-	const [isLoadingData, setIsLoadingData] = useState(true);
-	const [cronConnectionId, setCronConnectionId] = useState<string>();
-	const [trigger, setTrigger] = useState<Trigger>();
+
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 
-	const fetchData = async () => {
-		try {
-			const { data: connections, error: connectionsError } = await ConnectionService.list();
-			if (connectionsError) {
-				throw connectionsError;
-			}
-
-			const connectionId = connections?.find(
-				(item) => item.name === schedulerTriggerConnectionName
-			)?.connectionId;
-			if (!connectionId) {
-				throw new Error(tErrors("connectionCronNotFound", { ns: "services" }));
-			}
-			setCronConnectionId(connectionId);
-
-			const resources = await fetchResources();
-
-			const formattedResources = Object.keys(resources).map((name) => ({
-				label: name,
-				value: name,
-			}));
-			setFilesNameList(formattedResources);
-		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionsFetchError"),
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
-			);
-		} finally {
-			setIsLoadingData(false);
-		}
-	};
-
 	useEffect(() => {
-		const fetchTrigger = async () => {
-			const { data } = await TriggersService.get(triggerId!);
-			if (!data) {
+		const fetchResourcesData = async () => {
+			try {
+				const resources = await fetchResources();
+				const formattedResources = Object.keys(resources).map((name) => ({
+					label: name,
+					value: name,
+				}));
+				setFilesNameList(formattedResources);
+			} catch (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: tErrors("triggerNotFound"),
+					message: tErrors("resourcesFetchError"),
 					type: "error",
 				});
-				LoggerService.error(namespaces.triggerService, tErrors("triggerNotFoundExtended", { triggerId }));
-
-				return;
 			}
-			setTrigger(data);
 		};
-
-		fetchTrigger();
-		fetchData();
+		fetchResourcesData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -99,9 +64,9 @@ export const SchedulerEditTrigger = () => {
 		handleSubmit,
 		register,
 		reset,
-		watch,
 	} = useForm({
 		defaultValues: {
+			connection: { label: "", value: "" },
 			cron: "",
 			entryFunction: "",
 			filePath: { label: "", value: "" },
@@ -111,21 +76,25 @@ export const SchedulerEditTrigger = () => {
 	});
 
 	useEffect(() => {
-		reset({
-			cron: trigger?.data?.schedule?.string?.v,
-			entryFunction: trigger?.entryFunction,
-			filePath: { label: trigger?.path, value: trigger?.path },
-			name: trigger?.name,
-		});
+		if (trigger && !!connections.length) {
+			const selectedConnection = connections.find((item) => item.value === trigger.connectionId);
+			reset({
+				cron: trigger.data!.schedule.string.v,
+				entryFunction: trigger.entryFunction,
+				filePath: { label: trigger.path, value: trigger.path },
+				name: trigger.name,
+				connection: selectedConnection,
+			});
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [trigger]);
+	}, [trigger, connections]);
 
 	const onSubmit = async () => {
 		const { cron, entryFunction, filePath, name } = getValues();
 		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
 			connectionId: cronConnectionId!,
-			data: { ["schedule"]: { string: { v: cron } } },
+			data: { schedule: { string: { v: cron } } },
 			entryFunction,
 			eventType: "",
 			name,
@@ -144,12 +113,14 @@ export const SchedulerEditTrigger = () => {
 			return;
 		}
 
-		navigate(`/projects/${projectId}/triggers`);
+		navigate(`/projects/${projectId!}/triggers`);
 	};
 
-	const { cron, entryFunction, name } = watch();
+	const cron = useWatch({ control, name: "cron" });
+	const entryFunction = useWatch({ control, name: "entryFunction" });
+	const name = useWatch({ control, name: "name" });
 
-	return isLoadingData ? (
+	return isLoadingConnections || isLoadingTrigger ? (
 		<Loader isCenter size="xl" />
 	) : (
 		<div className="min-w-80">
@@ -167,6 +138,29 @@ export const SchedulerEditTrigger = () => {
 			>
 				<div className="flex w-full flex-col gap-6">
 					<div className="relative">
+						<Controller
+							control={control}
+							name="connection"
+							render={({ field }) => (
+								<Select
+									{...field}
+									aria-label={t("placeholders.selectConnection")}
+									dataTestid="select-trigger-type"
+									disabled
+									isError={!!errors.connection}
+									noOptionsLabel={t("noConnectionsAvailable")}
+									onChange={(selected) => field.onChange(selected)}
+									options={connections}
+									placeholder={t("placeholders.selectConnection")}
+									value={field.value}
+								/>
+							)}
+						/>
+
+						<ErrorMessage>{errors.connection?.message}</ErrorMessage>
+					</div>
+
+					<div className="relative">
 						<Input
 							{...register("name")}
 							aria-label={t("placeholders.name")}
@@ -177,7 +171,7 @@ export const SchedulerEditTrigger = () => {
 							value={name}
 						/>
 
-						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.name?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -190,7 +184,7 @@ export const SchedulerEditTrigger = () => {
 							placeholder={t("placeholders.cron")}
 						/>
 
-						<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.cron?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -201,7 +195,7 @@ export const SchedulerEditTrigger = () => {
 								<Select
 									{...field}
 									aria-label={t("placeholders.selectFile")}
-									dataTestid="select-trigger-file"
+									dataTestid="select-file"
 									isError={!!errors.filePath}
 									label={t("placeholders.file")}
 									noOptionsLabel={t("noFilesAvailable")}
@@ -213,7 +207,7 @@ export const SchedulerEditTrigger = () => {
 							)}
 						/>
 
-						<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -226,12 +220,12 @@ export const SchedulerEditTrigger = () => {
 							placeholder={t("placeholders.functionName")}
 						/>
 
-						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
 					</div>
 				</div>
 			</form>
 
-			<Accordion className="mt-2" title={t("information")}>
+			<Accordion className="mt-6" title={t("information")}>
 				<div className="flex flex-col items-start gap-2">
 					{infoCronExpressionsLinks.map(({ text, url }, index) => (
 						<Link

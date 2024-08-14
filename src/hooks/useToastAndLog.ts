@@ -7,9 +7,9 @@ import { ErrorType } from "@src/types/hooks";
 
 import { useToastStore } from "@store";
 
-export const useToastAndLog = () => {
-	const { t: tErrors } = useTranslation("errors");
-	const { t } = useTranslation("integrations");
+export const useToastAndLog = (messagesDictionary: string, errorDictionary: string) => {
+	const { t: tErrors } = useTranslation(errorDictionary);
+	const { t } = useTranslation(messagesDictionary);
 	const addToast = useToastStore((state) => state.addToast);
 
 	const handleErrorDetails = (error: ErrorType): string => {

@@ -2,95 +2,60 @@ import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce, has } from "lodash";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { namespaces } from "@constants";
-import { TriggerFormIds } from "@enums/components";
-import { SelectOption } from "@interfaces/components";
-import { ConnectionService, LoggerService, TriggersService } from "@services";
-import { Trigger, TriggerData } from "@type/models";
+import { TriggersService } from "@services";
+import { schedulerTriggerConnectionName } from "@src/constants";
+import { TriggerFormIds } from "@src/enums/components";
+import { SelectOption } from "@src/interfaces/components";
+import { TriggerData } from "@src/types/models";
 import { defaultTriggerSchema } from "@validations";
 
-import { useFileOperations } from "@hooks";
+import { useFetchConnections, useFetchTrigger, useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader } from "@components/atoms";
 import { Select, TabFormHeader } from "@components/molecules";
 
-import { InfoIcon, PlusCircle } from "@assets/image";
-import { TrashIcon } from "@assets/image/icons";
+import { InfoIcon, PlusCircle, TrashIcon } from "@assets/image/icons";
 
 export const DefaultEditTrigger = () => {
 	const { projectId, triggerId } = useParams();
 	const navigate = useNavigate();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
-	const [isSaving, setIsSaving] = useState(false);
-	const [isLoadingData, setIsLoadingData] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useFileOperations(projectId!);
+	const { connections, isLoading: isLoadingConnections } = useFetchConnections(
+		projectId!,
+		schedulerTriggerConnectionName
+	);
+	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 
-	const [trigger, setTrigger] = useState<Trigger>();
 	const [triggerData, setTriggerData] = useState<TriggerData>({});
-	const [connections, setConnections] = useState<SelectOption[]>([]);
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
-
-	const fetchData = async () => {
-		try {
-			const { data: connections, error: connectionsError } = await ConnectionService.listByProjectId(projectId!);
-			if (connectionsError) {
-				throw connectionsError;
-			}
-
-			const formattedConnections = connections?.map((item) => ({
-				label: item.name,
-				value: item.connectionId,
-			}));
-			setConnections(formattedConnections || []);
-
-			const resources = await fetchResources();
-
-			const formattedResources = Object.keys(resources).map((name) => ({
-				label: name,
-				value: name,
-			}));
-			setFilesNameList(formattedResources);
-		} catch (error) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionsFetchError"),
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.triggerService,
-				tErrors("connectionsFetchErrorExtended", { error: (error as Error).message, projectId })
-			);
-		} finally {
-			setIsLoadingData(false);
-		}
-	};
-
-	const fetchTrigger = async () => {
-		const { data } = await TriggersService.get(triggerId!);
-		if (!data) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("triggerNotFound"),
-				type: "error",
-			});
-			LoggerService.error(namespaces.triggerService, tErrors("triggerNotFoundExtended", { triggerId }));
-
-			return;
-		}
-		setTrigger(data);
-		setTriggerData(data.data || {});
-	};
+	const [isSaving, setIsSaving] = useState(false);
 
 	useEffect(() => {
-		fetchTrigger();
-		fetchData();
+		const fetchResourcesData = async () => {
+			try {
+				const resources = await fetchResources();
+				const formattedResources = Object.keys(resources).map((name) => ({
+					label: name,
+					value: name,
+				}));
+				setFilesNameList(formattedResources);
+			} catch (error) {
+				addToast({
+					id: Date.now().toString(),
+					message: tErrors("resourcesFetchError"),
+					type: "error",
+				});
+			}
+		};
+		fetchResourcesData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -101,7 +66,6 @@ export const DefaultEditTrigger = () => {
 		handleSubmit,
 		register,
 		reset,
-		watch,
 	} = useForm({
 		defaultValues: {
 			connection: { label: "", value: "" },
@@ -115,20 +79,18 @@ export const DefaultEditTrigger = () => {
 	});
 
 	useEffect(() => {
-		const resetForm = () => {
+		if (trigger && !!connections.length) {
 			reset({
-				connection: { label: trigger?.connectionName, value: trigger?.connectionId },
-				entryFunction: trigger?.entryFunction,
-				eventType: trigger?.eventType,
-				filePath: { label: trigger?.path, value: trigger?.path },
-				filter: trigger?.filter,
-				name: trigger?.name,
+				connection: { label: trigger.connectionName, value: trigger.connectionId },
+				entryFunction: trigger.entryFunction,
+				eventType: trigger.eventType,
+				filePath: { label: trigger.path, value: trigger.path },
+				filter: trigger.filter,
+				name: trigger.name,
 			});
-		};
-
-		resetForm();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [trigger]);
+			setTriggerData(trigger.data || {});
+		}
+	}, [trigger, connections, reset]);
 
 	const onSubmit = async () => {
 		const { connection, entryFunction, eventType, filePath, filter, name } = getValues();
@@ -159,11 +121,10 @@ export const DefaultEditTrigger = () => {
 		navigate(-1);
 	};
 
-	const updateTriggerDataKey = debounce((newKey, oldKey) => {
+	const updateTriggerDataKey = debounce((newKey: string, oldKey: string) => {
 		if (newKey === oldKey) {
 			return;
 		}
-
 		setTriggerData((prevData) => {
 			const updatedTriggerData = { ...prevData };
 			updatedTriggerData[newKey] = updatedTriggerData[oldKey];
@@ -190,7 +151,6 @@ export const DefaultEditTrigger = () => {
 
 			return;
 		}
-
 		setTriggerData((prevData) => ({
 			...prevData,
 			"": { string: { v: "" } },
@@ -206,9 +166,12 @@ export const DefaultEditTrigger = () => {
 		});
 	};
 
-	const { entryFunction, eventType, filter, name } = watch();
+	const entryFunction = useWatch({ control, name: "entryFunction" });
+	const eventType = useWatch({ control, name: "eventType" });
+	const filter = useWatch({ control, name: "filter" });
+	const name = useWatch({ control, name: "name" });
 
-	return isLoadingData ? (
+	return isLoadingConnections || isLoadingTrigger ? (
 		<Loader isCenter size="xl" />
 	) : (
 		<div className="min-w-80">
@@ -236,7 +199,7 @@ export const DefaultEditTrigger = () => {
 							value={name}
 						/>
 
-						<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.name?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -247,7 +210,8 @@ export const DefaultEditTrigger = () => {
 								<Select
 									{...field}
 									aria-label={t("placeholders.selectConnection")}
-									dataTestid="select-trigger-connection"
+									dataTestid="select-trigger-type"
+									disabled
 									isError={!!errors.connection}
 									label={t("placeholders.connection")}
 									noOptionsLabel={t("noConnectionsAvailable")}
@@ -259,7 +223,7 @@ export const DefaultEditTrigger = () => {
 							)}
 						/>
 
-						<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.connection?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -281,7 +245,7 @@ export const DefaultEditTrigger = () => {
 							)}
 						/>
 
-						<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -294,7 +258,7 @@ export const DefaultEditTrigger = () => {
 							value={entryFunction}
 						/>
 
-						<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -306,7 +270,7 @@ export const DefaultEditTrigger = () => {
 							value={eventType}
 						/>
 
-						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.eventType?.message}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -318,7 +282,7 @@ export const DefaultEditTrigger = () => {
 							value={filter}
 						/>
 
-						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors.filter?.message}</ErrorMessage>
 					</div>
 
 					<div>

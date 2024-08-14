@@ -37,7 +37,7 @@ export const useConnectionForm = (
 		mode: "onChange",
 		defaultValues: initialValues,
 	});
-	const toastAndLog = useToastAndLog();
+	const toastAndLog = useToastAndLog("integrations", "errors");
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [connectionType, setConnectionType] = useState<string | undefined>();

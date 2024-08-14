@@ -20,16 +20,12 @@ const cronFormat =
 
 i18n.on("initialized", () => {
 	defaultTriggerSchema = z.object({
-		connection: selectItemSchema.refine((value: { label: any }) => value.label, {
-			message: i18n.t("connectionIsRequired", { ns: "validations" }),
-		}),
 		entryFunction: z.string().min(1, i18n.t("functionNameIsRequired", { ns: "validations" })),
 		eventType: z.string(),
 		filePath: selectItemSchema.refine((value: { label: any }) => value.label, {
 			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 		}),
 		filter: z.string(),
-		name: z.string().min(1, i18n.t("nameIsRequired", { ns: "validations" })),
 	});
 
 	schedulerTriggerSchema = z.object({
@@ -40,7 +36,6 @@ i18n.on("initialized", () => {
 		filePath: selectItemSchema.refine((value: { label: any }) => value.label, {
 			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 		}),
-		name: z.string().min(1, i18n.t("nameIsRequired", { ns: "validations" })),
 	});
 });
 

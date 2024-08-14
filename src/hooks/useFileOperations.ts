@@ -25,7 +25,7 @@ export function useFileOperations(projectId: string) {
 			const { data, error } = await ProjectsService.getResources(projectId);
 			if (error) throw new Error((error as Error).message);
 			if (clearStore) {
-				await dbService.clearStore(); // Clear and replace the local cache
+				await dbService.clearStore();
 			}
 			for (const [name, content] of Object.entries(data || {})) {
 				await dbService.put(name, new Uint8Array(content));
