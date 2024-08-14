@@ -88,7 +88,9 @@ export const useConnectionForm = (
 
 			const connectionData = getValues();
 
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			const filtereConnectionValues = filterConnectionValues(connectionData, validationSchema);
+
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -103,7 +105,9 @@ export const useConnectionForm = (
 		const connectionData = getValues();
 
 		try {
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			const filtereConnectionValues = filterConnectionValues(connectionData, validationSchema);
+
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
 			toastAndLog("success", "connectionEditedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
