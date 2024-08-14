@@ -25,18 +25,16 @@ export const GithubIntegrationEditForm = () => {
 		onSubmitEdit,
 		register,
 		setValue,
-	} = useConnectionForm(
-		{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true, webhook: "" },
-		githubIntegrationSchema,
-		"edit"
-	);
+	} = useConnectionForm({ pat: "", secret: "", webhook: "" }, githubIntegrationSchema, "edit");
 
 	useEffect(() => {
-		const patWebhookKey: string | undefined = connectionVariables?.find(
-			(variable) => variable.name === "pat_key"
-		)?.value;
+		if (connectionVariables) {
+			const patWebhookKey: string | undefined = connectionVariables?.find(
+				(variable) => variable.name === "pat_key"
+			)?.value;
 
-		setWebhook(patWebhookKey);
+			setWebhook(patWebhookKey);
+		}
 	}, [connectionVariables]);
 
 	const ConnectionTypeComponent =

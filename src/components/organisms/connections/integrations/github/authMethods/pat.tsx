@@ -56,7 +56,9 @@ export const PatForm = ({
 	};
 
 	useEffect(() => {
-		handleWebhook();
+		if (patWebhookKey || webhook) {
+			handleWebhook();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [webhook, patWebhookKey]);
 

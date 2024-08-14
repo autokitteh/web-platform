@@ -5,7 +5,6 @@ import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { ZodSchema } from "zod";
 
-import { filterConnectionValues } from "@hooks/utils/filterConnectionsFormFields";
 import { ConnectionService, HttpService, VariablesService } from "@services";
 import { apiBaseUrl } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
@@ -89,9 +88,7 @@ export const useConnectionForm = (
 
 			const connectionData = getValues();
 
-			const filtereConnectionValues = filterConnectionValues(connectionData, (integrationName as Integrations)!);
-
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -106,9 +103,7 @@ export const useConnectionForm = (
 		const connectionData = getValues();
 
 		try {
-			const filtereConnectionValues = filterConnectionValues(connectionData, (integrationName as Integrations)!);
-
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
+			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionEditedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
