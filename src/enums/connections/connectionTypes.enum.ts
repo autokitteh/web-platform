@@ -9,4 +9,5 @@ export enum ConnectionAuthType {
 	ApiKey = "apiKey",
 	ApiToken = "apiToken",
 	AuthToken = "authToken",
+	DiscordBotToken = "discordBotToken",
 }
