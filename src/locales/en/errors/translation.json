@@ -6,7 +6,7 @@
 	"error": "Error",
 	"errorCreatingNewConnection": "Error while creating a new connection",
 	"errorCreatingNewConnectionExtended": "Error while creating a new connection, error: {{error}}",
-	"errorEditingNewConnection": "Error while editing a new connection",
+	"errorEditingNewConnection": "Error while editing connection",
 	"errorEditingNewConnectionExtended": "Error while creating a new connection, error: {{error}}",
 	"errorFetchingVariabls": "Error fetching variables",
 	"errorFetchingVariablsExtended": "Error fetching variables, error: {{error}}",

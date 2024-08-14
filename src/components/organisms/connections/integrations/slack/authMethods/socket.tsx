@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import { infoSlackModeLinks } from "@src/constants/lists/connections";
 
-import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
@@ -14,9 +14,9 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const SocketForm = ({
 	errors,
 	isLoading,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	mode,
 	register,
+	setValue,
 }: {
 	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
@@ -27,28 +27,65 @@ export const SocketForm = ({
 	setValue: any;
 }) => {
 	const { t } = useTranslation("integrations");
+	const isEditMode = mode === "edit";
+	const [lockState, setLockState] = useState<{ appToken: boolean; botToken: boolean }>({
+		appToken: true,
+		botToken: true,
+	});
 
 	return (
 		<>
 			<div className="relative">
-				<Input
-					{...register("bot_token")}
-					aria-label={t("slack.placeholders.botToken")}
-					isError={!!errors.botToken}
-					isRequired
-					placeholder={t("slack.placeholders.botToken")}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						{...register("bot_token")}
+						aria-label={t("slack.placeholders.botToken")}
+						handleInputChange={(newPatValue) => setValue("bot_token", newPatValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, botToken: newLockState }))
+						}
+						isError={!!errors.botToken}
+						isLocked={lockState.botToken}
+						isRequired
+						placeholder={t("slack.placeholders.botToken")}
+						resetOnFirstFocus
+					/>
+				) : (
+					<Input
+						{...register("bot_token")}
+						aria-label={t("slack.placeholders.botToken")}
+						isError={!!errors.botToken}
+						isRequired
+						placeholder={t("slack.placeholders.botToken")}
+					/>
+				)}
 
 				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
-				<Input
-					{...register("app_token")}
-					aria-label={t("slack.placeholders.appToken")}
-					isError={!!errors.appToken}
-					isRequired
-					placeholder={t("slack.placeholders.appToken")}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						{...register("app_token")}
+						aria-label={t("slack.placeholders.appToken")}
+						handleInputChange={(newPatValue) => setValue("app_token", newPatValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, appToken: newLockState }))
+						}
+						isError={!!errors.appToken}
+						isLocked={lockState.appToken}
+						isRequired
+						placeholder={t("slack.placeholders.appToken")}
+						resetOnFirstFocus
+					/>
+				) : (
+					<Input
+						{...register("app_token")}
+						aria-label={t("slack.placeholders.appToken")}
+						isError={!!errors.appToken}
+						isRequired
+						placeholder={t("slack.placeholders.appToken")}
+					/>
+				)}
 
 				<ErrorMessage>{errors.appToken?.message as string}</ErrorMessage>
 			</div>

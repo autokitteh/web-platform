@@ -15,8 +15,8 @@ export const connectionSchema = z.object({
 });
 
 export const slackIntegrationSchema = z.object({
-	botToken: z.string().min(1, "Bot Token is required"),
-	appToken: z.string().min(1, "App-Level Token is required"),
+	bot_token: z.string().min(1, "Bot Token is required"),
+	app_token: z.string().min(1, "App-Level Token is required"),
 });
 
 export const selectRegionSchema = z.object({
