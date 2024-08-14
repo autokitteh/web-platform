@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -64,7 +64,6 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 			getValues,
 			handleSubmit,
 			register,
-			watch,
 		} = useForm({
 			defaultValues: {
 				cron: "",
@@ -103,7 +102,8 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 			onSubmit: handleSubmit(onSubmit),
 		}));
 
-		const { cron, entryFunction } = watch();
+		const entryFunction = useWatch({ control, name: "entryFunction" });
+		const cron = useWatch({ control, name: "cron" });
 
 		return isLoading ? (
 			<Loader isCenter size="xl" />

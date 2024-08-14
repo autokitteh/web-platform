@@ -56,7 +56,8 @@ export const DefaultEditTrigger = () => {
 			}
 		};
 		fetchResourcesData();
-	}, [fetchResources, tErrors, addToast]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const {
 		control,
