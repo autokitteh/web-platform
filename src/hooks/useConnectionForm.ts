@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
 
+import { filterConnectionValues } from "@hooks/utils/filterConnectionsFormFields";
 import { ConnectionService, HttpService, VariablesService } from "@services";
 import { apiBaseUrl } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
