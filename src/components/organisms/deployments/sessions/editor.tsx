@@ -1,20 +1,48 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
+import JsonView from "@uiw/react-json-view";
+import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { isEqual } from "lodash";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { fetchSessionsInterval, sessionsEditorLineHeight } from "@constants";
+import { defaultSessionTab, fetchSessionsInterval, sessionTabs, sessionsEditorLineHeight } from "@constants";
 import { SessionLogRecord } from "@models";
 import { SessionsService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 
-import { Button, Frame, IconButton, Loader, LogoCatLarge } from "@components/atoms";
+import { Button, Frame, IconButton, Loader, LogoCatLarge, Tab } from "@components/atoms";
+import { Accordion } from "@components/molecules";
+import { SessionsTableState } from "@components/organisms/deployments";
 
 import { CatImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
+
+const longArray = new Array(1000).fill(1);
+const example = {
+	string: "Lorem ipsum dolor sit amet",
+	integer: 42,
+	float: 114.514,
+	bigint: 10086n,
+	null: null,
+	undefined,
+	timer: 0,
+	date: new Date("Tue Sep 13 2022 14:07:44 GMT-0500 (Central Daylight Time)"),
+	array: [19, 100.86, "test", NaN, Infinity],
+	nestedArray: [
+		[1, 2],
+		[3, 4],
+	],
+	object: {
+		"first-child": true,
+		"second-child": false,
+		"last-child": null,
+	},
+	longArray,
+	string_number: "1234",
+};
 
 export const SessionTableEditorFrame = () => {
 	const [editorKey, setEditorKey] = useState(0);
@@ -28,6 +56,7 @@ export const SessionTableEditorFrame = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [firstLoad, setFirstLoad] = useState(true);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
+	const [activeTab] = useState(defaultSessionTab);
 
 	const fetchSessionLog = useCallback(async () => {
 		if (firstLoad) {
@@ -161,14 +190,79 @@ export const SessionTableEditorFrame = () => {
 	const sessionLogsAsStringForOutput = cachedSessionLogs?.map(({ logs }) => logs).join("\n");
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
+	const goTo = (path: string) => {
+		if (path === "outputs") {
+			navigate("");
+
+			return;
+		}
+		navigate(path.toLowerCase());
+	};
+
 	return (
-		<Frame className="ml-2.5 w-2/4 pt-20 transition">
+		<Frame className="ml-2.5 w-2/4 transition">
 			{isLoading ? (
 				<Loader isCenter size="xl" />
 			) : (
 				<>
-					<div className="-mt-10 flex items-center justify-between font-bold">
-						{t("output")}:{/* eslint-disable @liferay/empty-line-between-elements */}
+					<div className="flex items-center justify-between">
+						<span className="text-lg" title="Session ID">
+							{sessionId}
+						</span>
+
+						<span title="Created">3 days ago</span>
+					</div>
+					<div className="mt-1 flex justify-between">
+						<div className="flex flex-col gap-1">
+							<div className="flex items-center gap-1">
+								Current status: <SessionsTableState sessionState={4} />
+							</div>
+
+							<div>
+								Start time: <span>{new Date().toLocaleDateString("en-GB")}</span>
+							</div>
+
+							<div>
+								End time: <span>{new Date().toLocaleDateString("en-GB")}</span>
+							</div>
+						</div>
+
+						<div className="flex flex-col gap-1">
+							<div>Connection name: MyGitHub</div>
+
+							<div>Event Type: Type</div>
+
+							<div>Build ID: bld_01j53hcjq6ecqamda2qq3n8wdx</div>
+						</div>
+					</div>
+					<Accordion className="mt-2" title="Trigger Inputs">
+						<JsonView
+							className="scrollbar max-h-72 overflow-auto"
+							style={githubDarkTheme}
+							value={example}
+						/>
+					</Accordion>
+					<div className="mt-2 flex items-center justify-between">
+						<div
+							className={
+								`flex items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
+								`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
+							}
+						>
+							{sessionTabs.map((singleTab) => (
+								<Tab
+									activeTab={activeTab}
+									ariaLabel={singleTab.label}
+									className="p-0"
+									key={singleTab.value}
+									onClick={() => goTo(singleTab.value)}
+									value={singleTab.value}
+								>
+									{singleTab.label}
+								</Tab>
+							))}
+						</div>
+
 						<IconButton
 							ariaLabel={t("buttons.ariaCloseEditor")}
 							className="h-7 w-7 bg-gray-1100 p-0.5"
@@ -180,7 +274,7 @@ export const SessionTableEditorFrame = () => {
 					{cachedSessionLogs?.length ? (
 						<Editor
 							beforeMount={handleEditorWillMount}
-							className="-ml-6"
+							className="absolute -ml-6 h-full"
 							key={editorKey}
 							loading={<Loader isCenter size="lg" />}
 							onMount={handleEditorDidMount}
@@ -203,7 +297,6 @@ export const SessionTableEditorFrame = () => {
 							<CatImage className="border-b border-gray-750 fill-gray-750" />
 						</div>
 					)}
-
 					{isScrolledDown ? (
 						<div className="absolute bottom-2 left-1/2 m-auto -translate-x-1/2 transform">
 							<Button className="justify-center" onClick={scrollToTop} variant="filled">
