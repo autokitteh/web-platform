@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
+import TimeAgo from "react-timeago";
 import { ListOnItemsRenderedProps } from "react-window";
 
 import { namespaces } from "@constants";
@@ -36,6 +37,7 @@ export const SessionsTable = () => {
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [lastLoadedTime, setLastLoadedTime] = useState<Date | null>(null);
 
 	const frameClass = useMemo(
 		() => cn("w-1/2 bg-gray-1100 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
@@ -170,11 +172,7 @@ export const SessionsTable = () => {
 		setIsRefreshing(true);
 		try {
 			await fetchDeployments();
-			addToast({
-				id: Date.now().toString(),
-				message: t("sessionsRefreshed"),
-				type: "success",
-			});
+			setLastLoadedTime(new Date());
 		} finally {
 			setIsRefreshing(false);
 		}
@@ -188,6 +186,14 @@ export const SessionsTable = () => {
 			}),
 		[isRefreshing]
 	);
+
+	const customFormatter = (value: number, unit: string, suffix: string) => {
+		if (value === 0) {
+			return "just now";
+		}
+
+		return `${value} ${unit}${value !== 1 ? "s" : ""} ${suffix}`;
+	};
 
 	return (
 		<div className="flex h-full w-full py-2.5">
@@ -204,14 +210,22 @@ export const SessionsTable = () => {
 							{t("buttons.back")}
 						</IconButton>
 
-						<IconButton
-							className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
-							disabled={isRefreshing}
-							onClick={handleRefreshClick}
-							title={t("refresh")}
-						>
-							<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
-						</IconButton>
+						<div className="group relative flex items-center gap-2">
+							<IconButton
+								className="h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
+								disabled={isRefreshing}
+								onClick={handleRefreshClick}
+								title={t("refresh")}
+							>
+								<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
+							</IconButton>
+
+							{lastLoadedTime ? (
+								<div className="opacity-0 transition group-hover:opacity-100">
+									<TimeAgo date={lastLoadedTime} formatter={customFormatter} />
+								</div>
+							) : null}
+						</div>
 					</div>
 
 					<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />

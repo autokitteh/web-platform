@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 
 import * as Sentry from "@sentry/react";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
 import {
 	BrowserRouter,
 	Navigate,
@@ -29,7 +31,7 @@ import { SettingsLayout } from "@components/templates/settingsLayout";
 
 export const App = () => {
 	let AKRoutes = Routes;
-
+	TimeAgo.addDefaultLocale(en);
 	if (isProduction) {
 		Sentry.init({
 			dsn: import.meta.env.VITE_SENTRY_DSN,
