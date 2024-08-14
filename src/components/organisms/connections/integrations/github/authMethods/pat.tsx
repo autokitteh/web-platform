@@ -44,11 +44,6 @@ export const PatForm = ({
 
 			return;
 		}
-		if (!isEditMode) {
-			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
-
-			return;
-		}
 		if (!patWebhookKey) {
 			return;
 		}
@@ -58,7 +53,11 @@ export const PatForm = ({
 	useEffect(() => {
 		if (patWebhookKey || webhook) {
 			handleWebhook();
+
+			return;
 		}
+		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [webhook, patWebhookKey]);
 
