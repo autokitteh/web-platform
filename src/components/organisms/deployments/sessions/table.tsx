@@ -176,7 +176,9 @@ export const SessionsTable = () => {
 				type: "success",
 			});
 		} finally {
-			setIsRefreshing(false);
+			setTimeout(() => {
+				setIsRefreshing(false);
+			}, 600);
 		}
 	};
 
