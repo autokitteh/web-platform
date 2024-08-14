@@ -73,25 +73,28 @@ export const useConnectionForm = (
 	};
 
 	const createConnection = async (
-		connectionId: string,
+		newConnectionId: string,
 		connectionAuthType: ConnectionAuthType,
 		integrationName?: string
 	): Promise<void> => {
 		setIsLoading(true);
 
 		try {
-			VariablesService.setByConnectiontId(connectionId!, {
+			VariablesService.setByConnectiontId(newConnectionId!, {
 				name: "auth_type",
 				value: connectionAuthType,
 				isSecret: false,
-				scopeId: connectionId,
+				scopeId: newConnectionId,
 			});
 
 			const connectionData = getValues();
 
 			const filtereConnectionValues = filterConnectionValues(connectionData, (integrationName as Integrations)!);
 
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, filtereConnectionValues);
+			await HttpService.post(
+				`/${integrationName}/save?cid=${newConnectionId}&origin=web`,
+				filtereConnectionValues
+			);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
