@@ -155,7 +155,7 @@ export const SessionOutputs = () => {
 	return isLoading ? (
 		<Loader isCenter size="xl" />
 	) : (
-		<>
+		<div className="mt-2 h-full">
 			{cachedSessionLogs?.length ? (
 				<Editor
 					beforeMount={handleEditorWillMount}
@@ -181,6 +181,7 @@ export const SessionOutputs = () => {
 					<CatImage className="border-b border-gray-750 fill-gray-750" />
 				</div>
 			)}
+
 			{isScrolledDown ? (
 				<div className="absolute bottom-2 left-1/2 m-auto -translate-x-1/2 transform">
 					<Button className="justify-center" onClick={scrollToTop} variant="filled">
@@ -188,6 +189,6 @@ export const SessionOutputs = () => {
 					</Button>
 				</div>
 			) : null}
-		</>
+		</div>
 	);
 };

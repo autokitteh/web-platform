@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
@@ -36,7 +37,7 @@ const example = {
 };
 
 export const SessionViewer = () => {
-	const { deploymentId, projectId, sessionId } = useParams();
+	const { deploymentId, projectId } = useParams();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -62,11 +63,11 @@ export const SessionViewer = () => {
 	return (
 		<Frame className="ml-2.5 w-2/4 transition">
 			<div className="flex items-center justify-between">
-				<div className="text-lg" title="Session ID">
-					{sessionId}
+				<div className="text-lg font-bold" title="Trigger name">
+					NewTrigger
 				</div>
 
-				<div className="flex items-center" title="Created">
+				<div className="flex items-center font-semibold" title="Created">
 					3 days ago
 					<IconButton
 						ariaLabel={t("buttons.ariaCloseEditor")}
@@ -85,15 +86,15 @@ export const SessionViewer = () => {
 					</div>
 
 					<div className="flex items-center gap-2 font-semibold">
-						<div title="Start Time">{new Date().toLocaleDateString("en-GB")}</div>
+						<div title="Start Time"> {moment().utc().format("HH:mm:ss")}</div>
 
 						<IconSvg className="fill-white" src={ArrowRightIcon} />
 
-						<div title="End Time">{new Date().toLocaleDateString("en-GB")}</div>
+						<SessionsTableState className="font-semibold" sessionState={2} />
 					</div>
 
 					<div>
-						Duration: <span className="font-semibold">2024-08-13T07:54:44.952685919Z</span>
+						Duration: <span className="font-semibold">35s</span>
 					</div>
 				</div>
 
