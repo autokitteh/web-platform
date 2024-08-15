@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { apiBaseUrl } from "@constants";
+import { apiBaseUrl, apiRequestTimeout } from "@constants";
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 	axios.create({
@@ -9,6 +9,7 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 			"Content-Type": "application/x-www-form-urlencoded",
 		},
 		withCredentials,
+		timeout: apiRequestTimeout,
 	});
 
 // Axios instance for API requests

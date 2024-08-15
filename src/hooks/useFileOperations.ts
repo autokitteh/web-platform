@@ -33,8 +33,7 @@ export function useFileOperations(projectId: string) {
 
 			return await fetchFiles();
 		} catch (error) {
-			console.error("Failed to sync resources from server:", error);
-			throw error;
+			return error;
 		}
 	};
 
@@ -77,7 +76,7 @@ export function useFileOperations(projectId: string) {
 			};
 			const { error } = await ProjectsService.setResources(projectId, resourcesWithAddedFile);
 			if (error) {
-				throw error;
+				return error;
 			}
 			dbService.put(name, fileContent);
 		},

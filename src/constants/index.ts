@@ -10,6 +10,7 @@ export {
 	maxLogs,
 	isProduction,
 	fileSizeUploadLimit,
+	apiRequestTimeout,
 } from "@constants/global.constants";
 export { menuItems } from "@constants/menuItems.constants";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
