@@ -1,3 +1,10 @@
+## [1.37.1](https://github.com/autokitteh/web-platform/compare/v1.37.0...v1.37.1) (2024-08-15)
+
+
+### Bug Fixes
+
+* not component re-rendered caused login issue ([#271](https://github.com/autokitteh/web-platform/issues/271)) ([18a5b60](https://github.com/autokitteh/web-platform/commit/18a5b6012b7f486fb709374a88885d0b90f59832))
+
 # [1.37.0](https://github.com/autokitteh/web-platform/compare/v1.36.0...v1.37.0) (2024-08-15)
 
 
