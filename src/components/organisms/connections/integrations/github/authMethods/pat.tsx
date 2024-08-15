@@ -39,13 +39,13 @@ export const PatForm = ({
 	const isEditMode = mode === "edit";
 
 	useEffect(() => {
-		if (webhook) {
-			setValue("webhook", webhook);
+		if (patWebhookKey) {
+			setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
 
 			return;
 		}
-		if (patWebhookKey) {
-			setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
+		if (webhook) {
+			setValue("webhook", webhook);
 
 			return;
 		}
