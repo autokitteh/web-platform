@@ -27,6 +27,7 @@ export const useConnectionForm = (
 	const navigate = useNavigate();
 
 	const {
+		control,
 		formState: { errors },
 		getValues,
 		handleSubmit,
@@ -219,6 +220,7 @@ export const useConnectionForm = (
 	}, [connectionId]);
 
 	return {
+		control,
 		errors,
 		handleSubmit,
 		onSubmit,
