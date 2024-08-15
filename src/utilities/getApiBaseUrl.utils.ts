@@ -6,7 +6,7 @@ export const getApiBaseUrl = (): string => {
 	if (hostname.endsWith(".autokitteh.cloud")) {
 		const [env, ...rest] = hostname.split(".");
 
-		return `https://${env}-api.${rest}`;
+		return `https://${env}-api.${rest.join(".")}`;
 	}
 
 	return "http://localhost:9980";
