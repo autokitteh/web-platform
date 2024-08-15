@@ -41,14 +41,14 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 					withCredentials: true,
 				});
 				await getLoggedInUser();
-				setDescopeRenderKey((prevKey) => prevKey + 1);
 			} catch (error) {
-				setDescopeRenderKey((prevKey) => prevKey + 1);
 				addToast({
 					id: Date.now().toString(),
 					message: `Error occurred during login: ${(error as Error).message}`,
 					type: "error",
 				});
+			} finally {
+				setDescopeRenderKey((prevKey) => prevKey + 1);
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
