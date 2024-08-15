@@ -6,11 +6,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { apiBaseUrl, namespaces } from "@constants";
+import { namespaces } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
+import { getApiBaseUrl } from "@src/utilities";
 import { googleIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
@@ -77,6 +78,8 @@ export const GoogleIntegrationAddForm = ({
 
 	const handleGoogleOAuth = async () => {
 		try {
+			const apiBaseUrl = getApiBaseUrl();
+
 			window.open(`${apiBaseUrl}/oauth/start/google?cid=${connectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {

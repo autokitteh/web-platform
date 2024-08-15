@@ -7,13 +7,12 @@ import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
 
 import { ConnectionService, HttpService, VariablesService } from "@services";
-import { apiBaseUrl } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
-import { flattenFormData } from "@src/utilities";
+import { flattenFormData, getApiBaseUrl } from "@src/utilities";
 
 import { useToastAndLog } from "@hooks";
 
@@ -25,6 +24,7 @@ export const useConnectionForm = (
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 	const navigate = useNavigate();
+	const apiBaseUrl = getApiBaseUrl();
 
 	const {
 		control,

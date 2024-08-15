@@ -5,7 +5,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 
-import { apiBaseUrl, authBearer, isLoggedInCookie } from "@constants";
+import { authBearer, isLoggedInCookie } from "@constants";
+import { getApiBaseUrl } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
 import { useToastStore } from "@store";
@@ -37,6 +38,8 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
 			try {
+				const apiBaseUrl = getApiBaseUrl();
+
 				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
 					withCredentials: true,
 				});
