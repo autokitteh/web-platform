@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import Cookies from "js-cookie";
 
-import { apiBaseUrl, apiRequestTimeout } from "@constants";
+import { apiBaseUrl, apiRequestTimeout, isLoggedInCookie } from "@constants";
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 	axios.create({
@@ -14,6 +15,22 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 
 // Axios instance for API requests
 const httpClient = createAxiosInstance(apiBaseUrl, import.meta.env.VITE_AUTH_ENABLED === "true");
+
+httpClient.interceptors.response.use(
+	function (response: AxiosResponse) {
+		return response;
+	},
+	function (error: AxiosError) {
+		const status = error?.response?.status || 0;
+		if (status === 401) {
+			Cookies.remove(isLoggedInCookie);
+			window.localStorage.clear();
+			window.location.reload();
+		}
+
+		return Promise.reject(error);
+	}
+);
 
 // Axios instance for local domain requests (same domain as the app)
 const localDomainHttpClient = createAxiosInstance("/");

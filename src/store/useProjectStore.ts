@@ -14,7 +14,6 @@ const defaultState: Omit<
 	| "getProject"
 	| "getProjectsList"
 	| "renameProject"
-	| "reset"
 	| "projectList"
 	| "deleteProject"
 	| "createProjectFromManifest"
@@ -122,10 +121,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 			return state;
 		});
-	},
-
-	reset: () => {
-		set(defaultState);
 	},
 });
 

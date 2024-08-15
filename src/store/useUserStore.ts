@@ -27,7 +27,6 @@ const store: StateCreator<UserStore> = (set) => ({
 		return { data, error: undefined };
 	},
 	logoutFunction: () => {},
-	reset: () => set(defaultState),
 	setLogoutFunction: (logoutFn) => {
 		set((state) => ({
 			...state,

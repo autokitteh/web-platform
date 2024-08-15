@@ -2,27 +2,28 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { Descope, useDescope } from "@descope/react-sdk";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 
-import { apiBaseUrl } from "@constants";
-import { authBearer } from "@src/constants/global.constants";
+import { apiBaseUrl, authBearer, isLoggedInCookie } from "@constants";
 import { useUserStore } from "@store/useUserStore";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useToastStore } from "@store";
 
 import { Badge, Frame, LogoCatLarge } from "@components/atoms";
 
 import { IconLogoAuth } from "@assets/image";
 
 export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) => {
-	const { getProjectsList, reset: resetProjectStore } = useProjectStore();
-	const { getLoggedInUser, reset: resetUserStore, setLogoutFunction, user } = useUserStore();
+	const { getLoggedInUser, setLogoutFunction } = useUserStore();
 	const { logout } = useDescope();
+
 	const handleLogout = useCallback(() => {
-		resetProjectStore();
-		resetUserStore();
+		Cookies.remove(isLoggedInCookie);
 		logout();
-	}, [resetProjectStore, resetUserStore, logout]);
+		window.localStorage.clear();
+		window.location.reload();
+	}, [logout]);
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("login");
 	const benefits = Object.values(t("benefits", { returnObjects: true }));
@@ -40,7 +41,6 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 					withCredentials: true,
 				});
 				await getLoggedInUser();
-				await getProjectsList();
 			} catch (error) {
 				setDescopeRenderKey((prevKey) => prevKey + 1);
 				addToast({
@@ -51,10 +51,12 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[getLoggedInUser, getProjectsList]
+		[getLoggedInUser]
 	);
 
-	if (authBearer || user) {
+	const isLoggedIn = Cookies.get(isLoggedInCookie);
+
+	if (authBearer || isLoggedIn) {
 		return children;
 	}
 
