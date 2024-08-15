@@ -41,6 +41,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 					withCredentials: true,
 				});
 				await getLoggedInUser();
+				setDescopeRenderKey((prevKey) => prevKey + 1);
 			} catch (error) {
 				setDescopeRenderKey((prevKey) => prevKey + 1);
 				addToast({
