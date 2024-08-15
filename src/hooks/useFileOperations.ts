@@ -76,7 +76,7 @@ export function useFileOperations(projectId: string) {
 			};
 			const { error } = await ProjectsService.setResources(projectId, resourcesWithAddedFile);
 			if (error) {
-				return error;
+				throw error;
 			}
 			dbService.put(name, fileContent);
 		},
