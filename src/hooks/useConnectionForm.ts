@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DefaultValues, FieldValues, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
-import { ZodSchema } from "zod";
+import { ZodObject, ZodRawShape } from "zod";
 
 import { ConnectionService, HttpService, VariablesService } from "@services";
 import { apiBaseUrl } from "@src/constants";
@@ -13,12 +13,13 @@ import { Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
+import { flattenFormData } from "@src/utilities";
 
 import { useToastAndLog } from "@hooks";
 
 export const useConnectionForm = (
 	initialValues: DefaultValues<FieldValues> | undefined,
-	validationSchema: ZodSchema,
+	validationSchema: ZodObject<ZodRawShape>,
 	mode: FormMode
 ) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
@@ -90,7 +91,7 @@ export const useConnectionForm = (
 				scopeId: connectionId,
 			});
 
-			const connectionData = getValues();
+			const connectionData = flattenFormData(getValues(), validationSchema);
 
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
@@ -104,7 +105,7 @@ export const useConnectionForm = (
 	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
 		setIsLoading(true);
 
-		const connectionData = getValues();
+		const connectionData = flattenFormData(getValues(), validationSchema);
 
 		try {
 			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
