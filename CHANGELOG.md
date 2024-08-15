@@ -1,3 +1,10 @@
+# [1.37.0](https://github.com/autokitteh/web-platform/compare/v1.36.0...v1.37.0) (2024-08-15)
+
+
+### Features
+
+* control the authentication state on the client side ([#249](https://github.com/autokitteh/web-platform/issues/249)) ([adc028b](https://github.com/autokitteh/web-platform/commit/adc028b550ed7d1259b833cdecd681b99733182f))
+
 # [1.36.0](https://github.com/autokitteh/web-platform/compare/v1.35.0...v1.36.0) (2024-08-15)
 
 
