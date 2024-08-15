@@ -8,14 +8,13 @@ import { useTranslation } from "react-i18next";
 import { apiBaseUrl, authBearer, isLoggedInCookie } from "@constants";
 import { useUserStore } from "@store/useUserStore";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useToastStore } from "@store";
 
 import { Badge, Frame, LogoCatLarge } from "@components/atoms";
 
 import { IconLogoAuth } from "@assets/image";
 
 export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) => {
-	const { getProjectsList } = useProjectStore();
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
 	const { logout } = useDescope();
 
@@ -42,7 +41,6 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 					withCredentials: true,
 				});
 				await getLoggedInUser();
-				await getProjectsList();
 			} catch (error) {
 				setDescopeRenderKey((prevKey) => prevKey + 1);
 				addToast({
@@ -53,12 +51,12 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[getLoggedInUser, getProjectsList]
+		[getLoggedInUser]
 	);
 
-	const authCookieExist = Cookies.get(isLoggedInCookie);
+	const isLoggedIn = Cookies.get(isLoggedInCookie);
 
-	if (authBearer || authCookieExist) {
+	if (authBearer || isLoggedIn) {
 		return children;
 	}
 
