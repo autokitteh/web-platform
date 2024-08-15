@@ -63,11 +63,11 @@ export const SessionViewer = () => {
 	return (
 		<Frame className="ml-2.5 w-2/4 transition">
 			<div className="flex items-center justify-between">
-				<div className="text-lg font-bold" title="Trigger name">
+				<div className="font-bold" title="Trigger name">
 					NewTrigger
 				</div>
 
-				<div className="flex items-center font-semibold" title="Created">
+				<div className="flex items-center font-bold" title="Created">
 					3 days ago
 					<IconButton
 						ariaLabel={t("buttons.ariaCloseEditor")}
@@ -88,7 +88,7 @@ export const SessionViewer = () => {
 					<div className="flex items-center gap-2 font-semibold">
 						<div title="Start Time"> {moment().utc().format("HH:mm:ss")}</div>
 
-						<IconSvg className="fill-white" src={ArrowRightIcon} />
+						<IconSvg className="fill-white" size="sm" src={ArrowRightIcon} />
 
 						<SessionsTableState className="font-semibold" sessionState={2} />
 					</div>
