@@ -170,11 +170,6 @@ export const SessionsTable = () => {
 		setIsRefreshing(true);
 		try {
 			await fetchDeployments();
-			addToast({
-				id: Date.now().toString(),
-				message: t("sessionsRefreshed"),
-				type: "success",
-			});
 		} finally {
 			setTimeout(() => {
 				setIsRefreshing(false);
@@ -184,7 +179,7 @@ export const SessionsTable = () => {
 
 	const rotateIconClass = useMemo(
 		() =>
-			cn("animate-spin-medium fill-white transition group-hover:fill-green-800", {
+			cn("animate-spin fill-white transition group-hover:fill-green-800", {
 				"animation-running": isRefreshing,
 				"animation-paused": !isRefreshing,
 			}),
