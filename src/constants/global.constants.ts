@@ -3,6 +3,7 @@ export const fetchSessionsInterval = 10000;
 export const defaultSessionsVisiblePageSize = 10;
 export const maxLogs = 20;
 export const fileSizeUploadLimit = 50 * 1024; // 50KB
+export const apiRequestTimeout = 5000;
 
 export const isDevelopment = import.meta.env.VITE_NODE_ENV === "development";
 export const isProduction = import.meta.env.VITE_NODE_ENV === "production";
