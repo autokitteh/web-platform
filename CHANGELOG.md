@@ -1,3 +1,10 @@
+# [1.36.0](https://github.com/autokitteh/web-platform/compare/v1.35.0...v1.36.0) (2024-08-15)
+
+
+### Features
+
+* update grpc and axios default timeout  requests ([#252](https://github.com/autokitteh/web-platform/issues/252)) ([f53c5ea](https://github.com/autokitteh/web-platform/commit/f53c5ea022dd349a98c5f8fb7f39d91d03b73aa5))
+
 # [1.35.0](https://github.com/autokitteh/web-platform/compare/v1.34.0...v1.35.0) (2024-08-13)
 
 
