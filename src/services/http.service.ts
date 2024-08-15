@@ -1,21 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { apiAuthCookieName, apiBaseUrl, apiRequestTimeout } from "@constants";
-=======
-import { apiBaseUrl, isLoggedInCookie } from "@constants";
->>>>>>> 62fd916b (refactor: rename constant)
-import { deleteCookie } from "@src/utilities";
-=======
-import { apiBaseUrl, isLoggedInCookie, namespaces } from "@constants";
-import { LoggerService } from "@services";
->>>>>>> bcaace5c (refactor: add cookies library instead of native js)
-=======
-import { apiBaseUrl, isLoggedInCookie } from "@constants";
->>>>>>> 1e9992c6 (refactor: remove irrelevant logs)
+import { apiBaseUrl, apiRequestTimeout, isLoggedInCookie } from "@constants";
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
 	axios.create({

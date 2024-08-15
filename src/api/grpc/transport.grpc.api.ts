@@ -10,7 +10,7 @@ import {
 import { createConnectTransport } from "@connectrpc/connect-web";
 import Cookies from "js-cookie";
 
-import { apiBaseUrl, apiRequestTimeout, isAuthEnabled, isLoggedInCookie, namespaces } from "@constants";
+import { apiBaseUrl, apiRequestTimeout, isAuthEnabled, isLoggedInCookie } from "@constants";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
