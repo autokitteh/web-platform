@@ -33,7 +33,8 @@ export function useFileOperations(projectId: string) {
 
 			return await fetchFiles();
 		} catch (error) {
-			return error;
+			console.error("Failed to sync resources from server:", error);
+			throw error;
 		}
 	};
 
