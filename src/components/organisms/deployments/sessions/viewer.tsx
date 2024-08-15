@@ -7,11 +7,11 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultSessionTab, sessionTabs } from "@constants";
 
-import { Frame, IconButton, LogoCatLarge, Tab } from "@components/atoms";
+import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { Close } from "@assets/image/icons";
+import { ArrowRightIcon, Close } from "@assets/image/icons";
 
 const example = {
 	string: "Lorem ipsum dolor sit amet",
@@ -81,24 +81,34 @@ export const SessionViewer = () => {
 			<div className="mt-1 flex justify-between">
 				<div className="flex flex-col gap-1">
 					<div className="flex items-center gap-1">
-						Current status: <SessionsTableState sessionState={4} />
+						Current status: <SessionsTableState className="font-semibold" sessionState={4} />
+					</div>
+
+					<div className="flex items-center gap-2 font-semibold">
+						<div title="Start Time">{new Date().toLocaleDateString("en-GB")}</div>
+
+						<IconSvg className="fill-white" src={ArrowRightIcon} />
+
+						<div title="End Time">{new Date().toLocaleDateString("en-GB")}</div>
 					</div>
 
 					<div>
-						Start time: <span>{new Date().toLocaleDateString("en-GB")}</span>
-					</div>
-
-					<div>
-						End time: <span>{new Date().toLocaleDateString("en-GB")}</span>
+						Duration: <span className="font-semibold">2024-08-13T07:54:44.952685919Z</span>
 					</div>
 				</div>
 
 				<div className="flex flex-col gap-1">
-					<div>Connection name: MyGitHub</div>
+					<div>
+						Connection name: <span className="font-semibold">MyGitHub</span>
+					</div>
 
-					<div>Event Type: Type</div>
+					<div>
+						Event ID: <span className="font-semibold">evt_01j55bpx8pepjv8vk4bxwx2hnr</span>
+					</div>
 
-					<div>Build ID: bld_01j53hcjq6ecqamda2qq3n8wdx</div>
+					<div>
+						Build ID: <span className="font-semibold">bld_01j53hcjq6ecqamda2qq3n8wdx</span>
+					</div>
 				</div>
 			</div>
 
