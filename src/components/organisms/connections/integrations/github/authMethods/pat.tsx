@@ -38,21 +38,14 @@ export const PatForm = ({
 	const [webhook, setWebhook] = useState("");
 	const isEditMode = mode === "edit";
 
-	const handleWebhook = () => {
+	useEffect(() => {
 		if (webhook) {
 			setValue("webhook", webhook);
 
 			return;
 		}
-		if (!patWebhookKey) {
-			return;
-		}
-		setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
-	};
-
-	useEffect(() => {
-		if (patWebhookKey || webhook) {
-			handleWebhook();
+		if (patWebhookKey) {
+			setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
 
 			return;
 		}

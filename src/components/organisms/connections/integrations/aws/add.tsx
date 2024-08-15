@@ -23,7 +23,7 @@ export const AwsIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { control, createConnection, errors, isLoading, register } = useConnectionForm(
+	const { control, createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
 		{ access_key: "", secret_key: "", token: "", name: { label: "", value: "" } },
 		awsIntegrationSchema,
 		"create"
@@ -37,7 +37,7 @@ export const AwsIntegrationAddForm = ({
 	}, [connectionId]);
 
 	return (
-		<form className="flex w-full flex-col gap-6" onSubmit={triggerParentFormSubmit}>
+		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Controller
 					control={control}
@@ -62,24 +62,24 @@ export const AwsIntegrationAddForm = ({
 				<Input
 					{...register("access_key")}
 					aria-label={t("aws.placeholders.accessKey")}
-					isError={!!errors.accessKey}
+					isError={!!errors.access_key}
 					isRequired
 					placeholder={t("aws.placeholders.accessKey")}
 				/>
 
-				<ErrorMessage>{errors.accessKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.access_key?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">
 				<Input
 					{...register("secret_key")}
 					aria-label={t("aws.placeholders.secretKey")}
-					isError={!!errors.secretKey}
+					isError={!!errors.secret_key}
 					isRequired
 					placeholder={t("aws.placeholders.secretKey")}
 				/>
 
-				<ErrorMessage>{errors.secretKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.secret_key?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">

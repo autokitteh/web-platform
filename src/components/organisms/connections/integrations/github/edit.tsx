@@ -13,7 +13,7 @@ import { Select } from "@components/molecules";
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [webhook, setWebhook] = useState<string | undefined>(undefined);
+	const [webhook, setWebhook] = useState<string>();
 
 	const {
 		connectionType,
@@ -29,9 +29,7 @@ export const GithubIntegrationEditForm = () => {
 
 	useEffect(() => {
 		if (connectionVariables) {
-			const patWebhookKey: string | undefined = connectionVariables?.find(
-				(variable) => variable.name === "pat_key"
-			)?.value;
+			const patWebhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
 
 			setWebhook(patWebhookKey);
 		}

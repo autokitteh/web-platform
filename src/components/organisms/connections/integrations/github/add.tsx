@@ -22,11 +22,8 @@ export const GithubIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { copyToClipboard, createConnection, errors, handleOAuth, isLoading, register, setValue } = useConnectionForm(
-		{ pat: "", secret: "" },
-		githubIntegrationSchema,
-		"create"
-	);
+	const { copyToClipboard, createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValue } =
+		useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
@@ -63,7 +60,7 @@ export const GithubIntegrationAddForm = ({
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>
-			<form className="mt-6 flex items-start gap-6" onSubmit={triggerParentFormSubmit}>
+			<form className="mt-6 flex items-start gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				<div className="flex w-full flex-col gap-6">
 					{ConnectionTypeComponent ? (
 						<ConnectionTypeComponent
