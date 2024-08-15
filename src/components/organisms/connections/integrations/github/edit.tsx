@@ -13,7 +13,7 @@ import { Select } from "@components/molecules";
 
 export const GithubIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [webhook, setWebhook] = useState<string | undefined>(undefined);
+	const [webhook, setWebhook] = useState<string>();
 
 	const {
 		connectionType,
@@ -25,18 +25,14 @@ export const GithubIntegrationEditForm = () => {
 		onSubmitEdit,
 		register,
 		setValue,
-	} = useConnectionForm(
-		{ pat: "", secret: "", patIsSecret: true, secretIsSecret: true, webhook: "" },
-		githubIntegrationSchema,
-		"edit"
-	);
+	} = useConnectionForm({ pat: "", secret: "", webhook: "" }, githubIntegrationSchema, "edit");
 
 	useEffect(() => {
-		const patWebhookKey: string | undefined = connectionVariables?.find(
-			(variable) => variable.name === "pat_key"
-		)?.value;
+		if (connectionVariables) {
+			const patWebhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
 
-		setWebhook(patWebhookKey);
+			setWebhook(patWebhookKey);
+		}
 	}, [connectionVariables]);
 
 	const ConnectionTypeComponent =
@@ -45,29 +41,30 @@ export const GithubIntegrationEditForm = () => {
 	const selectConnectionTypeValue = githubIntegrationAuthMethods.find((method) => method.value === connectionType);
 
 	return (
-		<form className="flex items-start gap-10" id="connectionForm" onSubmit={handleSubmit(onSubmitEdit)}>
-			<div className="flex w-full flex-col gap-6">
-				<Select
-					aria-label={t("placeholders.selectConnectionType")}
-					disabled
-					onChange={() => {}}
-					options={githubIntegrationAuthMethods}
-					placeholder={t("placeholders.selectConnectionType")}
-					value={selectConnectionTypeValue}
-				/>
-
-				{ConnectionTypeComponent ? (
-					<ConnectionTypeComponent
-						copyToClipboard={copyToClipboard}
-						errors={errors}
-						isLoading={isLoading}
-						mode="edit"
-						patWebhookKey={webhook}
-						register={register}
-						setValue={setValue}
-					/>
-				) : null}
-			</div>
-		</form>
+		<>
+			<Select
+				aria-label={t("placeholders.selectConnectionType")}
+				disabled
+				label={t("placeholders.connectionType")}
+				options={githubIntegrationAuthMethods}
+				placeholder={t("placeholders.selectConnectionType")}
+				value={selectConnectionTypeValue}
+			/>
+			<form className="mt-6 flex items-start gap-10" id="connectionForm" onSubmit={handleSubmit(onSubmitEdit)}>
+				<div className="flex w-full flex-col gap-6">
+					{ConnectionTypeComponent ? (
+						<ConnectionTypeComponent
+							copyToClipboard={copyToClipboard}
+							errors={errors}
+							isLoading={isLoading}
+							mode="edit"
+							patWebhookKey={webhook}
+							register={register}
+							setValue={setValue}
+						/>
+					) : null}
+				</div>
+			</form>
+		</>
 	);
 };

@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 
-import { namespaces } from "@constants";
 import { selectIntegrationAws } from "@constants/lists/connections";
-import { HttpService, LoggerService } from "@services";
+import { ConnectionAuthType } from "@src/enums";
+import { Integrations } from "@src/enums/components";
+import { useConnectionForm } from "@src/hooks";
 import { awsIntegrationSchema } from "@validations";
-
-import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
 import { Select } from "@components/molecules";
@@ -24,96 +21,27 @@ export const AwsIntegrationAddForm = ({
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
 }) => {
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const { projectId } = useParams();
-	const navigate = useNavigate();
-	const addToast = useToastStore((state) => state.addToast);
-	const [isLoading, setIsLoading] = useState(false);
 
-	const {
-		control,
-		formState: { errors },
-		getValues,
-		handleSubmit,
-		register,
-	} = useForm({
-		resolver: zodResolver(awsIntegrationSchema),
-		defaultValues: {
-			region: { value: "", label: "" },
-			accessKey: "",
-			secretKey: "",
-			token: "",
-		},
-	});
-
-	const createConnection = async () => {
-		setIsLoading(true);
-		const { accessKey, region, secretKey, token } = getValues();
-
-		try {
-			await HttpService.post(`/aws/save?cid=${connectionId}&origin=web`, {
-				name: region.value,
-				access_key: accessKey,
-				secret_key: secretKey,
-				token,
-			});
-			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({
-				id: Date.now().toString(),
-				message: successMessage,
-				type: "success",
-			});
-			LoggerService.info(namespaces.connectionService, successMessage);
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
-			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
-			);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	const { control, createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
+		{ access_key: "", secret_key: "", token: "", name: { label: "", value: "" } },
+		awsIntegrationSchema,
+		"create"
+	);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection();
+			createConnection(connectionId, ConnectionAuthType.AWSConfig, Integrations.aws);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const onSubmit = () => {
-		if (connectionId) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionExists"),
-				type: "error",
-			});
-
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("connectionExistsExtended", { connectionId })}`
-			);
-
-			return;
-		}
-
-		triggerParentFormSubmit();
-	};
-
 	return (
-		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Controller
 					control={control}
-					name="region"
+					name="name"
 					render={({ field }) => (
 						<Select
 							aria-label={t("aws.placeholders.region")}
@@ -132,26 +60,26 @@ export const AwsIntegrationAddForm = ({
 
 			<div className="relative">
 				<Input
-					{...register("accessKey")}
+					{...register("access_key")}
 					aria-label={t("aws.placeholders.accessKey")}
-					isError={!!errors.accessKey}
+					isError={!!errors.access_key}
 					isRequired
 					placeholder={t("aws.placeholders.accessKey")}
 				/>
 
-				<ErrorMessage>{errors.accessKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.access_key?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">
 				<Input
-					{...register("secretKey")}
+					{...register("secret_key")}
 					aria-label={t("aws.placeholders.secretKey")}
-					isError={!!errors.secretKey}
+					isError={!!errors.secret_key}
 					isRequired
 					placeholder={t("aws.placeholders.secretKey")}
 				/>
 
-				<ErrorMessage>{errors.secretKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.secret_key?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">

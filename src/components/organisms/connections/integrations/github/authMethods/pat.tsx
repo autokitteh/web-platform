@@ -38,25 +38,19 @@ export const PatForm = ({
 	const [webhook, setWebhook] = useState("");
 	const isEditMode = mode === "edit";
 
-	const handleWebhook = () => {
+	useEffect(() => {
+		if (patWebhookKey) {
+			setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
+
+			return;
+		}
 		if (webhook) {
 			setValue("webhook", webhook);
 
 			return;
 		}
-		if (!isEditMode) {
-			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
 
-			return;
-		}
-		if (!patWebhookKey) {
-			return;
-		}
-		setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
-	};
-
-	useEffect(() => {
-		handleWebhook();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [webhook, patWebhookKey]);
 
