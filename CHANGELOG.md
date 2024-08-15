@@ -1,3 +1,10 @@
+## [1.37.2](https://github.com/autokitteh/web-platform/compare/v1.37.1...v1.37.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* fix github connections forms ([#270](https://github.com/autokitteh/web-platform/issues/270)) ([d978ece](https://github.com/autokitteh/web-platform/commit/d978ece6c612409bdf3a44b9083c17abc7a2df1e))
+
 ## [1.37.1](https://github.com/autokitteh/web-platform/compare/v1.37.0...v1.37.1) (2024-08-15)
 
 
