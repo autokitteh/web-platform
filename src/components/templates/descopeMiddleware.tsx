@@ -67,6 +67,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	);
 
 	const isLoggedIn = Cookies.get(isLoggedInCookie);
+	console.log("Descope Middleware - isLoggedIn Cookie", isLoggedIn);
 
 	if (authBearer || isLoggedIn) {
 		return children;
