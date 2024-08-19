@@ -1,5 +1,6 @@
 import i18n from "i18next";
 import { get } from "lodash";
+import moment from "moment";
 
 import {
 	Session as ProtoSession,
@@ -10,6 +11,7 @@ import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
 import { SessionLogRecord, convertSessionProtoToModel } from "@models";
 import { EnvironmentsService, LoggerService } from "@services";
+import { SessionLogRecordType } from "@src/enums";
 import { ServiceResponse, StartSessionArgsType } from "@type";
 import { Session, SessionFilter } from "@type/models";
 import { flattenArray } from "@utilities";
@@ -34,6 +36,30 @@ export class SessionsService {
 			const sessionHistory = response.log?.records
 				.map((state: ProtoSessionLogRecord) => new SessionLogRecord(state))
 				.filter((record: SessionLogRecord) => record.logs);
+
+			return { data: sessionHistory, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.sessionsService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async getLogPrintsBySessionId(sessionId: string): Promise<ServiceResponse<Array<SessionLogRecord>>> {
+		try {
+			const response = await sessionsClient.getLog({ sessionId });
+			const sessionHistory = response.log?.records
+				.map((state: ProtoSessionLogRecord) => {
+					const record = new SessionLogRecord(state);
+
+					if (record.logs && record.dateTime) {
+						const formattedDateTime = moment(record.dateTime).format("MM-DD-YYYY HH:mm:ss");
+						record.logs = `${formattedDateTime} ${record.logs}`;
+					}
+
+					return record;
+				})
+				.filter((record: SessionLogRecord) => record.type === SessionLogRecordType.print && record.logs);
 
 			return { data: sessionHistory, error: undefined };
 		} catch (error) {

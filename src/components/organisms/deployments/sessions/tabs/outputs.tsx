@@ -30,11 +30,12 @@ export const SessionOutputs = () => {
 		if (firstLoad) {
 			setIsLoading(true);
 		}
-		const { data: sessionHistoryStates, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
+		const { data: sessionHistoryStates, error } = await SessionsService.getLogPrintsBySessionId(sessionId!);
 		if (firstLoad) {
 			setFirstLoad(false);
 			setIsLoading(false);
 		}
+
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
