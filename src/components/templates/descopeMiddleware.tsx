@@ -23,7 +23,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		await logout();
 		console.log("handleLogout", `.${window.location.hostname}`);
 
-		Cookies.remove(isLoggedInCookie, { domain: `.${window.location.hostname}` });
+		Cookies.remove(isLoggedInCookie, { domain: `.${window.location.hostname}`, path: "/" });
 		window.localStorage.clear();
 		window.location.reload();
 	}, [logout]);
