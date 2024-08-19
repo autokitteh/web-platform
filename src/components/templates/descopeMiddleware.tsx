@@ -21,6 +21,8 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 
 	const handleLogout = useCallback(async () => {
 		await logout();
+		console.log("handleLogout", `.${window.location.hostname}`);
+
 		Cookies.remove(isLoggedInCookie, { domain: `.${window.location.hostname}` });
 		window.localStorage.clear();
 		window.location.reload();
