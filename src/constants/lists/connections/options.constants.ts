@@ -69,7 +69,7 @@ export const selectIntegrationGoogle: SelectOption[] = [
 ];
 
 export const selectIntegrationSlack: SelectOption[] = [
-	{ label: "Socket Mode", value: ConnectionAuthType.Mode },
+	{ label: "Socket Mode", value: ConnectionAuthType.Socket },
 	{ label: "OAuth v2", value: ConnectionAuthType.Oauth },
 ];
 
