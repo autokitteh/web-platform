@@ -19,19 +19,16 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
 	const { logout } = useDescope();
 
-	const handleLogout = useCallback(() => {
+	const handleLogout = useCallback(async () => {
 		console.log("Descope Logging out - before cookie removal");
 		Cookies.remove(isLoggedInCookie);
 		console.log("Descope Logging out - after cookie removal");
-		console.log("Descope Logging out - before logout");
-		logout();
-		console.log("Descope Logging out - after logout");
 		console.log("Descope Logging out - before localStorage.clear");
 		window.localStorage.clear();
 		console.log("Descope Logging out - after localStorage.clear");
-		console.log("Descope Logging out - before window.location.reload");
-		window.location.reload();
-		console.log("Descope Logging out - after window.location.reload");
+		console.log("Descope Logging out - before logout");
+		await logout();
+		console.log("Descope Logging out - after logout");
 	}, [logout]);
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("login");
