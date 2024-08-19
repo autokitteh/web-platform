@@ -31,7 +31,7 @@ httpClient.interceptors.response.use(
 			if (rootDomain.error) {
 				console.error(rootDomain.error.message);
 
-				return;
+				return Promise.reject(rootDomain.error.message);
 			}
 			Cookies.remove(isLoggedInCookie, { domain: `.${rootDomain.domain}` });
 			window.localStorage.clear();
