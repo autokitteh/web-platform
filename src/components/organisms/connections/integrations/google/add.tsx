@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { namespaces } from "@constants";
+import { formsPerIntegrationsMapping, namespaces } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { HttpService, LoggerService } from "@services";
+import { Integrations } from "@src/enums/components";
 import { getApiBaseUrl } from "@src/utilities";
 import { googleIntegrationSchema } from "@validations";
 
 import { useToastStore } from "@store";
 
 import { Select } from "@components/molecules";
-import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connections/integrations/google";
 
 export const GoogleIntegrationAddForm = ({
 	connectionId,
@@ -121,51 +121,28 @@ export const GoogleIntegrationAddForm = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [type]);
 
-	const renderConnectionFields = () => {
-		switch (selectedConnectionType?.value) {
-			case ConnectionAuthType.ServiceAccount:
-				return <JsonKeyGoogleForm isLoading={isLoading} />;
-			case ConnectionAuthType.Oauth:
-				return <OauthGoogleForm triggerParentFormSubmit={triggerParentFormSubmit} />;
-			default:
-				return null;
-		}
-	};
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
-	const onSubmit = () => {
-		if (connectionId) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionExists"),
-				type: "error",
-			});
-
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("connectionExistsExtended", { connectionId })}`
-			);
-
-			return;
-		}
-
-		triggerParentFormSubmit();
-	};
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[Integrations.github]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
-		<FormProvider {...methods}>
-			<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-				<Select
-					aria-label={t("placeholders.selectConnectionType")}
-					label={t("placeholders.connectionType")}
-					noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
-					onChange={selectConnectionType}
-					options={selectIntegrationGoogle}
-					placeholder={t("placeholders.selectConnectionType")}
-					value={selectedConnectionType}
-				/>
+		<>
+			<Select
+				aria-label={t("placeholders.selectConnectionType")}
+				label={t("placeholders.connectionType")}
+				noOptionsLabel={t("placeholders.noConnectionTypesAvailable")}
+				onChange={(option) => setConnectionType(option)}
+				options={selectIntegrationGoogle}
+				placeholder={t("placeholders.selectConnectionType")}
+				value={connectionType}
+			/>
 
-				{renderConnectionFields()}
+			<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+				<div className="flex w-full flex-col gap-6">
+					{ConnectionTypeComponent ? <ConnectionTypeComponent isLoading={isLoading} mode="create" /> : null}
+				</div>
 			</form>
-		</FormProvider>
+		</>
 	);
 };

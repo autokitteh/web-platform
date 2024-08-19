@@ -9,7 +9,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const OauthGoogleForm = ({ triggerParentFormSubmit }: { triggerParentFormSubmit: () => void }) => {
+export const OauthGoogleForm = () => {
 	const { t } = useTranslation("integrations");
 
 	return (
@@ -33,7 +33,7 @@ export const OauthGoogleForm = ({ triggerParentFormSubmit }: { triggerParentForm
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
-				onClick={triggerParentFormSubmit}
+				type="submit"
 				variant="outline"
 			>
 				{t("buttons.startOAuthFlow")}

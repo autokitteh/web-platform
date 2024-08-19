@@ -8,6 +8,7 @@ export enum ConnectionAuthType {
 	Bearer = "bearer",
 	ApiKey = "apiKey",
 	Key = "key",
+	JsonKey = "jsonKey",
 	ApiToken = "apiToken",
 	AuthToken = "authToken",
 	AWSConfig = "awsConfig",
