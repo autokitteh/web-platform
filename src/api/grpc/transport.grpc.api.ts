@@ -26,12 +26,12 @@ const authInterceptor: Interceptor =
 				console.log("gRPC Transport - before cookie removal");
 				Cookies.remove(isLoggedInCookie);
 				console.log("gRPC Transport - after cookie removal");
-				console.log("gRPC Transport - Descope Logging out - before localStorage.clear");
+				console.log("gRPC Transport - before localStorage.clear");
 				window.localStorage.clear();
-				console.log("gRPC Transport - Descope Logging out - after localStorage.clear");
-				console.log("gRPC Transport - Descope Logging out - before window.location.reload");
+				console.log("gRPC Transport - after localStorage.clear");
+				console.log("gRPC Transport - before window.location.reload");
 				window.location.reload();
-				console.log("gRPC Transport - Descope Logging out - after window.location.reload");
+				console.log("gRPC Transport - after window.location.reload");
 			}
 			throw error;
 		}

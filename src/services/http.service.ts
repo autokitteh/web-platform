@@ -26,8 +26,13 @@ httpClient.interceptors.response.use(
 	function (error: AxiosError) {
 		const status = error?.response?.status || 0;
 		if (status === 401) {
+			console.log("gRPC Transport - before cookie removal");
 			Cookies.remove(isLoggedInCookie);
+			console.log("gRPC Transport - after cookie removal");
+			console.log("gRPC Transport - before localStorage.clear");
 			window.localStorage.clear();
+			console.log("HTTP Service - after localStorage.clear");
+			console.log("HTTP Service - before window.location.reload");
 			window.location.reload();
 		}
 
