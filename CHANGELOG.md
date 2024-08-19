@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/autokitteh/web-platform/compare/v1.37.2...v1.38.0) (2024-08-19)
+
+
+### Features
+
+* adjust api url by the app url ([#261](https://github.com/autokitteh/web-platform/issues/261)) ([770e95e](https://github.com/autokitteh/web-platform/commit/770e95e6d72d429a51e75af48d95965dadf60e4c))
+
 ## [1.37.2](https://github.com/autokitteh/web-platform/compare/v1.37.1...v1.37.2) (2024-08-15)
 
 
