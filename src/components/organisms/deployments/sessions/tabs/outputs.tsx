@@ -75,11 +75,19 @@ export const SessionOutputs = () => {
 	}, [fetchSessionLog]);
 
 	const handleEditorWillMount = (monaco: Monaco) => {
+		monaco.languages.register({ id: "outputLogs" });
+
+		monaco.languages.setMonarchTokensProvider("outputLogs", {
+			tokenizer: {
+				root: [[/\b\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}\b/, "dateTime"]],
+			},
+		});
+
 		monaco.editor.defineTheme("sessionEditorTheme", {
 			base: "vs-dark",
 			colors: { "editor.background": "#000000" },
+			rules: [{ token: "dateTime", foreground: "FFA500" }],
 			inherit: true,
-			rules: [],
 		});
 	};
 
@@ -161,6 +169,7 @@ export const SessionOutputs = () => {
 				<Editor
 					beforeMount={handleEditorWillMount}
 					className="absolute -ml-6 h-full"
+					language="outputLogs"
 					loading={<Loader isCenter size="lg" />}
 					onMount={handleEditorDidMount}
 					options={{
@@ -171,8 +180,9 @@ export const SessionOutputs = () => {
 						renderLineHighlight: "none",
 						scrollBeyondLastLine: false,
 						wordWrap: "on",
+						contextmenu: false,
 					}}
-					theme="vs-dark"
+					theme="sessionEditorTheme"
 					value={sessionLogsAsStringForOutput}
 				/>
 			) : (
