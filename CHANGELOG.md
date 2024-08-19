@@ -1,3 +1,10 @@
+## [1.38.1](https://github.com/autokitteh/web-platform/compare/v1.38.0...v1.38.1) (2024-08-19)
+
+
+### Bug Fixes
+
+* fix logout process by specifying the domain of the cookie ([#274](https://github.com/autokitteh/web-platform/issues/274)) ([3d89d90](https://github.com/autokitteh/web-platform/commit/3d89d90b7ee97eb2b4f8d3dbcda53ac23f0f5163))
+
 # [1.38.0](https://github.com/autokitteh/web-platform/compare/v1.37.2...v1.38.0) (2024-08-19)
 
 
