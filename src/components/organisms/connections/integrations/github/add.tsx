@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants";
-import { githubIntegrationSchema } from "@validations";
+import { githubIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -22,8 +22,17 @@ export const GithubIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { copyToClipboard, createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValue } =
-		useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create");
+	const {
+		copyToClipboard,
+		createConnection,
+		errors,
+		handleOAuth,
+		handleSubmit,
+		isLoading,
+		register,
+		setValidationSchema,
+		setValue,
+	} = useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
@@ -39,6 +48,19 @@ export const GithubIntegrationAddForm = ({
 				break;
 		}
 	};
+
+	useEffect(() => {
+		if (!connectionType?.value) {
+			return;
+		}
+		if (connectionType.value === ConnectionAuthType.Oauth) {
+			setValidationSchema(oauthSchema);
+
+			return;
+		}
+		setValidationSchema(githubIntegrationSchema);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionType]);
 
 	useEffect(() => {
 		if (connectionId) {

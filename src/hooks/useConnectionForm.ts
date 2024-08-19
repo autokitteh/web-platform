@@ -25,6 +25,7 @@ export const useConnectionForm = (
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
+	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
 
 	const {
 		control,
@@ -36,7 +37,7 @@ export const useConnectionForm = (
 		setValue,
 		watch,
 	} = useForm({
-		resolver: zodResolver(validationSchema),
+		resolver: zodResolver(formSchema),
 		mode: "onChange",
 		defaultValues: initialValues,
 	});
@@ -219,6 +220,11 @@ export const useConnectionForm = (
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
+	const setValidationSchema = (newSchema: ZodObject<ZodRawShape>) => {
+		setFormSchema(newSchema);
+		reset(getValues(), { keepErrors: true });
+	};
+
 	return {
 		control,
 		errors,
@@ -241,5 +247,6 @@ export const useConnectionForm = (
 		onSubmitEdit,
 		integration,
 		connectionName,
+		setValidationSchema,
 	};
 };
