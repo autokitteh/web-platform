@@ -23,9 +23,6 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		console.log("Descope Logging out - before cookie removal");
 		Cookies.remove(isLoggedInCookie);
 		console.log("Descope Logging out - after cookie removal");
-		console.log("Descope Logging out - before localStorage.clear");
-		window.localStorage.clear();
-		console.log("Descope Logging out - after localStorage.clear");
 		console.log("Descope Logging out - before logout");
 		await logout();
 		console.log("Descope Logging out - after logout");
