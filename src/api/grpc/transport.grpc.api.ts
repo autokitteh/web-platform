@@ -23,7 +23,7 @@ const authInterceptor: Interceptor =
 			return await next(req);
 		} catch (error) {
 			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
-				Cookies.remove(isLoggedInCookie);
+				Cookies.remove(isLoggedInCookie, { domain: `.${window.location.hostname}` });
 				window.localStorage.clear();
 				window.location.reload();
 			}

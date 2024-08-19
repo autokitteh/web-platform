@@ -19,9 +19,9 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
 	const { logout } = useDescope();
 
-	const handleLogout = useCallback(() => {
-		Cookies.remove(isLoggedInCookie);
-		logout();
+	const handleLogout = useCallback(async () => {
+		await logout();
+		Cookies.remove(isLoggedInCookie, { domain: `.${window.location.hostname}` });
 		window.localStorage.clear();
 		window.location.reload();
 	}, [logout]);

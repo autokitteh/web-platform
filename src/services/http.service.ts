@@ -26,7 +26,7 @@ httpClient.interceptors.response.use(
 	function (error: AxiosError) {
 		const status = error?.response?.status || 0;
 		if (status === 401) {
-			Cookies.remove(isLoggedInCookie);
+			Cookies.remove(isLoggedInCookie, { domain: `.${window.location.hostname}` });
 			window.localStorage.clear();
 			window.location.reload();
 		}
