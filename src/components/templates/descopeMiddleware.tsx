@@ -51,7 +51,10 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
 					withCredentials: true,
 				});
+				console.log("Descope Middleware - Login success");
+
 				await getLoggedInUser();
+				console.log("Descope Middleware - Login success - getLoggedInUser success");
 			} catch (error) {
 				addToast({
 					id: Date.now().toString(),
