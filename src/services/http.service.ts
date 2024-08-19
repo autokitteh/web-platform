@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
+import psl from "psl";
 
 import { apiRequestTimeout, isLoggedInCookie } from "@constants";
 import { getApiBaseUrl } from "@src/utilities";
@@ -26,7 +27,13 @@ httpClient.interceptors.response.use(
 	function (error: AxiosError) {
 		const status = error?.response?.status || 0;
 		if (status === 401) {
-			Cookies.remove(isLoggedInCookie, { domain: `.${window.location.hostname}` });
+			const rootDomain = psl.parse(window.location.hostname);
+			if (rootDomain.error) {
+				console.error(rootDomain.error.message);
+
+				return;
+			}
+			Cookies.remove(isLoggedInCookie, { domain: `.${rootDomain.domain}` });
 			window.localStorage.clear();
 			window.location.reload();
 		}

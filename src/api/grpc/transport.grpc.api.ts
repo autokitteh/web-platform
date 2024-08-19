@@ -9,6 +9,7 @@ import {
 } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import Cookies from "js-cookie";
+import psl from "psl";
 
 import { apiRequestTimeout, isAuthEnabled, isLoggedInCookie } from "@constants";
 import { getApiBaseUrl } from "@src/utilities";
@@ -23,7 +24,14 @@ const authInterceptor: Interceptor =
 			return await next(req);
 		} catch (error) {
 			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
-				Cookies.remove(isLoggedInCookie, { domain: `.${window.location.hostname}` });
+				const rootDomain = psl.parse(window.location.hostname);
+				if (rootDomain.error) {
+					console.error(rootDomain.error.message);
+
+					throw rootDomain.error.message;
+				}
+				Cookies.remove(isLoggedInCookie, { domain: `.${rootDomain.domain}` });
+
 				window.localStorage.clear();
 				window.location.reload();
 			}

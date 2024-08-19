@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Descope, useDescope } from "@descope/react-sdk";
 import axios from "axios";
 import Cookies from "js-cookie";
+import psl from "psl";
 import { useTranslation } from "react-i18next";
 
 import { authBearer, isLoggedInCookie } from "@constants";
@@ -21,9 +22,13 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 
 	const handleLogout = useCallback(async () => {
 		await logout();
-		console.log("handleLogout", `.${window.location.hostname}`);
+		const rootDomain = psl.parse(window.location.hostname);
+		if (rootDomain.error) {
+			console.error(rootDomain.error.message);
 
-		Cookies.remove(isLoggedInCookie, { domain: `.${window.location.hostname}`, path: "/" });
+			return;
+		}
+		Cookies.remove(isLoggedInCookie, { domain: `.${rootDomain.domain}` });
 		window.localStorage.clear();
 		window.location.reload();
 	}, [logout]);
