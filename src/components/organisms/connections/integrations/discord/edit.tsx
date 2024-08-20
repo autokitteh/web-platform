@@ -1,51 +1,41 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { ConnectionAuthType } from "@src/enums";
-import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { discordIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const DiscordIntegrationAddForm = ({
-	connectionId,
-	triggerParentFormSubmit,
-}: {
-	connectionId?: string;
-	triggerParentFormSubmit: () => void;
-}) => {
+export const DiscordIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
+	const [lockState, setLockState] = useState(true);
 
-	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
+	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
 		{
 			botToken: "",
 		},
 		discordIntegrationSchema,
-		"create"
+		"edit"
 	);
 
-	useEffect(() => {
-		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.BotToken, Integrations.discord);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
-
 	return (
-		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
-				<Input
+				<SecretInput
 					{...register("botToken")}
 					aria-label={t("discord.placeholders.botToken")}
+					handleInputChange={(newValue) => setValue("botToken", newValue)}
+					handleLockAction={setLockState}
 					isError={!!errors.botToken}
+					isLocked={lockState}
 					isRequired
 					placeholder={t("discord.placeholders.botToken")}
+					resetOnFirstFocus
 				/>
 
 				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>
