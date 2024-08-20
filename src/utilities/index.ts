@@ -11,3 +11,4 @@ export { ValidateURL } from "@utilities/validateUrl.utils";
 export { fetchAllFilesContent, fetchFileContent } from "@utilities/templateFilesFetch";
 export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.utils";
 export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";
+export { getCookieDomain } from "@utilities/getCookieDomain.utils";

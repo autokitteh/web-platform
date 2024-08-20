@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import psl from "psl";
 
 import { apiRequestTimeout, isLoggedInCookie } from "@constants";
-import { getApiBaseUrl } from "@src/utilities";
+import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
 
 const apiBaseUrl = getApiBaseUrl();
 
@@ -34,14 +34,7 @@ httpClient.interceptors.response.use(
 				return Promise.reject(rootDomain.error.message);
 			}
 
-			let cookieDomain = `.${rootDomain.domain}`;
-
-			const { domain, input } = rootDomain;
-			if (domain === null && input === "localhost") {
-				cookieDomain = "localhost";
-			}
-
-			Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
+			Cookies.remove(isLoggedInCookie, { domain: getCookieDomain(rootDomain) });
 			window.localStorage.clear();
 			window.location.reload();
 		}
