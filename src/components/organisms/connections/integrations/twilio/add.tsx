@@ -1,22 +1,17 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { namespaces } from "@constants";
+import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationTwilio } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { HttpService, LoggerService } from "@services";
-import { twilioApiKeyIntegrationSchema, twilioTokenIntegrationSchema } from "@validations";
-
-import { useToastStore } from "@store";
+import { Integrations } from "@src/enums/components";
+import { useConnectionForm } from "@src/hooks";
+import { oauthSchema, twilioApiKeyIntegrationSchema, twilioTokenIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
-import { ApiKeyTwilioForm, AuthTokenTwilioForm } from "@components/organisms/connections/integrations/twilio";
 
 export const TwilioIntegrationAddForm = ({
 	connectionId,
@@ -25,132 +20,73 @@ export const TwilioIntegrationAddForm = ({
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
 }) => {
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const { projectId } = useParams();
-	const navigate = useNavigate();
-	const addToast = useToastStore((state) => state.addToast);
-	const [selectedConnectionType, setSelectedConnectionType] = useState<SelectOption>();
-	const [isLoading, setIsLoading] = useState(false);
 
-	const formSchema = useMemo(() => {
-		if (selectedConnectionType?.value === ConnectionAuthType.AuthToken) return twilioTokenIntegrationSchema;
-		if (selectedConnectionType?.value === ConnectionAuthType.ApiKey) return twilioApiKeyIntegrationSchema;
-	}, [selectedConnectionType]);
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
-	const methods = useForm({
-		resolver: formSchema ? zodResolver(formSchema) : undefined,
-		defaultValues: {
-			sid: "",
-			token: "",
-			key: "",
-			secret: "",
-		},
-	});
+	const { createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
+		useConnectionForm(
+			{
+				account_sid: "",
+				auth_token: "",
+				api_key: "",
+				api_secret: "",
+			},
+			oauthSchema,
+			"create"
+		);
 
-	const { getValues, handleSubmit } = methods;
-
-	const requestPayload = useMemo(() => {
-		const { key, secret, sid, token } = getValues();
-		if (selectedConnectionType?.value === ConnectionAuthType.AuthToken) {
-			return {
-				account_sid: sid,
-				auth_token: token,
-			};
+	useEffect(() => {
+		if (!connectionType?.value) {
+			return;
 		}
-		if (selectedConnectionType?.value === ConnectionAuthType.ApiKey) {
-			return {
-				account_sid: sid,
-				api_key: key,
-				api_secret: secret,
-			};
-		}
-	}, [getValues, selectedConnectionType]);
+		if (connectionType.value === ConnectionAuthType.AuthToken) {
+			setValidationSchema(twilioTokenIntegrationSchema);
 
-	const createConnection = async () => {
-		setIsLoading(true);
-
-		try {
-			await HttpService.post(`/twilio/save?cid=${connectionId}&origin=web`, requestPayload);
-			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({
-				id: Date.now().toString(),
-				message: successMessage,
-				type: "success",
-			});
-			LoggerService.info(namespaces.connectionService, successMessage);
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
-			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
-			);
-		} finally {
-			setIsLoading(false);
+			return;
 		}
-	};
+		if (connectionType.value === ConnectionAuthType.ApiKey) {
+			setValidationSchema(twilioApiKeyIntegrationSchema);
+
+			return;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionType]);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection();
+			createConnection(connectionId, connectionType?.value as ConnectionAuthType, Integrations.twilio);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const selectConnectionType = (option: SingleValue<SelectOption>) => {
-		setSelectedConnectionType(option as SelectOption);
-	};
-
-	const renderConnectionFields = () => {
-		switch (selectedConnectionType?.value) {
-			case ConnectionAuthType.AuthToken:
-				return <AuthTokenTwilioForm isLoading={isLoading} />;
-			case ConnectionAuthType.ApiKey:
-				return <ApiKeyTwilioForm isLoading={isLoading} />;
-			default:
-				return null;
-		}
-	};
-
-	const onSubmit = () => {
-		if (connectionId) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionExists"),
-				type: "error",
-			});
-
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("connectionExistsExtended", { connectionId })}`
-			);
-
-			return;
-		}
-
-		triggerParentFormSubmit();
-	};
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[Integrations.twilio]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
-		<FormProvider {...methods}>
-			<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-				<Select
-					aria-label={t("placeholders.selectConnectionType")}
-					label={t("placeholders.connectionType")}
-					onChange={selectConnectionType}
-					options={selectIntegrationTwilio}
-					placeholder={t("placeholders.selectConnectionType")}
-					value={selectedConnectionType}
-				/>
+		<>
+			<Select
+				aria-label={t("placeholders.selectConnectionType")}
+				label={t("placeholders.connectionType")}
+				onChange={(option) => setConnectionType(option)}
+				options={selectIntegrationTwilio}
+				placeholder={t("placeholders.selectConnectionType")}
+				value={connectionType}
+			/>
 
-				{renderConnectionFields()}
+			<form className="mt-6 flex items-start gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+				<div className="flex w-full flex-col gap-6">
+					{ConnectionTypeComponent ? (
+						<ConnectionTypeComponent
+							errors={errors}
+							isLoading={isLoading}
+							mode="create"
+							register={register}
+							setValue={setValue}
+						/>
+					) : null}
+				</div>
 			</form>
-		</FormProvider>
+		</>
 	);
 };

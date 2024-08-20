@@ -6,6 +6,10 @@ import {
 	OauthForm as SlackOauthForm,
 	SocketForm,
 } from "@components/organisms/connections/integrations/slack/authMethods";
+import {
+	ApiKeyTwilioForm,
+	AuthTokenTwilioForm,
+} from "@components/organisms/connections/integrations/twilio/authMethods";
 
 export const formsPerIntegrationsMapping: Partial<
 	Record<Integrations, Partial<Record<ConnectionAuthType, React.ComponentType<any>>>>
@@ -17,5 +21,9 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.slack]: {
 		[ConnectionAuthType.Socket]: SocketForm,
 		[ConnectionAuthType.Oauth]: SlackOauthForm,
+	},
+	[Integrations.twilio]: {
+		[ConnectionAuthType.ApiKey]: ApiKeyTwilioForm,
+		[ConnectionAuthType.AuthToken]: AuthTokenTwilioForm,
 	},
 };

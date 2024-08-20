@@ -45,13 +45,13 @@ export const httpBearerIntegrationSchema = z.object({
 });
 
 export const twilioTokenIntegrationSchema = z.object({
-	sid: z.string().min(1, "Account SID is required"),
-	token: z.string().min(1, "Auth Token is required"),
+	account_sid: z.string().min(1, "Account SID is required"),
+	auth_token: z.string().min(1, "Auth Token is required"),
 });
 export const twilioApiKeyIntegrationSchema = z.object({
-	sid: z.string().min(1, "Account SID is required"),
-	key: z.string().min(1, "API Key is required"),
-	secret: z.string().min(1, "API Secret is required"),
+	account_sid: z.string().min(1, "Account SID is required"),
+	api_key: z.string().min(1, "API Key is required"),
+	api_secret: z.string().min(1, "API Secret is required"),
 });
 
 export const jiraIntegrationSchema = z.object({
