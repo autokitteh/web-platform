@@ -7,7 +7,7 @@ import psl from "psl";
 import { useTranslation } from "react-i18next";
 
 import { authBearer, isLoggedInCookie } from "@constants";
-import { getApiBaseUrl } from "@src/utilities";
+import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
 import { useToastStore } from "@store";
@@ -28,7 +28,9 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 
 			return;
 		}
-		Cookies.remove(isLoggedInCookie, { domain: `.${rootDomain.domain}` });
+
+		Cookies.remove(isLoggedInCookie, { domain: getCookieDomain(rootDomain) });
+
 		window.localStorage.clear();
 		window.location.reload();
 	}, [logout]);

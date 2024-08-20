@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 import psl from "psl";
 
 import { apiRequestTimeout, isAuthEnabled, isLoggedInCookie } from "@constants";
-import { getApiBaseUrl } from "@src/utilities";
+import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -30,7 +30,7 @@ const authInterceptor: Interceptor =
 
 					throw rootDomain.error.message;
 				}
-				Cookies.remove(isLoggedInCookie, { domain: `.${rootDomain.domain}` });
+				Cookies.remove(isLoggedInCookie, { domain: getCookieDomain(rootDomain) });
 
 				window.localStorage.clear();
 				window.location.reload();
