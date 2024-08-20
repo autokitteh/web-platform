@@ -74,7 +74,7 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	}
 
 	return (
-		<div className="flex h-screen w-screen flex-col pb-10 pl-10 pr-9 pt-5">
+		<div className="flex h-screen w-screen flex-col px-40 pb-10 pt-5">
 			<IconLogoAuth />
 
 			<div className="flex flex-1 items-center justify-between">
