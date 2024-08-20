@@ -3,6 +3,7 @@ import { Integrations } from "@src/enums/components";
 
 import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connections/integrations/google/authMethods";
+import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connections/integrations/jira/authMethods";
 import {
 	OauthForm as SlackOauthForm,
 	SocketForm,
@@ -30,5 +31,9 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.google]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
 		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
+	},
+	[Integrations.jira]: {
+		[ConnectionAuthType.ApiToken]: ApiTokenJiraForm,
+		[ConnectionAuthType.Oauth]: OauthJiraForm,
 	},
 };
