@@ -1,45 +1,100 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { useFormContext } from "react-hook-form";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoTwilioLinks } from "@constants/lists/connections";
 
-import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const AuthTokenTwilioForm = ({ isLoading }: { isLoading: boolean }) => {
+interface AuthTokenTwilioFormProps {
+	errors: FieldErrors<any>;
+	isLoading: boolean;
+	mode: "create" | "edit";
+	patWebhookKey?: string;
+	register: UseFormRegister<{ [key: string]: any }>;
+	setValue: (name: string, value: any) => void;
+}
+
+export const AuthTokenTwilioForm: React.FC<AuthTokenTwilioFormProps> = ({
+	errors,
+	isLoading,
+	mode,
+	patWebhookKey,
+	register,
+	setValue,
+}) => {
 	const { t } = useTranslation("integrations");
-	const {
-		formState: { errors },
-		register,
-	} = useFormContext();
+	const [lockState, setLockState] = useState<{ account_sid: boolean; auth_token: boolean }>({
+		account_sid: true,
+		auth_token: true,
+	});
+	const isEditMode = mode === "edit";
+
+	useEffect(() => {
+		if (patWebhookKey) {
+			setValue("webhook", patWebhookKey);
+		}
+	}, [patWebhookKey, setValue]);
 
 	return (
 		<>
 			<div className="relative">
-				<Input
-					{...register("sid")}
-					aria-label={t("twilio.placeholders.sid")}
-					isError={!!errors.sid}
-					isRequired
-					placeholder={t("twilio.placeholders.sid")}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						{...register("account_sid")}
+						aria-label={t("twilio.placeholders.sid")}
+						handleInputChange={(newSidValue) => setValue("account_sid", newSidValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, account_sid: newLockState }))
+						}
+						isError={!!errors.account_sid}
+						isLocked={lockState.account_sid}
+						isRequired
+						placeholder={t("twilio.placeholders.sid")}
+						resetOnFirstFocus
+					/>
+				) : (
+					<Input
+						{...register("account_sid")}
+						aria-label={t("twilio.placeholders.sid")}
+						isError={!!errors.account_sid}
+						isRequired
+						placeholder={t("twilio.placeholders.sid")}
+					/>
+				)}
 
-				<ErrorMessage>{errors.sid?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.account_sid?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
-				<Input
-					{...register("token")}
-					aria-label={t("twilio.placeholders.token")}
-					isError={!!errors.token}
-					isRequired
-					placeholder={t("twilio.placeholders.token")}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						{...register("auth_token")}
+						aria-label={t("twilio.placeholders.token")}
+						handleInputChange={(newTokenValue) => setValue("auth_token", newTokenValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, auth_token: newLockState }))
+						}
+						isError={!!errors.auth_token}
+						isLocked={lockState.auth_token}
+						isRequired
+						placeholder={t("twilio.placeholders.token")}
+						resetOnFirstFocus
+					/>
+				) : (
+					<Input
+						{...register("auth_token")}
+						aria-label={t("twilio.placeholders.token")}
+						isError={!!errors.auth_token}
+						isRequired
+						placeholder={t("twilio.placeholders.token")}
+					/>
+				)}
 
-				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.auth_token?.message as string}</ErrorMessage>
 			</div>
 
 			<Button
@@ -53,6 +108,7 @@ export const AuthTokenTwilioForm = ({ isLoading }: { isLoading: boolean }) => {
 
 				{t("buttons.saveConnection")}
 			</Button>
+
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
 					{infoTwilioLinks.map(({ text, url }, index) => (

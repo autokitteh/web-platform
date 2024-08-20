@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
+import { ZodObject, ZodRawShape } from "zod";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationTwilio } from "@constants/lists/connections";
@@ -22,16 +23,24 @@ export const TwilioIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, handleSubmit, isLoading, setValidationSchema } = useConnectionForm(
-		{
-			sid: "",
-			token: "",
-		},
-		twilioTokenIntegrationSchema,
-		"create"
-	);
-
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
+
+	const formSchema = useMemo(() => {
+		if (connectionType?.value === ConnectionAuthType.AuthToken) return twilioTokenIntegrationSchema;
+		if (connectionType?.value === ConnectionAuthType.ApiKey) return twilioApiKeyIntegrationSchema;
+	}, [connectionType]) as ZodObject<ZodRawShape>;
+
+	const { createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
+		useConnectionForm(
+			{
+				account_sid: "",
+				auth_token: "",
+				api_key: "",
+				api_secret: "",
+			},
+			formSchema,
+			"create"
+		);
 
 	useEffect(() => {
 		if (!connectionType?.value) {
@@ -69,7 +78,15 @@ export const TwilioIntegrationAddForm = ({
 
 			<form className="mt-6 flex items-start gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				<div className="flex w-full flex-col gap-6">
-					{ConnectionTypeComponent ? <ConnectionTypeComponent isLoading={isLoading} /> : null}
+					{ConnectionTypeComponent ? (
+						<ConnectionTypeComponent
+							errors={errors}
+							isLoading={isLoading}
+							mode="create"
+							register={register}
+							setValue={setValue}
+						/>
+					) : null}
 				</div>
 			</form>
 		</>
