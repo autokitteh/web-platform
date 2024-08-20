@@ -100,7 +100,6 @@ export const ApiTokenJiraForm = ({
 						}
 						isError={!!errors.email}
 						isLocked={lockState.email}
-						isRequired
 						placeholder={t("jira.placeholders.email")}
 						resetOnFirstFocus
 					/>
