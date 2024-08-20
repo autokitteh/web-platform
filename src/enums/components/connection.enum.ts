@@ -15,9 +15,9 @@ export enum Integrations {
 	googledrive = "googledrive",
 	googleforms = "googleforms",
 	aws = "aws",
-	chatgpt = "chatgpt",
 	http = "http",
 	twilio = "twilio",
 	jira = "jira",
 	discord = "discord",
+	openAi = "openAi",
 }

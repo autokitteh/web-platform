@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 
-import { namespaces } from "@constants";
 import { infoOpenAiLinks } from "@constants/lists/connections";
-import { HttpService, LoggerService } from "@services";
+import { ConnectionAuthType } from "@src/enums";
+import { Integrations } from "@src/enums/components";
+import { useConnectionForm } from "@src/hooks";
 import { openAiIntegrationSchema } from "@validations";
-
-import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -24,85 +20,25 @@ export const OpenAiIntegrationAddForm = ({
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
 }) => {
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const { projectId } = useParams();
-	const navigate = useNavigate();
-	const [isLoading, setIsLoading] = useState(false);
-	const addToast = useToastStore((state) => state.addToast);
 
-	const {
-		formState: { errors },
-		getValues,
-		handleSubmit,
-		register,
-	} = useForm({
-		resolver: zodResolver(openAiIntegrationSchema),
-		defaultValues: {
+	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
+		{
 			key: "",
 		},
-	});
-
-	const createConnection = async () => {
-		setIsLoading(true);
-		const { key } = getValues();
-
-		try {
-			await HttpService.post(`/chatgpt/save?cid=${connectionId}&origin=web`, {
-				key,
-			});
-			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({
-				id: Date.now().toString(),
-				message: successMessage,
-				type: "success",
-			});
-			LoggerService.info(namespaces.connectionService, successMessage);
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
-			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
-			);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+		openAiIntegrationSchema,
+		"create"
+	);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection();
+			createConnection(connectionId, ConnectionAuthType.Key, Integrations.openAi);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const onSubmit = () => {
-		if (connectionId) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionExists"),
-				type: "error",
-			});
-
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("connectionExistsExtended", { connectionId })}`
-			);
-
-			return;
-		}
-
-		triggerParentFormSubmit();
-	};
-
 	return (
-		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Input
 					{...register("key")}
