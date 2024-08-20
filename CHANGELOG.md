@@ -1,3 +1,10 @@
+## [1.38.2](https://github.com/autokitteh/web-platform/compare/v1.38.1...v1.38.2) (2024-08-20)
+
+
+### Bug Fixes
+
+* fix logout cookie domain on localhost ([#281](https://github.com/autokitteh/web-platform/issues/281)) ([2e87144](https://github.com/autokitteh/web-platform/commit/2e8714471bbb074d3a827261464d05c5f56d291e))
+
 ## [1.38.1](https://github.com/autokitteh/web-platform/compare/v1.38.0...v1.38.1) (2024-08-19)
 
 
