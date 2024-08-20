@@ -11,5 +11,5 @@ export enum ConnectionAuthType {
 	AuthToken = "authToken",
 	AWSConfig = "awsConfig",
 	Socket = "socket",
-	botToken = "botToken",
+	BotToken = "botToken",
 }
