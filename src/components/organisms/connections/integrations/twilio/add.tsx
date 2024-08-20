@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
-import { ZodObject, ZodRawShape } from "zod";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationTwilio } from "@constants/lists/connections";
@@ -10,7 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { twilioApiKeyIntegrationSchema, twilioTokenIntegrationSchema } from "@validations";
+import { oauthSchema, twilioApiKeyIntegrationSchema, twilioTokenIntegrationSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -25,11 +24,6 @@ export const TwilioIntegrationAddForm = ({
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
-	const formSchema = useMemo(() => {
-		if (connectionType?.value === ConnectionAuthType.AuthToken) return twilioTokenIntegrationSchema;
-		if (connectionType?.value === ConnectionAuthType.ApiKey) return twilioApiKeyIntegrationSchema;
-	}, [connectionType]) as ZodObject<ZodRawShape>;
-
 	const { createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
 		useConnectionForm(
 			{
@@ -38,7 +32,7 @@ export const TwilioIntegrationAddForm = ({
 				api_key: "",
 				api_secret: "",
 			},
-			formSchema,
+			oauthSchema,
 			"create"
 		);
 
@@ -51,7 +45,11 @@ export const TwilioIntegrationAddForm = ({
 
 			return;
 		}
-		setValidationSchema(twilioApiKeyIntegrationSchema);
+		if (connectionType.value === ConnectionAuthType.ApiKey) {
+			setValidationSchema(twilioApiKeyIntegrationSchema);
+
+			return;
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
 
