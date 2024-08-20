@@ -10,22 +10,20 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-interface AuthTokenTwilioFormProps {
-	errors: FieldErrors<any>;
-	isLoading: boolean;
-	mode: "create" | "edit";
-	patWebhookKey?: string;
-	register: UseFormRegister<{ [key: string]: any }>;
-	setValue: (name: string, value: any) => void;
-}
-
-export const AuthTokenTwilioForm: React.FC<AuthTokenTwilioFormProps> = ({
+export const AuthTokenTwilioForm = ({
 	errors,
 	isLoading,
 	mode,
 	patWebhookKey,
 	register,
 	setValue,
+}: {
+	errors: FieldErrors<any>;
+	isLoading: boolean;
+	mode: "create" | "edit";
+	patWebhookKey?: string;
+	register: UseFormRegister<{ [key: string]: any }>;
+	setValue: (name: string, value: any) => void;
 }) => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState<{ account_sid: boolean; auth_token: boolean }>({
