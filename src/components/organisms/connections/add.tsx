@@ -102,8 +102,8 @@ export const AddConnection = () => {
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" isHiddenButtons title={t("addNewConnection")} />
 
-			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
-				<div className="relative mb-6">
+			<form className="mb-4 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
+				<div className="relative mb-4">
 					<Input
 						aria-label={t("placeholders.name")}
 						{...register("connectionName")}

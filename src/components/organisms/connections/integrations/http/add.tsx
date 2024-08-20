@@ -99,7 +99,7 @@ export const HttpIntegrationAddForm = ({
 	return (
 		<FormProvider {...methods}>
 			<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex w-full flex-col gap-6">
+				<div className="flex w-full flex-col gap-4">
 					<Select
 						aria-label={t("placeholders.selectConnectionType")}
 						label={t("placeholders.connectionType")}
