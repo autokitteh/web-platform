@@ -136,7 +136,7 @@ export const SchedulerEditTrigger = () => {
 				id={TriggerFormIds.modifySchedulerForm}
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<div className="flex w-full flex-col gap-6">
+				<div className="flex w-full flex-col gap-4">
 					<div className="relative">
 						<Controller
 							control={control}
@@ -225,7 +225,7 @@ export const SchedulerEditTrigger = () => {
 				</div>
 			</form>
 
-			<Accordion className="mt-6" title={t("information")}>
+			<Accordion className="mt-4" title={t("information")}>
 				<div className="flex flex-col items-start gap-2">
 					{infoCronExpressionsLinks.map(({ text, url }, index) => (
 						<Link

@@ -187,7 +187,7 @@ export const DefaultEditTrigger = () => {
 				id={TriggerFormIds.modifyDefaultForm}
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<div className="flex w-full flex-col gap-6">
+				<div className="flex w-full flex-col gap-4">
 					<div className="relative">
 						<Input
 							disabled
@@ -298,7 +298,7 @@ export const DefaultEditTrigger = () => {
 							{triggerData
 								? Object.entries(triggerData).map(([key, value]) => (
 										<div className="align-center flex gap-1" key={key}>
-											<div className="flex w-full gap-6">
+											<div className="flex w-full gap-4">
 												<Input
 													aria-label={t("placeholders.key")}
 													className="w-full"
