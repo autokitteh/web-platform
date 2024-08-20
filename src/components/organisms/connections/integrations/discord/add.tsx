@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { namespaces } from "@constants";
-import { HttpService, LoggerService } from "@services";
+import { ConnectionAuthType } from "@src/enums";
+import { Integrations } from "@src/enums/components";
+import { useConnectionForm } from "@src/hooks";
 import { discordIntegrationSchema } from "@validations";
-
-import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -23,85 +20,25 @@ export const DiscordIntegrationAddForm = ({
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
 }) => {
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const { projectId } = useParams();
-	const navigate = useNavigate();
-	const addToast = useToastStore((state) => state.addToast);
-	const [isLoading, setIsLoading] = useState(false);
 
-	const {
-		formState: { errors },
-		getValues,
-		handleSubmit,
-		register,
-	} = useForm({
-		resolver: zodResolver(discordIntegrationSchema),
-		defaultValues: {
+	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
+		{
 			botToken: "",
 		},
-	});
-
-	const createConnection = async () => {
-		setIsLoading(true);
-		const { botToken } = getValues();
-
-		try {
-			await HttpService.post(`/discord/save?cid=${connectionId}&origin=web`, {
-				botToken,
-			});
-			const successMessage = t("connectionCreatedSuccessfully");
-			addToast({
-				id: Date.now().toString(),
-				message: successMessage,
-				type: "success",
-			});
-			LoggerService.info(namespaces.connectionService, successMessage);
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
-			const errorMessage = error.response?.data || tErrors("errorCreatingNewConnection");
-			addToast({
-				id: Date.now().toString(),
-				message: errorMessage,
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("errorCreatingNewConnectionExtended", { error: errorMessage })}`
-			);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+		discordIntegrationSchema,
+		"create"
+	);
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection();
+			createConnection(connectionId, ConnectionAuthType.botToken, Integrations.discord);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	const onSubmit = () => {
-		if (connectionId) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("connectionExists"),
-				type: "error",
-			});
-
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("connectionExistsExtended", { connectionId })}`
-			);
-
-			return;
-		}
-
-		triggerParentFormSubmit();
-	};
-
 	return (
-		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Input
 					{...register("botToken")}
