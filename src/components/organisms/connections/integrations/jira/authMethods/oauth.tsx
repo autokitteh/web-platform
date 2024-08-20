@@ -7,7 +7,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const OauthJiraForm = ({ triggerParentFormSubmit }: { triggerParentFormSubmit: () => void }) => {
+export const OauthJiraForm = () => {
 	const { t } = useTranslation("integrations");
 
 	return (
@@ -29,7 +29,7 @@ export const OauthJiraForm = ({ triggerParentFormSubmit }: { triggerParentFormSu
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
-				onClick={triggerParentFormSubmit}
+				type="submit"
 				variant="outline"
 			>
 				{t("buttons.startOAuthFlow")}

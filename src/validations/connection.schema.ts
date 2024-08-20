@@ -55,7 +55,7 @@ export const twilioApiKeyIntegrationSchema = z.object({
 });
 
 export const jiraIntegrationSchema = z.object({
-	baseUrl: z.string().min(1, "Base url is required"),
+	base_url: z.string().min(1, "Base url is required"),
 	token: z.string().min(1, "Token is required"),
 	email: z.string(),
 });
