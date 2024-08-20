@@ -54,7 +54,8 @@ export const ApiTokenJiraForm = ({
 						aria-label={t("jira.placeholders.baseUrl")}
 						isError={!!errors.base_url}
 						isRequired
-						placeholder={t("jira.placeholders.baseUrl")}
+						label={t("jira.placeholders.baseUrl")}
+						placeholder={t("jira.placeholders.exempleUrl")}
 					/>
 				)}
 
@@ -81,6 +82,7 @@ export const ApiTokenJiraForm = ({
 						aria-label={t("jira.placeholders.pat")}
 						isError={!!errors.token}
 						isRequired
+						label={t("jira.placeholders.pat")}
 						placeholder={t("jira.placeholders.pat")}
 					/>
 				)}
@@ -107,6 +109,7 @@ export const ApiTokenJiraForm = ({
 						{...register("email")}
 						aria-label={t("jira.placeholders.email")}
 						isError={!!errors.email}
+						label={t("jira.placeholders.email")}
 						placeholder={t("jira.placeholders.email")}
 						type="email"
 					/>
