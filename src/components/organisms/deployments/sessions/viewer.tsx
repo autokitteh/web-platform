@@ -12,7 +12,7 @@ import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms
 import { Accordion } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { ArrowRightIcon, Close } from "@assets/image/icons";
+import { ArrowRightIcon, Close, CopyIcon } from "@assets/image/icons";
 
 const example = {
 	string: "Lorem ipsum dolor sit amet",
@@ -64,7 +64,7 @@ export const SessionViewer = () => {
 		<Frame className="ml-2.5 w-2/4 transition">
 			<div className="flex items-center justify-between">
 				<div className="font-bold" title="Trigger name">
-					NewTrigger
+					ses_01j5qf52n2es6v5see1f69pwm1
 				</div>
 
 				<div className="flex items-center font-bold" title="Created">
@@ -82,7 +82,7 @@ export const SessionViewer = () => {
 			<div className="mt-1 flex justify-between">
 				<div className="flex flex-col gap-1">
 					<div className="flex items-center gap-1">
-						Current status: <SessionsTableState className="font-semibold" sessionState={4} />
+						Status: <SessionsTableState className="font-semibold" sessionState={4} />
 					</div>
 
 					<div className="flex items-center gap-2 font-semibold">
@@ -100,15 +100,27 @@ export const SessionViewer = () => {
 
 				<div className="flex flex-col gap-1">
 					<div>
-						Connection name: <span className="font-semibold">MyGitHub</span>
+						Connection name: <span className="font-semibold">MySlack</span>
 					</div>
 
 					<div>
-						Event ID: <span className="font-semibold">evt_01j55bpx8pepjv8vk4bxwx2hnr</span>
+						Trigger name: <span className="font-semibold">slack_slash_command</span>
+					</div>
+				</div>
+
+				<div className="flex flex-col gap-1">
+					<div>
+						Event ID:
+						<IconButton className="inline" title="evt_01j55bpx8pepjv8vk4bxwx2hnr">
+							<CopyIcon className="h-3 w-3 fill-white" />
+						</IconButton>
 					</div>
 
 					<div>
-						Build ID: <span className="font-semibold">bld_01j53hcjq6ecqamda2qq3n8wdx</span>
+						Build ID:
+						<IconButton className="inline" title="bld_01j53hcjq6ecqamda2qq3n8wdx">
+							<CopyIcon className="h-3 w-3 fill-white" />
+						</IconButton>
 					</div>
 				</div>
 			</div>
