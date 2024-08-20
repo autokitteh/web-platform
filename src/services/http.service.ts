@@ -33,7 +33,15 @@ httpClient.interceptors.response.use(
 
 				return Promise.reject(rootDomain.error.message);
 			}
-			Cookies.remove(isLoggedInCookie, { domain: `.${rootDomain.domain}` });
+
+			let cookieDomain = `.${rootDomain.domain}`;
+
+			const { domain, input } = rootDomain;
+			if (domain === null && input === "localhost") {
+				cookieDomain = "localhost";
+			}
+
+			Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
 			window.localStorage.clear();
 			window.location.reload();
 		}
