@@ -40,3 +40,4 @@ export { default as TrashCanIcon } from "@assets/image/icons/TrashCan.svg?react"
 export { default as UnlockedLockIcon } from "@assets/image/icons/Lock.svg?react";
 export { default as LockIcon } from "@assets/image/icons/UnlockedLock.svg?react";
 export { default as PlusIcon } from "@assets/image/icons/Plus.svg?react";
+export { default as CloneIcon } from "@assets/image/icons/Clone.svg?react";
