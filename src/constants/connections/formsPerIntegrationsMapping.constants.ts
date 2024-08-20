@@ -2,6 +2,7 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 
 import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
+import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connections/integrations/google/authMethods";
 import {
 	OauthForm as SlackOauthForm,
 	SocketForm,
@@ -25,5 +26,9 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.twilio]: {
 		[ConnectionAuthType.ApiKey]: ApiKeyTwilioForm,
 		[ConnectionAuthType.AuthToken]: AuthTokenTwilioForm,
+	},
+	[Integrations.google]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleForm,
+		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
 	},
 };
