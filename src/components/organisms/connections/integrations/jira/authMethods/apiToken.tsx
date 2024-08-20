@@ -64,7 +64,7 @@ export const ApiTokenJiraForm = ({
 				{isEditMode ? (
 					<SecretInput
 						{...register("token")}
-						aria-label={t("jira.placeholders.token")}
+						aria-label={t("jira.placeholders.pat")}
 						handleInputChange={(newValue) => setValue("token", newValue)}
 						handleLockAction={(newLockState: boolean) =>
 							setLockState((prevState) => ({ ...prevState, token: newLockState }))
@@ -72,16 +72,16 @@ export const ApiTokenJiraForm = ({
 						isError={!!errors.token}
 						isLocked={lockState.token}
 						isRequired
-						placeholder={t("jira.placeholders.token")}
+						placeholder={t("jira.placeholders.pat")}
 						resetOnFirstFocus
 					/>
 				) : (
 					<Input
 						{...register("token")}
-						aria-label={t("jira.placeholders.token")}
+						aria-label={t("jira.placeholders.pat")}
 						isError={!!errors.token}
 						isRequired
-						placeholder={t("jira.placeholders.token")}
+						placeholder={t("jira.placeholders.pat")}
 					/>
 				)}
 

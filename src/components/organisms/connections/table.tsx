@@ -165,10 +165,10 @@ export const ConnectionsTable = () => {
 									<Td className="font-semibold">{name}</Td>
 
 									<Td>
-										<div className="flex items-center gap-2">
+										<div className="flex items-center gap-2" title={integrationName}>
 											<IconSvg
 												alt={integrationName}
-												className="h-6 w-6 rounded-full bg-white p-0.5"
+												className="h-6 w-6 shrink-0 rounded-full bg-white p-0.5"
 												src={logo}
 											/>
 
