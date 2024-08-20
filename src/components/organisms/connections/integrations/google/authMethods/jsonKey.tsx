@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useFormContext } from "react-hook-form";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoGoogleAccountLinks } from "@constants/lists";
@@ -10,25 +10,29 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const JsonKeyGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
+export const JsonKeyGoogleForm = ({
+	errors,
+	isLoading,
+	register,
+}: {
+	errors: FieldErrors<any>;
+	isLoading: boolean;
+	register: UseFormRegister<{ [x: string]: any }>;
+}) => {
 	const { t } = useTranslation("integrations");
-	const {
-		formState: { errors },
-		register,
-	} = useFormContext();
 
 	return (
-		<div>
+		<>
 			<div className="relative mb-3">
 				<Textarea
 					rows={5}
-					{...register("jsonKey")}
+					{...register("json")}
 					aria-label={t("google.placeholders.jsonKey")}
-					isError={!!errors.jsonKey}
+					isError={!!errors.json}
 					placeholder={t("google.placeholders.jsonKey")}
 				/>
 
-				<ErrorMessage>{errors.jsonKey?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.json?.message as string}</ErrorMessage>
 			</div>
 
 			<Button
@@ -59,6 +63,6 @@ export const JsonKeyGoogleForm = ({ isLoading }: { isLoading: boolean }) => {
 					))}
 				</div>
 			</Accordion>
-		</div>
+		</>
 	);
 };
