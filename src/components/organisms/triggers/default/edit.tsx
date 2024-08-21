@@ -183,162 +183,158 @@ export const DefaultEditTrigger = () => {
 			/>
 
 			<form
-				className="flex items-start gap-10"
+				className="flex w-full flex-col gap-4"
 				id={TriggerFormIds.modifyDefaultForm}
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<div className="flex w-full flex-col gap-4">
-					<div className="relative">
-						<Input
-							disabled
-							{...register("name")}
-							aria-label={t("placeholders.name")}
-							isError={!!errors.name}
-							isRequired
-							placeholder={t("placeholders.name")}
-							value={name}
-						/>
+				<div className="relative">
+					<Input
+						disabled
+						{...register("name")}
+						aria-label={t("placeholders.name")}
+						isError={!!errors.name}
+						isRequired
+						placeholder={t("placeholders.name")}
+						value={name}
+					/>
 
-						<ErrorMessage>{errors.name?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.name?.message}</ErrorMessage>
+				</div>
 
-					<div className="relative">
-						<Controller
-							control={control}
-							name="connection"
-							render={({ field }) => (
-								<Select
-									{...field}
-									aria-label={t("placeholders.selectConnection")}
-									dataTestid="select-trigger-type"
-									disabled
-									isError={!!errors.connection}
-									label={t("placeholders.connection")}
-									noOptionsLabel={t("noConnectionsAvailable")}
-									onChange={(selected) => field.onChange(selected)}
-									options={connections}
-									placeholder={t("placeholders.selectConnection")}
-									value={field.value}
-								/>
-							)}
-						/>
+				<div className="relative">
+					<Controller
+						control={control}
+						name="connection"
+						render={({ field }) => (
+							<Select
+								{...field}
+								aria-label={t("placeholders.selectConnection")}
+								dataTestid="select-trigger-type"
+								disabled
+								isError={!!errors.connection}
+								label={t("placeholders.connection")}
+								noOptionsLabel={t("noConnectionsAvailable")}
+								onChange={(selected) => field.onChange(selected)}
+								options={connections}
+								placeholder={t("placeholders.selectConnection")}
+								value={field.value}
+							/>
+						)}
+					/>
 
-						<ErrorMessage>{errors.connection?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.connection?.message}</ErrorMessage>
+				</div>
 
-					<div className="relative">
-						<Controller
-							control={control}
-							name="filePath"
-							render={({ field }) => (
-								<Select
-									{...field}
-									aria-label={t("placeholders.selectFile")}
-									isError={!!errors.filePath}
-									label={t("placeholders.file")}
-									noOptionsLabel={t("noFilesAvailable")}
-									onChange={(selected) => field.onChange(selected)}
-									options={filesNameList}
-									placeholder={t("placeholders.selectFile")}
-									value={field.value}
-								/>
-							)}
-						/>
+				<div className="relative">
+					<Controller
+						control={control}
+						name="filePath"
+						render={({ field }) => (
+							<Select
+								{...field}
+								aria-label={t("placeholders.selectFile")}
+								isError={!!errors.filePath}
+								label={t("placeholders.file")}
+								noOptionsLabel={t("noFilesAvailable")}
+								onChange={(selected) => field.onChange(selected)}
+								options={filesNameList}
+								placeholder={t("placeholders.selectFile")}
+								value={field.value}
+							/>
+						)}
+					/>
 
-						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
+				</div>
 
-					<div className="relative">
-						<Input
-							{...register("entryFunction")}
-							aria-label={t("placeholders.functionName")}
-							isError={!!errors.entryFunction}
-							isRequired
-							placeholder={t("placeholders.functionName")}
-							value={entryFunction}
-						/>
+				<div className="relative">
+					<Input
+						{...register("entryFunction")}
+						aria-label={t("placeholders.functionName")}
+						isError={!!errors.entryFunction}
+						isRequired
+						placeholder={t("placeholders.functionName")}
+						value={entryFunction}
+					/>
 
-						<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
+				</div>
 
-					<div className="relative">
-						<Input
-							{...register("eventType")}
-							aria-label={t("placeholders.eventType")}
-							isError={!!errors.eventType}
-							placeholder={t("placeholders.eventType")}
-							value={eventType}
-						/>
+				<div className="relative">
+					<Input
+						{...register("eventType")}
+						aria-label={t("placeholders.eventType")}
+						isError={!!errors.eventType}
+						placeholder={t("placeholders.eventType")}
+						value={eventType}
+					/>
 
-						<ErrorMessage>{errors.eventType?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.eventType?.message}</ErrorMessage>
+				</div>
 
-					<div className="relative">
-						<Input
-							{...register("filter")}
-							aria-label={t("placeholders.filter")}
-							isError={!!errors.filter}
-							placeholder={t("placeholders.filter")}
-							value={filter}
-						/>
+				<div className="relative">
+					<Input
+						{...register("filter")}
+						aria-label={t("placeholders.filter")}
+						isError={!!errors.filter}
+						placeholder={t("placeholders.filter")}
+						value={filter}
+					/>
 
-						<ErrorMessage>{errors.filter?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.filter?.message}</ErrorMessage>
+				</div>
 
-					<div>
-						<div className="flex items-center gap-1 text-base text-gray-500">
-							{t("titleData")}
+				<div>
+					<div className="flex items-center gap-1 text-base text-gray-500">
+						{t("titleData")}
 
-							<div className="cursor-pointer" title={t("titleInfo")}>
-								<InfoIcon className="fill-white" />
-							</div>
+						<div className="cursor-pointer" title={t("titleInfo")}>
+							<InfoIcon className="fill-white" />
 						</div>
+					</div>
 
-						<div className="mb-2 flex flex-col gap-2">
-							{triggerData
-								? Object.entries(triggerData).map(([key, value]) => (
-										<div className="align-center flex gap-1" key={key}>
-											<div className="flex w-full gap-4">
-												<Input
-													aria-label={t("placeholders.key")}
-													className="w-full"
-													defaultValue={key}
-													onChange={(event) => updateTriggerDataKey(event.target.value, key)}
-													placeholder={t("placeholders.key")}
-												/>
+					<div className="mb-2 flex flex-col gap-2">
+						{triggerData
+							? Object.entries(triggerData).map(([key, value]) => (
+									<div className="align-center flex gap-1" key={key}>
+										<div className="flex w-full gap-4">
+											<Input
+												aria-label={t("placeholders.key")}
+												className="w-full"
+												defaultValue={key}
+												onChange={(event) => updateTriggerDataKey(event.target.value, key)}
+												placeholder={t("placeholders.key")}
+											/>
 
-												<Input
-													aria-label={t("placeholders.value")}
-													className="w-full"
-													defaultValue={value.string.v}
-													onChange={(event) =>
-														updateTriggerDataValue(key, event.target.value)
-													}
-													placeholder={t("placeholders.value")}
-												/>
-											</div>
-
-											<IconButton
-												ariaLabel={t("ariaDeleteData", { name: key })}
-												className="self-center bg-gray-1300 hover:bg-black"
-												onClick={() => handleDeleteData(key)}
-											>
-												<TrashIcon className="h-4 w-4 fill-white" />
-											</IconButton>
+											<Input
+												aria-label={t("placeholders.value")}
+												className="w-full"
+												defaultValue={value.string.v}
+												onChange={(event) => updateTriggerDataValue(key, event.target.value)}
+												placeholder={t("placeholders.value")}
+											/>
 										</div>
-									))
-								: null}
-						</div>
 
-						<Button
-							className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
-							onClick={handleAddNewData}
-						>
-							<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
-
-							{t("buttonAddNewData")}
-						</Button>
+										<IconButton
+											ariaLabel={t("ariaDeleteData", { name: key })}
+											className="self-center bg-gray-1300 hover:bg-black"
+											onClick={() => handleDeleteData(key)}
+										>
+											<TrashIcon className="h-4 w-4 fill-white" />
+										</IconButton>
+									</div>
+								))
+							: null}
 					</div>
+
+					<Button
+						className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
+						onClick={handleAddNewData}
+					>
+						<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+
+						{t("buttonAddNewData")}
+					</Button>
 				</div>
 			</form>
 		</div>
