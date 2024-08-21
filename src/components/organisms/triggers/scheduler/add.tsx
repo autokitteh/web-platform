@@ -109,7 +109,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 			<Loader isCenter size="xl" />
 		) : (
 			<>
-				<form className="flex w-full flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+				<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
 					<div className="relative">
 						<Input
 							{...register("cron")}

@@ -70,7 +70,7 @@ export const AddVariable = () => {
 				title={tForm("addNewVariable")}
 			/>
 
-			<form className="flex flex-col gap-4" id="createNewVariableForm" onSubmit={handleSubmit(onSubmit)}>
+			<form className="flex flex-col gap-6" id="createNewVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
 						{...register("name", { required: t("nameRequired") })}

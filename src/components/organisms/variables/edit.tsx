@@ -103,7 +103,7 @@ export const EditVariable = () => {
 				title={tForm("modifyVariable")}
 			/>
 
-			<form className="flex flex-col gap-4" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
+			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
 						value={name}
