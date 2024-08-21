@@ -159,7 +159,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 		return isSaving ? (
 			<Loader isCenter size="xl" />
 		) : (
-			<form className="flex w-full flex-col gap-4">
+			<form className="flex w-full flex-col gap-6">
 				<div className="relative">
 					<Controller
 						control={control}
@@ -232,7 +232,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 						{triggerData
 							? Object.entries(triggerData).map(([key, value]) => (
 									<div className="align-center flex gap-1" key={key}>
-										<div className="flex w-full gap-4">
+										<div className="flex w-full gap-6">
 											<Input
 												aria-label={t("placeholders.key")}
 												className="w-full"

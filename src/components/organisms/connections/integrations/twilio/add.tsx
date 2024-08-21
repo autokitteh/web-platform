@@ -74,7 +74,7 @@ export const TwilioIntegrationAddForm = ({
 				value={connectionType}
 			/>
 
-			<form className="mt-4 flex w-full flex-col gap-4" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+			<form className="mt-6 flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						errors={errors}

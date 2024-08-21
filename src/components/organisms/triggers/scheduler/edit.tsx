@@ -132,7 +132,7 @@ export const SchedulerEditTrigger = () => {
 			/>
 
 			<form
-				className="flex w-full flex-col gap-4"
+				className="flex w-full flex-col gap-6"
 				id={TriggerFormIds.modifySchedulerForm}
 				onSubmit={handleSubmit(onSubmit)}
 			>

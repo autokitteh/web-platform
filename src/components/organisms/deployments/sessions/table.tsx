@@ -216,7 +216,7 @@ export const SessionsTable = () => {
 
 				{sessions.length ? (
 					<div className="relative flex h-full flex-col">
-						<Table className="mt-4 flex-1 overflow-hidden">
+						<Table className="mt-6 flex-1 overflow-hidden">
 							<THead>
 								<Tr>
 									<Th className="group cursor-pointer font-normal">

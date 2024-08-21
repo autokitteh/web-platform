@@ -50,7 +50,7 @@ export const GithubIntegrationEditForm = () => {
 				placeholder={t("placeholders.selectConnectionType")}
 				value={selectConnectionTypeValue}
 			/>
-			<form className="mt-4 flex flex-col gap-4" id="connectionForm" onSubmit={handleSubmit(onSubmitEdit)}>
+			<form className="mt-6 flex flex-col gap-6" id="connectionForm" onSubmit={handleSubmit(onSubmitEdit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						copyToClipboard={copyToClipboard}
