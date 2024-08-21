@@ -58,6 +58,7 @@ export const GoogleIntegrationAddForm = ({
 		if (connectionType.value === ConnectionAuthType.Oauth) {
 			setValidationSchema(googleOauthSchema);
 			setValue("auth_type", ConnectionAuthType.Oauth);
+			setValue("auth_scopes", type);
 
 			return;
 		}
@@ -65,7 +66,7 @@ export const GoogleIntegrationAddForm = ({
 		setValue("auth_type", ConnectionAuthType.Json);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType]);
+	}, [connectionType, type]);
 
 	useEffect(() => {
 		if (connectionId) {
