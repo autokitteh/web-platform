@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { ConnectionService, HttpService, NoCredentialsHttpClient, VariablesService } from "@services";
+import { ConnectionService, HttpService, VariablesService } from "@services";
 import { ConnectionAuthType } from "@src/enums";
 import { GoogleIntegrations, Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
@@ -211,6 +211,14 @@ export const useConnectionForm = (
 		}
 	};
 
+	const openPopup = (url, title, width, height) => {
+		const left = (window.screen.width - width) / 2;
+		const top = (window.screen.height - height) / 2;
+		const options = `toolbar=no, menubar=no, width=${width}, height=${height}, top=${top}, left=${left}`;
+
+		return window.open(url, title, options);
+	};
+
 	const handleGoogleOauth = async (oauthConnectionId: string) => {
 		setIsLoading(true);
 
@@ -224,11 +232,20 @@ export const useConnectionForm = (
 
 			const connectionData = flattenFormData(getValues(), validationSchema);
 
-			const response = await HttpService.post(
-				`/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web`,
-				connectionData
+			const response = await fetch(
+				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+					},
+					body: new URLSearchParams(connectionData).toString(),
+				}
 			);
-			console.log("response", response);
+
+			if (response.url) {
+				openPopup(response.url, "Google OAuth", 600, 600);
+			}
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
