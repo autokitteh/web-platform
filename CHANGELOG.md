@@ -1,3 +1,10 @@
+## [1.38.3](https://github.com/autokitteh/web-platform/compare/v1.38.2...v1.38.3) (2024-08-21)
+
+
+### Bug Fixes
+
+* spacing in forms to show errors ([#287](https://github.com/autokitteh/web-platform/issues/287)) ([26bcce4](https://github.com/autokitteh/web-platform/commit/26bcce4cafa86441a5fbe977f2a4886e13379bb1))
+
 ## [1.38.2](https://github.com/autokitteh/web-platform/compare/v1.38.1...v1.38.2) (2024-08-20)
 
 
