@@ -3,4 +3,5 @@ export enum StoreName {
 	project = "ProjectStore",
 	user = "UserStore",
 	files = "FileStore",
+	connectionChecker = "ConnectionCheckerStore",
 }

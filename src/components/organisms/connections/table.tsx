@@ -3,12 +3,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ModalName } from "@enums/components";
+import { ConnectionStatus, ModalName } from "@enums/components";
 import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useModalStore, useToastStore } from "@store";
+import { useConnectionCheckerStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ConnectionTableStatus, SortButton } from "@components/molecules";
@@ -22,7 +22,6 @@ export const ConnectionsTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "connections" });
 	const { closeModal, openModal } = useModalStore();
 	const { projectId } = useParams();
-
 	const navigate = useNavigate();
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +31,8 @@ export const ConnectionsTable = () => {
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections, "name");
+
+	const { connectionId: checkerConnectionId, incrementRetries, resetChecker, retries } = useConnectionCheckerStore();
 
 	const fetchConnections = async () => {
 		setIsLoading(true);
@@ -58,8 +59,42 @@ export const ConnectionsTable = () => {
 
 	useEffect(() => {
 		fetchConnections();
+
+		if (!checkerConnectionId) return;
+
+		const checkStatus = async () => {
+			if (retries >= 6) {
+				resetChecker();
+
+				return;
+			}
+
+			const { data: statusData, error } = await ConnectionService.test(checkerConnectionId);
+			if (error) {
+				addToast({
+					id: Date.now().toString(),
+					message: (error as Error).message,
+					type: "error",
+				});
+
+				return;
+			}
+
+			if (statusData && statusData === ConnectionStatus.ok.toString()) {
+				resetChecker();
+				fetchConnections();
+			} else {
+				incrementRetries();
+			}
+		};
+
+		const intervalId = setInterval(checkStatus, 10 * 1000);
+
+		checkStatus();
+
+		return () => clearInterval(intervalId);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	}, []);
 
 	const handleOpenModalDeleteConnection = useCallback(
 		(connectionId: string) => {
