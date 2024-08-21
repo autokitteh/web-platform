@@ -32,13 +32,16 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 	},
 
 	resetChecker: () => {
+		const { recheckIntervalId } = get();
+
+		if (recheckIntervalId) {
+			clearInterval(recheckIntervalId);
+		}
+
 		set((state) => {
 			state.connectionId = "";
 			state.retries = 0;
-			if (state.recheckIntervalId) {
-				clearInterval(state.recheckIntervalId);
-				state.recheckIntervalId = null;
-			}
+			state.recheckIntervalId = null;
 
 			return state;
 		});
@@ -53,7 +56,6 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		const checkStatus = async () => {
 			if (retries >= 6) {
 				resetChecker();
-				clearInterval(get().recheckIntervalId!);
 
 				return;
 			}
@@ -71,7 +73,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 					return;
 				}
 
-				if (statusData === ("ok" as ConnectionStatusType)) {
+				if (statusData === ("ok" as ConnectionStatusType).toString()) {
 					resetChecker();
 				} else {
 					incrementRetries();
@@ -82,6 +84,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 					message: (error as Error).message,
 					type: "error",
 				});
+				resetChecker();
 			}
 		};
 
@@ -91,8 +94,6 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 
 			return state;
 		});
-
-		checkStatus();
 	},
 });
 
