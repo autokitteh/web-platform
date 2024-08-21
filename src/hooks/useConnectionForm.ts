@@ -10,6 +10,7 @@ import { ConnectionService, HttpService, VariablesService } from "@services";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
+import { useConnectionCheckerStore } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup } from "@src/utilities";
@@ -33,6 +34,7 @@ export const useConnectionForm = (
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
+	const { setCheckerInterval } = useConnectionCheckerStore();
 
 	const {
 		clearErrors,
@@ -178,6 +180,7 @@ export const useConnectionForm = (
 			}
 
 			setConnectionId(responseConnectionId);
+			setCheckerInterval(responseConnectionId!);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
