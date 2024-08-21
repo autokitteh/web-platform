@@ -194,7 +194,7 @@ export const useConnectionForm = (
 		editConnection(connectionId!, connectionIntegrationName);
 	};
 
-	const handleOAuth = async (oauthConnectionId: string, integrationName: typeof Integrations) => {
+	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
