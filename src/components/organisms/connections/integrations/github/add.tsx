@@ -82,19 +82,17 @@ export const GithubIntegrationAddForm = ({
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>
-			<form className="mt-6 flex items-start gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
-				<div className="flex w-full flex-col gap-6">
-					{ConnectionTypeComponent ? (
-						<ConnectionTypeComponent
-							copyToClipboard={copyToClipboard}
-							errors={errors}
-							isLoading={isLoading}
-							mode="create"
-							register={register}
-							setValue={setValue}
-						/>
-					) : null}
-				</div>
+			<form className="mt-4 flex flex-col gap-4" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+				{ConnectionTypeComponent ? (
+					<ConnectionTypeComponent
+						copyToClipboard={copyToClipboard}
+						errors={errors}
+						isLoading={isLoading}
+						mode="create"
+						register={register}
+						setValue={setValue}
+					/>
+				) : null}
 			</form>
 		</>
 	);

@@ -132,100 +132,98 @@ export const SchedulerEditTrigger = () => {
 			/>
 
 			<form
-				className="flex items-start gap-10"
+				className="flex w-full flex-col gap-4"
 				id={TriggerFormIds.modifySchedulerForm}
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<div className="flex w-full flex-col gap-6">
-					<div className="relative">
-						<Controller
-							control={control}
-							name="connection"
-							render={({ field }) => (
-								<Select
-									{...field}
-									aria-label={t("placeholders.selectConnection")}
-									dataTestid="select-trigger-type"
-									disabled
-									isError={!!errors.connection}
-									noOptionsLabel={t("noConnectionsAvailable")}
-									onChange={(selected) => field.onChange(selected)}
-									options={connections}
-									placeholder={t("placeholders.selectConnection")}
-									value={field.value}
-								/>
-							)}
-						/>
+				<div className="relative">
+					<Controller
+						control={control}
+						name="connection"
+						render={({ field }) => (
+							<Select
+								{...field}
+								aria-label={t("placeholders.selectConnection")}
+								dataTestid="select-trigger-type"
+								disabled
+								isError={!!errors.connection}
+								noOptionsLabel={t("noConnectionsAvailable")}
+								onChange={(selected) => field.onChange(selected)}
+								options={connections}
+								placeholder={t("placeholders.selectConnection")}
+								value={field.value}
+							/>
+						)}
+					/>
 
-						<ErrorMessage>{errors.connection?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.connection?.message}</ErrorMessage>
+				</div>
 
-					<div className="relative">
-						<Input
-							{...register("name")}
-							aria-label={t("placeholders.name")}
-							disabled
-							isError={!!errors.name}
-							isRequired
-							placeholder={t("placeholders.name")}
-							value={name}
-						/>
+				<div className="relative">
+					<Input
+						{...register("name")}
+						aria-label={t("placeholders.name")}
+						disabled
+						isError={!!errors.name}
+						isRequired
+						placeholder={t("placeholders.name")}
+						value={name}
+					/>
 
-						<ErrorMessage>{errors.name?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.name?.message}</ErrorMessage>
+				</div>
 
-					<div className="relative">
-						<Input
-							value={cron}
-							{...register("cron")}
-							aria-label={t("placeholders.cron")}
-							isError={!!errors.cron}
-							isRequired
-							placeholder={t("placeholders.cron")}
-						/>
+				<div className="relative">
+					<Input
+						value={cron}
+						{...register("cron")}
+						aria-label={t("placeholders.cron")}
+						isError={!!errors.cron}
+						isRequired
+						placeholder={t("placeholders.cron")}
+					/>
 
-						<ErrorMessage>{errors.cron?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.cron?.message}</ErrorMessage>
+				</div>
 
-					<div className="relative">
-						<Controller
-							control={control}
-							name="filePath"
-							render={({ field }) => (
-								<Select
-									{...field}
-									aria-label={t("placeholders.selectFile")}
-									dataTestid="select-file"
-									isError={!!errors.filePath}
-									label={t("placeholders.file")}
-									noOptionsLabel={t("noFilesAvailable")}
-									onChange={(selected) => field.onChange(selected)}
-									options={filesNameList}
-									placeholder={t("placeholders.selectFile")}
-									value={field.value}
-								/>
-							)}
-						/>
+				<div className="relative">
+					<Controller
+						control={control}
+						name="filePath"
+						render={({ field }) => (
+							<Select
+								{...field}
+								aria-label={t("placeholders.selectFile")}
+								dataTestid="select-file"
+								isError={!!errors.filePath}
+								label={t("placeholders.file")}
+								noOptionsLabel={t("noFilesAvailable")}
+								onChange={(selected) => field.onChange(selected)}
+								options={filesNameList}
+								placeholder={t("placeholders.selectFile")}
+								value={field.value}
+							/>
+						)}
+					/>
 
-						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
+				</div>
 
-					<div className="relative">
-						<Input
-							value={entryFunction}
-							{...register("entryFunction")}
-							aria-label={t("placeholders.functionName")}
-							isError={!!errors.entryFunction}
-							isRequired
-							placeholder={t("placeholders.functionName")}
-						/>
+				<div className="relative">
+					<Input
+						value={entryFunction}
+						{...register("entryFunction")}
+						aria-label={t("placeholders.functionName")}
+						isError={!!errors.entryFunction}
+						isRequired
+						placeholder={t("placeholders.functionName")}
+					/>
 
-						<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
-					</div>
+					<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
 				</div>
 			</form>
 
-			<Accordion className="mt-6" title={t("information")}>
+			<Accordion className="mt-4" title={t("information")}>
 				<div className="flex flex-col items-start gap-2">
 					{infoCronExpressionsLinks.map(({ text, url }, index) => (
 						<Link

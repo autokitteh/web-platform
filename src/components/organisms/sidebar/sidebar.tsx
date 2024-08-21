@@ -69,31 +69,9 @@ export const Sidebar = () => {
 
 						{isAuthEnabled ? (
 							<div className="flex flex-col justify-end gap-5">
-								<Button className="hover:bg-transparent" href="#">
-									<img
-										alt="avatar"
-										className="h-8 w-8 rounded-full"
-										src="https://via.placeholder.com/30"
-									/>
-
-									<AnimatePresence>
-										{isOpen ? (
-											<motion.span
-												animate="visible"
-												className="overflow-hidden whitespace-nowrap"
-												exit="hidden"
-												initial="hidden"
-												variants={animateVariant}
-											>
-												James L.
-											</motion.span>
-										) : null}
-									</AnimatePresence>
-								</Button>
-
 								<div>
 									<Button className="hover:bg-transparent" href="/settings">
-										<SettingsIcon className="h-8 w-8" fill="black" />
+										<SettingsIcon className="h-7 w-7" fill="black" />
 
 										<AnimatePresence>
 											{isOpen ? (
@@ -111,7 +89,7 @@ export const Sidebar = () => {
 									</Button>
 
 									<Button className="hover:bg-transparent" onClick={() => logoutFunction()}>
-										<LogoutIcon className="h-8 w-8" fill="black" />
+										<LogoutIcon className="h-7 w-7" fill="black" />
 
 										<AnimatePresence>
 											{isOpen ? (

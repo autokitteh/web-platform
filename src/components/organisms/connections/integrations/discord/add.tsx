@@ -38,7 +38,7 @@ export const DiscordIntegrationAddForm = ({
 	}, [connectionId]);
 
 	return (
-		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+		<form className="flex w-full flex-col gap-4" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Input
 					{...register("botToken")}

@@ -98,19 +98,17 @@ export const HttpIntegrationAddForm = ({
 
 	return (
 		<FormProvider {...methods}>
-			<form className="flex items-start gap-10" onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex w-full flex-col gap-6">
-					<Select
-						aria-label={t("placeholders.selectConnectionType")}
-						label={t("placeholders.connectionType")}
-						onChange={setSelectedConnectionType}
-						options={selectIntegrationHttp}
-						placeholder={t("placeholders.selectConnectionType")}
-						value={selectedConnectionType}
-					/>
+			<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+				<Select
+					aria-label={t("placeholders.selectConnectionType")}
+					label={t("placeholders.connectionType")}
+					onChange={setSelectedConnectionType}
+					options={selectIntegrationHttp}
+					placeholder={t("placeholders.selectConnectionType")}
+					value={selectedConnectionType}
+				/>
 
-					{renderConnectionFields()}
-				</div>
+				{renderConnectionFields()}
 			</form>
 		</FormProvider>
 	);

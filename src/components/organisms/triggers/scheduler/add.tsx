@@ -109,7 +109,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 			<Loader isCenter size="xl" />
 		) : (
 			<>
-				<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+				<form className="flex w-full flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
 					<div className="relative">
 						<Input
 							{...register("cron")}
@@ -159,7 +159,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 						<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
 					</div>
 				</form>
-				<Accordion className="mt-6" title={t("information")}>
+				<Accordion className="mt-4" title={t("information")}>
 					<div className="flex flex-col items-start gap-2">
 						{infoCronExpressionsLinks.map(({ text, url }, index) => (
 							<Link
