@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { googleIntegrationSchema, oauthSchema } from "@validations";
+import { googleIntegrationSchema, googleOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -34,7 +34,7 @@ export const GoogleIntegrationAddForm = ({
 		reset,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm({ json: "" }, googleIntegrationSchema, "create");
+	} = useConnectionForm({ json: "", auth_type: "json" }, googleIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
@@ -56,11 +56,14 @@ export const GoogleIntegrationAddForm = ({
 			return;
 		}
 		if (connectionType.value === ConnectionAuthType.Oauth) {
-			setValidationSchema(oauthSchema);
+			setValidationSchema(googleOauthSchema);
+			setValue("auth_type", ConnectionAuthType.Oauth);
 
 			return;
 		}
 		setValidationSchema(googleIntegrationSchema);
+		setValue("auth_type", ConnectionAuthType.Json);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
 
