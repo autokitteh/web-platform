@@ -74,17 +74,17 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	}
 
 	return (
-		<div className="flex h-screen w-screen flex-col pb-10 pl-10 pr-9 pt-5">
+		<div className="m-auto flex h-screen w-full max-w-[1200px] flex-col pb-10 pt-5">
 			<IconLogoAuth />
 
-			<div className="flex flex-1 items-center justify-between">
-				<div className="flex h-full w-1/2 items-center justify-center rounded-2xl px-8 py-10">
+			<div className="flex flex-1">
+				<div className="flex h-full w-1/2 justify-center rounded-2xl px-8 pt-12">
 					<div className="max-w-96">
 						<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
 					</div>
 				</div>
 
-				<Frame className="flex h-full w-1/2 items-center justify-center overflow-hidden bg-gray-150">
+				<Frame className="flex h-full w-1/2 items-center overflow-hidden bg-gray-150 pt-20">
 					<h2 className="text-3xl font-bold text-black">{t("whyDevelopersLove")}</h2>
 
 					<div className="mt-8 flex max-w-485 flex-wrap gap-3.5">
