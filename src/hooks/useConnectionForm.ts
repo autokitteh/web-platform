@@ -211,7 +211,7 @@ export const useConnectionForm = (
 		}
 	};
 
-	const openPopup = (url: string, title: string, width: number, height: number) => {
+	const openPopup = (url: string, title: string, width: number = 0, height: number = 0) => {
 		const left = (window.screen.width - width) / 2;
 		const top = (window.screen.height - height) / 2;
 		const options = `toolbar=no, menubar=no, width=${width}, height=${height}, top=${top}, left=${left}`;
@@ -221,9 +221,8 @@ export const useConnectionForm = (
 
 	const handleGoogleOauth = async (oauthConnectionId: string) => {
 		setIsLoading(true);
-
 		try {
-			VariablesService.setByConnectiontId(oauthConnectionId!, {
+			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
 				value: ConnectionAuthType.Oauth,
 				isSecret: false,
@@ -231,25 +230,20 @@ export const useConnectionForm = (
 			});
 
 			const connectionData = flattenFormData(getValues(), validationSchema);
-
-			const oauthCreationResponse = await fetch(
+			const response = await fetch(
 				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web`,
 				{
 					method: "POST",
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded",
-					},
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
 					body: new URLSearchParams(connectionData).toString(),
 				}
 			);
 
-			if (oauthCreationResponse.url) {
-				openPopup(oauthCreationResponse.url, "Google OAuth", 0, 0);
-				setIsLoading(false);
-
-				return;
+			if (!response.url) {
+				toastAndLog("error", "errorRetrieveOauthURL");
 			}
-			toastAndLog("error", "errorCreatingNewConnection");
+
+			openPopup(response.url, "Google OAuth");
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
 		} finally {

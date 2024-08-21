@@ -4,6 +4,7 @@
 	"error": "Error",
 	"errorCreatingNewConnection": "Error while creating a new connection",
 	"errorCreatingNewConnectionExtended": "Error while creating a new connection, error: {{error}}",
+	"errorRetrieveOauthURL": "Failed to retrieve OAuth URL",
 	"errorEditingNewConnection": "Error while editing a connection",
 	"errorEditingNewConnectionExtended": "Error while editing a connection, error: {{error}}",
 	"errorFetchingVariabls": "Error fetching variables",
