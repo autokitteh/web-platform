@@ -7,21 +7,25 @@ import { ConnectionCheckerStore } from "@interfaces/store";
 
 const store: StateCreator<ConnectionCheckerStore> = (set) => ({
 	setCheckerInterval: (connectionId: string) =>
-		set((state) => ({
-			...state,
-			connectionId,
-			retries: 0,
-		})),
+		set((state) => {
+			state.connectionId = connectionId;
+			state.retries = 0;
+
+			return state;
+		}),
 	incrementRetries: () =>
-		set((state) => ({
-			...state,
-			retries: state.retries + 1,
-		})),
+		set((state) => {
+			state.retries += 1;
+
+			return state;
+		}),
 	resetChecker: () =>
-		set(() => ({
-			connectionId: "",
-			retries: 0,
-		})),
+		set((state) => {
+			state.connectionId = "";
+			state.retries = 0;
+
+			return state;
+		}),
 	connectionId: "",
 	retries: 0,
 });

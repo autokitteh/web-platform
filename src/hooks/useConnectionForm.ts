@@ -180,7 +180,6 @@ export const useConnectionForm = (
 			}
 
 			setConnectionId(responseConnectionId);
-			setCheckerInterval(responseConnectionId!);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
@@ -214,7 +213,9 @@ export const useConnectionForm = (
 				scopeId: oauthConnectionId,
 			});
 			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`;
+
 			openPopup(OauthUrl, "Authorize");
+			setCheckerInterval(oauthConnectionId!);
 
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -249,6 +250,9 @@ export const useConnectionForm = (
 			}
 
 			openPopup(response.url, "Authorize");
+			setCheckerInterval(oauthConnectionId!);
+
+			window.open(`${apiBaseUrl}/oauth/start/${integration}?cid=${oauthConnectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
