@@ -101,7 +101,7 @@ export const useConnectionForm = (
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnection", error);
+			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -164,14 +164,14 @@ export const useConnectionForm = (
 			);
 
 			if (error || !responseConnectionId) {
-				toastAndLog("error", "errorCreatingNewConnection", error, true);
+				toastAndLog("error", "errorCreatingNewConnectionExtended", error, true);
 
 				return;
 			}
 
 			setConnectionId(responseConnectionId);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnection", error);
+			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -205,13 +205,13 @@ export const useConnectionForm = (
 			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnection", error);
+			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
-	const openPopup = (url, title, width, height) => {
+	const openPopup = (url: string, title: string, width: number, height: number) => {
 		const left = (window.screen.width - width) / 2;
 		const top = (window.screen.height - height) / 2;
 		const options = `toolbar=no, menubar=no, width=${width}, height=${height}, top=${top}, left=${left}`;
@@ -232,7 +232,7 @@ export const useConnectionForm = (
 
 			const connectionData = flattenFormData(getValues(), validationSchema);
 
-			const response = await fetch(
+			const oauthCreationResponse = await fetch(
 				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web`,
 				{
 					method: "POST",
@@ -243,11 +243,15 @@ export const useConnectionForm = (
 				}
 			);
 
-			if (response.url) {
-				openPopup(response.url, "Google OAuth", 600, 600);
+			if (oauthCreationResponse.url) {
+				openPopup(oauthCreationResponse.url, "Google OAuth", 0, 0);
+				setIsLoading(false);
+
+				return;
 			}
+			toastAndLog("error", "errorCreatingNewConnection");
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnection", error);
+			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
 		} finally {
 			setIsLoading(false);
 		}
