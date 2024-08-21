@@ -6,9 +6,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { ConnectionService, HttpService, VariablesService } from "@services";
+import { ConnectionService, HttpService, NoCredentialsHttpClient, VariablesService } from "@services";
 import { ConnectionAuthType } from "@src/enums";
-import { Integrations } from "@src/enums/components";
+import { GoogleIntegrations, Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
@@ -102,6 +102,7 @@ export const useConnectionForm = (
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
+		} finally {
 			setIsLoading(false);
 		}
 	};
@@ -152,13 +153,17 @@ export const useConnectionForm = (
 				connectionName,
 				integration: { value: integrationName },
 			} = getValues();
+
+			const integrationUniqueName =
+				integrationName in GoogleIntegrations ? `${Integrations.google}${integrationName}` : integrationName;
+
 			const { data: responseConnectionId, error } = await ConnectionService.create(
 				projectId!,
-				integrationName,
+				integrationUniqueName,
 				connectionName
 			);
 
-			if (error) {
+			if (error || !responseConnectionId) {
 				toastAndLog("error", "errorCreatingNewConnection", error, true);
 
 				return;
@@ -189,7 +194,7 @@ export const useConnectionForm = (
 		editConnection(connectionId!, connectionIntegrationName);
 	};
 
-	const handleOAuth = async (oauthConnectionId: string, integrationName: Integrations) => {
+	const handleOAuth = async (oauthConnectionId: string, integrationName: typeof Integrations) => {
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
@@ -199,6 +204,31 @@ export const useConnectionForm = (
 			});
 			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			toastAndLog("error", "errorCreatingNewConnection", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleGoogleOauth = async (oauthConnectionId: string) => {
+		setIsLoading(true);
+
+		try {
+			VariablesService.setByConnectiontId(oauthConnectionId!, {
+				name: "auth_type",
+				value: ConnectionAuthType.Oauth,
+				isSecret: false,
+				scopeId: oauthConnectionId,
+			});
+
+			const connectionData = flattenFormData(getValues(), validationSchema);
+
+			const response = await HttpService.post(
+				`/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web`,
+				connectionData
+			);
+			console.log("response", response);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
@@ -251,5 +281,6 @@ export const useConnectionForm = (
 		connectionName,
 		setValidationSchema,
 		clearErrors,
+		handleGoogleOauth,
 	};
 };

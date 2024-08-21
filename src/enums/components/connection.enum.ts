@@ -5,20 +5,28 @@ export enum ConnectionStatus {
 	warning = 2,
 }
 
-export enum Integrations {
+export enum GoogleIntegrations {
+	sheets = "sheets",
+	calendar = "calendar",
+	drive = "drive",
+	forms = "forms",
+}
+
+enum RegularIntegrations {
 	github = "github",
 	slack = "slack",
-	gmail = "gmail",
 	google = "google",
 	googlegemini = "googlegemini",
-	googlesheets = "sheets",
-	googlecalendar = "calendar",
-	googledrive = "drive",
-	googleforms = "forms",
 	aws = "aws",
+	gmail = "gmail",
 	http = "http",
 	twilio = "twilio",
 	jira = "jira",
 	discord = "discord",
 	chatgpt = "chatgpt",
 }
+
+export const Integrations = {
+	...RegularIntegrations,
+	...GoogleIntegrations,
+};
