@@ -80,7 +80,7 @@ export const SlackIntegrationAddForm = ({
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>
-			<form className="mt-4 flex w-full flex-col gap-4" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+			<form className="mt-4 flex flex-col gap-4" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent errors={errors} isLoading={isLoading} register={register} />
 				) : null}
