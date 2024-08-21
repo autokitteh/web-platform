@@ -84,7 +84,10 @@ export class ConnectionService {
 			};
 		} catch (error) {
 			const errorMessage = i18n.t("connectionStatusFetchFail", { ns: "services" });
-			const errorLog = i18n.t("connectionStatusFetchFail", { ns: "services", error: (error as Error).message });
+			const errorLog = i18n.t("connectionStatusFetchFailExtended", {
+				ns: "services",
+				error: (error as Error).message,
+			});
 
 			LoggerService.error(namespaces.connectionService, errorLog);
 

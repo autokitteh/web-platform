@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ConnectionStatus, ModalName } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
@@ -32,7 +32,7 @@ export const ConnectionsTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections, "name");
 
-	const { connectionId: checkerConnectionId, incrementRetries, resetChecker, retries } = useConnectionCheckerStore();
+	const { startCheckingStatus } = useConnectionCheckerStore();
 
 	const fetchConnections = async () => {
 		setIsLoading(true);
@@ -59,40 +59,7 @@ export const ConnectionsTable = () => {
 
 	useEffect(() => {
 		fetchConnections();
-
-		if (!checkerConnectionId) return;
-
-		const checkStatus = async () => {
-			if (retries >= 6) {
-				resetChecker();
-
-				return;
-			}
-
-			const { data: statusData, error } = await ConnectionService.test(checkerConnectionId);
-			if (error) {
-				addToast({
-					id: Date.now().toString(),
-					message: (error as Error).message,
-					type: "error",
-				});
-
-				return;
-			}
-
-			if (statusData && statusData === ConnectionStatus.ok.toString()) {
-				resetChecker();
-				fetchConnections();
-			} else {
-				incrementRetries();
-			}
-		};
-
-		const intervalId = setInterval(checkStatus, 10 * 1000);
-
-		checkStatus();
-
-		return () => clearInterval(intervalId);
+		startCheckingStatus(); // Start checking the connection status
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
