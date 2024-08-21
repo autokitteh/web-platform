@@ -28,6 +28,7 @@ export const useConnectionForm = (
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
 
 	const {
+		clearErrors,
 		control,
 		formState: { errors },
 		getValues,
@@ -248,5 +249,6 @@ export const useConnectionForm = (
 		integration,
 		connectionName,
 		setValidationSchema,
+		clearErrors,
 	};
 };

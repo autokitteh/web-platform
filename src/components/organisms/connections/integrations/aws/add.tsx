@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 
-import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
@@ -23,8 +22,8 @@ export const AwsIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { control, createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
-		{ access_key: "", secret_key: "", token: "", name: { label: "", value: "" } },
+	const { clearErrors, createConnection, errors, handleSubmit, isLoading, register, setValue } = useConnectionForm(
+		{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
 		awsIntegrationSchema,
 		"create"
 	);
@@ -39,20 +38,16 @@ export const AwsIntegrationAddForm = ({
 	return (
 		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
-				<Controller
-					control={control}
-					name="name"
-					render={({ field }) => (
-						<Select
-							aria-label={t("aws.placeholders.region")}
-							isError={!!errors.region}
-							label={t("aws.placeholders.region")}
-							onChange={(selected) => field.onChange(selected)}
-							options={selectIntegrationAws}
-							placeholder={t("aws.placeholders.region")}
-							value={field.value}
-						/>
-					)}
+				<Select
+					aria-label={t("aws.placeholders.region")}
+					isError={!!errors.region}
+					label={t("aws.placeholders.region")}
+					onChange={(selectedRegion) => {
+						setValue("region", selectedRegion);
+						clearErrors("region");
+					}}
+					options={selectIntegrationAws}
+					placeholder={t("aws.placeholders.region")}
 				/>
 
 				<ErrorMessage>{errors.region?.message as string}</ErrorMessage>

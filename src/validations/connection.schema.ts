@@ -24,7 +24,7 @@ export const selectRegionSchema = z.object({
 	value: z.string(),
 });
 export const awsIntegrationSchema = z.object({
-	name: selectRegionSchema.refine((value) => value.label, {
+	region: selectRegionSchema.refine((value) => value.label, {
 		message: "Region is required",
 	}),
 	access_key: z.string().min(1, "Access Key is required"),
