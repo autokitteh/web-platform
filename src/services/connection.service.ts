@@ -69,16 +69,6 @@ export class ConnectionService {
 		try {
 			const { status } = await connectionsClient.test({ connectionId });
 
-			if (!status) {
-				const errorMessage = i18n.t("connectionStatusFetchFail", { ns: "services" });
-				LoggerService.error(namespaces.triggerService, errorMessage);
-
-				return {
-					data: undefined,
-					error: errorMessage,
-				};
-			}
-
 			return {
 				data: mapProtoStatusToConnectionStatus(status),
 				error: undefined,
