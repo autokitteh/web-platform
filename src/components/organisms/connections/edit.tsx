@@ -31,7 +31,7 @@ export const EditConnection = () => {
 	}, [connectionId]);
 
 	const SelectedIntegrationComponent = selectedIntegration
-		? integrationToEditComponent[selectedIntegration.value as keyof typeof Integrations]
+		? integrationToEditComponent[selectedIntegration.value as Integrations]
 		: null;
 
 	return (
