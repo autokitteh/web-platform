@@ -3,9 +3,9 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { StoreName } from "@enums";
-import { ConnectionStatus } from "@enums/components";
 import { ConnectionCheckerStore } from "@interfaces/store";
 import { ConnectionService } from "@services";
+import { ConnectionStatusType } from "@type/models";
 
 import { useToastStore } from "@store";
 
@@ -53,6 +53,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		const checkStatus = async () => {
 			if (retries >= 6) {
 				resetChecker();
+				clearInterval(get().recheckIntervalId!);
 
 				return;
 			}
@@ -70,7 +71,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 					return;
 				}
 
-				if (statusData === ConnectionStatus.ok.toString()) {
+				if (statusData === ("ok" as ConnectionStatusType)) {
 					resetChecker();
 				} else {
 					incrementRetries();

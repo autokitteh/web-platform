@@ -68,6 +68,7 @@ export class ConnectionService {
 	static async test(connectionId: string): Promise<ServiceResponse<ConnectionStatusType>> {
 		try {
 			const { status } = await connectionsClient.test({ connectionId });
+
 			if (!status) {
 				const errorMessage = i18n.t("connectionStatusFetchFail", { ns: "services" });
 				LoggerService.error(namespaces.triggerService, errorMessage);
