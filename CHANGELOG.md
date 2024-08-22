@@ -1,3 +1,10 @@
+# [1.42.0](https://github.com/autokitteh/web-platform/compare/v1.41.0...v1.42.0) (2024-08-22)
+
+
+### Features
+
+* add aws edit form component ([#291](https://github.com/autokitteh/web-platform/issues/291)) ([e1c4c5b](https://github.com/autokitteh/web-platform/commit/e1c4c5b578a97515a216e177835c299f3cbab178))
+
 # [1.41.0](https://github.com/autokitteh/web-platform/compare/v1.40.0...v1.41.0) (2024-08-22)
 
 
