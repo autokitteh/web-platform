@@ -34,7 +34,7 @@ export const useConnectionForm = (
 	const navigate = useNavigate();
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
-	const { setCheckerInterval, startCheckingStatus } = useConnectionCheckerStore();
+	const { startCheckingStatus } = useConnectionCheckerStore();
 
 	const {
 		clearErrors,
@@ -215,8 +215,7 @@ export const useConnectionForm = (
 			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`;
 
 			openPopup(OauthUrl, "Authorize");
-			setCheckerInterval(oauthConnectionId!);
-			startCheckingStatus();
+			startCheckingStatus(oauthConnectionId!);
 
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -251,7 +250,7 @@ export const useConnectionForm = (
 			}
 
 			openPopup(response.url, "Authorize");
-			setCheckerInterval(oauthConnectionId!);
+			startCheckingStatus(oauthConnectionId!);
 
 			window.open(`${apiBaseUrl}/oauth/start/${integration}?cid=${oauthConnectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);

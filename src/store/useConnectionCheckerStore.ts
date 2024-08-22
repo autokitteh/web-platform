@@ -14,15 +14,6 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 	retries: 0,
 	recheckIntervalId: null as NodeJS.Timeout | null,
 
-	setCheckerInterval: (connectionId: string) => {
-		set((state) => {
-			state.connectionId = connectionId;
-			state.retries = 0;
-
-			return state;
-		});
-	},
-
 	incrementRetries: () => {
 		set((state) => {
 			state.retries += 1;
@@ -47,11 +38,18 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		});
 	},
 
-	startCheckingStatus: () => {
-		const { connectionId, incrementRetries, resetChecker, retries } = get();
+	startCheckingStatus: (connectionId: string) => {
+		const { incrementRetries, resetChecker, retries } = get();
 		const addToast = useToastStore.getState().addToast;
 
 		if (!connectionId) return;
+
+		set((state) => {
+			state.connectionId = connectionId;
+			state.retries = 0;
+
+			return state;
+		});
 
 		const checkStatus = async () => {
 			if (retries >= 6) {
