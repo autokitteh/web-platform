@@ -39,7 +39,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 	},
 
 	startCheckingStatus: (connectionId: string) => {
-		const { incrementRetries, resetChecker, retries } = get();
+		const { incrementRetries, resetChecker } = get();
 		const addToast = useToastStore.getState().addToast;
 
 		if (!connectionId) return;
@@ -52,6 +52,8 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		});
 
 		const checkStatus = async () => {
+			const { retries } = get();
+
 			if (retries >= 6) {
 				resetChecker();
 
