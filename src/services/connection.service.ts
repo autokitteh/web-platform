@@ -162,7 +162,6 @@ export class ConnectionService {
 
 			const convertedConnections = connections.map(convertConnectionProtoToModel);
 			const { integrations } = await integrationsClient.list({});
-
 			if (!integrations) {
 				const errorMessage = i18n.t("intergrationsNotFoundExtended", { ns: "services", projectId });
 				LoggerService.error(namespaces.triggerService, errorMessage);

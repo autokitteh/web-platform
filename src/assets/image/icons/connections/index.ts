@@ -14,3 +14,4 @@ export { default as TwilioIcon } from "@assets/image/icons/connections/Twilio.sv
 export { default as DiscordIcon } from "@assets/image/icons/connections/Discord.svg?react";
 export { default as GoogleDriveIcon } from "@assets/image/icons/connections/GoogleDrive.svg?react";
 export { default as RedisIcon } from "@assets/image/icons/connections/Redis.svg?react";
+export { default as GoogleGeminiIcon } from "@assets/image/icons/connections/GoogleGemini.svg?react";

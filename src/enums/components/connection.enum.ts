@@ -14,6 +14,7 @@ export enum Integrations {
 	googlecalendar = "googlecalendar",
 	googledrive = "googledrive",
 	googleforms = "googleforms",
+	googlegemini = "googlegemini",
 	aws = "aws",
 	http = "http",
 	twilio = "twilio",

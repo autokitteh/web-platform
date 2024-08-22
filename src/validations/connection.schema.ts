@@ -64,4 +64,8 @@ export const discordIntegrationSchema = z.object({
 	botToken: z.string().min(1, "Bot token is required"),
 });
 
+export const googleGeminiIntegrationSchema = z.object({
+	key: z.string().min(1, "Key is required"),
+});
+
 export const oauthSchema = z.object({});

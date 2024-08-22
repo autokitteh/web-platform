@@ -15,6 +15,7 @@ import {
 	AwsIntegrationAddForm,
 	DiscordIntegrationAddForm,
 	GithubIntegrationAddForm,
+	GoogleGeminiIntegrationAddForm,
 	GoogleIntegrationAddForm,
 	HttpIntegrationAddForm,
 	JiraIntegrationAddForm,
@@ -78,6 +79,12 @@ export const AddConnection = () => {
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
 				type={selectedIntegration.value}
+			/>
+		),
+		googlegemini: (
+			<GoogleGeminiIntegrationAddForm
+				connectionId={connectionId}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
 			/>
 		),
 		aws: <AwsIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,

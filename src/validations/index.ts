@@ -12,6 +12,7 @@ export {
 	jiraIntegrationSchema,
 	discordIntegrationSchema,
 	oauthSchema,
+	googleGeminiIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { defaultTriggerSchema, schedulerTriggerSchema } from "@validations/newTrigger.schema";

@@ -124,5 +124,14 @@
 		"information": {
 			"devPlatform": "Discord developer platform"
 		}
+	},
+	"gemini": {
+		"placeholders": {
+			"key": "Secret API Key"
+		},
+		"information": {
+			"aiStudio": "Google AI Studio",
+			"apiKeys": "API keys"
+		}
 	}
 }
