@@ -127,7 +127,7 @@ export const useConnectionForm = (
 			const { data: connectionResponse, error } = await ConnectionService.get(connId);
 
 			if (error) {
-				toastAndLog("error", "errorFetchingConnectionExtended", error, true);
+				toastAndLog("error", "errorFetchingConnection", error, true);
 
 				return;
 			}
@@ -142,7 +142,7 @@ export const useConnectionForm = (
 			await getConnectionAuthType(connId);
 			await getConnectionVariables(connId);
 		} catch (error) {
-			toastAndLog("error", "errorFetchingConnectionExtended", error);
+			toastAndLog("error", "errorFetchingConnection", error);
 		}
 	};
 
@@ -164,14 +164,14 @@ export const useConnectionForm = (
 			);
 
 			if (error || !responseConnectionId) {
-				toastAndLog("error", "errorCreatingNewConnectionExtended", error, true);
+				toastAndLog("error", "errorCreatingNewConnection", error, true);
 
 				return;
 			}
 
 			setConnectionId(responseConnectionId);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
+			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
 			setIsLoading(false);
 		}
