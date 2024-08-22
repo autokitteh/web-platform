@@ -35,7 +35,7 @@ export const HttpIntegrationEditForm = () => {
 
 			return;
 		}
-		if (connectionType === ConnectionAuthType.Oauth) {
+		if (connectionType === ConnectionAuthType.NoAuth) {
 			setValidationSchema(oauthSchema);
 
 			return;

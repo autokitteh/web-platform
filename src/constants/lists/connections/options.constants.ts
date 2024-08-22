@@ -94,7 +94,7 @@ export const selectIntegrationAws: SelectOption[] = [
 ];
 
 export const selectIntegrationHttp: SelectOption[] = [
-	{ label: "No Auth", value: ConnectionAuthType.Oauth },
+	{ label: "No Auth", value: ConnectionAuthType.NoAuth },
 	{ label: "Basic", value: ConnectionAuthType.Basic, disabled: true },
 	{ label: "Bearer", value: ConnectionAuthType.Bearer, disabled: true },
 ];

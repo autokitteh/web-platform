@@ -28,7 +28,7 @@ export const HttpIntegrationAddForm = ({
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
-			case ConnectionAuthType.Oauth:
+			case ConnectionAuthType.NoAuth:
 				return await handleOAuth(connectionId, Integrations.http);
 			case ConnectionAuthType.Basic:
 				await createConnection(connectionId, ConnectionAuthType.Basic, Integrations.http);
@@ -45,7 +45,7 @@ export const HttpIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.Oauth) {
+		if (connectionType.value === ConnectionAuthType.NoAuth) {
 			setValidationSchema(oauthSchema);
 
 			return;

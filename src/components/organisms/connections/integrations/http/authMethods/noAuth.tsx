@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "@components/atoms";
 
-export const HttpOauthForm = () => {
+export const HttpNoAuthForm = () => {
 	const { t } = useTranslation("integrations");
 
 	return (

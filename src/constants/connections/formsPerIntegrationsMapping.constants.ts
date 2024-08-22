@@ -6,7 +6,7 @@ import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connec
 import {
 	HttpBasicForm,
 	HttpBearerForm,
-	HttpOauthForm,
+	HttpNoAuthForm,
 } from "@components/organisms/connections/integrations/http/authMethods";
 import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connections/integrations/jira/authMethods";
 import {
@@ -44,6 +44,6 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.http]: {
 		[ConnectionAuthType.Basic]: HttpBasicForm,
 		[ConnectionAuthType.Bearer]: HttpBearerForm,
-		[ConnectionAuthType.Oauth]: HttpOauthForm,
+		[ConnectionAuthType.NoAuth]: HttpNoAuthForm,
 	},
 };
