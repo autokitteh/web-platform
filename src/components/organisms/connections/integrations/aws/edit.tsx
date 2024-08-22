@@ -13,9 +13,11 @@ import { FloppyDiskIcon } from "@assets/image/icons";
 
 export const AwsIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [lockStateAccessKey, setLockStateAccessKey] = useState(true);
-	const [lockStateSecretKey, setLockStateSecretKey] = useState(true);
-	const [lockStateToken, setLockStateToken] = useState(true);
+	const [lockState, setLockState] = useState<{ access_key: boolean; secret_key: boolean; token: boolean }>({
+		access_key: true,
+		secret_key: true,
+		token: true,
+	});
 
 	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
 		{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
@@ -53,9 +55,11 @@ export const AwsIntegrationEditForm = () => {
 					{...register("access_key")}
 					aria-label={t("aws.placeholders.accessKey")}
 					handleInputChange={(newValue) => setValue("access_key", newValue)}
-					handleLockAction={setLockStateAccessKey}
+					handleLockAction={(newLockState: boolean) =>
+						setLockState((prevState) => ({ ...prevState, access_key: newLockState }))
+					}
 					isError={!!errors.access_key}
-					isLocked={lockStateAccessKey}
+					isLocked={lockState.access_key}
 					isRequired
 					placeholder={t("aws.placeholders.accessKey")}
 					resetOnFirstFocus
@@ -69,9 +73,11 @@ export const AwsIntegrationEditForm = () => {
 					{...register("secret_key")}
 					aria-label={t("aws.placeholders.secretKey")}
 					handleInputChange={(newValue) => setValue("secret_key", newValue)}
-					handleLockAction={setLockStateSecretKey}
+					handleLockAction={(newLockState: boolean) =>
+						setLockState((prevState) => ({ ...prevState, secret_key: newLockState }))
+					}
 					isError={!!errors.secret_key}
-					isLocked={lockStateSecretKey}
+					isLocked={lockState.secret_key}
 					isRequired
 					placeholder={t("aws.placeholders.secretKey")}
 					resetOnFirstFocus
@@ -85,9 +91,11 @@ export const AwsIntegrationEditForm = () => {
 					{...register("token")}
 					aria-label={t("aws.placeholders.token")}
 					handleInputChange={(newValue) => setValue("token", newValue)}
-					handleLockAction={setLockStateToken}
+					handleLockAction={(newLockState: boolean) =>
+						setLockState((prevState) => ({ ...prevState, token: newLockState }))
+					}
 					isError={!!errors.token}
-					isLocked={lockStateToken}
+					isLocked={lockState.token}
 					isRequired
 					placeholder={t("aws.placeholders.token")}
 					resetOnFirstFocus
