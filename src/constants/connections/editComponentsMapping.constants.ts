@@ -10,7 +10,7 @@ import { OpenAiIntegrationEditForm } from "@components/organisms/connections/int
 import { SlackIntegrationEditForm } from "@components/organisms/connections/integrations/slack";
 import { TwilioIntegrationEditForm } from "@components/organisms/connections/integrations/twilio";
 
-export const integrationToEditComponent: Partial<Record<Integrations, React.ComponentType<any>>> = {
+export const integrationToEditComponent: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
 	[Integrations.github]: GithubIntegrationEditForm,
 	[Integrations.discord]: DiscordIntegrationEditForm,
 	[Integrations.jira]: JiraIntegrationEditForm,

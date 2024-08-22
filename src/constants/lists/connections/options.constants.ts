@@ -31,10 +31,10 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Jira", value: Integrations.jira, icon: JiraIcon },
 	{ disabled: false, label: "Discord", value: Integrations.discord, icon: DiscordIcon },
 	{ disabled: false, label: "Google (All APIs)", value: Integrations.google, icon: GoogleIcon },
-	{ disabled: false, label: "Google Sheets", value: Integrations.googlesheets, icon: GoogleSheetsIcon },
-	{ disabled: false, label: "Google Calendar", value: Integrations.googlecalendar, icon: GoogleCalendarIcon },
-	{ disabled: false, label: "Google Drive", value: Integrations.googledrive, icon: GoogleDriveIcon },
-	{ disabled: false, label: "Google Forms", value: Integrations.googleforms, icon: GoogleFormsIcon },
+	{ disabled: false, label: "Google Sheets", value: Integrations.sheets, icon: GoogleSheetsIcon },
+	{ disabled: false, label: "Google Calendar", value: Integrations.calendar, icon: GoogleCalendarIcon },
+	{ disabled: false, label: "Google Drive", value: Integrations.drive, icon: GoogleDriveIcon },
+	{ disabled: false, label: "Google Forms", value: Integrations.forms, icon: GoogleFormsIcon },
 	{ disabled: false, label: "Google Gemini", value: Integrations.googlegemini, icon: GoogleGeminiIcon },
 ];
 
@@ -49,10 +49,10 @@ export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElem
 	[Integrations.jira]: JiraIcon,
 	[Integrations.discord]: DiscordIcon,
 	[Integrations.google]: GoogleIcon,
-	[Integrations.googlesheets]: GoogleSheetsIcon,
-	[Integrations.googlecalendar]: GoogleCalendarIcon,
-	[Integrations.googledrive]: GoogleDriveIcon,
-	[Integrations.googleforms]: GoogleFormsIcon,
+	[Integrations.sheets]: GoogleSheetsIcon,
+	[Integrations.calendar]: GoogleCalendarIcon,
+	[Integrations.drive]: GoogleDriveIcon,
+	[Integrations.forms]: GoogleFormsIcon,
 	[Integrations.googlegemini]: GoogleGeminiIcon,
 };
 

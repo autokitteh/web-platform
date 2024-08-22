@@ -41,7 +41,7 @@
 	"variableNotCreatedByProjectIdExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}, Project ID: {{projectId}}, error: {{error}}",
 	"variableNotCreatedByConnectionIdExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}, Connection ID: {{connectionId}}, error: {{error}}",
 	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}",
-	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}, Name: {{name}}",
+	"variablesNotFoundExtended": "Couldn't fetch the variables details, Environments ID: {{id}}",
 	"projectNameExist": "Project name already exists"
 
 }

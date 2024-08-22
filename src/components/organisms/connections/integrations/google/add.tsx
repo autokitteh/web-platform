@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { googleIntegrationSchema, oauthSchema } from "@validations";
+import { googleIntegrationSchema, googleOauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -27,14 +27,14 @@ export const GoogleIntegrationAddForm = ({
 	const {
 		createConnection,
 		errors,
-		handleOAuth,
+		handleGoogleOauth,
 		handleSubmit,
 		isLoading,
 		register,
 		reset,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm({ json: "" }, googleIntegrationSchema, "create");
+	} = useConnectionForm({ json: "", auth_type: "json" }, googleIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
@@ -44,7 +44,7 @@ export const GoogleIntegrationAddForm = ({
 				await createConnection(connectionId, ConnectionAuthType.JsonKey, Integrations.google);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleOAuth(connectionId, Integrations.google);
+				await handleGoogleOauth(connectionId);
 				break;
 			default:
 				break;
@@ -56,13 +56,17 @@ export const GoogleIntegrationAddForm = ({
 			return;
 		}
 		if (connectionType.value === ConnectionAuthType.Oauth) {
-			setValidationSchema(oauthSchema);
+			setValue("auth_type", ConnectionAuthType.Oauth);
+			setValue("auth_scopes", type);
+			setValidationSchema(googleOauthSchema);
 
 			return;
 		}
+		setValue("auth_type", ConnectionAuthType.Json);
 		setValidationSchema(googleIntegrationSchema);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType]);
+	}, [connectionType, type]);
 
 	useEffect(() => {
 		if (connectionId) {

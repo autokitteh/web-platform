@@ -12,9 +12,16 @@ import { Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
-import { flattenFormData, getApiBaseUrl } from "@src/utilities";
+import { flattenFormData, getApiBaseUrl, openPopup } from "@src/utilities";
 
 import { useToastAndLog } from "@hooks";
+
+const GoogleIntegrationsPrefixRequired = [
+	Integrations.sheets,
+	Integrations.calendar,
+	Integrations.drive,
+	Integrations.forms,
+];
 
 export const useConnectionForm = (
 	initialValues: DefaultValues<FieldValues> | undefined,
@@ -102,6 +109,7 @@ export const useConnectionForm = (
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
+		} finally {
 			setIsLoading(false);
 		}
 	};
@@ -126,7 +134,7 @@ export const useConnectionForm = (
 			const { data: connectionResponse, error } = await ConnectionService.get(connId);
 
 			if (error) {
-				toastAndLog("error", "errorFetchingConnectionExtended", error, true);
+				toastAndLog("error", "errorFetchingConnection", error, true);
 
 				return;
 			}
@@ -141,7 +149,7 @@ export const useConnectionForm = (
 			await getConnectionAuthType(connId);
 			await getConnectionVariables(connId);
 		} catch (error) {
-			toastAndLog("error", "errorFetchingConnectionExtended", error);
+			toastAndLog("error", "errorFetchingConnection", error);
 		}
 	};
 
@@ -152,13 +160,18 @@ export const useConnectionForm = (
 				connectionName,
 				integration: { value: integrationName },
 			} = getValues();
+
+			const integrationUniqueName = GoogleIntegrationsPrefixRequired.includes(integrationName)
+				? `${Integrations.google}${integrationName}`
+				: integrationName;
+
 			const { data: responseConnectionId, error } = await ConnectionService.create(
 				projectId!,
-				integrationName,
+				integrationUniqueName,
 				connectionName
 			);
 
-			if (error) {
+			if (error || !responseConnectionId) {
 				toastAndLog("error", "errorCreatingNewConnection", error, true);
 
 				return;
@@ -189,7 +202,7 @@ export const useConnectionForm = (
 		editConnection(connectionId!, connectionIntegrationName);
 	};
 
-	const handleOAuth = async (oauthConnectionId: string, integrationName: Integrations) => {
+	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
@@ -197,7 +210,42 @@ export const useConnectionForm = (
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
-			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
+			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`;
+			openPopup(OauthUrl, "Authorize");
+
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			toastAndLog("error", "errorCreatingNewConnection", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleGoogleOauth = async (oauthConnectionId: string) => {
+		setIsLoading(true);
+		try {
+			await VariablesService.setByConnectiontId(oauthConnectionId, {
+				name: "auth_type",
+				value: ConnectionAuthType.Oauth,
+				isSecret: false,
+				scopeId: oauthConnectionId,
+			});
+
+			const connectionData = flattenFormData(getValues(), validationSchema);
+			const response = await fetch(
+				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					body: new URLSearchParams(connectionData).toString(),
+				}
+			);
+
+			if (!response.url) {
+				toastAndLog("error", "errorRetrieveOauthURL");
+			}
+
+			openPopup(response.url, "Authorize");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
@@ -251,5 +299,6 @@ export const useConnectionForm = (
 		connectionName,
 		setValidationSchema,
 		clearErrors,
+		handleGoogleOauth,
 	};
 };

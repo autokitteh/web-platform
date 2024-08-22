@@ -19,7 +19,7 @@ import {
 } from "@components/organisms/connections/integrations/twilio/authMethods";
 
 export const formsPerIntegrationsMapping: Partial<
-	Record<Integrations, Partial<Record<ConnectionAuthType, React.ComponentType<any>>>>
+	Record<keyof typeof Integrations, Partial<Record<ConnectionAuthType, React.ComponentType<any>>>>
 > = {
 	[Integrations.github]: {
 		[ConnectionAuthType.Pat]: PatForm,
