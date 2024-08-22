@@ -1,23 +1,17 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 
-import { namespaces } from "@constants";
+import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationHttp } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { LoggerService } from "@services";
-import { httpBasicIntegrationSchema, httpBearerIntegrationSchema } from "@validations";
+import { Integrations } from "@src/enums/components";
+import { useConnectionForm } from "@src/hooks";
+import { httpBasicIntegrationSchema, httpBearerIntegrationSchema, oauthSchema } from "@validations";
 
-import { useToastStore } from "@store";
-
-import { Button } from "@components/atoms";
 import { Select } from "@components/molecules";
-import { HttpBasicForm, HttpBearerForm } from "@components/organisms/connections/integrations/http";
 
 export const HttpIntegrationAddForm = ({
 	connectionId,
@@ -26,90 +20,82 @@ export const HttpIntegrationAddForm = ({
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
 }) => {
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const { projectId } = useParams();
-	const navigate = useNavigate();
-	const addToast = useToastStore((state) => state.addToast);
-	const [selectedConnectionType, setSelectedConnectionType] = useState<SingleValue<SelectOption>>({
-		value: ConnectionAuthType.NoAuth,
-		label: t("http.noAuth"),
-	});
-	const [isLoading] = useState(false);
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
-	const formSchema = useMemo(() => {
-		if (selectedConnectionType?.value === ConnectionAuthType.Basic) return httpBasicIntegrationSchema;
-		if (selectedConnectionType?.value === ConnectionAuthType.Bearer) return httpBearerIntegrationSchema;
-	}, [selectedConnectionType]);
+	const { createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
+		useConnectionForm({ basic_username: "", basic_password: "", bearer_access_token: "" }, oauthSchema, "create");
 
-	const methods = useForm({
-		resolver: formSchema ? zodResolver(formSchema) : undefined,
-		defaultValues: {
-			username: "",
-			password: "",
-			token: "",
-		},
-	});
-
-	const { handleSubmit } = methods;
-
-	useEffect(() => {
-		if (!connectionId) return;
-		navigate(`/projects/${projectId}/connections`);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
-
-	const renderNoAuth = () => (
-		<Button
-			ariaLabel={t("buttons.saveConnection")}
-			className="ml-auto w-fit bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
-			disabled={isLoading}
-			onClick={triggerParentFormSubmit}
-		>
-			{t("buttons.saveConnection")}
-		</Button>
-	);
-
-	const renderConnectionFields = () => {
-		switch (selectedConnectionType?.value) {
+	const configureConnection = async (connectionId: string) => {
+		switch (connectionType?.value) {
 			case ConnectionAuthType.NoAuth:
-				return renderNoAuth();
+				await createConnection(connectionId, ConnectionAuthType.NoAuth, `i/${Integrations.http}`);
+				break;
 			case ConnectionAuthType.Basic:
-				return <HttpBasicForm isLoading={isLoading} />;
+				await createConnection(connectionId, ConnectionAuthType.Basic, `i/${Integrations.http}`);
+				break;
 			case ConnectionAuthType.Bearer:
-				return <HttpBearerForm isLoading={isLoading} />;
+				await createConnection(connectionId, ConnectionAuthType.Bearer, `i/${Integrations.http}`);
+				break;
 			default:
-				return null;
+				break;
 		}
 	};
 
-	const onSubmit = () => {
-		if (connectionId) {
-			addToast({ id: Date.now().toString(), message: tErrors("connectionExists"), type: "error" });
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("connectionExistsExtended", { connectionId })}`
-			);
+	useEffect(() => {
+		if (!connectionType?.value) {
+			return;
+		}
+		if (connectionType.value === ConnectionAuthType.NoAuth) {
+			setValidationSchema(oauthSchema);
 
 			return;
 		}
-		triggerParentFormSubmit();
-	};
+		if (connectionType?.value === ConnectionAuthType.Basic) {
+			setValidationSchema(httpBasicIntegrationSchema);
+
+			return;
+		}
+		if (connectionType?.value === ConnectionAuthType.Bearer) {
+			setValidationSchema(httpBearerIntegrationSchema);
+
+			return;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionType]);
+
+	useEffect(() => {
+		if (connectionId) {
+			configureConnection(connectionId);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
+
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[Integrations.http]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
-		<FormProvider {...methods}>
-			<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-				<Select
-					aria-label={t("placeholders.selectConnectionType")}
-					label={t("placeholders.connectionType")}
-					onChange={setSelectedConnectionType}
-					options={selectIntegrationHttp}
-					placeholder={t("placeholders.selectConnectionType")}
-					value={selectedConnectionType}
-				/>
-
-				{renderConnectionFields()}
+		<>
+			<Select
+				aria-label={t("placeholders.selectConnectionType")}
+				dataTestid="select-connection-type"
+				label={t("placeholders.connectionType")}
+				onChange={(option) => setConnectionType(option)}
+				options={selectIntegrationHttp}
+				placeholder={t("placeholders.selectConnectionType")}
+				value={connectionType}
+			/>
+			<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+				{ConnectionTypeComponent ? (
+					<ConnectionTypeComponent
+						errors={errors}
+						isLoading={isLoading}
+						mode="create"
+						register={register}
+						setValue={setValue}
+					/>
+				) : null}
 			</form>
-		</FormProvider>
+		</>
 	);
 };

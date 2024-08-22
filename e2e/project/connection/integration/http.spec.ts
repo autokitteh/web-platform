@@ -6,6 +6,8 @@ test.beforeEach(async ({ connectionPage }) => {
 
 test.describe("Project Connection HTTP", () => {
 	test("Create HTTP no Auth", async ({ page }) => {
+		await page.getByTestId("select-connection-type").click();
+		await page.getByRole("option", { name: "No Auth" }).click();
 		await page.getByRole("button", { name: "Save Connection" }).click();
 
 		const newNameInTable = page.getByRole("row", { name: "NewHTTP" });
@@ -15,6 +17,8 @@ test.describe("Project Connection HTTP", () => {
 	});
 
 	test("Delete HTTP", async ({ page }) => {
+		await page.getByTestId("select-connection-type").click();
+		await page.getByRole("option", { name: "No Auth" }).click();
 		await page.getByRole("button", { name: "Save Connection" }).click();
 
 		const newNameInTable = page.getByRole("row", { name: "NewHTTP" });

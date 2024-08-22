@@ -12,7 +12,7 @@ export class ConnectionPage extends DashboardPage {
 		await nameInput.click();
 		await nameInput.fill(connectionName);
 
-		await this.page.getByTestId("select-connection-type").click();
+		await this.page.getByTestId("select-integration").click();
 		await this.page.getByRole("option", { name: connectionType }).click();
 	}
 }

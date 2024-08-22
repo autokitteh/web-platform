@@ -37,11 +37,11 @@ export const openAiIntegrationSchema = z.object({
 });
 
 export const httpBasicIntegrationSchema = z.object({
-	username: z.string().min(1, "Username is required"),
-	password: z.string().min(1, "Password is required"),
+	basic_username: z.string().min(1, "Username is required"),
+	basic_password: z.string().min(1, "Password is required"),
 });
 export const httpBearerIntegrationSchema = z.object({
-	token: z.string().min(1, "Personal Access Token is required"),
+	bearer_access_token: z.string().min(1, "Personal Access Token is required"),
 });
 
 export const twilioTokenIntegrationSchema = z.object({
