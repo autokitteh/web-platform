@@ -202,7 +202,9 @@ export const useConnectionForm = (
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
-			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
+			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`;
+			openPopup(OauthUrl, "Authorize");
+
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
@@ -235,7 +237,8 @@ export const useConnectionForm = (
 				toastAndLog("error", "errorRetrieveOauthURL");
 			}
 
-			openPopup(response.url, "Google OAuth");
+			openPopup(response.url, "Authorize");
+			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
