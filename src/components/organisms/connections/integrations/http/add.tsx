@@ -31,10 +31,10 @@ export const HttpIntegrationAddForm = ({
 			case ConnectionAuthType.NoAuth:
 				return await handleOAuth(connectionId, Integrations.http);
 			case ConnectionAuthType.Basic:
-				await createConnection(connectionId, ConnectionAuthType.Basic, Integrations.http);
+				await createConnection(connectionId, ConnectionAuthType.Basic, `i/${Integrations.http}`);
 				break;
 			case ConnectionAuthType.Bearer:
-				await createConnection(connectionId, ConnectionAuthType.Bearer, Integrations.http);
+				await createConnection(connectionId, ConnectionAuthType.Bearer, `i/${Integrations.http}`);
 				break;
 			default:
 				break;
