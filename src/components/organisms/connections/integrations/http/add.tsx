@@ -77,6 +77,7 @@ export const HttpIntegrationAddForm = ({
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
+				dataTestid="select-connection-type"
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
 				options={selectIntegrationHttp}
