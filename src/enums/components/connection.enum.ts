@@ -19,5 +19,5 @@ export enum Integrations {
 	twilio = "twilio",
 	jira = "jira",
 	discord = "discord",
-	openAi = "openAi",
+	chatgpt = "chatgpt",
 }

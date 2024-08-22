@@ -81,7 +81,7 @@ export const AddConnection = () => {
 			/>
 		),
 		aws: <AwsIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
-		openAi: (
+		chatgpt: (
 			<OpenAiIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
 		http: <HttpIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
