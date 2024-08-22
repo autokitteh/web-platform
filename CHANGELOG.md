@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/autokitteh/web-platform/compare/v1.38.3...v1.39.0) (2024-08-22)
+
+
+### Features
+
+* add twilio edit form component ([#288](https://github.com/autokitteh/web-platform/issues/288)) ([f353419](https://github.com/autokitteh/web-platform/commit/f35341981b13fdffdd1568aa7045165ec7264804))
+
 ## [1.38.3](https://github.com/autokitteh/web-platform/compare/v1.38.2...v1.38.3) (2024-08-21)
 
 
