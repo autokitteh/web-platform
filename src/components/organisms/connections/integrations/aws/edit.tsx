@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { SingleValue } from "react-select";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
 import { useConnectionForm } from "@src/hooks";
+import { SelectOption } from "@src/interfaces/components";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -19,8 +20,9 @@ export const AwsIntegrationEditForm = () => {
 		secret_key: true,
 		token: true,
 	});
+	const [regionValue, setRegionValue] = useState<SingleValue<SelectOption>>();
 
-	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+	const { connectionVariables, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(
 			{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
 			awsIntegrationSchema,
@@ -31,11 +33,13 @@ export const AwsIntegrationEditForm = () => {
 		if (!connectionVariables) return;
 
 		const region = connectionVariables?.find((variable) => variable.name === "Region");
-		setValue("region", region);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		if (region) {
+			setRegionValue({
+				label: region.name,
+				value: region.value,
+			});
+		}
 	}, [connectionVariables]);
-
-	const region = useWatch({ control, name: "region" });
 
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
@@ -47,7 +51,7 @@ export const AwsIntegrationEditForm = () => {
 					label={t("aws.placeholders.region")}
 					options={selectIntegrationAws}
 					placeholder={t("aws.placeholders.region")}
-					value={region}
+					value={regionValue}
 				/>
 
 				<ErrorMessage>{errors.region?.message as string}</ErrorMessage>
