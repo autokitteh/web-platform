@@ -9,6 +9,7 @@ import {
 	GoogleCalendarIcon,
 	GoogleDriveIcon,
 	GoogleFormsIcon,
+	GoogleGeminiIcon,
 	GoogleGmailIcon,
 	GoogleIcon,
 	GoogleSheetsIcon,
@@ -34,6 +35,7 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Google Calendar", value: Integrations.googlecalendar, icon: GoogleCalendarIcon },
 	{ disabled: false, label: "Google Drive", value: Integrations.googledrive, icon: GoogleDriveIcon },
 	{ disabled: false, label: "Google Forms", value: Integrations.googleforms, icon: GoogleFormsIcon },
+	{ disabled: false, label: "Google Gemini", value: Integrations.googlegemini, icon: GoogleGeminiIcon },
 ];
 
 export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
@@ -51,6 +53,7 @@ export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElem
 	[Integrations.googlecalendar]: GoogleCalendarIcon,
 	[Integrations.googledrive]: GoogleDriveIcon,
 	[Integrations.googleforms]: GoogleFormsIcon,
+	[Integrations.googlegemini]: GoogleGeminiIcon,
 };
 
 export const triggerTypes: SelectOption[] = [
