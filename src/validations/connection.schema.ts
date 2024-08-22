@@ -8,7 +8,7 @@ export const githubIntegrationSchema = z.object({
 
 export const googleIntegrationSchema = z.object({
 	json: z.string().min(1, "Json Key is required"),
-	auth_type: z.string().default("json"),
+	auth_type: z.string(),
 });
 
 export const connectionSchema = z.object({
@@ -71,6 +71,6 @@ export const googleGeminiIntegrationSchema = z.object({
 
 export const oauthSchema = z.object({});
 export const googleOauthSchema = z.object({
-	auth_type: z.string().default("oauth"),
+	auth_type: z.string(),
 	auth_scopes: z.string(),
 });
