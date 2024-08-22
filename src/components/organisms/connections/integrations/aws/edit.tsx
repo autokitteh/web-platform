@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
@@ -19,7 +20,7 @@ export const AwsIntegrationEditForm = () => {
 		token: true,
 	});
 
-	const { connectionVariables, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, watch } =
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(
 			{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
 			awsIntegrationSchema,
@@ -34,7 +35,7 @@ export const AwsIntegrationEditForm = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
-	const region = watch("region");
+	const region = useWatch({ control, name: "region" });
 
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
