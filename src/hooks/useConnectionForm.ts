@@ -243,7 +243,7 @@ export const useConnectionForm = (
 				toastAndLog("error", "errorRetrieveOauthURL");
 			}
 
-			openPopup(response.url, "Google OAuth");
+			openPopup(response.url, "Google OAuth", 500, 500);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
 		} finally {
