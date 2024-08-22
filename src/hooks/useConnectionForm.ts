@@ -60,6 +60,7 @@ export const useConnectionForm = (
 		}
 
 		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
+
 		if (!connectionAuthType) {
 			toastAndLog("error", "errorFetchingConnectionType");
 
