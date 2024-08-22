@@ -1,3 +1,10 @@
+# [1.41.0](https://github.com/autokitteh/web-platform/compare/v1.40.0...v1.41.0) (2024-08-22)
+
+
+### Features
+
+* add slack edit form component ([#292](https://github.com/autokitteh/web-platform/issues/292)) ([241e9b5](https://github.com/autokitteh/web-platform/commit/241e9b50444b981d05ef64f077a702247209c750))
+
 # [1.40.0](https://github.com/autokitteh/web-platform/compare/v1.39.0...v1.40.0) (2024-08-22)
 
 
