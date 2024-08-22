@@ -161,10 +161,9 @@ export const useConnectionForm = (
 				integration: { value: integrationName },
 			} = getValues();
 
-			const integrationUniqueName =
-				integrationName in GoogleIntegrationsPrefixRequired
-					? `${Integrations.google}${integrationName}`
-					: integrationName;
+			const integrationUniqueName = GoogleIntegrationsPrefixRequired.includes(integrationName)
+				? `${Integrations.google}${integrationName}`
+				: integrationName;
 
 			const { data: responseConnectionId, error } = await ConnectionService.create(
 				projectId!,
