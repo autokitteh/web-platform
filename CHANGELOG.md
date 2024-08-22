@@ -1,3 +1,10 @@
+# [1.40.0](https://github.com/autokitteh/web-platform/compare/v1.39.0...v1.40.0) (2024-08-22)
+
+
+### Features
+
+* add openai edit form component ([#289](https://github.com/autokitteh/web-platform/issues/289)) ([064f87b](https://github.com/autokitteh/web-platform/commit/064f87b3b3296b076da038519add2f7097213554))
+
 # [1.39.0](https://github.com/autokitteh/web-platform/compare/v1.38.3...v1.39.0) (2024-08-22)
 
 
