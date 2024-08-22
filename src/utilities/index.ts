@@ -12,3 +12,4 @@ export { fetchAllFilesContent, fetchFileContent } from "@utilities/templateFiles
 export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.utils";
 export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";
 export { getCookieDomain } from "@utilities/getCookieDomain.utils";
+export { openPopup } from "@utilities/openPopup.utils";

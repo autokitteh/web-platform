@@ -12,7 +12,7 @@ import { GoogleIntegrations, Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
-import { flattenFormData, getApiBaseUrl } from "@src/utilities";
+import { flattenFormData, getApiBaseUrl, openPopup } from "@src/utilities";
 
 import { useToastAndLog } from "@hooks";
 
@@ -101,7 +101,7 @@ export const useConnectionForm = (
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
+			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -205,18 +205,10 @@ export const useConnectionForm = (
 			window.open(`${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`, "_blank");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
+			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
 			setIsLoading(false);
 		}
-	};
-
-	const openPopup = (url: string, title: string, width: number = 0, height: number = 0) => {
-		const left = (window.screen.width - width) / 2;
-		const top = (window.screen.height - height) / 2;
-		const options = `toolbar=no, menubar=no, width=${width}, height=${height}, top=${top}, left=${left}`;
-
-		return window.open(url, title, options);
 	};
 
 	const handleGoogleOauth = async (oauthConnectionId: string) => {
@@ -243,9 +235,9 @@ export const useConnectionForm = (
 				toastAndLog("error", "errorRetrieveOauthURL");
 			}
 
-			openPopup(response.url, "Google OAuth", 500, 500);
+			openPopup(response.url, "Google OAuth");
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnectionExtended", error);
+			toastAndLog("error", "errorCreatingNewConnection", error);
 		} finally {
 			setIsLoading(false);
 		}
