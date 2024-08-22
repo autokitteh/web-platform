@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
-import { ZodObject, ZodRawShape } from "zod";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationHttp } from "@constants/lists/connections";
@@ -24,13 +23,8 @@ export const HttpIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
-	const formSchema = useMemo(() => {
-		if (connectionType?.value === ConnectionAuthType.Basic) return httpBasicIntegrationSchema;
-		if (connectionType?.value === ConnectionAuthType.Bearer) return httpBearerIntegrationSchema;
-	}, [connectionType]) as ZodObject<ZodRawShape>;
-
 	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema, setValue } =
-		useConnectionForm({ basic_username: "", basic_password: "", bearer_access_token: "" }, formSchema, "create");
+		useConnectionForm({ basic_username: "", basic_password: "", bearer_access_token: "" }, oauthSchema, "create");
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
@@ -56,7 +50,16 @@ export const HttpIntegrationAddForm = ({
 
 			return;
 		}
-		setValidationSchema(formSchema);
+		if (connectionType?.value === ConnectionAuthType.Basic) {
+			setValidationSchema(httpBasicIntegrationSchema);
+
+			return;
+		}
+		if (connectionType?.value === ConnectionAuthType.Bearer) {
+			setValidationSchema(httpBearerIntegrationSchema);
+
+			return;
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
 
