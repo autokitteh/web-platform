@@ -1,23 +1,18 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
+import { ZodObject, ZodRawShape } from "zod";
 
-import { namespaces } from "@constants";
+import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationHttp } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { LoggerService } from "@services";
-import { httpBasicIntegrationSchema, httpBearerIntegrationSchema } from "@validations";
+import { Integrations } from "@src/enums/components";
+import { useConnectionForm } from "@src/hooks";
+import { httpBasicIntegrationSchema, httpBearerIntegrationSchema, oauthSchema } from "@validations";
 
-import { useToastStore } from "@store";
-
-import { Button } from "@components/atoms";
 import { Select } from "@components/molecules";
-import { HttpBasicForm, HttpBearerForm } from "@components/organisms/connections/integrations/http";
 
 export const HttpIntegrationAddForm = ({
 	connectionId,
@@ -26,90 +21,76 @@ export const HttpIntegrationAddForm = ({
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
 }) => {
-	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("integrations");
-	const { projectId } = useParams();
-	const navigate = useNavigate();
-	const addToast = useToastStore((state) => state.addToast);
-	const [selectedConnectionType, setSelectedConnectionType] = useState<SingleValue<SelectOption>>({
-		value: ConnectionAuthType.NoAuth,
-		label: t("http.noAuth"),
-	});
-	const [isLoading] = useState(false);
+	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const formSchema = useMemo(() => {
-		if (selectedConnectionType?.value === ConnectionAuthType.Basic) return httpBasicIntegrationSchema;
-		if (selectedConnectionType?.value === ConnectionAuthType.Bearer) return httpBearerIntegrationSchema;
-	}, [selectedConnectionType]);
+		if (connectionType?.value === ConnectionAuthType.Basic) return httpBasicIntegrationSchema;
+		if (connectionType?.value === ConnectionAuthType.Bearer) return httpBearerIntegrationSchema;
+	}, [connectionType]) as ZodObject<ZodRawShape>;
 
-	const methods = useForm({
-		resolver: formSchema ? zodResolver(formSchema) : undefined,
-		defaultValues: {
-			username: "",
-			password: "",
-			token: "",
-		},
-	});
+	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema, setValue } =
+		useConnectionForm({ pat: "", secret: "" }, formSchema, "create");
 
-	const { handleSubmit } = methods;
-
-	useEffect(() => {
-		if (!connectionId) return;
-		navigate(`/projects/${projectId}/connections`);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
-
-	const renderNoAuth = () => (
-		<Button
-			ariaLabel={t("buttons.saveConnection")}
-			className="ml-auto w-fit bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
-			disabled={isLoading}
-			onClick={triggerParentFormSubmit}
-		>
-			{t("buttons.saveConnection")}
-		</Button>
-	);
-
-	const renderConnectionFields = () => {
-		switch (selectedConnectionType?.value) {
+	const configureConnection = async (connectionId: string) => {
+		switch (connectionType?.value) {
 			case ConnectionAuthType.NoAuth:
-				return renderNoAuth();
+				return await handleOAuth(connectionId, Integrations.http);
 			case ConnectionAuthType.Basic:
-				return <HttpBasicForm isLoading={isLoading} />;
+				await createConnection(connectionId, ConnectionAuthType.Basic, Integrations.http);
+				break;
 			case ConnectionAuthType.Bearer:
-				return <HttpBearerForm isLoading={isLoading} />;
+				await createConnection(connectionId, ConnectionAuthType.Bearer, Integrations.http);
+				break;
 			default:
-				return null;
+				break;
 		}
 	};
 
-	const onSubmit = () => {
-		if (connectionId) {
-			addToast({ id: Date.now().toString(), message: tErrors("connectionExists"), type: "error" });
-			LoggerService.error(
-				namespaces.connectionService,
-				`${tErrors("connectionExistsExtended", { connectionId })}`
-			);
+	useEffect(() => {
+		if (!connectionType?.value) {
+			return;
+		}
+		if (connectionType.value === ConnectionAuthType.NoAuth) {
+			setValidationSchema(oauthSchema);
 
 			return;
 		}
-		triggerParentFormSubmit();
-	};
+		setValidationSchema(formSchema);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionType]);
+
+	useEffect(() => {
+		if (connectionId) {
+			configureConnection(connectionId);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
+
+	const ConnectionTypeComponent =
+		formsPerIntegrationsMapping[Integrations.http]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
-		<FormProvider {...methods}>
-			<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-				<Select
-					aria-label={t("placeholders.selectConnectionType")}
-					label={t("placeholders.connectionType")}
-					onChange={setSelectedConnectionType}
-					options={selectIntegrationHttp}
-					placeholder={t("placeholders.selectConnectionType")}
-					value={selectedConnectionType}
-				/>
-
-				{renderConnectionFields()}
+		<>
+			<Select
+				aria-label={t("placeholders.selectConnectionType")}
+				label={t("placeholders.connectionType")}
+				onChange={(option) => setConnectionType(option)}
+				options={selectIntegrationHttp}
+				placeholder={t("placeholders.selectConnectionType")}
+				value={connectionType}
+			/>
+			<form className="flex flex-col gap-4" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+				{ConnectionTypeComponent ? (
+					<ConnectionTypeComponent
+						errors={errors}
+						isLoading={isLoading}
+						mode="create"
+						register={register}
+						setValue={setValue}
+					/>
+				) : null}
 			</form>
-		</FormProvider>
+		</>
 	);
 };
