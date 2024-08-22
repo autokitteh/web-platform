@@ -59,7 +59,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 			}
 
 			try {
-				const { data: statusData, error } = await ConnectionService.test(connectionId);
+				const { data: connectionDetails, error } = await ConnectionService.get(connectionId);
 
 				if (error) {
 					addToast({
@@ -71,7 +71,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 					return;
 				}
 
-				if (statusData === ("ok" as ConnectionStatusType).toString()) {
+				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
 					resetChecker();
 				} else {
 					incrementRetries();

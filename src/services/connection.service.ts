@@ -2,11 +2,11 @@ import i18n from "i18next";
 
 import { connectionsClient, integrationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
-import { convertConnectionProtoToModel, mapProtoStatusToConnectionStatus } from "@models/connection.model";
+import { convertConnectionProtoToModel } from "@models/connection.model";
 import { LoggerService } from "@services";
 import { integrationIcons } from "@src/constants/lists/connections";
 import { ServiceResponse } from "@type";
-import { Connection, ConnectionStatusType } from "@type/models";
+import { Connection } from "@type/models";
 
 export class ConnectionService {
 	static async delete(connectionId: string): Promise<ServiceResponse<void>> {
@@ -63,26 +63,6 @@ export class ConnectionService {
 			LoggerService.error(namespaces.connectionService, (error as Error).message);
 
 			return { data: undefined, error: new Error(error) };
-		}
-	}
-	static async test(connectionId: string): Promise<ServiceResponse<ConnectionStatusType>> {
-		try {
-			const { status } = await connectionsClient.test({ connectionId });
-
-			return {
-				data: mapProtoStatusToConnectionStatus(status),
-				error: undefined,
-			};
-		} catch (error) {
-			const errorMessage = i18n.t("connectionStatusFetchFail", { ns: "services" });
-			const errorLog = i18n.t("connectionStatusFetchFailExtended", {
-				ns: "services",
-				error: (error as Error).message,
-			});
-
-			LoggerService.error(namespaces.connectionService, errorLog);
-
-			return { data: undefined, error: errorMessage };
 		}
 	}
 
