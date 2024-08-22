@@ -1,5 +1,6 @@
 import { Integrations } from "@src/enums/components";
 
+import { AwsIntegrationEditForm } from "@components/organisms/connections/integrations/aws";
 import { DiscordIntegrationEditForm } from "@components/organisms/connections/integrations/discord";
 import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
 import { HttpIntegrationEditForm } from "@components/organisms/connections/integrations/http";
@@ -16,4 +17,5 @@ export const integrationToEditComponent: Partial<Record<Integrations, React.Comp
 	[Integrations.twilio]: TwilioIntegrationEditForm,
 	[Integrations.chatgpt]: OpenAiIntegrationEditForm,
 	[Integrations.slack]: SlackIntegrationEditForm,
+	[Integrations.aws]: AwsIntegrationEditForm,
 };
