@@ -44,6 +44,6 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.http]: {
 		[ConnectionAuthType.Basic]: HttpBasicForm,
 		[ConnectionAuthType.Bearer]: HttpBearerForm,
-		[ConnectionAuthType.NoAuth]: HttpOauthForm,
+		[ConnectionAuthType.Oauth]: HttpOauthForm,
 	},
 };

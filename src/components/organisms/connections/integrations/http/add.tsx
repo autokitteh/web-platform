@@ -30,11 +30,11 @@ export const HttpIntegrationAddForm = ({
 	}, [connectionType]) as ZodObject<ZodRawShape>;
 
 	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema, setValue } =
-		useConnectionForm({ pat: "", secret: "" }, formSchema, "create");
+		useConnectionForm({ basic_username: "", basic_password: "", bearer_access_token: "" }, formSchema, "create");
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
-			case ConnectionAuthType.NoAuth:
+			case ConnectionAuthType.Oauth:
 				return await handleOAuth(connectionId, Integrations.http);
 			case ConnectionAuthType.Basic:
 				await createConnection(connectionId, ConnectionAuthType.Basic, Integrations.http);
@@ -51,7 +51,7 @@ export const HttpIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.NoAuth) {
+		if (connectionType.value === ConnectionAuthType.Oauth) {
 			setValidationSchema(oauthSchema);
 
 			return;
