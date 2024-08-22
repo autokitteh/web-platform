@@ -23,13 +23,14 @@ export const HttpIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
-	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema, setValue } =
+	const { createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
 		useConnectionForm({ basic_username: "", basic_password: "", bearer_access_token: "" }, oauthSchema, "create");
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.NoAuth:
-				return await handleOAuth(connectionId, Integrations.http);
+				await createConnection(connectionId, ConnectionAuthType.NoAuth, `i/${Integrations.http}`);
+				break;
 			case ConnectionAuthType.Basic:
 				await createConnection(connectionId, ConnectionAuthType.Basic, `i/${Integrations.http}`);
 				break;
