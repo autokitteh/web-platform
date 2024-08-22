@@ -19,31 +19,20 @@ export const AwsIntegrationEditForm = () => {
 		token: true,
 	});
 
-	const {
-		connectionType,
-		connectionVariables,
-		errors,
-		handleSubmit,
-		isLoading,
-		onSubmitEdit,
-		register,
-		setValue,
-		watch,
-	} = useConnectionForm(
-		{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
-		awsIntegrationSchema,
-		"edit"
-	);
-
-	const selectConnectionTypeValue = selectIntegrationAws.find((method) => method.value === connectionType);
+	const { connectionVariables, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue, watch } =
+		useConnectionForm(
+			{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
+			awsIntegrationSchema,
+			"edit"
+		);
 
 	useEffect(() => {
-		if (!selectConnectionTypeValue) return;
+		if (!connectionVariables) return;
 
-		const region = connectionVariables?.find((variable) => variable.name === "region");
+		const region = connectionVariables?.find((variable) => variable.name === "Region");
 		setValue("region", region);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectConnectionTypeValue]);
+	}, [connectionVariables]);
 
 	const region = watch("region");
 
