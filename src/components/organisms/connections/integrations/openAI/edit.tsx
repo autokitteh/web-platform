@@ -1,44 +1,44 @@
 import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 
+import { infoOpenAiLinks } from "@constants/lists/connections";
 import { useConnectionForm } from "@src/hooks";
-import { discordIntegrationSchema } from "@validations";
+import { openAiIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const DiscordIntegrationEditForm = () => {
+export const OpenAiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
 	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
 		{
-			botToken: "",
+			key: "",
 		},
-		discordIntegrationSchema,
+		openAiIntegrationSchema,
 		"edit"
 	);
 
 	return (
-		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
-					{...register("botToken")}
-					aria-label={t("discord.placeholders.botToken")}
-					handleInputChange={(newValue) => setValue("botToken", newValue)}
+					{...register("key")}
+					aria-label={t("openAi.placeholders.apiKey")}
+					handleInputChange={(newValue) => setValue("key", newValue)}
 					handleLockAction={setLockState}
-					isError={!!errors.botToken}
+					isError={!!errors.key}
 					isLocked={lockState}
 					isRequired
-					placeholder={t("discord.placeholders.botToken")}
+					placeholder={t("openAi.placeholders.apiKey")}
 					resetOnFirstFocus
 				/>
 
-				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>
+				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>
 
 			<Button
@@ -54,15 +54,20 @@ export const DiscordIntegrationEditForm = () => {
 			</Button>
 
 			<Accordion title={t("information")}>
-				<Link
-					className="group inline-flex items-center gap-2.5 text-green-800"
-					target="_blank"
-					to="https://discord.com/developers/docs/intro"
-				>
-					{t("discord.information.devPlatform")}
+				<div className="flex flex-col gap-2">
+					{infoOpenAiLinks.map(({ text, url }, index) => (
+						<Link
+							className="group inline-flex items-center gap-2.5 text-green-800"
+							key={index}
+							target="_blank"
+							to={url}
+						>
+							{text}
 
-					<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
-				</Link>
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
+						</Link>
+					))}
+				</div>
 			</Accordion>
 		</form>
 	);

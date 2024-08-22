@@ -4,6 +4,7 @@ import { DiscordIntegrationEditForm } from "@components/organisms/connections/in
 import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
 import { HttpIntegrationEditForm } from "@components/organisms/connections/integrations/http";
 import { JiraIntegrationEditForm } from "@components/organisms/connections/integrations/jira";
+import { OpenAiIntegrationEditForm } from "@components/organisms/connections/integrations/openAI";
 import { TwilioIntegrationEditForm } from "@components/organisms/connections/integrations/twilio";
 
 export const integrationToEditComponent: Partial<Record<Integrations, React.ComponentType<any>>> = {
@@ -12,4 +13,5 @@ export const integrationToEditComponent: Partial<Record<Integrations, React.Comp
 	[Integrations.jira]: JiraIntegrationEditForm,
 	[Integrations.http]: HttpIntegrationEditForm,
 	[Integrations.twilio]: TwilioIntegrationEditForm,
+	[Integrations.chatgpt]: OpenAiIntegrationEditForm,
 };

@@ -32,13 +32,13 @@ export const OpenAiIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.Key, Integrations.openAi);
+			createConnection(connectionId, ConnectionAuthType.Key, Integrations.chatgpt);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
 	return (
-		<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
+		<form className="flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 			<div className="relative">
 				<Input
 					{...register("key")}
