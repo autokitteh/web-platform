@@ -8,13 +8,20 @@ import { ZodObject, ZodRawShape } from "zod";
 
 import { ConnectionService, HttpService, VariablesService } from "@services";
 import { ConnectionAuthType } from "@src/enums";
-import { GoogleIntegrations, Integrations } from "@src/enums/components";
+import { Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup } from "@src/utilities";
 
 import { useToastAndLog } from "@hooks";
+
+const GoogleIntegrationsPrefixRequired = [
+	Integrations.sheets,
+	Integrations.calendar,
+	Integrations.drive,
+	Integrations.forms,
+];
 
 export const useConnectionForm = (
 	initialValues: DefaultValues<FieldValues> | undefined,
@@ -155,7 +162,9 @@ export const useConnectionForm = (
 			} = getValues();
 
 			const integrationUniqueName =
-				integrationName in GoogleIntegrations ? `${Integrations.google}${integrationName}` : integrationName;
+				integrationName in GoogleIntegrationsPrefixRequired
+					? `${Integrations.google}${integrationName}`
+					: integrationName;
 
 			const { data: responseConnectionId, error } = await ConnectionService.create(
 				projectId!,
