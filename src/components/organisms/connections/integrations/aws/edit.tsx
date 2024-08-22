@@ -19,7 +19,17 @@ export const AwsIntegrationEditForm = () => {
 		token: true,
 	});
 
-	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
+	const {
+		connectionType,
+		connectionVariables,
+		errors,
+		handleSubmit,
+		isLoading,
+		onSubmitEdit,
+		register,
+		setValue,
+		watch,
+	} = useConnectionForm(
 		{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
 		awsIntegrationSchema,
 		"edit"
@@ -30,9 +40,12 @@ export const AwsIntegrationEditForm = () => {
 	useEffect(() => {
 		if (!selectConnectionTypeValue) return;
 
-		setValue("region", selectConnectionTypeValue);
+		const region = connectionVariables?.find((variable) => variable.name === "region");
+		setValue("region", region);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectConnectionTypeValue]);
+
+	const region = watch("region");
 
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
@@ -44,7 +57,7 @@ export const AwsIntegrationEditForm = () => {
 					label={t("aws.placeholders.region")}
 					options={selectIntegrationAws}
 					placeholder={t("aws.placeholders.region")}
-					value={selectConnectionTypeValue}
+					value={region}
 				/>
 
 				<ErrorMessage>{errors.region?.message as string}</ErrorMessage>

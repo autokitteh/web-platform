@@ -52,8 +52,6 @@ export const useConnectionForm = (
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 
 	const getConnectionAuthType = async (connectionId: string) => {
-		const { region } = getValues();
-		const variableName = !region ? "auth_type" : "Region";
 		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
 			toastAndLog("error", "errorFetchingVariables");
@@ -61,7 +59,7 @@ export const useConnectionForm = (
 			return;
 		}
 
-		const connectionAuthType = vars?.find((variable) => variable.name === variableName);
+		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
 
 		if (!connectionAuthType) {
 			toastAndLog("error", "errorFetchingConnectionType");
