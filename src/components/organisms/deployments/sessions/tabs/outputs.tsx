@@ -30,6 +30,12 @@ export const SessionOutputs = () => {
 		if (firstLoad) {
 			setIsLoading(true);
 		}
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { data: sessionHistoryStates1, error: errorAct } = await SessionsService.getSessionActivitiesBySessionId(
+			sessionId!
+		);
+
 		const { data: sessionHistoryStates, error } = await SessionsService.getLogPrintsBySessionId(sessionId!);
 		if (firstLoad) {
 			setFirstLoad(false);
