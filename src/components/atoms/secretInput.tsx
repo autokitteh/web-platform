@@ -24,6 +24,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		isLocked = false,
 		isLockedDisabled,
 		isRequired,
+		label,
 		onFocus,
 		placeholder,
 		resetOnFirstFocus,
@@ -104,7 +105,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	const wrapperClass = cn(baseClass, "pr-2.5");
 
 	const inputClass = cn(
-		"h-12 w-full bg-transparent px-4 py-2.5 outline-none",
+		"h-12 w-full bg-transparent px-4 py-2.5 placeholder-gray-600 outline-none",
 		{ "text-gray-400": disabled },
 		{ "text-white": variant === InputVariant.dark },
 		{ "placeholder-gray-1000": variant === InputVariant.light },
@@ -114,13 +115,16 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	);
 
 	const labelClass = cn(
-		"pointer-events-none absolute left-4 transition-all",
+		"pointer-events-none absolute left-4 opacity-0 transition-all",
 		{ "top-1/2 -translate-y-1/2 text-gray-600": !isFocused && !hasValue },
-		{ "-top-2 left-3 px-1 text-xs text-white before:bg-gray-950": isFocused || hasValue },
+		{ "-top-2 left-3 px-1 text-xs text-white opacity-100 before:bg-gray-950": isFocused || hasValue },
 		{ "text-gray-900": variant === InputVariant.light },
 		{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light },
 		{ "text-black": variant === InputVariant.light },
-		{ "-top-2 left-3 translate-y-0 px-1 text-xs text-white": !isFocused && resetOnFirstFocus && isFirstFocus }
+		{
+			"-top-2 left-3 translate-y-0 px-1 text-xs text-white opacity-100":
+				!isFocused && resetOnFirstFocus && isFirstFocus,
+		}
 	);
 
 	const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
@@ -157,16 +161,19 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					onBlur={handleBlur}
 					onChange={handleChange}
 					onFocus={handleFocus}
+					placeholder={placeholderText}
 					ref={ref}
 					type={inputType}
 					value={innerValue}
 				/>
 
-				<label className={labelClass} htmlFor={id}>
-					<span className="relative z-10">{placeholderText}</span>
+				{label || placeholderText ? (
+					<label className={labelClass} htmlFor={id}>
+						<span className="relative z-10">{label || placeholderText}</span>
 
-					<span className={borderOverlayLabelClass} />
-				</label>
+						<span className={borderOverlayLabelClass} />
+					</label>
+				) : null}
 
 				{isLockedDisabled ? (
 					<Button onClick={handleLockedStateAction} type="button" variant={buttonVariant}>
