@@ -21,4 +21,5 @@ export enum Integrations {
 	jira = "jira",
 	discord = "discord",
 	chatgpt = "chatgpt",
+	confluence = "confluence",
 }
