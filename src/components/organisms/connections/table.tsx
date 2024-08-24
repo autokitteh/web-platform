@@ -36,15 +36,15 @@ export const ConnectionsTable = () => {
 	const fetchConnections = async () => {
 		setIsLoading(true);
 		try {
-			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
+			const { data: connectionsResponse, error } = await ConnectionService.listByProjectId(projectId!);
 			if (error) {
 				throw error;
 			}
-			if (!connections) {
+			if (!connectionsResponse) {
 				return;
 			}
 
-			setConnections(connections);
+			setConnections(connectionsResponse);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -58,8 +58,13 @@ export const ConnectionsTable = () => {
 
 	useEffect(() => {
 		fetchConnections();
+		console.log("rendering connections table");
 
-		return () => resetChecker();
+		return () => {
+			console.log("Clearing interval...");
+
+			resetChecker();
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -68,8 +73,7 @@ export const ConnectionsTable = () => {
 			setConnectionId(connectionId);
 			openModal(ModalName.deleteConnection);
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[connectionId]
+		[openModal]
 	);
 
 	const handleDeleteConnection = async () => {
