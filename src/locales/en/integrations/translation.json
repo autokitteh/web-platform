@@ -109,7 +109,7 @@
 			"baseUrl": "Base URL",
 			"pat": "API Token / Personal Access Token (PAT)",
 			"email": "User email address (API tokens only, not PATs!)",
-			"exempleUrl": "https://your-domain.atlassian.net or on-prem URL"
+			"exampleUrl": "https://your-domain.atlassian.net or on-prem URL"
 		},
 		"information": {
 			"oauth": "Jira Cloud platform: OAuth 2.0 (3LO) apps",

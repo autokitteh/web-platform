@@ -46,7 +46,7 @@ export const ApiTokenJiraForm = ({
 						isLocked={lockState.base_url}
 						isRequired
 						label={t("jira.placeholders.baseUrl")}
-						placeholder={t("jira.placeholders.exempleUrl")}
+						placeholder={t("jira.placeholders.exampleUrl")}
 						resetOnFirstFocus
 					/>
 				) : (
@@ -56,7 +56,7 @@ export const ApiTokenJiraForm = ({
 						isError={!!errors.base_url}
 						isRequired
 						label={t("jira.placeholders.baseUrl")}
-						placeholder={t("jira.placeholders.exempleUrl")}
+						placeholder={t("jira.placeholders.exampleUrl")}
 					/>
 				)}
 
