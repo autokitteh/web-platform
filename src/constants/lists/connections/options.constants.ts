@@ -4,6 +4,7 @@ import { SelectOption } from "@interfaces/components";
 
 import {
 	AwsIcon,
+	ConfluenceIcon,
 	DiscordIcon,
 	GithubIcon,
 	GoogleCalendarIcon,
@@ -29,6 +30,7 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Twilio", value: Integrations.twilio, icon: TwilioIcon },
 	{ disabled: false, label: "Gmail", value: Integrations.gmail, icon: GoogleGmailIcon },
 	{ disabled: false, label: "Jira", value: Integrations.jira, icon: JiraIcon },
+	{ disabled: false, label: "Atlassian Confluence", value: Integrations.confluence, icon: ConfluenceIcon },
 	{ disabled: false, label: "Discord", value: Integrations.discord, icon: DiscordIcon },
 	{ disabled: false, label: "Google (All APIs)", value: Integrations.google, icon: GoogleIcon },
 	{ disabled: false, label: "Google Sheets", value: Integrations.sheets, icon: GoogleSheetsIcon },
@@ -47,6 +49,7 @@ export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElem
 	[Integrations.twilio]: TwilioIcon,
 	[Integrations.gmail]: GoogleGmailIcon,
 	[Integrations.jira]: JiraIcon,
+	[Integrations.confluence]: ConfluenceIcon,
 	[Integrations.discord]: DiscordIcon,
 	[Integrations.google]: GoogleIcon,
 	[Integrations.sheets]: GoogleSheetsIcon,

@@ -95,7 +95,20 @@ export const AddConnection = () => {
 		twilio: (
 			<TwilioIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),
-		jira: <JiraIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
+		jira: (
+			<JiraIntegrationAddForm
+				connectionId={connectionId}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
+				type={selectedIntegration.value}
+			/>
+		),
+		confluence: (
+			<JiraIntegrationAddForm
+				connectionId={connectionId}
+				triggerParentFormSubmit={handleSubmit(onSubmit)}
+				type={selectedIntegration.value}
+			/>
+		),
 		discord: (
 			<DiscordIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
 		),

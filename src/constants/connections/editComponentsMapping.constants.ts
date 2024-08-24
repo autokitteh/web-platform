@@ -20,4 +20,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.slack]: SlackIntegrationEditForm,
 	[Integrations.aws]: AwsIntegrationEditForm,
 	[Integrations.googlegemini]: GoogleGeminiIntegrationEditForm,
+	[Integrations.confluence]: JiraIntegrationEditForm,
 };

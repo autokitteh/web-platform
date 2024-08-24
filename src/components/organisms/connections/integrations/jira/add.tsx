@@ -16,13 +16,15 @@ import { Select } from "@components/molecules";
 export const JiraIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
+	type,
 }: {
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
+	type: string;
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema } =
+	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, reset, setValidationSchema } =
 		useConnectionForm(
 			{
 				base_url: "",
@@ -66,6 +68,11 @@ export const JiraIntegrationAddForm = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
+
+	useEffect(() => {
+		reset({ base_url: "", token: "", email: "" });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [type]);
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.jira]?.[connectionType?.value as ConnectionAuthType];
