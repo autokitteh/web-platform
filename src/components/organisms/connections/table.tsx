@@ -8,7 +8,7 @@ import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useModalStore, useToastStore } from "@store";
+import { useConnectionCheckerStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ConnectionTableStatus, SortButton } from "@components/molecules";
@@ -31,6 +31,7 @@ export const ConnectionsTable = () => {
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections, "name");
+	const { resetChecker } = useConnectionCheckerStore();
 
 	const fetchConnections = async () => {
 		setIsLoading(true);
@@ -57,6 +58,8 @@ export const ConnectionsTable = () => {
 
 	useEffect(() => {
 		fetchConnections();
+
+		return () => resetChecker();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
