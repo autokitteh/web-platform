@@ -58,11 +58,8 @@ export const ConnectionsTable = () => {
 
 	useEffect(() => {
 		fetchConnections();
-		console.log("rendering connections table");
 
 		return () => {
-			console.log("Clearing interval...");
-
 			resetChecker();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
