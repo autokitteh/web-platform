@@ -250,9 +250,7 @@ export const useConnectionForm = (
 			}
 
 			openPopup(response.url, "Authorize");
-			startCheckingStatus(oauthConnectionId!);
-
-			window.open(`${apiBaseUrl}/oauth/start/${integration}?cid=${oauthConnectionId}&origin=web`, "_blank");
+			startCheckingStatus(oauthConnectionId);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			toastAndLog("error", "errorCreatingNewConnection", error);

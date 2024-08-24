@@ -10,9 +10,10 @@ import { ConnectionStatusType } from "@type/models";
 import { useToastStore } from "@store";
 
 const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
-	connectionId: "",
 	retries: 0,
-	recheckIntervalId: null as NodeJS.Timeout | null,
+	recheckIntervalId: null,
+	shouldRefetchConnections: false,
+	avoidNextRerenderCleanup: true,
 
 	incrementRetries: () => {
 		set((state) => {
@@ -22,17 +23,37 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		});
 	},
 
-	resetChecker: () => {
-		const { recheckIntervalId } = get();
+	setShouldRefetchConnections: (value: boolean) => {
+		set((state) => {
+			state.shouldRefetchConnections = value;
 
-		if (recheckIntervalId) {
-			clearInterval(recheckIntervalId);
+			return state;
+		});
+	},
+
+	resetChecker: () => {
+		const { avoidNextRerenderCleanup, recheckIntervalId } = get();
+
+		if (avoidNextRerenderCleanup) {
+			set((state) => {
+				state.avoidNextRerenderCleanup = false;
+
+				return state;
+			});
+
+			return;
 		}
 
+		if (!recheckIntervalId) {
+			return;
+		}
+		clearInterval(recheckIntervalId);
+
 		set((state) => {
-			state.connectionId = "";
 			state.retries = 0;
 			state.recheckIntervalId = null;
+			state.shouldRefetchConnections = false;
+			state.avoidNextRerenderCleanup = false;
 
 			return state;
 		});
@@ -42,17 +63,15 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		const { incrementRetries, resetChecker } = get();
 		const addToast = useToastStore.getState().addToast;
 
-		if (!connectionId) return;
-
 		set((state) => {
-			state.connectionId = connectionId;
 			state.retries = 0;
+			state.avoidNextRerenderCleanup = true;
 
 			return state;
 		});
 
 		const checkStatus = async () => {
-			const { retries } = get();
+			const { retries, setShouldRefetchConnections } = get();
 
 			if (retries >= 6) {
 				resetChecker();
@@ -74,6 +93,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 				}
 
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
+					setShouldRefetchConnections(true);
 					resetChecker();
 				} else {
 					incrementRetries();

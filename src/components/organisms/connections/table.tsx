@@ -31,7 +31,7 @@ export const ConnectionsTable = () => {
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections, "name");
-	const { resetChecker } = useConnectionCheckerStore();
+	const { resetChecker, shouldRefetchConnections } = useConnectionCheckerStore();
 
 	const fetchConnections = async () => {
 		setIsLoading(true);
@@ -57,13 +57,16 @@ export const ConnectionsTable = () => {
 	};
 
 	useEffect(() => {
-		fetchConnections();
-
 		return () => {
 			resetChecker();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		fetchConnections();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [shouldRefetchConnections]);
 
 	const handleOpenModalDeleteConnection = useCallback(
 		(connectionId: string) => {
