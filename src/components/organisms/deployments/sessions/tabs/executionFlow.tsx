@@ -8,9 +8,11 @@ import { SessionsService } from "@services/sessions.service";
 import { sessionsEditorLineHeight } from "@src/constants";
 import { useToastStore } from "@src/store";
 
-import { Loader } from "@components/atoms";
+import { IconSvg, Loader } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
+
+import { ArrowUpFaIcon } from "@assets/image/icons";
 
 export const SessionExecutionFlow = () => {
 	const { sessionId } = useParams();
@@ -43,74 +45,85 @@ export const SessionExecutionFlow = () => {
 		});
 	};
 
-	return (activities || []).map((activity) => (
-		<div className="mt-2" key={activity.key}>
-			<Accordion
-				className="mt-2 rounded-md bg-gray-1000 px-2 py-1"
-				title={
-					<div className="flex w-full gap-3">
-						<div className="mt-0.5">{activity.startTime.toTimeString().split(" ")[0]}</div>
+	return (activities || []).map((activity, index) => (
+		<div key={activity.key}>
+			{index !== 0 ? (
+				<div className="flex w-full items-center justify-center pt-2">
+					<IconSvg className="fill-white" size="sm" src={ArrowUpFaIcon} />
+				</div>
+			) : null}
 
-						<div>
-							<div className="text-left font-bold"> {activity.functionName}</div>
+			<div className="mt-2">
+				<Accordion
+					className="mt-2 rounded-md bg-gray-1000 px-2 py-1"
+					title={
+						<div className="flex w-full gap-3">
+							<div className="mt-0.5">{activity.startTime.toTimeString().split(" ")[0]}</div>
 
-							<div className="flex items-center gap-1">
-								<span>Status: </span>
+							<div>
+								<div className="text-left font-bold"> {activity.functionName}</div>
 
-								{activity.status === "error" || activity.status === "completed" ? (
-									<>
-										<ActivityStatus activityState={activity.status} /> -
-										<ReactTimeAgo date={activity.endTime} locale="en-US" />
-									</>
-								) : (
-									<>
-										<ActivityStatus activityState={activity.status} /> -
-										<ReactTimeAgo date={activity.startTime} locale="en-US" />
-									</>
-								)}
+								<div className="flex items-center gap-1">
+									<span>Status: </span>
+
+									{activity.status === "error" || activity.status === "completed" ? (
+										<>
+											<ActivityStatus activityState={activity.status} /> -
+											<ReactTimeAgo date={activity.endTime} locale="en-US" />
+										</>
+									) : (
+										<>
+											<ActivityStatus activityState={activity.status} /> -
+											<ReactTimeAgo date={activity.startTime} locale="en-US" />
+										</>
+									)}
+								</div>
 							</div>
 						</div>
+					}
+				>
+					<div className="mx-7">
+						<div className="font-bold">Params:</div>
+
+						{activity.parameters
+							? Object.keys(activity.parameters).map((parameter) => (
+									<div key={parameter}>
+										<span>{parameter}: </span>
+
+										<div className="inline font-semibold">{activity.parameters[parameter]}</div>
+									</div>
+								))
+							: null}
+
+						{activity.returnValue ? (
+							<Accordion
+								className="mt-2"
+								title={<div className="font-bold underline">Returned Value</div>}
+							>
+								<Editor
+									beforeMount={handleEditorWillMount}
+									className="h-64"
+									language="json"
+									loading={<Loader isCenter size="lg" />}
+									options={{
+										lineHeight: sessionsEditorLineHeight,
+										lineNumbers: "off",
+										minimap: { enabled: false },
+										readOnly: true,
+										renderLineHighlight: "none",
+										scrollBeyondLastLine: false,
+										wordWrap: "on",
+										contextmenu: false,
+										theme: "vscode",
+									}}
+									theme="sessionEditorTheme"
+									value={JSON.stringify(activity.returnValue, null, "\t")}
+								/>
+							</Accordion>
+						) : null}
 					</div>
-				}
-			>
-				<div className="mx-7">
-					<div className="font-bold">Params:</div>
-
-					{activity.parameters
-						? Object.keys(activity.parameters).map((parameter) => (
-								<div key={parameter}>
-									<span>{parameter}: </span>
-
-									<div className="inline font-semibold">{activity.parameters[parameter]}</div>
-								</div>
-							))
-						: null}
-
-					{activity.returnValue ? (
-						<Accordion className="mt-2" title={<div className="font-bold underline">Returned Value</div>}>
-							<Editor
-								beforeMount={handleEditorWillMount}
-								className="h-64"
-								language="json"
-								loading={<Loader isCenter size="lg" />}
-								options={{
-									lineHeight: sessionsEditorLineHeight,
-									lineNumbers: "off",
-									minimap: { enabled: false },
-									readOnly: true,
-									renderLineHighlight: "none",
-									scrollBeyondLastLine: false,
-									wordWrap: "on",
-									contextmenu: false,
-									theme: "vscode",
-								}}
-								theme="sessionEditorTheme"
-								value={JSON.stringify(activity.returnValue, null, "\t")}
-							/>
-						</Accordion>
-					) : null}
-				</div>
-			</Accordion>
+				</Accordion>
+			</div>
 		</div>
 	));
 };

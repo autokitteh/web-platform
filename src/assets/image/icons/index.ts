@@ -2,6 +2,8 @@ export { default as ActionActiveIcon } from "@assets/image/icons/ActionActive.sv
 export { default as ActionStoppedIcon } from "@assets/image/icons/ActionStopped.svg?react";
 export { default as ArrowDown } from "@assets/image/icons/ArrowDown.svg?react";
 export { default as ArrowLeft } from "@assets/image/icons/ArrowLeft.svg?react";
+export { default as ArrowUpIcon } from "@assets/image/icons/ArrowUp.svg?react";
+export { default as ArrowUpFaIcon } from "@assets/image/icons/ArrowUpFa.svg?react";
 export { default as ArrowUp } from "@assets/image/icons/ArrowUp.svg?react";
 export { default as BellIcon } from "@assets/image/icons/Bell.svg?react";
 export { default as ClockIcon } from "@assets/image/icons/Clock.svg?react";
