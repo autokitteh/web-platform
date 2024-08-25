@@ -74,6 +74,7 @@ export const ConnectionsTable = () => {
 		if (!connectionId) {
 			return;
 		}
+		setConnectionId(undefined);
 		setIsLoadingDeleteConnection(true);
 		const { error } = await ConnectionService.delete(connectionId);
 		setIsLoadingDeleteConnection(false);
