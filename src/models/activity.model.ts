@@ -22,10 +22,10 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			if (currentActivity) {
 				activities.push(currentActivity);
 			}
-			const paramNames = callSpec.function.function.desc.input.map((param) => param.name);
+			const paramNames = callSpec?.function?.function?.desc?.input.map((param) => param.name);
 			const paramValues = callSpec.args.map((arg) => (arg.string ? arg.string.v : null));
 
-			const parameters = paramNames.reduce((acc, paramName, index) => {
+			const parameters: { [key: string]: string | null } = paramNames?.reduce((acc, paramName: string, index) => {
 				acc[paramName] = paramValues[index] || null;
 
 				return acc;

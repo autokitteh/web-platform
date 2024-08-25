@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultSessionTab, sessionTabs } from "@constants";
-import { SessionsService } from "@services/sessions.service";
 
 import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -87,11 +86,11 @@ export const SessionViewer = () => {
 					</div>
 
 					<div className="flex items-center gap-2 font-semibold">
-						<div title="Start Time"> {moment().utc().format("HH:mm:ss")}</div>
+						<div title="Start Time"> {moment().format("HH:mm:ss")}</div>
 
 						<IconSvg className="fill-white" size="sm" src={ArrowRightIcon} />
 
-						<SessionsTableState className="font-semibold" sessionState={2} />
+						<div title="Start Time"> {moment().format("HH:mm:ss")}</div>
 					</div>
 
 					<div>
