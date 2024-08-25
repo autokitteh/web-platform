@@ -1,6 +1,6 @@
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Activity } from "@src/types/models";
-import { convertTimestampToMilliseconds } from "@src/utilities/convertTimestampToDate.utils";
+import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
 import { convertTimestampToDate } from "@utilities";
 
 /**
@@ -38,7 +38,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				startTime: null,
 				endTime: null,
 				returnValue: null,
-				key: convertTimestampToMilliseconds(log.t).getTime(),
+				key: convertTimestampToEpoch(log.t).getTime(),
 			};
 		}
 
