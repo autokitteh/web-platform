@@ -63,7 +63,8 @@ export const SessionViewer = () => {
 
 	useEffect(() => {
 		fetchSessionInfo();
-	}, [sessionId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const goTo = (path: string) => {
 		if (path === defaultSessionTab) {

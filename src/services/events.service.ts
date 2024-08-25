@@ -8,9 +8,12 @@ import { Event } from "@src/types/models/event.type";
 import { ServiceResponse } from "@type";
 
 export class EventsService {
-	static async get(eventId: string): Promise<ServiceResponse<Event>> {
+	static async get(eventId: string): Promise<ServiceResponse<Event | undefined>> {
 		try {
 			const { event } = await eventsClient.get({ eventId });
+			if (!event) {
+				return { data: undefined, error: undefined };
+			}
 			const eventConverted = convertEventProtoToModel(event);
 
 			return { data: eventConverted, error: undefined };

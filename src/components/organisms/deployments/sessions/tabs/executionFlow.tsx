@@ -6,6 +6,7 @@ import ReactTimeAgo from "react-time-ago";
 
 import { SessionsService } from "@services/sessions.service";
 import { sessionsEditorLineHeight } from "@src/constants";
+import { useToastStore } from "@src/store";
 
 import { Loader } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -14,13 +15,24 @@ import { ActivityStatus } from "@components/organisms/deployments/sessions/activ
 export const SessionExecutionFlow = () => {
 	const { sessionId } = useParams();
 	const [activities, setActivities] = React.useState<any[]>([]);
+	const addToast = useToastStore((state) => state.addToast);
+
+	const fetchActivities = async () => {
+		const { data: sessionExecution, error } = await SessionsService.getSessionActivitiesBySessionId(sessionId!);
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+			});
+		}
+		setActivities(sessionExecution || []);
+	};
 
 	useEffect(() => {
-		(async () => {
-			const { data: sessionExecution, error } = await SessionsService.getSessionActivitiesBySessionId(sessionId!);
-			setActivities(sessionExecution || []);
-		})();
-	}, [sessionId]);
+		fetchActivities();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("sessionEditorTheme", {
@@ -43,7 +55,7 @@ export const SessionExecutionFlow = () => {
 							<div className="text-left font-bold"> {activity.functionName}</div>
 
 							<div className="flex items-center gap-1">
-								Status:{" "}
+								<span>Status: </span>
 
 								{activity.status === "error" || activity.status === "completed" ? (
 									<>
@@ -67,7 +79,9 @@ export const SessionExecutionFlow = () => {
 					{activity.parameters
 						? Object.keys(activity.parameters).map((parameter) => (
 								<div key={parameter}>
-									{parameter}: {activity.parameters[parameter]}
+									<span>{parameter}: </span>
+
+									<div className="inline font-semibold">{activity.parameters[parameter]}</div>
 								</div>
 							))
 						: null}

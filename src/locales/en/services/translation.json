@@ -23,6 +23,7 @@
 	"historyResult": "Result",
 	"historyTime": "Time",
 	"eventsNotFound": "Couldn't fetch events",
+	"eventNotFound": "No event found, event ID: {{eventId}}",
 	"eventNotFoundForSession": "Couldn't fetch event for session {{sessionId}}",
 	"intergrationsNotFound": "Couldn't fetch intergrations",
 	"intergrationsNotFoundExtended": "Couldn't fetch intergrations, project ID: {{projectId}}",
