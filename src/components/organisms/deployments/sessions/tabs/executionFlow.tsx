@@ -3,11 +3,12 @@ import React, { useEffect } from "react";
 import JsonView from "@uiw/react-json-view";
 import { vscodeTheme } from "@uiw/react-json-view/vscode";
 import { useParams } from "react-router-dom";
+import ReactTimeAgo from "react-time-ago";
 
 import { SessionsService } from "@services/sessions.service";
 
 import { Accordion } from "@components/molecules";
-import { SessionsTableState } from "@components/organisms/deployments";
+import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
 
 const example = {
 	string: "Lorem ipsum dolor sit amet",
@@ -55,9 +56,19 @@ export const SessionExecutionFlow = () => {
 							<div className="text-left font-bold"> {activity.functionName}</div>
 
 							<div className="flex items-center gap-1">
-								Status: <SessionsTableState sessionState={4} /> -{" "}
+								Status:{" "}
 
-								<div>{(new Date() - activity.startTime).toString()}</div>
+								{activity.status === "error" || activity.status === "completed" ? (
+									<>
+										<ActivityStatus activityState={activity.status} /> -
+										<ReactTimeAgo date={activity.endTime} locale="en-US" />
+									</>
+								) : (
+									<>
+										<ActivityStatus activityState={activity.status} /> -
+										<ReactTimeAgo date={activity.startTime} locale="en-US" />
+									</>
+								)}
 							</div>
 						</div>
 					</div>
