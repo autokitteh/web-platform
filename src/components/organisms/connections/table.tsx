@@ -87,6 +87,8 @@ export const ConnectionsTable = () => {
 
 			return;
 		}
+		setConnectionId(undefined);
+
 		fetchConnections();
 	};
 
