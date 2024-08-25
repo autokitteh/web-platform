@@ -8,17 +8,17 @@ import { Event } from "@src/types/models/event.type";
 import { ServiceResponse } from "@type";
 
 export class EventsService {
-	static async list(connectionId: string): Promise<ServiceResponse<Event[]>> {
+	static async get(eventId: string): Promise<ServiceResponse<Event>> {
 		try {
-			const { events } = await eventsClient.list({ connectionId });
-			const eventsConverted = events.map((event) => convertEventProtoToModel(event));
+			const { event } = await eventsClient.get({ eventId });
+			const eventConverted = convertEventProtoToModel(event);
 
-			return { data: eventsConverted, error: undefined };
+			return { data: eventConverted, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.deploymentsService,
 				i18n.t("fetchFailedForEvents", {
-					connectionId,
+					eventId,
 					error: (error as Error).message,
 					ns: "services",
 				})

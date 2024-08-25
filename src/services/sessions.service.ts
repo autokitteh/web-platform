@@ -89,9 +89,11 @@ export class SessionsService {
 	static async getSessionInfo(sessionId: string): Promise<ServiceResponse<ViewerSession>> {
 		try {
 			const { session } = await sessionsClient.get({ sessionId });
-			const { data: events, error: eventsError } = await EventsService.list(session!.sessionId);
+			const { data: event, error: eventsError } = await EventsService.get(session?.eventId);
 			const { data: connections, error: connectionsError } = await ConnectionService.list();
-			const sessionConverted = convertSessionProtoToViewerModel(session!, events!, connections!);
+			const connectionName =
+				connections?.find((connection) => connection.connectionId === event?.connectionId)?.name || "";
+			const sessionConverted = convertSessionProtoToViewerModel(session!, connectionName);
 
 			return { data: sessionConverted, error: undefined };
 		} catch (error) {

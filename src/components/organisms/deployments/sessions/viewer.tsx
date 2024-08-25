@@ -5,9 +5,11 @@ import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import ReactTimeAgo from "react-time-ago";
 
 import { defaultSessionTab, sessionTabs } from "@constants";
 import { SessionsService } from "@services/sessions.service";
+import { SessionState } from "@src/enums";
 import { ViewerSession } from "@src/types/models/session.type";
 
 import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
@@ -60,7 +62,7 @@ export const SessionViewer = () => {
 
 	useEffect(() => {
 		fetchSessionInfo();
-	}, []);
+	}, [sessionId]);
 
 	const goTo = (path: string) => {
 		if (path === defaultSessionTab) {
@@ -71,70 +73,158 @@ export const SessionViewer = () => {
 		navigate(path.toLowerCase());
 	};
 
+	function formatExtendedTimeDifference(date1, date2) {
+		// Calculate the duration between two dates
+		const duration = moment.duration(moment(date1).diff(moment(date2)));
+
+		// Get the different time units
+		const months = Math.floor(duration.asMonths());
+		const weeks = Math.floor(duration.asWeeks() % 4); // To calculate the weeks after extracting months
+		const days = duration.days(); // Remaining days after extracting weeks
+		const hours = duration.hours();
+		const minutes = duration.minutes();
+		const seconds = duration.seconds();
+
+		// Build the output string
+		let result = "";
+
+		if (months > 0) {
+			result += `${months} month${months > 1 ? "s" : ""}, `;
+		}
+		if (weeks > 0) {
+			result += `${weeks} week${weeks > 1 ? "s" : ""}, `;
+		}
+		if (days > 0) {
+			result += `${days} day${days > 1 ? "s" : ""}, `;
+		}
+		if (hours > 0) {
+			result += `${hours} hour${hours > 1 ? "s" : ""}, `;
+		}
+		if (minutes > 0) {
+			result += `${minutes} minute${minutes > 1 ? "s" : ""}`;
+		}
+		if (seconds > 0) {
+			result += (result ? " and " : "") + `${seconds} second${seconds > 1 ? "s" : ""}`;
+		}
+
+		// If the duration is less than a day, use HH:mm:ss format
+		if (months === 0 && weeks === 0 && days === 0) {
+			result = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+		}
+
+		return result;
+	}
+
 	return (
 		<Frame className="ml-2.5 w-2/4 transition">
-			<div className="flex items-center justify-between">
-				<div className="font-bold" title="Trigger name">
-					ses_01j5qf52n2es6v5see1f69pwm1
-				</div>
+			{sessionInfo ? (
+				<>
+					<div className="flex items-center justify-between">
+						<div className="font-bold" title="Trigger name">
+							{sessionInfo.sessionId}
+						</div>
 
-				<div className="flex items-center font-bold" title="Created">
-					3 days ago
-					<IconButton
-						ariaLabel={t("buttons.ariaCloseEditor")}
-						className="relative -right-4 -top-3 h-7 w-7 bg-gray-1100 p-0.5"
-						onClick={closeEditor}
-					>
-						<Close className="h-3 w-3 fill-white transition" />
-					</IconButton>
-				</div>
-			</div>
+						<div className="flex items-center font-bold" title="Created">
+							<ReactTimeAgo date={sessionInfo.createdAt} locale="en-US" />
 
-			<div className="mt-1 flex justify-between">
-				<div className="flex flex-col gap-1">
-					<div className="flex items-center gap-1">
-						Status: <SessionsTableState className="font-semibold" sessionState={4} />
+							<IconButton
+								ariaLabel={t("buttons.ariaCloseEditor")}
+								className="relative -right-4 -top-3 h-7 w-7 bg-gray-1100 p-0.5"
+								onClick={closeEditor}
+							>
+								<Close className="h-3 w-3 fill-white transition" />
+							</IconButton>
+						</div>
 					</div>
+					<div className="mt-1 flex justify-between">
+						<div className="flex flex-col gap-1">
+							{sessionInfo.state === SessionState.completed ||
+							sessionInfo.state === SessionState.error ? (
+								<>
+									<div className="flex items-center gap-1">
+										Status:
+										<SessionsTableState
+											className="font-semibold"
+											sessionState={sessionInfo.state}
+										/>
+									</div>
+									<div className="flex items-center gap-2 font-semibold">
+										<div title="Start Time">{moment(sessionInfo.createdAt).format("HH:mm:ss")}</div>
 
-					<div className="flex items-center gap-2 font-semibold">
-						<div title="Start Time"> {moment().format("HH:mm:ss")}</div>
+										<IconSvg className="fill-white" size="sm" src={ArrowRightIcon} />
 
-						<IconSvg className="fill-white" size="sm" src={ArrowRightIcon} />
+										<div title="Start Time">{moment(sessionInfo.updatedAt).format("HH:mm:ss")}</div>
+									</div>
 
-						<div title="Start Time"> {moment().format("HH:mm:ss")}</div>
+									<div className="flex items-center gap-1">
+										Duration:
+										<div className="font-semibold">
+											{formatExtendedTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)}
+										</div>
+									</div>
+								</>
+							) : (
+								<>
+									<div className="flex items-center gap-1">
+										Status:
+										<SessionsTableState
+											className="font-semibold"
+											sessionState={sessionInfo.state}
+										/>
+									</div>
+									<div className="flex items-center gap-2 font-semibold">
+										<div title="Start Time">{moment(sessionInfo.createdAt).format("HH:mm:ss")}</div>
+
+										<IconSvg className="fill-white" size="sm" src={ArrowRightIcon} />
+
+										<SessionsTableState
+											className="font-semibold"
+											sessionState={sessionInfo.state}
+										/>
+									</div>
+
+									<div className="flex items-center gap-1">
+										Duration:
+										<div className="font-semibold">
+											<ReactTimeAgo
+												date={sessionInfo.createdAt}
+												locale="en-US"
+												timeStyle="mini"
+											/>
+										</div>
+									</div>
+								</>
+							)}
+						</div>
+
+						<div className="flex flex-col gap-1">
+							<div>
+								Connection name: <span className="font-semibold">{sessionInfo.connectionName}</span>
+							</div>
+
+							<div>
+								Trigger name: <span className="font-semibold">{sessionInfo.triggerName}</span>
+							</div>
+						</div>
+
+						<div className="flex flex-col gap-1">
+							<div>
+								Event ID:
+								<IconButton className="inline" title="evt_01j55bpx8pepjv8vk4bxwx2hnr">
+									<CopyIcon className="h-3 w-3 fill-white" />
+								</IconButton>
+							</div>
+
+							<div>
+								Build ID:
+								<IconButton className="inline" title="bld_01j53hcjq6ecqamda2qq3n8wdx">
+									<CopyIcon className="h-3 w-3 fill-white" />
+								</IconButton>
+							</div>
+						</div>
 					</div>
-
-					<div>
-						Duration: <span className="font-semibold">35s</span>
-					</div>
-				</div>
-
-				<div className="flex flex-col gap-1">
-					<div>
-						Connection name: <span className="font-semibold">MySlack</span>
-					</div>
-
-					<div>
-						Trigger name: <span className="font-semibold">slack_slash_command</span>
-					</div>
-				</div>
-
-				<div className="flex flex-col gap-1">
-					<div>
-						Event ID:
-						<IconButton className="inline" title="evt_01j55bpx8pepjv8vk4bxwx2hnr">
-							<CopyIcon className="h-3 w-3 fill-white" />
-						</IconButton>
-					</div>
-
-					<div>
-						Build ID:
-						<IconButton className="inline" title="bld_01j53hcjq6ecqamda2qq3n8wdx">
-							<CopyIcon className="h-3 w-3 fill-white" />
-						</IconButton>
-					</div>
-				</div>
-			</div>
+				</>
+			) : null}
 
 			<Accordion className="mt-2" title="Trigger Inputs">
 				<JsonView className="scrollbar max-h-72 overflow-auto" style={githubDarkTheme} value={example} />

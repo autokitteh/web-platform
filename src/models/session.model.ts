@@ -18,21 +18,12 @@ export function convertSessionProtoToModel(protoSession: ProtoSession): Session 
 		state: protoSession.state,
 	};
 }
-export function convertSessionProtoToViewerModel(
-	protoSession: ProtoSession,
-	events: Event[],
-	connections: Connection[]
-): ViewerSession {
+export function convertSessionProtoToViewerModel(protoSession: ProtoSession, connectionName: string): ViewerSession {
 	return {
 		buildId: protoSession.buildId,
-		connectionName:
-			connections?.find(
-				(connection) =>
-					connection.connectionId ===
-						events?.find((event) => event.eventId === protoSession.eventId)?.connectionId || ""
-			)?.name || "",
+		connectionName,
 		createdAt: convertTimestampToDate(protoSession.createdAt),
-		endedAt: convertTimestampToDate(protoSession.updatedAt),
+		updatedAt: convertTimestampToDate(protoSession.updatedAt),
 		entrypoint: protoSession.entrypoint as unknown as EntrypointTrigger,
 		eventId: protoSession.eventId,
 		inputs: protoSession.inputs,
