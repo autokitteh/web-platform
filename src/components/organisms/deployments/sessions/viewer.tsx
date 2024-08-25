@@ -73,46 +73,27 @@ export const SessionViewer = () => {
 		navigate(path.toLowerCase());
 	};
 
-	function formatExtendedTimeDifference(date1, date2) {
+	function formatTimeDifference(endDate: Date, stardDate: Date) {
 		// Calculate the duration between two dates
-		const duration = moment.duration(moment(date1).diff(moment(date2)));
+		const duration = moment.duration(moment(endDate).diff(moment(stardDate)));
 
-		// Get the different time units
 		const months = Math.floor(duration.asMonths());
-		const weeks = Math.floor(duration.asWeeks() % 4); // To calculate the weeks after extracting months
-		const days = duration.days(); // Remaining days after extracting weeks
+		const weeks = Math.floor(duration.asWeeks());
+		const days = Math.floor(duration.asDays());
 		const hours = duration.hours();
 		const minutes = duration.minutes();
 		const seconds = duration.seconds();
 
-		// Build the output string
-		let result = "";
-
-		if (months > 0) {
-			result += `${months} month${months > 1 ? "s" : ""}, `;
+		// Determine the format based on the duration
+		if (months >= 1) {
+			return `${months}m`;
+		} else if (weeks >= 1) {
+			return `${weeks}w`;
+		} else if (days >= 1) {
+			return `${days}d`;
+		} else {
+			return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 		}
-		if (weeks > 0) {
-			result += `${weeks} week${weeks > 1 ? "s" : ""}, `;
-		}
-		if (days > 0) {
-			result += `${days} day${days > 1 ? "s" : ""}, `;
-		}
-		if (hours > 0) {
-			result += `${hours} hour${hours > 1 ? "s" : ""}, `;
-		}
-		if (minutes > 0) {
-			result += `${minutes} minute${minutes > 1 ? "s" : ""}`;
-		}
-		if (seconds > 0) {
-			result += (result ? " and " : "") + `${seconds} second${seconds > 1 ? "s" : ""}`;
-		}
-
-		// If the duration is less than a day, use HH:mm:ss format
-		if (months === 0 && weeks === 0 && days === 0) {
-			result = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-		}
-
-		return result;
 	}
 
 	return (
@@ -159,7 +140,7 @@ export const SessionViewer = () => {
 									<div className="flex items-center gap-1">
 										Duration:
 										<div className="font-semibold">
-											{formatExtendedTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)}
+											{formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)}
 										</div>
 									</div>
 								</>
