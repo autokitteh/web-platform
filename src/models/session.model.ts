@@ -8,7 +8,15 @@ import { convertTimestampToDate } from "@utilities";
  * @param protoSession The ProtoSession object to convert.
  * @returns The SessionType object.
  */
-export function convertSessionProtoToModel(protoSession: ProtoSession): Session {
+export function convertSessionProtoToModel(
+	protoSession: ProtoSession,
+	connections: Connection[],
+	events: Event[]
+): Session {
+	const event = events?.find((event) => event.eventId === protoSession.eventId);
+	const connectionName =
+		connections?.find((connection) => connection.connectionId === event?.connectionId)?.name || "";
+
 	return {
 		createdAt: convertTimestampToDate(protoSession.createdAt!),
 		deploymentId: protoSession.deploymentId,
@@ -16,6 +24,7 @@ export function convertSessionProtoToModel(protoSession: ProtoSession): Session 
 		inputs: protoSession.inputs,
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
+		connectionName,
 	};
 }
 export function convertSessionProtoToViewerModel(protoSession: ProtoSession, connectionName: string): ViewerSession {

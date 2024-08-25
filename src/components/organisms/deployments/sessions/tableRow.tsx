@@ -70,7 +70,7 @@ export const SessionsTableRow = memo(
 					<SessionsTableState sessionState={session.state} />
 				</Td>
 
-				<Td className="border-r-0">{session.sessionId}</Td>
+				<Td className="border-r-0">{session.connectionName}</Td>
 
 				<Td className={sessionLastTdClass}>
 					<div className="flex space-x-1">

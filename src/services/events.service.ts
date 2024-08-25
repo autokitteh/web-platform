@@ -17,8 +17,26 @@ export class EventsService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.deploymentsService,
-				i18n.t("fetchFailedForEvents", {
+				i18n.t("fetchFailedForEvent", {
 					eventId,
+					error: (error as Error).message,
+					ns: "services",
+				})
+			);
+
+			return { data: undefined, error };
+		}
+	}
+	static async list(): Promise<ServiceResponse<Event[]>> {
+		try {
+			const { events } = await eventsClient.list({ maxResults: 0, order: "DESC" });
+			const eventsConverted = events.map(convertEventProtoToModel);
+
+			return { data: eventsConverted, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.deploymentsService,
+				i18n.t("fetchFailedForEvents", {
 					error: (error as Error).message,
 					ns: "services",
 				})

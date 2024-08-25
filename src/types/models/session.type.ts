@@ -2,6 +2,7 @@ import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions
 import { SessionStateType } from "@enums";
 
 export type Session = {
+	connectionName?: string;
 	createdAt: Date;
 	deploymentId: string;
 	entrypoint: EntrypointTrigger;

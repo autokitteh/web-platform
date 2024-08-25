@@ -223,8 +223,8 @@ export const SessionsTable = () => {
 
 									<Th className="group cursor-pointer font-normal">{t("table.columns.status")}</Th>
 
-									<Th className="group cursor-pointer border-0 font-normal">
-										{t("table.columns.sessionId")}
+									<Th className="group cursor-pointer font-normal">
+										{t("table.columns.connectionName")}
 									</Th>
 
 									<Th className="mr-1.5 max-w-20 border-0 font-normal">
