@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultSessionTab, sessionTabs } from "@constants";
+import { SessionsService } from "@services/sessions.service";
 
 import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion } from "@components/molecules";

@@ -1,4 +1,4 @@
 export type ProtoTimestamp = {
-	nanoseconds?: number;
+	nanos?: number;
 	seconds: bigint;
 };

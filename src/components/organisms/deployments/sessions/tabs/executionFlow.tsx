@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { vscodeTheme } from "@uiw/react-json-view/vscode";
+import { useParams } from "react-router-dom";
+
+import { SessionsService } from "@services/sessions.service";
 
 import { Accordion } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
@@ -29,19 +32,32 @@ const example = {
 };
 
 export const SessionExecutionFlow = () => {
-	return (
-		<div className="mt-2">
+	const { sessionId } = useParams();
+	const [activities, setActivities] = React.useState<any[]>([]);
+	const [openActivities, setOpenActivities] = React.useState<string[]>([]);
+
+	useEffect(() => {
+		(async () => {
+			const { data: sessionExecution, error } = await SessionsService.getSessionActivitiesBySessionId(sessionId!);
+			setActivities(sessionExecution || []);
+		})();
+	}, [sessionId]);
+
+	return (activities || []).map((activity) => (
+		<div className="mt-2" key={activity.key}>
 			<Accordion
 				className="mt-2 rounded-md bg-gray-1000 px-2 py-1"
 				title={
 					<div className="flex w-full gap-3">
-						<div className="mt-0.5">18:20</div>
+						<div className="mt-0.5">{activity.startTime.toTimeString().split(" ")[0]}</div>
 
 						<div>
-							<div className="font-bold"> get(url,params?,headers?,data?,json?)</div>
+							<div className="text-left font-bold"> {activity.functionName}</div>
 
 							<div className="flex items-center gap-1">
-								Status: <SessionsTableState sessionState={4} /> - 3m | Attempt #1
+								Status: <SessionsTableState sessionState={4} /> -{" "}
+
+								<div>{(new Date() - activity.startTime).toString()}</div>
 							</div>
 						</div>
 					</div>
@@ -50,13 +66,25 @@ export const SessionExecutionFlow = () => {
 				<div className="mx-7">
 					<div className="font-bold">Params:</div>
 
-					<div>#0: https://httpbin.org/json</div>
+					{activity.parameters
+						? Object.keys(activity.parameters).map((parameter) => (
+								<div key={parameter}>
+									{parameter}: {activity.parameters[parameter]}
+								</div>
+							))
+						: null}
 
-					<Accordion className="mt-2" title={<div className="font-bold underline">Returned Value</div>}>
-						<JsonView className="scrollbar max-h-72 overflow-auto" style={vscodeTheme} value={example} />
-					</Accordion>
+					{activity.returnValue ? (
+						<Accordion className="mt-2" title={<div className="font-bold underline">Returned Value</div>}>
+							<JsonView
+								className="scrollbar max-h-72 overflow-auto"
+								style={vscodeTheme}
+								value={activity.returnValue}
+							/>
+						</Accordion>
+					) : null}
 				</div>
 			</Accordion>
 		</div>
-	);
+	));
 };

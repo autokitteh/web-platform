@@ -22,3 +22,10 @@ export enum SessionState {
 	stopped = 5,
 	unspecified = 0,
 }
+
+export enum ActivityState {
+	completed = 4,
+	created = 1,
+	error = 3,
+	running = 2,
+}

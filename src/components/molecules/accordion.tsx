@@ -37,7 +37,7 @@ export const Accordion: React.FC<AccordionProps> = ({ children, className, title
 			</Button>
 
 			<motion.div animate={{ height: isOpen ? "auto" : 0 }} className="overflow-hidden" initial={false}>
-				<div className="border-b border-gray-950 py-3">{children}</div>
+				{isOpen ? <div className="border-b border-gray-950 py-3">{children}</div> : null}
 			</motion.div>
 		</div>
 	);
