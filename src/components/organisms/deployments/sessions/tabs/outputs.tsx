@@ -31,11 +31,6 @@ export const SessionOutputs = () => {
 			setIsLoading(true);
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { data: sessionHistoryStates1, error: errorAct } = await SessionsService.getSessionActivitiesBySessionId(
-			sessionId!
-		);
-
 		const { data: sessionHistoryStates, error } = await SessionsService.getLogPrintsBySessionId(sessionId!);
 		if (firstLoad) {
 			setFirstLoad(false);
@@ -130,6 +125,16 @@ export const SessionOutputs = () => {
 		setIsScrolledDown(scrollPosition > 0);
 	};
 
+	useEffect(() => {
+		return () => {
+			const editor = editorRef.current;
+			if (editor) {
+				const disposable = editor.onDidScrollChange(checkScrollPosition);
+				disposable.dispose();
+			}
+		};
+	}, []);
+
 	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("sessionEditorTheme");
 		editorRef.current = _editor;
@@ -154,16 +159,6 @@ export const SessionOutputs = () => {
 			scrollToBottom();
 		}
 	}, [cachedSessionLogs]);
-
-	useEffect(() => {
-		return () => {
-			const editor = editorRef.current;
-			if (editor) {
-				const disposable = editor.onDidScrollChange(checkScrollPosition);
-				disposable.dispose();
-			}
-		};
-	}, []);
 
 	const sessionLogsAsStringForOutput = cachedSessionLogs?.map(({ logs }) => logs).join("\n");
 

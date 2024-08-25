@@ -64,7 +64,7 @@ export const SessionsTableRow = memo(
 				onClick={() => openSessionLog(session.sessionId)}
 				style={style}
 			>
-				<Td>{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
+				<Td>{moment(session.createdAt).format("YYYY-MM-DD HH:mm:ss")}</Td>
 
 				<Td>
 					<SessionsTableState sessionState={session.state} />

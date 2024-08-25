@@ -54,7 +54,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 		}
 
 		if (state && state.error && currentActivity) {
-			currentActivity.endTime = convertTimestampToDate(state.t);
+			currentActivity.endTime = convertTimestampToDate(log.t);
 			currentActivity.status = "error";
 		}
 	}
@@ -66,5 +66,5 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 
 	console.log("activities", activities);
 
-	return activities;
+	return activities.reverse();
 }

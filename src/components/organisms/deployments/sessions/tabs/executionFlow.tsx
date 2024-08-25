@@ -1,41 +1,19 @@
 import React, { useEffect } from "react";
 
-import JsonView from "@uiw/react-json-view";
-import { vscodeTheme } from "@uiw/react-json-view/vscode";
+import Editor, { Monaco } from "@monaco-editor/react";
 import { useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
 import { SessionsService } from "@services/sessions.service";
+import { sessionsEditorLineHeight } from "@src/constants";
 
+import { Loader } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
-
-const example = {
-	string: "Lorem ipsum dolor sit amet",
-	integer: 42,
-	float: 114.514,
-	bigint: 10086n,
-	null: null,
-	undefined,
-	timer: 0,
-	date: new Date("Tue Sep 13 2022 14:07:44 GMT-0500 (Central Daylight Time)"),
-	array: [19, 100.86, "test", NaN, Infinity],
-	nestedArray: [
-		[1, 2],
-		[3, 4],
-	],
-	object: {
-		"first-child": true,
-		"second-child": false,
-		"last-child": null,
-	},
-	string_number: "1234",
-};
 
 export const SessionExecutionFlow = () => {
 	const { sessionId } = useParams();
 	const [activities, setActivities] = React.useState<any[]>([]);
-	const [openActivities, setOpenActivities] = React.useState<string[]>([]);
 
 	useEffect(() => {
 		(async () => {
@@ -43,6 +21,15 @@ export const SessionExecutionFlow = () => {
 			setActivities(sessionExecution || []);
 		})();
 	}, [sessionId]);
+
+	const handleEditorWillMount = (monaco: Monaco) => {
+		monaco.editor.defineTheme("sessionEditorTheme", {
+			base: "vs-dark",
+			colors: { "editor.background": "#000000" },
+			rules: [{ token: "dateTime", foreground: "FFA500" }],
+			inherit: true,
+		});
+	};
 
 	return (activities || []).map((activity) => (
 		<div className="mt-2" key={activity.key}>
@@ -87,10 +74,24 @@ export const SessionExecutionFlow = () => {
 
 					{activity.returnValue ? (
 						<Accordion className="mt-2" title={<div className="font-bold underline">Returned Value</div>}>
-							<JsonView
-								className="scrollbar max-h-72 overflow-auto"
-								style={vscodeTheme}
-								value={activity.returnValue}
+							<Editor
+								beforeMount={handleEditorWillMount}
+								className="h-64"
+								language="json"
+								loading={<Loader isCenter size="lg" />}
+								options={{
+									lineHeight: sessionsEditorLineHeight,
+									lineNumbers: "off",
+									minimap: { enabled: false },
+									readOnly: true,
+									renderLineHighlight: "none",
+									scrollBeyondLastLine: false,
+									wordWrap: "on",
+									contextmenu: false,
+									theme: "vscode",
+								}}
+								theme="sessionEditorTheme"
+								value={JSON.stringify(activity.returnValue, null, "\t")}
 							/>
 						</Accordion>
 					) : null}

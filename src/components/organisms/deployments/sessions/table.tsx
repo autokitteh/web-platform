@@ -219,9 +219,7 @@ export const SessionsTable = () => {
 						<Table className="mt-6 flex-1 overflow-hidden">
 							<THead>
 								<Tr>
-									<Th className="group cursor-pointer font-normal">
-										{t("table.columns.activationTime")}
-									</Th>
+									<Th className="group cursor-pointer font-normal">{t("table.columns.startTime")}</Th>
 
 									<Th className="group cursor-pointer font-normal">{t("table.columns.status")}</Th>
 

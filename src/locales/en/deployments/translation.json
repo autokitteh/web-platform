@@ -42,7 +42,7 @@
 		"table": {
 			"columns": {
 				"actions": "Actions",
-				"activationTime": "Activation time",
+				"startTime": "Start time",
 				"sessionId": "Session ID",
 				"status": "Status"
 			},
