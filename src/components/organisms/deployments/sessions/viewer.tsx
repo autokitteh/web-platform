@@ -1,3 +1,4 @@
+/* eslint-disable @liferay/empty-line-between-elements */
 import React, { useEffect, useState } from "react";
 
 import JsonView from "@uiw/react-json-view";
@@ -134,7 +135,7 @@ export const SessionViewer = () => {
 
 										<IconSvg className="fill-white" size="sm" src={ArrowRightIcon} />
 
-										<div title="Start Time">{moment(sessionInfo.updatedAt).format("HH:mm:ss")}</div>
+										<div title="End Time">{moment(sessionInfo.updatedAt).format("HH:mm:ss")}</div>
 									</div>
 
 									<div className="flex items-center gap-1">
@@ -185,6 +186,17 @@ export const SessionViewer = () => {
 
 							<div>
 								Trigger name: <span className="font-semibold">{sessionInfo.triggerName}</span>
+							</div>
+
+							<div>
+								Entrypoint:{" "}
+								<div className="inline font-semibold">
+									<div className="inline">{sessionInfo.entrypoint.path}</div>
+
+									<IconSvg className="inline fill-white" size="sm" src={ArrowRightIcon} />
+
+									<div className="inline">{sessionInfo.entrypoint.name}</div>
+								</div>
 							</div>
 						</div>
 

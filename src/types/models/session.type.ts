@@ -13,7 +13,7 @@ export type ViewerSession = {
 	buildId: string;
 	connectionName?: string;
 	createdAt: Date;
-	entrypoint: EntrypointTrigger;
+	entrypoint: SessionEntrypoint;
 	eventId: string;
 	eventType: string;
 	inputs: object;

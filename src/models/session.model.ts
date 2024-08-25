@@ -1,5 +1,5 @@
 import { Session as ProtoSession } from "@ak-proto-ts/sessions/v1/session_pb";
-import { ViewerSession } from "@src/types/models/session.type";
+import { SessionEntrypoint, ViewerSession } from "@src/types/models/session.type";
 import { Connection, EntrypointTrigger, Session } from "@type/models";
 import { Event } from "@type/models/event.type";
 import { convertTimestampToDate } from "@utilities";
@@ -24,7 +24,7 @@ export function convertSessionProtoToViewerModel(protoSession: ProtoSession, con
 		connectionName,
 		createdAt: convertTimestampToDate(protoSession.createdAt),
 		updatedAt: convertTimestampToDate(protoSession.updatedAt),
-		entrypoint: protoSession.entrypoint as unknown as EntrypointTrigger,
+		entrypoint: protoSession.entrypoint as unknown as SessionEntrypoint,
 		eventId: protoSession.eventId,
 		inputs: protoSession.inputs,
 		sessionId: protoSession.sessionId,
