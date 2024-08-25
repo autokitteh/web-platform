@@ -1,5 +1,5 @@
 export type Integration = {
-	displayName?: string;
-	integrationId?: string;
+	displayName: string;
+	integrationId: string;
 	uniqueName: string;
 };
