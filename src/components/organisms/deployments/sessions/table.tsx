@@ -23,7 +23,7 @@ import { CatImage } from "@assets/image";
 import { ArrowLeft, RotateIcon } from "@assets/image/icons";
 
 export const SessionsTable = () => {
-	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 70, min: 40 });
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10 });
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
