@@ -9,6 +9,19 @@ export type Session = {
 	sessionId: string;
 	state: number;
 };
+export type ViewerSession = {
+	buildId: string;
+	connectionName?: string;
+	createdAt: Date;
+	endedAt: Date;
+	entrypoint: EntrypointTrigger;
+	eventId: string;
+	eventType: string;
+	inputs: object;
+	sessionId: string;
+	state: number;
+	triggerName: string;
+};
 
 export type EntrypointTrigger = {
 	location: SessionEntrypoint;

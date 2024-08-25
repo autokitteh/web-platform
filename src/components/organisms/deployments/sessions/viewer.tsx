@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultSessionTab, sessionTabs } from "@constants";
+import { SessionsService } from "@services/sessions.service";
+import { ViewerSession } from "@src/types/models/session.type";
 
 import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -37,12 +39,12 @@ const example = {
 };
 
 export const SessionViewer = () => {
-	const { deploymentId, projectId } = useParams();
+	const { deploymentId, projectId, sessionId } = useParams();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [activeTab, setActiveTab] = useState(defaultSessionTab);
-
+	const [sessionInfo, setSessionInfo] = useState<ViewerSession>();
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
 	useEffect(() => {
@@ -50,6 +52,15 @@ export const SessionViewer = () => {
 		const activeTabIndex = pathParts[6] || defaultSessionTab;
 		setActiveTab(activeTabIndex);
 	}, [location]);
+
+	const fetchSessionInfo = async () => {
+		const { data: sessionInfoResponse } = await SessionsService.getSessionInfo(sessionId!);
+		setSessionInfo(sessionInfoResponse);
+	};
+
+	useEffect(() => {
+		fetchSessionInfo();
+	}, []);
 
 	const goTo = (path: string) => {
 		if (path === defaultSessionTab) {

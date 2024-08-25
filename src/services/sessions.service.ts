@@ -2,6 +2,7 @@ import i18n from "i18next";
 import { get } from "lodash";
 import moment from "moment";
 
+import { EventsService } from "./events.service";
 import {
 	Session as ProtoSession,
 	SessionLogRecord as ProtoSessionLogRecord,
@@ -10,8 +11,10 @@ import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
 import { SessionLogRecord, convertSessionLogRecordsProtoToActivitiesModel, convertSessionProtoToModel } from "@models";
-import { EnvironmentsService, LoggerService } from "@services";
+import { ConnectionService, EnvironmentsService, LoggerService } from "@services";
 import { SessionLogRecordType } from "@src/enums";
+import { convertSessionProtoToViewerModel } from "@src/models/session.model";
+import { ViewerSession } from "@src/types/models/session.type";
 import { ServiceResponse, StartSessionArgsType } from "@type";
 import { Session, SessionFilter } from "@type/models";
 import { flattenArray } from "@utilities";
@@ -49,7 +52,7 @@ export class SessionsService {
 		try {
 			const response = await sessionsClient.getLog({ sessionId });
 
-			const activities = convertSessionLogRecordsProtoToActivitiesModel(response.log?.records);
+			const activities = convertSessionLogRecordsProtoToActivitiesModel(response.log!.records);
 
 			return { data: activities, error: undefined };
 		} catch (error) {
@@ -76,6 +79,21 @@ export class SessionsService {
 				.filter((record: SessionLogRecord) => record.type === SessionLogRecordType.print && record.logs);
 
 			return { data: sessionHistory, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.sessionsService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async getSessionInfo(sessionId: string): Promise<ServiceResponse<ViewerSession>> {
+		try {
+			const { session } = await sessionsClient.get({ sessionId });
+			const { data: events, error: eventsError } = await EventsService.list(session!.sessionId);
+			const { data: connections, error: connectionsError } = await ConnectionService.list();
+			const sessionConverted = convertSessionProtoToViewerModel(session!, events!, connections!);
+
+			return { data: sessionConverted, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);
 
