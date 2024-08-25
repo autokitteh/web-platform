@@ -1,10 +1,10 @@
 import { ActivityState } from "@enums";
 
 export type Activity = {
-	deploymentId: string;
-	endTime: Date;
+	endTime?: Date;
+	functionName: string;
 	key: string;
-	parameters: string[];
+	parameters: Record<string, string> | undefined;
 	returnValue: object;
 	startTime: Date;
 	status: keyof ActivityState;
