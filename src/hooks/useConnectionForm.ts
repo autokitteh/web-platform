@@ -215,7 +215,7 @@ export const useConnectionForm = (
 			const OauthUrl = `${apiBaseUrl}/oauth/start/${integrationName}?cid=${oauthConnectionId}&origin=web`;
 
 			openPopup(OauthUrl, "Authorize");
-			startCheckingStatus(oauthConnectionId!);
+			startCheckingStatus(oauthConnectionId);
 
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
