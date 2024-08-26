@@ -53,7 +53,6 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 			state.retries = 0;
 			state.recheckIntervalId = null;
 			state.shouldRefetchConnections = false;
-			state.avoidNextRerenderCleanup = false;
 
 			return state;
 		});
