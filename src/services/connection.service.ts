@@ -160,7 +160,7 @@ export class ConnectionService {
 			}
 
 			convertedConnections.map((connection) => {
-				const integration = integrations!.find(
+				const integration = integrations.find(
 					(integration) => integration.integrationId === connection.integrationId
 				);
 				if (integration) {
