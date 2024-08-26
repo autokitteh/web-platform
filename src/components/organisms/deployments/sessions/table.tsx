@@ -9,12 +9,13 @@ import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { DeploymentsService, LoggerService, SessionsService } from "@services";
+import { useResize } from "@src/hooks";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
 import { useModalStore, useToastStore } from "@store";
 
-import { Frame, IconButton, IconSvg, Loader, TBody, THead, Table, Th, Tr } from "@components/atoms";
+import { Button, Frame, IconButton, IconSvg, Loader, TBody, THead, Table, Th, Tr } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
@@ -22,6 +23,7 @@ import { CatImage } from "@assets/image";
 import { ArrowLeft, RotateIcon } from "@assets/image/icons";
 
 export const SessionsTable = () => {
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10 });
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
@@ -38,7 +40,7 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const frameClass = useMemo(
-		() => cn("w-1/2 bg-gray-1100 pl-7 transition-all", { "w-3/4 rounded-r-none": !sessionId }),
+		() => cn("h-full w-full bg-gray-1100 pl-7 transition-all", { "rounded-r-none": !sessionId }),
 		[sessionId]
 	);
 
@@ -186,87 +188,104 @@ export const SessionsTable = () => {
 		[isRefreshing]
 	);
 
+	const resizeClass = useMemo(
+		() =>
+			cn(
+				"resize-handle-horizontal bg-gray-white z-0 h-[97%] cursor-ew-resize self-center rounded-none p-1.5 transition hover:bg-gray-750",
+				{
+					"h-full bg-gray-1100 p-1": !sessionId,
+				}
+			),
+		[sessionId]
+	);
+
 	return (
 		<div className="flex h-full w-full py-2.5">
-			<Frame className={frameClass}>
-				<div className="flex items-center justify-between gap-2.5">
-					<div className="flex flex-wrap items-center gap-2.5">
-						<IconButton
-							ariaLabel={t("ariaLabelReturnBack")}
-							className="min-w-20 gap-2 bg-gray-1050 text-sm text-white hover:bg-black"
-							onClick={() => navigate(`/projects/${projectId}/deployments`)}
-						>
-							<ArrowLeft className="h-4" />
+			<div style={{ width: `${leftSideWidth}%` }}>
+				<Frame className={frameClass}>
+					<div className="flex items-center justify-between gap-2.5">
+						<div className="flex flex-wrap items-center gap-2.5">
+							<IconButton
+								ariaLabel={t("ariaLabelReturnBack")}
+								className="min-w-20 gap-2 bg-gray-1050 text-sm text-white hover:bg-black"
+								onClick={() => navigate(`/projects/${projectId}/deployments`)}
+							>
+								<ArrowLeft className="h-4" />
 
-							{t("buttons.back")}
-						</IconButton>
+								{t("buttons.back")}
+							</IconButton>
 
-						<IconButton
-							className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
-							disabled={isRefreshing}
-							onClick={handleRefreshClick}
-							title={t("refresh")}
-						>
-							<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
-						</IconButton>
+							<IconButton
+								className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
+								disabled={isRefreshing}
+								onClick={handleRefreshClick}
+								title={t("refresh")}
+							>
+								<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
+							</IconButton>
+						</div>
+
+						<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 					</div>
 
-					<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
-				</div>
+					{sessions.length ? (
+						<div className="relative flex h-full flex-col">
+							<Table className="mt-6 flex-1 overflow-hidden">
+								<THead>
+									<Tr>
+										<Th className="group cursor-pointer font-normal">
+											{t("table.columns.activationTime")}
+										</Th>
 
-				{sessions.length ? (
-					<div className="relative flex h-full flex-col">
-						<Table className="mt-6 flex-1 overflow-hidden">
-							<THead>
-								<Tr>
-									<Th className="group cursor-pointer font-normal">
-										{t("table.columns.activationTime")}
-									</Th>
+										<Th className="group cursor-pointer font-normal">
+											{t("table.columns.status")}
+										</Th>
 
-									<Th className="group cursor-pointer font-normal">{t("table.columns.status")}</Th>
+										<Th className="group cursor-pointer border-0 font-normal">
+											{t("table.columns.sessionId")}
+										</Th>
 
-									<Th className="group cursor-pointer border-0 font-normal">
-										{t("table.columns.sessionId")}
-									</Th>
+										<Th className="mr-1.5 max-w-20 border-0 font-normal">
+											{t("table.columns.actions")}
+										</Th>
+									</Tr>
+								</THead>
 
-									<Th className="mr-1.5 max-w-20 border-0 font-normal">
-										{t("table.columns.actions")}
-									</Th>
-								</Tr>
-							</THead>
+								<TBody>
+									<SessionsTableList
+										onItemsRendered={handleItemsRendered}
+										onSelectedSessionId={setSelectedSessionId}
+										onSessionRemoved={debouncedFetchDeployments}
+										sessions={sessions}
+									/>
+								</TBody>
+							</Table>
 
-							<TBody>
-								<SessionsTableList
-									onItemsRendered={handleItemsRendered}
-									onSelectedSessionId={setSelectedSessionId}
-									onSessionRemoved={debouncedFetchDeployments}
-									sessions={sessions}
-								/>
-							</TBody>
-						</Table>
+							{isLoading ? (
+								<div className="flex h-10 w-full items-center">
+									<Loader firstColor="light-gray" size="md" />
+								</div>
+							) : null}
+						</div>
+					) : (
+						<div className="mt-10 text-center text-xl font-semibold">{t("noSessions")}</div>
+					)}
+				</Frame>
+			</div>
 
-						{isLoading ? (
-							<div className="flex h-10 w-full items-center">
-								<Loader firstColor="light-gray" size="md" />
-							</div>
-						) : null}
-					</div>
+			<Button className={resizeClass} />
+
+			<div className="flex" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+				{sessionId ? (
+					<Outlet />
 				) : (
-					<div className="mt-10 text-center text-xl font-semibold">{t("noSessions")}</div>
-				)}
-			</Frame>
-
-			{sessionId ? (
-				<Outlet />
-			) : (
-				<Frame className="w-3/5 rounded-l-none bg-gray-1100 pt-20 transition">
-					<div className="mt-20 flex flex-col items-center">
+					<Frame className="flex h-full w-full flex-col items-center rounded-l-none bg-gray-1100 pt-40 transition">
 						<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
 
 						<CatImage className="border-b border-gray-750 fill-gray-750" />
-					</div>
-				</Frame>
-			)}
+					</Frame>
+				)}
+			</div>
 
 			<DeleteSessionModal onDelete={handleRemoveSession} />
 		</div>

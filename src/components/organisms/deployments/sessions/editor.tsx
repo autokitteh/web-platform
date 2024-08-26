@@ -162,7 +162,7 @@ export const SessionTableEditorFrame = () => {
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
 	return (
-		<Frame className="ml-2.5 w-3/5 pt-20 transition">
+		<Frame className="h-full w-full pt-20 transition">
 			{isLoading ? (
 				<Loader isCenter size="xl" />
 			) : (
