@@ -27,7 +27,7 @@ export const SessionsTableRow = memo(
 
 		const sessionRowClass = (id: string) =>
 			cn("group cursor-pointer hover:bg-gray-1300", { "bg-black": id === selectedSessionId });
-		const sessionLastTdClass = cn("max-w-20 justify-end border-0 pr-0", { "mr-1.5": !scrollDisplayed });
+		const sessionLastTdClass = cn("w-1/8 max-w-20 justify-end border-0 pr-0", { "mr-1.5": !scrollDisplayed });
 
 		if (!session) {
 			return null;
@@ -64,15 +64,19 @@ export const SessionsTableRow = memo(
 				onClick={() => openSessionLog(session.sessionId)}
 				style={style}
 			>
-				<Td>{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
+				<Td className="w-1/4" customWidth>
+					{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}
+				</Td>
 
-				<Td>
+				<Td className="w-1/8" customWidth>
 					<SessionsTableState sessionState={session.state} />
 				</Td>
 
-				<Td className="border-r-0">{session.sessionId}</Td>
+				<Td className="w-1/2 border-r-0" customWidth>
+					{session.sessionId}
+				</Td>
 
-				<Td className={sessionLastTdClass}>
+				<Td className={sessionLastTdClass} customWidth>
 					<div className="flex space-x-1">
 						<IconButton
 							className="p-1"

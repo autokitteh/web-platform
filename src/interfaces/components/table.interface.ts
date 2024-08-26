@@ -5,6 +5,7 @@ export interface TableProps {
 	className?: string;
 	onClick?: () => void;
 	style?: React.CSSProperties;
+	customWidth?: boolean;
 }
 
 export interface TableVariantContextType {
