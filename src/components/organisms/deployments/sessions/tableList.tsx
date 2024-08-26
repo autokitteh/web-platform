@@ -2,13 +2,14 @@ import React, { useCallback, useMemo, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List, ListOnItemsRenderedProps } from "react-window";
+import { ListOnItemsRenderedProps } from "react-window";
 
 import { ModalName } from "@enums/components";
 import { SessionsTableListProps } from "@interfaces/components";
 
 import { useModalStore } from "@store";
 
+import { VirtualTable } from "@components/molecules";
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 
 export const SessionsTableList = ({
@@ -48,7 +49,7 @@ export const SessionsTableList = ({
 
 	const itemsRendered = useCallback(
 		(event: ListOnItemsRenderedProps, height: number) => {
-			const totalSessionsHeight = sessions.length * 48;
+			const totalSessionsHeight = sessions.length * 36;
 			const hasScroll = height < totalSessionsHeight;
 			onItemsRendered(event);
 			setScrollDisplayed(hasScroll);
@@ -58,23 +59,18 @@ export const SessionsTableList = ({
 	);
 
 	return (
-		<div className="h-full">
-			<AutoSizer>
-				{({ height, width }) => (
-					<List
-						className="scrollbar"
-						height={height}
-						itemCount={sessions.length}
-						itemData={itemData}
-						itemKey={(index) => sessions[index].sessionId}
-						itemSize={38}
-						onItemsRendered={(event) => itemsRendered(event, height)}
-						width={width}
-					>
-						{SessionsTableRow}
-					</List>
-				)}
-			</AutoSizer>
-		</div>
+		<AutoSizer>
+			{({ height, width }) => (
+				<VirtualTable
+					height={height - 30}
+					itemCount={sessions.length}
+					itemData={itemData}
+					itemSize={36}
+					onItemsRendered={(event) => itemsRendered(event, height)}
+					row={SessionsTableRow}
+					width={width}
+				/>
+			)}
+		</AutoSizer>
 	);
 };

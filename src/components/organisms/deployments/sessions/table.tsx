@@ -15,7 +15,7 @@ import { cn } from "@utilities";
 
 import { useModalStore, useToastStore } from "@store";
 
-import { Button, Frame, IconButton, IconSvg, Loader, TBody, THead, Table, Th, Tr } from "@components/atoms";
+import { Button, Frame, IconButton, IconSvg, Loader, THead, Table, Th, Tr } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
@@ -230,36 +230,34 @@ export const SessionsTable = () => {
 
 					{sessions.length ? (
 						<div className="relative flex h-full flex-col">
-							<Table className="mt-6 flex-1 overflow-hidden">
+							<Table className="mt-6 overflow-hidden">
 								<THead>
 									<Tr>
-										<Th className="group cursor-pointer font-normal">
+										<Th className="w-1/4 font-normal" hasFixedWidth>
 											{t("table.columns.activationTime")}
 										</Th>
 
-										<Th className="group cursor-pointer font-normal">
+										<Th className="w-1/8 font-normal" hasFixedWidth>
 											{t("table.columns.status")}
 										</Th>
 
-										<Th className="group cursor-pointer border-0 font-normal">
+										<Th className="w-1/2 font-normal" hasFixedWidth>
 											{t("table.columns.sessionId")}
 										</Th>
 
-										<Th className="mr-1.5 max-w-20 border-0 font-normal">
+										<Th className="w-1/8 font-normal" hasFixedWidth>
 											{t("table.columns.actions")}
 										</Th>
 									</Tr>
 								</THead>
-
-								<TBody>
-									<SessionsTableList
-										onItemsRendered={handleItemsRendered}
-										onSelectedSessionId={setSelectedSessionId}
-										onSessionRemoved={debouncedFetchDeployments}
-										sessions={sessions}
-									/>
-								</TBody>
 							</Table>
+
+							<SessionsTableList
+								onItemsRendered={handleItemsRendered}
+								onSelectedSessionId={setSelectedSessionId}
+								onSessionRemoved={debouncedFetchDeployments}
+								sessions={sessions}
+							/>
 
 							{isLoading ? (
 								<div className="flex h-10 w-full items-center">
