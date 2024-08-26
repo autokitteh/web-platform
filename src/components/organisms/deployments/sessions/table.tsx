@@ -233,19 +233,19 @@ export const SessionsTable = () => {
 							<Table className="mt-6 overflow-hidden">
 								<THead>
 									<Tr>
-										<Th className="w-1/4 font-normal" customWidth>
+										<Th className="w-1/4 font-normal" hasFixedWidth>
 											{t("table.columns.activationTime")}
 										</Th>
 
-										<Th className="w-1/8 font-normal" customWidth>
+										<Th className="w-1/8 font-normal" hasFixedWidth>
 											{t("table.columns.status")}
 										</Th>
 
-										<Th className="w-1/2 font-normal" customWidth>
+										<Th className="w-1/2 font-normal" hasFixedWidth>
 											{t("table.columns.sessionId")}
 										</Th>
 
-										<Th className="w-1/8 font-normal" customWidth>
+										<Th className="w-1/8 font-normal" hasFixedWidth>
 											{t("table.columns.actions")}
 										</Th>
 									</Tr>
