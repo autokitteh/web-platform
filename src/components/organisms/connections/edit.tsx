@@ -21,7 +21,7 @@ export const EditConnection = () => {
 		fetchConnection,
 		integration: selectedIntegration,
 		register,
-	} = useConnectionForm({}, connectionSchema, "edit");
+	} = useConnectionForm(connectionSchema, "edit");
 
 	useEffect(() => {
 		if (connectionId) {
@@ -46,7 +46,7 @@ export const EditConnection = () => {
 						disabled
 						isError={!!errors.connectionName}
 						isRequired
-						placeholder={t("github.placeholders.name")}
+						label={t("github.placeholders.name")}
 						value={connectionName}
 					/>
 				</div>

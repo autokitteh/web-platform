@@ -80,7 +80,7 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 								aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}
 								isError={!!errors.name}
 								isRequired
-								placeholder={t("addCodeAssets.placeholderName", { ns: "modals" })}
+								label={t("addCodeAssets.placeholderName", { ns: "modals" })}
 								variant="light"
 							/>
 

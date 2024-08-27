@@ -15,16 +15,7 @@ export const TwilioIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 
 	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setValidationSchema, setValue } =
-		useConnectionForm(
-			{
-				account_sid: "",
-				auth_token: "",
-				api_key: "",
-				api_secret: "",
-			},
-			oauthSchema,
-			"edit"
-		);
+		useConnectionForm(oauthSchema, "edit");
 
 	useEffect(() => {
 		if (!connectionType) {

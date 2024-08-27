@@ -15,11 +15,7 @@ export const HttpIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 
 	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setValidationSchema, setValue } =
-		useConnectionForm(
-			{ basic_username: "", basic_password: "", bearer_access_token: "" },
-			httpBasicIntegrationSchema,
-			"edit"
-		);
+		useConnectionForm(httpBasicIntegrationSchema, "edit");
 
 	useEffect(() => {
 		if (!connectionType) {

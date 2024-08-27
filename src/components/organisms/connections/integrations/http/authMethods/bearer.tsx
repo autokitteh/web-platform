@@ -43,8 +43,7 @@ export const HttpBearerForm = ({
 						isError={!!errors.bearer_access_token}
 						isLocked={lockState.bearer_access_token}
 						isRequired
-						placeholder={t("http.placeholders.accessToken")}
-						resetOnFirstFocus
+						label={t("http.placeholders.accessToken")}
 					/>
 				) : (
 					<Input
@@ -52,7 +51,7 @@ export const HttpBearerForm = ({
 						aria-label={t("http.placeholders.accessToken")}
 						isError={!!errors.bearer_access_token}
 						isRequired
-						placeholder={t("http.placeholders.accessToken")}
+						label={t("http.placeholders.accessToken")}
 					/>
 				)}
 

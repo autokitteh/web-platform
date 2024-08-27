@@ -27,7 +27,6 @@ import {
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
 	const { connectionId, errors, handleSubmit, onSubmit, register, setValue, watch } = useConnectionForm(
-		{ connectionName: "", integration: { label: "", value: "" } },
 		connectionSchema,
 		"create"
 	);
@@ -43,42 +42,42 @@ export const AddConnection = () => {
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration.value}
+				type={selectedIntegration?.value}
 			/>
 		),
 		google: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration.value}
+				type={selectedIntegration?.value}
 			/>
 		),
 		sheets: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration.value}
+				type={selectedIntegration?.value}
 			/>
 		),
 		calendar: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration.value}
+				type={selectedIntegration?.value}
 			/>
 		),
 		drive: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration.value}
+				type={selectedIntegration?.value}
 			/>
 		),
 		forms: (
 			<GoogleIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration.value}
+				type={selectedIntegration?.value}
 			/>
 		),
 		googlegemini: (
@@ -99,14 +98,14 @@ export const AddConnection = () => {
 			<JiraIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration.value}
+				type={selectedIntegration?.value}
 			/>
 		),
 		confluence: (
 			<JiraIntegrationAddForm
 				connectionId={connectionId}
 				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration.value}
+				type={selectedIntegration?.value}
 			/>
 		),
 		discord: (
@@ -130,7 +129,7 @@ export const AddConnection = () => {
 						disabled={!!connectionId}
 						isError={!!errors.connectionName}
 						isRequired
-						placeholder={t("placeholders.name")}
+						label={t("placeholders.name")}
 					/>
 
 					<ErrorMessage>{errors?.connectionName?.message as string}</ErrorMessage>

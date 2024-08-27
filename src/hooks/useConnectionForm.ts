@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DefaultValues, FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
@@ -24,11 +24,7 @@ const GoogleIntegrationsPrefixRequired = [
 	Integrations.forms,
 ];
 
-export const useConnectionForm = (
-	initialValues: DefaultValues<FieldValues> | undefined,
-	validationSchema: ZodObject<ZodRawShape>,
-	mode: FormMode
-) => {
+export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode: FormMode) => {
 	const { connectionId: paramConnectionId, projectId } = useParams();
 	const [connectionIntegrationName, setConnectionIntegrationName] = useState<string>();
 	const navigate = useNavigate();
@@ -49,7 +45,6 @@ export const useConnectionForm = (
 	} = useForm({
 		resolver: zodResolver(formSchema),
 		mode: "onChange",
-		defaultValues: initialValues,
 	});
 	const toastAndLog = useToastAndLog("integrations", "errors");
 
@@ -277,7 +272,6 @@ export const useConnectionForm = (
 
 	const setValidationSchema = (newSchema: ZodObject<ZodRawShape>) => {
 		setFormSchema(newSchema);
-		reset(getValues(), { keepErrors: true });
 	};
 
 	return {

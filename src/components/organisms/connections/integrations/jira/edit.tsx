@@ -15,11 +15,6 @@ export const JiraIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 
 	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		{
-			base_url: "",
-			token: "",
-			email: "",
-		},
 		jiraIntegrationSchema,
 		"edit"
 	);

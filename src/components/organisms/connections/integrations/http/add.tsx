@@ -24,7 +24,7 @@ export const HttpIntegrationAddForm = ({
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const { createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
-		useConnectionForm({ basic_username: "", basic_password: "", bearer_access_token: "" }, oauthSchema, "create");
+		useConnectionForm(oauthSchema, "create");
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {

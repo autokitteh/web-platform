@@ -70,8 +70,7 @@ export const PatForm = ({
 						isError={!!errors.pat}
 						isLocked={lockState.pat}
 						isRequired
-						placeholder={t("github.placeholders.pat")}
-						resetOnFirstFocus
+						label={t("github.placeholders.pat")}
 					/>
 				) : (
 					<Input
@@ -79,7 +78,7 @@ export const PatForm = ({
 						aria-label={t("github.placeholders.pat")}
 						isError={!!errors.pat}
 						isRequired
-						placeholder={t("github.placeholders.pat")}
+						label={t("github.placeholders.pat")}
 					/>
 				)}
 
@@ -91,7 +90,7 @@ export const PatForm = ({
 					aria-label={t("github.placeholders.webhookUrl")}
 					className="w-full"
 					disabled
-					placeholder={t("github.placeholders.webhookUrl")}
+					label={t("github.placeholders.webhookUrl")}
 					value={webhook}
 				/>
 
@@ -118,15 +117,14 @@ export const PatForm = ({
 						isError={!!errors.secret}
 						isLocked={lockState.secret}
 						isRequired
-						placeholder={t("github.placeholders.secret")}
-						resetOnFirstFocus
+						label={t("github.placeholders.secret")}
 					/>
 				) : (
 					<Input
 						{...register("secret")}
 						aria-label={t("github.placeholders.secret")}
 						isError={!!errors.secret}
-						placeholder={t("github.placeholders.secret")}
+						label={t("github.placeholders.secret")}
 					/>
 				)}
 

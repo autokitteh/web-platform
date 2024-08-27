@@ -46,8 +46,7 @@ export const ApiKeyTwilioForm = ({
 						isError={!!errors.account_sid}
 						isLocked={lockState.account_sid}
 						isRequired
-						placeholder={t("twilio.placeholders.sid")}
-						resetOnFirstFocus
+						label={t("twilio.placeholders.sid")}
 					/>
 				) : (
 					<Input
@@ -55,7 +54,7 @@ export const ApiKeyTwilioForm = ({
 						aria-label={t("twilio.placeholders.sid")}
 						isError={!!errors.account_sid}
 						isRequired
-						placeholder={t("twilio.placeholders.sid")}
+						label={t("twilio.placeholders.sid")}
 					/>
 				)}
 
@@ -73,8 +72,7 @@ export const ApiKeyTwilioForm = ({
 						isError={!!errors.api_key}
 						isLocked={lockState.api_key}
 						isRequired
-						placeholder={t("twilio.placeholders.key")}
-						resetOnFirstFocus
+						label={t("twilio.placeholders.key")}
 					/>
 				) : (
 					<Input
@@ -82,7 +80,7 @@ export const ApiKeyTwilioForm = ({
 						aria-label={t("twilio.placeholders.key")}
 						isError={!!errors.api_key}
 						isRequired
-						placeholder={t("twilio.placeholders.key")}
+						label={t("twilio.placeholders.key")}
 					/>
 				)}
 
@@ -100,8 +98,7 @@ export const ApiKeyTwilioForm = ({
 						isError={!!errors.api_secret}
 						isLocked={lockState.api_secret}
 						isRequired
-						placeholder={t("twilio.placeholders.secret")}
-						resetOnFirstFocus
+						label={t("twilio.placeholders.secret")}
 					/>
 				) : (
 					<Input
@@ -109,7 +106,7 @@ export const ApiKeyTwilioForm = ({
 						aria-label={t("twilio.placeholders.secret")}
 						isError={!!errors.api_secret}
 						isRequired
-						placeholder={t("twilio.placeholders.secret")}
+						label={t("twilio.placeholders.secret")}
 					/>
 				)}
 

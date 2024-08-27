@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 
+import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { SingleValue } from "react-select";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
 import { useConnectionForm } from "@src/hooks";
-import { SelectOption } from "@src/interfaces/components";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -20,38 +19,38 @@ export const AwsIntegrationEditForm = () => {
 		secret_key: true,
 		token: true,
 	});
-	const [regionValue, setRegionValue] = useState<SingleValue<SelectOption>>();
 
-	const { connectionVariables, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(
-			{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
-			awsIntegrationSchema,
-			"edit"
-		);
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+		useConnectionForm(awsIntegrationSchema, "edit");
 
 	useEffect(() => {
 		if (!connectionVariables) return;
-
 		const region = connectionVariables?.find((variable) => variable.name === "Region");
 		if (region) {
-			setRegionValue({
-				label: region.name,
+			setValue("region", {
+				label: region.value,
 				value: region.value,
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
-				<Select
-					aria-label={t("aws.placeholders.region")}
-					disabled
-					isError={!!errors.region}
-					label={t("aws.placeholders.region")}
-					options={selectIntegrationAws}
-					placeholder={t("aws.placeholders.region")}
-					value={regionValue}
+				<Controller
+					control={control}
+					name="region"
+					render={({ field }) => (
+						<Select
+							{...field}
+							aria-label={t("aws.placeholders.region")}
+							isError={!!errors.region}
+							label={t("aws.placeholders.region")}
+							options={selectIntegrationAws}
+							placeholder={t("aws.placeholders.region")}
+						/>
+					)}
 				/>
 
 				<ErrorMessage>{errors.region?.message as string}</ErrorMessage>
@@ -68,8 +67,7 @@ export const AwsIntegrationEditForm = () => {
 					isError={!!errors.access_key}
 					isLocked={lockState.access_key}
 					isRequired
-					placeholder={t("aws.placeholders.accessKey")}
-					resetOnFirstFocus
+					label={t("aws.placeholders.accessKey")}
 				/>
 
 				<ErrorMessage>{errors.access_key?.message as string}</ErrorMessage>
@@ -86,8 +84,7 @@ export const AwsIntegrationEditForm = () => {
 					isError={!!errors.secret_key}
 					isLocked={lockState.secret_key}
 					isRequired
-					placeholder={t("aws.placeholders.secretKey")}
-					resetOnFirstFocus
+					label={t("aws.placeholders.secretKey")}
 				/>
 
 				<ErrorMessage>{errors.secret_key?.message as string}</ErrorMessage>
@@ -104,8 +101,7 @@ export const AwsIntegrationEditForm = () => {
 					isError={!!errors.token}
 					isLocked={lockState.token}
 					isRequired
-					placeholder={t("aws.placeholders.token")}
-					resetOnFirstFocus
+					label={t("aws.placeholders.token")}
 				/>
 
 				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>

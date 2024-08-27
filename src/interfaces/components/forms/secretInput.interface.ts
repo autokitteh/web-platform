@@ -2,7 +2,7 @@ import { InputType } from "@type/components";
 
 export interface SecretInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	classInput?: string;
-	label?: string;
+	label: string;
 	isError?: boolean;
 	isLocked: boolean;
 	isLockedDisabled?: boolean;
@@ -11,5 +11,4 @@ export interface SecretInputProps extends React.InputHTMLAttributes<HTMLInputEle
 	handleInputChange?: (value: string) => void;
 	variant?: InputType;
 	onFocus?: () => void;
-	resetOnFirstFocus?: boolean;
 }

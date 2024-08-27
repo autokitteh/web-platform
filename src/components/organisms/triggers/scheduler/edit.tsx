@@ -166,7 +166,7 @@ export const SchedulerEditTrigger = () => {
 						disabled
 						isError={!!errors.name}
 						isRequired
-						placeholder={t("placeholders.name")}
+						label={t("placeholders.name")}
 						value={name}
 					/>
 
@@ -180,7 +180,7 @@ export const SchedulerEditTrigger = () => {
 						aria-label={t("placeholders.cron")}
 						isError={!!errors.cron}
 						isRequired
-						placeholder={t("placeholders.cron")}
+						label={t("placeholders.cron")}
 					/>
 
 					<ErrorMessage>{errors.cron?.message}</ErrorMessage>
@@ -216,7 +216,7 @@ export const SchedulerEditTrigger = () => {
 						aria-label={t("placeholders.functionName")}
 						isError={!!errors.entryFunction}
 						isRequired
-						placeholder={t("placeholders.functionName")}
+						label={t("placeholders.functionName")}
 					/>
 
 					<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>

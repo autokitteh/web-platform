@@ -25,16 +25,7 @@ export const TwilioIntegrationAddForm = ({
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const { createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
-		useConnectionForm(
-			{
-				account_sid: "",
-				auth_token: "",
-				api_key: "",
-				api_secret: "",
-			},
-			oauthSchema,
-			"create"
-		);
+		useConnectionForm(oauthSchema, "create");
 
 	useEffect(() => {
 		if (!connectionType?.value) {

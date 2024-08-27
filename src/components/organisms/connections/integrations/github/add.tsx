@@ -32,7 +32,7 @@ export const GithubIntegrationAddForm = ({
 		register,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm({ pat: "", secret: "" }, githubIntegrationSchema, "create");
+	} = useConnectionForm(githubIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 

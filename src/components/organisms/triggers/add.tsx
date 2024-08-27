@@ -61,7 +61,7 @@ export const AddTrigger = () => {
 						{...register("name", { required: tErrors("nameRequired") })}
 						aria-label={t("placeholders.name")}
 						isError={!!errors.name}
-						placeholder={t("placeholders.name")}
+						label={t("placeholders.name")}
 					/>
 
 					<ErrorMessage>{errors.name?.message}</ErrorMessage>

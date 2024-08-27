@@ -23,9 +23,6 @@ export const GoogleGeminiIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
-		{
-			key: "",
-		},
 		googleGeminiIntegrationSchema,
 		"create"
 	);
@@ -45,7 +42,7 @@ export const GoogleGeminiIntegrationAddForm = ({
 					aria-label={t("gemini.placeholders.key")}
 					isError={!!errors.key}
 					isRequired
-					placeholder={t("gemini.placeholders.key")}
+					label={t("gemini.placeholders.key")}
 				/>
 
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>

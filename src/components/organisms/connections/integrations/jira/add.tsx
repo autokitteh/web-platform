@@ -25,15 +25,7 @@ export const JiraIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, reset, setValidationSchema } =
-		useConnectionForm(
-			{
-				base_url: "",
-				token: "",
-				email: "",
-			},
-			jiraIntegrationSchema,
-			"create"
-		);
+		useConnectionForm(jiraIntegrationSchema, "create");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const configureConnection = async (connectionId: string) => {

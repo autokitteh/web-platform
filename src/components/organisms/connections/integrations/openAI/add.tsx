@@ -23,9 +23,6 @@ export const OpenAiIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
-		{
-			key: "",
-		},
 		openAiIntegrationSchema,
 		"create"
 	);
@@ -45,7 +42,7 @@ export const OpenAiIntegrationAddForm = ({
 					aria-label={t("openAi.placeholders.apiKey")}
 					isError={!!errors.key}
 					isRequired
-					placeholder={t("openAi.placeholders.apiKey")}
+					label={t("openAi.placeholders.apiKey")}
 				/>
 
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>

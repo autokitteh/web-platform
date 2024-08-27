@@ -116,7 +116,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 							aria-label={t("placeholders.cron")}
 							isError={!!errors.cron}
 							isRequired
-							placeholder={t("placeholders.cron")}
+							label={t("placeholders.cron")}
 							value={cron}
 						/>
 
@@ -152,7 +152,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 							aria-label={t("placeholders.functionName")}
 							isError={!!errors.entryFunction}
 							isRequired
-							placeholder={t("placeholders.functionName")}
+							label={t("placeholders.functionName")}
 							value={entryFunction}
 						/>
 

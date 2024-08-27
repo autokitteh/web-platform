@@ -23,14 +23,7 @@ export const SlackIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema } =
-		useConnectionForm(
-			{
-				bot_token: "",
-				app_token: "",
-			},
-			slackIntegrationSchema,
-			"create"
-		);
+		useConnectionForm(slackIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 

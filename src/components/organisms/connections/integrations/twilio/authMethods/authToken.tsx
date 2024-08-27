@@ -52,8 +52,7 @@ export const AuthTokenTwilioForm = ({
 						isError={!!errors.account_sid}
 						isLocked={lockState.account_sid}
 						isRequired
-						placeholder={t("twilio.placeholders.sid")}
-						resetOnFirstFocus
+						label={t("twilio.placeholders.sid")}
 					/>
 				) : (
 					<Input
@@ -61,7 +60,7 @@ export const AuthTokenTwilioForm = ({
 						aria-label={t("twilio.placeholders.sid")}
 						isError={!!errors.account_sid}
 						isRequired
-						placeholder={t("twilio.placeholders.sid")}
+						label={t("twilio.placeholders.sid")}
 					/>
 				)}
 
@@ -79,8 +78,7 @@ export const AuthTokenTwilioForm = ({
 						isError={!!errors.auth_token}
 						isLocked={lockState.auth_token}
 						isRequired
-						placeholder={t("twilio.placeholders.token")}
-						resetOnFirstFocus
+						label={t("twilio.placeholders.token")}
 					/>
 				) : (
 					<Input
@@ -88,7 +86,7 @@ export const AuthTokenTwilioForm = ({
 						aria-label={t("twilio.placeholders.token")}
 						isError={!!errors.auth_token}
 						isRequired
-						placeholder={t("twilio.placeholders.token")}
+						label={t("twilio.placeholders.token")}
 					/>
 				)}
 
