@@ -73,6 +73,7 @@ export const Security = () => {
 								aria-label={t("copyInputAriaLabel")}
 								className="flex-1 rounded-3xl hover:border-gray-1100"
 								disabled
+								label={t("copyInputAriaLabel")}
 								value={token}
 							/>
 

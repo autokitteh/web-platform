@@ -52,7 +52,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 		[hasValue, onChange]
 	);
 
-	const placeholderText = isRequired ? `${placeholder} *` : placeholder;
+	const labelText = isRequired ? `${label} *` : label;
 
 	const baseClass = cn(
 		"relative flex items-center border border-gray-950 bg-black pr-2.5 text-base",
@@ -74,12 +74,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
 	const labelClass = cn(
 		"pointer-events-none absolute left-4 opacity-0 transition-all",
-		{ "top-1/2 -translate-y-1/2 text-gray-600": !isFocused && !hasValue },
+		{ "top-1/2 -translate-y-1/2 text-gray-600 opacity-100": !isFocused && !hasValue && !placeholder },
 		{ "-top-2 left-3 px-1 text-xs text-white opacity-100 before:bg-gray-950": isFocused || hasValue },
 		{ "text-gray-900": variant === InputVariant.light },
+		{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light },
+		{ "text-black": variant === InputVariant.light },
 		{
-			"-top-2 left-3 px-1 text-xs opacity-100 before:bg-white":
-				(isFocused || hasValue) && variant === InputVariant.light,
+			"-top-2 left-3 translate-y-0 px-1 text-xs text-white opacity-100": placeholder,
 		}
 	);
 
@@ -100,15 +101,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 				onBlur={handleBlur}
 				onChange={handleChange}
 				onFocus={handleFocus}
-				placeholder={placeholderText}
+				placeholder={placeholder}
 				ref={ref}
 				type={type}
 				value={value}
 			/>
 
-			{label || placeholderText ? (
+			{labelText ? (
 				<label className={labelClass} htmlFor={id}>
-					<span className="relative z-10">{label || placeholderText}</span>
+					<span className="relative z-10">{labelText}</span>
 
 					<span className={borderOverlayLabelClass} />
 				</label>

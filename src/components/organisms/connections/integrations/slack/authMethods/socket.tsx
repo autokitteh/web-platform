@@ -44,8 +44,7 @@ export const SocketForm = ({
 						isError={!!errors.bot_token}
 						isLocked={lockState.bot_token}
 						isRequired
-						placeholder={t("slack.placeholders.botToken")}
-						resetOnFirstFocus
+						label={t("slack.placeholders.botToken")}
 					/>
 				) : (
 					<Input
@@ -53,7 +52,7 @@ export const SocketForm = ({
 						aria-label={t("slack.placeholders.botToken")}
 						isError={!!errors.bot_token}
 						isRequired
-						placeholder={t("slack.placeholders.botToken")}
+						label={t("slack.placeholders.botToken")}
 					/>
 				)}
 
@@ -71,8 +70,7 @@ export const SocketForm = ({
 						isError={!!errors.app_token}
 						isLocked={lockState.app_token}
 						isRequired
-						placeholder={t("slack.placeholders.appToken")}
-						resetOnFirstFocus
+						label={t("slack.placeholders.appToken")}
 					/>
 				) : (
 					<Input
@@ -80,7 +78,7 @@ export const SocketForm = ({
 						aria-label={t("slack.placeholders.appToken")}
 						isError={!!errors.app_token}
 						isRequired
-						placeholder={t("slack.placeholders.appToken")}
+						label={t("slack.placeholders.appToken")}
 					/>
 				)}
 

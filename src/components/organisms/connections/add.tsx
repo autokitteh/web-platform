@@ -129,7 +129,7 @@ export const AddConnection = () => {
 						disabled={!!connectionId}
 						isError={!!errors.connectionName}
 						isRequired
-						placeholder={t("placeholders.name")}
+						label={t("placeholders.name")}
 					/>
 
 					<ErrorMessage>{errors?.connectionName?.message as string}</ErrorMessage>

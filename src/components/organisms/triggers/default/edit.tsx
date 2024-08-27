@@ -194,7 +194,7 @@ export const DefaultEditTrigger = () => {
 						aria-label={t("placeholders.name")}
 						isError={!!errors.name}
 						isRequired
-						placeholder={t("placeholders.name")}
+						label={t("placeholders.name")}
 						value={name}
 					/>
 
@@ -253,7 +253,7 @@ export const DefaultEditTrigger = () => {
 						aria-label={t("placeholders.functionName")}
 						isError={!!errors.entryFunction}
 						isRequired
-						placeholder={t("placeholders.functionName")}
+						label={t("placeholders.functionName")}
 						value={entryFunction}
 					/>
 
@@ -265,7 +265,7 @@ export const DefaultEditTrigger = () => {
 						{...register("eventType")}
 						aria-label={t("placeholders.eventType")}
 						isError={!!errors.eventType}
-						placeholder={t("placeholders.eventType")}
+						label={t("placeholders.eventType")}
 						value={eventType}
 					/>
 
@@ -277,7 +277,7 @@ export const DefaultEditTrigger = () => {
 						{...register("filter")}
 						aria-label={t("placeholders.filter")}
 						isError={!!errors.filter}
-						placeholder={t("placeholders.filter")}
+						label={t("placeholders.filter")}
 						value={filter}
 					/>
 
@@ -302,16 +302,16 @@ export const DefaultEditTrigger = () => {
 												aria-label={t("placeholders.key")}
 												className="w-full"
 												defaultValue={key}
+												label={t("placeholders.key")}
 												onChange={(event) => updateTriggerDataKey(event.target.value, key)}
-												placeholder={t("placeholders.key")}
 											/>
 
 											<Input
 												aria-label={t("placeholders.value")}
 												className="w-full"
 												defaultValue={value.string.v}
+												label={t("placeholders.value")}
 												onChange={(event) => updateTriggerDataValue(key, event.target.value)}
-												placeholder={t("placeholders.value")}
 											/>
 										</div>
 

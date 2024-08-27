@@ -77,7 +77,7 @@ export const AddVariable = () => {
 						aria-label={tForm("placeholders.name")}
 						className={dirtyFields["name"] ? "border-white" : ""}
 						isError={!!errors.name}
-						placeholder={tForm("placeholders.name")}
+						label={tForm("placeholders.name")}
 					/>
 
 					<ErrorMessage ariaLabel={tForm("ariaNameRequired")}>{errors.name?.message}</ErrorMessage>
@@ -89,7 +89,7 @@ export const AddVariable = () => {
 							setValue("isSecret", newState);
 						}}
 						isLocked={isSecret}
-						placeholder={tForm("placeholders.value")}
+						label={tForm("placeholders.value")}
 						{...register("value")}
 						handleInputChange={(newValue) => setValue("value", newValue)}
 					/>

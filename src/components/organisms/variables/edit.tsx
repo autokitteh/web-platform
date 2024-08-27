@@ -111,7 +111,7 @@ export const EditVariable = () => {
 						aria-label={tForm("placeholders.name")}
 						className={dirtyFields["name"] ? "border-white" : ""}
 						isError={!!errors.name}
-						placeholder={tForm("placeholders.name")}
+						label={tForm("placeholders.name")}
 					/>
 
 					<ErrorMessage ariaLabel={tForm("ariaNameRequired")}>{errors.name?.message}</ErrorMessage>
@@ -120,13 +120,12 @@ export const EditVariable = () => {
 				<div className="relative">
 					<SecretInput
 						handleLockAction={(newState: boolean) => setValue("isSecret", newState)}
-						placeholder={tForm("placeholders.value")}
+						label={tForm("placeholders.value")}
 						{...register("value", {
 							required: tForm("valueRequired"),
 						})}
 						handleInputChange={(newValue) => setValue("value", newValue)}
 						isLocked={isSecret}
-						resetOnFirstFocus
 						value={value}
 					/>
 

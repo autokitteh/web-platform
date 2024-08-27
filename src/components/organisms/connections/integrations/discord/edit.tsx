@@ -31,8 +31,7 @@ export const DiscordIntegrationEditForm = () => {
 					isError={!!errors.botToken}
 					isLocked={lockState}
 					isRequired
-					placeholder={t("discord.placeholders.botToken")}
-					resetOnFirstFocus
+					label={t("discord.placeholders.botToken")}
 				/>
 
 				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>

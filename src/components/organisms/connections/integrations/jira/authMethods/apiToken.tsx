@@ -47,7 +47,6 @@ export const ApiTokenJiraForm = ({
 						isRequired
 						label={t("jira.placeholders.baseUrl")}
 						placeholder={t("jira.placeholders.exampleUrl")}
-						resetOnFirstFocus
 					/>
 				) : (
 					<Input
@@ -74,8 +73,7 @@ export const ApiTokenJiraForm = ({
 						isError={!!errors.token}
 						isLocked={lockState.token}
 						isRequired
-						placeholder={t("jira.placeholders.pat")}
-						resetOnFirstFocus
+						label={t("jira.placeholders.pat")}
 					/>
 				) : (
 					<Input
@@ -84,7 +82,6 @@ export const ApiTokenJiraForm = ({
 						isError={!!errors.token}
 						isRequired
 						label={t("jira.placeholders.pat")}
-						placeholder={t("jira.placeholders.pat")}
 					/>
 				)}
 
@@ -101,8 +98,7 @@ export const ApiTokenJiraForm = ({
 						}
 						isError={!!errors.email}
 						isLocked={lockState.email}
-						placeholder={t("jira.placeholders.email")}
-						resetOnFirstFocus
+						label={t("jira.placeholders.email")}
 					/>
 				) : (
 					<Input
@@ -110,7 +106,7 @@ export const ApiTokenJiraForm = ({
 						aria-label={t("jira.placeholders.email")}
 						isError={!!errors.email}
 						label={t("jira.placeholders.email")}
-						placeholder={t("jira.placeholders.email")}
+						placeholder="name@exemple.com"
 						type="email"
 					/>
 				)}

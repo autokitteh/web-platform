@@ -31,8 +31,7 @@ export const GoogleGeminiIntegrationEditForm = () => {
 					isError={!!errors.key}
 					isLocked={lockState}
 					isRequired
-					placeholder={t("gemini.placeholders.key")}
-					resetOnFirstFocus
+					label={t("gemini.placeholders.key")}
 				/>
 
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>

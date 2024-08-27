@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { Button } from "./buttons";
 import { ButtonVariant, InputVariant } from "@enums/components";
 import { SecretInputProps } from "@interfaces/components";
-import { secretString } from "@src/constants/forms";
 import { cn } from "@utilities";
 
 import { IconSvg } from "@components/atoms/icons";
@@ -27,34 +26,19 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		label,
 		onFocus,
 		placeholder,
-		resetOnFirstFocus,
 		value,
 		variant,
 		...rest
 	} = props;
 
 	const { t } = useTranslation("components", { keyPrefix: "inputs" });
-	const [innerValue, setInnerValue] = useState(resetOnFirstFocus ? secretString : value);
+	const [innerValue, setInnerValue] = useState<string>();
 
 	const [isFocused, setIsFocused] = useState<boolean>(false);
 	const [hasValue, setHasValue] = useState<boolean>();
 
-	const [isFirstFocus, setIsFirstFocus] = useState<boolean>(true);
-	const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
-
 	const handleFocus = () => {
 		onFocus?.();
-		setIsButtonClicked(true);
-		setIsFocused(true);
-
-		if (isFirstFocus && !isButtonClicked && isLocked && resetOnFirstFocus) {
-			setIsFirstFocus(false);
-
-			handleInputChange?.("");
-			setInnerValue("");
-
-			return;
-		}
 		setIsFocused(true);
 	};
 
@@ -75,8 +59,6 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const handleChange = useCallback(
 		(event: React.ChangeEvent<HTMLInputElement>) => {
-			setIsButtonClicked(true);
-
 			const newValue = !!event.target.value;
 			if (newValue !== hasValue) {
 				setHasValue(newValue);
@@ -87,7 +69,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		[hasValue, handleInputChange]
 	);
 
-	const placeholderText = isRequired ? `${placeholder} *` : placeholder;
+	const labelText = isRequired ? `${label} *` : label;
 
 	const baseClass = cn(
 		"relative flex items-center border border-gray-950 bg-black text-base",
@@ -116,14 +98,13 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const labelClass = cn(
 		"pointer-events-none absolute left-4 opacity-0 transition-all",
-		{ "top-1/2 -translate-y-1/2 text-gray-600": !isFocused && !hasValue },
+		{ "top-1/2 -translate-y-1/2 text-gray-600 opacity-100": !isFocused && !hasValue && !placeholder },
 		{ "-top-2 left-3 px-1 text-xs text-white opacity-100 before:bg-gray-950": isFocused || hasValue },
 		{ "text-gray-900": variant === InputVariant.light },
 		{ "-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light },
 		{ "text-black": variant === InputVariant.light },
 		{
-			"-top-2 left-3 translate-y-0 px-1 text-xs text-white opacity-100":
-				!isFocused && resetOnFirstFocus && isFirstFocus,
+			"-top-2 left-3 translate-y-0 px-1 text-xs text-white opacity-100": placeholder,
 		}
 	);
 
@@ -145,7 +126,6 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	const disabledButtonClass = cn("mr-2", iconFill);
 
 	const handleLockedStateAction = () => {
-		setIsButtonClicked(true);
 		handleLockAction?.(!isLocked);
 	};
 
@@ -161,15 +141,15 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					onBlur={handleBlur}
 					onChange={handleChange}
 					onFocus={handleFocus}
-					placeholder={placeholderText}
+					placeholder={placeholder}
 					ref={ref}
 					type={inputType}
 					value={innerValue}
 				/>
 
-				{label || placeholderText ? (
+				{labelText ? (
 					<label className={labelClass} htmlFor={id}>
-						<span className="relative z-10">{label || placeholderText}</span>
+						<span className="relative z-10">{labelText}</span>
 
 						<span className={borderOverlayLabelClass} />
 					</label>

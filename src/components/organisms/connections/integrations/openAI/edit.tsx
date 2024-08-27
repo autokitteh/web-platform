@@ -31,8 +31,7 @@ export const OpenAiIntegrationEditForm = () => {
 					isError={!!errors.key}
 					isLocked={lockState}
 					isRequired
-					placeholder={t("openAi.placeholders.apiKey")}
-					resetOnFirstFocus
+					label={t("openAi.placeholders.apiKey")}
 				/>
 
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>

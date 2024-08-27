@@ -42,7 +42,7 @@ export const DiscordIntegrationAddForm = ({
 					aria-label={t("discord.placeholders.botToken")}
 					isError={!!errors.botToken}
 					isRequired
-					placeholder={t("discord.placeholders.botToken")}
+					label={t("discord.placeholders.botToken")}
 				/>
 
 				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>

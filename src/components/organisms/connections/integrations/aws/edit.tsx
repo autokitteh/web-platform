@@ -79,8 +79,7 @@ export const AwsIntegrationEditForm = () => {
 					isError={!!errors.access_key}
 					isLocked={lockState.access_key}
 					isRequired
-					placeholder={t("aws.placeholders.accessKey")}
-					resetOnFirstFocus
+					label={t("aws.placeholders.accessKey")}
 				/>
 
 				<ErrorMessage>{errors.access_key?.message as string}</ErrorMessage>
@@ -97,8 +96,7 @@ export const AwsIntegrationEditForm = () => {
 					isError={!!errors.secret_key}
 					isLocked={lockState.secret_key}
 					isRequired
-					placeholder={t("aws.placeholders.secretKey")}
-					resetOnFirstFocus
+					label={t("aws.placeholders.secretKey")}
 				/>
 
 				<ErrorMessage>{errors.secret_key?.message as string}</ErrorMessage>
@@ -115,8 +113,7 @@ export const AwsIntegrationEditForm = () => {
 					isError={!!errors.token}
 					isLocked={lockState.token}
 					isRequired
-					placeholder={t("aws.placeholders.token")}
-					resetOnFirstFocus
+					label={t("aws.placeholders.token")}
 				/>
 
 				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>

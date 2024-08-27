@@ -58,7 +58,7 @@ export const AwsIntegrationAddForm = ({
 					aria-label={t("aws.placeholders.accessKey")}
 					isError={!!errors.access_key}
 					isRequired
-					placeholder={t("aws.placeholders.accessKey")}
+					label={t("aws.placeholders.accessKey")}
 				/>
 
 				<ErrorMessage>{errors.access_key?.message as string}</ErrorMessage>
@@ -70,7 +70,7 @@ export const AwsIntegrationAddForm = ({
 					aria-label={t("aws.placeholders.secretKey")}
 					isError={!!errors.secret_key}
 					isRequired
-					placeholder={t("aws.placeholders.secretKey")}
+					label={t("aws.placeholders.secretKey")}
 				/>
 
 				<ErrorMessage>{errors.secret_key?.message as string}</ErrorMessage>
@@ -82,7 +82,7 @@ export const AwsIntegrationAddForm = ({
 					aria-label={t("aws.placeholders.token")}
 					isError={!!errors.token}
 					isRequired
-					placeholder={t("aws.placeholders.token")}
+					label={t("aws.placeholders.token")}
 				/>
 
 				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>

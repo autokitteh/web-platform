@@ -46,8 +46,7 @@ export const HttpBasicForm = ({
 						isError={!!errors.basic_username}
 						isLocked={lockState.basic_username}
 						isRequired
-						placeholder={t("http.placeholders.username")}
-						resetOnFirstFocus
+						label={t("http.placeholders.username")}
 					/>
 				) : (
 					<Input
@@ -55,7 +54,7 @@ export const HttpBasicForm = ({
 						aria-label={t("http.placeholders.username")}
 						isError={!!errors.username}
 						isRequired
-						placeholder={t("http.placeholders.username")}
+						label={t("http.placeholders.username")}
 					/>
 				)}
 
@@ -73,8 +72,7 @@ export const HttpBasicForm = ({
 						isError={!!errors.basic_password}
 						isLocked={lockState.basic_password}
 						isRequired
-						placeholder={t("http.placeholders.password")}
-						resetOnFirstFocus
+						label={t("http.placeholders.password")}
 					/>
 				) : (
 					<Input
@@ -82,7 +80,7 @@ export const HttpBasicForm = ({
 						aria-label={t("http.placeholders.password")}
 						isError={!!errors.basic_password}
 						isRequired
-						placeholder={t("http.placeholders.password")}
+						label={t("http.placeholders.password")}
 					/>
 				)}
 
