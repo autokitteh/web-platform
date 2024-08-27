@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 
+import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { SingleValue } from "react-select";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
 import { useConnectionForm } from "@src/hooks";
-import { SelectOption } from "@src/interfaces/components";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -20,21 +19,16 @@ export const AwsIntegrationEditForm = () => {
 		secret_key: true,
 		token: true,
 	});
-	const [regionValue, setRegionValue] = useState<SingleValue<SelectOption>>();
 
-	const { connectionVariables, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(awsIntegrationSchema, "edit");
 
 	useEffect(() => {
 		if (!connectionVariables) return;
 		const region = connectionVariables?.find((variable) => variable.name === "Region");
 		if (region) {
-			setRegionValue({
-				label: region.name,
-				value: region.value,
-			});
 			setValue("region", {
-				label: region.name,
+				label: region.value,
 				value: region.value,
 			});
 		}
@@ -44,16 +38,19 @@ export const AwsIntegrationEditForm = () => {
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
-				<Select
-					aria-label={t("aws.placeholders.region")}
-					isError={!!errors.region}
-					label={t("aws.placeholders.region")}
-					onChange={(region) => {
-						setValue("region", region);
-					}}
-					options={selectIntegrationAws}
-					placeholder={t("aws.placeholders.region")}
-					value={regionValue}
+				<Controller
+					control={control}
+					name="region"
+					render={({ field }) => (
+						<Select
+							{...field}
+							aria-label={t("aws.placeholders.region")}
+							isError={!!errors.region}
+							label={t("aws.placeholders.region")}
+							options={selectIntegrationAws}
+							placeholder={t("aws.placeholders.region")}
+						/>
+					)}
 				/>
 
 				<ErrorMessage>{errors.region?.message as string}</ErrorMessage>
