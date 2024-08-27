@@ -22,19 +22,32 @@ export const AwsIntegrationEditForm = () => {
 	});
 	const [regionValue, setRegionValue] = useState<SingleValue<SelectOption>>();
 
-	const { connectionVariables, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(awsIntegrationSchema, "edit");
+	const {
+		connectionVariables,
+		errors,
+		handleSubmit,
+		isLoading,
+		onSubmitEdit,
+		register,
+		setValidationSchema,
+		setValue,
+	} = useConnectionForm(awsIntegrationSchema, "edit");
 
 	useEffect(() => {
 		if (!connectionVariables) return;
-
 		const region = connectionVariables?.find((variable) => variable.name === "Region");
 		if (region) {
 			setRegionValue({
 				label: region.name,
 				value: region.value,
 			});
+			setValue("region", {
+				label: region.name,
+				value: region.value,
+			});
+			setValidationSchema(awsIntegrationSchema);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
 	return (
@@ -42,9 +55,11 @@ export const AwsIntegrationEditForm = () => {
 			<div className="relative">
 				<Select
 					aria-label={t("aws.placeholders.region")}
-					disabled
 					isError={!!errors.region}
 					label={t("aws.placeholders.region")}
+					onChange={(region) => {
+						setValue("region", region);
+					}}
 					options={selectIntegrationAws}
 					placeholder={t("aws.placeholders.region")}
 					value={regionValue}

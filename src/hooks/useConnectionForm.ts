@@ -272,7 +272,15 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const setValidationSchema = (newSchema: ZodObject<ZodRawShape>) => {
 		setFormSchema(newSchema);
-		reset(getValues(), { keepErrors: true });
+		const shape = newSchema.shape;
+
+		Object.keys(shape).forEach((key) => {
+			const fieldSchema = shape[key];
+
+			if (fieldSchema._def.typeName === "ZodString") {
+				setValue(key, "");
+			}
+		});
 	};
 
 	return {
