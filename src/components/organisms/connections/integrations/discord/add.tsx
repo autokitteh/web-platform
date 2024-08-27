@@ -23,9 +23,6 @@ export const DiscordIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
-		{
-			botToken: "",
-		},
 		discordIntegrationSchema,
 		"create"
 	);

@@ -15,10 +15,6 @@ export const SlackIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 
 	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		{
-			bot_token: "",
-			app_token: "",
-		},
 		slackIntegrationSchema,
 		"edit"
 	);

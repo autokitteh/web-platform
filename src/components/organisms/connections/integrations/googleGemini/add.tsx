@@ -23,9 +23,6 @@ export const GoogleGeminiIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
-		{
-			key: "",
-		},
 		googleGeminiIntegrationSchema,
 		"create"
 	);

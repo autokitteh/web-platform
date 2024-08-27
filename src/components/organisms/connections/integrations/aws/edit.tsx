@@ -23,11 +23,7 @@ export const AwsIntegrationEditForm = () => {
 	const [regionValue, setRegionValue] = useState<SingleValue<SelectOption>>();
 
 	const { connectionVariables, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
-		useConnectionForm(
-			{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
-			awsIntegrationSchema,
-			"edit"
-		);
+		useConnectionForm(awsIntegrationSchema, "edit");
 
 	useEffect(() => {
 		if (!connectionVariables) return;

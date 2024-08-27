@@ -25,7 +25,7 @@ export const GithubIntegrationEditForm = () => {
 		onSubmitEdit,
 		register,
 		setValue,
-	} = useConnectionForm({ pat: "", secret: "", webhook: "" }, githubIntegrationSchema, "edit");
+	} = useConnectionForm(githubIntegrationSchema, "edit");
 
 	useEffect(() => {
 		if (connectionVariables) {

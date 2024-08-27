@@ -16,9 +16,6 @@ export const DiscordIntegrationEditForm = () => {
 	const [lockState, setLockState] = useState(true);
 
 	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		{
-			botToken: "",
-		},
 		discordIntegrationSchema,
 		"edit"
 	);

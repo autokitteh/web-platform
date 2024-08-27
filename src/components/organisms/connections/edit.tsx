@@ -21,7 +21,7 @@ export const EditConnection = () => {
 		fetchConnection,
 		integration: selectedIntegration,
 		register,
-	} = useConnectionForm({}, connectionSchema, "edit");
+	} = useConnectionForm(connectionSchema, "edit");
 
 	useEffect(() => {
 		if (connectionId) {

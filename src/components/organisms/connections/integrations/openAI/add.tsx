@@ -23,9 +23,6 @@ export const OpenAiIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const { createConnection, errors, handleSubmit, isLoading, register } = useConnectionForm(
-		{
-			key: "",
-		},
 		openAiIntegrationSchema,
 		"create"
 	);

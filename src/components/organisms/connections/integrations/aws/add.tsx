@@ -23,7 +23,6 @@ export const AwsIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const { clearErrors, createConnection, errors, handleSubmit, isLoading, register, setValue } = useConnectionForm(
-		{ access_key: "", secret_key: "", token: "", region: { label: "", value: "" } },
 		awsIntegrationSchema,
 		"create"
 	);

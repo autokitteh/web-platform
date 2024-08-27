@@ -34,7 +34,7 @@ export const GoogleIntegrationAddForm = ({
 		reset,
 		setValidationSchema,
 		setValue,
-	} = useConnectionForm({ json: "", auth_type: "json" }, googleIntegrationSchema, "create");
+	} = useConnectionForm(googleIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 

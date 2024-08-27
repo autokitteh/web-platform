@@ -16,9 +16,6 @@ export const GoogleGeminiIntegrationEditForm = () => {
 	const [lockState, setLockState] = useState(true);
 
 	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		{
-			key: "",
-		},
 		googleGeminiIntegrationSchema,
 		"edit"
 	);
