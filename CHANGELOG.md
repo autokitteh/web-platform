@@ -1,3 +1,23 @@
+# [1.43.0](https://github.com/autokitteh/web-platform/compare/v1.42.0...v1.43.0) (2024-08-27)
+
+
+### Bug Fixes
+
+* disable husky on semantic-release commit ([#303](https://github.com/autokitteh/web-platform/issues/303)) ([e814ba3](https://github.com/autokitteh/web-platform/commit/e814ba30888a14dd52d5a968396a91572bc8dc84))
+* fix google add functionality ([#285](https://github.com/autokitteh/web-platform/issues/285)) ([bfb6f4f](https://github.com/autokitteh/web-platform/commit/bfb6f4f9b4a31ed61b91b56af31f8a82d4922073))
+* install dependencies for semantic release in github actions workflow ([#304](https://github.com/autokitteh/web-platform/issues/304)) ([b4f1a2c](https://github.com/autokitteh/web-platform/commit/b4f1a2c9202fb70236afdfccba26511b0268208d))
+* reset connection id on it deletion ([#298](https://github.com/autokitteh/web-platform/issues/298)) ([46e39a8](https://github.com/autokitteh/web-platform/commit/46e39a8bfaca6616cb57657f0e16e3c0e0247b53))
+* tables nested dom error ([#300](https://github.com/autokitteh/web-platform/issues/300)) ([43fb26f](https://github.com/autokitteh/web-platform/commit/43fb26fba2ff8add0fd2abb45d138322b4236f5d))
+
+
+### Features
+
+* add confluence add/edit form components ([#293](https://github.com/autokitteh/web-platform/issues/293)) ([a68d815](https://github.com/autokitteh/web-platform/commit/a68d8150d653bdb92957f15c1f7199b777208fbe))
+* add drag pane between sessions and viewer ([#297](https://github.com/autokitteh/web-platform/issues/297)) ([d1a5d0f](https://github.com/autokitteh/web-platform/commit/d1a5d0f8f2cc177c04ec7dd05f6f9f0dd970f1a2))
+* add google gemini add/edit form components ([#294](https://github.com/autokitteh/web-platform/issues/294)) ([73fdb45](https://github.com/autokitteh/web-platform/commit/73fdb45f52c327eeb327d69a4fb01f08803e78bf))
+* add typescript check on commit ([#296](https://github.com/autokitteh/web-platform/issues/296)) ([998ce79](https://github.com/autokitteh/web-platform/commit/998ce79f7a2daebc9c657562afd48b16d20ea032))
+* check OAuth connection on creation ([#286](https://github.com/autokitteh/web-platform/issues/286)) ([a1120ae](https://github.com/autokitteh/web-platform/commit/a1120ae4493c450ca8d6614cbbb19b31ba91d53b))
+
 # [1.42.0](https://github.com/autokitteh/web-platform/compare/v1.41.0...v1.42.0) (2024-08-22)
 
 
