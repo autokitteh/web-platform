@@ -24,6 +24,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		isLockedDisabled,
 		isRequired,
 		label,
+		onChange,
 		onFocus,
 		placeholder,
 		value,
@@ -65,8 +66,9 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 			}
 			setInnerValue(event.target.value);
 			handleInputChange?.(event.target.value);
+			onChange?.(event);
 		},
-		[hasValue, handleInputChange]
+		[hasValue, handleInputChange, onChange]
 	);
 
 	const labelText = isRequired ? `${label} *` : label;
