@@ -4,6 +4,8 @@
 	"connectionDeleteFailedExtended": "Connection deletion failed - connection ID: {{connectionId}}, error: {{error}}",
 	"connectionNotFound": "Couldn't fetch the connection details",
 	"connectionNotFoundExtended": "Failed to fetch the connection for the project {{projectId}}. Error: {{error}}",
+	"connectionStatusFetchFail": "Couldn't fetch the connection status",
+	"connectionStatusFetchFailExtended": "Failed to fetch the connection status with the error: {{error}}.",
 	"defaultEnvironmentNotFound": "Default environment not found, project ID: {{projectId}}",
 	"issueFetchingDefaultEnvironment": "Couldn't fetch the default environment, project ID: {{projectId}}, error: {{error}}",
 	"connectionsNotFound": "Couldn't fetch the connections details",

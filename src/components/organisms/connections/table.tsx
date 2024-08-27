@@ -8,7 +8,7 @@ import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useModalStore, useToastStore } from "@store";
+import { useConnectionCheckerStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ConnectionTableStatus, SortButton } from "@components/molecules";
@@ -22,7 +22,6 @@ export const ConnectionsTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "connections" });
 	const { closeModal, openModal } = useModalStore();
 	const { projectId } = useParams();
-
 	const navigate = useNavigate();
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -32,19 +31,20 @@ export const ConnectionsTable = () => {
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections, "name");
+	const { resetChecker, shouldRefetchConnections } = useConnectionCheckerStore();
 
 	const fetchConnections = async () => {
 		setIsLoading(true);
 		try {
-			const { data: connections, error } = await ConnectionService.listByProjectId(projectId!);
+			const { data: connectionsResponse, error } = await ConnectionService.listByProjectId(projectId!);
 			if (error) {
 				throw error;
 			}
-			if (!connections) {
+			if (!connectionsResponse) {
 				return;
 			}
 
-			setConnections(connections);
+			setConnections(connectionsResponse);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -57,17 +57,23 @@ export const ConnectionsTable = () => {
 	};
 
 	useEffect(() => {
+		return () => {
+			resetChecker();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
 		fetchConnections();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	}, [shouldRefetchConnections]);
 
 	const handleOpenModalDeleteConnection = useCallback(
 		(connectionId: string) => {
 			setConnectionId(connectionId);
 			openModal(ModalName.deleteConnection);
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[connectionId]
+		[openModal]
 	);
 
 	const handleDeleteConnection = async () => {
