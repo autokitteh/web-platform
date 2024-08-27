@@ -233,7 +233,7 @@ export const SessionsTable = () => {
 							<Table className="mt-6 overflow-hidden">
 								<THead>
 									<Tr>
-										<Th className="group cursor-pointer font-normal" hasFixedWidth>
+										<Th className="group w-1/4 cursor-pointer font-normal" hasFixedWidth>
 											{t("table.columns.startTime")}
 										</Th>
 
@@ -241,11 +241,11 @@ export const SessionsTable = () => {
 											{t("table.columns.status")}
 										</Th>
 
-										<Th className="w-1/2 font-normal" hasFixedWidth>
+										<Th className="w-1/4 font-normal" hasFixedWidth>
 											{t("table.columns.sessionId")}
 										</Th>
 
-										<Th className="group cursor-pointer font-normal">
+										<Th className="group w-1/4 cursor-pointer font-normal" hasFixedWidth>
 											{t("table.columns.connectionName")}
 										</Th>
 
