@@ -221,9 +221,6 @@ jobs:
           node-version: "21.2.0"
           cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
-
       - uses: actions/download-artifact@v4
         with:
           name: built-files
@@ -231,4 +228,5 @@ jobs:
       - name: Release and tag a new version
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          HUSKY: 0
         run: npx semantic-release
