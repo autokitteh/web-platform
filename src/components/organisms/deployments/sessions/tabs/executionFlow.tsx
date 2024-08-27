@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 
-import Editor, { Monaco } from "@monaco-editor/react";
+import JsonView from "@uiw/react-json-view";
+import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
 import { SessionsService } from "@services/sessions.service";
-import { sessionsEditorLineHeight } from "@src/constants";
 import { useToastStore } from "@src/store";
 
-import { IconSvg, Loader } from "@components/atoms";
+import { IconSvg } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
 
@@ -35,15 +35,6 @@ export const SessionExecutionFlow = () => {
 		fetchActivities();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const handleEditorWillMount = (monaco: Monaco) => {
-		monaco.editor.defineTheme("sessionEditorTheme", {
-			base: "vs-dark",
-			colors: { "editor.background": "#000000" },
-			rules: [{ token: "dateTime", foreground: "FFA500" }],
-			inherit: true,
-		});
-	};
 
 	return (
 		<div className="pt-5">
@@ -104,24 +95,10 @@ export const SessionExecutionFlow = () => {
 										className="mt-2"
 										title={<div className="font-bold underline">Returned Value</div>}
 									>
-										<Editor
-											beforeMount={handleEditorWillMount}
-											className="h-64"
-											language="json"
-											loading={<Loader isCenter size="lg" />}
-											options={{
-												lineHeight: sessionsEditorLineHeight,
-												lineNumbers: "off",
-												minimap: { enabled: false },
-												readOnly: true,
-												renderLineHighlight: "none",
-												scrollBeyondLastLine: false,
-												wordWrap: "on",
-												contextmenu: false,
-												theme: "vscode",
-											}}
-											theme="sessionEditorTheme"
-											value={JSON.stringify(activity.returnValue, null, "\t")}
+										<JsonView
+											className="scrollbar max-h-72 overflow-auto"
+											style={githubDarkTheme}
+											value={activity.returnValue}
 										/>
 									</Accordion>
 								) : null}
