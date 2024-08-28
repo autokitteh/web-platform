@@ -99,7 +99,7 @@ export const SessionViewer = () => {
 	}
 
 	return (
-		<Frame className="h-[92vh] w-full overflow-hidden pb-3 transition">
+		<Frame className="h-full w-full overflow-hidden pb-3 transition">
 			{sessionInfo ? (
 				<>
 					<div className="flex items-center justify-between">
