@@ -15,7 +15,7 @@ export const GoogleIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 
 	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		{ json: "" },
+		{ json: "", auth_type: "json" },
 		googleIntegrationSchema,
 		"edit"
 	);
