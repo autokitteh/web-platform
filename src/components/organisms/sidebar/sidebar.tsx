@@ -38,7 +38,10 @@ export const Sidebar = () => {
 
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
-			<div className="relative z-50 flex h-full items-start" onMouseLeave={handleMouseLeave}>
+			<div
+				className="relative z-50 flex h-full min-w-main-nav-sidebar items-start"
+				onMouseLeave={handleMouseLeave}
+			>
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
 						<Link className="ml-1 flex items-center gap-2.5" to="/">
@@ -60,23 +63,26 @@ export const Sidebar = () => {
 						</Link>
 
 						<Button
-							ariaLabel="Toggle Sidebar"
-							className="mt-10 w-full gap-1 p-0.5 pl-1 hover:bg-green-200"
+							ariaLabel={t("toggleSidebar")}
+							className="mt-10 w-full gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
 							onClick={() => setIsOpen(!isOpen)}
-							title={isOpen ? "Close Sidebar" : "Open Sidebar"}
+							title={isOpen ? t("closeSidebar") : t("openSidebar")}
 						>
-							<MenuToggle className="flex w-9 items-center justify-center pb-1 pt-2" isOpen={isOpen} />
+							<MenuToggle
+								className="-mr-2 flex w-9 items-center justify-center pb-1 pt-2"
+								isOpen={isOpen}
+							/>
 
 							<AnimatePresence>
 								{isOpen ? (
 									<motion.span
 										animate="visible"
-										className="overflow-hidden whitespace-nowrap pr-2"
+										className="overflow-hidden whitespace-nowrap"
 										exit="hidden"
 										initial="hidden"
 										variants={animateVariant}
 									>
-										Close Sidebar
+										{t("closeSidebar")}
 									</motion.span>
 								) : null}
 							</AnimatePresence>

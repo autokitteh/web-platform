@@ -19,7 +19,7 @@ export const Button = ({
 	variant,
 }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
-		"flex items-center gap-2.5 rounded-3xl p-2 transition",
+		"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
 		"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",
 		{
 			"bg-black text-white": variant === ButtonVariant.filled,
