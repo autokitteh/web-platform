@@ -4,14 +4,12 @@ import { Activity } from "@src/types/models";
 import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
 import { convertTimestampToDate } from "@utilities";
 
-function transformData(input: { [key: string]: any }, parentKey: string = ""): any[] {
+const extractKWArgsData = (input: { [key: string]: any }, parentKey: string = ""): any[] => {
 	let result: any[] = [];
 
-	// Iterate over each key in the input object
 	for (const [key, value] of Object.entries(input)) {
 		const currentKey = parentKey ? `${parentKey}.${key}` : key;
 
-		// If the value is an object and has a `items` property, it is treated as a dictionary
 		if (value?.dict?.items) {
 			value.dict.items.forEach((item: any) => {
 				if (item.k.string && item.v.string) {
@@ -22,13 +20,12 @@ function transformData(input: { [key: string]: any }, parentKey: string = ""): a
 				}
 			});
 		} else if (typeof value === "object" && value !== null) {
-			// If it is another kind of object, recursively transform it
-			result = result.concat(transformData(value, currentKey));
+			result = result.concat(extractKWArgsData(value, currentKey));
 		}
 	}
 
 	return result;
-}
+};
 
 /**
  * Converts a ProtoSession object to a SessionType object.
@@ -53,7 +50,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				param.optional ? `${param.name}?` : param.name
 			);
 
-			const kwargs = transformData(callSpec.kwargs) || [];
+			const kwargs = extractKWArgsData(callSpec.kwargs) || [];
 
 			const args = callSpec.args
 				.map((arg) => (arg.string ? arg.string.v : null))
