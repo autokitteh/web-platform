@@ -76,7 +76,6 @@ export const SessionViewer = () => {
 	};
 
 	function formatTimeDifference(endDate: Date, stardDate: Date) {
-		// Calculate the duration between two dates
 		const duration = moment.duration(moment(endDate).diff(moment(stardDate)));
 
 		const months = Math.floor(duration.asMonths());
@@ -86,7 +85,6 @@ export const SessionViewer = () => {
 		const minutes = duration.minutes();
 		const seconds = duration.seconds();
 
-		// Determine the format based on the duration
 		if (months >= 1) {
 			return `${months}m`;
 		} else if (weeks >= 1) {
