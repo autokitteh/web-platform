@@ -3,6 +3,7 @@ import { Integrations } from "@src/enums/components";
 import { AwsIntegrationEditForm } from "@components/organisms/connections/integrations/aws";
 import { DiscordIntegrationEditForm } from "@components/organisms/connections/integrations/discord";
 import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
+import { GoogleIntegrationEditForm } from "@components/organisms/connections/integrations/google";
 import { GoogleGeminiIntegrationEditForm } from "@components/organisms/connections/integrations/googleGemini";
 import { HttpIntegrationEditForm } from "@components/organisms/connections/integrations/http";
 import { JiraIntegrationEditForm } from "@components/organisms/connections/integrations/jira";
@@ -21,4 +22,4 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.aws]: AwsIntegrationEditForm,
 	[Integrations.googlegemini]: GoogleGeminiIntegrationEditForm,
 	[Integrations.confluence]: JiraIntegrationEditForm,
-};
+	[Integrations.google]: GoogleIntegrationEditForm,
