@@ -14,6 +14,14 @@ export const OauthGoogleForm = () => {
 
 	return (
 		<>
+			<Button
+				aria-label={t("buttons.startOAuthFlow")}
+				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
+				type="submit"
+				variant="outline"
+			>
+				{t("buttons.startOAuthFlow")}
+			</Button>
 			<Accordion title={t("information")}>
 				<div className="flex flex-col items-start gap-2">
 					{infoGoogleUserLinks.map(({ text, url }, index) => (
@@ -30,14 +38,6 @@ export const OauthGoogleForm = () => {
 					))}
 				</div>
 			</Accordion>
-			<Button
-				aria-label={t("buttons.startOAuthFlow")}
-				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
-				type="submit"
-				variant="outline"
-			>
-				{t("buttons.startOAuthFlow")}
-			</Button>
 		</>
 	);
 };
