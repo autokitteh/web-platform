@@ -45,7 +45,7 @@ export const Button = ({
 			{children}
 		</button>
 	) : (
-		<Link ariaLabel={ariaLabel} className={buttonClass} disabled={disabled} to={href}>
+		<Link ariaLabel={ariaLabel} className={buttonClass} disabled={disabled} title={title} to={href}>
 			{children}
 		</Link>
 	);
