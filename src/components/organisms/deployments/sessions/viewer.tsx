@@ -11,9 +11,11 @@ import ReactTimeAgo from "react-time-ago";
 import { defaultSessionTab, sessionTabs } from "@constants";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
+import { useToastStore } from "@src/store";
 import { ViewerSession } from "@src/types/models/session.type";
+import { copyToClipboard } from "@src/utilities";
 
-import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
+import { Button, Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
@@ -27,6 +29,7 @@ export const SessionViewer = () => {
 	const [activeTab, setActiveTab] = useState(defaultSessionTab);
 	const [sessionInfo, setSessionInfo] = useState<ViewerSession>();
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
+	const addToast = useToastStore((state) => state.addToast);
 
 	useEffect(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
@@ -51,6 +54,15 @@ export const SessionViewer = () => {
 			return;
 		}
 		navigate(path.toLowerCase());
+	};
+
+	const copyTextToClipboard = async (text: string) => {
+		const copyResponse = await copyToClipboard(text);
+		addToast({
+			id: Date.now().toString(),
+			message: copyResponse.message,
+			type: copyResponse.isError ? "error" : "success",
+		});
 	};
 
 	function formatTimeDifference(endDate: Date, stardDate: Date) {
@@ -157,13 +169,17 @@ export const SessionViewer = () => {
 						</div>
 
 						<div className="flex flex-col gap-1">
-							<div>
-								Connection name: <span className="font-semibold">{sessionInfo.connectionName}</span>
-							</div>
+							{sessionInfo?.connectionName ? (
+								<div>
+									Connection name: <span className="font-semibold">{sessionInfo.connectionName}</span>
+								</div>
+							) : null}
 
-							<div>
-								Trigger name: <span className="font-semibold">{sessionInfo.triggerName}</span>
-							</div>
+							{sessionInfo?.triggerName ? (
+								<div>
+									Trigger name: <span className="font-semibold">{sessionInfo.triggerName}</span>
+								</div>
+							) : null}
 
 							<div>
 								Entrypoint:{" "}
@@ -180,16 +196,30 @@ export const SessionViewer = () => {
 						<div className="flex flex-col gap-1">
 							<div>
 								Event ID:
-								<IconButton className="inline" title="evt_01j55bpx8pepjv8vk4bxwx2hnr">
-									<CopyIcon className="h-3 w-3 fill-white" />
-								</IconButton>
+								<Button
+									aria-label={t("copyButton")}
+									className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
+									onClick={() => copyTextToClipboard(sessionInfo.eventId)}
+									variant="outline"
+								>
+									<IconButton className="inline" title="evt_01j55bpx8pepjv8vk4bxwx2hnr">
+										<CopyIcon className="h-3 w-3 fill-white" />
+									</IconButton>
+								</Button>
 							</div>
 
 							<div>
 								Build ID:
-								<IconButton className="inline" title="bld_01j53hcjq6ecqamda2qq3n8wdx">
-									<CopyIcon className="h-3 w-3 fill-white" />
-								</IconButton>
+								<Button
+									aria-label={t("copyButton")}
+									className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
+									onClick={() => copyTextToClipboard(sessionInfo.buildId)}
+									variant="outline"
+								>
+									<IconButton className="inline" title="evt_01j55bpx8pepjv8vk4bxwx2hnr">
+										<CopyIcon className="h-3 w-3 fill-white" />
+									</IconButton>
+								</Button>
 							</div>
 						</div>
 					</div>

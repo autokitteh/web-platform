@@ -1,3 +1,5 @@
 {
-	"success": "Success"
+	"success": "Success",
+	"copyFailure": "Could not copy",
+	"copySuccess": "Copied to clipboard successfully"
 }
