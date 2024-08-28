@@ -14,7 +14,7 @@ import { ActivityStatus } from "@components/organisms/deployments/sessions/activ
 
 import { ArrowUpFaIcon } from "@assets/image/icons";
 
-export const SessionExecutionFlow = () => {
+export const SessionActivitiesList = () => {
 	const { sessionId } = useParams();
 	const [activities, setActivities] = React.useState<any[]>([]);
 	const addToast = useToastStore((state) => state.addToast);
