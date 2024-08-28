@@ -31,7 +31,6 @@ module.exports = {
       },
       width: {
         "default-icon": "1.625rem",
-        "main-nav-sidebar": "85px",
         "1/8": "12.5%",
       },
       height: {

@@ -10,10 +10,10 @@ import { SubmenuInfo } from "@interfaces/components";
 import { useUserStore } from "@store";
 
 import { Button, Loader } from "@components/atoms";
+import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { BurgerMenuIcon } from "@assets/image/icons";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
@@ -24,7 +24,6 @@ export const Sidebar = () => {
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
 
 	const handleMouseLeave = () => {
-		setIsOpen(false);
 		setSubmenuInfo({ submenu: undefined, top: 0 });
 	};
 
@@ -40,12 +39,8 @@ export const Sidebar = () => {
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
 			<div className="relative w-main-nav-sidebar">
-				<div
-					className="absolute left-0 top-0 z-50 flex h-full items-start"
-					onMouseEnter={() => setIsOpen(true)}
-					onMouseLeave={handleMouseLeave}
-				>
-					<div className="z-10 flex h-full flex-col justify-between bg-white p-4 pb-10 pt-6">
+				<div className="absolute left-0 top-0 z-50 flex h-full items-start" onMouseLeave={handleMouseLeave}>
+					<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 						<div>
 							<Link className="ml-1 flex items-center gap-2.5" to="/">
 								<IconLogo className="h-8 w-8" />
@@ -65,7 +60,31 @@ export const Sidebar = () => {
 								</AnimatePresence>
 							</Link>
 
-							<BurgerMenuIcon />
+							<Button
+								ariaLabel="Toggle Sidebar"
+								className="mt-10 w-full gap-1 p-0.5 pl-1 hover:bg-green-200"
+								onClick={() => setIsOpen(!isOpen)}
+								title={isOpen ? "Close Sidebar" : "Open Sidebar"}
+							>
+								<MenuToggle
+									className="flex w-9 items-center justify-center pb-1 pt-2"
+									isOpen={isOpen}
+								/>
+
+								<AnimatePresence>
+									{isOpen ? (
+										<motion.span
+											animate="visible"
+											className="overflow-hidden whitespace-nowrap pr-2"
+											exit="hidden"
+											initial="hidden"
+											variants={animateVariant}
+										>
+											Close Sidebar
+										</motion.span>
+									) : null}
+								</AnimatePresence>
+							</Button>
 
 							<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 						</div>

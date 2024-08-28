@@ -82,8 +82,9 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
 						ariaLabel="New Project"
-						className="gap-1.5 p-0.5 pl-1 hover:bg-green-200"
+						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200"
 						onClick={handleCreateProject}
+						title="New Project"
 					>
 						<div className="flex h-9 w-9 items-center justify-center">
 							<IconSvg alt="New Project" size="xl" src={NewProject} />
@@ -106,7 +107,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 				</li>
 
 				<li onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}>
-					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} href="#">
+					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} title={t("myProjects")}>
 						<div className={buttonMenuIconWrapperStyle("#")}>
 							<IconSvg
 								alt={t("myProjects")}

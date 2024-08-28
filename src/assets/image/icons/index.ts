@@ -33,8 +33,6 @@ export { default as UserIcon } from "@assets/image/icons/User.svg?react";
 export { default as SearchIcon } from "@assets/image/icons/Search.svg?react";
 export { default as ArrowZigzagIcon } from "@assets/image/icons/ArrowZigzag.svg?react";
 export { default as MenuCircleIcon } from "@assets/image/icons/MenuCircle.svg?react";
-export { default as BurgerMenuIcon } from "@assets/image/icons/BurgerMenu.svg?react";
-export { default as CloseBurgerMenuIcon } from "@assets/image/icons/CloseBurgerMenu.svg?react";
 
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
 export { default as PipeCircleIcon } from "@assets/image/icons/PipeCircle.svg?react";
