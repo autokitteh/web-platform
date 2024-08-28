@@ -23,3 +23,4 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.googlegemini]: GoogleGeminiIntegrationEditForm,
 	[Integrations.confluence]: JiraIntegrationEditForm,
 	[Integrations.google]: GoogleIntegrationEditForm,
+};
