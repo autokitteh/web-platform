@@ -19,28 +19,6 @@ import { SessionsTableState } from "@components/organisms/deployments";
 
 import { ArrowRightIcon, Close, CopyIcon } from "@assets/image/icons";
 
-const example = {
-	string: "Lorem ipsum dolor sit amet",
-	integer: 42,
-	float: 114.514,
-	bigint: 10086n,
-	null: null,
-	undefined,
-	timer: 0,
-	date: new Date("Tue Sep 13 2022 14:07:44 GMT-0500 (Central Daylight Time)"),
-	array: [19, 100.86, "test", NaN, Infinity],
-	nestedArray: [
-		[1, 2],
-		[3, 4],
-	],
-	object: {
-		"first-child": true,
-		"second-child": false,
-		"last-child": null,
-	},
-	string_number: "1234",
-};
-
 export const SessionViewer = () => {
 	const { deploymentId, projectId, sessionId } = useParams();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
@@ -64,7 +42,7 @@ export const SessionViewer = () => {
 	useEffect(() => {
 		fetchSessionInfo();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [sessionId]);
 
 	const goTo = (path: string) => {
 		if (path === defaultSessionTab) {
@@ -218,9 +196,15 @@ export const SessionViewer = () => {
 				</>
 			) : null}
 
-			<Accordion className="mt-2" title="Trigger Inputs">
-				<JsonView className="scrollbar max-h-72 overflow-auto" style={githubDarkTheme} value={example} />
-			</Accordion>
+			{sessionInfo?.inputs ? (
+				<Accordion className="mt-2" title="Trigger Inputs">
+					<JsonView
+						className="scrollbar max-h-72 overflow-auto"
+						style={githubDarkTheme}
+						value={sessionInfo.inputs}
+					/>
+				</Accordion>
+			) : null}
 
 			<div className="mt-2 flex items-center justify-between">
 				<div

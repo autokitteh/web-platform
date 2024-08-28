@@ -27,7 +27,7 @@ export function convertSessionProtoToModel(
 		connectionName,
 	};
 }
-export function convertSessionProtoToViewerModel(protoSession: ProtoSession, connectionName: string): ViewerSession {
+export function convertSessionProtoToViewerModel(protoSession: ProtoSession, connectionName?: string): ViewerSession {
 	return {
 		buildId: protoSession.buildId,
 		connectionName,

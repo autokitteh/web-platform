@@ -38,6 +38,7 @@
 	"projectNotCreated": "There was an issue creating the project",
 	"projectNotFound": "Couldn't fetch the project details",
 	"projectRemoveFailedExtended": "Project remove failed, ID: {{projectId}}, error: {{error}}",
+	"sessionNotFound": "Couldn't fetch the session details",
 	"sessionLogMissingError": "Session error log value is missing",
 	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}",
 	"sessionStopFailedExtended": "Error stopping session execution: {{error}} for session id: {{sessionId}}",

@@ -90,8 +90,8 @@ export class SessionsService {
 		try {
 			const { session } = await sessionsClient.get({ sessionId });
 
-			if (!session?.eventId) {
-				const errorMessage = i18n.t("eventNotFoundForSession", {
+			if (!session) {
+				const errorMessage = i18n.t("sessionNotFound", {
 					ns: "services",
 				});
 				LoggerService.error(namespaces.sessionsService, errorMessage);
@@ -102,43 +102,22 @@ export class SessionsService {
 				};
 			}
 
-			const { data: event, error: eventError } = await EventsService.get(session?.eventId);
-			if (eventError) {
-				return { data: undefined, error: eventError };
-			}
-
-			if (!event) {
-				const errorMessage = i18n.t("eventsNotFound", {
-					ns: "services",
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
+			if (!session?.eventId) {
+				const sessionConverted = convertSessionProtoToViewerModel(session!);
 
 				return {
-					data: undefined,
-					error: new Error(errorMessage),
+					data: sessionConverted,
+					error: undefined,
 				};
 			}
 
-			const { data: connections, error: connectionsError } = await ConnectionService.list();
-			if (connectionsError) {
-				return { data: undefined, error: connectionsError };
+			const { data: connection, error } = await ConnectionService.getByEventId(session.eventId);
+
+			if (error) {
+				return { data: undefined, error };
 			}
 
-			if (!connections) {
-				const errorMessage = i18n.t("connectionsNotFound", {
-					ns: "services",
-				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return {
-					data: undefined,
-					error: new Error(errorMessage),
-				};
-			}
-
-			const connectionName =
-				connections?.find((connection) => connection.connectionId === event?.connectionId)?.name || "";
-			const sessionConverted = convertSessionProtoToViewerModel(session!, connectionName);
+			const sessionConverted = convertSessionProtoToViewerModel(session!, connection?.name);
 
 			return { data: sessionConverted, error: undefined };
 		} catch (error) {
@@ -171,7 +150,7 @@ export class SessionsService {
 				const errorMessage = i18n.t("eventsNotFound", {
 					ns: "services",
 				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
+				LoggerService.error(namespaces.sessionsService, errorMessage);
 
 				return {
 					data: undefined,
@@ -188,7 +167,7 @@ export class SessionsService {
 				const errorMessage = i18n.t("connectionsNotFound", {
 					ns: "services",
 				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
+				LoggerService.error(namespaces.sessionsService, errorMessage);
 
 				return {
 					data: undefined,
@@ -221,7 +200,7 @@ export class SessionsService {
 				const errorMessage = i18n.t("eventsNotFound", {
 					ns: "services",
 				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
+				LoggerService.error(namespaces.sessionsService, errorMessage);
 
 				return {
 					data: undefined,
@@ -238,7 +217,7 @@ export class SessionsService {
 				const errorMessage = i18n.t("connectionsNotFound", {
 					ns: "services",
 				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
+				LoggerService.error(namespaces.sessionsService, errorMessage);
 
 				return {
 					data: undefined,
@@ -285,7 +264,7 @@ export class SessionsService {
 				const errorMessage = i18n.t("eventsNotFound", {
 					ns: "services",
 				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
+				LoggerService.error(namespaces.sessionsService, errorMessage);
 
 				return {
 					data: undefined,
@@ -302,7 +281,7 @@ export class SessionsService {
 				const errorMessage = i18n.t("connectionsNotFound", {
 					ns: "services",
 				});
-				LoggerService.error(namespaces.connectionService, errorMessage);
+				LoggerService.error(namespaces.sessionsService, errorMessage);
 
 				return {
 					data: undefined,
