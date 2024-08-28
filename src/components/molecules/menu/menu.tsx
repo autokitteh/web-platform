@@ -15,7 +15,7 @@ import { Button, IconSvg } from "@components/atoms";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
 
-export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
+export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -61,7 +61,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
 	const buttonMenuStyle = (href: string) =>
-		cn("w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200", {
+		cn("relative z-10 w-full gap-1.5 p-0.5 pl-1 group-hover:bg-green-200", {
 			"bg-gray-1100": isButtonActive(href) && isOpen,
 			"text-white hover:bg-gray-1100": isButtonActive(href),
 		});
@@ -106,7 +106,11 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 					</Button>
 				</li>
 
-				<li onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}>
+				<li
+					className="-before:z-1 group cursor-pointer before:absolute before:left-0 before:h-10 before:w-full"
+					onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}
+					onMouseLeave={onMouseLeave}
+				>
 					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} title={t("myProjects")}>
 						<div className={buttonMenuIconWrapperStyle("#")}>
 							<IconSvg

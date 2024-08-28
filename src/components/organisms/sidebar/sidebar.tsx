@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -22,14 +22,18 @@ export const Sidebar = () => {
 	const { logoutFunction } = useUserStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
-
-	const handleMouseLeave = () => {
-		setSubmenuInfo({ submenu: undefined, top: 0 });
-	};
+	const submenuRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		setIsOpen(false);
 	}, [location.pathname]);
+
+	const handleMouseLeave = (event: React.MouseEvent) => {
+		if (submenuRef.current && submenuRef.current.contains(event.relatedTarget as Node)) {
+			return;
+		}
+		setSubmenuInfo?.({ submenu: undefined, top: 0 });
+	};
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
@@ -38,10 +42,7 @@ export const Sidebar = () => {
 
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
-			<div
-				className="relative z-50 flex h-full min-w-main-nav-sidebar items-start"
-				onMouseLeave={handleMouseLeave}
-			>
+			<div className="relative z-50 flex h-full min-w-[65px] items-start">
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
 						<Link className="ml-1 flex items-center gap-2.5" to="/">
@@ -88,7 +89,12 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
+						<Menu
+							className="mt-8"
+							isOpen={isOpen}
+							onMouseLeave={handleMouseLeave}
+							onSubmenu={setSubmenuInfo}
+						/>
 					</div>
 
 					{isAuthEnabled ? (
@@ -134,7 +140,11 @@ export const Sidebar = () => {
 				</div>
 
 				<AnimatePresence>
-					{submenuInfo.submenu && !!submenuInfo.submenu.length ? <Submenu submenuInfo={submenuInfo} /> : null}
+					{submenuInfo.submenu && !!submenuInfo.submenu.length ? (
+						<div onMouseLeave={handleMouseLeave} ref={submenuRef}>
+							<Submenu submenuInfo={submenuInfo} />
+						</div>
+					) : null}
 				</AnimatePresence>
 			</div>
 		</Suspense>

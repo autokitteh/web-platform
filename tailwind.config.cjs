@@ -23,7 +23,6 @@ module.exports = {
         500: "500px",
         550: "550px",
         650: "650px",
-        "main-nav-sidebar": "65px"
       },
       maxWidth: {
         420: "420px",
