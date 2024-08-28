@@ -4,6 +4,32 @@ import { Activity } from "@src/types/models";
 import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
 import { convertTimestampToDate } from "@utilities";
 
+function transformData(input: { [key: string]: any }, parentKey: string = ""): any[] {
+	let result: any[] = [];
+
+	// Iterate over each key in the input object
+	for (const [key, value] of Object.entries(input)) {
+		const currentKey = parentKey ? `${parentKey}.${key}` : key;
+
+		// If the value is an object and has a `items` property, it is treated as a dictionary
+		if (value?.dict?.items) {
+			value.dict.items.forEach((item: any) => {
+				if (item.k.string && item.v.string) {
+					result.push({
+						key: `${currentKey}.${item.k.string.v}`,
+						value: item.v.string.v,
+					});
+				}
+			});
+		} else if (typeof value === "object" && value !== null) {
+			// If it is another kind of object, recursively transform it
+			result = result.concat(transformData(value, currentKey));
+		}
+	}
+
+	return result;
+}
+
 /**
  * Converts a ProtoSession object to a SessionType object.
  * @param protoSession The ProtoSession object to convert.
@@ -26,17 +52,17 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			const paramNames = callSpec?.function?.function?.desc?.input.map((param) =>
 				param.optional ? `${param.name}?` : param.name
 			);
-			const paramValues = callSpec.args.map((arg) => (arg.string ? arg.string.v : null));
 
-			const parameters: Record<string, any> = {};
+			const kwargs = transformData(callSpec.kwargs) || [];
 
-			paramNames?.map((parameter, index) => {
-				parameters[parameter] = paramValues[index] || null;
-			}, {});
+			const args = callSpec.args
+				.map((arg) => (arg.string ? arg.string.v : null))
+				.filter((arg) => arg !== null) as string[];
 
 			currentActivity = {
 				functionName: `${callSpec?.function?.function?.name}(${paramNames?.join(", ")})`,
-				parameters,
+				args,
+				kwargs,
 				status: "created" as keyof ActivityState,
 				startTime: convertTimestampToDate(log.t),
 				endTime: undefined,

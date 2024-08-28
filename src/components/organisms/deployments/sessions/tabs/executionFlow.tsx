@@ -8,7 +8,7 @@ import ReactTimeAgo from "react-time-ago";
 import { SessionsService } from "@services/sessions.service";
 import { useToastStore } from "@src/store";
 
-import { IconSvg } from "@components/atoms";
+import { IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
 
@@ -76,19 +76,44 @@ export const SessionExecutionFlow = () => {
 							}
 						>
 							<div className="mx-7">
-								<div className="font-bold">Params:</div>
+								{activity.args.length ? (
+									<>
+										<div className="font-bold">Arguments:</div>
 
-								{activity.parameters
-									? Object.keys(activity.parameters).map((parameter) => (
-											<div key={parameter}>
-												<span>{parameter}: </span>
+										<ul>
+											{activity.args.map((argument: string) => (
+												<li key={argument}>{argument}</li>
+											))}
+										</ul>
+									</>
+								) : null}
 
-												<div className="inline font-semibold">
-													{activity.parameters[parameter]}
-												</div>
-											</div>
-										))
-									: null}
+								{activity.kwargs.length ? (
+									<>
+										<div className="mt-4 font-bold">Arguments:</div>
+										<Table>
+											<THead>
+												<Tr>
+													<Th>Key</Th>
+
+													<Th>Value</Th>
+												</Tr>
+											</THead>
+
+											<TBody>
+												{activity.kwargs.map((argument: { key: string; value: any }) => (
+													<Tr key={argument.key}>
+														<Td>{argument.key}</Td>
+
+														<Td>
+															<div className="inline font-semibold">{argument.value}</div>
+														</Td>
+													</Tr>
+												))}
+											</TBody>
+										</Table>
+									</>
+								) : null}
 
 								{activity.returnValue ? (
 									<Accordion
