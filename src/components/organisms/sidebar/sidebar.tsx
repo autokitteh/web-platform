@@ -100,7 +100,7 @@ export const Sidebar = () => {
 					{isAuthEnabled ? (
 						<div className="flex flex-col justify-end gap-5">
 							<div>
-								<Button className="hover:bg-transparent" href="/settings">
+								<Button className="hover:bg-transparent" href="/settings" title={t("settings")}>
 									<SettingsIcon className="h-7 w-7" fill="black" />
 
 									<AnimatePresence>
@@ -118,7 +118,11 @@ export const Sidebar = () => {
 									</AnimatePresence>
 								</Button>
 
-								<Button className="hover:bg-transparent" onClick={() => logoutFunction()}>
+								<Button
+									className="hover:bg-transparent"
+									onClick={() => logoutFunction()}
+									title={t("logout")}
+								>
 									<LogoutIcon className="h-7 w-7" fill="black" />
 
 									<AnimatePresence>
