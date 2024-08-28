@@ -61,7 +61,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
 	const buttonMenuStyle = (href: string) =>
-		cn("gap-1.5 p-0.5 pl-1 hover:bg-green-200", {
+		cn("w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200", {
 			"bg-gray-1100": isButtonActive(href) && isOpen,
 			"text-white hover:bg-gray-1100": isButtonActive(href),
 		});
@@ -78,7 +78,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 
 	return (
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
-			<ul>
+			<ul className="flex flex-col gap-2">
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
 						ariaLabel="New Project"

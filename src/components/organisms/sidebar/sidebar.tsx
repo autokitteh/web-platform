@@ -38,105 +38,98 @@ export const Sidebar = () => {
 
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
-			<div className="relative w-main-nav-sidebar">
-				<div className="absolute left-0 top-0 z-50 flex h-full items-start" onMouseLeave={handleMouseLeave}>
-					<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
-						<div>
-							<Link className="ml-1 flex items-center gap-2.5" to="/">
-								<IconLogo className="h-8 w-8" />
+			<div className="relative z-50 flex h-full items-start" onMouseLeave={handleMouseLeave}>
+				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
+					<div>
+						<Link className="ml-1 flex items-center gap-2.5" to="/">
+							<IconLogo className="h-8 w-8" />
 
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="overflow-hidden whitespace-nowrap"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											<IconLogoName className="h-3 w-20" />
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Link>
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										<IconLogoName className="h-3 w-20" />
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Link>
 
-							<Button
-								ariaLabel="Toggle Sidebar"
-								className="mt-10 w-full gap-1 p-0.5 pl-1 hover:bg-green-200"
-								onClick={() => setIsOpen(!isOpen)}
-								title={isOpen ? "Close Sidebar" : "Open Sidebar"}
-							>
-								<MenuToggle
-									className="flex w-9 items-center justify-center pb-1 pt-2"
-									isOpen={isOpen}
-								/>
+						<Button
+							ariaLabel="Toggle Sidebar"
+							className="mt-10 w-full gap-1 p-0.5 pl-1 hover:bg-green-200"
+							onClick={() => setIsOpen(!isOpen)}
+							title={isOpen ? "Close Sidebar" : "Open Sidebar"}
+						>
+							<MenuToggle className="flex w-9 items-center justify-center pb-1 pt-2" isOpen={isOpen} />
 
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="overflow-hidden whitespace-nowrap pr-2"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											Close Sidebar
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Button>
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap pr-2"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										Close Sidebar
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
 
-							<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
-						</div>
-
-						{isAuthEnabled ? (
-							<div className="flex flex-col justify-end gap-5">
-								<div>
-									<Button className="hover:bg-transparent" href="/settings">
-										<SettingsIcon className="h-7 w-7" fill="black" />
-
-										<AnimatePresence>
-											{isOpen ? (
-												<motion.span
-													animate="visible"
-													className="overflow-hidden whitespace-nowrap"
-													exit="hidden"
-													initial="hidden"
-													variants={animateVariant}
-												>
-													{t("settings")}
-												</motion.span>
-											) : null}
-										</AnimatePresence>
-									</Button>
-
-									<Button className="hover:bg-transparent" onClick={() => logoutFunction()}>
-										<LogoutIcon className="h-7 w-7" fill="black" />
-
-										<AnimatePresence>
-											{isOpen ? (
-												<motion.span
-													animate="visible"
-													exit="hidden"
-													initial="hidden"
-													variants={animateVariant}
-												>
-													{t("logout")}
-												</motion.span>
-											) : null}
-										</AnimatePresence>
-									</Button>
-								</div>
-							</div>
-						) : null}
+						<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 					</div>
 
-					<AnimatePresence>
-						{submenuInfo.submenu && !!submenuInfo.submenu.length ? (
-							<Submenu submenuInfo={submenuInfo} />
-						) : null}
-					</AnimatePresence>
+					{isAuthEnabled ? (
+						<div className="flex flex-col justify-end gap-5">
+							<div>
+								<Button className="hover:bg-transparent" href="/settings">
+									<SettingsIcon className="h-7 w-7" fill="black" />
+
+									<AnimatePresence>
+										{isOpen ? (
+											<motion.span
+												animate="visible"
+												className="overflow-hidden whitespace-nowrap"
+												exit="hidden"
+												initial="hidden"
+												variants={animateVariant}
+											>
+												{t("settings")}
+											</motion.span>
+										) : null}
+									</AnimatePresence>
+								</Button>
+
+								<Button className="hover:bg-transparent" onClick={() => logoutFunction()}>
+									<LogoutIcon className="h-7 w-7" fill="black" />
+
+									<AnimatePresence>
+										{isOpen ? (
+											<motion.span
+												animate="visible"
+												exit="hidden"
+												initial="hidden"
+												variants={animateVariant}
+											>
+												{t("logout")}
+											</motion.span>
+										) : null}
+									</AnimatePresence>
+								</Button>
+							</div>
+						</div>
+					) : null}
 				</div>
+
+				<AnimatePresence>
+					{submenuInfo.submenu && !!submenuInfo.submenu.length ? <Submenu submenuInfo={submenuInfo} /> : null}
+				</AnimatePresence>
 			</div>
 		</Suspense>
 	);
