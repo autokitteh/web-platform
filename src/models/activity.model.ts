@@ -28,9 +28,9 @@ const extractKWArgsData = (input: { [key: string]: any }, parentKey: string = ""
 };
 
 /**
- * Converts a ProtoSession object to a SessionType object.
- * @param protoSession The ProtoSession object to convert.
- * @returns The SessionType object.
+ * Converts a ProtoSessionLogRecords array to a Activities array.
+ * @param protoSession The ProtoSessionLogRecords object to convert.
+ * @returns The Activity array.
  */
 export function convertSessionLogRecordsProtoToActivitiesModel(
 	ProtoSessionLogRecords: ProtoSessionLogRecord[]
