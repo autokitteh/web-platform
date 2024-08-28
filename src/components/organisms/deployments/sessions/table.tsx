@@ -41,7 +41,7 @@ export const SessionsTable = () => {
 
 	const frameClass = useMemo(
 		() =>
-			cn("h-full w-full overflow-hidden bg-gray-1100 pb-6 pl-7 transition-all", {
+			cn("h-full w-full overflow-hidden bg-gray-1100 pb-3 pl-7 transition-all", {
 				"rounded-r-none": !sessionId,
 			}),
 		[sessionId]
