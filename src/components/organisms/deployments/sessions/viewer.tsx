@@ -99,7 +99,7 @@ export const SessionViewer = () => {
 	}
 
 	return (
-		<Frame className="h-full w-full transition">
+		<Frame className="h-[92vh] w-full transition">
 			{sessionInfo ? (
 				<>
 					<div className="flex items-center justify-between">
@@ -245,9 +245,7 @@ export const SessionViewer = () => {
 					))}
 				</div>
 			</div>
-
 			<Outlet />
-
 			<LogoCatLarge />
 		</Frame>
 	);

@@ -27,7 +27,7 @@ export const AppLayout = ({
 
 					{displayStatsTopbar ? <StatsTopbar /> : null}
 
-					<div className="h-full">
+					<div className="mb-4 h-full">
 						<div className="flex h-full gap-6">
 							<Outlet />
 						</div>

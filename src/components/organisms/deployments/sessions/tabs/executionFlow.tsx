@@ -37,7 +37,7 @@ export const SessionExecutionFlow = () => {
 	}, []);
 
 	return (
-		<div className="pt-5">
+		<div className="h-full overflow-y-scroll pt-5">
 			{(activities || []).map((activity, index) => (
 				<div key={activity.key}>
 					{index !== 0 ? (

@@ -40,7 +40,10 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const frameClass = useMemo(
-		() => cn("h-full w-full bg-gray-1100 pl-7 transition-all", { "rounded-r-none": !sessionId }),
+		() =>
+			cn("h-full w-full overflow-hidden bg-gray-1100 pb-6 pl-7 transition-all", {
+				"rounded-r-none": !sessionId,
+			}),
 		[sessionId]
 	);
 
@@ -200,7 +203,7 @@ export const SessionsTable = () => {
 	);
 
 	return (
-		<div className="m-4 flex w-full">
+		<div className="flex w-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center justify-between gap-2.5">
@@ -229,7 +232,7 @@ export const SessionsTable = () => {
 					</div>
 
 					{sessions.length ? (
-						<div className="relative flex h-full flex-col">
+						<div className="relative flex h-full flex-col overflow-hidden">
 							<Table className="mt-6 overflow-hidden">
 								<THead>
 									<Tr>
