@@ -64,7 +64,7 @@ export const Sidebar = () => {
 						</Link>
 
 						<Button
-							ariaLabel={t("toggleSidebar")}
+							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
 							className="mt-10 w-full gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
 							onClick={() => setIsOpen(!isOpen)}
 							title={isOpen ? t("closeSidebar") : t("openSidebar")}

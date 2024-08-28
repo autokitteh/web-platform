@@ -107,10 +107,12 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 				</li>
 
 				<li
-					className="-before:z-1 group cursor-pointer before:absolute before:left-0 before:h-10 before:w-full"
+					className="group"
 					onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}
 					onMouseLeave={onMouseLeave}
 				>
+					<div className="-before:z-1 cursor-pointer before:absolute before:left-0 before:h-10 before:w-full" />
+
 					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} title={t("myProjects")}>
 						<div className={buttonMenuIconWrapperStyle("#")}>
 							<IconSvg
