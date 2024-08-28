@@ -13,6 +13,7 @@ import { Button, Loader } from "@components/atoms";
 import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
+import { BurgerMenuIcon } from "@assets/image/icons";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
@@ -63,6 +64,8 @@ export const Sidebar = () => {
 									) : null}
 								</AnimatePresence>
 							</Link>
+
+							<BurgerMenuIcon />
 
 							<Menu className="mt-8" isOpen={isOpen} onSubmenu={setSubmenuInfo} />
 						</div>
