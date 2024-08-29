@@ -47,7 +47,6 @@ export const Project = () => {
 								<Tab
 									activeTab={activeTab}
 									ariaLabel={singleTab.label}
-									className="text-md flex items-center"
 									key={singleTab.value}
 									onClick={() => goTo(singleTab.value)}
 									value={singleTab.value}

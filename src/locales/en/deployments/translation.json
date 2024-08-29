@@ -42,8 +42,10 @@
 		"table": {
 			"columns": {
 				"actions": "Actions",
-				"activationTime": "Activation time",
+				"startTime": "Start time",
 				"sessionId": "Session ID",
+				"triggerName": "Trigger Name",
+				"connectionName": "Connection Name",
 				"status": "Status"
 			},
 			"statuses": {
@@ -58,5 +60,17 @@
 			"stopSession": "Stop session"
 		},
 		"totalSessions": "Total {{total}}"
+	},
+	"activities":{
+		"notData": "No activities found",
+		"statuses": {
+			"all": "All",
+			"completed": "Completed",
+			"created": "Created",
+			"error": "Error",
+			"running": "Running",
+			"stopped": "Stopped",
+			"unspecified": "Unspecified"
+		}
 	}
 }

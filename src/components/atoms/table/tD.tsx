@@ -5,7 +5,7 @@ import { cn } from "@utilities";
 
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
-export const Td = ({ children, className, hasFixedWidth = false, onClick }: TableProps) => {
+export const Td = ({ children, className, hasFixedWidth = false, onClick, title }: TableProps) => {
 	const tdStyle = cn(
 		"flex h-9.5 w-full items-center overflow-hidden px-4",
 		{
@@ -22,7 +22,7 @@ export const Td = ({ children, className, hasFixedWidth = false, onClick }: Tabl
 	};
 
 	return (
-		<td className={tdStyle}>
+		<td className={tdStyle} title={title}>
 			<div className="w-full truncate" onClick={onClick} onKeyDown={handleKeyDown}>
 				{children}
 			</div>
