@@ -1,3 +1,10 @@
+# [1.44.0](https://github.com/autokitteh/web-platform/compare/v1.43.0...v1.44.0) (2024-08-29)
+
+
+### Features
+
+* add burger menu to sidebar ([#302](https://github.com/autokitteh/web-platform/issues/302)) ([12a05ba](https://github.com/autokitteh/web-platform/commit/12a05ba21a037eacb0be58a3f72eff21771f4cdf))
+
 # [1.43.0](https://github.com/autokitteh/web-platform/compare/v1.42.0...v1.43.0) (2024-08-27)
 
 
