@@ -2,6 +2,8 @@ export { default as ActionActiveIcon } from "@assets/image/icons/ActionActive.sv
 export { default as ActionStoppedIcon } from "@assets/image/icons/ActionStopped.svg?react";
 export { default as ArrowDown } from "@assets/image/icons/ArrowDown.svg?react";
 export { default as ArrowLeft } from "@assets/image/icons/ArrowLeft.svg?react";
+export { default as ArrowUpIcon } from "@assets/image/icons/ArrowUp.svg?react";
+export { default as ArrowUpFaIcon } from "@assets/image/icons/ArrowUpFa.svg?react";
 export { default as ArrowUp } from "@assets/image/icons/ArrowUp.svg?react";
 export { default as BellIcon } from "@assets/image/icons/Bell.svg?react";
 export { default as Close } from "@assets/image/icons/Close.svg?react";
@@ -32,6 +34,7 @@ export { default as UserIcon } from "@assets/image/icons/User.svg?react";
 export { default as SearchIcon } from "@assets/image/icons/Search.svg?react";
 export { default as ArrowZigzagIcon } from "@assets/image/icons/ArrowZigzag.svg?react";
 export { default as MenuCircleIcon } from "@assets/image/icons/MenuCircle.svg?react";
+export { default as ArrowRightIcon } from "@assets/image/icons/ArrowRight.svg?react";
 
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
 export { default as PipeCircleIcon } from "@assets/image/icons/PipeCircle.svg?react";

@@ -9,7 +9,6 @@ export interface SessionTableFilterProps {
 
 export interface SessionsTableRowProps {
 	openSessionLog: (sessionId: string) => void;
-	scrollDisplayed: boolean;
 	selectedSessionId?: string;
 	sessions: Session[];
 	showDeleteModal: (id: string) => void;

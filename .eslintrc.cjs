@@ -123,7 +123,7 @@ module.exports = {
 		"react/jsx-fragments": "error",
 		"react/destructuring-assignment": ["error", "always", { destructureInSignature: "always" }],
 		"react/jsx-no-leaked-render": ["error", { validStrategies: ["ternary"] }],
-		"react/jsx-max-depth": ["error", { max: 6 }],
+		"react/jsx-max-depth": ["error", { max: 7 }],
 		"react/function-component-definition": ["error", { namedComponents: "arrow-function" }],
 		"react/jsx-key": [
 			"error",

@@ -18,7 +18,8 @@ import { DeploymentsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
-import { SessionTableEditorFrame } from "@components/organisms/deployments";
+import { SessionViewer } from "@components/organisms/deployments";
+import { SessionActivitiesList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
 import { Security } from "@components/organisms/settings";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
@@ -119,7 +120,11 @@ export const App = () => {
 
 						<Route element={<Sessions />} path=":deploymentId">
 							<Route element={<SessionsTable />} path="sessions">
-								<Route element={<SessionTableEditorFrame />} path=":sessionId" />
+								<Route element={<SessionViewer />} path=":sessionId">
+									<Route element={<SessionOutputs />} index />
+
+									<Route element={<SessionActivitiesList />} path="executionflow" />
+								</Route>
 
 								<Route element={<Navigate replace to="/404" />} path="*" />
 							</Route>
