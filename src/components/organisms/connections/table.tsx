@@ -54,6 +54,7 @@ export const ConnectionsTable = () => {
 		} finally {
 			setIsLoading(false);
 		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -64,11 +65,13 @@ export const ConnectionsTable = () => {
 			resetChecker();
 			setFetchConnectionsCallback(null);
 		};
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		fetchConnections();
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
