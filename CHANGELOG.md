@@ -1,3 +1,10 @@
+## [1.44.1](https://github.com/autokitteh/web-platform/compare/v1.44.0...v1.44.1) (2024-08-29)
+
+
+### Bug Fixes
+
+* google oauth add ([#306](https://github.com/autokitteh/web-platform/issues/306)) ([e5f0325](https://github.com/autokitteh/web-platform/commit/e5f0325ad2d4c3bd93fcb41e9c23a616eedebbe7))
+
 # [1.44.0](https://github.com/autokitteh/web-platform/compare/v1.43.0...v1.44.0) (2024-08-29)
 
 
