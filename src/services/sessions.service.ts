@@ -61,21 +61,22 @@ export class SessionsService {
 		}
 	}
 
-	static async getLogPrintsBySessionId(sessionId: string): Promise<ServiceResponse<Array<SessionLogRecord>>> {
+	static async getPrintsForViewerBySessionId(sessionId: string): Promise<ServiceResponse<Array<SessionLogRecord>>> {
 		try {
 			const response = await sessionsClient.getLog({ sessionId });
 			const sessionHistory = response.log?.records
 				.map((state: ProtoSessionLogRecord) => {
 					const record = new SessionLogRecord(state);
 
-					if (record.logs && record.dateTime) {
-						const formattedDateTime = moment(record.dateTime).format("MM-DD-YYYY HH:mm:ss");
-						record.logs = `${formattedDateTime} ${record.logs}`;
+					if (record.type !== SessionLogRecordType.print) {
+						return undefined;
 					}
+					const formattedDateTime = moment(record.dateTime).format("MM-DD-YYYY HH:mm:ss");
+					record.logs = `${formattedDateTime} ${record.logs}`;
 
 					return record;
 				})
-				.filter((record: SessionLogRecord) => record.type === SessionLogRecordType.print && record.logs);
+				.filter((record) => record !== undefined) as SessionLogRecord[];
 
 			return { data: sessionHistory, error: undefined };
 		} catch (error) {
