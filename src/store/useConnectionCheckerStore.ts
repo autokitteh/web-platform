@@ -12,8 +12,8 @@ import { useToastStore } from "@store";
 const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 	retries: 0,
 	recheckIntervalId: null,
-	shouldRefetchConnections: false,
 	avoidNextRerenderCleanup: true,
+	fetchConnectionsCallback: () => {},
 
 	incrementRetries: () => {
 		set((state) => {
@@ -23,9 +23,9 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		});
 	},
 
-	setShouldRefetchConnections: (value: boolean) => {
+	setFetchConnectionsCallback: (callback: (() => void) | null) => {
 		set((state) => {
-			state.shouldRefetchConnections = value;
+			state.fetchConnectionsCallback = callback;
 
 			return state;
 		});
@@ -52,7 +52,6 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		set((state) => {
 			state.retries = 0;
 			state.recheckIntervalId = null;
-			state.shouldRefetchConnections = false;
 
 			return state;
 		});
@@ -70,7 +69,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		});
 
 		const checkStatus = async () => {
-			const { retries, setShouldRefetchConnections } = get();
+			const { fetchConnectionsCallback, retries } = get();
 
 			if (retries >= 6) {
 				resetChecker();
@@ -92,7 +91,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 				}
 
 				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
-					setShouldRefetchConnections(true);
+					if (fetchConnectionsCallback) fetchConnectionsCallback();
 					resetChecker();
 				} else {
 					incrementRetries();
