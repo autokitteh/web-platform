@@ -4,7 +4,7 @@ export interface ConnectionCheckerStore {
 	resetChecker: () => void;
 	recheckIntervalId: NodeJS.Timeout | null;
 	startCheckingStatus: (connectionId: string) => void;
-	shouldRefetchConnections: boolean;
-	setShouldRefetchConnections: (value: boolean) => void;
 	avoidNextRerenderCleanup: boolean;
+	fetchConnectionsCallback: (() => void) | null;
+	setFetchConnectionsCallback: (callback: (() => Promise<void>) | null) => void;
 }

@@ -31,9 +31,9 @@ export const ConnectionsTable = () => {
 
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections, "name");
-	const { resetChecker, shouldRefetchConnections } = useConnectionCheckerStore();
+	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
 
-	const fetchConnections = async () => {
+	const fetchConnections = useCallback(async () => {
 		setIsLoading(true);
 		try {
 			const { data: connectionsResponse, error } = await ConnectionService.listByProjectId(projectId!);
@@ -54,19 +54,21 @@ export const ConnectionsTable = () => {
 		} finally {
 			setIsLoading(false);
 		}
-	};
+	}, [projectId, addToast]);
 
 	useEffect(() => {
+		setFetchConnectionsCallback(fetchConnections);
+
 		return () => {
 			resetChecker();
+			setFetchConnectionsCallback(null);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		fetchConnections();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [shouldRefetchConnections]);
+	}, [fetchConnections]);
 
 	const handleOpenModalDeleteConnection = useCallback(
 		(connectionId: string) => {
@@ -95,13 +97,15 @@ export const ConnectionsTable = () => {
 		}
 		setConnectionId(undefined);
 
-		fetchConnections();
+		fetchConnections(); // Re-fetch connections after deletion
 	};
 
-	const handleConnectionEditClick = useCallback((connectionId: string) => {
-		navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const handleConnectionEditClick = useCallback(
+		(connectionId: string) => {
+			navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+		},
+		[navigate, projectId]
+	);
 
 	return isLoading ? (
 		<Loader isCenter size="xl" />
