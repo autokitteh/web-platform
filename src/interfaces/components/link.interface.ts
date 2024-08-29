@@ -5,4 +5,5 @@ export interface LinkProps {
 	disabled?: boolean;
 	target?: React.HTMLAttributeAnchorTarget;
 	to: string;
+	title?: string;
 }
