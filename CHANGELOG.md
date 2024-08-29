@@ -1,3 +1,10 @@
+## [1.44.2](https://github.com/autokitteh/web-platform/compare/v1.44.1...v1.44.2) (2024-08-29)
+
+
+### Bug Fixes
+
+* oauth re-fetching add ([#307](https://github.com/autokitteh/web-platform/issues/307)) ([5e3abd4](https://github.com/autokitteh/web-platform/commit/5e3abd4c8054c565ab9c14b251e70fb3c65d5f23))
+
 ## [1.44.1](https://github.com/autokitteh/web-platform/compare/v1.44.0...v1.44.1) (2024-08-29)
 
 
