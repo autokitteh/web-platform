@@ -6,6 +6,7 @@ export interface TableProps {
 	onClick?: () => void;
 	style?: React.CSSProperties;
 	hasFixedWidth?: boolean;
+	title?: string;
 }
 
 export interface TableVariantContextType {

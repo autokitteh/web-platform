@@ -1,5 +1,6 @@
 import i18n from "i18next";
 
+import { EventsService } from "./events.service";
 import { connectionsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
@@ -24,6 +25,44 @@ export class ConnectionService {
 
 			return { data: undefined, error };
 		}
+	}
+
+	static async getByEventId(eventId: string): Promise<ServiceResponse<Connection>> {
+		const { data: event, error: eventError } = await EventsService.get(eventId);
+		if (eventError) {
+			return { data: undefined, error: eventError };
+		}
+
+		if (!event) {
+			const errorMessage = i18n.t("eventsNotFound", {
+				ns: "services",
+			});
+			LoggerService.error(namespaces.connectionService, errorMessage);
+
+			return {
+				data: undefined,
+				error: new Error(errorMessage),
+			};
+		}
+
+		const { data: connections, error: connectionsError } = await ConnectionService.list();
+		if (connectionsError) {
+			return { data: undefined, error: connectionsError };
+		}
+
+		if (!connections) {
+			return {
+				data: undefined,
+				error: undefined,
+			};
+		}
+
+		const connection = connections?.find((connection) => connection.connectionId === event?.connectionId);
+
+		return {
+			data: connection,
+			error: undefined,
+		};
 	}
 
 	static async get(connectionId: string): Promise<ServiceResponse<Connection>> {
