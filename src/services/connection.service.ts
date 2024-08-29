@@ -45,19 +45,11 @@ export class ConnectionService {
 			};
 		}
 
-		const { data: connections, error: connectionsError } = await ConnectionService.list();
-		if (connectionsError) {
-			return { data: undefined, error: connectionsError };
+		if (!event.connectionId) {
+			return { data: undefined, error: undefined };
 		}
 
-		if (!connections) {
-			return {
-				data: undefined,
-				error: undefined,
-			};
-		}
-
-		const connection = connections?.find((connection) => connection.connectionId === event?.connectionId);
+		const { data: connection } = await ConnectionService.get(event.connectionId);
 
 		return {
 			data: connection,
