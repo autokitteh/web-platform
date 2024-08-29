@@ -22,7 +22,7 @@ module.exports = {
         '3px': '3px',
         500: "500px",
         550: "550px",
-        650: "650px"
+        650: "650px",
       },
       maxWidth: {
         420: "420px",
@@ -31,7 +31,6 @@ module.exports = {
       },
       width: {
         "default-icon": "1.625rem",
-        "main-nav-sidebar": "85px",
         "1/8": "12.5%",
       },
       height: {

@@ -15,7 +15,7 @@ import { Button, IconSvg } from "@components/atoms";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
 
-export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
+export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -61,7 +61,7 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
 	const buttonMenuStyle = (href: string) =>
-		cn("gap-1.5 p-0.5 pl-1 hover:bg-green-200", {
+		cn("relative z-10 w-full gap-1.5 p-0.5 pl-1 group-hover:bg-green-200", {
 			"bg-gray-1100": isButtonActive(href) && isOpen,
 			"text-white hover:bg-gray-1100": isButtonActive(href),
 		});
@@ -78,12 +78,13 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 
 	return (
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
-			<ul>
+			<ul className="flex flex-col gap-2">
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
 						ariaLabel="New Project"
-						className="gap-1.5 p-0.5 pl-1 hover:bg-green-200"
+						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200"
 						onClick={handleCreateProject}
+						title="New Project"
 					>
 						<div className="flex h-9 w-9 items-center justify-center">
 							<IconSvg alt="New Project" size="xl" src={NewProject} />
@@ -105,8 +106,14 @@ export const Menu = ({ className, isOpen = false, onSubmenu }: MenuProps) => {
 					</Button>
 				</li>
 
-				<li onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}>
-					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} href="#">
+				<li
+					className="group"
+					onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}
+					onMouseLeave={onMouseLeave}
+				>
+					<div className="-before:z-1 cursor-pointer before:absolute before:left-0 before:h-10 before:w-full" />
+
+					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} title={t("myProjects")}>
 						<div className={buttonMenuIconWrapperStyle("#")}>
 							<IconSvg
 								alt={t("myProjects")}

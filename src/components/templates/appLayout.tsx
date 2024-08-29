@@ -22,7 +22,7 @@ export const AppLayout = ({
 			<div className="flex h-full">
 				<Sidebar />
 
-				<div className="-ml-7 flex flex-1 flex-col overflow-auto pl-7 transition">
+				<div className="flex flex-1 flex-col overflow-auto transition">
 					{displayTopbar ? <ProjectTopbar /> : null}
 
 					{displayStatsTopbar ? <StatsTopbar /> : null}

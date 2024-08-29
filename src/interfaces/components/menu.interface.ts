@@ -10,5 +10,6 @@ export interface SubmenuProps {
 export interface MenuProps {
 	className?: string;
 	isOpen: boolean;
+	onMouseLeave: (event: React.MouseEvent) => void;
 	onSubmenu?: (submenuInfo: SubmenuInfo) => void;
 }
