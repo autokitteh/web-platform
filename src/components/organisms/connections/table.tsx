@@ -69,7 +69,8 @@ export const ConnectionsTable = () => {
 
 	useEffect(() => {
 		fetchConnections();
-	}, [fetchConnections]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleOpenModalDeleteConnection = useCallback(
 		(connectionId: string) => {
@@ -105,7 +106,8 @@ export const ConnectionsTable = () => {
 		(connectionId: string) => {
 			navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
 		},
-		[navigate, projectId]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[projectId]
 	);
 
 	return isLoading ? (
