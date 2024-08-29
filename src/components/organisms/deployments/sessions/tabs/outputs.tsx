@@ -31,7 +31,7 @@ export const SessionOutputs = () => {
 			setIsLoading(true);
 		}
 
-		const { data: sessionHistoryStates, error } = await SessionsService.getLogPrintsBySessionId(sessionId!);
+		const { data: sessionHistoryStates, error } = await SessionsService.getPrintsForViewerBySessionId(sessionId!);
 		if (firstLoad) {
 			setFirstLoad(false);
 			setIsLoading(false);
