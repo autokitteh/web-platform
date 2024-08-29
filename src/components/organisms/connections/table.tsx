@@ -98,7 +98,7 @@ export const ConnectionsTable = () => {
 		}
 		setConnectionId(undefined);
 
-		fetchConnections(); // Re-fetch connections after deletion
+		fetchConnections();
 	};
 
 	const handleConnectionEditClick = useCallback(

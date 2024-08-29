@@ -33,7 +33,7 @@ export const SlackIntegrationAddForm = ({
 				await createConnection(connectionId, ConnectionAuthType.Socket, Integrations.slack);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleOAuth(connectionId, Integrations.github);
+				await handleOAuth(connectionId, Integrations.slack);
 				break;
 			default:
 				break;
