@@ -28,7 +28,7 @@ const extractKWArgsData = (input: { [key: string]: any }, parentKey: string = ""
 };
 
 /**
- * Converts a ProtoSessionLogRecords array to a Activities array.
+ * Converts a ProtoSessionLogRecords array to an Activities array.
  * @param protoSession The ProtoSessionLogRecords object to convert.
  * @returns The Activity array.
  */
