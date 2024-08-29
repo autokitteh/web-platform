@@ -248,10 +248,6 @@ export const SessionsTable = () => {
 											{t("table.columns.sessionId")}
 										</Th>
 
-										<Th className="group w-1/4 cursor-pointer font-normal" hasFixedWidth>
-											{t("table.columns.connectionName")}
-										</Th>
-
 										<Th className="w-1/8 font-normal" hasFixedWidth>
 											{t("table.columns.actions")}
 										</Th>

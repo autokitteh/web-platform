@@ -76,10 +76,6 @@ export const SessionsTableRow = memo(
 					{session.sessionId}
 				</Td>
 
-				<Td className="w-1/4 border-r-0" hasFixedWidth>
-					{session.connectionName}
-				</Td>
-
 				<Td className={sessionLastTdClass} hasFixedWidth>
 					<div className="flex space-x-1">
 						<IconButton

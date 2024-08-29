@@ -1,22 +1,13 @@
 import { Session as ProtoSession } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionEntrypoint, ViewerSession } from "@src/types/models/session.type";
-import { Connection, EntrypointTrigger, Session } from "@type/models";
-import { Event } from "@type/models/event.type";
+import { EntrypointTrigger, Session } from "@type/models";
 import { convertTimestampToDate } from "@utilities";
 /**
  * Converts a ProtoSession object to a SessionType object.
  * @param protoSession The ProtoSession object to convert.
  * @returns The SessionType object.
  */
-export function convertSessionProtoToModel(
-	protoSession: ProtoSession,
-	connections: Connection[],
-	events: Event[]
-): Session {
-	const event = events?.find((event) => event.eventId === protoSession.eventId);
-	const connectionName =
-		connections?.find((connection) => connection.connectionId === event?.connectionId)?.name || "";
-
+export function convertSessionProtoToModel(protoSession: ProtoSession): Session {
 	return {
 		createdAt: convertTimestampToDate(protoSession.createdAt!),
 		deploymentId: protoSession.deploymentId,
@@ -24,7 +15,6 @@ export function convertSessionProtoToModel(
 		inputs: protoSession.inputs,
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
-		connectionName,
 	};
 }
 export function convertSessionProtoToViewerModel(protoSession: ProtoSession, connectionName?: string): ViewerSession {
