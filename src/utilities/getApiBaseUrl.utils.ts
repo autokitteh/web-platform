@@ -9,5 +9,5 @@ export const getApiBaseUrl = (): string => {
 		return `https://${env}-api.${rest.join(".")}`;
 	}
 
-	return "http://localhost:9980";
+	return import.meta.env.VITE_HOST_URL || "http://localhost:9980";
 };

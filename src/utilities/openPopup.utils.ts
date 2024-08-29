@@ -1,4 +1,4 @@
-export const openPopup = (url: string, title: string, width: number = 500, height: number = 500) => {
+export const openPopup = (url: string, title: string, width: number = 0, height: number = 0) => {
 	const left = (window.screen.width - width) / 2;
 	const top = (window.screen.height - height) / 2;
 	const options = `toolbar=no, menubar=no, width=${width}, height=${height}, top=${top}, left=${left}`;

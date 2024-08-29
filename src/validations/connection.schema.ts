@@ -71,6 +71,5 @@ export const googleGeminiIntegrationSchema = z.object({
 
 export const oauthSchema = z.object({});
 export const googleOauthSchema = z.object({
-	auth_type: z.string(),
-	auth_scopes: z.string(),
+	auth_scopes: z.string().min(1, "Auth Scope is required"),
 });
