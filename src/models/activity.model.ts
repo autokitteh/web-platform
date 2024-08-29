@@ -36,7 +36,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 	ProtoSessionLogRecords: ProtoSessionLogRecord[]
 ): Activity[] {
 	const activities = [];
-	let currentActivity = null as Activity | null;
+	let currentActivity: Activity | null = null;
 
 	for (let i = ProtoSessionLogRecords.length - 1; i >= 0; i--) {
 		const log = ProtoSessionLogRecords[i];
@@ -75,12 +75,12 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 
 		if (callAttemptComplete && currentActivity) {
 			currentActivity.status = "completed" as keyof ActivityState;
-			currentActivity.endTime = convertTimestampToDate(callAttemptComplete.completedAt);
+			currentActivity.endTime = convertTimestampToDate(callAttemptComplete.completedAt) as Date | undefined;
 			currentActivity.returnValue = callAttemptComplete?.result?.value as object;
 		}
 
 		if (state && state.error && currentActivity) {
-			currentActivity.endTime = convertTimestampToDate(log.t);
+			currentActivity.endTime = convertTimestampToDate(log.t) as Date | undefined;
 			currentActivity.status = "error" as keyof ActivityState;
 		}
 	}
