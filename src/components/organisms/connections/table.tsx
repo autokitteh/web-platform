@@ -54,7 +54,8 @@ export const ConnectionsTable = () => {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [projectId, addToast]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		setFetchConnectionsCallback(fetchConnections);
