@@ -1,4 +1,3 @@
-import randomatic from "randomatic";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -25,8 +24,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 
 	createProject: async () => {
-		const projectName = randomatic("Aa", 8);
-		const { data: projectId, error } = await ProjectsService.create(projectName);
+		const { data: projectId, error } = await ProjectsService.create();
 
 		if (error) {
 			return { data: undefined, error };
@@ -35,10 +33,19 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			return { data: undefined, error: new Error("Project not created") };
 		}
 
+		const { data: project, error: nameError } = await ProjectsService.get(projectId);
+
+		if (nameError) {
+			return { data: undefined, error: nameError };
+		}
+		if (!project) {
+			return { data: undefined, error: new Error("Project could not be fetched") };
+		}
+
 		const menuItem = {
 			href: `/${SidebarHrefMenu.projects}/${projectId}`,
 			id: projectId,
-			name: projectName,
+			name: project.name,
 		};
 
 		set((state) => {
@@ -47,7 +54,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			return state;
 		});
 
-		return { data: { name: projectName, projectId }, error: undefined };
+		return { data: { name: project.name, projectId }, error: undefined };
 	},
 
 	createProjectFromManifest: async (projectManifest: string) => {
