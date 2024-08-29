@@ -1,6 +1,8 @@
 {
 	"menu": {
 		"logout": "Logout",
-		"settings": "Settings"
+		"settings": "Settings",
+		"closeSidebar": "Close Sidebar",
+		"openSidebar": "Open Sidebar"
 	}
 }
