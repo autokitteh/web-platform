@@ -231,20 +231,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			});
 
 			const connectionData = flattenFormData(getValues(), validationSchema);
-			const response = await fetch(
-				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/x-www-form-urlencoded" },
-					body: new URLSearchParams(connectionData).toString(),
-				}
+			openPopup(
+				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&auth_scopes=${connectionData.auth_scopes}`,
+				"Authorize"
 			);
-
-			if (!response.url) {
-				toastAndLog("error", "errorRetrieveOauthURL");
-			}
-
-			openPopup(response.url, "Authorize");
 			startCheckingStatus(oauthConnectionId);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
