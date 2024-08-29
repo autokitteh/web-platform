@@ -36,13 +36,9 @@ export class ProjectsService {
 		}
 	}
 
-	static async create(projectName: string): Promise<ServiceResponse<string>> {
+	static async create(): Promise<ServiceResponse<string>> {
 		try {
-			const { projectId } = await projectsClient.create({
-				project: {
-					name: projectName,
-				},
-			});
+			const { projectId } = await projectsClient.create({ project: {} });
 			if (!projectId) {
 				LoggerService.error(namespaces.projectService, i18n.t("projectNotCreated", { ns: "services" }));
 
