@@ -97,8 +97,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			});
 
 			const connectionData = flattenFormData(getValues(), validationSchema);
+			const formattedIntegrationName =
+				Integrations.http === integrationName ? `i/${integrationName}` : integrationName;
 
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -120,9 +122,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		}
 
 		const connectionData = flattenFormData(getValues(), validationSchema);
-
+		const formattedIntegrationName =
+			Integrations.http === integrationName ? `i/${integrationName}` : integrationName;
 		try {
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionEditedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {

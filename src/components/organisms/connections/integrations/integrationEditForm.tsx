@@ -20,10 +20,12 @@ export const IntegrationEditForm = ({ integrationType, schemas, selectOptions }:
 	const [webhook, setWebhook] = useState<string>();
 
 	const {
+		connectionId,
 		connectionType,
 		connectionVariables,
 		copyToClipboard,
 		errors,
+		handleOAuth,
 		handleSubmit,
 		isLoading,
 		onSubmitEdit,
@@ -56,6 +58,15 @@ export const IntegrationEditForm = ({ integrationType, schemas, selectOptions }:
 		[connectionType, selectOptions]
 	);
 
+	const handleFormSubmit = () => {
+		if (connectionId && connectionType === ConnectionAuthType.Oauth) {
+			handleOAuth(connectionId, integrationType);
+
+			return;
+		}
+		onSubmitEdit();
+	};
+
 	return (
 		<>
 			<Select
@@ -67,7 +78,7 @@ export const IntegrationEditForm = ({ integrationType, schemas, selectOptions }:
 				placeholder={t("placeholders.selectConnectionType")}
 				value={selectConnectionTypeValue}
 			/>
-			<form className="mt-6 flex flex-col items-stretch gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
+			<form className="mt-6 flex flex-col items-stretch gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						copyToClipboard={copyToClipboard}

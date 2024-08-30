@@ -29,13 +29,13 @@ export const HttpIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.NoAuth:
-				await createConnection(connectionId, ConnectionAuthType.NoAuth, `i/${Integrations.http}`);
+				await createConnection(connectionId, ConnectionAuthType.NoAuth, Integrations.http);
 				break;
 			case ConnectionAuthType.Basic:
-				await createConnection(connectionId, ConnectionAuthType.Basic, `i/${Integrations.http}`);
+				await createConnection(connectionId, ConnectionAuthType.Basic, Integrations.http);
 				break;
 			case ConnectionAuthType.Bearer:
-				await createConnection(connectionId, ConnectionAuthType.Bearer, `i/${Integrations.http}`);
+				await createConnection(connectionId, ConnectionAuthType.Bearer, Integrations.http);
 				break;
 			default:
 				break;
