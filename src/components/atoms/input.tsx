@@ -104,7 +104,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 				placeholder={placeholder}
 				ref={ref}
 				type={type}
-				value={value}
+				value={value || ""}
 			/>
 
 			{labelText ? (

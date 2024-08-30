@@ -146,7 +146,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					placeholder={placeholder}
 					ref={ref}
 					type={inputType}
-					value={innerValue}
+					value={innerValue || ""}
 				/>
 
 				{labelText ? (

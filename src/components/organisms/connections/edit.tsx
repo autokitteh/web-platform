@@ -47,7 +47,7 @@ export const EditConnection = () => {
 						isError={!!errors.connectionName}
 						isRequired
 						label={t("github.placeholders.name")}
-						value={connectionName || ""}
+						value={connectionName}
 					/>
 				</div>
 
