@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -14,8 +14,17 @@ import { Select } from "@components/molecules";
 export const HttpIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 
-	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setValidationSchema, setValue } =
-		useConnectionForm(httpBasicIntegrationSchema, "edit");
+	const {
+		connectionType,
+		errors,
+		handleSubmit,
+		isLoading,
+		onSubmitEdit,
+		register,
+		setConnectionType,
+		setValidationSchema,
+		setValue,
+	} = useConnectionForm(httpBasicIntegrationSchema, "edit");
 
 	useEffect(() => {
 		if (!connectionType) {
@@ -42,30 +51,33 @@ export const HttpIntegrationEditForm = () => {
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.http]?.[connectionType as ConnectionAuthType];
 
-	const selectConnectionTypeValue = selectIntegrationHttp.find((method) => method.value === connectionType);
+	const selectConnectionTypeValue = useMemo(
+		() => selectIntegrationHttp.find((method) => method.value === connectionType),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[]
+	);
 
 	return (
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled
+				disabled={!!selectConnectionTypeValue}
 				label={t("placeholders.connectionType")}
+				onChange={(option) => setConnectionType(option?.value)}
 				options={selectIntegrationHttp}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={selectConnectionTypeValue}
 			/>
 			<form className="mt-6 flex items-start gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
-				<div className="flex w-full flex-col gap-6">
-					{ConnectionTypeComponent ? (
-						<ConnectionTypeComponent
-							errors={errors}
-							isLoading={isLoading}
-							mode="edit"
-							register={register}
-							setValue={setValue}
-						/>
-					) : null}
-				</div>
+				{ConnectionTypeComponent ? (
+					<ConnectionTypeComponent
+						errors={errors}
+						isLoading={isLoading}
+						mode="edit"
+						register={register}
+						setValue={setValue}
+					/>
+				) : null}
 			</form>
 		</>
 	);

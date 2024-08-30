@@ -49,10 +49,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const toastAndLog = useToastAndLog("integrations", "errors");
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
-	const [connectionType, setConnectionType] = useState<string | undefined>();
-	const [connectionVariables, setConnectionVariables] = useState<Variable[] | undefined>();
+	const [connectionType, setConnectionType] = useState<string>();
+	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [isLoading, setIsLoading] = useState(false);
-	const [connectionName, setConnectionName] = useState<string | undefined>();
+	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 
 	const getConnectionAuthType = async (connectionId: string) => {
@@ -65,12 +65,9 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
 
-		if (!connectionAuthType) {
-			toastAndLog("error", "errorFetchingConnectionType");
-
-			return;
+		if (connectionAuthType) {
+			setConnectionType(connectionAuthType.value);
 		}
-		setConnectionType(connectionAuthType.value);
 	};
 
 	const getConnectionVariables = async (connectionId: string) => {
@@ -113,6 +110,14 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
 		setIsLoading(true);
+		if (connectionType) {
+			VariablesService.setByConnectiontId(connectionId!, {
+				name: "auth_type",
+				value: connectionType,
+				isSecret: false,
+				scopeId: connectionId,
+			});
+		}
 
 		const connectionData = flattenFormData(getValues(), validationSchema);
 
@@ -289,5 +294,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		setValidationSchema,
 		clearErrors,
 		handleGoogleOauth,
+		setConnectionType,
 	};
 };
