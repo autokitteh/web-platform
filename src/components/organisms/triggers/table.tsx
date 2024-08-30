@@ -109,7 +109,7 @@ export const TriggersTable = () => {
 				</Button>
 			</div>
 			{triggers.length ? (
-				<Table className="mt-3">
+				<Table className="mt-2.5">
 					<THead>
 						<Tr>
 							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("name")}>

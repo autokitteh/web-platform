@@ -102,7 +102,7 @@ export const EditorTabs = () => {
 	};
 
 	return (
-		<div className="flex h-full flex-1 flex-col pt-8">
+		<div className="absolute flex h-full flex-1 flex-col pt-8">
 			{projectId ? (
 				<>
 					<div

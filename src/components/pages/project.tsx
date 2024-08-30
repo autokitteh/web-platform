@@ -40,7 +40,7 @@ export const Project = () => {
 						<div
 							className={
 								"flex select-none items-center gap-1 xl:gap-2 2xl:gap-4 3xl:gap-5 " +
-								"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2"
+								"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2 pb-5"
 							}
 						>
 							{projectTabs.map((singleTab) => (
