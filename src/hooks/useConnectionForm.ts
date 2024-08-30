@@ -96,7 +96,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				scopeId: connectionId,
 			});
 
-			const connectionData = flattenFormData(getValues(), validationSchema);
+			const connectionData = flattenFormData(getValues(), formSchema);
 			const formattedIntegrationName =
 				Integrations.http === integrationName ? `i/${integrationName}` : integrationName;
 
@@ -121,7 +121,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			});
 		}
 
-		const connectionData = flattenFormData(getValues(), validationSchema);
+		const connectionData = flattenFormData(getValues(), formSchema);
 		const formattedIntegrationName =
 			Integrations.http === integrationName ? `i/${integrationName}` : integrationName;
 		try {
