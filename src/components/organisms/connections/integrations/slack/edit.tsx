@@ -14,10 +14,8 @@ import { Select } from "@components/molecules";
 export const SlackIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 
-	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		slackIntegrationSchema,
-		"edit"
-	);
+	const { connectionType, errors, handleSubmit, isLoading, onSubmitEdit, register, setConnectionType, setValue } =
+		useConnectionForm(slackIntegrationSchema, "edit");
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.slack]?.[connectionType as ConnectionAuthType];
@@ -33,6 +31,7 @@ export const SlackIntegrationEditForm = () => {
 				aria-label={t("placeholders.selectConnectionType")}
 				disabled={!!selectConnectionTypeValue}
 				label={t("placeholders.connectionType")}
+				onChange={(option) => setConnectionType(option?.value)}
 				options={selectIntegrationSlack}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={selectConnectionTypeValue}
