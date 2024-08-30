@@ -147,6 +147,7 @@ export const SchedulerEditTrigger = () => {
 								dataTestid="select-trigger-type"
 								disabled
 								isError={!!errors.connection}
+								label={t("placeholders.connection")}
 								noOptionsLabel={t("noConnectionsAvailable")}
 								onChange={(selected) => field.onChange(selected)}
 								options={connections}
