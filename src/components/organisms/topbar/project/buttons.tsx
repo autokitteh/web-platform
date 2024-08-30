@@ -113,44 +113,43 @@ export const ProjectTopbarButtons = () => {
 		<div className="flex items-stretch gap-3">
 			<Button
 				ariaLabel={t("topbar.buttons.ariaBuildProject")}
-				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white"
+				className="h-8 whitespace-nowrap px-3.5"
 				disabled={loadingButton[TopbarButton.build]}
 				onClick={build}
-				variant="outline"
+				variant="filledGray"
 			>
-				{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg size="lg" src={BuildIcon} />}
+				{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg size="md" src={BuildIcon} />}
 
 				{t("topbar.buttons.build")}
 			</Button>
 
 			<Button
 				ariaLabel={t("topbar.buttons.ariaDeployProject")}
-				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white"
+				className="h-8 whitespace-nowrap px-3.5"
 				disabled={loadingButton[TopbarButton.deploy]}
 				onClick={deploy}
-				variant="outline"
+				variant="filledGray"
 			>
-				{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg size="lg" src={DeployIcon} />}
+				{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg size="md" src={DeployIcon} />}
 
 				{t("topbar.buttons.deploy")}
 			</Button>
 
 			<Button
 				ariaLabel={t("topbar.buttons.ariaDeployments")}
-				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white"
+				className="h-8 whitespace-nowrap px-4"
 				href={`/projects/${projectId}/deployments`}
-				variant="outline"
+				variant="filledGray"
 			>
-				<IconSvg size="lg" src={StatsIcon} />
+				<IconSvg size="md" src={StatsIcon} />
 
 				{t("topbar.buttons.deployments")}
 			</Button>
 
 			<DropdownButton
-				className="font-semibold text-white"
 				contentMenu={
 					<Button
-						className="whitespace-nowrap px-4 py-2 font-semibold text-white"
+						className="h-8 whitespace-nowrap px-4 text-white"
 						onClick={handleOpenModalDeletePrject}
 						variant="outline"
 					>
@@ -160,8 +159,8 @@ export const ProjectTopbarButtons = () => {
 					</Button>
 				}
 			>
-				<Button className="h-full px-4 text-white" variant="outline">
-					<IconSvg size="lg" src={MoreIcon} />
+				<Button className="h-8 whitespace-nowrap px-4" variant="filledGray">
+					<IconSvg size="md" src={MoreIcon} />
 
 					{t("more", { ns: "buttons" })}
 				</Button>
