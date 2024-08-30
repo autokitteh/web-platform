@@ -11,7 +11,7 @@ async function createTriggerScheduler(
 ) {
 	await page.getByRole("link", { name: "Add new" }).click();
 
-	const nameInput = page.locator('input[name="name"][aria-label="Name"]');
+	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
 	await nameInput.fill(name);
 
