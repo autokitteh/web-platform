@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -22,13 +22,16 @@ export const SlackIntegrationEditForm = () => {
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.slack]?.[connectionType as ConnectionAuthType];
 
-	const selectConnectionTypeValue = selectIntegrationSlack.find((method) => method.value === connectionType);
+	const selectConnectionTypeValue = useMemo(
+		() => selectIntegrationSlack.find((method) => method.value === connectionType),
+		[connectionType]
+	);
 
 	return (
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled
+				disabled={!!selectConnectionTypeValue}
 				label={t("placeholders.connectionType")}
 				options={selectIntegrationSlack}
 				placeholder={t("placeholders.selectConnectionType")}

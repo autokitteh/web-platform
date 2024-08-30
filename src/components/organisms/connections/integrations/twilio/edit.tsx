@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -31,19 +31,21 @@ export const TwilioIntegrationEditForm = () => {
 
 			return;
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionType]);
+	}, [connectionType, setValidationSchema]);
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.twilio]?.[connectionType as ConnectionAuthType];
 
-	const selectConnectionTypeValue = selectIntegrationTwilio.find((method) => method.value === connectionType);
+	const selectConnectionTypeValue = useMemo(
+		() => selectIntegrationTwilio.find((method) => method.value === connectionType),
+		[connectionType]
+	);
 
 	return (
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled
+				disabled={!!selectConnectionTypeValue}
 				label={t("placeholders.connectionType")}
 				options={selectIntegrationTwilio}
 				placeholder={t("placeholders.selectConnectionType")}

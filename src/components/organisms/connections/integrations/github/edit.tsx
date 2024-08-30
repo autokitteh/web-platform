@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -24,6 +24,7 @@ export const GithubIntegrationEditForm = () => {
 		isLoading,
 		onSubmitEdit,
 		register,
+		setConnectionType,
 		setValue,
 	} = useConnectionForm(githubIntegrationSchema, "edit");
 
@@ -38,14 +39,19 @@ export const GithubIntegrationEditForm = () => {
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.github]?.[connectionType as ConnectionAuthType];
 
-	const selectConnectionTypeValue = githubIntegrationAuthMethods.find((method) => method.value === connectionType);
+	const selectConnectionTypeValue = useMemo(
+		() => githubIntegrationAuthMethods.find((method) => method.value === connectionType),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[]
+	);
 
 	return (
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled
+				disabled={!!selectConnectionTypeValue}
 				label={t("placeholders.connectionType")}
+				onChange={(option) => setConnectionType(option?.value)}
 				options={githubIntegrationAuthMethods}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={selectConnectionTypeValue}

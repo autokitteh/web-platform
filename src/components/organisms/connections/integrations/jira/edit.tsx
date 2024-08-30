@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -22,13 +22,16 @@ export const JiraIntegrationEditForm = () => {
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.jira]?.[connectionType as ConnectionAuthType];
 
-	const selectConnectionTypeValue = selectIntegrationJira.find((method) => method.value === connectionType);
+	const selectConnectionTypeValue = useMemo(
+		() => selectIntegrationJira.find((method) => method.value === connectionType),
+		[connectionType]
+	);
 
 	return (
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled
+				disabled={!!selectConnectionTypeValue}
 				label={t("placeholders.connectionType")}
 				options={selectIntegrationJira}
 				placeholder={t("placeholders.selectConnectionType")}
