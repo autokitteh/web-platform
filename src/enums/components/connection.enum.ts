@@ -23,3 +23,11 @@ export enum Integrations {
 	chatgpt = "chatgpt",
 	confluence = "confluence",
 }
+
+export enum ConnectionGoogleServices {
+	googleGmail = "googlegmail",
+	googleSheets = "googlesheets",
+	googleCalendar = "googlecalendar",
+	googleDrive = "googledrive",
+	googleForms = "googleforms",
+}
