@@ -15,7 +15,7 @@ import { useToastStore } from "@src/store";
 import { ViewerSession } from "@src/types/models/session.type";
 import { copyToClipboard } from "@src/utilities";
 
-import { Button, Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
+import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
@@ -194,32 +194,28 @@ export const SessionViewer = () => {
 						</div>
 
 						<div className="flex flex-col gap-1">
-							<div>
+							<div className="flex items-center">
 								Event ID:
-								<Button
+								<IconButton
 									aria-label={t("copyButton")}
-									className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
+									className="inline bg-transparent"
 									onClick={() => copyTextToClipboard(sessionInfo.eventId)}
-									variant="outline"
+									title="evt_01j55bpx8pepjv8vk4bxwx2hnr"
 								>
-									<IconButton className="inline" title="evt_01j55bpx8pepjv8vk4bxwx2hnr">
-										<CopyIcon className="h-3 w-3 fill-white" />
-									</IconButton>
-								</Button>
+									<CopyIcon className="h-4 w-4 fill-white" />
+								</IconButton>
 							</div>
 
-							<div>
+							<div className="flex items-center">
 								Build ID:
-								<Button
+								<IconButton
 									aria-label={t("copyButton")}
-									className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
-									onClick={() => copyTextToClipboard(sessionInfo.buildId)}
-									variant="outline"
+									className="inline bg-transparent"
+									onClick={() => copyTextToClipboard(sessionInfo.eventId)}
+									title="evt_01j55bpx8pepjv8vk4bxwx2hnr"
 								>
-									<IconButton className="inline" title="evt_01j55bpx8pepjv8vk4bxwx2hnr">
-										<CopyIcon className="h-3 w-3 fill-white" />
-									</IconButton>
-								</Button>
+									<CopyIcon className="h-4 w-4 fill-white" />
+								</IconButton>
 							</div>
 						</div>
 					</div>

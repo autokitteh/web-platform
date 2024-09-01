@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
 import { SessionsService } from "@services/sessions.service";
+import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 import { useToastStore } from "@src/store";
 
 import { IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -20,7 +21,7 @@ export const SessionActivitiesList = () => {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const fetchActivities = async () => {
-		const { data: sessionExecution, error } = await SessionsService.getSessionActivitiesBySessionId(sessionId!);
+		const { data: sessionExecution, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
 		if (error) {
 			addToast({
 				id: Date.now().toString(),
@@ -28,7 +29,8 @@ export const SessionActivitiesList = () => {
 				type: "error",
 			});
 		}
-		setActivities(sessionExecution || []);
+		const sessionExecutionConverted = convertSessionLogRecordsProtoToActivitiesModel(sessionExecution!.records);
+		setActivities(sessionExecutionConverted || []);
 	};
 
 	useEffect(() => {
@@ -79,18 +81,27 @@ export const SessionActivitiesList = () => {
 								{activity.args.length ? (
 									<>
 										<div className="font-bold">Arguments:</div>
+										<Table>
+											<THead>
+												<Tr>
+													<Th>Value</Th>
+												</Tr>
+											</THead>
 
-										<ul>
-											{activity.args.map((argument: string) => (
-												<li key={argument}>{argument}</li>
-											))}
-										</ul>
+											<TBody>
+												{activity.args.map((argument: string) => (
+													<Tr key={argument}>
+														<Td>{argument}</Td>
+													</Tr>
+												))}
+											</TBody>
+										</Table>
 									</>
 								) : null}
 
 								{activity.kwargs.length ? (
 									<>
-										<div className="mt-4 font-bold">Arguments:</div>
+										<div className="mt-4 font-bold">KW Arguments:</div>
 										<Table>
 											<THead>
 												<Tr>
@@ -105,9 +116,7 @@ export const SessionActivitiesList = () => {
 													<Tr key={argument.key}>
 														<Td>{argument.key}</Td>
 
-														<Td>
-															<div className="inline font-semibold">{argument.value}</div>
-														</Td>
+														<Td>{argument.value}</Td>
 													</Tr>
 												))}
 											</TBody>

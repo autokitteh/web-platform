@@ -62,7 +62,7 @@ export const SessionsTableList = ({
 		<AutoSizer>
 			{({ height, width }) => (
 				<VirtualTable
-					height={height - 45}
+					height={height}
 					itemCount={sessions.length}
 					itemData={itemData}
 					itemSize={36}
