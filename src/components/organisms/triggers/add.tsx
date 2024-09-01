@@ -55,7 +55,7 @@ export const AddTrigger = () => {
 				title={t("addNewTrigger")}
 			/>
 
-			<form className="mb-4 flex w-full flex-col gap-6" id="addTriggerForm" onSubmit={handleSubmit(onSubmit)}>
+			<form className="mb-6 flex w-full flex-col gap-6" id="addTriggerForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
 						{...register("name", { required: tErrors("nameRequired") })}

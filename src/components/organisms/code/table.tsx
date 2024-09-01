@@ -166,7 +166,7 @@ export const CodeTable = () => {
 		<Loader isCenter size="xl" />
 	) : (
 		<div className="flex h-full flex-col">
-			<div className="mb-3 flex justify-end gap-4">
+			<div className="mb-2.5 flex justify-end gap-4">
 				{!isEmpty(sortedResources) ? (
 					<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-gray-500 hover:text-white">
 						<input

@@ -12,16 +12,14 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 70, min: 35 });
 	const [outputHeight] = useResize({ direction: "vertical", initial: 30, max: 90, min: 20 });
 
-	const heightFrameClass = cn("h-[80vh] xl:h-[86vh] 2xl:h-[90vh]");
-	const rightFrameClass = cn(`overflow-hidden rounded-l-none pb-0`, {
-		[heightFrameClass]: true,
+	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none pb-0`, {
 		"rounded-2xl": !children,
 	});
 
-	const leftFrameClass = cn(`flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100 ${heightFrameClass}`);
+	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`);
 
 	return (
-		<div className="flex w-full justify-end">
+		<div className="flex w-full justify-end py-2">
 			<div className="flex items-center" style={{ width: `${leftSideWidth}%` }}>
 				{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 			</div>

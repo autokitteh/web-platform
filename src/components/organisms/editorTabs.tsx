@@ -18,7 +18,6 @@ export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
-	const [editorKey, setEditorKey] = useState(0);
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 
 	const { fetchFiles } = useFileOperations(projectId!);
@@ -45,13 +44,6 @@ export const EditorTabs = () => {
 		loadContent();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
-
-	useEffect(() => {
-		const handleResize = () => setEditorKey((prevKey) => prevKey + 1);
-		window.addEventListener("resize", handleResize);
-
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
 
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("myCustomTheme", {
@@ -102,7 +94,7 @@ export const EditorTabs = () => {
 	};
 
 	return (
-		<div className="flex h-full flex-1 flex-col pt-8">
+		<div className="flex h-full flex-col pt-11">
 			{projectId ? (
 				<>
 					<div
@@ -131,29 +123,27 @@ export const EditorTabs = () => {
 							</Tab>
 						))}
 					</div>
-					<div className="mt-1 h-full">
-						<Editor
-							aria-label={activeEditorFileName}
-							beforeMount={handleEditorWillMount}
-							key={editorKey}
-							language={languageEditor}
-							loading={<Loader size="lg" />}
-							onChange={handleUpdateContent}
-							onMount={handleEditorDidMount}
-							options={{
-								lineNumbers: "off",
-								minimap: {
-									enabled: false,
-								},
-								readOnly: content === t("noFileText"),
-								renderLineHighlight: "none",
-								scrollBeyondLastLine: false,
-								wordWrap: "on",
-							}}
-							theme="vs-dark"
-							value={content}
-						/>
-					</div>
+					<Editor
+						aria-label={activeEditorFileName}
+						beforeMount={handleEditorWillMount}
+						className="absolute -ml-6 h-full"
+						language={languageEditor}
+						loading={<Loader size="lg" />}
+						onChange={handleUpdateContent}
+						onMount={handleEditorDidMount}
+						options={{
+							lineNumbers: "off",
+							minimap: {
+								enabled: false,
+							},
+							readOnly: content === t("noFileText"),
+							renderLineHighlight: "none",
+							scrollBeyondLastLine: false,
+							wordWrap: "on",
+						}}
+						theme="vs-dark"
+						value={content}
+					/>
 				</>
 			) : null}
 		</div>
