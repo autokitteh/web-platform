@@ -10,7 +10,8 @@
             "deploy": "Deploy",
             "goToProject": "Go to project",
             "deployments": "Deployments",
-            "delete": "Delete"
+            "delete": "Delete",
+            "settings": "Settings"
         },
         "deployedProjectSuccess": "Project deploy completed successfully.",
         "projectNotFound": "Project not found",

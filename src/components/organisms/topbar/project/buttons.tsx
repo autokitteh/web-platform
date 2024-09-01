@@ -3,18 +3,19 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ModalName, TopbarButton } from "@enums/components";
+import { SettingProjectDrawer } from "./settingProjectDrawer";
+import { DrawerName, ModalName, TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 
 import { useFileOperations } from "@hooks";
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useDrawerStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
 
 import { BuildIcon, DeployIcon, MoreIcon, StatsIcon } from "@assets/image";
-import { TrashIcon } from "@assets/image/icons";
+import { GearIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
@@ -22,6 +23,7 @@ export const ProjectTopbarButtons = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
+	const { openDrawer } = useDrawerStore();
 	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
@@ -104,13 +106,28 @@ export const ProjectTopbarButtons = () => {
 		navigate("/");
 	};
 
-	const handleOpenModalDeletePrject = useCallback(() => {
+	const handleOpenModalDeleteProject = useCallback(() => {
 		openModal(ModalName.deleteProject);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+	const handleOpenDrawerSettingProject = React.useCallback(() => {
+		openDrawer(DrawerName.projectSettings);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
 		<div className="flex items-stretch gap-3">
+			<Button
+				ariaLabel={t("topbar.buttons.settings")}
+				className="h-8 whitespace-nowrap px-3.5"
+				onClick={handleOpenDrawerSettingProject}
+				variant="filledGray"
+			>
+				<IconSvg className="fill-white" size="md" src={GearIcon} />
+
+				{t("topbar.buttons.settings")}
+			</Button>
+
 			<Button
 				ariaLabel={t("topbar.buttons.ariaBuildProject")}
 				className="h-8 whitespace-nowrap px-3.5"
@@ -148,7 +165,7 @@ export const ProjectTopbarButtons = () => {
 
 			<DropdownButton
 				contentMenu={
-					<Button className="h-8 px-4" onClick={handleOpenModalDeletePrject} variant="filledGray">
+					<Button className="h-8 px-4" onClick={handleOpenModalDeleteProject} variant="filledGray">
 						<IconSvg className="fill-white" size="md" src={TrashIcon} />
 
 						{t("topbar.buttons.delete")}
@@ -163,6 +180,8 @@ export const ProjectTopbarButtons = () => {
 			</DropdownButton>
 
 			<DeleteProjectModal onDelete={handleDeleteProject} />
+
+			<SettingProjectDrawer />
 		</div>
 	);
 };
