@@ -26,7 +26,7 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 	const toast = await waitForToast(page, "Project deploy completed successfully.");
 	await expect(toast).toBeVisible();
 
-	await page.getByRole("link", { name: "View project stats" }).click();
+	await page.getByRole("link", { name: "Deployments" }).click();
 });
 
 test.describe("Project Deployment Suite", () => {

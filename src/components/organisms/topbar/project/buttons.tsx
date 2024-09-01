@@ -136,14 +136,14 @@ export const ProjectTopbarButtons = () => {
 			</Button>
 
 			<Button
-				ariaLabel={t("topbar.buttons.ariaStats")}
+				ariaLabel={t("topbar.buttons.ariaDeployments")}
 				className="whitespace-nowrap px-4 py-2.5 font-semibold text-white"
 				href={`/projects/${projectId}/deployments`}
 				variant="outline"
 			>
 				<IconSvg size="lg" src={StatsIcon} />
 
-				{t("topbar.buttons.stats")}
+				{t("topbar.buttons.deployments")}
 			</Button>
 
 			<DropdownButton

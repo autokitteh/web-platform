@@ -13,7 +13,7 @@ import { useProjectStore, useToastStore } from "@store";
 import { ErrorMessage } from "@components/atoms";
 import { ProjectTopbarButtons } from "@components/organisms/topbar/project";
 
-export const ProjectTopbar = () => {
+export const ProjectConfigTopbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const { projectId } = useParams();
 	const { getProject, renameProject } = useProjectStore();

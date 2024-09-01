@@ -71,7 +71,7 @@ export const App = () => {
 					<Route element={<NotFound404 />} path="404" />
 				</Route>
 
-				<Route element={<AppLayout displayTopbar />} path="projects">
+				<Route element={<AppLayout displayConfigurationTopbar />} path="projects">
 					<Route element={<Project />} path=":projectId">
 						<Route element={<Navigate replace to="code" />} index />
 
@@ -115,7 +115,7 @@ export const App = () => {
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
-				<Route element={<AppLayout displayStatsTopbar />} path="projects/:projectId">
+				<Route element={<AppLayout displayDeploymentsAndSessionsTopbar />} path="projects/:projectId">
 					<Route element={<Deployments />} path="deployments">
 						<Route element={<DeploymentsTable />} index />
 
