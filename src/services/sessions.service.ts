@@ -201,6 +201,7 @@ export class SessionsService {
 
 			const sessionAsStartRequest = {
 				session: { ...startSessionArgs, envId: defaultEnvironment!.envId },
+				jsonInputs: startSessionArgs.jsonInputs,
 			} as unknown as StartRequest;
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
 

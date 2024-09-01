@@ -9,3 +9,4 @@ export { SessionsService } from "@services/sessions.service";
 export { TriggersService } from "@services/triggers.service";
 export { VariablesService } from "@services/variables.service";
 export { IntegrationsService } from "@services/integrations.service";
+export { BuildsService } from "@services/builds.service";

@@ -17,3 +17,4 @@ export { convertTimestampToEpoch } from "@utilities/convertTimestampToDate.utils
 export { copyToClipboard } from "@utilities/copyToClipboard.utils";
 export { stripGoogleConnectionName } from "@utilities/stripGoogleConnectionName.utils";
 export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
+export { convertBuildRuntimesToViewTriggers } from "@utilities/convertBuildRuntimesToViewTriggers.utils";

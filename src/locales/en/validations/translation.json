@@ -5,5 +5,6 @@
     "fileNameIsRequired": "File name is required",
     "functionNameIsRequired": "Function name is required",
     "nameIsRequired": "Name is required",
-    "valueIsRequired": "Value is required"
+    "valueIsRequired": "Value is required",
+    "keyIsRequired": "Key is required"
 }
