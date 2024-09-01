@@ -34,8 +34,9 @@ export class ConnectionService {
 		}
 
 		if (!event) {
-			const errorMessage = i18n.t("eventsNotFound", {
+			const errorMessage = i18n.t("eventNotFound", {
 				ns: "services",
+				eventId,
 			});
 			LoggerService.error(namespaces.connectionService, errorMessage);
 
