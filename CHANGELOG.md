@@ -1,3 +1,10 @@
+# [1.45.0](https://github.com/autokitteh/web-platform/compare/v1.44.2...v1.45.0) (2024-09-01)
+
+
+### Features
+
+* update style for topbar project ([#308](https://github.com/autokitteh/web-platform/issues/308)) ([87db1c5](https://github.com/autokitteh/web-platform/commit/87db1c5fd7a235a00f1cced3d7a77d2f6483c505))
+
 ## [1.44.2](https://github.com/autokitteh/web-platform/compare/v1.44.1...v1.44.2) (2024-08-29)
 
 
