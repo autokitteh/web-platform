@@ -4,23 +4,28 @@ import { Activity } from "@src/types/models";
 import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
 import { convertTimestampToDate } from "@utilities";
 
-const extractKWArgsData = (input: { [key: string]: any }, parentKey: string = ""): any[] => {
-	let result: any[] = [];
+const extractKWArgsData = (input: { [key: string]: any }): any[] => {
+	const result: any[] = [];
+	const stack: { object: { [key: string]: any }; parentKey: string }[] = [{ object: input, parentKey: "" }];
 
-	for (const [key, value] of Object.entries(input)) {
-		const currentKey = parentKey ? `${parentKey}.${key}` : key;
+	while (stack.length) {
+		const { object, parentKey } = stack.pop()!;
 
-		if (value?.dict?.items) {
-			value.dict.items.forEach((item: any) => {
-				if (item.k.string && item.v.string) {
-					result.push({
-						key: `${currentKey}.${item.k.string.v}`,
-						value: item.v.string.v,
-					});
-				}
-			});
-		} else if (typeof value === "object" && value !== null) {
-			result = result.concat(extractKWArgsData(value, currentKey));
+		for (const [key, value] of Object.entries(object)) {
+			const currentKey = parentKey ? `${parentKey}.${key}` : key;
+
+			if (value?.dict?.items) {
+				value.dict.items.forEach((item: any) => {
+					if (item.k.string && item.v.string) {
+						result.push({
+							key: `${currentKey}.${item.k.string.v}`,
+							value: item.v.string.v,
+						});
+					}
+				});
+			} else if (typeof value === "object" && value !== null) {
+				stack.push({ object: value, parentKey: currentKey });
+			}
 		}
 	}
 

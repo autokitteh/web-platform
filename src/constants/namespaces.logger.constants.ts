@@ -14,4 +14,5 @@ export const namespaces = {
 	sessionsService: "Sessions Service",
 	triggerService: "Trigger Service",
 	variableService: "Variable Service",
+	eventsService: "Events Service",
 };

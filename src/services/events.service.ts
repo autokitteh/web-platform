@@ -19,7 +19,7 @@ export class EventsService {
 			return { data: eventConverted, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.deploymentsService,
+				namespaces.eventsService,
 				i18n.t("fetchFailedForEvent", {
 					eventId,
 					error: (error as Error).message,
