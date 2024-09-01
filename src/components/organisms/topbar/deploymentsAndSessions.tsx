@@ -11,7 +11,7 @@ import { Button, IconSvg } from "@components/atoms";
 
 import { ProjectsIcon } from "@assets/image";
 
-export const StatsTopbar = () => {
+export const DeploymentsAndSessionsTopbar = () => {
 	const { t } = useTranslation(["projects", "errors"]);
 	const { projectId } = useParams();
 	const [project, setProject] = useState<Project>();

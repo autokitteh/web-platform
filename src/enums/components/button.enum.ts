@@ -7,5 +7,5 @@ export enum ButtonVariant {
 export enum TopbarButton {
 	build = "Build",
 	deploy = "Deploy",
-	viewStats = "View Stats",
+	deployments = "Deployments",
 }
