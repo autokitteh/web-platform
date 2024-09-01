@@ -38,8 +38,8 @@ export const EditConnection = () => {
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" title={t("editConnection")} />
 
-			<div className="mb-4 flex w-5/6 flex-col">
-				<div className="relative mb-4">
+			<div className="mb-6 flex w-5/6 flex-col">
+				<div className="relative mb-6">
 					<Input
 						aria-label={t("github.placeholders.name")}
 						{...register("connectionName")}
