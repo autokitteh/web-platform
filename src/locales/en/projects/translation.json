@@ -11,7 +11,8 @@
             "goToProject": "Go to project",
             "deployments": "Deployments",
             "delete": "Delete",
-            "settings": "Settings"
+            "ariaSettingsRun": "Settings run",
+            "run": "Run"
         },
         "deployedProjectSuccess": "Project deploy completed successfully.",
         "projectNotFound": "Project not found",
@@ -20,5 +21,22 @@
     },
     "outputLog":{
         "clear": "Clear logs"
+    },
+    "singleshot":{
+        "noFilesAvailable": "No files available",
+        "noFunctionsAvailable": "No functions available",
+        "titleParams": "Params",
+        "ariaDeleteParam": "Delete parameter",
+        "placeholders": {
+            "selectFile": "Select file",
+            "file": "File",
+            "selectEntrypoint": "Select entrypoint",
+            "entrypoint": "Entrypoint",
+            "key": "Key",
+            "value": "Value"
+        },
+        "buttons": {
+            "addNewParameter": "Add new"
+        }
     }
 }

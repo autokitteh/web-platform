@@ -20,7 +20,7 @@ export const Drawer = ({ children, name, variant }: DrawerProps) => {
 		<AnimatePresence>
 			{isOpen ? (
 				<>
-					<div className="fixed right-0 top-0 z-50 h-screen w-96 py-2">
+					<div className="fixed right-0 top-0 z-50 h-screen w-500 py-2">
 						<motion.aside
 							animate={{
 								x: 0,

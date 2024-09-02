@@ -1,3 +1,3 @@
 export enum DrawerName {
-	projectSettings = "projectSettings",
+	projectRunSettings = "projectRunSettings",
 }

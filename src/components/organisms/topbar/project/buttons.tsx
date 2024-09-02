@@ -3,7 +3,6 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { SettingProjectDrawer } from "./settingProjectDrawer";
 import { DrawerName, ModalName, TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 
@@ -13,9 +12,10 @@ import { useDrawerStore, useModalStore, useProjectStore, useToastStore } from "@
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
+import { SettingsRunProjectDrawer } from "@components/organisms/topbar/project";
 
 import { BuildIcon, DeployIcon, MoreIcon, StatsIcon } from "@assets/image";
-import { GearIcon, TrashIcon } from "@assets/image/icons";
+import { GearIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
@@ -110,22 +110,27 @@ export const ProjectTopbarButtons = () => {
 		openModal(ModalName.deleteProject);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	const handleOpenDrawerSettingProject = React.useCallback(() => {
-		openDrawer(DrawerName.projectSettings);
+	const handleOpenDrawerRunSettingProject = useCallback(() => {
+		openDrawer(DrawerName.projectRunSettings);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
 		<div className="flex items-stretch gap-3">
 			<Button
-				ariaLabel={t("topbar.buttons.settings")}
-				className="h-8 whitespace-nowrap px-3.5"
-				onClick={handleOpenDrawerSettingProject}
+				ariaLabel={t("topbar.buttons.ariaSettingsRun")}
+				className="h-8 whitespace-nowrap"
+				onClick={handleOpenDrawerRunSettingProject}
+				title={t("topbar.buttons.ariaSettingsRun")}
 				variant="filledGray"
 			>
 				<IconSvg className="fill-white" size="md" src={GearIcon} />
+			</Button>
 
-				{t("topbar.buttons.settings")}
+			<Button ariaLabel={t("topbar.buttons.run")} className="h-8 whitespace-nowrap px-3.5" variant="filledGray">
+				<IconSvg size="md" src={DeployIcon} />
+
+				{t("topbar.buttons.run")}
 			</Button>
 
 			<Button
@@ -147,7 +152,11 @@ export const ProjectTopbarButtons = () => {
 				onClick={deploy}
 				variant="filledGray"
 			>
-				{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg size="md" src={DeployIcon} />}
+				{loadingButton[TopbarButton.deploy] ? (
+					<Spinner />
+				) : (
+					<IconSvg className="fill-white" size="md" src={RocketIcon} />
+				)}
 
 				{t("topbar.buttons.deploy")}
 			</Button>
@@ -181,7 +190,7 @@ export const ProjectTopbarButtons = () => {
 
 			<DeleteProjectModal onDelete={handleDeleteProject} />
 
-			<SettingProjectDrawer />
+			<SettingsRunProjectDrawer />
 		</div>
 	);
 };
