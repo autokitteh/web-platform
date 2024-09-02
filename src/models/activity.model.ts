@@ -4,34 +4,6 @@ import { SessionActivity } from "@src/types/models";
 import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
 import { convertTimestampToDate } from "@utilities";
 
-const extractKWArgsData = (input: { [key: string]: any }): any[] => {
-	const result: any[] = [];
-	const stack: { object: { [key: string]: any }; parentKey: string }[] = [{ object: input, parentKey: "" }];
-
-	while (stack.length) {
-		const { object, parentKey } = stack.pop()!;
-
-		for (const [key, value] of Object.entries(object)) {
-			const currentKey = parentKey ? `${parentKey}.${key}` : key;
-
-			if (value?.dict?.items) {
-				value.dict.items.forEach((item: any) => {
-					if (item.k.string && item.v.string) {
-						result.push({
-							key: `${currentKey}.${item.k.string.v}`,
-							value: item.v.string.v,
-						});
-					}
-				});
-			} else if (typeof value === "object" && value !== null) {
-				stack.push({ object: value, parentKey: currentKey });
-			}
-		}
-	}
-
-	return result;
-};
-
 /**
  * Converts a ProtoSessionLogRecords array to an Activities array.
  * @param protoSession The ProtoSessionLogRecords object to convert.
@@ -55,7 +27,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				param.optional ? `${param.name}?` : param.name
 			);
 
-			const kwargs = extractKWArgsData(callSpec.kwargs) || [];
+			const kwargs = JSON.parse(callSpec?.kwargs?.params?.string?.v || "{}");
 
 			const args = callSpec.args
 				.map((arg) => (arg.string ? arg.string.v : null))

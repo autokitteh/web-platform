@@ -7,7 +7,7 @@ import {
 } from "@ak-proto-ts/sessions/v1/session_pb";
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
-import { defaultSessionLogRecordsPageSize, defaultSessionsVisiblePageSize, namespaces } from "@constants";
+import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
 import { convertSessionProtoToModel } from "@models";
 import { ConnectionService, EnvironmentsService, LoggerService } from "@services";
 import { convertSessionProtoToViewerModel } from "@src/models/session.model";
@@ -33,14 +33,14 @@ export class SessionsService {
 	static async getLogRecordsBySessionId(
 		sessionId: string,
 		pageToken?: string,
-		pageSize: number = defaultSessionLogRecordsPageSize
-	): Promise<ServiceResponse<{ count: number; nextPageToken: string; records: Array<ProtoSessionLogRecord> }>> {
+		pageSize?: number
+	): Promise<ServiceResponse<{ count: number; nextPageToken?: string; records: Array<ProtoSessionLogRecord> }>> {
 		try {
 			const response = await sessionsClient.getLog({
 				sessionId,
 				pageSize,
 				pageToken,
-				jsonValues: false,
+				jsonValues: true,
 				ascending: false,
 			});
 
