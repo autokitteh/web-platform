@@ -27,17 +27,19 @@ export const SessionOutputs: React.FC = () => {
 
 	const isRowLoaded = ({ index }: Index) => !!logs[index];
 
-	const loadMoreRows = async ({ startIndex, stopIndex }: IndexRange, pageSize?: number) => {
+	const loadMoreRows = async ({ startIndex }: IndexRange, height: number) => {
 		if (isLoadingRef.current || (!nextPageToken && startIndex !== 0)) {
 			return;
 		}
 		isLoadingRef.current = true;
 
 		try {
+			const nextPageSize = Math.round(height / defaultSessionLogRecordsListRowHeight) + 10;
+
 			const { data, error } = await SessionsService.getLogRecordsBySessionId(
 				sessionId!,
 				nextPageToken,
-				pageSize || stopIndex - startIndex
+				nextPageSize
 			);
 			if (error) {
 				addToast({
@@ -64,15 +66,12 @@ export const SessionOutputs: React.FC = () => {
 
 	useEffect(() => {
 		if (!document?.getElementById("session-prints")?.offsetHeight) {
-			loadMoreRows({ startIndex: 0, stopIndex: minimumSessionLogsRecordsToDisplayFallback });
+			loadMoreRows({ startIndex: 0, stopIndex: 0 }, minimumSessionLogsRecordsToDisplayFallback);
+
+			return;
 		}
 
-		const minimumLogsToFillListElement =
-			Math.round(
-				document.getElementById("session-prints")!.offsetHeight / defaultSessionLogRecordsListRowHeight
-			) + 10;
-
-		loadMoreRows({ startIndex: 0, stopIndex: 0 }, minimumLogsToFillListElement);
+		loadMoreRows({ startIndex: 0, stopIndex: 0 }, document.getElementById("session-prints")!.offsetHeight);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -115,7 +114,9 @@ export const SessionOutputs: React.FC = () => {
 					{({ height, width }) => (
 						<InfiniteLoader
 							isRowLoaded={isRowLoaded}
-							loadMoreRows={loadMoreRows}
+							loadMoreRows={({ startIndex, stopIndex }) =>
+								loadMoreRows({ startIndex, stopIndex }, height)
+							}
 							minimumBatchSize={10}
 							rowCount={nextPageToken ? logs.length + 1 : logs.length}
 							threshold={15}
