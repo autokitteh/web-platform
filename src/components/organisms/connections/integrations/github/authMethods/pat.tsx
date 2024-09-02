@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import randomatic from "randomatic";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { infoGithubLinks } from "@constants/lists";
-import { useConnectionForm } from "@src/hooks";
+import { VariablesService } from "@services";
+import { useToastStore } from "@src/store";
 import { getApiBaseUrl } from "@src/utilities";
-import { oauthSchema } from "@validations/connection.schema";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -33,6 +34,9 @@ export const PatForm = ({
 		pat: true,
 		secret: true,
 	});
+	const addToast = useToastStore((state) => state.addToast);
+
+	const { connectionId } = useParams();
 
 	const apiBaseUrl = getApiBaseUrl();
 
@@ -40,18 +44,36 @@ export const PatForm = ({
 	const [webhook, setWebhook] = useState("");
 	const isEditMode = mode === "edit";
 
-	const { connectionVariables } = useConnectionForm(oauthSchema, "edit");
+	const getWebhookOnInit = async () => {
+		if (!connectionId) {
+			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
 
-	useEffect(() => {
+			return;
+		}
+		const { data: connectionVariables, error } = await VariablesService.list(connectionId);
+
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+			});
+		}
+
 		const webhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
 		if (webhookKey) {
 			setWebhook(`${apiBaseUrl}/${webhookKey}`);
 
 			return;
 		}
+
 		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+	};
+
+	useEffect(() => {
+		getWebhookOnInit();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
+	}, []);
 
 	useEffect(() => {
 		if (webhook) {
