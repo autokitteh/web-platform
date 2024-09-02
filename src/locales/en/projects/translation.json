@@ -12,8 +12,7 @@
             "deployments": "Deployments",
             "delete": "Delete",
             "ariaSettingsRun": "Settings manual run",
-            "manualRun": "Manual Run",
-            "noFilesFound": "No files found in the project"
+            "manualRun": "Manual Run"
         },
         "deployedProjectSuccess": "Project deploy completed successfully.",
         "projectNotFound": "Project not found",
@@ -23,7 +22,7 @@
     "outputLog":{
         "clear": "Clear logs"
     },
-    "singleshot":{
+    "manualRun":{
         "noFilesAvailable": "No files available",
         "noFunctionsAvailable": "No functions available",
         "titleParams": "Params",

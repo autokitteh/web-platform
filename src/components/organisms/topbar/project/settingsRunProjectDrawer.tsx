@@ -14,7 +14,7 @@ import { InfoIcon, TrashIcon } from "@assets/image/icons";
 
 export const SettingsRunProjectDrawer = () => {
 	const { t: tButtons } = useTranslation("buttons");
-	const { t } = useTranslation("projects", { keyPrefix: "singleshot" });
+	const { t } = useTranslation("projects", { keyPrefix: "manualRun" });
 	const { closeDrawer } = useDrawerStore();
 
 	const {
