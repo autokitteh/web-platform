@@ -45,14 +45,12 @@ export const PatForm = ({
 	useEffect(() => {
 		if (connectionVariables) {
 			const webhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
+			if (!webhookKey) {
+				setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
 
+				return;
+			}
 			setWebhook(`${apiBaseUrl}/${webhookKey}`);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionVariables]);
-
-	useEffect(() => {
-		if (webhook) {
 			setValue("webhook", webhook);
 
 			return;
@@ -63,7 +61,7 @@ export const PatForm = ({
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [webhook]);
+	}, [connectionVariables]);
 
 	return (
 		<>

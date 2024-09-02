@@ -67,10 +67,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 		if (connectionAuthType) {
 			setConnectionType(connectionAuthType.value);
-
-			return;
 		}
-		toastAndLog("error", "errorFetchingConnectionType");
 	};
 
 	const getConnectionVariables = async (connectionId: string) => {

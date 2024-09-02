@@ -11,7 +11,7 @@ export const SlackIntegrationEditForm = () => (
 	<IntegrationEditForm
 		integrationType={Integrations.slack}
 		schemas={{
-			[ConnectionAuthType.AuthToken]: slackIntegrationSchema,
+			[ConnectionAuthType.Socket]: slackIntegrationSchema,
 			[ConnectionAuthType.Oauth]: oauthSchema,
 		}}
 		selectOptions={selectIntegrationSlack}
