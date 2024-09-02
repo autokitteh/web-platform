@@ -1,28 +1,30 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
+import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { SelectOption } from "@src/interfaces/components";
 
 import { Select } from "@components/molecules";
 
-interface IntegrationEditFormProps {
+export const IntegrationEditForm = ({
+	integrationType,
+	schemas,
+	selectOptions,
+}: {
 	integrationType: Integrations;
 	schemas: Partial<Record<ConnectionAuthType, any>>;
 	selectOptions: Array<{ label: string; value: string }>;
-}
-
-export const IntegrationEditForm = ({ integrationType, schemas, selectOptions }: IntegrationEditFormProps) => {
+}) => {
 	const { t } = useTranslation("integrations");
-	const [webhook, setWebhook] = useState<string>();
 
 	const {
 		connectionId,
 		connectionType,
-		connectionVariables,
 		copyToClipboard,
 		errors,
 		handleOAuth,
@@ -34,14 +36,8 @@ export const IntegrationEditForm = ({ integrationType, schemas, selectOptions }:
 		setValidationSchema,
 		setValue,
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit");
-
-	useEffect(() => {
-		if (connectionVariables) {
-			const patWebhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
-
-			setWebhook(patWebhookKey);
-		}
-	}, [connectionVariables]);
+	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
+	const [isFirstConnectionType, setIsFirstConnectionType] = useState<boolean>(true);
 
 	useEffect(() => {
 		if (connectionType && schemas[connectionType as ConnectionAuthType]) {
@@ -49,6 +45,13 @@ export const IntegrationEditForm = ({ integrationType, schemas, selectOptions }:
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, schemas]);
+
+	useEffect(() => {
+		if (connectionType && isFirstConnectionType) {
+			setInitialConnectionType(!!connectionType);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionType]);
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
@@ -67,13 +70,18 @@ export const IntegrationEditForm = ({ integrationType, schemas, selectOptions }:
 		onSubmitEdit();
 	};
 
+	const handleConnectionTypeChange = (option: SingleValue<SelectOption>) => {
+		setIsFirstConnectionType(false);
+		setConnectionType(option?.value);
+	};
+
 	return (
 		<>
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
-				disabled={!!selectConnectionTypeValue}
+				disabled={initialConnectionType}
 				label={t("placeholders.connectionType")}
-				onChange={(option) => setConnectionType(option?.value)}
+				onChange={handleConnectionTypeChange}
 				options={selectOptions}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={selectConnectionTypeValue}
@@ -85,7 +93,6 @@ export const IntegrationEditForm = ({ integrationType, schemas, selectOptions }:
 						errors={errors}
 						isLoading={isLoading}
 						mode="edit"
-						patWebhookKey={webhook}
 						register={register}
 						setValue={setValue}
 					/>

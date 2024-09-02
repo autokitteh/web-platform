@@ -87,7 +87,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const getFormattedConnectionData = (
 		getValues: UseFormGetValues<FieldValues>,
 		formSchema: ZodObject<ZodRawShape>,
-		integrationName: string
+		integrationName?: string
 	) => {
 		const connectionData = flattenFormData(getValues(), formSchema);
 		const formattedIntegrationName =
@@ -114,7 +114,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
 				getValues,
 				formSchema,
-				integrationName!
+				integrationName
 			);
 
 			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
@@ -258,7 +258,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				scopeId: oauthConnectionId,
 			});
 
-			const connectionData = flattenFormData(getValues(), validationSchema);
+			const { connectionData } = getFormattedConnectionData(getValues, formSchema);
 			openPopup(
 				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&auth_scopes=${connectionData.auth_scopes}`,
 				"Authorize"

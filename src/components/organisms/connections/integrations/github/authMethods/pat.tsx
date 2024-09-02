@@ -5,7 +5,9 @@ import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoGithubLinks } from "@constants/lists";
+import { useConnectionForm } from "@src/hooks";
 import { getApiBaseUrl } from "@src/utilities";
+import { oauthSchema } from "@validations/connection.schema";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -17,7 +19,6 @@ export const PatForm = ({
 	errors,
 	isLoading,
 	mode,
-	patWebhookKey,
 	register,
 	setValue,
 }: {
@@ -25,7 +26,6 @@ export const PatForm = ({
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	mode: "create" | "edit";
-	patWebhookKey?: string;
 	register: UseFormRegister<{ [x: string]: any }>;
 	setValue: any;
 }) => {
@@ -40,21 +40,30 @@ export const PatForm = ({
 	const [webhook, setWebhook] = useState("");
 	const isEditMode = mode === "edit";
 
-	useEffect(() => {
-		if (patWebhookKey) {
-			setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
+	const { connectionVariables } = useConnectionForm(oauthSchema, "edit");
 
-			return;
+	useEffect(() => {
+		if (connectionVariables) {
+			const webhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
+
+			setWebhook(`${apiBaseUrl}/${webhookKey}`);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
+
+	useEffect(() => {
 		if (webhook) {
 			setValue("webhook", webhook);
 
 			return;
 		}
-		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+
+		if (!isEditMode) {
+			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [webhook, patWebhookKey]);
+	}, [webhook]);
 
 	return (
 		<>
@@ -116,7 +125,6 @@ export const PatForm = ({
 						}
 						isError={!!errors.secret}
 						isLocked={lockState.secret}
-						isRequired
 						label={t("github.placeholders.secret")}
 					/>
 				) : (

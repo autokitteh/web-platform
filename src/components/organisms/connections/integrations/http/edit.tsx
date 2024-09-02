@@ -5,7 +5,7 @@ import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { httpBasicIntegrationSchema, httpBearerIntegrationSchema, oauthSchema } from "@validations";
 
-import { IntegrationEditForm } from "@components/organisms/connections/integrations/integrationEditForm";
+import { IntegrationEditForm } from "@components/organisms/connections/integrations";
 
 export const HttpIntegrationEditForm = () => (
 	<IntegrationEditForm
