@@ -43,20 +43,17 @@ export const PatForm = ({
 	const { connectionVariables } = useConnectionForm(oauthSchema, "edit");
 
 	useEffect(() => {
-		if (connectionVariables) {
-			const webhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
-			if (!webhookKey) {
-				setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
-
-				return;
-			}
-			setWebhook(`${apiBaseUrl}/${webhookKey}`);
+		if (!connectionVariables) {
+			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
 
 			return;
 		}
 
-		if (!isEditMode) {
-			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+		const webhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
+		if (webhookKey) {
+			setWebhook(`${apiBaseUrl}/${webhookKey}`);
+
+			return;
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
