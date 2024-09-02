@@ -12,7 +12,7 @@ import { Drawer, Select } from "@components/molecules";
 import { PlusCircle } from "@assets/image";
 import { InfoIcon, TrashIcon } from "@assets/image/icons";
 
-export const SettingsRunProjectDrawer = () => {
+export const SettingsManualRunDrawer = () => {
 	const { t: tButtons } = useTranslation("buttons");
 	const { t } = useTranslation("projects", { keyPrefix: "manualRun" });
 	const { closeDrawer } = useDrawerStore();

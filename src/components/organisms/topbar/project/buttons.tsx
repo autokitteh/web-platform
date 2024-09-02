@@ -12,9 +12,9 @@ import { useDrawerStore, useModalStore, useProjectStore, useToastStore } from "@
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
-import { SettingsRunProjectDrawer } from "@components/organisms/topbar/project";
+import { SettingsManualRunDrawer } from "@components/organisms/topbar/project";
 
-import { BuildIcon, DeployIcon, MoreIcon, StatsIcon } from "@assets/image";
+import { BuildIcon, MoreIcon, RunIcon, StatsIcon } from "@assets/image";
 import { GearIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
@@ -32,7 +32,7 @@ export const ProjectTopbarButtons = () => {
 	const fetchAndCheckResources = useCallback(async () => {
 		const resources = await fetchResources();
 		if (!Object.keys(resources).length) {
-			return null;
+			return;
 		}
 
 		return resources;
@@ -136,7 +136,7 @@ export const ProjectTopbarButtons = () => {
 				className="h-8 whitespace-nowrap px-3.5"
 				variant="filledGray"
 			>
-				<IconSvg size="md" src={DeployIcon} />
+				<IconSvg size="md" src={RunIcon} />
 
 				{t("topbar.buttons.manualRun")}
 			</Button>
@@ -198,7 +198,7 @@ export const ProjectTopbarButtons = () => {
 
 			<DeleteProjectModal onDelete={handleDeleteProject} />
 
-			<SettingsRunProjectDrawer />
+			<SettingsManualRunDrawer />
 		</div>
 	);
 };
