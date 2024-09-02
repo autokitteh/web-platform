@@ -236,19 +236,19 @@ export const SessionsTable = () => {
 							<Table className="mt-6 overflow-hidden">
 								<THead>
 									<Tr className="justify-between">
-										<Th className="group w-1/4 cursor-pointer font-normal" hasFixedWidth>
+										<Th className="group w-[25%] cursor-pointer font-normal" hasFixedWidth>
 											{t("table.columns.startTime")}
 										</Th>
 
-										<Th className="w-1/8 font-normal" hasFixedWidth>
+										<Th className="w-[15%] font-normal" hasFixedWidth>
 											{t("table.columns.status")}
 										</Th>
 
-										<Th className="w-1/4 font-normal" hasFixedWidth>
+										<Th className="w-[40%] font-normal" hasFixedWidth>
 											{t("table.columns.sessionId")}
 										</Th>
 
-										<Th className="w-1/8 font-normal" hasFixedWidth>
+										<Th className="w-[20%] font-normal" hasFixedWidth>
 											{t("table.columns.actions")}
 										</Th>
 									</Tr>
