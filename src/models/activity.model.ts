@@ -1,6 +1,6 @@
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { ActivityState } from "@src/enums";
-import { Activity } from "@src/types/models";
+import { SessionActivity } from "@src/types/models";
 import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
 import { convertTimestampToDate } from "@utilities";
 
@@ -35,13 +35,13 @@ const extractKWArgsData = (input: { [key: string]: any }): any[] => {
 /**
  * Converts a ProtoSessionLogRecords array to an Activities array.
  * @param protoSession The ProtoSessionLogRecords object to convert.
- * @returns The Activity array.
+ * @returns The SessionActivity array.
  */
 export function convertSessionLogRecordsProtoToActivitiesModel(
 	ProtoSessionLogRecords: ProtoSessionLogRecord[]
-): Activity[] {
+): SessionActivity[] {
 	const activities = [];
-	let currentActivity: Activity | null = null;
+	let currentActivity: SessionActivity | null = null;
 
 	for (let i = ProtoSessionLogRecords.length - 1; i >= 0; i--) {
 		const log = ProtoSessionLogRecords[i];

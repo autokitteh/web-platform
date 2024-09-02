@@ -34,6 +34,7 @@ export const SessionTableEditorFrame = () => {
 			setIsLoading(true);
 		}
 		const { data: sessionHistoryStates, error } = await SessionsService.getLogRecordsBySessionId(sessionId!);
+		const sessionLogRecords = sessionHistoryStates?.records.map((logRecord) => new SessionLogRecord(logRecord));
 		if (firstLoad) {
 			setFirstLoad(false);
 			setIsLoading(false);
@@ -47,17 +48,17 @@ export const SessionTableEditorFrame = () => {
 
 			return;
 		}
-		if (!sessionHistoryStates) {
+		if (!sessionLogRecords) {
 			setCachedSessionLogs([]);
 
 			return;
 		}
 
 		if (!isEqual(cachedSessionLogs, sessionHistoryStates)) {
-			setCachedSessionLogs(sessionHistoryStates);
+			setCachedSessionLogs(sessionLogRecords);
 		}
 
-		const completedState = sessionHistoryStates.find((state) => state.isFinished());
+		const completedState = sessionLogRecords.find((state: SessionLogRecord) => state.isFinished());
 		if (completedState && sessionFetchIntervalIdRef.current) {
 			clearInterval(sessionFetchIntervalIdRef.current);
 			sessionFetchIntervalIdRef.current = null;

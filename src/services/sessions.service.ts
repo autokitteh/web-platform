@@ -7,8 +7,8 @@ import {
 } from "@ak-proto-ts/sessions/v1/session_pb";
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
-import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
-import { SessionLogRecord, convertSessionProtoToModel } from "@models";
+import { defaultSessionLogRecordsPageSize, defaultSessionsVisiblePageSize, namespaces } from "@constants";
+import { convertSessionProtoToModel } from "@models";
 import { ConnectionService, EnvironmentsService, LoggerService } from "@services";
 import { convertSessionProtoToViewerModel } from "@src/models/session.model";
 import { ViewerSession } from "@src/types/models/session.type";
@@ -30,9 +30,18 @@ export class SessionsService {
 		}
 	}
 
-	static async getLogRecordsBySessionId(sessionId: string): Promise<ServiceResponse<Array<SessionLogRecord>>> {
+	static async getLogRecordsBySessionId(
+		sessionId: string,
+		pageToken: string = ""
+	): Promise<ServiceResponse<{ count: number; nextPageToken: string; records: Array<ProtoSessionLogRecord> }>> {
 		try {
-			const response = await sessionsClient.getLog({ sessionId });
+			const response = await sessionsClient.getLog({
+				sessionId,
+				pageSize: defaultSessionLogRecordsPageSize,
+				pageToken,
+				jsonValues: false,
+				ascending: false,
+			});
 
 			if (!response?.log?.records) {
 				const errorMessage = i18n.t("sessionLogNotFound", {
@@ -47,11 +56,14 @@ export class SessionsService {
 				};
 			}
 
-			const sessionHistory = response.log?.records
-				.map((state: ProtoSessionLogRecord) => new SessionLogRecord(state))
-				.filter((record: SessionLogRecord) => record.logs);
-
-			return { data: sessionHistory, error: undefined };
+			return {
+				data: {
+					records: response.log.records,
+					nextPageToken: response.nextPageToken,
+					count: Number(response.count),
+				},
+				error: undefined,
+			};
 		} catch (error) {
 			LoggerService.error(namespaces.sessionsService, (error as Error).message);
 

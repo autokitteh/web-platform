@@ -1,5 +1,5 @@
 import { SessionStateType as ProtoSessionStateType } from "@ak-proto-ts/sessions/v1/session_pb";
-import { SessionStateType } from "@enums";
+import { ActivityState, SessionStateType } from "@enums";
 
 export type Session = {
 	connectionName?: string;
@@ -45,3 +45,21 @@ export type SessionFilter = {
 };
 
 export type SessionStateKeyType = keyof typeof SessionStateType;
+
+export type SessionOutput = {
+	isFinished: boolean;
+	key: string;
+	print: string;
+	time: string;
+};
+
+export type SessionActivity = {
+	args?: string[];
+	endTime?: Date;
+	functionName: string;
+	key: string;
+	kwargs?: { key: string; value: any }[];
+	returnValue: object;
+	startTime: Date;
+	status: keyof ActivityState;
+};
