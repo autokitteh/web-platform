@@ -235,7 +235,7 @@ export const SessionsTable = () => {
 						<div className="relative flex h-full flex-col overflow-hidden">
 							<Table className="mt-6 overflow-hidden">
 								<THead>
-									<Tr>
+									<Tr className="justify-between">
 										<Th className="group w-1/4 cursor-pointer font-normal" hasFixedWidth>
 											{t("table.columns.startTime")}
 										</Th>
