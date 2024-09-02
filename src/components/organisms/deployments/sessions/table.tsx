@@ -15,7 +15,7 @@ import { cn } from "@utilities";
 
 import { useModalStore, useToastStore } from "@store";
 
-import { Button, Frame, IconButton, IconSvg, Loader, THead, Table, Th, Tr } from "@components/atoms";
+import { Button, Frame, IconButton, IconSvg, Loader } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
@@ -234,27 +234,41 @@ export const SessionsTable = () => {
 
 					{sessions.length ? (
 						<div className="relative flex h-full flex-col overflow-hidden">
-							<Table className="mt-6 overflow-hidden">
-								<THead>
-									<Tr className="justify-between">
-										<Th className="group w-[25%] cursor-pointer font-normal" hasFixedWidth>
+							<div className="scrollbar mt-6 overflow-hidden rounded-t-14 text-white">
+								<div className="sticky top-0 z-10 overflow-hidden bg-gray-1250 text-gray-500">
+									<div className="flex justify-between border-b-2 border-gray-1050 transition hover:bg-gray-1250">
+										<div
+											className="flex h-9.5 w-[15%] items-center gap-1 truncate px-4 font-normal"
+											style={{ flex: "1 0 25%", padding: "0 10px" }}
+										>
 											{t("table.columns.startTime")}
-										</Th>
+										</div>
 
-										<Th className="w-[15%] font-normal" hasFixedWidth>
+										<div
+											className="flex h-9.5 w-[15%] items-center gap-1 truncate px-4 font-normal"
+											style={{ flex: "1 0 15%", padding: "0 10px" }}
+										>
 											{t("table.columns.status")}
-										</Th>
+										</div>
 
-										<Th className="w-[40%] font-normal" hasFixedWidth>
+										<div
+											className="flex h-9.5 w-[15%] items-center gap-1 truncate px-4 font-normal"
+											style={{ flex: "1 0 40%", padding: "0 10px" }}
+										>
 											{t("table.columns.sessionId")}
-										</Th>
+										</div>
 
-										<Th className="w-[20%] font-normal" hasFixedWidth>
+										<div
+											className="flex h-9.5 w-[15%] items-center gap-1 truncate px-4 font-normal"
+											style={{
+												flex: "1 0 20%",
+											}}
+										>
 											{t("table.columns.actions")}
-										</Th>
-									</Tr>
-								</THead>
-							</Table>
+										</div>
+									</div>
+								</div>
+							</div>
 
 							<SessionsTableList
 								onItemsRendered={handleItemsRendered}
