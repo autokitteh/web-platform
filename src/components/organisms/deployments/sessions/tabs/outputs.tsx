@@ -19,6 +19,7 @@ export const SessionOutputs: React.FC = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("deployments");
 	const isLoadingRef = useRef<boolean>(false);
+	const listRef = useRef<List | null>(null); // Use a mutable ref to hold the list instance
 
 	const cache = new CellMeasurerCache({
 		fixedWidth: true,
@@ -72,6 +73,11 @@ export const SessionOutputs: React.FC = () => {
 		}
 
 		loadMoreRows({ startIndex: 0, stopIndex: 0 }, document.getElementById("session-prints")!.offsetHeight);
+
+		if (listRef.current) {
+			listRef.current.scrollToPosition(0);
+		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -105,6 +111,10 @@ export const SessionOutputs: React.FC = () => {
 		);
 	};
 
+	const registerListRef = (ref: List | null) => {
+		listRef.current = ref;
+	};
+
 	return (
 		<Frame className="h-full pb-0 transition" id="session-prints">
 			{isLoadingRef.current ? (
@@ -127,7 +137,10 @@ export const SessionOutputs: React.FC = () => {
 									height={height}
 									onRowsRendered={onRowsRendered}
 									overscanRowCount={10}
-									ref={registerChild}
+									ref={(ref) => {
+										registerChild(ref); // This ensures the InfiniteLoader gets the List instance
+										registerListRef(ref); // Register the list ref using callback
+									}}
 									rowCount={logs.length}
 									rowHeight={cache.rowHeight}
 									rowRenderer={rowRenderer}
