@@ -1,3 +1,10 @@
+# [1.46.0](https://github.com/autokitteh/web-platform/compare/v1.45.0...v1.46.0) (2024-09-02)
+
+
+### Features
+
+* enable select connection type in edit form when no auth_type ([#295](https://github.com/autokitteh/web-platform/issues/295)) ([8224924](https://github.com/autokitteh/web-platform/commit/82249241c1a956c65b3ef3d06948cb3250aa5257))
+
 # [1.45.0](https://github.com/autokitteh/web-platform/compare/v1.44.2...v1.45.0) (2024-09-01)
 
 
