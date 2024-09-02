@@ -2,7 +2,6 @@ import React, { CSSProperties, memo } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { areEqual } from "react-window";
 
 import { SessionState } from "@enums";
 import { SessionsTableRowProps } from "@interfaces/components";
@@ -15,6 +14,18 @@ import { IconButton, Td, Tr } from "@components/atoms";
 import { SessionsTableState } from "@components/organisms/deployments";
 
 import { ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
+
+const arePropsEqual = (
+	prevProps: { data: SessionsTableRowProps; index: number; style: CSSProperties },
+	nextProps: { data: SessionsTableRowProps; index: number; style: CSSProperties }
+) => {
+	return (
+		prevProps.data.sessions === nextProps.data.sessions &&
+		prevProps.index === nextProps.index &&
+		prevProps.data.selectedSessionId === nextProps.data.selectedSessionId &&
+		prevProps.data.scrollDisplayed === nextProps.data.scrollDisplayed
+	);
+};
 
 export const SessionsTableRow = memo(
 	({ data, index, style }: { data: SessionsTableRowProps; index: number; style: CSSProperties }) => {
@@ -95,7 +106,7 @@ export const SessionsTableRow = memo(
 			</Tr>
 		);
 	},
-	areEqual
+	arePropsEqual
 );
 
 SessionsTableRow.displayName = "SessionsTableRow";
