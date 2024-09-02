@@ -11,8 +11,8 @@
             "goToProject": "Go to project",
             "deployments": "Deployments",
             "delete": "Delete",
-            "ariaSettingsRun": "Settings run",
-            "run": "Run"
+            "ariaSettingsRun": "Settings manual run",
+            "manualRun": "Manual Run"
         },
         "deployedProjectSuccess": "Project deploy completed successfully.",
         "projectNotFound": "Project not found",

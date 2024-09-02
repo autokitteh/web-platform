@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -28,12 +28,23 @@ export const ProjectTopbarButtons = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const { fetchResources } = useFileOperations(projectId!);
+	const [resources, setResources] = useState<Record<string, Uint8Array> | null>(null);
+
+	useEffect(() => {
+		const fetchAndSetResources = async () => {
+			const fetchedResources = await fetchResources();
+			setResources(fetchedResources);
+
+			if (!Object.keys(fetchedResources).length) {
+				setResources(null);
+			}
+		};
+
+		fetchAndSetResources();
+	}, [fetchResources]);
 
 	const build = async () => {
-		const resources = await fetchResources();
-		if (!Object.keys(resources).length) {
-			return;
-		}
+		if (!resources) return;
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
 
@@ -56,11 +67,7 @@ export const ProjectTopbarButtons = () => {
 	};
 
 	const deploy = async () => {
-		const resources = await fetchResources();
-
-		if (!Object.keys(resources).length) {
-			return;
-		}
+		if (!resources) return;
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
 
@@ -127,16 +134,20 @@ export const ProjectTopbarButtons = () => {
 				<IconSvg className="fill-white" size="md" src={GearIcon} />
 			</Button>
 
-			<Button ariaLabel={t("topbar.buttons.run")} className="h-8 whitespace-nowrap px-3.5" variant="filledGray">
+			<Button
+				ariaLabel={t("topbar.buttons.manualRun")}
+				className="h-8 whitespace-nowrap px-3.5"
+				variant="filledGray"
+			>
 				<IconSvg size="md" src={DeployIcon} />
 
-				{t("topbar.buttons.run")}
+				{t("topbar.buttons.manualRun")}
 			</Button>
 
 			<Button
 				ariaLabel={t("topbar.buttons.ariaBuildProject")}
 				className="h-8 whitespace-nowrap px-3.5"
-				disabled={loadingButton[TopbarButton.build]}
+				disabled={loadingButton[TopbarButton.build] || !resources}
 				onClick={build}
 				variant="filledGray"
 			>
@@ -148,7 +159,7 @@ export const ProjectTopbarButtons = () => {
 			<Button
 				ariaLabel={t("topbar.buttons.ariaDeployProject")}
 				className="h-8 whitespace-nowrap px-3.5"
-				disabled={loadingButton[TopbarButton.deploy]}
+				disabled={loadingButton[TopbarButton.deploy] || !resources}
 				onClick={deploy}
 				variant="filledGray"
 			>
