@@ -29,10 +29,19 @@ export const Button = ({
 			"border border-gray-750 hover:bg-gray-1100 hover:text-white": variant === ButtonVariant.outline,
 		},
 		{
-			"pointer-events-none opacity-30": disabled,
+			"cursor-not-allowed opacity-30": disabled, // cursor-not-allowed додає стилю курсору
 		},
 		className
 	);
+
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		if (disabled) {
+			event.preventDefault();
+
+			return;
+		}
+		onClick?.(event);
+	};
 
 	return !href ? (
 		<button
@@ -40,7 +49,7 @@ export const Button = ({
 			className={buttonClass}
 			disabled={disabled}
 			form={form}
-			onClick={onClick}
+			onClick={handleClick}
 			style={style}
 			title={title}
 			type={type}

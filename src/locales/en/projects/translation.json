@@ -12,7 +12,8 @@
             "deployments": "Deployments",
             "delete": "Delete",
             "ariaSettingsRun": "Settings manual run",
-            "manualRun": "Manual Run"
+            "manualRun": "Manual Run",
+            "noFilesFound": "No files found in the project"
         },
         "deployedProjectSuccess": "Project deploy completed successfully.",
         "projectNotFound": "Project not found",

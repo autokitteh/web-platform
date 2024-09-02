@@ -149,6 +149,7 @@ export const ProjectTopbarButtons = () => {
 				className="h-8 whitespace-nowrap px-3.5"
 				disabled={loadingButton[TopbarButton.build] || !resources}
 				onClick={build}
+				title={t("topbar.buttons.noFilesFound")}
 				variant="filledGray"
 			>
 				{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg size="md" src={BuildIcon} />}
@@ -161,6 +162,7 @@ export const ProjectTopbarButtons = () => {
 				className="h-8 whitespace-nowrap px-3.5"
 				disabled={loadingButton[TopbarButton.deploy] || !resources}
 				onClick={deploy}
+				title={t("topbar.buttons.noFilesFound")}
 				variant="filledGray"
 			>
 				{loadingButton[TopbarButton.deploy] ? (
