@@ -32,12 +32,13 @@ export class SessionsService {
 
 	static async getLogRecordsBySessionId(
 		sessionId: string,
-		pageToken?: string
+		pageToken?: string,
+		pageSize: number = defaultSessionLogRecordsPageSize
 	): Promise<ServiceResponse<{ count: number; nextPageToken: string; records: Array<ProtoSessionLogRecord> }>> {
 		try {
 			const response = await sessionsClient.getLog({
 				sessionId,
-				pageSize: defaultSessionLogRecordsPageSize,
+				pageSize,
 				pageToken,
 				jsonValues: false,
 				ascending: false,
