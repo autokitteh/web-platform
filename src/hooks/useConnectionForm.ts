@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FieldValues, UseFormGetValues, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
@@ -67,7 +67,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 		if (connectionAuthType) {
 			setConnectionType(connectionAuthType.value);
+
+			return;
 		}
+		toastAndLog("error", "errorFetchingConnectionType");
 	};
 
 	const getConnectionVariables = async (connectionId: string) => {
@@ -79,6 +82,18 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		}
 
 		setConnectionVariables(vars);
+	};
+
+	const getFormattedConnectionData = (
+		getValues: UseFormGetValues<FieldValues>,
+		formSchema: ZodObject<ZodRawShape>,
+		integrationName: string
+	) => {
+		const connectionData = flattenFormData(getValues(), formSchema);
+		const formattedIntegrationName =
+			integrationName === Integrations.http ? `i/${integrationName}` : integrationName;
+
+		return { connectionData, formattedIntegrationName };
 	};
 
 	const createConnection = async (
@@ -96,9 +111,11 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				scopeId: connectionId,
 			});
 
-			const connectionData = flattenFormData(getValues(), formSchema);
-			const formattedIntegrationName =
-				Integrations.http === integrationName ? `i/${integrationName}` : integrationName;
+			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
+				getValues,
+				formSchema,
+				integrationName!
+			);
 
 			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
@@ -121,9 +138,12 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			});
 		}
 
-		const connectionData = flattenFormData(getValues(), formSchema);
-		const formattedIntegrationName =
-			Integrations.http === integrationName ? `i/${integrationName}` : integrationName;
+		const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
+			getValues,
+			formSchema,
+			integrationName!
+		);
+
 		try {
 			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionEditedSuccessfully");
