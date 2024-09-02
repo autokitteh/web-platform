@@ -99,7 +99,7 @@ export const SessionActivitiesList = () => {
 									</>
 								) : null}
 
-								{activity.kwargs.length ? (
+								{Object.keys(activity.kwargs).length ? (
 									<>
 										<div className="mt-4 font-bold">KW Arguments:</div>
 										<Table>
@@ -112,11 +112,11 @@ export const SessionActivitiesList = () => {
 											</THead>
 
 											<TBody>
-												{activity.kwargs.map((argument: { key: string; value: any }) => (
-													<Tr key={argument.key}>
-														<Td>{argument.key}</Td>
+												{Object.keys(activity.kwargs).map((argumentKey) => (
+													<Tr key={argumentKey}>
+														<Td>{argumentKey}</Td>
 
-														<Td>{argument.value}</Td>
+														<Td>{activity.kwargs[argumentKey]}</Td>
 													</Tr>
 												))}
 											</TBody>
