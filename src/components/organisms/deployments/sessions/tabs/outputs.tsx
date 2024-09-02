@@ -79,7 +79,7 @@ export const SessionOutputs: React.FC = () => {
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [sessionId]);
 
 	const rowRenderer = ({
 		index,
@@ -111,6 +111,7 @@ export const SessionOutputs: React.FC = () => {
 		);
 	};
 
+	// Use a callback ref for registering the list instance
 	const registerListRef = (ref: List | null) => {
 		listRef.current = ref;
 	};
