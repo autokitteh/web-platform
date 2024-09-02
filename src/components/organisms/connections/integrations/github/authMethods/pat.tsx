@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import randomatic from "randomatic";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import { infoGithubLinks } from "@constants/lists";
+import { VariablesService } from "@services";
+import { useToastStore } from "@src/store";
 import { getApiBaseUrl } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
@@ -17,7 +20,6 @@ export const PatForm = ({
 	errors,
 	isLoading,
 	mode,
-	patWebhookKey,
 	register,
 	setValue,
 }: {
@@ -25,7 +27,6 @@ export const PatForm = ({
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	mode: "create" | "edit";
-	patWebhookKey?: string;
 	register: UseFormRegister<{ [x: string]: any }>;
 	setValue: any;
 }) => {
@@ -33,6 +34,9 @@ export const PatForm = ({
 		pat: true,
 		secret: true,
 	});
+	const addToast = useToastStore((state) => state.addToast);
+
+	const { connectionId } = useParams();
 
 	const apiBaseUrl = getApiBaseUrl();
 
@@ -40,21 +44,43 @@ export const PatForm = ({
 	const [webhook, setWebhook] = useState("");
 	const isEditMode = mode === "edit";
 
-	useEffect(() => {
-		if (patWebhookKey) {
-			setWebhook(`${apiBaseUrl}/${patWebhookKey}`);
+	const getWebhookOnInit = async () => {
+		if (!connectionId) {
+			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
 
 			return;
 		}
+		const { data: connectionVariables, error } = await VariablesService.list(connectionId);
+
+		if (error) {
+			addToast({
+				id: Date.now().toString(),
+				message: (error as Error).message,
+				type: "error",
+			});
+		}
+
+		const webhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
+		if (webhookKey) {
+			setWebhook(`${apiBaseUrl}/${webhookKey}`);
+
+			return;
+		}
+
+		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+	};
+
+	useEffect(() => {
+		getWebhookOnInit();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
 		if (webhook) {
 			setValue("webhook", webhook);
-
-			return;
 		}
-		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [webhook, patWebhookKey]);
+	}, [webhook]);
 
 	return (
 		<>
@@ -116,7 +142,6 @@ export const PatForm = ({
 						}
 						isError={!!errors.secret}
 						isLocked={lockState.secret}
-						isRequired
 						label={t("github.placeholders.secret")}
 					/>
 				) : (
@@ -134,7 +159,6 @@ export const PatForm = ({
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
-				id="connectionForm"
 				type="submit"
 				variant="outline"
 			>

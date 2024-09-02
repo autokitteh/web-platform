@@ -33,7 +33,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 	} = props;
 
 	const { t } = useTranslation("components", { keyPrefix: "inputs" });
-	const [innerValue, setInnerValue] = useState<string>();
+	const [innerValue, setInnerValue] = useState(value);
 
 	const [isFocused, setIsFocused] = useState<boolean>(false);
 	const [hasValue, setHasValue] = useState<boolean>();
@@ -45,6 +45,9 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	useEffect(() => {
 		setHasValue(!!value || !!defaultValue);
+		if (value) {
+			setInnerValue(value);
+		}
 	}, [value, defaultValue]);
 
 	const handleBlur = useCallback(
@@ -146,7 +149,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 					placeholder={placeholder}
 					ref={ref}
 					type={inputType}
-					value={innerValue}
+					value={innerValue || ""}
 				/>
 
 				{labelText ? (

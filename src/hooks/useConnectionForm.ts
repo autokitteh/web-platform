@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FieldValues, UseFormGetValues, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
@@ -49,10 +49,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const toastAndLog = useToastAndLog("integrations", "errors");
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
-	const [connectionType, setConnectionType] = useState<string | undefined>();
-	const [connectionVariables, setConnectionVariables] = useState<Variable[] | undefined>();
+	const [connectionType, setConnectionType] = useState<string>();
+	const [connectionVariables, setConnectionVariables] = useState<Variable[]>();
 	const [isLoading, setIsLoading] = useState(false);
-	const [connectionName, setConnectionName] = useState<string | undefined>();
+	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 
 	const getConnectionAuthType = async (connectionId: string) => {
@@ -65,12 +65,9 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 		const connectionAuthType = vars?.find((variable) => variable.name === "auth_type");
 
-		if (!connectionAuthType) {
-			toastAndLog("error", "errorFetchingConnectionType");
-
-			return;
+		if (connectionAuthType) {
+			setConnectionType(connectionAuthType.value);
 		}
-		setConnectionType(connectionAuthType.value);
 	};
 
 	const getConnectionVariables = async (connectionId: string) => {
@@ -82,6 +79,18 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		}
 
 		setConnectionVariables(vars);
+	};
+
+	const getFormattedConnectionData = (
+		getValues: UseFormGetValues<FieldValues>,
+		formSchema: ZodObject<ZodRawShape>,
+		integrationName?: string
+	) => {
+		const connectionData = flattenFormData(getValues(), formSchema);
+		const formattedIntegrationName =
+			integrationName === Integrations.http ? `i/${integrationName}` : integrationName;
+
+		return { connectionData, formattedIntegrationName };
 	};
 
 	const createConnection = async (
@@ -99,9 +108,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				scopeId: connectionId,
 			});
 
-			const connectionData = flattenFormData(getValues(), validationSchema);
+			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
+				getValues,
+				formSchema,
+				integrationName
+			);
 
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionCreatedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -113,11 +126,23 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
 		setIsLoading(true);
+		if (connectionType) {
+			VariablesService.setByConnectiontId(connectionId!, {
+				name: "auth_type",
+				value: connectionType,
+				isSecret: false,
+				scopeId: connectionId,
+			});
+		}
 
-		const connectionData = flattenFormData(getValues(), validationSchema);
+		const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
+			getValues,
+			formSchema,
+			integrationName!
+		);
 
 		try {
-			await HttpService.post(`/${integrationName}/save?cid=${connectionId}&origin=web`, connectionData);
+			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			toastAndLog("success", "connectionEditedSuccessfully");
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -230,7 +255,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				scopeId: oauthConnectionId,
 			});
 
-			const connectionData = flattenFormData(getValues(), validationSchema);
+			const { connectionData } = getFormattedConnectionData(getValues, formSchema);
 			openPopup(
 				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&auth_scopes=${connectionData.auth_scopes}`,
 				"Authorize"
@@ -289,5 +314,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		setValidationSchema,
 		clearErrors,
 		handleGoogleOauth,
+		setConnectionType,
 	};
 };

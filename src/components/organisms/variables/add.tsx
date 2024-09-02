@@ -91,6 +91,7 @@ export const AddVariable = () => {
 						isLocked={isSecret}
 						label={tForm("placeholders.value")}
 						{...register("value")}
+						aria-label={tForm("placeholders.value")}
 						handleInputChange={(newValue) => setValue("value", newValue)}
 					/>
 

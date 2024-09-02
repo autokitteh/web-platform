@@ -40,7 +40,7 @@ test.describe("Project Variables Suite", () => {
 
 	test("Modifying variable with empty value", async ({ page }) => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
-		await page.getByLabel("Value").clear();
+		await page.getByRole("textbox", { name: "Value" }).clear();
 		await page.getByRole("button", { name: "Save" }).click();
 
 		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });

@@ -23,11 +23,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	} = props;
 
 	const [isFocused, setIsFocused] = useState(false);
-	const [hasValue, setHasValue] = useState<boolean>(!!value || !!defaultValue);
+	const [inputValue, setInputValue] = useState(value || defaultValue || "");
+	const [hasValue, setHasValue] = useState<boolean>(!!inputValue);
 
 	useEffect(() => {
-		setHasValue(!!value || !!defaultValue);
-	}, [value, defaultValue]);
+		if (value) {
+			setInputValue(value);
+			setHasValue(!!value);
+		}
+	}, [value]);
 
 	const handleFocus = useCallback(() => setIsFocused(true), []);
 	const handleBlur = useCallback(
@@ -43,13 +47,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
 	const handleChange = useCallback(
 		(event: React.ChangeEvent<HTMLInputElement>) => {
-			const newValue = !!event.target.value;
-			if (newValue !== hasValue) {
-				setHasValue(newValue);
-			}
+			const newValue = event.target.value;
+			setInputValue(newValue);
+			setHasValue(!!newValue);
 			onChange?.(event);
 		},
-		[hasValue, onChange]
+		[onChange]
 	);
 
 	const labelText = isRequired ? `${label} *` : label;
@@ -95,7 +98,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 			<input
 				{...rest}
 				className={inputClass}
-				defaultValue={defaultValue}
 				disabled={disabled}
 				id={id}
 				onBlur={handleBlur}
@@ -104,7 +106,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 				placeholder={placeholder}
 				ref={ref}
 				type={type}
-				value={value}
+				value={inputValue}
 			/>
 
 			{labelText ? (

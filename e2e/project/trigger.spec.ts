@@ -11,12 +11,12 @@ async function createTriggerScheduler(
 ) {
 	await page.getByRole("link", { name: "Add new" }).click();
 
-	await page.getByTestId("select-trigger-type").click();
-	await page.getByRole("option", { name: "Scheduler" }).click();
-
-	const nameInput = page.getByRole("textbox", { exact: true, name: "Name" });
+	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
 	await nameInput.fill(name);
+
+	await page.getByTestId("select-trigger-type").click();
+	await page.getByRole("option", { name: "Scheduler" }).click();
 
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 	await cronInput.click();
@@ -103,7 +103,7 @@ test.describe("Project Triggers Suite", () => {
 		await page.getByTestId("select-file").click();
 		await page.getByRole("option", { name: "newFile.star" }).click();
 		await page.getByRole("button", { name: "Save" }).click();
-		const nameErrorMessage = page.getByText("Name is required", { exact: true });
+		const nameErrorMessage = page.getByText("Name is required");
 
 		await expect(nameErrorMessage).toBeVisible();
 		const nameInput = page.getByRole("textbox", { exact: true, name: "Name" });

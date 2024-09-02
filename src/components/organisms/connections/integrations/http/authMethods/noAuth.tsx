@@ -10,7 +10,7 @@ export const HttpNoAuthForm = () => {
 	return (
 		<Button
 			ariaLabel={t("buttons.saveConnection")}
-			className="ml-auto mt-4 w-fit bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
+			className="ml-auto w-fit bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
 			type="submit"
 			variant="outline"
 		>

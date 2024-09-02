@@ -8,3 +8,4 @@ export { TwilioIntegrationAddForm } from "@components/organisms/connections/inte
 export { JiraIntegrationAddForm } from "@components/organisms/connections/integrations/jira";
 export { DiscordIntegrationAddForm } from "@components/organisms/connections/integrations/discord";
 export { GoogleGeminiIntegrationAddForm } from "@components/organisms/connections/integrations/googleGemini";
+export { IntegrationEditForm } from "@components/organisms/connections/integrations/integrationEditForm";
