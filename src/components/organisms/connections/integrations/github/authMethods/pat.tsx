@@ -51,7 +51,6 @@ export const PatForm = ({
 				return;
 			}
 			setWebhook(`${apiBaseUrl}/${webhookKey}`);
-			setValue("webhook", webhook);
 
 			return;
 		}
@@ -62,6 +61,13 @@ export const PatForm = ({
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
+
+	useEffect(() => {
+		if (webhook) {
+			setValue("webhook", webhook);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [webhook]);
 
 	return (
 		<>
@@ -140,7 +146,6 @@ export const PatForm = ({
 				aria-label={t("buttons.saveConnection")}
 				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
 				disabled={isLoading}
-				id="connectionForm"
 				type="submit"
 				variant="outline"
 			>
