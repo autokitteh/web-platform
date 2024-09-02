@@ -52,6 +52,7 @@ export const SessionsTable = () => {
 			const loaderTimeout = setTimeout(() => {
 				setIsLoading(true);
 			}, 1000);
+
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
 				{
@@ -263,7 +264,7 @@ export const SessionsTable = () => {
 							/>
 
 							{isLoading ? (
-								<div className="flex h-10 w-full items-center">
+								<div className="absolute bottom-0 z-20 flex h-10 w-full items-center bg-gray-1100">
 									<Loader firstColor="light-gray" size="md" />
 								</div>
 							) : null}
