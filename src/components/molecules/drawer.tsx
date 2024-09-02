@@ -28,10 +28,10 @@ export const Drawer = ({ children, name, variant }: DrawerProps) => {
 							}}
 							className={baseClass}
 							exit={{
-								x: 400,
+								x: 500,
 								transition: { duration: 0.25 },
 							}}
-							initial={{ x: 400 }}
+							initial={{ x: 500 }}
 						>
 							{children}
 						</motion.aside>
