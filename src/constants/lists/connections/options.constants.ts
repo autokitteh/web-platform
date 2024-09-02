@@ -1,5 +1,5 @@
 import { ConnectionAuthType } from "@enums";
-import { Integrations, TriggerFormType } from "@enums/components";
+import { ConnectionGoogleServices, Integrations, TriggerFormType } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 import {
@@ -52,10 +52,10 @@ export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElem
 	[Integrations.confluence]: ConfluenceIcon,
 	[Integrations.discord]: DiscordIcon,
 	[Integrations.google]: GoogleIcon,
-	[Integrations.sheets]: GoogleSheetsIcon,
-	[Integrations.calendar]: GoogleCalendarIcon,
-	[Integrations.drive]: GoogleDriveIcon,
-	[Integrations.forms]: GoogleFormsIcon,
+	[ConnectionGoogleServices.googleSheets]: GoogleSheetsIcon,
+	[ConnectionGoogleServices.googleCalendar]: GoogleCalendarIcon,
+	[ConnectionGoogleServices.googleDrive]: GoogleDriveIcon,
+	[ConnectionGoogleServices.googleForms]: GoogleFormsIcon,
 	[Integrations.googlegemini]: GoogleGeminiIcon,
 };
 
