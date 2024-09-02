@@ -5,6 +5,7 @@ import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
 import { IntegrationsService, LoggerService } from "@services";
 import { integrationIcons } from "@src/constants/lists/connections";
+import { ConnectionGoogleServices } from "@src/enums/components";
 import { ServiceResponse } from "@type";
 import { Connection } from "@type/models";
 
@@ -57,7 +58,12 @@ export class ConnectionService {
 			);
 			if (integration) {
 				convertedConnection.integrationName = integration.displayName;
-				convertedConnection.integrationUniqueName = integration.uniqueName;
+
+				let integrationType = integration.uniqueName;
+				if (integrationType in ConnectionGoogleServices) {
+					integrationType = integration.uniqueName.substring(6);
+				}
+				convertedConnection.integrationUniqueName = integrationType;
 				convertedConnection.logo = integrationIcons[integration.uniqueName];
 			}
 

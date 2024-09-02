@@ -30,15 +30,8 @@ export const EditConnection = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
-	let integrationType = selectedIntegration?.value;
-	if (selectedIntegration?.value?.indexOf(Integrations.google) !== -1) {
-		if (selectedIntegration?.value !== Integrations.google) {
-			integrationType = selectedIntegration?.value.substring(6);
-		}
-	}
-
 	const SelectedIntegrationComponent = selectedIntegration
-		? integrationToEditComponent[integrationType as keyof typeof Integrations]
+		? integrationToEditComponent[selectedIntegration?.value as keyof typeof Integrations]
 		: null;
 
 	return (
