@@ -12,7 +12,7 @@ import { useDrawerStore, useModalStore, useProjectStore, useToastStore } from "@
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
-import { SettingsManualRunDrawer } from "@components/organisms/topbar/project";
+import { ManualRunSettingsDrawer } from "@components/organisms/topbar/project";
 
 import { BuildIcon, MoreIcon, RunIcon, StatsIcon } from "@assets/image";
 import { GearIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
@@ -110,12 +110,13 @@ export const ProjectTopbarButtons = () => {
 		navigate("/");
 	};
 
-	const handleOpenModalDeleteProject = useCallback(() => {
+	const openModalDeleteProject = useCallback(() => {
 		openModal(ModalName.deleteProject);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	const handleOpenDrawerRunSettingProject = useCallback(() => {
-		openDrawer(DrawerName.projectRunSettings);
+
+	const openManualRunSettings = useCallback(() => {
+		openDrawer(DrawerName.projectManualRunSettings);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -124,7 +125,7 @@ export const ProjectTopbarButtons = () => {
 			<Button
 				ariaLabel={t("topbar.buttons.ariaSettingsRun")}
 				className="h-8 whitespace-nowrap"
-				onClick={handleOpenDrawerRunSettingProject}
+				onClick={openManualRunSettings}
 				title={t("topbar.buttons.ariaSettingsRun")}
 				variant="filledGray"
 			>
@@ -182,7 +183,7 @@ export const ProjectTopbarButtons = () => {
 
 			<DropdownButton
 				contentMenu={
-					<Button className="h-8 px-4" onClick={handleOpenModalDeleteProject} variant="filledGray">
+					<Button className="h-8 px-4" onClick={openModalDeleteProject} variant="filledGray">
 						<IconSvg className="fill-white" size="md" src={TrashIcon} />
 
 						{t("topbar.buttons.delete")}
@@ -198,7 +199,7 @@ export const ProjectTopbarButtons = () => {
 
 			<DeleteProjectModal onDelete={handleDeleteProject} />
 
-			<SettingsManualRunDrawer />
+			<ManualRunSettingsDrawer />
 		</div>
 	);
 };

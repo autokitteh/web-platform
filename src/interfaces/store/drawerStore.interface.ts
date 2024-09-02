@@ -1,8 +1,7 @@
-export interface DrawerStore<T = unknown> {
+export interface DrawerStore {
 	closeDrawer: (name: string) => void;
-	data?: T;
 	drawers: {
 		[key: string]: boolean;
 	};
-	openDrawer: (name: string, data?: T) => void;
+	openDrawer: (name: string) => void;
 }

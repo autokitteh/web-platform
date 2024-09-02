@@ -12,15 +12,16 @@ import { Drawer, Select } from "@components/molecules";
 import { PlusCircle } from "@assets/image";
 import { InfoIcon, TrashIcon } from "@assets/image/icons";
 
-export const SettingsManualRunDrawer = () => {
+export const ManualRunSettingsDrawer = () => {
 	const { t: tButtons } = useTranslation("buttons");
 	const { t } = useTranslation("projects", { keyPrefix: "manualRun" });
 	const { closeDrawer } = useDrawerStore();
 
 	const {
 		control,
-		formState: { errors },
+		formState: { errors, isValid },
 	} = useForm({
+		mode: "onChange",
 		defaultValues: {
 			filePath: { label: "", value: "" },
 			entrypoint: { label: "", value: "" },
@@ -28,13 +29,13 @@ export const SettingsManualRunDrawer = () => {
 	});
 
 	return (
-		<Drawer name={DrawerName.projectRunSettings} variant="dark">
+		<Drawer name={DrawerName.projectManualRunSettings} variant="dark">
 			<form>
 				<div className="flex items-center justify-end gap-6">
 					<Button
 						ariaLabel={tButtons("cancel")}
 						className="p-0 font-semibold text-gray-500 hover:text-white"
-						onClick={() => closeDrawer(DrawerName.projectRunSettings)}
+						onClick={() => closeDrawer(DrawerName.projectManualRunSettings)}
 					>
 						{tButtons("cancel")}
 					</Button>
@@ -42,6 +43,7 @@ export const SettingsManualRunDrawer = () => {
 					<Button
 						ariaLabel={tButtons("save")}
 						className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
+						disabled={!isValid}
 						type="submit"
 						variant="outline"
 					>
