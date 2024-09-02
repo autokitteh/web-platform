@@ -31,9 +31,10 @@ export const EditConnection = () => {
 	}, [connectionId]);
 
 	let integrationType = selectedIntegration?.value;
-	if (selectedIntegration?.value?.indexOf(Integrations.google) !== -1) {
+	if (selectedIntegration && selectedIntegration.value?.indexOf(Integrations.google) !== -1) {
 		if (selectedIntegration?.value !== Integrations.google) {
-			integrationType = selectedIntegration?.value.substring(6);
+			integrationType = selectedIntegration!.value.substring(6);
+			selectedIntegration!.value = integrationType;
 		}
 	}
 
