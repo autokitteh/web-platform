@@ -1,3 +1,10 @@
+## [1.47.1](https://github.com/autokitteh/web-platform/compare/v1.47.0...v1.47.1) (2024-09-02)
+
+
+### Bug Fixes
+
+* edit google connections ([#318](https://github.com/autokitteh/web-platform/issues/318)) ([d8110d2](https://github.com/autokitteh/web-platform/commit/d8110d29c4d52f0a133ddb7e850c4922e10ca41b))
+
 # [1.47.0](https://github.com/autokitteh/web-platform/compare/v1.46.0...v1.47.0) (2024-09-02)
 
 
