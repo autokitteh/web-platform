@@ -117,7 +117,7 @@ export const SessionOutputs: React.FC = () => {
 	};
 
 	return (
-		<Frame className="h-full pb-0 transition" id="session-prints">
+		<Frame className="h-full pb-0 pl-0 transition" id="session-prints">
 			{isLoadingRef.current ? (
 				<Loader isCenter size="xl" />
 			) : (
