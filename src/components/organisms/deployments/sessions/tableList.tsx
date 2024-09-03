@@ -53,7 +53,7 @@ export const SessionsTableList = ({
 		<AutoSizer>
 			{({ height, width }) => (
 				<List
-					height={height + 50} // Use the full height from AutoSizer
+					height={height - height * 0.1}
 					onRowsRendered={({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }) =>
 						onItemsRendered({
 							visibleStartIndex: startIndex,
