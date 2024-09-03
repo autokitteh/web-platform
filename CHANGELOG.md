@@ -1,3 +1,10 @@
+# [1.48.0](https://github.com/autokitteh/web-platform/compare/v1.47.1...v1.48.0) (2024-09-03)
+
+
+### Features
+
+* session viewer - models and services ([#309](https://github.com/autokitteh/web-platform/issues/309)) ([6a60fbd](https://github.com/autokitteh/web-platform/commit/6a60fbd1bd683bcd8636cabee48d8fa7070a67e5))
+
 ## [1.47.1](https://github.com/autokitteh/web-platform/compare/v1.47.0...v1.47.1) (2024-09-02)
 
 
