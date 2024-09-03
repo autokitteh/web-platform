@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, List, ListRowRenderer } from "react-virtualized";
@@ -19,6 +19,10 @@ export const SessionsTableList = ({
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
+	const [dimensions, setDimensions] = useState<{ height: number; width: number }>({
+		height: 0,
+		width: 0,
+	});
 
 	const openSessionLog = useCallback(
 		(sessionId: string) => {
@@ -49,11 +53,15 @@ export const SessionsTableList = ({
 		<SessionsTableRow data={itemData} index={index} key={key} style={style} />
 	);
 
+	const handleResize = useCallback(({ height, width }: { height: number; width: number }) => {
+		setDimensions({ height: height - 20, width: width - 20 });
+	}, []);
+
 	return (
-		<AutoSizer>
-			{({ height, width }) => (
+		<AutoSizer onResize={handleResize}>
+			{(_) => (
 				<List
-					height={height - height * 0.1}
+					height={dimensions.height - dimensions.height * 0.1}
 					onRowsRendered={({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }) =>
 						onItemsRendered({
 							visibleStartIndex: startIndex,
@@ -65,7 +73,7 @@ export const SessionsTableList = ({
 					rowCount={sessions.length}
 					rowHeight={40}
 					rowRenderer={rowRenderer}
-					width={width}
+					width={dimensions.width}
 				/>
 			)}
 		</AutoSizer>
