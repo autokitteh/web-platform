@@ -237,33 +237,19 @@ export const SessionsTable = () => {
 							<div className="scrollbar mt-6 overflow-hidden rounded-t-14 text-white">
 								<div className="sticky top-0 z-10 overflow-hidden bg-gray-1250 text-gray-500">
 									<div className="flex justify-between border-b-2 border-gray-1050 transition hover:bg-gray-1250">
-										<div
-											className="flex h-9.5 w-[15%] items-center gap-1 truncate px-4 font-normal"
-											style={{ flex: "1 0 25%", padding: "0 10px" }}
-										>
+										<div className="flex h-9.5 w-[25%] items-center gap-1 truncate px-4 font-normal">
 											{t("table.columns.startTime")}
 										</div>
 
-										<div
-											className="flex h-9.5 w-[15%] items-center gap-1 truncate px-4 font-normal"
-											style={{ flex: "1 0 15%", padding: "0 10px" }}
-										>
+										<div className="flex h-9.5 w-[15%] items-center gap-1 truncate px-4 font-normal">
 											{t("table.columns.status")}
 										</div>
 
-										<div
-											className="flex h-9.5 w-[15%] items-center gap-1 truncate px-4 font-normal"
-											style={{ flex: "1 0 40%", padding: "0 10px" }}
-										>
+										<div className="flex h-9.5 w-[40%] items-center gap-1 truncate px-4 font-normal">
 											{t("table.columns.sessionId")}
 										</div>
 
-										<div
-											className="flex h-9.5 w-[15%] items-center gap-1 truncate px-4 font-normal"
-											style={{
-												flex: "1 0 20%",
-											}}
-										>
+										<div className="flex h-9.5 w-[20%] items-center gap-1 truncate px-4 font-normal">
 											{t("table.columns.actions")}
 										</div>
 									</div>
