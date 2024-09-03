@@ -91,7 +91,7 @@ export const SessionViewer = () => {
 			{sessionInfo ? (
 				<>
 					<div className="flex items-center justify-between">
-						<div className="font-bold" title="Trigger name">
+						<div className="font-bold" title="Session ID">
 							{sessionInfo.sessionId}
 						</div>
 
@@ -107,29 +107,36 @@ export const SessionViewer = () => {
 							</IconButton>
 						</div>
 					</div>
-					<div className="mt-1 flex justify-between">
-						<div className="flex flex-col gap-1">
+					<div className="mt-1 flex">
+						<div className="flex w-[25%] flex-col gap-1">
 							{sessionInfo.state === SessionState.completed ||
 							sessionInfo.state === SessionState.error ? (
 								<>
 									<div className="flex items-center gap-1">
-										Status:
-										<SessionsTableState
-											className="font-semibold"
-											sessionState={sessionInfo.state}
-										/>
+										<div className="w-1/2">Status:</div>{" "}
+										<div className="w-full">
+											<SessionsTableState
+												className="font-semibold"
+												sessionState={sessionInfo.state}
+											/>
+										</div>
 									</div>
 									<div className="flex items-center gap-2 font-semibold">
-										<div title="Start Time">{moment(sessionInfo.createdAt).format("HH:mm:ss")}</div>
+										<div className="w-1/2" title="Start Time">
+											{moment(sessionInfo.createdAt).format("HH:mm:ss")}
+										</div>
+										<div className="flex w-full flex-row items-center">
+											<IconSvg className="mr-2 fill-white" size="sm" src={ArrowRightIcon} />
 
-										<IconSvg className="fill-white" size="sm" src={ArrowRightIcon} />
-
-										<div title="End Time">{moment(sessionInfo.updatedAt).format("HH:mm:ss")}</div>
+											<div title="End Time">
+												{moment(sessionInfo.updatedAt).format("HH:mm:ss")}
+											</div>
+										</div>
 									</div>
 
 									<div className="flex items-center gap-1">
-										Duration:
-										<div className="font-semibold">
+										<div className="w-1/2">Duration:</div>
+										<div className="w-full font-semibold">
 											{formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)}
 										</div>
 									</div>
@@ -137,26 +144,31 @@ export const SessionViewer = () => {
 							) : (
 								<>
 									<div className="flex items-center gap-1">
-										Status:
-										<SessionsTableState
-											className="font-semibold"
-											sessionState={sessionInfo.state}
-										/>
+										<div className="w-1/2">Status:</div>{" "}
+										<div className="w-full">
+											<SessionsTableState
+												className="font-semibold"
+												sessionState={sessionInfo.state}
+											/>
+										</div>
 									</div>
 									<div className="flex items-center gap-2 font-semibold">
-										<div title="Start Time">{moment(sessionInfo.createdAt).format("HH:mm:ss")}</div>
+										<div className="w-1/2" title="Start Time">
+											{moment(sessionInfo.createdAt).format("HH:mm:ss")}
+										</div>
+										<div className="flex w-full flex-row items-center">
+											<IconSvg className="mr-2 fill-white" size="sm" src={ArrowRightIcon} />
 
-										<IconSvg className="fill-white" size="sm" src={ArrowRightIcon} />
-
-										<SessionsTableState
-											className="font-semibold"
-											sessionState={sessionInfo.state}
-										/>
+											<SessionsTableState
+												className="font-semibold"
+												sessionState={sessionInfo.state}
+											/>
+										</div>
 									</div>
 
 									<div className="flex items-center gap-1">
-										Duration:
-										<div className="font-semibold">
+										<div className="w-1/2">Duration:</div>{" "}
+										<div className="w-full font-semibold">
 											<ReactTimeAgo
 												date={sessionInfo.createdAt}
 												locale="en-US"
@@ -168,21 +180,23 @@ export const SessionViewer = () => {
 							)}
 						</div>
 
-						<div className="flex flex-col gap-1">
+						<div className="ml-3 flex w-[50%] flex-col gap-1">
 							{sessionInfo?.connectionName ? (
-								<div>
-									Connection name: <span className="font-semibold">{sessionInfo.connectionName}</span>
+								<div className="flex">
+									<div className="w-2/5">Connection name:</div>{" "}
+									<span className="font-semibold">{sessionInfo.connectionName}</span>
 								</div>
 							) : null}
 
 							{sessionInfo?.triggerName ? (
-								<div>
-									Trigger name: <span className="font-semibold">{sessionInfo.triggerName}</span>
+								<div className="flex">
+									<div className="w-2/5">Trigger name:</div>{" "}
+									<span className="font-semibold">{sessionInfo.triggerName}</span>
 								</div>
 							) : null}
 
-							<div>
-								Entrypoint:{" "}
+							<div className="flex">
+								<div className="w-2/5">Entrypoint:</div>{" "}
 								<div className="inline font-semibold">
 									<div className="inline">{sessionInfo.entrypoint.path}</div>
 
@@ -193,7 +207,7 @@ export const SessionViewer = () => {
 							</div>
 						</div>
 
-						<div className="flex flex-col gap-1">
+						<div className="flex w-[15%] flex-col gap-1">
 							<div className="flex items-center">
 								Event ID:
 								<IconButton
@@ -223,7 +237,7 @@ export const SessionViewer = () => {
 			) : null}
 
 			{sessionInfo?.inputs ? (
-				<Accordion className="mt-2" title="Trigger Inputs">
+				<Accordion className="mb-1 mt-2" title="Inputs">
 					<JsonView
 						className="scrollbar max-h-72 overflow-auto"
 						style={githubDarkTheme}
