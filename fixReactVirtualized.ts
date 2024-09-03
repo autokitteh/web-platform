@@ -14,7 +14,7 @@ export const reactVirtualized = (): PluginOption => {
 
 			const brokenFilePath = path.join(
 				reactVirtualizedPath,
-				"..", // back to dist
+				"..",
 				"es",
 				"WindowScroller",
 				"utils",
