@@ -62,6 +62,7 @@
 		"totalSessions": "Total {{total}}"
 	},
 	"activities":{
+		"notData": "No activities found",
 		"statuses": {
 			"all": "All",
 			"completed": "Completed",
