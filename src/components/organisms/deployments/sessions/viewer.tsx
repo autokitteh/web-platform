@@ -208,7 +208,7 @@ export const SessionViewer = () => {
 						</div>
 
 						<div className="flex w-[15%] flex-col gap-1">
-							<div className="flex items-center">
+							<div className="flex items-start">
 								Event ID:
 								<IconButton
 									aria-label={t("copyButton")}
@@ -216,11 +216,11 @@ export const SessionViewer = () => {
 									onClick={() => copyTextToClipboard(sessionInfo.eventId)}
 									title="evt_01j55bpx8pepjv8vk4bxwx2hnr"
 								>
-									<CopyIcon className="h-4 w-4 fill-white" />
+									<CopyIcon className="-mt-2 h-4 w-4 fill-white" />
 								</IconButton>
 							</div>
 
-							<div className="flex items-center">
+							<div className="flex items-start">
 								Build ID:
 								<IconButton
 									aria-label={t("copyButton")}
@@ -228,7 +228,7 @@ export const SessionViewer = () => {
 									onClick={() => copyTextToClipboard(sessionInfo.eventId)}
 									title="evt_01j55bpx8pepjv8vk4bxwx2hnr"
 								>
-									<CopyIcon className="h-4 w-4 fill-white" />
+									<CopyIcon className="-mt-2 h-4 w-4 fill-white" />
 								</IconButton>
 							</div>
 						</div>
