@@ -1,4 +1,4 @@
-import React, { LegacyRef, useEffect, useRef, useState } from "react";
+import React, { LegacyRef, useCallback, useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -20,6 +20,11 @@ export const SessionOutputs: React.FC = () => {
 	const { t } = useTranslation("deployments");
 	const isLoadingRef = useRef<boolean>(false);
 	const listRef = useRef<List | null>(null); // Use a mutable ref to hold the list instance
+
+	const [dimensions, setDimensions] = useState<{ height: number; width: number }>({
+		height: 0,
+		width: 0,
+	});
 
 	const cache = new CellMeasurerCache({
 		fixedWidth: true,
@@ -111,22 +116,25 @@ export const SessionOutputs: React.FC = () => {
 		);
 	};
 
-	// Use a callback ref for registering the list instance
 	const registerListRef = (ref: List | null) => {
 		listRef.current = ref;
 	};
+
+	const handleResize = useCallback(({ height, width }: { height: number; width: number }) => {
+		setDimensions({ height: height - 20, width: width - 20 });
+	}, []);
 
 	return (
 		<Frame className="h-full pb-0 pl-0 transition" id="session-prints">
 			{isLoadingRef.current ? (
 				<Loader isCenter size="xl" />
 			) : (
-				<AutoSizer>
-					{({ height, width }) => (
+				<AutoSizer onResize={handleResize}>
+					{(_) => (
 						<InfiniteLoader
 							isRowLoaded={isRowLoaded}
 							loadMoreRows={({ startIndex, stopIndex }) =>
-								loadMoreRows({ startIndex, stopIndex }, height)
+								loadMoreRows({ startIndex, stopIndex }, dimensions.height)
 							}
 							minimumBatchSize={10}
 							rowCount={nextPageToken ? logs.length + 1 : logs.length}
@@ -135,7 +143,7 @@ export const SessionOutputs: React.FC = () => {
 							{({ onRowsRendered, registerChild }) => (
 								<List
 									deferredMeasurementCache={cache}
-									height={height}
+									height={dimensions.height} // Use dimensions from state
 									onRowsRendered={onRowsRendered}
 									overscanRowCount={10}
 									ref={(ref) => {
@@ -145,7 +153,7 @@ export const SessionOutputs: React.FC = () => {
 									rowCount={logs.length}
 									rowHeight={cache.rowHeight}
 									rowRenderer={rowRenderer}
-									width={width}
+									width={dimensions.width} // Use dimensions from state
 								/>
 							)}
 						</InfiniteLoader>
