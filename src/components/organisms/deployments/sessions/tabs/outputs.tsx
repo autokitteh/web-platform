@@ -17,7 +17,7 @@ export const SessionOutputs: React.FC = () => {
 	const [nextPageToken, setNextPageToken] = useState<string>();
 	const { sessionId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
-	const { t } = useTranslation("deployments");
+	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const isLoadingRef = useRef<boolean>(false);
 	const listRef = useRef<List | null>(null); // Use a mutable ref to hold the list instance
 
@@ -163,7 +163,7 @@ export const SessionOutputs: React.FC = () => {
 
 			{!logs.length ? (
 				<div className="center mt-20 flex flex-col">
-					<p className="mb-8 text-lg font-bold text-gray-750">{t("noData")}</p>
+					<div className="mt-10 text-center text-xl font-semibold">{t("notData")}</div>
 				</div>
 			) : null}
 		</Frame>
