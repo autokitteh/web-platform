@@ -108,12 +108,12 @@ export const SessionViewer = () => {
 						</div>
 					</div>
 					<div className="mt-1 flex">
-						<div className="flex w-[25%] flex-col gap-1">
+						<div className="flex w-[25%] flex-col gap-1 border border-y-0 border-l-0">
 							{sessionInfo.state === SessionState.completed ||
 							sessionInfo.state === SessionState.error ? (
 								<>
 									<div className="flex items-center gap-1">
-										<div className="w-1/2">Status:</div>{" "}
+										<div className="w-3/5">Status</div>{" "}
 										<div className="w-full">
 											<SessionsTableState
 												className="font-semibold"
@@ -122,7 +122,7 @@ export const SessionViewer = () => {
 										</div>
 									</div>
 									<div className="flex items-center gap-2 font-semibold">
-										<div className="w-1/2" title="Start Time">
+										<div className="w-3/5" title="Start Time">
 											{moment(sessionInfo.createdAt).format("HH:mm:ss")}
 										</div>
 										<div className="flex w-full flex-row items-center">
@@ -135,7 +135,7 @@ export const SessionViewer = () => {
 									</div>
 
 									<div className="flex items-center gap-1">
-										<div className="w-1/2">Duration:</div>
+										<div className="w-3/5">Duration</div>
 										<div className="w-full font-semibold">
 											{formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)}
 										</div>
@@ -144,7 +144,7 @@ export const SessionViewer = () => {
 							) : (
 								<>
 									<div className="flex items-center gap-1">
-										<div className="w-1/2">Status:</div>{" "}
+										<div className="w-3/5">Status</div>{" "}
 										<div className="w-full">
 											<SessionsTableState
 												className="font-semibold"
@@ -153,7 +153,7 @@ export const SessionViewer = () => {
 										</div>
 									</div>
 									<div className="flex items-center gap-2 font-semibold">
-										<div className="w-1/2" title="Start Time">
+										<div className="w-3/5" title="Start Time">
 											{moment(sessionInfo.createdAt).format("HH:mm:ss")}
 										</div>
 										<div className="flex w-full flex-row items-center">
@@ -167,7 +167,7 @@ export const SessionViewer = () => {
 									</div>
 
 									<div className="flex items-center gap-1">
-										<div className="w-1/2">Duration:</div>{" "}
+										<div className="w-3/5">Duration</div>{" "}
 										<div className="w-full font-semibold">
 											<ReactTimeAgo
 												date={sessionInfo.createdAt}
@@ -180,23 +180,23 @@ export const SessionViewer = () => {
 							)}
 						</div>
 
-						<div className="ml-3 flex w-[50%] flex-col gap-1">
+						<div className="ml-3 flex w-[50%] flex-col gap-1 border border-y-0 border-l-0">
 							{sessionInfo?.connectionName ? (
 								<div className="flex">
-									<div className="w-2/5">Connection name:</div>{" "}
+									<div className="w-1/3">Connection</div>{" "}
 									<span className="font-semibold">{sessionInfo.connectionName}</span>
 								</div>
 							) : null}
 
 							{sessionInfo?.triggerName ? (
 								<div className="flex">
-									<div className="w-2/5">Trigger name:</div>{" "}
+									<div className="w-1/3">Trigger</div>{" "}
 									<span className="font-semibold">{sessionInfo.triggerName}</span>
 								</div>
 							) : null}
 
 							<div className="flex">
-								<div className="w-2/5">Entrypoint:</div>{" "}
+								<div className="w-1/3">Entrypoint</div>{" "}
 								<div className="inline font-semibold">
 									<div className="inline">{sessionInfo.entrypoint.path}</div>
 
@@ -207,9 +207,9 @@ export const SessionViewer = () => {
 							</div>
 						</div>
 
-						<div className="flex w-[15%] flex-col gap-1">
+						<div className="ml-3 flex w-[15%] flex-col gap-1">
 							<div className="flex items-start">
-								Event ID:
+								Event ID
 								<IconButton
 									aria-label={t("copyButton")}
 									className="inline bg-transparent"
@@ -221,7 +221,7 @@ export const SessionViewer = () => {
 							</div>
 
 							<div className="flex items-start">
-								Build ID:
+								Build ID
 								<IconButton
 									aria-label={t("copyButton")}
 									className="inline bg-transparent"
