@@ -12,7 +12,7 @@
             "deployments": "Deployments",
             "delete": "Delete",
             "ariaSettingsRun": "Settings manual run",
-            "manualRun": "Manual Run"
+            "manual": "Manual"
         },
         "deployedProjectSuccess": "Project deploy completed successfully.",
         "projectNotFound": "Project not found",

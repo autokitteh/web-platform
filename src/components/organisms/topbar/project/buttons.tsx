@@ -3,19 +3,19 @@ import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { DrawerName, ModalName, TopbarButton } from "@enums/components";
+import { ModalName, TopbarButton } from "@enums/components";
 import { ProjectsService } from "@services";
 
 import { useFileOperations } from "@hooks";
-import { useDrawerStore, useModalStore, useProjectStore, useToastStore } from "@store";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
 import { ManualRunSettingsDrawer } from "@components/organisms/topbar/project";
 
-import { BuildIcon, MoreIcon, RunIcon, StatsIcon } from "@assets/image";
-import { GearIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
+import { BuildIcon, MoreIcon, StatsIcon } from "@assets/image";
+import { RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
@@ -23,7 +23,7 @@ export const ProjectTopbarButtons = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
-	const { openDrawer } = useDrawerStore();
+
 	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
@@ -115,33 +115,8 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const openManualRunSettings = useCallback(() => {
-		openDrawer(DrawerName.projectManualRunSettings);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	return (
 		<div className="flex items-stretch gap-3">
-			<Button
-				ariaLabel={t("topbar.buttons.ariaSettingsRun")}
-				className="h-8 whitespace-nowrap"
-				onClick={openManualRunSettings}
-				title={t("topbar.buttons.ariaSettingsRun")}
-				variant="filledGray"
-			>
-				<IconSvg className="fill-white" size="md" src={GearIcon} />
-			</Button>
-
-			<Button
-				ariaLabel={t("topbar.buttons.manualRun")}
-				className="h-8 whitespace-nowrap px-3.5"
-				variant="filledGray"
-			>
-				<IconSvg size="md" src={RunIcon} />
-
-				{t("topbar.buttons.manualRun")}
-			</Button>
-
 			<Button
 				ariaLabel={t("topbar.buttons.ariaBuildProject")}
 				className="h-8 whitespace-nowrap px-3.5"
