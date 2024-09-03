@@ -1,4 +1,5 @@
 import i18n from "i18next";
+import moment from "moment";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Value } from "@ak-proto-ts/values/v1/values_pb";
@@ -6,8 +7,8 @@ import { namespaces } from "@constants";
 import { SessionLogRecordType, SessionStateType } from "@enums";
 import { convertErrorProtoToModel } from "@models/error.model";
 import { LoggerService } from "@services";
-import { Callstack } from "@type/models";
-import { convertTimestampToDate } from "@utilities";
+import { Callstack, SessionOutput } from "@type/models";
+import { convertTimestampToDate, convertTimestampToEpoch } from "@utilities";
 
 export class SessionLogRecord {
 	callstackTrace: Callstack[] = [];
@@ -16,6 +17,7 @@ export class SessionLogRecord {
 	logs?: string;
 	state?: SessionStateType;
 	type: SessionLogRecordType = SessionLogRecordType.unknown;
+	key?: string;
 
 	constructor(logRecord: ProtoSessionLogRecord) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -31,6 +33,8 @@ export class SessionLogRecord {
 
 			return;
 		}
+
+		this.key = convertTimestampToEpoch(logRecord.t).toString();
 
 		switch (logRecordType) {
 			case SessionLogRecordType.callAttemptStart:
@@ -48,9 +52,7 @@ export class SessionLogRecord {
 				break;
 			case SessionLogRecordType.print:
 				this.type = SessionLogRecordType.print;
-				this.logs = logRecord.print?.text
-					? `${i18n.t("historyPrint", { ns: "services" })}: ${logRecord.print.text}`
-					: undefined;
+				this.logs = logRecord.print?.text;
 				break;
 			default:
 		}
@@ -158,3 +160,25 @@ export class SessionLogRecord {
 		);
 	}
 }
+
+export const convertSessionLogProtoToViewerOutput = (logRecords: ProtoSessionLogRecord[]): SessionOutput[] => {
+	return logRecords
+		.map((state: ProtoSessionLogRecord) => {
+			const record = new SessionLogRecord(state);
+
+			if (record.type !== SessionLogRecordType.print) {
+				return undefined;
+			}
+			const formattedDateTime = moment(record.dateTime).format("MM-DD-YYYY HH:mm:ss");
+
+			const output: SessionOutput = {
+				print: record.logs || "",
+				time: formattedDateTime,
+				isFinished: record.isFinished(),
+				key: record.key || "",
+			};
+
+			return output;
+		})
+		.filter((record) => !!record?.print) as SessionOutput[];
+};

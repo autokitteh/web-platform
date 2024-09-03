@@ -10,6 +10,8 @@ export type {
 	SessionEntrypoint,
 	SessionFilter,
 	SessionStateKeyType,
+	SessionOutput,
+	SessionActivity,
 } from "@type/models/session.type";
 export type { Trigger, TriggerData, TriggerObj } from "@type/models/trigger.type";
 export type { User } from "@type/models/user.type";
