@@ -59,7 +59,7 @@ export const SessionsTableList = ({
 
 	return (
 		<AutoSizer onResize={handleResize}>
-			{(_) => (
+			{({ width }) => (
 				<List
 					height={dimensions.height - dimensions.height * 0.1}
 					onRowsRendered={({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }) =>
@@ -73,7 +73,7 @@ export const SessionsTableList = ({
 					rowCount={sessions.length}
 					rowHeight={40}
 					rowRenderer={rowRenderer}
-					width={dimensions.width}
+					width={width}
 				/>
 			)}
 		</AutoSizer>
