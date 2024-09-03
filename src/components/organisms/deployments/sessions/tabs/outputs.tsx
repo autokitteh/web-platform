@@ -139,8 +139,8 @@ export const SessionOutputs: React.FC = () => {
 									onRowsRendered={onRowsRendered}
 									overscanRowCount={10}
 									ref={(ref) => {
-										registerChild(ref); // This ensures the InfiniteLoader gets the List instance
-										registerListRef(ref); // Register the list ref using callback
+										registerChild(ref);
+										registerListRef(ref);
 									}}
 									rowCount={logs.length}
 									rowHeight={cache.rowHeight}
