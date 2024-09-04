@@ -135,11 +135,12 @@ export class SessionLogRecord {
 				logRecord.state?.error?.error?.value,
 				i18n.t("sessionLogMissingOnErrorType", { ns: "errors" })
 			)?.message;
-			this.logs = `Error: ${this.error}\n`;
+			this.logs = "Error:";
+			this.logs += `\n- ${this.error}\n`;
 			this.callstackTrace = (logRecord?.state?.error?.error?.callstack || []) as Callstack[];
 			this.logs += `Callstack:\n`;
 			this.callstackTrace.map(({ location: { col, name, path, row } }) => {
-				this.logs += `\t${path}: ${row}.${col}: ${name}\n`;
+				this.logs += `- ${path}: ${row}.${col}: ${name}\n`;
 			});
 		}
 		if (this.isFinished()) {
@@ -166,7 +167,7 @@ export const convertSessionLogProtoToViewerOutput = (logRecords: ProtoSessionLog
 		.map((state: ProtoSessionLogRecord) => {
 			const record = new SessionLogRecord(state);
 
-			if (record.type !== SessionLogRecordType.print) {
+			if (record.type !== SessionLogRecordType.print && record.state !== SessionStateType.error) {
 				return undefined;
 			}
 			const formattedDateTime = moment(record.dateTime).format("MM-DD-YYYY HH:mm:ss");
