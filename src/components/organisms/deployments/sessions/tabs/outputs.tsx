@@ -166,7 +166,7 @@ export const SessionOutputs: React.FC = () => {
 
 			{!logs.length ? (
 				<div className="center mt-20 flex flex-col">
-					<div className="mt-10 text-center text-xl font-semibold">{t("notData")}</div>
+					<div className="mt-10 text-center text-xl font-semibold">{t("noLogsFound")}</div>
 				</div>
 			) : null}
 		</Frame>

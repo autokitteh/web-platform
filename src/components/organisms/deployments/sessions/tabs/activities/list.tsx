@@ -145,7 +145,7 @@ export const SessionActivitiesList = () => {
 					</div>
 				))
 			) : (
-				<div className="mt-10 text-center text-xl font-semibold">{t("notData")}</div>
+				<div className="mt-10 text-center text-xl font-semibold">{t("noActivitiesFound")}</div>
 			)}
 		</div>
 	);

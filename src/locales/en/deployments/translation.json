@@ -31,7 +31,7 @@
 			"back": "Back",
 			"scrollToTop": "Scroll to Top"
 		},
-		"notData": "No logs found",
+		"noLogsFound": "No logs found",
 		"noSelectedSession": "No session selected",
 		"noSessions": "No sessions found",
 		"output": "Output",
@@ -62,7 +62,7 @@
 		"totalSessions": "Total {{total}}"
 	},
 	"activities":{
-		"notData": "No activities found",
+		"noActivitiesFound": "No activities found",
 		"statuses": {
 			"all": "All",
 			"completed": "Completed",
