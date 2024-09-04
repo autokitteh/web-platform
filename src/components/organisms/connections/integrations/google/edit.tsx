@@ -7,8 +7,13 @@ import { googleIntegrationSchema, oauthSchema } from "@validations";
 
 import { IntegrationEditForm } from "@components/organisms/connections/integrations";
 
-export const GoogleIntegrationEditForm = () => (
+export const GoogleIntegrationEditForm = ({
+	googleIntegrationApplication,
+}: {
+	googleIntegrationApplication: string;
+}) => (
 	<IntegrationEditForm
+		googleIntegrationApplication={googleIntegrationApplication}
 		integrationType={Integrations.google}
 		schemas={{
 			[ConnectionAuthType.JsonKey]: googleIntegrationSchema,
