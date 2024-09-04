@@ -33,9 +33,9 @@ export const EditConnection = () => {
 	let googleIntegrationApplication;
 
 	let integrationType = selectedIntegration?.value;
-	if (selectedIntegration && selectedIntegration.value?.indexOf(Integrations.google) !== -1) {
+	if (selectedIntegration && selectedIntegration.value?.includes(Integrations.google)) {
 		if (selectedIntegration?.value !== Integrations.google) {
-			integrationType = selectedIntegration!.value.substring(6);
+			integrationType = selectedIntegration!.value.substring(Integrations.google.length);
 			selectedIntegration!.value = integrationType;
 			googleIntegrationApplication = integrationType;
 		}
