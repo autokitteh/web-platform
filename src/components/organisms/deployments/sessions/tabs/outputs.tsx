@@ -19,7 +19,8 @@ export const SessionOutputs: React.FC = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const isLoadingRef = useRef<boolean>(false);
-	const listRef = useRef<List | null>(null); // Use a mutable ref to hold the list instance
+	const listRef = useRef<List | null>(null);
+	const frameRef = useRef<HTMLDivElement>(null);
 
 	const [dimensions, setDimensions] = useState<{ height: number; width: number }>({
 		height: 0,
@@ -71,13 +72,14 @@ export const SessionOutputs: React.FC = () => {
 	};
 
 	useEffect(() => {
-		if (!document?.getElementById("session-prints")?.offsetHeight) {
+		setLogs([]);
+		if (!frameRef?.current?.offsetHeight) {
 			loadMoreRows({ startIndex: 0, stopIndex: 0 }, minimumSessionLogsRecordsToDisplayFallback);
 
 			return;
 		}
 
-		loadMoreRows({ startIndex: 0, stopIndex: 0 }, document.getElementById("session-prints")!.offsetHeight);
+		loadMoreRows({ startIndex: 0, stopIndex: 0 }, frameRef.current.offsetHeight);
 
 		if (listRef.current) {
 			listRef.current.scrollToPosition(0);
@@ -125,7 +127,7 @@ export const SessionOutputs: React.FC = () => {
 	}, []);
 
 	return (
-		<Frame className="h-full pb-0 pl-0 transition" id="session-prints">
+		<Frame className="h-full rounded-[0] pb-0 pl-0 transition" ref={frameRef}>
 			{isLoadingRef.current ? (
 				<Loader isCenter size="xl" />
 			) : (
@@ -153,6 +155,7 @@ export const SessionOutputs: React.FC = () => {
 									rowCount={logs.length}
 									rowHeight={cache.rowHeight}
 									rowRenderer={rowRenderer}
+									style={{ borderRadius: 0 }}
 									width={dimensions.width} // Use dimensions from state
 								/>
 							)}
