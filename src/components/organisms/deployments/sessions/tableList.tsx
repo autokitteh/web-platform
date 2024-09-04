@@ -71,7 +71,6 @@ export const SessionsTableList = ({
 					rowCount={sessions.length}
 					rowHeight={40}
 					rowRenderer={rowRenderer}
-					style={{ borderRadius: "0.375rem" }}
 					width={width}
 				/>
 			)}
