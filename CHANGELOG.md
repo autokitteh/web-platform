@@ -1,3 +1,10 @@
+## [1.48.1](https://github.com/autokitteh/web-platform/compare/v1.48.0...v1.48.1) (2024-09-04)
+
+
+### Bug Fixes
+
+* edit google connections - add the type for google permissions ([#321](https://github.com/autokitteh/web-platform/issues/321)) ([21f5f34](https://github.com/autokitteh/web-platform/commit/21f5f34cb73ad21b87d0f938d157670b1cd5971b))
+
 # [1.48.0](https://github.com/autokitteh/web-platform/compare/v1.47.1...v1.48.0) (2024-09-03)
 
 
