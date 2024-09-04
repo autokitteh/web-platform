@@ -90,7 +90,7 @@ export const SessionViewer = () => {
 		<Frame className="h-full w-full overflow-hidden pb-3 transition">
 			{sessionInfo ? (
 				<>
-					<div className="flex items-center justify-between">
+					<div className="mb-4 flex items-center justify-between">
 						<div className="font-bold" title="Session ID">
 							{sessionInfo.sessionId}
 						</div>
@@ -107,13 +107,13 @@ export const SessionViewer = () => {
 							</IconButton>
 						</div>
 					</div>
-					<div className="mt-1 flex">
-						<div className="flex w-[25%] flex-col gap-1 border border-y-0 border-l-0">
+					<div className="flex gap-6">
+						<div className="flex w-1/4 flex-col gap-2">
 							{sessionInfo.state === SessionState.completed ||
 							sessionInfo.state === SessionState.error ? (
 								<>
-									<div className="flex items-center gap-1">
-										<div className="w-3/5">Status</div>{" "}
+									<div className="flex items-center gap-2">
+										<div className="w-3/5">Status</div>
 										<div className="w-full">
 											<SessionsTableState
 												className="font-semibold"
@@ -134,7 +134,7 @@ export const SessionViewer = () => {
 										</div>
 									</div>
 
-									<div className="flex items-center gap-1">
+									<div className="flex items-center gap-2">
 										<div className="w-3/5">Duration</div>
 										<div className="w-full font-semibold">
 											{formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)}
@@ -143,8 +143,8 @@ export const SessionViewer = () => {
 								</>
 							) : (
 								<>
-									<div className="flex items-center gap-1">
-										<div className="w-3/5">Status</div>{" "}
+									<div className="flex items-center gap-2">
+										<div className="w-3/5">Status</div>
 										<div className="w-full">
 											<SessionsTableState
 												className="font-semibold"
@@ -166,8 +166,8 @@ export const SessionViewer = () => {
 										</div>
 									</div>
 
-									<div className="flex items-center gap-1">
-										<div className="w-3/5">Duration</div>{" "}
+									<div className="flex items-center gap-2">
+										<div className="w-3/5">Duration</div>
 										<div className="w-full font-semibold">
 											<ReactTimeAgo
 												date={sessionInfo.createdAt}
@@ -180,36 +180,36 @@ export const SessionViewer = () => {
 							)}
 						</div>
 
-						<div className="ml-3 flex w-[50%] flex-col gap-1 border border-y-0 border-l-0">
+						<div className="flex w-1/2 flex-col gap-2">
 							{sessionInfo?.connectionName ? (
-								<div className="flex">
-									<div className="w-1/3">Connection</div>{" "}
+								<div className="flex items-center gap-2">
+									<div className="w-1/3">Connection</div>
 									<span className="font-semibold">{sessionInfo.connectionName}</span>
 								</div>
 							) : null}
 
 							{sessionInfo?.triggerName ? (
-								<div className="flex">
-									<div className="w-1/3">Trigger</div>{" "}
+								<div className="flex items-center gap-2">
+									<div className="w-1/3">Trigger</div>
 									<span className="font-semibold">{sessionInfo.triggerName}</span>
 								</div>
 							) : null}
 
-							<div className="flex">
-								<div className="w-1/3">Entrypoint</div>{" "}
+							<div className="flex items-center gap-2">
+								<div className="w-1/3">Entrypoint</div>
 								<div className="inline font-semibold">
 									<div className="inline">{sessionInfo.entrypoint.path}</div>
 
-									<IconSvg className="inline fill-white" size="sm" src={ArrowRightIcon} />
+									<IconSvg className="mx-2 inline fill-white" size="sm" src={ArrowRightIcon} />
 
 									<div className="inline">{sessionInfo.entrypoint.name}</div>
 								</div>
 							</div>
 						</div>
 
-						<div className="ml-3 flex w-[15%] flex-col gap-1">
-							<div className="flex items-start">
-								Event ID
+						<div className="flex w-1/4 flex-col gap-2">
+							<div className="flex items-start gap-2">
+								<div>Event ID</div>
 								<IconButton
 									aria-label={t("copyButton")}
 									className="inline bg-transparent"
@@ -220,8 +220,8 @@ export const SessionViewer = () => {
 								</IconButton>
 							</div>
 
-							<div className="flex items-start">
-								Build ID
+							<div className="flex items-start gap-2">
+								<div>Build ID</div>
 								<IconButton
 									aria-label={t("copyButton")}
 									className="inline bg-transparent"
@@ -237,7 +237,7 @@ export const SessionViewer = () => {
 			) : null}
 
 			{sessionInfo?.inputs ? (
-				<Accordion className="mb-1 mt-2" title="Inputs">
+				<Accordion className="mb-4 mt-6" title="Inputs">
 					<JsonView
 						className="scrollbar max-h-72 overflow-auto"
 						style={githubDarkTheme}
@@ -246,13 +246,8 @@ export const SessionViewer = () => {
 				</Accordion>
 			) : null}
 
-			<div className="mt-2 flex items-center justify-between">
-				<div
-					className={
-						`flex items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
-						`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
-					}
-				>
+			<div className="mt-4 flex items-center justify-between">
+				<div className="scrollbar flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">
 					{sessionTabs.map((singleTab) => (
 						<Tab
 							activeTab={activeTab}
