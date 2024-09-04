@@ -31,11 +31,14 @@ export const EditConnection = () => {
 	}, [connectionId]);
 
 	let googleIntegrationApplication;
-	const integrationType = selectedIntegration?.value;
-	if (selectedIntegration && integrationType?.includes(Integrations.google)) {
-		if (integrationType === Integrations.google) return;
-		googleIntegrationApplication = integrationType.substring(Integrations.google.length);
-		selectedIntegration.value = googleIntegrationApplication;
+
+	let integrationType = selectedIntegration?.value;
+	if (selectedIntegration && selectedIntegration.value?.indexOf(Integrations.google) !== -1) {
+		if (selectedIntegration?.value !== Integrations.google) {
+			integrationType = selectedIntegration!.value.substring(6);
+			selectedIntegration!.value = integrationType;
+			googleIntegrationApplication = integrationType;
+		}
 	}
 
 	const SelectedIntegrationComponent = selectedIntegration
