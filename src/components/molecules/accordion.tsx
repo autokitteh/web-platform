@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { Button, IconSvg } from "@components/atoms";
 
@@ -12,7 +12,7 @@ type AccordionProps = {
 	title: React.ReactNode;
 };
 
-export const Accordion: React.FC<AccordionProps> = ({ children, className, title }) => {
+export const Accordion = ({ children, className, title }: AccordionProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (
@@ -36,9 +36,19 @@ export const Accordion: React.FC<AccordionProps> = ({ children, className, title
 				{title}
 			</Button>
 
-			<motion.div animate={{ height: isOpen ? "auto" : 0 }} className="overflow-hidden" initial={false}>
-				{isOpen ? <div className="border-b border-gray-950 py-3">{children}</div> : null}
-			</motion.div>
+			<AnimatePresence>
+				{isOpen ? (
+					<motion.div
+						animate={{ height: "auto" }}
+						className="overflow-hidden"
+						exit={{ height: 0 }}
+						initial={{ height: 0 }}
+						transition={{ duration: 0.3 }}
+					>
+						<div className="border-b border-gray-950 py-3">{children}</div>
+					</motion.div>
+				) : null}
+			</AnimatePresence>
 		</div>
 	);
 };

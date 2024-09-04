@@ -19,10 +19,7 @@ export const SessionsTableList = ({
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
-	const [dimensions, setDimensions] = useState<{ height: number; width: number }>({
-		height: 0,
-		width: 0,
-	});
+	const [resizeHeight, setResizeHeight] = useState<number>(0);
 
 	const openSessionLog = useCallback(
 		(sessionId: string) => {
@@ -53,15 +50,16 @@ export const SessionsTableList = ({
 		<SessionsTableRow data={itemData} index={index} key={key} style={style} />
 	);
 
-	const handleResize = useCallback(({ height, width }: { height: number; width: number }) => {
-		setDimensions({ height: height - 20, width: width - 20 });
+	const handleResize = useCallback(({ height }: { height: number }) => {
+		setResizeHeight(height - 20);
 	}, []);
 
 	return (
 		<AutoSizer onResize={handleResize}>
-			{({ width }) => (
+			{({ height, width }) => (
 				<List
-					height={dimensions.height - dimensions.height * 0.1}
+					className="scrollbar"
+					height={resizeHeight || height - height * 0.1}
 					onRowsRendered={({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }) =>
 						onItemsRendered({
 							visibleStartIndex: startIndex,
@@ -73,6 +71,7 @@ export const SessionsTableList = ({
 					rowCount={sessions.length}
 					rowHeight={40}
 					rowRenderer={rowRenderer}
+					style={{ borderRadius: "0.375rem" }}
 					width={width}
 				/>
 			)}

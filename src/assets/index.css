@@ -87,13 +87,3 @@ a {
 .animation-running {
 	animation-play-state: running;
 }
-
-.ReactVirtualized__Grid.ReactVirtualized__List{
-    border-bottom-left-radius: 14px;
-    border-bottom-right-radius: 14px;
-}
-
-#session-prints .ReactVirtualized__Grid.ReactVirtualized__List{
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
