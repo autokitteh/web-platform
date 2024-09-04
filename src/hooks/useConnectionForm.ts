@@ -256,8 +256,9 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			});
 
 			const { connectionData } = getFormattedConnectionData(getValues, formSchema);
+			const authScopes = connectionData.auth_scopes ? `auth_scopes=${connectionData.auth_scopes}` : "";
 			openPopup(
-				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&auth_scopes=${connectionData.auth_scopes}`,
+				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${authScopes}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);
