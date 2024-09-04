@@ -1,3 +1,10 @@
+## [1.48.2](https://github.com/autokitteh/web-platform/compare/v1.48.1...v1.48.2) (2024-09-04)
+
+
+### Bug Fixes
+
+* oauth google connections config ([#322](https://github.com/autokitteh/web-platform/issues/322)) ([d7cdba1](https://github.com/autokitteh/web-platform/commit/d7cdba1e04628b155114b6babc6171eb6593bff9))
+
 ## [1.48.1](https://github.com/autokitteh/web-platform/compare/v1.48.0...v1.48.1) (2024-09-04)
 
 
