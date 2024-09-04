@@ -30,11 +30,14 @@ export const EditConnection = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
+	let googleIntegrationApplication;
+
 	let integrationType = selectedIntegration?.value;
-	if (selectedIntegration && selectedIntegration.value?.indexOf(Integrations.google) !== -1) {
+	if (selectedIntegration && selectedIntegration.value?.includes(Integrations.google)) {
 		if (selectedIntegration?.value !== Integrations.google) {
-			integrationType = selectedIntegration!.value.substring(6);
+			integrationType = selectedIntegration!.value.substring(Integrations.google.length);
 			selectedIntegration!.value = integrationType;
+			googleIntegrationApplication = integrationType;
 		}
 	}
 
@@ -69,7 +72,11 @@ export const EditConnection = () => {
 				/>
 			</div>
 
-			<div className="w-5/6"> {SelectedIntegrationComponent ? <SelectedIntegrationComponent /> : null}</div>
+			<div className="w-5/6">
+				{SelectedIntegrationComponent ? (
+					<SelectedIntegrationComponent googleIntegrationApplication={googleIntegrationApplication} />
+				) : null}
+			</div>
 		</div>
 	);
 };

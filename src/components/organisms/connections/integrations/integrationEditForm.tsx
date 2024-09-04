@@ -12,10 +12,12 @@ import { SelectOption } from "@src/interfaces/components";
 import { Select } from "@components/molecules";
 
 export const IntegrationEditForm = ({
+	googleIntegrationApplication,
 	integrationType,
 	schemas,
 	selectOptions,
 }: {
+	googleIntegrationApplication?: string;
 	integrationType: Integrations;
 	schemas: Partial<Record<ConnectionAuthType, any>>;
 	selectOptions: Array<{ label: string; value: string }>;
@@ -27,6 +29,7 @@ export const IntegrationEditForm = ({
 		connectionType,
 		copyToClipboard,
 		errors,
+		handleGoogleOauth,
 		handleOAuth,
 		handleSubmit,
 		isLoading,
@@ -38,6 +41,14 @@ export const IntegrationEditForm = ({
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit");
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState<boolean>(true);
+
+	useEffect(() => {
+		if (googleIntegrationApplication) {
+			setValue("auth_type", ConnectionAuthType.Oauth);
+			setValue("auth_scopes", googleIntegrationApplication);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (connectionType && schemas[connectionType as ConnectionAuthType]) {
@@ -63,6 +74,12 @@ export const IntegrationEditForm = ({
 
 	const handleFormSubmit = () => {
 		if (connectionId && connectionType === ConnectionAuthType.Oauth) {
+			if (integrationType === Integrations.google) {
+				handleGoogleOauth(connectionId);
+
+				return;
+			}
+
 			handleOAuth(connectionId, integrationType);
 
 			return;
