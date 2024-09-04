@@ -110,7 +110,7 @@ export const SessionOutputs: React.FC = () => {
 						<div className="flex">
 							<div className="w-1/3 text-yellow-500">[{log.time}]: </div>
 
-							<div className="w-full">{log.print}</div>
+							<div className="w-full whitespace-pre-line">{log.print}</div>
 						</div>
 					</div>
 				)}
@@ -127,7 +127,7 @@ export const SessionOutputs: React.FC = () => {
 	}, []);
 
 	return (
-		<Frame className="h-full rounded-[0] pb-0 pl-0 transition" ref={frameRef}>
+		<Frame className="h-full rounded-b-[0] pb-0 pl-0 transition" ref={frameRef}>
 			{isLoadingRef.current ? (
 				<Loader isCenter size="xl" />
 			) : (
@@ -155,7 +155,6 @@ export const SessionOutputs: React.FC = () => {
 									rowCount={logs.length}
 									rowHeight={cache.rowHeight}
 									rowRenderer={rowRenderer}
-									style={{ borderRadius: 0 }}
 									width={dimensions.width} // Use dimensions from state
 								/>
 							)}
