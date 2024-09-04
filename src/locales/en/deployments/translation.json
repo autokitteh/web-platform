@@ -27,7 +27,6 @@
 	"sessions": {
 		"ariaLabelReturnBack": "Return back",
 		"buttons": {
-			"ariaCloseEditor": "Close session log viewer",
 			"back": "Back",
 			"scrollToTop": "Scroll to Top"
 		},
@@ -59,7 +58,19 @@
 			},
 			"stopSession": "Stop session"
 		},
-		"totalSessions": "Total {{total}}"
+		"totalSessions": "Total {{total}}",
+		"viewer":{
+			"buttons":{
+				"ariaCloseEditor": "Close session log viewer"
+			},
+			"connectionName": "Connection",
+			"trigger": "Trigger",
+			"entrypoint": "Entrypoint",
+			"eventId": "Event ID",
+			"buildId": "Build ID",
+			"copyButton": "Copy"
+
+		}
 	},
 	"activities":{
 		"noActivitiesFound": "No activities found",

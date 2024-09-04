@@ -11,25 +11,22 @@ import ReactTimeAgo from "react-time-ago";
 import { defaultSessionTab, sessionTabs } from "@constants";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
-import { useToastStore } from "@src/store";
 import { ViewerSession } from "@src/types/models/session.type";
-import { copyToClipboard } from "@src/utilities";
 
 import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
-import { Accordion } from "@components/molecules";
+import { Accordion, CopyButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { ArrowRightIcon, Close, CopyIcon } from "@assets/image/icons";
+import { ArrowRightIcon, Close } from "@assets/image/icons";
 
 export const SessionViewer = () => {
 	const { deploymentId, projectId, sessionId } = useParams();
-	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
+	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [activeTab, setActiveTab] = useState(defaultSessionTab);
 	const [sessionInfo, setSessionInfo] = useState<ViewerSession>();
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
-	const addToast = useToastStore((state) => state.addToast);
 
 	useEffect(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
@@ -54,15 +51,6 @@ export const SessionViewer = () => {
 			return;
 		}
 		navigate(path.toLowerCase());
-	};
-
-	const copyTextToClipboard = async (text: string) => {
-		const copyResponse = await copyToClipboard(text);
-		addToast({
-			id: Date.now().toString(),
-			message: copyResponse.message,
-			type: copyResponse.isError ? "error" : "success",
-		});
 	};
 
 	function formatTimeDifference(endDate: Date, stardDate: Date) {
@@ -93,6 +81,7 @@ export const SessionViewer = () => {
 					<div className="mb-4 flex items-center justify-between">
 						<div className="font-bold" title="Session ID">
 							{sessionInfo.sessionId}
+							<CopyButton text={sessionInfo.sessionId} />
 						</div>
 
 						<div className="flex items-center font-bold" title="Created">
@@ -183,20 +172,20 @@ export const SessionViewer = () => {
 						<div className="flex w-1/2 flex-col gap-2">
 							{sessionInfo?.connectionName ? (
 								<div className="flex items-center gap-2">
-									<div className="w-1/3">Connection</div>
+									<div className="w-1/3">{t("connectionName")}</div>
 									<span className="font-semibold">{sessionInfo.connectionName}</span>
 								</div>
 							) : null}
 
 							{sessionInfo?.triggerName ? (
 								<div className="flex items-center gap-2">
-									<div className="w-1/3">Trigger</div>
+									<div className="w-1/3">{t("trigger")}</div>
 									<span className="font-semibold">{sessionInfo.triggerName}</span>
 								</div>
 							) : null}
 
 							<div className="flex items-center gap-2">
-								<div className="w-1/3">Entrypoint</div>
+								<div className="w-1/3">{t("entrypoint")}</div>
 								<div className="inline font-semibold">
 									<div className="inline">{sessionInfo.entrypoint.path}</div>
 
@@ -209,27 +198,13 @@ export const SessionViewer = () => {
 
 						<div className="flex w-1/4 flex-col gap-2">
 							<div className="flex items-start gap-2">
-								<div>Event ID</div>
-								<IconButton
-									aria-label={t("copyButton")}
-									className="inline bg-transparent"
-									onClick={() => copyTextToClipboard(sessionInfo.eventId)}
-									title="evt_01j55bpx8pepjv8vk4bxwx2hnr"
-								>
-									<CopyIcon className="-mt-2 h-4 w-4 fill-white" />
-								</IconButton>
+								<div>{t("eventId")}</div>
+								<CopyButton className="-mt-2" text={sessionInfo.eventId} />
 							</div>
 
 							<div className="flex items-start gap-2">
-								<div>Build ID</div>
-								<IconButton
-									aria-label={t("copyButton")}
-									className="inline bg-transparent"
-									onClick={() => copyTextToClipboard(sessionInfo.eventId)}
-									title="evt_01j55bpx8pepjv8vk4bxwx2hnr"
-								>
-									<CopyIcon className="-mt-2 h-4 w-4 fill-white" />
-								</IconButton>
+								<div>{t("buildId")}</div>
+								<CopyButton className="-mt-2" text={sessionInfo.buildId} />
 							</div>
 						</div>
 					</div>
