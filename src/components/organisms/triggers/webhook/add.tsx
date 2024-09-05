@@ -25,7 +25,7 @@ export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFo
 		const navigate = useNavigate();
 		const { projectId } = useParams<{ projectId: string }>();
 		const addToast = useToastStore((state) => state.addToast);
-		const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
+		const { t } = useTranslation("tabs", { keyPrefix: "triggers" });
 		const { t: tErrors } = useTranslation(["errors", "services"]);
 		const { t: tGlobal } = useTranslation(["global"]);
 		const { fetchResources } = useFileOperations(projectId!);
@@ -95,6 +95,12 @@ export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFo
 
 				return;
 			}
+
+			addToast({
+				id: Date.now().toString(),
+				message: t("createdSuccessfully"),
+				type: "success",
+			});
 			navigate(`/projects/${projectId}/triggers`);
 		};
 
@@ -110,10 +116,10 @@ export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFo
 			<>
 				<div className="relative mb-6 flex gap-2">
 					<Input
-						aria-label={t("placeholders.webhookUrl")}
+						aria-label={t("form.placeholders.webhookUrl")}
 						className="w-full"
 						disabled
-						label={t("placeholders.webhookUrl")}
+						label={t("form.placeholders.webhookUrl")}
 						placeholder="The webhook URL will be generated after saving the trigger."
 					/>
 
@@ -136,14 +142,14 @@ export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFo
 							render={({ field }) => (
 								<Select
 									{...field}
-									aria-label={t("placeholders.selectFile")}
+									aria-label={t("form.placeholders.selectFile")}
 									dataTestid="select-file"
 									isError={!!errors.filePath}
-									label={t("placeholders.file")}
-									noOptionsLabel={t("noFilesAvailable")}
+									label={t("form.placeholders.file")}
+									noOptionsLabel={t("form.noFilesAvailable")}
 									onChange={(selected) => field.onChange(selected)}
 									options={filesNameList}
-									placeholder={t("placeholders.selectFile")}
+									placeholder={t("form.placeholders.selectFile")}
 									value={field.value}
 								/>
 							)}
@@ -155,17 +161,17 @@ export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFo
 					<div className="relative">
 						<Input
 							{...register("entryFunction")}
-							aria-label={t("placeholders.functionName")}
+							aria-label={t("form.placeholders.functionName")}
 							isError={!!errors.entryFunction}
 							isRequired
-							label={t("placeholders.functionName")}
+							label={t("form.placeholders.functionName")}
 							value={entryFunction}
 						/>
 
 						<ErrorMessage>{errors.entryFunction?.message}</ErrorMessage>
 					</div>
 				</form>
-				<Accordion className="mt-4" title={t("information")}>
+				<Accordion className="mt-4" title={t("form.information")}>
 					<div className="flex flex-col items-start gap-2">
 						{infoCronExpressionsLinks.map(({ text, url }, index) => (
 							<Link

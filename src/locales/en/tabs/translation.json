@@ -53,6 +53,7 @@
 		"noFileText": "// Click on a file to start editing or create a new one"
 	},
 	"triggers": {
+		"createdSuccessfully": "Trigger created successfully",
 		"buttons": {
 			"addNew": "Add new",
 			"loading": "Loading"

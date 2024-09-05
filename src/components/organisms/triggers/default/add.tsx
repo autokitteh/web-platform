@@ -9,6 +9,7 @@ import { namespaces } from "@constants";
 import { SelectOption } from "@interfaces/components";
 import { ChildFormRef, DefaultTriggerFormProps } from "@interfaces/components/forms";
 import { LoggerService, TriggersService } from "@services";
+import { TriggerTypes } from "@src/enums";
 import { defaultTriggerSchema } from "@validations";
 
 import { useFileOperations } from "@hooks";
@@ -22,7 +23,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 		const navigate = useNavigate();
 		const { projectId } = useParams<{ projectId: string }>();
 		const addToast = useToastStore((state) => state.addToast);
-		const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
+		const { t } = useTranslation("tabs", { keyPrefix: "triggers" });
 		const { t: tErrors } = useTranslation("errors");
 		const { fetchResources } = useFileOperations(projectId!);
 		const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
@@ -77,6 +78,7 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 			const { entryFunction, eventType, filePath, filter } = getValues();
 			setIsSaving(true);
 			const { error } = await TriggersService.create(projectId!, {
+				sourceType: TriggerTypes.connection,
 				connectionId,
 				entryFunction,
 				eventType,
@@ -95,7 +97,13 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 
 				return;
 			}
-			navigate(-1);
+
+			addToast({
+				id: Date.now().toString(),
+				message: t("createdSuccessfully"),
+				type: "success",
+			});
+			navigate(`/projects/${projectId}/triggers`);
 		};
 
 		useImperativeHandle(ref, () => ({
@@ -115,13 +123,13 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 						render={({ field }) => (
 							<Select
 								{...field}
-								aria-label={t("placeholders.selectFile")}
+								aria-label={t("form.placeholders.selectFile")}
 								isError={!!errors.filePath}
-								label={t("placeholders.file")}
-								noOptionsLabel={t("noFilesAvailable")}
+								label={t("form.placeholders.file")}
+								noOptionsLabel={t("form.noFilesAvailable")}
 								onChange={(selected) => field.onChange(selected)}
 								options={filesNameList}
-								placeholder={t("placeholders.selectFile")}
+								placeholder={t("form.placeholders.selectFile")}
 								value={field.value}
 							/>
 						)}
@@ -133,10 +141,10 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 				<div className="relative">
 					<Input
 						{...register("entryFunction")}
-						aria-label={t("placeholders.functionName")}
+						aria-label={t("form.placeholders.functionName")}
 						isError={!!errors.entryFunction}
 						isRequired
-						label={t("placeholders.functionName")}
+						label={t("form.placeholders.functionName")}
 						value={entryFunction}
 					/>
 
@@ -146,9 +154,9 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 				<div className="relative">
 					<Input
 						{...register("eventType")}
-						aria-label={t("placeholders.eventType")}
+						aria-label={t("form.placeholders.eventType")}
 						isError={!!errors.eventType}
-						label={t("placeholders.eventType")}
+						label={t("form.placeholders.eventType")}
 						value={eventType}
 					/>
 
@@ -158,9 +166,9 @@ export const DefaultTriggerForm = forwardRef<ChildFormRef, DefaultTriggerFormPro
 				<div className="relative">
 					<Input
 						{...register("filter")}
-						aria-label={t("placeholders.filter")}
+						aria-label={t("form.placeholders.filter")}
 						isError={!!errors.filter}
-						label={t("placeholders.filter")}
+						label={t("form.placeholders.filter")}
 						value={filter}
 					/>
 
