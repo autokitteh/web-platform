@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { TriggersService } from "@services";
-import { schedulerTriggerConnectionName } from "@src/constants";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { defaultTriggerSchema } from "@validations";
@@ -24,10 +23,7 @@ export const DefaultEditTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useFileOperations(projectId!);
-	const { connections, isLoading: isLoadingConnections } = useFetchConnections(
-		projectId!,
-		schedulerTriggerConnectionName
-	);
+	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);

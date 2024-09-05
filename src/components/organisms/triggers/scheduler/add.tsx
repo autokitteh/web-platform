@@ -9,6 +9,7 @@ import { infoCronExpressionsLinks, namespaces } from "@constants";
 import { SelectOption } from "@interfaces/components";
 import { ChildFormRef, SchedulerTriggerFormProps } from "@interfaces/components/forms";
 import { LoggerService, TriggersService } from "@services";
+import { TriggerTypes } from "@src/enums";
 import { schedulerTriggerSchema } from "@validations";
 
 import { useFileOperations } from "@hooks";
@@ -20,7 +21,7 @@ import { Accordion, Select } from "@components/molecules";
 import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFormProps>(
-	({ connectionId, name, setIsSaving }, ref) => {
+	({ name, setIsSaving }, ref) => {
 		const navigate = useNavigate();
 		const { projectId } = useParams<{ projectId: string }>();
 		const addToast = useToastStore((state) => state.addToast);
@@ -77,7 +78,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 			const { cron, entryFunction, filePath } = getValues();
 			setIsSaving(true);
 			const { error } = await TriggersService.create(projectId!, {
-				connectionId,
+				sourceType: TriggerTypes.schedule,
 				schedule: cron,
 				entryFunction,
 				eventType: "",

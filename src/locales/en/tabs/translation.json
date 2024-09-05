@@ -91,7 +91,12 @@
 				"value": "Value"
 			},
 			"titleData": "Data",
-			"titleInfo": "Relevant only for HTTP"
+			"titleInfo": "Relevant only for HTTP",
+			"extraConnections": {
+				"schedulerLabel": "Scheduler",
+				"webhookLabel": "Webhook",
+				"connectionLabel": "Connection"
+			}
 		},
 		"table": {
 			"buttons": {

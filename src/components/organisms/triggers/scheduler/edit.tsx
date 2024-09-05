@@ -6,7 +6,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { TriggersService } from "@services";
-import { infoCronExpressionsLinks, schedulerTriggerConnectionName } from "@src/constants";
+import { infoCronExpressionsLinks } from "@src/constants";
+import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { schedulerTriggerSchema } from "@validations";
@@ -26,11 +27,7 @@ export const SchedulerEditTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useFileOperations(projectId!);
-	const {
-		connections,
-		cronConnectionId,
-		isLoading: isLoadingConnections,
-	} = useFetchConnections(projectId!, schedulerTriggerConnectionName);
+	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const [isSaving, setIsSaving] = useState(false);
 
@@ -93,7 +90,7 @@ export const SchedulerEditTrigger = () => {
 		const { cron, entryFunction, filePath, name } = getValues();
 		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
-			connectionId: cronConnectionId!,
+			sourceType: TriggerTypes.schedule,
 			schedule: cron,
 			entryFunction,
 			eventType: "",

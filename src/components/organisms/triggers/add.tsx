@@ -4,8 +4,8 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { schedulerTriggerConnectionName } from "@constants";
 import { ChildFormRef } from "@interfaces/components/forms";
+import { TriggerTypes } from "@src/enums";
 
 import { useFetchConnections } from "@hooks";
 
@@ -19,10 +19,7 @@ export const AddTrigger = () => {
 	const [isSaving, setIsSaving] = useState(false);
 	const { projectId } = useParams<{ projectId: string }>();
 
-	const { connections, cronConnectionId, isLoading } = useFetchConnections(
-		projectId!,
-		schedulerTriggerConnectionName
-	);
+	const { connections, isLoading } = useFetchConnections(projectId!);
 	const {
 		control,
 		formState: { errors },
@@ -39,7 +36,7 @@ export const AddTrigger = () => {
 	const childFormRef = useRef<ChildFormRef>(null);
 	const { connection, name } = watch();
 
-	const isCronConnection = connection.value === cronConnectionId;
+	const isCronConnection = connection.value === TriggerTypes.schedule;
 	const TriggerFormComponent = isCronConnection ? TriggerSchedulerForm : DefaultTriggerForm;
 
 	const onSubmit = async () => {
