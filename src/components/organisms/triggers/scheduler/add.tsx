@@ -78,7 +78,7 @@ export const TriggerSchedulerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 			setIsSaving(true);
 			const { error } = await TriggersService.create(projectId!, {
 				connectionId,
-				data: { ["schedule"]: { string: { v: cron } } },
+				schedule: cron,
 				entryFunction,
 				eventType: "",
 				name,

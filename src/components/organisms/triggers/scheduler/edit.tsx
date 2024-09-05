@@ -79,7 +79,7 @@ export const SchedulerEditTrigger = () => {
 		if (trigger && !!connections.length) {
 			const selectedConnection = connections.find((item) => item.value === trigger.connectionId);
 			reset({
-				cron: trigger.data!.schedule.string.v,
+				cron: trigger.schedule,
 				entryFunction: trigger.entryFunction,
 				filePath: { label: trigger.path, value: trigger.path },
 				name: trigger.name,
@@ -94,7 +94,7 @@ export const SchedulerEditTrigger = () => {
 		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
 			connectionId: cronConnectionId!,
-			data: { schedule: { string: { v: cron } } },
+			schedule: cron,
 			entryFunction,
 			eventType: "",
 			name,
