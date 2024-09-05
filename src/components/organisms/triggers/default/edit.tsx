@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { TriggersService } from "@services";
+import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { defaultTriggerSchema } from "@validations";
@@ -71,8 +72,10 @@ export const DefaultEditTrigger = () => {
 
 	useEffect(() => {
 		if (trigger && !!connections.length) {
+			const selectedConnection = connections.find((item) => item.value === trigger.connectionId);
+
 			reset({
-				connection: { label: trigger.connectionName, value: trigger.connectionId },
+				connection: selectedConnection,
 				entryFunction: trigger.entryFunction,
 				eventType: trigger.eventType,
 				filePath: { label: trigger.path, value: trigger.path },
@@ -87,6 +90,7 @@ export const DefaultEditTrigger = () => {
 
 		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
+			sourceType: TriggerTypes.connection,
 			connectionId: connection.value,
 			entryFunction,
 			eventType,

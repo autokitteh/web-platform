@@ -4,6 +4,7 @@ import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";
 import { EnvironmentsService, LoggerService } from "@services";
+import { reverseTriggerTypeConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { Trigger } from "@type/models";
 
@@ -16,7 +17,7 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			const { connectionId, entryFunction, eventType, filter, name, path } = trigger;
+			const { connectionId, entryFunction, eventType, filter, name, path, schedule, sourceType } = trigger;
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
@@ -27,6 +28,8 @@ export class TriggersService {
 					filter,
 					name,
 					triggerId: undefined,
+					sourceType: reverseTriggerTypeConverter(sourceType),
+					schedule,
 				},
 			});
 
@@ -130,10 +133,24 @@ export class TriggersService {
 				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
 
-			const { connectionId, entryFunction, eventType, filter, name, path, triggerId } = trigger;
+			const {
+				connectionId,
+				entryFunction,
+				eventType,
+				filter,
+				name,
+				path,
+				schedule,
+				sourceType,
+				triggerId,
+				webhookSlug,
+			} = trigger;
 
 			await triggersClient.update({
 				trigger: {
+					sourceType: reverseTriggerTypeConverter(sourceType),
+					schedule,
+					webhookSlug,
 					codeLocation: { name: entryFunction, path },
 					connectionId,
 					envId: environments && environments[0].envId,

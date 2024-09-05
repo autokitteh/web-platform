@@ -10,3 +10,15 @@ export const triggerTypeConverter = (triggerType: number): TriggerTypes | undefi
 
 	return TriggerTypes[triggerTypeName as TriggerTypeKeyType];
 };
+
+export const reverseTriggerTypeConverter = (triggerType?: TriggerTypeKeyType): number | undefined => {
+	if (!triggerType) {
+		return;
+	}
+	if (!(triggerType in TriggerTypes)) {
+		return;
+	}
+	const sessionStateType = ProtoTriggerType[triggerType.toUpperCase() as keyof typeof ProtoTriggerType];
+
+	return sessionStateType;
+};

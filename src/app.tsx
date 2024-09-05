@@ -21,6 +21,7 @@ import { AddConnection } from "@components/organisms/connections/add";
 import { SessionTableEditorFrame } from "@components/organisms/deployments";
 import { Security } from "@components/organisms/settings";
 import { AddTrigger, DefaultEditTrigger, SchedulerEditTrigger, TriggersTable } from "@components/organisms/triggers";
+import { WebhookEditTrigger } from "@components/organisms/triggers/webhook";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import { Connections, Dashboard, NotFound404, Project, Sessions, Triggers, Variables } from "@components/pages";
 import { Deployments } from "@components/pages/deployments";
@@ -94,7 +95,9 @@ export const App = () => {
 
 							<Route element={<DefaultEditTrigger />} path=":triggerId/edit" />
 
-							<Route element={<SchedulerEditTrigger />} path=":triggerId/edit-scheduler" />
+							<Route element={<SchedulerEditTrigger />} path=":triggerId/edit-schedule" />
+
+							<Route element={<WebhookEditTrigger />} path=":triggerId/edit-webhook" />
 
 							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>

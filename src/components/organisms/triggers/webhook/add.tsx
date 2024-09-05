@@ -78,7 +78,7 @@ export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFo
 			const { entryFunction, filePath } = getValues();
 			setIsSaving(true);
 			const { error } = await TriggersService.create(projectId!, {
-				sourceType: TriggerTypes.schedule,
+				sourceType: TriggerTypes.webhook,
 				entryFunction,
 				eventType: "",
 				name,
@@ -113,7 +113,7 @@ export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFo
 						aria-label={t("placeholders.webhookUrl")}
 						className="w-full"
 						disabled
-						label={t("placeholders.functionName")}
+						label={t("placeholders.webhookUrl")}
 						placeholder="The webhook URL will be generated after saving the trigger."
 					/>
 

@@ -88,8 +88,8 @@ export const TriggersTable = () => {
 	);
 
 	const handleNavigate = (triggerId: string, sourceType: TriggerTypes) => {
-		const isScheduler = sourceType === TriggerTypes.schedule;
-		const path = isScheduler ? `/edit-scheduler` : `/edit`;
+		const isConnection = sourceType === TriggerTypes.connection;
+		const path = isConnection ? "/edit" : `/edit-${sourceType}`;
 		navigate(`${triggerId}${path}`);
 	};
 

@@ -10,20 +10,22 @@ import { infoCronExpressionsLinks } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { schedulerTriggerSchema } from "@validations";
+import { getApiBaseUrl } from "@src/utilities";
+import { webhookTriggerSchema } from "@validations";
 
 import { useFetchConnections, useFetchTrigger, useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
-import { ErrorMessage, Input, Link, Loader } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, Loader } from "@components/atoms";
 import { Accordion, Select, TabFormHeader } from "@components/molecules";
 
-import { ExternalLinkIcon } from "@assets/image/icons";
+import { CopyIcon, ExternalLinkIcon } from "@assets/image/icons";
 
-export const SchedulerEditTrigger = () => {
+export const WebhookEditTrigger = () => {
 	const { projectId, triggerId } = useParams();
 	const navigate = useNavigate();
 	const { t: tErrors } = useTranslation(["errors", "services"]);
+	const { t: tGlobal } = useTranslation(["global"]);
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchResources } = useFileOperations(projectId!);
@@ -64,19 +66,19 @@ export const SchedulerEditTrigger = () => {
 	} = useForm({
 		defaultValues: {
 			connection: { label: "", value: "" },
-			cron: "",
 			entryFunction: "",
 			filePath: { label: "", value: "" },
 			name: "",
 		},
-		resolver: zodResolver(schedulerTriggerSchema),
+		resolver: zodResolver(webhookTriggerSchema),
 	});
 
 	useEffect(() => {
 		if (trigger && !!connections.length) {
-			const selectedConnection = connections.find((item) => item.value === trigger.connectionId);
+			const selectedConnection = connections.find(
+				(item) => item.value === trigger.connectionId || item.value === trigger.sourceType
+			);
 			reset({
-				cron: trigger.schedule,
 				entryFunction: trigger.entryFunction,
 				filePath: { label: trigger.path, value: trigger.path },
 				name: trigger.name,
@@ -87,11 +89,10 @@ export const SchedulerEditTrigger = () => {
 	}, [trigger, connections]);
 
 	const onSubmit = async () => {
-		const { cron, entryFunction, filePath, name } = getValues();
+		const { entryFunction, filePath, name } = getValues();
 		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
-			sourceType: TriggerTypes.schedule,
-			schedule: cron,
+			sourceType: TriggerTypes.webhook,
 			entryFunction,
 			eventType: "",
 			name,
@@ -113,9 +114,9 @@ export const SchedulerEditTrigger = () => {
 		navigate(`/projects/${projectId!}/triggers`);
 	};
 
-	const cron = useWatch({ control, name: "cron" });
 	const entryFunction = useWatch({ control, name: "entryFunction" });
 	const name = useWatch({ control, name: "name" });
+	const apiBaseUrl = getApiBaseUrl();
 
 	return isLoadingConnections || isLoadingTrigger ? (
 		<Loader isCenter size="xl" />
@@ -133,6 +134,20 @@ export const SchedulerEditTrigger = () => {
 				id={TriggerFormIds.modifySchedulerForm}
 				onSubmit={handleSubmit(onSubmit)}
 			>
+				<div className="relative">
+					<Input
+						{...register("name")}
+						aria-label={t("placeholders.name")}
+						disabled
+						isError={!!errors.name}
+						isRequired
+						label={t("placeholders.name")}
+						value={name}
+					/>
+
+					<ErrorMessage>{errors.name?.message}</ErrorMessage>
+				</div>
+
 				<div className="relative">
 					<Controller
 						control={control}
@@ -157,31 +172,26 @@ export const SchedulerEditTrigger = () => {
 					<ErrorMessage>{errors.connection?.message}</ErrorMessage>
 				</div>
 
-				<div className="relative">
+				<div className="relative flex gap-2">
 					<Input
-						{...register("name")}
-						aria-label={t("placeholders.name")}
+						aria-label={t("placeholders.webhookUrl")}
+						className="w-full"
 						disabled
-						isError={!!errors.name}
-						isRequired
-						label={t("placeholders.name")}
-						value={name}
+						label={t("placeholders.webhookUrl")}
+						placeholder="The webhook URL will be generated after saving the trigger."
+						value={`${apiBaseUrl}/${trigger?.webhookSlug}`}
 					/>
 
-					<ErrorMessage>{errors.name?.message}</ErrorMessage>
-				</div>
+					<Button
+						aria-label={tGlobal("copy")}
+						className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
+						disabled
+						variant="outline"
+					>
+						<CopyIcon className="h-3.5 w-3.5 fill-black" />
 
-				<div className="relative">
-					<Input
-						value={cron}
-						{...register("cron")}
-						aria-label={t("placeholders.cron")}
-						isError={!!errors.cron}
-						isRequired
-						label={t("placeholders.cron")}
-					/>
-
-					<ErrorMessage>{errors.cron?.message}</ErrorMessage>
+						{tGlobal("copy")}
+					</Button>
 				</div>
 
 				<div className="relative">

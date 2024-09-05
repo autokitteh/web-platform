@@ -1,2 +1,2 @@
 export { reverseSessionStateConverter, sessionStateConverter } from "@models/utils/sessionsStateConverter.utils";
-export { triggerTypeConverter } from "@models/utils/triggerTypeConverter.utils";
+export { triggerTypeConverter, reverseTriggerTypeConverter } from "@models/utils/triggerTypeConverter.utils";

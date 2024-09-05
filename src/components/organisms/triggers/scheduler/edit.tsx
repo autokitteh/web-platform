@@ -74,7 +74,9 @@ export const SchedulerEditTrigger = () => {
 
 	useEffect(() => {
 		if (trigger && !!connections.length) {
-			const selectedConnection = connections.find((item) => item.value === trigger.connectionId);
+			const selectedConnection = connections.find(
+				(item) => item.value === trigger.connectionId || item.value === trigger.sourceType
+			);
 			reset({
 				cron: trigger.schedule,
 				entryFunction: trigger.entryFunction,
@@ -134,6 +136,20 @@ export const SchedulerEditTrigger = () => {
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<div className="relative">
+					<Input
+						{...register("name")}
+						aria-label={t("placeholders.name")}
+						disabled
+						isError={!!errors.name}
+						isRequired
+						label={t("placeholders.name")}
+						value={name}
+					/>
+
+					<ErrorMessage>{errors.name?.message}</ErrorMessage>
+				</div>
+
+				<div className="relative">
 					<Controller
 						control={control}
 						name="connection"
@@ -155,20 +171,6 @@ export const SchedulerEditTrigger = () => {
 					/>
 
 					<ErrorMessage>{errors.connection?.message}</ErrorMessage>
-				</div>
-
-				<div className="relative">
-					<Input
-						{...register("name")}
-						aria-label={t("placeholders.name")}
-						disabled
-						isError={!!errors.name}
-						isRequired
-						label={t("placeholders.name")}
-						value={name}
-					/>
-
-					<ErrorMessage>{errors.name?.message}</ErrorMessage>
 				</div>
 
 				<div className="relative">
