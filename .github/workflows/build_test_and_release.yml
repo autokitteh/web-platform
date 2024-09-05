@@ -197,12 +197,14 @@ jobs:
       - name: Run build
         run: npm run build
 
+      - name: Override .gitignore
+        run: echo '!dist' >> .gitignore
+
       - name: Upload Built Files
         uses: actions/upload-artifact@v4
         with:
           name: built-files
-          path: |
-            ./dist
+          path: dist
 
   release:
     needs: build
@@ -216,6 +218,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
+
       - uses: actions/setup-node@v4
         with:
           node-version: "21.2.0"
@@ -227,6 +230,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: built-files
+          path: ./dist
+
+      - name: Create ZIP of the dist directory
+        run: zip -r dist.zip dist
 
       - name: Release and tag a new version
         env:

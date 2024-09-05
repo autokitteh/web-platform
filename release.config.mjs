@@ -19,7 +19,6 @@ export default {
 				changelogFile: "CHANGELOG.md",
 			},
 		],
-		"@semantic-release/npm",
 		[
 			"@semantic-release/git",
 			{
@@ -30,7 +29,13 @@ export default {
 		[
 			"@semantic-release/github",
 			{
-				assets: ["dist/**"],
+				assets: [
+					{
+						path: "dist.zip",
+						name: "autokitteh-web-${nextRelease.gitTag}.zip",
+						label: "autokitteh-web-${nextRelease.gitTag}.zip",
+					},
+				],
 			},
 		],
 		[
