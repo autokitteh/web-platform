@@ -6,6 +6,7 @@ import { namespaces } from "@constants";
 import { convertConnectionProtoToModel } from "@models/connection.model";
 import { IntegrationsService, LoggerService } from "@services";
 import { integrationIcons } from "@src/constants/lists/connections";
+import { stripGoogleConnectionName } from "@src/utilities";
 import { ServiceResponse } from "@type";
 import { Connection } from "@type/models";
 
@@ -90,7 +91,8 @@ export class ConnectionService {
 			if (integration) {
 				convertedConnection.integrationName = integration.displayName;
 				convertedConnection.integrationUniqueName = integration.uniqueName;
-				convertedConnection.logo = integrationIcons[integration.uniqueName];
+				const strippedIntegrationName = stripGoogleConnectionName(integration.uniqueName);
+				convertedConnection.logo = integrationIcons[strippedIntegrationName];
 			}
 
 			return { data: convertedConnection, error: undefined };
@@ -197,7 +199,8 @@ export class ConnectionService {
 				);
 				if (integration) {
 					connection.integrationName = integration.displayName;
-					connection.logo = integrationIcons[integration.uniqueName];
+					const strippedIntegrationName = stripGoogleConnectionName(integration.uniqueName);
+					connection.logo = integrationIcons[strippedIntegrationName];
 				}
 			});
 
@@ -259,7 +262,8 @@ export class ConnectionService {
 				}
 
 				connection.integrationName = integration.displayName;
-				connection.logo = integrationIcons[integration.uniqueName];
+				const strippedIntegrationName = stripGoogleConnectionName(integration.uniqueName);
+				connection.logo = integrationIcons[strippedIntegrationName];
 			});
 
 			return { data: convertedConnections, error: undefined };

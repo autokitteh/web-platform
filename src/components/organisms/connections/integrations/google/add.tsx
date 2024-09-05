@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { googleIntegrationSchema, googleOauthSchema } from "@validations";
+import { googleIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -55,10 +55,19 @@ export const GoogleIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.Oauth) {
+
+		if (type === Integrations.google) {
+			setValue("auth_type", ConnectionAuthType.Oauth);
+			setValue("auth_scopes", "");
+			setValidationSchema(oauthSchema);
+
+			return;
+		}
+
+		if (connectionType.value === ConnectionAuthType.Oauth && type !== Integrations.google) {
 			setValue("auth_type", ConnectionAuthType.Oauth);
 			setValue("auth_scopes", type);
-			setValidationSchema(googleOauthSchema);
+			setValidationSchema(oauthSchema);
 
 			return;
 		}

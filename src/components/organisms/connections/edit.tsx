@@ -7,6 +7,7 @@ import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { integrationToEditComponent } from "@src/constants";
 import { Integrations } from "@src/enums/components";
+import { stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { Input } from "@components/atoms";
@@ -30,14 +31,15 @@ export const EditConnection = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
 
+	let integrationType = selectedIntegration?.value;
 	let googleIntegrationApplication;
 
-	let integrationType = selectedIntegration?.value;
-	if (selectedIntegration && selectedIntegration.value?.includes(Integrations.google)) {
-		if (selectedIntegration?.value !== Integrations.google) {
-			integrationType = selectedIntegration!.value.substring(Integrations.google.length);
-			selectedIntegration!.value = integrationType;
-			googleIntegrationApplication = integrationType;
+	if (integrationType) {
+		googleIntegrationApplication = stripGoogleConnectionName(integrationType);
+
+		if (googleIntegrationApplication) {
+			integrationType = googleIntegrationApplication;
+			selectedIntegration!.value = googleIntegrationApplication;
 		}
 	}
 

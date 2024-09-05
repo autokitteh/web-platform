@@ -15,3 +15,4 @@ export { getCookieDomain } from "@utilities/getCookieDomain.utils";
 export { openPopup } from "@utilities/openPopup.utils";
 export { convertTimestampToEpoch } from "@utilities/convertTimestampToDate.utils";
 export { copyToClipboard } from "@utilities/copyToClipboard.utils";
+export { stripGoogleConnectionName } from "@utilities/stripGoogleConnectionName.utils";
