@@ -1,3 +1,10 @@
+# [1.49.0](https://github.com/autokitteh/web-platform/compare/v1.48.2...v1.49.0) (2024-09-05)
+
+
+### Features
+
+* distribute dist folder in releases ([#323](https://github.com/autokitteh/web-platform/issues/323)) ([df4fda1](https://github.com/autokitteh/web-platform/commit/df4fda1999ead7f06db31a0bd92ff6df67ce29e9))
+
 ## [1.48.2](https://github.com/autokitteh/web-platform/compare/v1.48.1...v1.48.2) (2024-09-04)
 
 
