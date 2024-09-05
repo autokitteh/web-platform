@@ -4,25 +4,15 @@ import { useTranslation } from "react-i18next";
 
 import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
-import { IntegrationType } from "@type/components";
+import { integrationAddFormComponents } from "@src/constants/connections";
+import { Integrations } from "@src/enums/components";
+import { stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { useConnectionForm } from "@hooks";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select, TabFormHeader } from "@components/molecules";
-import {
-	AwsIntegrationAddForm,
-	DiscordIntegrationAddForm,
-	GithubIntegrationAddForm,
-	GoogleGeminiIntegrationAddForm,
-	GoogleIntegrationAddForm,
-	HttpIntegrationAddForm,
-	JiraIntegrationAddForm,
-	OpenAiIntegrationAddForm,
-	SlackIntegrationAddForm,
-	TwilioIntegrationAddForm,
-} from "@components/organisms/connections/integrations";
 
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
@@ -33,88 +23,16 @@ export const AddConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	const integrationComponents: Record<IntegrationType, JSX.Element> = {
-		github: (
-			<GithubIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
-		),
-		slack: <SlackIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
-		gmail: (
-			<GoogleIntegrationAddForm
-				connectionId={connectionId}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration?.value}
-			/>
-		),
-		google: (
-			<GoogleIntegrationAddForm
-				connectionId={connectionId}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration?.value}
-			/>
-		),
-		sheets: (
-			<GoogleIntegrationAddForm
-				connectionId={connectionId}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration?.value}
-			/>
-		),
-		calendar: (
-			<GoogleIntegrationAddForm
-				connectionId={connectionId}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration?.value}
-			/>
-		),
-		drive: (
-			<GoogleIntegrationAddForm
-				connectionId={connectionId}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration?.value}
-			/>
-		),
-		forms: (
-			<GoogleIntegrationAddForm
-				connectionId={connectionId}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration?.value}
-			/>
-		),
-		googlegemini: (
-			<GoogleGeminiIntegrationAddForm
-				connectionId={connectionId}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-			/>
-		),
-		aws: <AwsIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
-		chatgpt: (
-			<OpenAiIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
-		),
-		http: <HttpIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />,
-		twilio: (
-			<TwilioIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
-		),
-		jira: (
-			<JiraIntegrationAddForm
-				connectionId={connectionId}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration?.value}
-			/>
-		),
-		confluence: (
-			<JiraIntegrationAddForm
-				connectionId={connectionId}
-				triggerParentFormSubmit={handleSubmit(onSubmit)}
-				type={selectedIntegration?.value}
-			/>
-		),
-		discord: (
-			<DiscordIntegrationAddForm connectionId={connectionId} triggerParentFormSubmit={handleSubmit(onSubmit)} />
-		),
-	};
+	let integrationType = selectedIntegration?.value;
+	const googleIntegrationApplication = stripGoogleConnectionName(selectedIntegration?.value);
 
-	const selectedIntegrationComponent = selectedIntegration
-		? integrationComponents[selectedIntegration.value as IntegrationType]
+	if (googleIntegrationApplication) {
+		integrationType = googleIntegrationApplication;
+		selectedIntegration!.value = integrationType;
+	}
+
+	const SelectedIntegrationComponent = selectedIntegration
+		? integrationAddFormComponents[integrationType as keyof typeof Integrations]
 		: null;
 
 	return (
@@ -147,7 +65,16 @@ export const AddConnection = () => {
 				/>
 			</form>
 
-			<div className="w-5/6">{selectedIntegrationComponent}</div>
+			<div className="w-5/6">
+				{SelectedIntegrationComponent ? (
+					<SelectedIntegrationComponent
+						connectionId={connectionId}
+						googleIntegrationApplication={googleIntegrationApplication}
+						triggerParentFormSubmit={handleSubmit(onSubmit)}
+						type={selectedIntegration?.value}
+					/>
+				) : null}
+			</div>
 		</div>
 	);
 };
