@@ -15,12 +15,10 @@ import { Select } from "@components/molecules";
 
 export const GoogleIntegrationAddForm = ({
 	connectionId,
-	googleIntegrationApplication,
 	triggerParentFormSubmit,
 	type,
 }: {
 	connectionId?: string;
-	googleIntegrationApplication?: string;
 	triggerParentFormSubmit: () => void;
 	type: string;
 }) => {
@@ -39,14 +37,6 @@ export const GoogleIntegrationAddForm = ({
 	} = useConnectionForm(googleIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
-
-	useEffect(() => {
-		if (googleIntegrationApplication) {
-			setValue("auth_type", ConnectionAuthType.Oauth);
-			setValue("auth_scopes", googleIntegrationApplication);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [googleIntegrationApplication]);
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {

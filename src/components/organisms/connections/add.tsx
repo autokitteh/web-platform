@@ -23,11 +23,9 @@ export const AddConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	let integrationType = selectedIntegration?.value;
-	const googleIntegrationApplication = stripGoogleConnectionName(selectedIntegration?.value);
+	const integrationType = stripGoogleConnectionName(selectedIntegration?.value);
 
-	if (googleIntegrationApplication) {
-		integrationType = googleIntegrationApplication;
+	if (integrationType) {
 		selectedIntegration!.value = integrationType;
 	}
 
@@ -69,7 +67,6 @@ export const AddConnection = () => {
 				{SelectedIntegrationComponent ? (
 					<SelectedIntegrationComponent
 						connectionId={connectionId}
-						googleIntegrationApplication={googleIntegrationApplication}
 						triggerParentFormSubmit={handleSubmit(onSubmit)}
 						type={selectedIntegration?.value}
 					/>
