@@ -32,11 +32,15 @@ export const EditConnection = () => {
 	}, [connectionId]);
 
 	let integrationType = selectedIntegration?.value;
-	const googleIntegrationApplication = stripGoogleConnectionName(selectedIntegration?.value);
+	let googleIntegrationApplication;
 
-	if (googleIntegrationApplication) {
-		integrationType = googleIntegrationApplication;
-		selectedIntegration!.value = integrationType;
+	if (integrationType) {
+		googleIntegrationApplication = stripGoogleConnectionName(integrationType);
+
+		if (googleIntegrationApplication) {
+			integrationType = googleIntegrationApplication;
+			selectedIntegration!.value = googleIntegrationApplication;
+		}
 	}
 
 	const SelectedIntegrationComponent = selectedIntegration
