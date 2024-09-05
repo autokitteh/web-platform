@@ -23,12 +23,11 @@ export const AddConnection = () => {
 
 	const selectedIntegration: SelectOption = watch("integration");
 
-	const integrationType = stripGoogleConnectionName(selectedIntegration?.value);
+	const integrationType = stripGoogleConnectionName(selectedIntegration?.value) || selectedIntegration?.value;
 
 	if (integrationType) {
 		selectedIntegration!.value = integrationType;
 	}
-
 	const SelectedIntegrationComponent = selectedIntegration
 		? integrationAddFormComponents[integrationType as keyof typeof Integrations]
 		: null;
