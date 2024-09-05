@@ -1,6 +1,5 @@
 import i18n from "i18next";
 
-import { ConnectionService } from "./connection.service";
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";
@@ -17,13 +16,12 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			const { connectionId, data, entryFunction, eventType, filter, name, path } = trigger;
+			const { connectionId, entryFunction, eventType, filter, name, path } = trigger;
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
 					codeLocation: { name: entryFunction, path },
 					connectionId,
-					data,
 					envId: defaultEnvironment!.envId,
 					eventType,
 					filter,
@@ -62,11 +60,10 @@ export class TriggersService {
 		try {
 			const { trigger } = await triggersClient.get({ triggerId });
 			const convertedTrigger = convertTriggerProtoToModel(trigger!);
-			const { data: connection } = await ConnectionService.get(convertedTrigger.connectionId);
 
 			const triggerData = {
 				...convertedTrigger,
-				connectionName: connection?.name,
+				connectionName: "",
 			} as Trigger;
 
 			return { data: triggerData, error: undefined };
@@ -96,21 +93,11 @@ export class TriggersService {
 			const { triggers } = await triggersClient.list({ envId: environments && environments[0].envId });
 
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
-			const { data: connectionsList, error } = await ConnectionService.list();
-			if (error) {
-				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
-
-				return { data: undefined, error };
-			}
 
 			const enrhichedTriggers = convertedTriggers.map((trigger) => {
-				const connection = connectionsList?.find(
-					(connection) => connection.connectionId === trigger.connectionId
-				);
-
 				return {
 					...trigger,
-					connectionName: connection?.name || i18n.t("connectionNotFound", { ns: "services" }),
+					connectionName: "",
 				};
 			});
 
@@ -143,13 +130,12 @@ export class TriggersService {
 				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
 
-			const { connectionId, data, entryFunction, eventType, filter, name, path, triggerId } = trigger;
+			const { connectionId, entryFunction, eventType, filter, name, path, triggerId } = trigger;
 
 			await triggersClient.update({
 				trigger: {
 					codeLocation: { name: entryFunction, path },
 					connectionId,
-					data,
 					envId: environments && environments[0].envId,
 					eventType,
 					filter,

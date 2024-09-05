@@ -47,11 +47,11 @@ export class ConnectionService {
 			};
 		}
 
-		if (!event.connectionId) {
+		if (!event.destinationId) {
 			return { data: undefined, error: undefined };
 		}
 
-		const { data: connection } = await ConnectionService.get(event.connectionId);
+		const { data: connection } = await ConnectionService.get(event.destinationId);
 
 		return {
 			data: connection,

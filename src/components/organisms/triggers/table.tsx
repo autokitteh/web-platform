@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { TriggersService } from "@services";
+import { TriggerTypes } from "@src/enums";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -86,7 +87,8 @@ export const TriggersTable = () => {
 		[triggerId]
 	);
 
-	const handleNavigate = (triggerId: string, isScheduler: boolean) => {
+	const handleNavigate = (triggerId: string, sourceType: TriggerTypes) => {
+		const isScheduler = sourceType === TriggerTypes.schedule;
 		const path = isScheduler ? `/edit-scheduler` : `/edit`;
 		navigate(`${triggerId}${path}`);
 	};
@@ -154,7 +156,7 @@ export const TriggersTable = () => {
 							<Tr className="group" key={trigger.triggerId}>
 								<Td className="font-semibold">
 									<div className="flex gap-3">
-										{trigger.data?.schedule?.string?.v ? (
+										{trigger.sourceType === TriggerTypes.schedule ? (
 											<ClockIcon className="w-4 fill-white" />
 										) : null}
 
@@ -174,7 +176,7 @@ export const TriggersTable = () => {
 											ariaLabel={t("table.buttons.ariaModifyTrigger", {
 												name: trigger.name,
 											})}
-											onClick={() => handleNavigate(trigger.triggerId!, !!trigger.data?.schedule)}
+											onClick={() => handleNavigate(trigger.triggerId!, trigger.sourceType!)}
 										>
 											<EditIcon className="h-3 w-3 fill-white" />
 										</IconButton>

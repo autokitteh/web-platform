@@ -1,4 +1,4 @@
 export type Event = {
-	connectionId?: string;
+	destinationId?: string;
 	eventId: string;
 };

@@ -6,3 +6,4 @@ export { ProjectIntervalTypes } from "@enums/projectIntervals.enum";
 export { SessionLogRecordType, SessionState, SessionStateType, ActivityState } from "@enums/session.enum";
 export { SortOrder } from "@enums/sortOrder.enum";
 export { StoreName } from "@enums/storeName.enum";
+export { TriggerType, TriggerTypes } from "@enums/trigger.enum";

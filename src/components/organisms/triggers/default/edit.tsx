@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { debounce, has } from "lodash";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,16 +9,13 @@ import { TriggersService } from "@services";
 import { schedulerTriggerConnectionName } from "@src/constants";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { TriggerData } from "@src/types/models";
 import { defaultTriggerSchema } from "@validations";
 
 import { useFetchConnections, useFetchTrigger, useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
-import { Button, ErrorMessage, IconButton, Input, Loader } from "@components/atoms";
+import { ErrorMessage, Input, Loader } from "@components/atoms";
 import { Select, TabFormHeader } from "@components/molecules";
-
-import { InfoIcon, PlusCircle, TrashIcon } from "@assets/image/icons";
 
 export const DefaultEditTrigger = () => {
 	const { projectId, triggerId } = useParams();
@@ -34,7 +30,6 @@ export const DefaultEditTrigger = () => {
 	);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 
-	const [triggerData, setTriggerData] = useState<TriggerData>({});
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isSaving, setIsSaving] = useState(false);
 
@@ -88,7 +83,6 @@ export const DefaultEditTrigger = () => {
 				filter: trigger.filter,
 				name: trigger.name,
 			});
-			setTriggerData(trigger.data || {});
 		}
 	}, [trigger, connections, reset]);
 
@@ -98,7 +92,6 @@ export const DefaultEditTrigger = () => {
 		setIsSaving(true);
 		const { error } = await TriggersService.update(projectId!, {
 			connectionId: connection.value,
-			data: triggerData,
 			entryFunction,
 			eventType,
 			filter,
@@ -119,51 +112,6 @@ export const DefaultEditTrigger = () => {
 		}
 
 		navigate(-1);
-	};
-
-	const updateTriggerDataKey = debounce((newKey: string, oldKey: string) => {
-		if (newKey === oldKey) {
-			return;
-		}
-		setTriggerData((prevData) => {
-			const updatedTriggerData = { ...prevData };
-			updatedTriggerData[newKey] = updatedTriggerData[oldKey];
-			delete updatedTriggerData[oldKey];
-
-			return updatedTriggerData;
-		});
-	}, 500);
-
-	const updateTriggerDataValue = (key: string, value: string) => {
-		setTriggerData((prevData) => ({
-			...prevData,
-			[key]: { string: { v: value } },
-		}));
-	};
-
-	const handleAddNewData = () => {
-		if (has(triggerData, "")) {
-			addToast({
-				id: Date.now().toString(),
-				message: tErrors("emptyKeyExist"),
-				type: "error",
-			});
-
-			return;
-		}
-		setTriggerData((prevData) => ({
-			...prevData,
-			"": { string: { v: "" } },
-		}));
-	};
-
-	const handleDeleteData = (key: string) => {
-		setTriggerData((prevData) => {
-			const updatedData = { ...prevData };
-			delete updatedData[key];
-
-			return updatedData;
-		});
 	};
 
 	const entryFunction = useWatch({ control, name: "entryFunction" });
@@ -282,59 +230,6 @@ export const DefaultEditTrigger = () => {
 					/>
 
 					<ErrorMessage>{errors.filter?.message}</ErrorMessage>
-				</div>
-
-				<div>
-					<div className="flex items-center gap-1 text-base text-gray-500">
-						{t("titleData")}
-
-						<div className="cursor-pointer" title={t("titleInfo")}>
-							<InfoIcon className="fill-white" />
-						</div>
-					</div>
-
-					<div className="mb-2 flex flex-col gap-2">
-						{triggerData
-							? Object.entries(triggerData).map(([key, value]) => (
-									<div className="align-center flex gap-1" key={key}>
-										<div className="flex w-full gap-6">
-											<Input
-												aria-label={t("placeholders.key")}
-												className="w-full"
-												defaultValue={key}
-												label={t("placeholders.key")}
-												onChange={(event) => updateTriggerDataKey(event.target.value, key)}
-											/>
-
-											<Input
-												aria-label={t("placeholders.value")}
-												className="w-full"
-												defaultValue={value.string.v}
-												label={t("placeholders.value")}
-												onChange={(event) => updateTriggerDataValue(key, event.target.value)}
-											/>
-										</div>
-
-										<IconButton
-											ariaLabel={t("ariaDeleteData", { name: key })}
-											className="self-center bg-gray-1300 hover:bg-black"
-											onClick={() => handleDeleteData(key)}
-										>
-											<TrashIcon className="h-4 w-4 fill-white" />
-										</IconButton>
-									</div>
-								))
-							: null}
-					</div>
-
-					<Button
-						className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
-						onClick={handleAddNewData}
-					>
-						<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
-
-						{t("buttonAddNewData")}
-					</Button>
 				</div>
 			</form>
 		</div>
