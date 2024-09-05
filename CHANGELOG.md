@@ -1,3 +1,10 @@
+## [1.49.1](https://github.com/autokitteh/web-platform/compare/v1.49.0...v1.49.1) (2024-09-05)
+
+
+### Bug Fixes
+
+* refactor connection add form and fix google oauth ([#325](https://github.com/autokitteh/web-platform/issues/325)) ([52160b8](https://github.com/autokitteh/web-platform/commit/52160b898425362cf0cdb4247087fa63b758d9cc))
+
 # [1.49.0](https://github.com/autokitteh/web-platform/compare/v1.48.2...v1.49.0) (2024-09-05)
 
 
