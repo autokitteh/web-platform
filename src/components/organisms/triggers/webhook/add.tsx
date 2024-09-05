@@ -10,23 +10,24 @@ import { SelectOption } from "@interfaces/components";
 import { ChildFormRef, SchedulerTriggerFormProps } from "@interfaces/components/forms";
 import { LoggerService, TriggersService } from "@services";
 import { TriggerTypes } from "@src/enums";
-import { schedulerTriggerSchema } from "@validations";
+import { webhookTriggerSchema } from "@validations";
 
 import { useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
-import { ErrorMessage, Input, Link, Loader } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, Loader } from "@components/atoms";
 import { Accordion, Select } from "@components/molecules";
 
-import { ExternalLinkIcon } from "@assets/image/icons";
+import { CopyIcon, ExternalLinkIcon } from "@assets/image/icons";
 
-export const SchedulerTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFormProps>(
+export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFormProps>(
 	({ name, setIsSaving }, ref) => {
 		const navigate = useNavigate();
 		const { projectId } = useParams<{ projectId: string }>();
 		const addToast = useToastStore((state) => state.addToast);
 		const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 		const { t: tErrors } = useTranslation(["errors", "services"]);
+		const { t: tGlobal } = useTranslation(["global"]);
 		const { fetchResources } = useFileOperations(projectId!);
 		const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 		const [isLoading, setIsLoading] = useState(false);
@@ -67,19 +68,17 @@ export const SchedulerTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 			register,
 		} = useForm({
 			defaultValues: {
-				cron: "",
 				entryFunction: "",
 				filePath: { label: "", value: "" },
 			},
-			resolver: zodResolver(schedulerTriggerSchema),
+			resolver: zodResolver(webhookTriggerSchema),
 		});
 
 		const onSubmit = async () => {
-			const { cron, entryFunction, filePath } = getValues();
+			const { entryFunction, filePath } = getValues();
 			setIsSaving(true);
 			const { error } = await TriggersService.create(projectId!, {
 				sourceType: TriggerTypes.schedule,
-				schedule: cron,
 				entryFunction,
 				eventType: "",
 				name,
@@ -104,26 +103,32 @@ export const SchedulerTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 		}));
 
 		const entryFunction = useWatch({ control, name: "entryFunction" });
-		const cron = useWatch({ control, name: "cron" });
 
 		return isLoading ? (
 			<Loader isCenter size="xl" />
 		) : (
 			<>
+				<div className="relative mb-6 flex gap-2">
+					<Input
+						aria-label={t("placeholders.webhookUrl")}
+						className="w-full"
+						disabled
+						label={t("placeholders.functionName")}
+						placeholder="The webhook URL will be generated after saving the trigger."
+					/>
+
+					<Button
+						aria-label={tGlobal("copy")}
+						className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
+						disabled
+						variant="outline"
+					>
+						<CopyIcon className="h-3.5 w-3.5 fill-black" />
+
+						{tGlobal("copy")}
+					</Button>
+				</div>
 				<form className="flex w-full flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-					<div className="relative">
-						<Input
-							{...register("cron")}
-							aria-label={t("placeholders.cron")}
-							isError={!!errors.cron}
-							isRequired
-							label={t("placeholders.cron")}
-							value={cron}
-						/>
-
-						<ErrorMessage>{errors.cron?.message}</ErrorMessage>
-					</div>
-
 					<div className="relative">
 						<Controller
 							control={control}
@@ -181,4 +186,4 @@ export const SchedulerTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFor
 	}
 );
 
-SchedulerTriggerForm.displayName = "SchedulerTriggerForm";
+AddWebhookTriggerForm.displayName = "AddWebhookTriggerForm";

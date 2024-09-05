@@ -11,7 +11,7 @@ import { useFetchConnections } from "@hooks";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select, TabFormHeader } from "@components/molecules";
-import { DefaultTriggerForm, TriggerSchedulerForm } from "@components/organisms/triggers";
+import { AddWebhookTriggerForm, DefaultTriggerForm, SchedulerTriggerForm } from "@components/organisms/triggers";
 
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -36,8 +36,19 @@ export const AddTrigger = () => {
 	const childFormRef = useRef<ChildFormRef>(null);
 	const { connection, name } = watch();
 
-	const isCronConnection = connection.value === TriggerTypes.schedule;
-	const TriggerFormComponent = isCronConnection ? TriggerSchedulerForm : DefaultTriggerForm;
+	let TriggerFormComponent;
+
+	switch (connection.value) {
+		case TriggerTypes.schedule:
+			TriggerFormComponent = SchedulerTriggerForm;
+			break;
+		case TriggerTypes.webhook:
+			TriggerFormComponent = AddWebhookTriggerForm;
+			break;
+		default:
+			TriggerFormComponent = DefaultTriggerForm;
+			break;
+	}
 
 	const onSubmit = async () => {
 		await childFormRef.current?.onSubmit();

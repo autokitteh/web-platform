@@ -75,6 +75,7 @@
 			"noConnectionsAvailable": "No connections available",
 			"noFilesAvailable": "No files available",
 			"placeholders": {
+				"webhookUrl": "Webhook URL",
 				"cron": "Cron expression",
 				"eventType": "Event type",
 				"filter": "Filter",

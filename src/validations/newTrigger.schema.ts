@@ -9,6 +9,7 @@ const selectItemSchema = z.object({
 
 let defaultTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
 let schedulerTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
+let webhookTriggerSchema: ZodObject<Record<string, ZodTypeAny>>;
 
 const cronFormat =
 	"^(@(?:yearly|annually|monthly|weekly|daily|midnight|hourly)" +
@@ -37,6 +38,13 @@ i18n.on("initialized", () => {
 			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 		}),
 	});
+
+	webhookTriggerSchema = z.object({
+		entryFunction: z.string().min(1, i18n.t("functionNameIsRequired", { ns: "validations" })),
+		filePath: selectItemSchema.refine((value: { label: any }) => value.label, {
+			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
+		}),
+	});
 });
 
-export { defaultTriggerSchema, schedulerTriggerSchema };
+export { defaultTriggerSchema, schedulerTriggerSchema, webhookTriggerSchema };
