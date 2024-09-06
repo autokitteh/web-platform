@@ -98,6 +98,7 @@ export const IntegrationEditForm = ({
 				aria-label={t("placeholders.selectConnectionType")}
 				disabled={initialConnectionType}
 				label={t("placeholders.connectionType")}
+				name="connectionType"
 				onChange={handleConnectionTypeChange}
 				options={selectOptions}
 				placeholder={t("placeholders.selectConnectionType")}

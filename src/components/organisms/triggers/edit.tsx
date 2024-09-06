@@ -1,22 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import { z } from "zod";
 
-import { infoCronExpressionsLinks } from "@constants";
-import { SelectOption } from "@interfaces/components";
 import { TriggersService } from "@services";
+import { infoCronExpressionsLinks } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
-import { TriggerFormData, triggerResolver } from "@validations";
+import { TriggerFormIds } from "@src/enums/components";
+import { SelectOption } from "@src/interfaces/components";
+import { getApiBaseUrl } from "@src/utilities";
+import { triggerSchema } from "@validations";
 
-import { useFetchConnections, useFileOperations } from "@hooks";
+import { useFetchConnections, useFetchTrigger, useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input, Link, Loader } from "@components/atoms";
 import { Accordion, Select, TabFormHeader } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon } from "@assets/image/icons";
+
+type TriggerFormData = z.infer<typeof triggerSchema>;
 
 const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -31,6 +37,7 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 				<Input
 					aria-label={t("placeholders.name")}
 					control={control}
+					disabled
 					isError={!!errors.name}
 					label={t("placeholders.name")}
 					name="name"
@@ -44,6 +51,7 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 					aria-label={t("placeholders.selectConnection")}
 					control={control}
 					dataTestid="select-trigger-type"
+					disabled
 					isError={!!errors.connection}
 					label={t("placeholders.connection")}
 					name="connection"
@@ -58,9 +66,33 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 	);
 };
 
-const WebhookFields = () => {
+const SchedulerFields = () => {
+	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
+	const {
+		control,
+		formState: { errors },
+	} = useFormContext<TriggerFormData>();
+
+	return (
+		<div className="relative">
+			<Input
+				aria-label={t("placeholders.cron")}
+				control={control}
+				isError={!!errors.cron}
+				label={t("placeholders.cron")}
+				name="cron"
+			/>
+
+			<ErrorMessage>{errors.cron?.message?.toString() || ""}</ErrorMessage>
+		</div>
+	);
+};
+
+const WebhookFields = ({ webhookSlug }: { webhookSlug: string }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tGlobal } = useTranslation("global");
+	const apiBaseUrl = getApiBaseUrl();
+	const webhookUrl = `${apiBaseUrl}/${webhookSlug}`;
 
 	return (
 		<div className="relative flex gap-2">
@@ -70,13 +102,13 @@ const WebhookFields = () => {
 				disabled
 				label={t("placeholders.webhookUrl")}
 				name="webhookUrl"
-				placeholder="The webhook URL will be generated after saving the trigger."
+				value={webhookUrl}
 			/>
 
 			<Button
 				aria-label={tGlobal("copy")}
 				className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
-				disabled
+				onClick={() => navigator.clipboard.writeText(webhookUrl)}
 				variant="outline"
 			>
 				<CopyIcon className="h-3.5 w-3.5 fill-black" />
@@ -93,6 +125,7 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 		control,
 		formState: { errors },
 	} = useFormContext<TriggerFormData>();
+	const connectionType = useWatch({ name: "connection.value" });
 
 	return (
 		<>
@@ -124,49 +157,50 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 				<ErrorMessage>{errors.entryFunction?.message?.toString() || ""}</ErrorMessage>
 			</div>
 
-			<Accordion className="mt-4" title={t("information")}>
-				<div className="flex flex-col items-start gap-2">
-					{infoCronExpressionsLinks.map(({ text, url }, index) => (
-						<Link
-							className="inline-flex items-center gap-2.5 text-green-800"
-							key={index}
-							target="_blank"
-							to={url}
-						>
-							{text}
+			{connectionType === TriggerTypes.connection ? (
+				<>
+					<div className="relative">
+						<Input
+							aria-label={t("placeholders.eventType")}
+							control={control}
+							isError={!!errors.eventType}
+							label={t("placeholders.eventType")}
+							name="eventType"
+						/>
 
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
-						</Link>
-					))}
-				</div>
-			</Accordion>
+						<ErrorMessage>{errors.eventType?.message?.toString() || ""}</ErrorMessage>
+					</div>
+
+					<div className="relative">
+						<Input
+							aria-label={t("placeholders.filter")}
+							control={control}
+							isError={!!errors.filter}
+							label={t("placeholders.filter")}
+							name="filter"
+						/>
+
+						<ErrorMessage>{errors.filter?.message?.toString() || ""}</ErrorMessage>
+					</div>
+				</>
+			) : null}
 		</>
 	);
 };
 
-const ConnectionTypeFields = () => {
-	const connectionType = useWatch({ name: "connection.value" });
-
-	if (connectionType === TriggerTypes.webhook) {
-		return <WebhookFields />;
-	}
-
-	return null;
-};
-
-export const AddTrigger = () => {
+export const EditTrigger = () => {
+	const { projectId, triggerId } = useParams();
+	const navigate = useNavigate();
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
-	const navigate = useNavigate();
-	const { projectId } = useParams<{ projectId: string }>();
-	const [isSaving, setIsSaving] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 
-	const { isLoading: isLoadingConnections } = useFetchConnections(projectId!);
+	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
+	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const { fetchResources } = useFileOperations(projectId!);
+
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
-	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
-	const { connections } = useFetchConnections(projectId!);
+	const [isSaving, setIsSaving] = useState(false);
 
 	const methods = useForm<TriggerFormData>({
 		defaultValues: {
@@ -175,19 +209,16 @@ export const AddTrigger = () => {
 			filePath: { label: "", value: "" },
 			entryFunction: "",
 			cron: "",
+			eventType: "",
+			filter: "",
 		},
-		resolver: triggerResolver,
+		resolver: zodResolver(triggerSchema),
 	});
 
-	const {
-		control,
-		formState: { errors },
-		handleSubmit,
-	} = methods;
+	const { handleSubmit, reset } = methods;
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const loadFiles = async () => {
-			setIsLoadingFiles(true);
 			try {
 				const resources = await fetchResources();
 				const formattedResources = Object.keys(resources).map((name) => ({
@@ -197,52 +228,65 @@ export const AddTrigger = () => {
 				setFilesNameList(formattedResources);
 			} catch (error) {
 				addToast({
-					id: Date.now()?.toString(),
+					id: Date.now().toString(),
 					message: tErrors("resourcesFetchError"),
 					type: "error",
 				});
-			} finally {
-				setIsLoadingFiles(false);
 			}
 		};
 
 		loadFiles();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [fetchResources, addToast, tErrors]);
+
+	useEffect(() => {
+		if (trigger && connections.length) {
+			const selectedConnection = connections.find(
+				(item) => item.value === trigger.connectionId || item.value === trigger.sourceType
+			);
+			reset({
+				name: trigger.name,
+				connection: selectedConnection,
+				filePath: { label: trigger.path, value: trigger.path },
+				entryFunction: trigger.entryFunction,
+				cron: trigger.schedule,
+				eventType: trigger.eventType,
+				filter: trigger.filter,
+			});
+		}
+	}, [trigger, connections, reset]);
 
 	const onSubmit = async (data: TriggerFormData) => {
 		setIsSaving(true);
 		try {
-			const { error } = await TriggersService.create(projectId!, {
+			const { error } = await TriggersService.update(projectId!, {
 				sourceType: data.connection.value as TriggerTypes,
 				name: data.name,
 				path: data.filePath.value,
 				entryFunction: data.entryFunction,
 				schedule: data.cron,
-				eventType: "",
-				triggerId: undefined,
+				eventType: data.eventType,
+				filter: data.filter,
+				triggerId: triggerId!,
 			});
 
 			if (error) {
 				addToast({
 					id: Date.now()?.toString(),
-					message: tErrors("triggerNotCreated"),
+					message: tErrors("triggerNotEdited"),
 					type: "error",
 				});
-
-				return;
 			}
 
 			addToast({
-				id: Date.now()?.toString(),
-				message: t("createdSuccessfully"),
+				id: Date.now().toString(),
+				message: t("updatedSuccessfully"),
 				type: "success",
 			});
 			navigate(`/projects/${projectId}/triggers`);
 		} catch (error) {
 			addToast({
-				id: Date.now()?.toString(),
-				message: tErrors("triggerNotCreated"),
+				id: Date.now().toString(),
+				message: tErrors("triggerNotUpdated"),
 				type: "error",
 			});
 		} finally {
@@ -250,34 +294,52 @@ export const AddTrigger = () => {
 		}
 	};
 
-	if (isLoadingConnections || isLoadingFiles) {
+	if (isLoadingConnections || isLoadingTrigger) {
 		return <Loader isCenter size="xl" />;
 	}
 
 	return (
 		<FormProvider {...methods}>
 			<div className="min-w-80">
-				<TabFormHeader className="mb-10" form="triggerForm" isLoading={isSaving} title={t("addNewTrigger")} />
+				<TabFormHeader
+					className="mb-10"
+					form={TriggerFormIds.modifyTriggerForm}
+					isLoading={isSaving}
+					title={t("modifyTrigger")}
+				/>
 
-				<form className="flex flex-col gap-6" id="triggerForm" onSubmit={handleSubmit(onSubmit)}>
+				<form
+					className="flex flex-col gap-6"
+					id={TriggerFormIds.modifyTriggerForm}
+					onSubmit={handleSubmit(onSubmit)}
+				>
 					<CommonFields connections={connections} />
 
-					<ConnectionTypeFields />
+					{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 
-					<div className="relative">
-						<Input
-							aria-label={t("placeholders.cron")}
-							control={control}
-							isError={!!errors.cron}
-							label={t("placeholders.cron")}
-							name="cron"
-						/>
-
-						<ErrorMessage>{errors.cron?.message?.toString() || ""}</ErrorMessage>
-					</div>
+					{trigger?.sourceType === TriggerTypes.webhook ? (
+						<WebhookFields webhookSlug={trigger.webhookSlug || ""} />
+					) : null}
 
 					<TriggerSpecificFields filesNameList={filesNameList} />
 				</form>
+
+				<Accordion className="mt-4" title={t("information")}>
+					<div className="flex flex-col items-start gap-2">
+						{infoCronExpressionsLinks.map(({ text, url }, index) => (
+							<Link
+								className="inline-flex items-center gap-2.5 text-green-800"
+								key={index}
+								target="_blank"
+								to={url}
+							>
+								{text}
+
+								<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
+							</Link>
+						))}
+					</div>
+				</Accordion>
 			</div>
 		</FormProvider>
 	);

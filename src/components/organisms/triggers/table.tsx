@@ -87,12 +87,6 @@ export const TriggersTable = () => {
 		[triggerId]
 	);
 
-	const handleNavigate = (triggerId: string, sourceType: TriggerTypes) => {
-		const isConnection = sourceType === TriggerTypes.connection;
-		const path = isConnection ? "/edit" : `/edit-${sourceType}`;
-		navigate(`${triggerId}${path}`);
-	};
-
 	return isLoading ? (
 		<Loader isCenter size="xl" />
 	) : (
@@ -176,7 +170,7 @@ export const TriggersTable = () => {
 											ariaLabel={t("table.buttons.ariaModifyTrigger", {
 												name: trigger.name,
 											})}
-											onClick={() => handleNavigate(trigger.triggerId!, trigger.sourceType!)}
+											onClick={() => navigate(`${triggerId}/edit`)}
 										>
 											<EditIcon className="h-3 w-3 fill-white" />
 										</IconButton>

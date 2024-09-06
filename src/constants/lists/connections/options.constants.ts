@@ -1,5 +1,5 @@
 import { ConnectionAuthType } from "@enums";
-import { Integrations, TriggerFormType } from "@enums/components";
+import { Integrations } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 import {
@@ -57,11 +57,6 @@ export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElem
 	[Integrations.forms]: GoogleFormsIcon,
 	[Integrations.googlegemini]: GoogleGeminiIcon,
 };
-
-export const triggerTypes: SelectOption[] = [
-	{ disabled: false, label: "Default", value: TriggerFormType.default },
-	{ disabled: false, label: "Scheduler", value: TriggerFormType.scheduler },
-];
 
 export const githubIntegrationAuthMethods: SelectOption[] = [
 	{ label: "Personal Access Token (PAT)", value: ConnectionAuthType.Pat },

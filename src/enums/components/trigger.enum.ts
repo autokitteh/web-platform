@@ -4,6 +4,5 @@ export enum TriggerFormType {
 }
 
 export enum TriggerFormIds {
-	modifyDefaultForm = "modifyDefaultForm",
-	modifySchedulerForm = "modifySchedulerForm",
+	modifyTriggerForm = "modifyTriggerForm",
 }

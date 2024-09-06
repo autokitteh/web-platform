@@ -24,6 +24,6 @@ export {
 } from "@constants/dashboard.constants";
 export { sessionsEditorLineHeight, defaultSessionLogRecordsPageSize } from "@src/constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
-export { defaultTriggerType, infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
+export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";

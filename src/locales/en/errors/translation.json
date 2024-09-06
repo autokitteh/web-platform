@@ -37,6 +37,7 @@
 	"sessionsFetchErrorExtended": "Couldn't fetch the sessions details, error message: {{error}}",
 	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}",
 	"triggerNotCreated": "There was an issue creating the trigger",
+	"triggerNotEdited": "There was an issue editing the trigger",
 	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
 	"triggerNotFound": "Couldn't fetch the trigger",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",

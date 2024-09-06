@@ -1,33 +1,42 @@
 import React, { forwardRef, useCallback, useEffect, useId, useState } from "react";
 
+import { useController } from "react-hook-form";
+
 import { InputVariant } from "@enums/components";
-import { InputProps } from "@interfaces/components";
+import { ExtendedInputProps } from "@src/interfaces/components/forms";
 import { cn } from "@utilities";
 
-export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+export const Input = forwardRef<HTMLInputElement, ExtendedInputProps>((props, ref) => {
 	const {
 		classInput,
 		className,
+		control,
 		defaultValue,
 		disabled,
 		icon,
 		isError,
 		isRequired,
 		label,
+		name = "",
 		onChange,
 		placeholder,
 		type = "text",
-		value,
+		value: propValue,
 		variant,
 		...rest
 	} = props;
 
+	const useControllerProps = control ? { control, name } : undefined;
+	const {
+		field: { onBlur, onChange: fieldOnChange, ref: fieldRef, value },
+	} = useController(useControllerProps || { name });
+
 	const [isFocused, setIsFocused] = useState(false);
-	const [inputValue, setInputValue] = useState(value || defaultValue || "");
+	const [inputValue, setInputValue] = useState(value || propValue || defaultValue || "");
 	const [hasValue, setHasValue] = useState<boolean>(!!inputValue);
 
 	useEffect(() => {
-		if (value) {
+		if (value !== undefined) {
 			setInputValue(value);
 			setHasValue(!!value);
 		}
@@ -41,8 +50,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 			if (newValue !== hasValue) {
 				setHasValue(newValue);
 			}
+			onBlur();
 		},
-		[hasValue]
+		[hasValue, onBlur]
 	);
 
 	const handleChange = useCallback(
@@ -50,9 +60,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 			const newValue = event.target.value;
 			setInputValue(newValue);
 			setHasValue(!!newValue);
+			fieldOnChange(newValue);
 			onChange?.(event);
 		},
-		[onChange]
+		[onChange, fieldOnChange]
 	);
 
 	const labelText = isRequired ? `${label} *` : label;
@@ -104,7 +115,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 				onChange={handleChange}
 				onFocus={handleFocus}
 				placeholder={placeholder}
-				ref={ref}
+				ref={(element) => {
+					fieldRef(element);
+					if (typeof ref === "function") ref(element);
+					else if (ref) ref.current = element;
+				}}
 				type={type}
 				value={inputValue}
 			/>

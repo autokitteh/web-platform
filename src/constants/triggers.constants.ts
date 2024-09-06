@@ -1,9 +1,5 @@
 import i18n from "i18next";
 
-import { triggerTypes } from "@constants/lists/connections";
-
-export const defaultTriggerType = triggerTypes[0];
-
 export let infoCronExpressionsLinks: { text: string; url: string }[] = [];
 export let extraTriggerTypes = [
 	{

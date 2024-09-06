@@ -45,6 +45,7 @@ export const AddConnection = () => {
 						isError={!!errors.connectionName}
 						isRequired
 						label={t("placeholders.name")}
+						name="connectionName"
 					/>
 
 					<ErrorMessage>{errors?.connectionName?.message as string}</ErrorMessage>
@@ -55,6 +56,7 @@ export const AddConnection = () => {
 					dataTestid="select-integration"
 					disabled={!!connectionId}
 					label={t("placeholders.integration")}
+					name="integration"
 					onChange={(selectedIntegration) => setValue("integration", selectedIntegration)}
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}
