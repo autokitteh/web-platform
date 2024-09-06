@@ -119,7 +119,7 @@ export const ProjectTemplatesTabs = () => {
 
 				LoggerService.error(
 					namespaces.manifestService,
-					`${t("projectCreationFailedExtended", { error: t("projectTemplateNotFound") })}`
+					`${t("projectCreationFailedExtended", { error: t("projectTemplateManifestNotFound") })}`
 				);
 
 				return;
@@ -132,7 +132,7 @@ export const ProjectTemplatesTabs = () => {
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: t("projectCreationFailed", { error }),
+					message: t("projectCreationFailed"),
 					type: "error",
 				});
 				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
