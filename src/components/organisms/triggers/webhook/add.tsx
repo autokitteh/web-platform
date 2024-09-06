@@ -3,7 +3,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useState } from "rea
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { infoCronExpressionsLinks, namespaces } from "@constants";
 import { SelectOption } from "@interfaces/components";
@@ -22,7 +22,6 @@ import { CopyIcon, ExternalLinkIcon } from "@assets/image/icons";
 
 export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFormProps>(
 	({ name, setIsSaving }, ref) => {
-		const navigate = useNavigate();
 		const { projectId } = useParams<{ projectId: string }>();
 		const addToast = useToastStore((state) => state.addToast);
 		const { t } = useTranslation("tabs", { keyPrefix: "triggers" });
@@ -98,10 +97,10 @@ export const AddWebhookTriggerForm = forwardRef<ChildFormRef, SchedulerTriggerFo
 
 			addToast({
 				id: Date.now().toString(),
-				message: t("createdSuccessfully"),
+				message: "Webhook ID",
 				type: "success",
+				showCopyButton: true,
 			});
-			navigate(`/projects/${projectId}/triggers`);
 		};
 
 		useImperativeHandle(ref, () => ({

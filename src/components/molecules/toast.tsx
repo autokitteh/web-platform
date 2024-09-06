@@ -3,6 +3,7 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
+import { CopyButton } from "./copyButton";
 import { ToasterTypes } from "@interfaces/components/toast.interface";
 import { useToastStore } from "@store/useToastStore";
 import { cn } from "@utilities";
@@ -88,7 +89,7 @@ export const Toast = () => {
 	};
 
 	const renderToasts = () =>
-		toasts.map(({ id, message, type }, index) => {
+		toasts.map(({ id, message, showCopyButton, type }, index) => {
 			const title = t(`titles.${type}`);
 
 			return (
@@ -112,6 +113,8 @@ export const Toast = () => {
 								<p className={titleStyle(type)}>{title}</p>
 
 								{message}
+
+								{showCopyButton ? <CopyButton text={message} /> : null}
 							</div>
 
 							<IconButton

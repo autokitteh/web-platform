@@ -9,3 +9,4 @@ export { TabFormHeader } from "@components/molecules/tabFormHeader";
 export { Toast } from "@components/molecules/toast";
 export { Select } from "@components/molecules/select";
 export { VirtualTable } from "@components/molecules/virtualTable";
+export { CopyButton } from "@components/molecules/copyButton";
