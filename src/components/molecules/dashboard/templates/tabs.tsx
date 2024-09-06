@@ -3,7 +3,12 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { defaultTemplateProjectCategory, namespaces, templateProjectsCategories } from "@constants";
+import {
+	defaultTemplateProjectCategory,
+	findTemplateFilesByAssetDirectory,
+	namespaces,
+	templateProjectsCategories,
+} from "@constants";
 import { LoggerService } from "@services";
 import { useFileOperations } from "@src/hooks";
 import { fetchAllFilesContent, fetchFileContent } from "@src/utilities";
@@ -12,8 +17,6 @@ import { useProjectStore, useToastStore } from "@store";
 
 import { Tab } from "@components/atoms";
 import { ProjectTemplateCard } from "@components/molecules/dashboard/templates";
-
-import { filesPerProject } from "@assets/templates";
 
 export const ProjectTemplatesTabs = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
@@ -49,10 +52,7 @@ export const ProjectTemplatesTabs = () => {
 				type: "error",
 			});
 
-			LoggerService.error(
-				namespaces.manifestService,
-				`${t("projectCreationFailedExtended", { error: t("projectFilesNotFound") })}`
-			);
+			LoggerService.error(namespaces.manifestService, `${t("projectDirectoryNotConfigured")}`);
 			setIsCreating(false);
 
 			return;
@@ -69,10 +69,21 @@ export const ProjectTemplatesTabs = () => {
 			return;
 		}
 
-		const filesData = await fetchAllFilesContent(
-			`/assets/templates/${projectTemplateDirectory}/`,
-			filesPerProject[projectTemplateDirectory!]
-		);
+		const filesPerProject = findTemplateFilesByAssetDirectory(projectTemplateDirectory);
+
+		if (!filesPerProject) {
+			addToast({
+				id: Date.now().toString(),
+				message: t("projectTemplateFilesNotFound"),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.manifestService, `${t("projectTemplateFilesNotFound")}`);
+
+			return;
+		}
+
+		const filesData = await fetchAllFilesContent(`/assets/templates/${projectTemplateDirectory}/`, filesPerProject);
 
 		await saveAllFiles(filesData);
 
@@ -121,7 +132,7 @@ export const ProjectTemplatesTabs = () => {
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: t("projectCreationFailed", { error: t("projectNameExist") }),
+					message: t("projectCreationFailed", { error }),
 					type: "error",
 				});
 				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
