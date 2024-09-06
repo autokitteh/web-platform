@@ -6,6 +6,7 @@
 		"deleteDisabled": "Cannot delete active deployment",
 		"loading": "Loading",
 		"noDeployments": "No deployments found",
+		"manual": "Manual",
 		"table": {
 			"columns": {
 				"buildId": "Build ID",

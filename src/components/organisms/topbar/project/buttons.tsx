@@ -12,7 +12,6 @@ import { useModalStore, useProjectStore, useToastStore } from "@store";
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
-import { ManualRunSettingsDrawer } from "@components/organisms/topbar/project";
 
 import { BuildIcon, MoreIcon, StatsIcon } from "@assets/image";
 import { RocketIcon, TrashIcon } from "@assets/image/icons";
@@ -173,8 +172,6 @@ export const ProjectTopbarButtons = () => {
 			</DropdownButton>
 
 			<DeleteProjectModal onDelete={handleDeleteProject} />
-
-			<ManualRunSettingsDrawer />
 		</div>
 	);
 };
