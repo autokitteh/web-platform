@@ -26,7 +26,6 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Slack", value: Integrations.slack, icon: SlackIcon },
 	{ disabled: false, label: "AWS", value: Integrations.aws, icon: AwsIcon },
 	{ disabled: false, label: "OpenAI ChatGPT", value: Integrations.chatgpt, icon: OpenAiIcon },
-	{ disabled: false, label: "HTTP", value: Integrations.http, icon: HttpIcon },
 	{ disabled: false, label: "Twilio", value: Integrations.twilio, icon: TwilioIcon },
 	{ disabled: false, label: "Gmail", value: Integrations.gmail, icon: GoogleGmailIcon },
 	{ disabled: false, label: "Jira", value: Integrations.jira, icon: JiraIcon },

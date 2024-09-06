@@ -121,9 +121,10 @@ export const ProjectTemplatesTabs = () => {
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: t("projectCreationFailedExtended", { error: t("projectNameExist") }),
+					message: t("projectCreationFailed", { error: t("projectNameExist") }),
 					type: "error",
 				});
+				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
 			}
 
 			setProjectId(projectId!);
