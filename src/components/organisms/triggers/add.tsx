@@ -36,7 +36,7 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 					label={t("placeholders.name")}
 				/>
 
-				<ErrorMessage>{errors.name?.message?.toString() || ""}</ErrorMessage>
+				<ErrorMessage>{String(errors.name?.message)}</ErrorMessage>
 			</div>
 
 			<div className="relative">
@@ -57,7 +57,7 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 					)}
 				/>
 
-				<ErrorMessage>{errors.connection?.message?.toString() || ""}</ErrorMessage>
+				<ErrorMessage>{String(errors.connection?.message)}</ErrorMessage>
 			</div>
 		</>
 	);
@@ -119,7 +119,7 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 					)}
 				/>
 
-				<ErrorMessage>{errors.filePath?.message?.toString() || ""}</ErrorMessage>
+				<ErrorMessage>{String(errors.filePath?.message)}</ErrorMessage>
 			</div>
 
 			<div className="relative">
@@ -130,7 +130,7 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 					{...register("entryFunction")}
 				/>
 
-				<ErrorMessage>{errors.entryFunction?.message?.toString() || ""}</ErrorMessage>
+				<ErrorMessage>{String(errors.entryFunction?.message)}</ErrorMessage>
 			</div>
 
 			<Accordion className="mt-4" title={t("information")}>
@@ -284,7 +284,7 @@ export const AddTrigger = () => {
 								label={t("placeholders.cron")}
 							/>
 
-							<ErrorMessage>{errors.cron?.message?.toString() || ""}</ErrorMessage>
+							<ErrorMessage>{String(errors.cron?.message)}</ErrorMessage>
 						</div>
 					) : null}
 
