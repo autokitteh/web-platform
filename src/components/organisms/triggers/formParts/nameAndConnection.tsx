@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { SelectOption } from "@src/interfaces/components";
@@ -17,6 +17,9 @@ export const NameAndConnectionFields = ({ connections, isEdit }: { connections: 
 		register,
 	} = useFormContext<TriggerFormData>();
 
+	const watchedName = useWatch({ control, name: "name" });
+	const watchedConnection = useWatch({ control, name: "connection" });
+
 	return (
 		<>
 			<div className="relative">
@@ -26,6 +29,7 @@ export const NameAndConnectionFields = ({ connections, isEdit }: { connections: 
 					disabled={isEdit}
 					isError={!!errors.name}
 					label={t("placeholders.name")}
+					value={watchedName}
 				/>
 
 				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
@@ -46,6 +50,7 @@ export const NameAndConnectionFields = ({ connections, isEdit }: { connections: 
 							noOptionsLabel={t("noConnectionsAvailable")}
 							options={connections}
 							placeholder={t("placeholders.selectConnection")}
+							value={watchedConnection}
 						/>
 					)}
 				/>

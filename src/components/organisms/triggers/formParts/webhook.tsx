@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { getApiBaseUrl } from "@src/utilities";
+import { copyToClipboard, getApiBaseUrl } from "@src/utilities";
 
 import { Button, Input } from "@components/atoms";
 
@@ -12,9 +12,14 @@ export const WebhookFields = ({ webhookSlug }: { webhookSlug?: string }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tGlobal } = useTranslation("global");
 	const apiBaseUrl = getApiBaseUrl();
-	const webhookUrl = webhookSlug
-		? `${apiBaseUrl}/${webhookSlug}`
-		: "The webhook URL will be generated after saving the trigger.";
+
+	const [webhookUrl, setWebhookUrl] = useState<string>("");
+
+	useEffect(() => {
+		setWebhookUrl(
+			webhookSlug ? `${apiBaseUrl}/${webhookSlug}` : "The webhook URL will be generated after saving the trigger."
+		);
+	}, [webhookSlug, apiBaseUrl]);
 
 	return (
 		<div className="relative flex gap-2">
@@ -30,7 +35,7 @@ export const WebhookFields = ({ webhookSlug }: { webhookSlug?: string }) => {
 			<Button
 				aria-label={tGlobal("copy")}
 				className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
-				onClick={() => navigator.clipboard.writeText(webhookUrl)}
+				onClick={() => copyToClipboard(webhookUrl)}
 				variant="outline"
 			>
 				<CopyIcon className="h-3.5 w-3.5 fill-black" />

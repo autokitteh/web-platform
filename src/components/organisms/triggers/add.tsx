@@ -31,11 +31,10 @@ export const AddTrigger = () => {
 	const [isSaving, setIsSaving] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 
-	const { isLoading: isLoadingConnections } = useFetchConnections(projectId!);
+	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { fetchResources } = useFileOperations(projectId!);
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
-	const { connections } = useFetchConnections(projectId!);
 
 	const methods = useForm<TriggerFormData>({
 		defaultValues: {
@@ -44,11 +43,13 @@ export const AddTrigger = () => {
 			filePath: { label: "", value: "" },
 			entryFunction: "",
 			cron: "",
+			eventType: "",
+			filter: "",
 		},
 		resolver: triggerResolver,
 	});
 
-	const { handleSubmit } = methods;
+	const { control, handleSubmit } = methods;
 
 	useEffect(() => {
 		const loadFiles = async () => {
@@ -62,7 +63,7 @@ export const AddTrigger = () => {
 				setFilesNameList(formattedResources);
 			} catch (error) {
 				addToast({
-					id: Date.now()?.toString(),
+					id: Date.now().toString(),
 					message: tErrors("resourcesFetchError"),
 					type: "error",
 				});
@@ -84,7 +85,8 @@ export const AddTrigger = () => {
 				path: data.filePath.value,
 				entryFunction: data.entryFunction,
 				schedule: data.cron,
-				eventType: "",
+				eventType: data.eventType,
+				filter: data.filter,
 				triggerId: undefined,
 			});
 
@@ -99,14 +101,14 @@ export const AddTrigger = () => {
 			}
 
 			addToast({
-				id: Date.now()?.toString(),
+				id: Date.now().toString(),
 				message: t("createdSuccessfully"),
 				type: "success",
 			});
 			navigate(`/projects/${projectId}/triggers`);
 		} catch (error) {
 			addToast({
-				id: Date.now()?.toString(),
+				id: Date.now().toString(),
 				message: tErrors("triggerNotCreated"),
 				type: "error",
 			});
@@ -115,7 +117,7 @@ export const AddTrigger = () => {
 		}
 	};
 
-	const connectionType = useWatch({ control: methods.control, name: "connection.value" });
+	const connectionType = useWatch({ control, name: "connection.value" });
 
 	if (isLoadingConnections || isLoadingFiles) {
 		return <Loader isCenter size="xl" />;

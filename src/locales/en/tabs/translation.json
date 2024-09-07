@@ -63,6 +63,7 @@
 			"addNewTrigger": "Add new trigger",
 			"ariaDeleteData": "Delete {{name}} data",
 			"buttonAddNewData": "Add new data",
+			"updatedSuccessfully": "Trigger updated successfully",
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
 			},
@@ -103,7 +104,7 @@
 				"nameRequired": "Name is required",
 				"connectionRequired": "Connection is required",
 				"fileRequired": "File is required",
-				"functionRequired": "Function name is required",
+				"functionRequired": "Function is required",
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers"
 			}
 		},

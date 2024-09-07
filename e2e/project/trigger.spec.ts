@@ -111,8 +111,8 @@ test.describe("Project Triggers Suite", () => {
 		await nameInput.fill("triggerTest");
 		await page.getByRole("button", { name: "Save" }).click();
 
-		const functionNameErrorMessage = page.getByText("Function name is required");
-		const cronErrorMessage = page.getByText("The cron schedule expression must match the required format");
+		const functionNameErrorMessage = page.getByText("Function is required");
+		const cronErrorMessage = page.getByText("Cron expression is required and must be valid for schedule triggers");
 
 		await expect(functionNameErrorMessage).toBeVisible();
 		await expect(cronErrorMessage).toBeVisible();
@@ -120,7 +120,7 @@ test.describe("Project Triggers Suite", () => {
 
 	test("Modify trigger without a values", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
-		await page.getByRole("button", { name: `Modify triggerName trigger` }).click();
+		await page.getByRole("button", { name: "Modify triggerName trigger" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).fill("");
 
@@ -129,8 +129,8 @@ test.describe("Project Triggers Suite", () => {
 
 		await page.getByRole("button", { name: "Save" }).click();
 
-		const functionNameErrorMessage = page.getByText("Function name is required");
-		const cronErrorMessage = page.getByText("The cron schedule expression must match the required format");
+		const functionNameErrorMessage = page.getByText("Function is required");
+		const cronErrorMessage = page.getByText("Cron expression is required and must be valid for schedule triggers");
 
 		await expect(functionNameErrorMessage).toBeVisible();
 		await expect(cronErrorMessage).toBeVisible();

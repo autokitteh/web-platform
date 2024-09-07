@@ -39,6 +39,22 @@ export const EditTrigger = () => {
 	const { fetchResources } = useFileOperations(projectId!);
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
+	const [isSaving, setIsSaving] = useState(false);
+
+	const methods = useForm<TriggerFormData>({
+		defaultValues: {
+			name: "",
+			connection: { label: "", value: "" },
+			filePath: { label: "", value: "" },
+			entryFunction: "",
+			cron: "",
+			eventType: "",
+			filter: "",
+		},
+		resolver: zodResolver(triggerSchema),
+	});
+
+	const { handleSubmit, setValue } = methods;
 
 	useEffect(() => {
 		const loadFiles = async () => {
@@ -60,39 +76,22 @@ export const EditTrigger = () => {
 
 		loadFiles();
 	}, [fetchResources, addToast, tErrors]);
-	const [isSaving, setIsSaving] = useState(false);
-
-	const methods = useForm<TriggerFormData>({
-		defaultValues: {
-			name: "",
-			connection: { label: "", value: "" },
-			filePath: { label: "", value: "" },
-			entryFunction: "",
-			cron: "",
-			eventType: "",
-			filter: "",
-		},
-		resolver: zodResolver(triggerSchema),
-	});
-
-	const { handleSubmit, reset } = methods;
 
 	useEffect(() => {
-		if (trigger && connections.length) {
+		if (trigger && connections.length && !isLoadingTrigger && !isLoadingConnections) {
 			const selectedConnection = connections.find(
 				(item) => item.value === trigger.connectionId || item.value === trigger.sourceType
 			);
-			reset({
-				name: trigger.name,
-				connection: selectedConnection,
-				filePath: { label: trigger.path, value: trigger.path },
-				entryFunction: trigger.entryFunction,
-				cron: trigger.schedule,
-				eventType: trigger.eventType,
-				filter: trigger.filter,
-			});
+
+			setValue("name", trigger.name);
+			setValue("connection", selectedConnection || { label: "", value: "" });
+			setValue("filePath", { label: trigger.path, value: trigger.path });
+			setValue("entryFunction", trigger.entryFunction);
+			setValue("cron", trigger.schedule || "");
+			setValue("eventType", trigger.eventType || "");
+			setValue("filter", trigger.filter || "");
 		}
-	}, [trigger, connections, reset]);
+	}, [trigger, connections, isLoadingTrigger, isLoadingConnections, setValue]);
 
 	const onSubmit = async (data: TriggerFormData) => {
 		setIsSaving(true);

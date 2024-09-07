@@ -17,7 +17,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 		formState: { errors },
 		register,
 	} = useFormContext<TriggerFormData>();
-	const connectionType = useWatch({ name: "connection.value" });
+	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 
 	return (
 		<>
@@ -48,6 +48,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 					{...register("entryFunction")}
 					isError={!!errors.entryFunction}
 					label={t("placeholders.functionName")}
+					value={watchedFunctionName}
 				/>
 
 				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
@@ -61,7 +62,6 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 							{...register("eventType")}
 							isError={!!errors.eventType}
 							label={t("placeholders.eventType")}
-							name="eventType"
 						/>
 
 						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
@@ -73,7 +73,6 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 							{...register("filter")}
 							isError={!!errors.filter}
 							label={t("placeholders.filter")}
-							name="filter"
 						/>
 
 						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
