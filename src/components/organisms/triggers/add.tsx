@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-import { Controller, FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { infoCronExpressionsLinks } from "@constants";
+import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { SelectOption } from "@interfaces/components";
 import { TriggersService } from "@services";
 import { TriggerTypes } from "@src/enums";
@@ -14,78 +14,14 @@ import { TriggerFormData, triggerResolver } from "@validations";
 import { useFetchConnections, useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
-import { ErrorMessage, Input, Link, Loader } from "@components/atoms";
-import { Accordion, Select, TabFormHeader } from "@components/molecules";
+import { Loader } from "@components/atoms";
+import { TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
 	SchedulerInfo,
 	WebhookFields,
 } from "@components/organisms/triggers/formParts";
-
-import { ExternalLinkIcon } from "@assets/image/icons";
-
-const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[] }) => {
-	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
-	const {
-		control,
-		formState: { errors },
-		register,
-	} = useFormContext<TriggerFormData>();
-
-	return (
-		<>
-			<div className="relative">
-				<Controller
-					control={control}
-					name="filePath"
-					render={({ field }) => (
-						<Select
-							{...field}
-							aria-label={t("placeholders.selectFile")}
-							dataTestid="select-file"
-							isError={!!errors.filePath}
-							label={t("placeholders.file")}
-							noOptionsLabel={t("noFilesAvailable")}
-							options={filesNameList}
-							placeholder={t("placeholders.selectFile")}
-						/>
-					)}
-				/>
-
-				<ErrorMessage>{String(errors.filePath?.message)}</ErrorMessage>
-			</div>
-
-			<div className="relative">
-				<Input
-					aria-label={t("placeholders.functionName")}
-					isError={!!errors.entryFunction}
-					label={t("placeholders.functionName")}
-					{...register("entryFunction")}
-				/>
-
-				<ErrorMessage>{String(errors.entryFunction?.message)}</ErrorMessage>
-			</div>
-
-			<Accordion className="mt-4" title={t("information")}>
-				<div className="flex flex-col items-start gap-2">
-					{infoCronExpressionsLinks.map(({ text, url }, index) => (
-						<Link
-							className="inline-flex items-center gap-2.5 text-green-800"
-							key={index}
-							target="_blank"
-							to={url}
-						>
-							{text}
-
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
-						</Link>
-					))}
-				</div>
-			</Accordion>
-		</>
-	);
-};
 
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
