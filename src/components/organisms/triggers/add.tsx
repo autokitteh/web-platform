@@ -190,7 +190,7 @@ export const AddTrigger = () => {
 				<TabFormHeader className="mb-10" form="triggerForm" isLoading={isSaving} title={t("addNewTrigger")} />
 
 				<form className="flex flex-col gap-6" id="triggerForm" onSubmit={handleSubmit(onSubmit)}>
-					<NameAndConnectionFields connections={connections} isEdit={false} />
+					<NameAndConnectionFields connections={connections} />
 
 					{connectionType === TriggerTypes.webhook ? <WebhookFields /> : null}
 

@@ -9,7 +9,7 @@ import { TriggerFormData } from "@validations/newTrigger.schema";
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";
 
-export const NameAndConnectionFields = ({ connections, isEdit }: { connections: SelectOption[]; isEdit: boolean }) => {
+export const NameAndConnectionFields = ({ connections, isEdit }: { connections: SelectOption[]; isEdit?: boolean }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const {
 		control,

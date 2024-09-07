@@ -152,7 +152,7 @@ export const EditTrigger = () => {
 					id={TriggerFormIds.modifyTriggerForm}
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<NameAndConnectionFields connections={connections} isEdit={false} />
+					<NameAndConnectionFields connections={connections} isEdit />
 
 					{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 
