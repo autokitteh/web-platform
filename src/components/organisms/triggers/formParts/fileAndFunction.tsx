@@ -17,6 +17,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 		formState: { errors },
 		register,
 	} = useFormContext<TriggerFormData>();
+	const connectionType = useWatch({ name: "connection.value" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 
 	return (
