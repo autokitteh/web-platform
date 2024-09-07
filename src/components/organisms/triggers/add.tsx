@@ -13,83 +13,16 @@ import { TriggerFormData, triggerResolver } from "@validations";
 import { useFetchConnections, useFileOperations } from "@hooks";
 import { useToastStore } from "@store";
 
-import { Button, ErrorMessage, Input, Link, Loader } from "@components/atoms";
+import { ErrorMessage, Input, Link, Loader } from "@components/atoms";
 import { Accordion, Select, TabFormHeader } from "@components/molecules";
+import {
+	NameAndConnectionFields,
+	SchedulerFields,
+	SchedulerInfo,
+	WebhookFields,
+} from "@components/organisms/triggers/formParts";
 
-import { CopyIcon, ExternalLinkIcon } from "@assets/image/icons";
-
-const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
-	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
-	const {
-		control,
-		formState: { errors },
-		register,
-	} = useFormContext<TriggerFormData>();
-
-	return (
-		<>
-			<div className="relative">
-				<Input
-					aria-label={t("placeholders.name")}
-					{...register("name")}
-					isError={!!errors.name}
-					label={t("placeholders.name")}
-				/>
-
-				<ErrorMessage>{String(errors.name?.message)}</ErrorMessage>
-			</div>
-
-			<div className="relative">
-				<Controller
-					control={control}
-					name="connection"
-					render={({ field }) => (
-						<Select
-							{...field}
-							aria-label={t("placeholders.selectConnection")}
-							dataTestid="select-trigger-type"
-							isError={!!errors.connection}
-							label={t("placeholders.connection")}
-							noOptionsLabel={t("noConnectionsAvailable")}
-							options={connections}
-							placeholder={t("placeholders.selectConnection")}
-						/>
-					)}
-				/>
-
-				<ErrorMessage>{String(errors.connection?.message)}</ErrorMessage>
-			</div>
-		</>
-	);
-};
-
-const WebhookFields = () => {
-	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
-	const { t: tGlobal } = useTranslation("global");
-
-	return (
-		<div className="relative flex gap-2">
-			<Input
-				aria-label={t("placeholders.webhookUrl")}
-				className="w-full"
-				disabled
-				label={t("placeholders.webhookUrl")}
-				placeholder="The webhook URL will be generated after saving the trigger."
-			/>
-
-			<Button
-				aria-label={tGlobal("copy")}
-				className="w-fit rounded-md border-black bg-white px-5 font-semibold hover:bg-gray-950"
-				disabled
-				variant="outline"
-			>
-				<CopyIcon className="h-3.5 w-3.5 fill-black" />
-
-				{tGlobal("copy")}
-			</Button>
-		</div>
-	);
-};
+import { ExternalLinkIcon } from "@assets/image/icons";
 
 const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[] }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
@@ -153,16 +86,6 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 	);
 };
 
-const ConnectionTypeFields = () => {
-	const connectionType = useWatch({ name: "connection.value" });
-
-	if (connectionType === TriggerTypes.webhook) {
-		return <WebhookFields />;
-	}
-
-	return null;
-};
-
 export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
@@ -188,11 +111,7 @@ export const AddTrigger = () => {
 		resolver: triggerResolver,
 	});
 
-	const {
-		formState: { errors },
-		handleSubmit,
-		register,
-	} = methods;
+	const { handleSubmit } = methods;
 
 	React.useEffect(() => {
 		const loadFiles = async () => {
@@ -271,25 +190,16 @@ export const AddTrigger = () => {
 				<TabFormHeader className="mb-10" form="triggerForm" isLoading={isSaving} title={t("addNewTrigger")} />
 
 				<form className="flex flex-col gap-6" id="triggerForm" onSubmit={handleSubmit(onSubmit)}>
-					<CommonFields connections={connections} />
+					<NameAndConnectionFields connections={connections} isEdit={false} />
 
-					<ConnectionTypeFields />
+					{connectionType === TriggerTypes.webhook ? <WebhookFields /> : null}
 
-					{connectionType === TriggerTypes.schedule ? (
-						<div className="relative">
-							<Input
-								aria-label={t("placeholders.cron")}
-								{...register("cron")}
-								isError={!!errors.cron}
-								label={t("placeholders.cron")}
-							/>
-
-							<ErrorMessage>{String(errors.cron?.message)}</ErrorMessage>
-						</div>
-					) : null}
+					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 
 					<TriggerSpecificFields filesNameList={filesNameList} />
 				</form>
+
+				{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
 			</div>
 		</FormProvider>
 	);
