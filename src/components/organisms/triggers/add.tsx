@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
+import { Controller, FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -23,6 +23,7 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 	const {
 		control,
 		formState: { errors },
+		register,
 	} = useFormContext<TriggerFormData>();
 
 	return (
@@ -30,26 +31,30 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 			<div className="relative">
 				<Input
 					aria-label={t("placeholders.name")}
-					control={control}
+					{...register("name")}
 					isError={!!errors.name}
 					label={t("placeholders.name")}
-					name="name"
 				/>
 
 				<ErrorMessage>{errors.name?.message?.toString() || ""}</ErrorMessage>
 			</div>
 
 			<div className="relative">
-				<Select
-					aria-label={t("placeholders.selectConnection")}
+				<Controller
 					control={control}
-					dataTestid="select-trigger-type"
-					isError={!!errors.connection}
-					label={t("placeholders.connection")}
 					name="connection"
-					noOptionsLabel={t("noConnectionsAvailable")}
-					options={connections}
-					placeholder={t("placeholders.selectConnection")}
+					render={({ field }) => (
+						<Select
+							{...field}
+							aria-label={t("placeholders.selectConnection")}
+							dataTestid="select-trigger-type"
+							isError={!!errors.connection}
+							label={t("placeholders.connection")}
+							noOptionsLabel={t("noConnectionsAvailable")}
+							options={connections}
+							placeholder={t("placeholders.selectConnection")}
+						/>
+					)}
 				/>
 
 				<ErrorMessage>{errors.connection?.message?.toString() || ""}</ErrorMessage>
@@ -69,7 +74,6 @@ const WebhookFields = () => {
 				className="w-full"
 				disabled
 				label={t("placeholders.webhookUrl")}
-				name="webhookUrl"
 				placeholder="The webhook URL will be generated after saving the trigger."
 			/>
 
@@ -92,21 +96,27 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 	const {
 		control,
 		formState: { errors },
+		register,
 	} = useFormContext<TriggerFormData>();
 
 	return (
 		<>
 			<div className="relative">
-				<Select
-					aria-label={t("placeholders.selectFile")}
+				<Controller
 					control={control}
-					dataTestid="select-file"
-					isError={!!errors.filePath}
-					label={t("placeholders.file")}
 					name="filePath"
-					noOptionsLabel={t("noFilesAvailable")}
-					options={filesNameList}
-					placeholder={t("placeholders.selectFile")}
+					render={({ field }) => (
+						<Select
+							{...field}
+							aria-label={t("placeholders.selectFile")}
+							dataTestid="select-file"
+							isError={!!errors.filePath}
+							label={t("placeholders.file")}
+							noOptionsLabel={t("noFilesAvailable")}
+							options={filesNameList}
+							placeholder={t("placeholders.selectFile")}
+						/>
+					)}
 				/>
 
 				<ErrorMessage>{errors.filePath?.message?.toString() || ""}</ErrorMessage>
@@ -115,10 +125,9 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 			<div className="relative">
 				<Input
 					aria-label={t("placeholders.functionName")}
-					control={control}
 					isError={!!errors.entryFunction}
 					label={t("placeholders.functionName")}
-					name="entryFunction"
+					{...register("entryFunction")}
 				/>
 
 				<ErrorMessage>{errors.entryFunction?.message?.toString() || ""}</ErrorMessage>
@@ -180,9 +189,9 @@ export const AddTrigger = () => {
 	});
 
 	const {
-		control,
 		formState: { errors },
 		handleSubmit,
+		register,
 	} = methods;
 
 	React.useEffect(() => {
@@ -250,6 +259,8 @@ export const AddTrigger = () => {
 		}
 	};
 
+	const connectionType = useWatch({ control: methods.control, name: "connection.value" });
+
 	if (isLoadingConnections || isLoadingFiles) {
 		return <Loader isCenter size="xl" />;
 	}
@@ -264,17 +275,18 @@ export const AddTrigger = () => {
 
 					<ConnectionTypeFields />
 
-					<div className="relative">
-						<Input
-							aria-label={t("placeholders.cron")}
-							control={control}
-							isError={!!errors.cron}
-							label={t("placeholders.cron")}
-							name="cron"
-						/>
+					{connectionType === TriggerTypes.schedule ? (
+						<div className="relative">
+							<Input
+								aria-label={t("placeholders.cron")}
+								{...register("cron")}
+								isError={!!errors.cron}
+								label={t("placeholders.cron")}
+							/>
 
-						<ErrorMessage>{errors.cron?.message?.toString() || ""}</ErrorMessage>
-					</div>
+							<ErrorMessage>{errors.cron?.message?.toString() || ""}</ErrorMessage>
+						</div>
+					) : null}
 
 					<TriggerSpecificFields filesNameList={filesNameList} />
 				</form>

@@ -74,7 +74,6 @@ export const JiraIntegrationAddForm = ({
 			<Select
 				aria-label={t("placeholders.selectConnectionType")}
 				label={t("placeholders.connectionType")}
-				name="connectionType"
 				onChange={(option) => setConnectionType(option)}
 				options={selectIntegrationJira}
 				placeholder={t("placeholders.selectConnectionType")}

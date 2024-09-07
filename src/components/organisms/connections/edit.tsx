@@ -68,7 +68,6 @@ export const EditConnection = () => {
 					aria-label={t("placeholders.selectIntegration")}
 					disabled
 					label={t("placeholders.integration")}
-					name="integration"
 					options={integrationTypes}
 					placeholder={t("placeholders.selectIntegration")}
 					value={selectedIntegration}

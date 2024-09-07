@@ -23,15 +23,7 @@ const SelectWrapper = ({ emptyList = false, ...props }: SelectProps & { emptyLis
 
 	const optionsList = emptyList ? [] : options;
 
-	return (
-		<Select
-			{...props}
-			name="test"
-			onChange={handleChange}
-			options={optionsList}
-			value={selectedOption as SelectOption}
-		/>
-	);
+	return <Select {...props} onChange={handleChange} options={optionsList} value={selectedOption as SelectOption} />;
 };
 
 const meta: Meta<typeof SelectWrapper> = {

@@ -1,15 +1,7 @@
-import React, { forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useId, useMemo, useState } from "react";
 
-import { Control, useController } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import ReactSelect, {
-	GroupBase,
-	OptionProps,
-	SelectInstance,
-	SingleValue,
-	SingleValueProps,
-	components,
-} from "react-select";
+import ReactSelect, { OptionProps, SingleValue, SingleValueProps, components } from "react-select";
 
 import { getSelectDarkStyles, getSelectLightStyles } from "@constants";
 import { SelectOption, SelectProps } from "@interfaces/components";
@@ -17,60 +9,43 @@ import { cn } from "@utilities";
 
 import { IconLabel } from "@components/molecules/select";
 
-interface ExtendedSelectProps extends Omit<SelectProps, "ref"> {
-	control?: Control<any>;
-	name: string;
-}
-
-export const Select = forwardRef<HTMLDivElement, ExtendedSelectProps>(
+export const Select = forwardRef<HTMLDivElement, SelectProps>(
 	(
 		{
-			control,
 			dataTestid,
 			disabled = false,
 			isError = false,
 			label,
-			name,
 			noOptionsLabel,
 			onChange,
 			options,
 			placeholder = "Select",
-			value: propValue,
+			value,
 			variant,
 			...rest
 		},
 		ref
 	) => {
-		const selectRef = useRef<SelectInstance<SelectOption, false, GroupBase<SelectOption>> | null>(null);
-		const useControllerProps = control ? { control, name } : undefined;
-		const {
-			field: { onBlur, onChange: fieldOnChange, ref: fieldRef, value },
-		} = useController(useControllerProps || { name });
-
 		const [selectedOption, setSelectedOption] = useState<SingleValue<SelectOption>>(null);
 		const [isFocused, setIsFocused] = useState(false);
 		const { t } = useTranslation("components", { keyPrefix: "select" });
 		const { Option, SingleValue } = components;
 
 		useEffect(() => {
-			const valueSelected = options.find((option) => option.value === (value || propValue)?.value) || null;
+			const valueSelected = options.find((option) => option.value === value?.value) || null;
 			setSelectedOption(valueSelected);
-		}, [value, propValue, options]);
+		}, [value, options]);
 
 		const handleChange = useCallback(
 			(selected: SingleValue<SelectOption>) => {
 				setSelectedOption(selected);
-				fieldOnChange(selected);
 				onChange?.(selected);
 			},
-			[onChange, fieldOnChange]
+			[onChange]
 		);
 
 		const handleFocus = useCallback(() => setIsFocused(true), []);
-		const handleBlur = useCallback(() => {
-			setIsFocused(false);
-			onBlur();
-		}, [onBlur]);
+		const handleBlur = useCallback(() => setIsFocused(false), []);
 
 		const noOptionsMessage = useMemo(() => () => noOptionsLabel || t("noOptionsAvailable"), [noOptionsLabel, t]);
 		const selectStyles = useMemo(
@@ -123,13 +98,6 @@ export const Select = forwardRef<HTMLDivElement, ExtendedSelectProps>(
 			);
 		};
 
-		useEffect(() => {
-			if (selectRef.current) {
-				const inputElement = selectRef.current.inputRef;
-				fieldRef(inputElement);
-			}
-		}, [fieldRef]);
-
 		return (
 			<div className="relative" data-testid={dataTestid} ref={ref}>
 				<ReactSelect
@@ -144,9 +112,6 @@ export const Select = forwardRef<HTMLDivElement, ExtendedSelectProps>(
 					onFocus={handleFocus}
 					options={options}
 					placeholder={placeholder}
-					ref={(instance) => {
-						selectRef.current = instance;
-					}}
 					styles={selectStyles}
 					value={selectedOption}
 				/>

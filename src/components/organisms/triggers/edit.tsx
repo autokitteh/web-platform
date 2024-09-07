@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
+import { Controller, FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
@@ -29,6 +29,7 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 	const {
 		control,
 		formState: { errors },
+		register,
 	} = useFormContext<TriggerFormData>();
 
 	return (
@@ -36,28 +37,32 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 			<div className="relative">
 				<Input
 					aria-label={t("placeholders.name")}
-					control={control}
+					{...register("name")}
 					disabled
 					isError={!!errors.name}
 					label={t("placeholders.name")}
-					name="name"
 				/>
 
 				<ErrorMessage>{errors.name?.message?.toString() || ""}</ErrorMessage>
 			</div>
 
 			<div className="relative">
-				<Select
-					aria-label={t("placeholders.selectConnection")}
+				<Controller
 					control={control}
-					dataTestid="select-trigger-type"
-					disabled
-					isError={!!errors.connection}
-					label={t("placeholders.connection")}
 					name="connection"
-					noOptionsLabel={t("noConnectionsAvailable")}
-					options={connections}
-					placeholder={t("placeholders.selectConnection")}
+					render={({ field }) => (
+						<Select
+							{...field}
+							aria-label={t("placeholders.selectConnection")}
+							dataTestid="select-trigger-type"
+							disabled
+							isError={!!errors.connection}
+							label={t("placeholders.connection")}
+							noOptionsLabel={t("noConnectionsAvailable")}
+							options={connections}
+							placeholder={t("placeholders.selectConnection")}
+						/>
+					)}
 				/>
 
 				<ErrorMessage>{errors.connection?.message?.toString() || ""}</ErrorMessage>
@@ -69,18 +74,17 @@ const CommonFields = ({ connections }: { connections: SelectOption[] }) => {
 const SchedulerFields = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const {
-		control,
 		formState: { errors },
+		register,
 	} = useFormContext<TriggerFormData>();
 
 	return (
 		<div className="relative">
 			<Input
 				aria-label={t("placeholders.cron")}
-				control={control}
+				{...register("cron")}
 				isError={!!errors.cron}
 				label={t("placeholders.cron")}
-				name="cron"
 			/>
 
 			<ErrorMessage>{errors.cron?.message?.toString() || ""}</ErrorMessage>
@@ -124,22 +128,28 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 	const {
 		control,
 		formState: { errors },
+		register,
 	} = useFormContext<TriggerFormData>();
 	const connectionType = useWatch({ name: "connection.value" });
 
 	return (
 		<>
 			<div className="relative">
-				<Select
-					aria-label={t("placeholders.selectFile")}
+				<Controller
 					control={control}
-					dataTestid="select-file"
-					isError={!!errors.filePath}
-					label={t("placeholders.file")}
 					name="filePath"
-					noOptionsLabel={t("noFilesAvailable")}
-					options={filesNameList}
-					placeholder={t("placeholders.selectFile")}
+					render={({ field }) => (
+						<Select
+							{...field}
+							aria-label={t("placeholders.selectFile")}
+							dataTestid="select-file"
+							isError={!!errors.filePath}
+							label={t("placeholders.file")}
+							noOptionsLabel={t("noFilesAvailable")}
+							options={filesNameList}
+							placeholder={t("placeholders.selectFile")}
+						/>
+					)}
 				/>
 
 				<ErrorMessage>{errors.filePath?.message?.toString() || ""}</ErrorMessage>
@@ -148,10 +158,9 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 			<div className="relative">
 				<Input
 					aria-label={t("placeholders.functionName")}
-					control={control}
+					{...register("entryFunction")}
 					isError={!!errors.entryFunction}
 					label={t("placeholders.functionName")}
-					name="entryFunction"
 				/>
 
 				<ErrorMessage>{errors.entryFunction?.message?.toString() || ""}</ErrorMessage>
@@ -162,7 +171,7 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 					<div className="relative">
 						<Input
 							aria-label={t("placeholders.eventType")}
-							control={control}
+							{...register("eventType")}
 							isError={!!errors.eventType}
 							label={t("placeholders.eventType")}
 							name="eventType"
@@ -174,7 +183,7 @@ const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[
 					<div className="relative">
 						<Input
 							aria-label={t("placeholders.filter")}
-							control={control}
+							{...register("filter")}
 							isError={!!errors.filter}
 							label={t("placeholders.filter")}
 							name="filter"

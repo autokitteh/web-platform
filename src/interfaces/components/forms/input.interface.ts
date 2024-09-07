@@ -1,7 +1,5 @@
 import { ReactNode } from "react";
 
-import { Control } from "react-hook-form";
-
 import { InputType } from "@type/components";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -14,9 +12,4 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 	isRequired?: boolean;
 	placeholder?: string;
 	variant?: InputType;
-}
-
-export interface ExtendedInputProps extends InputProps {
-	control?: Control<any>;
-	name?: string;
 }

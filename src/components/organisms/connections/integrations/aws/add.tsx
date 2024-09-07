@@ -41,7 +41,6 @@ export const AwsIntegrationAddForm = ({
 					aria-label={t("aws.placeholders.region")}
 					isError={!!errors.region}
 					label={t("aws.placeholders.region")}
-					name="region"
 					onChange={(selectedRegion) => {
 						setValue("region", selectedRegion);
 						clearErrors("region");
