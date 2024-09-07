@@ -39,6 +39,7 @@ export const CopyButton = ({
 			className={copyButtonStyle}
 			onClick={() => copyTextToClipboard(text)}
 			title={text}
+			type="button"
 		>
 			<CopyIcon className={copyButtonIconStyle} />
 		</IconButton>

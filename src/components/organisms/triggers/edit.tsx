@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { z } from "zod";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
@@ -29,7 +29,6 @@ type TriggerFormData = z.infer<typeof triggerSchema>;
 
 export const EditTrigger = () => {
 	const { projectId, triggerId } = useParams();
-	const navigate = useNavigate();
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
@@ -75,7 +74,8 @@ export const EditTrigger = () => {
 		};
 
 		loadFiles();
-	}, [fetchResources, addToast, tErrors]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (trigger && connections.length && !isLoadingTrigger && !isLoadingConnections) {
@@ -96,8 +96,12 @@ export const EditTrigger = () => {
 	const onSubmit = async (data: TriggerFormData) => {
 		setIsSaving(true);
 		try {
+			const sourceType = data.connection.value in TriggerTypes ? data.connection.value : TriggerTypes.connection;
+			const connectionId = data.connection.value in TriggerTypes ? undefined : data.connection.value;
+
 			const { error } = await TriggersService.update(projectId!, {
-				sourceType: data.connection.value as TriggerTypes,
+				sourceType,
+				connectionId,
 				name: data.name,
 				path: data.filePath.value,
 				entryFunction: data.entryFunction,
@@ -113,6 +117,8 @@ export const EditTrigger = () => {
 					message: tErrors("triggerNotEdited"),
 					type: "error",
 				});
+
+				return;
 			}
 
 			addToast({
@@ -120,7 +126,6 @@ export const EditTrigger = () => {
 				message: t("updatedSuccessfully"),
 				type: "success",
 			});
-			navigate(`/projects/${projectId}/triggers`);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),

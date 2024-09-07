@@ -79,8 +79,12 @@ export const AddTrigger = () => {
 	const onSubmit = async (data: TriggerFormData) => {
 		setIsSaving(true);
 		try {
-			const { error } = await TriggersService.create(projectId!, {
-				sourceType: data.connection.value as TriggerTypes,
+			const sourceType = data.connection.value in TriggerTypes ? data.connection.value : TriggerTypes.connection;
+			const connectionId = data.connection.value in TriggerTypes ? undefined : data.connection.value;
+
+			const { data: triggerId, error } = await TriggersService.create(projectId!, {
+				sourceType,
+				connectionId,
 				name: data.name,
 				path: data.filePath.value,
 				entryFunction: data.entryFunction,
@@ -105,7 +109,7 @@ export const AddTrigger = () => {
 				message: t("createdSuccessfully"),
 				type: "success",
 			});
-			navigate(`/projects/${projectId}/triggers`);
+			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
 		} catch (error) {
 			addToast({
 				id: Date.now().toString(),

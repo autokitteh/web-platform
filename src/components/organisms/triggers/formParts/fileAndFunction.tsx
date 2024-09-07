@@ -19,6 +19,8 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 	} = useFormContext<TriggerFormData>();
 	const connectionType = useWatch({ name: "connection.value" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
+	const watchedEventType = useWatch({ control, name: "eventType" });
+	const watchedFilter = useWatch({ control, name: "filter" });
 
 	return (
 		<>
@@ -55,7 +57,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 			</div>
 
-			{connectionType === TriggerTypes.connection ? (
+			{connectionType !== TriggerTypes.webhook && connectionType !== TriggerTypes.schedule ? (
 				<>
 					<div className="relative">
 						<Input
@@ -63,6 +65,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 							{...register("eventType")}
 							isError={!!errors.eventType}
 							label={t("placeholders.eventType")}
+							value={watchedEventType}
 						/>
 
 						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
@@ -74,6 +77,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 							{...register("filter")}
 							isError={!!errors.filter}
 							label={t("placeholders.filter")}
+							value={watchedFilter}
 						/>
 
 						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>

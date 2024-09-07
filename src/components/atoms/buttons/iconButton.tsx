@@ -17,6 +17,7 @@ export const IconButton = ({
 	onMouseEnter,
 	onMouseLeave,
 	title,
+	type = "button",
 	variant,
 }: IconButtonProps) => {
 	const iconButtonClass = cn(
@@ -47,6 +48,7 @@ export const IconButton = ({
 			role="button"
 			tabIndex={0}
 			title={title}
+			type={type}
 			{...linkHref}
 		>
 			{children}

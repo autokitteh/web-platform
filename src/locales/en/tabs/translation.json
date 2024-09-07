@@ -53,12 +53,12 @@
 		"noFileText": "// Click on a file to start editing or create a new one"
 	},
 	"triggers": {
-		"createdSuccessfully": "Trigger created successfully",
 		"buttons": {
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
 		"form": {
+			"createdSuccessfully": "Trigger created successfully",
 			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
 			"cronSchedulerConnectionTitle": "Scheduler",
 			"addNewTrigger": "Add new trigger",

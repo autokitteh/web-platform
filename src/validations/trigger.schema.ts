@@ -31,12 +31,7 @@ i18n.on("initialized", () => {
 		entryFunction: z.string().min(1, i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" })),
 		eventType: z.string().optional(),
 		filter: z.string().optional(),
-		cron: z
-			.string()
-			.regex(new RegExp(cronFormat), {
-				message: i18n.t("triggers.form.validations.invalidCron", { ns: "tabs" }),
-			})
-			.optional(),
+		cron: z.string().optional(),
 	});
 });
 
