@@ -4,6 +4,7 @@ export type Trigger = {
 	connectionId?: string;
 	connectionName?: string;
 	entryFunction: string;
+	entrypoint?: string;
 	eventType: string;
 	filter?: string;
 	name: string;

@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { TriggersService } from "@services";
-import { TriggerTypes } from "@src/enums";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -16,7 +15,7 @@ import { SortButton } from "@components/molecules";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 
 import { PlusCircle } from "@assets/image";
-import { ClockIcon, EditIcon, TrashIcon } from "@assets/image/icons";
+import { EditIcon, TrashIcon } from "@assets/image/icons";
 
 export const TriggersTable = () => {
 	const { t: tError } = useTranslation("errors");
@@ -118,25 +117,22 @@ export const TriggersTable = () => {
 								/>
 							</Th>
 
-							<Th
-								className="group cursor-pointer font-normal"
-								onClick={() => requestSort("connectionName")}
-							>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("sourceType")}>
 								{t("table.columns.connection")}
 
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"connectionName" === sortConfig.key}
+									isActive={"sourceType" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
-							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("path")}>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("entrypoint")}>
 								{t("table.columns.call")}
 
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"path" === sortConfig.key}
+									isActive={"entrypoint" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
@@ -150,19 +146,17 @@ export const TriggersTable = () => {
 							<Tr className="group" key={trigger.triggerId}>
 								<Td className="font-semibold">
 									<div className="flex gap-3">
-										{trigger.sourceType === TriggerTypes.schedule ? (
-											<ClockIcon className="w-4 fill-white" />
-										) : null}
-
 										<div>{trigger.name}</div>
 									</div>
 								</Td>
 
-								<Td>{trigger.sourceType}</Td>
-
 								<Td>
-									{trigger.path}:{trigger.entryFunction}
+									<span className="capitalize" title={trigger.sourceType}>
+										{trigger.sourceType}
+									</span>
 								</Td>
+
+								<Td>{trigger.entrypoint}</Td>
 
 								<Td className="max-w-20 pr-0">
 									<div className="flex space-x-1">

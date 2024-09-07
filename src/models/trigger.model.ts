@@ -19,4 +19,5 @@ export const convertTriggerProtoToModel = (protoTrigger: ProtoTrigger): Trigger 
 	name: protoTrigger.name,
 	path: protoTrigger.codeLocation!.path,
 	triggerId: protoTrigger.triggerId,
+	entrypoint: `${protoTrigger.codeLocation!.path}:${protoTrigger.codeLocation!.name}`,
 });
