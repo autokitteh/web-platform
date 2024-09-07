@@ -131,7 +131,11 @@ export const AddTrigger = () => {
 					title={t("addNewTrigger")}
 				/>
 
-				<form className="flex flex-col gap-6" id="triggerForm" onSubmit={handleSubmit(onSubmit)}>
+				<form
+					className="flex flex-col gap-6"
+					id={TriggerFormIds.addTriggerForm}
+					onSubmit={handleSubmit(onSubmit)}
+				>
 					<NameAndConnectionFields connections={connections} />
 
 					{connectionType === TriggerTypes.webhook ? <WebhookFields /> : null}

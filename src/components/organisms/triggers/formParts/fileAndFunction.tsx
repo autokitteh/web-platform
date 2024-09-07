@@ -39,7 +39,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 					)}
 				/>
 
-				<ErrorMessage>{String(errors.filePath?.message)}</ErrorMessage>
+				<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">
@@ -50,7 +50,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 					label={t("placeholders.functionName")}
 				/>
 
-				<ErrorMessage>{String(errors.entryFunction?.message)}</ErrorMessage>
+				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 			</div>
 
 			{connectionType === TriggerTypes.connection ? (
@@ -64,7 +64,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 							name="eventType"
 						/>
 
-						<ErrorMessage>{String(errors.eventType?.message)}</ErrorMessage>
+						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
 					</div>
 
 					<div className="relative">
@@ -76,7 +76,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 							name="filter"
 						/>
 
-						<ErrorMessage>{String(errors.filter?.message)}</ErrorMessage>
+						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
 					</div>
 				</>
 			) : null}

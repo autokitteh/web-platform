@@ -5,7 +5,6 @@ import { ZodObject, ZodTypeAny, z } from "zod";
 import { TriggerTypes } from "@src/enums";
 
 const selectItemSchema = z.object({
-	disabled: z.boolean().optional(),
 	label: z.string(),
 	value: z.string(),
 });
@@ -22,21 +21,20 @@ const cronFormat =
 
 i18n.on("initialized", () => {
 	triggerSchema = z.object({
-		name: z.string().min(1, "Name is required"),
-		connection: z.object({
-			label: z.string(),
-			value: z.string().min(1, "Connection is required"),
+		name: z.string().min(1, i18n.t("triggers.form.validations.nameRequired", { ns: "tabs" })),
+		connection: selectItemSchema.refine((value) => value.label, {
+			message: i18n.t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
 		}),
 		filePath: selectItemSchema.refine((value) => value.label, {
-			message: "File name is required",
+			message: i18n.t("triggers.form.validations.fileRequired", { ns: "tabs" }),
 		}),
-		entryFunction: z.string().min(1, "Function name is required"),
+		entryFunction: z.string().min(1, i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" })),
 		eventType: z.string().optional(),
 		filter: z.string().optional(),
 		cron: z
 			.string()
 			.regex(new RegExp(cronFormat), {
-				message: "Invalid cron expression format",
+				message: i18n.t("triggers.form.validations.invalidCron", { ns: "tabs" }),
 			})
 			.optional(),
 	});
@@ -45,10 +43,8 @@ i18n.on("initialized", () => {
 export type TriggerFormData = z.infer<typeof triggerSchema>;
 export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 	try {
-		// First, validate with the base schema
 		const validatedData = await triggerSchema.parseAsync(values);
 
-		// Then, apply custom validation
 		if (validatedData.connection.value === TriggerTypes.schedule) {
 			if (!validatedData.cron || !new RegExp(cronFormat).test(validatedData.cron)) {
 				return {
@@ -56,20 +52,18 @@ export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 					errors: {
 						cron: {
 							type: "manual",
-							message: "Cron expression is required and must be valid for schedule triggers",
+							message: i18n.t("triggers.form.validations.invalidCron", { ns: "tabs" }),
 						},
 					},
 				};
 			}
 		}
 
-		// If all validations pass, return the validated data
 		return {
 			values: validatedData,
 			errors: {},
 		};
 	} catch (error) {
-		// If Zod validation fails, format the errors
 		if (error instanceof z.ZodError) {
 			const errors = error.errors.reduce(
 				(acc, error) => {
@@ -87,7 +81,6 @@ export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 			};
 		}
 
-		// If it's not a Zod error, re-throw
 		throw error;
 	}
 };

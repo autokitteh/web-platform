@@ -28,7 +28,7 @@ export const NameAndConnectionFields = ({ connections, isEdit }: { connections: 
 					label={t("placeholders.name")}
 				/>
 
-				<ErrorMessage>{String(errors.name?.message)}</ErrorMessage>
+				<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">
@@ -50,7 +50,7 @@ export const NameAndConnectionFields = ({ connections, isEdit }: { connections: 
 					)}
 				/>
 
-				<ErrorMessage>{String(errors.connection?.message)}</ErrorMessage>
+				<ErrorMessage>{errors.connection?.message as string}</ErrorMessage>
 			</div>
 		</>
 	);

@@ -23,7 +23,7 @@ export const SchedulerFields = () => {
 				label={t("placeholders.cron")}
 			/>
 
-			<ErrorMessage>{String(errors.cron?.message)}</ErrorMessage>
+			<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>
 		</div>
 	);
 };

@@ -98,6 +98,13 @@
 				"schedulerLabel": "Scheduler",
 				"webhookLabel": "Webhook",
 				"connectionLabel": "Connection"
+			},
+			"validations":{
+				"nameRequired": "Name is required",
+				"connectionRequired": "Connection is required",
+				"fileRequired": "File is required",
+				"functionRequired": "Function name is required",
+				"invalidCron": "Cron expression is required and must be valid for schedule triggers"
 			}
 		},
 		"table": {
