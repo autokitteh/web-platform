@@ -59,6 +59,7 @@
 			"loading": "Loading"
 		},
 		"form": {
+			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
 			"cronSchedulerConnectionTitle": "Scheduler",
 			"addNewTrigger": "Add new trigger",
 			"ariaDeleteData": "Delete {{name}} data",
