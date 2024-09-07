@@ -8,6 +8,7 @@ import { infoCronExpressionsLinks } from "@constants";
 import { SelectOption } from "@interfaces/components";
 import { TriggersService } from "@services";
 import { TriggerTypes } from "@src/enums";
+import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
 
 import { useFetchConnections, useFileOperations } from "@hooks";
@@ -187,7 +188,12 @@ export const AddTrigger = () => {
 	return (
 		<FormProvider {...methods}>
 			<div className="min-w-80">
-				<TabFormHeader className="mb-10" form="triggerForm" isLoading={isSaving} title={t("addNewTrigger")} />
+				<TabFormHeader
+					className="mb-10"
+					form={TriggerFormIds.addTriggerForm}
+					isLoading={isSaving}
+					title={t("addNewTrigger")}
+				/>
 
 				<form className="flex flex-col gap-6" id="triggerForm" onSubmit={handleSubmit(onSubmit)}>
 					<NameAndConnectionFields connections={connections} />

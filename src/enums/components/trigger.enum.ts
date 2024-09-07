@@ -5,4 +5,5 @@ export enum TriggerFormType {
 
 export enum TriggerFormIds {
 	modifyTriggerForm = "modifyTriggerForm",
+	addTriggerForm = "addTriggerForm",
 }
