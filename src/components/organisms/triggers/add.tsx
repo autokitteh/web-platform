@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -50,7 +50,7 @@ export const AddTrigger = () => {
 
 	const { handleSubmit } = methods;
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const loadFiles = async () => {
 			setIsLoadingFiles(true);
 			try {
