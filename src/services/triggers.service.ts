@@ -64,12 +64,7 @@ export class TriggersService {
 			const { trigger } = await triggersClient.get({ triggerId });
 			const convertedTrigger = convertTriggerProtoToModel(trigger!);
 
-			const triggerData = {
-				...convertedTrigger,
-				connectionName: "",
-			} as Trigger;
-
-			return { data: triggerData, error: undefined };
+			return { data: convertedTrigger, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
@@ -97,14 +92,7 @@ export class TriggersService {
 
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
 
-			const enrhichedTriggers = convertedTriggers.map((trigger) => {
-				return {
-					...trigger,
-					connectionName: "",
-				};
-			});
-
-			return { data: enrhichedTriggers, error: undefined };
+			return { data: convertedTriggers, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
 

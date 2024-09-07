@@ -158,7 +158,7 @@ export const TriggersTable = () => {
 									</div>
 								</Td>
 
-								<Td>{trigger.connectionName}</Td>
+								<Td>{trigger.sourceType}</Td>
 
 								<Td>
 									{trigger.path}:{trigger.entryFunction}
