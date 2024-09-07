@@ -15,6 +15,6 @@ export {
 	googleGeminiIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
-export type { TriggerFormData } from "@validations/newTrigger.schema";
-export { triggerSchema, triggerResolver } from "@validations/newTrigger.schema";
-export { newVariableShema } from "@validations/newVariable.schema";
+export type { TriggerFormData } from "@validations/trigger.schema";
+export { triggerSchema, triggerResolver } from "@validations/trigger.schema";
+export { newVariableShema } from "@validations/variable.schema";

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { TriggerTypes } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
-import { TriggerFormData } from "@validations/newTrigger.schema";
+import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";
