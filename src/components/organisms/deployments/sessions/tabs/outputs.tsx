@@ -1,26 +1,24 @@
-import React, { LegacyRef, useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { AutoSizer, CellMeasurer, CellMeasurerCache, Index, IndexRange, InfiniteLoader, List } from "react-virtualized";
 
-import { SessionsService } from "@services";
 import { defaultSessionLogRecordsListRowHeight, minimumSessionLogsRecordsToDisplayFallback } from "@src/constants";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
 import { SessionOutput } from "@src/types/models";
-import { useToastStore } from "@store/useToastStore";
+import { useCacheStore } from "@store/useCacheStore";
 
 import { Frame, Loader } from "@components/atoms";
 
 export const SessionOutputs: React.FC = () => {
-	const [logs, setLogs] = useState<SessionOutput[]>([]);
-	const [nextPageToken, setNextPageToken] = useState<string>();
 	const { sessionId } = useParams();
-	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
-	const isLoadingRef = useRef<boolean>(false);
 	const listRef = useRef<List | null>(null);
 	const frameRef = useRef<HTMLDivElement>(null);
+
+	const { loadLogs, loading, logs, nextPageToken, reset } = useCacheStore();
+	const [outputs, setOutputs] = useState<SessionOutput[]>([]);
 
 	const [dimensions, setDimensions] = useState<{ height: number; width: number }>({
 		height: 0,
@@ -32,47 +30,24 @@ export const SessionOutputs: React.FC = () => {
 		defaultHeight: defaultSessionLogRecordsListRowHeight,
 	});
 
-	const isRowLoaded = ({ index }: Index) => !!logs[index];
+	const isRowLoaded = ({ index }: Index) => !!outputs[index];
 
-	const loadMoreRows = async ({ startIndex }: IndexRange, height: number) => {
-		if (isLoadingRef.current || (!nextPageToken && startIndex !== 0)) {
-			return;
-		}
-		isLoadingRef.current = true;
+	const loadMoreRows = useCallback(
+		async ({ startIndex }: IndexRange, height: number) => {
+			if (loading || (!nextPageToken && startIndex !== 0)) {
+				return;
+			}
 
-		try {
 			const nextPageSize = Math.round(height / defaultSessionLogRecordsListRowHeight) + 10;
-
-			const { data, error } = await SessionsService.getLogRecordsBySessionId(
-				sessionId!,
-				nextPageToken,
-				nextPageSize
-			);
-			if (error) {
-				addToast({
-					id: `error-${Date.now()}`,
-					message: t("An error occurred") + `: ${error}`,
-					type: "error",
-				});
-			}
-			if (data) {
-				const convertedRecords = convertSessionLogProtoToViewerOutput(data.records);
-				setLogs((prev) => [...prev, ...convertedRecords]);
-				setNextPageToken(data.nextPageToken);
-			}
-		} catch (error) {
-			addToast({
-				id: `error-${Date.now()}`,
-				message: t("An error occurred") + `: ${error.message}`,
-				type: "error",
-			});
-		} finally {
-			isLoadingRef.current = false;
-		}
-	};
+			await loadLogs(sessionId!, nextPageSize);
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[nextPageToken]
+	);
 
 	useEffect(() => {
-		setLogs([]);
+		reset();
+		setOutputs([]);
 		if (!frameRef?.current?.offsetHeight) {
 			loadMoreRows({ startIndex: 0, stopIndex: 0 }, minimumSessionLogsRecordsToDisplayFallback);
 
@@ -84,9 +59,14 @@ export const SessionOutputs: React.FC = () => {
 		if (listRef.current) {
 			listRef.current.scrollToPosition(0);
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId]);
+	}, []);
+
+	useEffect(() => {
+		const convertedOutputs = convertSessionLogProtoToViewerOutput(logs);
+
+		setOutputs(convertedOutputs);
+	}, [logs]);
 
 	const rowRenderer = ({
 		index,
@@ -99,12 +79,12 @@ export const SessionOutputs: React.FC = () => {
 		parent: any;
 		style: React.CSSProperties;
 	}): React.ReactNode => {
-		const log = logs[index] || {};
+		const log = outputs[index] || {};
 
 		return (
 			<CellMeasurer cache={cache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
 				{({ measure, registerChild }) => (
-					<div ref={registerChild as LegacyRef<HTMLDivElement>} style={style}>
+					<div ref={registerChild as React.LegacyRef<HTMLDivElement>} style={style}>
 						<script onLoad={measure} />
 
 						<div className="flex">
@@ -128,7 +108,7 @@ export const SessionOutputs: React.FC = () => {
 
 	return (
 		<Frame className="h-full rounded-b-[0] pb-0 pl-0 transition" ref={frameRef}>
-			{isLoadingRef.current ? (
+			{loading && !outputs.length ? (
 				<Loader isCenter size="xl" />
 			) : (
 				<AutoSizer onResize={handleResize}>
@@ -139,7 +119,7 @@ export const SessionOutputs: React.FC = () => {
 								loadMoreRows({ startIndex, stopIndex }, dimensions.height)
 							}
 							minimumBatchSize={10}
-							rowCount={nextPageToken ? logs.length + 1 : logs.length}
+							rowCount={nextPageToken ? outputs.length + 1 : outputs.length}
 							threshold={15}
 						>
 							{({ onRowsRendered, registerChild }) => (
@@ -152,7 +132,7 @@ export const SessionOutputs: React.FC = () => {
 										registerChild(ref);
 										registerListRef(ref);
 									}}
-									rowCount={logs.length}
+									rowCount={outputs.length}
 									rowHeight={cache.rowHeight}
 									rowRenderer={rowRenderer}
 									width={dimensions.width}
@@ -163,7 +143,7 @@ export const SessionOutputs: React.FC = () => {
 				</AutoSizer>
 			)}
 
-			{!logs.length ? (
+			{!outputs.length && !loading ? (
 				<div className="center mt-20 flex flex-col">
 					<div className="mt-10 text-center text-xl font-semibold">{t("noLogsFound")}</div>
 				</div>
