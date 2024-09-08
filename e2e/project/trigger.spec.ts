@@ -4,12 +4,6 @@ import { expect, test } from "@e2e/fixtures";
 
 const triggerName = "triggerName";
 
-const backToTheList = async (page: Page) => {
-	const backButton = page.getByRole("button", { name: "Return back" });
-	await backButton.click();
-	await backButton.click();
-};
-
 async function createTriggerScheduler(
 	page: Page,
 	name: string,
@@ -78,7 +72,7 @@ test.describe("Project Triggers Suite", () => {
 		await expect(nameInput).toBeDisabled();
 		await expect(nameInput).toHaveValue(triggerName);
 
-		await backToTheList(page);
+		await page.getByRole("button", { name: "Return back" }).click();
 
 		const newRowInTable = page.getByRole("row", { name: "triggerName" });
 		await expect(newRowInTable).toHaveCount(1);
@@ -90,7 +84,7 @@ test.describe("Project Triggers Suite", () => {
 	test("Modify trigger with cron expression", async ({ page }) => {
 		await createTriggerScheduler(page, triggerName, "5 4 * * *", "newFile.star", "functionName");
 
-		backToTheList(page);
+		await page.getByRole("button", { name: "Return back" }).click();
 
 		await modifyTrigger(page, triggerName, "4 4 * * *", "newFunctionName");
 
@@ -112,7 +106,7 @@ test.describe("Project Triggers Suite", () => {
 
 	test("Delete trigger", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
-		await backToTheList(page);
+		await page.getByRole("button", { name: "Return back" }).click();
 		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newRowInTable).toBeVisible();
 
@@ -146,7 +140,7 @@ test.describe("Project Triggers Suite", () => {
 
 	test("Modify trigger without a values", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
-		await backToTheList(page);
+		await page.getByRole("button", { name: "Return back" }).click();
 
 		await page.getByRole("button", { name: "Modify triggerName trigger" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).click();
