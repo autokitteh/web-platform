@@ -17,8 +17,9 @@ export const SessionOutputs = () => {
 	const listRef = useRef<List | null>(null);
 	const frameRef = useRef<HTMLDivElement>(null);
 
-	const { loadLogs, loading, logs, nextPageToken, reset } = useCacheStore();
+	const { displayedSessionId, loadLogs, loading, logs, nextPageToken, reset } = useCacheStore();
 	const [outputs, setOutputs] = useState<SessionOutput[]>([]);
+	const [scrollPosition, setScrollPosition] = useState<number>(0);
 
 	const [dimensions, setDimensions] = useState<{ height: number; width: number }>({
 		height: 0,
@@ -41,12 +42,16 @@ export const SessionOutputs = () => {
 			const nextPageSize = Math.round(height / defaultSessionLogRecordsListRowHeight) + 10;
 			await loadLogs(sessionId!, nextPageSize);
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[nextPageToken]
+		[nextPageToken, loading, loadLogs, sessionId]
 	);
 
 	useEffect(() => {
-		if (logs.length) {
+		const savedScrollPosition = sessionStorage.getItem(`scrollPosition_${sessionId}`);
+		if (savedScrollPosition && listRef.current) {
+			listRef.current.scrollToPosition(parseInt(savedScrollPosition, 10));
+		}
+
+		if (logs.length && displayedSessionId === sessionId) {
 			return;
 		}
 		reset();
@@ -58,16 +63,11 @@ export const SessionOutputs = () => {
 		}
 
 		loadMoreRows({ startIndex: 0, stopIndex: 0 }, frameRef.current.offsetHeight);
-
-		if (listRef.current) {
-			listRef.current.scrollToPosition(0);
-		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		const convertedOutputs = convertSessionLogProtoToViewerOutput(logs);
-
 		setOutputs(convertedOutputs);
 	}, [logs]);
 
@@ -109,6 +109,16 @@ export const SessionOutputs = () => {
 		setDimensions({ height: height - 20, width: width - 20 });
 	}, []);
 
+	const handleScroll = ({ scrollTop }: { scrollTop: number }) => {
+		if (scrollTop !== 0) setScrollPosition(scrollTop);
+	};
+
+	useEffect(() => {
+		return () => {
+			sessionStorage.setItem(`scrollPosition_${sessionId}`, scrollPosition.toString());
+		};
+	}, [sessionId, scrollPosition]);
+
 	return (
 		<Frame className="h-full rounded-b-[0] pb-0 pl-0 transition" ref={frameRef}>
 			{loading && !outputs.length ? (
@@ -130,6 +140,7 @@ export const SessionOutputs = () => {
 									deferredMeasurementCache={cache}
 									height={dimensions.height}
 									onRowsRendered={onRowsRendered}
+									onScroll={handleScroll}
 									overscanRowCount={10}
 									ref={(ref) => {
 										registerChild(ref);

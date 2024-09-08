@@ -42,11 +42,11 @@ export const SessionViewer = () => {
 
 	const fetchSessions = async () => {
 		if (
-			sessionInfo
-			// !(sessionInfo.state === SessionState.completed || sessionInfo.state === SessionState.error)
+			sessionInfo &&
+			!(sessionInfo.state === SessionState.completed || sessionInfo.state === SessionState.error)
 		) {
 			setIsRefreshing(true);
-			await reload(sessionInfo.sessionId);
+			reload(sessionInfo.sessionId);
 
 			setTimeout(() => {
 				setIsRefreshing(false);

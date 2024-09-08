@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { ActivityList } from "./infiniteList";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
+import { SessionActivity } from "@src/types/models";
 import { useCacheStore } from "@store/useCacheStore";
 
 import { Frame, Loader } from "@components/atoms";
@@ -12,15 +13,12 @@ import { Frame, Loader } from "@components/atoms";
 export const SessionActivitiesList = () => {
 	const { sessionId } = useParams();
 	const { t } = useTranslation("deployments", { keyPrefix: "activities" });
-	const { loadLogs, loading, logs, nextPageToken, reload, reset } = useCacheStore();
-	const activities = convertSessionLogRecordsProtoToActivitiesModel(logs);
+	const { loadLogs, loading, logs, nextPageToken } = useCacheStore();
+	const [activities, setActivities] = useState<SessionActivity[]>([]);
 
 	useEffect(() => {
-		if (reset && reload && sessionId) {
-			reset();
-			reload(sessionId);
-		}
-	}, [sessionId, reset, reload]);
+		setActivities(convertSessionLogRecordsProtoToActivitiesModel(logs));
+	}, [logs]);
 
 	const handleItemsRendered = useCallback(
 		({ visibleStopIndex }: { visibleStopIndex: number }) => {

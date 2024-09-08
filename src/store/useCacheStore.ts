@@ -13,6 +13,7 @@ export interface CacheStore {
 	reload: (sessionId: string) => void;
 	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
 	nextPageToken?: string;
+	displayedSessionId?: string;
 }
 
 const store: StateCreator<CacheStore> = (set, get) => ({
@@ -32,6 +33,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		set((state) => {
 			state.logs = [];
 			state.nextPageToken = "";
+			state.displayedSessionId = sessionId;
 
 			return state;
 		});
@@ -40,7 +42,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 	},
 
 	loadLogs: async (sessionId: string, pageSize?: number) => {
-		set({ loading: true });
+		set({ loading: true, displayedSessionId: sessionId });
 
 		try {
 			const { nextPageToken } = get();
