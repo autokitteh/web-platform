@@ -11,6 +11,7 @@ import ReactTimeAgo from "react-time-ago";
 import { defaultSessionTab, sessionTabs } from "@constants";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
+import { useCacheStore } from "@src/store/useCacheStore";
 import { ViewerSession } from "@src/types/models/session.type";
 import { cn } from "@src/utilities";
 
@@ -37,14 +38,25 @@ export const SessionViewer = () => {
 		setActiveTab(activeTabIndex);
 	}, [location]);
 
+	const { reload } = useCacheStore();
+
+	const fetchSessions = async () => {
+		if (
+			sessionInfo
+			// !(sessionInfo.state === SessionState.completed || sessionInfo.state === SessionState.error)
+		) {
+			setIsRefreshing(true);
+			await reload(sessionInfo.sessionId);
+
+			setTimeout(() => {
+				setIsRefreshing(false);
+			}, 800);
+		}
+	};
+
 	const fetchSessionInfo = async () => {
-		setIsRefreshing(true);
 		const { data: sessionInfoResponse } = await SessionsService.getSessionInfo(sessionId!);
 		setSessionInfo(sessionInfoResponse);
-
-		setTimeout(() => {
-			setIsRefreshing(false);
-		}, 800);
 	};
 
 	useEffect(() => {
@@ -252,7 +264,7 @@ export const SessionViewer = () => {
 				<IconButton
 					className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
 					disabled={isRefreshing}
-					onClick={fetchSessionInfo}
+					onClick={fetchSessions}
 					title={t("refresh")}
 				>
 					<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
