@@ -75,7 +75,7 @@ export const SessionViewer = () => {
 	}
 
 	return (
-		<Frame className="h-full w-full overflow-hidden pb-3 transition">
+		<Frame className="overflow-hidden pb-3">
 			{sessionInfo ? (
 				<>
 					<div className="mb-4 flex items-center justify-between">
@@ -185,32 +185,28 @@ export const SessionViewer = () => {
 							) : null}
 
 							<div className="flex items-center gap-2">
-								<div className="w-1/3">{t("entrypoint")}</div>
+								{t("entrypoint")}:
 								<div className="inline font-semibold">
 									<div className="inline">{sessionInfo.entrypoint.path}</div>
-
 									<IconSvg className="mx-2 inline fill-white" size="sm" src={ArrowRightIcon} />
-
 									<div className="inline">{sessionInfo.entrypoint.name}</div>
 								</div>
 							</div>
 						</div>
 
-						<div className="flex w-1/4 flex-col gap-2">
-							<div className="flex items-start gap-2">
+						<div className="ml-auto flex w-auto flex-col gap-2">
+							<div className="-mt-1 flex items-center gap-2">
 								<div>{t("eventId")}</div>
-								<CopyButton className="-mt-2" text={sessionInfo.eventId} />
+								<CopyButton text={sessionInfo.eventId} />
 							</div>
-
-							<div className="flex items-start gap-2">
+							<div className="-mt-2 flex items-center gap-2">
 								<div>{t("buildId")}</div>
-								<CopyButton className="-mt-2" text={sessionInfo.buildId} />
+								<CopyButton text={sessionInfo.buildId} />
 							</div>
 						</div>
 					</div>
 				</>
 			) : null}
-
 			{sessionInfo?.inputs ? (
 				<Accordion className="mb-4 mt-6" title="Inputs">
 					<JsonView
@@ -220,7 +216,6 @@ export const SessionViewer = () => {
 					/>
 				</Accordion>
 			) : null}
-
 			<div className="mt-4 flex items-center justify-between">
 				<div className="scrollbar flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">
 					{sessionTabs.map((singleTab) => (

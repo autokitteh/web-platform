@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -7,8 +7,10 @@ import { useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
 import { SessionsService } from "@services/sessions.service";
+import { ActivityState } from "@src/enums";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 import { useToastStore } from "@src/store";
+import { SessionActivity } from "@src/types/models";
 
 import { IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -18,7 +20,7 @@ import { ArrowUpFaIcon } from "@assets/image/icons";
 
 export const SessionActivitiesList = () => {
 	const { sessionId } = useParams();
-	const [activities, setActivities] = React.useState<any[]>([]);
+	const [activities, setActivities] = useState<SessionActivity[]>([]);
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("deployments", { keyPrefix: "activities" });
 
@@ -62,26 +64,27 @@ export const SessionActivitiesList = () => {
 											<div className="text-left font-bold"> {activity.functionName}</div>
 
 											<div className="flex items-center gap-1">
-												<span>Status: </span>
-
-												{activity.status === "error" || activity.status === "completed" ? (
-													<>
-														<ActivityStatus activityState={activity.status} /> -
-														<ReactTimeAgo date={activity.endTime} locale="en-US" />
-													</>
-												) : (
-													<>
-														<ActivityStatus activityState={activity.status} /> -
-														<ReactTimeAgo date={activity.startTime} locale="en-US" />
-													</>
-												)}
+												<span>
+													Status: {/* eslint-disable @liferay/empty-line-between-elements */}
+												</span>
+												<ActivityStatus activityState={activity.status as ActivityState} />
+												-
+												<ReactTimeAgo
+													date={
+														activity.status === ("error" as keyof ActivityState) ||
+														activity.status === ("completed" as keyof ActivityState)
+															? activity.endTime!
+															: activity.startTime
+													}
+													locale="en-US"
+												/>
 											</div>
 										</div>
 									</div>
 								}
 							>
 								<div className="mx-7">
-									{activity.args.length ? (
+									{activity?.args?.length ? (
 										<>
 											<div className="font-bold">Arguments:</div>
 											<Table>
@@ -102,7 +105,7 @@ export const SessionActivitiesList = () => {
 										</>
 									) : null}
 
-									{Object.keys(activity.kwargs).length ? (
+									{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
 										<>
 											<div className="mt-4 font-bold">KW Arguments:</div>
 											<Table>
@@ -115,11 +118,17 @@ export const SessionActivitiesList = () => {
 												</THead>
 
 												<TBody>
-													{Object.keys(activity.kwargs).map((argumentKey) => (
-														<Tr key={argumentKey}>
-															<Td>{argumentKey}</Td>
+													{Object.entries(activity.kwargs).map(([key, value]) => (
+														<Tr key={key}>
+															<Td>{key}</Td>
 
-															<Td>{activity.kwargs[argumentKey]}</Td>
+															{activity.kwargs ? (
+																<Td>
+																	{typeof value === "object"
+																		? JSON.stringify(value)
+																		: String(value)}
+																</Td>
+															) : null}
 														</Tr>
 													))}
 												</TBody>
@@ -135,7 +144,7 @@ export const SessionActivitiesList = () => {
 											<JsonView
 												className="scrollbar max-h-72 overflow-auto"
 												style={githubDarkTheme}
-												value={activity.returnValue}
+												value={JSON.parse(activity.returnValue)}
 											/>
 										</Accordion>
 									) : null}

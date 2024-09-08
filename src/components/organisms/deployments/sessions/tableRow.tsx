@@ -42,7 +42,9 @@ export const SessionsTableRow = memo(
 		}
 
 		const sessionRowClass = (id: string) =>
-			cn("group cursor-pointer justify-between hover:bg-gray-1300", { "bg-black": id === selectedSessionId });
+			cn("group flex cursor-pointer items-center justify-between hover:bg-gray-1300", {
+				"bg-black": id === selectedSessionId,
+			});
 
 		const handleDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 			event.stopPropagation();
@@ -75,20 +77,20 @@ export const SessionsTableRow = memo(
 				onClick={() => openSessionLog(session.sessionId)}
 				onKeyDown={() => openSessionLog(session.sessionId)}
 				role="button"
-				style={{ ...style, display: "flex", justifyContent: "space-between", alignItems: "center" }}
+				style={{ ...style }}
 				tabIndex={0}
 			>
-				<div className="flex w-[25%] px-2.5">{moment(session.createdAt).format("YYYY-MM-DD HH:mm:ss")}</div>
+				<div className="flex w-1/4 px-2.5">{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</div>
 
 				<div className="flex w-[15%] px-2.5">
 					<SessionsTableState sessionState={session.state} />
 				</div>
 
-				<div className="flex w-[40%] px-2.5" title={session.sessionId}>
+				<div className="flex w-2/5 px-2.5" title={session.sessionId}>
 					{session.sessionId}
 				</div>
 
-				<div className="flex w-[20%] justify-end px-2.5">
+				<div className="flex w-1/5 justify-end px-2.5">
 					<IconButton
 						className="p-1"
 						disabled={session.state !== SessionState.running}

@@ -19,7 +19,7 @@ export const SessionsTableList = ({
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const { openModal } = useModalStore();
-	const [resizeHeight, setResizeHeight] = useState<number>(0);
+	const [resizeHeight, setResizeHeight] = useState(0);
 
 	const openSessionLog = useCallback(
 		(sessionId: string) => {
@@ -59,7 +59,7 @@ export const SessionsTableList = ({
 			{({ height, width }) => (
 				<List
 					className="scrollbar"
-					height={resizeHeight || height - height * 0.1}
+					height={resizeHeight || height * 0.9}
 					onRowsRendered={({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }) =>
 						onItemsRendered({
 							visibleStartIndex: startIndex,

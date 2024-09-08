@@ -59,7 +59,7 @@ export type SessionActivity = {
 	functionName: string;
 	key: string;
 	kwargs?: { key: string; value: any }[];
-	returnValue: object;
+	returnValue: string;
 	startTime: Date;
 	status: keyof ActivityState;
 };
