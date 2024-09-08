@@ -5,13 +5,16 @@ import ReactTimeAgo from "react-time-ago";
 import { ActivityState } from "@src/enums";
 import { SessionActivity } from "@src/types/models";
 
-import { Accordion } from "@components/molecules";
+import { Button, IconSvg } from "@components/atoms";
 import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
+
+import { PlusAccordionIcon } from "@assets/image/icons";
 
 interface ActivityRowProps {
 	data: { activities: SessionActivity[] };
 	index: number;
 	style: CSSProperties;
+	setActivity: (activity: SessionActivity) => void;
 }
 
 const areEqual = (prevProps: ActivityRowProps, nextProps: ActivityRowProps) => {
@@ -21,7 +24,7 @@ const areEqual = (prevProps: ActivityRowProps, nextProps: ActivityRowProps) => {
 	);
 };
 
-export const ActivityRow = memo(({ data, index, style }: ActivityRowProps) => {
+export const ActivityRow = memo(({ data, index, setActivity, style }: ActivityRowProps) => {
 	const activity = data.activities[index];
 
 	if (!activity) {
@@ -29,38 +32,37 @@ export const ActivityRow = memo(({ data, index, style }: ActivityRowProps) => {
 	}
 
 	return (
-		<div style={style}>
-			<Accordion
-				className="mt-2 rounded-md bg-gray-1000 px-2 py-1"
-				title={
-					<div className="flex w-full gap-3">
-						<div className="mt-0.5">{activity.startTime.toTimeString().split(" ")[0]}</div>
+		<Button
+			className="group flex w-full cursor-pointer gap-2.5 p-0 text-white hover:bg-transparent"
+			onClick={() => setActivity(activity)}
+			style={style}
+		>
+			<IconSvg className="w-3.5 fill-gray-500 transition group-hover:fill-green-800" src={PlusAccordionIcon} />
 
-						<div>
-							<div className="text-left font-bold">{activity.functionName}</div>
+			<div className="flex w-full gap-3">
+				<div className="mt-0.5">{activity.startTime.toTimeString().split(" ")[0]}</div>
 
-							<div className="flex items-center gap-1">
-								<span>Status: {/* eslint-disable-next-line prettier/prettier */}</span>
-								
-								<ActivityStatus activityState={activity.status as ActivityState} />
-								-
-								<ReactTimeAgo
-									date={
-										activity.status === ("error" as keyof ActivityState) ||
-										activity.status === ("completed" as keyof ActivityState)
-											? activity.endTime!
-											: activity.startTime
-									}
-									locale="en-US"
-								/>
-							</div>
-						</div>
+				<div>
+					<div className="text-left font-bold">{activity.functionName}</div>
+
+					<div className="flex items-center gap-1">
+						<span>Status: {/* eslint-disable-next-line prettier/prettier */}</span>
+
+						<ActivityStatus activityState={activity.status as ActivityState} />
+						-
+						<ReactTimeAgo
+							date={
+								activity.status === ("error" as keyof ActivityState) ||
+								activity.status === ("completed" as keyof ActivityState)
+									? activity.endTime!
+									: activity.startTime
+							}
+							locale="en-US"
+						/>
 					</div>
-				}
-			>
-				123
-			</Accordion>
-		</div>
+				</div>
+			</div>
+		</Button>
 	);
 }, areEqual);
 

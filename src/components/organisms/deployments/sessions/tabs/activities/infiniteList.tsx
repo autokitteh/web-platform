@@ -7,7 +7,10 @@ import { AutoSizer, List, ListRowRenderer } from "react-virtualized";
 import { ActivityRow } from "./infiniteRow";
 import { SessionActivity } from "@src/types/models";
 
+import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { Accordion } from "@components/molecules";
+
+import { Close } from "@assets/image/icons";
 
 interface ActivityListProps {
 	activities: SessionActivity[];
@@ -16,66 +19,100 @@ interface ActivityListProps {
 
 export const ActivityList: React.FC<ActivityListProps> = ({ activities, onItemsRendered }) => {
 	const [resizeHeight, setResizeHeight] = useState(0);
+	const [activity, setActivity] = useState<SessionActivity>();
 
 	const itemData = useMemo(() => ({ activities }), [activities]);
 
 	const rowRenderer: ListRowRenderer = ({ index, key, style }) => (
-		<ActivityRow data={itemData} index={index} key={key} style={style} />
+		<ActivityRow data={itemData} index={index} key={key} setActivity={setActivity} style={style} />
 	);
 
 	const handleResize = useCallback(({ height }: { height: number }) => {
 		setResizeHeight(height - 20);
 	}, []);
 
+	const autoSizerClass = activity ? "hidden" : "";
+
 	return (
 		<div className="h-full w-full">
-			<div className="absolute z-30 h-full w-full bg-black">
-				<div className="mx-7">
-					{/* Arguments */}
+			{activity ? (
+				<div className="absolute z-30 h-full w-full">
+					<IconButton className="absolute right-0" onClick={() => setActivity(undefined)}>
+						<Close fill="white" />
+					</IconButton>
 
-					{activities[0]?.args?.length ? (
-						<>
-							<div className="font-bold">Arguments:</div>
-							<div className="mt-2">
-								{activities[0].args.map((argument: string, index) => (
-									<div key={index}>{argument}</div>
-								))}
-							</div>
-						</>
-					) : null}
+					<div className="mx-7">
+						{/* Arguments */}
 
-					{/* KW Arguments */}
+						{activity?.args?.length ? (
+							<>
+								<div className="font-bold">Arguments:</div>
+								<Table className="mt-2">
+									<THead>
+										<Tr>
+											<Th>Key</Th>
+										</Tr>
+									</THead>
 
-					{activities[0].kwargs && !!Object.keys(activities[0].kwargs).length ? (
-						<>
-							<div className="mt-4 font-bold">KW Arguments:</div>
-							<div className="mt-2">
-								{Object.entries(activities[0].kwargs).map(([key, value]) => (
-									<div key={key}>
-										<span className="font-semibold">{key}: </span>
+									<TBody>
+										{activity.args.map((argument) => (
+											<Tr key={argument}>
+												<Td>{argument} </Td>
+											</Tr>
+										))}
+									</TBody>
+								</Table>
+							</>
+						) : null}
 
-										{typeof value === "object" ? JSON.stringify(value) : String(value)}
-									</div>
-								))}
-							</div>
-						</>
-					) : null}
+						{/* KW Arguments */}
 
-					{/* Returned Value */}
+						{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
+							<>
+								<div className="mt-4 font-bold">KW Arguments:</div>
+								<Table className="mt-2">
+									<THead>
+										<Tr>
+											<Th>Key</Th>
 
-					{activities[0].returnValue ? (
-						<Accordion className="mt-2" title={<div className="font-bold underline">Returned Value</div>}>
-							<JsonView
-								className="scrollbar max-h-72 overflow-auto"
-								style={githubDarkTheme}
-								value={JSON.parse(activities[0].returnValue)}
-							/>
-						</Accordion>
-					) : null}
+											<Th>Value</Th>
+										</Tr>
+									</THead>
+
+									<TBody>
+										{Object.entries(activity.kwargs).map(([key, value]) => (
+											<Tr key={key}>
+												<Td>{key}: </Td>
+
+												<Td>
+													{typeof value === "object" ? JSON.stringify(value) : String(value)}
+												</Td>
+											</Tr>
+										))}
+									</TBody>
+								</Table>
+							</>
+						) : null}
+
+						{/* Returned Value */}
+
+						{activity.returnValue ? (
+							<Accordion
+								className="mt-2"
+								title={<div className="font-bold underline">Returned Value</div>}
+							>
+								<JsonView
+									className="scrollbar max-h-72 overflow-auto"
+									style={githubDarkTheme}
+									value={JSON.parse(activity.returnValue)}
+								/>
+							</Accordion>
+						) : null}
+					</div>
 				</div>
-			</div>
+			) : null}
 
-			<AutoSizer onResize={handleResize}>
+			<AutoSizer className={autoSizerClass} onResize={handleResize}>
 				{({ height, width }) => (
 					<List
 						className="scrollbar"
