@@ -40,7 +40,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				status: "created" as keyof ActivityState,
 				startTime: convertTimestampToDate(log.t),
 				endTime: undefined,
-				returnValue: {},
+				returnValue: "",
 				key: convertTimestampToEpoch(log.t).getTime().toString(),
 			};
 		}
@@ -53,7 +53,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 		if (callAttemptComplete && currentActivity) {
 			currentActivity.status = "completed" as keyof ActivityState;
 			currentActivity.endTime = convertTimestampToDate(callAttemptComplete.completedAt) as Date | undefined;
-			currentActivity.returnValue = callAttemptComplete?.result?.value as object;
+			currentActivity.returnValue = callAttemptComplete?.result?.value?.string?.v as string;
 		}
 
 		if (state && state.error && currentActivity) {
