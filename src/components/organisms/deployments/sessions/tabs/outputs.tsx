@@ -108,7 +108,7 @@ export const SessionOutputs: React.FC = () => {
 						<script onLoad={measure} />
 
 						<div className="flex">
-							<div className="w-1/3 text-yellow-500">[{log.time}]: </div>
+							<div className="w-52 text-yellow-500">[{log.time}]: </div>
 
 							<div className="w-full whitespace-pre-line">{log.print}</div>
 						</div>
@@ -145,7 +145,7 @@ export const SessionOutputs: React.FC = () => {
 							{({ onRowsRendered, registerChild }) => (
 								<List
 									deferredMeasurementCache={cache}
-									height={dimensions.height} // Use dimensions from state
+									height={dimensions.height}
 									onRowsRendered={onRowsRendered}
 									overscanRowCount={10}
 									ref={(ref) => {
@@ -155,7 +155,7 @@ export const SessionOutputs: React.FC = () => {
 									rowCount={logs.length}
 									rowHeight={cache.rowHeight}
 									rowRenderer={rowRenderer}
-									width={dimensions.width} // Use dimensions from state
+									width={dimensions.width}
 								/>
 							)}
 						</InfiniteLoader>
