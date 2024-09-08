@@ -46,6 +46,9 @@ export const SessionOutputs = () => {
 	);
 
 	useEffect(() => {
+		if (logs.length) {
+			return;
+		}
 		reset();
 		setOutputs([]);
 		if (!frameRef?.current?.offsetHeight) {
