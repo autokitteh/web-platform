@@ -5,6 +5,7 @@ import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { AutoSizer, List, ListRowRenderer } from "react-virtualized";
 
 import { ActivityRow } from "./infiniteRow";
+import { ActivityListProps } from "@src/interfaces/components";
 import { SessionActivity } from "@src/types/models";
 
 import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -12,12 +13,7 @@ import { Accordion } from "@components/molecules";
 
 import { Close } from "@assets/image/icons";
 
-interface ActivityListProps {
-	activities: SessionActivity[];
-	onItemsRendered: (props: { visibleStartIndex: number; visibleStopIndex: number }) => void;
-}
-
-export const ActivityList: React.FC<ActivityListProps> = ({ activities, onItemsRendered }) => {
+export const ActivityList = ({ activities, onItemsRendered }: ActivityListProps) => {
 	const [resizeHeight, setResizeHeight] = useState(0);
 	const [activity, setActivity] = useState<SessionActivity>();
 

@@ -11,7 +11,7 @@ import { useCacheStore } from "@store/useCacheStore";
 
 import { Frame, Loader } from "@components/atoms";
 
-export const SessionOutputs: React.FC = () => {
+export const SessionOutputs = () => {
 	const { sessionId } = useParams();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const listRef = useRef<List | null>(null);
