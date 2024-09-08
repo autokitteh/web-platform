@@ -10,10 +10,18 @@ import { Button, IconButton } from "@components/atoms";
 
 import { ArrowLeft } from "@assets/image/icons";
 
-export const TabFormHeader = ({ className, form, isHiddenButtons, isLoading, title }: TabFormHeaderProps) => {
+export const TabFormHeader = ({
+	className,
+	customBackRoute,
+	form,
+	isHiddenButtons,
+	isLoading,
+	title,
+}: TabFormHeaderProps) => {
 	const { t } = useTranslation("buttons");
 	const navigate = useNavigate();
 	const baseStyle = cn("flex justify-between bg-gray-1100 py-2.5", className);
+	const navigateBack = customBackRoute ? () => navigate(customBackRoute) : () => navigate(-1);
 
 	return (
 		<div className="sticky -top-10 z-20 -my-2.5">
@@ -22,7 +30,7 @@ export const TabFormHeader = ({ className, form, isHiddenButtons, isLoading, tit
 					<IconButton
 						ariaLabel={t("ariaLabelReturnBack")}
 						className="h-8 w-8 p-0 hover:bg-black"
-						onClick={() => navigate(-1)}
+						onClick={navigateBack}
 					>
 						<ArrowLeft />
 					</IconButton>
@@ -35,7 +43,7 @@ export const TabFormHeader = ({ className, form, isHiddenButtons, isLoading, tit
 						<Button
 							ariaLabel={t("cancel")}
 							className="p-0 font-semibold text-gray-500 hover:text-white"
-							onClick={() => navigate(-1)}
+							onClick={navigateBack}
 						>
 							{t("cancel")}
 						</Button>

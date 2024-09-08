@@ -53,7 +53,7 @@ export const EditTrigger = () => {
 		resolver: zodResolver(triggerSchema),
 	});
 
-	const { handleSubmit, setValue } = methods;
+	const { handleSubmit, reset } = methods;
 
 	useEffect(() => {
 		const loadFiles = async () => {
@@ -78,20 +78,24 @@ export const EditTrigger = () => {
 	}, []);
 
 	useEffect(() => {
+		let selectedConnection;
 		if (trigger && connections.length && !isLoadingTrigger && !isLoadingConnections) {
-			const selectedConnection = connections.find(
+			selectedConnection = connections.find(
 				(item) => item.value === trigger.connectionId || item.value === trigger.sourceType
 			);
-
-			setValue("name", trigger.name);
-			setValue("connection", selectedConnection || { label: "", value: "" });
-			setValue("filePath", { label: trigger.path, value: trigger.path });
-			setValue("entryFunction", trigger.entryFunction);
-			setValue("cron", trigger.schedule || "");
-			setValue("eventType", trigger.eventType || "");
-			setValue("filter", trigger.filter || "");
 		}
-	}, [trigger, connections, isLoadingTrigger, isLoadingConnections, setValue]);
+
+		reset({
+			name: trigger?.name,
+			connection: selectedConnection || { label: "", value: "" },
+			filePath: { label: trigger?.path, value: trigger?.path },
+			entryFunction: trigger?.entryFunction,
+			cron: trigger?.schedule,
+			eventType: trigger?.eventType,
+			filter: trigger?.filter,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [trigger, connections]);
 
 	const onSubmit = async (data: TriggerFormData) => {
 		setIsSaving(true);
@@ -146,6 +150,7 @@ export const EditTrigger = () => {
 			<div className="min-w-80">
 				<TabFormHeader
 					className="mb-10"
+					customBackRoute={`/projects/${projectId}/triggers`}
 					form={TriggerFormIds.modifyTriggerForm}
 					isLoading={isSaving}
 					title={t("modifyTrigger")}
