@@ -9,7 +9,7 @@ import { useCacheStore } from "@store/useCacheStore";
 
 import { Frame, Loader } from "@components/atoms";
 
-export const SessionActivitiesList: React.FC = () => {
+export const SessionActivitiesList = () => {
 	const { sessionId } = useParams();
 	const { t } = useTranslation("deployments", { keyPrefix: "activities" });
 	const { loadLogs, loading, logs, nextPageToken, reload, reset } = useCacheStore();

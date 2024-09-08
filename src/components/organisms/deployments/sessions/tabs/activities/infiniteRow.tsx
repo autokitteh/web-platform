@@ -1,21 +1,14 @@
-import React, { CSSProperties, memo } from "react";
+import React, { memo } from "react";
 
 import ReactTimeAgo from "react-time-ago";
 
 import { ActivityState } from "@src/enums";
-import { SessionActivity } from "@src/types/models";
+import { ActivityRowProps } from "@src/interfaces/components";
 
 import { Button, IconSvg } from "@components/atoms";
 import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
 
 import { PlusAccordionIcon } from "@assets/image/icons";
-
-interface ActivityRowProps {
-	data: { activities: SessionActivity[] };
-	index: number;
-	style: CSSProperties;
-	setActivity: (activity: SessionActivity) => void;
-}
 
 const areEqual = (prevProps: ActivityRowProps, nextProps: ActivityRowProps) => {
 	return (
