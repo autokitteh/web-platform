@@ -1,154 +1,45 @@
-// import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 
-// import JsonView from "@uiw/react-json-view";
-// import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
-// import { useTranslation } from "react-i18next";
-// import { useParams } from "react-router-dom";
-// import ReactTimeAgo from "react-time-ago";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
-// import { ActivityState } from "@src/enums";
-// import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
-// import { SessionActivity } from "@src/types/models";
-// import { useCacheStore } from "@store/useCacheStore";
+import { ActivityList } from "./infiniteList";
+import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
+import { useCacheStore } from "@store/useCacheStore";
 
-// import { IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-// import { Accordion } from "@components/molecules";
-// import { ActivityStatus } from "@components/organisms/deployments/sessions/activityStatus";
+import { Frame, Loader } from "@components/atoms";
 
-// import { ArrowUpFaIcon } from "@assets/image/icons";
+export const SessionActivitiesList: React.FC = () => {
+	const { sessionId } = useParams();
+	const { t } = useTranslation("deployments", { keyPrefix: "activities" });
+	const { loadLogs, loading, logs, nextPageToken, reload, reset } = useCacheStore();
+	const activities = convertSessionLogRecordsProtoToActivitiesModel(logs);
 
-// export const SessionActivitiesList = () => {
-// 	const { sessionId } = useParams();
-// 	const [activities, setActivities] = useState<SessionActivity[]>([]);
-// 	const { t } = useTranslation("deployments", { keyPrefix: "activities" });
+	useEffect(() => {
+		if (reset && reload && sessionId) {
+			reset();
+			reload(sessionId);
+		}
+	}, [sessionId, reset, reload]);
 
-// 	const { loadLogs, logs, reset } = useCacheStore((state) => state.sessionLogs);
+	const handleItemsRendered = useCallback(
+		({ visibleStopIndex }: { visibleStopIndex: number }) => {
+			if (visibleStopIndex >= activities.length - 1 && nextPageToken && sessionId) {
+				loadLogs(sessionId);
+			}
+		},
+		[activities.length, nextPageToken, loadLogs, sessionId]
+	);
 
-// 	useEffect(() => {
-// 		if (reset) reset();
-// 		loadLogs(sessionId!);
-// 		// eslint-disable-next-line react-hooks/exhaustive-deps
-// 	}, [sessionId]);
-
-// 	useEffect(() => {
-// 		const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(logs);
-// 		setActivities(convertedActivities || []);
-// 	}, [logs]);
-
-// 	return (
-// 		<div className="h-full overflow-y-scroll pt-5">
-// 			{activities?.length ? (
-// 				activities.map((activity, index) => (
-// 					<div key={activity.key}>
-// 						{index !== 0 ? (
-// 							<div className="flex w-full items-center justify-center pt-2">
-// 								<IconSvg className="fill-white" size="sm" src={ArrowUpFaIcon} />
-// 							</div>
-// 						) : null}
-
-// 						<div className="mt-2">
-// 							<Accordion
-// 								className="mt-2 rounded-md bg-gray-1000 px-2 py-1"
-// 								title={
-// 									<div className="flex w-full gap-3">
-// 										<div className="mt-0.5">{activity.startTime.toTimeString().split(" ")[0]}</div>
-
-// 										<div>
-// 											<div className="text-left font-bold"> {activity.functionName}</div>
-
-// 											<div className="flex items-center gap-1">
-// 												<span>
-// 													Status: {/* eslint-disable @liferay/empty-line-between-elements */}
-// 												</span>
-// 												<ActivityStatus activityState={activity.status as ActivityState} />
-// 												-
-// 												<ReactTimeAgo
-// 													date={
-// 														activity.status === ("error" as keyof ActivityState) ||
-// 														activity.status === ("completed" as keyof ActivityState)
-// 															? activity.endTime!
-// 															: activity.startTime
-// 													}
-// 													locale="en-US"
-// 												/>
-// 											</div>
-// 										</div>
-// 									</div>
-// 								}
-// 							>
-// 								<div className="mx-7">
-// 									{activity?.args?.length ? (
-// 										<>
-// 											<div className="font-bold">Arguments:</div>
-// 											<Table>
-// 												<THead>
-// 													<Tr>
-// 														<Th>Value</Th>
-// 													</Tr>
-// 												</THead>
-
-// 												<TBody>
-// 													{activity.args.map((argument: string) => (
-// 														<Tr key={argument}>
-// 															<Td>{argument}</Td>
-// 														</Tr>
-// 													))}
-// 												</TBody>
-// 											</Table>
-// 										</>
-// 									) : null}
-
-// 									{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
-// 										<>
-// 											<div className="mt-4 font-bold">KW Arguments:</div>
-// 											<Table>
-// 												<THead>
-// 													<Tr>
-// 														<Th>Key</Th>
-
-// 														<Th>Value</Th>
-// 													</Tr>
-// 												</THead>
-
-// 												<TBody>
-// 													{Object.entries(activity.kwargs).map(([key, value]) => (
-// 														<Tr key={key}>
-// 															<Td>{key}</Td>
-
-// 															{activity.kwargs ? (
-// 																<Td>
-// 																	{typeof value === "object"
-// 																		? JSON.stringify(value)
-// 																		: String(value)}
-// 																</Td>
-// 															) : null}
-// 														</Tr>
-// 													))}
-// 												</TBody>
-// 											</Table>
-// 										</>
-// 									) : null}
-
-// 									{activity.returnValue ? (
-// 										<Accordion
-// 											className="mt-2"
-// 											title={<div className="font-bold underline">Returned Value</div>}
-// 										>
-// 											<JsonView
-// 												className="scrollbar max-h-72 overflow-auto"
-// 												style={githubDarkTheme}
-// 												value={JSON.parse(activity.returnValue)}
-// 											/>
-// 										</Accordion>
-// 									) : null}
-// 								</div>
-// 							</Accordion>
-// 						</div>
-// 					</div>
-// 				))
-// 			) : (
-// 				<div className="mt-10 text-center text-xl font-semibold">{t("noActivitiesFound")}</div>
-// 			)}
-// 		</div>
-// 	);
-// };
+	return (
+		<Frame className="h-full rounded-b-[0] pb-0 pl-0 transition">
+			{loading && !activities.length ? (
+				<Loader isCenter size="xl" />
+			) : activities.length ? (
+				<ActivityList activities={activities} onItemsRendered={handleItemsRendered} />
+			) : (
+				<div className="mt-10 text-center text-xl font-semibold">{t("noActivitiesFound")}</div>
+			)}
+		</Frame>
+	);
+};
