@@ -2,6 +2,14 @@ import { Page } from "@playwright/test";
 
 import { expect, test } from "@e2e/fixtures";
 
+const triggerName = "triggerName";
+
+const backToTheList = async (page: Page) => {
+	const backButton = page.getByRole("button", { name: "Return back" });
+	await backButton.click();
+	await backButton.click();
+};
+
 async function createTriggerScheduler(
 	page: Page,
 	name: string,
@@ -30,6 +38,9 @@ async function createTriggerScheduler(
 	await functionNameInput.fill(functionName);
 
 	await page.getByRole("button", { name: "Save" }).click();
+
+	await expect(nameInput).toBeDisabled();
+	await expect(nameInput).toHaveValue(triggerName);
 }
 
 async function modifyTrigger(page: Page, name: string, cronExpression: string, functionName: string) {
@@ -61,30 +72,48 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 test.describe("Project Triggers Suite", () => {
 	test("Create trigger with cron expression", async ({ page }) => {
-		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
+		await createTriggerScheduler(page, triggerName, "5 4 * * *", "newFile.star", "functionName");
+
+		const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
+		await expect(nameInput).toBeDisabled();
+		await expect(nameInput).toHaveValue(triggerName);
+
+		await backToTheList(page);
 
 		const newRowInTable = page.getByRole("row", { name: "triggerName" });
 		await expect(newRowInTable).toHaveCount(1);
 
-		const newCallInTable = page.getByRole("cell", { name: "newFile.star:functionName" });
-		await expect(newCallInTable).toBeVisible();
+		const newCellInTable = page.getByRole("cell", { name: "newFile.star:functionName" });
+		await expect(newCellInTable).toBeVisible();
 	});
 
 	test("Modify trigger with cron expression", async ({ page }) => {
-		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
+		await createTriggerScheduler(page, triggerName, "5 4 * * *", "newFile.star", "functionName");
+
+		backToTheList(page);
+
+		await modifyTrigger(page, triggerName, "4 4 * * *", "newFunctionName");
+
+		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
+		await expect(cronInput).toHaveValue("4 4 * * *");
+
+		const functionNameInput = page.getByRole("textbox", { name: "Function name" });
+		await expect(functionNameInput).toHaveValue("newFunctionName");
+
+		const backButton = page.getByRole("button", { name: "Return back" });
+		await backButton.click();
 
 		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newRowInTable).toBeVisible();
 
-		await modifyTrigger(page, "triggerName", "4 4 * * *", "newFunctionName");
-
-		const newCallInTable = page.getByRole("cell", { name: "newFile.star:newFunctionName" });
-		await expect(newCallInTable).toBeVisible();
+		const newCellInTable = page.getByRole("cell", { name: "newFile.star:newFunctionName" });
+		await expect(newCellInTable).toBeVisible();
 	});
 
 	test("Delete trigger", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
-
+		const backButton = page.getByRole("button", { name: "Return back" });
+		await backButton.click();
 		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newRowInTable).toBeVisible();
 
