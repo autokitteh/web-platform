@@ -80,17 +80,17 @@ export const SessionsTableRow = memo(
 				style={{ ...style }}
 				tabIndex={0}
 			>
-				<div className="flex w-1/4 px-2.5">{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</div>
+				<div className="flex w-56 px-2.5">{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</div>
 
-				<div className="flex w-[15%] px-2.5">
+				<div className="flex w-32 px-2.5">
 					<SessionsTableState sessionState={session.state} />
 				</div>
 
-				<div className="flex w-2/5 px-2.5" title={session.sessionId}>
+				<div className="flex w-80 px-2.5" title={session.sessionId}>
 					{session.sessionId}
 				</div>
 
-				<div className="flex w-1/5 justify-end px-2.5">
+				<div className="flex w-32 justify-end px-2.5">
 					<IconButton
 						className="p-1"
 						disabled={session.state !== SessionState.running}
