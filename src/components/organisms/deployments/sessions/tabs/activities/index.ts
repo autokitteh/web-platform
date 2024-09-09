@@ -1,1 +1,1 @@
-export { SessionActivitiesList } from "@components/organisms/deployments/sessions/tabs/activities/list";
+export { ActivityList } from "@components/organisms/deployments/sessions/tabs/activities/infiniteList";
