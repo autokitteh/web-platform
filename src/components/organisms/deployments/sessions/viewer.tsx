@@ -258,8 +258,7 @@ export const SessionViewer = () => {
 					))}
 				</div>
 
-				{sessionInfo &&
-				(sessionInfo.state === SessionState.completed || sessionInfo.state === SessionState.error) ? null : (
+				{sessionInfo ? (
 					<IconButton
 						className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
 						disabled={isRefreshing}
@@ -268,7 +267,7 @@ export const SessionViewer = () => {
 					>
 						<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
 					</IconButton>
-				)}
+				) : null}
 			</div>
 			<Outlet />
 			<LogoCatLarge />
