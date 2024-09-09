@@ -15,7 +15,7 @@ import { SessionActivity } from "@src/types/models";
 import { Frame, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
-import { Close } from "@assets/image/icons";
+import { ArrowLeft, Close } from "@assets/image/icons";
 
 export const ActivityList = () => {
 	const [activity, setActivity] = useState<SessionActivity>();
@@ -90,7 +90,7 @@ export const ActivityList = () => {
 	};
 
 	const handleResize = useCallback(({ height, width }: { height: number; width: number }) => {
-		setDimensions({ height: height * 0.9, width: width * 0.9 });
+		setDimensions({ height: height * 0.95, width: width * 0.95 });
 	}, []);
 
 	const handleScroll = ({ scrollTop }: { scrollTop: number }) => {
@@ -110,6 +110,14 @@ export const ActivityList = () => {
 					<div className="flex items-center">
 						<IconButton className="absolute right-0" onClick={() => setActivity(undefined)}>
 							<Close fill="white" />
+						</IconButton>
+
+						<IconButton
+							ariaLabel={t("ariaLabelReturnBack")}
+							className="h-8 w-8 p-0 hover:bg-black"
+							onClick={() => setActivity(undefined)}
+						>
+							<ArrowLeft className="h-3 w-3" />
 						</IconButton>
 
 						<div className="font-semibold">{activity.functionName}</div>

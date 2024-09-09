@@ -106,7 +106,7 @@ export const SessionOutputs = () => {
 	};
 
 	const handleResize = useCallback(({ height, width }: { height: number; width: number }) => {
-		setDimensions({ height: height - 20, width: width - 20 });
+		setDimensions({ height: height * 0.95, width: width * 0.95 });
 	}, []);
 
 	const handleScroll = ({ scrollTop }: { scrollTop: number }) => {
