@@ -6,13 +6,9 @@ import { initialSortConfig } from "@constants";
 import { SortDirectionVariant } from "@enums/components";
 import { SortConfig } from "@type";
 
-export const useSort = <T,>(
-	items: T[],
-	initialSortKey?: keyof T,
-	initialSortDirection: SortDirectionVariant = SortDirectionVariant.ASC
-) => {
+export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 	const [sortConfig, setSortConfig] = useState<SortConfig<T>>(
-		initialSortKey ? { direction: initialSortDirection, key: initialSortKey } : initialSortConfig
+		initialSortKey ? { direction: SortDirectionVariant.ASC, key: initialSortKey } : initialSortConfig
 	);
 
 	const sortedItems = useMemo(() => {
