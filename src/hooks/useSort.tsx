@@ -6,9 +6,13 @@ import { initialSortConfig } from "@constants";
 import { SortDirectionVariant } from "@enums/components";
 import { SortConfig } from "@type";
 
-export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
+export const useSort = <T,>(
+	items: T[],
+	initialSortKey?: keyof T,
+	initialSortDirection: SortDirectionVariant = SortDirectionVariant.ASC
+) => {
 	const [sortConfig, setSortConfig] = useState<SortConfig<T>>(
-		initialSortKey ? { direction: SortDirectionVariant.ASC, key: initialSortKey } : initialSortConfig
+		initialSortKey ? { direction: initialSortDirection, key: initialSortKey } : initialSortConfig
 	);
 
 	const sortedItems = useMemo(() => {
@@ -16,7 +20,17 @@ export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 			return items;
 		}
 
-		return orderBy(items, [sortConfig.key], [sortConfig.direction]);
+		return orderBy(
+			items,
+			[
+				(item) => {
+					const value = item[sortConfig.key];
+
+					return typeof value === "string" ? value.toLowerCase() : value;
+				},
+			],
+			[sortConfig.direction]
+		);
 	}, [items, sortConfig]);
 
 	const requestSort = useCallback((key: keyof T) => {

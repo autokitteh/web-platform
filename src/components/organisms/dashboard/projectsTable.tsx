@@ -16,7 +16,7 @@ export const ProjectsTable = () => {
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 
-	const { items: sortedProjects, requestSort, sortConfig } = useSort<Project>(projectsList);
+	const { items: sortedProjects, requestSort, sortConfig } = useSort<Project>(projectsList, "name");
 
 	return (
 		<div className="relative mb-3 mt-7">

@@ -3,5 +3,5 @@ import { SortConfig } from "@type";
 
 export const initialSortConfig: SortConfig<any> = {
 	direction: SortDirectionVariant.DESC,
-	key: undefined,
+	key: SortDirectionVariant.ASC,
 };
