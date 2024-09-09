@@ -8,7 +8,7 @@ export interface ActivityListProps {
 }
 
 export interface ActivityRowProps {
-	data: { activities: SessionActivity[] };
+	data: SessionActivity;
 	index: number;
 	style: CSSProperties;
 	setActivity: (activity: SessionActivity) => void;

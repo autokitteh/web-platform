@@ -11,15 +11,10 @@ import { ActivityStatus } from "@components/organisms/deployments/sessions/activ
 import { PlusAccordionIcon } from "@assets/image/icons";
 
 const areEqual = (prevProps: ActivityRowProps, nextProps: ActivityRowProps) => {
-	return (
-		prevProps.index === nextProps.index &&
-		prevProps.data.activities[prevProps.index] === nextProps.data.activities[nextProps.index]
-	);
+	return prevProps.index === nextProps.index && prevProps.data === nextProps.data;
 };
 
-export const ActivityRow = memo(({ data, index, setActivity, style }: ActivityRowProps) => {
-	const activity = data.activities[index];
-
+export const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowProps) => {
 	if (!activity) {
 		return null;
 	}
