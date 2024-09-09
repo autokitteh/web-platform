@@ -90,7 +90,7 @@ export const SessionOutputs = () => {
 					<div ref={registerChild as React.LegacyRef<HTMLDivElement>} style={style}>
 						<script onLoad={measure} />
 
-						<div className="flex">
+						<div className="font-mono flex">
 							<div className="w-52 text-yellow-500">[{log.time}]: </div>
 
 							<div className="w-full whitespace-pre-line">{log.print}</div>

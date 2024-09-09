@@ -17,7 +17,8 @@ export const SessionActivitiesList = () => {
 	const [activities, setActivities] = useState<SessionActivity[]>([]);
 
 	useEffect(() => {
-		setActivities(convertSessionLogRecordsProtoToActivitiesModel(logs));
+		const activities = convertSessionLogRecordsProtoToActivitiesModel(logs);
+		setActivities(activities);
 	}, [logs]);
 
 	const handleItemsRendered = useCallback(

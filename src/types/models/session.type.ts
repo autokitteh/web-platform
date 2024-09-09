@@ -59,7 +59,9 @@ export type SessionActivity = {
 	functionName: string;
 	key: string;
 	kwargs?: { key: string; value: any }[];
-	returnValue: string;
+	returnBytesValue?: string;
+	returnJSONValue?: object;
+	returnStringValue?: string;
 	startTime: Date;
 	status: keyof ActivityState;
 };

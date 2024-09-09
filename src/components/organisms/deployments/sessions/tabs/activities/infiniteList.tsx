@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -17,10 +17,8 @@ export const ActivityList = ({ activities, onItemsRendered }: ActivityListProps)
 	const [resizeHeight, setResizeHeight] = useState(0);
 	const [activity, setActivity] = useState<SessionActivity>();
 
-	const itemData = useMemo(() => ({ activities }), [activities]);
-
 	const rowRenderer: ListRowRenderer = ({ index, key, style }) => (
-		<ActivityRow data={itemData} index={index} key={key} setActivity={setActivity} style={style} />
+		<ActivityRow data={activities[index]} index={index} key={key} setActivity={setActivity} style={style} />
 	);
 
 	const handleResize = useCallback(({ height }: { height: number }) => {
@@ -33,17 +31,20 @@ export const ActivityList = ({ activities, onItemsRendered }: ActivityListProps)
 		<div className="h-full w-full">
 			{activity ? (
 				<div className="absolute z-30 h-full w-full">
-					<IconButton className="absolute right-0" onClick={() => setActivity(undefined)}>
-						<Close fill="white" />
-					</IconButton>
+					<div className="flex items-center">
+						<IconButton className="absolute right-0" onClick={() => setActivity(undefined)}>
+							<Close fill="white" />
+						</IconButton>
 
-					<div className="mx-7">
-						{/* Arguments */}
+						<div className="font-semibold">{activity.functionName}</div>
+					</div>
 
-						{activity?.args?.length ? (
-							<>
-								<div className="font-bold">Arguments:</div>
-								<Table className="mt-2">
+					<div>
+						<div className="pl-4">
+							<div className="mb-4 mt-8 font-bold">Arguments:</div>
+
+							{activity?.args?.length ? (
+								<Table>
 									<THead>
 										<Tr>
 											<Th>Key</Th>
@@ -58,15 +59,14 @@ export const ActivityList = ({ activities, onItemsRendered }: ActivityListProps)
 										))}
 									</TBody>
 								</Table>
-							</>
-						) : null}
+							) : (
+								<div>No arguments found</div>
+							)}
 
-						{/* KW Arguments */}
+							<div className="mb-4 mt-8 font-bold">KW Arguments:</div>
 
-						{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
-							<>
-								<div className="mt-4 font-bold">KW Arguments:</div>
-								<Table className="mt-2">
+							{activity.kwargs && !!Object.keys(activity.kwargs).length ? (
+								<Table>
 									<THead>
 										<Tr>
 											<Th>Key</Th>
@@ -78,7 +78,7 @@ export const ActivityList = ({ activities, onItemsRendered }: ActivityListProps)
 									<TBody>
 										{Object.entries(activity.kwargs).map(([key, value]) => (
 											<Tr key={key}>
-												<Td>{key}: </Td>
+												<Td>{key}</Td>
 
 												<Td>
 													{typeof value === "object" ? JSON.stringify(value) : String(value)}
@@ -87,23 +87,51 @@ export const ActivityList = ({ activities, onItemsRendered }: ActivityListProps)
 										))}
 									</TBody>
 								</Table>
-							</>
-						) : null}
+							) : (
+								<div>No KW arguments found</div>
+							)}
 
-						{/* Returned Value */}
+							<div className="mb-4 mt-8 font-bold">Return value:</div>
 
-						{activity.returnValue ? (
-							<Accordion
-								className="mt-2"
-								title={<div className="font-bold underline">Returned Value</div>}
-							>
-								<JsonView
-									className="scrollbar max-h-72 overflow-auto"
-									style={githubDarkTheme}
-									value={JSON.parse(activity.returnValue)}
-								/>
-							</Accordion>
-						) : null}
+							{!activity.returnStringValue &&
+							!activity.returnBytesValue &&
+							!Object.keys(activity.returnJSONValue || {}).length ? (
+								<div>No returned value found</div>
+							) : null}
+
+							{activity.returnBytesValue ? (
+								<Accordion
+									className="mb-4"
+									title={<div className="font-bold underline">Returned Value</div>}
+								>
+									<pre className="whitespace-pre-wrap">{activity.returnBytesValue}</pre>
+								</Accordion>
+							) : null}
+
+							{Object.keys(activity.returnJSONValue || {}).length ? (
+								<Accordion
+									className="mb-4"
+									title={<div className="font-bold underline">Returned Value</div>}
+								>
+									<JsonView
+										className="scrollbar mt-2 max-h-72 overflow-auto"
+										style={githubDarkTheme}
+										value={activity.returnJSONValue}
+									/>
+								</Accordion>
+							) : null}
+
+							{activity.returnStringValue ? (
+								<Accordion
+									className="mb-4"
+									title={<div className="font-bold underline">Returned Value</div>}
+								>
+									<pre className="w-4/5 whitespace-pre-wrap break-words">
+										{activity.returnStringValue}
+									</pre>
+								</Accordion>
+							) : null}
+						</div>
 					</div>
 				</div>
 			) : null}
