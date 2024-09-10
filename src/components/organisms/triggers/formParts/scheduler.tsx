@@ -31,7 +31,7 @@ export const SchedulerFields = () => {
 				{...register("cron")}
 				isError={!!errors.cron}
 				label={t("placeholders.cron")}
-				value={cronValue || ""}
+				value={cronValue}
 			/>
 
 			<ErrorMessage>{errors.cron?.message as string}</ErrorMessage>

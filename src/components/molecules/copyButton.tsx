@@ -1,5 +1,6 @@
 import React from "react";
 
+import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { useToastStore } from "@src/store";
@@ -21,14 +22,14 @@ export const CopyButton = ({
 	const { t } = useTranslation("components", { keyPrefix: "buttons" });
 	const addToast = useToastStore((state) => state.addToast);
 
-	const copyTextToClipboard = async (text: string) => {
+	const copyTextToClipboard = debounce(async (text: string) => {
 		const copyResponse = await copyToClipboard(text);
 		addToast({
 			id: Date.now().toString(),
 			message: copyResponse.message,
 			type: copyResponse.isError ? "error" : "success",
 		});
-	};
+	}, 300);
 
 	const copyButtonStyle = cn("ml-2 inline bg-transparent p-1", className);
 	const copyButtonIconStyle = cn("m-0.5 h-4 w-4 fill-white", iconClassName);

@@ -37,21 +37,39 @@ i18n.on("initialized", () => {
 
 export type TriggerFormData = z.infer<typeof triggerSchema>;
 export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
+	const generateCronError = () => ({
+		cron: {
+			type: "manual",
+			message: i18n.t("triggers.form.validations.invalidCron", { ns: "tabs" }),
+		},
+	});
+	const processZodErrors = (error: z.ZodError) => {
+		return error.errors.reduce(
+			(acc, error) => {
+				const path = error.path.join(".");
+				acc[path] = { type: "manual", message: error.message };
+
+				return acc;
+			},
+			{} as Record<string, { message: string; type: string }>
+		);
+	};
+	const validateCron = (data: TriggerFormData) => {
+		if (data.connection.value !== TriggerTypes.schedule) return null;
+		if (!data.cron || !new RegExp(cronFormat).test(data.cron)) {
+			return generateCronError();
+		}
+
+		return null;
+	};
 	try {
 		const validatedData = await triggerSchema.parseAsync(values);
-
-		if (validatedData.connection.value === TriggerTypes.schedule) {
-			if (!validatedData.cron || !new RegExp(cronFormat).test(validatedData.cron)) {
-				return {
-					values,
-					errors: {
-						cron: {
-							type: "manual",
-							message: i18n.t("triggers.form.validations.invalidCron", { ns: "tabs" }),
-						},
-					},
-				};
-			}
+		const cronError = validateCron(validatedData);
+		if (cronError) {
+			return {
+				values,
+				errors: cronError,
+			};
 		}
 
 		return {
@@ -60,22 +78,11 @@ export const triggerResolver: Resolver<TriggerFormData> = async (values) => {
 		};
 	} catch (error) {
 		if (error instanceof z.ZodError) {
-			const errors = error.errors.reduce(
-				(acc, error) => {
-					const path = error.path.join(".");
-					acc[path] = { type: "manual", message: error.message };
-
-					return acc;
-				},
-				{} as Record<string, { message: string; type: string }>
-			);
-
 			return {
 				values,
-				errors,
+				errors: processZodErrors(error),
 			};
 		}
-
 		throw error;
 	}
 };
