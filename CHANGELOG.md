@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/autokitteh/web-platform/compare/v2.2.0...v2.3.0) (2024-09-10)
+
+
+### Features
+
+* manual run functionality ([#320](https://github.com/autokitteh/web-platform/issues/320)) ([e6643b0](https://github.com/autokitteh/web-platform/commit/e6643b07d05689a184c2eac3668591b33f588ebf))
+
 # [2.2.0](https://github.com/autokitteh/web-platform/compare/v2.1.0...v2.2.0) (2024-09-10)
 
 
