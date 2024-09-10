@@ -106,26 +106,28 @@ export const ProjectConfigTopbar = () => {
 
 	return (
 		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-1250 py-2 pl-7 pr-3">
-			<div className="relative flex items-end gap-3 font-fira-code text-gray-500">
-				<span
-					className={inputClass}
-					contentEditable={true}
-					onBlur={handleInputChange}
-					onInput={handleInput}
-					onKeyDown={handleInputChange}
-					role="textbox"
-					suppressContentEditableWarning={true}
-					tabIndex={0}
-					title={t("topbar.rename")}
-				>
-					{project?.name}
-				</span>
+			<div className="flex items-center gap-5">
+				<div className="relative flex items-end gap-3 font-fira-code text-gray-500">
+					<span
+						className={inputClass}
+						contentEditable={true}
+						onBlur={handleInputChange}
+						onInput={handleInput}
+						onKeyDown={handleInputChange}
+						role="textbox"
+						suppressContentEditableWarning={true}
+						tabIndex={0}
+						title={t("topbar.rename")}
+					>
+						{project?.name}
+					</span>
 
-				<ErrorMessage className="-bottom-5 text-xs">
-					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
-				</ErrorMessage>
+					<ErrorMessage className="-bottom-5 text-xs">
+						{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
+					</ErrorMessage>
 
-				<span className="text-sm font-semibold leading-tight">{project?.id}</span>
+					<span className="text-sm font-semibold leading-tight">{project?.id}</span>
+				</div>
 			</div>
 
 			<ProjectTopbarButtons />

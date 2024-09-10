@@ -3,6 +3,7 @@ export { ConnectionStatus, Integrations } from "@enums/components/connection.enu
 export { InputVariant } from "@enums/components/input.enum";
 export { SidebarHrefMenu, SidebarMenu } from "@enums/components/menu.enum";
 export { ModalName } from "@enums/components/modal.enum";
+export { DrawerName } from "@enums/components/drawer.enum";
 export { ReadOnlyFile } from "@enums/components/readOnlyFile.enum";
 export { SortDirectionVariant } from "@enums/components/table.enum";
 export { OutputTabsVariants } from "@enums/components/tabs.enum";

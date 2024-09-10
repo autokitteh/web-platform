@@ -42,7 +42,7 @@ export const Sidebar = () => {
 
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
-			<div className="relative z-50 flex h-full min-w-[65px] items-start">
+			<div className="relative z-40 flex h-full min-w-[65px] items-start">
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
 						<Link className="ml-1 flex items-center gap-2.5" to="/">

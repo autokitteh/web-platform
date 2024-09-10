@@ -27,7 +27,7 @@ export const Modal = ({ children, className, name }: ModalProps) => {
 		isOpen: state.modals[name],
 		onClose: state.closeModal,
 	}));
-	const wrapperClass = cn("fixed left-0 top-0 z-40 flex h-full w-full items-center justify-center");
+	const wrapperClass = cn("fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center");
 	const modalClasses = cn("w-500 rounded-2xl border border-gray-950 bg-white p-3.5 text-gray-1250", className);
 	const bgClass = cn("absolute left-0 top-0 -z-10 h-full w-full bg-gray-1100/50");
 

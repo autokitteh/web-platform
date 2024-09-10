@@ -13,8 +13,8 @@ import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
 
-import { BuildIcon, DeployIcon, MoreIcon, StatsIcon } from "@assets/image";
-import { TrashIcon } from "@assets/image/icons";
+import { BuildIcon, MoreIcon, StatsIcon } from "@assets/image";
+import { RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
@@ -22,16 +22,24 @@ export const ProjectTopbarButtons = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
+
 	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const { fetchResources } = useFileOperations(projectId!);
 
-	const build = async () => {
+	const fetchAndCheckResources = useCallback(async () => {
 		const resources = await fetchResources();
 		if (!Object.keys(resources).length) {
 			return;
 		}
+
+		return resources;
+	}, [fetchResources]);
+
+	const build = async () => {
+		const resources = await fetchAndCheckResources();
+		if (!resources) return;
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
 
@@ -54,11 +62,8 @@ export const ProjectTopbarButtons = () => {
 	};
 
 	const deploy = async () => {
-		const resources = await fetchResources();
-
-		if (!Object.keys(resources).length) {
-			return;
-		}
+		const resources = await fetchAndCheckResources();
+		if (!resources) return;
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
 
@@ -104,7 +109,7 @@ export const ProjectTopbarButtons = () => {
 		navigate("/");
 	};
 
-	const handleOpenModalDeletePrject = useCallback(() => {
+	const openModalDeleteProject = useCallback(() => {
 		openModal(ModalName.deleteProject);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -130,7 +135,11 @@ export const ProjectTopbarButtons = () => {
 				onClick={deploy}
 				variant="filledGray"
 			>
-				{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg size="md" src={DeployIcon} />}
+				{loadingButton[TopbarButton.deploy] ? (
+					<Spinner />
+				) : (
+					<IconSvg className="fill-white" size="md" src={RocketIcon} />
+				)}
 
 				{t("topbar.buttons.deploy")}
 			</Button>
@@ -148,7 +157,7 @@ export const ProjectTopbarButtons = () => {
 
 			<DropdownButton
 				contentMenu={
-					<Button className="h-8 px-4" onClick={handleOpenModalDeletePrject} variant="filledGray">
+					<Button className="h-8 px-4" onClick={openModalDeleteProject} variant="filledGray">
 						<IconSvg className="fill-white" size="md" src={TrashIcon} />
 
 						{t("topbar.buttons.delete")}
