@@ -20,7 +20,7 @@ export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 			items,
 			[
 				(item) => {
-					const value = item[sortConfig.key];
+					const value = sortConfig.key ? item[sortConfig.key] : undefined;
 
 					return typeof value === "string" ? value.toLowerCase() : value;
 				},
