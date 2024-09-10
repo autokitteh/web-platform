@@ -113,7 +113,7 @@
 		},
 		"single": {
 			"arguments": "Arguments",
-			"argummentsKey": "Key",
+			"argumentsKey": "Key",
 			"noArgumentsFound": "No arguments found",
 			"kwArguments": "KW Arguments",
 			"kwArgumentsKey": "Key",

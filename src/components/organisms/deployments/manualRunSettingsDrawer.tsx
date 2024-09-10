@@ -95,6 +95,7 @@ export const ManualRunSettingsDrawer = () => {
 			message: t("executionSucceed", { sessionId }),
 			type: "success",
 		});
+		closeDrawer(DrawerName.projectManualRunSettings);
 	};
 
 	return (

@@ -28,7 +28,10 @@ const updateFilePathAndEntrypointFunctions = (
 
 		addToast({
 			id: Date.now().toString(),
-			message: i18n.t("manualRun.filePathDoesNotExistExtended", { ns: "deployments", filePath: filePath.value }),
+			message: i18n.t("history.manualRun.filePathDoesNotExistExtended", {
+				ns: "deployments",
+				filePath: filePath.value,
+			}),
 			type: "error",
 		});
 
@@ -103,7 +106,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const actualParams = params || project?.params || [];
 
 		const jsonInputs = actualParams.length
-			? Object.fromEntries(actualParams.map(({ key, value }) => [key, value]))
+			? Object.fromEntries(actualParams.map(({ key, value }) => [key, `"${value}"`]))
 			: {};
 
 		const sessionArgs = {
@@ -121,7 +124,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 		set((state) => {
 			if (params?.length) {
-				project.params = [...params];
+				state.projectManualRun[projectId] = { ...project, params: [...params] };
 			}
 
 			return state;
