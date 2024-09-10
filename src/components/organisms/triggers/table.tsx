@@ -15,7 +15,7 @@ import { SortButton } from "@components/molecules";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 
 import { PlusCircle } from "@assets/image";
-import { ClockIcon, EditIcon, TrashIcon } from "@assets/image/icons";
+import { EditIcon, TrashIcon } from "@assets/image/icons";
 
 export const TriggersTable = () => {
 	const { t: tError } = useTranslation("errors");
@@ -86,11 +86,6 @@ export const TriggersTable = () => {
 		[triggerId]
 	);
 
-	const handleNavigate = (triggerId: string, isScheduler: boolean) => {
-		const path = isScheduler ? `/edit-scheduler` : `/edit`;
-		navigate(`${triggerId}${path}`);
-	};
-
 	return isLoading ? (
 		<Loader isCenter size="xl" />
 	) : (
@@ -122,25 +117,22 @@ export const TriggersTable = () => {
 								/>
 							</Th>
 
-							<Th
-								className="group cursor-pointer font-normal"
-								onClick={() => requestSort("connectionName")}
-							>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("sourceType")}>
 								{t("table.columns.connection")}
 
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"connectionName" === sortConfig.key}
+									isActive={"sourceType" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 
-							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("path")}>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("entrypoint")}>
 								{t("table.columns.call")}
 
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"path" === sortConfig.key}
+									isActive={"entrypoint" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
@@ -154,19 +146,17 @@ export const TriggersTable = () => {
 							<Tr className="group" key={trigger.triggerId}>
 								<Td className="font-semibold">
 									<div className="flex gap-3">
-										{trigger.data?.schedule?.string?.v ? (
-											<ClockIcon className="w-4 fill-white" />
-										) : null}
-
 										<div>{trigger.name}</div>
 									</div>
 								</Td>
 
-								<Td>{trigger.connectionName}</Td>
-
 								<Td>
-									{trigger.path}:{trigger.entryFunction}
+									<span className="capitalize" title={trigger.sourceType}>
+										{trigger.sourceType}
+									</span>
 								</Td>
+
+								<Td>{trigger.entrypoint}</Td>
 
 								<Td className="max-w-20 pr-0">
 									<div className="flex space-x-1">
@@ -174,7 +164,7 @@ export const TriggersTable = () => {
 											ariaLabel={t("table.buttons.ariaModifyTrigger", {
 												name: trigger.name,
 											})}
-											onClick={() => handleNavigate(trigger.triggerId!, !!trigger.data?.schedule)}
+											onClick={() => navigate(`${trigger.triggerId}/edit`)}
 										>
 											<EditIcon className="h-3 w-3 fill-white" />
 										</IconButton>

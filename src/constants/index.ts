@@ -17,13 +17,13 @@ export { menuItems } from "@constants/menuItems.constants";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
 export { defaultProjectTab, projectTabs } from "@constants/project.constants";
-export { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants/dashboard.constants";
+export {
+	defaultTemplateProjectCategory,
+	templateProjectsCategories,
+	findTemplateFilesByAssetDirectory,
+} from "@constants/dashboard.constants";
 export { sessionsEditorLineHeight, defaultSessionLogRecordsPageSize } from "@src/constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
-export {
-	defaultTriggerType,
-	infoCronExpressionsLinks,
-	schedulerTriggerConnectionName,
-} from "@constants/triggers.constants";
+export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";

@@ -1,11 +1,16 @@
 import i18n from "i18next";
 
-import { triggerTypes } from "@constants/lists/connections";
-
-export const schedulerTriggerConnectionName = "cron";
-export const defaultTriggerType = triggerTypes[0];
-
 export let infoCronExpressionsLinks: { text: string; url: string }[] = [];
+export let extraTriggerTypes = [
+	{
+		label: "Scheduler",
+		value: "schedule",
+	},
+	{
+		label: "Webhook",
+		value: "webhook",
+	},
+];
 
 i18n.on("initialized", () => {
 	infoCronExpressionsLinks = [
@@ -16,6 +21,17 @@ i18n.on("initialized", () => {
 		{
 			text: i18n.t("triggers.form.info.schedules", { ns: "tabs" }),
 			url: "https://docs.temporal.io/workflows#robfig-predefined-schedules-and-intervals",
+		},
+	];
+
+	extraTriggerTypes = [
+		{
+			label: i18n.t("triggers.form.extraConnections.schedulerLabel", { ns: "tabs" }),
+			value: "schedule",
+		},
+		{
+			label: i18n.t("triggers.form.extraConnections.webhookLabel", { ns: "tabs" }),
+			value: "webhook",
 		},
 	];
 });

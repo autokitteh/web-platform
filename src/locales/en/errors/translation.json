@@ -37,6 +37,7 @@
 	"sessionsFetchErrorExtended": "Couldn't fetch the sessions details, error message: {{error}}",
 	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}",
 	"triggerNotCreated": "There was an issue creating the trigger",
+	"triggerNotEdited": "There was an issue editing the trigger",
 	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
 	"triggerNotFound": "Couldn't fetch the trigger",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
@@ -50,9 +51,9 @@
 	"fileTooLargeExtended": "File is too large, maximum file size: {{maxSize}} for the project ID: {{projectId}}",
 	"connectionsFetchError": "Couldn't fetch the connections details",
 	"connectionsFetchErrorExtended": "Failed to fetch the connections for the project {{projectId}}. Error: {{error}}",
+	"connectionsNotFound": "No connections found",
 	"resourcesFetchError": "Couldn't fetch resources data for the project",
 	"resourcesFetchErrorExtended": "Failed to fetch the resources for the project {{projectId}}. Error: {{error}}",
-	"connectionCronNotFound": "Couldn't fetch the connection with cron name details",
-	"connectionCronNotFounExtended": "Couldn't fetch the connection with cron name details"
+	"connectionCronNotFound": "Couldn't fetch the scheduler connection"
 	
 }

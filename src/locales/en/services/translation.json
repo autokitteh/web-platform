@@ -12,7 +12,7 @@
 	"issueFetchingDefaultEnvironment": "Couldn't fetch the default environment, project ID: {{projectId}}, error: {{error}}",
 	"connectionsNotFound": "Couldn't fetch the connections details",
 	"connectionsNotFoundExtended": "Failed to fetch the connections for the project {{projectId}}",
-	"defaultEnvironmentNotFoundExtended": "Default environment not found, project ID: {{projectId}}",
+	"defaultEnvironmentNotFoundExtended": "Default environment not found, project ID: {{projectId}}, error: {{error}}",
 	"deleteFailedIdError": "Deployment deletion failed - deployment: {{deploymentId}}, error: {{error}}",
 	"deploymentFetchError": "Couldn't fetch the deployment details",
 	"deploymentFetchErrorExtended": "Couldn't fetch the deployment details, deployment ID: {{deploymentId}}, error: {{error}}",

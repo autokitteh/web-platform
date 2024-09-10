@@ -4,7 +4,6 @@ export { default as ArrowDown } from "@assets/image/icons/ArrowDown.svg?react";
 export { default as ArrowLeft } from "@assets/image/icons/ArrowLeft.svg?react";
 export { default as ArrowUp } from "@assets/image/icons/ArrowUp.svg?react";
 export { default as BellIcon } from "@assets/image/icons/Bell.svg?react";
-export { default as ClockIcon } from "@assets/image/icons/Clock.svg?react";
 export { default as Close } from "@assets/image/icons/Close.svg?react";
 export { default as CopyIcon } from "@assets/image/icons/Copy.svg?react";
 export { default as EditIcon } from "@assets/image/icons/Edit.svg?react";

@@ -13,7 +13,6 @@ export {
 	githubIntegrationAuthMethods,
 	integrationTypes,
 	selectIntegrationGoogle,
-	triggerTypes,
 	selectIntegrationSlack,
 	selectIntegrationAws,
 	selectIntegrationHttp,

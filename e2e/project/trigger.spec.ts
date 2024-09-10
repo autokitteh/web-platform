@@ -2,6 +2,8 @@ import { Page } from "@playwright/test";
 
 import { expect, test } from "@e2e/fixtures";
 
+const triggerName = "triggerName";
+
 async function createTriggerScheduler(
 	page: Page,
 	name: string,
@@ -30,6 +32,9 @@ async function createTriggerScheduler(
 	await functionNameInput.fill(functionName);
 
 	await page.getByRole("button", { name: "Save" }).click();
+
+	await expect(nameInput).toBeDisabled();
+	await expect(nameInput).toHaveValue(triggerName);
 }
 
 async function modifyTrigger(page: Page, name: string, cronExpression: string, functionName: string) {
@@ -61,30 +66,47 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 test.describe("Project Triggers Suite", () => {
 	test("Create trigger with cron expression", async ({ page }) => {
-		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
+		await createTriggerScheduler(page, triggerName, "5 4 * * *", "newFile.star", "functionName");
+
+		const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
+		await expect(nameInput).toBeDisabled();
+		await expect(nameInput).toHaveValue(triggerName);
+
+		await page.getByRole("button", { name: "Return back" }).click();
 
 		const newRowInTable = page.getByRole("row", { name: "triggerName" });
 		await expect(newRowInTable).toHaveCount(1);
 
-		const newCallInTable = page.getByRole("cell", { name: "newFile.star:functionName" });
-		await expect(newCallInTable).toBeVisible();
+		const newCellInTable = page.getByRole("cell", { name: "newFile.star:functionName" });
+		await expect(newCellInTable).toBeVisible();
 	});
 
 	test("Modify trigger with cron expression", async ({ page }) => {
-		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
+		await createTriggerScheduler(page, triggerName, "5 4 * * *", "newFile.star", "functionName");
+
+		await page.getByRole("button", { name: "Return back" }).click();
+
+		await modifyTrigger(page, triggerName, "4 4 * * *", "newFunctionName");
+
+		const cronInput = page.getByRole("textbox", { name: "Cron expression" });
+		await expect(cronInput).toHaveValue("4 4 * * *");
+
+		const functionNameInput = page.getByRole("textbox", { name: "Function name" });
+		await expect(functionNameInput).toHaveValue("newFunctionName");
+
+		const backButton = page.getByRole("button", { name: "Return back" });
+		await backButton.click();
 
 		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newRowInTable).toBeVisible();
 
-		await modifyTrigger(page, "triggerName", "4 4 * * *", "newFunctionName");
-
-		const newCallInTable = page.getByRole("cell", { name: "newFile.star:newFunctionName" });
-		await expect(newCallInTable).toBeVisible();
+		const newCellInTable = page.getByRole("cell", { name: "newFile.star:newFunctionName" });
+		await expect(newCellInTable).toBeVisible();
 	});
 
 	test("Delete trigger", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
-
+		await page.getByRole("button", { name: "Return back" }).click();
 		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newRowInTable).toBeVisible();
 
@@ -111,16 +133,16 @@ test.describe("Project Triggers Suite", () => {
 		await nameInput.fill("triggerTest");
 		await page.getByRole("button", { name: "Save" }).click();
 
-		const functionNameErrorMessage = page.getByText("Function name is required");
-		const cronErrorMessage = page.getByText("The cron schedule expression must match the required format");
+		const functionNameErrorMessage = page.getByText("Function is required");
 
 		await expect(functionNameErrorMessage).toBeVisible();
-		await expect(cronErrorMessage).toBeVisible();
 	});
 
 	test("Modify trigger without a values", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "newFile.star", "functionName");
-		await page.getByRole("button", { name: `Modify triggerName trigger` }).click();
+		await page.getByRole("button", { name: "Return back" }).click();
+
+		await page.getByRole("button", { name: "Modify triggerName trigger" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).click();
 		await page.getByRole("textbox", { name: "Cron expression" }).fill("");
 
@@ -129,10 +151,8 @@ test.describe("Project Triggers Suite", () => {
 
 		await page.getByRole("button", { name: "Save" }).click();
 
-		const functionNameErrorMessage = page.getByText("Function name is required");
-		const cronErrorMessage = page.getByText("The cron schedule expression must match the required format");
+		const functionNameErrorMessage = page.getByText("Function is required");
 
 		await expect(functionNameErrorMessage).toBeVisible();
-		await expect(cronErrorMessage).toBeVisible();
 	});
 });

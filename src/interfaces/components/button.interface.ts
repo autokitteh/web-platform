@@ -39,6 +39,7 @@ export interface IconButtonProps extends React.AriaAttributes, React.DOMAttribut
 	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>) => void;
 	title?: string;
 	variant?: ButtonType;
+	type?: "button" | "submit";
 }
 
 export interface SortButtonProps {

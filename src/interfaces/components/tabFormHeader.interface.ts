@@ -4,4 +4,5 @@ export interface TabFormHeaderProps {
 	isLoading?: boolean;
 	title: string;
 	isHiddenButtons?: boolean;
+	customBackRoute?: string;
 }

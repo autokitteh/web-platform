@@ -5,10 +5,8 @@ import {
 	ConfluenceIcon,
 	GithubIcon,
 	GoogleCalendarIcon,
-	GoogleFormsIcon,
 	GoogleGmailIcon,
 	GoogleSheetsIcon,
-	HttpIcon,
 	JiraIcon,
 	OpenAiIcon,
 	SlackIcon,
@@ -29,6 +27,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GoogleSheetsIcon, title: "Sheets" },
 				],
 				assetDirectory: "aws_health_to_slack",
+				files: ["autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Slack notify on Confluence page created",
@@ -38,26 +37,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SlackIcon, title: "Slack" },
 				],
 				assetDirectory: "confluence_to_slack",
-			},
-			{
-				title: "Create Jira Ticket on HTTP request",
-				description: "Create a Jira ticket based on HTTP request",
-				integrations: [
-					{ icon: HttpIcon, title: "HTTP" },
-					{ icon: JiraIcon, title: "Jira" },
-				],
-				assetDirectory: "create_jira_issue",
-			},
-			{
-				title: "Create Jira ticket from form",
-				description:
-					"Trigger by HTTP request, continue polling Google forms, and create Jira ticket based on the form's data",
-				integrations: [
-					{ icon: GoogleFormsIcon, title: "Forms" },
-					{ icon: HttpIcon, title: "HTTP" },
-					{ icon: JiraIcon, title: "Jira" },
-				],
-				assetDirectory: "google_forms_to_jira",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "JIRA Assignee From Google Calendar Workflow",
@@ -67,6 +47,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GoogleCalendarIcon, title: "Google Calendar" },
 				],
 				assetDirectory: "jira_assignee_from_calendar",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Create calendar due date event for Jira ticket",
@@ -76,6 +57,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: JiraIcon, title: "Jira" },
 				],
 				assetDirectory: "jira_to_google_calendar",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Pull Request Review Reminder (Purrr)",
@@ -86,6 +68,24 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SlackIcon, title: "Slack" },
 				],
 				assetDirectory: "purrr",
+				files: [
+					"README.md",
+					"autokitteh.yaml",
+					"debug.star",
+					"github_helpers.star",
+					"github_issue_comment.star",
+					"github_pr.star",
+					"github_pr_review.star",
+					"github_review_comment.star",
+					"github_thread.star",
+					"markdown.star",
+					"redis_helpers.star",
+					"slack_cmd.star",
+					"slack_helpers.star",
+					"slack_message.star",
+					"slack_reaction.star",
+					"user_helpers.star",
+				],
 			},
 			{
 				title: "Monitor PR until completion in Slack",
@@ -96,6 +96,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: GoogleSheetsIcon, title: "Sheets" },
 				],
 				assetDirectory: "reviewkitteh",
+				files: ["autokitteh.yaml", "program.star"],
 			},
 		],
 	},
@@ -112,7 +113,19 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: OpenAiIcon, title: "ChatGPT" },
 				],
 				assetDirectory: "categorize_notify",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 		],
 	},
 ];
+
+export const findTemplateFilesByAssetDirectory = (assetDirectory: string) => {
+	for (const category of templateProjectsCategories) {
+		const card = category.cards.find((card) => card.assetDirectory === assetDirectory);
+		if (card) {
+			return card.files;
+		}
+	}
+
+	return undefined;
+};

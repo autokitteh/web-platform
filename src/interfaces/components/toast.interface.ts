@@ -2,6 +2,7 @@ export interface Toast {
 	id: string;
 	message: string;
 	type: ToasterTypes;
+	showCopyButton?: boolean;
 }
 
 export type ToasterTypes = "error" | "info" | "success";

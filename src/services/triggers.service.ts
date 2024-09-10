@@ -1,10 +1,10 @@
 import i18n from "i18next";
 
-import { ConnectionService } from "./connection.service";
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";
 import { EnvironmentsService, LoggerService } from "@services";
+import { reverseTriggerTypeConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { Trigger } from "@type/models";
 
@@ -17,18 +17,19 @@ export class TriggersService {
 				return { data: undefined, error };
 			}
 
-			const { connectionId, data, entryFunction, eventType, filter, name, path } = trigger;
+			const { connectionId, entryFunction, eventType, filter, name, path, schedule, sourceType } = trigger;
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
 					codeLocation: { name: entryFunction, path },
 					connectionId,
-					data,
 					envId: defaultEnvironment!.envId,
 					eventType,
 					filter,
 					name,
 					triggerId: undefined,
+					sourceType: reverseTriggerTypeConverter(sourceType),
+					schedule,
 				},
 			});
 
@@ -62,14 +63,8 @@ export class TriggersService {
 		try {
 			const { trigger } = await triggersClient.get({ triggerId });
 			const convertedTrigger = convertTriggerProtoToModel(trigger!);
-			const { data: connection } = await ConnectionService.get(convertedTrigger.connectionId);
 
-			const triggerData = {
-				...convertedTrigger,
-				connectionName: connection?.name,
-			} as Trigger;
-
-			return { data: triggerData, error: undefined };
+			return { data: convertedTrigger, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.projectService,
@@ -87,7 +82,7 @@ export class TriggersService {
 			if (errorEnvs) {
 				LoggerService.error(
 					namespaces.triggerService,
-					i18n.t("errors.defaultEnvironmentNotFoundExtended", { projectId })
+					i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services", error: errorEnvs })
 				);
 
 				return { data: undefined, error: errorEnvs };
@@ -96,25 +91,8 @@ export class TriggersService {
 			const { triggers } = await triggersClient.list({ envId: environments && environments[0].envId });
 
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
-			const { data: connectionsList, error } = await ConnectionService.list();
-			if (error) {
-				LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
 
-				return { data: undefined, error };
-			}
-
-			const enrhichedTriggers = convertedTriggers.map((trigger) => {
-				const connection = connectionsList?.find(
-					(connection) => connection.connectionId === trigger.connectionId
-				);
-
-				return {
-					...trigger,
-					connectionName: connection?.name || i18n.t("connectionNotFound", { ns: "services" }),
-				};
-			});
-
-			return { data: enrhichedTriggers, error: undefined };
+			return { data: convertedTriggers, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.triggerService, i18n.t("triggersNotFound", { ns: "services" }));
 
@@ -129,7 +107,7 @@ export class TriggersService {
 			if (error) {
 				LoggerService.error(
 					namespaces.triggerService,
-					i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services" })
+					i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services", error })
 				);
 
 				return { data: undefined, error };
@@ -143,13 +121,26 @@ export class TriggersService {
 				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
 			}
 
-			const { connectionId, data, entryFunction, eventType, filter, name, path, triggerId } = trigger;
+			const {
+				connectionId,
+				entryFunction,
+				eventType,
+				filter,
+				name,
+				path,
+				schedule,
+				sourceType,
+				triggerId,
+				webhookSlug,
+			} = trigger;
 
 			await triggersClient.update({
 				trigger: {
+					sourceType: reverseTriggerTypeConverter(sourceType),
+					schedule,
+					webhookSlug,
 					codeLocation: { name: entryFunction, path },
 					connectionId,
-					data,
 					envId: environments && environments[0].envId,
 					eventType,
 					filter,

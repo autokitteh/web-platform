@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,7 +24,7 @@ export const ProjectTopbarButtons = () => {
 	const { closeModal, openModal } = useModalStore();
 	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const [loadingButton, setLoadingButton] = React.useState<Record<string, boolean>>({});
+	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const { fetchResources } = useFileOperations(projectId!);
 
 	const build = async () => {
@@ -104,7 +104,7 @@ export const ProjectTopbarButtons = () => {
 		navigate("/");
 	};
 
-	const handleOpenModalDeletePrject = React.useCallback(() => {
+	const handleOpenModalDeletePrject = useCallback(() => {
 		openModal(ModalName.deleteProject);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

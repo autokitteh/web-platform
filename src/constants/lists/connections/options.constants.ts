@@ -1,5 +1,5 @@
 import { ConnectionAuthType } from "@enums";
-import { Integrations, TriggerFormType } from "@enums/components";
+import { Integrations } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
 
 import {
@@ -26,7 +26,6 @@ export const integrationTypes: SelectOption[] = [
 	{ disabled: false, label: "Slack", value: Integrations.slack, icon: SlackIcon },
 	{ disabled: false, label: "AWS", value: Integrations.aws, icon: AwsIcon },
 	{ disabled: false, label: "OpenAI ChatGPT", value: Integrations.chatgpt, icon: OpenAiIcon },
-	{ disabled: false, label: "HTTP", value: Integrations.http, icon: HttpIcon },
 	{ disabled: false, label: "Twilio", value: Integrations.twilio, icon: TwilioIcon },
 	{ disabled: false, label: "Gmail", value: Integrations.gmail, icon: GoogleGmailIcon },
 	{ disabled: false, label: "Jira", value: Integrations.jira, icon: JiraIcon },
@@ -58,11 +57,6 @@ export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElem
 	[Integrations.forms]: GoogleFormsIcon,
 	[Integrations.googlegemini]: GoogleGeminiIcon,
 };
-
-export const triggerTypes: SelectOption[] = [
-	{ disabled: false, label: "Default", value: TriggerFormType.default },
-	{ disabled: false, label: "Scheduler", value: TriggerFormType.scheduler },
-];
 
 export const githubIntegrationAuthMethods: SelectOption[] = [
 	{ label: "Personal Access Token (PAT)", value: ConnectionAuthType.Pat },

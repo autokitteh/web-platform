@@ -58,10 +58,13 @@
 			"loading": "Loading"
 		},
 		"form": {
+			"createdSuccessfully": "Trigger created successfully",
+			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
 			"cronSchedulerConnectionTitle": "Scheduler",
 			"addNewTrigger": "Add new trigger",
 			"ariaDeleteData": "Delete {{name}} data",
 			"buttonAddNewData": "Add new data",
+			"updatedSuccessfully": "Trigger updated successfully",
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
 			},
@@ -75,6 +78,7 @@
 			"noConnectionsAvailable": "No connections available",
 			"noFilesAvailable": "No files available",
 			"placeholders": {
+				"webhookUrl": "Webhook URL",
 				"cron": "Cron expression",
 				"eventType": "Event type",
 				"filter": "Filter",
@@ -91,7 +95,19 @@
 				"value": "Value"
 			},
 			"titleData": "Data",
-			"titleInfo": "Relevant only for HTTP"
+			"titleInfo": "Relevant only for HTTP",
+			"extraConnections": {
+				"schedulerLabel": "Scheduler",
+				"webhookLabel": "Webhook",
+				"connectionLabel": "Connection"
+			},
+			"validations":{
+				"nameRequired": "Name is required",
+				"connectionRequired": "Connection is required",
+				"fileRequired": "File is required",
+				"functionRequired": "Function is required",
+				"invalidCron": "Cron expression is required and must be valid for schedule triggers"
+			}
 		},
 		"table": {
 			"buttons": {

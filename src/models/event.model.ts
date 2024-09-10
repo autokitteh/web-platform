@@ -3,7 +3,7 @@ import { Event } from "@src/types/models/event.type";
 
 export function convertEventProtoToModel(protoEvent: ProtoEvent): Event {
 	return {
-		connectionId: protoEvent.connectionId,
+		destinationId: protoEvent.destinationId,
 		eventId: protoEvent.eventId,
 	};
 }
