@@ -69,7 +69,6 @@
 			"eventId": "Event ID",
 			"buildId": "Build ID",
 			"copyButton": "Copy"
-
 		}
 	},
 	"activities":{
@@ -82,6 +81,18 @@
 			"running": "Running",
 			"stopped": "Stopped",
 			"unspecified": "Unspecified"
+		},
+		"single": {
+			"arguments": "Arguments",
+			"argummentsKey": "Key",
+			"noArgumentsFound": "No arguments found",
+			"kwArguments": "KW Arguments",
+			"kwArgummentsKey": "Key",
+			"kwArgummentsValue": "Value",
+			"noKwArgumentsFound": "No KW arguments found",
+			"returnValues": "Return Values",
+			"noReturnValuesFound": "No return values found"
+
 		}
 	}
 }
