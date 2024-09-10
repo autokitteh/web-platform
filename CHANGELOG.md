@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/autokitteh/web-platform/compare/v1.49.1...v2.0.0) (2024-09-10)
+
+
+### Features
+
+* migrate http connections to webhook triggers ([#324](https://github.com/autokitteh/web-platform/issues/324)) ([686c43d](https://github.com/autokitteh/web-platform/commit/686c43d378eab8895c5a6d85237facfd2cd3a855))
+
+
+### BREAKING CHANGES
+
+* Remove HTTP connection and add HTTP webhook as a trigger instead.
+
 ## [1.49.1](https://github.com/autokitteh/web-platform/compare/v1.49.0...v1.49.1) (2024-09-05)
 
 
