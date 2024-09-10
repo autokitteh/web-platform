@@ -14,7 +14,7 @@ export const WebhookFields = ({ webhookSlug }: { webhookSlug?: string }) => {
 	const [webhookUrl, setWebhookUrl] = useState<string>("");
 
 	useEffect(() => {
-		setWebhookUrl(webhookSlug ? `${apiBaseUrl}/${webhookSlug}` : t("webhookWillBeGenerated"));
+		setWebhookUrl(webhookSlug ? `${apiBaseUrl}/webhooks/${webhookSlug}` : t("webhookWillBeGenerated"));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
