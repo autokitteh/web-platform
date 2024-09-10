@@ -21,24 +21,27 @@ i18n.on("initialized", () => {
 		entrypointFunction: selectSchema.refine((value) => value.label, {
 			message: i18n.t("functionNameIsRequired", { ns: "validations" }),
 		}),
-		params: z.array(paramSchema).superRefine((items, ctx) => {
-			items.forEach((item, index) => {
-				if (item.key?.trim().length === 0) {
-					ctx.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: i18n.t("keyIsRequired", { ns: "validations" }),
-						path: [`params.${index}.key`],
-					});
-				}
-				if (item.value?.trim().length === 0) {
-					ctx.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: i18n.t("valueIsRequired", { ns: "validations" }),
-						path: [`params.${index}.value`],
-					});
-				}
-			});
-		}),
+		params: z
+			.array(paramSchema)
+			.superRefine((items, ctx) => {
+				items.forEach((item, index) => {
+					if (item.key?.trim().length === 0) {
+						ctx.addIssue({
+							code: z.ZodIssueCode.custom,
+							message: i18n.t("keyIsRequired", { ns: "validations" }),
+							path: [`params.${index}.key`],
+						});
+					}
+					if (item.value?.trim().length === 0) {
+						ctx.addIssue({
+							code: z.ZodIssueCode.custom,
+							message: i18n.t("valueIsRequired", { ns: "validations" }),
+							path: [`params.${index}.value`],
+						});
+					}
+				});
+			})
+			.optional(),
 	});
 });
 
