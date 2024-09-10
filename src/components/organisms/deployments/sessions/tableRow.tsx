@@ -2,7 +2,6 @@ import React, { CSSProperties, memo } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { areEqual } from "react-window";
 
 import { SessionState } from "@enums";
 import { SessionsTableRowProps } from "@interfaces/components";
@@ -11,27 +10,41 @@ import { cn } from "@utilities";
 
 import { useToastStore } from "@store";
 
-import { IconButton, Td, Tr } from "@components/atoms";
+import { IconButton } from "@components/atoms";
 import { SessionsTableState } from "@components/organisms/deployments";
 
 import { ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
+
+const areEqual = (
+	prevProps: { data: SessionsTableRowProps; index: number },
+	nextProps: { data: SessionsTableRowProps; index: number }
+) => {
+	const prevSession = prevProps.data.sessions[prevProps.index];
+	const nextSession = nextProps.data.sessions[nextProps.index];
+
+	return (
+		prevProps.index === nextProps.index &&
+		prevProps.data.selectedSessionId === nextProps.data.selectedSessionId &&
+		prevSession === nextSession
+	);
+};
 
 export const SessionsTableRow = memo(
 	({ data, index, style }: { data: SessionsTableRowProps; index: number; style: CSSProperties }) => {
 		const { t: tErrors } = useTranslation("errors");
 		const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 		const addToast = useToastStore((state) => state.addToast);
-		const { onSessionRemoved, openSessionLog, scrollDisplayed, selectedSessionId, sessions, showDeleteModal } =
-			data;
+		const { onSessionRemoved, openSessionLog, selectedSessionId, sessions, showDeleteModal } = data;
 		const session = sessions[index];
-
-		const sessionRowClass = (id: string) =>
-			cn("group cursor-pointer hover:bg-gray-1300", { "bg-black": id === selectedSessionId });
-		const sessionLastTdClass = cn("w-1/8 max-w-20 justify-end border-0 pr-0", { "mr-1.5": !scrollDisplayed });
 
 		if (!session) {
 			return null;
 		}
+
+		const sessionRowClass = (id: string) =>
+			cn("group flex cursor-pointer items-center justify-between hover:bg-gray-1300", {
+				"bg-black": id === selectedSessionId,
+			});
 
 		const handleDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 			event.stopPropagation();
@@ -59,40 +72,39 @@ export const SessionsTableRow = memo(
 			session.state === SessionState.running ? "h-4 w-4 transition group-hover:fill-white" : "h-4 w-4 transition";
 
 		return (
-			<Tr
+			<div
 				className={sessionRowClass(session.sessionId)}
 				onClick={() => openSessionLog(session.sessionId)}
-				style={style}
+				onKeyDown={() => openSessionLog(session.sessionId)}
+				role="button"
+				style={{ ...style }}
+				tabIndex={0}
 			>
-				<Td className="w-1/4" hasFixedWidth>
-					{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}
-				</Td>
+				<div className="flex w-56 px-2.5">{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</div>
 
-				<Td className="w-1/8" hasFixedWidth>
+				<div className="flex w-32 px-2.5">
 					<SessionsTableState sessionState={session.state} />
-				</Td>
+				</div>
 
-				<Td className="w-1/2 border-r-0" hasFixedWidth>
+				<div className="flex w-80 px-2.5" title={session.sessionId}>
 					{session.sessionId}
-				</Td>
+				</div>
 
-				<Td className={sessionLastTdClass} hasFixedWidth>
-					<div className="flex space-x-1">
-						<IconButton
-							className="p-1"
-							disabled={session.state !== SessionState.running}
-							onClick={handleStopSession}
-							title={t("table.stopSession")}
-						>
-							<ActionStoppedIcon className={actionStoppedIconClass} />
-						</IconButton>
+				<div className="flex w-32 justify-end px-2.5">
+					<IconButton
+						className="p-1"
+						disabled={session.state !== SessionState.running}
+						onClick={handleStopSession}
+						title={t("table.stopSession")}
+					>
+						<ActionStoppedIcon className={actionStoppedIconClass} />
+					</IconButton>
 
-						<IconButton className="p-1.5" onClick={handleDeleteClick}>
-							<TrashIcon className="h-3 w-3 fill-white" />
-						</IconButton>
-					</div>
-				</Td>
-			</Tr>
+					<IconButton className="p-1.5" onClick={handleDeleteClick}>
+						<TrashIcon className="h-3 w-3 fill-white" />
+					</IconButton>
+				</div>
+			</div>
 		);
 	},
 	areEqual

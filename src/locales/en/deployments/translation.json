@@ -27,11 +27,10 @@
 	"sessions": {
 		"ariaLabelReturnBack": "Return back",
 		"buttons": {
-			"ariaCloseEditor": "Close session log viewer",
 			"back": "Back",
 			"scrollToTop": "Scroll to Top"
 		},
-		"noData": "No data yet",
+		"noLogsFound": "No logs found",
 		"noSelectedSession": "No session selected",
 		"noSessions": "No sessions found",
 		"output": "Output",
@@ -42,8 +41,10 @@
 		"table": {
 			"columns": {
 				"actions": "Actions",
-				"activationTime": "Activation time",
+				"startTime": "Start time",
 				"sessionId": "Session ID",
+				"triggerName": "Trigger Name",
+				"connectionName": "Connection Name",
 				"status": "Status"
 			},
 			"statuses": {
@@ -57,6 +58,41 @@
 			},
 			"stopSession": "Stop session"
 		},
-		"totalSessions": "Total {{total}}"
+		"totalSessions": "Total {{total}}",
+		"viewer":{
+			"buttons":{
+				"ariaCloseEditor": "Close session log viewer"
+			},
+			"connectionName": "Connection",
+			"trigger": "Trigger",
+			"entrypoint": "Entrypoint",
+			"eventId": "Event ID",
+			"buildId": "Build ID",
+			"copyButton": "Copy"
+		}
+	},
+	"activities":{
+		"noActivitiesFound": "No activities found",
+		"statuses": {
+			"all": "All",
+			"completed": "Completed",
+			"created": "Created",
+			"error": "Error",
+			"running": "Running",
+			"stopped": "Stopped",
+			"unspecified": "Unspecified"
+		},
+		"single": {
+			"arguments": "Arguments",
+			"argummentsKey": "Key",
+			"noArgumentsFound": "No arguments found",
+			"kwArguments": "KW Arguments",
+			"kwArgumentsKey": "Key",
+			"kwArgumentsValue": "Value",
+			"noKwArgumentsFound": "No KW arguments found",
+			"returnValues": "Return Values",
+			"noReturnValuesFound": "No return values found"
+
+		}
 	}
 }

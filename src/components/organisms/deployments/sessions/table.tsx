@@ -15,7 +15,7 @@ import { cn } from "@utilities";
 
 import { useModalStore, useToastStore } from "@store";
 
-import { Button, Frame, IconButton, IconSvg, Loader, THead, Table, Th, Tr } from "@components/atoms";
+import { Button, Frame, IconButton, IconSvg, Loader } from "@components/atoms";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
@@ -40,7 +40,10 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const frameClass = useMemo(
-		() => cn("h-full w-full bg-gray-1100 pl-7 transition-all", { "rounded-r-none": !sessionId }),
+		() =>
+			cn("h-full w-full overflow-hidden bg-gray-1100 pb-3 pl-7 transition-all", {
+				"rounded-r-none": !sessionId,
+			}),
 		[sessionId]
 	);
 
@@ -49,6 +52,7 @@ export const SessionsTable = () => {
 			const loaderTimeout = setTimeout(() => {
 				setIsLoading(true);
 			}, 1000);
+
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
 				{
@@ -200,7 +204,7 @@ export const SessionsTable = () => {
 	);
 
 	return (
-		<div className="flex h-full w-full py-2.5">
+		<div className="flex w-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center justify-between gap-2.5">
@@ -229,28 +233,28 @@ export const SessionsTable = () => {
 					</div>
 
 					{sessions.length ? (
-						<div className="relative flex h-full flex-col">
-							<Table className="mt-6 overflow-hidden">
-								<THead>
-									<Tr>
-										<Th className="w-1/4 font-normal" hasFixedWidth>
-											{t("table.columns.activationTime")}
-										</Th>
+						<div className="relative flex h-full flex-col overflow-hidden">
+							<div className="scrollbar mt-6 overflow-hidden rounded-t-14 text-white">
+								<div className="sticky top-0 z-10 overflow-hidden bg-gray-1250 text-gray-500">
+									<div className="flex justify-between border-b-2 border-gray-1050 transition hover:bg-gray-1250">
+										<div className="flex h-9.5 w-56 items-center gap-1 truncate px-4 font-normal">
+											{t("table.columns.startTime")}
+										</div>
 
-										<Th className="w-1/8 font-normal" hasFixedWidth>
+										<div className="flex h-9.5 w-32 items-center gap-1 truncate px-4 font-normal">
 											{t("table.columns.status")}
-										</Th>
+										</div>
 
-										<Th className="w-1/2 font-normal" hasFixedWidth>
+										<div className="flex h-9.5 w-80 items-center gap-1 truncate px-4 font-normal">
 											{t("table.columns.sessionId")}
-										</Th>
+										</div>
 
-										<Th className="w-1/8 font-normal" hasFixedWidth>
+										<div className="flex h-9.5 w-32 items-center gap-1 truncate px-4 font-normal">
 											{t("table.columns.actions")}
-										</Th>
-									</Tr>
-								</THead>
-							</Table>
+										</div>
+									</div>
+								</div>
+							</div>
 
 							<SessionsTableList
 								onItemsRendered={handleItemsRendered}
@@ -260,7 +264,7 @@ export const SessionsTable = () => {
 							/>
 
 							{isLoading ? (
-								<div className="flex h-10 w-full items-center">
+								<div className="absolute bottom-0 z-20 flex h-10 w-full items-center bg-gray-1100">
 									<Loader firstColor="light-gray" size="md" />
 								</div>
 							) : null}
@@ -277,10 +281,12 @@ export const SessionsTable = () => {
 				{sessionId ? (
 					<Outlet />
 				) : (
-					<Frame className="flex h-full w-full flex-col items-center rounded-l-none bg-gray-1100 pt-40 transition">
-						<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
+					<Frame className="w-full rounded-l-none bg-gray-1100 pt-20 transition">
+						<div className="mt-20 flex flex-col items-center">
+							<p className="mb-8 text-lg font-bold text-gray-750">{t("noSelectedSession")}</p>
 
-						<CatImage className="border-b border-gray-750 fill-gray-750" />
+							<CatImage className="border-b border-gray-750 fill-gray-750" />
+						</div>
 					</Frame>
 				)}
 			</div>

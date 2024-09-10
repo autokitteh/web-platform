@@ -22,7 +22,14 @@ export {
 	templateProjectsCategories,
 	findTemplateFilesByAssetDirectory,
 } from "@constants/dashboard.constants";
-export { sessionsEditorLineHeight, defaultSessionLogRecordsPageSize } from "@src/constants/sessions.constants";
+export {
+	sessionTabs,
+	defaultSessionTab,
+	defaultSessionLogRecordsPageSize,
+	defaultSessionLogRecordsListRowHeight,
+	minimumSessionLogsRecordsToDisplayFallback,
+	sessionsEditorLineHeight,
+} from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";

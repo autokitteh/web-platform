@@ -2,7 +2,7 @@ import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions
 import { ActivityState } from "@src/enums";
 import { SessionActivity } from "@src/types/models";
 import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
-import { convertTimestampToDate } from "@utilities";
+import { convertPythonStringToJSON, convertTimestampToDate } from "@utilities";
 
 /**
  * Converts a ProtoSessionLogRecords array to an Activities array.
@@ -27,7 +27,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				param.optional ? `${param.name}?` : param.name
 			);
 
-			const kwargs = JSON.parse(callSpec?.kwargs?.params?.string?.v || "{}");
+			const kwargs = convertPythonStringToJSON(callSpec?.kwargs?.params?.string?.v || "{}");
 
 			const args = callSpec.args
 				.map((arg) => (arg.string ? arg.string.v : null))
@@ -40,7 +40,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				status: "created" as keyof ActivityState,
 				startTime: convertTimestampToDate(log.t),
 				endTime: undefined,
-				returnValue: {},
+				returnJSONValue: {},
 				key: convertTimestampToEpoch(log.t).getTime().toString(),
 			};
 		}
@@ -53,7 +53,30 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 		if (callAttemptComplete && currentActivity) {
 			currentActivity.status = "completed" as keyof ActivityState;
 			currentActivity.endTime = convertTimestampToDate(callAttemptComplete.completedAt) as Date | undefined;
-			currentActivity.returnValue = callAttemptComplete?.result?.value as object;
+			if (callAttemptComplete.result?.value?.bytes?.v) {
+				try {
+					const byteArray = callAttemptComplete?.result?.value?.bytes?.v;
+
+					if (!byteArray || !Array.isArray(byteArray)) {
+						throw new Error("Invalid or missing byte array");
+					}
+
+					const uint8Array = new Uint8Array(byteArray);
+					const decoder = new TextDecoder("utf-8"); // Specify 'utf-8' or another encoding if known
+					const decodedString = decoder.decode(uint8Array);
+					currentActivity.returnBytesValue = decodedString;
+				} catch (error) {
+					console.error("Error decoding text:", error);
+				}
+			}
+			if (callAttemptComplete.result?.value?.string?.v) {
+				const returnValueConverted = convertPythonStringToJSON(callAttemptComplete?.result?.value?.string?.v);
+				if (typeof returnValueConverted === "string") {
+					currentActivity.returnStringValue = returnValueConverted;
+				} else {
+					currentActivity.returnJSONValue = returnValueConverted;
+				}
+			}
 		}
 
 		if (state && state.error && currentActivity) {

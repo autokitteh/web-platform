@@ -39,3 +39,4 @@ export type { ToggleProps } from "@interfaces/components/toggle.interface";
 export type { TypographyProps } from "@interfaces/components/typography.interface";
 export type { StatusProps } from "@interfaces/components/status.interface";
 export type { SecretInputProps } from "@interfaces/components/forms/secretInput.interface";
+export type { ActivityRowProps } from "@interfaces/components/activity.interface";

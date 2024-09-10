@@ -14,6 +14,7 @@ export const Button = ({
 	form,
 	href,
 	onClick,
+	style,
 	title,
 	type = "button",
 	variant,
@@ -40,6 +41,7 @@ export const Button = ({
 			disabled={disabled}
 			form={form}
 			onClick={onClick}
+			style={style}
 			title={title}
 			type={type}
 		>
