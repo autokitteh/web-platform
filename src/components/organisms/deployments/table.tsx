@@ -122,7 +122,7 @@ export const DeploymentsTable = () => {
 			if (error) {
 				addToast({
 					id: Date.now().toString(),
-					message: t("executionFailed"),
+					message: t("manualRun.executionFailed"),
 					type: "error",
 				});
 				LoggerService.error(
