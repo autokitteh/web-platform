@@ -31,8 +31,8 @@ export const CopyButton = ({
 		});
 	}, 300);
 
-	const copyButtonStyle = cn("ml-2 inline bg-transparent p-1", className);
-	const copyButtonIconStyle = cn("m-0.5 h-4 w-4 fill-white", iconClassName);
+	const copyButtonStyle = cn("h-12 w-12 bg-transparent p-1 hover:bg-gray-900", className);
+	const copyButtonIconStyle = cn("m-0.5 h-5 w-5 fill-white", iconClassName);
 
 	return (
 		<IconButton
