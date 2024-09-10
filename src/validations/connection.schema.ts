@@ -61,6 +61,12 @@ export const jiraIntegrationSchema = z.object({
 	email: z.string().email("This is not a valid email.").optional().or(z.literal("")),
 });
 
+export const confluenceIntegrationSchema = z.object({
+	base_url: z.string().min(1, "Base url is required").url({ message: "Invalid url" }),
+	token: z.string().min(1, "Token is required"),
+	email: z.string().email("This is not a valid email.").optional().or(z.literal("")),
+});
+
 export const discordIntegrationSchema = z.object({
 	botToken: z.string().min(1, "Bot token is required"),
 });

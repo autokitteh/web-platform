@@ -2,6 +2,7 @@ import { Integrations } from "@src/enums/components";
 
 import {
 	AwsIntegrationAddForm,
+	ConfluenceIntegrationAddForm,
 	DiscordIntegrationAddForm,
 	GithubIntegrationAddForm,
 	GoogleGeminiIntegrationAddForm,
@@ -26,6 +27,6 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	chatgpt: OpenAiIntegrationAddForm,
 	twilio: TwilioIntegrationAddForm,
 	jira: JiraIntegrationAddForm,
-	confluence: JiraIntegrationAddForm,
+	confluence: ConfluenceIntegrationAddForm,
 	discord: DiscordIntegrationAddForm,
 };
