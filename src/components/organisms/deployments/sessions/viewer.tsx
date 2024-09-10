@@ -41,14 +41,13 @@ export const SessionViewer = () => {
 	const { reload } = useCacheStore();
 
 	const fetchSessions = async () => {
-		if (sessionInfo) {
-			setIsRefreshing(true);
-			reload(sessionInfo.sessionId);
+		if (!sessionInfo) return;
 
-			setTimeout(() => {
-				setIsRefreshing(false);
-			}, 800);
-		}
+		setIsRefreshing(true);
+		reload(sessionInfo.sessionId);
+		setTimeout(() => {
+			setIsRefreshing(false);
+		}, 800);
 	};
 
 	const fetchSessionInfo = async () => {

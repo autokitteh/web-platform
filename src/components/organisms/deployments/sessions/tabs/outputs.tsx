@@ -9,7 +9,7 @@ import { convertSessionLogProtoToViewerOutput } from "@src/models";
 import { SessionOutput } from "@src/types/models";
 import { useCacheStore } from "@store/useCacheStore";
 
-import { Frame, Loader } from "@components/atoms";
+import { Loader } from "@components/atoms";
 
 export const SessionOutputs = () => {
 	const { sessionId } = useParams();
@@ -120,7 +120,7 @@ export const SessionOutputs = () => {
 	}, [sessionId, scrollPosition]);
 
 	return (
-		<Frame className="h-full rounded-b-[0] pb-0 pl-0 transition" ref={frameRef}>
+		<div className="scrollbar h-full w-full" ref={frameRef}>
 			{loading && !outputs.length ? (
 				<Loader isCenter size="xl" />
 			) : (
@@ -162,6 +162,6 @@ export const SessionOutputs = () => {
 					<div className="mt-10 text-center text-xl font-semibold">{t("noLogsFound")}</div>
 				</div>
 			) : null}
-		</Frame>
+		</div>
 	);
 };

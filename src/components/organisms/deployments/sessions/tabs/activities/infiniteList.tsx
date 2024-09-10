@@ -4,21 +4,21 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { AutoSizer, IndexRange, List, ListRowRenderer } from "react-virtualized";
 
-import { ActivityRow } from "./infiniteRow";
 import { defaultSessionLogRecordsListRowHeight, minimumSessionLogsRecordsToDisplayFallback } from "@src/constants";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 import { useCacheStore } from "@src/store/useCacheStore";
 import { SessionActivity } from "@src/types/models";
+import { cn } from "@src/utilities";
 
 import { Frame, Loader } from "@components/atoms";
-import { SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
+import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
 export const ActivityList = () => {
 	const [activity, setActivity] = useState<SessionActivity>();
 	const listRef = useRef<List | null>(null);
 	const frameRef = useRef<HTMLDivElement>(null);
 
-	const autoSizerClass = activity ? "hidden" : "";
+	const autoSizerClass = cn({ hidden: activity });
 	const { sessionId } = useParams();
 	const { t } = useTranslation("deployments", { keyPrefix: "activities" });
 	const { displayedSessionId, loadLogs, loading, logs, nextPageToken, reset } = useCacheStore();
@@ -57,13 +57,10 @@ export const ActivityList = () => {
 		}
 		reset();
 		setActivities([]);
-		if (!frameRef?.current?.offsetHeight) {
-			loadMoreRows({ startIndex: 0, stopIndex: 0 }, minimumSessionLogsRecordsToDisplayFallback);
+		const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsToDisplayFallback;
 
-			return;
-		}
+		loadMoreRows({ startIndex: 0, stopIndex: 0 }, frameHeight);
 
-		loadMoreRows({ startIndex: 0, stopIndex: 0 }, frameRef.current.offsetHeight);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

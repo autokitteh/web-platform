@@ -3,7 +3,8 @@ export const convertPythonStringToJSON = (input: string): any => {
 		let trimmedString = input.trim();
 		if (trimmedString.startsWith('`"') && trimmedString.endsWith('"`')) {
 			trimmedString = trimmedString.slice(2, -2);
-		} else if (trimmedString.startsWith('"') && trimmedString.endsWith('"')) {
+		}
+		if (trimmedString.startsWith('"') && trimmedString.endsWith('"')) {
 			trimmedString = trimmedString.slice(1, -1);
 		}
 
