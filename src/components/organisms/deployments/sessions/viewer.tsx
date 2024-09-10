@@ -105,9 +105,9 @@ export const SessionViewer = () => {
 			{sessionInfo ? (
 				<>
 					<div className="mb-4 flex items-center justify-between">
-						<div className="font-bold" title="Session ID">
-							{sessionInfo.sessionId}
-							<CopyButton text={sessionInfo.sessionId} />
+						<div className="flex items-center font-bold" title="Session ID">
+							<div className="mr-1">{sessionInfo.sessionId}</div>
+							<CopyButton size="sm" text={sessionInfo.sessionId} />
 						</div>
 
 						<div className="flex items-center font-bold" title="Created">
@@ -221,13 +221,13 @@ export const SessionViewer = () => {
 						</div>
 
 						<div className="ml-auto flex w-auto flex-col gap-2">
-							<div className="-mt-1 flex items-center gap-2">
+							<div className="flex items-center gap-2">
 								<div>{t("eventId")}</div>
-								<CopyButton text={sessionInfo.eventId} />
+								<CopyButton size="sm" text={sessionInfo.eventId} />
 							</div>
-							<div className="-mt-2 flex items-center gap-2">
+							<div className="flex items-center gap-2">
 								<div>{t("buildId")}</div>
-								<CopyButton text={sessionInfo.buildId} />
+								<CopyButton size="sm" text={sessionInfo.buildId} />
 							</div>
 						</div>
 					</div>
