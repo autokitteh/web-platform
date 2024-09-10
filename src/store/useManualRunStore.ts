@@ -20,10 +20,11 @@ const defaultProjectState = {
 
 const updateFilePathAndEntrypointFunctions = (
 	projectData: ManualProjectData,
-	filePath: { label: string; value: string }
+	filePath: { label: string; value: string },
+	isInitialLoad?: boolean
 ) => {
 	const selectedFile = projectData.files[filePath.value];
-	if (!selectedFile || !selectedFile.length) {
+	if (!isInitialLoad && (!selectedFile || !selectedFile.length)) {
 		const addToast = useToastStore.getState().addToast;
 
 		addToast({
@@ -44,31 +45,36 @@ const updateFilePathAndEntrypointFunctions = (
 		label: entry.name,
 		value: entry.name,
 	}));
-
-	if (projectData.entrypointFunctions.length) {
-		projectData.entrypointFunction = projectData.entrypointFunctions[0];
-		projectData.selectedEntrypoint = selectedFile[0];
-	}
 };
 
 const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 
-	updateProjectManualRun: (projectId, { entrypointFunction, filePath, files, lastDeployment, params }) => {
+	updateProjectManualRun: (
+		projectId,
+		{ entrypointFunction, filePath, files, lastDeployment, params },
+		isInitialLoad
+	) => {
 		set((state) => {
 			const projectData = state.projectManualRun[projectId] || { ...defaultProjectState };
 
 			if (files) {
-				const fileOptions = Object.keys(files).map((file) => ({
+				const filteredFiles = Object.fromEntries(
+					Object.entries(files)
+						.filter(([key]) => key !== "archive")
+						.map(([key, value]) => [key, value.filter((entry) => !entry.name.startsWith("_"))])
+				);
+
+				const fileOptions = Object.keys(filteredFiles).map((file) => ({
 					label: file,
 					value: file,
 				}));
 
 				projectData.fileOptions = fileOptions;
-				projectData.files = files;
+				projectData.files = filteredFiles;
 
 				const firstFile = fileOptions[0];
-				updateFilePathAndEntrypointFunctions(projectData, firstFile);
+				updateFilePathAndEntrypointFunctions(projectData, firstFile, isInitialLoad);
 			}
 
 			if (filePath) {

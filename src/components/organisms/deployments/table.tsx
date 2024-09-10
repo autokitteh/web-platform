@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -100,7 +100,7 @@ export const DeploymentsTable = () => {
 
 		if (!Object.values(files).length) return;
 
-		updateProjectManualRun(projectId, { files, lastDeployment });
+		updateProjectManualRun(projectId, { files, lastDeployment }, true);
 		setIsManualRunEnabled(true);
 	};
 
@@ -144,11 +144,6 @@ export const DeploymentsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const disableButtonManualRun = useMemo(
-		() => !isManualRunEnabled || !entrypointFunction || savingManualRun,
-		[isManualRunEnabled, entrypointFunction, savingManualRun]
-	);
-
 	return isLoadingDeployments ? (
 		<Loader isCenter size="xl" />
 	) : (
@@ -173,7 +168,7 @@ export const DeploymentsTable = () => {
 					<Button
 						ariaLabel={t("manual")}
 						className="h-full whitespace-nowrap px-3.5"
-						disabled={disableButtonManualRun}
+						disabled={!isManualRunEnabled || !entrypointFunction?.value || savingManualRun}
 						onClick={startManualRun}
 						variant="filledGray"
 					>

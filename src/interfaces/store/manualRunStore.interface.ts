@@ -16,6 +16,6 @@ export interface ManualRunStore {
 	projectManualRun: {
 		[projectId: string]: ManualProjectData;
 	};
-	updateProjectManualRun: (projectId: string, updates: Partial<ManualProjectData>) => void;
+	updateProjectManualRun: (projectId: string, updates: Partial<ManualProjectData>, isInitialLoad: boolean) => void;
 	saveProjectManualRun: (projectId: string, params?: { key: string; value: string }[]) => ServiceResponse<string>;
 }
