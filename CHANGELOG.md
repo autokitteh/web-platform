@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/autokitteh/web-platform/compare/v2.1.0...v2.2.0) (2024-09-10)
+
+
+### Features
+
+* add drawer component ([#315](https://github.com/autokitteh/web-platform/issues/315)) ([b1ee654](https://github.com/autokitteh/web-platform/commit/b1ee6547d4d073765ad7999e3204196facfe027c))
+
 # [2.1.0](https://github.com/autokitteh/web-platform/compare/v2.0.0...v2.1.0) (2024-09-10)
 
 
