@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/autokitteh/web-platform/compare/v2.0.0...v2.1.0) (2024-09-10)
+
+
+### Features
+
+* session viewer UI ([#319](https://github.com/autokitteh/web-platform/issues/319)) ([e48e6be](https://github.com/autokitteh/web-platform/commit/e48e6bef3b1d80b31f08ee645820d5bc823ac6c8))
+
 # [2.0.0](https://github.com/autokitteh/web-platform/compare/v1.49.1...v2.0.0) (2024-09-10)
 
 
