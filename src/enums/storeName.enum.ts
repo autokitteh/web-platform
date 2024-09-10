@@ -4,5 +4,5 @@ export enum StoreName {
 	user = "UserStore",
 	files = "FileStore",
 	connectionChecker = "ConnectionCheckerStore",
-	cache = "CacheStore",
+	manualRun = "ManualRunStore",
 }

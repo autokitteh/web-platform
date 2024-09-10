@@ -17,3 +17,4 @@ export type { Trigger, TriggerObj, TriggerTypeKeyType } from "@type/models/trigg
 export type { User } from "@type/models/user.type";
 export type { Variable } from "@type/models/variable.type";
 export type { Integration } from "@type/models/integration.type";
+export type { BuildInfoRuntimes } from "@type/models/buildInfoRuntimes.type";

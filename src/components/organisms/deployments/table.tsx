@@ -3,15 +3,17 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { DeploymentsService } from "@services";
+import { BuildsService, DeploymentsService, LoggerService } from "@services";
+import { namespaces } from "@src/constants";
+import { DeploymentStateVariant } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
+import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
 import { Deployment } from "@type/models";
 
-import { useDrawerStore, useToastStore } from "@store";
+import { useDrawerStore, useManualRunStore, useToastStore } from "@store";
 
-import { Button, IconSvg, Loader } from "@components/atoms";
-import { DeploymentsTableContent } from "@components/organisms/deployments";
-import { ManualRunSettingsDrawer } from "@components/organisms/topbar/project";
+import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
+import { DeploymentsTableContent, ManualRunSettingsDrawer } from "@components/organisms/deployments";
 
 import { RunIcon } from "@assets/image";
 import { GearIcon } from "@assets/image/icons";
@@ -20,11 +22,20 @@ export const DeploymentsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { openDrawer } = useDrawerStore();
+	const { projectId } = useParams();
 
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
 	const [isLoadingDeployments, setIsLoadingDeployments] = useState(true);
-
-	const { projectId } = useParams();
+	const [isManualRunEnabled, setIsManualRunEnabled] = useState(false);
+	const [savingManualRun, setSavingManualRun] = useState(false);
+	const { entrypointFunction, lastDeploymentStore, saveProjectManualRun, updateProjectManualRun } = useManualRunStore(
+		(state) => ({
+			lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
+			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
+			updateProjectManualRun: state.updateProjectManualRun,
+			saveProjectManualRun: state.saveProjectManualRun,
+		})
+	);
 
 	const fetchDeployments = async () => {
 		if (!projectId) {
@@ -42,6 +53,7 @@ export const DeploymentsTable = () => {
 
 			return;
 		}
+
 		if (!data) {
 			return;
 		}
@@ -53,8 +65,82 @@ export const DeploymentsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const loadSingleshotArgs = async () => {
+		if (!deployments.length || !projectId) return;
+
+		const lastDeployment = deployments[0];
+
+		if (lastDeployment.state !== DeploymentStateVariant.active) {
+			setIsManualRunEnabled(false);
+
+			return;
+		}
+
+		if (lastDeployment.buildId === lastDeploymentStore?.buildId) {
+			setIsManualRunEnabled(true);
+
+			return;
+		}
+
+		const { data: buildDescription, error: buildDescriptionError } = await BuildsService.getBuildDescription(
+			lastDeployment.buildId
+		);
+
+		if (buildDescriptionError) {
+			addToast({
+				id: Date.now().toString(),
+				message: t("buildInformationForSingleshotNotLoaded"),
+				type: "error",
+			});
+
+			return;
+		}
+		const buildInfo = JSON.parse(buildDescription!);
+		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
+
+		if (!Object.values(files).length) return;
+
+		updateProjectManualRun(projectId, { files, lastDeployment }, true);
+		setIsManualRunEnabled(true);
+	};
+
+	useEffect(() => {
+		loadSingleshotArgs();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [deployments]);
+
 	const openManualRunSettings = useCallback(() => {
 		openDrawer(DrawerName.projectManualRunSettings);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const startManualRun = useCallback(async () => {
+		if (!projectId) return;
+		try {
+			setSavingManualRun(true);
+			const { data: sessionId, error } = await saveProjectManualRun(projectId);
+			if (error) {
+				addToast({
+					id: Date.now().toString(),
+					message: t("manualRun.executionFailed"),
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.sessionsService,
+					`${t("manualRun.executionFailedExtended", { projectId, error })}`
+				);
+
+				return;
+			}
+			addToast({
+				id: Date.now().toString(),
+				message: t("manualRun.executionSucceed", { sessionId }),
+				type: "success",
+			});
+		} finally {
+			setSavingManualRun(false);
+		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -69,17 +155,24 @@ export const DeploymentsTable = () => {
 
 				<div className="border-1 flex h-10 gap-2 rounded-3xl border border-gray-1000 p-1">
 					<Button
-						ariaLabel={t("topbar.buttons.ariaSettingsRun")}
+						ariaLabel={t("ariaSettingsRun")}
 						className="h-full whitespace-nowrap"
+						disabled={!isManualRunEnabled}
 						onClick={openManualRunSettings}
-						title={t("topbar.buttons.ariaSettingsRun")}
+						title={t("ariaSettingsRun")}
 						variant="filledGray"
 					>
 						<IconSvg className="fill-white" src={GearIcon} />
 					</Button>
 
-					<Button ariaLabel={t("manual")} className="h-full whitespace-nowrap px-3.5" variant="filledGray">
-						<IconSvg src={RunIcon} />
+					<Button
+						ariaLabel={t("manual")}
+						className="h-full whitespace-nowrap px-3.5"
+						disabled={!isManualRunEnabled || !entrypointFunction?.value || savingManualRun}
+						onClick={startManualRun}
+						variant="filledGray"
+					>
+						<IconSvg src={!savingManualRun ? RunIcon : Spinner} />
 
 						{t("manual")}
 					</Button>

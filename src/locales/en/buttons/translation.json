@@ -4,5 +4,6 @@
     "create": "Create",
     "loading": "Loading",
     "more": "More",
-    "save": "Save"
+    "save": "Save",
+    "saveAndRun": "Save and Run"
 }

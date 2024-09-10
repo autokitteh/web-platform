@@ -14,5 +14,6 @@ export const namespaces = {
 	sessionsService: "Sessions Service",
 	triggerService: "Trigger Service",
 	variableService: "Variable Service",
+	buildRuntimeEntrypoints: "Convert runtime to entrypoints",
 	eventsService: "Events Service",
 };
