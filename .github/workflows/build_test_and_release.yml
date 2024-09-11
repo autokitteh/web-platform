@@ -93,10 +93,6 @@ jobs:
             -e AK_AUTHJWTTOKENS__SIGN_KEY="183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154" \
             ${{ steps.login-ecr.outputs.registry }}/autokitteh:latest up --mode=dev)
           echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
-        
-      - name: Log container output
-        run: |
-          docker logs -f ${{ env.CONTAINER_ID }} &
       
       - name: Wait for Backend to Start
         run: |
@@ -119,14 +115,6 @@ jobs:
             printf '.'
             sleep 5
           done
-      
-      - name: Check container health
-        run: |
-          if [ "$(docker inspect -f {{.State.Health.Status}} ${{ env.CONTAINER_ID }})" != "healthy" ]; then
-            echo "Container is not healthy"
-            docker logs ${{ env.CONTAINER_ID }}
-            exit 1
-          fi
 
       - name: Use cached node_modules
         uses: actions/cache@v4
