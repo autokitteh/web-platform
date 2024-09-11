@@ -137,6 +137,11 @@
 	"overrides": {
 		"vite": {
 			"rollup": "npm:@rollup/wasm-node"
-		}
+		},
+		"glob": "9.0.0",
+		"rimraf": "^4.0.0"
+	},
+	"resolutions": {
+		"micromatch": "^4.0.8"
 	}
 }
