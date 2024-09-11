@@ -88,7 +88,7 @@ jobs:
             -e AK_AUTHHTTPMIDDLEWARE__ALLOW_DEFAULT_USER="false" \
             -e AK_AUTHLOGINHTTPSVC__ALLOWED_LOGINS="*" \
             -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED="true" \
-            -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="P2lCDZnvUHzsXvLNFybQAUPMRUj8" \
+            -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="${{ secrets.VITE_DESCOPE_PROJECT_ID }}" \
             -e AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:4173" \
             -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE="true" \
             -e AK_AUTHSESSIONS__ALLOWED_DOMAIN="localhost:4173" \
