@@ -93,6 +93,11 @@ jobs:
             -e AK_AUTHJWTTOKENS__SIGN_KEY="183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154" \
             ${{ steps.login-ecr.outputs.registry }}/autokitteh:latest)
           echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
+
+      - name: Run 'ak up' in container
+        run: |
+          docker exec ${{ env.CONTAINER_ID }} ak up &
+          echo "Started 'ak up' in background"
       
       - name: Log container output
         run: |
