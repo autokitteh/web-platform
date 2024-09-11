@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useForm } from "react-hook-form";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { LoggerService } from "@services";
@@ -16,6 +16,7 @@ import { Drawer, Select } from "@components/molecules";
 import { ManualRunParamsForm } from "@components/organisms/deployments";
 
 import { RunIcon } from "@assets/image";
+import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const ManualRunSettingsDrawer = () => {
 	const { t: tButtons } = useTranslation("buttons");
@@ -93,19 +94,19 @@ export const ManualRunSettingsDrawer = () => {
 		}
 		addToast({
 			message: (
-				<Trans
-					components={{
-						tag: (
-							<Button
-								className="cursor-pointer p-0 text-blue-500 underline"
-								onClick={() => navigate(`${lastDeployment?.deploymentId}/sessions/${sessionId}`)}
-							/>
-						),
-					}}
-					i18nKey="executionSucceed"
-					t={t}
-					values={{ sessionId }}
-				/>
+				<>
+					{t("executionSucceed")}:
+					<div className="flex items-center gap-1">
+						<Button
+							className="cursor-pointer p-0 text-green-800 underline"
+							onClick={() => navigate(`${lastDeployment?.deploymentId}/sessions/${sessionId}`)}
+						>
+							{sessionId}
+						</Button>
+
+						<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
+					</div>
+				</>
 			),
 			type: "success",
 		});

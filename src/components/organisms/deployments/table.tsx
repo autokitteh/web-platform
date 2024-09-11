@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { BuildsService, DeploymentsService, LoggerService } from "@services";
@@ -16,7 +16,7 @@ import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DeploymentsTableContent, ManualRunSettingsDrawer } from "@components/organisms/deployments";
 
 import { RunIcon } from "@assets/image";
-import { GearIcon } from "@assets/image/icons";
+import { ExternalLinkIcon, GearIcon } from "@assets/image/icons";
 
 export const DeploymentsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
@@ -132,21 +132,19 @@ export const DeploymentsTable = () => {
 			}
 			addToast({
 				message: (
-					<Trans
-						components={{
-							tag: (
-								<Button
-									className="cursor-pointer p-0 text-blue-500 underline"
-									onClick={() =>
-										navigate(`${lastDeploymentStore?.deploymentId}/sessions/${sessionId}`)
-									}
-								/>
-							),
-						}}
-						i18nKey="manualRun.executionSucceed"
-						t={t}
-						values={{ sessionId }}
-					/>
+					<>
+						{t("manualRun.executionSucceed")}:
+						<div className="flex items-center gap-1">
+							<Button
+								className="cursor-pointer p-0 text-green-800 underline"
+								onClick={() => navigate(`${lastDeploymentStore?.deploymentId}/sessions/${sessionId}`)}
+							>
+								{sessionId}
+							</Button>
+
+							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
+						</div>
+					</>
 				),
 				type: "success",
 			});
