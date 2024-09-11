@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/autokitteh/web-platform/compare/v2.3.0...v2.3.1) (2024-09-11)
+
+
+### Bug Fixes
+
+* reset and reload sessions ([#331](https://github.com/autokitteh/web-platform/issues/331)) ([4c3a1ae](https://github.com/autokitteh/web-platform/commit/4c3a1ae8dc42bf185695e0bf1856df97a1321ad7))
+
 # [2.3.0](https://github.com/autokitteh/web-platform/compare/v2.2.0...v2.3.0) (2024-09-10)
 
 
