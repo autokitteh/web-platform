@@ -82,7 +82,7 @@ jobs:
 
       - name: Start AutoKitteh container
         run: |
-          docker run -d \
+          CONTAINER_ID=$(docker run -d \
             -p 9980:9980 \
             -e AK_AUTHHTTPMIDDLEWARE__REQUIRED=true \
             -e AK_AUTHLOGINHTTPSVC__ALLOWED_LOGINS="*" \
@@ -91,17 +91,42 @@ jobs:
             -e AK_AUTHSESSIONS__ALLOWED_DOMAIN="localhost:4173" \
             -e AK_AUTHSESSIONS__COOKIE_KEYS="78d85f1c9fd9df7d3d459a75f1db315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5" \
             -e AK_AUTHJWTTOKENS__SIGN_KEY="183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154" \
-            ${{ steps.login-ecr.outputs.registry }}/autokitteh:latest   
-            
+            ${{ steps.login-ecr.outputs.registry }}/autokitteh:latest)
+          echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
+      
+      - name: Log container output
+        run: |
+          docker logs -f ${{ env.CONTAINER_ID }} &
+      
       - name: Wait for Backend to Start
         run: |
           URL=http://localhost:9980
           echo "Waiting for backend to start..."
-          until $(curl --output /dev/null --silent --head --fail -X POST $URL); do
+          timeout=300
+          start_time=$(date +%s)
+          while true; do
+            if curl --output /dev/null --silent --head --fail $URL; then
+              echo "Backend is up!"
+              break
+            fi
+            current_time=$(date +%s)
+            elapsed=$((current_time - start_time))
+            if [ $elapsed -ge $timeout ]; then
+              echo "Timeout waiting for backend to start"
+              docker logs ${{ env.CONTAINER_ID }}
+              exit 1
+            fi
             printf '.'
             sleep 5
           done
-          echo "Backend is up!"
+      
+      - name: Check container health
+        run: |
+          if [ "$(docker inspect -f {{.State.Health.Status}} ${{ env.CONTAINER_ID }})" != "healthy" ]; then
+            echo "Container is not healthy"
+            docker logs ${{ env.CONTAINER_ID }}
+            exit 1
+          fi
 
       - name: Use cached node_modules
         uses: actions/cache@v4
