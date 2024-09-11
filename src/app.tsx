@@ -14,6 +14,7 @@ import {
 
 import { isProduction } from "@constants";
 
+import { Toast } from "@components/molecules";
 import { DeploymentsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
@@ -144,6 +145,8 @@ export const App = () => {
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</AKRoutes>
+
+			<Toast />
 		</BrowserRouter>
 	);
 };

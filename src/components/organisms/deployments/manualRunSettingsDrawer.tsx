@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
@@ -13,10 +13,9 @@ import { manualRunSchema } from "@validations";
 
 import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
-import { ManualRunParamsForm } from "@components/organisms/deployments";
+import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/deployments";
 
 import { RunIcon } from "@assets/image";
-import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const ManualRunSettingsDrawer = () => {
 	const { t: tButtons } = useTranslation("buttons");
@@ -24,7 +23,6 @@ export const ManualRunSettingsDrawer = () => {
 	const { closeDrawer } = useDrawerStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { projectId } = useParams();
-	const navigate = useNavigate();
 	const [sendingManualRun, setSendingManualRun] = useState(false);
 
 	const { projectManualRun, saveProjectManualRun, updateProjectManualRun } = useManualRunStore((state) => ({
@@ -93,21 +91,7 @@ export const ManualRunSettingsDrawer = () => {
 			return;
 		}
 		addToast({
-			message: (
-				<>
-					{t("executionSucceed")}:
-					<div className="flex items-center gap-1">
-						<Button
-							className="cursor-pointer p-0 text-green-800 underline"
-							onClick={() => navigate(`${lastDeployment?.deploymentId}/sessions/${sessionId}`)}
-						>
-							{sessionId}
-						</Button>
-
-						<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
-					</div>
-				</>
-			),
+			message: <ManualRunSuccessToastMessage deploymentId={lastDeployment?.deploymentId} sessionId={sessionId} />,
 			type: "success",
 		});
 		closeDrawer(DrawerName.projectManualRunSettings);

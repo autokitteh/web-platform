@@ -47,7 +47,7 @@
 			"completeAllParams": "Please complete all parameters",
 			"executionFailed": "Session execution failed",
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
-			"executionSucceed": "Session execution succeed for Session ID",
+			"executionSucceed": "Session execution succeed for session ID",
 			"missingDeploymentOrEntrypoint": "Missing deployment or entrypoint",
 			"noFunctionsFound": "No functions found",
 			"filePathDoesNotExistExtended": "File path {{filePath}} does not exist or has no entry points."

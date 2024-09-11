@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { BuildsService, DeploymentsService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
@@ -13,17 +13,20 @@ import { Deployment } from "@type/models";
 import { useDrawerStore, useManualRunStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
-import { DeploymentsTableContent, ManualRunSettingsDrawer } from "@components/organisms/deployments";
+import {
+	DeploymentsTableContent,
+	ManualRunSettingsDrawer,
+	ManualRunSuccessToastMessage,
+} from "@components/organisms/deployments";
 
 import { RunIcon } from "@assets/image";
-import { ExternalLinkIcon, GearIcon } from "@assets/image/icons";
+import { GearIcon } from "@assets/image/icons";
 
 export const DeploymentsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { openDrawer } = useDrawerStore();
 	const { projectId } = useParams();
-	const navigate = useNavigate();
 
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
 	const [isLoadingDeployments, setIsLoadingDeployments] = useState(true);
@@ -132,19 +135,10 @@ export const DeploymentsTable = () => {
 			}
 			addToast({
 				message: (
-					<>
-						{t("manualRun.executionSucceed")}:
-						<div className="flex items-center gap-1">
-							<Button
-								className="cursor-pointer p-0 text-green-800 underline"
-								onClick={() => navigate(`${lastDeploymentStore?.deploymentId}/sessions/${sessionId}`)}
-							>
-								{sessionId}
-							</Button>
-
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
-						</div>
-					</>
+					<ManualRunSuccessToastMessage
+						deploymentId={lastDeploymentStore?.deploymentId}
+						sessionId={sessionId}
+					/>
 				),
 				type: "success",
 			});
