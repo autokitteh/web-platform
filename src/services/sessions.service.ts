@@ -1,5 +1,5 @@
 import i18n from "i18next";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 
 import {
 	Session as ProtoSession,
@@ -199,9 +199,10 @@ export class SessionsService {
 				return { data: undefined, error: envError };
 			}
 
+			const sessionToStart = { ...omit(startSessionArgs, "jsonInputs"), envId: defaultEnvironment!.envId };
 			const sessionAsStartRequest = {
-				session: { ...startSessionArgs, envId: defaultEnvironment!.envId },
-				jsonInputs: startSessionArgs.jsonInputs,
+				session: sessionToStart,
+				jsonInputs: startSessionArgs?.jsonInputs,
 			} as unknown as StartRequest;
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
 
