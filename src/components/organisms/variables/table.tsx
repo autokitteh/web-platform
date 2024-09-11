@@ -50,7 +50,6 @@ export const VariablesTable = () => {
 			setVariables(vars);
 		} catch (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
@@ -73,7 +72,6 @@ export const VariablesTable = () => {
 
 		if (error) {
 			return addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});

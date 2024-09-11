@@ -50,7 +50,6 @@ export const EditVariable = () => {
 
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
@@ -83,7 +82,6 @@ export const EditVariable = () => {
 
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});

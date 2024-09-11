@@ -13,7 +13,11 @@ import { Deployment } from "@type/models";
 import { useDrawerStore, useManualRunStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
-import { DeploymentsTableContent, ManualRunSettingsDrawer } from "@components/organisms/deployments";
+import {
+	DeploymentsTableContent,
+	ManualRunSettingsDrawer,
+	ManualRunSuccessToastMessage,
+} from "@components/organisms/deployments";
 
 import { RunIcon } from "@assets/image";
 import { GearIcon } from "@assets/image/icons";
@@ -46,7 +50,6 @@ export const DeploymentsTable = () => {
 		setIsLoadingDeployments(false);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
@@ -88,7 +91,6 @@ export const DeploymentsTable = () => {
 
 		if (buildDescriptionError) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("buildInformationForSingleshotNotLoaded"),
 				type: "error",
 			});
@@ -121,7 +123,6 @@ export const DeploymentsTable = () => {
 			const { data: sessionId, error } = await saveProjectManualRun(projectId);
 			if (error) {
 				addToast({
-					id: Date.now().toString(),
 					message: t("manualRun.executionFailed"),
 					type: "error",
 				});
@@ -133,8 +134,13 @@ export const DeploymentsTable = () => {
 				return;
 			}
 			addToast({
-				id: Date.now().toString(),
-				message: t("manualRun.executionSucceed", { sessionId }),
+				message: (
+					<ManualRunSuccessToastMessage
+						deploymentId={lastDeploymentStore?.deploymentId}
+						projectId={projectId}
+						sessionId={sessionId}
+					/>
+				),
 				type: "success",
 			});
 		} finally {

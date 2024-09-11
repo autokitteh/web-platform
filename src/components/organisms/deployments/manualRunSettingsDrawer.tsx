@@ -13,7 +13,7 @@ import { manualRunSchema } from "@validations";
 
 import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
-import { ManualRunParamsForm } from "@components/organisms/deployments";
+import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/deployments";
 
 import { RunIcon } from "@assets/image";
 
@@ -31,7 +31,8 @@ export const ManualRunSettingsDrawer = () => {
 		saveProjectManualRun: state.saveProjectManualRun,
 	}));
 
-	const { entrypointFunction, entrypointFunctions, fileOptions, filePath, params } = projectManualRun || {};
+	const { entrypointFunction, entrypointFunctions, fileOptions, filePath, lastDeployment, params } =
+		projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
@@ -82,7 +83,6 @@ export const ManualRunSettingsDrawer = () => {
 		setSendingManualRun(false);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("executionFailed"),
 				type: "error",
 			});
@@ -91,8 +91,13 @@ export const ManualRunSettingsDrawer = () => {
 			return;
 		}
 		addToast({
-			id: Date.now().toString(),
-			message: t("executionSucceed", { sessionId }),
+			message: (
+				<ManualRunSuccessToastMessage
+					deploymentId={lastDeployment?.deploymentId}
+					projectId={projectId}
+					sessionId={sessionId}
+				/>
+			),
 			type: "success",
 		});
 		closeDrawer(DrawerName.projectManualRunSettings);

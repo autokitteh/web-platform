@@ -30,13 +30,11 @@ export const Security = () => {
 			await navigator.clipboard.writeText(text);
 
 			addToast({
-				id: Date.now().toString(),
 				message: t("copySuccess"),
 				type: "success",
 			});
 		} catch (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("copyFailure"),
 				type: "error",
 			});

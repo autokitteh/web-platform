@@ -23,7 +23,6 @@ export const DeploymentsAndSessionsTopbar = () => {
 		const { data: project, error } = await getProject(projectId);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
@@ -32,7 +31,6 @@ export const DeploymentsAndSessionsTopbar = () => {
 		}
 		if (!project) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("projectNotFound"),
 				type: "error",
 			});

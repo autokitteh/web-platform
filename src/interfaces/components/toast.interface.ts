@@ -1,6 +1,6 @@
 export interface Toast {
 	id: string;
-	message: string;
+	message: React.ReactNode;
 	type: ToasterTypes;
 	showCopyButton?: boolean;
 }
@@ -8,7 +8,7 @@ export interface Toast {
 export type ToasterTypes = "error" | "info" | "success";
 
 export interface ToastStore {
-	addToast: (toast: Toast) => void;
+	addToast: (toast: Omit<Toast, "id">) => void;
 	removeToast: (id: string) => void;
 	toasts: Toast[];
 }

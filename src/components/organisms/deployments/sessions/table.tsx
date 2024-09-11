@@ -65,7 +65,6 @@ export const SessionsTable = () => {
 
 			if (error) {
 				addToast({
-					id: Date.now().toString(),
 					message: tErrors("sessionsFetchError"),
 					type: "error",
 				});
@@ -102,7 +101,6 @@ export const SessionsTable = () => {
 		const { data, error } = await DeploymentsService.listByProjectId(projectId!);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: tErrors("deploymentFetchError", { ns: "services" }),
 				type: "error",
 			});
@@ -143,7 +141,6 @@ export const SessionsTable = () => {
 		const { error } = await SessionsService.deleteSession(selectedSessionId);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: tErrors("failedRemoveSession"),
 				type: "error",
 			});

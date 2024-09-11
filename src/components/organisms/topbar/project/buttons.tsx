@@ -46,13 +46,11 @@ export const ProjectTopbarButtons = () => {
 		const { error } = await ProjectsService.build(projectId!, resources);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
 		} else {
 			addToast({
-				id: Date.now().toString(),
 				message: t("topbar.buildProjectSuccess"),
 				type: "success",
 			});
@@ -70,13 +68,11 @@ export const ProjectTopbarButtons = () => {
 		const { error } = await ProjectsService.run(projectId!, resources);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
 		} else {
 			addToast({
-				id: Date.now().toString(),
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
 			});
@@ -94,7 +90,6 @@ export const ProjectTopbarButtons = () => {
 		closeModal(ModalName.deleteProject);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: tError("projectRemoveFailed"),
 				type: "error",
 			});
@@ -102,7 +97,6 @@ export const ProjectTopbarButtons = () => {
 			return;
 		}
 		addToast({
-			id: Date.now().toString(),
 			message: t("topbar.deleteProjectSuccess"),
 			type: "success",
 		});

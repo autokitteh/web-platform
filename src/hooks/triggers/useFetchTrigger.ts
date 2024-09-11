@@ -23,7 +23,6 @@ export const useFetchTrigger = (triggerId: string) => {
 			logExtendedMessage = logMessage
 		) => {
 			addToast({
-				id: Date.now().toString(),
 				message: tErrors(toastMessage),
 				type: "error",
 			});

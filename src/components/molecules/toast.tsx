@@ -91,6 +91,7 @@ export const Toast = () => {
 	const renderToasts = () =>
 		toasts.map(({ id, message, showCopyButton, type }, index) => {
 			const title = t(`titles.${type}`);
+			const textCopyButton = typeof message === "string" ? message : "";
 
 			return (
 				<AnimatePresence key={id}>
@@ -114,7 +115,7 @@ export const Toast = () => {
 
 								{message}
 
-								{showCopyButton ? <CopyButton text={message} /> : null}
+								{showCopyButton ? <CopyButton text={textCopyButton} /> : null}
 							</div>
 
 							<IconButton

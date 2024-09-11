@@ -44,7 +44,6 @@ export const TriggersTable = () => {
 			setTriggers(triggers);
 		} catch (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
@@ -67,7 +66,6 @@ export const TriggersTable = () => {
 		closeModal(ModalName.deleteTrigger);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: tError("triggerRemoveFailed") + (error as Error).message,
 				type: "error",
 			});

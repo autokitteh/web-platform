@@ -34,7 +34,6 @@ export const ProjectConfigTopbar = () => {
 
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
@@ -43,7 +42,6 @@ export const ProjectConfigTopbar = () => {
 		}
 		if (!project) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
@@ -86,7 +84,6 @@ export const ProjectConfigTopbar = () => {
 			const { error } = await ProjectsService.update(projectId, newName);
 			if (error) {
 				addToast({
-					id: Date.now().toString(),
 					message: (error as Error).message,
 					type: "error",
 				});

@@ -58,7 +58,6 @@ export const SessionsTableRow = memo(
 			const { error } = await SessionsService.stop(session.sessionId);
 			if (error) {
 				addToast({
-					id: Date.now().toString(),
 					message: tErrors("failedStopSession"),
 					type: "error",
 				});

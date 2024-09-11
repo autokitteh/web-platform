@@ -50,7 +50,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			if (error) {
 				useToastStore.getState().addToast({
-					id: `error-${Date.now()}`,
 					message: `An error occurred: ${error}`,
 					type: "error",
 				});
@@ -66,7 +65,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			}
 		} catch (error) {
 			useToastStore.getState().addToast({
-				id: `error-${Date.now()}`,
 				message: `An error occurred: ${error.message}`,
 				type: "error",
 			});
