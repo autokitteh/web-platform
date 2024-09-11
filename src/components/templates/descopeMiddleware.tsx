@@ -55,7 +55,6 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 				await getLoggedInUser();
 			} catch (error) {
 				addToast({
-					id: Date.now().toString(),
 					message: `Error occurred during login: ${(error as Error).message}`,
 					type: "error",
 				});

@@ -41,7 +41,6 @@ export const SessionTableEditorFrame = () => {
 		}
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});

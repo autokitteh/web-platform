@@ -82,7 +82,6 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 
 				if (error) {
 					addToast({
-						id: Date.now().toString(),
 						message: (error as Error).message,
 						type: "error",
 					});
@@ -98,7 +97,6 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 				}
 			} catch (error) {
 				addToast({
-					id: Date.now().toString(),
 					message: (error as Error).message,
 					type: "error",
 				});

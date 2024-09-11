@@ -1,3 +1,4 @@
+/* eslint-disable @liferay/empty-line-between-elements */
 import React, { memo } from "react";
 
 import ReactTimeAgo from "react-time-ago";
@@ -41,8 +42,7 @@ export const ActivityRow = memo(({ data: activity, setActivity, style }: Activit
 					<div className="text-left font-bold">{functionName}</div>
 
 					<div className="flex items-center gap-1">
-						<span>Status: {/* eslint-disable-next-line prettier/prettier */}</span>
-
+						<span>Status:</span>
 						<ActivityStatus activityState={status as ActivityState} />
 						-
 						<ReactTimeAgo date={activityTime} locale="en-US" />

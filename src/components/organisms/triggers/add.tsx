@@ -63,7 +63,6 @@ export const AddTrigger = () => {
 				setFilesNameList(formattedResources);
 			} catch (error) {
 				addToast({
-					id: Date.now().toString(),
 					message: tErrors("resourcesFetchError"),
 					type: "error",
 				});
@@ -96,7 +95,6 @@ export const AddTrigger = () => {
 
 			if (error) {
 				addToast({
-					id: Date.now()?.toString(),
 					message: tErrors("triggerNotCreated"),
 					type: "error",
 				});
@@ -105,14 +103,12 @@ export const AddTrigger = () => {
 			}
 
 			addToast({
-				id: Date.now().toString(),
 				message: t("createdSuccessfully"),
 				type: "success",
 			});
 			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
 		} catch (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: tErrors("triggerNotCreated"),
 				type: "error",
 			});

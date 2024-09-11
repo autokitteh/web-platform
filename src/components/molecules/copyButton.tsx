@@ -26,7 +26,6 @@ export const CopyButton = ({
 	const copyTextToClipboard = debounce(async (text: string) => {
 		const copyResponse = await copyToClipboard(text);
 		addToast({
-			id: Date.now().toString(),
 			message: copyResponse.message,
 			type: copyResponse.isError ? "error" : "success",
 		});

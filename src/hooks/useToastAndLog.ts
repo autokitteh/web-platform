@@ -37,7 +37,7 @@ export const useToastAndLog = (messagesDictionary: string, errorDictionary: stri
 
 	const toastAndLog = (type: "error" | "success", key: string, error?: ErrorType, skipLogger: boolean = false) => {
 		const message = type === "error" ? tErrors(key) : t(key);
-		addToast({ id: Date.now().toString(), message, type });
+		addToast({ message, type });
 
 		if (!skipLogger) {
 			const extendedMessage =

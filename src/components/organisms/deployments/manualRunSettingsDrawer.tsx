@@ -82,7 +82,6 @@ export const ManualRunSettingsDrawer = () => {
 		setSendingManualRun(false);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("executionFailed"),
 				type: "error",
 			});
@@ -91,7 +90,6 @@ export const ManualRunSettingsDrawer = () => {
 			return;
 		}
 		addToast({
-			id: Date.now().toString(),
 			message: t("executionSucceed", { sessionId }),
 			type: "success",
 		});

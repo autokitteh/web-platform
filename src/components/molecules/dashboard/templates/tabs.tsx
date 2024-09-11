@@ -47,7 +47,6 @@ export const ProjectTemplatesTabs = () => {
 		setIsCreating(true);
 		if (!projectTemplateDirectory) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("projectCreationFailed"),
 				type: "error",
 			});
@@ -60,7 +59,6 @@ export const ProjectTemplatesTabs = () => {
 
 		if (!projectId) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("projectCreationFailed"),
 				type: "error",
 			});
@@ -73,7 +71,6 @@ export const ProjectTemplatesTabs = () => {
 
 		if (!filesPerProject) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("projectTemplateFilesNotFound"),
 				type: "error",
 			});
@@ -88,7 +85,6 @@ export const ProjectTemplatesTabs = () => {
 		await saveAllFiles(filesData);
 
 		addToast({
-			id: Date.now().toString(),
 			message: t("projectCreatedSuccessfully"),
 			type: "success",
 		});
@@ -112,7 +108,6 @@ export const ProjectTemplatesTabs = () => {
 
 			if (!manifestData) {
 				addToast({
-					id: Date.now().toString(),
 					message: t("projectCreationFailed"),
 					type: "error",
 				});
@@ -131,7 +126,6 @@ export const ProjectTemplatesTabs = () => {
 
 			if (error) {
 				addToast({
-					id: Date.now().toString(),
 					message: t("projectCreationFailed"),
 					type: "error",
 				});
@@ -143,7 +137,6 @@ export const ProjectTemplatesTabs = () => {
 			setIsCreating(false);
 		} catch (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("projectCreationFailed"),
 				type: "error",
 			});

@@ -69,7 +69,6 @@ export const CodeTable = () => {
 			for (const file of files) {
 				if (file.size > fileSizeUploadLimit) {
 					addToast({
-						id: Date.now().toString(),
 						message: tErrors("fileTooLarge"),
 						type: "error",
 					});
@@ -90,7 +89,6 @@ export const CodeTable = () => {
 			fetchResources();
 		} catch (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: tErrors("fileAddFailed", { fileName: files[0]?.name }),
 				type: "error",
 			});
@@ -135,7 +133,6 @@ export const CodeTable = () => {
 			getResources();
 		} catch (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }),
 				type: "error",
 			});

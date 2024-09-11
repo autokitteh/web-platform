@@ -46,7 +46,6 @@ export const DeploymentsTable = () => {
 		setIsLoadingDeployments(false);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
@@ -88,7 +87,6 @@ export const DeploymentsTable = () => {
 
 		if (buildDescriptionError) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("buildInformationForSingleshotNotLoaded"),
 				type: "error",
 			});
@@ -121,7 +119,6 @@ export const DeploymentsTable = () => {
 			const { data: sessionId, error } = await saveProjectManualRun(projectId);
 			if (error) {
 				addToast({
-					id: Date.now().toString(),
 					message: t("manualRun.executionFailed"),
 					type: "error",
 				});
@@ -133,7 +130,6 @@ export const DeploymentsTable = () => {
 				return;
 			}
 			addToast({
-				id: Date.now().toString(),
 				message: t("manualRun.executionSucceed", { sessionId }),
 				type: "success",
 			});

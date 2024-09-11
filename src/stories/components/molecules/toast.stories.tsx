@@ -12,7 +12,7 @@ const ToastWrapper = () => {
 	const { addToast } = useToastStore();
 
 	const handleAddToast = (type: ToasterTypes) => {
-		addToast({ id: Date.now().toString(), type, message: `This is a ${type} toast message.` });
+		addToast({ type, message: `This is a ${type} toast message.` });
 	};
 
 	return (

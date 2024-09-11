@@ -47,7 +47,6 @@ export const ConnectionsTable = () => {
 			setConnections(connectionsResponse);
 		} catch (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: (error as Error).message,
 				type: "error",
 			});
@@ -93,7 +92,6 @@ export const ConnectionsTable = () => {
 		closeModal(ModalName.deleteConnection);
 		if (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: tErrors("connectionRemoveFailed"),
 				type: "error",
 			});

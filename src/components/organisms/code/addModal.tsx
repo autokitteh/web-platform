@@ -54,7 +54,6 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 			openFileAsActive(newFile);
 		} catch (error) {
 			addToast({
-				id: Date.now().toString(),
 				message: t("fileAddFailed", { fileName: name }),
 				type: "error",
 			});
