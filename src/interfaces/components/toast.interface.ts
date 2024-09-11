@@ -1,6 +1,6 @@
 export interface Toast {
 	id: string;
-	message: string;
+	message: React.ReactNode;
 	type: ToasterTypes;
 	showCopyButton?: boolean;
 }
