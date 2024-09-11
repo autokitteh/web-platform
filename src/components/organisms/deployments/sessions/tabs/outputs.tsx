@@ -17,7 +17,7 @@ export const SessionOutputs = () => {
 	const listRef = useRef<List | null>(null);
 	const frameRef = useRef<HTMLDivElement>(null);
 
-	const { displayedSessionId, loadLogs, loading, logs, nextPageToken, reset } = useCacheStore();
+	const { loadLogs, loading, logs, nextPageToken, reset } = useCacheStore();
 	const [outputs, setOutputs] = useState<SessionOutput[]>([]);
 	const [scrollPosition, setScrollPosition] = useState<number>(0);
 
@@ -51,18 +51,11 @@ export const SessionOutputs = () => {
 			listRef.current.scrollToPosition(parseInt(savedScrollPosition, 10));
 		}
 
-		if (logs.length && displayedSessionId === sessionId) {
-			return;
-		}
 		reset();
 		setOutputs([]);
-		if (!frameRef?.current?.offsetHeight) {
-			loadMoreRows({ startIndex: 0, stopIndex: 0 }, minimumSessionLogsRecordsToDisplayFallback);
+		const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsToDisplayFallback;
 
-			return;
-		}
-
-		loadMoreRows({ startIndex: 0, stopIndex: 0 }, frameRef.current.offsetHeight);
+		loadMoreRows({ startIndex: 0, stopIndex: 0 }, frameHeight);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
