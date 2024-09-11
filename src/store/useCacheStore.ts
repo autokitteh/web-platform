@@ -2,7 +2,7 @@ import { StateCreator, create } from "zustand";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionsService } from "@services/sessions.service";
-import { minimumSessionLogsRecordsToDisplayFallback } from "@src/constants";
+import { minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
 
 import { useToastStore } from "@store";
 
@@ -13,7 +13,6 @@ export interface CacheStore {
 	reload: (sessionId: string) => void;
 	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
 	nextPageToken?: string;
-	displayedSessionId?: string;
 }
 
 const store: StateCreator<CacheStore> = (set, get) => ({
@@ -33,16 +32,15 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		set((state) => {
 			state.logs = [];
 			state.nextPageToken = "";
-			state.displayedSessionId = sessionId;
 
 			return state;
 		});
 		const { loadLogs } = get();
-		loadLogs(sessionId, minimumSessionLogsRecordsToDisplayFallback);
+		loadLogs(sessionId, minimumSessionLogsRecordsFrameHeightFallback);
 	},
 
 	loadLogs: async (sessionId: string, pageSize?: number) => {
-		set({ loading: true, displayedSessionId: sessionId });
+		set({ loading: true });
 
 		try {
 			const { nextPageToken } = get();
