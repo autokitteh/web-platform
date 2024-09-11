@@ -137,6 +137,7 @@ export const DeploymentsTable = () => {
 				message: (
 					<ManualRunSuccessToastMessage
 						deploymentId={lastDeploymentStore?.deploymentId}
+						projectId={projectId}
 						sessionId={sessionId}
 					/>
 				),

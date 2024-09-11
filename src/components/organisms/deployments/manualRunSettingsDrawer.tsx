@@ -91,7 +91,13 @@ export const ManualRunSettingsDrawer = () => {
 			return;
 		}
 		addToast({
-			message: <ManualRunSuccessToastMessage deploymentId={lastDeployment?.deploymentId} sessionId={sessionId} />,
+			message: (
+				<ManualRunSuccessToastMessage
+					deploymentId={lastDeployment?.deploymentId}
+					projectId={projectId}
+					sessionId={sessionId}
+				/>
+			),
 			type: "success",
 		});
 		closeDrawer(DrawerName.projectManualRunSettings);
