@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
@@ -23,6 +23,7 @@ export const ManualRunSettingsDrawer = () => {
 	const { closeDrawer } = useDrawerStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { projectId } = useParams();
+	const navigate = useNavigate();
 	const [sendingManualRun, setSendingManualRun] = useState(false);
 
 	const { projectManualRun, saveProjectManualRun, updateProjectManualRun } = useManualRunStore((state) => ({
@@ -31,7 +32,8 @@ export const ManualRunSettingsDrawer = () => {
 		saveProjectManualRun: state.saveProjectManualRun,
 	}));
 
-	const { entrypointFunction, entrypointFunctions, fileOptions, filePath, params } = projectManualRun || {};
+	const { entrypointFunction, entrypointFunctions, fileOptions, filePath, lastDeployment, params } =
+		projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
@@ -90,7 +92,21 @@ export const ManualRunSettingsDrawer = () => {
 			return;
 		}
 		addToast({
-			message: t("executionSucceed", { sessionId }),
+			message: (
+				<Trans
+					components={{
+						tag: (
+							<Button
+								className="cursor-pointer p-0 text-blue-500 underline"
+								onClick={() => navigate(`${lastDeployment?.deploymentId}/sessions/${sessionId}`)}
+							/>
+						),
+					}}
+					i18nKey="executionSucceed"
+					t={t}
+					values={{ sessionId }}
+				/>
+			),
 			type: "success",
 		});
 		closeDrawer(DrawerName.projectManualRunSettings);
