@@ -48,3 +48,7 @@ export interface SortButtonProps {
 	isActive: boolean;
 	sortDirection: SortDirection | undefined;
 }
+
+export interface RefreshButtonProps {
+	onRefresh: () => Promise<void>;
+}

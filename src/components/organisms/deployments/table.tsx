@@ -13,6 +13,7 @@ import { Deployment } from "@type/models";
 import { useDrawerStore, useManualRunStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
+import { RefreshButton } from "@components/molecules";
 import {
 	DeploymentsTableContent,
 	ManualRunSettingsDrawer,
@@ -148,7 +149,9 @@ export const DeploymentsTable = () => {
 				),
 				type: "success",
 			});
-			fetchDeployments();
+			setTimeout(() => {
+				fetchDeployments();
+			}, 100);
 		} finally {
 			setSavingManualRun(false);
 		}
@@ -159,9 +162,13 @@ export const DeploymentsTable = () => {
 	return (
 		<div className="flex w-full flex-col">
 			<div className="mt-2 flex items-center justify-between">
-				<h1 className="text-base text-black">
-					{t("tableTitle")} ({deployments.length})
-				</h1>
+				<div className="flex items-center gap-3">
+					<h1 className="text-base text-black">
+						{t("tableTitle")} ({deployments.length})
+					</h1>
+
+					<RefreshButton onRefresh={fetchDeployments} />
+				</div>
 
 				<div className="border-1 flex h-10 gap-2 rounded-3xl border border-gray-1000 p-1">
 					<Button
