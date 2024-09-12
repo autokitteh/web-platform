@@ -1,5 +1,5 @@
 /* eslint-disable @liferay/empty-line-between-elements */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
@@ -13,13 +13,12 @@ import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
 import { useCacheStore } from "@src/store/useCacheStore";
 import { ViewerSession } from "@src/types/models/session.type";
-import { cn } from "@src/utilities";
 
 import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
-import { Accordion, CopyButton } from "@components/molecules";
+import { Accordion, CopyButton, RefreshButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { ArrowRightIcon, Close, RotateIcon } from "@assets/image/icons";
+import { ArrowRightIcon, Close } from "@assets/image/icons";
 
 export const SessionViewer = () => {
 	const { deploymentId, projectId, sessionId } = useParams();
@@ -28,7 +27,6 @@ export const SessionViewer = () => {
 	const location = useLocation();
 	const [activeTab, setActiveTab] = useState(defaultSessionTab);
 	const [sessionInfo, setSessionInfo] = useState<ViewerSession>();
-	const [isRefreshing, setIsRefreshing] = useState(false);
 
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
@@ -43,11 +41,7 @@ export const SessionViewer = () => {
 	const fetchSessions = async () => {
 		if (!sessionInfo) return;
 
-		setIsRefreshing(true);
 		reload(sessionInfo.sessionId);
-		setTimeout(() => {
-			setIsRefreshing(false);
-		}, 800);
 	};
 
 	const fetchSessionInfo = async () => {
@@ -89,15 +83,6 @@ export const SessionViewer = () => {
 			return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 		}
 	}
-
-	const rotateIconClass = useMemo(
-		() =>
-			cn("animate-spin fill-white transition group-hover:fill-green-800", {
-				"animation-running": isRefreshing,
-				"animation-paused": !isRefreshing,
-			}),
-		[isRefreshing]
-	);
 
 	return (
 		<Frame className="overflow-hidden pb-3">
@@ -257,16 +242,7 @@ export const SessionViewer = () => {
 					))}
 				</div>
 
-				{sessionInfo ? (
-					<IconButton
-						className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
-						disabled={isRefreshing}
-						onClick={fetchSessions}
-						title={t("refresh")}
-					>
-						<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
-					</IconButton>
-				) : null}
+				{sessionInfo ? <RefreshButton onRefresh={fetchSessions} /> : null}
 			</div>
 			<Outlet />
 			<LogoCatLarge />

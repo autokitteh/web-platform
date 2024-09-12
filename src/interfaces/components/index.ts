@@ -5,6 +5,7 @@ export type {
 	DropdownState,
 	IconButtonProps,
 	SortButtonProps,
+	RefreshButtonProps,
 } from "@interfaces/components/button.interface";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { InputProps, SelectOption, SelectProps, TextArea, SelectIconLabel } from "@interfaces/components/forms";

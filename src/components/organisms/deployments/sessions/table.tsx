@@ -15,12 +15,13 @@ import { cn } from "@utilities";
 
 import { useModalStore, useToastStore } from "@store";
 
-import { Button, Frame, IconButton, IconSvg, Loader } from "@components/atoms";
+import { Button, Frame, IconButton, Loader } from "@components/atoms";
+import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
 import { CatImage } from "@assets/image";
-import { ArrowLeft, RotateIcon } from "@assets/image/icons";
+import { ArrowLeft } from "@assets/image/icons";
 
 export const SessionsTable = () => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10 });
@@ -36,7 +37,6 @@ export const SessionsTable = () => {
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
-	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const frameClass = useMemo(
@@ -169,26 +169,6 @@ export const SessionsTable = () => {
 		}
 	};
 
-	const handleRefreshClick = async () => {
-		setIsRefreshing(true);
-		try {
-			await fetchDeployments();
-		} finally {
-			setTimeout(() => {
-				setIsRefreshing(false);
-			}, 600);
-		}
-	};
-
-	const rotateIconClass = useMemo(
-		() =>
-			cn("animate-spin fill-white transition group-hover:fill-green-800", {
-				"animation-running": isRefreshing,
-				"animation-paused": !isRefreshing,
-			}),
-		[isRefreshing]
-	);
-
 	const resizeClass = useMemo(
 		() =>
 			cn(
@@ -216,14 +196,7 @@ export const SessionsTable = () => {
 								{t("buttons.back")}
 							</IconButton>
 
-							<IconButton
-								className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
-								disabled={isRefreshing}
-								onClick={handleRefreshClick}
-								title={t("refresh")}
-							>
-								<IconSvg className={rotateIconClass} size="md" src={RotateIcon} />
-							</IconButton>
+							<RefreshButton onRefresh={fetchDeployments} />
 						</div>
 
 						<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
