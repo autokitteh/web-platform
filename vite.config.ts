@@ -61,7 +61,6 @@ export default defineConfig({
 			"@assets": path.resolve(__dirname, "./src/assets"),
 			"@components": path.resolve(__dirname, "./src/components"),
 			"@constants": path.resolve(__dirname, "./src/constants"),
-			"@e2e": path.resolve(__dirname, "./e2e"),
 			"@enums": path.resolve(__dirname, "./src/enums"),
 			"@hooks": path.resolve(__dirname, "./src/hooks"),
 			"@i18n": path.resolve(__dirname, "./src/i18n"),

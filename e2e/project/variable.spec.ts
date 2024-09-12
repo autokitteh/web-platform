@@ -1,4 +1,4 @@
-import { expect, test } from "@e2e/fixtures";
+import { expect, test } from "../fixtures";
 
 test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();

@@ -31,7 +31,6 @@ module.exports = {
 					["@assets", "./src/assets"],
 					["@components", "./src/components"],
 					["@constants", "./src/constants"],
-					["@e2e", "./e2e"],
 					["@enums", "./src/enums"],
 					["@hooks", "./src/hooks"],
 					["@i18n", "./src/i18n"],
