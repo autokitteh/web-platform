@@ -8,6 +8,7 @@ export { default as Map } from "@assets/image/Map.svg?react";
 export { default as CatDashboardImage } from "@assets/image/CatDashboard.svg?react";
 export { default as StartFromTemplateImage } from "@assets/image/StartFromTemplate.svg?react";
 export { default as DefaultAvatar } from "@assets/image/avatar.png";
+export { default as LoginIntegrationsLogoPng } from "@assets/image/LoginIntegrationsLogo.png";
 export { ArrowDown, ArrowUp, InfoIcon, Minimize, PlusCircle, SmallArrowDown, ThreeDots } from "@assets/image/icons";
 export {
 	ConnectionsIcon as Connections,
