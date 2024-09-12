@@ -149,7 +149,9 @@ export const DeploymentsTable = () => {
 				),
 				type: "success",
 			});
-			fetchDeployments();
+			setTimeout(() => {
+				fetchDeployments();
+			}, 100);
 		} finally {
 			setSavingManualRun(false);
 		}
