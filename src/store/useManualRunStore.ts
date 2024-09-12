@@ -111,7 +111,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const actualParams = params || project?.params || [];
 
 		const jsonInputs = actualParams.length
-			? Object.fromEntries(actualParams.map(({ key, value }) => [key, value]))
+			? Object.fromEntries(actualParams.map(({ key, value }) => [key, `"${value}"`]))
 			: {};
 
 		const sessionArgs = {
