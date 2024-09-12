@@ -46,21 +46,26 @@ export const DeploymentsTable = () => {
 			return;
 		}
 
-		const { data, error } = await DeploymentsService.listByProjectId(projectId);
-		setIsLoadingDeployments(false);
-		if (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
+		setIsLoadingDeployments(true);
 
-			return;
-		}
+		try {
+			const { data, error } = await DeploymentsService.listByProjectId(projectId);
+			if (error) {
+				addToast({
+					message: (error as Error).message,
+					type: "error",
+				});
 
-		if (!data) {
-			return;
+				return;
+			}
+
+			if (!data) {
+				return;
+			}
+			setDeployments(data);
+		} finally {
+			setIsLoadingDeployments(false);
 		}
-		setDeployments(data);
 	};
 
 	useEffect(() => {
@@ -143,6 +148,7 @@ export const DeploymentsTable = () => {
 				),
 				type: "success",
 			});
+			fetchDeployments();
 		} finally {
 			setSavingManualRun(false);
 		}
@@ -150,9 +156,7 @@ export const DeploymentsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return isLoadingDeployments ? (
-		<Loader isCenter size="xl" />
-	) : (
+	return (
 		<div className="flex w-full flex-col">
 			<div className="mt-2 flex items-center justify-between">
 				<h1 className="text-base text-black">
@@ -185,11 +189,15 @@ export const DeploymentsTable = () => {
 				</div>
 			</div>
 
-			{!deployments.length ? (
+			{isLoadingDeployments ? <Loader isCenter size="xl" /> : null}
+
+			{!isLoadingDeployments && !deployments.length ? (
 				<div className="mt-10 text-center text-xl font-semibold text-black">{t("noDeployments")}</div>
-			) : (
+			) : null}
+
+			{!isLoadingDeployments && !!deployments.length ? (
 				<DeploymentsTableContent deployments={deployments} updateDeployments={fetchDeployments} />
-			)}
+			) : null}
 
 			<ManualRunSettingsDrawer />
 		</div>
