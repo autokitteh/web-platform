@@ -1,1 +1,1 @@
-export { waitForToast } from "@e2e/utils/waitForToast";
+export { waitForToast } from "../utils/waitForToast";

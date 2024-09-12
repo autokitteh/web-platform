@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
 
-import { expect, test } from "@e2e/fixtures";
+import { expect, test } from "../fixtures";
 
 const triggerName = "triggerName";
 

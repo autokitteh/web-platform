@@ -27,7 +27,6 @@
 			"@components/*": ["./src/components/*"],
 			"@api/*": ["./src/api/*"],
 			"@routing/*": ["./src/routing/*"],
-			"@e2e/*": ["./e2e/*"],
 			"@utils/*": ["./src/utils/*"],
 			"@utils": ["./src/utils/index"],
 			"@validations/*": ["./src/validations/*"],
