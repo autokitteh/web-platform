@@ -1,3 +1,15 @@
+# [2.4.0](https://github.com/autokitteh/web-platform/compare/v2.3.1...v2.4.0) (2024-09-12)
+
+
+### Features
+
+* add refresh button to deployments table ([#336](https://github.com/autokitteh/web-platform/issues/336)) ([46412ec](https://github.com/autokitteh/web-platform/commit/46412ec731c2e4aa59cbebd30812c5da052ebb08))
+
+
+### Reverts
+
+* eslint downgrade didnt help - rollback ([#337](https://github.com/autokitteh/web-platform/issues/337)) ([6e5ea8b](https://github.com/autokitteh/web-platform/commit/6e5ea8befaeccaad43a504e04e89898d159f6ed3))
+
 ## [2.3.1](https://github.com/autokitteh/web-platform/compare/v2.3.0...v2.3.1) (2024-09-11)
 
 
