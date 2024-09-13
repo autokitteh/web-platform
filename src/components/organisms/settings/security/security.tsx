@@ -33,6 +33,7 @@ export const Security = () => {
 				message: t("copySuccess"),
 				type: "success",
 			});
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: t("copyFailure"),

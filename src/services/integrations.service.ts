@@ -15,6 +15,7 @@ export class IntegrationsService {
 			const integrationsConverted = integrations.map(convertIntegrationProtoToModel);
 
 			return { data: integrationsConverted, error: undefined };
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			const errorMessage = i18n.t("intergrationsNotFound", { ns: "services" });
 			LoggerService.error(namespaces.integrationService, errorMessage);
