@@ -274,6 +274,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		try {
 			await navigator.clipboard.writeText(text);
 			toastAndLog("success", "copySuccess", true);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			toastAndLog("error", "copyError", true);
 		}

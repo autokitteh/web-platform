@@ -72,6 +72,7 @@ module.exports = {
 		"perfectionist"
 	],
 	rules: {
+		"@typescript-eslint/no-unused-expressions": "off",
 		"sort-keys": "off",
 		"perfectionist/sort-object-types": [
 			"error",

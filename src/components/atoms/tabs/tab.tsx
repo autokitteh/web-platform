@@ -19,7 +19,9 @@ export const Tab = ({ activeTab, ariaLabel, children, className, onClick, value,
 
 	const handleActive = () => {
 		setActiveTab(value);
-		onClick && onClick();
+		if (onClick) {
+			onClick();
+		}
 	};
 
 	return (
