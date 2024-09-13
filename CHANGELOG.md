@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/autokitteh/web-platform/compare/v2.4.0...v2.4.1) (2024-09-13)
+
+
+### Bug Fixes
+
+* sort projects in dashboard ([#327](https://github.com/autokitteh/web-platform/issues/327)) ([7aa21cd](https://github.com/autokitteh/web-platform/commit/7aa21cd677303b76b3b5e8615f152373710c5c36))
+
 # [2.4.0](https://github.com/autokitteh/web-platform/compare/v2.3.1...v2.4.0) (2024-09-12)
 
 
