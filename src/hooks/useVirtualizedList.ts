@@ -56,7 +56,8 @@ export function useVirtualizedList<T>(
 		const initialLoadSize = Math.ceil(frameHeight / itemHeight) * 2;
 
 		loadMoreRows({ startIndex: 0, stopIndex: initialLoadSize });
-	}, [sessionId, logs.length, reset, loadMoreRows, itemHeight]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId]);
 
 	useEffect(() => {
 		const convertedItems = convertDataFunction(logs);
