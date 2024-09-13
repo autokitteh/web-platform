@@ -22,8 +22,16 @@ export const JiraIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema } =
-		useConnectionForm(jiraIntegrationSchema, "create");
+	const {
+		clearErrors,
+		createConnection,
+		errors,
+		handleOAuth,
+		handleSubmit,
+		isLoading,
+		register,
+		setValidationSchema,
+	} = useConnectionForm(jiraIntegrationSchema, "create");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const configureConnection = async (connectionId: string) => {
@@ -49,6 +57,7 @@ export const JiraIntegrationAddForm = ({
 			return;
 		}
 		setValidationSchema(jiraIntegrationSchema);
+		clearErrors();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
 

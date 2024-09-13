@@ -22,8 +22,16 @@ export const ConfluenceIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema } =
-		useConnectionForm(confluenceIntegrationSchema, "create");
+	const {
+		clearErrors,
+		createConnection,
+		errors,
+		handleOAuth,
+		handleSubmit,
+		isLoading,
+		register,
+		setValidationSchema,
+	} = useConnectionForm(confluenceIntegrationSchema, "create");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const configureConnection = async (connectionId: string) => {
@@ -49,6 +57,7 @@ export const ConfluenceIntegrationAddForm = ({
 			return;
 		}
 		setValidationSchema(confluenceIntegrationSchema);
+		clearErrors();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
 
