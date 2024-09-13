@@ -97,7 +97,7 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 3.  **Check Code Formatting**: Check if the code meets the formatting standards.
 
-    `npm run prettuier`
+    `npm run prettier`
 
 4.  **Fix Code Formatting**: Automatically format the codebase.
 
