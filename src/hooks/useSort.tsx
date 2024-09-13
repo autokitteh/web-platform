@@ -16,7 +16,17 @@ export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 			return items;
 		}
 
-		return orderBy(items, [sortConfig.key], [sortConfig.direction]);
+		return orderBy(
+			items,
+			[
+				(item) => {
+					const value = sortConfig.key ? item[sortConfig.key] : undefined;
+
+					return typeof value === "string" ? value.toLowerCase() : value;
+				},
+			],
+			[sortConfig.direction]
+		);
 	}, [items, sortConfig]);
 
 	const requestSort = useCallback((key: keyof T) => {
