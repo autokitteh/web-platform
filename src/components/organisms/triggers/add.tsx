@@ -61,7 +61,6 @@ export const AddTrigger = () => {
 					value: name,
 				}));
 				setFilesNameList(formattedResources);
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			} catch (error) {
 				addToast({
 					message: tErrors("resourcesFetchError"),
@@ -108,7 +107,6 @@ export const AddTrigger = () => {
 				type: "success",
 			});
 			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("triggerNotCreated"),

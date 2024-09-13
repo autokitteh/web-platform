@@ -87,7 +87,6 @@ export const CodeTable = () => {
 				await saveFile(file.name, fileContent);
 			}
 			fetchResources();
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("fileAddFailed", { fileName: files[0]?.name }),
@@ -132,7 +131,6 @@ export const CodeTable = () => {
 		try {
 			await deleteFile(selectedRemoveFileName);
 			getResources();
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }),

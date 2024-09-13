@@ -64,7 +64,6 @@ export const EditTrigger = () => {
 					value: name,
 				}));
 				setFilesNameList(formattedResources);
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			} catch (error) {
 				addToast({
 					message: tErrors("resourcesFetchError"),
@@ -128,7 +127,6 @@ export const EditTrigger = () => {
 				message: t("updatedSuccessfully"),
 				type: "success",
 			});
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("triggerNotUpdated"),

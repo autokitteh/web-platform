@@ -52,7 +52,6 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 			const newFileContent = new TextEncoder().encode(tTabsEditor("initialContentForNewFile"));
 			await addFile(newFile, newFileContent);
 			openFileAsActive(newFile);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: t("fileAddFailed", { fileName: name }),

@@ -47,8 +47,6 @@ export const DeploymentsTable = () => {
 			return;
 		}
 
-		setIsLoadingDeployments(true);
-
 		try {
 			const { data, error } = await DeploymentsService.listByProjectId(projectId);
 			if (error) {
