@@ -1,6 +1,10 @@
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 
+import {
+	ConfluenceApiTokenForm,
+	ConfluenceOauthForm,
+} from "@components/organisms/connections/integrations/confluence/authMethods";
 import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connections/integrations/google/authMethods";
 import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connections/integrations/jira/authMethods";
@@ -35,5 +39,9 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.jira]: {
 		[ConnectionAuthType.ApiToken]: ApiTokenJiraForm,
 		[ConnectionAuthType.Oauth]: OauthJiraForm,
+	},
+	[Integrations.confluence]: {
+		[ConnectionAuthType.ApiToken]: ConfluenceApiTokenForm,
+		[ConnectionAuthType.Oauth]: ConfluenceOauthForm,
 	},
 };

@@ -7,7 +7,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon } from "@assets/image/icons";
 
-export const OauthConfluenceForm = () => {
+export const ConfluenceOauthForm = () => {
 	const { t } = useTranslation("integrations");
 
 	return (

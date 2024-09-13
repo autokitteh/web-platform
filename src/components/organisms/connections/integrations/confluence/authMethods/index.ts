@@ -1,2 +1,2 @@
-export { ApiTokenJiraForm } from "@components/organisms/connections/integrations/jira/authMethods/apiToken";
-export { OauthJiraForm } from "@components/organisms/connections/integrations/jira/authMethods/oauth";
+export { ConfluenceApiTokenForm } from "@components/organisms/connections/integrations/confluence/authMethods/apiToken";
+export { ConfluenceOauthForm } from "@components/organisms/connections/integrations/confluence/authMethods/oauth";

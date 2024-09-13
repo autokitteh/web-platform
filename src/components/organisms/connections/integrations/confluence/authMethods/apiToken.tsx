@@ -10,7 +10,7 @@ import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
-export const ApiTokenConfluenceForm = ({
+export const ConfluenceApiTokenForm = ({
 	errors,
 	isLoading,
 	mode,

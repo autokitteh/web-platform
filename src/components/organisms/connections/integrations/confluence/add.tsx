@@ -16,15 +16,13 @@ import { Select } from "@components/molecules";
 export const ConfluenceIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
-	type,
 }: {
 	connectionId?: string;
 	triggerParentFormSubmit: () => void;
-	type: string;
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, reset, setValidationSchema } =
+	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema } =
 		useConnectionForm(confluenceIntegrationSchema, "create");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
@@ -60,11 +58,6 @@ export const ConfluenceIntegrationAddForm = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
-
-	useEffect(() => {
-		reset({ base_url: "", token: "", email: "" });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [type]);
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[Integrations.confluence]?.[connectionType?.value as ConnectionAuthType];
