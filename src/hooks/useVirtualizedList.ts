@@ -9,17 +9,17 @@ import { useCacheStore } from "@store/useCacheStore";
 
 export function useVirtualizedList<T>(
 	convertDataFunction: (data: any[]) => T[],
-	itemHeight: number = defaultSessionLogRecordsListRowHeight
+	itemHeight = defaultSessionLogRecordsListRowHeight
 ) {
 	const { sessionId } = useParams();
-	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
+	const { t } = useTranslation("deployments", { keyPrefix: "sessionAndActivities" });
 	const listRef = useRef<any>(null);
 	const frameRef = useRef<HTMLDivElement>(null);
 
 	const { loadLogs, loading, logs, nextPageToken, reset } = useCacheStore();
 	const [items, setItems] = useState<T[]>([]);
-	const [scrollPosition, setScrollPosition] = useState<number>(0);
-	const [dimensions, setDimensions] = useState<{ height: number; width: number }>({
+	const [scrollPosition, setScrollPosition] = useState(0);
+	const [dimensions, setDimensions] = useState({
 		height: 0,
 		width: 0,
 	});

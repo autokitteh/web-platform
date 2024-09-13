@@ -61,6 +61,7 @@ export const SessionOutputs = () => {
 				<AutoSizer onResize={handleResize}>
 					{({ height, width }) => (
 						<InfiniteLoader
+							className="scrollbar"
 							isRowLoaded={isRowLoaded}
 							loadMoreRows={loadMoreRows}
 							rowCount={nextPageToken ? outputs.length + 1 : outputs.length}

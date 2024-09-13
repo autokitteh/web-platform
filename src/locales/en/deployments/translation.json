@@ -59,7 +59,6 @@
 			"back": "Back",
 			"scrollToTop": "Scroll to Top"
 		},
-		"noLogsFound": "No logs found",
 		"noSelectedSession": "No session selected",
 		"noSessions": "No sessions found",
 		"output": "Output",
@@ -100,7 +99,6 @@
 		}
 	},
 	"activities":{
-		"noActivitiesFound": "No activities found",
 		"statuses": {
 			"all": "All",
 			"completed": "Completed",
@@ -122,5 +120,9 @@
 			"noReturnValuesFound": "No return values found"
 
 		}
+	},
+	"sessionAndActivities":{
+		"noActivitiesFound": "No activites found",
+		"noLogsFound": "No logs found"
 	}
 }

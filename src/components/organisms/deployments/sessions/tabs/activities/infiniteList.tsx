@@ -11,7 +11,7 @@ import { Frame, Loader } from "@components/atoms";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
 export const ActivityList = () => {
-	const [selectedActivity, setSelectedActivity] = useState<SessionActivity | undefined>();
+	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
 
 	const {
 		handleResize,
