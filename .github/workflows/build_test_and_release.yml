@@ -170,11 +170,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run code TS validation
+      - name: Run TypeScript compilation test
         run: npm run type-check
 
-      - name: Run code linter check
-        run: npm run lint
+      - name: Run eslint
+        run: "npm run lint:ci"
+
+      - name: Run prettier
+        run: "npm run prettier:ci"
 
       - name: Run build
         run: npm run build
