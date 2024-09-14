@@ -196,7 +196,7 @@ export const SessionsTable = () => {
 								{t("buttons.back")}
 							</IconButton>
 
-							<RefreshButton onRefresh={fetchDeployments} />
+							<RefreshButton isLoading={isLoading} onRefresh={fetchDeployments} />
 						</div>
 
 						<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
