@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -38,10 +38,14 @@ export const RefreshButton = ({ isLoading, onRefresh }: RefreshButtonProps) => {
 		}
 	};
 
-	const rotateIconClass = cn("animate-spin fill-white transition group-hover:fill-green-800", {
-		"animation-running": isSpinning,
-		"animation-paused": !isSpinning,
-	});
+	const rotateIconClass = useMemo(
+		() =>
+			cn("animate-spin fill-white transition group-hover:fill-green-800", {
+				"animation-running": isSpinning,
+				"animation-paused": !isSpinning,
+			}),
+		[isSpinning]
+	);
 
 	return (
 		<IconButton
