@@ -115,8 +115,7 @@
 		"information": {
 			"oauth": "Jira Cloud platform: OAuth 2.0 (3LO) apps",
 			"apiTokens": "Jira Cloud: API tokens",
-			"accessTokens": "Jira Data Center: Personal Access Tokens",
-			"emailSample": "name@example.com"
+			"accessTokens": "Jira Data Center: Personal Access Tokens"
 		}
 	},
 	"confluence": {
@@ -125,13 +124,13 @@
 			"baseUrl": "Base URL",
 			"pat": "API Token / Personal Access Token (PAT)",
 			"email": "Token owner's email (API tokens only, not PATs!)",
-			"exampleUrl": "https://your-domain.atlassian.net or on-prem URL"
+			"exampleUrl": "https://your-domain.atlassian.net or on-prem URL",
+			"emailSample": "name@example.com"
 		},
 		"information": {
 			"oauth": "AutoKitteh guide: configuring Atlassian integrations",
 			"apiTokens": "Confluence Cloud: API tokens",
-			"accessTokens": "Confluence Data Center: Personal Access Tokenss",
-			"emailSample": "name@example.com"
+			"accessTokens": "Confluence Data Center: Personal Access Tokenss"
 		}
 	},
 	"discord": {
