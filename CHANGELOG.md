@@ -1,3 +1,10 @@
+## [2.4.3](https://github.com/autokitteh/web-platform/compare/v2.4.2...v2.4.3) (2024-09-15)
+
+
+### Bug Fixes
+
+* connections forms placeholders for jira and confluence ([#346](https://github.com/autokitteh/web-platform/issues/346)) ([6e1428d](https://github.com/autokitteh/web-platform/commit/6e1428df0a4ce561c1ff3353bad01aeade177ccb))
+
 ## [2.4.2](https://github.com/autokitteh/web-platform/compare/v2.4.1...v2.4.2) (2024-09-15)
 
 
