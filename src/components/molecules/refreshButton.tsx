@@ -18,9 +18,12 @@ export const RefreshButton = ({ isLoading, onRefresh }: RefreshButtonProps) => {
 		if (isLoading && !isSpinning) {
 			setIsSpinning(true);
 			setSpinStartTime(Date.now());
-		} else if (!isLoading && isSpinning) {
-			const currentTime = Date.now();
-			const elapsedTime = spinStartTime ? currentTime - spinStartTime : 0;
+
+			return;
+		}
+
+		if (!isLoading && isSpinning) {
+			const elapsedTime = Date.now() - (spinStartTime || 0);
 			const remainingTime = Math.max(0, 600 - elapsedTime);
 
 			setTimeout(() => {
