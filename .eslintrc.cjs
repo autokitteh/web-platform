@@ -69,7 +69,8 @@ module.exports = {
 		"@liferay",
 		"eslint-plugin-local-rules",
 		"import",
-		"perfectionist"
+		"perfectionist",
+		"prettier"
 	],
 	rules: {
 		"@typescript-eslint/no-unused-expressions": "off",
