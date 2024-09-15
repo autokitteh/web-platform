@@ -99,13 +99,14 @@ export const ConfluenceApiTokenForm = ({
 						isError={!!errors.email}
 						isLocked={lockState.email}
 						label={t("confluence.placeholders.email")}
+						placeholder={t("confluence.placeholders.emailSample")}
 					/>
 				) : (
 					<Input
 						{...register("email")}
 						aria-label={t("confluence.placeholders.email")}
 						isError={!!errors.email}
-						label={t("jira.placeholders.email")}
+						label={t("confluence.placeholders.email")}
 						placeholder={t("confluence.placeholders.emailSample")}
 						type="email"
 					/>

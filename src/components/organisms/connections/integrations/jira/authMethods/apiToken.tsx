@@ -99,6 +99,7 @@ export const ApiTokenJiraForm = ({
 						isError={!!errors.email}
 						isLocked={lockState.email}
 						label={t("jira.placeholders.email")}
+						placeholder={t("jira.placeholders.emailSample")}
 					/>
 				) : (
 					<Input
