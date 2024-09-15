@@ -113,8 +113,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					</div>
 				</h2>
 
-				<p className="mb-16 font-fira-code text-xl"> {t("rightSide.subtitle")} </p>
-
 				<h3 className="mb-12 font-averta text-2xl font-bold">
 					<div>{t("rightSide.descriptionFirstLine")}</div>
 

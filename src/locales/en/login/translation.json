@@ -1,14 +1,13 @@
 {
     "leftSide": {
-        "autokittehGreenTitle": "autokitteh",
+        "autokittehGreenTitle": "AutoKitteh",
         "welcomeTitle": "Welcome to"
     },
     "rightSide": {
         "titleFirstLine": "Reliable Automation",
         "titleSecondLine": "Few Lines of Code",
-        "subtitle": "Build automations in code in minutes",
         "descriptionFirstLine": "All you need to easily develop",
-        "descriptionSecondLine": "robust automations in Python code",
+        "descriptionSecondLine": "robust automations in Python",
         "benefitsList":{
             "bullet1": "Serverless Python environment",
             "bullet2": "Super fast deploys",
@@ -16,9 +15,9 @@
             "bullet4": "Builtin integrations",
             "bullet5": "Scalable",
             "bullet6": "Secure",
-            "bullet7": "Observability",
-            "bullet8": "Long-running workflow",
-            "bullet9": "Ready to use Templates"
+            "bullet7": "Easy management",
+            "bullet8": "Long-running workflows",
+            "bullet9": "Ready-to-use templates"
         }
     }
 }
