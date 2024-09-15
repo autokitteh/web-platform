@@ -8,3 +8,7 @@ export { JiraIntegrationAddForm } from "@components/organisms/connections/integr
 export { DiscordIntegrationAddForm } from "@components/organisms/connections/integrations/discord";
 export { GoogleGeminiIntegrationAddForm } from "@components/organisms/connections/integrations/googleGemini";
 export { IntegrationEditForm } from "@components/organisms/connections/integrations/integrationEditForm";
+export {
+	ConfluenceIntegrationAddForm,
+	ConfluenceIntegrationEditForm,
+} from "@components/organisms/connections/integrations/confluence";

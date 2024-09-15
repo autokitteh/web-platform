@@ -9,6 +9,8 @@ let infoOpenAiLinks: { text: string; url: string }[] = [];
 let infoHttpBasicLinks: { text: string; url: string }[] = [];
 let infoHttpBearerLinks: { text: string; url: string }[] = [];
 let infoTwilioLinks: { text: string; url: string }[] = [];
+let infoConfluenceLinks: { text: string; url: string }[] = [];
+let infoJiraLinks: { text: string; url: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoGithubLinks = [
@@ -115,6 +117,28 @@ i18n.on("initialized", () => {
 			text: i18n.t("twilio.information.apiOverview", { ns: "integrations" }),
 		},
 	];
+
+	infoConfluenceLinks = [
+		{
+			url: "https://id.atlassian.com/manage-profile/security/api-tokens",
+			text: i18n.t("confluence.information.apiTokens", { ns: "integrations" }),
+		},
+		{
+			url: "https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html",
+			text: i18n.t("confluence.information.accessTokens", { ns: "integrations" }),
+		},
+	];
+
+	infoJiraLinks = [
+		{
+			url: "https://id.atlassian.com/manage-profile/security/api-tokens",
+			text: i18n.t("jira.information.apiTokens", { ns: "integrations" }),
+		},
+		{
+			url: "https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html",
+			text: i18n.t("jira.information.accessTokens", { ns: "integrations" }),
+		},
+	];
 });
 
 export {
@@ -127,4 +151,6 @@ export {
 	infoHttpBasicLinks,
 	infoHttpBearerLinks,
 	infoTwilioLinks,
+	infoConfluenceLinks,
+	infoJiraLinks,
 };

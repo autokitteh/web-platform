@@ -108,13 +108,30 @@
 		"placeholders": {
 			"baseUrl": "Base URL",
 			"pat": "API Token / Personal Access Token (PAT)",
-			"email": "User email address (API tokens only, not PATs!)",
-			"exampleUrl": "https://your-domain.atlassian.net or on-prem URL"
+			"email": "Token owner's email (API tokens only, not PATs!)",
+			"exampleUrl": "https://your-domain.atlassian.net or on-prem URL",
+			"emailSample": "name@example.com"
 		},
 		"information": {
 			"oauth": "Jira Cloud platform: OAuth 2.0 (3LO) apps",
 			"apiTokens": "Jira Cloud: API tokens",
-			"accessTokens": "Jira Data Center: Personal Access Tokens"
+			"accessTokens": "Jira Data Center: Personal Access Tokens",
+			"emailSample": "name@example.com"
+		}
+	},
+	"confluence": {
+		"clickButtonAuthorize": "Click the button below to authorize the Atlassian",
+		"placeholders": {
+			"baseUrl": "Base URL",
+			"pat": "API Token / Personal Access Token (PAT)",
+			"email": "Token owner's email (API tokens only, not PATs!)",
+			"exampleUrl": "https://your-domain.atlassian.net or on-prem URL"
+		},
+		"information": {
+			"oauth": "AutoKitteh guide: configuring Atlassian integrations",
+			"apiTokens": "Confluence Cloud: API tokens",
+			"accessTokens": "Confluence Data Center: Personal Access Tokenss",
+			"emailSample": "name@example.com"
 		}
 	},
 	"discord": {

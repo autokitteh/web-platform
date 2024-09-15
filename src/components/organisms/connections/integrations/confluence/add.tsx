@@ -4,16 +4,16 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { selectIntegrationJira } from "@constants/lists/connections";
+import { selectIntegrationConfluence } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { jiraIntegrationSchema, oauthSchema } from "@validations";
+import { confluenceIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
-export const JiraIntegrationAddForm = ({
+export const ConfluenceIntegrationAddForm = ({
 	connectionId,
 	triggerParentFormSubmit,
 }: {
@@ -31,16 +31,16 @@ export const JiraIntegrationAddForm = ({
 		isLoading,
 		register,
 		setValidationSchema,
-	} = useConnectionForm(jiraIntegrationSchema, "create");
+	} = useConnectionForm(confluenceIntegrationSchema, "create");
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.ApiToken:
-				await createConnection(connectionId, ConnectionAuthType.ApiToken, Integrations.jira);
+				await createConnection(connectionId, ConnectionAuthType.ApiToken, Integrations.confluence);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleOAuth(connectionId, Integrations.jira);
+				await handleOAuth(connectionId, Integrations.confluence);
 				break;
 			default:
 				break;
@@ -56,7 +56,7 @@ export const JiraIntegrationAddForm = ({
 
 			return;
 		}
-		setValidationSchema(jiraIntegrationSchema);
+		setValidationSchema(confluenceIntegrationSchema);
 		clearErrors();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType]);
@@ -69,7 +69,7 @@ export const JiraIntegrationAddForm = ({
 	}, [connectionId]);
 
 	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.jira]?.[connectionType?.value as ConnectionAuthType];
+		formsPerIntegrationsMapping[Integrations.confluence]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
 		<>
@@ -77,7 +77,7 @@ export const JiraIntegrationAddForm = ({
 				aria-label={t("placeholders.selectConnectionType")}
 				label={t("placeholders.connectionType")}
 				onChange={(option) => setConnectionType(option)}
-				options={selectIntegrationJira}
+				options={selectIntegrationConfluence}
 				placeholder={t("placeholders.selectConnectionType")}
 				value={connectionType}
 			/>

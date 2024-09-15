@@ -8,6 +8,8 @@ export {
 	infoHttpBasicLinks,
 	infoHttpBearerLinks,
 	infoTwilioLinks,
+	infoConfluenceLinks,
+	infoJiraLinks,
 } from "@constants/lists/connections/integrationInfoLinks.constants";
 export {
 	githubIntegrationAuthMethods,
@@ -19,4 +21,5 @@ export {
 	selectIntegrationTwilio,
 	selectIntegrationJira,
 	integrationIcons,
+	selectIntegrationConfluence,
 } from "@constants/lists/connections/options.constants";
