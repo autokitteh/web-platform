@@ -1,76 +1,126 @@
-import React, { ReactNode } from "react";
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 
-import { LoginIntegrationsLogoPng } from "@assets/image";
-import { GithubIcon } from "@assets/image/icons/connections";
+import { Descope, useDescope } from "@descope/react-sdk";
+import axios from "axios";
+import Cookies from "js-cookie";
+import psl from "psl";
+import { useTranslation } from "react-i18next";
+
+import { authBearer, isLoggedInCookie } from "@constants";
+import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
+import { useUserStore } from "@store/useUserStore";
+
+import { useToastStore } from "@store";
+
+import { IconSvg } from "@components/atoms";
+
+import { LoginIntegrationsLogoPng, inJustTitle } from "@assets/image";
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
+	const isLoggedIn = Cookies.get(isLoggedInCookie);
+	if (authBearer || isLoggedIn) {
+		return children;
+	}
+
+	const { getLoggedInUser, setLogoutFunction } = useUserStore();
+	const { logout } = useDescope();
+	const { t } = useTranslation("login");
+
+	const handleLogout = useCallback(async () => {
+		await logout();
+		const rootDomain = psl.parse(window.location.hostname);
+		if (rootDomain.error) {
+			console.error(rootDomain.error.message);
+
+			return;
+		}
+
+		Cookies.remove(isLoggedInCookie, { domain: getCookieDomain(rootDomain) });
+
+		window.localStorage.clear();
+		window.location.reload();
+	}, [logout]);
+	const addToast = useToastStore((state) => state.addToast);
+
+	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
+
+	useEffect(() => {
+		setLogoutFunction(handleLogout);
+	}, [handleLogout, setLogoutFunction]);
+
+	const handleSuccess = useCallback(
+		async (event: CustomEvent<any>) => {
+			try {
+				const apiBaseUrl = getApiBaseUrl();
+
+				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
+					withCredentials: true,
+				});
+				await getLoggedInUser();
+			} catch (error) {
+				addToast({
+					message: `Error occurred during login: ${(error as Error).message}`,
+					type: "error",
+				});
+			} finally {
+				setDescopeRenderKey((prevKey) => prevKey + 1);
+			}
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[getLoggedInUser]
+	);
+
+	const benefitsList = Object.values(t("rightSide.benefitsList", { returnObjects: true }));
+
 	return (
 		<div className="flex h-screen bg-white">
-			{/* Left side */}
+			<div className="flex w-1/2 flex-col items-center justify-center p-8 font-averta text-black">
+				<h1 className="mb-16 text-center font-averta text-4xl font-semibold">
+					{t("leftSide.welcomeTitle")}
 
-			<div className="flex w-1/3 flex-col items-start justify-center p-8">
-				<div className="mb-8 flex items-center">
-					<div className="mr-2 h-10 w-10 rounded-full bg-black" />
-
-					<div>
-						<h2 className="text-xl font-bold">autokitteh</h2>
-
-						<p className="text-sm text-gray-500">Complex automation made simple</p>
-					</div>
-				</div>
-
-				<h1 className="mb-8 text-4xl font-bold">
-					Welcome to <span className="bg-green-300 rounded px-2">autokitteh</span>
+					<span className="flex items-center justify-center rounded-full bg-green-800 p-1 pt-0 font-bold">
+						{t("leftSide.autokittehGreenTitle")}
+					</span>
 				</h1>
 
-				<button className="mb-4 flex w-full items-center justify-center rounded-full border border-gray-300 px-4 py-2">
-					<GithubIcon className="mr-2" />
-					Sign up with GitHub
-				</button>
-
-				<button className="flex w-full items-center justify-center rounded-full border border-gray-300 px-4 py-2">
-					<GithubIcon className="mr-2" />
-					Sign up with Google
-				</button>
+				<div className="max-w-96">
+					<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
+				</div>
 			</div>
 
-			{/* Right side */}
+			<div className="relative m-10 mr-20 flex w-2/3 flex-col justify-center rounded-3xl bg-gray-1250 pb-32 pl-16 text-white">
+				<h2 className="mb-4 font-averta text-4xl font-bold">
+					{t("rightSide.titleFirstLine")}
 
-			<div className="relative w-2/3 rounded-l-3xl bg-black p-12 text-white">
-				<h2 className="mb-2 text-3xl font-bold">
-					Reliable Automation
-					<span className="text-xl font-normal">in Just a</span> Few Lines of Code
+					<div className="flex">
+						<IconSvg
+							className="mr-2 h-10 w-24 fill-white group-hover:fill-green-800"
+							size="3xl"
+							src={inJustTitle}
+						/>
+
+						{t("rightSide.titleSecondLine")}
+					</div>
 				</h2>
 
-				<p className="mb-8 text-gray-400">Build automations in code in minutes</p>
+				<p className="mb-16 font-fira-code text-xl"> {t("rightSide.subtitle")} </p>
 
-				<h3 className="mb-4 text-xl">All you need to easily develop automations automations in Python code</h3>
+				<h3 className="mb-12 font-averta text-2xl font-bold">
+					<div>{t("rightSide.descriptionFirstLine")}</div>
 
-				<ul className="mb-8 list-inside list-disc">
-					<li>Serverless Python environment</li>
+					<div>{t("rightSide.descriptionSecondLine")}</div>
+				</h3>
 
-					<li>Super fast deploys</li>
-
-					<li>Super fast ramp-up</li>
-
-					<li>Builtin integrations</li>
-
-					<li>Scalable</li>
-
-					<li>Secured</li>
-
-					<li>Observability</li>
-
-					<li>Long-running workflow</li>
-
-					<li>Ready to use Templates</li>
+				<ul className="mb-8 list-inside list-disc font-averta text-xl font-semibold">
+					{benefitsList?.length
+						? Object.values(benefitsList).map((benefit) => <li key={benefit}>{benefit}</li>)
+						: null}
 				</ul>
-
-				{children}
 
 				<img
 					alt="autokitteh logo with integrations"
-					className="absolute bottom-8 right-8 h-1/2"
+					className="absolute -right-8 bottom-12 h-5/6"
 					src={LoginIntegrationsLogoPng}
 				/>
 			</div>

@@ -19,3 +19,4 @@ export {
 	StatsBlackIcon as StatsBlack,
 } from "@assets/image/sidebar";
 export { BuildIcon, RunIcon, FullScreenIcon, MoreIcon, StatsIcon } from "@assets/image/topbar";
+export { default as inJustTitle } from "@assets/image/inJustLoginTitle.svg?react";
