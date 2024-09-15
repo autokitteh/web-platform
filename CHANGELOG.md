@@ -1,3 +1,10 @@
+## [2.4.2](https://github.com/autokitteh/web-platform/compare/v2.4.1...v2.4.2) (2024-09-15)
+
+
+### Bug Fixes
+
+* confluence integration fix ([#328](https://github.com/autokitteh/web-platform/issues/328)) ([7ee2ee1](https://github.com/autokitteh/web-platform/commit/7ee2ee1266c71f7f3519df088953581e928b4424))
+
 ## [2.4.1](https://github.com/autokitteh/web-platform/compare/v2.4.0...v2.4.1) (2024-09-13)
 
 
