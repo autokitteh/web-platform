@@ -4,6 +4,7 @@ import { get, omit } from "lodash";
 import {
 	Session as ProtoSession,
 	SessionLogRecord as ProtoSessionLogRecord,
+	SessionLogRecord_Type,
 } from "@ak-proto-ts/sessions/v1/session_pb";
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
@@ -36,12 +37,18 @@ export class SessionsService {
 		pageSize?: number
 	): Promise<ServiceResponse<{ count: number; nextPageToken?: string; records: Array<ProtoSessionLogRecord> }>> {
 		try {
+			const selectedTypes =
+				SessionLogRecord_Type.CALL_SPEC |
+				SessionLogRecord_Type.CALL_ATTEMPT_START |
+				SessionLogRecord_Type.CALL_ATTEMPT_COMPLETE;
+
 			const response = await sessionsClient.getLog({
 				sessionId,
 				pageSize,
 				pageToken,
 				jsonValues: true,
 				ascending: false,
+				types: selectedTypes,
 			});
 
 			if (!response?.log?.records) {
