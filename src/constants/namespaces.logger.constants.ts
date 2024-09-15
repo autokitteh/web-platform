@@ -28,5 +28,7 @@ export const namespaces = {
 	stores: {
 		connectionCheckerStore: "Connection Checker Store",
 		cache: "Cache Store",
+		activitiesStore: "Activity Logs Store",
+		outputStore: "Output Logs Store",
 	},
 };

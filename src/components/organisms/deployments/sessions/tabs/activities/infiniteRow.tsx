@@ -1,5 +1,4 @@
-/* eslint-disable @liferay/empty-line-between-elements */
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 
 import ReactTimeAgo from "react-time-ago";
 
@@ -11,24 +10,35 @@ import { ActivityStatus } from "@components/organisms/deployments/sessions/activ
 
 import { PlusAccordionIcon } from "@assets/image/icons";
 
-const areEqual = (prevProps: ActivityRowProps, nextProps: ActivityRowProps) => {
-	return prevProps.index === nextProps.index && prevProps.data === nextProps.data;
-};
-
-export const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowProps) => {
+const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowProps) => {
 	if (!activity) {
 		return null;
 	}
+
 	const { endTime, functionName, startTime, status } = activity;
 	const displayTime = startTime.toTimeString().split(" ")[0];
-	const isFinished = (status as ActivityState) === "error" || (status as ActivityState) === "completed";
+	const isFinished =
+		(status as keyof typeof ActivityState) === ActivityState.error ||
+		(status as keyof typeof ActivityState) === ActivityState.completed;
 	const activityTime = isFinished ? endTime! : startTime;
+
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	const handleClick = useCallback(() => setActivity(activity), [activity, setActivity]);
+	// eslint-disable-next-line react-hooks/rules-of-hooks
+	const handleKeyDown = useCallback(
+		(event: React.KeyboardEvent<HTMLDivElement>) => {
+			if (event.key === "Enter" || event.key === " ") {
+				setActivity(activity);
+			}
+		},
+		[activity, setActivity]
+	);
 
 	return (
 		<div
-			className="group flex w-full cursor-pointer gap-2.5 p-0 text-white hover:bg-transparent"
-			onClick={() => setActivity(activity)}
-			onKeyDown={() => setActivity(activity)}
+			className="group flex w-full cursor-pointer gap-2.5 p-2 text-white hover:bg-gray-700"
+			onClick={handleClick}
+			onKeyDown={handleKeyDown}
 			role="button"
 			style={style}
 			tabIndex={0}
@@ -42,8 +52,8 @@ export const ActivityRow = memo(({ data: activity, setActivity, style }: Activit
 					<div className="text-left font-bold">{functionName}</div>
 
 					<div className="flex items-center gap-1">
-						<span>Status:</span>
-						<ActivityStatus activityState={status as ActivityState} />
+						<span>Status:</span> {/* eslint-disable-next-line @liferay/empty-line-between-elements */}
+						<ActivityStatus activityState={ActivityState[status as keyof typeof ActivityState]} />
 						-
 						<ReactTimeAgo date={activityTime} locale="en-US" />
 					</div>
@@ -51,6 +61,8 @@ export const ActivityRow = memo(({ data: activity, setActivity, style }: Activit
 			</div>
 		</div>
 	);
-}, areEqual);
+});
 
 ActivityRow.displayName = "ActivityRow";
+
+export { ActivityRow };
