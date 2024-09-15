@@ -3,7 +3,6 @@ import React from "react";
 import { AutoSizer, CellMeasurer, InfiniteLoader, List } from "react-virtualized";
 
 import { useVirtualizedList } from "@hooks/useVirtualizedList";
-import { convertSessionLogProtoToViewerOutput } from "@src/models";
 import { SessionOutput } from "@src/types/models";
 
 import { Loader } from "@components/atoms";
@@ -21,7 +20,7 @@ export const SessionOutputs = () => {
 		loading,
 		nextPageToken,
 		t,
-	} = useVirtualizedList<SessionOutput>(convertSessionLogProtoToViewerOutput);
+	} = useVirtualizedList("outputs");
 
 	const rowRenderer = ({
 		index,
@@ -34,7 +33,7 @@ export const SessionOutputs = () => {
 		parent: any;
 		style: React.CSSProperties;
 	}) => {
-		const log = outputs[index] || {};
+		const log = (outputs[index] as SessionOutput) || {};
 
 		return (
 			<CellMeasurer cache={cache} columnIndex={0} key={key} parent={parent} rowIndex={index}>

@@ -1,16 +1,18 @@
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { DeploymentsService } from "@services";
 import { SessionsService } from "@services/sessions.service";
 import { minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
 import { StoreName } from "@src/enums";
+import { convertSessionLogProtoToViewerOutput, convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
+import { SessionActivity, SessionOutput } from "@src/types/models";
 
 import { useToastStore } from "@store";
 
 export interface CacheStore {
-	logs: ProtoSessionLogRecord[];
+	activities: SessionActivity[];
+	outputs: SessionOutput[];
 	loading: boolean;
 	reset: () => void;
 	reload: (sessionId: string) => void;
@@ -21,7 +23,8 @@ export interface CacheStore {
 }
 
 const store: StateCreator<CacheStore> = (set, get) => ({
-	logs: [],
+	activities: [],
+	outputs: [],
 	loading: false,
 	nextPageToken: "",
 	projectLastDeployment: undefined,
@@ -60,20 +63,20 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 	},
 
 	reset: () => {
-		set((state) => {
-			state.logs = [];
-
-			return state;
-		});
+		set((state) => ({
+			...state,
+			activities: [],
+			outputs: [],
+		}));
 	},
 
 	reload: (sessionId: string) => {
-		set((state) => {
-			state.logs = [];
-			state.nextPageToken = "";
-
-			return state;
-		});
+		set((state) => ({
+			...state,
+			activities: [],
+			outputs: [],
+			nextPageToken: "",
+		}));
 		const { loadLogs } = get();
 		loadLogs(sessionId, minimumSessionLogsRecordsFrameHeightFallback);
 	},
@@ -96,7 +99,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				set({ loading: false });
 
 				set((state) => ({
-					logs: [...state.logs, ...data.records],
+					activities: [...state.activities, ...convertSessionLogRecordsProtoToActivitiesModel(data.records)],
+					outputs: [...state.outputs, ...convertSessionLogProtoToViewerOutput(data.records)],
 					nextPageToken: data.nextPageToken,
 				}));
 			}

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { AutoSizer, InfiniteLoader, List } from "react-virtualized";
 
 import { useVirtualizedList } from "@src/hooks/useVirtualizedList";
-import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 import { SessionActivity } from "@src/types/models";
 import { cn } from "@src/utilities";
 
@@ -23,12 +22,18 @@ export const ActivityList = () => {
 		loading,
 		nextPageToken,
 		t,
-	} = useVirtualizedList<SessionActivity>(convertSessionLogRecordsProtoToActivitiesModel, 60);
+	} = useVirtualizedList("activities", 60);
 
 	const autoSizerClass = cn({ hidden: selectedActivity });
 
 	const rowRenderer = ({ index, key, style }: { index: number; key: string; style: React.CSSProperties }) => (
-		<ActivityRow data={activities[index]} index={index} key={key} setActivity={setSelectedActivity} style={style} />
+		<ActivityRow
+			data={activities[index] as SessionActivity}
+			index={index}
+			key={key}
+			setActivity={setSelectedActivity}
+			style={style}
+		/>
 	);
 
 	return (
