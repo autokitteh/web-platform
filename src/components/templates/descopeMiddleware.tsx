@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { Descope, useDescope } from "@descope/react-sdk";
@@ -18,11 +17,6 @@ import { IconSvg } from "@components/atoms";
 import { LoginIntegrationsLogoPng, inJustTitle } from "@assets/image";
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
-	const isLoggedIn = Cookies.get(isLoggedInCookie);
-	if (authBearer || isLoggedIn) {
-		return children;
-	}
-
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
@@ -70,6 +64,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getLoggedInUser]
 	);
+
+	const isLoggedIn = Cookies.get(isLoggedInCookie);
+	if (authBearer || isLoggedIn) {
+		return children;
+	}
 
 	const benefitsList = Object.values(t("rightSide.benefitsList", { returnObjects: true }));
 
