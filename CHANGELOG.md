@@ -1,3 +1,10 @@
+## [2.4.4](https://github.com/autokitteh/web-platform/compare/v2.4.3...v2.4.4) (2024-09-16)
+
+
+### Bug Fixes
+
+* setup deployments loader and refresh button behaviour ([#345](https://github.com/autokitteh/web-platform/issues/345)) ([e429f27](https://github.com/autokitteh/web-platform/commit/e429f27b61b81f6bb9c231abc96ffe8f17283170))
+
 ## [2.4.3](https://github.com/autokitteh/web-platform/compare/v2.4.2...v2.4.3) (2024-09-15)
 
 
