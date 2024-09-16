@@ -54,6 +54,6 @@
 	"connectionsNotFound": "No connections found",
 	"resourcesFetchError": "Couldn't fetch resources data for the project",
 	"resourcesFetchErrorExtended": "Failed to fetch the resources for the project {{projectId}}. Error: {{error}}",
-	"connectionCronNotFound": "Couldn't fetch the scheduler connection"
-	
+	"connectionCronNotFound": "Couldn't fetch the scheduler connection",
+	"assetsNotFound": "No assets found"
 }

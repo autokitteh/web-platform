@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName, TopbarButton } from "@enums/components";
-import { ProjectsService } from "@services";
+import { LoggerService, ProjectsService } from "@services";
+import { namespaces } from "@src/constants";
 
 import { useFileOperations } from "@hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
@@ -31,10 +32,17 @@ export const ProjectTopbarButtons = () => {
 	const fetchAndCheckResources = useCallback(async () => {
 		const resources = await fetchResources();
 		if (!Object.keys(resources).length) {
+			addToast({
+				message: tError("assetsNotFound"),
+				type: "error",
+			});
+			LoggerService.error(namespaces.projectUI, tError("assetsNotFound"));
+
 			return;
 		}
 
 		return resources;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fetchResources]);
 
 	const build = async () => {
@@ -54,6 +62,7 @@ export const ProjectTopbarButtons = () => {
 				message: t("topbar.buildProjectSuccess"),
 				type: "success",
 			});
+			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccess"));
 		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
@@ -76,6 +85,7 @@ export const ProjectTopbarButtons = () => {
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
 			});
+			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccess"));
 		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
@@ -100,6 +110,8 @@ export const ProjectTopbarButtons = () => {
 			message: t("topbar.deleteProjectSuccess"),
 			type: "success",
 		});
+		LoggerService.info(namespaces.projectUI, t("topbar.deleteProjectSuccess"));
+
 		navigate("/");
 	};
 
