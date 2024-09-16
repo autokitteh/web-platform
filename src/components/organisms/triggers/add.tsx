@@ -12,7 +12,7 @@ import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
 
 import { useFetchConnections, useFileOperations } from "@hooks";
-import { useToastStore } from "@store";
+import { useProjectValidationStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -27,9 +27,10 @@ export const AddTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
 	const navigate = useNavigate();
-	const { projectId } = useParams<{ projectId: string }>();
+	const { projectId } = useParams();
 	const [isSaving, setIsSaving] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
+	const { checkState } = useProjectValidationStore();
 
 	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { fetchResources } = useFileOperations(projectId!);
@@ -107,6 +108,9 @@ export const AddTrigger = () => {
 				message: t("createdSuccessfully"),
 				type: "success",
 			});
+
+			checkState(projectId!, true);
+
 			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {

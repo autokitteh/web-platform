@@ -4,18 +4,20 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { useFileOperations } from "@src/hooks";
+import { useProjectValidationStore } from "@src/store";
 import { calculatePathDepth } from "@utilities";
 
-import { Tab } from "@components/atoms";
+import { Badge, Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
 
 export const Project = () => {
 	const navigate = useNavigate();
 	const [displayTabs, setDisplayTabs] = useState(false);
 	const location = useLocation();
-	const { projectId } = useParams();
 
 	const [activeTab, setActiveTab] = useState(defaultProjectTab);
+	const { projectId } = useParams();
+	const { checkState, projectValidationState } = useProjectValidationStore();
 
 	useEffect(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
@@ -29,6 +31,11 @@ export const Project = () => {
 			setDisplayTabs(isProjectsMainView);
 		}
 	}, [location]);
+
+	useEffect(() => {
+		checkState(projectId!);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const goTo = (path: string) => {
 		navigate(path.toLowerCase());
@@ -61,15 +68,30 @@ export const Project = () => {
 								"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2 pb-5"
 							}
 						>
-							{projectTabs.map((singleTab) => (
+							{projectTabs.map((tabKey, index) => (
 								<Tab
 									activeTab={activeTab}
-									ariaLabel={singleTab.label}
-									key={singleTab.value}
-									onClick={() => goTo(singleTab.value)}
-									value={singleTab.value}
+									ariaLabel={
+										projectValidationState[tabKey.value as keyof typeof projectValidationState] ||
+										tabKey.label
+									}
+									key={index}
+									onClick={() => goTo(tabKey.value)}
+									title={
+										projectValidationState[tabKey.value as keyof typeof projectValidationState] ||
+										tabKey.label
+									}
+									value={tabKey.value}
 								>
-									{singleTab.label}
+									<div className="relative">
+										{projectValidationState[tabKey.value as keyof typeof projectValidationState] ? (
+											<div className="absolute right-0 top-0.5">
+												<Badge> </Badge>
+											</div>
+										) : null}
+
+										<div>{tabKey.label}</div>
+									</div>
 								</Tab>
 							))}
 						</div>

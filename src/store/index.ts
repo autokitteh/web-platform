@@ -7,3 +7,4 @@ export { useFileStore } from "@store/useFileStore";
 export { useConnectionCheckerStore } from "@store/useConnectionCheckerStore";
 export { useDrawerStore } from "@store/useDrawerStore";
 export { useManualRunStore } from "@store/useManualRunStore";
+export { useProjectValidationStore } from "@store/useProjectValidationStore";

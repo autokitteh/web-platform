@@ -1,4 +1,9 @@
 {
+	"validation":{
+		"noCodeAndAssets": "No code assets available",
+		"connectionsNotConfigured": "Connections not configured",
+		"noTriggers": "No triggers available"
+	},
 	"code&assets": {
 		"buttons": {
 			"addCodeAndAssets": "Add Code & Assets",

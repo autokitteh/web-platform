@@ -8,7 +8,7 @@ import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useConnectionCheckerStore, useModalStore, useToastStore } from "@store";
+import { useConnectionCheckerStore, useModalStore, useProjectValidationStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ConnectionTableStatus, SortButton } from "@components/molecules";
@@ -23,6 +23,7 @@ export const ConnectionsTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const { projectId } = useParams();
 	const navigate = useNavigate();
+	const { checkState } = useProjectValidationStore();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingDeleteConnection, setIsLoadingDeleteConnection] = useState(false);
@@ -45,6 +46,7 @@ export const ConnectionsTable = () => {
 			}
 
 			setConnections(connectionsResponse);
+			checkState(projectId!, true);
 		} catch (error) {
 			addToast({
 				message: (error as Error).message,

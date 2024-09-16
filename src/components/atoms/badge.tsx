@@ -5,10 +5,11 @@ import { cn } from "@utilities";
 
 export const Badge = ({ children, className }: BadgeProps) => {
 	const badgeClasses = cn(
-		"inline-block bg-red px-1 py-0.5 text-xs font-bold text-black",
+		"absolute bottom-0 inline-block h-2 w-2 bg-red p-1 text-xs font-bold text-black",
 		"whitespace-nowrap rounded-full text-center align-baseline leading-none",
+		{ "h-auto w-auto": !!children },
 		className
 	);
 
-	return <span className={badgeClasses}>{children}</span>;
+	return <div className={badgeClasses}>{children}</div>;
 };

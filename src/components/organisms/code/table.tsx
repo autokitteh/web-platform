@@ -10,7 +10,7 @@ import { LoggerService } from "@services";
 import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
-import { useModalStore, useToastStore } from "@store";
+import { useModalStore, useProjectValidationStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
@@ -25,7 +25,7 @@ export const CodeTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-
+	const { checkState } = useProjectValidationStore();
 	const {
 		deleteFile,
 		fetchFiles,
@@ -48,6 +48,9 @@ export const CodeTable = () => {
 	const fetchResources = async () => {
 		setIsLoading(true);
 		const resources = await fetchResourcesFromServer(true);
+		if (resources) {
+			checkState(projectId!, true);
+		}
 		setResources(resources);
 		setIsLoading(false);
 	};
