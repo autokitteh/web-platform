@@ -1,13 +1,15 @@
-import React from "react";
+// SessionOutputs.tsx
+import React, { useCallback } from "react";
 
-import { AutoSizer, CellMeasurer, InfiniteLoader, List } from "react-virtualized";
+import { AutoSizer, CellMeasurer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
 import { useVirtualizedList } from "@hooks/useVirtualizedList";
+import { SessionLogType } from "@src/enums";
 import { SessionOutput } from "@src/types/models";
 
 import { Loader } from "@components/atoms";
 
-export const SessionOutputs = () => {
+export const SessionOutputs: React.FC = () => {
 	const {
 		cache,
 		frameRef,
@@ -20,37 +22,36 @@ export const SessionOutputs = () => {
 		loading,
 		nextPageToken,
 		t,
-	} = useVirtualizedList("outputs");
+	} = useVirtualizedList<SessionOutput>(SessionLogType.Output);
 
-	const rowRenderer = ({
-		index,
-		key,
-		parent,
-		style,
-	}: {
-		index: number;
-		key: string;
-		parent: any;
-		style: React.CSSProperties;
-	}) => {
-		const log = (outputs[index] as SessionOutput) || {};
+	const customRowRenderer = useCallback(
+		(props: ListRowProps) => {
+			const log = outputs[props.index];
 
-		return (
-			<CellMeasurer cache={cache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
-				{({ measure, registerChild }) => (
-					<div ref={registerChild as React.LegacyRef<HTMLDivElement>} style={style}>
-						<script onLoad={measure} />
+			return (
+				<CellMeasurer
+					cache={cache}
+					columnIndex={0}
+					key={props.key}
+					parent={props.parent}
+					rowIndex={props.index}
+				>
+					{({ measure, registerChild }) => (
+						<div ref={registerChild as React.LegacyRef<HTMLDivElement>} style={props.style}>
+							<script onLoad={measure} />
 
-						<div className="flex">
-							<div className="w-52 text-yellow-500">[{log.time}]: </div>
+							<div className="flex">
+								<div className="w-52 text-yellow-500">[{log.time}]: </div>
 
-							<div className="w-full whitespace-pre-line">{log.print}</div>
+								<div className="w-full whitespace-pre-line">{log.print}</div>
+							</div>
 						</div>
-					</div>
-				)}
-			</CellMeasurer>
-		);
-	};
+					)}
+				</CellMeasurer>
+			);
+		},
+		[cache, outputs]
+	);
 
 	return (
 		<div className="scrollbar size-full" ref={frameRef}>
@@ -74,12 +75,14 @@ export const SessionOutputs = () => {
 									onScroll={handleScroll}
 									overscanRowCount={10}
 									ref={(ref) => {
-										registerChild(ref);
-										listRef.current = ref;
+										if (ref) {
+											listRef.current = ref;
+											registerChild(ref);
+										}
 									}}
 									rowCount={outputs.length}
 									rowHeight={cache.rowHeight}
-									rowRenderer={rowRenderer}
+									rowRenderer={customRowRenderer}
 									width={width}
 								/>
 							)}

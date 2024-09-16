@@ -1,0 +1,129 @@
+// useVirtualizedList.tsx
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
+
+import { defaultSessionLogRecordsListRowHeight, minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
+import { SessionLogType } from "@src/enums";
+import { VirtualizedListHookResult } from "@src/interfaces/hooks";
+import { ActivitySession, OutputSession } from "@src/interfaces/store";
+import { SessionActivity, SessionOutput } from "@src/types/models";
+
+import { useActivitiesCacheStore, useOutputsCacheStore } from "@store";
+
+export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
+	type: SessionLogType,
+	itemHeight = defaultSessionLogRecordsListRowHeight,
+	customRowRenderer?: (props: ListRowProps, item: T) => React.ReactNode
+): VirtualizedListHookResult<T> {
+	const { sessionId } = useParams<{ sessionId: string }>();
+	const { t } = useTranslation("deployments", { keyPrefix: "sessionAndActivities" });
+	const frameRef = useRef<HTMLDivElement>(null);
+
+	// Call both stores unconditionally
+	const outputsCacheStore = useOutputsCacheStore();
+	const activitiesCacheStore = useActivitiesCacheStore();
+
+	// Choose the appropriate store based on type
+	const store = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
+	const session = sessionId ? store.sessions[sessionId] : null;
+	const listRef = useRef<List | null>(null);
+
+	const items = useMemo(() => {
+		return session
+			? ((type === SessionLogType.Output
+					? (session as OutputSession).outputs
+					: (session as ActivitySession).activities) as T[])
+			: [];
+	}, [session, type]);
+
+	const { loadLogs, loading, reset } = store;
+
+	const [scrollPosition, setScrollPosition] = useState(0);
+	const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
+
+	const cache = new CellMeasurerCache({
+		fixedWidth: true,
+		defaultHeight: itemHeight,
+	});
+
+	const isRowLoaded = useCallback(({ index }: { index: number }): boolean => !!items[index], [items]);
+
+	const loadMoreRows = useCallback(
+		async ({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }): Promise<void> => {
+			if (!sessionId || loading || (session && session.fullyLoaded)) {
+				return Promise.resolve();
+			}
+
+			const pageSize = stopIndex - startIndex + 1;
+
+			return loadLogs(sessionId, pageSize * 2);
+		},
+		[sessionId, loading, session, loadLogs]
+	);
+
+	const handleResize = useCallback(({ height, width }: { height: number; width: number }): void => {
+		setDimensions({ height: height * 0.95, width: width * 0.95 });
+	}, []);
+
+	const handleScroll = useCallback(({ scrollTop }: { scrollTop: number }): void => {
+		if (scrollTop !== 0) setScrollPosition(scrollTop);
+	}, []);
+
+	useEffect(() => {
+		if (!sessionId) return;
+
+		const savedScrollPosition = sessionStorage.getItem(`scrollPosition_${sessionId}_${type}`);
+		if (savedScrollPosition && listRef.current) {
+			listRef.current.scrollToPosition(parseInt(savedScrollPosition, 10));
+		}
+
+		if (!session) {
+			reset(sessionId);
+			const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsFrameHeightFallback;
+			const initialLoadSize = Math.ceil(frameHeight / itemHeight) * 2;
+			loadMoreRows({ startIndex: 0, stopIndex: initialLoadSize });
+		}
+	}, [sessionId, type, session, reset, loadMoreRows, itemHeight]);
+
+	useEffect(() => {
+		return () => {
+			if (sessionId) {
+				sessionStorage.setItem(`scrollPosition_${sessionId}_${type}`, scrollPosition.toString());
+			}
+		};
+	}, [sessionId, type, scrollPosition]);
+
+	const rowRenderer = useCallback(
+		(props: ListRowProps): React.ReactNode => {
+			const item = items[props.index] as T;
+
+			return customRowRenderer ? (
+				customRowRenderer(props, item)
+			) : (
+				<div key={props.key} style={props.style}>
+					{JSON.stringify(item)}
+				</div>
+			);
+		},
+		[items, customRowRenderer]
+	);
+
+	return {
+		items,
+		loading,
+		isRowLoaded,
+		loadMoreRows,
+		handleResize,
+		handleScroll,
+		dimensions,
+		cache,
+		listRef,
+		frameRef,
+		t,
+		nextPageToken: session?.nextPageToken ?? null,
+		rowRenderer,
+	};
+}

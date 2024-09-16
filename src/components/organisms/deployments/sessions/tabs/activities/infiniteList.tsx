@@ -1,16 +1,27 @@
 import React, { useState } from "react";
 
-import { AutoSizer, InfiniteLoader, List } from "react-virtualized";
+import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
-import { useVirtualizedList } from "@src/hooks/useVirtualizedList";
+import { SessionLogType } from "@src/enums";
+import { useVirtualizedList } from "@src/hooks";
 import { SessionActivity } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Frame, Loader } from "@components/atoms";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
-export const ActivityList = () => {
+export const ActivityList: React.FC = () => {
 	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
+
+	const customRowRenderer = (props: ListRowProps, activity: SessionActivity) => (
+		<ActivityRow
+			data={activity}
+			index={props.index}
+			key={props.key}
+			setActivity={setSelectedActivity}
+			style={props.style}
+		/>
+	);
 
 	const {
 		handleResize,
@@ -21,20 +32,11 @@ export const ActivityList = () => {
 		loadMoreRows,
 		loading,
 		nextPageToken,
+		rowRenderer,
 		t,
-	} = useVirtualizedList("activities", 60);
+	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, 60, customRowRenderer);
 
 	const autoSizerClass = cn({ hidden: selectedActivity });
-
-	const rowRenderer = ({ index, key, style }: { index: number; key: string; style: React.CSSProperties }) => (
-		<ActivityRow
-			data={activities[index] as SessionActivity}
-			index={index}
-			key={key}
-			setActivity={setSelectedActivity}
-			style={style}
-		/>
-	);
 
 	return (
 		<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">

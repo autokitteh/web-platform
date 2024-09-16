@@ -10,3 +10,9 @@ export type {
 	ProjectValidationStore,
 	ProjectValidationLevel,
 } from "@interfaces/store/projectValidationStore.interface";
+export type {
+	ActivitiesStore,
+	ActivitySession,
+	OutputsStore,
+	OutputSession,
+} from "@interfaces/store/activitiesAndOutputsCache.store.interface";

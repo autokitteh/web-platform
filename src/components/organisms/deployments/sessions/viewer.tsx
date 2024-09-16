@@ -11,8 +11,7 @@ import ReactTimeAgo from "react-time-ago";
 import { defaultSessionTab, sessionTabs } from "@constants";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
-import { useToastStore } from "@src/store";
-import { useCacheStore } from "@src/store/useCacheStore";
+import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 import { ViewerSession } from "@src/types/models/session.type";
 
 import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
@@ -41,12 +40,14 @@ export const SessionViewer = () => {
 		setActiveTab(activeTabIndex);
 	}, [location]);
 
-	const { reload } = useCacheStore();
+	const { reload: reloadOutputs } = useOutputsCacheStore();
+	const { reload: reloadActivities } = useActivitiesCacheStore();
 
 	const fetchSessions = async () => {
 		if (!sessionInfo) return;
 
-		reload(sessionInfo.sessionId);
+		reloadOutputs(sessionInfo.sessionId);
+		reloadActivities(sessionInfo.sessionId);
 	};
 
 	const fetchSessionInfo = async () => {

@@ -29,3 +29,8 @@ export enum ActivityState {
 	error = "error",
 	running = "running",
 }
+
+export enum SessionLogType {
+	Output = "outputs",
+	Activity = "activities",
+}
