@@ -1,3 +1,10 @@
+## [2.4.6](https://github.com/autokitteh/web-platform/compare/v2.4.5...v2.4.6) (2024-09-16)
+
+
+### Bug Fixes
+
+* reload files on top build or deploy click ([#356](https://github.com/autokitteh/web-platform/issues/356)) ([bdee418](https://github.com/autokitteh/web-platform/commit/bdee4184397ce082a5229ff983eef6d39674d80a))
+
 ## [2.4.5](https://github.com/autokitteh/web-platform/compare/v2.4.4...v2.4.5) (2024-09-16)
 
 
