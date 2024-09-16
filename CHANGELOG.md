@@ -1,3 +1,10 @@
+## [2.4.5](https://github.com/autokitteh/web-platform/compare/v2.4.4...v2.4.5) (2024-09-16)
+
+
+### Bug Fixes
+
+* display topbar build and deploy errors ([#353](https://github.com/autokitteh/web-platform/issues/353)) ([49be61b](https://github.com/autokitteh/web-platform/commit/49be61b01faaf2b38eb2b0e6e6b3f695c2a00c95))
+
 ## [2.4.4](https://github.com/autokitteh/web-platform/compare/v2.4.3...v2.4.4) (2024-09-16)
 
 
