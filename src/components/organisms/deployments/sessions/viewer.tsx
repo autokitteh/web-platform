@@ -11,6 +11,7 @@ import ReactTimeAgo from "react-time-ago";
 import { defaultSessionTab, sessionTabs } from "@constants";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
+import { useToastStore } from "@src/store";
 import { useCacheStore } from "@src/store/useCacheStore";
 import { ViewerSession } from "@src/types/models/session.type";
 
@@ -23,10 +24,14 @@ import { ArrowRightIcon, Close } from "@assets/image/icons";
 export const SessionViewer = () => {
 	const { deploymentId, projectId, sessionId } = useParams();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
+	const { t: tErrors } = useTranslation("errors");
+
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [activeTab, setActiveTab] = useState(defaultSessionTab);
 	const [sessionInfo, setSessionInfo] = useState<ViewerSession>();
+	const [isLoading, setIsLoading] = useState(false);
+	const addToast = useToastStore((state) => state.addToast);
 
 	const closeEditor = () => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
@@ -45,8 +50,29 @@ export const SessionViewer = () => {
 	};
 
 	const fetchSessionInfo = async () => {
-		const { data: sessionInfoResponse } = await SessionsService.getSessionInfo(sessionId!);
-		setSessionInfo(sessionInfoResponse);
+		try {
+			setIsLoading(true);
+			const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId!);
+			setIsLoading(false);
+
+			if (error) {
+				addToast({
+					message: tErrors("fetchSessionFailed"),
+					type: "error",
+				});
+
+				return;
+			}
+			setSessionInfo(sessionInfoResponse);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			addToast({
+				message: tErrors("fetchSessionFailed"),
+				type: "error",
+			});
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	useEffect(() => {
@@ -242,7 +268,7 @@ export const SessionViewer = () => {
 					))}
 				</div>
 
-				{sessionInfo ? <RefreshButton onRefresh={fetchSessions} /> : null}
+				{sessionInfo ? <RefreshButton isLoading={isLoading} onRefresh={fetchSessions} /> : null}
 			</div>
 			<Outlet />
 			<LogoCatLarge />

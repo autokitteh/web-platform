@@ -30,7 +30,8 @@ export const DeploymentsTable = () => {
 	const { projectId } = useParams();
 
 	const [deployments, setDeployments] = useState<Deployment[]>([]);
-	const [isLoadingDeployments, setIsLoadingDeployments] = useState(true);
+	const [isInitialLoading, setIsInitialLoading] = useState(true);
+	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [isManualRunEnabled, setIsManualRunEnabled] = useState(false);
 	const [savingManualRun, setSavingManualRun] = useState(false);
 	const { entrypointFunction, lastDeploymentStore, saveProjectManualRun, updateProjectManualRun } = useManualRunStore(
@@ -42,12 +43,16 @@ export const DeploymentsTable = () => {
 		})
 	);
 
-	const fetchDeployments = async () => {
+	const fetchDeployments = async (isInitial = false) => {
 		if (!projectId) {
 			return;
 		}
 
-		setIsLoadingDeployments(true);
+		if (isInitial) {
+			setIsInitialLoading(true);
+		} else {
+			setIsRefreshing(true);
+		}
 
 		try {
 			const { data, error } = await DeploymentsService.listByProjectId(projectId);
@@ -65,12 +70,16 @@ export const DeploymentsTable = () => {
 			}
 			setDeployments(data);
 		} finally {
-			setIsLoadingDeployments(false);
+			if (isInitial) {
+				setIsInitialLoading(false);
+			} else {
+				setIsRefreshing(false);
+			}
 		}
 	};
 
 	useEffect(() => {
-		fetchDeployments();
+		fetchDeployments(true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -167,7 +176,7 @@ export const DeploymentsTable = () => {
 						{t("tableTitle")} ({deployments.length})
 					</h1>
 
-					<RefreshButton onRefresh={fetchDeployments} />
+					<RefreshButton isLoading={isRefreshing} onRefresh={fetchDeployments} />
 				</div>
 
 				<div className="border-1 flex h-10 gap-2 rounded-3xl border border-gray-1000 p-1">
@@ -196,14 +205,14 @@ export const DeploymentsTable = () => {
 				</div>
 			</div>
 
-			{isLoadingDeployments ? <Loader isCenter size="xl" /> : null}
+			{isInitialLoading ? <Loader isCenter size="xl" /> : null}
 
-			{!isLoadingDeployments && !deployments.length ? (
+			{!isInitialLoading && !deployments.length ? (
 				<div className="mt-10 text-center text-xl font-semibold text-black">{t("noDeployments")}</div>
 			) : null}
 
-			{!isLoadingDeployments && !!deployments.length ? (
-				<DeploymentsTableContent deployments={deployments} updateDeployments={fetchDeployments} />
+			{!isInitialLoading && !!deployments.length ? (
+				<DeploymentsTableContent deployments={deployments} updateDeployments={() => fetchDeployments(false)} />
 			) : null}
 
 			<ManualRunSettingsDrawer />

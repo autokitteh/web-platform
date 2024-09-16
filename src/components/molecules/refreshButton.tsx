@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -9,34 +9,51 @@ import { IconButton, IconSvg } from "@components/atoms";
 
 import { RotateIcon } from "@assets/image/icons";
 
-export const RefreshButton = ({ onRefresh }: RefreshButtonProps) => {
+export const RefreshButton = ({ isLoading, onRefresh }: RefreshButtonProps) => {
 	const { t } = useTranslation("buttons");
-	const [isRefreshing, setIsRefreshing] = useState(false);
+	const [isSpinning, setIsSpinning] = useState(false);
+	const [spinStartTime, setSpinStartTime] = useState<number | null>(null);
 
-	const handleRefreshClick = async () => {
-		setIsRefreshing(true);
-		try {
-			await onRefresh();
-		} finally {
+	useEffect(() => {
+		if (isLoading && !isSpinning) {
+			setIsSpinning(true);
+			setSpinStartTime(Date.now());
+
+			return;
+		}
+
+		if (!isLoading && isSpinning) {
+			const elapsedTime = Date.now() - (spinStartTime || 0);
+			const remainingTime = Math.max(0, 600 - elapsedTime);
+
 			setTimeout(() => {
-				setIsRefreshing(false);
-			}, 600);
+				setIsSpinning(false);
+				setSpinStartTime(null);
+			}, remainingTime);
+		}
+	}, [isLoading, isSpinning, spinStartTime]);
+
+	const handleRefreshClick = () => {
+		if (!isSpinning) {
+			setIsSpinning(true);
+			setSpinStartTime(Date.now());
+			onRefresh();
 		}
 	};
 
 	const rotateIconClass = useMemo(
 		() =>
 			cn("animate-spin fill-white transition group-hover:fill-green-800", {
-				"animation-running": isRefreshing,
-				"animation-paused": !isRefreshing,
+				"animation-running": isSpinning,
+				"animation-paused": !isSpinning,
 			}),
-		[isRefreshing]
+		[isSpinning]
 	);
 
 	return (
 		<IconButton
 			className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
-			disabled={isRefreshing}
+			disabled={isSpinning}
 			onClick={handleRefreshClick}
 			title={t("refresh")}
 		>
