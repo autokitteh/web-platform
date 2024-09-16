@@ -31,7 +31,7 @@ export const ProjectTopbarButtons = () => {
 	const { fetchResources } = useFileOperations(projectId!);
 
 	const fetchAndCheckResources = useCallback(async () => {
-		const resources = await fetchResources();
+		const resources = await fetchResources(true);
 		if (!Object.keys(resources).length) {
 			addToast({
 				message: tError("assetsNotFound"),
