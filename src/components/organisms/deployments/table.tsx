@@ -12,7 +12,7 @@ import { Deployment } from "@type/models";
 
 import { useDrawerStore, useManualRunStore, useToastStore } from "@store";
 
-import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
+import { Button, Frame, IconSvg, Loader, Spinner } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
 import {
 	DeploymentsTableContent,
@@ -169,10 +169,10 @@ export const DeploymentsTable = () => {
 	}, []);
 
 	return (
-		<div className="flex w-full flex-col">
-			<div className="mt-2 flex items-center justify-between">
+		<Frame className="bg-gray-1100">
+			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-3">
-					<h1 className="text-base text-black">
+					<h1 className="text-base">
 						{t("tableTitle")} ({deployments.length})
 					</h1>
 
@@ -182,21 +182,21 @@ export const DeploymentsTable = () => {
 				<div className="border-1 flex h-10 gap-2 rounded-3xl border border-gray-1000 p-1">
 					<Button
 						ariaLabel={t("ariaSettingsRun")}
-						className="h-full whitespace-nowrap"
+						className="h-full whitespace-nowrap bg-gray-1050"
 						disabled={!isManualRunEnabled}
 						onClick={openManualRunSettings}
 						title={t("ariaSettingsRun")}
-						variant="filledGray"
+						variant="filled"
 					>
 						<IconSvg className="fill-white" src={GearIcon} />
 					</Button>
 
 					<Button
 						ariaLabel={t("manual")}
-						className="h-full whitespace-nowrap px-3.5"
+						className="h-full whitespace-nowrap bg-gray-1050 px-3.5"
 						disabled={!isManualRunEnabled || !entrypointFunction?.value || savingManualRun}
 						onClick={startManualRun}
-						variant="filledGray"
+						variant="filled"
 					>
 						<IconSvg src={!savingManualRun ? RunIcon : Spinner} />
 
@@ -216,6 +216,6 @@ export const DeploymentsTable = () => {
 			) : null}
 
 			<ManualRunSettingsDrawer />
-		</div>
+		</Frame>
 	);
 };
