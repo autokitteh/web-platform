@@ -6,7 +6,8 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { infoGithubLinks } from "@constants/lists";
-import { VariablesService } from "@services";
+import { LoggerService, VariablesService } from "@services";
+import { namespaces } from "@src/constants";
 import { useToastStore } from "@src/store";
 import { getApiBaseUrl } from "@src/utilities";
 
@@ -41,6 +42,7 @@ export const PatForm = ({
 	const apiBaseUrl = getApiBaseUrl();
 
 	const { t } = useTranslation("integrations");
+	const { t: tErrors } = useTranslation("errors");
 	const [webhook, setWebhook] = useState("");
 	const isEditMode = mode === "edit";
 
@@ -54,9 +56,13 @@ export const PatForm = ({
 
 		if (error) {
 			addToast({
-				message: (error as Error).message,
+				message: tErrors("noWebhookInVariables"),
 				type: "error",
 			});
+			LoggerService.error(
+				namespaces.projectUICode,
+				tErrors("noWebhookInVariablesExtended", { error: (error as Error).message })
+			);
 		}
 
 		const webhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;

@@ -5,7 +5,8 @@ import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { VariablesService } from "@services";
+import { LoggerService, VariablesService } from "@services";
+import { namespaces } from "@src/constants";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
@@ -22,7 +23,7 @@ export const EditVariable = () => {
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
-
+	const { t: tErrors } = useTranslation("errors");
 	const {
 		control,
 		formState: { dirtyFields, errors },
@@ -50,9 +51,14 @@ export const EditVariable = () => {
 
 		if (error) {
 			addToast({
-				message: (error as Error).message,
+				message: tErrors("variableNotFetched"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				tErrors("variableNotFetchedExtended", { error: (error as Error).message })
+			);
 		}
 		if (!currentVar) {
 			return;
@@ -82,10 +88,22 @@ export const EditVariable = () => {
 
 		if (error) {
 			addToast({
-				message: (error as Error).message,
+				message: tErrors("variableNotCreated"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				tErrors("variableNotCreatedExtended", { error: (error as Error).message })
+			);
 		}
+
+		addToast({
+			message: tForm("editedSuccessfully"),
+			type: "success",
+		});
+
+		LoggerService.info(namespaces.projectUICode, tForm("editedSuccessfullyExtended", { name }));
 
 		navigate(-1);
 	};

@@ -5,7 +5,8 @@ import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { VariablesService } from "@services";
+import { LoggerService, VariablesService } from "@services";
+import { namespaces } from "@src/constants";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
@@ -51,9 +52,14 @@ export const AddVariable = () => {
 
 		if (error) {
 			addToast({
-				message: t("variableNotCreated") + (error as Error).message,
+				message: t("variableNotCreated"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				t("variableNotCreatedExtended", { error: (error as Error).message })
+			);
 
 			return;
 		}

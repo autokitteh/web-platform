@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { ConnectionService } from "@services";
+import { ConnectionService, LoggerService } from "@services";
+import { namespaces } from "@src/constants";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -50,6 +51,8 @@ export const ConnectionsTable = () => {
 				message: (error as Error).message,
 				type: "error",
 			});
+
+			LoggerService.error(namespaces.projectUICode, tErrors("connectionsFetchFailed"));
 		} finally {
 			setIsLoading(false);
 		}
@@ -95,6 +98,7 @@ export const ConnectionsTable = () => {
 				message: tErrors("connectionRemoveFailed"),
 				type: "error",
 			});
+			LoggerService.error(namespaces.projectUICode, tErrors("connectionRemoveFailed"));
 
 			return;
 		}

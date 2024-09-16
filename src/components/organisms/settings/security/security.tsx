@@ -2,7 +2,8 @@ import React, { useState } from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { HttpService } from "@services";
+import { HttpService, LoggerService } from "@services";
+import { namespaces } from "@src/constants";
 
 import { useToastStore } from "@store";
 
@@ -33,12 +34,16 @@ export const Security = () => {
 				message: t("copySuccess"),
 				type: "success",
 			});
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: t("copyFailure"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				t("copyFailureExtended", { error: (error as Error).message })
+			);
 		}
 	};
 

@@ -8,7 +8,8 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
-import { defaultSessionTab, sessionTabs } from "@constants";
+import { defaultSessionTab, namespaces, sessionTabs } from "@constants";
+import { LoggerService } from "@services/logger.service";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
 import { useToastStore } from "@src/store";
@@ -61,15 +62,24 @@ export const SessionViewer = () => {
 					type: "error",
 				});
 
+				LoggerService.error(
+					namespaces.projectUICode,
+					tErrors("fetchSessionFailedExtended", { error: (error as Error).message })
+				);
+
 				return;
 			}
 			setSessionInfo(sessionInfoResponse);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("fetchSessionFailed"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				tErrors("fetchSessionFailedExtended", { error: (error as Error).message })
+			);
 		} finally {
 			setIsLoading(false);
 		}

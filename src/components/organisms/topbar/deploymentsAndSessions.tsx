@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { redirect, useParams } from "react-router-dom";
 
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { useProjectStore } from "@store/useProjectStore";
 import { useToastStore } from "@store/useToastStore";
 import { Project } from "@type/models";
@@ -23,9 +25,14 @@ export const DeploymentsAndSessionsTopbar = () => {
 		const { data: project, error } = await getProject(projectId);
 		if (error) {
 			addToast({
-				message: (error as Error).message,
+				message: t("projectNotFound"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				t("projectNotFoundExtended", { error: (error as Error).message })
+			);
 
 			return redirect("/404");
 		}
@@ -34,6 +41,8 @@ export const DeploymentsAndSessionsTopbar = () => {
 				message: t("projectNotFound"),
 				type: "error",
 			});
+
+			LoggerService.error(namespaces.projectUICode, t("projectNotFound"));
 
 			return redirect("/404");
 		}

@@ -6,7 +6,8 @@ import Cookies from "js-cookie";
 import psl from "psl";
 import { useTranslation } from "react-i18next";
 
-import { authBearer, isLoggedInCookie } from "@constants";
+import { authBearer, isLoggedInCookie, namespaces } from "@constants";
+import { LoggerService } from "@services/logger.service";
 import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
@@ -58,6 +59,10 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 					message: `Error occurred during login: ${(error as Error).message}`,
 					type: "error",
 				});
+				LoggerService.error(
+					namespaces.projectUICode,
+					`Error occurred during login: ${(error as Error).message}`
+				);
 			} finally {
 				setDescopeRenderKey((prevKey) => prevKey + 1);
 			}

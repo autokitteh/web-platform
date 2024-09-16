@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 
 import { useProjectStore, useToastStore, useUserStore } from "@store";
 
@@ -27,6 +29,11 @@ export const DashboardTopbar = () => {
 				message: (error as Error).message,
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				t("copyFailureExtended", { error: (error as Error).message })
+			);
 
 			return;
 		}

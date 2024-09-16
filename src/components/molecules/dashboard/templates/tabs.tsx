@@ -62,6 +62,8 @@ export const ProjectTemplatesTabs = () => {
 				message: t("projectCreationFailed"),
 				type: "error",
 			});
+			LoggerService.error(namespaces.projectUI, t("projectCreationFailed"));
+
 			setIsCreating(false);
 
 			return;
@@ -88,6 +90,12 @@ export const ProjectTemplatesTabs = () => {
 			message: t("projectCreatedSuccessfully"),
 			type: "success",
 		});
+
+		LoggerService.info(
+			namespaces.projectUI,
+			t("projectCreatedSuccessfullyExtended", { name: projectTemplateDirectory })
+		);
+
 		setIsCreating(false);
 
 		navigate(`/projects/${projectId}/connections`);

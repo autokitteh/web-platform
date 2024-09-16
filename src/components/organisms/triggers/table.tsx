@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { TriggersService } from "@services";
+import { LoggerService, TriggersService } from "@services";
+import { namespaces } from "@src/constants";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -35,7 +36,15 @@ export const TriggersTable = () => {
 		try {
 			const { data: triggers, error } = await TriggersService.listByProjectId(projectId!);
 			if (error) {
-				throw error;
+				addToast({
+					message: tError("triggersFetchError"),
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.projectUICode,
+					t("triggersFetchErrorExtended", { error: (error as Error).message })
+				);
 			}
 			if (!triggers) {
 				return;
@@ -44,9 +53,14 @@ export const TriggersTable = () => {
 			setTriggers(triggers);
 		} catch (error) {
 			addToast({
-				message: (error as Error).message,
+				message: tError("triggersFetchError"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				t("triggersFetchErrorExtended", { error: (error as Error).message })
+			);
 		} finally {
 			setIsLoading(false);
 		}
@@ -66,9 +80,14 @@ export const TriggersTable = () => {
 		closeModal(ModalName.deleteTrigger);
 		if (error) {
 			addToast({
-				message: tError("triggerRemoveFailed") + (error as Error).message,
+				message: tError("triggerRemoveFailed"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				t("triggerRemoveFailedExtended", { error: (error as Error).message })
+			);
 
 			return;
 		}

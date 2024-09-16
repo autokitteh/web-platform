@@ -6,6 +6,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
@@ -41,10 +43,19 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 				message: (error as Error).message,
 				type: "error",
 			});
+			LoggerService.error(
+				namespaces.projectUI,
+				t("projectCreationFailedExtended", { error: (error as Error).message })
+			);
 
 			return;
 		}
 
+		addToast({
+			message: t("projectCreatedSuccessfully"),
+			type: "success",
+		});
+		LoggerService.info(namespaces.projectUI, t("projectCreatedSuccessfully"));
 		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
 	};
 

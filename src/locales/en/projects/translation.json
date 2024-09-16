@@ -15,6 +15,7 @@
         },
         "deployedProjectSuccess": "Project deploy completed successfully.",
         "projectNotFound": "Project not found",
+        "projectNotFoundExtended": "Project not found, error: {{error}}",
         "rename": "Rename",
         "success": "Success"
     },

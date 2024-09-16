@@ -138,6 +138,10 @@ export const CodeTable = () => {
 				message: tErrors("failedRemoveFile", { fileName: selectedRemoveFileName }),
 				type: "error",
 			});
+			LoggerService.error(
+				namespaces.projectUICode,
+				tErrors("failedRemoveFile", { fileName: selectedRemoveFileName })
+			);
 		}
 	};
 

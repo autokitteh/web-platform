@@ -25,6 +25,7 @@ import { GearIcon } from "@assets/image/icons";
 
 export const DeploymentsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
+	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
 	const { openDrawer } = useDrawerStore();
 	const { projectId } = useParams();
@@ -58,17 +59,16 @@ export const DeploymentsTable = () => {
 			const { data, error } = await DeploymentsService.listByProjectId(projectId);
 			if (error) {
 				addToast({
-					message: (error as Error).message,
+					message: tErrors("failedFetchDeployments"),
 					type: "error",
 				});
 
+				LoggerService.error(namespaces.projectUICode, tErrors("failedFetchDeploymentsExtended", { error }));
+
 				return;
 			}
 
-			if (!data) {
-				return;
-			}
-			setDeployments(data);
+			setDeployments(data || []);
 		} finally {
 			if (isInitial) {
 				setIsInitialLoading(false);
@@ -158,6 +158,8 @@ export const DeploymentsTable = () => {
 				),
 				type: "success",
 			});
+			LoggerService.info(namespaces.projectUI, t("executionSucceedExtended", { sessionId }));
+
 			setTimeout(() => {
 				fetchDeployments();
 			}, 100);

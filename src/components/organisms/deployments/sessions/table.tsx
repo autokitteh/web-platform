@@ -101,9 +101,14 @@ export const SessionsTable = () => {
 		const { data, error } = await DeploymentsService.listByProjectId(projectId!);
 		if (error) {
 			addToast({
-				message: tErrors("deploymentFetchError", { ns: "services" }),
+				message: tErrors("failedFetchDeployments", { ns: "services" }),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				tErrors("failedFetchDeploymentsExtended", { error: (error as Error).message })
+			);
 
 			return;
 		}

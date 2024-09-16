@@ -100,6 +100,8 @@ export const ManualRunSettingsDrawer = () => {
 			),
 			type: "success",
 		});
+		LoggerService.info(namespaces.projectUI, t("executionSucceedExtended", { sessionId }));
+
 		closeDrawer(DrawerName.projectManualRunSettings);
 	};
 

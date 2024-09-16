@@ -59,6 +59,9 @@
 		},
 		"form": {
 			"createdSuccessfully": "Trigger created successfully",
+			"createdSuccessfullyExtended": "Trigger created successfully, name: {{name}}",
+			"editedSuccessfully": "Trigger edited successfully",
+			"editedSuccessfullyExtended": "Trigger edited successfully, name: {{name}}",
 			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
 			"cronSchedulerConnectionTitle": "Scheduler",
 			"addNewTrigger": "Add new trigger",
@@ -149,7 +152,8 @@
 			"placeholders": {
 				"name": "Name",
 				"value": "Value"
-			}
+			},
+			"createdSuccessfully": "Variable created successfully"
 		},
 		"modals": {
 			"modify": {

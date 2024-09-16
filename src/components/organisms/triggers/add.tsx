@@ -6,7 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { SelectOption } from "@interfaces/components";
-import { TriggersService } from "@services";
+import { LoggerService, TriggersService } from "@services";
+import { namespaces } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
@@ -107,6 +108,9 @@ export const AddTrigger = () => {
 				message: t("createdSuccessfully"),
 				type: "success",
 			});
+
+			LoggerService.info(namespaces.projectUI, t("createdSuccessfully"));
+
 			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {

@@ -7,7 +7,8 @@ import { useParams } from "react-router-dom";
 import { z } from "zod";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
-import { TriggersService } from "@services";
+import { LoggerService, TriggersService } from "@services";
+import { namespaces } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
@@ -64,12 +65,15 @@ export const EditTrigger = () => {
 					value: name,
 				}));
 				setFilesNameList(formattedResources);
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			} catch (error) {
 				addToast({
 					message: tErrors("resourcesFetchError"),
 					type: "error",
 				});
+				LoggerService.error(
+					namespaces.projectUI,
+					t("resourcesFetchErrorExtended", { error: (error as Error).message })
+				);
 			}
 		};
 
@@ -120,6 +124,7 @@ export const EditTrigger = () => {
 					message: tErrors("triggerNotEdited"),
 					type: "error",
 				});
+				LoggerService.error(namespaces.projectUI, t("triggerNotEdited"));
 
 				return;
 			}
@@ -128,12 +133,15 @@ export const EditTrigger = () => {
 				message: t("updatedSuccessfully"),
 				type: "success",
 			});
+			LoggerService.info(namespaces.projectUI, t("updatedSuccessfully"));
+
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("triggerNotUpdated"),
 				type: "error",
 			});
+			LoggerService.error(namespaces.projectUI, t("triggerNotUpdated"));
 		} finally {
 			setIsSaving(false);
 		}

@@ -48,6 +48,7 @@
 			"executionFailed": "Session execution failed",
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
 			"executionSucceed": "Session execution succeed for session ID",
+			"executionSucceedExtended": "Session execution succeed for session ID: {{sessionId}}",
 			"missingDeploymentOrEntrypoint": "Missing deployment or entrypoint",
 			"noFunctionsFound": "No functions found",
 			"filePathDoesNotExistExtended": "File path {{filePath}} does not exist or has no entry points."
@@ -62,9 +63,6 @@
 		"noSelectedSession": "No session selected",
 		"noSessions": "No sessions found",
 		"output": "Output",
-		"sessionsName": "Sessions",
-		"sessionsRefreshed": "Sessions refreshed successfully",
-		"sessionsStillOld": "Sessions are still old",
 		"table": {
 			"columns": {
 				"actions": "Actions",
@@ -96,7 +94,9 @@
 			"eventId": "Event ID",
 			"buildId": "Build ID",
 			"copyButton": "Copy"
-		}
+		},
+		"sessionLogRecordsFetchFailed": "Failed to fetch session log records",
+		"sessionLogRecordsFetchFailedExtended": "Failed to fetch session log records, session ID: {{sessionId}}, error: {{error}}"
 	},
 	"activities":{
 		"statuses": {
@@ -124,5 +124,6 @@
 	"sessionAndActivities":{
 		"noActivitiesFound": "No activites found",
 		"noLogsFound": "No logs found"
-	}
+	},
+	"deploymentActionSucceed": "Deployment {{action}} failed"
 }

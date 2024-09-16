@@ -10,6 +10,7 @@
 	"templates":{ 
 		"title": "Templates",
 		"projectCreatedSuccessfully": "Project created successfully",
+		"projectCreatedSuccessfullyExtended": "Project created successfully, project name: {{name}}",
 		"projectCreationFailed": "Project creation failed",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"projectNameExist": "Project name already exists",

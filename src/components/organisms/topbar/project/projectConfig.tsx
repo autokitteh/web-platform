@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { redirect, useParams } from "react-router-dom";
 
-import { ProjectsService } from "@services";
+import { LoggerService, ProjectsService } from "@services";
+import { namespaces } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
@@ -34,17 +35,23 @@ export const ProjectConfigTopbar = () => {
 
 		if (error) {
 			addToast({
-				message: (error as Error).message,
+				message: t("projectNotFound"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				t("projectNotFoundExtended", { error: (error as Error).message })
+			);
 
 			return redirect("/404");
 		}
 		if (!project) {
 			addToast({
-				message: (error as Error).message,
+				message: t("projectNotFound"),
 				type: "error",
 			});
+			LoggerService.error(namespaces.projectUICode, t("projectNotFound"));
 
 			return redirect("/404");
 		}

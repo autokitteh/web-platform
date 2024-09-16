@@ -54,6 +54,7 @@
 		"closeButton": "Close",
 		"copyButton": "Copy connection token",
 		"copyFailure": "Failed to copy token to clipboard",
+		"copyFailureExtended": "Failed to copy token to clipboard, error: {{error}}",
 		"copyInputAriaLabel": "Copy this token to be able to use it in your application",
 		"copyInputLabel": "Copy Me",
 		"copySuccess": "Token copied to clipboard",

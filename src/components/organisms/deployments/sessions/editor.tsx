@@ -6,9 +6,9 @@ import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { fetchSessionsInterval, sessionsEditorLineHeight } from "@constants";
+import { fetchSessionsInterval, namespaces, sessionsEditorLineHeight } from "@constants";
 import { SessionLogRecord } from "@models";
-import { SessionsService } from "@services";
+import { LoggerService, SessionsService } from "@services";
 import { useToastStore } from "@store/useToastStore";
 
 import { Button, Frame, IconButton, Loader, LogoCatLarge } from "@components/atoms";
@@ -41,9 +41,14 @@ export const SessionTableEditorFrame = () => {
 		}
 		if (error) {
 			addToast({
-				message: (error as Error).message,
+				message: t("sessionLogRecordsFetchFailed"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.projectUICode,
+				t("sessionLogRecordsFetchFailedExtended", { error: (error as Error).message, sessionId })
+			);
 
 			return;
 		}

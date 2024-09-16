@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
-import { DeploymentsService } from "@services";
+import { DeploymentsService, LoggerService } from "@services";
+import { namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -25,7 +26,8 @@ export const DeploymentsTableContent = ({
 	deployments: Deployment[];
 	updateDeployments: () => void;
 }) => {
-	const { t } = useTranslation("deployments", { keyPrefix: "history" });
+	const { t } = useTranslation("deployments");
+	const { t: tErrors } = useTranslation("errors");
 	const navigate = useNavigate();
 	const { items: sortedDeployments, requestSort, sortConfig } = useSort<Deployment>(deployments);
 	const addToast = useToastStore((state) => state.addToast);
@@ -50,15 +52,28 @@ export const DeploymentsTableContent = ({
 
 			if (error) {
 				addToast({
-					message: (error as Error).message,
+					message: tErrors("deploymentActionFailed"),
 					type: "error",
 				});
+
+				LoggerService.error(
+					namespaces.projectUICode,
+					tErrors("deploymentActionFailedExtended", { error: (error as Error).message })
+				);
 
 				return;
 			}
 			if (action === "delete") {
 				closeModal(ModalName.deleteDeployment);
 			}
+
+			addToast({
+				message: t("deploymentActionSucceed", { action }),
+				type: "success",
+			});
+
+			LoggerService.info(namespaces.projectUICode, t("deploymentActionSucceed", { action }));
+
 			updateDeployments();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps

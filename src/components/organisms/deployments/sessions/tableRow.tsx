@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 
 import { SessionState } from "@enums";
 import { SessionsTableRowProps } from "@interfaces/components";
-import { SessionsService } from "@services";
+import { LoggerService, SessionsService } from "@services";
+import { namespaces } from "@src/constants";
 import { cn } from "@utilities";
 
 import { useToastStore } from "@store";
@@ -61,6 +62,11 @@ export const SessionsTableRow = memo(
 					message: tErrors("failedStopSession"),
 					type: "error",
 				});
+
+				LoggerService.error(
+					namespaces.projectUICode,
+					tErrors("failedStopSessionExtended", { error: (error as Error).message })
+				);
 
 				return;
 			}

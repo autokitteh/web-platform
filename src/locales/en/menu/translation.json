@@ -4,5 +4,9 @@
     "myProjects": "My Projects",
     "newProject": "New Project",
     "settings": "Settings",
-    "stats": "Stats"
+    "stats": "Stats",
+    "projectCreatedSuccessfully": "Project created successfully",
+    "projectCreatedSuccessfullyExtended": "Project created successfully, project name: {{name}}",
+    "projectCreationFailed": "Project creation failed",
+    "projectCreationFailedExtended": "Project creation failed, error: {{error}}"
 }
