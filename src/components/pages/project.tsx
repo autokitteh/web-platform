@@ -7,7 +7,7 @@ import { useFileOperations } from "@src/hooks";
 import { useProjectValidationStore } from "@src/store";
 import { calculatePathDepth } from "@utilities";
 
-import { Badge, Tab } from "@components/atoms";
+import { Notification, Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
 
 export const Project = () => {
@@ -86,7 +86,7 @@ export const Project = () => {
 									<div className="relative">
 										{projectValidationState[tabKey.value as keyof typeof projectValidationState] ? (
 											<div className="absolute right-0 top-0.5">
-												<Badge> </Badge>
+												<Notification> </Notification>
 											</div>
 										) : null}
 

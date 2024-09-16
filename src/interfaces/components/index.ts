@@ -1,4 +1,4 @@
-export type { BadgeProps } from "@interfaces/components/badge.interface";
+export type { NotificationProps } from "@interfaces/components/notification.interface";
 export type {
 	ButtonProps,
 	DropdownButtonProps,

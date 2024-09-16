@@ -2,9 +2,9 @@ import React from "react";
 
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Badge } from "@components/atoms";
+import { Notification } from "@components/atoms";
 
-const BadgeWrapper = ({ content }: { content: string }) => (
+const NotificationWrapper = ({ content }: { content: string }) => (
 	<div className="relative inline-block">
 		<img
 			alt="avatar"
@@ -13,21 +13,21 @@ const BadgeWrapper = ({ content }: { content: string }) => (
 		/>
 
 		<div className="absolute right-0 top-2 -translate-y-1/2 translate-x-1/2">
-			<Badge>{content}</Badge>
+			<Notification>{content}</Notification>
 		</div>
 	</div>
 );
 
 const meta = {
-	title: "Display/Badge",
-	component: BadgeWrapper,
+	title: "Display/Notification",
+	component: NotificationWrapper,
 	parameters: {
 		actions: { disable: true },
 	},
 	argTypes: {
 		content: { control: "text" },
 	},
-} satisfies Meta<typeof BadgeWrapper>;
+} satisfies Meta<typeof NotificationWrapper>;
 
 export default meta;
 
@@ -35,6 +35,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary = {
 	args: {
-		content: "Badge",
+		content: "Notification",
 	},
 } satisfies Story;
