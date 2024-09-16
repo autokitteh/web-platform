@@ -1,10 +1,12 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
+import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName, TopbarButton } from "@enums/components";
-import { ProjectsService } from "@services";
+import { LoggerService, ProjectsService } from "@services";
+import { namespaces } from "@src/constants";
 
 import { useFileOperations } from "@hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
@@ -31,13 +33,20 @@ export const ProjectTopbarButtons = () => {
 	const fetchAndCheckResources = useCallback(async () => {
 		const resources = await fetchResources();
 		if (!Object.keys(resources).length) {
+			addToast({
+				message: tError("assetsNotFound"),
+				type: "error",
+			});
+			LoggerService.error(namespaces.projectUI, tError("assetsNotFound"));
+
 			return;
 		}
 
 		return resources;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fetchResources]);
 
-	const build = async () => {
+	const build = useCallback(async () => {
 		const resources = await fetchAndCheckResources();
 		if (!resources) return;
 
@@ -54,12 +63,14 @@ export const ProjectTopbarButtons = () => {
 				message: t("topbar.buildProjectSuccess"),
 				type: "success",
 			});
+			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccess"));
 		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-	const deploy = async () => {
+	const deploy = useCallback(async () => {
 		const resources = await fetchAndCheckResources();
 		if (!resources) return;
 
@@ -76,10 +87,22 @@ export const ProjectTopbarButtons = () => {
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
 			});
+			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccess"));
 		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const debouncedBuild = useRef(debounce(build, 1000, { leading: true, trailing: false })).current;
+	const debouncedDeploy = useRef(debounce(deploy, 1000, { leading: true, trailing: false })).current;
+
+	useEffect(() => {
+		return () => {
+			debouncedBuild.cancel();
+			debouncedDeploy.cancel();
+		};
+	}, [debouncedBuild, debouncedDeploy]);
 
 	const handleDeleteProject = async () => {
 		if (!projectId) {
@@ -100,6 +123,8 @@ export const ProjectTopbarButtons = () => {
 			message: t("topbar.deleteProjectSuccess"),
 			type: "success",
 		});
+		LoggerService.info(namespaces.projectUI, t("topbar.deleteProjectSuccess"));
+
 		navigate("/");
 	};
 
@@ -114,7 +139,7 @@ export const ProjectTopbarButtons = () => {
 				ariaLabel={t("topbar.buttons.ariaBuildProject")}
 				className="h-8 whitespace-nowrap px-3.5"
 				disabled={loadingButton[TopbarButton.build]}
-				onClick={build}
+				onClick={debouncedBuild}
 				variant="filledGray"
 			>
 				{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg size="md" src={BuildIcon} />}
@@ -126,7 +151,7 @@ export const ProjectTopbarButtons = () => {
 				ariaLabel={t("topbar.buttons.ariaDeployProject")}
 				className="h-8 whitespace-nowrap px-3.5"
 				disabled={loadingButton[TopbarButton.deploy]}
-				onClick={deploy}
+				onClick={debouncedDeploy}
 				variant="filledGray"
 			>
 				{loadingButton[TopbarButton.deploy] ? (
