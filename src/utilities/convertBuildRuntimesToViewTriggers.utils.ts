@@ -10,14 +10,16 @@ const processRuntime = (runtime: BuildInfoRuntimes): Record<string, SessionEntry
 
 	fileNames.forEach((fileName) => {
 		const entrypointsForFile = runtime.artifact.exports
-			.filter((entrypoint) => entrypoint.location.path === fileName)
+			.filter(
+				({ location: { path }, symbol: name }) =>
+					path === fileName && !name.startsWith("_") && name !== "archive"
+			)
 			.map(({ location: { col, path, row }, symbol: name }) => ({
 				path,
 				row,
 				col,
 				name,
-			}))
-			.filter(({ name }) => !name.startsWith("_"));
+			}));
 
 		const uniqueEntrypoints = uniqBy(
 			entrypointsForFile,
