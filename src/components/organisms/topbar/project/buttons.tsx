@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -46,7 +46,7 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fetchResources]);
 
-	const build = async () => {
+	const build = useCallback(async () => {
 		const resources = await fetchAndCheckResources();
 		if (!resources) return;
 
@@ -67,11 +67,10 @@ export const ProjectTopbarButtons = () => {
 		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-	const debouncedBuild = debounce(build, 1000);
-
-	const deploy = async () => {
+	const deploy = useCallback(async () => {
 		const resources = await fetchAndCheckResources();
 		if (!resources) return;
 
@@ -92,8 +91,18 @@ export const ProjectTopbarButtons = () => {
 		}
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
-	};
-	const debouncedDeploy = debounce(deploy, 1000);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const debouncedBuild = useRef(debounce(build, 1000, { leading: true, trailing: false })).current;
+	const debouncedDeploy = useRef(debounce(deploy, 1000, { leading: true, trailing: false })).current;
+
+	useEffect(() => {
+		return () => {
+			debouncedBuild.cancel();
+			debouncedDeploy.cancel();
+		};
+	}, [debouncedBuild, debouncedDeploy]);
 
 	const handleDeleteProject = async () => {
 		if (!projectId) {
