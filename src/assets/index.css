@@ -119,4 +119,20 @@ a {
 
 ul {
 	font-size: 15px;
+	@apply ml-6;
+}
+
+ul li {
+	position: relative;
+}
+
+ul li::before {
+	content: "";
+	position: absolute;
+	@apply -left-3;
+	@apply top-2.5;
+	@apply w-1;
+	@apply h-1;
+	background-color: white;
+	border-radius: 50%;
 }

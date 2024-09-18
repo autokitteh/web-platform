@@ -47,7 +47,7 @@ export const WelcomeCards = () => {
 							</IconButton>
 						</div>
 
-						<ul className="font-base ml-3 font-averta font-semibold leading-normal">
+						<ul className="font-base font-averta font-semibold leading-normal">
 							<li>
 								Develop Python code -{" "}
 								<Link className="font-normal text-green-800" to="#">
@@ -89,7 +89,7 @@ export const WelcomeCards = () => {
 							</IconButton>
 						</div>
 
-						<ul className="font-base ml-3 font-averta font-semibold leading-normal">
+						<ul className="font-base font-averta font-semibold leading-normal">
 							<li>Synchronization with the server</li>
 							<li>Quick actions</li>
 							<li>Dev tools</li>
