@@ -92,7 +92,7 @@ export const DashboardProjectsTable = () => {
 				</div>
 			</div>
 
-			<div className="mt-8 grid grid-cols-auto-fit-250 gap-5 border-t-2 border-gray-1050 pt-6">
+			<div className="mt-8 grid grid-cols-auto-fit-248 gap-5 border-t-2 border-gray-1050 pt-6">
 				{dashboardFooterProjectRecommendations.map((card, index) => (
 					<DashboardFooterProjectCard card={card} key={index} />
 				))}
