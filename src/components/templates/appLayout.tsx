@@ -27,7 +27,7 @@ export const AppLayout = ({
 
 					{displayDeploymentsAndSessionsTopbar ? <DeploymentsAndSessionsTopbar /> : null}
 
-					<div className="mb-2 h-full">
+					<div className="h-full">
 						<div className="flex h-full gap-6">
 							<Outlet />
 						</div>

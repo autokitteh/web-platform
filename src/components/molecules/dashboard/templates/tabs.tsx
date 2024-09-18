@@ -148,7 +148,7 @@ export const ProjectTemplatesTabs = () => {
 
 	return (
 		<div className="flex h-full flex-1 flex-col">
-			<div className="sticky -top-8 z-20 -mt-5 bg-gray-100 pb-0 pt-3">
+			<div className="sticky -top-8 z-20 -mt-5 bg-gray-1250 pb-0 pt-3">
 				<div
 					className={
 						"flex select-none items-center gap-2 xl:gap-4 2xl:gap-5 3xl:gap-6 " +
@@ -163,7 +163,6 @@ export const ProjectTemplatesTabs = () => {
 							key={name}
 							onClick={() => handleTabClick(name)}
 							value={name}
-							variant="dark"
 						>
 							{name}
 						</Tab>

@@ -8,7 +8,7 @@
 		}
 	},
 	"templates":{ 
-		"title": "Templates",
+		"title": "Start From Template",
 		"projectCreatedSuccessfully": "Project created successfully",
 		"projectCreationFailed": "Project creation failed",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
