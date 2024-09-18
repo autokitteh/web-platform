@@ -44,7 +44,7 @@ export const DashboardTopbar = () => {
 
 			<div className="mt-1 flex w-full items-end justify-between">
 				<Typography className="w-full text-4xl font-semibold" element="h1">
-					Welcome to autokitteh
+					{t("welcome")}
 				</Typography>
 
 				<Button

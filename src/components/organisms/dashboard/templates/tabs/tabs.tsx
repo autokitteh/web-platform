@@ -16,13 +16,13 @@ import { fetchAllFilesContent, fetchFileContent } from "@src/utilities";
 import { useProjectStore, useToastStore } from "@store";
 
 import { Tab } from "@components/atoms";
-import { ProjectTemplateCard } from "@components/molecules/dashboard/templates";
+import { ProjectTemplateCard } from "@components/organisms/dashboard/templates/tabs";
 
 export const ProjectTemplatesTabs = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
-	const [isCreating, setIsCreating] = useState<boolean>(false);
+	const [loadingCardId, setLoadingCardId] = useState<string>();
 
 	const activeCategory = useMemo(
 		() => templateProjectsCategories.find((category) => category.name === activeTab),
@@ -44,7 +44,6 @@ export const ProjectTemplatesTabs = () => {
 	const { createProjectFromManifest } = useProjectStore();
 
 	const getAndSaveFiles = async () => {
-		setIsCreating(true);
 		if (!projectTemplateDirectory) {
 			addToast({
 				message: t("projectCreationFailed"),
@@ -52,7 +51,6 @@ export const ProjectTemplatesTabs = () => {
 			});
 
 			LoggerService.error(namespaces.manifestService, `${t("projectDirectoryNotConfigured")}`);
-			setIsCreating(false);
 
 			return;
 		}
@@ -62,7 +60,6 @@ export const ProjectTemplatesTabs = () => {
 				message: t("projectCreationFailed"),
 				type: "error",
 			});
-			setIsCreating(false);
 
 			return;
 		}
@@ -88,7 +85,6 @@ export const ProjectTemplatesTabs = () => {
 			message: t("projectCreatedSuccessfully"),
 			type: "success",
 		});
-		setIsCreating(false);
 
 		navigate(`/projects/${projectId}/connections`);
 	};
@@ -101,7 +97,7 @@ export const ProjectTemplatesTabs = () => {
 	}, [projectId]);
 
 	const createProjectFromAsset = async (assetDirectory: string) => {
-		setIsCreating(true);
+		setLoadingCardId(assetDirectory);
 		try {
 			const manifestURL = `/assets/templates/${assetDirectory}/autokitteh.yaml`;
 			const manifestData = await fetchFileContent(manifestURL);
@@ -131,16 +127,15 @@ export const ProjectTemplatesTabs = () => {
 				});
 				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
 			}
-
+			setLoadingCardId(undefined);
 			setProjectId(projectId!);
 			getProjectsList();
-			setIsCreating(false);
 		} catch (error) {
 			addToast({
 				message: t("projectCreationFailed"),
 				type: "error",
 			});
-			setIsCreating(false);
+			setLoadingCardId(undefined);
 
 			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
 		}
@@ -176,7 +171,7 @@ export const ProjectTemplatesTabs = () => {
 							<ProjectTemplateCard
 								card={card}
 								category={activeCategory.name}
-								isCreating={isCreating}
+								isCreating={loadingCardId === card.assetDirectory}
 								key={index}
 								onCreateClick={() => createProjectFromAsset(card.assetDirectory)}
 							/>

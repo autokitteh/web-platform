@@ -1,6 +1,7 @@
 {
 	"topbar": {
 		"hello": "Hello",
+		"welcome": "Welcome to autokitteh",
 		"logout": "Logout",
 		"buttons":{
 			"newProject": "New Project",

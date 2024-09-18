@@ -13,6 +13,7 @@ export const Typography = <E extends ElementType = "div">({
 	const Element = element || "div";
 	const sizeClasses = {
 		default: "",
+		xl: "text-xl",
 		large: "text-lg",
 		medium: "text-base",
 		small: "text-sm",
