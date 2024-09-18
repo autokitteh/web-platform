@@ -77,7 +77,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 
 	return (
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
-			<ul className="flex flex-col gap-2">
+			<ul className="ml-0 flex flex-col gap-2">
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
 						ariaLabel="New Project"
@@ -106,7 +106,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 				</li>
 
 				<li
-					className="group"
+					className="group static"
 					onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}
 					onMouseLeave={onMouseLeave}
 				>
