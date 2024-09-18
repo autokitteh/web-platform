@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { dashboardFooterProjectRecommendations } from "@src/constants";
 import { SidebarHrefMenu } from "@src/enums/components";
 import { Project } from "@type/models";
 
@@ -11,6 +12,7 @@ import { useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Link, Spinner, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
 import { SortButton } from "@components/molecules";
+import { DashboardFooterProjectCard } from "@components/organisms/dashboard";
 
 import { StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, PlusAccordionIcon } from "@assets/image/icons";
@@ -91,6 +93,10 @@ export const DashboardProjectsTable = () => {
 			</div>
 
 			<div className="mt-8 grid grid-cols-auto-fit-290 gap-5 border-t-2 border-gray-1050 pt-6">
+				{dashboardFooterProjectRecommendations.map((card, index) => (
+					<DashboardFooterProjectCard card={card} key={index} />
+				))}
+
 				<div className="rounded-md border-2 border-gray-1050 bg-gray-1100 px-5 pb-4 pt-6 font-averta">
 					<div className="flex items-center gap-2.5">
 						<Link className="hover:scale-110" target="_blank" to="https://www.reddit.com/r/autokitteh/">

@@ -18,7 +18,7 @@ export const Dashboard = () => {
 	const dashboardContent = useMemo(() => {
 		if (isLoadingProjectsList) {
 			return <Loader isCenter size="lg" />;
-		} else if (hasProjects) {
+		} else if (!hasProjects) {
 			return <DashboardWelcomeMainBlock />;
 		} else {
 			return <DashboardProjectsTable />;
@@ -34,7 +34,9 @@ export const Dashboard = () => {
 					{dashboardContent}
 				</Frame>
 
-				<CatDashboardImage className="absolute -bottom-6 -right-5" />
+				{!hasProjects && !isLoadingProjectsList ? (
+					<CatDashboardImage className="absolute -bottom-6 -right-5" />
+				) : null}
 			</div>
 
 			<div className="resize-handle-horizontal z-10 -ml-2 w-1 cursor-ew-resize transition hover:bg-gray-750" />
