@@ -11,8 +11,11 @@ export const ProjectTemplatesSection = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 
 	return (
-		<Frame className="w-5/12 rounded-none border-l border-l-gray-750 bg-gray-1250">
-			<Typography className="mb-7 flex w-full items-center gap-3 font-averta text-3xl font-semibold" element="h2">
+		<Frame className="h-full rounded-none border-l border-l-gray-750 bg-gray-1250">
+			<Typography
+				className="mb-7 flex w-full select-none items-center gap-3 font-averta text-3xl font-semibold"
+				element="h2"
+			>
 				<IconSvg className="stroke-white" size="2xl" src={ArrowRightCircleIcon} />
 
 				{t("title")}

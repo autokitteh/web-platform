@@ -9,7 +9,7 @@ import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
 
 export const DashboardWelcomeCards = () => {
 	return (
-		<div className="z-10 mt-7 grid gap-5">
+		<div className="z-10 mt-7 grid select-none gap-5">
 			<div className="col-span-1 grid grid-cols-auto-fit-350 items-stretch gap-4 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pl-6 pr-4 font-averta text-white">
 				<div className="flex flex-col">
 					<div className="flex min-h-64 w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-gray-1400">

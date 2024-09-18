@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 
 import { motion } from "framer-motion";
 
+import { useResize } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
 import { Frame, Loader } from "@components/atoms";
@@ -12,7 +13,7 @@ import { CatDashboardImage } from "@assets/image";
 
 export const Dashboard = () => {
 	const { isLoadingProjectsList, projectsList } = useProjectStore();
-
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 60, max: 78, min: 30 });
 	const hasProjects = !!projectsList.length;
 
 	const dashboardContent = useMemo(() => {
@@ -27,7 +28,7 @@ export const Dashboard = () => {
 
 	return (
 		<div className="m-4 ml-0 flex w-full overflow-hidden rounded-2xl">
-			<div className="relative flex w-2/3 flex-col">
+			<div className="relative flex w-2/3 flex-col" style={{ width: `${leftSideWidth}%` }}>
 				<Frame className="flex-1 rounded-r-none bg-gray-1100">
 					<DashboardTopbar />
 
@@ -44,7 +45,11 @@ export const Dashboard = () => {
 				</motion.div>
 			</div>
 
-			<ProjectTemplatesSection />
+			<div className="resize-handle-horizontal z-10 -ml-2 w-1 cursor-ew-resize transition hover:bg-gray-750" />
+
+			<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+				<ProjectTemplatesSection />
+			</div>
 		</div>
 	);
 };
