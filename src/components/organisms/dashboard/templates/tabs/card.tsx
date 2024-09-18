@@ -11,11 +11,13 @@ import { DownloadDownArrowIcon, PipeCircleDarkIcon } from "@assets/image/icons";
 export const ProjectTemplateCard = ({
 	card,
 	category,
+	disabled,
 	isCreating,
 	onCreateClick,
 }: {
 	card: TemplateCardType;
 	category: string;
+	disabled?: boolean;
 	isCreating: boolean;
 	onCreateClick: () => void;
 }) => {
@@ -53,6 +55,7 @@ export const ProjectTemplateCard = ({
 
 			<Button
 				className="border-1 ml-auto mt-auto w-auto gap-1.5 rounded-full border-gray-1350 bg-gray-1450 p-2 px-3.5 leading-none text-white"
+				disabled={disabled || isCreating}
 				onClick={onCreateClick}
 				title={t("createProject")}
 				variant="filledGray"
