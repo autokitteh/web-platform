@@ -1,28 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-
-import {
-	defaultTemplateProjectCategory,
-	findTemplateFilesByAssetDirectory,
-	namespaces,
-	templateProjectsCategories,
-} from "@constants";
-import { LoggerService } from "@services";
-import { useFileOperations } from "@src/hooks";
-import { fetchAllFilesContent, fetchFileContent } from "@src/utilities";
-
-import { useProjectStore, useToastStore } from "@store";
+import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
+import { useCreateProjectFromTemplate } from "@src/hooks";
 
 import { Tab } from "@components/atoms";
 import { ProjectTemplateCard } from "@components/organisms/dashboard/templates/tabs";
 
 export const ProjectTemplatesTabs = () => {
-	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
-
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
 	const [loadingCardId, setLoadingCardId] = useState<string>();
+	const { createProject } = useCreateProjectFromTemplate();
 
 	const activeCategory = useMemo(
 		() => templateProjectsCategories.find((category) => category.name === activeTab),
@@ -33,112 +20,10 @@ export const ProjectTemplatesTabs = () => {
 		setActiveTab(category);
 	}, []);
 
-	const addToast = useToastStore((state) => state.addToast);
-	const { getProjectsList } = useProjectStore();
-
-	const [projectId, setProjectId] = useState<string | null>(null);
-	const [projectTemplateDirectory, setProjectTemplateDirectory] = useState<string>();
-	const navigate = useNavigate();
-
-	const { saveAllFiles } = useFileOperations(projectId || "");
-	const { createProjectFromManifest } = useProjectStore();
-
-	const getAndSaveFiles = async () => {
-		if (!projectTemplateDirectory) {
-			addToast({
-				message: t("projectCreationFailed"),
-				type: "error",
-			});
-
-			LoggerService.error(namespaces.manifestService, `${t("projectDirectoryNotConfigured")}`);
-
-			return;
-		}
-
-		if (!projectId) {
-			addToast({
-				message: t("projectCreationFailed"),
-				type: "error",
-			});
-
-			return;
-		}
-
-		const filesPerProject = findTemplateFilesByAssetDirectory(projectTemplateDirectory);
-
-		if (!filesPerProject) {
-			addToast({
-				message: t("projectTemplateFilesNotFound"),
-				type: "error",
-			});
-
-			LoggerService.error(namespaces.manifestService, `${t("projectTemplateFilesNotFound")}`);
-
-			return;
-		}
-
-		const filesData = await fetchAllFilesContent(`/assets/templates/${projectTemplateDirectory}/`, filesPerProject);
-
-		await saveAllFiles(filesData);
-
-		addToast({
-			message: t("projectCreatedSuccessfully"),
-			type: "success",
-		});
-
-		navigate(`/projects/${projectId}/connections`);
-	};
-
-	useEffect(() => {
-		if (projectId) {
-			getAndSaveFiles();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
-
 	const createProjectFromAsset = async (assetDirectory: string) => {
 		setLoadingCardId(assetDirectory);
-		try {
-			const manifestURL = `/assets/templates/${assetDirectory}/autokitteh.yaml`;
-			const manifestData = await fetchFileContent(manifestURL);
-
-			if (!manifestData) {
-				addToast({
-					message: t("projectCreationFailed"),
-					type: "error",
-				});
-
-				LoggerService.error(
-					namespaces.manifestService,
-					`${t("projectCreationFailedExtended", { error: t("projectTemplateManifestNotFound") })}`
-				);
-
-				return;
-			}
-
-			setProjectTemplateDirectory(assetDirectory);
-
-			const { data: projectId, error } = await createProjectFromManifest(manifestData);
-
-			if (error) {
-				addToast({
-					message: t("projectCreationFailed"),
-					type: "error",
-				});
-				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
-			}
-			setLoadingCardId(undefined);
-			setProjectId(projectId!);
-			getProjectsList();
-		} catch (error) {
-			addToast({
-				message: t("projectCreationFailed"),
-				type: "error",
-			});
-			setLoadingCardId(undefined);
-
-			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
-		}
+		await createProject(assetDirectory);
+		setLoadingCardId(undefined);
 	};
 
 	return (

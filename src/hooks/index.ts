@@ -6,3 +6,4 @@ export { useConnectionForm } from "@hooks/useConnectionForm";
 export { useToastAndLog } from "@hooks/useToastAndLog";
 export { useFetchConnections } from "@hooks/triggers/useFetchConnections";
 export { useFetchTrigger } from "@hooks/triggers/useFetchTrigger";
+export { useCreateProjectFromTemplate } from "@hooks/useCreateProjectFromTemplate";

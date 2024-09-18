@@ -134,7 +134,7 @@ export const dashboardProjectsCards: TableProjectCardType[] = [
 	},
 ];
 
-export const findTemplateFilesByAssetDirectory = (assetDirectory: string) => {
+export const findTemplateFilesByAssetDirectory = async (assetDirectory: string) => {
 	for (const category of templateProjectsCategories) {
 		const card = category.cards.find((card) => card.assetDirectory === assetDirectory);
 		if (card) {

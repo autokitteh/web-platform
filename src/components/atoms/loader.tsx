@@ -9,7 +9,7 @@ export const Loader = ({
 	secondColor = "gray",
 	size = "md",
 }: LoaderProps) => {
-	const sizeClass = cn("loader-cycle-disks flex items-center", {
+	const sizeClass = cn("loader-cycle-disks flex h-auto items-center", {
 		"w-4 before:h-2 before:w-2 after:h-2 after:w-2": size === "sm",
 		"w-6 before:h-6 before:w-6 after:h-6 after:w-6": size === "lg",
 		"w-8 before:h-4 before:w-4 after:h-4 after:w-4": size === "md",

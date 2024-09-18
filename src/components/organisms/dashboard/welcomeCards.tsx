@@ -1,10 +1,11 @@
 /* eslint-disable @liferay/empty-line-between-elements */
-import React from "react";
+import React, { useState } from "react";
 
 import { ModalName } from "@src/enums/components";
+import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore } from "@src/store";
 
-import { Button, IconButton, IconSvg, Link, Typography } from "@components/atoms";
+import { Button, IconButton, IconSvg, Link, Spinner, Typography } from "@components/atoms";
 import { WelcomeInfoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
 
 import { ProjectsIcon, StartFromTemplateImage } from "@assets/image";
@@ -12,9 +13,17 @@ import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
 
 export const DashboardWelcomeCards = () => {
 	const { openModal } = useModalStore();
+	const { createProject } = useCreateProjectFromTemplate();
+	const [creatingTemplate, setCreatingTemplate] = useState(false);
 
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });
+	};
+
+	const createProjectFromAsset = async (assetDirectory: string) => {
+		setCreatingTemplate(true);
+		await createProject(assetDirectory);
+		setCreatingTemplate(false);
 	};
 
 	return (
@@ -51,8 +60,11 @@ export const DashboardWelcomeCards = () => {
 								Start With Demo Project
 							</Typography>
 
-							<Button className="min-w-64 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200">
-								<IconSvg size="lg" src={ProjectsIcon} />
+							<Button
+								className="min-w-64 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
+								onClick={() => createProjectFromAsset("quickstart")}
+							>
+								<IconSvg size="lg" src={!creatingTemplate ? ProjectsIcon : Spinner} />
 								Meow world
 							</Button>
 						</div>

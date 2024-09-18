@@ -14,12 +14,13 @@ import { CatDashboardImage } from "@assets/image";
 export const Dashboard = () => {
 	const { isLoadingProjectsList, projectsList } = useProjectStore();
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 60, max: 78, min: 30 });
+
 	const hasProjects = !!projectsList.length;
 
 	const dashboardContent = useMemo(() => {
 		if (isLoadingProjectsList) {
 			return <Loader isCenter size="lg" />;
-		} else if (!hasProjects) {
+		} else if (hasProjects) {
 			return <DashboardWelcomeCards />;
 		} else {
 			return <DashboardProjectsTable />;
