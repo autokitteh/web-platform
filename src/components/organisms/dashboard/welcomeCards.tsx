@@ -51,7 +51,7 @@ export const DashboardWelcomeCards = () => {
 					</Typography>
 
 					<Typography className="text-center text-3xl font-bold 2xl:text-right" element="h2">
-						In a <span className="text-green-800">Few Lines of Code</span>
+						In a Few Lines of Code
 					</Typography>
 
 					<div className="mt-10">

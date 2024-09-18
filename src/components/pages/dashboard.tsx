@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
 
-import { motion } from "framer-motion";
-
 import { useResize } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
@@ -20,7 +18,7 @@ export const Dashboard = () => {
 	const dashboardContent = useMemo(() => {
 		if (isLoadingProjectsList) {
 			return <Loader isCenter size="lg" />;
-		} else if (hasProjects) {
+		} else if (!hasProjects) {
 			return <DashboardWelcomeCards />;
 		} else {
 			return <DashboardProjectsTable />;
@@ -36,14 +34,7 @@ export const Dashboard = () => {
 					{dashboardContent}
 				</Frame>
 
-				<motion.div
-					animate={{ y: 0, x: 0 }}
-					className="absolute -bottom-6 -right-5"
-					initial={{ y: 150, x: 100 }}
-					transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-				>
-					<CatDashboardImage />
-				</motion.div>
+				<CatDashboardImage className="absolute -bottom-6 -right-5" />
 			</div>
 
 			<div className="resize-handle-horizontal z-10 -ml-2 w-1 cursor-ew-resize transition hover:bg-gray-750" />

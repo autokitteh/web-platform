@@ -14,6 +14,17 @@ import {
 
 export const defaultTemplateProjectCategory = "DevOps";
 
+const hiddenTemplateProjectCategories = [
+	{
+		cards: [
+			{
+				assetDirectory: "quickstart",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
+			},
+		],
+	},
+];
+
 export const templateProjectsCategories: TemplateCategory[] = [
 	{
 		name: "DevOps",
@@ -135,7 +146,8 @@ export const dashboardProjectsCards: TableProjectCardType[] = [
 ];
 
 export const findTemplateFilesByAssetDirectory = async (assetDirectory: string) => {
-	for (const category of templateProjectsCategories) {
+	const projectCategories = [...templateProjectsCategories, ...hiddenTemplateProjectCategories];
+	for (const category of projectCategories) {
 		const card = category.cards.find((card) => card.assetDirectory === assetDirectory);
 		if (card) {
 			return card.files;
