@@ -27,7 +27,7 @@ export const ProjectTemplateCard = ({
 				<div className="flex gap-3">
 					{card.integrations.map(({ icon, title }, index) => (
 						<div
-							className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gray-400 p-1"
+							className="relative flex size-8 items-center justify-center rounded-full bg-gray-400 p-1"
 							key={index}
 							title={title}
 						>
@@ -48,12 +48,12 @@ export const ProjectTemplateCard = ({
 			<div className="mb-4 mt-1 text-base">{card.description}</div>
 
 			<Button
-				className="border-1 absolute bottom-2 right-2 rounded-full border border-solid border-black p-1 hover:bg-white"
+				className="absolute bottom-2 right-2 rounded-full border border-solid border-black p-1 hover:bg-white"
 				onClick={onCreateClick}
 				title={t("createProject")}
 			>
 				{isCreating ? (
-					<div className="flex h-4 w-4 items-center">
+					<div className="flex size-4 items-center">
 						<Loader size="sm" />
 					</div>
 				) : (

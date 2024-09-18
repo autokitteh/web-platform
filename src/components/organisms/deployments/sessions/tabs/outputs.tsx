@@ -42,7 +42,7 @@ export const SessionOutputs = () => {
 					<div ref={registerChild as React.LegacyRef<HTMLDivElement>} style={style}>
 						<script onLoad={measure} />
 
-						<div className="font-mono flex">
+						<div className="flex">
 							<div className="w-52 text-yellow-500">[{log.time}]: </div>
 
 							<div className="w-full whitespace-pre-line">{log.print}</div>
@@ -54,7 +54,7 @@ export const SessionOutputs = () => {
 	};
 
 	return (
-		<div className="scrollbar h-full w-full" ref={frameRef}>
+		<div className="scrollbar size-full" ref={frameRef}>
 			{loading && !outputs.length ? (
 				<Loader isCenter size="xl" />
 			) : (
@@ -90,7 +90,7 @@ export const SessionOutputs = () => {
 			)}
 
 			{!outputs.length && !loading ? (
-				<div className="center mt-20 flex flex-col">
+				<div className="mt-20 flex flex-col">
 					<div className="mt-10 text-center text-xl font-semibold">{t("noLogsFound")}</div>
 				</div>
 			) : null}

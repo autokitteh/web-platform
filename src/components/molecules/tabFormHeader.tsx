@@ -29,7 +29,7 @@ export const TabFormHeader = ({
 				<div className="flex items-center gap-1">
 					<IconButton
 						ariaLabel={t("ariaLabelReturnBack")}
-						className="h-8 w-8 p-0 hover:bg-black"
+						className="size-8 p-0 hover:bg-black"
 						onClick={navigateBack}
 					>
 						<ArrowLeft />

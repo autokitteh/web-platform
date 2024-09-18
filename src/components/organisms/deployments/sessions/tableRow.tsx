@@ -100,7 +100,7 @@ export const SessionsTableRow = memo(
 					</IconButton>
 
 					<IconButton className="p-1.5" onClick={handleDeleteClick}>
-						<TrashIcon className="h-3 w-3 fill-white" />
+						<TrashIcon className="size-3 fill-white" />
 					</IconButton>
 				</div>
 			</div>

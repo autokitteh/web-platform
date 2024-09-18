@@ -125,10 +125,10 @@ export const SessionViewer = () => {
 
 							<IconButton
 								ariaLabel={t("buttons.ariaCloseEditor")}
-								className="relative -right-4 -top-3 h-7 w-7 bg-gray-1100 p-0.5"
+								className="relative -right-4 -top-3 size-7 bg-gray-1100 p-0.5"
 								onClick={closeEditor}
 							>
-								<Close className="h-3 w-3 fill-white transition" />
+								<Close className="size-3 fill-white transition" />
 							</IconButton>
 						</div>
 					</div>

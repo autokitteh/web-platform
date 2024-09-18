@@ -30,7 +30,7 @@ export const ManualRunSuccessToastMessage = ({
 					{sessionId}
 				</Button>
 
-				<ExternalLinkIcon className="h-3.5 w-3.5 fill-white duration-200" />
+				<ExternalLinkIcon className="size-3.5 fill-white duration-200" />
 			</div>
 		</>
 	);

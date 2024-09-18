@@ -14,13 +14,13 @@ export const OauthJiraForm = () => {
 		<div>
 			<Accordion title={t("information")}>
 				<Link
-					className="text-md inline-flex items-center gap-2.5 text-green-800"
+					className="inline-flex items-center gap-2.5 text-green-800"
 					target="_blank"
 					to="https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/"
 				>
 					{t("jira.information.oauth")}
 
-					<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
+					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 				</Link>
 			</Accordion>
 

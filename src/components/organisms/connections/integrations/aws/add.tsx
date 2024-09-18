@@ -95,7 +95,7 @@ export const AwsIntegrationAddForm = ({
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-5 w-5 fill-white transition" />}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 
 				{t("buttons.saveConnection")}
 			</Button>

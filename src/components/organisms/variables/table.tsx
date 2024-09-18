@@ -97,7 +97,7 @@ export const VariablesTable = () => {
 					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-500 hover:text-white"
 					href="add"
 				>
-					<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}
 				</Button>
@@ -142,7 +142,7 @@ export const VariablesTable = () => {
 										value
 									) : (
 										<div className="flex items-center gap-2 leading-none">
-											<LockSolid className="h-3 w-3 fill-white" />
+											<LockSolid className="size-3 fill-white" />
 
 											<span className="pt-2">**********</span>
 										</div>
@@ -155,14 +155,14 @@ export const VariablesTable = () => {
 											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
 											onClick={() => navigate(`edit/${envId}/${name}`)}
 										>
-											<EditIcon className="h-3 w-3 fill-white" />
+											<EditIcon className="size-3 fill-white" />
 										</IconButton>
 
 										<IconButton
 											ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
 											onClick={() => showDeleteModal(name, value, scopeId!)}
 										>
-											<TrashIcon className="h-3 w-3 fill-white" />
+											<TrashIcon className="size-3 fill-white" />
 										</IconButton>
 									</div>
 								</Td>

@@ -32,7 +32,7 @@ export const ActivityList = () => {
 	);
 
 	return (
-		<Frame className="mr-3 h-4/5 w-full rounded-b-[0] pb-0 transition">
+		<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
 			{selectedActivity ? (
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}

@@ -52,7 +52,7 @@ export const RefreshButton = ({ isLoading, onRefresh }: RefreshButtonProps) => {
 
 	return (
 		<IconButton
-			className="group h-[2.125rem] w-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
+			className="group size-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
 			disabled={isSpinning}
 			onClick={handleRefreshClick}
 			title={t("refresh")}

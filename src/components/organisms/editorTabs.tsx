@@ -118,7 +118,7 @@ export const EditorTabs = () => {
 									className={activeCloseIcon(name)}
 									onClick={(event) => handleCloseButtonClick(event, name)}
 								>
-									<Close className="h-2 w-2 fill-gray-750 transition group-hover:fill-white" />
+									<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
 								</IconButton>
 							</Tab>
 						))}

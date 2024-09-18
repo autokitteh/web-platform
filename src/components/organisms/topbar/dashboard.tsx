@@ -36,7 +36,7 @@ export const DashboardTopbar = () => {
 
 	return (
 		<div className="mt-6 flex">
-			<Typography className="font-averta-bold w-full text-3xl font-bold text-black" element="h1">
+			<Typography className="w-full text-3xl font-bold text-black" element="h1">
 				{t("hello")} {userName ? `, ${userName}` : null}
 			</Typography>
 
