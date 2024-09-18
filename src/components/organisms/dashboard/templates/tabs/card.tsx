@@ -22,7 +22,7 @@ export const ProjectTemplateCard = ({
 	const { t } = useTranslation("templates");
 
 	return (
-		<div className="border-1350 relative flex flex-col rounded-md border border-gray-1350 bg-gray-1100 px-5 pb-4 pt-5 text-white">
+		<div className="border-1350 relative flex flex-col rounded-md border border-gray-1350 bg-gray-1100 px-5 pb-4 pt-5 font-averta text-white">
 			<div className="flex items-center gap-5">
 				<Status>{category}</Status>
 

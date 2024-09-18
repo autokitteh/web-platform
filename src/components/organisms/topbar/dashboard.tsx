@@ -38,17 +38,17 @@ export const DashboardTopbar = () => {
 
 	return (
 		<div className="flex flex-wrap">
-			<Typography className="w-full text-3xl font-semibold" element="h2">
-				{t("hello")} {userName ? `, ${userName}` : null}
+			<Typography className="w-full font-averta text-3xl font-semibold" element="h2">
+				{t("hello")} {userName ? `, ${userName}` : null} James
 			</Typography>
 
 			<div className="mt-1 flex w-full items-end justify-between">
-				<Typography className="w-full text-4xl font-semibold" element="h1">
+				<Typography className="w-full font-averta text-4xl font-semibold" element="h1">
 					{t("welcome")}
 				</Typography>
 
 				<Button
-					className="gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 text-base"
+					className="gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 font-averta text-base font-semibold"
 					disabled={loadingNewProject}
 					onClick={handleCreateProject}
 					variant="filled"
