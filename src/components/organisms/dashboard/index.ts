@@ -1,5 +1,5 @@
 export { DashboardProjectsTable } from "@components/organisms/dashboard/projectsTable";
-export { DashboardWelcomeCards } from "@components/organisms/dashboard/welcomeCards";
+export { DashboardWelcomeMainBlock } from "@components/organisms/dashboard/welcomeMainBlock";
 export { WelcomeInfoCard } from "@components/organisms/dashboard/welcomeInfoCard";
-export { DashboardProjectsTableCard } from "@components/organisms/dashboard/projectsTableCard";
+export { DashboardFooterProjectCard } from "@components/organisms/dashboard/footerProjectCard";
 export { WelcomeVideoModal } from "@components/organisms/dashboard/welcomeVideoModal";

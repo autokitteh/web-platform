@@ -8,12 +8,14 @@ import { Modal } from "@components/molecules";
 export const WelcomeVideoModal = () => {
 	const data = useModalStore((state) => state.data) as { video: string };
 
+	if (!data) return null;
+
 	return (
 		<Modal className="h-3/4 w-3/4 bg-black/50" name={ModalName.welcomePage}>
 			<iframe
 				allowFullScreen={true}
 				className="h-full w-full rounded-14 pb-7 pt-4"
-				src={data?.video}
+				src={data.video}
 				title="Video"
 			/>
 		</Modal>

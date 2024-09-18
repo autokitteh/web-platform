@@ -4,7 +4,7 @@ import { useResize } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
 import { Frame, Loader } from "@components/atoms";
-import { DashboardProjectsTable, DashboardTopbar, DashboardWelcomeCards } from "@components/organisms";
+import { DashboardProjectsTable, DashboardTopbar, DashboardWelcomeMainBlock } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
 
 import { CatDashboardImage } from "@assets/image";
@@ -18,8 +18,8 @@ export const Dashboard = () => {
 	const dashboardContent = useMemo(() => {
 		if (isLoadingProjectsList) {
 			return <Loader isCenter size="lg" />;
-		} else if (!hasProjects) {
-			return <DashboardWelcomeCards />;
+		} else if (hasProjects) {
+			return <DashboardWelcomeMainBlock />;
 		} else {
 			return <DashboardProjectsTable />;
 		}

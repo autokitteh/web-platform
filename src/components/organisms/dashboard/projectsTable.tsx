@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { dashboardProjectsCards } from "@src/constants";
 import { SidebarHrefMenu } from "@src/enums/components";
 import { Project } from "@type/models";
 
@@ -12,7 +11,6 @@ import { useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Link, Spinner, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { DashboardProjectsTableCard } from "@components/organisms/dashboard";
 
 import { StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, PlusAccordionIcon } from "@assets/image/icons";
@@ -22,15 +20,15 @@ export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 	const { createProject, projectsList } = useProjectStore();
 	const navigate = useNavigate();
-	const [loadingNewProject, setLoadingNewProject] = useState(false);
+	const [creatingProject, setCreatingProject] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 
 	const { items: sortedProjects, requestSort, sortConfig } = useSort<Project>(projectsList, "name");
 
-	const handleCreateProject = async () => {
-		setLoadingNewProject(true);
+	const handleCreateProjectClick = async () => {
+		setCreatingProject(true);
 		const { data, error } = await createProject();
-		setLoadingNewProject(false);
+		setCreatingProject(false);
 		if (error) {
 			addToast({
 				message: (error as Error).message,
@@ -76,11 +74,11 @@ export const DashboardProjectsTable = () => {
 			<div className="mt-5 flex flex-col items-center justify-center">
 				<Button
 					className="gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 font-averta text-base font-semibold"
-					disabled={loadingNewProject}
-					onClick={handleCreateProject}
+					disabled={creatingProject}
+					onClick={handleCreateProjectClick}
 					variant="filled"
 				>
-					<IconSvg className="fill-white" size="lg" src={!loadingNewProject ? PlusAccordionIcon : Spinner} />
+					<IconSvg className="fill-white" size="lg" src={!creatingProject ? PlusAccordionIcon : Spinner} />
 
 					{t("buttons.startNewProject")}
 				</Button>
@@ -93,10 +91,6 @@ export const DashboardProjectsTable = () => {
 			</div>
 
 			<div className="mt-8 grid grid-cols-auto-fit-290 gap-5 border-t-2 border-gray-1050 pt-6">
-				{dashboardProjectsCards.map((card, index) => (
-					<DashboardProjectsTableCard card={card} isCreating={false} key={index} onCreateClick={() => {}} />
-				))}
-
 				<div className="rounded-md border-2 border-gray-1050 bg-gray-1100 px-5 pb-4 pt-6 font-averta">
 					<div className="flex items-center gap-2.5">
 						<Link className="hover:scale-110" target="_blank" to="https://www.reddit.com/r/autokitteh/">

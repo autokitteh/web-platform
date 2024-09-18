@@ -10,7 +10,7 @@ import { ProjectTemplateCard } from "@components/organisms/dashboard/templates/t
 export const ProjectTemplatesTabs = () => {
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
 	const [loadingCardId, setLoadingCardId] = useState<string>();
-	const { createProject } = useCreateProjectFromTemplate();
+	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
 	const { projectsList } = useProjectStore();
 
 	const activeCategory = useMemo(
@@ -31,7 +31,7 @@ export const ProjectTemplatesTabs = () => {
 
 	const createProjectFromAsset = async (assetDirectory: string) => {
 		setLoadingCardId(assetDirectory);
-		await createProject(assetDirectory);
+		await createProjectFromTemplate(assetDirectory);
 		setLoadingCardId(undefined);
 	};
 

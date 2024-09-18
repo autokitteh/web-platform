@@ -6,6 +6,6 @@ export type { ToastType } from "@type/components/toast.type";
 export type {
 	TemplateCategory,
 	TemplateCardType,
-	TableProjectCardType,
+	DashboardFooterTemplateCardType,
 } from "@src/types/components/projectTemplates.type";
 export type { FormMode, ManualFormParamsErrors } from "@src/types/components/form.type";

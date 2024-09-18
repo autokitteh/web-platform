@@ -1,4 +1,4 @@
-import { TableProjectCardType, TemplateCategory } from "@src/types/components";
+import { DashboardFooterTemplateCardType, TemplateCategory } from "@src/types/components";
 
 import {
 	AwsIcon,
@@ -130,7 +130,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 	},
 ];
 
-export const dashboardProjectsCards: TableProjectCardType[] = [
+export const dashboardFooterProjectRecommendations: DashboardFooterTemplateCardType[] = [
 	{
 		title: "Build another Slack project",
 		description: "What are the benefits of workflow automation? From reduced costs to greater productivity",

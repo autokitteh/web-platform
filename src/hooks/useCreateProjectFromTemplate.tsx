@@ -56,7 +56,7 @@ export const useCreateProjectFromTemplate = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const createProject = async (assetDir: string) => {
+	const createProjectFromTemplate = async (assetDir: string) => {
 		try {
 			const manifestURL = `/assets/templates/${assetDir}/autokitteh.yaml`;
 			const manifestData = await fetchFileContent(manifestURL);
@@ -99,5 +99,5 @@ export const useCreateProjectFromTemplate = () => {
 		}
 	};
 
-	return { createProject };
+	return { createProjectFromTemplate };
 };

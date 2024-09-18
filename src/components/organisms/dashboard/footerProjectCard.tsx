@@ -2,18 +2,18 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { TableProjectCardType } from "@src/types/components";
+import { DashboardFooterTemplateCardType } from "@src/types/components";
 
 import { Button, IconSvg, Loader, Typography } from "@components/atoms";
 
 import { DownloadDownArrowIcon } from "@assets/image/icons";
 
-export const DashboardProjectsTableCard = ({
+export const DashboardFooterProjectCard = ({
 	card,
 	isCreating,
 	onCreateClick,
 }: {
-	card: TableProjectCardType;
+	card: DashboardFooterTemplateCardType;
 	isCreating: boolean;
 	onCreateClick: () => void;
 }) => {

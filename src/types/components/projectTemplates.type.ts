@@ -8,7 +8,7 @@ export type TemplateCardType = {
 	title: string;
 };
 
-export type TableProjectCardType = {
+export type DashboardFooterTemplateCardType = {
 	assetDirectory: string;
 	description: string;
 	icon: FunctionComponent<SVGProps<SVGSVGElement>>;

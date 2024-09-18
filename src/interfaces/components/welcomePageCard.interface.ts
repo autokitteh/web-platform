@@ -1,11 +1,11 @@
-interface Item {
+interface WelcomeCardInfoListItem {
 	text: string;
 	linkText?: string;
 	linkHref?: string;
 }
 
 export interface WelcomeInfoCardProps {
-	items: Item[];
+	items: WelcomeCardInfoListItem[];
 	title: React.ReactNode;
 	onPlay?: () => void;
 }

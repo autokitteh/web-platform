@@ -13,10 +13,10 @@ import { WelcomeInfoCard, WelcomeVideoModal } from "@components/organisms/dashbo
 import { ProjectsIcon, StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
 
-export const DashboardWelcomeCards = () => {
+export const DashboardWelcomeMainBlock = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { openModal } = useModalStore();
-	const { createProject } = useCreateProjectFromTemplate();
+	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
 	const [creatingTemplate, setCreatingTemplate] = useState(false);
 
 	const handleOpenModal = (video: string) => {
@@ -25,7 +25,7 @@ export const DashboardWelcomeCards = () => {
 
 	const createProjectFromAsset = async (assetDirectory: string) => {
 		setCreatingTemplate(true);
-		await createProject(assetDirectory);
+		await createProjectFromTemplate(assetDirectory);
 		setCreatingTemplate(false);
 	};
 
