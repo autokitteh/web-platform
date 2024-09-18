@@ -9,8 +9,8 @@ import { CirclePlayIcon } from "@assets/image/icons";
 export const WelcomeCards = () => {
 	return (
 		<div className="z-10 mt-7 grid gap-5">
-			<div className="col-span-1 flex w-full items-stretch gap-8 overflow-hidden rounded-2xl border border-gray-950 bg-black p-8 pr-7 font-averta text-white">
-				<div className="flex w-full max-w-550 items-center justify-center rounded-2xl border-2 border-gray-750 bg-gray-1400">
+			<div className="col-span-1 flex w-full items-stretch gap-8 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pr-7 font-averta text-white">
+				<div className="bg-gray-1400 flex w-full max-w-550 items-center justify-center rounded-2xl border-2 border-gray-750">
 					<IconButton className="group h-20 w-20 overflow-hidden rounded-full p-0">
 						<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
 					</IconButton>
@@ -29,7 +29,7 @@ export const WelcomeCards = () => {
 						Build anything with simple code. Use APIs and build your business logic: Serverless, no queues,
 						secured, managed
 					</Typography>
-					<div className="mt-10 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 pb-24">
+					<div className="relative mt-10 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 pb-24">
 						<Typography className="font-semibold text-gray-500" element="p">
 							Start With Demo Project
 						</Typography>
@@ -39,13 +39,13 @@ export const WelcomeCards = () => {
 								<IconSvg size="lg" src={ProjectsIcon} />
 								Meow world
 							</Button>
-							<StartFromTemplateImage className="-bottom-22 absolute left-8" />
 						</div>
+						<StartFromTemplateImage className="absolute -right-12 bottom-0" />
 					</div>
 				</div>
 			</div>
 
-			<div className="grid grid-cols-auto-fit-350 gap-5">
+			<div className="grid-cols-auto-fit-350 grid gap-5">
 				<div className="rounded-2xl border border-gray-950 bg-gray-1250 py-5 pl-6 pr-4 font-averta text-white">
 					<Typography className="text-xl font-bold" element="h3">
 						Starting a project -{" "}
@@ -55,7 +55,7 @@ export const WelcomeCards = () => {
 					</Typography>
 
 					<div className="mt-2.5 flex items-center">
-						<div className="flex min-h-32 w-full max-w-64 items-center justify-center rounded-2xl border border-gray-750 bg-gray-1400">
+						<div className="bg-gray-1400 flex min-h-32 w-full max-w-64 items-center justify-center rounded-2xl border border-gray-750">
 							<IconButton className="group h-11 w-11 overflow-hidden rounded-full p-0">
 								<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
 							</IconButton>
@@ -97,7 +97,7 @@ export const WelcomeCards = () => {
 					</Typography>
 
 					<div className="mt-2.5 flex items-center">
-						<div className="flex min-h-32 w-full max-w-64 items-center justify-center rounded-2xl border border-gray-750 bg-gray-1400">
+						<div className="bg-gray-1400 flex min-h-32 w-full max-w-64 items-center justify-center rounded-2xl border border-gray-750">
 							<IconButton className="group h-11 w-11 overflow-hidden rounded-full p-0">
 								<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
 							</IconButton>
