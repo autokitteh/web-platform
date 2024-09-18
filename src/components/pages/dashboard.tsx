@@ -35,7 +35,7 @@ export const Dashboard = () => {
 				</Frame>
 
 				{!hasProjects && !isLoadingProjectsList ? (
-					<CatDashboardImage className="absolute -bottom-6 -right-5" />
+					<CatDashboardImage className="absolute -bottom-6 -right-5 hidden minHeightLg:block" />
 				) : null}
 			</div>
 

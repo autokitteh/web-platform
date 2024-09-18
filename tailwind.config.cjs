@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef, @typescript-eslint/no-require-imports
 const plugin = require('tailwindcss/plugin');
 
 // eslint-disable-next-line no-undef
@@ -44,7 +44,7 @@ module.exports = {
         "4xl": "40px",
       },
       gridTemplateColumns: {
-        'auto-fit-290': 'repeat(auto-fit, minmax(290px, 1fr))',
+        'auto-fit-250': 'repeat(auto-fit, minmax(250px, 1fr))',
         'auto-fit-350': 'repeat(auto-fit, minmax(350px, 1fr))',
       },
     },
@@ -55,6 +55,7 @@ module.exports = {
       xl: "1280px",
       "2xl": "1536px",
       "3xl": "1736px",
+      'minHeightLg': { 'raw': '(min-height: 1000px)' },
     },
     colors: {
       transparent: {

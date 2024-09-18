@@ -8,7 +8,7 @@ export const DashboardFooterProjectCard = ({ card }: { card: DashboardFooterTemp
 	return (
 		<div className="rounded-md border-2 border-gray-1050 bg-gray-1100 px-5 pb-4 pt-6 font-averta">
 			<div className="flex items-center gap-4">
-				<div className="flex h-10 w-10 items-center justify-center rounded-full bg-white p-1">
+				<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white p-1">
 					<IconSvg className="rounded-full" size="xl" src={card.icon} />
 				</div>
 

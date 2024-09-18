@@ -59,7 +59,7 @@ export const ProjectTemplatesTabs = () => {
 				</div>
 			</div>
 
-			<div className="mt-4 grid grid-cols-auto-fit-290 gap-x-4 gap-y-5 pb-5 text-black">
+			<div className="mt-4 grid grid-cols-auto-fit-250 gap-x-4 gap-y-5 pb-5 text-black">
 				{activeCategory
 					? activeCategory.cards.map((card, index) => (
 							<ProjectTemplateCard
