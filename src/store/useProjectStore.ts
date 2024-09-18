@@ -18,6 +18,7 @@ const defaultState: Omit<
 	| "createProjectFromManifest"
 > = {
 	projectsList: [],
+	isLoadingProjectsList: true,
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
@@ -107,13 +108,20 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	getProjectsList: async () => {
+		const projectsList = get().projectsList;
+		if (!projectsList.length) {
+			set((state) => ({ ...state, isLoadingProjectsList: true }));
+		}
+
 		const { data: projects, error } = await ProjectsService.list();
 
 		if (error) {
+			set((state) => ({ ...state, isLoadingProjectsList: false }));
+
 			return { data: undefined, error };
 		}
 
-		set((state) => ({ ...state, projectsList: projects }));
+		set((state) => ({ ...state, projectsList: projects, isLoadingProjectsList: false }));
 
 		return { data: projects, error: undefined };
 	},

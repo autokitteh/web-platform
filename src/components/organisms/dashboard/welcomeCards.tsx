@@ -7,7 +7,7 @@ import { WelcomeInfoCard } from "@components/organisms/dashboard";
 import { ProjectsIcon, StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
 
-export const WelcomeCards = () => {
+export const DashboardWelcomeCards = () => {
 	return (
 		<div className="z-10 mt-7 grid gap-5">
 			<div className="col-span-1 grid grid-cols-auto-fit-350 items-stretch gap-4 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pl-6 pr-4 font-averta text-white">

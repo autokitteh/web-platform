@@ -10,4 +10,4 @@ export {
 	DashboardTopbar,
 	DeleteProjectModal,
 } from "@components/organisms/topbar";
-export { ProjectsTable, WelcomeCards } from "@components/organisms/dashboard";
+export { DashboardProjectsTable, DashboardWelcomeCards } from "@components/organisms/dashboard";

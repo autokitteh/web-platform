@@ -1,21 +1,37 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { motion } from "framer-motion";
 
-import { Frame } from "@components/atoms";
-import { DashboardTopbar, WelcomeCards } from "@components/organisms";
+import { useProjectStore } from "@src/store";
+
+import { Frame, Loader } from "@components/atoms";
+import { DashboardProjectsTable, DashboardTopbar, DashboardWelcomeCards } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
 
 import { CatDashboardImage } from "@assets/image";
 
 export const Dashboard = () => {
+	const { isLoadingProjectsList, projectsList } = useProjectStore();
+
+	const hasProjects = !!projectsList.length;
+
+	const dashboardContent = useMemo(() => {
+		if (isLoadingProjectsList) {
+			return <Loader isCenter size="lg" />;
+		} else if (!hasProjects) {
+			return <DashboardWelcomeCards />;
+		} else {
+			return <DashboardProjectsTable />;
+		}
+	}, [isLoadingProjectsList, hasProjects]);
+
 	return (
 		<div className="m-4 ml-0 flex w-full overflow-hidden rounded-2xl">
 			<div className="relative w-2/3">
 				<Frame className="flex h-full flex-col overflow-x-clip rounded-r-none bg-gray-1100">
 					<DashboardTopbar />
 
-					<WelcomeCards />
+					{dashboardContent}
 				</Frame>
 
 				<motion.div

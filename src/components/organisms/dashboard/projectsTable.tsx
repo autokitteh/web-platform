@@ -11,7 +11,7 @@ import { useProjectStore } from "@store";
 import { TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 
-export const ProjectsTable = () => {
+export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
@@ -19,9 +19,7 @@ export const ProjectsTable = () => {
 	const { items: sortedProjects, requestSort, sortConfig } = useSort<Project>(projectsList, "name");
 
 	return (
-		<div className="relative mb-3 mt-7">
-			<div className="font-averta text-2xl font-bold">{t("title")}</div>
-
+		<div className="mt-10">
 			{sortedProjects.length ? (
 				<Table className="mt-2.5 max-h-96 rounded-t-20">
 					<THead>
@@ -48,9 +46,7 @@ export const ProjectsTable = () => {
 						))}
 					</TBody>
 				</Table>
-			) : (
-				<div className="mt-10 text-center text-xl font-semibold text-black">{t("noProjects")}</div>
-			)}
+			) : null}
 		</div>
 	);
 };
