@@ -1,4 +1,5 @@
 {
     "createProject": "Create New Project From Template",
+    "projectAlreadyExist": "Project with this template already exist",
     "start": "Start"
 }

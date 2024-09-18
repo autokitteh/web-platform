@@ -2,6 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@src/utilities";
 import { TemplateCardType } from "@type/components";
 
 import { Button, IconSvg, Loader, Status, Typography } from "@components/atoms";
@@ -53,23 +54,27 @@ export const ProjectTemplateCard = ({
 				{card.description}
 			</Typography>
 
-			<Button
-				className="border-1 ml-auto mt-auto w-auto gap-1.5 rounded-full border-gray-1350 bg-gray-1450 p-2 px-3.5 leading-none text-white"
-				disabled={disabled || isCreating}
-				onClick={onCreateClick}
-				title={t("createProject")}
-				variant="filledGray"
+			<div
+				className={cn("mt-auto", { "cursor-not-allowed": disabled })}
+				title={disabled ? t("projectAlreadyExist") : t("createProject")}
 			>
-				{isCreating ? (
-					<div className="flex h-3 w-4 items-center">
-						<Loader size="sm" />
-					</div>
-				) : (
-					<IconSvg className="h-3" size="xl" src={DownloadDownArrowIcon} />
-				)}
+				<Button
+					className="border-1 ml-auto mt-1 w-auto gap-1.5 rounded-full border-gray-1350 bg-gray-1450 p-2 px-3.5 leading-none text-white"
+					disabled={disabled || isCreating}
+					onClick={onCreateClick}
+					variant="filledGray"
+				>
+					{isCreating ? (
+						<div className="flex h-3 w-4 items-center">
+							<Loader size="sm" />
+						</div>
+					) : (
+						<IconSvg className="h-3" size="xl" src={DownloadDownArrowIcon} />
+					)}
 
-				{t("start")}
-			</Button>
+					{t("start")}
+				</Button>
+			</div>
 		</div>
 	);
 };
