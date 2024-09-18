@@ -116,3 +116,7 @@ a {
 .animation-running {
 	animation-play-state: running;
 }
+
+ul {
+	font-size: 15px;
+}

@@ -39,7 +39,7 @@ export const DashboardTopbar = () => {
 	return (
 		<div className="flex flex-wrap">
 			<Typography className="w-full font-averta text-3xl font-semibold" element="h2">
-				{t("hello")} {userName ? `, ${userName}` : null} James
+				{t("hello")} {userName ? `, ${userName}` : null}
 			</Typography>
 
 			<div className="mt-1 flex w-full items-end justify-between">

@@ -20,10 +20,10 @@ export const ProjectsTable = () => {
 
 	return (
 		<div className="relative mb-3 mt-7">
-			<div className="text-2xl font-bold">{t("title")}</div>
+			<div className="font-averta text-2xl font-bold">{t("title")}</div>
 
 			{sortedProjects.length ? (
-				<Table className="mt-2.5 max-h-96 rounded-t-20" variant="light">
+				<Table className="mt-2.5 max-h-96 rounded-t-20">
 					<THead>
 						<Tr className="border-none pl-6">
 							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("name")}>

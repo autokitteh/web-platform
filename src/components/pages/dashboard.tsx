@@ -3,7 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 
 import { Frame } from "@components/atoms";
-import { DashboardTopbar, ProjectsTable } from "@components/organisms";
+import { DashboardTopbar, WelcomeCards } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
 
 import { CatDashboard } from "@assets/image";
@@ -15,7 +15,7 @@ export const Dashboard = () => {
 				<Frame className="relative flex w-2/3 flex-col overflow-hidden rounded-r-none bg-gray-1100">
 					<DashboardTopbar />
 
-					<ProjectsTable />
+					<WelcomeCards />
 
 					<motion.div
 						animate={{ y: 0, x: 0 }}
