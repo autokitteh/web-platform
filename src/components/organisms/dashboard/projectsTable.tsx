@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { dashboardProjectsCards } from "@src/constants";
 import { SidebarHrefMenu } from "@src/enums/components";
 import { Project } from "@type/models";
 
@@ -11,6 +12,7 @@ import { useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Spinner, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
+import { DashboardProjectsTableCard } from "@components/organisms/dashboard";
 
 import { StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, PlusAccordionIcon } from "@assets/image/icons";
@@ -41,7 +43,7 @@ export const DashboardProjectsTable = () => {
 	};
 
 	return (
-		<div className="mt-10">
+		<div className="z-10 mt-10">
 			{sortedProjects.length ? (
 				<Table className="mt-2.5 max-h-96 rounded-t-20">
 					<THead>
@@ -87,6 +89,12 @@ export const DashboardProjectsTable = () => {
 
 					<ArrowStartTemplateIcon className="absolute -top-4 left-52" />
 				</div>
+			</div>
+
+			<div className="mt-10 grid grid-cols-auto-fit-290 gap-5 pt-6">
+				{dashboardProjectsCards.map((card, index) => (
+					<DashboardProjectsTableCard card={card} isCreating={false} key={index} onCreateClick={() => {}} />
+				))}
 			</div>
 		</div>
 	);

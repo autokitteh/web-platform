@@ -28,7 +28,8 @@
 			}
 		},
 		"buttons":{
-			"startNewProject": "Start New Project"
+			"startNewProject": "Start New Project",
+			"start": "Start"
 		}
 	}
 }
