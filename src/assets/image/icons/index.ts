@@ -47,3 +47,4 @@ export { default as ArrowRightCircleIcon } from "@assets/image/icons/ArrowRightC
 export { default as RocketIcon } from "@assets/image/icons/Rocket.svg?react";
 export { default as DownloadDownArrowIcon } from "@assets/image/icons/DownloadDownArrow.svg?react";
 export { default as CirclePlayIcon } from "@assets/image/icons/CirclePlay.svg?react";
+export { default as ArrowStartTemplateIcon } from "@assets/image/icons/ArrowStartTemplate.svg?react";

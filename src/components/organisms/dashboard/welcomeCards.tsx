@@ -4,49 +4,52 @@ import React from "react";
 import { Button, IconButton, IconSvg, Link, Typography } from "@components/atoms";
 
 import { ProjectsIcon, StartFromTemplateImage } from "@assets/image";
-import { CirclePlayIcon } from "@assets/image/icons";
+import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
 
 export const WelcomeCards = () => {
 	return (
 		<div className="z-10 mt-7 grid gap-5">
-			<div className="font-averta col-span-1 flex w-full items-stretch gap-8 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pr-7 text-white">
-				<div className="bg-gray-1400 flex w-full max-w-550 items-center justify-center rounded-2xl border-2 border-gray-750">
-					<IconButton className="group h-20 w-20 overflow-hidden rounded-full p-0">
-						<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
-					</IconButton>
-				</div>
-
-				<div className="mt-2">
-					<Typography className="text-3xl font-bold" element="h2">
-						Reliable Automation
-					</Typography>
-
-					<Typography className="text-3xl font-bold" element="h2">
-						In a Few Lines of Code
-					</Typography>
-
-					<Typography className="mt-4 font-bold" element="p">
+			<div className="col-span-1 grid grid-cols-auto-fit-350 items-stretch gap-4 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pl-6 pr-4 font-averta text-white">
+				<div className="flex flex-col">
+					<div className="flex min-h-64 w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-gray-1400">
+						<IconButton className="group h-20 w-20 overflow-hidden rounded-full p-0">
+							<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
+						</IconButton>
+					</div>
+					<Typography className="mt-2 font-bold" element="p">
 						Build anything with simple code. Use APIs and build your business logic: Serverless, no queues,
 						secured, managed
 					</Typography>
-					<div className="relative mt-10 flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 pb-24">
-						<Typography className="font-semibold text-gray-500" element="p">
-							Start With Demo Project
-						</Typography>
+				</div>
+				<div className="m-auto mt-2 w-full">
+					<Typography className="text-center text-3xl font-bold 2xl:text-left" element="h2">
+						Reliable Automation
+					</Typography>
 
-						<div className="relative">
-							<Button className="font-averta min-w-64 justify-center gap-3 rounded-full bg-green-800 py-3 text-2xl font-bold leading-tight hover:bg-green-200">
+					<Typography className="text-center text-3xl font-bold 2xl:text-right" element="h2">
+						In a <span className="text-green-800">Few Lines of Code</span>
+					</Typography>
+
+					<div className="mt-10">
+						<div className="flex flex-col items-center justify-center gap-1">
+							<Typography className="font-semibold text-gray-500" element="p">
+								Start With Demo Project
+							</Typography>
+							<Button className="min-w-64 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200">
 								<IconSvg size="lg" src={ProjectsIcon} />
 								Meow world
 							</Button>
 						</div>
-						<StartFromTemplateImage className="absolute -right-12 bottom-0" />
+						<div className="relative left-1/2 mt-2 inline-block -translate-x-1/2">
+							<StartFromTemplateImage className="m-auto" />
+							<ArrowStartTemplateIcon className="absolute -top-4 left-52" />
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<div className="grid-cols-auto-fit-350 grid gap-5">
-				<div className="font-averta rounded-2xl border border-gray-950 bg-gray-1250 py-5 pl-6 pr-4 text-white">
+			<div className="grid grid-cols-auto-fit-350 gap-5">
+				<div className="rounded-2xl border border-gray-950 bg-gray-1250 py-5 pl-6 pr-4 font-averta text-white">
 					<Typography className="text-xl font-bold" element="h3">
 						Starting a project -{" "}
 						<Link className="font-normal text-green-800" to="#">
@@ -55,7 +58,7 @@ export const WelcomeCards = () => {
 					</Typography>
 
 					<div className="mt-2.5 flex items-center">
-						<div className="bg-gray-1400 flex min-h-32 w-full max-w-64 items-center justify-center rounded-2xl border border-gray-750">
+						<div className="flex min-h-32 w-full max-w-64 items-center justify-center rounded-2xl border border-gray-750 bg-gray-1400">
 							<IconButton className="group h-11 w-11 overflow-hidden rounded-full p-0">
 								<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
 							</IconButton>
@@ -88,7 +91,7 @@ export const WelcomeCards = () => {
 					</div>
 				</div>
 
-				<div className="font-averta rounded-2xl border border-gray-950 bg-gray-1250 py-5 pl-6 pr-4 text-white">
+				<div className="rounded-2xl border border-gray-950 bg-gray-1250 py-5 pl-6 pr-4 font-averta text-white">
 					<Typography className="text-xl font-bold" element="h3">
 						Develop in VS-Code,{" "}
 						<Link className="font-normal text-green-800" to="#">
@@ -97,7 +100,7 @@ export const WelcomeCards = () => {
 					</Typography>
 
 					<div className="mt-2.5 flex items-center">
-						<div className="bg-gray-1400 flex min-h-32 w-full max-w-64 items-center justify-center rounded-2xl border border-gray-750">
+						<div className="flex min-h-32 w-full max-w-64 items-center justify-center rounded-2xl border border-gray-750 bg-gray-1400">
 							<IconButton className="group h-11 w-11 overflow-hidden rounded-full p-0">
 								<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
 							</IconButton>
