@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
+import { defaultProjectFile } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
@@ -34,7 +35,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 	};
 
 	const handleCreateProject = async () => {
-		const { data, error } = await createProject();
+		const { data, error } = await createProject(true);
 
 		if (error) {
 			addToast({
@@ -45,7 +46,19 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 			return;
 		}
 
-		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
+		const projectId = data?.projectId;
+		if (!projectId) {
+			addToast({
+				message: t("projectCreationFailed"),
+				type: "error",
+			});
+
+			return;
+		}
+
+		navigate(`/${SidebarHrefMenu.projects}/${projectId}`, {
+			state: { fileToOpen: defaultProjectFile },
+		});
 	};
 
 	useEffect(() => {

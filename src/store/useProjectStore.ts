@@ -1,3 +1,4 @@
+import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -6,6 +7,8 @@ import { StoreName } from "@enums";
 import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
+import { defaultProjectDirectory, defaultProjectFile } from "@src/constants";
+import { fetchFileContent } from "@src/utilities";
 
 const defaultState: Omit<
 	ProjectStore,
@@ -24,7 +27,7 @@ const defaultState: Omit<
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 
-	createProject: async () => {
+	createProject: async (isDefault?: boolean) => {
 		const { data: projectId, error } = await ProjectsService.create();
 
 		if (error) {
@@ -41,6 +44,22 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}
 		if (!project) {
 			return { data: undefined, error: new Error("Project could not be fetched") };
+		}
+
+		if (isDefault) {
+			const defaultResource = await fetchFileContent(
+				`/assets/templates/${defaultProjectDirectory}/${defaultProjectFile}`
+			);
+
+			const defaultResources = {
+				[defaultProjectFile.toString()]: new TextEncoder().encode(defaultResource || ""),
+			};
+
+			const { error: saveResourceError } = await ProjectsService.setResources(projectId, defaultResources);
+
+			if (saveResourceError) {
+				return { data: undefined, error: i18n.t("couldntSaveDefaultFileForProject", { ns: "errors" }) };
+			}
 		}
 
 		const menuItem = {

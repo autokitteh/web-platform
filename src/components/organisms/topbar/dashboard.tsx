@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
+import { defaultProjectFile } from "@src/constants";
 
 import { useProjectStore, useToastStore, useUserStore } from "@store";
 
@@ -13,6 +14,7 @@ import { PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
+	const { t: tErrors } = useTranslation("errors");
 	const { user } = useUserStore();
 	const { createProject } = useProjectStore();
 	const [loadingNewProject, setLoadingNewProject] = useState(false);
@@ -33,7 +35,19 @@ export const DashboardTopbar = () => {
 			return;
 		}
 
-		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
+		const projectId = data?.projectId;
+		if (!projectId) {
+			addToast({
+				message: tErrors("projectCreationFailed"),
+				type: "error",
+			});
+
+			return;
+		}
+
+		navigate(`/${SidebarHrefMenu.projects}/${projectId}`, {
+			state: { fileToOpen: defaultProjectFile },
+		});
 	};
 
 	return (

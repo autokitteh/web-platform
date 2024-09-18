@@ -16,7 +16,12 @@ export {
 export { menuItems } from "@constants/menuItems.constants";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
-export { defaultProjectTab, projectTabs } from "@constants/project.constants";
+export {
+	defaultProjectTab,
+	projectTabs,
+	defaultProjectFile,
+	defaultProjectDirectory,
+} from "@constants/project.constants";
 export {
 	defaultTemplateProjectCategory,
 	templateProjectsCategories,
