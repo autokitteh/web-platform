@@ -1,11 +1,5 @@
-interface WelcomeCardInfoListItem {
-	text: string;
-	linkText?: string;
-	linkHref?: string;
-}
-
 export interface WelcomeInfoCardProps {
-	items: WelcomeCardInfoListItem[];
+	children?: React.ReactNode;
 	title: React.ReactNode;
 	onPlay?: () => void;
 }

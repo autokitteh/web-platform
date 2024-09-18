@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { infoCardPythonCode, infoCardVSCode } from "@src/constants/lists";
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore } from "@src/store";
@@ -83,24 +84,6 @@ export const DashboardWelcomeMainBlock = () => {
 
 			<div className="grid grid-cols-auto-fit-350 gap-5">
 				<WelcomeInfoCard
-					items={[
-						{
-							text: t("cards.startingProject.developPythonCode"),
-							linkText: t("cards.startingProject.docs"),
-							linkHref: "#",
-						},
-						{
-							text: t("cards.startingProject.configure"),
-							linkText: t("cards.startingProject.connectionsToApplications"),
-							linkHref: "#",
-						},
-						{
-							text: t("cards.startingProject.configure"),
-							linkText: t("cards.startingProject.triggers"),
-							linkHref: "#",
-						},
-						{ text: t("cards.startingProject.setVarsOptional") },
-					]}
 					onPlay={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
@@ -110,15 +93,22 @@ export const DashboardWelcomeMainBlock = () => {
 							</Link>
 						</Typography>
 					}
-				/>
+				>
+					<ul className="font-base font-averta font-semibold leading-normal">
+						{infoCardPythonCode.map(({ linkHref, linkText, text }, index) => (
+							<li key={index}>
+								{text}{" "}
+								{linkHref ? (
+									<Link className="font-normal text-green-800" to={linkHref}>
+										{linkText}
+									</Link>
+								) : null}
+							</li>
+						))}
+					</ul>
+				</WelcomeInfoCard>
 
 				<WelcomeInfoCard
-					items={[
-						{ text: t("cards.developInVSCode.synchronizationWithServer") },
-						{ text: t("cards.developInVSCode.quickActions") },
-						{ text: t("cards.developInVSCode.devTools") },
-						{ text: t("cards.developInVSCode.autocomplete") },
-					]}
 					onPlay={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
@@ -128,7 +118,13 @@ export const DashboardWelcomeMainBlock = () => {
 							</Link>
 						</Typography>
 					}
-				/>
+				>
+					<ul className="font-base font-averta font-semibold leading-normal">
+						{infoCardVSCode.map(({ text }, index) => (
+							<li key={index}>{text}</li>
+						))}
+					</ul>
+				</WelcomeInfoCard>
 			</div>
 			<WelcomeVideoModal />
 		</div>
