@@ -31,7 +31,7 @@ export const DashboardProjectsTableCard = ({
 				</Typography>
 			</div>
 
-			<Typography className="ml-14 mt-2" element="p">
+			<Typography className="mb-1 ml-14 mt-2" element="p">
 				{card.description}
 			</Typography>
 
