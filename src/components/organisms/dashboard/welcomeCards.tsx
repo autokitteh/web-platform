@@ -1,6 +1,8 @@
 /* eslint-disable @liferay/empty-line-between-elements */
 import React, { useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore } from "@src/store";
@@ -12,6 +14,7 @@ import { ProjectsIcon, StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
 
 export const DashboardWelcomeCards = () => {
+	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { openModal } = useModalStore();
 	const { createProject } = useCreateProjectFromTemplate();
 	const [creatingTemplate, setCreatingTemplate] = useState(false);
@@ -40,32 +43,32 @@ export const DashboardWelcomeCards = () => {
 					</div>
 
 					<Typography className="mt-2 font-bold" element="p">
-						Build anything with simple code. Use APIs and build your business logic: Serverless, no queues,
-						secured, managed
+						{t("cards.main.buildAnything")}
 					</Typography>
 				</div>
 
 				<div className="m-auto mt-2 w-full">
 					<Typography className="text-center text-3xl font-bold 2xl:text-left" element="h2">
-						Reliable Automation
+						{t("cards.main.reliableAutomation")}
 					</Typography>
 
 					<Typography className="text-center text-3xl font-bold 2xl:text-right" element="h2">
-						In a Few Lines of Code
+						{t("cards.main.inAFewLinesOfCode")}
 					</Typography>
 
 					<div className="mt-10">
 						<div className="flex flex-col items-center justify-center gap-1">
 							<Typography className="font-semibold text-gray-500" element="p">
-								Start With Demo Project
+								{t("cards.main.startWithDemoProject")}
 							</Typography>
 
 							<Button
+								ariaLabel={t("cards.main.meowWorld")}
 								className="min-w-64 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
 								onClick={() => createProjectFromAsset("quickstart")}
 							>
 								<IconSvg size="lg" src={!creatingTemplate ? ProjectsIcon : Spinner} />
-								Meow world
+								{t("cards.main.meowWorld")}
 							</Button>
 						</div>
 
@@ -81,17 +84,29 @@ export const DashboardWelcomeCards = () => {
 			<div className="grid grid-cols-auto-fit-350 gap-5">
 				<WelcomeInfoCard
 					items={[
-						{ text: "Develop Python code -", linkText: "docs", linkHref: "#" },
-						{ text: "Configure", linkText: "connections to applications", linkHref: "#" },
-						{ text: "Configure", linkText: "Triggers", linkHref: "#" },
-						{ text: "Set vars - Optional" },
+						{
+							text: t("cards.startingProject.developPythonCode"),
+							linkText: t("cards.startingProject.docs"),
+							linkHref: "#",
+						},
+						{
+							text: t("cards.startingProject.configure"),
+							linkText: t("cards.startingProject.connectionsToApplications"),
+							linkHref: "#",
+						},
+						{
+							text: t("cards.startingProject.configure"),
+							linkText: t("cards.startingProject.triggers"),
+							linkHref: "#",
+						},
+						{ text: t("cards.startingProject.setVarsOptional") },
 					]}
 					onPlay={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
-							Starting a project -{" "}
+							{t("cards.startingProject.startingAProject")}{" "}
 							<Link className="font-normal text-green-800" to="#">
-								docs
+								{t("cards.startingProject.docs")}
 							</Link>
 						</Typography>
 					}
@@ -99,17 +114,17 @@ export const DashboardWelcomeCards = () => {
 
 				<WelcomeInfoCard
 					items={[
-						{ text: "Synchronization with the server" },
-						{ text: "Quick actions" },
-						{ text: "Dev tools" },
-						{ text: "Autocomplete" },
+						{ text: t("cards.developInVSCode.synchronizationWithServer") },
+						{ text: t("cards.developInVSCode.quickActions") },
+						{ text: t("cards.developInVSCode.devTools") },
+						{ text: t("cards.developInVSCode.autocomplete") },
 					]}
 					onPlay={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
-							Develop in VS-Code,{" "}
+							{t("cards.developInVSCode.developInVSCode")}{" "}
 							<Link className="font-normal text-green-800" to="#">
-								using VS-Code Extension
+								{t("cards.developInVSCode.usingVSCodeExtension")}
 							</Link>
 						</Typography>
 					}

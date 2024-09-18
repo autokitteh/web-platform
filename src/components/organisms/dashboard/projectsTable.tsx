@@ -121,11 +121,11 @@ export const DashboardProjectsTable = () => {
 					</div>
 
 					<Typography className="mt-4 font-semibold uppercase text-green-200" element="h3" size="large">
-						JOIN THE COMMUNITY
+						{t("cards.community.title")}
 					</Typography>
 
 					<Typography className="mt-1" element="p">
-						See how our community is creating projects
+						{t("cards.community.desc")}
 					</Typography>
 				</div>
 			</div>
