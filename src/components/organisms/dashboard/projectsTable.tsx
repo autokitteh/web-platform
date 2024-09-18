@@ -1,22 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { SidebarHrefMenu } from "@src/enums/components";
 import { Project } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useProjectStore } from "@store";
+import { useProjectStore, useToastStore } from "@store";
 
-import { TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, IconSvg, Spinner, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
+
+import { StartFromTemplateImage } from "@assets/image";
+import { ArrowStartTemplateIcon, PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
-	const { projectsList } = useProjectStore();
+	const { createProject, projectsList } = useProjectStore();
 	const navigate = useNavigate();
+	const [loadingNewProject, setLoadingNewProject] = useState(false);
+	const addToast = useToastStore((state) => state.addToast);
 
 	const { items: sortedProjects, requestSort, sortConfig } = useSort<Project>(projectsList, "name");
+
+	const handleCreateProject = async () => {
+		setLoadingNewProject(true);
+		const { data, error } = await createProject();
+		setLoadingNewProject(false);
+		if (error) {
+			addToast({
+				message: (error as Error).message,
+				type: "error",
+			});
+
+			return;
+		}
+
+		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
+	};
 
 	return (
 		<div className="mt-10">
@@ -47,6 +69,25 @@ export const DashboardProjectsTable = () => {
 					</TBody>
 				</Table>
 			) : null}
+
+			<div className="mt-5 flex flex-col items-center justify-center">
+				<Button
+					className="gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 font-averta text-base font-semibold"
+					disabled={loadingNewProject}
+					onClick={handleCreateProject}
+					variant="filled"
+				>
+					<IconSvg className="fill-white" size="lg" src={!loadingNewProject ? PlusAccordionIcon : Spinner} />
+
+					{t("buttons.startNewProject")}
+				</Button>
+
+				<div className="relative ml-5 mt-4">
+					<StartFromTemplateImage />
+
+					<ArrowStartTemplateIcon className="absolute -top-4 left-52" />
+				</div>
+			</div>
 		</div>
 	);
 };

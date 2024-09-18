@@ -26,6 +26,9 @@
 			"columns": {
 				"projectName": "Project Name"
 			}
+		},
+		"buttons":{
+			"startNewProject": "Start New Project"
 		}
 	}
 }
