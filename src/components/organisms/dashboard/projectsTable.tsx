@@ -10,12 +10,13 @@ import { Project } from "@type/models";
 import { useSort } from "@hooks";
 import { useProjectStore, useToastStore } from "@store";
 
-import { Button, IconSvg, Spinner, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, IconSvg, Link, Spinner, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DashboardProjectsTableCard } from "@components/organisms/dashboard";
 
 import { StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, PlusAccordionIcon } from "@assets/image/icons";
+import { GithubIcon, LinkedInIcon, RedditIcon, TelegramIcon } from "@assets/image/icons/dashboard";
 
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
@@ -43,7 +44,7 @@ export const DashboardProjectsTable = () => {
 	};
 
 	return (
-		<div className="z-10 mt-10">
+		<div className="z-10 mt-10 h-full">
 			{sortedProjects.length ? (
 				<Table className="mt-2.5 max-h-96 rounded-t-20">
 					<THead>
@@ -91,10 +92,42 @@ export const DashboardProjectsTable = () => {
 				</div>
 			</div>
 
-			<div className="mt-10 grid grid-cols-auto-fit-290 gap-5 pt-6">
+			<div className="mt-8 grid grid-cols-auto-fit-290 gap-5 border-t-2 border-gray-1050 pt-6">
 				{dashboardProjectsCards.map((card, index) => (
 					<DashboardProjectsTableCard card={card} isCreating={false} key={index} onCreateClick={() => {}} />
 				))}
+
+				<div className="rounded-md border-2 border-gray-1050 bg-gray-1100 px-5 pb-4 pt-6 font-averta">
+					<div className="flex items-center gap-2.5">
+						<Link className="hover:scale-110" target="_blank" to="https://www.reddit.com/r/autokitteh/">
+							<RedditIcon />
+						</Link>
+
+						<Link
+							className="hover:scale-110"
+							target="_blank"
+							to="https://www.linkedin.com/company/autokitteh/"
+						>
+							<LinkedInIcon />
+						</Link>
+
+						<Link className="hover:scale-110" target="_blank" to="https://discord.gg/UhnJuBarZQ">
+							<TelegramIcon />
+						</Link>
+
+						<Link className="hover:scale-110" target="_blank" to="https://github.com/autokitteh/autokitteh">
+							<GithubIcon />
+						</Link>
+					</div>
+
+					<Typography className="mt-4 font-semibold uppercase text-green-200" element="h3" size="large">
+						JOIN THE COMMUNITY
+					</Typography>
+
+					<Typography className="mt-1" element="p">
+						See how our community is creating projects
+					</Typography>
+				</div>
 			</div>
 		</div>
 	);
