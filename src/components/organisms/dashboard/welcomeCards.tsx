@@ -1,19 +1,31 @@
 /* eslint-disable @liferay/empty-line-between-elements */
 import React from "react";
 
+import { ModalName } from "@src/enums/components";
+import { useModalStore } from "@src/store";
+
 import { Button, IconButton, IconSvg, Link, Typography } from "@components/atoms";
-import { WelcomeInfoCard } from "@components/organisms/dashboard";
+import { WelcomeInfoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
 
 import { ProjectsIcon, StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
 
 export const DashboardWelcomeCards = () => {
+	const { openModal } = useModalStore();
+
+	const handleOpenModal = (video: string) => {
+		openModal(ModalName.welcomePage, { video });
+	};
+
 	return (
 		<div className="z-10 mt-7 grid select-none gap-5">
 			<div className="col-span-1 grid grid-cols-auto-fit-350 items-stretch gap-4 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pl-6 pr-4 font-averta text-white">
 				<div className="flex flex-col">
 					<div className="flex min-h-64 w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-gray-1400">
-						<IconButton className="group h-20 w-20 overflow-hidden rounded-full p-0">
+						<IconButton
+							className="group h-20 w-20 overflow-hidden rounded-full p-0 focus:scale-90"
+							onClick={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
+						>
 							<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
 						</IconButton>
 					</div>
@@ -62,6 +74,7 @@ export const DashboardWelcomeCards = () => {
 						{ text: "Configure", linkText: "Triggers", linkHref: "#" },
 						{ text: "Set vars - Optional" },
 					]}
+					onPlay={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
 							Starting a project -{" "}
@@ -79,6 +92,7 @@ export const DashboardWelcomeCards = () => {
 						{ text: "Dev tools" },
 						{ text: "Autocomplete" },
 					]}
+					onPlay={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
 							Develop in VS-Code,{" "}
@@ -89,6 +103,7 @@ export const DashboardWelcomeCards = () => {
 					}
 				/>
 			</div>
+			<WelcomeVideoModal />
 		</div>
 	);
 };

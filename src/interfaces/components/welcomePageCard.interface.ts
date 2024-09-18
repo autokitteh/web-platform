@@ -7,4 +7,5 @@ interface Item {
 export interface WelcomeInfoCardProps {
 	items: Item[];
 	title: React.ReactNode;
+	onPlay?: () => void;
 }

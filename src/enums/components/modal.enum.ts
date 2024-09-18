@@ -8,4 +8,5 @@ export enum ModalName {
 	deleteVariable = "deleteVariable",
 	getToken = "getToken",
 	deleteProject = "deleteProject",
+	welcomePage = "welcomePage",
 }

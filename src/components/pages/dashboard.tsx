@@ -19,7 +19,7 @@ export const Dashboard = () => {
 	const dashboardContent = useMemo(() => {
 		if (isLoadingProjectsList) {
 			return <Loader isCenter size="lg" />;
-		} else if (!hasProjects) {
+		} else if (hasProjects) {
 			return <DashboardWelcomeCards />;
 		} else {
 			return <DashboardProjectsTable />;
