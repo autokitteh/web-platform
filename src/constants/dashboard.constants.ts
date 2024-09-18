@@ -1,4 +1,4 @@
-import { DashboardFooterTemplateCardType, TemplateCategory } from "@src/types/components";
+import { TemplateCategory } from "@src/types/components";
 
 import {
 	AwsIcon,
@@ -127,21 +127,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 		],
-	},
-];
-
-export const dashboardFooterProjectRecommendations: DashboardFooterTemplateCardType[] = [
-	{
-		title: "Build another Slack project",
-		description: "What are the benefits of workflow automation? From reduced costs to greater productivity",
-		assetDirectory: "aws_health_to_slack",
-		icon: SlackIcon,
-	},
-	{
-		title: "Try connecting your Github",
-		description: "What are the benefits of workflow automation? From reduced costs to greater productivity",
-		assetDirectory: "purrr",
-		icon: GithubIcon,
 	},
 ];
 

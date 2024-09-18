@@ -21,7 +21,6 @@ export {
 	defaultTemplateProjectCategory,
 	templateProjectsCategories,
 	findTemplateFilesByAssetDirectory,
-	dashboardFooterProjectRecommendations,
 } from "@constants/dashboard.constants";
 export {
 	sessionTabs,

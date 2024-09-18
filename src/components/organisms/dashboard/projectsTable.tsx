@@ -3,20 +3,17 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { dashboardFooterProjectRecommendations } from "@src/constants";
 import { SidebarHrefMenu } from "@src/enums/components";
 import { Project } from "@type/models";
 
 import { useSort } from "@hooks";
 import { useProjectStore, useToastStore } from "@store";
 
-import { Button, IconSvg, Link, Spinner, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
+import { Button, IconSvg, Spinner, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { DashboardFooterProjectCard } from "@components/organisms/dashboard";
 
 import { StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, PlusAccordionIcon } from "@assets/image/icons";
-import { GithubIcon, LinkedInIcon, RedditIcon, TelegramIcon } from "@assets/image/icons/dashboard";
 
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
@@ -89,44 +86,6 @@ export const DashboardProjectsTable = () => {
 					<StartFromTemplateImage />
 
 					<ArrowStartTemplateIcon className="absolute -top-4 left-52" />
-				</div>
-			</div>
-
-			<div className="mt-8 grid grid-cols-auto-fit-248 gap-5 border-t-2 border-gray-1050 pt-6">
-				{dashboardFooterProjectRecommendations.map((card, index) => (
-					<DashboardFooterProjectCard card={card} key={index} />
-				))}
-
-				<div className="rounded-md border-2 border-gray-1050 bg-gray-1100 px-5 pb-4 pt-6 font-averta">
-					<div className="flex items-center gap-2.5">
-						<Link className="hover:scale-110" target="_blank" to="https://www.reddit.com/r/autokitteh/">
-							<RedditIcon />
-						</Link>
-
-						<Link
-							className="hover:scale-110"
-							target="_blank"
-							to="https://www.linkedin.com/company/autokitteh/"
-						>
-							<LinkedInIcon />
-						</Link>
-
-						<Link className="hover:scale-110" target="_blank" to="https://discord.gg/UhnJuBarZQ">
-							<TelegramIcon />
-						</Link>
-
-						<Link className="hover:scale-110" target="_blank" to="https://github.com/autokitteh/autokitteh">
-							<GithubIcon />
-						</Link>
-					</div>
-
-					<Typography className="mt-4 font-semibold uppercase text-green-200" element="h3" size="large">
-						{t("cards.community.title")}
-					</Typography>
-
-					<Typography className="mt-1" element="p">
-						{t("cards.community.desc")}
-					</Typography>
 				</div>
 			</div>
 		</div>
