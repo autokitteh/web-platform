@@ -1,3 +1,10 @@
+# [2.10.0](https://github.com/autokitteh/web-platform/compare/v2.9.2...v2.10.0) (2024-09-19)
+
+
+### Features
+
+* add button and toggle for code autosave ([#358](https://github.com/autokitteh/web-platform/issues/358)) ([fc0cfc6](https://github.com/autokitteh/web-platform/commit/fc0cfc60ac2064258d5e7aa58a27cbdf66f29b79))
+
 ## [2.9.2](https://github.com/autokitteh/web-platform/compare/v2.9.1...v2.9.2) (2024-09-19)
 
 
