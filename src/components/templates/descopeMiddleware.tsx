@@ -14,7 +14,7 @@ import { useToastStore } from "@store";
 
 import { IconSvg } from "@components/atoms";
 
-import { LoginIntegrationsLogoPng, inJustTitle } from "@assets/image";
+import { AKRoundLogo, LoginLogos, inJustTitle } from "@assets/image";
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
@@ -74,11 +74,13 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<div className="flex h-screen bg-white">
-			<div className="flex w-1/2 flex-col items-center justify-center p-8 font-averta text-black">
+			<div className="my-6 flex w-1/2 flex-col items-center justify-center rounded-r-xl bg-gray-1250 p-8 font-averta text-white">
+				<IconSvg className="mb-4" size="3xl" src={AKRoundLogo} />
+
 				<h1 className="mb-16 text-center font-averta text-4xl font-semibold">
 					{t("leftSide.welcomeTitle")}
 
-					<span className="flex items-center justify-center rounded-full bg-green-800 p-1 pt-0 font-bold">
+					<span className="flex items-center justify-center rounded-full bg-green-800 p-1 pt-0 font-bold text-black">
 						{t("leftSide.autokittehGreenTitle")}
 					</span>
 				</h1>
@@ -97,16 +99,12 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				</a>
 			</div>
 
-			<div className="relative m-10 mr-20 flex w-2/3 flex-col justify-center rounded-3xl bg-gray-1250 pb-32 pl-16 text-white">
+			<div className="relative m-10 mr-20 flex w-2/3 flex-col justify-center rounded-3xl pb-32 pl-16 text-black">
 				<h2 className="mb-4 font-averta text-4xl font-bold">
 					{t("rightSide.titleFirstLine")}
 
 					<div className="flex">
-						<IconSvg
-							className="mr-2 h-10 w-24 fill-white group-hover:fill-green-800"
-							size="3xl"
-							src={inJustTitle}
-						/>
+						<IconSvg className="ml-4 mr-2 h-10 w-24" size="3xl" src={inJustTitle} />
 
 						{t("rightSide.titleSecondLine")}
 					</div>
@@ -123,13 +121,13 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 						? Object.values(benefitsList).map((benefit) => <li key={benefit}>{benefit}</li>)
 						: null}
 				</ul>
-
-				<img
-					alt="autokitteh logo with integrations"
-					className="absolute -right-8 bottom-12 h-5/6"
-					src={LoginIntegrationsLogoPng}
-				/>
 			</div>
+
+			<img
+				alt="autokitteh logo with integrations"
+				className="absolute bottom-0 right-8 w-6/12"
+				src={LoginLogos}
+			/>
 		</div>
 	);
 };
