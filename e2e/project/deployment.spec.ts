@@ -4,29 +4,12 @@ import { waitForToast } from "../utils";
 test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 
-	await page.getByRole("button", { name: "Create new file" }).click();
-	const newFileInput = page.getByRole("textbox", { name: "new file name" });
-	await newFileInput.click();
-	await newFileInput.fill("newFile");
-	await page.getByRole("button", { exact: true, name: "Create" }).click();
-	await expect(page.getByRole("row", { name: "newFile.star" })).toHaveCount(1);
-	await expect(page.getByText("// Start typing here...")).toBeVisible();
-	const editor = page.getByRole("code");
-	await editor.click();
-	await page.keyboard.down("Shift");
-	await page.keyboard.press("Home");
-	await page.keyboard.up("Shift");
-	await page.keyboard.press("Backspace");
-	await page.keyboard.type(`def on_http_get(data): print("Received %s request" % data.method)`);
-	await page.keyboard.press("Escape");
-	await page.waitForTimeout(2000);
-
 	const deployButton = page.getByRole("button", { name: "Deploy project" });
 	await deployButton.click();
 	const toast = await waitForToast(page, "Project deploy completed successfully.");
 	await expect(toast).toBeVisible();
 
-	await page.getByRole("link", { name: "Deployments" }).click();
+	await page.getByRole("button", { name: "Deployments" }).click();
 });
 
 test.describe("Project Deployment Suite", () => {
