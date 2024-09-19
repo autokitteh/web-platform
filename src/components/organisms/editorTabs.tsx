@@ -10,12 +10,11 @@ import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
-import { Button, IconButton, Loader, Tab, Toggle } from "@components/atoms";
+import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Toggle } from "@components/atoms";
 
-import { Close } from "@assets/image/icons";
+import { Close, SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = () => {
-	const [checked, setChecked] = useState(true);
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
@@ -28,6 +27,8 @@ export const EditorTabs = () => {
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const [content, setContent] = useState<string>("");
+	const [checked, setChecked] = useState(true);
+	const [loadingSave, setLoadingSave] = useState(false);
 
 	const loadContent = async () => {
 		const resources = await fetchFiles();
@@ -70,15 +71,26 @@ export const EditorTabs = () => {
 			newContent === tTabsEditor("initialContentForNewFile")
 		)
 			return;
+		setLoadingSave(true);
 		await saveFile(activeEditorFileName, newContent);
 		setContent(newContent);
+		setLoadingSave(false);
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
+	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
+		projectId,
+		activeEditorFileName,
+	]);
 
 	const handleUpdateContent = (newContent?: string) => {
-		debouncedUpdateContent(newContent);
+		if (!newContent) return;
+
+		setContent(newContent);
+
+		if (checked) {
+			debouncedUpdateContent(newContent);
+		}
 	};
 
 	const activeCloseIcon = (fileName: string) =>
@@ -125,16 +137,22 @@ export const EditorTabs = () => {
 							))}
 						</div>
 
-						<div className="border-1 relative -right-4 -top-2 inline-flex gap-2 rounded-3xl border border-gray-1000 p-1 pl-2">
-							<Toggle checked={checked} onChange={setChecked} title="Autosave" />
+						{openFiles.length ? (
+							<div className="border-1 relative -right-4 -top-2 inline-flex gap-2 rounded-3xl border border-gray-1000 p-1 pl-2">
+								<Toggle checked={checked} onChange={setChecked} title={t("autoSave")} />
 
-							<Button
-								className="whitespace-nowrap bg-gray-1050 px-5 py-1 hover:bg-gray-950"
-								variant="filled"
-							>
-								Save
-							</Button>
-						</div>
+								<Button
+									className="whitespace-nowrap bg-gray-1050 px-4 py-1 hover:bg-gray-950"
+									disabled={loadingSave}
+									onClick={() => debouncedUpdateContent(content)}
+									variant="filled"
+								>
+									<IconSvg className="fill-white" src={!loadingSave ? SaveIcon : Spinner} />
+
+									{t("buttons.save")}
+								</Button>
+							</div>
+						) : null}
 					</div>
 
 					<Editor

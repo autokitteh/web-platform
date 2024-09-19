@@ -52,8 +52,10 @@
 	},
 	"editor": {
 		"buttons": {
-			"ariaCloseFile": "Close file tab"
+			"ariaCloseFile": "Close file tab",
+			"save": "Save"
 		},
+		"autoSave": "Auto save",
 		"initialContentForNewFile": "// Start typing here...",
 		"noFileText": "// Click on a file to start editing or create a new one"
 	},

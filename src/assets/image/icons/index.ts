@@ -52,3 +52,4 @@ export { default as DeploymentsIcon } from "@assets/image/icons/Deployments.svg?
 export { default as AssetsIcon } from "@assets/image/icons/Assets.svg?react";
 export { default as SessionsIcon } from "@assets/image/icons/Sessions.svg?react";
 export { default as WarningTriangleIcon } from "@assets/image/icons/WarningTriangle.svg?react";
+export { default as SaveIcon } from "@assets/image/icons/Save.svg?react";
