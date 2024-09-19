@@ -137,7 +137,10 @@ ul li::before {
 	border-radius: 50%;
 }
 
-rect:hover.topbarNavigationIcon, path.topbarNavigationIcon:hover, circle.topbarNavigationIcon:hover, line.topbarNavigationIcon:hover {
+rect:hover.topbarNavigationIcon,
+path.topbarNavigationIcon:hover,
+circle.topbarNavigationIcon:hover,
+line.topbarNavigationIcon:hover {
 	stroke: green;
 	fill: green;
 }
