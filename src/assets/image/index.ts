@@ -5,6 +5,8 @@ export { default as IconLogoAuth } from "@assets/image/LogoAuth.svg?react";
 export { default as LogoCatImage } from "@assets/image/LogoCat.svg?react";
 export { default as IconLogoName } from "@assets/image/LogoName.svg?react";
 export { default as Map } from "@assets/image/Map.svg?react";
+export { default as CatDashboardImage } from "@assets/image/CatDashboard.svg?react";
+export { default as StartFromTemplateImage } from "@assets/image/StartFromTemplate.svg?react";
 export { default as DefaultAvatar } from "@assets/image/avatar.png";
 export { ArrowDown, ArrowUp, InfoIcon, Minimize, PlusCircle, SmallArrowDown, ThreeDots } from "@assets/image/icons";
 export {

@@ -8,6 +8,13 @@ export type TemplateCardType = {
 	title: string;
 };
 
+export type DashboardFooterTemplateCardType = {
+	assetDirectory: string;
+	description: string;
+	icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+	title: string;
+};
+
 export type TemplateCategory = {
 	cards: TemplateCardType[];
 	name: string;

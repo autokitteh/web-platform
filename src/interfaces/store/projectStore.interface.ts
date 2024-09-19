@@ -9,4 +9,5 @@ export interface ProjectStore {
 	createProjectFromManifest: (manifest: string) => ServiceResponse<string>;
 	projectsList: Project[];
 	renameProject: (projectId: string, projectName: string) => void;
+	isLoadingProjectsList: boolean;
 }

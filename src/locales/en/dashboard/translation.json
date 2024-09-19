@@ -1,6 +1,7 @@
 {
 	"topbar": {
 		"hello": "Hello",
+		"welcome": "Welcome to autokitteh",
 		"logout": "Logout",
 		"buttons":{
 			"newProject": "New Project",
@@ -8,24 +9,61 @@
 		}
 	},
 	"templates":{ 
-		"title": "Templates",
+		"title": "Start From Template",
 		"projectCreatedSuccessfully": "Project created successfully",
 		"projectCreationFailed": "Project creation failed",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"projectNameExist": "Project name already exists",
 		"projectTemplateManifestNotFound": "Project template manifest not found",
 		"projectTemplateNotFoundExtended": "Project template not found, error: {{error}}",
-		"projectTemplatFileseNotFound": "Project template files not found",
+		"projectTemplateFilesNotFound": "Project template files not found",
 		"projectFilesNotFound": "Project files not found",
 		"projectDirectoryNotConfigured": "Project directory not configured",
 		"projectFilesNotFoundExtended": "Project files not found, error: {{error}}"
 	},
 	"projects": {
-		"title": "All projects",
-		"noProjects": "No projects found",
 		"table": {
 			"columns": {
 				"projectName": "Project Name"
+			}
+		},
+		"buttons":{
+			"startNewProject": "Start New Project",
+			"start": "Start"
+		},
+		"cards":{
+			"community": {
+				"title": "JOIN THE COMMUNITY",
+				"desc": "See how our community is creating projects"
+			}
+		}
+	},
+	"welcome": {
+		  "cards": {
+			"main": {
+			  "buildAnything": "Build anything with simple code. Use APIs and build your business logic: Serverless, no queues, secured, managed",
+			  "reliableAutomation": "Reliable Automation",
+			  "inAFewLinesOfCode": "In a Few Lines of Code",
+			  "startWithDemoProject": "Start With Demo Project",
+			  "meowWorld": "Meow world"
+			},
+			"startingProject": {
+			  "developPythonCode": "Develop Python code -",
+			  "configure": "Configure",
+			  "connectionsToApplications": "connections to applications",
+			  "triggers": "Triggers",
+			  "setVarsOptional": "Set vars - Optional",
+			  "startingAProject": "Starting a project -",
+			  "docs": "docs"
+			},
+			"developInVSCode": {
+			  "synchronizationWithServer": "Synchronization with the server",
+			  "quickActions": "Quick actions",
+			  "devTools": "Dev tools",
+			  "autocomplete": "Autocomplete",
+			  "developInVSCode": "Develop in VS-Code,",
+			  "usingVSCodeExtension": "using VS-Code Extension",
+			  "docs": "docs"
 			}
 		}
 	}

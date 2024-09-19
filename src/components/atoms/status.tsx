@@ -3,12 +3,9 @@ import React from "react";
 import { StatusProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Status = ({ children, className, color = "gray" }: StatusProps) => {
+export const Status = ({ children, className }: StatusProps) => {
 	const statusClasses = cn(
-		"rounded border px-1.5 py-1 text-xs font-bold",
-		{
-			"border-gray-450 bg-gray-400 text-gray-900": color === "gray",
-		},
+		"rounded border border-gray-450 bg-gray-400 px-1.5 py-1 text-xs font-bold text-gray-900",
 		className
 	);
 

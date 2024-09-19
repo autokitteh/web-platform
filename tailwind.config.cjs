@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef, @typescript-eslint/no-require-imports
 const plugin = require('tailwindcss/plugin');
 
 // eslint-disable-next-line no-undef
@@ -9,6 +9,7 @@ module.exports = {
       "fira-sans": ["Fira Sans", "sans-serif"],
       "fira-code": ["Fira Code", "sans-serif"],
       "mono": ["monospace", "sans-serif", "helvetica"],
+      "averta": ["Averta", "sans-serif"],
     },
     extend: {
       fontSize: {
@@ -43,16 +44,14 @@ module.exports = {
         "4xl": "40px",
       },
       gridTemplateColumns: {
-        'auto-fit-305': 'repeat(auto-fit, minmax(290px, 1fr))',
+        'auto-fit-248': 'repeat(auto-fit, minmax(248px, 1fr))',
+        'auto-fit-350': 'repeat(auto-fit, minmax(350px, 1fr))',
       },
     },
     screens: {
-      sm: "640px",
-      md: "768px",
-      lg: "1024px",
-      xl: "1280px",
       "2xl": "1536px",
       "3xl": "1736px",
+      'minHeightLg': { 'raw': '(min-height: 1000px)' },
     },
     colors: {
       transparent: {
@@ -103,6 +102,9 @@ module.exports = {
         1200: "#2c2c2c",
         1250: "#1b1b1b",
         1300: "#101010", 
+        1350: "#4c4c4c", 
+        1400: "#464646", 
+        1450: "#1c1c1c", 
       },
       error: {
         DEFAULT: "#FF6B61",

@@ -5,5 +5,5 @@ export interface TypographyProps<E extends ElementType = ElementType> {
 	children: ReactNode;
 	className?: string;
 	element?: E;
-	size?: "large" | "medium" | "small" | "default";
+	size?: "xl" | "large" | "medium" | "small" | "default";
 }

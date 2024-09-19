@@ -1,4 +1,4 @@
-import { TemplateCategory } from "@src/types/components/projectTemplates.type";
+import { TemplateCategory } from "@src/types/components";
 
 import {
 	AwsIcon,
@@ -13,6 +13,17 @@ import {
 } from "@assets/image/icons/connections";
 
 export const defaultTemplateProjectCategory = "DevOps";
+
+const hiddenTemplateProjectsCategories = [
+	{
+		cards: [
+			{
+				assetDirectory: "quickstart",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
+			},
+		],
+	},
+];
 
 export const templateProjectsCategories: TemplateCategory[] = [
 	{
@@ -119,8 +130,9 @@ export const templateProjectsCategories: TemplateCategory[] = [
 	},
 ];
 
-export const findTemplateFilesByAssetDirectory = (assetDirectory: string) => {
-	for (const category of templateProjectsCategories) {
+export const findTemplateFilesByAssetDirectory = async (assetDirectory: string) => {
+	const projectsCategories = [...templateProjectsCategories, ...hiddenTemplateProjectsCategories];
+	for (const category of projectsCategories) {
 		const card = category.cards.find((card) => card.assetDirectory === assetDirectory);
 		if (card) {
 			return card.files;

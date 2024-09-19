@@ -42,3 +42,4 @@ export type { StatusProps } from "@interfaces/components/status.interface";
 export type { SecretInputProps } from "@interfaces/components/forms/secretInput.interface";
 export type { ActivityRowProps } from "@interfaces/components/activity.interface";
 export type { DrawerProps } from "@interfaces/components/drawer.interface";
+export type { WelcomeInfoCardProps } from "@interfaces/components/welcomePageCard.interface";
