@@ -85,7 +85,9 @@ export const EditorTabs = () => {
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
+	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const debouncedSaveContent = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
 		projectId,
 		activeEditorFileName,
 	]);
@@ -145,14 +147,14 @@ export const EditorTabs = () => {
 						</div>
 
 						{openFiles.length ? (
-							<div className="relative -right-4 -top-2 z-10 flex flex-col items-end">
+							<div className="relative -right-4 -top-2 z-10 flex flex-col items-end whitespace-nowrap">
 								<div className="border-1 inline-flex gap-2 rounded-3xl border border-gray-1000 p-1 pl-2">
-									<Toggle checked={checked} onChange={setChecked} title={t("autoSave")} />
+									<Toggle checked={checked} label={t("autoSave")} onChange={setChecked} />
 
 									<Button
 										className="whitespace-nowrap px-4 py-1"
 										disabled={loadingSave}
-										onClick={() => debouncedUpdateContent(content)}
+										onClick={() => debouncedSaveContent(content)}
 										variant="filledGray"
 									>
 										<IconSvg className="fill-white" src={!loadingSave ? SaveIcon : Spinner} />
