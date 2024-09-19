@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/autokitteh/web-platform/compare/v2.6.1...v2.7.0) (2024-09-19)
+
+
+### Features
+
+* topbar navigation v2 ([#361](https://github.com/autokitteh/web-platform/issues/361)) ([ff4413f](https://github.com/autokitteh/web-platform/commit/ff4413fcd0132806f3a305a1a4d2d9836adfe2ae))
+
 ## [2.6.1](https://github.com/autokitteh/web-platform/compare/v2.6.0...v2.6.1) (2024-09-19)
 
 
