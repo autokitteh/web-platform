@@ -1,3 +1,10 @@
+## [2.6.1](https://github.com/autokitteh/web-platform/compare/v2.6.0...v2.6.1) (2024-09-19)
+
+
+### Bug Fixes
+
+* reload deployments on manual run ([#362](https://github.com/autokitteh/web-platform/issues/362)) ([a3e2c15](https://github.com/autokitteh/web-platform/commit/a3e2c150fdb2bd20a7b5085152b16df560b133d8))
+
 # [2.6.0](https://github.com/autokitteh/web-platform/compare/v2.5.0...v2.6.0) (2024-09-19)
 
 
