@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @liferay/empty-line-between-elements */
 import React, { useEffect, useState } from "react";
 
