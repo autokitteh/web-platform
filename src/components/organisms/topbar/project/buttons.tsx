@@ -26,7 +26,7 @@ export const ProjectTopbarButtons = () => {
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
 	const { isValid, projectValidationState } = useProjectValidationStore();
-	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error !== "");
+	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 
 	const { deleteProject } = useProjectStore();

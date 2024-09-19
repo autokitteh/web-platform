@@ -7,8 +7,10 @@ import { useFileOperations } from "@src/hooks";
 import { useProjectValidationStore } from "@src/store";
 import { calculatePathDepth } from "@utilities";
 
-import { Notification, Tab } from "@components/atoms";
+import { IconSvg, Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
+
+import { WarningTriangleIcon } from "@assets/image/icons";
 
 export const Project = () => {
 	const navigate = useNavigate();
@@ -68,32 +70,37 @@ export const Project = () => {
 								"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2 pb-5"
 							}
 						>
-							{projectTabs.map((tabKey, index) => (
-								<Tab
-									activeTab={activeTab}
-									ariaLabel={
-										projectValidationState[tabKey.value as keyof typeof projectValidationState] ||
-										tabKey.label
-									}
-									key={index}
-									onClick={() => goTo(tabKey.value)}
-									title={
-										projectValidationState[tabKey.value as keyof typeof projectValidationState] ||
-										tabKey.label
-									}
-									value={tabKey.value}
-								>
-									<div className="relative">
-										{projectValidationState[tabKey.value as keyof typeof projectValidationState] ? (
-											<div className="absolute right-0 top-0.5">
-												<Notification> </Notification>
-											</div>
-										) : null}
+							{projectTabs.map((tabKey) => {
+								const tabState =
+									projectValidationState[tabKey.value as keyof typeof projectValidationState];
+								const warning = tabState.level === "warning" ? tabState.message : "";
+								const error = tabState.level === "error" ? tabState.message : "";
 
-										<div>{tabKey.label}</div>
-									</div>
-								</Tab>
-							))}
+								return (
+									<Tab
+										activeTab={activeTab}
+										ariaLabel={tabState?.message || tabKey.label}
+										key={tabKey.value}
+										onClick={() => goTo(tabKey.value)}
+										title={tabState?.message || tabKey.label}
+										value={tabKey.value}
+									>
+										<div className="flex items-center">
+											<div className="tracking-wide">{tabKey.value}</div>
+
+											{error ? (
+												<div className="mb-0.5 ml-1.5 size-3 rounded-full bg-error" />
+											) : null}
+
+											{warning ? (
+												<div className="relative mb-1.5 ml-1.5 size-3 rounded-full">
+													<IconSvg src={WarningTriangleIcon} />
+												</div>
+											) : null}
+										</div>
+									</Tab>
+								);
+							})}
 						</div>
 					</div>
 
