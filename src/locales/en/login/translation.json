@@ -1,13 +1,24 @@
 {
-    "benefits": {
-        "easyToMaintain": "Easy to maintain",
-        "efficientManagementTools": "Efficient management tools",
-        "fastDeployment": "Fast deployment",
-        "flexibility": "Flexibility",
-        "longRunning": "Long-running",
-        "lowerDevelopmentCosts": "Lower development costs",
-        "reliability": "Reliability",
-        "versatility": "Versatility"
+    "leftSide": {
+        "autokittehGreenTitle": "AutoKitteh",
+        "welcomeTitle": "Welcome to",
+        "register": "Register"
     },
-    "whyDevelopersLove": "Why developers love Autokitteh"
+    "rightSide": {
+        "titleFirstLine": "Reliable Automation",
+        "titleSecondLine": "Few Lines of Code",
+        "descriptionFirstLine": "All you need to easily develop",
+        "descriptionSecondLine": "robust automations in Python",
+        "benefitsList":{
+            "bullet1": "Serverless Python environment",
+            "bullet2": "Super fast deploys",
+            "bullet3": "Super fast ramp-up",
+            "bullet4": "Builtin integrations",
+            "bullet5": "Scalable",
+            "bullet6": "Secure",
+            "bullet7": "Easy management",
+            "bullet8": "Long-running workflows",
+            "bullet9": "Ready-to-use templates"
+        }
+    }
 }

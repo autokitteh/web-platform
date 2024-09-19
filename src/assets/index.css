@@ -136,3 +136,31 @@ ul li::before {
 	background-color: white;
 	border-radius: 50%;
 }
+@layer base {
+	@font-face {
+		font-family: "Averta";
+		src:
+			url("fonts/averta-bold-webfont.woff2") format("woff2"),
+			url("fonts/averta-bold-webfont.woff") format("woff");
+		font-weight: 700;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: "Averta";
+		src:
+			url("fonts/averta-semibold-webfont.woff2") format("woff2"),
+			url("fonts/averta-semibold-webfont.woff") format("woff");
+		font-weight: 600;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: "Averta";
+		src:
+			url("fonts/averta-regular-webfont.woff2") format("woff2"),
+			url("fonts/averta-regular-webfont.woff") format("woff");
+		font-weight: 400;
+		font-style: normal;
+	}
+}

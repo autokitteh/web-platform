@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { Descope, useDescope } from "@descope/react-sdk";
 import axios from "axios";
@@ -12,13 +12,14 @@ import { useUserStore } from "@store/useUserStore";
 
 import { useToastStore } from "@store";
 
-import { Badge, Frame, LogoCatLarge } from "@components/atoms";
+import { IconSvg } from "@components/atoms";
 
-import { IconLogoAuth } from "@assets/image";
+import { AKRoundLogo, LoginLogos, inJustTitle } from "@assets/image";
 
-export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) => {
+export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
 	const { logout } = useDescope();
+	const { t } = useTranslation("login");
 
 	const handleLogout = useCallback(async () => {
 		await logout();
@@ -35,8 +36,6 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 		window.location.reload();
 	}, [logout]);
 	const addToast = useToastStore((state) => state.addToast);
-	const { t } = useTranslation("login");
-	const benefits = Object.values(t("benefits", { returnObjects: true }));
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
@@ -67,36 +66,62 @@ export const DescopeMiddleware = ({ children }: { children: React.ReactNode }) =
 	);
 
 	const isLoggedIn = Cookies.get(isLoggedInCookie);
-
 	if (authBearer || isLoggedIn) {
 		return children;
 	}
 
-	return (
-		<div className="m-auto flex h-screen w-full max-w-[1200px] flex-col pb-10 pt-5">
-			<IconLogoAuth />
+	const benefitsList = Object.values(t("rightSide.benefitsList", { returnObjects: true }));
 
-			<div className="flex flex-1">
-				<div className="flex h-full w-1/2 justify-center rounded-2xl px-8 pt-12">
-					<div className="max-w-96">
-						<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
-					</div>
+	return (
+		<div className="flex h-screen">
+			<div className="my-6 flex w-1/2 flex-col items-center justify-center rounded-r-xl bg-gray-1250 p-8 font-averta text-white">
+				<IconSvg className="mb-4" size="3xl" src={AKRoundLogo} />
+
+				<h1 className="mb-16 text-center font-averta text-4xl font-semibold">
+					{t("leftSide.welcomeTitle")}
+
+					<span className="flex items-center justify-center rounded-full bg-green-800 p-1 pt-0 font-bold text-black">
+						{t("leftSide.autokittehGreenTitle")}
+					</span>
+				</h1>
+
+				<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
+
+				<a
+					className="font-averta text-lg text-green-800 hover:text-gray-500"
+					href="https://autokitteh.com/get-a-demo/"
+					rel="noreferrer"
+					target="_blank"
+				>
+					{t("leftSide.register")}
+				</a>
+			</div>
+
+			<div className="relative m-10 mr-20 flex w-2/3 flex-col justify-center rounded-3xl pb-32 pl-16 text-black">
+				<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleFirstLine")}</h2>
+
+				<div className="mb-4 flex">
+					<IconSvg className="ml-4 mr-2 h-10 w-24" size="3xl" src={inJustTitle} />
+
+					<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleSecondLine")}</h2>
 				</div>
 
-				<Frame className="flex h-full w-1/2 items-center overflow-hidden bg-gray-150 pt-20">
-					<h2 className="text-3xl font-bold text-black">{t("whyDevelopersLove")}</h2>
+				<h3 className="font-averta text-2xl font-bold">{t("rightSide.descriptionFirstLine")}</h3>
 
-					<div className="mt-8 flex max-w-485 flex-wrap gap-3.5">
-						{benefits.map((name, index) => (
-							<Badge className="z-10 bg-white px-4 py-2 text-base font-normal" key={index}>
-								{t(name)}
-							</Badge>
-						))}
-					</div>
+				<h3 className="mb-12 font-averta text-2xl font-bold">{t("rightSide.descriptionSecondLine")}</h3>
 
-					<LogoCatLarge className="!-bottom-5 !-right-5 opacity-100" />
-				</Frame>
+				<ul className="font-averta text-xl font-semibold">
+					{benefitsList?.length
+						? Object.values(benefitsList).map((benefit) => (
+								<li className="before:size-1.5 before:bg-black" key={benefit}>
+									{benefit}
+								</li>
+							))
+						: null}
+				</ul>
 			</div>
+
+			<img alt="autokitteh logo with integrations" className="absolute bottom-0 right-8 w-1/2" src={LoginLogos} />
 		</div>
 	);
 };
