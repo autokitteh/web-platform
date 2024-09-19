@@ -17,7 +17,7 @@ import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/o
 
 import { RunIcon } from "@assets/image";
 
-export const ManualRunSettingsDrawer = () => {
+export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	const { t: tButtons } = useTranslation("buttons");
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
 	const { closeDrawer } = useDrawerStore();
@@ -81,6 +81,7 @@ export const ManualRunSettingsDrawer = () => {
 
 		const { data: sessionId, error } = await saveProjectManualRun(projectId, params);
 		setSendingManualRun(false);
+		onRun();
 		if (error) {
 			addToast({
 				message: t("executionFailed"),
