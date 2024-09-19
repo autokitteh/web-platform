@@ -113,7 +113,11 @@ export const EditorTabs = () => {
 	]);
 
 	const handleUpdateContent = (newContent?: string) => {
-		if (!newContent) return;
+		if (!newContent) {
+			setContent("");
+
+			return;
+		}
 
 		setContent(newContent);
 
