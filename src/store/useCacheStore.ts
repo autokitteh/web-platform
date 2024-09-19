@@ -48,6 +48,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 					[projectId]: "",
 				},
 			});
+
+			return;
 		}
 
 		set({
