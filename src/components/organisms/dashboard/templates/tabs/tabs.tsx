@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useCallback, useMemo, useState } from "react";
 
 import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
