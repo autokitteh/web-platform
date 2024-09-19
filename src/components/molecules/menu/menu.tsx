@@ -46,15 +46,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 			return;
 		}
 
-		const projectId = data?.projectId;
-		if (!projectId) {
-			addToast({
-				message: t("projectCreationFailed"),
-				type: "error",
-			});
-
-			return;
-		}
+		const projectId = data!.projectId;
 
 		navigate(`/${SidebarHrefMenu.projects}/${projectId}`, {
 			state: { fileToOpen: defaultProjectFile },

@@ -14,7 +14,6 @@ import { PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
-	const { t: tErrors } = useTranslation("errors");
 	const { user } = useUserStore();
 	const { createProject } = useProjectStore();
 	const [loadingNewProject, setLoadingNewProject] = useState(false);
@@ -36,14 +35,6 @@ export const DashboardTopbar = () => {
 		}
 
 		const projectId = data?.projectId;
-		if (!projectId) {
-			addToast({
-				message: tErrors("projectCreationFailed"),
-				type: "error",
-			});
-
-			return;
-		}
 
 		navigate(`/${SidebarHrefMenu.projects}/${projectId}`, {
 			state: { fileToOpen: defaultProjectFile },
