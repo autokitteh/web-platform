@@ -35,10 +35,10 @@ const store: StateCreator<ProjectValidationStore> = (set, get) => ({
 		}
 
 		set((state) => ({ ...state, isValid: false }));
-		const newProjectValidationState = defaultProjectValidationState;
+		const newProjectValidationState = { ...defaultProjectValidationState };
 
 		const { data: resources } = await ProjectsService.getResources(projectId);
-		if (!resources || !Object.keys(resources).length) {
+		if (!resources || JSON.stringify(resources) === JSON.stringify({})) {
 			newProjectValidationState.code = {
 				message: i18n.t("validation.noCodeAndAssets", { ns: "tabs" }),
 				level: "error",

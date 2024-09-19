@@ -12,7 +12,7 @@ import { LoggerService } from "@services";
 import { codeAssetsSchema } from "@validations";
 
 import { useFileOperations } from "@hooks";
-import { useModalStore, useToastStore } from "@store";
+import { useModalStore, useProjectValidationStore, useToastStore } from "@store";
 
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal, Select } from "@components/molecules";
@@ -24,6 +24,7 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 	const { closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { addFile, openFileAsActive } = useFileOperations(projectId!);
+	const { checkState } = useProjectValidationStore();
 
 	const languageSelectOptions = Object.keys(monacoLanguages).map((key) => ({
 		label: key,
@@ -52,6 +53,7 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 			const newFileContent = new TextEncoder().encode(tTabsEditor("initialContentForNewFile"));
 			await addFile(newFile, newFileContent);
 			openFileAsActive(newFile);
+			checkState(projectId!, true);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({

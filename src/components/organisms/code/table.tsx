@@ -135,6 +135,7 @@ export const CodeTable = () => {
 		try {
 			await deleteFile(selectedRemoveFileName);
 			getResources();
+			checkState(projectId!, true);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({

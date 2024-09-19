@@ -19,7 +19,7 @@ export const Project = () => {
 
 	const [activeTab, setActiveTab] = useState(defaultProjectTab);
 	const { projectId } = useParams();
-	const { checkState, projectValidationState } = useProjectValidationStore();
+	const { projectValidationState } = useProjectValidationStore();
 
 	useEffect(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
@@ -33,11 +33,6 @@ export const Project = () => {
 			setDisplayTabs(isProjectsMainView);
 		}
 	}, [location]);
-
-	useEffect(() => {
-		checkState(projectId!);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
 
 	const goTo = (path: string) => {
 		navigate(path.toLowerCase());
@@ -86,7 +81,7 @@ export const Project = () => {
 										value={tabKey.value}
 									>
 										<div className="flex items-center">
-											<div className="tracking-wide">{tabKey.value}</div>
+											<div className="tracking-wide">{tabKey.label}</div>
 
 											{error ? (
 												<div className="mb-0.5 ml-1.5 size-3 rounded-full bg-error" />
