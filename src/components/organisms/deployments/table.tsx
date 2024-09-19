@@ -215,7 +215,7 @@ export const DeploymentsTable = () => {
 				<DeploymentsTableContent deployments={deployments} updateDeployments={() => fetchDeployments(false)} />
 			) : null}
 
-			<ManualRunSettingsDrawer />
+			<ManualRunSettingsDrawer onRun={() => fetchDeployments()} />
 		</Frame>
 	);
 };
