@@ -1,3 +1,10 @@
+# [2.9.0](https://github.com/autokitteh/web-platform/compare/v2.8.0...v2.9.0) (2024-09-19)
+
+
+### Features
+
+* project status visibility ([#355](https://github.com/autokitteh/web-platform/issues/355)) ([32d6222](https://github.com/autokitteh/web-platform/commit/32d6222534bad946e9d9ac4d6dfa13bd4481eeba))
+
 # [2.8.0](https://github.com/autokitteh/web-platform/compare/v2.7.0...v2.8.0) (2024-09-19)
 
 
