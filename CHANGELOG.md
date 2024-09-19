@@ -1,3 +1,10 @@
+## [2.9.1](https://github.com/autokitteh/web-platform/compare/v2.9.0...v2.9.1) (2024-09-19)
+
+
+### Bug Fixes
+
+* fix bugs ([#363](https://github.com/autokitteh/web-platform/issues/363)) ([34a4b27](https://github.com/autokitteh/web-platform/commit/34a4b278ea245e339433a80b816c311f64a90e57))
+
 # [2.9.0](https://github.com/autokitteh/web-platform/compare/v2.8.0...v2.9.0) (2024-09-19)
 
 
