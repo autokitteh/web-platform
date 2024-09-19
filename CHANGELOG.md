@@ -1,3 +1,10 @@
+## [2.9.2](https://github.com/autokitteh/web-platform/compare/v2.9.1...v2.9.2) (2024-09-19)
+
+
+### Bug Fixes
+
+* button alignment topbar & seconds ([#364](https://github.com/autokitteh/web-platform/issues/364)) ([c5a6d70](https://github.com/autokitteh/web-platform/commit/c5a6d70688aeaf5e5a3ac1ef2e491d8b47f1e446))
+
 ## [2.9.1](https://github.com/autokitteh/web-platform/compare/v2.9.0...v2.9.1) (2024-09-19)
 
 
