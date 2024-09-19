@@ -20,7 +20,7 @@ export const ProjectTopbarNavigation = () => {
 
 	const selectedSection = useMemo(() => {
 		if (paramDeploymentId) return "sessions";
-		if (location.pathname.includes("deployments") && projectLastDeployment?.[projectId || ""]) return "deployments";
+		if (location.pathname.includes("deployments")) return "deployments";
 
 		return "assets";
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -29,7 +29,7 @@ export const ProjectTopbarNavigation = () => {
 	return (
 		<div className="ml-5 mr-auto flex items-stretch">
 			{mainNavigationItems.map((item, index) => {
-				if (item.key === "sessions" && !deploymentId) return null;
+				const noDeploymentsState = item.key === "sessions" && !deploymentId;
 
 				const isSelected = selectedSection === item.key;
 				const buttonClassName = cn(baseButtonClass, { "bg-black": isSelected });
@@ -45,7 +45,13 @@ export const ProjectTopbarNavigation = () => {
 						})}
 						key={item.key}
 					>
-						<Button ariaLabel={item.label} className={buttonClassName} href={href} variant="filledGray">
+						<Button
+							ariaLabel={item.label}
+							className={buttonClassName}
+							disabled={noDeploymentsState}
+							href={href}
+							variant="filledGray"
+						>
 							<IconSvg className={iconClassName} size="lg" src={item.icon} />
 
 							<span className="ml-2 group-hover:text-white">{item.label}</span>
