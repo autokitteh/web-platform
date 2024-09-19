@@ -76,9 +76,15 @@ export const EditorTabs = () => {
 			!projectId ||
 			!activeEditorFileName ||
 			!newContent ||
-			newContent === t("noFileText") ||
-			newContent === tTabsEditor("initialContentForNewFile")
+			newContent?.trim() === "" ||
+			newContent?.trim() === t("noFileText") ||
+			newContent?.trim() === tTabsEditor("initialContentForNewFile")
 		) {
+			addToast({
+				message: tErrors("codeSaveFailed"),
+				type: "error",
+			});
+
 			return;
 		}
 
