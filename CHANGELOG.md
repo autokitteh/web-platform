@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/autokitteh/web-platform/compare/v2.4.7...v2.5.0) (2024-09-19)
+
+
+### Features
+
+* redesign dashboard ([#340](https://github.com/autokitteh/web-platform/issues/340)) ([30f0661](https://github.com/autokitteh/web-platform/commit/30f0661e43b7e839ab3fe8dd9b3e667a05fb2fbb))
+
 ## [2.4.7](https://github.com/autokitteh/web-platform/compare/v2.4.6...v2.4.7) (2024-09-19)
 
 
