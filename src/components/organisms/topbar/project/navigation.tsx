@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { mainNavigationItems } from "@src/constants";
 import { useCacheStore } from "@src/store/useCacheStore";
@@ -15,6 +15,7 @@ export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const location = useLocation();
 	const { projectLastDeployment } = useCacheStore();
+	const navigate = useNavigate();
 
 	const deploymentId = projectLastDeployment?.[projectId || ""] || paramDeploymentId;
 
@@ -32,7 +33,7 @@ export const ProjectTopbarNavigation = () => {
 				const noDeploymentsState = item.key === "sessions" && !deploymentId;
 
 				const isSelected = selectedSection === item.key;
-				const buttonClassName = cn(baseButtonClass, { "bg-black": isSelected });
+				const buttonClassName = cn(baseButtonClass, { "active bg-black": isSelected });
 				const iconClassName = cn(baseIconClass, { "text-green-200": isSelected });
 				const href = `/projects/${projectId}${item.path.replace("{deploymentId}", deploymentId || "")}`;
 
@@ -49,7 +50,9 @@ export const ProjectTopbarNavigation = () => {
 							ariaLabel={item.label}
 							className={buttonClassName}
 							disabled={noDeploymentsState}
-							href={href}
+							onClick={() => navigate(href)}
+							role="navigation"
+							title={item.label}
 							variant="filledGray"
 						>
 							<IconSvg className={iconClassName} size="lg" src={item.icon} />
