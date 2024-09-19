@@ -88,7 +88,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
 
 				<a
-					className="font-averta text-lg hover:text-gray-500"
+					className="font-averta text-lg text-green-800 hover:text-gray-500"
 					href="https://autokitteh.com/get-a-demo/"
 					rel="noreferrer"
 					target="_blank"
