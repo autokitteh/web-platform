@@ -48,3 +48,6 @@ export { default as RocketIcon } from "@assets/image/icons/Rocket.svg?react";
 export { default as DownloadDownArrowIcon } from "@assets/image/icons/DownloadDownArrow.svg?react";
 export { default as CirclePlayIcon } from "@assets/image/icons/CirclePlay.svg?react";
 export { default as ArrowStartTemplateIcon } from "@assets/image/icons/ArrowStartTemplate.svg?react";
+export { default as DeploymentsIcon } from "@assets/image/icons/Deployments.svg?react";
+export { default as AssetsIcon } from "@assets/image/icons/Assets.svg?react";
+export { default as SessionsIcon } from "@assets/image/icons/Sessions.svg?react";

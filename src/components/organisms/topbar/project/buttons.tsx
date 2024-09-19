@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
+import { useCacheStore } from "@src/store/useCacheStore";
 
 import { useFileOperations } from "@hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
@@ -15,7 +16,7 @@ import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
 
-import { BuildIcon, MoreIcon, StatsIcon } from "@assets/image";
+import { BuildIcon, MoreIcon } from "@assets/image";
 import { RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
@@ -29,6 +30,7 @@ export const ProjectTopbarButtons = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const { fetchResources } = useFileOperations(projectId!);
+	const { fetchLastDeploymentId } = useCacheStore();
 
 	const fetchAndCheckResources = useCallback(async () => {
 		const resources = await fetchResources(true);
@@ -90,6 +92,8 @@ export const ProjectTopbarButtons = () => {
 			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccess"));
 		}
 
+		fetchLastDeploymentId(projectId!, true);
+
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -134,7 +138,7 @@ export const ProjectTopbarButtons = () => {
 	}, []);
 
 	return (
-		<div className="flex items-stretch gap-3">
+		<div className="flex items-center gap-3">
 			<Button
 				ariaLabel={t("topbar.buttons.ariaBuildProject")}
 				className="h-8 whitespace-nowrap px-3.5"
@@ -161,17 +165,6 @@ export const ProjectTopbarButtons = () => {
 				)}
 
 				{t("topbar.buttons.deploy")}
-			</Button>
-
-			<Button
-				ariaLabel={t("topbar.buttons.ariaDeployments")}
-				className="h-8 whitespace-nowrap px-4"
-				href={`/projects/${projectId}/deployments`}
-				variant="filledGray"
-			>
-				<IconSvg size="md" src={StatsIcon} />
-
-				{t("topbar.buttons.deployments")}
 			</Button>
 
 			<DropdownButton

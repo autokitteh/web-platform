@@ -17,7 +17,7 @@ export const CopyButton = ({
 	text,
 }: {
 	className?: string;
-	size?: Extract<SystemSizes, "sm" | "md">;
+	size?: Extract<SystemSizes, "xs" | "sm" | "md">;
 	text: string;
 }) => {
 	const { t } = useTranslation("components", { keyPrefix: "buttons" });
@@ -32,16 +32,18 @@ export const CopyButton = ({
 	}, 300);
 
 	const copyButtonStyle = cn(
-		"inline flex h-12 w-12 items-center bg-transparent hover:bg-gray-900",
+		"inline flex h-12 w-12 items-center justify-center bg-transparent hover:bg-gray-900",
 		{
-			"h-12 w-12": size === "md",
-			"h-8 w-8": size === "sm",
+			"size-12": size === "md",
+			"size-8": size === "sm",
+			"size-6": size === "xs",
 		},
 		className
 	);
 	const copyButtonIconStyle = cn("h-5 w-5 fill-white", {
-		"h-5 w-5": size === "md",
-		"h-4 w-4": size === "sm",
+		"size-5": size === "md",
+		"size-4": size === "sm",
+		"size-3": size === "xs",
 	});
 
 	return (

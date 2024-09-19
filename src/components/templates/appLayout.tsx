@@ -4,16 +4,14 @@ import { Outlet } from "react-router-dom";
 
 import { cn } from "@utilities";
 
-import { DeploymentsAndSessionsTopbar, ProjectConfigTopbar, Sidebar } from "@components/organisms";
+import { ProjectConfigTopbar, Sidebar } from "@components/organisms";
 
 export const AppLayout = ({
 	className,
 	displayConfigurationTopbar,
-	displayDeploymentsAndSessionsTopbar,
 }: {
 	className?: string;
 	displayConfigurationTopbar?: boolean;
-	displayDeploymentsAndSessionsTopbar?: boolean;
 }) => {
 	const appLayoutClasses = cn("h-screen w-screen pr-5", className);
 
@@ -24,8 +22,6 @@ export const AppLayout = ({
 
 				<div className="flex flex-1 flex-col overflow-auto transition">
 					{displayConfigurationTopbar ? <ProjectConfigTopbar /> : null}
-
-					{displayDeploymentsAndSessionsTopbar ? <DeploymentsAndSessionsTopbar /> : null}
 
 					<div className="h-full">
 						<div className="flex h-full gap-6">

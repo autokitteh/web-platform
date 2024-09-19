@@ -1,8 +1,11 @@
 import { StateCreator, create } from "zustand";
+import { persist } from "zustand/middleware";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
+import { DeploymentsService } from "@services";
 import { SessionsService } from "@services/sessions.service";
 import { minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
+import { StoreName } from "@src/enums";
 
 import { useToastStore } from "@store";
 
@@ -13,12 +16,38 @@ export interface CacheStore {
 	reload: (sessionId: string) => void;
 	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
 	nextPageToken?: string;
+	projectLastDeployment?: Record<string, string>;
+	fetchLastDeploymentId: (projectId: string, force?: boolean) => Promise<void>;
 }
 
 const store: StateCreator<CacheStore> = (set, get) => ({
 	logs: [],
 	loading: false,
 	nextPageToken: "",
+	projectLastDeployment: undefined,
+
+	fetchLastDeploymentId: async (projectId: string, force?: boolean) => {
+		const { projectLastDeployment } = get();
+
+		if (projectLastDeployment?.projectId === projectId && !force) {
+			return;
+		}
+
+		const { data: deployments, error } = await DeploymentsService.listByProjectId(projectId);
+
+		if (error) {
+			return;
+		}
+
+		if (!deployments || !deployments.length) {
+			return;
+		}
+		set({
+			projectLastDeployment: {
+				[projectId]: deployments[deployments.length - 1].deploymentId,
+			},
+		});
+	},
 
 	reset: () => {
 		set((state) => {
@@ -72,4 +101,4 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 	},
 });
 
-export const useCacheStore = create(store);
+export const useCacheStore = create(persist(store, { name: StoreName.cache }));
