@@ -10,11 +10,12 @@ import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
-import { IconButton, Loader, Tab } from "@components/atoms";
+import { Button, IconButton, Loader, Tab, Toggle } from "@components/atoms";
 
 import { Close } from "@assets/image/icons";
 
 export const EditorTabs = () => {
+	const [checked, setChecked] = useState(true);
 	const { projectId } = useParams();
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
@@ -94,35 +95,48 @@ export const EditorTabs = () => {
 	};
 
 	return (
-		<div className="flex h-full flex-col pt-11">
+		<div className="relative flex h-full flex-col pt-11">
 			{projectId ? (
 				<>
-					<div
-						className={
-							`absolute top-5 flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
-							`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
-						}
-					>
-						{openFiles?.map(({ name }) => (
-							<Tab
-								activeTab={activeEditorFileName}
-								className="group flex items-center gap-1"
-								key={name}
-								onClick={() => openFileAsActive(name)}
-								value={name}
-							>
-								{name}
-
-								<IconButton
-									ariaLabel={t("buttons.ariaCloseFile")}
-									className={activeCloseIcon(name)}
-									onClick={(event) => handleCloseButtonClick(event, name)}
+					<div className="absolute left-0 top-0 flex w-full justify-between">
+						<div
+							className={
+								`flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
+								`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
+							}
+						>
+							{openFiles?.map(({ name }) => (
+								<Tab
+									activeTab={activeEditorFileName}
+									className="group flex items-center gap-1"
+									key={name}
+									onClick={() => openFileAsActive(name)}
+									value={name}
 								>
-									<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-								</IconButton>
-							</Tab>
-						))}
+									{name}
+									<IconButton
+										ariaLabel={t("buttons.ariaCloseFile")}
+										className={activeCloseIcon(name)}
+										onClick={(event) => handleCloseButtonClick(event, name)}
+									>
+										<Close className="h-2 w-2 fill-gray-750 transition group-hover:fill-white" />
+									</IconButton>
+								</Tab>
+							))}
+						</div>
+
+						<div className="border-1 relative -right-4 -top-2 inline-flex gap-2 rounded-3xl border border-gray-1000 p-1 pl-2">
+							<Toggle checked={checked} onChange={setChecked} title="Autosave" />
+
+							<Button
+								className="whitespace-nowrap bg-gray-1050 px-5 py-1 hover:bg-gray-950"
+								variant="filled"
+							>
+								Save
+							</Button>
+						</div>
 					</div>
+
 					<Editor
 						aria-label={activeEditorFileName}
 						beforeMount={handleEditorWillMount}
