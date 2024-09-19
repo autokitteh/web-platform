@@ -135,12 +135,13 @@ export const EditorTabs = () => {
 									value={name}
 								>
 									{name}
+
 									<IconButton
 										ariaLabel={t("buttons.ariaCloseFile")}
 										className={activeCloseIcon(name)}
 										onClick={(event) => handleCloseButtonClick(event, name)}
 									>
-										<Close className="h-2 w-2 fill-gray-750 transition group-hover:fill-white" />
+										<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
 									</IconButton>
 								</Tab>
 							))}
@@ -148,7 +149,7 @@ export const EditorTabs = () => {
 
 						{openFiles.length ? (
 							<div className="relative -right-4 -top-2 z-10 flex flex-col items-end whitespace-nowrap">
-								<div className="border-1 inline-flex gap-2 rounded-3xl border border-gray-1000 p-1 pl-2">
+								<div className="inline-flex gap-2 rounded-3xl border border-gray-1000 p-1 pl-2">
 									<Toggle checked={checked} label={t("autoSave")} onChange={setChecked} />
 
 									<Button
