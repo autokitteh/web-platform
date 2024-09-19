@@ -1,3 +1,10 @@
+# [2.8.0](https://github.com/autokitteh/web-platform/compare/v2.7.0...v2.8.0) (2024-09-19)
+
+
+### Features
+
+* login page redesign ([#341](https://github.com/autokitteh/web-platform/issues/341)) ([51ef73a](https://github.com/autokitteh/web-platform/commit/51ef73a36a395019ca441eeb16508828f2c63ce7))
+
 # [2.7.0](https://github.com/autokitteh/web-platform/compare/v2.6.1...v2.7.0) (2024-09-19)
 
 
