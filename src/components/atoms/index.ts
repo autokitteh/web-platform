@@ -1,4 +1,3 @@
-export { Badge } from "@components/atoms/badge";
 export { Button, IconButton } from "@components/atoms/buttons";
 export { DropdownMenu } from "@components/atoms/dropdownMenu";
 export { ErrorMessage } from "@components/atoms/errorMessage";

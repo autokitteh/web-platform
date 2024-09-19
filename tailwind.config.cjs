@@ -61,7 +61,7 @@ module.exports = {
         DEFAULT: "transparent",
       },
       red: {
-        DEFAULT: "red",
+        DEFAULT: "red"
       },
       white: {
         DEFAULT: "#ffffff",

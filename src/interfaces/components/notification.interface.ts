@@ -1,4 +1,4 @@
-export interface BadgeProps {
+export interface NotificationProps {
 	children: React.ReactNode;
 	className?: string;
 }

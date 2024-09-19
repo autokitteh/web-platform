@@ -10,7 +10,7 @@ import { namespaces } from "@src/constants";
 import { useCacheStore } from "@src/store/useCacheStore";
 
 import { useFileOperations } from "@hooks";
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useModalStore, useProjectStore, useProjectValidationStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -25,6 +25,9 @@ export const ProjectTopbarButtons = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
+	const { isValid, projectValidationState } = useProjectValidationStore();
+	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
+	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 
 	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
@@ -138,34 +141,38 @@ export const ProjectTopbarButtons = () => {
 	}, []);
 
 	return (
-		<div className="flex items-center gap-3">
-			<Button
-				ariaLabel={t("topbar.buttons.ariaBuildProject")}
-				className="h-8 whitespace-nowrap px-3.5"
-				disabled={loadingButton[TopbarButton.build]}
-				onClick={debouncedBuild}
-				variant="filledGray"
-			>
-				{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg size="md" src={BuildIcon} />}
+		<div className="flex items-stretch gap-3">
+			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
+				<Button
+					ariaLabel={t("topbar.buttons.ariaBuildProject")}
+					className="h-8 whitespace-nowrap px-3.5"
+					disabled={loadingButton[TopbarButton.build]}
+					onClick={debouncedBuild}
+					variant="filledGray"
+				>
+					{loadingButton[TopbarButton.build] ? <Spinner /> : <IconSvg size="md" src={BuildIcon} />}
 
-				{t("topbar.buttons.build")}
-			</Button>
+					{t("topbar.buttons.build")}
+				</Button>
+			</div>
 
-			<Button
-				ariaLabel={t("topbar.buttons.ariaDeployProject")}
-				className="h-8 whitespace-nowrap px-3.5"
-				disabled={loadingButton[TopbarButton.deploy]}
-				onClick={debouncedDeploy}
-				variant="filledGray"
-			>
-				{loadingButton[TopbarButton.deploy] ? (
-					<Spinner />
-				) : (
-					<IconSvg className="fill-white" size="md" src={RocketIcon} />
-				)}
+			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
+				<Button
+					ariaLabel={t("topbar.buttons.ariaDeployProject")}
+					className="h-8 whitespace-nowrap px-3.5"
+					disabled={loadingButton[TopbarButton.deploy]}
+					onClick={debouncedDeploy}
+					variant="filledGray"
+				>
+					{loadingButton[TopbarButton.deploy] ? (
+						<Spinner />
+					) : (
+						<IconSvg className="fill-white" size="md" src={RocketIcon} />
+					)}
 
-				{t("topbar.buttons.deploy")}
-			</Button>
+					{t("topbar.buttons.deploy")}
+				</Button>
+			</div>
 
 			<DropdownButton
 				contentMenu={
