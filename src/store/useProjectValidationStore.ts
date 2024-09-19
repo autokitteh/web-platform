@@ -27,8 +27,6 @@ const store: StateCreator<ProjectValidationStore> = (set, get) => ({
 	currentProjectId: "",
 	projectValidationState: defaultProjectValidationState,
 	isValid: false,
-	totalErrors: 0,
-	totalWarnings: 0,
 	checkState: async (projectId, enforce = false) => {
 		if (projectId === get().currentProjectId && !enforce) {
 			return;
@@ -62,12 +60,8 @@ const store: StateCreator<ProjectValidationStore> = (set, get) => ({
 			};
 		}
 
-		const totalErrors = Object.values(newProjectValidationState).filter(
+		const isInvalid = Object.values(newProjectValidationState).filter(
 			(error) => !!error.message && error.level === "error"
-		).length;
-
-		const totalWarnings = Object.values(newProjectValidationState).filter(
-			(error) => !!error.message && error.level === "warning"
 		).length;
 
 		set((state) => ({
@@ -76,9 +70,7 @@ const store: StateCreator<ProjectValidationStore> = (set, get) => ({
 				...newProjectValidationState,
 			},
 			currentProjectId: projectId,
-			isValid: !totalErrors,
-			totalErrors,
-			totalWarnings,
+			isValid: !isInvalid,
 		}));
 
 		return;

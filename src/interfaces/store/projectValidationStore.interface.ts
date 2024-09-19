@@ -18,6 +18,4 @@ export interface ProjectValidationStore {
 	};
 	checkState: (projectId: string, enforce?: boolean) => void;
 	isValid: boolean;
-	totalErrors: number;
-	totalWarnings: number;
 }

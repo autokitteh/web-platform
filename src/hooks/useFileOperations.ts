@@ -63,7 +63,9 @@ export function useFileOperations(projectId: string) {
 		async (name: string) => {
 			await dbService.delete(name);
 			closeOpenedFile(name);
-			await ProjectsService.setResources(projectId, {});
+			const resources = await dbService.getAll();
+
+			await ProjectsService.setResources(projectId, resources);
 		},
 		[projectId, closeOpenedFile]
 	);
