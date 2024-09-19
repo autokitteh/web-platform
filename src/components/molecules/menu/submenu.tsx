@@ -19,7 +19,7 @@ export const Submenu = ({ submenuInfo }: SubmenuProps) => {
 	return (
 		<motion.div
 			animate="visible"
-			className="scrollbar z-1 absolute left-full mr-2.5 h-screen w-auto overflow-auto border-l border-r border-gray-500 bg-gray-250 px-2"
+			className="scrollbar absolute left-full mr-2.5 h-screen w-auto overflow-auto border-x border-gray-500 bg-gray-250 px-2"
 			exit="hidden"
 			initial="hidden"
 			style={{ paddingTop: submenuInfo.top }}

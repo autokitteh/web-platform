@@ -179,7 +179,7 @@ export const DeploymentsTable = () => {
 					<RefreshButton isLoading={isRefreshing} onRefresh={fetchDeployments} />
 				</div>
 
-				<div className="border-1 flex h-10 gap-2 rounded-3xl border border-gray-1000 p-1">
+				<div className="flex h-10 gap-2 rounded-3xl border border-gray-1000 p-1">
 					<Button
 						ariaLabel={t("ariaSettingsRun")}
 						className="h-full whitespace-nowrap bg-gray-1050"

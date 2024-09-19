@@ -176,7 +176,7 @@ export const CodeTable = () => {
 							type="file"
 						/>
 
-						<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+						<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 						{t("buttons.addNewFile")}
 					</label>
@@ -187,7 +187,7 @@ export const CodeTable = () => {
 					className="group w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
 					onClick={() => openModal(ModalName.addCodeAssets)}
 				>
-					<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.createNewFile")}
 				</Button>
@@ -217,7 +217,7 @@ export const CodeTable = () => {
 
 									<Td className="max-w-12 pr-0">
 										<IconButton onClick={(event) => handleTrashIconClick(event, name)}>
-											<TrashIcon className="h-3 w-3 fill-white" />
+											<TrashIcon className="size-3 fill-white" />
 										</IconButton>
 									</Td>
 								</Tr>

@@ -41,7 +41,7 @@ export const Drawer = ({ children, name, variant }: DrawerProps) => {
 							opacity: 1,
 							transition: { delay: 0.1, duration: 0.25 },
 						}}
-						className="bg-indigo-950/30 fixed left-0 top-0 z-40 flex h-full w-full items-center justify-center backdrop-blur-sm"
+						className="fixed left-0 top-0 z-40 flex size-full items-center justify-center backdrop-blur-sm"
 						exit={{
 							opacity: 0,
 						}}

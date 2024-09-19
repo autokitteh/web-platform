@@ -41,6 +41,6 @@ export const Primary = {
 		className: "w-8 h-8",
 		disabled: false,
 		title: "",
-		children: <Close className="h-3 w-3 fill-gray-500 transition group-hover:fill-white" />,
+		children: <Close className="size-3 fill-gray-500 transition group-hover:fill-white" />,
 	},
 } satisfies Story;

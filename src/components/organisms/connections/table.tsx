@@ -123,7 +123,7 @@ export const ConnectionsTable = () => {
 					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-500 hover:text-white"
 					onClick={() => navigate("add")}
 				>
-					<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}
 				</Button>
@@ -184,7 +184,7 @@ export const ConnectionsTable = () => {
 										<div className="flex items-center gap-2" title={integrationName}>
 											<IconSvg
 												alt={integrationName}
-												className="h-6 w-6 shrink-0 rounded-full bg-white p-0.5"
+												className="size-6 shrink-0 rounded-full bg-white p-0.5"
 												src={logo}
 											/>
 
@@ -206,7 +206,7 @@ export const ConnectionsTable = () => {
 												onClick={() => handleConnectionEditClick(connectionId)}
 												title={t("table.buttons.titleEditConnection")}
 											>
-												<EditIcon className="h-3 w-3 fill-white" />
+												<EditIcon className="size-3 fill-white" />
 											</IconButton>
 
 											<IconButton
@@ -214,7 +214,7 @@ export const ConnectionsTable = () => {
 												onClick={() => handleOpenModalDeleteConnection(connectionId)}
 												title={t("table.buttons.titleRemoveConnection")}
 											>
-												<TrashIcon className="h-3 w-3 fill-white" />
+												<TrashIcon className="size-3 fill-white" />
 											</IconButton>
 										</div>
 									</Td>

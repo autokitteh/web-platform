@@ -82,7 +82,7 @@ export const Security = () => {
 								onClick={() => copyToClipboard(token)}
 								variant="outline"
 							>
-								<CopyIcon className="w-4.1 h-6 fill-black" />
+								<CopyIcon className="h-6 w-4 fill-black" />
 							</Button>
 						</div>
 					) : (

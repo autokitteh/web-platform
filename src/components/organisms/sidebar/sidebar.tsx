@@ -46,7 +46,7 @@ export const Sidebar = () => {
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
 						<Link className="ml-1 flex items-center gap-2.5" to="/">
-							<IconLogo className="h-8 w-8" />
+							<IconLogo className="size-8" />
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -101,7 +101,7 @@ export const Sidebar = () => {
 						<div className="flex flex-col justify-end gap-5">
 							<div>
 								<Button className="hover:bg-transparent" href="/settings" title={t("settings")}>
-									<SettingsIcon className="h-7 w-7" fill="black" />
+									<SettingsIcon className="size-7" fill="black" />
 
 									<AnimatePresence>
 										{isOpen ? (
@@ -123,7 +123,7 @@ export const Sidebar = () => {
 									onClick={() => logoutFunction()}
 									title={t("logout")}
 								>
-									<LogoutIcon className="h-7 w-7" fill="black" />
+									<LogoutIcon className="size-7" fill="black" />
 
 									<AnimatePresence>
 										{isOpen ? (

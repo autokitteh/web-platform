@@ -125,7 +125,7 @@ export const PatForm = ({
 					onClick={() => copyToClipboard(webhook)}
 					variant="outline"
 				>
-					<CopyIcon className="h-3.5 w-3.5 fill-black" />
+					<CopyIcon className="size-3.5 fill-black" />
 
 					{t("buttons.copy")}
 				</Button>
@@ -161,7 +161,7 @@ export const PatForm = ({
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-5 w-5 fill-white transition" />}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 
 				{t("buttons.saveConnection")}
 			</Button>
@@ -176,7 +176,7 @@ export const PatForm = ({
 						>
 							{text}
 
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
 				</div>

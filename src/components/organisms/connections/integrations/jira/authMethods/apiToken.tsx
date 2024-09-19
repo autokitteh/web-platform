@@ -122,7 +122,7 @@ export const ApiTokenJiraForm = ({
 				type="submit"
 				variant="outline"
 			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-5 w-5 fill-white transition" />}
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 
 				{t("buttons.saveConnection")}
 			</Button>
@@ -137,7 +137,7 @@ export const ApiTokenJiraForm = ({
 						>
 							{text}
 
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
 				</div>

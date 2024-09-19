@@ -96,7 +96,7 @@ export const TriggersTable = () => {
 					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-500 hover:text-white"
 					href="add"
 				>
-					<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 					{t("buttons.addNew")}
 				</Button>
@@ -164,7 +164,7 @@ export const TriggersTable = () => {
 											})}
 											onClick={() => navigate(`${trigger.triggerId}/edit`)}
 										>
-											<EditIcon className="h-3 w-3 fill-white" />
+											<EditIcon className="size-3 fill-white" />
 										</IconButton>
 
 										<IconButton
@@ -173,7 +173,7 @@ export const TriggersTable = () => {
 											})}
 											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
 										>
-											<TrashIcon className="h-3 w-3 fill-white" />
+											<TrashIcon className="size-3 fill-white" />
 										</IconButton>
 									</div>
 								</Td>

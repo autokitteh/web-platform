@@ -8,6 +8,7 @@ module.exports = {
     fontFamily: {
       "fira-sans": ["Fira Sans", "sans-serif"],
       "fira-code": ["Fira Code", "sans-serif"],
+      "mono": ["monospace", "sans-serif", "helvetica"],
     },
     extend: {
       fontSize: {

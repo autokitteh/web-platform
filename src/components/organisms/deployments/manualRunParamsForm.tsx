@@ -91,7 +91,7 @@ export const ManualRunParamsForm = () => {
 						className="self-center bg-gray-1300 hover:bg-black"
 						onClick={() => remove(index)}
 					>
-						<TrashIcon className="h-4 w-4 fill-white" />
+						<TrashIcon className="size-4 fill-white" />
 					</IconButton>
 				</div>
 			))}
@@ -101,7 +101,7 @@ export const ManualRunParamsForm = () => {
 				onClick={handleAddParam}
 				type="button"
 			>
-				<PlusCircle className="h-5 w-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+				<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
 				{t("buttons.addNewParameter")}
 			</Button>

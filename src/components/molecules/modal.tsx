@@ -55,7 +55,7 @@ export const Modal = ({ children, className, name }: ModalProps) => {
 							className="group ml-auto h-default-icon w-default-icon bg-gray-250 p-0"
 							onClick={() => onClose(name)}
 						>
-							<Close className="h-3 w-3 fill-black transition group-hover:fill-white" />
+							<Close className="size-3 fill-black transition group-hover:fill-white" />
 						</IconButton>
 
 						{children}

@@ -85,7 +85,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 						onClick={handleCreateProject}
 						title="New Project"
 					>
-						<div className="flex h-9 w-9 items-center justify-center">
+						<div className="flex size-9 items-center justify-center">
 							<IconSvg alt="New Project" size="xl" src={NewProject} />
 						</div>
 
@@ -110,7 +110,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 					onMouseEnter={(event) => handleMouseEnter(event, sortedProjectsList)}
 					onMouseLeave={onMouseLeave}
 				>
-					<div className="-before:z-1 cursor-pointer before:absolute before:left-0 before:h-10 before:w-full" />
+					<div className="cursor-pointer before:absolute before:left-0 before:h-10 before:w-full" />
 
 					<Button ariaLabel={t("myProjects")} className={buttonMenuStyle("#")} title={t("myProjects")}>
 						<div className={buttonMenuIconWrapperStyle("#")}>

@@ -122,7 +122,7 @@ export const Toast = () => {
 								className="group ml-auto h-default-icon w-default-icon bg-gray-1050 p-0"
 								onClick={() => removeToast(id)}
 							>
-								<Close className="h-3 w-3 fill-white transition" />
+								<Close className="size-3 fill-white transition" />
 							</IconButton>
 						</div>
 					</motion.div>

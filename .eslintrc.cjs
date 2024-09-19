@@ -13,7 +13,8 @@ module.exports = {
 		"plugin:security/recommended-legacy",
 		"plugin:promise/recommended",
 		"plugin:@liferay/react",
-		"plugin:prettier/recommended"
+		"plugin:prettier/recommended",
+		"plugin:tailwindcss/recommended"
 	],
 	settings: {
 		"react": {
@@ -106,9 +107,7 @@ module.exports = {
 				"singleQuote": false,
 				"tabWidth": 4,
 				"trailingComma": "es5",
-				"useTabs": true,
-				"plugins": ["prettier-plugin-tailwindcss"],
-				"tailwindFunctions": ["cn"],
+				"useTabs": true
 			},
 		],
 		"security/detect-object-injection": "off",

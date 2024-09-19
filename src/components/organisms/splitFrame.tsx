@@ -24,6 +24,8 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 				{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 			</div>
 
+			{/* eslint-disable tailwindcss/no-custom-classname */}
+
 			<div className="resize-handle-horizontal z-10 -ml-2 w-2 cursor-ew-resize" />
 
 			<div
@@ -34,6 +36,8 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 					<div style={{ height: `${100 - (outputHeight as number)}%` }}>
 						<EditorTabs />
 					</div>
+
+					{}
 
 					<Button className="resize-handle-vertical z-0 -mx-8 cursor-ns-resize rounded-none bg-gray-1100 p-0.5 transition hover:bg-gray-750" />
 

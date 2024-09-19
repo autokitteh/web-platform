@@ -26,7 +26,7 @@ export const OauthForm = () => {
 						>
 							{text}
 
-							<ExternalLinkIcon className="h-3.5 w-3.5 fill-green-800 duration-200" />
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
 				</div>

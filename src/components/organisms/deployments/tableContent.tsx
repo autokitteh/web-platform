@@ -139,7 +139,7 @@ export const DeploymentsTableContent = ({
 											}
 											title={t("ariaDeactivateDeploy")}
 										>
-											<ActionStoppedIcon className="h-4 w-4 transition group-hover:fill-white" />
+											<ActionStoppedIcon className="size-4 transition group-hover:fill-white" />
 										</IconButton>
 									) : (
 										<IconButton
@@ -147,7 +147,7 @@ export const DeploymentsTableContent = ({
 											className="p-1"
 											onClick={(event) => handleDeploymentAction(deploymentId, "activate", event)}
 										>
-											<ActionActiveIcon className="h-4 w-4 transition group-hover:fill-green-800" />
+											<ActionActiveIcon className="size-4 transition group-hover:fill-green-800" />
 										</IconButton>
 									)}
 
@@ -157,7 +157,7 @@ export const DeploymentsTableContent = ({
 										onClick={(event) => showDeleteModal(event, deploymentId)}
 										title={t("ariaDeleteDeploy")}
 									>
-										<TrashIcon className="h-3 w-3 fill-white" />
+										<TrashIcon className="size-3 fill-white" />
 									</IconButton>
 								</div>
 							</Td>
