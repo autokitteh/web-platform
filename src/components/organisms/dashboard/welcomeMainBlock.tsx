@@ -43,20 +43,25 @@ export const DashboardWelcomeMainBlock = () => {
 						</IconButton>
 					</div>
 
-					<Typography className="mt-2 font-bold" element="p">
+					<Typography className="mt-4 font-bold 2xl:hidden" element="p">
 						{t("cards.main.buildAnything")}
 					</Typography>
 				</div>
 
 				<div className="m-auto mt-2 w-full">
-					<Typography className="text-center text-3xl font-bold 2xl:text-left" element="h2">
-						{t("cards.main.reliableAutomation")}
-					</Typography>
+					<div className="m-auto w-4/5">
+						<Typography className="text-3xl font-bold" element="h2">
+							{t("cards.main.reliableAutomation")}
+						</Typography>
 
-					<Typography className="text-center text-3xl font-bold 2xl:text-right" element="h2">
-						{t("cards.main.inAFewLinesOfCode")}
-					</Typography>
+						<Typography className="text-3xl font-bold" element="h2">
+							{t("cards.main.inAFewLinesOfCode")}
+						</Typography>
 
+						<Typography className="mt-6 hidden font-bold 2xl:block" element="p">
+							{t("cards.main.buildAnything")}
+						</Typography>
+					</div>
 					<div className="mt-10">
 						<div className="flex flex-col items-center justify-center gap-1">
 							<Typography className="font-semibold text-gray-500" element="p">
@@ -73,10 +78,10 @@ export const DashboardWelcomeMainBlock = () => {
 							</Button>
 						</div>
 
-						<div className="relative left-1/2 mt-2 inline-block -translate-x-1/2">
+						<div className="relative left-1/2 mt-2 inline-block w-full -translate-x-1/2 2xl:w-auto">
 							<StartFromTemplateImage className="m-auto" />
 
-							<ArrowStartTemplateIcon className="absolute -top-4 left-52" />
+							<ArrowStartTemplateIcon className="absolute -bottom-8 left-auto right-0 top-auto 2xl:-top-4 2xl:left-52" />
 						</div>
 					</div>
 				</div>

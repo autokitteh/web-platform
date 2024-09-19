@@ -11,7 +11,7 @@ import { CatDashboardImage } from "@assets/image";
 
 export const Dashboard = () => {
 	const { isLoadingProjectsList, projectsList } = useProjectStore();
-	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 60, max: 78, min: 30 });
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 78, min: 30 });
 
 	const hasProjects = !!projectsList.length;
 
