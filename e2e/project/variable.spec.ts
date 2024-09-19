@@ -10,7 +10,7 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 	await page.getByLabel("Name").fill("nameVariable");
 	await page.getByLabel("Value").click();
 	await page.getByLabel("Value").fill("valueVariable");
-	await page.getByRole("button", { name: "Save" }).click();
+	await page.getByRole("button", { name: "Save", exact: true }).click();
 
 	const variableInTable = page.getByRole("cell", { exact: true, name: "nameVariable" });
 	const variableValueInTable = page.getByRole("cell", { exact: true, name: "valueVariable" });
@@ -21,7 +21,7 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 test.describe("Project Variables Suite", () => {
 	test("Create variable with empty fields", async ({ page }) => {
 		await page.getByRole("link", { name: "Add new" }).click();
-		await page.getByRole("button", { name: "Save" }).click();
+		await page.getByRole("button", { name: "Save", exact: true }).click();
 
 		const nameErrorMessage = page.getByRole("alert", { name: "Name is required" });
 		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });
@@ -33,7 +33,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
 		await page.getByLabel("Value").click();
 		await page.getByLabel("Value").fill("newValueVariable");
-		await page.getByRole("button", { name: "Save" }).click();
+		await page.getByRole("button", { name: "Save", exact: true }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
 		await expect(newVariableInTable).toBeVisible();
 	});
@@ -41,7 +41,7 @@ test.describe("Project Variables Suite", () => {
 	test("Modifying variable with empty value", async ({ page }) => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
 		await page.getByRole("textbox", { name: "Value" }).clear();
-		await page.getByRole("button", { name: "Save" }).click();
+		await page.getByRole("button", { name: "Save", exact: true }).click();
 
 		const valueErrorMessage = page.getByRole("alert", { name: "Value is required" });
 		await expect(valueErrorMessage).toBeVisible();

@@ -31,7 +31,7 @@ async function createTriggerScheduler(
 	await functionNameInput.click();
 	await functionNameInput.fill(functionName);
 
-	await page.getByRole("button", { name: "Save" }).click();
+	await page.getByRole("button", { name: "Save", exact: true }).click();
 
 	await expect(nameInput).toBeDisabled();
 	await expect(nameInput).toHaveValue(triggerName);
@@ -48,7 +48,7 @@ async function modifyTrigger(page: Page, name: string, cronExpression: string, f
 	await functionNameInput.click();
 	await functionNameInput.fill(functionName);
 
-	await page.getByRole("button", { name: "Save" }).click();
+	await page.getByRole("button", { name: "Save", exact: true }).click();
 }
 
 test.beforeEach(async ({ dashboardPage, page }) => {
@@ -124,14 +124,14 @@ test.describe("Project Triggers Suite", () => {
 		await page.getByRole("option", { name: "Scheduler" }).click();
 		await page.getByTestId("select-file").click();
 		await page.getByRole("option", { name: "newFile.star" }).click();
-		await page.getByRole("button", { name: "Save" }).click();
+		await page.getByRole("button", { name: "Save", exact: true }).click();
 		const nameErrorMessage = page.getByText("Name is required");
 
 		await expect(nameErrorMessage).toBeVisible();
 		const nameInput = page.getByRole("textbox", { exact: true, name: "Name" });
 		await nameInput.click();
 		await nameInput.fill("triggerTest");
-		await page.getByRole("button", { name: "Save" }).click();
+		await page.getByRole("button", { name: "Save", exact: true }).click();
 
 		const functionNameErrorMessage = page.getByText("Function is required");
 
@@ -149,7 +149,7 @@ test.describe("Project Triggers Suite", () => {
 		await page.getByRole("textbox", { name: "Function name" }).click();
 		await page.getByRole("textbox", { name: "Function name" }).fill("");
 
-		await page.getByRole("button", { name: "Save" }).click();
+		await page.getByRole("button", { name: "Save", exact: true }).click();
 
 		const functionNameErrorMessage = page.getByText("Function is required");
 
