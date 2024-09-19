@@ -11,37 +11,40 @@ export const ProjectTopbarNavigation = () => {
 
 	return (
 		<div className="ml-5 mr-auto flex items-stretch">
-			<div className="h-full border-0.5 border-y-0">
+			<div className="mr-[-0.5px] h-full border-0.5 border-y-0 border-gray-750">
 				<Button
 					ariaLabel="Assets"
-					className="size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black"
+					className="group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black"
 					variant="filledGray"
 				>
-					<IconSvg size="md" src={AssetsIcon} />
-					Assets
+					<IconSvg className="text-white group-hover:text-green-200" size="lg" src={AssetsIcon} />
+
+					<span className="ml-2 group-hover:text-white">Assets</span>
 				</Button>
 			</div>
 
-			<div className="group ml-[-0.5px] h-full border-0.5 border-y-0">
+			<div className="mx-[-0.5px] h-full border-0.5 border-y-0 border-gray-750">
 				<Button
-					ariaLabel="Assets"
-					className="size-full whitespace-nowrap rounded-none bg-transparent p-3.5 group-hover:bg-black"
+					ariaLabel="Deployments"
+					className="group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black"
 					variant="filledGray"
 				>
-					<IconSvg size="md" src={DeploymentsIcon} />
-					Deployments
+					<IconSvg className="text-white group-hover:text-green-200" size="lg" src={DeploymentsIcon} />
+
+					<span className="ml-2 group-hover:text-white">Deployments</span>
 				</Button>
 			</div>
 
-			<div className="ml-[-0.5px] h-full border-0.5 border-y-0">
+			<div className="ml-[-0.5px] h-full border-0.5 border-y-0 border-gray-750">
 				<Button
-					ariaLabel="Assets"
-					className="size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black"
+					ariaLabel="Sessions"
+					className="group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black"
 					href={`/projects/${projectId}/deployments`}
 					variant="filledGray"
 				>
-					<IconSvg size="md" src={SessionsIcon} />
-					Sessions
+					<IconSvg className="text-white group-hover:text-green-200" size="lg" src={SessionsIcon} />
+
+					<span className="ml-2 group-hover:text-white">Sessions</span>
 				</Button>
 			</div>
 		</div>
