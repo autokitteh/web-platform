@@ -39,9 +39,19 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			return;
 		}
 
-		if (!deployments || !deployments.length) {
+		if (!deployments) {
 			return;
 		}
+		if (!deployments.length) {
+			set({
+				projectLastDeployment: {
+					[projectId]: "",
+				},
+			});
+
+			return;
+		}
+
 		set({
 			projectLastDeployment: {
 				[projectId]: deployments[deployments.length - 1].deploymentId,

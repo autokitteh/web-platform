@@ -17,7 +17,8 @@ export const ProjectTopbarName = () => {
 	const { getProject, renameProject } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState(true);
 	const [project, setProject] = useState<Project>();
-	const { t } = useTranslation(["projects", "errors", "buttons"]);
+	const { t } = useTranslation(["projects", "buttons"]);
+	const { t: tErrors } = useTranslation("errors");
 	const inputClass = cn(
 		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0",
 		{
@@ -31,7 +32,7 @@ export const ProjectTopbarName = () => {
 
 		if (error || !project) {
 			addToast({
-				message: t("projectLoadingFailed"),
+				message: tErrors("projectLoadingFailed"),
 				type: "error",
 			});
 
@@ -39,7 +40,7 @@ export const ProjectTopbarName = () => {
 		}
 		if (!project) {
 			addToast({
-				message: t("noProjectFound"),
+				message: tErrors("noProjectFound"),
 				type: "error",
 			});
 
@@ -77,7 +78,7 @@ export const ProjectTopbarName = () => {
 			const { error } = await ProjectsService.update(projectId, newName);
 			if (error) {
 				addToast({
-					message: t("projectUpdateFailed"),
+					message: tErrors("projectUpdateFailed"),
 					type: "error",
 				});
 

@@ -31,7 +31,6 @@ export const DeploymentsTableContent = ({
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal, openModal } = useModalStore();
 	const [deploymentId, setDeploymentId] = useState<string>();
-
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
 		setDeploymentId(id);

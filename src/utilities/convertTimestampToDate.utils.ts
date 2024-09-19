@@ -17,7 +17,8 @@ export const convertTimestampToEpoch = (timestamp: unknown): Date => {
 	const timestampConverted = timestamp as ProtoTimestamp;
 
 	const milliseconds =
-		timestampConverted.seconds * BigInt(1000) + BigInt(timestampConverted.nanos ? timestampConverted.nanos : 0);
+		BigInt(timestampConverted.seconds) * BigInt(1000) +
+		BigInt(timestampConverted.nanos ? timestampConverted.nanos : 0);
 
 	return new Date(Number(milliseconds));
 };
