@@ -11,7 +11,8 @@ import { useFileOperations } from "@hooks";
 import { useProjectStore, useToastStore } from "@store";
 
 import { ErrorMessage } from "@components/atoms";
-import { ProjectTopbarButtons } from "@components/organisms/topbar/project";
+import { CopyButton } from "@components/molecules";
+import { ProjectTopbarButtons, ProjectTopbarNavigation } from "@components/organisms/topbar/project";
 
 export const ProjectConfigTopbar = () => {
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
@@ -102,8 +103,8 @@ export const ProjectConfigTopbar = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-between gap-5 rounded-b-xl bg-gray-1250 py-2 pl-7 pr-3">
-			<div className="flex items-center gap-5">
+		<div className="flex justify-between rounded-b-xl bg-gray-1250 pl-7 pr-3">
+			<div className="flex items-center py-2">
 				<div className="relative flex items-end gap-3 font-fira-code text-gray-500">
 					<span
 						className={inputClass}
@@ -123,9 +124,14 @@ export const ProjectConfigTopbar = () => {
 						{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
 					</ErrorMessage>
 
-					<span className="text-sm font-semibold leading-tight">{project?.id}</span>
+					<span className="font-fira-code font-semibold">
+						ID
+						<CopyButton className="ml-2 inline p-1 pl-1.5" size="xs" text={project?.id || ""} />
+					</span>
 				</div>
 			</div>
+
+			<ProjectTopbarNavigation />
 
 			<ProjectTopbarButtons />
 		</div>

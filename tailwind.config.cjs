@@ -38,6 +38,9 @@ module.exports = {
       height: {
         "default-icon": "1.625rem"
       },
+      borderWidth: {
+        0.5: "0.5px",
+      },
       borderRadius: {
         14: "14px",
         20: "20px",
