@@ -15,7 +15,7 @@ import { CopyButton } from "@components/molecules";
 export const ProjectTopbarName = () => {
 	const { projectId } = useParams();
 	const { getProject, renameProject } = useProjectStore();
-	const [isNameValid, setIsNameValid] = useState<boolean>(true);
+	const [isNameValid, setIsNameValid] = useState(true);
 	const [project, setProject] = useState<Project>();
 	const { t } = useTranslation(["projects", "errors", "buttons"]);
 	const inputClass = cn(
@@ -29,17 +29,9 @@ export const ProjectTopbarName = () => {
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
 
-		if (error) {
+		if (error || !project) {
 			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-
-			return redirect("/404");
-		}
-		if (!project) {
-			addToast({
-				message: (error as Error).message,
+				message: t("projectLoadingFailed"),
 				type: "error",
 			});
 
@@ -77,7 +69,7 @@ export const ProjectTopbarName = () => {
 			const { error } = await ProjectsService.update(projectId, newName);
 			if (error) {
 				addToast({
-					message: (error as Error).message,
+					message: t("projectUpdateFailed"),
 					type: "error",
 				});
 
@@ -111,7 +103,7 @@ export const ProjectTopbarName = () => {
 					{project?.name}
 				</span>
 
-				<ErrorMessage className="-bottom-5 text-xs">
+				<ErrorMessage className="-bottom-3.5 text-xs">
 					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
 				</ErrorMessage>
 

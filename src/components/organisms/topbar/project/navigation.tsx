@@ -8,9 +8,6 @@ import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
-const baseButtonClass = "group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black";
-const baseIconClass = "text-white";
-
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const location = useLocation();
@@ -24,44 +21,54 @@ export const ProjectTopbarNavigation = () => {
 		if (location.pathname.includes("deployments")) return "deployments";
 
 		return "assets";
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [deploymentId, location.pathname, projectId]);
+	}, [paramDeploymentId, location.pathname]);
 
-	return (
-		<div className="ml-5 mr-auto flex items-stretch">
-			{mainNavigationItems.map((item, index) => {
+	const navigationItems = useMemo(
+		() =>
+			mainNavigationItems.map((item) => {
 				const noDeploymentsState = item.key === "sessions" && !deploymentId;
-
 				const isSelected = selectedSection === item.key;
-				const buttonClassName = cn(baseButtonClass, { "active bg-black": isSelected });
-				const iconClassName = cn(baseIconClass, { "text-green-200": isSelected });
+				const buttonClassName = cn(
+					"group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black",
+					{
+						"active bg-black": isSelected,
+					}
+				);
+				const iconClassName = cn("text-white", {
+					"text-green-200": isSelected,
+				});
 				const href = `/projects/${projectId}${item.path.replace("{deploymentId}", deploymentId || "")}`;
 
-				return (
-					<div
-						className={cn("h-full border-0.5 border-y-0 border-gray-750", {
-							"mr-[-0.5px]": index === 0,
-							"mx-[-0.5px]": index === 1,
-							"ml-[-0.5px]": index === 2,
-						})}
-						key={item.key}
-					>
-						<Button
-							ariaLabel={item.label}
-							className={buttonClassName}
-							disabled={noDeploymentsState}
-							onClick={() => navigate(href)}
-							role="navigation"
-							title={item.label}
-							variant="filledGray"
-						>
-							<IconSvg className={iconClassName} size="lg" src={item.icon} />
+				return {
+					...item,
+					noDeploymentsState,
+					isSelected,
+					buttonClassName,
+					iconClassName,
+					href,
+				};
+			}),
+		[deploymentId, selectedSection, projectId]
+	);
 
-							<span className="ml-2 group-hover:text-white">{item.label}</span>
-						</Button>
-					</div>
-				);
-			})}
+	return (
+		<div className="ml-5 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
+			{navigationItems.map(({ buttonClassName, href, icon, iconClassName, key, label, noDeploymentsState }) => (
+				<Button
+					ariaLabel={label}
+					className={buttonClassName}
+					disabled={noDeploymentsState}
+					key={key}
+					onClick={() => navigate(href)}
+					role="navigation"
+					title={label}
+					variant="filledGray"
+				>
+					<IconSvg className={iconClassName} size="lg" src={icon} />
+
+					<span className="ml-2 group-hover:text-white">{label}</span>
+				</Button>
+			))}
 		</div>
 	);
 };
