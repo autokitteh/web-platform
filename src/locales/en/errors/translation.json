@@ -59,5 +59,6 @@
 	"couldntSaveDefaultFileForProject": "Couldn't save the default file for the project",
 	"projectCreationFailed": "Project creation failed",
 	"projectLoadingFailed": "Failed to load the project",
+	"noProjectFound": "No project found",
 	"projectUpdateFailed": "Failed to update the project"
 }

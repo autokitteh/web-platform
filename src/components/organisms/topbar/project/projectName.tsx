@@ -37,6 +37,14 @@ export const ProjectTopbarName = () => {
 
 			return redirect("/404");
 		}
+		if (!project) {
+			addToast({
+				message: t("noProjectFound"),
+				type: "error",
+			});
+
+			return redirect("/404");
+		}
 		setProject(project);
 	};
 
