@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @liferay/empty-line-between-elements */
 import React, { useEffect, useState } from "react";
 
@@ -254,7 +253,7 @@ export const SessionViewer = () => {
 				</Accordion>
 			) : null}
 			<div className="mt-4 flex items-center justify-between">
-				<div className="scrollbar flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">
+				<div className="scrollbar xl:gap-4 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase 2xl:gap-6">
 					{sessionTabs.map((singleTab) => (
 						<Tab
 							activeTab={activeTab}

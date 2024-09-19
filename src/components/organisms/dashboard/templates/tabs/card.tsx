@@ -25,14 +25,14 @@ export const ProjectTemplateCard = ({
 	const { t } = useTranslation("templates");
 
 	return (
-		<div className="border-1350 relative flex select-none flex-col rounded-md border border-gray-1350 bg-gray-1100 px-5 pb-4 pt-5 font-averta text-white">
+		<div className="relative flex select-none flex-col rounded-md border border-gray-1350 bg-gray-1100 px-5 pb-4 pt-5 font-averta text-white">
 			<div className="flex items-center gap-5">
 				<Status>{category}</Status>
 
 				<div className="flex gap-3">
 					{card.integrations.map(({ icon, title }, index) => (
 						<div
-							className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gray-1400 p-1"
+							className="relative flex size-8 items-center justify-center rounded-full bg-gray-1400 p-1"
 							key={index}
 							title={title}
 						>
@@ -59,7 +59,7 @@ export const ProjectTemplateCard = ({
 				title={disabled ? t("projectAlreadyExist") : t("createProject")}
 			>
 				<Button
-					className="border-1 ml-auto mt-1 w-auto gap-1.5 rounded-full border-gray-1350 bg-gray-1450 p-2 px-3.5 leading-none text-white"
+					className="ml-auto mt-1 w-auto gap-1.5 rounded-full border-gray-1350 bg-gray-1450 p-2 px-3.5 leading-none text-white"
 					disabled={disabled || isCreating}
 					onClick={onCreateClick}
 					variant="filledGray"

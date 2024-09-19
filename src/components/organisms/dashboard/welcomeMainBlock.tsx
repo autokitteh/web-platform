@@ -36,7 +36,7 @@ export const DashboardWelcomeMainBlock = () => {
 				<div className="flex flex-col">
 					<div className="flex min-h-64 w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-gray-1400">
 						<IconButton
-							className="group h-20 w-20 overflow-hidden rounded-full p-0 focus:scale-90"
+							className="group size-20 overflow-hidden rounded-full p-0 focus:scale-90"
 							onClick={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
 						>
 							<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
@@ -99,7 +99,7 @@ export const DashboardWelcomeMainBlock = () => {
 						</Typography>
 					}
 				>
-					<ul className="font-base font-averta font-semibold leading-normal">
+					<ul className="font-averta font-semibold leading-normal">
 						{infoCardPythonCode.map(({ linkHref, linkText, text }, index) => (
 							<li key={index}>
 								{text}{" "}
@@ -124,7 +124,7 @@ export const DashboardWelcomeMainBlock = () => {
 						</Typography>
 					}
 				>
-					<ul className="font-base font-averta font-semibold leading-normal">
+					<ul className="font-averta font-semibold leading-normal">
 						{infoCardVSCode.map(({ text }, index) => (
 							<li key={index}>{text}</li>
 						))}

@@ -12,10 +12,7 @@ export const WelcomeInfoCard = ({ children, onPlay, title }: WelcomeInfoCardProp
 
 		<div className="mt-auto flex items-center pt-2.5">
 			<div className="flex min-h-32 w-1/2 items-center justify-center rounded-2xl border border-gray-750 bg-gray-1400">
-				<IconButton
-					className="group h-11 w-11 overflow-hidden rounded-full p-0 focus:scale-90"
-					onClick={onPlay}
-				>
+				<IconButton className="group size-11 overflow-hidden rounded-full p-0 focus:scale-90" onClick={onPlay}>
 					<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
 				</IconButton>
 			</div>

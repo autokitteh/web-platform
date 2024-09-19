@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useCallback, useEffect, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
