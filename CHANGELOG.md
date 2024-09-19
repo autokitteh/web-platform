@@ -1,3 +1,10 @@
+## [2.4.7](https://github.com/autokitteh/web-platform/compare/v2.4.6...v2.4.7) (2024-09-19)
+
+
+### Bug Fixes
+
+* prettier errors in vscode ([#360](https://github.com/autokitteh/web-platform/issues/360)) ([5e78bd5](https://github.com/autokitteh/web-platform/commit/5e78bd5fef43ba1df1c5b1c4babf9df2d707c15c))
+
 ## [2.4.6](https://github.com/autokitteh/web-platform/compare/v2.4.5...v2.4.6) (2024-09-16)
 
 
