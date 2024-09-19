@@ -11,8 +11,9 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const location = useLocation();
-	const { projectLastDeployment } = useCacheStore();
+	const { fetchLastDeploymentId, projectLastDeployment } = useCacheStore();
 	const navigate = useNavigate();
+	fetchLastDeploymentId(projectId!);
 
 	const deploymentId = projectLastDeployment?.[projectId || ""] || paramDeploymentId;
 
