@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
+import { useFileOperations } from "@src/hooks";
 import { calculatePathDepth } from "@utilities";
 
 import { Tab } from "@components/atoms";
@@ -12,6 +13,7 @@ export const Project = () => {
 	const navigate = useNavigate();
 	const [displayTabs, setDisplayTabs] = useState(false);
 	const location = useLocation();
+	const { projectId } = useParams();
 
 	const [activeTab, setActiveTab] = useState(defaultProjectTab);
 
@@ -31,6 +33,22 @@ export const Project = () => {
 	const goTo = (path: string) => {
 		navigate(path.toLowerCase());
 	};
+	const { fetchResources, openFileAsActive } = useFileOperations(projectId!);
+
+	const { fileToOpen } = location.state || {};
+
+	const openDefaultFile = async (filename: string) => {
+		await fetchResources();
+		openFileAsActive(filename);
+		navigate(location.pathname, { replace: true });
+	};
+
+	useEffect(() => {
+		if (fileToOpen) {
+			openDefaultFile(fileToOpen);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location, navigate]);
 
 	return (
 		<SplitFrame>

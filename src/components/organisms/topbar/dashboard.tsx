@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { SidebarHrefMenu } from "@enums/components";
+import { defaultProjectFile } from "@src/constants";
 
 import { useProjectStore, useToastStore, useUserStore } from "@store";
 
@@ -33,7 +34,11 @@ export const DashboardTopbar = () => {
 			return;
 		}
 
-		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
+		const projectId = data?.projectId;
+
+		navigate(`/${SidebarHrefMenu.projects}/${projectId}`, {
+			state: { fileToOpen: defaultProjectFile },
+		});
 	};
 
 	return (
