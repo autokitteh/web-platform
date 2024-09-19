@@ -1,78 +1,57 @@
-import React from "react";
+import React, { useMemo } from "react";
 
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
+import { mainNavigationItems } from "@src/constants";
 import { useManualRunStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
-import { AssetsIcon, DeploymentsIcon, SessionsIcon } from "@assets/image/icons";
+const baseButtonClass = "group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black";
+const baseIconClass = "text-white";
 
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId, projectId } = useParams();
+	const location = useLocation();
 	const { lastDeploymentStore } = useManualRunStore((state) => ({
 		lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
 	}));
 
-	const isDeploymentsPage = location.pathname.includes("deployments") && projectId;
+	const selectedSection = useMemo(() => {
+		if (deploymentId) return "sessions";
+		if (location.pathname.includes("deployments") && projectId) return "deployments";
 
-	const selectedSection = deploymentId ? "sessions" : isDeploymentsPage ? "deployments" : "assets";
-
-	const baseButtonClass = "group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black";
-	const baseIconClass = "text-white";
-
-	const assetsButtonClassName = cn(baseButtonClass, { "bg-black": selectedSection === "assets" });
-	const assetsIconClassName = cn(baseIconClass, { "text-green-200": selectedSection === "assets" });
-
-	const deploymentsButtonClassName = cn(baseButtonClass, { "bg-black": selectedSection === "deployments" });
-	const deploymentsIconClassName = cn(baseIconClass, { "text-green-200": selectedSection === "deployments" });
-
-	const sessionsButtonClassName = cn(baseButtonClass, { "bg-black": selectedSection === "sessions" });
-	const sessionsIconClassName = cn(baseIconClass, { "text-green-200": selectedSection === "sessions" });
+		return "assets";
+	}, [deploymentId, location.pathname, projectId]);
 
 	return (
 		<div className="ml-5 mr-auto flex items-stretch">
-			<div className="mr-[-0.5px] h-full border-0.5 border-y-0 border-gray-750">
-				<Button
-					ariaLabel="Assets"
-					className={assetsButtonClassName}
-					href={`/projects/${projectId}/code`}
-					variant="filledGray"
-				>
-					<IconSvg className={assetsIconClassName} size="lg" src={AssetsIcon} />
+			{mainNavigationItems.map((item, index) => {
+				if (item.key === "sessions" && !lastDeploymentStore) return null;
 
-					<span className="ml-2 group-hover:text-white">Assets</span>
-				</Button>
-			</div>
+				const isSelected = selectedSection === item.key;
+				const buttonClassName = cn(baseButtonClass, { "bg-black": isSelected });
+				const iconClassName = cn(baseIconClass, { "text-green-200": isSelected });
+				const href = `/projects/${projectId}${item.path.replace("{deploymentId}", lastDeploymentStore?.deploymentId || "")}`;
 
-			<div className="mx-[-0.5px] h-full border-0.5 border-y-0 border-gray-750">
-				<Button
-					ariaLabel="Deployments"
-					className={deploymentsButtonClassName}
-					href={`/projects/${projectId}/deployments`}
-					variant="filledGray"
-				>
-					<IconSvg className={deploymentsIconClassName} size="lg" src={DeploymentsIcon} />
-
-					<span className="ml-2 group-hover:text-white">Deployments</span>
-				</Button>
-			</div>
-
-			<div className="ml-[-0.5px] h-full border-0.5 border-y-0 border-gray-750">
-				{lastDeploymentStore ? (
-					<Button
-						ariaLabel="Sessions"
-						className={sessionsButtonClassName}
-						href={`/projects/${projectId}/deployments/${lastDeploymentStore.deploymentId}/sessions`}
-						variant="filledGray"
+				return (
+					<div
+						className={cn("h-full border-0.5 border-y-0 border-gray-750", {
+							"mr-[-0.5px]": index === 0,
+							"mx-[-0.5px]": index === 1,
+							"ml-[-0.5px]": index === 2,
+						})}
+						key={item.key}
 					>
-						<IconSvg className={sessionsIconClassName} size="lg" src={SessionsIcon} />
+						<Button ariaLabel={item.label} className={buttonClassName} href={href} variant="filledGray">
+							<IconSvg className={iconClassName} size="lg" src={item.icon} />
 
-						<span className="ml-2 group-hover:text-white">Sessions</span>
-					</Button>
-				) : null}
-			</div>
+							<span className="ml-2 group-hover:text-white">{item.label}</span>
+						</Button>
+					</div>
+				);
+			})}
 		</div>
 	);
 };
