@@ -134,7 +134,7 @@ export const ProjectTopbarButtons = () => {
 	}, []);
 
 	return (
-		<div className="flex items-stretch gap-3">
+		<div className="flex items-center gap-3">
 			<Button
 				ariaLabel={t("topbar.buttons.ariaBuildProject")}
 				className="h-8 whitespace-nowrap px-3.5"

@@ -115,7 +115,7 @@ export const App = () => {
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
-				<Route element={<AppLayout displayDeploymentsAndSessionsTopbar />} path="projects/:projectId">
+				<Route element={<AppLayout displayConfigurationTopbar />} path="projects/:projectId">
 					<Route element={<Deployments />} path="deployments">
 						<Route element={<DeploymentsTable />} index />
 
