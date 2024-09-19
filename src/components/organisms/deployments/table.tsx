@@ -169,7 +169,7 @@ export const DeploymentsTable = () => {
 	}, []);
 
 	return (
-		<Frame className="bg-gray-1100">
+		<Frame className="my-2 bg-gray-1100">
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-3">
 					<h1 className="text-base">

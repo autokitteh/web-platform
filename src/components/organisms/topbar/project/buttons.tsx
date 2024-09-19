@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
+import { useCacheStore } from "@src/store/useCacheStore";
 
 import { useFileOperations } from "@hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
@@ -29,6 +30,7 @@ export const ProjectTopbarButtons = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const { fetchResources } = useFileOperations(projectId!);
+	const { fetchLastDeploymentId } = useCacheStore();
 
 	const fetchAndCheckResources = useCallback(async () => {
 		const resources = await fetchResources(true);
@@ -89,6 +91,8 @@ export const ProjectTopbarButtons = () => {
 			});
 			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccess"));
 		}
+
+		fetchLastDeploymentId(projectId!, true);
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps

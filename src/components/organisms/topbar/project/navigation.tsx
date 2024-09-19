@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 import { mainNavigationItems } from "@src/constants";
-import { useManualRunStore } from "@src/store";
+import { useCacheStore } from "@src/store/useCacheStore";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -12,28 +12,29 @@ const baseButtonClass = "group size-full whitespace-nowrap rounded-none bg-trans
 const baseIconClass = "text-white";
 
 export const ProjectTopbarNavigation = () => {
-	const { deploymentId, projectId } = useParams();
+	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const location = useLocation();
-	const { lastDeploymentStore } = useManualRunStore((state) => ({
-		lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
-	}));
+	const { projectLastDeployment } = useCacheStore();
+
+	const deploymentId = projectLastDeployment?.[projectId || ""] || paramDeploymentId;
 
 	const selectedSection = useMemo(() => {
-		if (deploymentId) return "sessions";
-		if (location.pathname.includes("deployments") && projectId) return "deployments";
+		if (paramDeploymentId) return "sessions";
+		if (location.pathname.includes("deployments") && projectLastDeployment?.[projectId || ""]) return "deployments";
 
 		return "assets";
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [deploymentId, location.pathname, projectId]);
 
 	return (
 		<div className="ml-5 mr-auto flex items-stretch">
 			{mainNavigationItems.map((item, index) => {
-				if (item.key === "sessions" && !lastDeploymentStore) return null;
+				if (item.key === "sessions" && !deploymentId) return null;
 
 				const isSelected = selectedSection === item.key;
 				const buttonClassName = cn(baseButtonClass, { "bg-black": isSelected });
 				const iconClassName = cn(baseIconClass, { "text-green-200": isSelected });
-				const href = `/projects/${projectId}${item.path.replace("{deploymentId}", lastDeploymentStore?.deploymentId || "")}`;
+				const href = `/projects/${projectId}${item.path.replace("{deploymentId}", deploymentId || "")}`;
 
 				return (
 					<div
