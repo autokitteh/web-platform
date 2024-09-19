@@ -150,10 +150,10 @@ export const EditorTabs = () => {
 									<Toggle checked={checked} onChange={setChecked} title={t("autoSave")} />
 
 									<Button
-										className="whitespace-nowrap bg-gray-1050 px-4 py-1 hover:bg-gray-950"
+										className="whitespace-nowrap px-4 py-1"
 										disabled={loadingSave}
 										onClick={() => debouncedUpdateContent(content)}
-										variant="filled"
+										variant="filledGray"
 									>
 										<IconSvg className="fill-white" src={!loadingSave ? SaveIcon : Spinner} />
 
