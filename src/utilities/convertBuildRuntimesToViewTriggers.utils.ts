@@ -1,20 +1,29 @@
+import { uniqBy } from "lodash";
+
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
-import { BuildInfoRuntimes, EntrypointTrigger, SessionEntrypoint } from "@type/models";
+import { BuildInfoRuntimes, SessionEntrypoint } from "@type/models";
 
 const processRuntime = (runtime: BuildInfoRuntimes): Record<string, SessionEntrypoint[]> => {
 	const result: Record<string, SessionEntrypoint[]> = {};
-	const filesNames = Object.keys(runtime.artifact.compiled_data);
+	const fileNames = Object.keys(runtime.artifact.compiled_data).filter((fileName) => fileName !== "archive");
 
-	filesNames.forEach((fileName) => {
-		result[fileName] = (result[fileName] || []).concat(
-			runtime.artifact.exports
-				.filter((entrypoint: EntrypointTrigger) => entrypoint.location.path === fileName)
-				.map((entrypoint: EntrypointTrigger) => ({
-					...entrypoint.location,
-					name: entrypoint.symbol,
-				}))
+	fileNames.forEach((fileName) => {
+		const entrypointsForFile = runtime.artifact.exports
+			.filter(({ location: { path }, symbol: name }) => path === fileName && !name.startsWith("_"))
+			.map(({ location: { col, path, row }, symbol: name }) => ({
+				path,
+				row,
+				col,
+				name,
+			}));
+
+		const uniqueEntrypoints = uniqBy(
+			entrypointsForFile,
+			({ col, name, path, row }) => `${path}:${row}:${col}:${name}`
 		);
+
+		result[fileName] = uniqueEntrypoints;
 	});
 
 	return result;
