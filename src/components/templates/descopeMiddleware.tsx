@@ -73,7 +73,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const benefitsList = Object.values(t("rightSide.benefitsList", { returnObjects: true }));
 
 	return (
-		<div className="flex h-screen bg-white">
+		<div className="flex h-screen">
 			<div className="my-6 flex w-1/2 flex-col items-center justify-center rounded-r-xl bg-gray-1250 p-8 font-averta text-white">
 				<IconSvg className="mb-4" size="3xl" src={AKRoundLogo} />
 
@@ -85,12 +85,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					</span>
 				</h1>
 
-				<div className="max-w-96">
-					<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
-				</div>
+				<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
 
 				<a
-					className="font-averta text-lg text-gray-1250 hover:text-gray-800"
+					className="font-averta text-lg hover:text-gray-500"
 					href="https://autokitteh.com/get-a-demo/"
 					rel="noreferrer"
 					target="_blank"
@@ -100,34 +98,30 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			</div>
 
 			<div className="relative m-10 mr-20 flex w-2/3 flex-col justify-center rounded-3xl pb-32 pl-16 text-black">
-				<h2 className="mb-4 font-averta text-4xl font-bold">
-					{t("rightSide.titleFirstLine")}
+				<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleFirstLine")}</h2>
 
-					<div className="flex">
-						<IconSvg className="ml-4 mr-2 h-10 w-24" size="3xl" src={inJustTitle} />
+				<div className="mb-4 flex">
+					<IconSvg className="ml-4 mr-2 h-10 w-24" size="3xl" src={inJustTitle} />
 
-						{t("rightSide.titleSecondLine")}
-					</div>
-				</h2>
+					<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleSecondLine")}</h2>
+				</div>
 
-				<h3 className="mb-12 font-averta text-2xl font-bold">
-					<div>{t("rightSide.descriptionFirstLine")}</div>
+				<h3 className="font-averta text-2xl font-bold">{t("rightSide.descriptionFirstLine")}</h3>
 
-					<div>{t("rightSide.descriptionSecondLine")}</div>
-				</h3>
+				<h3 className="mb-12 font-averta text-2xl font-bold">{t("rightSide.descriptionSecondLine")}</h3>
 
-				<ul className="mb-8 list-inside list-disc font-averta text-xl font-semibold">
+				<ul className="font-averta text-xl font-semibold">
 					{benefitsList?.length
-						? Object.values(benefitsList).map((benefit) => <li key={benefit}>{benefit}</li>)
+						? Object.values(benefitsList).map((benefit) => (
+								<li className="before:size-1.5 before:bg-black" key={benefit}>
+									{benefit}
+								</li>
+							))
 						: null}
 				</ul>
 			</div>
 
-			<img
-				alt="autokitteh logo with integrations"
-				className="absolute bottom-0 right-8 w-6/12"
-				src={LoginLogos}
-			/>
+			<img alt="autokitteh logo with integrations" className="absolute bottom-0 right-8 w-1/2" src={LoginLogos} />
 		</div>
 	);
 };
