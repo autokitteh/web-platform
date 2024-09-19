@@ -93,7 +93,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					rel="noreferrer"
 					target="_blank"
 				>
-					Register
+					{t("leftSide.register")}
 				</a>
 			</div>
 
