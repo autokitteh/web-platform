@@ -26,7 +26,7 @@ export const DashboardProjectsTable = () => {
 
 	const handleCreateProjectClick = async () => {
 		setCreatingProject(true);
-		const { data, error } = await createProject();
+		const { data, error } = await createProject(true);
 		setCreatingProject(false);
 		if (error) {
 			addToast({

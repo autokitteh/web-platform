@@ -23,7 +23,7 @@ export const DashboardTopbar = () => {
 
 	const handleCreateProject = async () => {
 		setLoadingNewProject(true);
-		const { data, error } = await createProject();
+		const { data, error } = await createProject(true);
 		setLoadingNewProject(false);
 		if (error) {
 			addToast({
