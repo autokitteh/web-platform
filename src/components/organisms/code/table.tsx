@@ -21,7 +21,7 @@ import { TrashIcon } from "@assets/image/icons";
 export const CodeTable = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const { projectId } = useParams();
-	const { t: tErrors } = useTranslation(["errors"]);
+	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);

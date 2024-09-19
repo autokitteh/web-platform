@@ -60,5 +60,8 @@
 	"projectCreationFailed": "Project creation failed",
 	"projectLoadingFailed": "Failed to load the project",
 	"noProjectFound": "No project found",
-	"projectUpdateFailed": "Failed to update the project"
+	"projectUpdateFailed": "Failed to update the project",
+	"fileSaveFailed": "File save failed",
+	"codeSaveFailed": "Code save failed",
+	"codeSaveFailedExtended": "Code save failed for the project {{projectId}}"
 }

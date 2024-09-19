@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { monacoLanguages } from "@constants";
+import { useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
@@ -17,9 +18,11 @@ import { Close, SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = () => {
 	const { projectId } = useParams();
+	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
+	const addToast = useToastStore((state) => state.addToast);
 
 	const { fetchFiles } = useFileOperations(projectId!);
 
@@ -72,16 +75,27 @@ export const EditorTabs = () => {
 		if (
 			!projectId ||
 			!activeEditorFileName ||
+			!newContent ||
 			newContent === t("noFileText") ||
-			newContent === undefined ||
 			newContent === tTabsEditor("initialContentForNewFile")
-		)
+		) {
 			return;
+		}
+
 		setLoadingSave(true);
-		await saveFile(activeEditorFileName, newContent);
-		setContent(newContent);
-		setLastSaved(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
-		setLoadingSave(false);
+		try {
+			await saveFile(activeEditorFileName, newContent);
+			setContent(newContent);
+			setLastSaved(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			addToast({
+				message: tErrors("resourcesFetchError"),
+				type: "error",
+			});
+		} finally {
+			setLoadingSave(false);
+		}
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
