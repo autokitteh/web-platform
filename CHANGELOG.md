@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/autokitteh/web-platform/compare/v2.5.0...v2.6.0) (2024-09-19)
+
+
+### Features
+
+* create and open default file on project creation ([#359](https://github.com/autokitteh/web-platform/issues/359)) ([1123d65](https://github.com/autokitteh/web-platform/commit/1123d651efb4e385e8e57c35d46223dec6c6f904))
+
 # [2.5.0](https://github.com/autokitteh/web-platform/compare/v2.4.7...v2.5.0) (2024-09-19)
 
 
