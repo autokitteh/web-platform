@@ -141,7 +141,7 @@ export const ProjectTopbarButtons = () => {
 	}, []);
 
 	return (
-		<div className="flex items-stretch gap-3">
+		<div className="flex items-center gap-3">
 			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaBuildProject")}
