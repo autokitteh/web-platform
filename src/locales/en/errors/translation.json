@@ -63,5 +63,7 @@
 	"projectUpdateFailed": "Failed to update the project",
 	"fileSaveFailed": "File save failed",
 	"codeSaveFailed": "Code save failed",
-	"codeSaveFailedExtended": "Code save failed for the project {{projectId}}"
+	"codeSaveFailedMissingProjectId": "Code save failed, missing project ID",
+	"codeSaveFailedMissingFileName": "Code save failed for the project {{projectId}}, missing file name",
+	"codeSaveFailedMissingContent": "Code save failed for the project {{projectId}}, missing file content"
 }

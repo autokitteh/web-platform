@@ -6,7 +6,8 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { monacoLanguages } from "@constants";
+import { monacoLanguages, namespaces } from "@constants";
+import { LoggerService } from "@services/index";
 import { useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
@@ -72,7 +73,36 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
-		if (!projectId || !activeEditorFileName || newContent === t("noFileText") || newContent === undefined) {
+		if (!projectId) {
+			addToast({
+				message: tErrors("codeSaveFailed"),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
+
+			return;
+		}
+
+		if (!activeEditorFileName) {
+			addToast({
+				message: tErrors("codeSaveFailed"),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingFileName", { projectId }));
+
+			return;
+		}
+
+		if (newContent === t("noFileText") || newContent === undefined) {
+			addToast({
+				message: tErrors("codeSaveFailed"),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingContent", { projectId }));
+
 			return;
 		}
 
