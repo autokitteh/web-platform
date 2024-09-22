@@ -72,7 +72,7 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
-		if (!newContent) {
+		if (!projectId || !activeEditorFileName || newContent === t("noFileText") || newContent === undefined) {
 			return;
 		}
 
