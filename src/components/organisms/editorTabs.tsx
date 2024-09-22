@@ -72,14 +72,7 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
-		if (
-			!projectId ||
-			!activeEditorFileName ||
-			!newContent ||
-			newContent?.trim() === "" ||
-			newContent?.trim() === t("noFileText") ||
-			newContent?.trim() === tTabsEditor("initialContentForNewFile")
-		) {
+		if (!projectId || !activeEditorFileName || newContent === t("noFileText") || newContent === undefined) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
 				type: "error",
@@ -121,7 +114,7 @@ export const EditorTabs = () => {
 
 		setContent(newContent);
 
-		if (checked) {
+		if (checked && newContent !== tTabsEditor("noFileText")) {
 			debouncedUpdateContent(newContent);
 		}
 	};
