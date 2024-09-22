@@ -72,12 +72,7 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
-		if (!projectId || !activeEditorFileName || newContent === t("noFileText") || newContent === undefined) {
-			addToast({
-				message: tErrors("codeSaveFailed"),
-				type: "error",
-			});
-
+		if (!newContent) {
 			return;
 		}
 
@@ -89,7 +84,7 @@ export const EditorTabs = () => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
-				message: tErrors("resourcesFetchError"),
+				message: tErrors("codeSaveFailed"),
 				type: "error",
 			});
 		} finally {
