@@ -10,7 +10,7 @@
 		"noDeployments": "No deployments found",
 		"manual": "Manual run",
 		"ariaSettingsRun": "Settings manual run",
-		"buildInformationForSingleshotNotLoaded": "Couldn't load build information for singleshot",
+		"buildInformationForSingleshotNotLoaded": "Couldn't load build information for manual run",
 		"table": {
 			"columns": {
 				"buildId": "Build ID",

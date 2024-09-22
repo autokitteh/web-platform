@@ -4,6 +4,7 @@ export const namespaces = {
 	integrationService: "Integrations Service",
 	triggersUI: "Triggers UI",
 	deploymentsService: "Deployments Service",
+	buildService: "Builds Service",
 	environmentsService: "Environments Service",
 	manifestService: "Manifest Service",
 	projectService: "Project Service",
