@@ -20,5 +20,9 @@
             "bullet8": "Long-running workflows",
             "bullet9": "Ready-to-use templates"
         }
+    },
+    "errors": {
+	    "loginFailed": "Error occurred during the login, please try again, error: {{error}}",
+        "logoutFailed": "Error occurred during the logout, please try again, error: {{error}}"
     }
 }

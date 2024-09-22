@@ -6,7 +6,8 @@ import Cookies from "js-cookie";
 import psl from "psl";
 import { useTranslation } from "react-i18next";
 
-import { authBearer, isLoggedInCookie } from "@constants";
+import { authBearer, isLoggedInCookie, namespaces } from "@constants";
+import { LoggerService } from "@services/index";
 import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
@@ -20,12 +21,18 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
+	const addToast = useToastStore((state) => state.addToast);
 
 	const handleLogout = useCallback(async () => {
 		await logout();
 		const rootDomain = psl.parse(window.location.hostname);
 		if (rootDomain.error) {
-			console.error(rootDomain.error.message);
+			addToast({
+				message: t("errors.logoutFailed", { error: rootDomain.error.message }),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.ui.loginPage, t("errors.logoutFailed", { error: rootDomain.error.message }));
 
 			return;
 		}
@@ -34,8 +41,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 		window.localStorage.clear();
 		window.location.reload();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [logout]);
-	const addToast = useToastStore((state) => state.addToast);
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
@@ -51,12 +58,19 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
 					withCredentials: true,
 				});
-				await getLoggedInUser();
+				const { error } = await getLoggedInUser();
+				if (error) {
+					addToast({
+						message: t("errors.loginFailed", { error }),
+						type: "error",
+					});
+				}
 			} catch (error) {
 				addToast({
-					message: `Error occurred during login: ${(error as Error).message}`,
+					message: t("errors.loginFailed", { error }),
 					type: "error",
 				});
+				LoggerService.error(namespaces.ui.loginPage, t("errors.logoutFailed", { error }));
 			} finally {
 				setDescopeRenderKey((prevKey) => prevKey + 1);
 			}
