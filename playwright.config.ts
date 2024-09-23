@@ -63,8 +63,8 @@ export default defineConfig({
 
 	testDir: "e2e",
 
-	// test timeout set to 2 minutes
-	timeout: 2 * 60 * 1000,
+	// test timeout set to 1 minute
+	timeout: 60 * 1000,
 
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
