@@ -1,3 +1,10 @@
+## [2.10.4](https://github.com/autokitteh/web-platform/compare/v2.10.3...v2.10.4) (2024-09-23)
+
+
+### Bug Fixes
+
+* update deps ([#376](https://github.com/autokitteh/web-platform/issues/376)) ([98357d7](https://github.com/autokitteh/web-platform/commit/98357d7e629f7af5e0f9564cfd241354836b4cc2))
+
 ## [2.10.3](https://github.com/autokitteh/web-platform/compare/v2.10.2...v2.10.3) (2024-09-23)
 
 
