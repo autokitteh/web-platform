@@ -78,7 +78,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const getConnectionVariables = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
-			toastAndLog("error", "errorFetchingVariables", error);
+			addToast({
+				message: tErrors("errorFetchingVariables"),
+				type: "error",
+			});
 
 			return;
 		}
@@ -120,10 +123,22 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			);
 
 			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
-			toastAndLog("success", "connectionCreatedSuccessfully");
+			addToast({
+				message: t("connectionCreatedSuccessfully"),
+				type: "error",
+			});
+			LoggerService.error(namespaces.hooks.connectionForm, t("connectionCreatedSuccessfully"));
+
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnection", error);
+			addToast({
+				message: tErrors("errorCreatingNewConnection"),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("errorCreatingNewConnectionExtended", { error })
+			);
 		} finally {
 			setIsLoading(false);
 		}
@@ -148,10 +163,23 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 		try {
 			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
-			toastAndLog("success", "connectionEditedSuccessfully");
+
+			addToast({
+				message: t("connectionEditedSuccessfully"),
+				type: "error",
+			});
+			LoggerService.error(namespaces.hooks.connectionForm, t("connectionEditedSuccessfully"));
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			toastAndLog("error", "errorEditingNewConnection", error);
+			addToast({
+				message: tErrors("errorEditingNewConnection"),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("errorEditingNewConnectionExtended", { error })
+			);
+
 			setIsLoading(false);
 		}
 	};
@@ -224,15 +252,36 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				connectionName
 			);
 
-			if (error || !responseConnectionId) {
-				toastAndLog("error", "errorCreatingNewConnection", error, true);
+			if (error) {
+				addToast({
+					message: tErrors("connectionNotCreated"),
+					type: "error",
+				});
+			}
+
+			if (error) {
+				addToast({
+					message: tErrors("connectionNotCreated"),
+					type: "error",
+				});
 
 				return;
 			}
 
+			if (!responseConnectionId) {
+				addToast({
+					message: tErrors("connectionNotCreated"),
+					type: "error",
+				});
+			}
+
 			setConnectionId(responseConnectionId);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnection", error);
+			addToast({
+				message: tErrors("connectionNotCreated"),
+				type: "error",
+			});
+			LoggerService.error(namespaces.hooks.connectionForm, tErrors("connectionNotCreatedExtended", { error }));
 		} finally {
 			setIsLoading(false);
 		}
@@ -270,7 +319,15 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnection", error);
+			addToast({
+				message: tErrors("errorCreatingNewConnection"),
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("errorCreatingNewConnectionExtended", { error })
+			);
 		} finally {
 			setIsLoading(false);
 		}
@@ -295,7 +352,15 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			startCheckingStatus(oauthConnectionId);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
-			toastAndLog("error", "errorCreatingNewConnection", error);
+			addToast({
+				message: tErrors("errorCreatingNewConnection"),
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("errorCreatingNewConnectionExtended", { error })
+			);
 		} finally {
 			setIsLoading(false);
 		}
@@ -304,10 +369,17 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
-			toastAndLog("success", "copySuccess", true);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+			addToast({
+				message: t("copySuccess"),
+				type: "success",
+			});
 		} catch (error) {
-			toastAndLog("error", "copyError", true);
+			addToast({
+				message: t("copyFailure"),
+				type: "error",
+			});
+			LoggerService.error(namespaces.hooks.connectionForm, t("copyFailureExtended", { error }));
 		}
 	};
 

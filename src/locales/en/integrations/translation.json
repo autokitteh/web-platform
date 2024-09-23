@@ -5,6 +5,7 @@
 	"connectionEditedSuccessfully": "Connection edited successfully",
 	"information": "More Information",
 	"copyFailure": "Could not copy",
+	"copyFailureExtended": "Could not copy, error: {{error}}",
 	"copySuccess": "Copied to clipboard successfully",
 	"placeholders": {
 		"noConnectionTypesAvailable": "No connection types available",
