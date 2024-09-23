@@ -9,7 +9,7 @@ import { SessionOutput } from "@src/types/models";
 
 import { Loader } from "@components/atoms";
 
-export const SessionOutputs: React.FC = () => {
+export const SessionOutputs = () => {
 	const {
 		cache,
 		frameRef,
