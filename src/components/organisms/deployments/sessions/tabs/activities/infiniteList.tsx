@@ -10,7 +10,7 @@ import { cn } from "@src/utilities";
 import { Frame, Loader } from "@components/atoms";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
-export const ActivityList: React.FC = () => {
+export const ActivityList = () => {
 	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
 
 	const customRowRenderer = (props: ListRowProps, activity: SessionActivity) => (
