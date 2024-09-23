@@ -164,11 +164,7 @@ export const ProjectTopbarButtons = () => {
 					onClick={debouncedDeploy}
 					variant="filledGray"
 				>
-					{loadingButton[TopbarButton.deploy] ? (
-						<Spinner />
-					) : (
-						<IconSvg className="fill-white" size="md" src={RocketIcon} />
-					)}
+					{loadingButton[TopbarButton.deploy] ? <Spinner /> : <IconSvg size="md" src={RocketIcon} />}
 
 					{t("topbar.buttons.deploy")}
 				</Button>
