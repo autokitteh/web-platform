@@ -19,13 +19,6 @@ export const ProjectTopbarNavigation = () => {
 	const fetchCurrentDeploymentId = async () => {
 		if (!projectId) return;
 
-		const lastDeployment = projectLastDeployment?.[projectId];
-		if (lastDeployment) {
-			setCachedLastDeploymentId(lastDeployment);
-
-			return;
-		}
-
 		const fetchedDeploymentId = await fetchLastDeploymentId(projectId);
 		if (fetchedDeploymentId) {
 			setCachedLastDeploymentId(fetchedDeploymentId);
@@ -33,6 +26,13 @@ export const ProjectTopbarNavigation = () => {
 	};
 
 	useEffect(() => {
+		const lastDeployment = projectLastDeployment?.[projectId!];
+		if (lastDeployment) {
+			setCachedLastDeploymentId(lastDeployment);
+
+			return;
+		}
+
 		fetchCurrentDeploymentId();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, projectLastDeployment]);
