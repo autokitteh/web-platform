@@ -60,7 +60,7 @@ export const DashboardProjectsTable = () => {
 
 					<TBody>
 						{sortedProjects.map(({ href, id, name }) => (
-							<Tr className="group cursor-pointer border-none pl-6" key={id}>
+							<Tr className="group cursor-pointer pl-6" key={id}>
 								<Td className="group-hover:font-bold" onClick={() => navigate(href)}>
 									{name}
 								</Td>
