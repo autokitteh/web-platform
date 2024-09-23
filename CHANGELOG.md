@@ -1,3 +1,10 @@
+## [2.10.3](https://github.com/autokitteh/web-platform/compare/v2.10.2...v2.10.3) (2024-09-23)
+
+
+### Bug Fixes
+
+* stop deployments infinite fetching ([#375](https://github.com/autokitteh/web-platform/issues/375)) ([84e38a0](https://github.com/autokitteh/web-platform/commit/84e38a0d012a208bf77bd69ebcae30b910595352))
+
 ## [2.10.2](https://github.com/autokitteh/web-platform/compare/v2.10.1...v2.10.2) (2024-09-23)
 
 
