@@ -1,3 +1,10 @@
+# [2.11.0](https://github.com/autokitteh/web-platform/compare/v2.10.5...v2.11.0) (2024-09-23)
+
+
+### Features
+
+* change deploy button icon in topbar action buttons ([#372](https://github.com/autokitteh/web-platform/issues/372)) ([7fce25b](https://github.com/autokitteh/web-platform/commit/7fce25b1d87a2496fa51679e73544f88917a9749))
+
 ## [2.10.5](https://github.com/autokitteh/web-platform/compare/v2.10.4...v2.10.5) (2024-09-23)
 
 
