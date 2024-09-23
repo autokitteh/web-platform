@@ -11,8 +11,8 @@ export class DashboardPage {
 		await this.page.goto("/");
 		await this.createButton.hover();
 		await this.createButton.click();
-		await this.page.getByText("program.py").isVisible();
-		await this.page.getByText("PROGRAM.PY").isVisible();
+		await this.page.getByRole("cell", { name: "program.py" });
+		await this.page.getByRole("tab", { name: "PROGRAM.PY" }).isVisible();
 		await this.page.getByText('print("Hello World!")').isVisible();
 	}
 }
