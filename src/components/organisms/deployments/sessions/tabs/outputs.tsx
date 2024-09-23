@@ -12,7 +12,6 @@ export const SessionOutputs = () => {
 	const {
 		cache,
 		frameRef,
-		handleResize,
 		handleScroll,
 		isRowLoaded,
 		items: outputs,
@@ -57,7 +56,7 @@ export const SessionOutputs = () => {
 			{loading && !outputs.length ? (
 				<Loader isCenter size="xl" />
 			) : (
-				<AutoSizer onResize={handleResize}>
+				<AutoSizer>
 					{({ height, width }) => (
 						<InfiniteLoader
 							className="scrollbar"

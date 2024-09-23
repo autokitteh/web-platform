@@ -1,4 +1,3 @@
-// useVirtualizedList.tsx
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
@@ -28,7 +27,6 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const store = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
 	const session = sessionId ? store.sessions[sessionId] : null;
 	const listRef = useRef<List | null>(null);
-	const [pageSize, setPageSize] = useState(0);
 
 	const items = useMemo(() => {
 		return session
@@ -41,27 +39,30 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const { loadLogs, loading, reset } = store;
 
 	const [scrollPosition, setScrollPosition] = useState(0);
-	const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
 
-	const cache = new CellMeasurerCache({
-		fixedWidth: true,
-		defaultHeight: itemHeight,
-	});
+	const cache = useMemo(
+		() =>
+			new CellMeasurerCache({
+				fixedWidth: true,
+				defaultHeight: itemHeight,
+			}),
+		[itemHeight]
+	);
 
 	const isRowLoaded = useCallback(({ index }: { index: number }): boolean => !!items[index], [items]);
 
-	const loadMoreRows = useCallback(async (): Promise<void> => {
-		if (!sessionId || loading || (session && session.fullyLoaded)) {
-			return Promise.resolve();
-		}
+	const loadMoreRows = useCallback(
+		async ({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }): Promise<void> => {
+			if (!sessionId || loading || (session && session.fullyLoaded)) {
+				return Promise.resolve();
+			}
 
-		return loadLogs(sessionId, pageSize * 2);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId, loading, session, loadLogs]);
+			const pageSize = stopIndex - startIndex + 1;
 
-	const handleResize = useCallback(({ height, width }: { height: number; width: number }): void => {
-		setDimensions({ height: height * 0.95, width: width * 0.95 });
-	}, []);
+			return loadLogs(sessionId, pageSize * 2);
+		},
+		[sessionId, loading, session, loadLogs]
+	);
 
 	const handleScroll = useCallback(({ scrollTop }: { scrollTop: number }): void => {
 		if (scrollTop !== 0) setScrollPosition(scrollTop);
@@ -79,8 +80,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 			reset(sessionId);
 			const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsFrameHeightFallback;
 			const initialLoadSize = Math.ceil(frameHeight / itemHeight) * 2;
-			setPageSize(initialLoadSize);
-			loadMoreRows();
+			loadMoreRows({ startIndex: 0, stopIndex: initialLoadSize });
 		}
 	}, [sessionId, type, session, reset, loadMoreRows, itemHeight]);
 
@@ -112,9 +112,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 		loading,
 		isRowLoaded,
 		loadMoreRows,
-		handleResize,
 		handleScroll,
-		dimensions,
 		cache,
 		listRef,
 		frameRef,

@@ -24,7 +24,6 @@ export const ActivityList = () => {
 	);
 
 	const {
-		handleResize,
 		handleScroll,
 		isRowLoaded,
 		items: activities,
@@ -47,7 +46,7 @@ export const ActivityList = () => {
 			{loading && !activities.length ? (
 				<Loader isCenter size="xl" />
 			) : activities.length ? (
-				<AutoSizer className={autoSizerClass} onResize={handleResize}>
+				<AutoSizer className={autoSizerClass}>
 					{({ height, width }) => (
 						<InfiniteLoader
 							isRowLoaded={isRowLoaded}
