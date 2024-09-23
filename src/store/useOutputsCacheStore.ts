@@ -1,7 +1,9 @@
+import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
+import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
-import { minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
+import { minimumSessionLogsRecordsFrameHeightFallback, namespaces } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { OutputsStore } from "@src/interfaces/store";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
@@ -69,9 +71,13 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			}
 		} catch (error) {
 			useToastStore.getState().addToast({
-				message: `An error occurred: ${error instanceof Error ? error.message : String(error)}`,
+				message: i18n.t("outputLogsFetchError", { ns: "errors" }),
 				type: "error",
 			});
+			LoggerService.error(
+				namespaces.stores.outputStore,
+				i18n.t("outputLogsFetchErrorExtended", { ns: "errors", error: (error as Error).message })
+			);
 		} finally {
 			set({ loading: false });
 		}

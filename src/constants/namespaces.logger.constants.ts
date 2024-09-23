@@ -16,4 +16,8 @@ export const namespaces = {
 	variableService: "Variable Service",
 	buildRuntimeEntrypoints: "Convert runtime to entrypoints",
 	eventsService: "Events Service",
+	stores: {
+		activitiesStore: "Activity Logs Store",
+		outputStore: "Output Logs Store",
+	},
 };

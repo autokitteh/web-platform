@@ -1,7 +1,9 @@
+import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
+import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
-import { minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
+import { minimumSessionLogsRecordsFrameHeightFallback, namespaces } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
@@ -50,7 +52,7 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 
 			if (error) {
 				useToastStore.getState().addToast({
-					message: `An error occurred: ${error}`,
+					message: i18n.t("activityLogsFetchError", { ns: "errors" }),
 					type: "error",
 				});
 			}
@@ -72,9 +74,13 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 			}
 		} catch (error) {
 			useToastStore.getState().addToast({
-				message: `An error occurred: ${error instanceof Error ? error.message : String(error)}`,
+				message: i18n.t("activityLogsFetchError", { ns: "errors" }),
 				type: "error",
 			});
+			LoggerService.error(
+				namespaces.stores.activitiesStore,
+				i18n.t("activityLogsFetchErrorExtended", { ns: "errors", error: (error as Error).message })
+			);
 		} finally {
 			set({ loading: false });
 		}

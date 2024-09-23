@@ -65,5 +65,10 @@
 	"codeSaveFailed": "Code save failed",
 	"codeSaveFailedMissingProjectId": "Code save failed, missing project ID",
 	"codeSaveFailedMissingFileName": "Code save failed for the project {{projectId}}, missing file name",
-	"codeSaveFailedMissingContent": "Code save failed for the project {{projectId}}, missing file content"
+	"codeSaveFailedMissingContent": "Code save failed for the project {{projectId}}, missing file content",
+	"codeSaveFailedExtended": "Code save failed for the project {{projectId}}",
+	"activityLogsFetchError": "Couldn't fetch the activity logs",
+	"activityLogsFetchErrorExtended": "Couldn't fetch the activity logs",
+	"outputLogsFetchError": "Couldn't fetch the output logs",
+	"outputogsFetchErrorExtended": "Couldn't fetch the output logs"
 }
