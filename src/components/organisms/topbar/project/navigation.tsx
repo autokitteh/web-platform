@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
@@ -11,10 +11,31 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const location = useLocation();
-	const { projectLastDeployment } = useCacheStore();
+	const { fetchLastDeploymentId, projectLastDeployment } = useCacheStore();
 	const navigate = useNavigate();
 
-	const deploymentId = projectLastDeployment?.[projectId || ""] || paramDeploymentId;
+	const [cachedLastDeploymentId, setCachedLastDeploymentId] = useState<string>();
+
+	const fetchCurrentDeploymentId = async () => {
+		if (projectId) {
+			if (projectLastDeployment?.[projectId]) {
+				setCachedLastDeploymentId(projectLastDeployment[projectId]);
+			}
+			if (!projectLastDeployment?.[projectId] || !cachedLastDeploymentId) {
+				const cachedDeploymentId = await fetchLastDeploymentId(projectId);
+				if (cachedDeploymentId) {
+					setCachedLastDeploymentId(cachedDeploymentId);
+				}
+			}
+		}
+	};
+
+	useEffect(() => {
+		fetchCurrentDeploymentId();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, projectLastDeployment]);
+
+	const deploymentId = cachedLastDeploymentId || paramDeploymentId;
 
 	const selectedSection = useMemo(() => {
 		if (paramDeploymentId) return "sessions";
@@ -26,7 +47,7 @@ export const ProjectTopbarNavigation = () => {
 	const navigationItems = useMemo(
 		() =>
 			mainNavigationItems.map((item) => {
-				const noDeploymentsState = item.key === "sessions" && !deploymentId;
+				const noDeploymentsState = item.key === "sessions" && !cachedLastDeploymentId;
 				const isSelected = selectedSection === item.key;
 				const buttonClassName = cn(
 					"group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black",
@@ -48,7 +69,7 @@ export const ProjectTopbarNavigation = () => {
 					href,
 				};
 			}),
-		[deploymentId, selectedSection, projectId]
+		[cachedLastDeploymentId, selectedSection, projectId, deploymentId]
 	);
 
 	return (
