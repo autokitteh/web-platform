@@ -1,4 +1,4 @@
-export const defalutFileExtension = ".star";
+export const defalutFileExtension = ".py";
 
 export const monacoLanguages = {
 	".json": "json",
