@@ -28,6 +28,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const store = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
 	const session = sessionId ? store.sessions[sessionId] : null;
 	const listRef = useRef<List | null>(null);
+	const [pageSize, setPageSize] = useState(0);
 
 	const items = useMemo(() => {
 		return session
@@ -48,18 +49,14 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 	const isRowLoaded = useCallback(({ index }: { index: number }): boolean => !!items[index], [items]);
 
-	const loadMoreRows = useCallback(
-		async ({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }): Promise<void> => {
-			if (!sessionId || loading || (session && session.fullyLoaded)) {
-				return Promise.resolve();
-			}
+	const loadMoreRows = useCallback(async (): Promise<void> => {
+		if (!sessionId || loading || (session && session.fullyLoaded)) {
+			return Promise.resolve();
+		}
 
-			const pageSize = stopIndex - startIndex + 1;
-
-			return loadLogs(sessionId, pageSize * 2);
-		},
-		[sessionId, loading, session, loadLogs]
-	);
+		return loadLogs(sessionId, pageSize * 2);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId, loading, session, loadLogs]);
 
 	const handleResize = useCallback(({ height, width }: { height: number; width: number }): void => {
 		setDimensions({ height: height * 0.95, width: width * 0.95 });
@@ -72,7 +69,8 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 			reset(sessionId);
 			const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsFrameHeightFallback;
 			const initialLoadSize = Math.ceil(frameHeight / itemHeight) * 2;
-			loadMoreRows({ startIndex: 0, stopIndex: initialLoadSize });
+			setPageSize(initialLoadSize);
+			loadMoreRows();
 		}
 	}, [sessionId, type, session, reset, loadMoreRows, itemHeight]);
 
