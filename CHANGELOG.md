@@ -1,3 +1,10 @@
+## [2.10.1](https://github.com/autokitteh/web-platform/compare/v2.10.0...v2.10.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* code save failed error ([#365](https://github.com/autokitteh/web-platform/issues/365)) ([ce5f55e](https://github.com/autokitteh/web-platform/commit/ce5f55ed1200367bfd7aace8c67f2b22c05f4e47))
+
 # [2.10.0](https://github.com/autokitteh/web-platform/compare/v2.9.2...v2.10.0) (2024-09-19)
 
 
