@@ -1,3 +1,10 @@
+## [2.10.2](https://github.com/autokitteh/web-platform/compare/v2.10.1...v2.10.2) (2024-09-23)
+
+
+### Bug Fixes
+
+* sessions button on top navigation disabled with deployments ([#369](https://github.com/autokitteh/web-platform/issues/369)) ([9562bb1](https://github.com/autokitteh/web-platform/commit/9562bb1a4698f6e2329ca8b0ba8f007d1a6f8cdc))
+
 ## [2.10.1](https://github.com/autokitteh/web-platform/compare/v2.10.0...v2.10.1) (2024-09-23)
 
 
