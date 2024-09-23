@@ -17,7 +17,7 @@ export interface CacheStore {
 	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
 	nextPageToken?: string;
 	projectLastDeployment?: Record<string, string>;
-	fetchLastDeploymentId: (projectId: string, force?: boolean) => Promise<void>;
+	fetchLastDeploymentId: (projectId: string, force?: boolean) => Promise<void | string>;
 }
 
 const store: StateCreator<CacheStore> = (set, get) => ({
@@ -52,11 +52,15 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			return;
 		}
 
+		const lastDeploymentId = deployments[0].deploymentId;
+
 		set({
 			projectLastDeployment: {
-				[projectId]: deployments[deployments.length - 1].deploymentId,
+				[projectId]: lastDeploymentId,
 			},
 		});
+
+		return lastDeploymentId;
 	},
 
 	reset: () => {
