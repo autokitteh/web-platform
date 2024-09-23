@@ -1,4 +1,3 @@
-// SessionOutputs.tsx
 import React, { useCallback } from "react";
 
 import { AutoSizer, CellMeasurer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
