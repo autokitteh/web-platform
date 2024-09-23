@@ -48,7 +48,8 @@
 			}
 		},
 		"titleAvailable": "Available Connections",
-		"titleNoAvailable": "No connections available."
+		"titleNoAvailable": "No connections available.",
+		"connectionRemoveSuccess": "Connection removed successfully"
 	},
 	"editor": {
 		"buttons": {

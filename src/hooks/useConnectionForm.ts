@@ -2,20 +2,20 @@ import { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, UseFormGetValues, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleValue } from "react-select";
 import { ZodObject, ZodRawShape } from "zod";
 
-import { ConnectionService, HttpService, VariablesService } from "@services";
+import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
+import { namespaces } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useConnectionCheckerStore } from "@src/store";
+import { useConnectionCheckerStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup } from "@src/utilities";
-
-import { useToastAndLog } from "@hooks";
 
 const GoogleIntegrationsPrefixRequired = [
 	Integrations.sheets,
@@ -46,7 +46,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		resolver: zodResolver(formSchema),
 		mode: "onChange",
 	});
-	const toastAndLog = useToastAndLog("integrations", "errors");
+	const { t: tErrors } = useTranslation("errors");
+	const { t } = useTranslation("integrations");
 
 	const [connectionId, setConnectionId] = useState(paramConnectionId);
 	const [connectionType, setConnectionType] = useState<string>();
@@ -54,11 +55,15 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const [isLoading, setIsLoading] = useState(false);
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
+	const addToast = useToastStore((state) => state.addToast);
 
 	const getConnectionAuthType = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
 		if (error) {
-			toastAndLog("error", "errorFetchingVariables");
+			addToast({
+				message: tErrors("errorFetchingVariables"),
+				type: "error",
+			});
 
 			return;
 		}
@@ -151,12 +156,29 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		}
 	};
 
-	const fetchConnection = async (connId: string) => {
+	const fetchConnection = async (connectionId: string) => {
 		try {
-			const { data: connectionResponse, error } = await ConnectionService.get(connId);
+			const { data: connectionResponse, error } = await ConnectionService.get(connectionId);
 
 			if (error) {
-				toastAndLog("error", "errorFetchingConnection", error, true);
+				addToast({
+					message: tErrors("errorFetchingConnection", { connectionId }),
+					type: "error",
+				});
+
+				return;
+			}
+
+			if (!connectionResponse) {
+				addToast({
+					message: tErrors("connectionNotFound"),
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("connectionNotFoundExtended", { connectionId })
+				);
 
 				return;
 			}
@@ -168,10 +190,19 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				value: connectionResponse!.integrationUniqueName!,
 			});
 
-			await getConnectionAuthType(connId);
-			await getConnectionVariables(connId);
+			await getConnectionAuthType(connectionId);
+			await getConnectionVariables(connectionId);
 		} catch (error) {
-			toastAndLog("error", "errorFetchingConnection", error);
+			const message = tErrors("errorFetchingConnectionExtended", {
+				connectionId,
+				error: (error as Error).message,
+			});
+			addToast({
+				message: tErrors("errorFetchingConnection", { connectionId }),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.hooks.connectionForm, message);
 		}
 	};
 

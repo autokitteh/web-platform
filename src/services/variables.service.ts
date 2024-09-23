@@ -41,7 +41,7 @@ export class VariablesService {
 
 	static async list(envId: string): Promise<ServiceResponse<Variable[]>> {
 		try {
-			const { vars } = await variablesClient.get({ scopeId: envId });
+			const { error, vars } = await variablesClient.get({ scopeId: envId });
 			const variables = vars.map(convertVariableProtoToModel);
 
 			return { data: variables, error: undefined };

@@ -19,5 +19,12 @@ export const namespaces = {
 	eventsService: "Events Service",
 	ui: {
 		loginPage: "Login Page",
+		deleteModal: "Delete Modal",
+	},
+	hooks: {
+		connectionForm: "Connection Form",
+	},
+	stores: {
+		connectionCheckerStore: "Connection Checker Store",
 	},
 };
