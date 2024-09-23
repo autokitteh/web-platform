@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { monacoLanguages, namespaces } from "@constants";
-import { LoggerService } from "@services/index";
+import { LoggerService } from "@services";
 import { useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
@@ -73,35 +73,28 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
-		if (!projectId) {
+		const handleError = (key: string, options?: Record<string, unknown>) => {
 			addToast({
 				message: tErrors("codeSaveFailed"),
 				type: "error",
 			});
+			LoggerService.error(namespaces.projectUICode, tErrors(key, options));
+		};
 
-			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingProjectId"));
+		if (!projectId) {
+			handleError("codeSaveFailedMissingProjectId");
 
 			return;
 		}
 
 		if (!activeEditorFileName) {
-			addToast({
-				message: tErrors("codeSaveFailed"),
-				type: "error",
-			});
-
-			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingFileName", { projectId }));
+			handleError("codeSaveFailedMissingFileName", { projectId });
 
 			return;
 		}
 
 		if (newContent === t("noFileText") || newContent === undefined) {
-			addToast({
-				message: tErrors("codeSaveFailed"),
-				type: "error",
-			});
-
-			LoggerService.error(namespaces.projectUICode, tErrors("codeSaveFailedMissingContent", { projectId }));
+			handleError("codeSaveFailedMissingContent", { projectId });
 
 			return;
 		}
