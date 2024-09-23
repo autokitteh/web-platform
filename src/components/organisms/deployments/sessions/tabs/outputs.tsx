@@ -32,8 +32,10 @@ OutputRow.displayName = "OutputRow";
 
 export const SessionOutputs = () => {
 	const {
+		handleScroll,
 		isRowLoaded,
 		items: outputs,
+		listRef,
 		loadMoreRows,
 		loading,
 		nextPageToken,
@@ -60,10 +62,9 @@ export const SessionOutputs = () => {
 		[outputs]
 	);
 
-	const listRef = useRef<List | null>(null);
-
 	const setListRef = useCallback((ref: List | null) => {
 		listRef.current = ref;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -84,6 +85,7 @@ export const SessionOutputs = () => {
 									deferredMeasurementCache={cacheRef.current}
 									height={height}
 									onRowsRendered={onRowsRendered}
+									onScroll={handleScroll}
 									overscanRowCount={10}
 									ref={(ref) => {
 										setListRef(ref);
