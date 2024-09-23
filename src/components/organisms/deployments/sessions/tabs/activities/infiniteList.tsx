@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
@@ -13,16 +13,6 @@ import { ActivityRow, SingleActivityInfo } from "@components/organisms/deploymen
 export const ActivityList = () => {
 	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
 
-	const customRowRenderer = (props: ListRowProps, activity: SessionActivity) => (
-		<ActivityRow
-			data={activity}
-			index={props.index}
-			key={props.key}
-			setActivity={setSelectedActivity}
-			style={props.style}
-		/>
-	);
-
 	const {
 		handleScroll,
 		isRowLoaded,
@@ -31,11 +21,44 @@ export const ActivityList = () => {
 		loadMoreRows,
 		loading,
 		nextPageToken,
-		rowRenderer,
 		t,
-	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, 60, customRowRenderer);
+	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, 60);
 
-	const autoSizerClass = cn({ hidden: selectedActivity });
+	const customRowRenderer = useCallback(
+		({ index, key, style }: ListRowProps) => (
+			<ActivityRow
+				data={activities[index]}
+				index={index}
+				key={key}
+				setActivity={setSelectedActivity}
+				style={style}
+			/>
+		),
+		[activities, setSelectedActivity]
+	);
+
+	const autoSizerClass = useMemo(() => cn({ hidden: selectedActivity }), [selectedActivity]);
+
+	const rowCount = useMemo(
+		() => (nextPageToken ? activities.length + 1 : activities.length),
+		[activities.length, nextPageToken]
+	);
+
+	if (loading && !activities.length) {
+		return (
+			<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
+				<Loader isCenter size="xl" />
+			</Frame>
+		);
+	}
+
+	if (!activities.length) {
+		return (
+			<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
+				<div className="mt-10 text-center text-xl font-semibold">{t("noActivitiesFound")}</div>
+			</Frame>
+		);
+	}
 
 	return (
 		<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
@@ -43,39 +66,35 @@ export const ActivityList = () => {
 				<SingleActivityInfo activity={selectedActivity} setActivity={setSelectedActivity} />
 			) : null}
 
-			{loading && !activities.length ? (
-				<Loader isCenter size="xl" />
-			) : activities.length ? (
-				<AutoSizer className={autoSizerClass}>
-					{({ height, width }) => (
-						<InfiniteLoader
-							isRowLoaded={isRowLoaded}
-							loadMoreRows={loadMoreRows}
-							rowCount={nextPageToken ? activities.length + 1 : activities.length}
-							threshold={15}
-						>
-							{({ onRowsRendered, registerChild }) => (
-								<List
-									className="scrollbar"
-									height={height}
-									onRowsRendered={onRowsRendered}
-									onScroll={handleScroll}
-									ref={(ref) => {
+			<AutoSizer className={autoSizerClass}>
+				{({ height, width }) => (
+					<InfiniteLoader
+						isRowLoaded={isRowLoaded}
+						loadMoreRows={loadMoreRows}
+						rowCount={rowCount}
+						threshold={15}
+					>
+						{({ onRowsRendered, registerChild }) => (
+							<List
+								className="scrollbar"
+								height={height}
+								onRowsRendered={onRowsRendered}
+								onScroll={handleScroll}
+								ref={(ref) => {
+									if (ref) {
 										registerChild(ref);
 										listRef.current = ref;
-									}}
-									rowCount={activities.length}
-									rowHeight={60}
-									rowRenderer={rowRenderer}
-									width={width}
-								/>
-							)}
-						</InfiniteLoader>
-					)}
-				</AutoSizer>
-			) : (
-				<div className="mt-10 text-center text-xl font-semibold">{t("noActivitiesFound")}</div>
-			)}
+									}
+								}}
+								rowCount={activities.length}
+								rowHeight={60}
+								rowRenderer={customRowRenderer}
+								width={width}
+							/>
+						)}
+					</InfiniteLoader>
+				)}
+			</AutoSizer>
 		</Frame>
 	);
 };
