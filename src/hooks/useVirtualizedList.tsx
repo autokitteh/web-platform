@@ -22,11 +22,9 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const { t } = useTranslation("deployments", { keyPrefix: "sessionAndActivities" });
 	const frameRef = useRef<HTMLDivElement>(null);
 
-	// Call both stores unconditionally
 	const outputsCacheStore = useOutputsCacheStore();
 	const activitiesCacheStore = useActivitiesCacheStore();
 
-	// Choose the appropriate store based on type
 	const store = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
 	const session = sessionId ? store.sessions[sessionId] : null;
 	const listRef = useRef<List | null>(null);
