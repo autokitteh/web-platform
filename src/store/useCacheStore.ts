@@ -40,7 +40,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 
 		if (!deployments || !deployments.length) {
-			// Only update if the value has changed
 			if (projectLastDeployment?.[projectId] !== "") {
 				set((state) => ({
 					projectLastDeployment: {
