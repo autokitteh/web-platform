@@ -17,16 +17,18 @@ export const ProjectTopbarNavigation = () => {
 	const [cachedLastDeploymentId, setCachedLastDeploymentId] = useState<string>();
 
 	const fetchCurrentDeploymentId = async () => {
-		if (projectId) {
-			if (projectLastDeployment?.[projectId]) {
-				setCachedLastDeploymentId(projectLastDeployment[projectId]);
-			}
-			if (!projectLastDeployment?.[projectId] || !cachedLastDeploymentId) {
-				const cachedDeploymentId = await fetchLastDeploymentId(projectId);
-				if (cachedDeploymentId) {
-					setCachedLastDeploymentId(cachedDeploymentId);
-				}
-			}
+		if (!projectId) return;
+
+		const lastDeployment = projectLastDeployment?.[projectId];
+		if (lastDeployment) {
+			setCachedLastDeploymentId(lastDeployment);
+
+			return;
+		}
+
+		const fetchedDeploymentId = await fetchLastDeploymentId(projectId);
+		if (fetchedDeploymentId) {
+			setCachedLastDeploymentId(fetchedDeploymentId);
 		}
 	};
 
