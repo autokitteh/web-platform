@@ -1,3 +1,10 @@
+## [2.10.5](https://github.com/autokitteh/web-platform/compare/v2.10.4...v2.10.5) (2024-09-23)
+
+
+### Bug Fixes
+
+* revert update deps ([#377](https://github.com/autokitteh/web-platform/issues/377)) ([e3df6a9](https://github.com/autokitteh/web-platform/commit/e3df6a9146b6ac9fc6b653c5af427e6c4b64b1ef)), closes [#376](https://github.com/autokitteh/web-platform/issues/376) [#357](https://github.com/autokitteh/web-platform/issues/357)
+
 ## [2.10.4](https://github.com/autokitteh/web-platform/compare/v2.10.3...v2.10.4) (2024-09-23)
 
 
