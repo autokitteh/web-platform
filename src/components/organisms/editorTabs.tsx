@@ -6,7 +6,8 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { monacoLanguages } from "@constants";
+import { monacoLanguages, namespaces } from "@constants";
+import { LoggerService } from "@services";
 import { useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
@@ -72,18 +73,28 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
-		if (
-			!projectId ||
-			!activeEditorFileName ||
-			!newContent ||
-			newContent?.trim() === "" ||
-			newContent?.trim() === t("noFileText") ||
-			newContent?.trim() === tTabsEditor("initialContentForNewFile")
-		) {
+		const handleError = (key: string, options?: Record<string, unknown>) => {
 			addToast({
 				message: tErrors("codeSaveFailed"),
 				type: "error",
 			});
+			LoggerService.error(namespaces.projectUICode, tErrors(key, options));
+		};
+
+		if (!projectId) {
+			handleError("codeSaveFailedMissingProjectId");
+
+			return;
+		}
+
+		if (!activeEditorFileName) {
+			handleError("codeSaveFailedMissingFileName", { projectId });
+
+			return;
+		}
+
+		if (newContent === t("noFileText") || newContent === undefined) {
+			handleError("codeSaveFailedMissingContent", { projectId });
 
 			return;
 		}
@@ -96,7 +107,7 @@ export const EditorTabs = () => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
-				message: tErrors("resourcesFetchError"),
+				message: tErrors("codeSaveFailed"),
 				type: "error",
 			});
 		} finally {
@@ -121,7 +132,7 @@ export const EditorTabs = () => {
 
 		setContent(newContent);
 
-		if (checked) {
+		if (checked && newContent !== tTabsEditor("noFileText")) {
 			debouncedUpdateContent(newContent);
 		}
 	};
