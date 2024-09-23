@@ -6,6 +6,7 @@ export interface VirtualizedListHookResult<T> {
 	isRowLoaded: (params: { index: number }) => boolean;
 	loadMoreRows: (params: { startIndex: number; stopIndex: number }) => Promise<void>;
 	handleResize: (params: { height: number; width: number }) => void;
+	handleScroll: (params: { scrollTop: number }) => void;
 	dimensions: { height: number; width: number };
 	cache: CellMeasurerCache;
 	listRef: React.MutableRefObject<List | null>;

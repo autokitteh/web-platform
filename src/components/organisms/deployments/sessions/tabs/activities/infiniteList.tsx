@@ -25,6 +25,7 @@ export const ActivityList = () => {
 
 	const {
 		handleResize,
+		handleScroll,
 		isRowLoaded,
 		items: activities,
 		listRef,
@@ -59,6 +60,7 @@ export const ActivityList = () => {
 									className="scrollbar"
 									height={height}
 									onRowsRendered={onRowsRendered}
+									onScroll={handleScroll}
 									ref={(ref) => {
 										registerChild(ref);
 										listRef.current = ref;

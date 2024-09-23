@@ -13,6 +13,7 @@ export const SessionOutputs = () => {
 		cache,
 		frameRef,
 		handleResize,
+		handleScroll,
 		isRowLoaded,
 		items: outputs,
 		listRef,
@@ -70,6 +71,7 @@ export const SessionOutputs = () => {
 									deferredMeasurementCache={cache}
 									height={height}
 									onRowsRendered={onRowsRendered}
+									onScroll={handleScroll}
 									overscanRowCount={10}
 									ref={(ref) => {
 										if (ref) {
