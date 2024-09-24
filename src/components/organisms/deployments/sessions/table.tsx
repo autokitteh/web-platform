@@ -15,13 +15,12 @@ import { cn } from "@utilities";
 
 import { useModalStore, useToastStore } from "@store";
 
-import { Button, Frame, IconButton, Loader } from "@components/atoms";
+import { Button, Frame, Loader } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
 import { CatImage } from "@assets/image";
-import { ArrowLeft } from "@assets/image/icons";
 
 export const SessionsTable = () => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10 });
@@ -186,16 +185,6 @@ export const SessionsTable = () => {
 				<Frame className={frameClass}>
 					<div className="flex items-center justify-between gap-2.5">
 						<div className="flex flex-wrap items-center gap-2.5">
-							<IconButton
-								ariaLabel={t("ariaLabelReturnBack")}
-								className="min-w-20 gap-2 bg-gray-1050 text-sm text-white hover:bg-black"
-								onClick={() => navigate(`/projects/${projectId}/deployments`)}
-							>
-								<ArrowLeft className="h-4" />
-
-								{t("buttons.back")}
-							</IconButton>
-
 							<RefreshButton isLoading={isLoading} onRefresh={fetchDeployments} />
 						</div>
 
