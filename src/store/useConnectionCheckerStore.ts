@@ -99,21 +99,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 					return;
 				}
 
-				if (!connectionDetails) {
-					addToast({
-						message: i18n.t("connectionNotFound", { ns: "errors" }),
-						type: "error",
-					});
-
-					LoggerService.error(
-						namespaces.hooks.connectionForm,
-						i18n.t("connectionNotFoundExtended", { ns: "errors", connectionId })
-					);
-
-					return;
-				}
-
-				if (connectionDetails.status === ("ok" as ConnectionStatusType).toString()) {
+				if (connectionDetails?.status === ("ok" as ConnectionStatusType).toString()) {
 					if (fetchConnectionsCallback) fetchConnectionsCallback();
 					resetChecker();
 				} else {

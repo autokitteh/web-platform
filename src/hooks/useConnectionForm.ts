@@ -197,20 +197,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				return;
 			}
 
-			if (!connectionResponse) {
-				addToast({
-					message: tErrors("connectionNotFound"),
-					type: "error",
-				});
-
-				LoggerService.error(
-					namespaces.hooks.connectionForm,
-					tErrors("connectionNotFoundExtended", { connectionId })
-				);
-
-				return;
-			}
-
 			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
 			setConnectionName(connectionResponse!.name);
 			setIntegration({

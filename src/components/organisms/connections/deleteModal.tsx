@@ -4,8 +4,7 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { ModalDeleteConnectionProps } from "@interfaces/components";
-import { ConnectionService, LoggerService } from "@services";
-import { namespaces } from "@src/constants";
+import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
 import { useModalStore, useToastStore } from "@store";
@@ -29,17 +28,6 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 				message: t("fetchFailed"),
 				type: "error",
 			});
-
-			return;
-		}
-
-		if (!data) {
-			addToast({
-				message: t("connectionNotFound"),
-				type: "error",
-			});
-
-			LoggerService.error(namespaces.ui.deleteModal, t("connectionNotFoundExtended", { connectionId }));
 
 			return;
 		}
