@@ -1,3 +1,10 @@
+## [2.11.1](https://github.com/autokitteh/web-platform/compare/v2.11.0...v2.11.1) (2024-09-24)
+
+
+### Bug Fixes
+
+* remove back button in sessions table screen ([#379](https://github.com/autokitteh/web-platform/issues/379)) ([aa23208](https://github.com/autokitteh/web-platform/commit/aa2320813eb2182c7ae96e83ffb6c3fc5848ac76))
+
 # [2.11.0](https://github.com/autokitteh/web-platform/compare/v2.10.5...v2.11.0) (2024-09-23)
 
 
