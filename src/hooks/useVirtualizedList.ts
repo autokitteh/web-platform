@@ -16,7 +16,13 @@ export function useVirtualizedList<T>(
 	const listRef = useRef<any>(null);
 	const frameRef = useRef<HTMLDivElement>(null);
 
-	const { loadLogs, loading, logs, nextPageToken, reset } = useCacheStore();
+	const {
+		loadLogs,
+		loading: { logs: loadingLogs },
+		logs,
+		nextPageToken,
+		reset,
+	} = useCacheStore();
 	const [items, setItems] = useState<T[]>([]);
 	const [scrollPosition, setScrollPosition] = useState(0);
 	const [dimensions, setDimensions] = useState({
@@ -33,14 +39,14 @@ export function useVirtualizedList<T>(
 
 	const loadMoreRows = useCallback(
 		async ({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }) => {
-			if (loading || (!nextPageToken && startIndex !== 0)) {
+			if (loadingLogs || (!nextPageToken && startIndex !== 0)) {
 				return;
 			}
 
 			const pageSize = stopIndex - startIndex + 1;
 			await loadLogs(sessionId!, pageSize * 2);
 		},
-		[loading, loadLogs, nextPageToken, sessionId]
+		[loadingLogs, loadLogs, nextPageToken, sessionId]
 	);
 
 	useEffect(() => {
@@ -80,7 +86,7 @@ export function useVirtualizedList<T>(
 
 	return {
 		items,
-		loading,
+		loading: loadingLogs,
 		isRowLoaded,
 		loadMoreRows,
 		handleResize,

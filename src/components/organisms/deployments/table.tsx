@@ -28,7 +28,11 @@ export const DeploymentsTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { openDrawer } = useDrawerStore();
 	const { projectId } = useParams();
-	const { deployments, fetchDeployments, loadingDeployments } = useCacheStore();
+	const {
+		deployments,
+		fetchDeployments,
+		loading: { deployments: loadingDeployments },
+	} = useCacheStore();
 
 	const [isManualRunEnabled, setIsManualRunEnabled] = useState(false);
 	const [savingManualRun, setSavingManualRun] = useState(false);
