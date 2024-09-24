@@ -24,7 +24,7 @@ import { ActivityList, SessionOutputs } from "@components/organisms/deployments/
 import { Security } from "@components/organisms/settings";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
-import { Connections, Dashboard, NotFound404, Project, Sessions, Triggers, Variables } from "@components/pages";
+import { Connections, Dashboard, Intro, NotFound404, Project, Sessions, Triggers, Variables } from "@components/pages";
 import { Deployments } from "@components/pages/deployments";
 import { AppLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
@@ -69,6 +69,8 @@ export const App = () => {
 			<AKRoutes>
 				<Route element={<AppLayout className="pr-0" />} path="/">
 					<Route element={<Dashboard />} index />
+
+					<Route element={<Intro />} path="intro" />
 
 					<Route element={<NotFound404 />} path="404" />
 				</Route>

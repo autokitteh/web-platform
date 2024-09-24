@@ -55,3 +55,4 @@ export { default as WarningTriangleIcon } from "@assets/image/icons/WarningTrian
 export { default as SaveIcon } from "@assets/image/icons/Save.svg?react";
 export { default as Check } from "@assets/image/icons/Check.svg?react";
 export { default as Square } from "@assets/image/icons/Square.svg?react";
+export { default as HelpIcon } from "@assets/image/icons/Question.svg?react";

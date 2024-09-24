@@ -3,6 +3,7 @@
 		"logout": "Logout",
 		"settings": "Settings",
 		"closeSidebar": "Close Sidebar",
-		"openSidebar": "Open Sidebar"
+		"openSidebar": "Open Sidebar",
+		"intro": "Introduction"
 	}
 }
