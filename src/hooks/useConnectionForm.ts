@@ -245,22 +245,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				});
 			}
 
-			if (error) {
-				addToast({
-					message: tErrors("connectionNotCreated"),
-					type: "error",
-				});
-
-				return;
-			}
-
-			if (!responseConnectionId) {
-				addToast({
-					message: tErrors("connectionNotCreated"),
-					type: "error",
-				});
-			}
-
 			setConnectionId(responseConnectionId);
 		} catch (error) {
 			addToast({
