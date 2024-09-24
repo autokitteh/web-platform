@@ -1,3 +1,4 @@
+import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -6,63 +7,60 @@ import { DeploymentsService } from "@services";
 import { SessionsService } from "@services/sessions.service";
 import { minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
 import { StoreName } from "@src/enums";
+import { Deployment } from "@src/types/models";
 
 import { useToastStore } from "@store";
 
 export interface CacheStore {
 	logs: ProtoSessionLogRecord[];
 	loading: boolean;
+	loadingDeployments: boolean;
 	reset: () => void;
 	reload: (sessionId: string) => void;
 	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
 	nextPageToken?: string;
-	projectLastDeployment?: Record<string, string>;
-	fetchLastDeploymentId: (projectId: string, force?: boolean) => Promise<void | string>;
+	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;
+	deployments?: Deployment[];
+	currentProjectId?: string;
 }
 
 const store: StateCreator<CacheStore> = (set, get) => ({
 	logs: [],
 	loading: false,
 	nextPageToken: "",
-	projectLastDeployment: undefined,
+	deployments: undefined,
+	loadingDeployments: false,
+	currentProjectId: undefined,
 
-	fetchLastDeploymentId: async (projectId: string, force?: boolean) => {
-		const { projectLastDeployment } = get();
+	fetchDeployments: async (projectId: string, force?: boolean) => {
+		const addToast = useToastStore.getState().addToast;
+		const { currentProjectId, deployments } = get();
 
-		if (projectLastDeployment?.projectId === projectId && !force) {
-			return;
+		if (currentProjectId === projectId && !force) {
+			return deployments;
 		}
 
-		const { data: deployments, error } = await DeploymentsService.listByProjectId(projectId);
+		set((state) => ({ ...state, currentProjectId: projectId }));
+		set({ loadingDeployments: true });
+		const { data: incomingDeployments, error } = await DeploymentsService.listByProjectId(projectId);
+		set({ loadingDeployments: false });
 
 		if (error) {
+			const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
+
+			addToast({
+				message: errorMsg,
+				type: "error",
+			});
+
 			return;
 		}
 
-		if (!deployments || !deployments.length) {
-			if (projectLastDeployment?.[projectId] !== "") {
-				set((state) => ({
-					projectLastDeployment: {
-						...state.projectLastDeployment,
-						[projectId]: "",
-					},
-				}));
-			}
-
-			return "";
-		}
-		const lastDeploymentId = deployments[0].deploymentId;
-
-		if (projectLastDeployment?.[projectId] !== lastDeploymentId) {
-			set((state) => ({
-				projectLastDeployment: {
-					...state.projectLastDeployment,
-					[projectId]: lastDeploymentId,
-				},
-			}));
+		if (deployments !== incomingDeployments) {
+			set((state) => ({ ...state, deployments: incomingDeployments }));
 		}
 
-		return lastDeploymentId;
+		return deployments;
 	},
 
 	reset: () => {

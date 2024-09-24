@@ -1,5 +1,6 @@
 import React, { KeyboardEventHandler, MouseEventHandler } from "react";
 
+import { Deployment } from "@src/types/models";
 import { ButtonType, SortDirection } from "@type/components";
 
 export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>, React.AriaAttributes {
@@ -50,6 +51,6 @@ export interface SortButtonProps {
 }
 
 export interface RefreshButtonProps {
-	onRefresh: () => Promise<void>;
+	onRefresh: () => Promise<void | Deployment[]>;
 	isLoading: boolean;
 }

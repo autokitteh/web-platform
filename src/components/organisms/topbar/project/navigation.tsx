@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
@@ -11,33 +11,19 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const location = useLocation();
-	const { fetchLastDeploymentId, projectLastDeployment } = useCacheStore();
+	const { deployments, fetchDeployments: getCachedDeployments } = useCacheStore();
 	const navigate = useNavigate();
 
-	const [cachedLastDeploymentId, setCachedLastDeploymentId] = useState<string>();
-
-	const fetchCurrentDeploymentId = async () => {
-		if (!projectId) return;
-
-		const fetchedDeploymentId = await fetchLastDeploymentId(projectId);
-		if (fetchedDeploymentId) {
-			setCachedLastDeploymentId(fetchedDeploymentId);
-		}
+	const fetchDeployments = async () => {
+		await getCachedDeployments(projectId!);
 	};
 
 	useEffect(() => {
-		const lastDeployment = projectLastDeployment?.[projectId!];
-		if (lastDeployment) {
-			setCachedLastDeploymentId(lastDeployment);
-
-			return;
-		}
-
-		fetchCurrentDeploymentId();
+		fetchDeployments();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, projectLastDeployment]);
+	}, []);
 
-	const deploymentId = cachedLastDeploymentId || paramDeploymentId;
+	const deploymentId = paramDeploymentId || deployments?.[0]?.deploymentId;
 
 	const selectedSection = useMemo(() => {
 		if (paramDeploymentId) return "sessions";
@@ -49,7 +35,8 @@ export const ProjectTopbarNavigation = () => {
 	const navigationItems = useMemo(
 		() =>
 			mainNavigationItems.map((item) => {
-				const noDeploymentsState = item.key === "sessions" && !cachedLastDeploymentId;
+				const noDeploymentsSessionButtonDisabled =
+					item.key === "sessions" && (!deployments || !deployments.length);
 				const isSelected = selectedSection === item.key;
 				const buttonClassName = cn(
 					"group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black",
@@ -64,34 +51,36 @@ export const ProjectTopbarNavigation = () => {
 
 				return {
 					...item,
-					noDeploymentsState,
+					noDeploymentsSessionButtonDisabled,
 					isSelected,
 					buttonClassName,
 					iconClassName,
 					href,
 				};
 			}),
-		[cachedLastDeploymentId, selectedSection, projectId, deploymentId]
+		[deployments, selectedSection, projectId, deploymentId]
 	);
 
 	return (
 		<div className="ml-5 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
-			{navigationItems.map(({ buttonClassName, href, icon, iconClassName, key, label, noDeploymentsState }) => (
-				<Button
-					ariaLabel={label}
-					className={buttonClassName}
-					disabled={noDeploymentsState}
-					key={key}
-					onClick={() => navigate(href)}
-					role="navigation"
-					title={label}
-					variant="filledGray"
-				>
-					<IconSvg className={iconClassName} size="lg" src={icon} />
+			{navigationItems.map(
+				({ buttonClassName, href, icon, iconClassName, key, label, noDeploymentsSessionButtonDisabled }) => (
+					<Button
+						ariaLabel={label}
+						className={buttonClassName}
+						disabled={noDeploymentsSessionButtonDisabled}
+						key={key}
+						onClick={() => navigate(href)}
+						role="navigation"
+						title={label}
+						variant="filledGray"
+					>
+						<IconSvg className={iconClassName} size="lg" src={icon} />
 
-					<span className="ml-2 group-hover:text-white">{label}</span>
-				</Button>
-			))}
+						<span className="ml-2 group-hover:text-white">{label}</span>
+					</Button>
+				)
+			)}
 		</div>
 	);
 };

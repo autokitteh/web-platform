@@ -33,7 +33,7 @@ export const ProjectTopbarButtons = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const { fetchResources } = useFileOperations(projectId!);
-	const { fetchLastDeploymentId } = useCacheStore();
+	const { fetchDeployments } = useCacheStore();
 
 	const fetchAndCheckResources = useCallback(async () => {
 		const resources = await fetchResources(true);
@@ -95,7 +95,7 @@ export const ProjectTopbarButtons = () => {
 			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccess"));
 		}
 
-		fetchLastDeploymentId(projectId!, true);
+		fetchDeployments(projectId!, true);
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
