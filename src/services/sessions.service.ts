@@ -74,7 +74,7 @@ export class SessionsService {
 
 	static async getSessionInfo(sessionId: string): Promise<ServiceResponse<ViewerSession>> {
 		try {
-			const { session } = await sessionsClient.get({ sessionId });
+			const { session } = await sessionsClient.get({ sessionId, jsonValues: true });
 
 			if (!session) {
 				const errorMessage = i18n.t("sessionNotFound", {
