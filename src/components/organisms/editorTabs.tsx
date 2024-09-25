@@ -27,7 +27,8 @@ export const EditorTabs = () => {
 
 	const { fetchFiles } = useFileOperations(projectId!);
 
-	const activeEditorFileName = openFiles?.find(({ isActive }: { isActive: boolean }) => isActive)?.name || "";
+	const activeEditorFileName =
+		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
@@ -137,10 +138,13 @@ export const EditorTabs = () => {
 		}
 	};
 
-	const activeCloseIcon = (fileName: string) =>
-		cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
-			"opacity-100": openFiles.find(({ isActive, name }) => name === fileName && isActive),
+	const activeCloseIcon = (fileName: string) => {
+		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
+
+		return cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
+			"opacity-100": isActiveFile,
 		});
+	};
 
 	const handleCloseButtonClick = (
 		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
@@ -161,25 +165,27 @@ export const EditorTabs = () => {
 								`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
 							}
 						>
-							{openFiles?.map(({ name }) => (
-								<Tab
-									activeTab={activeEditorFileName}
-									className="group flex items-center gap-1"
-									key={name}
-									onClick={() => openFileAsActive(name)}
-									value={name}
-								>
-									{name}
+							{projectId
+								? openFiles[projectId]?.map(({ name }) => (
+										<Tab
+											activeTab={activeEditorFileName}
+											className="group flex items-center gap-1"
+											key={name}
+											onClick={() => openFileAsActive(name)}
+											value={name}
+										>
+											{name}
 
-									<IconButton
-										ariaLabel={t("buttons.ariaCloseFile")}
-										className={activeCloseIcon(name)}
-										onClick={(event) => handleCloseButtonClick(event, name)}
-									>
-										<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-									</IconButton>
-								</Tab>
-							))}
+											<IconButton
+												ariaLabel={t("buttons.ariaCloseFile")}
+												className={activeCloseIcon(name)}
+												onClick={(event) => handleCloseButtonClick(event, name)}
+											>
+												<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
+											</IconButton>
+										</Tab>
+									))
+								: null}
 						</div>
 
 						{openFiles.length ? (

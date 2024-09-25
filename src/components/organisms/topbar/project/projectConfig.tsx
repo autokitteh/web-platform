@@ -9,14 +9,13 @@ import { ProjectTopbarButtons, ProjectTopbarName, ProjectTopbarNavigation } from
 export const ProjectConfigTopbar = () => {
 	const { projectId } = useParams();
 
-	const { openProjectId, setOpenFiles, setOpenProjectId } = useFileOperations(projectId!);
+	const { openProjectId, setOpenProjectId } = useFileOperations(projectId!);
 
 	useEffect(() => {
 		if (!projectId) return;
 
 		if (projectId !== openProjectId) {
 			setOpenProjectId(projectId);
-			setOpenFiles([]);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);

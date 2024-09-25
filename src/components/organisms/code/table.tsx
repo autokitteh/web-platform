@@ -104,7 +104,9 @@ export const CodeTable = () => {
 	};
 
 	const activeBodyRow = (fileName: string) => {
-		const isActiveFile = openFiles.find(({ isActive, name }) => name === fileName && isActive);
+		const isActiveFile = projectId
+			? openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive)
+			: undefined;
 
 		return cn({ "bg-black": isActiveFile });
 	};

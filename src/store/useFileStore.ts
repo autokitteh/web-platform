@@ -5,55 +5,87 @@ import { immer } from "zustand/middleware/immer";
 import { StoreName } from "@enums";
 
 interface FileState {
-	openFiles: { isActive: boolean; name: string }[];
-	setOpenFiles: (files: { isActive: boolean; name: string }[]) => void;
+	openFiles: Record<string, { isActive: boolean; name: string }[]>;
+	openProjectId: string;
+	setOpenProjectId: (projectId: string) => void;
+	setOpenFiles: (projectId: string, files: { isActive: boolean; name: string }[]) => void;
 	updateOpenedFiles: (fileName: string) => void;
 	closeOpenedFile: (fileName: string) => void;
 	openFileAsActive: (fileName: string) => void;
-	openProjectId: string;
-	setOpenProjectId: (projectId: string) => void;
 }
+
+const setActiveFile = (files: { isActive: boolean; name: string }[], fileName: string) =>
+	files.map((file) => ({ ...file, isActive: file.name === fileName }));
+
 const store: StateCreator<FileState> = (set) => ({
-	openFiles: [],
+	openFiles: {},
 	openProjectId: "",
-	setOpenProjectId: (projectId: string) => set((state) => ({ ...state, openProjectId: projectId })),
-	setOpenFiles: (files: { isActive: boolean; name: string }[]) => set((state) => ({ ...state, openFiles: files })),
-	updateOpenedFiles: (fileName: string) =>
+	setOpenProjectId: (projectId) => set((state) => ({ ...state, openProjectId: projectId })),
+	setOpenFiles: (projectId, files) =>
 		set((state) => {
-			const fileExists = state.openFiles.find((file) => file.name === fileName);
-			if (!fileExists) {
-				state.openFiles.push({ name: fileName, isActive: true });
+			state.openFiles[projectId] = files;
 
-				return { ...state };
-			}
-			state.openFiles = state.openFiles.map((file) =>
-				file.name === fileName ? { ...file, isActive: true } : { ...file, isActive: false }
-			);
-
-			return { ...state };
+			return state;
 		}),
-	closeOpenedFile: (fileName: string) =>
-		set((state) => {
-			const fileRemoved = state.openFiles.filter((file) => file.name !== fileName);
-			if (!fileRemoved.length) {
-				return { ...state, openFiles: [] };
-			}
-			const firstFile = { ...fileRemoved[0], isActive: true };
-			fileRemoved.shift();
 
-			return { ...state, openFiles: [firstFile, ...fileRemoved] };
+	updateOpenedFiles: (fileName) =>
+		set((state) => {
+			const { openFiles, openProjectId } = state;
+			const projectFiles = openFiles[openProjectId] || [];
+
+			if (projectFiles.some((file) => file.name === fileName)) {
+				state.openFiles[openProjectId] = setActiveFile(projectFiles, fileName);
+
+				return state;
+			}
+
+			state.openFiles[openProjectId] = [
+				{ name: fileName, isActive: true },
+				...setActiveFile(projectFiles, fileName),
+			];
+
+			return state;
 		}),
-	openFileAsActive: (fileName: string) =>
+
+	closeOpenedFile: (fileName) =>
 		set((state) => {
-			const updatedFiles = state.openFiles.map((file) =>
-				file.name === fileName ? { ...file, isActive: true } : { ...file, isActive: false }
-			);
-			const fileExists = updatedFiles.find((file) => file.name === fileName);
-			if (!fileExists) {
-				updatedFiles.push({ name: fileName, isActive: true });
+			const { openFiles, openProjectId } = state;
+			const projectFiles = openFiles[openProjectId];
+			if (!projectFiles) return state;
+
+			const index = projectFiles.findIndex((file) => file.name === fileName);
+			if (index === -1) return state;
+
+			const wasActive = projectFiles[index].isActive;
+			projectFiles.splice(index, 1);
+
+			if (!projectFiles.length) {
+				delete openFiles[openProjectId];
+			} else if (wasActive) {
+				projectFiles[0].isActive = true;
 			}
 
-			return { ...state, openFiles: updatedFiles };
+			return state;
+		}),
+
+	openFileAsActive: (fileName) =>
+		set((state) => {
+			const { openFiles, openProjectId } = state;
+			const projectFiles = openFiles[openProjectId] || [];
+
+			if (projectFiles.some((file) => file.name === fileName)) {
+				state.openFiles[openProjectId] = setActiveFile(projectFiles, fileName);
+
+				return state;
+			}
+
+			state.openFiles[openProjectId] = [
+				{ name: fileName, isActive: true },
+				...setActiveFile(projectFiles, fileName),
+			];
+
+			return state;
 		}),
 });
+
 export const useFileStore = create(persist(immer(store), { name: StoreName.files }));
