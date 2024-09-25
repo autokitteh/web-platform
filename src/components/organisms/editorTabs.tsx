@@ -188,20 +188,21 @@ export const EditorTabs = () => {
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
 							>
 								<div className="inline-flex gap-2 rounded-3xl border border-gray-1000 p-1">
-									<Button
-										className="whitespace-nowrap px-4 py-1"
-										disabled={loadingSave || autosave}
-										onClick={() => debouncedSaveContent(content)}
-										variant="filledGray"
-									>
-										<IconSvg className="fill-white" src={!loadingSave ? SaveIcon : Spinner} />
+									{autosave ? null : (
+										<Button
+											className="whitespace-nowrap px-4 py-1"
+											disabled={loadingSave || autosave}
+											onClick={() => debouncedSaveContent(content)}
+											variant="filledGray"
+										>
+											<IconSvg className="fill-white" src={!loadingSave ? SaveIcon : Spinner} />
 
-										<div className="mt-0.5">{t("buttons.save")}</div>
-									</Button>
+											<div className="mt-0.5">{t("buttons.save")}</div>
+										</Button>
+									)}
 
 									<Checkbox
 										checked={autosave}
-										className="mr-2"
 										label={t("autoSave")}
 										onChange={() => setAutosave(!autosave)}
 									/>
