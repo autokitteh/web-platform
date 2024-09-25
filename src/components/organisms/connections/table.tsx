@@ -102,6 +102,11 @@ export const ConnectionsTable = () => {
 		}
 		setConnectionId(undefined);
 
+		addToast({
+			message: t("connectionRemoveSuccess"),
+			type: "success",
+		});
+
 		fetchConnections();
 	};
 

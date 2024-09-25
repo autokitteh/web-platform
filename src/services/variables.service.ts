@@ -42,13 +42,14 @@ export class VariablesService {
 	static async list(envId: string): Promise<ServiceResponse<Variable[]>> {
 		try {
 			const { vars } = await variablesClient.get({ scopeId: envId });
+
 			const variables = vars.map(convertVariableProtoToModel);
 
 			return { data: variables, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.variableService,
-				i18n.t("variablesNotFoundExtended", { id: envId, ns: "services" })
+				i18n.t("errorFetchingVariablesByEnvironmentIdExtended", { envId, error, ns: "services" })
 			);
 
 			return { data: undefined, error };

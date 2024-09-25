@@ -9,7 +9,7 @@
 	"errorEditingNewConnectionExtended": "Error while editing a connection, error: {{error}}",
 	"errorFetchingVariabls": "Error fetching variables",
 	"errorFetchingVariablsExtended": "Error fetching variables, error: {{error}}",
-	"errorFetchingConnection": "Error while fetching connection",
+	"errorFetchingConnection": "Error while fetching connection, connection ID: {{connectionId}}",
 	"errorFetchingConnectionType": "Error while fetching connection authentication type",
 	"errorFetchingConnectionTypeUnknown": "Unknown connection authentication type",
 	"errorFetchingVariables": "Error while fetching connection variables",
@@ -17,7 +17,7 @@
 	"connectionNotFoundExtended": "Error while fetching connection, connectionId: {{connectionId}}",
 	"connectionExists": "Connection already exists",
 	"connectionExistsExtended": "Connection already exists, connectionId: {{connectionId}}",
-	"errorFetchingConnectionExtended": "Error while fetching connection, error: {{error}}",
+	"errorFetchingConnectionExtended": "Error while fetching connection, connection ID: {{connectionId}}, error: {{error}}",
 	"errorOccured": "An error occurred",
 	"failedRemoveFile": "Failed to remove file: {{fileName}}",
 	"failedRemoveSession": "Failed to remove session",
@@ -65,5 +65,8 @@
 	"codeSaveFailed": "Code save failed",
 	"codeSaveFailedMissingProjectId": "Code save failed, missing project ID",
 	"codeSaveFailedMissingFileName": "Code save failed for the project {{projectId}}, missing file name",
-	"codeSaveFailedMissingContent": "Code save failed for the project {{projectId}}, missing file content"
+	"codeSaveFailedMissingContent": "Code save failed for the project {{projectId}}, missing file content",
+	"codeSaveFailedExtended": "Code save failed for the project {{projectId}}",
+	"errorDeleteConnection": "Deleting connection failed",
+	"connectionNotCreated": "Couldn't create the connection"
 }

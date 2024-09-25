@@ -4,6 +4,7 @@ export const namespaces = {
 	integrationService: "Integrations Service",
 	triggersUI: "Triggers UI",
 	deploymentsService: "Deployments Service",
+	buildService: "Builds Service",
 	environmentsService: "Environments Service",
 	manifestService: "Manifest Service",
 	projectService: "Project Service",
@@ -16,4 +17,14 @@ export const namespaces = {
 	variableService: "Variable Service",
 	buildRuntimeEntrypoints: "Convert runtime to entrypoints",
 	eventsService: "Events Service",
+	ui: {
+		loginPage: "Login Page",
+		deleteModal: "Delete Modal",
+	},
+	hooks: {
+		connectionForm: "Connection Form",
+	},
+	stores: {
+		connectionCheckerStore: "Connection Checker Store",
+	},
 };

@@ -1,10 +1,12 @@
+import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { StoreName } from "@enums";
 import { ConnectionCheckerStore } from "@interfaces/store";
-import { ConnectionService } from "@services";
+import { ConnectionService, LoggerService } from "@services";
+import { namespaces } from "@src/constants";
 import { ConnectionStatusType } from "@type/models";
 
 import { useToastStore } from "@store";
@@ -81,10 +83,18 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 				const { data: connectionDetails, error } = await ConnectionService.get(connectionId);
 
 				if (error) {
+					const toastMessage = i18n.t("errorFetchingConnection", { connectionId, ns: "errors" });
+					const logeExtended = i18n.t("errorFetchingConnectionExtended", {
+						connectionId,
+						error: (error as Error).message,
+						ns: "errors",
+					});
 					addToast({
-						message: (error as Error).message,
+						message: toastMessage,
 						type: "error",
 					});
+
+					LoggerService.error(namespaces.stores.connectionCheckerStore, logeExtended);
 
 					return;
 				}

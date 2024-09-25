@@ -13,7 +13,7 @@ export class BuildsService {
 			return { data: descriptionJson, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.deploymentsService,
+				namespaces.buildService,
 				i18n.t("buildInfoFetchFailedForBuild", { buildId, error: (error as Error).message, ns: "services" })
 			);
 

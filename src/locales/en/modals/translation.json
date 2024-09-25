@@ -12,7 +12,12 @@
 		"line2": "Connection name - <strong>{{name}}</strong> <br /> App name - <icon /> <strong>{{appName}}</strong>",
 		"line3": "Deleting the connection may cause failure of projects.",
 		"line4": "Are you sure you want to delete this connection?",
-		"title": "Delete  {{name}} Connection"
+		"title": "Delete  {{name}} Connection",
+		"deleteFailed": "Failed to delete connection",
+		"fetchFailed": "Failed to fetch the connection",
+		"connectionNotFound": "Connection not found",
+		"connectionNotFoundExtended": "Connection not found, connection ID: {{connectionId}}"
+
 	},
 	"deleteDeployment": {
 		"cancelButton": "Cancel",
