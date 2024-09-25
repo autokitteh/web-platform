@@ -37,7 +37,6 @@ export const EditorTabs = () => {
 
 	const loadContent = async () => {
 		const resources = await fetchResources(true);
-
 		const resource = resources[activeEditorFileName];
 		if (resource) {
 			const byteArray = Array.from(resource);

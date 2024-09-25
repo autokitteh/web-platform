@@ -9,8 +9,18 @@ const setActiveFile = (files: { isActive: boolean; name: string }[], fileName: s
 	files.map((file) => ({ ...file, isActive: file.name === fileName }));
 
 const store: StateCreator<FileStore> = (set) => ({
+	fileList: {
+		isLoading: true,
+		list: [],
+	},
 	openFiles: {},
 	openProjectId: "",
+	setFileList: (payload) =>
+		set((state) => {
+			state.fileList = { ...state.fileList, ...payload };
+
+			return state;
+		}),
 	setOpenProjectId: (projectId) => set((state) => ({ ...state, openProjectId: projectId })),
 	setOpenFiles: (projectId, files) =>
 		set((state) => {
