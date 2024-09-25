@@ -1,3 +1,10 @@
+# [2.12.0](https://github.com/autokitteh/web-platform/compare/v2.11.1...v2.12.0) (2024-09-25)
+
+
+### Features
+
+* add intro(help) icon in the sidebar ([#380](https://github.com/autokitteh/web-platform/issues/380)) ([3f3c2dd](https://github.com/autokitteh/web-platform/commit/3f3c2ddd9238692389a7f6a94bc353f8d4dea790))
+
 ## [2.11.1](https://github.com/autokitteh/web-platform/compare/v2.11.0...v2.11.1) (2024-09-24)
 
 
