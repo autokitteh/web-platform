@@ -168,7 +168,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				message: t("connectionEditedSuccessfully"),
 				type: "error",
 			});
-			LoggerService.error(namespaces.hooks.connectionForm, t("connectionEditedSuccessfully"));
+			LoggerService.info(namespaces.hooks.connectionForm, t("connectionEditedSuccessfully"));
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
