@@ -25,28 +25,6 @@ export function useFileOperations(projectId: string) {
 	const { checkState } = useProjectValidationStore();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const fetchFiles = useCallback(async () => {
-		try {
-			setFileList({ isLoading: true });
-			const resources = await dbService.getAll();
-			if (resources) {
-				checkState(projectId!, true);
-			}
-			setFileList({ isLoading: false, list: Object.keys(resources) });
-
-			return resources;
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			addToast({
-				message: t("resourcesFetchError"),
-				type: "error",
-			});
-		} finally {
-			setFileList({ isLoading: false });
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	const getResources = useCallback(async () => await dbService.getAll(), []);
 
 	const fetchResources = async (clearStore?: boolean) => {
@@ -88,7 +66,7 @@ export function useFileOperations(projectId: string) {
 				const resources = await dbService.getAll();
 
 				const { error } = await ProjectsService.setResources(projectId, resources);
-
+				checkState(projectId!, true);
 				if (error) {
 					throw new Error(t("resourcesFetchError"));
 				}
@@ -116,12 +94,13 @@ export function useFileOperations(projectId: string) {
 
 	const deleteFile = useCallback(
 		async (name: string) => {
+			setFileList({ isLoading: true });
 			await dbService.delete(name);
 			closeOpenedFile(name);
-			const resources = await fetchFiles();
-			if (!resources) return;
+			const resources = await dbService.getAll();
 			const { error } = await ProjectsService.setResources(projectId, resources);
-
+			setFileList({ isLoading: false, list: Object.keys(resources) });
+			checkState(projectId!, true);
 			if (error) {
 				addToast({
 					message: t("resourcesFetchError"),
@@ -141,16 +120,16 @@ export function useFileOperations(projectId: string) {
 				[name]: fileContent,
 			};
 			const { error } = await ProjectsService.setResources(projectId, resourcesWithAddedFile);
+			checkState(projectId!, true);
 			if (error) {
 				throw error;
 			}
 			dbService.put(name, fileContent);
 		},
-		[projectId]
+		[checkState, projectId]
 	);
 
 	return {
-		fetchFiles,
 		saveFile,
 		saveAllFiles,
 		deleteFile,

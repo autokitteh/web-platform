@@ -35,6 +35,7 @@ export const EditorTabs = () => {
 	const [autosave, setAutosave] = useState(true);
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
+	const [isFirstLoad, setIsFirstLoad] = useState(true);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (resource) {
@@ -46,7 +47,6 @@ export const EditorTabs = () => {
 	};
 
 	const loadContent = async () => {
-		if (openProjectId === projectId) return;
 		const resources = await fetchResources(true);
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
@@ -59,10 +59,13 @@ export const EditorTabs = () => {
 	};
 
 	useEffect(() => {
-		loadContent();
-		if (openProjectId === projectId) {
-			loadFileResource();
+		if (isFirstLoad || openProjectId !== projectId) {
+			loadContent();
+			setIsFirstLoad(false);
+
+			return;
 		}
+		loadFileResource();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
 
