@@ -57,7 +57,7 @@ export function useFileOperations(projectId: string) {
 			});
 			LoggerService.error(
 				namespaces.resourcesService,
-				t("resourcesFetchError", { projectId, error: error.message })
+				t("resourcesFetchErrorExtended", { projectId, error: error.message })
 			);
 
 			return;
@@ -86,7 +86,7 @@ export function useFileOperations(projectId: string) {
 				});
 				LoggerService.error(
 					namespaces.resourcesService,
-					t("resourcesFetchError", { projectId, error: error.message })
+					t("resourcesFetchErrorExtended", { projectId, error: error.message })
 				);
 			}
 		},
