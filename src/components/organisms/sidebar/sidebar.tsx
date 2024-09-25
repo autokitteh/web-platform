@@ -101,7 +101,7 @@ export const Sidebar = () => {
 					<div className="h-full" />
 
 					<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
-						<IconSvg className="size-7 transition group-hover:fill-gray-1000" src={HelpIcon} />
+						<IconSvg className="size-7 transition" src={HelpIcon} />
 
 						<AnimatePresence>
 							{isOpen ? (
