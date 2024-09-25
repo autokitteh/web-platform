@@ -43,3 +43,4 @@ export type { SecretInputProps } from "@interfaces/components/forms/secretInput.
 export type { ActivityRowProps } from "@interfaces/components/activity.interface";
 export type { DrawerProps } from "@interfaces/components/drawer.interface";
 export type { WelcomeInfoCardProps } from "@interfaces/components/welcomePageCard.interface";
+export type { CheckboxProps } from "@interfaces/components/checkbox.interface";

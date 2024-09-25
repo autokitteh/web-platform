@@ -13,7 +13,7 @@ import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
-import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Toggle, Typography } from "@components/atoms";
+import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
 
 import { Close, SaveIcon } from "@assets/image/icons";
 
@@ -32,7 +32,7 @@ export const EditorTabs = () => {
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const [content, setContent] = useState<string>("");
-	const [checked, setChecked] = useState(true);
+	const [autosave, setAutosave] = useState(true);
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 
@@ -132,7 +132,7 @@ export const EditorTabs = () => {
 
 		setContent(newContent);
 
-		if (checked && newContent !== tTabsEditor("noFileText")) {
+		if (autosave && newContent !== tTabsEditor("noFileText")) {
 			debouncedUpdateContent(newContent);
 		}
 	};
@@ -183,27 +183,30 @@ export const EditorTabs = () => {
 						</div>
 
 						{openFiles.length ? (
-							<div className="relative -right-4 -top-2 z-10 flex flex-col items-end whitespace-nowrap">
-								<div className="inline-flex gap-2 rounded-3xl border border-gray-1000 p-1 pl-2">
-									<Toggle checked={checked} label={t("autoSave")} onChange={setChecked} />
+							<div
+								className="relative -right-4 -top-2 z-10 flex flex-col items-end whitespace-nowrap"
+								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
+							>
+								<div className="inline-flex gap-2 rounded-3xl border border-gray-1000 p-1">
+									{autosave ? null : (
+										<Button
+											className="whitespace-nowrap px-4 py-1"
+											disabled={loadingSave || autosave}
+											onClick={() => debouncedSaveContent(content)}
+											variant="filledGray"
+										>
+											<IconSvg className="fill-white" src={!loadingSave ? SaveIcon : Spinner} />
 
-									<Button
-										className="whitespace-nowrap px-4 py-1"
-										disabled={loadingSave}
-										onClick={() => debouncedSaveContent(content)}
-										variant="filledGray"
-									>
-										<IconSvg className="fill-white" src={!loadingSave ? SaveIcon : Spinner} />
+											<div className="mt-0.5">{t("buttons.save")}</div>
+										</Button>
+									)}
 
-										{t("buttons.save")}
-									</Button>
+									<Checkbox
+										checked={autosave}
+										label={t("autoSave")}
+										onChange={() => setAutosave(!autosave)}
+									/>
 								</div>
-
-								{lastSaved ? (
-									<Typography size="small">
-										{t("lastSaved")}:{lastSaved}
-									</Typography>
-								) : null}
 							</div>
 						) : null}
 					</div>

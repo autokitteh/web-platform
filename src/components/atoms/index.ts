@@ -16,3 +16,4 @@ export { Toggle } from "@components/atoms/toggle";
 export { Typography } from "@components/atoms/typography";
 export { Status } from "@components/atoms/status";
 export { SecretInput } from "@components/atoms/secretInput";
+export { Checkbox } from "@components/atoms/checkbox";
