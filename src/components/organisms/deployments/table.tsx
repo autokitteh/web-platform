@@ -44,10 +44,6 @@ export const DeploymentsTable = () => {
 			saveProjectManualRun: state.saveProjectManualRun,
 		})
 	);
-	useEffect(() => {
-		fetchDeployments(projectId!);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const loadSingleshotArgs = async () => {
 		if (!deployments?.length || !projectId) return;
@@ -125,7 +121,7 @@ export const DeploymentsTable = () => {
 				type: "success",
 			});
 			setTimeout(() => {
-				fetchDeployments(projectId);
+				fetchDeployments(projectId, true);
 			}, 100);
 		} finally {
 			setSavingManualRun(false);
@@ -142,7 +138,10 @@ export const DeploymentsTable = () => {
 						{t("tableTitle")} ({deployments?.length || 0})
 					</h1>
 
-					<RefreshButton isLoading={loadingDeployments} onRefresh={() => fetchDeployments(projectId!)} />
+					<RefreshButton
+						isLoading={loadingDeployments}
+						onRefresh={() => fetchDeployments(projectId!, true)}
+					/>
 				</div>
 
 				<div className="flex h-10 gap-2 rounded-3xl border border-gray-1000 p-1">

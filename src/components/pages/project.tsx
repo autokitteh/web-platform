@@ -5,7 +5,6 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { useFileOperations } from "@src/hooks";
 import { useProjectValidationStore } from "@src/store";
-import { useCacheStore } from "@src/store/useCacheStore";
 import { calculatePathDepth } from "@utilities";
 
 import { IconSvg, Tab } from "@components/atoms";
@@ -19,7 +18,6 @@ export const Project = () => {
 	const { projectId } = useParams();
 	const { projectValidationState } = useProjectValidationStore();
 	const { fetchResources, openFileAsActive } = useFileOperations(projectId!);
-	const { fetchDeployments } = useCacheStore();
 
 	const activeTab = useMemo(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
@@ -45,11 +43,6 @@ export const Project = () => {
 			openDefaultFile(fileToOpen);
 		}
 	}, [fileToOpen, openDefaultFile]);
-
-	useEffect(() => {
-		fetchDeployments(projectId!);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const goTo = (path: string) => {
 		navigate(path.toLowerCase());
