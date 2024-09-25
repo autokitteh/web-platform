@@ -28,7 +28,7 @@ export function convertSessionProtoToViewerModel(protoSession: ProtoSession, con
 		inputs: protoSession.inputs,
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
-		triggerName: protoSession?.inputs?.trigger?.struct?.fields?.name?.string?.v || "",
-		eventType: protoSession?.inputs?.event?.struct?.fields?.type?.string?.v || "",
+		triggerName: JSON.parse(protoSession?.inputs?.trigger?.string?.v || "{}")?.name || "",
+		eventType: JSON.parse(protoSession?.inputs?.event?.string?.v || "{}")?.id || "",
 	};
 }
