@@ -1,30 +1,12 @@
 import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
-import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { DeploymentsService, LoggerService } from "@services";
 import { SessionsService } from "@services/sessions.service";
 import { minimumSessionLogsRecordsFrameHeightFallback, namespaces } from "@src/constants";
-import { Deployment } from "@src/types/models";
+import { CacheStore } from "@src/interfaces/store";
 
 import { useToastStore } from "@store";
-
-interface LoadingState {
-	logs: boolean;
-	deployments: boolean;
-}
-
-export interface CacheStore {
-	logs: ProtoSessionLogRecord[];
-	deployments?: Deployment[];
-	loading: LoadingState;
-	nextPageToken: string;
-	currentProjectId?: string;
-	reset: () => void;
-	reload: (sessionId: string) => void;
-	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
-	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;
-}
 
 const initialState: Pick<CacheStore, "logs" | "loading" | "nextPageToken" | "deployments" | "currentProjectId"> = {
 	logs: [],

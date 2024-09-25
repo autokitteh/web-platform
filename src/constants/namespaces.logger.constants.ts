@@ -17,7 +17,6 @@ export const namespaces = {
 	variableService: "Variable Service",
 	buildRuntimeEntrypoints: "Convert runtime to entrypoints",
 	eventsService: "Events Service",
-<<<<<<< HEAD
 	ui: {
 		loginPage: "Login Page",
 		deleteModal: "Delete Modal",
@@ -27,9 +26,6 @@ export const namespaces = {
 	},
 	stores: {
 		connectionCheckerStore: "Connection Checker Store",
-=======
-	stores: {
 		cache: "Cache Store",
->>>>>>> 921ef2ac (refactor: add error log in cache store)
 	},
 };
