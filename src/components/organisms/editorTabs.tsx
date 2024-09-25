@@ -187,7 +187,7 @@ export const EditorTabs = () => {
 								className="relative -right-4 -top-2 z-10 flex flex-col items-end whitespace-nowrap"
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
 							>
-								<div className="inline-flex gap-2 rounded-3xl border border-gray-1000 p-1 pl-2">
+								<div className="inline-flex gap-2 rounded-3xl border border-gray-1000 p-1">
 									<Button
 										className="whitespace-nowrap px-4 py-1"
 										disabled={loadingSave || autosave}
