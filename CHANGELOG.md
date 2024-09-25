@@ -1,3 +1,10 @@
+# [2.14.0](https://github.com/autokitteh/web-platform/compare/v2.13.1...v2.14.0) (2024-09-25)
+
+
+### Features
+
+* save opened files state ([#374](https://github.com/autokitteh/web-platform/issues/374)) ([12316cd](https://github.com/autokitteh/web-platform/commit/12316cd3b9de4f2305d0e1d701e0c7cdd1292a00))
+
 ## [2.13.1](https://github.com/autokitteh/web-platform/compare/v2.13.0...v2.13.1) (2024-09-25)
 
 
