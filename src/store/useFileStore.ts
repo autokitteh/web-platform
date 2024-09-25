@@ -89,4 +89,4 @@ const store: StateCreator<FileStore> = (set) => ({
 		}),
 });
 
-export const useFileStore = create(persist(immer(store), { name: StoreName.files }));
+export const useFileStore = create(persist(immer(store), { name: StoreName.files, version: 1 }));
