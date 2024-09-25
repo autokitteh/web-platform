@@ -111,7 +111,7 @@ export const EditorTabs = () => {
 			});
 			LoggerService.error(
 				namespaces.ui.projectCodeEditor,
-				tErrors("codeSaveFailed", { error: (error as Error).message })
+				tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
 			);
 		} finally {
 			setLoadingSave(false);
