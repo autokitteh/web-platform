@@ -3,21 +3,12 @@ import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { StoreName } from "@enums";
-
-interface FileState {
-	openFiles: Record<string, { isActive: boolean; name: string }[]>;
-	openProjectId: string;
-	setOpenProjectId: (projectId: string) => void;
-	setOpenFiles: (projectId: string, files: { isActive: boolean; name: string }[]) => void;
-	updateOpenedFiles: (fileName: string) => void;
-	closeOpenedFile: (fileName: string) => void;
-	openFileAsActive: (fileName: string) => void;
-}
+import { FileStore } from "@src/interfaces/store";
 
 const setActiveFile = (files: { isActive: boolean; name: string }[], fileName: string) =>
 	files.map((file) => ({ ...file, isActive: file.name === fileName }));
 
-const store: StateCreator<FileState> = (set) => ({
+const store: StateCreator<FileStore> = (set) => ({
 	openFiles: {},
 	openProjectId: "",
 	setOpenProjectId: (projectId) => set((state) => ({ ...state, openProjectId: projectId })),
@@ -46,23 +37,22 @@ const store: StateCreator<FileState> = (set) => ({
 
 			return state;
 		}),
-
 	closeOpenedFile: (fileName) =>
 		set((state) => {
-			const { openFiles, openProjectId } = state;
-			const projectFiles = openFiles[openProjectId];
-			if (!projectFiles) return state;
+			const files = state.openFiles[state.openProjectId];
+			if (!files) return state;
 
-			const index = projectFiles.findIndex((file) => file.name === fileName);
+			const index = files.findIndex((file) => file.name === fileName);
 			if (index === -1) return state;
 
-			const wasActive = projectFiles[index].isActive;
-			projectFiles.splice(index, 1);
+			const wasActive = files[index].isActive;
+			files.splice(index, 1);
 
-			if (!projectFiles.length) {
-				delete openFiles[openProjectId];
-			} else if (wasActive) {
-				projectFiles[0].isActive = true;
+			if (wasActive && files.length) {
+				files[0].isActive = true;
+			}
+			if (!files.length) {
+				delete state.openFiles[state.openProjectId];
 			}
 
 			return state;
