@@ -100,8 +100,8 @@ export const Sidebar = () => {
 
 					<div className="h-full" />
 
-					<Button className="hover:bg-transparent" href="/intro" title={t("intro")}>
-						<IconSvg className="size-7" src={HelpIcon} />
+					<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
+						<IconSvg className="size-7 transition group-hover:fill-gray-1000" src={HelpIcon} />
 
 						<AnimatePresence>
 							{isOpen ? (
@@ -121,7 +121,7 @@ export const Sidebar = () => {
 					{isAuthEnabled ? (
 						<div className="flex flex-col justify-end gap-5">
 							<div>
-								<Button className="hover:bg-transparent" href="/settings" title={t("settings")}>
+								<Button className="hover:bg-green-200" href="/settings" title={t("settings")}>
 									<SettingsIcon className="size-7" fill="black" />
 
 									<AnimatePresence>
@@ -140,7 +140,7 @@ export const Sidebar = () => {
 								</Button>
 
 								<Button
-									className="hover:bg-transparent"
+									className="hover:bg-green-200"
 									onClick={() => logoutFunction()}
 									title={t("logout")}
 								>
