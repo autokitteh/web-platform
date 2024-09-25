@@ -4,9 +4,7 @@ import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 
 import IndexedDBService from "@services/indexedDb.service";
-import { LoggerService } from "@services/logger.service";
 import { ProjectsService } from "@services/projects.service";
-import { namespaces } from "@src/constants";
 
 import { useFileStore, useProjectValidationStore, useToastStore } from "@store";
 
@@ -84,7 +82,6 @@ export function useFileOperations(projectId: string) {
 
 	const saveFile = useCallback(
 		async (name: string, content: string) => {
-			// eslint-disable-next-line no-useless-catch
 			try {
 				const contentUint8Array = new TextEncoder().encode(content);
 				await dbService.put(name, contentUint8Array);
@@ -93,15 +90,14 @@ export function useFileOperations(projectId: string) {
 				const { error } = await ProjectsService.setResources(projectId, resources);
 
 				if (error) {
-					LoggerService.error(
-						namespaces.resourcesService,
-						tErrors("resourcesFetchErrorExtended", { projectId, error: (error as Error).message })
-					);
-					throw error;
+					throw new Error(t("resourcesFetchError"));
 				}
 				setFileList({ isLoading: false, list: Object.keys(resources) });
 			} catch (error) {
-				throw error;
+				addToast({
+					message: error.message,
+					type: "error",
+				});
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,10 +123,10 @@ export function useFileOperations(projectId: string) {
 			const { error } = await ProjectsService.setResources(projectId, resources);
 
 			if (error) {
-				LoggerService.error(
-					namespaces.resourcesService,
-					tErrors("resourcesFetchErrorExtended", { projectId, error: (error as Error).message })
-				);
+				addToast({
+					message: t("resourcesFetchError"),
+					type: "error",
+				});
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
