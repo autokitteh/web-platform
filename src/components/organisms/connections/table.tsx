@@ -60,18 +60,13 @@ export const ConnectionsTable = () => {
 	}, []);
 
 	useEffect(() => {
+		fetchConnections();
 		setFetchConnectionsCallback(fetchConnections);
 
 		return () => {
 			resetChecker();
 			setFetchConnectionsCallback(null);
 		};
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		fetchConnections();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

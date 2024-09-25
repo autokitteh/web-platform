@@ -57,17 +57,12 @@ export const AddTrigger = () => {
 			setIsLoadingFiles(true);
 			try {
 				const resources = await fetchResources();
+				if (!resources) return;
 				const formattedResources = Object.keys(resources).map((name) => ({
 					label: name,
 					value: name,
 				}));
 				setFilesNameList(formattedResources);
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			} catch (error) {
-				addToast({
-					message: tErrors("resourcesFetchError"),
-					type: "error",
-				});
 			} finally {
 				setIsLoadingFiles(false);
 			}

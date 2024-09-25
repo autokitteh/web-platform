@@ -48,7 +48,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 
 		const projectId = data!.projectId;
 
-		navigate(`/${SidebarHrefMenu.projects}/${projectId}`, {
+		navigate(`/${SidebarHrefMenu.projects}/${projectId}/code`, {
 			state: { fileToOpen: defaultProjectFile },
 		});
 	};

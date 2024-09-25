@@ -17,7 +17,7 @@ export const Project = () => {
 	const location = useLocation();
 	const { projectId } = useParams();
 	const { projectValidationState } = useProjectValidationStore();
-	const { fetchResources, openFileAsActive } = useFileOperations(projectId!);
+	const { openFileAsActive } = useFileOperations(projectId!);
 
 	const activeTab = useMemo(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
@@ -31,11 +31,9 @@ export const Project = () => {
 
 	const openDefaultFile = useCallback(
 		async (filename: string) => {
-			await fetchResources();
 			openFileAsActive(filename);
-			navigate(location.pathname, { replace: true });
 		},
-		[fetchResources, openFileAsActive, navigate, location.pathname]
+		[openFileAsActive]
 	);
 
 	useEffect(() => {

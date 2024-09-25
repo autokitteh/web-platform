@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { isEmpty, orderBy } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -10,7 +10,7 @@ import { LoggerService } from "@services";
 import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
-import { useModalStore, useProjectValidationStore, useToastStore } from "@store";
+import { useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
@@ -19,23 +19,19 @@ import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
 export const CodeTable = () => {
-	const [isLoading, setIsLoading] = useState(true);
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "code&assets" });
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { checkState } = useProjectValidationStore();
 	const {
 		deleteFile,
-		fetchFiles,
-		fetchResources: fetchResourcesFromServer,
+		fetchResources,
+		fileList: { isLoading, list },
 		openFileAsActive,
 		openFiles,
 		saveFile,
 	} = useFileOperations(projectId!);
-
-	const [resources, setResources] = useState<Record<string, Uint8Array>>({});
 	const [isDragOver, setIsDragOver] = useState(false);
 
 	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
@@ -45,30 +41,10 @@ export const CodeTable = () => {
 		"stroke-green-800": isDragOver,
 	});
 
-	const fetchResources = async () => {
-		setIsLoading(true);
-		const resources = await fetchResourcesFromServer(true);
-		if (resources) {
-			checkState(projectId!, true);
-		}
-		setResources(resources);
-		setIsLoading(false);
-	};
-
-	const getResources = async () => {
-		setIsLoading(true);
-		const resources = await fetchFiles();
-		setResources(resources);
-		setIsLoading(false);
-	};
-
-	useEffect(() => {
-		fetchResources();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	const fileUpload = async (files: File[]) => {
 		try {
+			let firstFileLoaded = true;
+
 			for (const file of files) {
 				if (file.size > fileSizeUploadLimit) {
 					addToast({
@@ -88,8 +64,12 @@ export const CodeTable = () => {
 				}
 				const fileContent = await file.text();
 				await saveFile(file.name, fileContent);
+
+				if (firstFileLoaded) {
+					openFileAsActive(file.name);
+					firstFileLoaded = false;
+				}
 			}
-			fetchResources();
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
@@ -104,7 +84,9 @@ export const CodeTable = () => {
 	};
 
 	const activeBodyRow = (fileName: string) => {
-		const isActiveFile = openFiles.find(({ isActive, name }) => name === fileName && isActive);
+		const isActiveFile = projectId
+			? openFiles[projectId]?.find(({ isActive, name }) => name === fileName && isActive)
+			: undefined;
 
 		return cn({ "bg-black": isActiveFile });
 	};
@@ -128,14 +110,15 @@ export const CodeTable = () => {
 		if (selectedFile) {
 			fileUpload(selectedFile);
 		}
+
+		event.target.value = "";
 	};
 
 	const handleRemoveFile = async () => {
 		closeModal(ModalName.deleteFile);
 		try {
 			await deleteFile(selectedRemoveFileName);
-			getResources();
-			checkState(projectId!, true);
+
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
@@ -150,8 +133,7 @@ export const CodeTable = () => {
 		openModal(ModalName.deleteFile, name);
 	};
 
-	const resourcesEntries = Object.entries(resources);
-	const sortedResources = orderBy(resourcesEntries, ([name]) => name, "asc");
+	const sortedResources = orderBy(list, (name) => name, "asc");
 
 	const styleBase = cn("relative flex-1 rounded-xl duration-300", {
 		"mb-auto mt-auto flex items-center justify-center": isEmpty(sortedResources),
@@ -165,7 +147,7 @@ export const CodeTable = () => {
 		}
 	);
 
-	return isLoading ? (
+	return isLoading && isEmpty(sortedResources) ? (
 		<Loader isCenter size="xl" />
 	) : (
 		<div className="flex h-full flex-col">
@@ -215,8 +197,8 @@ export const CodeTable = () => {
 						</THead>
 
 						<TBody>
-							{sortedResources.map(([name], index) => (
-								<Tr className={activeBodyRow(name)} key={index} onClick={() => openFileAsActive(name)}>
+							{sortedResources.map((name) => (
+								<Tr className={activeBodyRow(name)} key={name} onClick={() => openFileAsActive(name)}>
 									<Td className="cursor-pointer font-medium">{name}</Td>
 
 									<Td className="max-w-12 pr-0">

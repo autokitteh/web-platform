@@ -11,3 +11,4 @@ export type {
 	ProjectValidationLevel,
 } from "@interfaces/store/projectValidationStore.interface";
 export type { CacheStore } from "@interfaces/store/cacheStore.interface";
+export type { FileStore } from "@interfaces/store/fileStore.interface";

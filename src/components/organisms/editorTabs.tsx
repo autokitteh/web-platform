@@ -21,13 +21,13 @@ export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
+	const { closeOpenedFile, fetchResources, getResources, openFileAsActive, openFiles, openProjectId, saveFile } =
+		useFileOperations(projectId!);
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const addToast = useToastStore((state) => state.addToast);
 
-	const { fetchFiles } = useFileOperations(projectId!);
-
-	const activeEditorFileName = openFiles?.find(({ isActive }: { isActive: boolean }) => isActive)?.name || "";
+	const activeEditorFileName =
+		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
@@ -35,11 +35,9 @@ export const EditorTabs = () => {
 	const [autosave, setAutosave] = useState(true);
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
+	const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-	const loadContent = async () => {
-		const resources = await fetchFiles();
-
-		const resource = resources[activeEditorFileName];
+	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (resource) {
 			const byteArray = Array.from(resource);
 			setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
@@ -48,8 +46,26 @@ export const EditorTabs = () => {
 		}
 	};
 
+	const loadContent = async () => {
+		const resources = await fetchResources(true);
+		const resource = resources?.[activeEditorFileName];
+		updateContentFromResource(resource);
+	};
+
+	const loadFileResource = async () => {
+		const resources = await getResources();
+		const resource = resources?.[activeEditorFileName];
+		updateContentFromResource(resource);
+	};
+
 	useEffect(() => {
-		loadContent();
+		if (isFirstLoad || openProjectId !== projectId) {
+			loadContent();
+			setIsFirstLoad(false);
+
+			return;
+		}
+		loadFileResource();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
 
@@ -137,10 +153,13 @@ export const EditorTabs = () => {
 		}
 	};
 
-	const activeCloseIcon = (fileName: string) =>
-		cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
-			"opacity-100": openFiles.find(({ isActive, name }) => name === fileName && isActive),
+	const activeCloseIcon = (fileName: string) => {
+		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
+
+		return cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
+			"opacity-100": isActiveFile,
 		});
+	};
 
 	const handleCloseButtonClick = (
 		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
@@ -161,28 +180,30 @@ export const EditorTabs = () => {
 								`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
 							}
 						>
-							{openFiles?.map(({ name }) => (
-								<Tab
-									activeTab={activeEditorFileName}
-									className="group flex items-center gap-1"
-									key={name}
-									onClick={() => openFileAsActive(name)}
-									value={name}
-								>
-									{name}
+							{projectId
+								? openFiles[projectId]?.map(({ name }) => (
+										<Tab
+											activeTab={activeEditorFileName}
+											className="group flex items-center gap-1"
+											key={name}
+											onClick={() => openFileAsActive(name)}
+											value={name}
+										>
+											{name}
 
-									<IconButton
-										ariaLabel={t("buttons.ariaCloseFile")}
-										className={activeCloseIcon(name)}
-										onClick={(event) => handleCloseButtonClick(event, name)}
-									>
-										<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-									</IconButton>
-								</Tab>
-							))}
+											<IconButton
+												ariaLabel={t("buttons.ariaCloseFile")}
+												className={activeCloseIcon(name)}
+												onClick={(event) => handleCloseButtonClick(event, name)}
+											>
+												<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
+											</IconButton>
+										</Tab>
+									))
+								: null}
 						</div>
 
-						{openFiles.length ? (
+						{openFiles[projectId]?.length ? (
 							<div
 								className="relative -right-4 -top-2 z-10 flex flex-col items-end whitespace-nowrap"
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}

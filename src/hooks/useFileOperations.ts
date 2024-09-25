@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 
 import IndexedDBService from "@services/indexedDb.service";
@@ -7,63 +8,89 @@ import { LoggerService } from "@services/logger.service";
 import { ProjectsService } from "@services/projects.service";
 import { namespaces } from "@src/constants";
 
-import { useFileStore } from "@store";
+import { useFileStore, useProjectValidationStore, useToastStore } from "@store";
 
 const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export function useFileOperations(projectId: string) {
 	const { t: tErrors } = useTranslation("errors");
-	const { closeOpenedFile, openFileAsActive, openFiles, openProjectId, setOpenFiles, setOpenProjectId } =
-		useFileStore((state) => ({
-			setOpenFiles: state.setOpenFiles,
-			closeOpenedFile: state.closeOpenedFile,
-			openProjectId: state.openProjectId,
-			setOpenProjectId: state.setOpenProjectId,
-			openFiles: state.openFiles,
-			openFileAsActive: state.openFileAsActive,
-		}));
+	const {
+		closeOpenedFile,
+		fileList,
+		openFileAsActive,
+		openFiles,
+		openProjectId,
+		setFileList,
+		setOpenFiles,
+		setOpenProjectId,
+	} = useFileStore();
+	const { checkState } = useProjectValidationStore();
+	const addToast = useToastStore((state) => state.addToast);
 
-	const fetchFiles = useCallback(async () => await dbService.getAll(), []);
+	const getResources = useCallback(async () => await dbService.getAll(), []);
 
 	const fetchResources = async (clearStore?: boolean) => {
 		try {
+			setFileList({ isLoading: true });
 			const { data, error } = await ProjectsService.getResources(projectId);
-			if (error) throw new Error((error as Error).message);
+
+			if (error) {
+				return;
+			}
 			if (clearStore) {
 				await dbService.clearStore();
 			}
 			for (const [name, content] of Object.entries(data || {})) {
 				await dbService.put(name, new Uint8Array(content));
 			}
+			const resources = await dbService.getAll();
+			if (resources) {
+				checkState(projectId!, true);
+				setFileList({ isLoading: false, list: Object.keys(resources) });
+			}
 
-			return await fetchFiles();
+			return resources;
 		} catch (error) {
-			console.error("Failed to sync resources from server:", error);
-			throw error;
+			addToast({
+				message: t("resourcesFetchError"),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.resourcesService,
+				t("resourcesFetchErrorExtended", { projectId, error: error.message })
+			);
+
+			return;
+		} finally {
+			setFileList({ isLoading: false });
 		}
 	};
 
 	const saveFile = useCallback(
 		async (name: string, content: string) => {
-			// eslint-disable-next-line no-useless-catch
 			try {
 				const contentUint8Array = new TextEncoder().encode(content);
 				await dbService.put(name, contentUint8Array);
 				const resources = await dbService.getAll();
 
 				const { error } = await ProjectsService.setResources(projectId, resources);
-
+				checkState(projectId!, true);
 				if (error) {
-					LoggerService.error(
-						namespaces.resourcesService,
-						tErrors("resourcesFetchErrorExtended", { projectId, error: (error as Error).message })
-					);
-					throw error;
+					return;
 				}
+				setFileList({ isLoading: false, list: Object.keys(resources) });
 			} catch (error) {
-				throw error;
+				addToast({
+					message: t("resourcesFetchError"),
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.resourcesService,
+					t("resourcesFetchErrorExtended", { projectId, error: error.message })
+				);
 			}
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectId, tErrors]
 	);
 
@@ -79,13 +106,22 @@ export function useFileOperations(projectId: string) {
 
 	const deleteFile = useCallback(
 		async (name: string) => {
+			setFileList({ isLoading: true });
 			await dbService.delete(name);
 			closeOpenedFile(name);
 			const resources = await dbService.getAll();
-
-			await ProjectsService.setResources(projectId, resources);
+			const { error } = await ProjectsService.setResources(projectId, resources);
+			setFileList({ isLoading: false, list: Object.keys(resources) });
+			checkState(projectId!, true);
+			if (error) {
+				addToast({
+					message: t("resourcesFetchError"),
+					type: "error",
+				});
+			}
 		},
-		[projectId, closeOpenedFile]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[closeOpenedFile, projectId]
 	);
 
 	const addFile = useCallback(
@@ -96,16 +132,16 @@ export function useFileOperations(projectId: string) {
 				[name]: fileContent,
 			};
 			const { error } = await ProjectsService.setResources(projectId, resourcesWithAddedFile);
+			checkState(projectId!, true);
 			if (error) {
 				throw error;
 			}
 			dbService.put(name, fileContent);
 		},
-		[projectId]
+		[checkState, projectId]
 	);
 
 	return {
-		fetchFiles,
 		saveFile,
 		saveAllFiles,
 		deleteFile,
@@ -117,5 +153,8 @@ export function useFileOperations(projectId: string) {
 		openFileAsActive,
 		closeOpenedFile,
 		addFile,
+		setFileList,
+		fileList,
+		getResources,
 	};
 }

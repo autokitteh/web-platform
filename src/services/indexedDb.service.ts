@@ -11,7 +11,7 @@ class IndexedDBService {
 	}
 
 	async InitDB() {
-		const storeName = this.storeName; // Capture storeName in a closure
+		const storeName = this.storeName;
 		this.db = await openDB(this.dbName, 1, {
 			upgrade(db) {
 				if (!db.objectStoreNames.contains(storeName)) {
