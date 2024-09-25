@@ -63,11 +63,6 @@ export const AddTrigger = () => {
 					value: name,
 				}));
 				setFilesNameList(formattedResources);
-			} catch (error) {
-				addToast({
-					message: error.message,
-					type: "error",
-				});
 			} finally {
 				setIsLoadingFiles(false);
 			}

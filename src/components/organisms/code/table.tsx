@@ -197,8 +197,8 @@ export const CodeTable = () => {
 						</THead>
 
 						<TBody>
-							{sortedResources.map((name, index) => (
-								<Tr className={activeBodyRow(name)} key={index} onClick={() => openFileAsActive(name)}>
+							{sortedResources.map((name) => (
+								<Tr className={activeBodyRow(name)} key={name} onClick={() => openFileAsActive(name)}>
 									<Td className="cursor-pointer font-medium">{name}</Td>
 
 									<Td className="max-w-12 pr-0">

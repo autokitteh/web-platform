@@ -4,7 +4,9 @@ import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 
 import IndexedDBService from "@services/indexedDb.service";
+import { LoggerService } from "@services/logger.service";
 import { ProjectsService } from "@services/projects.service";
+import { namespaces } from "@src/constants";
 
 import { useFileStore, useProjectValidationStore, useToastStore } from "@store";
 
@@ -33,11 +35,6 @@ export function useFileOperations(projectId: string) {
 			const { data, error } = await ProjectsService.getResources(projectId);
 
 			if (error) {
-				addToast({
-					message: t("resourcesFetchError"),
-					type: "error",
-				});
-
 				return;
 			}
 			if (clearStore) {
@@ -53,6 +50,17 @@ export function useFileOperations(projectId: string) {
 			}
 
 			return resources;
+		} catch (error) {
+			addToast({
+				message: t("resourcesFetchError"),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.resourcesService,
+				t("resourcesFetchError", { projectId, error: error.message })
+			);
+
+			return;
 		} finally {
 			setFileList({ isLoading: false });
 		}
@@ -68,14 +76,18 @@ export function useFileOperations(projectId: string) {
 				const { error } = await ProjectsService.setResources(projectId, resources);
 				checkState(projectId!, true);
 				if (error) {
-					throw new Error(t("resourcesFetchError"));
+					return;
 				}
 				setFileList({ isLoading: false, list: Object.keys(resources) });
 			} catch (error) {
 				addToast({
-					message: error.message,
+					message: t("resourcesFetchError"),
 					type: "error",
 				});
+				LoggerService.error(
+					namespaces.resourcesService,
+					t("resourcesFetchError", { projectId, error: error.message })
+				);
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
