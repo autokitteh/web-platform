@@ -1,3 +1,10 @@
+# [2.13.0](https://github.com/autokitteh/web-platform/compare/v2.12.0...v2.13.0) (2024-09-25)
+
+
+### Features
+
+* cache deployments in zustand ([#378](https://github.com/autokitteh/web-platform/issues/378)) ([6b96a6d](https://github.com/autokitteh/web-platform/commit/6b96a6d06b403d84f7f63c2fe116e68c7e55d7c9))
+
 # [2.12.0](https://github.com/autokitteh/web-platform/compare/v2.11.1...v2.12.0) (2024-09-25)
 
 
