@@ -9,11 +9,12 @@ import { SubmenuInfo } from "@interfaces/components";
 
 import { useUserStore } from "@store";
 
-import { Button, Loader } from "@components/atoms";
+import { Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
+import { HelpIcon } from "@assets/image/icons";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
@@ -97,10 +98,30 @@ export const Sidebar = () => {
 						/>
 					</div>
 
+					<div className="h-full" />
+
+					<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
+						<IconSvg className="size-7 transition" src={HelpIcon} />
+
+						<AnimatePresence>
+							{isOpen ? (
+								<motion.span
+									animate="visible"
+									className="overflow-hidden whitespace-nowrap"
+									exit="hidden"
+									initial="hidden"
+									variants={animateVariant}
+								>
+									{t("intro")}
+								</motion.span>
+							) : null}
+						</AnimatePresence>
+					</Button>
+
 					{isAuthEnabled ? (
 						<div className="flex flex-col justify-end gap-5">
 							<div>
-								<Button className="hover:bg-transparent" href="/settings" title={t("settings")}>
+								<Button className="hover:bg-green-200" href="/settings" title={t("settings")}>
 									<SettingsIcon className="size-7" fill="black" />
 
 									<AnimatePresence>
@@ -119,7 +140,7 @@ export const Sidebar = () => {
 								</Button>
 
 								<Button
-									className="hover:bg-transparent"
+									className="hover:bg-green-200"
 									onClick={() => logoutFunction()}
 									title={t("logout")}
 								>
