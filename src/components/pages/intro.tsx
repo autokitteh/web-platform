@@ -3,7 +3,7 @@ import React from "react";
 import { useResize } from "@src/hooks";
 
 import { Frame } from "@components/atoms";
-import { DashboardTopbar, DashboardWelcomeMainBlock } from "@components/organisms";
+import { DashboardTopbar, IntroMainBlock } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
 
 import { CatDashboardImage } from "@assets/image";
@@ -17,7 +17,7 @@ export const Intro = () => {
 				<Frame className="flex-1 rounded-r-none bg-gray-1100">
 					<DashboardTopbar />
 
-					<DashboardWelcomeMainBlock />
+					<IntroMainBlock />
 				</Frame>
 
 				<CatDashboardImage className="absolute -bottom-6 -right-5 hidden minHeightLg:block" />

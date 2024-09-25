@@ -12,7 +12,7 @@ import { useProjectStore, useToastStore } from "@store";
 import { Button, IconSvg, Spinner, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 
-import { StartFromTemplateImage } from "@assets/image";
+import { OrStartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardProjectsTable = () => {
@@ -83,7 +83,7 @@ export const DashboardProjectsTable = () => {
 				</Button>
 
 				<div className="relative ml-5 mt-4">
-					<StartFromTemplateImage />
+					<OrStartFromTemplateImage />
 
 					<ArrowStartTemplateIcon className="absolute -top-4 left-52" />
 				</div>

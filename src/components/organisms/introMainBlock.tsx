@@ -7,19 +7,23 @@ import { meowWorldProjectName } from "@src/constants";
 import { infoCardPythonCode, infoCardVSCode } from "@src/constants/lists";
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useModalStore } from "@src/store";
+import { useModalStore, useProjectStore } from "@src/store";
 
 import { Button, IconButton, IconSvg, Link, Spinner, Typography } from "@components/atoms";
 import { WelcomeInfoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
 
-import { OrStartFromTemplateImage, ProjectsIcon } from "@assets/image";
+import { OrStartFromTemplateImage, ProjectsIcon, StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
 
-export const DashboardWelcomeMainBlock = () => {
+export const IntroMainBlock = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { openModal } = useModalStore();
 	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
 	const [creatingTemplate, setCreatingTemplate] = useState(false);
+
+	const { projectsList } = useProjectStore();
+
+	const meowWorldExist = projectsList.find((project) => project.name === meowWorldProjectName);
 
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });
@@ -65,24 +69,34 @@ export const DashboardWelcomeMainBlock = () => {
 					</div>
 					<div className="mt-10">
 						<div className="flex flex-col items-center justify-center gap-1">
-							<Typography className="font-semibold text-gray-500" element="p">
-								{t("cards.main.startWithDemoProject")}
-							</Typography>
+							{meowWorldExist ? null : (
+								<Typography className="font-semibold text-gray-500" element="p">
+									{t("cards.main.startWithDemoProject")}
+								</Typography>
+							)}
 
-							<Button
-								ariaLabel={t("cards.main.meowWorld")}
-								className="min-w-64 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
-								onClick={() => createProjectFromAsset(meowWorldProjectName)}
-							>
-								<IconSvg size="lg" src={!creatingTemplate ? ProjectsIcon : Spinner} />
-								{t("cards.main.meowWorld")}
-							</Button>
+							{meowWorldExist ? null : (
+								<Button
+									ariaLabel={t("cards.main.meowWorld")}
+									className="min-w-64 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
+									onClick={() => createProjectFromAsset(meowWorldProjectName)}
+								>
+									<IconSvg size="lg" src={!creatingTemplate ? ProjectsIcon : Spinner} />
+									{t("cards.main.meowWorld")}
+								</Button>
+							)}
 						</div>
 
 						<div className="relative left-1/2 mt-2 inline-block w-full -translate-x-1/2 2xl:w-auto">
-							<OrStartFromTemplateImage className="m-auto" />
+							{meowWorldExist ? (
+								<StartFromTemplateImage className="ml-auto w-11/12" />
+							) : (
+								<div>
+									<OrStartFromTemplateImage className="m-auto" />
 
-							<ArrowStartTemplateIcon className="absolute -bottom-8 left-auto right-0 top-auto 2xl:-top-4 2xl:left-52" />
+									<ArrowStartTemplateIcon className="absolute -bottom-8 left-auto right-0 top-auto 2xl:-top-4 2xl:left-52" />
+								</div>
+							)}
 						</div>
 					</div>
 				</div>

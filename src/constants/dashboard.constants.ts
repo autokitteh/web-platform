@@ -25,6 +25,8 @@ const hiddenTemplateProjectsCategories = [
 	},
 ];
 
+export const meowWorldProjectName = "quickstart";
+
 export const templateProjectsCategories: TemplateCategory[] = [
 	{
 		name: "DevOps",
