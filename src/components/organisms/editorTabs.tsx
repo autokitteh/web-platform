@@ -36,7 +36,7 @@ export const EditorTabs = () => {
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 
-	const updateContentFromResource = (resource: Uint8Array) => {
+	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (resource) {
 			const byteArray = Array.from(resource);
 			setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
@@ -47,19 +47,15 @@ export const EditorTabs = () => {
 
 	const loadContent = async () => {
 		if (openProjectId === projectId) return;
-
 		const resources = await fetchResources(true);
-		if (!resources) return;
-		const resource = resources[activeEditorFileName];
+		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
 	};
 
 	const loadFileResource = async () => {
 		const resources = await getResources();
-		const resource = resources[activeEditorFileName];
-		if (resource) {
-			updateContentFromResource(resource);
-		}
+		const resource = resources?.[activeEditorFileName];
+		updateContentFromResource(resource);
 	};
 
 	useEffect(() => {
@@ -70,7 +66,9 @@ export const EditorTabs = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
 
-	useEffect(() => {}, [projectId]);
+	useEffect(() => {
+		setLastSaved(undefined);
+	}, [projectId]);
 
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("myCustomTheme", {
