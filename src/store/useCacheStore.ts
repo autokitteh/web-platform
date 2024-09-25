@@ -2,9 +2,9 @@ import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
-import { DeploymentsService } from "@services";
+import { DeploymentsService, LoggerService } from "@services";
 import { SessionsService } from "@services/sessions.service";
-import { minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
+import { minimumSessionLogsRecordsFrameHeightFallback, namespaces } from "@src/constants";
 import { Deployment } from "@src/types/models";
 
 import { useToastStore } from "@store";
@@ -71,13 +71,18 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			}));
 
 			return incomingDeployments;
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
+			const errorLog = i18n.t("errorFetchingDeploymentsExtended", {
+				ns: "errors",
+				error: (error as Error).message,
+			});
 			useToastStore.getState().addToast({
 				message: errorMsg,
 				type: "error",
 			});
+			LoggerService.error(namespaces.stores.cache, errorLog);
+
 			set((state) => ({ ...state, loading: { ...state.loading, deployments: false } }));
 		}
 	},
