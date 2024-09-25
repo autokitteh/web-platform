@@ -37,6 +37,7 @@ const store: StateCreator<FileStore> = (set) => ({
 
 			return state;
 		}),
+
 	closeOpenedFile: (fileName) =>
 		set((state) => {
 			const files = state.openFiles[state.openProjectId];

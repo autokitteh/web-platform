@@ -21,11 +21,9 @@ export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
+	const { closeOpenedFile, fetchResources, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const addToast = useToastStore((state) => state.addToast);
-
-	const { fetchFiles } = useFileOperations(projectId!);
 
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
@@ -38,7 +36,7 @@ export const EditorTabs = () => {
 	const [lastSaved, setLastSaved] = useState<string>();
 
 	const loadContent = async () => {
-		const resources = await fetchFiles();
+		const resources = await fetchResources(true);
 
 		const resource = resources[activeEditorFileName];
 		if (resource) {

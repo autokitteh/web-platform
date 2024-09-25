@@ -28,6 +28,7 @@ export function useFileOperations(projectId: string) {
 	const fetchResources = async (clearStore?: boolean) => {
 		try {
 			const { data, error } = await ProjectsService.getResources(projectId);
+
 			if (error) throw new Error((error as Error).message);
 			if (clearStore) {
 				await dbService.clearStore();
