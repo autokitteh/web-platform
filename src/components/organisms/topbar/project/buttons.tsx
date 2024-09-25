@@ -35,7 +35,7 @@ export const ProjectTopbarButtons = () => {
 	const { fetchDeployments } = useCacheStore();
 	const { getResources } = useFileOperations(projectId!);
 
-	const fetchAndCheckResources = useCallback(async () => {
+	const fetchResources = useCallback(async () => {
 		const resources = await getResources();
 		if (!Object.keys(resources).length) {
 			addToast({
@@ -52,7 +52,7 @@ export const ProjectTopbarButtons = () => {
 	}, [getResources]);
 
 	const build = useCallback(async () => {
-		const resources = await fetchAndCheckResources();
+		const resources = await fetchResources();
 		if (!resources) return;
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
@@ -71,12 +71,14 @@ export const ProjectTopbarButtons = () => {
 			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccess"));
 		}
 
+		fetchDeployments(projectId!, true);
+
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const deploy = useCallback(async () => {
-		const resources = await fetchAndCheckResources();
+		const resources = await fetchResources();
 		if (!resources) return;
 
 		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
