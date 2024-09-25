@@ -1,3 +1,10 @@
+## [2.13.1](https://github.com/autokitteh/web-platform/compare/v2.13.0...v2.13.1) (2024-09-25)
+
+
+### Bug Fixes
+
+* success message on created connection ([#385](https://github.com/autokitteh/web-platform/issues/385)) ([f5ab5fd](https://github.com/autokitteh/web-platform/commit/f5ab5fdd1e231cbf3f9e0b6c7f65f09cdb462e7f))
+
 # [2.13.0](https://github.com/autokitteh/web-platform/compare/v2.12.0...v2.13.0) (2024-09-25)
 
 
