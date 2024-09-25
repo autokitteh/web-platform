@@ -43,6 +43,8 @@ export const CodeTable = () => {
 
 	const fileUpload = async (files: File[]) => {
 		try {
+			let firstFileLoaded = true;
+
 			for (const file of files) {
 				if (file.size > fileSizeUploadLimit) {
 					addToast({
@@ -62,6 +64,11 @@ export const CodeTable = () => {
 				}
 				const fileContent = await file.text();
 				await saveFile(file.name, fileContent);
+
+				if (firstFileLoaded) {
+					openFileAsActive(file.name);
+					firstFileLoaded = false;
+				}
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
@@ -103,6 +110,8 @@ export const CodeTable = () => {
 		if (selectedFile) {
 			fileUpload(selectedFile);
 		}
+
+		event.target.value = "";
 	};
 
 	const handleRemoveFile = async () => {
