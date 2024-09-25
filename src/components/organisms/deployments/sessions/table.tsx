@@ -8,8 +8,9 @@ import { ListOnItemsRenderedProps } from "react-window";
 import { namespaces } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
-import { DeploymentsService, LoggerService, SessionsService } from "@services";
+import { LoggerService, SessionsService } from "@services";
 import { useResize } from "@src/hooks";
+import { useCacheStore } from "@src/store/useCacheStore";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
@@ -37,6 +38,7 @@ export const SessionsTable = () => {
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
 
 	const frameClass = useMemo(
 		() =>
@@ -97,20 +99,9 @@ export const SessionsTable = () => {
 			return;
 		}
 
-		const { data, error } = await DeploymentsService.listByProjectId(projectId!);
-		if (error) {
-			addToast({
-				message: tErrors("deploymentFetchError", { ns: "services" }),
-				type: "error",
-			});
+		const deployments = await reloadDeploymentsCache(projectId, true);
 
-			return;
-		}
-		if (!data?.length) {
-			return;
-		}
-
-		const deployment = data.find((deployment) => deployment.deploymentId === deploymentId);
+		const deployment = deployments?.find((deployment) => deployment.deploymentId === deploymentId);
 
 		if (isEqual(deployment?.sessionStats, sessionStats) || !deployment?.sessionStats) {
 			return;
