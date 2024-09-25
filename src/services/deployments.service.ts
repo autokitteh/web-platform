@@ -18,9 +18,14 @@ export class DeploymentsService {
 
 			return { data: activateResponse, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
+			const errorMessage = i18n.t("deployments.activateFailed", {
+				deploymentId,
+				error,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.deploymentsService, errorMessage);
 
-			return { data: undefined, error };
+			return { data: undefined, error: errorMessage };
 		}
 	}
 
@@ -30,9 +35,15 @@ export class DeploymentsService {
 
 			return { data: createResponse.deploymentId, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
+			const errorMessage = i18n.t("deployments.createFailed", {
+				buildId: deployment.buildId,
+				envId: deployment.envId,
+				error,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.deploymentsService, errorMessage);
 
-			return { data: undefined, error };
+			return { data: undefined, error: errorMessage };
 		}
 	}
 
@@ -42,7 +53,12 @@ export class DeploymentsService {
 
 			return { data: deactivateResponse, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
+			const errorMessage = i18n.t("deployments.deactivateFailed", {
+				deploymentId,
+				error,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.deploymentsService, errorMessage);
 
 			return { data: undefined, error };
 		}
