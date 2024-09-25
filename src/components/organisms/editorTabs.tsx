@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
-import { last } from "lodash";
+import { debounce, last } from "lodash";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -11,7 +11,7 @@ import { LoggerService } from "@services";
 import { useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
-import { useAutosave, useEditorContent, useFileOperations, useSaveState } from "@hooks";
+import { useFileOperations } from "@hooks";
 
 import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
 
@@ -27,39 +27,37 @@ export const EditorTabs = () => {
 
 	const { fetchFiles } = useFileOperations(projectId!);
 
-	const [content, setContent] = useEditorContent();
-	const [autosave, toggleAutosave] = useAutosave(true);
-	const [loadingSave, lastSaved, updateSaveState] = useSaveState();
-
-	const activeEditorFileName = openFiles?.find(({ isActive }) => isActive)?.name || "";
+	const activeEditorFileName = openFiles?.find(({ isActive }: { isActive: boolean }) => isActive)?.name || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
-	const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const [content, setContent] = useState<string>("");
+	const [autosave, setAutosave] = useState(true);
+	const [loadingSave, setLoadingSave] = useState(false);
+	const [lastSaved, setLastSaved] = useState<string>();
 
-	const noFileText = tTabsEditor("noFileText");
-
-	const loadContent = useCallback(async () => {
+	const loadContent = async () => {
 		const resources = await fetchFiles();
+
 		const resource = resources[activeEditorFileName];
 		if (resource) {
 			const byteArray = Array.from(resource);
 			setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
 		} else {
-			setContent(noFileText);
+			setContent(t("noFileText"));
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [setContent]);
+	};
 
 	useEffect(() => {
 		loadContent();
-	}, [loadContent, projectId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeEditorFileName, projectId]);
 
 	useEffect(() => {
-		updateSaveState(false, undefined);
-	}, [projectId, updateSaveState]);
+		setLastSaved(undefined);
+	}, [projectId]);
 
-	const handleEditorWillMount = useCallback((monaco: Monaco) => {
+	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("myCustomTheme", {
 			base: "vs-dark",
 			colors: {
@@ -68,13 +66,13 @@ export const EditorTabs = () => {
 			inherit: true,
 			rules: [],
 		});
-	}, []);
+	};
 
-	const handleEditorDidMount = useCallback((_editor: unknown, monaco: Monaco) => {
+	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
 		monaco.editor.setTheme("myCustomTheme");
-	}, []);
+	};
 
-	const saveContent = useCallback(async (contentToSave: string) => {
+	const updateContent = async (newContent?: string) => {
 		const handleError = (key: string, options?: Record<string, unknown>) => {
 			addToast({
 				message: tErrors("codeSaveFailed"),
@@ -95,16 +93,17 @@ export const EditorTabs = () => {
 			return;
 		}
 
-		if (contentToSave === noFileText || contentToSave === undefined) {
+		if (newContent === t("noFileText") || newContent === undefined) {
 			handleError("codeSaveFailedMissingContent", { projectId });
 
 			return;
 		}
 
-		updateSaveState(true);
+		setLoadingSave(true);
 		try {
-			await saveFile(activeEditorFileName, contentToSave);
-			updateSaveState(false, moment().utc().format("YYYY-MM-DD HH:mm:ss"));
+			await saveFile(activeEditorFileName, newContent);
+			setContent(newContent);
+			setLastSaved(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
 		} catch (error) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
@@ -112,91 +111,78 @@ export const EditorTabs = () => {
 			});
 			LoggerService.error(
 				namespaces.ui.projectCodeEditor,
-				tErrors("codeSaveFailedExtended", { error: (error as Error).message })
+				tErrors("codeSaveFailed", { error: (error as Error).message })
 			);
 		} finally {
-			updateSaveState(false);
+			setLoadingSave(false);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	};
 
-	const debouncedSaveContent = useCallback(
-		(newContent: string) => {
-			if (saveTimeoutRef.current) {
-				clearTimeout(saveTimeoutRef.current);
-			}
-			saveTimeoutRef.current = setTimeout(() => {
-				saveContent(newContent);
-			}, 1500);
-		},
-		[saveContent]
-	);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const debouncedSaveContent = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
+		projectId,
+		activeEditorFileName,
+	]);
 
-	const handleUpdateContent = useCallback(
-		(newContent?: string) => {
-			if (newContent === undefined) {
-				setContent("");
+	const handleUpdateContent = (newContent?: string) => {
+		if (!newContent) {
+			setContent("");
 
-				return;
-			}
+			return;
+		}
 
-			setContent(newContent);
+		setContent(newContent);
 
-			if (autosave && newContent !== noFileText) {
-				debouncedSaveContent(newContent);
-			}
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[autosave]
-	);
+		if (autosave && newContent !== tTabsEditor("noFileText")) {
+			debouncedUpdateContent(newContent);
+		}
+	};
 
-	const activeCloseIcon = useCallback(
-		(fileName: string) =>
-			cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
-				"opacity-100": openFiles.find(({ isActive, name }) => name === fileName && isActive),
-			}),
-		[openFiles]
-	);
+	const activeCloseIcon = (fileName: string) =>
+		cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
+			"opacity-100": openFiles.find(({ isActive, name }) => name === fileName && isActive),
+		});
 
-	const handleCloseButtonClick = useCallback(
-		(event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>, name: string): void => {
-			event.stopPropagation();
-			closeOpenedFile(name);
-		},
-		[closeOpenedFile]
-	);
-
-	const memoizedTabs = useMemo(
-		() =>
-			openFiles?.map(({ name }) => (
-				<Tab
-					activeTab={activeEditorFileName}
-					className="group flex items-center gap-1"
-					key={name}
-					onClick={() => openFileAsActive(name)}
-					value={name}
-				>
-					{name}
-
-					<IconButton
-						ariaLabel={t("buttons.ariaCloseFile")}
-						className={activeCloseIcon(name)}
-						onClick={(event) => handleCloseButtonClick(event, name)}
-					>
-						<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-					</IconButton>
-				</Tab>
-			)),
-		[openFiles, activeEditorFileName, t, activeCloseIcon, openFileAsActive, handleCloseButtonClick]
-	);
+	const handleCloseButtonClick = (
+		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
+		name: string
+	): void => {
+		event.stopPropagation();
+		closeOpenedFile(name);
+	};
 
 	return (
 		<div className="relative flex h-full flex-col pt-11">
 			{projectId ? (
 				<>
 					<div className="absolute left-0 top-0 flex w-full justify-between">
-						<div className="scrollbar xl:gap-2 flex h-8 select-none items-center gap-1 overflow-x-auto overflow-y-hidden whitespace-nowrap 2xl:gap-4 3xl:gap-5">
-							{memoizedTabs}
+						<div
+							className={
+								`flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
+								`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
+							}
+						>
+							{openFiles?.map(({ name }) => (
+								<Tab
+									activeTab={activeEditorFileName}
+									className="group flex items-center gap-1"
+									key={name}
+									onClick={() => openFileAsActive(name)}
+									value={name}
+								>
+									{name}
+
+									<IconButton
+										ariaLabel={t("buttons.ariaCloseFile")}
+										className={activeCloseIcon(name)}
+										onClick={(event) => handleCloseButtonClick(event, name)}
+									>
+										<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
+									</IconButton>
+								</Tab>
+							))}
 						</div>
 
 						{openFiles.length ? (
@@ -205,20 +191,24 @@ export const EditorTabs = () => {
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
 							>
 								<div className="inline-flex gap-2 rounded-3xl border border-gray-1000 p-1">
-									{!autosave ? (
+									{autosave ? null : (
 										<Button
 											className="whitespace-nowrap px-4 py-1"
 											disabled={loadingSave || autosave}
-											onClick={() => saveContent(content)}
+											onClick={() => debouncedSaveContent(content)}
 											variant="filledGray"
 										>
 											<IconSvg className="fill-white" src={!loadingSave ? SaveIcon : Spinner} />
 
 											<div className="mt-0.5">{t("buttons.save")}</div>
 										</Button>
-									) : null}
+									)}
 
-									<Checkbox checked={autosave} label={t("autoSave")} onChange={toggleAutosave} />
+									<Checkbox
+										checked={autosave}
+										label={t("autoSave")}
+										onChange={() => setAutosave(!autosave)}
+									/>
 								</div>
 							</div>
 						) : null}
@@ -236,7 +226,7 @@ export const EditorTabs = () => {
 							minimap: {
 								enabled: false,
 							},
-							readOnly: content === noFileText,
+							readOnly: content === t("noFileText"),
 							renderLineHighlight: "none",
 							scrollBeyondLastLine: false,
 							wordWrap: "on",
