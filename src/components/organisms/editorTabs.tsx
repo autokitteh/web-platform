@@ -21,7 +21,8 @@ export const EditorTabs = () => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, fetchResources, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
+	const { closeOpenedFile, fetchResources, getResources, openFileAsActive, openFiles, openProjectId, saveFile } =
+		useFileOperations(projectId!);
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -35,9 +36,7 @@ export const EditorTabs = () => {
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 
-	const loadContent = async () => {
-		const resources = await fetchResources(true);
-		const resource = resources[activeEditorFileName];
+	const updateContentFromResource = (resource: Uint8Array) => {
 		if (resource) {
 			const byteArray = Array.from(resource);
 			setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
@@ -46,14 +45,32 @@ export const EditorTabs = () => {
 		}
 	};
 
+	const loadContent = async () => {
+		if (openProjectId === projectId) return;
+
+		const resources = await fetchResources(true);
+		if (!resources) return;
+		const resource = resources[activeEditorFileName];
+		updateContentFromResource(resource);
+	};
+
+	const loadFileResource = async () => {
+		const resources = await getResources();
+		const resource = resources[activeEditorFileName];
+		if (resource) {
+			updateContentFromResource(resource);
+		}
+	};
+
 	useEffect(() => {
 		loadContent();
+		if (openProjectId === projectId) {
+			loadFileResource();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
 
-	useEffect(() => {
-		setLastSaved(undefined);
-	}, [projectId]);
+	useEffect(() => {}, [projectId]);
 
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("myCustomTheme", {

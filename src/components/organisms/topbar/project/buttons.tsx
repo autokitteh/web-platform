@@ -32,11 +32,11 @@ export const ProjectTopbarButtons = () => {
 	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
-	const { fetchResources } = useFileOperations(projectId!);
 	const { fetchDeployments } = useCacheStore();
+	const { getResources } = useFileOperations(projectId!);
 
 	const fetchAndCheckResources = useCallback(async () => {
-		const resources = await fetchResources(true);
+		const resources = await getResources();
 		if (!Object.keys(resources).length) {
 			addToast({
 				message: tError("assetsNotFound"),
@@ -49,7 +49,7 @@ export const ProjectTopbarButtons = () => {
 
 		return resources;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fetchResources]);
+	}, [getResources]);
 
 	const build = useCallback(async () => {
 		const resources = await fetchAndCheckResources();
