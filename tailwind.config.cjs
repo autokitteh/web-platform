@@ -36,7 +36,8 @@ module.exports = {
         "1/8": "12.5%",
       },
       height: {
-        "default-icon": "1.625rem"
+        "default-icon": "1.625rem",
+        'screen/27': '27vh',
       },
       borderWidth: {
         0.5: "0.5px",

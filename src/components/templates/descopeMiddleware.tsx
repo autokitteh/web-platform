@@ -91,7 +91,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			<div className="my-6 flex w-1/2 flex-col items-center justify-center rounded-r-xl bg-gray-1250 p-8 font-averta text-white">
 				<IconSvg className="mb-4" size="3xl" src={AKRoundLogo} />
 
-				<h1 className="mb-16 text-center font-averta text-4xl font-semibold">
+				<h1 className="text-center font-averta text-4xl font-semibold">
 					{t("leftSide.welcomeTitle")}
 
 					<span className="flex items-center justify-center rounded-full bg-green-800 p-1 pt-0 font-bold text-black">
@@ -111,7 +111,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				</a>
 			</div>
 
-			<div className="relative m-10 mr-20 flex w-2/3 flex-col justify-center rounded-3xl pb-32 pl-16 text-black">
+			<div className="relative z-10 m-10 mr-20 flex w-2/3 flex-col justify-center rounded-3xl pb-32 pl-16 text-black">
 				<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleFirstLine")}</h2>
 
 				<div className="mb-4 flex">
@@ -135,7 +135,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				</ul>
 			</div>
 
-			<img alt="autokitteh logo with integrations" className="absolute bottom-0 right-8 w-1/2" src={LoginLogos} />
+			<img
+				alt="autokitteh logo with integrations"
+				className="absolute bottom-0 right-8 h-screen/27 w-1/2 object-contain object-bottom"
+				src={LoginLogos}
+			/>
 		</div>
 	);
 };
