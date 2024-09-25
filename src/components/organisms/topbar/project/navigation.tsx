@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
@@ -10,27 +10,28 @@ import { Button, IconSvg } from "@components/atoms";
 
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
-	const location = useLocation();
+	const { pathname } = useLocation();
 	const { deployments, fetchDeployments: getCachedDeployments } = useCacheStore();
 	const navigate = useNavigate();
 
-	const fetchDeployments = async () => {
-		await getCachedDeployments(projectId!);
-	};
+	const fetchDeployments = useCallback(() => {
+		getCachedDeployments(projectId!);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		fetchDeployments();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [pathname]);
 
 	const deploymentId = paramDeploymentId || deployments?.[0]?.deploymentId;
 
 	const selectedSection = useMemo(() => {
 		if (paramDeploymentId) return "sessions";
-		if (location.pathname.includes("deployments")) return "deployments";
+		if (pathname.includes("deployments")) return "deployments";
 
 		return "assets";
-	}, [paramDeploymentId, location.pathname]);
+	}, [paramDeploymentId, pathname]);
 
 	const navigationItems = useMemo(
 		() =>
