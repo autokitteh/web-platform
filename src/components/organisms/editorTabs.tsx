@@ -104,12 +104,15 @@ export const EditorTabs = () => {
 			await saveFile(activeEditorFileName, newContent);
 			setContent(newContent);
 			setLastSaved(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
 				type: "error",
 			});
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				tErrors("codeSaveFailed", { error: (error as Error).message })
+			);
 		} finally {
 			setLoadingSave(false);
 		}
@@ -220,7 +223,6 @@ export const EditorTabs = () => {
 						onChange={handleUpdateContent}
 						onMount={handleEditorDidMount}
 						options={{
-							lineNumbers: "off",
 							minimap: {
 								enabled: false,
 							},
