@@ -3,12 +3,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { BuildsService, DeploymentsService, LoggerService } from "@services";
+import { BuildsService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
+import { useCacheStore } from "@src/store/useCacheStore";
 import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
-import { Deployment } from "@type/models";
 
 import { useDrawerStore, useManualRunStore, useToastStore } from "@store";
 
@@ -28,10 +28,12 @@ export const DeploymentsTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { openDrawer } = useDrawerStore();
 	const { projectId } = useParams();
+	const {
+		deployments,
+		fetchDeployments,
+		loading: { deployments: loadingDeployments },
+	} = useCacheStore();
 
-	const [deployments, setDeployments] = useState<Deployment[]>([]);
-	const [isInitialLoading, setIsInitialLoading] = useState(true);
-	const [isRefreshing, setIsRefreshing] = useState(false);
 	const [isManualRunEnabled, setIsManualRunEnabled] = useState(false);
 	const [savingManualRun, setSavingManualRun] = useState(false);
 	const { entrypointFunction, lastDeploymentStore, saveProjectManualRun, updateProjectManualRun } = useManualRunStore(
@@ -43,50 +45,10 @@ export const DeploymentsTable = () => {
 		})
 	);
 
-	const fetchDeployments = async (isInitial = false) => {
-		if (!projectId) {
-			return;
-		}
-
-		if (isInitial) {
-			setIsInitialLoading(true);
-		} else {
-			setIsRefreshing(true);
-		}
-
-		try {
-			const { data, error } = await DeploymentsService.listByProjectId(projectId);
-			if (error) {
-				addToast({
-					message: (error as Error).message,
-					type: "error",
-				});
-
-				return;
-			}
-
-			if (!data) {
-				return;
-			}
-			setDeployments(data);
-		} finally {
-			if (isInitial) {
-				setIsInitialLoading(false);
-			} else {
-				setIsRefreshing(false);
-			}
-		}
-	};
-
-	useEffect(() => {
-		fetchDeployments(true);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	const loadSingleshotArgs = async () => {
-		if (!deployments.length || !projectId) return;
+		if (!deployments?.length || !projectId) return;
 
-		const lastDeployment = deployments[0];
+		const lastDeployment = deployments?.[0];
 
 		if (lastDeployment.state !== DeploymentStateVariant.active) {
 			setIsManualRunEnabled(false);
@@ -159,7 +121,7 @@ export const DeploymentsTable = () => {
 				type: "success",
 			});
 			setTimeout(() => {
-				fetchDeployments();
+				fetchDeployments(projectId, true);
 			}, 100);
 		} finally {
 			setSavingManualRun(false);
@@ -173,10 +135,13 @@ export const DeploymentsTable = () => {
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-3">
 					<h1 className="text-base">
-						{t("tableTitle")} ({deployments.length})
+						{t("tableTitle")} ({deployments?.length || 0})
 					</h1>
 
-					<RefreshButton isLoading={isRefreshing} onRefresh={fetchDeployments} />
+					<RefreshButton
+						isLoading={loadingDeployments}
+						onRefresh={() => fetchDeployments(projectId!, true)}
+					/>
 				</div>
 
 				<div className="flex h-10 gap-2 rounded-3xl border border-gray-1000 p-1">
@@ -205,17 +170,20 @@ export const DeploymentsTable = () => {
 				</div>
 			</div>
 
-			{isInitialLoading ? <Loader isCenter size="xl" /> : null}
+			{loadingDeployments ? <Loader isCenter size="xl" /> : null}
 
-			{!isInitialLoading && !deployments.length ? (
+			{!loadingDeployments && !deployments?.length ? (
 				<div className="mt-10 text-center text-xl font-semibold">{t("noDeployments")}</div>
 			) : null}
 
-			{!isInitialLoading && !!deployments.length ? (
-				<DeploymentsTableContent deployments={deployments} updateDeployments={() => fetchDeployments(false)} />
+			{!loadingDeployments && !!deployments?.length ? (
+				<DeploymentsTableContent
+					deployments={deployments}
+					updateDeployments={() => fetchDeployments(projectId!, true)}
+				/>
 			) : null}
 
-			<ManualRunSettingsDrawer onRun={() => fetchDeployments()} />
+			<ManualRunSettingsDrawer onRun={() => fetchDeployments(projectId!)} />
 		</Frame>
 	);
 };

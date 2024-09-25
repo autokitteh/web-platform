@@ -1,91 +1,83 @@
+import i18n from "i18next";
 import { StateCreator, create } from "zustand";
-import { persist } from "zustand/middleware";
 
-import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
-import { DeploymentsService } from "@services";
+import { DeploymentsService, LoggerService } from "@services";
 import { SessionsService } from "@services/sessions.service";
-import { minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
-import { StoreName } from "@src/enums";
+import { minimumSessionLogsRecordsFrameHeightFallback, namespaces } from "@src/constants";
+import { CacheStore } from "@src/interfaces/store";
 
 import { useToastStore } from "@store";
 
-export interface CacheStore {
-	logs: ProtoSessionLogRecord[];
-	loading: boolean;
-	reset: () => void;
-	reload: (sessionId: string) => void;
-	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
-	nextPageToken?: string;
-	projectLastDeployment?: Record<string, string>;
-	fetchLastDeploymentId: (projectId: string, force?: boolean) => Promise<void | string>;
-}
+const initialState: Pick<CacheStore, "logs" | "loading" | "nextPageToken" | "deployments" | "currentProjectId"> = {
+	logs: [],
+	loading: {
+		logs: false,
+		deployments: false,
+	},
+	nextPageToken: "",
+	deployments: undefined,
+	currentProjectId: undefined,
+};
 
 const store: StateCreator<CacheStore> = (set, get) => ({
-	logs: [],
-	loading: false,
-	nextPageToken: "",
-	projectLastDeployment: undefined,
+	...initialState,
 
-	fetchLastDeploymentId: async (projectId: string, force?: boolean) => {
-		const { projectLastDeployment } = get();
-
-		if (projectLastDeployment?.projectId === projectId && !force) {
-			return;
+	fetchDeployments: async (projectId: string, force?: boolean) => {
+		const { currentProjectId, deployments } = get();
+		if (currentProjectId === projectId && !force) {
+			return deployments;
 		}
 
-		const { data: deployments, error } = await DeploymentsService.listByProjectId(projectId);
+		set((state) => ({
+			...state,
+			currentProjectId: projectId,
+			loading: { ...state.loading, deployments: true },
+		}));
 
-		if (error) {
-			return;
-		}
+		try {
+			const { data: incomingDeployments, error } = await DeploymentsService.listByProjectId(projectId);
 
-		if (!deployments || !deployments.length) {
-			if (projectLastDeployment?.[projectId] !== "") {
-				set((state) => ({
-					projectLastDeployment: {
-						...state.projectLastDeployment,
-						[projectId]: "",
-					},
-				}));
+			if (error) {
+				const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
+
+				useToastStore.getState().addToast({
+					message: errorMsg,
+					type: "error",
+				});
 			}
 
-			return "";
-		}
-		const lastDeploymentId = deployments[0].deploymentId;
-
-		if (projectLastDeployment?.[projectId] !== lastDeploymentId) {
 			set((state) => ({
-				projectLastDeployment: {
-					...state.projectLastDeployment,
-					[projectId]: lastDeploymentId,
-				},
+				...state,
+				deployments: incomingDeployments,
+				loading: { ...state.loading, deployments: false },
 			}));
+
+			return incomingDeployments;
+		} catch (error) {
+			const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
+			const errorLog = i18n.t("errorFetchingDeploymentsExtended", {
+				ns: "errors",
+				error: (error as Error).message,
+			});
+			useToastStore.getState().addToast({
+				message: errorMsg,
+				type: "error",
+			});
+			LoggerService.error(namespaces.stores.cache, errorLog);
+
+			set((state) => ({ ...state, loading: { ...state.loading, deployments: false } }));
 		}
-
-		return lastDeploymentId;
 	},
 
-	reset: () => {
-		set((state) => {
-			state.logs = [];
-
-			return state;
-		});
-	},
+	reset: () => set((state) => ({ ...state, ...initialState })),
 
 	reload: (sessionId: string) => {
-		set((state) => {
-			state.logs = [];
-			state.nextPageToken = "";
-
-			return state;
-		});
-		const { loadLogs } = get();
-		loadLogs(sessionId, minimumSessionLogsRecordsFrameHeightFallback);
+		set((state) => ({ ...state, logs: [], nextPageToken: "" }));
+		get().loadLogs(sessionId, minimumSessionLogsRecordsFrameHeightFallback);
 	},
 
 	loadLogs: async (sessionId: string, pageSize?: number) => {
-		set({ loading: true });
+		set((state) => ({ ...state, loading: { ...state.loading, logs: true } }));
 
 		try {
 			const { nextPageToken } = get();
@@ -99,11 +91,10 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			}
 
 			if (data) {
-				set({ loading: false });
-
 				set((state) => ({
 					logs: [...state.logs, ...data.records],
 					nextPageToken: data.nextPageToken,
+					loading: { ...state.loading, logs: false },
 				}));
 			}
 		} catch (error) {
@@ -112,9 +103,9 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				type: "error",
 			});
 		} finally {
-			set({ loading: false });
+			set((state) => ({ ...state, loading: { ...state.loading, logs: false } }));
 		}
 	},
 });
 
-export const useCacheStore = create(persist(store, { name: StoreName.cache }));
+export const useCacheStore = create<CacheStore>(store);

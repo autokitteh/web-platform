@@ -26,5 +26,6 @@ export const namespaces = {
 	},
 	stores: {
 		connectionCheckerStore: "Connection Checker Store",
+		cache: "Cache Store",
 	},
 };
