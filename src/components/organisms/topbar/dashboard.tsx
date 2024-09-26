@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { SidebarHrefMenu } from "@enums/components";
 import { defaultProjectFile } from "@src/constants";
 
-import { useProjectStore, useToastStore, useUserStore } from "@store";
+import { useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Spinner, Typography } from "@components/atoms";
 
@@ -14,12 +14,10 @@ import { PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
-	const { user } = useUserStore();
 	const { createProject } = useProjectStore();
 	const [loadingNewProject, setLoadingNewProject] = useState(false);
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
-	const userName = user?.name || "";
 
 	const handleCreateProject = async () => {
 		setLoadingNewProject(true);
@@ -43,11 +41,7 @@ export const DashboardTopbar = () => {
 
 	return (
 		<div className="flex flex-wrap">
-			<Typography className="w-full font-averta text-3xl font-semibold" element="h2">
-				{t("hello")} {userName ? `, ${userName}` : null}
-			</Typography>
-
-			<div className="mt-1 flex w-full items-end justify-between">
+			<div className="flex w-full items-end justify-between">
 				<Typography className="w-full font-averta text-4xl font-semibold" element="h1">
 					{t("welcome")}
 				</Typography>

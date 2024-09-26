@@ -188,7 +188,7 @@ export const EditorTabs = () => {
 								? openFiles[projectId]?.map(({ name }) => (
 										<Tab
 											activeTab={activeEditorFileName}
-											className="group flex items-center gap-1"
+											className="group flex items-center gap-1 normal-case"
 											key={name}
 											onClick={() => openFileAsActive(name)}
 											value={name}
