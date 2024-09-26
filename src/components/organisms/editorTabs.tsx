@@ -120,12 +120,16 @@ export const EditorTabs = () => {
 			await saveFile(activeEditorFileName, newContent);
 			setContent(newContent);
 			setLastSaved(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.ui.projectCodeEditor,
+				tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
+			);
 		} finally {
 			setLoadingSave(false);
 		}
