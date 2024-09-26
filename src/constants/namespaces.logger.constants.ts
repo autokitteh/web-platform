@@ -20,6 +20,7 @@ export const namespaces = {
 	ui: {
 		loginPage: "Login Page",
 		deleteModal: "Delete Modal",
+		projectCodeEditor: "Project Code Editor",
 	},
 	hooks: {
 		connectionForm: "Connection Form",
