@@ -70,5 +70,7 @@
 	"codeSaveFailedMissingFileName": "Code save failed for the project {{projectId}}, missing file name",
 	"codeSaveFailedMissingContent": "Code save failed for the project {{projectId}}, missing file content",
 	"errorDeleteConnection": "Deleting connection failed",
-	"connectionNotCreated": "Couldn't create the connection"
+	"connectionNotCreated": "Couldn't create the connection",
+	"projectBuildFailed": "Project build failed",
+	"projectDeployFailed": "Project deploy failed"
 }

@@ -20,7 +20,7 @@ import { BuildIcon, MoreIcon } from "@assets/image";
 import { RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
-	const { t } = useTranslation(["projects", "buttons"]);
+	const { t } = useTranslation(["projects", "buttons", "errors"]);
 	const { t: tError } = useTranslation("errors");
 	const { projectId } = useParams();
 	const navigate = useNavigate();
@@ -55,25 +55,27 @@ export const ProjectTopbarButtons = () => {
 		const resources = await fetchResources();
 		if (!resources) return;
 
-		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
+		try {
+			setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
 
-		const { error } = await ProjectsService.build(projectId!, resources);
-		if (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-		} else {
+			const { error } = await ProjectsService.build(projectId!, resources);
+			if (error) {
+				addToast({
+					message: t("projectBuildFailed", { ns: "errors" }),
+					type: "error",
+				});
+
+				return;
+			}
+			fetchDeployments(projectId!, true);
 			addToast({
 				message: t("topbar.buildProjectSuccess"),
 				type: "success",
 			});
 			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccess"));
+		} finally {
+			setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
 		}
-
-		fetchDeployments(projectId!, true);
-
-		setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -81,25 +83,29 @@ export const ProjectTopbarButtons = () => {
 		const resources = await fetchResources();
 		if (!resources) return;
 
-		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
+		try {
+			setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
+			const { error } = await ProjectsService.run(projectId!, resources);
+			if (error) {
+				addToast({
+					message: t("projectDeployFailed", { ns: "errors" }),
+					type: "error",
+				});
 
-		const { error } = await ProjectsService.run(projectId!, resources);
-		if (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-		} else {
+				return;
+			}
+
+			fetchDeployments(projectId!, true);
+
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
 			});
 			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccess"));
+		} finally {
+			setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 		}
 
-		fetchDeployments(projectId!, true);
-
-		setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
