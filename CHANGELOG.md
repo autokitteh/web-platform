@@ -1,3 +1,10 @@
+## [2.14.1](https://github.com/autokitteh/web-platform/compare/v2.14.0...v2.14.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* improve code in editor and fix logs ([#390](https://github.com/autokitteh/web-platform/issues/390)) ([8856ab6](https://github.com/autokitteh/web-platform/commit/8856ab6a68d8e990b37e0ddcc83a081b13bf999c))
+
 # [2.14.0](https://github.com/autokitteh/web-platform/compare/v2.13.1...v2.14.0) (2024-09-25)
 
 
