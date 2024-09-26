@@ -245,7 +245,6 @@ export const EditorTabs = () => {
 						onChange={handleUpdateContent}
 						onMount={handleEditorDidMount}
 						options={{
-							lineNumbers: "off",
 							minimap: {
 								enabled: false,
 							},
