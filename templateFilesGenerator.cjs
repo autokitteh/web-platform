@@ -7,6 +7,7 @@ function extractDirectoryContents(dirPath) {
 	const result = [];
 
 	function processDirectory(currentPath, isRoot = true) {
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const entries = fs.readdirSync(currentPath, { withFileTypes: true });
 
 		const files = entries.filter((entry) => entry.isFile()).map((entry) => entry.name);
