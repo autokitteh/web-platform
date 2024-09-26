@@ -161,11 +161,15 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				],
 				assetDirectory: "data_pipeline",
 				files: [
+					"Makefile",
 					"README.md",
 					"autokitteh.yaml",
-					"program.py",
-					"approval_message.json.txt",
-					"request_modal.json.txt",
+					"bucket_event.json",
+					"example-sns-event.json",
+					"hike.gpx",
+					"pipeline.py",
+					"schema.sql",
+					"subscription-event.json",
 				],
 			},
 			{
@@ -213,8 +217,8 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					{ icon: SlackIcon, title: "Slack" },
 					{ icon: OpenAiIcon, title: "ChatGPT" },
 				],
-				assetDirectory: "categorize_notify",
-				files: ["README.md", "autokitteh.yaml", "program.py"],
+				assetDirectory: "categorize_emails",
+				files: ["README.md", "autokitteh-python.yaml", "program.py"],
 			},
 			{
 				title: "Ad-hoc room reservation via Slack",
@@ -288,7 +292,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Samples using GitHub APIs",
 				integrations: [{ icon: GithubIcon, title: "GitHub" }],
 				assetDirectory: "samples/github",
-				files: ["README.md", "autokitteh.yaml", "program.py"],
+				files: ["README.md", "autokitteh.yaml", "workflow.star"],
 			},
 			{
 				title: "Google Calendar",

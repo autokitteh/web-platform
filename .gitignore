@@ -37,3 +37,6 @@ dist-ssr
 
 # ESLint Cache
 .eslintcache
+
+# Directory to files list generator output (template_files_generator.cjs)
+directory_contents.json

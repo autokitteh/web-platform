@@ -225,7 +225,8 @@ module.exports = {
 		{
 			"files": ["*.json"],
 			"rules": {
-				"no-unused-expressions": "off"
+				"no-unused-expressions": "off",
+				"unicorn/filename-case": "off"
 			}
 		},
 		{
