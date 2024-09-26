@@ -1,9 +1,11 @@
 import { TemplateCategory } from "@src/types/components";
 
+import { AKRoundLogo } from "@assets/image";
 import {
 	AwsIcon,
 	ConfluenceIcon,
 	DiscordIcon,
+	GithubCopilotIcon,
 	GithubIcon,
 	GoogleCalendarIcon,
 	GoogleFormsIcon,
@@ -13,7 +15,9 @@ import {
 	HttpIcon,
 	JiraIcon,
 	OpenAiIcon,
+	SchedulerIcon,
 	SlackIcon,
+	SqliteIcon,
 	TwilioIcon,
 } from "@assets/image/icons/connections";
 
@@ -157,7 +161,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				integrations: [
 					{ icon: AwsIcon, title: "AWS S3" },
 					{ icon: HttpIcon, title: "Webhook" },
-					{ icon: HttpIcon, title: "Sqlite3" }, // Missing icon
+					{ icon: SqliteIcon, title: "Sqlite3" },
 				],
 				assetDirectory: "data_pipeline",
 				files: [
@@ -187,7 +191,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description:
 					"If Copilot was not used in a preceding period by users, the workflow automatically unregisters and notifies them. Users can ask for their subscription to be reinstated.",
 				integrations: [
-					{ icon: GithubIcon, title: "GitHub Copilot" }, // missing icon
+					{ icon: GithubCopilotIcon, title: "GitHub Copilot" },
 					{ icon: SlackIcon, title: "Slack" },
 				],
 				assetDirectory: "github_copilot_seats",
@@ -346,14 +350,14 @@ export const templateProjectsCategories: TemplateCategory[] = [
 			{
 				title: "Runtime Events",
 				description: "Samples using events in AutoKitteh - subscribe(), next_event(), unsubscribe()",
-				integrations: [{ icon: HttpIcon, title: "Built in events" }], // missing icon
+				integrations: [{ icon: AKRoundLogo, title: "Built in events" }],
 				assetDirectory: "samples/runtime_events",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Scheduler",
 				description: "Samples using cron scheduler for workflows",
-				integrations: [{ icon: HttpIcon, title: "Scheduler" }], // missing icon
+				integrations: [{ icon: SchedulerIcon, title: "Scheduler" }], // missing icon
 				assetDirectory: "samples/scheduler",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
