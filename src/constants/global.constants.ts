@@ -12,3 +12,5 @@ export const defaultSessionsVisiblePageSize = 10;
 export const maxLogs = 20;
 export const fileSizeUploadLimit = 50 * 1024; // 50KB
 export const apiRequestTimeout = isDevelopment ? 1000 * 60 : 5000;
+
+export const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
