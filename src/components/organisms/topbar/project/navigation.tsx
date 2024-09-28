@@ -45,7 +45,7 @@ export const ProjectTopbarNavigation = () => {
 						"active bg-black font-semibold": isSelected,
 					}
 				);
-				const iconClassName = cn("text-white -mr-2", {
+				const iconClassName = cn("text-white -mr-2 -mt-1", {
 					"text-green-200": isSelected,
 				});
 				const href = `/projects/${projectId}${item.path.replace("{deploymentId}", deploymentId || "")}`;
