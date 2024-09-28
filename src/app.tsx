@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 
 import * as Sentry from "@sentry/react";
+import { useTranslation } from "react-i18next";
 import {
 	BrowserRouter,
 	Navigate,
@@ -14,6 +15,7 @@ import {
 
 import { isProduction } from "@constants";
 
+import { PageTitle } from "@components/atoms";
 import { Toast } from "@components/molecules";
 import { DeploymentsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
@@ -31,6 +33,7 @@ import { SettingsLayout } from "@components/templates/settingsLayout";
 
 export const App = () => {
 	let AKRoutes = Routes;
+	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 
 	if (isProduction) {
 		Sentry.init({
@@ -68,11 +71,35 @@ export const App = () => {
 		<BrowserRouter>
 			<AKRoutes>
 				<Route element={<AppLayout className="pr-0" />} path="/">
-					<Route element={<Dashboard />} index />
+					<Route
+						element={
+							<>
+								<PageTitle title={t("template", { page: t("home") })} />
+								<Dashboard />
+							</>
+						}
+						index
+					/>
 
-					<Route element={<Intro />} path="intro" />
+					<Route
+						element={
+							<>
+								<PageTitle title={t("template", { page: t("intro") })} />
+								<Intro />
+							</>
+						}
+						path="intro"
+					/>
 
-					<Route element={<NotFound404 />} path="404" />
+					<Route
+						element={
+							<>
+								<PageTitle title={t("template", { page: t("404") })} />
+								<NotFound404 />
+							</>
+						}
+						path="404"
+					/>
 				</Route>
 
 				<Route element={<AppLayout displayConfigurationTopbar />} path="projects">
