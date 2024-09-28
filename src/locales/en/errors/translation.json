@@ -9,6 +9,8 @@
 	"errorEditingNewConnectionExtended": "Error while editing a connection, error: {{error}}",
 	"errorFetchingConnection": "Error while fetching connection, connection ID: {{connectionId}}",
 	"errorFetchingDeployments": "Error fetching deployments",
+	"errorFetchingConnections": "Error fetching connections",
+	"errorFetchingConnectionsExtended": "Error fetching connections, error: {{error}}",
 	"errorFetchingDeploymentsExtended": "Error fetching deployments, error: {{error}}",
 	"errorFetchingConnectionType": "Error while fetching connection authentication type",
 	"errorFetchingConnectionTypeUnknown": "Unknown connection authentication type",

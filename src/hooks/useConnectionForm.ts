@@ -13,7 +13,7 @@ import { namespaces } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useConnectionCheckerStore, useToastStore } from "@src/store";
+import { useCacheStore, useConnectionCheckerStore, useProjectValidationStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup } from "@src/utilities";
@@ -32,6 +32,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
 	const { startCheckingStatus } = useConnectionCheckerStore();
+	const { checkState } = useProjectValidationStore();
 
 	const {
 		clearErrors,
@@ -57,6 +58,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 	const addToast = useToastStore((state) => state.addToast);
+
+	const { fetchConnections } = useCacheStore();
 
 	const getConnectionAuthType = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
@@ -272,6 +275,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			);
 
 			setConnectionId(responseConnectionId);
+			fetchConnections(projectId!, true);
+			checkState(projectId!, true);
 		} catch (error) {
 			addToast({
 				message: tErrors("connectionNotCreated"),

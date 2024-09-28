@@ -1,7 +1,14 @@
 import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
-import { DeploymentsService, EnvironmentsService, LoggerService, TriggersService, VariablesService } from "@services";
+import {
+	ConnectionService,
+	DeploymentsService,
+	EnvironmentsService,
+	LoggerService,
+	TriggersService,
+	VariablesService,
+} from "@services";
 import { namespaces } from "@src/constants";
 import { CacheStore } from "@src/interfaces/store";
 import { Environment } from "@src/types/models";
@@ -10,15 +17,17 @@ import { useToastStore } from "@store";
 
 const initialState: Pick<
 	CacheStore,
-	"loading" | "deployments" | "triggers" | "variables" | "envId" | "currentProjectId"
+	"loading" | "deployments" | "connections" | "triggers" | "variables" | "envId" | "currentProjectId"
 > = {
 	loading: {
 		deployments: false,
 		triggers: false,
 		variables: false,
+		connections: false,
 	},
 	deployments: undefined,
 	variables: [],
+	connections: [],
 	triggers: [],
 	currentProjectId: undefined,
 	envId: undefined,
@@ -27,9 +36,56 @@ const initialState: Pick<
 const store: StateCreator<CacheStore> = (set, get) => ({
 	...initialState,
 
+	fetchConnections: async (projectId, force) => {
+		const { connections, currentProjectId } = get();
+		if (currentProjectId === projectId && !force && connections) {
+			return connections;
+		}
+
+		set((state) => ({
+			...state,
+			currentProjectId: projectId,
+			loading: { ...state.loading, connections: true },
+		}));
+
+		try {
+			const { data: incomingConnections, error } = await ConnectionService.listByProjectId(projectId!);
+
+			if (error) {
+				const errorMsg = i18n.t("errorFetchingConnections", { ns: "errors" });
+
+				useToastStore.getState().addToast({
+					message: errorMsg,
+					type: "error",
+				});
+			}
+
+			set((state) => ({
+				...state,
+				connections: incomingConnections,
+				loading: { ...state.loading, connections: false },
+			}));
+
+			return incomingConnections;
+		} catch (error) {
+			const errorMsg = i18n.t("errorFetchingConnections", { ns: "errors" });
+			const errorLog = i18n.t("errorFetchingConnectionsExtended", {
+				ns: "errors",
+				error: (error as Error).message,
+			});
+			useToastStore.getState().addToast({
+				message: errorMsg,
+				type: "error",
+			});
+			LoggerService.error(namespaces.stores.cache, errorLog);
+
+			set((state) => ({ ...state, loading: { ...state.loading, connections: false } }));
+		}
+	},
+
 	fetchDeployments: async (projectId, force) => {
 		const { currentProjectId, deployments } = get();
-		if (currentProjectId === projectId && !force) {
+		if (currentProjectId === projectId && !force && deployments) {
 			return deployments;
 		}
 
@@ -73,7 +129,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	fetchTriggers: async (projectId, force?) => {
+	fetchTriggers: async (projectId, force) => {
 		const { currentProjectId, triggers } = get();
 		if (currentProjectId === projectId && triggers?.length && !force) {
 			return triggers;
