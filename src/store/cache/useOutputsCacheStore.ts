@@ -52,7 +52,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 
 			if (error) {
 				useToastStore.getState().addToast({
-					message: `An error occurred: ${error}`,
+					message: i18n.t("outputLogsFetchError", { ns: "errors" }),
 					type: "error",
 				});
 			}

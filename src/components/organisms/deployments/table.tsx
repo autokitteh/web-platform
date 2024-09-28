@@ -7,10 +7,8 @@ import { BuildsService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant } from "@src/enums";
 import { DrawerName } from "@src/enums/components";
-import { useCacheStore } from "@src/store/useCacheStore";
+import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store/";
 import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
-
-import { useDrawerStore, useManualRunStore, useToastStore } from "@store";
 
 import { Button, Frame, IconSvg, Loader, Spinner } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";

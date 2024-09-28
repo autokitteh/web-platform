@@ -1,4 +1,3 @@
-/* eslint-disable @liferay/empty-line-between-elements */
 import React, { useEffect, useState } from "react";
 
 import JsonView from "@uiw/react-json-view";

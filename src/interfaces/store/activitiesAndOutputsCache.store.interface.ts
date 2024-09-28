@@ -2,7 +2,7 @@ import { SessionActivity, SessionOutput } from "@src/types/models";
 
 export interface ActivitySession {
 	activities: SessionActivity[];
-	nextPageToken: string | undefined;
+	nextPageToken?: string;
 	fullyLoaded: boolean;
 }
 
@@ -16,7 +16,7 @@ export interface ActivitiesStore {
 
 export interface OutputSession {
 	outputs: SessionOutput[];
-	nextPageToken: string | undefined;
+	nextPageToken?: string;
 	fullyLoaded: boolean;
 }
 

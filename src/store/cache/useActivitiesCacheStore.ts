@@ -1,8 +1,7 @@
 import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
-import { LoggerService } from "@services/index";
-import { SessionsService } from "@services/sessions.service";
+import { LoggerService, SessionsService } from "@services";
 import { minimumSessionLogsRecordsFrameHeightFallback, namespaces } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";

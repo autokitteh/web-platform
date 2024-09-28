@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { CSSProperties, memo, useCallback, useEffect, useRef } from "react";
 
 import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
@@ -8,25 +8,23 @@ import { SessionOutput } from "@src/types/models";
 
 import { Loader } from "@components/atoms";
 
-const OutputRow = React.memo(
-	({ log, measure, style }: { log: SessionOutput; measure: () => void; style: React.CSSProperties }) => {
-		const rowRef = useRef<HTMLDivElement>(null);
+const OutputRow = memo(({ log, measure, style }: { log: SessionOutput; measure: () => void; style: CSSProperties }) => {
+	const rowRef = useRef<HTMLDivElement>(null);
 
-		useEffect(() => {
-			measure();
-		}, [measure]);
+	useEffect(() => {
+		measure();
+	}, [measure]);
 
-		return (
-			<div ref={rowRef} style={style}>
-				<div className="flex">
-					<div className="w-52 text-yellow-500">[{log.time}]: </div>
+	return (
+		<div ref={rowRef} style={style}>
+			<div className="flex">
+				<div className="w-52 text-yellow-500">[{log.time}]: </div>
 
-					<div className="w-full whitespace-pre-line">{log.print}</div>
-				</div>
+				<div className="w-full whitespace-pre-line">{log.print}</div>
 			</div>
-		);
-	}
-);
+		</div>
+	);
+});
 
 OutputRow.displayName = "OutputRow";
 

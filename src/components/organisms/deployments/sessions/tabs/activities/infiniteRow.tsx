@@ -52,7 +52,7 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 					<div className="text-left font-bold">{functionName}</div>
 
 					<div className="flex items-center gap-1">
-						<span>Status:</span> {/* eslint-disable-next-line @liferay/empty-line-between-elements */}
+						<span>Status:</span>
 						<ActivityStatus activityState={ActivityState[status as keyof typeof ActivityState]} />
 						-
 						<ReactTimeAgo date={activityTime} locale="en-US" />

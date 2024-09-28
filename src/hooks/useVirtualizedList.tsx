@@ -52,18 +52,25 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 	const isRowLoaded = useCallback(({ index }: { index: number }): boolean => !!items[index], [items]);
 
-	const loadMoreRows = useCallback(async (): Promise<void> => {
-		if (!sessionId || loading || (session && session.fullyLoaded)) {
-			return Promise.resolve();
-		}
+	const shouldLoadMore = useMemo(() => !(loading || (session && session.fullyLoaded)), [loading, session]);
 
-		return loadLogs(sessionId, pageSize * 2);
+	const loadMoreRows = useCallback(async (): Promise<void> => {
+		if (!sessionId || !shouldLoadMore) {
+			return;
+		}
+		await loadLogs(sessionId, pageSize * 2);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId, loading, session, loadLogs]);
+	}, [sessionId, shouldLoadMore, loadLogs]);
 
 	const handleScroll = useCallback(({ scrollTop }: { scrollTop: number }): void => {
 		if (scrollTop !== 0) setScrollPosition(scrollTop);
 	}, []);
+
+	const calculatePageSize = useCallback(() => {
+		const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsFrameHeightFallback;
+
+		return Math.ceil(frameHeight / itemHeight) * 2;
+	}, [itemHeight]);
 
 	useEffect(() => {
 		if (!sessionId) return;
@@ -75,11 +82,11 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 		if (!session) {
 			reset(sessionId);
-			const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsFrameHeightFallback;
-			const initialLoadSize = Math.ceil(frameHeight / itemHeight) * 2;
-			setPageSize(initialLoadSize);
+			const newPageSize = calculatePageSize();
+			setPageSize(newPageSize);
 			loadMoreRows();
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId, type, session, reset, loadMoreRows, itemHeight]);
 
 	useEffect(() => {
