@@ -18,3 +18,4 @@ export { default as GoogleGeminiIcon } from "@assets/image/icons/connections/Goo
 export { default as SqliteIcon } from "@assets/image/icons/connections/Sqlite.svg?react";
 export { default as GithubCopilotIcon } from "@assets/image/icons/connections/GithubCopilot.svg?react";
 export { default as SchedulerIcon } from "@assets/image/icons/connections/Scheduler.svg?react";
+export { default as GrpcIcon } from "@assets/image/icons/connections/Grpc.svg?react";

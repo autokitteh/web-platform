@@ -1,4 +1,4 @@
-import { IntegrationsMap } from "@src/enums/components/connection.enum";
+import { HiddenIntegrationsForTemplates, IntegrationsMap } from "@src/enums/components/connection.enum";
 import { TemplateCategory } from "@src/types/components";
 
 export const defaultTemplateProjectCategory = "DevOps";
@@ -37,7 +37,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 			{
 				title: "Create Jira Ticket on HTTP request",
 				description: "Create a Jira ticket based on HTTP request",
-				integrations: [IntegrationsMap.http, IntegrationsMap.jira],
+				integrations: [HiddenIntegrationsForTemplates.http, IntegrationsMap.jira],
 				assetDirectory: "create_jira_issue",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
@@ -45,7 +45,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				title: "Create Jira ticket from Google form",
 				description:
 					"Trigger by HTTP request, continue polling Google forms, and create Jira ticket based on the form's data",
-				integrations: [IntegrationsMap.forms, IntegrationsMap.http, IntegrationsMap.jira],
+				integrations: [IntegrationsMap.forms, HiddenIntegrationsForTemplates.http, IntegrationsMap.jira],
 				assetDirectory: "google_forms_to_jira",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
@@ -108,7 +108,11 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				title: "Parse a file in S3 and insert to database",
 				description:
 					"Triggered by a new GPX file on an S3 bucket, the pipeline code will parse the GPX file and insert it into a database.",
-				integrations: [IntegrationsMap.awss3, IntegrationsMap.webhook, IntegrationsMap.sqlite3],
+				integrations: [
+					IntegrationsMap.aws,
+					HiddenIntegrationsForTemplates.http,
+					HiddenIntegrationsForTemplates.sqlite3,
+				],
 				assetDirectory: "data_pipeline",
 				files: [
 					"Makefile",
@@ -133,64 +137,16 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				title: "Unregister non active users from Copilot",
 				description:
 					"If Copilot was not used in a preceding period by users, the workflow automatically unregisters and notifies them. Users can ask for their subscription to be reinstated.",
-				integrations: [IntegrationsMap.githubcopilot, IntegrationsMap.slack],
+				integrations: [HiddenIntegrationsForTemplates.githubcopilot, IntegrationsMap.slack],
 				assetDirectory: "github_copilot_seats",
 				files: ["README.md", "autokitteh.yaml", "helpers.star", "msg.star", "seats.star", "triggers.star"],
 			},
 			{
 				title: "Create Jira Ticket from a Webhook data",
 				description: "Create Jira Ticket from a Webhook data",
-				integrations: [IntegrationsMap.jira, IntegrationsMap.webhook],
+				integrations: [IntegrationsMap.jira, HiddenIntegrationsForTemplates.http],
 				assetDirectory: "webhook_to_jira",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
-			},
-		],
-	},
-	{
-		name: "Office Automation",
-		cards: [
-			{
-				title: "Slack notify on important Email",
-				description:
-					"Categorizing incoming emails and notifying relevant Slack channels by integrating Gmail, ChatGPT, and Slack",
-				integrations: [IntegrationsMap.gmail, IntegrationsMap.slack, IntegrationsMap.chatgpt],
-				assetDirectory: "categorize_emails",
-				files: ["README.md", "autokitteh-python.yaml", "program.py"],
-			},
-			{
-				title: "Ad-hoc room reservation via Slack",
-				description: "Ad-hoc room reservation via Slack slash commands",
-				integrations: [IntegrationsMap.slack, IntegrationsMap.calendar],
-				assetDirectory: "room_reservation",
-				files: [
-					"README.md",
-					"autokitteh.yaml",
-					"available_rooms.py",
-					"google_sheets.py",
-					"reserve_room.py",
-					"room_status.py",
-				],
-			},
-			{
-				title: "Slack bot for assistance requests with AI categorization",
-				description:
-					"Slack bot: request for assistance is inferred using Google's Gemini AI. The appropriate person is mentioned according to a predetermined table of expertise in a Google Doc. The person can then !take the request and later !resolve it.",
-				integrations: [IntegrationsMap.slack, IntegrationsMap.googlegemini],
-				assetDirectory: "slack_support",
-				files: ["README.md", "autokitteh.yaml", "directory.py", "gemini.py", "main.py"],
-			},
-		],
-	},
-	{
-		name: "Durable workflows",
-		cards: [
-			{
-				title: "Fault tolerant workflow with manual Slack approvals",
-				description:
-					"Runs a sequence of tasks with fault tolerance. In case of failure, user can decide to terminate or retry from the point of failure.",
-				integrations: [IntegrationsMap.slack],
-				assetDirectory: "task_chain/single_workflow/basic",
-				files: ["interactive_message.json.txt", "autokitteh.yaml", "program.py"],
 			},
 		],
 	},
@@ -256,35 +212,35 @@ export const templateProjectsCategories: TemplateCategory[] = [
 			{
 				title: "gRPC",
 				description: "Samples using gRPC",
-				integrations: [IntegrationsMap.grpc],
+				integrations: [HiddenIntegrationsForTemplates.grpc],
 				assetDirectory: "samples/grpc",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "HTTP",
 				description: "Samples using HTTP requests and webhooks",
-				integrations: [IntegrationsMap.http],
+				integrations: [HiddenIntegrationsForTemplates.http],
 				assetDirectory: "samples/http",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "OpenAI ChatGPT",
 				description: "Samples using chatGPT APIs",
-				integrations: [IntegrationsMap.openai],
+				integrations: [IntegrationsMap.chatgpt],
 				assetDirectory: "samples/openai_chatgpt",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Runtime Events",
 				description: "Samples using events in AutoKitteh - subscribe(), next_event(), unsubscribe()",
-				integrations: [IntegrationsMap.builtinEvents],
+				integrations: [HiddenIntegrationsForTemplates.autokitteh],
 				assetDirectory: "samples/runtime_events",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Scheduler",
 				description: "Samples using cron scheduler for workflows",
-				integrations: [IntegrationsMap.scheduler],
+				integrations: [HiddenIntegrationsForTemplates.scheduler],
 				assetDirectory: "samples/scheduler",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
@@ -305,9 +261,57 @@ export const templateProjectsCategories: TemplateCategory[] = [
 			{
 				title: "Quickstart",
 				description: "Sample for quickstart",
-				integrations: [IntegrationsMap.webhook],
+				integrations: [HiddenIntegrationsForTemplates.http],
 				assetDirectory: "quickstart",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
+			},
+		],
+	},
+	{
+		name: "Durable workflows",
+		cards: [
+			{
+				title: "Fault tolerant workflow with manual Slack approvals",
+				description:
+					"Runs a sequence of tasks with fault tolerance. In case of failure, user can decide to terminate or retry from the point of failure.",
+				integrations: [IntegrationsMap.slack],
+				assetDirectory: "task_chain/single_workflow/basic",
+				files: ["interactive_message.json.txt", "autokitteh.yaml", "program.py"],
+			},
+		],
+	},
+	{
+		name: "Office Automation",
+		cards: [
+			{
+				title: "Slack notify on important Email",
+				description:
+					"Categorizing incoming emails and notifying relevant Slack channels by integrating Gmail, ChatGPT, and Slack",
+				integrations: [IntegrationsMap.gmail, IntegrationsMap.slack, IntegrationsMap.chatgpt],
+				assetDirectory: "categorize_emails",
+				files: ["README.md", "autokitteh-python.yaml", "program.py"],
+			},
+			{
+				title: "Ad-hoc room reservation via Slack",
+				description: "Ad-hoc room reservation via Slack slash commands",
+				integrations: [IntegrationsMap.slack, IntegrationsMap.calendar],
+				assetDirectory: "room_reservation",
+				files: [
+					"README.md",
+					"autokitteh.yaml",
+					"available_rooms.py",
+					"google_sheets.py",
+					"reserve_room.py",
+					"room_status.py",
+				],
+			},
+			{
+				title: "Slack bot for assistance requests with AI categorization",
+				description:
+					"Slack bot: request for assistance is inferred using Google's Gemini AI. The appropriate person is mentioned according to a predetermined table of expertise in a Google Doc. The person can then !take the request and later !resolve it.",
+				integrations: [IntegrationsMap.slack, IntegrationsMap.googlegemini],
+				assetDirectory: "slack_support",
+				files: ["README.md", "autokitteh.yaml", "directory.py", "gemini.py", "main.py"],
 			},
 		],
 	},

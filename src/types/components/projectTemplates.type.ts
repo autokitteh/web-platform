@@ -1,4 +1,4 @@
-import { FunctionComponent, SVGProps } from "react";
+import { ComponentType, SVGProps } from "react";
 
 export type TemplateCardType = {
 	assetDirectory: string;
@@ -11,7 +11,7 @@ export type TemplateCardType = {
 export type DashboardFooterTemplateCardType = {
 	assetDirectory: string;
 	description: string;
-	icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	title: string;
 };
 
@@ -21,6 +21,6 @@ export type TemplateCategory = {
 };
 
 type Integration = {
-	icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	label: string;
 };
