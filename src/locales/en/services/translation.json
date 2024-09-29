@@ -80,5 +80,6 @@
 		"createFailed": "Deployment creation failed - build: {{buildId}}, environment: {{envId}}, error: {{error}}"
 	},
 	"sessionTriggerSource": "Trigger {{triggerName}}",
-	"sessionConnectionSource": "Trigger {{connectionName}}"
+	"sessionConnectionSource": "Trigger {{connectionName}}",
+	"connection": "Connection - {{connectionName}}"
 }
