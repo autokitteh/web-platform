@@ -1,3 +1,10 @@
+## [2.15.1](https://github.com/autokitteh/web-platform/compare/v2.15.0...v2.15.1) (2024-09-29)
+
+
+### Bug Fixes
+
+* remove not existing template ([#406](https://github.com/autokitteh/web-platform/issues/406)) ([200ef43](https://github.com/autokitteh/web-platform/commit/200ef4304b0762ab4b253467884ee4c798f855c5))
+
 # [2.15.0](https://github.com/autokitteh/web-platform/compare/v2.14.2...v2.15.0) (2024-09-29)
 
 
