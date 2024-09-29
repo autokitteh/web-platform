@@ -1,3 +1,10 @@
+## [2.15.2](https://github.com/autokitteh/web-platform/compare/v2.15.1...v2.15.2) (2024-09-29)
+
+
+### Bug Fixes
+
+* template file names ([#407](https://github.com/autokitteh/web-platform/issues/407)) ([3998364](https://github.com/autokitteh/web-platform/commit/3998364ceb1b10245b62128e49707f99f6f6fc49))
+
 ## [2.15.1](https://github.com/autokitteh/web-platform/compare/v2.15.0...v2.15.1) (2024-09-29)
 
 
