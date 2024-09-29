@@ -27,11 +27,10 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 					ns: "services",
 					error: trigger.error,
 				});
-				LoggerService.error(namespaces.eventsService, errorMessage);
-			} else {
-				destinationName = trigger.data?.name;
-				sourceType = trigger.data?.sourceType;
+				throw errorMessage;
 			}
+			destinationName = trigger.data?.name;
+			sourceType = trigger.data?.sourceType;
 		}
 
 		if (protoEvent.destinationId.startsWith("con_")) {
@@ -43,15 +42,14 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 					error: connection.error,
 				});
 
-				LoggerService.error(namespaces.eventsService, errorMessage);
-			} else {
-				destinationName = connection.data?.name;
-				sourceType = i18n.t("connection", {
-					connectionName: connection.data?.name,
-					ns: "services",
-					error: connection.error,
-				});
+				throw errorMessage;
 			}
+			destinationName = connection.data?.name;
+			sourceType = i18n.t("connection", {
+				connectionName: connection.data?.name,
+				ns: "services",
+				error: connection.error,
+			});
 		}
 	} catch (error) {
 		const errorMessage = i18n.t("eventNoDestinationIdExtended", {
