@@ -6,10 +6,7 @@ import {
 	ConfluenceOauthForm,
 } from "@components/organisms/connections/integrations/confluence/authMethods";
 import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
-import {
-	JsonKeyGoogleForm as GoogleJsonKeyForm,
-	OauthGoogleForm,
-} from "@components/organisms/connections/integrations/google/authMethods";
+import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connections/integrations/google/authMethods";
 import {
 	JsonKeyGoogleCalendarForm,
 	OauthGoogleCalendarForm,
@@ -41,7 +38,7 @@ export const formsPerIntegrationsMapping: Partial<
 	},
 	[Integrations.google]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
-		[ConnectionAuthType.JsonKey]: GoogleJsonKeyForm,
+		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
 	},
 	[Integrations.calendar]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleCalendarForm,
