@@ -1,3 +1,10 @@
+## [2.14.2](https://github.com/autokitteh/web-platform/compare/v2.14.1...v2.14.2) (2024-09-29)
+
+
+### Bug Fixes
+
+* fetch logs and activities per session separately ([#392](https://github.com/autokitteh/web-platform/issues/392)) ([60888e2](https://github.com/autokitteh/web-platform/commit/60888e20032d94c5e904be0445b926e5a584bcee))
+
 ## [2.14.1](https://github.com/autokitteh/web-platform/compare/v2.14.0...v2.14.1) (2024-09-26)
 
 
