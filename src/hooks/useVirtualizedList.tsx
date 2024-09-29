@@ -81,8 +81,12 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 		if (!session) {
 			reset(sessionId);
-			const newPageSize = calculatePageSize();
-			setPageSize(newPageSize);
+			if (!pageSize) {
+				setPageSize(calculatePageSize());
+
+				return;
+			}
+			loadMoreRows();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId, type, session, reset, loadMoreRows, itemHeight]);
