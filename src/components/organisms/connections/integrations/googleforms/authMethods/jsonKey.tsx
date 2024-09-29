@@ -26,7 +26,7 @@ export const JsonKeyGoogleFormsForm = ({
 			<div className="relative mb-3">
 				<Input
 					label={t("google.labels.formId")}
-					{...register("cal_id")}
+					{...register("form_id")}
 					aria-label={t("google.placeholders.formId")}
 					isError={!!errors.json}
 					placeholder={t("google.placeholders.formId")}

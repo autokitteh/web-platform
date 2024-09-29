@@ -18,7 +18,7 @@ export const OauthGoogleFormsForm = ({ register }: { register: UseFormRegister<{
 			<div className="relative mb-3">
 				<Input
 					label={t("google.labels.formId")}
-					{...register("cal_id")}
+					{...register("form_id")}
 					aria-label={t("google.placeholders.calendarId")}
 					placeholder={t("google.placeholders.calendarId")}
 				/>
