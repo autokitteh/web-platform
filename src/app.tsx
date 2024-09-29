@@ -17,7 +17,7 @@ import { isProduction } from "@constants";
 
 import { PageTitle } from "@components/atoms";
 import { Toast } from "@components/molecules";
-import { DeploymentsTable, SessionsTable } from "@components/organisms";
+import { DeploymentsTable, EventsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
@@ -28,7 +28,7 @@ import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/tr
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import { Connections, Dashboard, Intro, NotFound404, Project, Sessions, Triggers, Variables } from "@components/pages";
 import { Deployments } from "@components/pages/deployments";
-import { AppLayout } from "@components/templates";
+import { AppLayout, EventsLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
 export const App = () => {
@@ -168,6 +168,12 @@ export const App = () => {
 
 				<Route element={<SettingsLayout />} path="settings">
 					<Route element={<Security />} index />
+
+					<Route element={<Navigate replace to="/404" />} path="*" />
+				</Route>
+
+				<Route element={<EventsLayout />} path="events">
+					<Route element={<EventsTable />} index />
 
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>

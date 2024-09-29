@@ -19,3 +19,4 @@ export type { Variable } from "@type/models/variable.type";
 export type { Integration } from "@type/models/integration.type";
 export type { BuildInfoRuntimes } from "@type/models/buildInfoRuntimes.type";
 export type { Value, WrappedJsonValue } from "@type/models/value.type";
+export type { Event } from "@type/models/event.type";

@@ -2,18 +2,21 @@ import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
 import { DeploymentsService, LoggerService, TriggersService } from "@services";
+import { EventsService } from "@services/events.service";
 import { namespaces } from "@src/constants";
 import { CacheStore } from "@src/interfaces/store";
 
 import { useToastStore } from "@store";
 
-const initialState: Pick<CacheStore, "loading" | "triggers" | "deployments" | "currentProjectId"> = {
+const initialState: Pick<CacheStore, "loading" | "triggers" | "deployments" | "events" | "currentProjectId"> = {
 	loading: {
 		deployments: false,
 		triggers: false,
+		events: false,
 	},
 	deployments: undefined,
 	triggers: [],
+	events: undefined,
 	currentProjectId: undefined,
 };
 
@@ -109,6 +112,52 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			LoggerService.error(namespaces.stores.cache, errorLog);
 
 			set((state) => ({ ...state, loading: { ...state.loading, triggers: false } }));
+		}
+	},
+
+	fetchEvents: async (force?: boolean) => {
+		const { events } = get();
+		if (events && !force) {
+			return events;
+		}
+
+		set((state) => ({
+			...state,
+			loading: { ...state.loading, events: true },
+		}));
+
+		try {
+			const { data: incomingEvents, error } = await EventsService.list();
+
+			if (error) {
+				const errorMsg = i18n.t("errorFetchingEvents", { ns: "errors" });
+
+				useToastStore.getState().addToast({
+					message: errorMsg,
+					type: "error",
+				});
+			}
+
+			set((state) => ({
+				...state,
+				events: incomingEvents,
+				loading: { ...state.loading, events: false },
+			}));
+
+			return incomingEvents;
+		} catch (error) {
+			const errorMsg = i18n.t("errorFetchingEvents", { ns: "errors" });
+			const errorLog = i18n.t("errorFetchingEventsExtended", {
+				ns: "errors",
+				error: (error as Error).message,
+			});
+			useToastStore.getState().addToast({
+				message: errorMsg,
+				type: "error",
+			});
+			LoggerService.error(namespaces.stores.cache, errorLog);
+
+			set((state) => ({ ...state, loading: { ...state.loading, events: false } }));
 		}
 	},
 });

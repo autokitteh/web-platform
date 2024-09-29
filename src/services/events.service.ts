@@ -30,4 +30,23 @@ export class EventsService {
 			return { data: undefined, error };
 		}
 	}
+
+	static async list(): Promise<ServiceResponse<Event[]>> {
+		try {
+			const { events } = await eventsClient.list({});
+			const eventsConverted = events.map(convertEventProtoToModel);
+
+			return { data: eventsConverted, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.eventsService,
+				i18n.t("fetchFailedForEventList", {
+					error: (error as Error).message,
+					ns: "services",
+				})
+			);
+
+			return { data: undefined, error };
+		}
+	}
 }
