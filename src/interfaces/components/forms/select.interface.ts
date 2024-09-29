@@ -22,6 +22,9 @@ export interface SelectOption {
 	value: string;
 	icon?: React.FC<React.SVGProps<SVGSVGElement>>;
 }
+export interface IntegrationSelectOption extends SelectOption {
+	icon: React.FC<React.SVGProps<SVGSVGElement>>;
+}
 
 export interface SelectIconLabel {
 	label: string;

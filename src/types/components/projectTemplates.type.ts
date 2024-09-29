@@ -22,5 +22,5 @@ export type TemplateCategory = {
 
 type Integration = {
 	icon: FunctionComponent<SVGProps<SVGSVGElement>>;
-	title: string;
+	label: string;
 };

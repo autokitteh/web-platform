@@ -1,62 +1,14 @@
 import { ConnectionAuthType } from "@enums";
-import { Integrations } from "@enums/components";
 import { SelectOption } from "@interfaces/components";
+import { IntegrationsMap } from "@src/enums/components/connection.enum";
 
-import {
-	AwsIcon,
-	ConfluenceIcon,
-	DiscordIcon,
-	GithubIcon,
-	GoogleCalendarIcon,
-	GoogleDriveIcon,
-	GoogleFormsIcon,
-	GoogleGeminiIcon,
-	GoogleGmailIcon,
-	GoogleIcon,
-	GoogleSheetsIcon,
-	HttpIcon,
-	JiraIcon,
-	OpenAiIcon,
-	SlackIcon,
-	TwilioIcon,
-} from "@assets/image/icons/connections";
+export const integrationTypes: SelectOption[] = Object.values(IntegrationsMap);
 
-export const integrationTypes: SelectOption[] = [
-	{ disabled: false, label: "Github", value: Integrations.github, icon: GithubIcon },
-	{ disabled: false, label: "Slack", value: Integrations.slack, icon: SlackIcon },
-	{ disabled: false, label: "AWS", value: Integrations.aws, icon: AwsIcon },
-	{ disabled: false, label: "OpenAI ChatGPT", value: Integrations.chatgpt, icon: OpenAiIcon },
-	{ disabled: false, label: "Twilio", value: Integrations.twilio, icon: TwilioIcon },
-	{ disabled: false, label: "Gmail", value: Integrations.gmail, icon: GoogleGmailIcon },
-	{ disabled: false, label: "Jira", value: Integrations.jira, icon: JiraIcon },
-	{ disabled: false, label: "Atlassian Confluence", value: Integrations.confluence, icon: ConfluenceIcon },
-	{ disabled: false, label: "Discord", value: Integrations.discord, icon: DiscordIcon },
-	{ disabled: false, label: "Google (All APIs)", value: Integrations.google, icon: GoogleIcon },
-	{ disabled: false, label: "Google Sheets", value: Integrations.sheets, icon: GoogleSheetsIcon },
-	{ disabled: false, label: "Google Calendar", value: Integrations.calendar, icon: GoogleCalendarIcon },
-	{ disabled: false, label: "Google Drive", value: Integrations.drive, icon: GoogleDriveIcon },
-	{ disabled: false, label: "Google Forms", value: Integrations.forms, icon: GoogleFormsIcon },
-	{ disabled: false, label: "Google Gemini", value: Integrations.googlegemini, icon: GoogleGeminiIcon },
-];
-
-export const integrationIcons: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
-	[Integrations.github]: GithubIcon,
-	[Integrations.slack]: SlackIcon,
-	[Integrations.aws]: AwsIcon,
-	[Integrations.chatgpt]: OpenAiIcon,
-	[Integrations.http]: HttpIcon,
-	[Integrations.twilio]: TwilioIcon,
-	[Integrations.gmail]: GoogleGmailIcon,
-	[Integrations.jira]: JiraIcon,
-	[Integrations.confluence]: ConfluenceIcon,
-	[Integrations.discord]: DiscordIcon,
-	[Integrations.google]: GoogleIcon,
-	[Integrations.sheets]: GoogleSheetsIcon,
-	[Integrations.calendar]: GoogleCalendarIcon,
-	[Integrations.drive]: GoogleDriveIcon,
-	[Integrations.forms]: GoogleFormsIcon,
-	[Integrations.googlegemini]: GoogleGeminiIcon,
-};
+export const integrationIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = Object.fromEntries(
+	Object.entries(IntegrationsMap)
+		.filter(([_, value]) => value.icon !== undefined)
+		.map(([key, value]) => [key, value.icon!])
+);
 
 export const githubIntegrationAuthMethods: SelectOption[] = [
 	{ label: "Personal Access Token (PAT)", value: ConnectionAuthType.Pat },
