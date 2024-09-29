@@ -1,5 +1,15 @@
 {
 	"topbar":{
 		"title": "Events"
+	},
+	"history":{
+		"noEvents": "No events found",
+		"noEventSelected": "No event selected"
+	},
+	"table": {
+		"columns": {
+			"eventId": "Event ID",
+			"createdAt": "Creation time"
+		}
 	}
 }

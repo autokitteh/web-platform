@@ -4,6 +4,7 @@ import { namespaces } from "@constants";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { Event as ProtoEvent } from "@src/autokitteh/proto/gen/ts/autokitteh/events/v1/event_pb";
 import { Event } from "@src/types/models/event.type";
+import { convertTimestampToDate } from "@src/utilities";
 
 export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<Event> => {
 	let destinationName;
@@ -56,5 +57,6 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 		eventId: protoEvent.eventId,
 		destinationName,
 		sourceType,
+		createdAt: convertTimestampToDate(protoEvent.createdAt),
 	};
 };
