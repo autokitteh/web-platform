@@ -1,3 +1,10 @@
+## [2.15.3](https://github.com/autokitteh/web-platform/compare/v2.15.2...v2.15.3) (2024-09-29)
+
+
+### Bug Fixes
+
+* logs fetch ([#408](https://github.com/autokitteh/web-platform/issues/408)) ([f0acd30](https://github.com/autokitteh/web-platform/commit/f0acd3012fe42aaad1be748785cde3c648c339f7))
+
 ## [2.15.2](https://github.com/autokitteh/web-platform/compare/v2.15.1...v2.15.2) (2024-09-29)
 
 
