@@ -1,3 +1,4 @@
+import { convertValue } from "./value.model";
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { ActivityState } from "@src/enums";
 import { SessionActivity } from "@src/types/models";
@@ -53,7 +54,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 		if (callAttemptComplete && currentActivity) {
 			currentActivity.status = "completed" as keyof ActivityState;
 			currentActivity.endTime = convertTimestampToDate(callAttemptComplete.completedAt) as Date | undefined;
-			if (callAttemptComplete.result?.value?.bytes?.v) {
+			if (convertValue(callAttemptComplete.result?.value)?.bytes) {
 				try {
 					const byteArray = callAttemptComplete?.result?.value?.bytes?.v;
 
@@ -62,7 +63,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 					}
 
 					const uint8Array = new Uint8Array(byteArray);
-					const decoder = new TextDecoder("utf-8"); // Specify 'utf-8' or another encoding if known
+					const decoder = new TextDecoder("utf-8");
 					const decodedString = decoder.decode(uint8Array);
 					currentActivity.returnBytesValue = decodedString;
 				} catch (error) {
@@ -70,7 +71,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				}
 			}
 			if (callAttemptComplete.result?.value?.string?.v) {
-				const returnValueConverted = convertPythonStringToJSON(callAttemptComplete?.result?.value?.string?.v);
+				const returnValueConverted = convertValue(callAttemptComplete?.result?.value)?.string;
 				if (typeof returnValueConverted === "string") {
 					currentActivity.returnStringValue = returnValueConverted;
 				} else {
