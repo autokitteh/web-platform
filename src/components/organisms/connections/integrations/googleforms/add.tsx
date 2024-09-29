@@ -90,7 +90,7 @@ export const GoogleFormsIntegrationAddForm = ({
 	}, [type]);
 
 	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.google]?.[connectionType?.value as ConnectionAuthType];
+		formsPerIntegrationsMapping[Integrations.forms]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
 		<>
