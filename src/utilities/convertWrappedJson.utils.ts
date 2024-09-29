@@ -11,23 +11,23 @@ export const parseNestedJson = (object: WrappedJsonObject): Record<string, strin
 	const result: Record<string, any> = {};
 
 	for (const key in object) {
-		if (Object.prototype.hasOwnProperty.call(object, key)) {
-			const value = convertValue(object[key] as Value);
-			if (value && typeof value === "object" && "string" in value && value && value.string) {
-				try {
-					result[key] = JSON.parse(value.string);
-				} catch (error) {
-					const errorMessage = i18n.t("convertWrappedJsonError", {
-						error: (error as Error).message,
-						ns: "errors",
-						key,
-					});
-					LoggerService.error(namespaces.sessionsService, errorMessage);
-					result[key] = errorMessage;
-				}
-			} else {
-				result[key] = value;
+		if (!Object.prototype.hasOwnProperty.call(object, key)) continue;
+
+		const value = convertValue(object[key] as Value);
+		if (value && typeof value === "object" && value && value.string) {
+			try {
+				result[key] = JSON.parse(value.string);
+			} catch (error) {
+				const errorMessage = i18n.t("convertWrappedJsonError", {
+					error: (error as Error).message,
+					ns: "errors",
+					key,
+				});
+				LoggerService.error(namespaces.sessionsService, errorMessage);
+				result[key] = errorMessage;
 			}
+		} else {
+			result[key] = value;
 		}
 	}
 
