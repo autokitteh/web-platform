@@ -108,13 +108,13 @@ export class SessionsService {
 				};
 			}
 
-			const { data: destinationName, error } = await EventsService.getDestinationName(session.eventId);
+			const { data: sourceType, error } = await EventsService.getSourceName(session.eventId);
 
 			if (error) {
 				return { data: undefined, error };
 			}
 
-			const sessionConverted = convertSessionProtoToViewerModel(session!, destinationName);
+			const sessionConverted = convertSessionProtoToViewerModel(session!, sourceType);
 
 			return { data: sessionConverted, error: undefined };
 		} catch (error) {

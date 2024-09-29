@@ -206,10 +206,10 @@ export const SessionViewer = () => {
 						</div>
 
 						<div className="flex w-1/2 flex-col gap-2">
-							{sessionInfo?.connectionName ? (
+							{sessionInfo?.sourceType ? (
 								<div className="flex items-center gap-2">
-									<div className="w-1/3">{t("connectionName")}</div>
-									<span className="font-semibold">{sessionInfo.connectionName}</span>
+									<div className="w-1/3">{t("source")}</div>
+									<span className="font-semibold">{sessionInfo.sourceType}</span>
 								</div>
 							) : null}
 
@@ -221,7 +221,7 @@ export const SessionViewer = () => {
 							) : null}
 
 							<div className="flex items-center gap-2">
-								{t("entrypoint")}:
+								{t("entrypoint")}
 								<div className="inline font-semibold">
 									<div className="inline">{sessionInfo.entrypoint.path}</div>
 									<IconSvg className="mx-2 inline fill-white" size="sm" src={ArrowRightIcon} />

@@ -99,6 +99,7 @@
 			},
 			"connectionName": "Connection",
 			"trigger": "Trigger",
+			"source": "Source",
 			"entrypoint": "Entrypoint",
 			"eventId": "Event ID",
 			"buildId": "Build ID",

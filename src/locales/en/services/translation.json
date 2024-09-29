@@ -58,7 +58,6 @@
 	"tokenFetchFailed": "Token authentication failed",
 	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
-	"fetchSessionFailed": "Failed to fetch session logs",
 	"triggerNotUpdated": "Failed to update trigger for the project",
 	"triggerNotUpdatedExtended": "Failed to update trigger for the project, trigger ID: {{triggerId}}. Error: {{error}}",
 	"triggerRemoveFailedExtended": "Trigger remove failed, ID: {{triggerId}}",
@@ -79,5 +78,7 @@
 		"activateFailed": "Deployment activation failed - deployment: {{deploymentId}}, error: {{error}}",
 		"deactivateFailed": "Deployment deactivation failed - deployment: {{deploymentId}}, error: {{error}}",
 		"createFailed": "Deployment creation failed - build: {{buildId}}, environment: {{envId}}, error: {{error}}"
-	}
+	},
+	"sessionTriggerSource": "Trigger {{triggerName}}",
+	"sessionConnectionSource": "Trigger {{connectionName}}"
 }

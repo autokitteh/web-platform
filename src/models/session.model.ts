@@ -17,10 +17,10 @@ export function convertSessionProtoToModel(protoSession: ProtoSession): Session 
 		state: protoSession.state,
 	};
 }
-export function convertSessionProtoToViewerModel(protoSession: ProtoSession, connectionName?: string): ViewerSession {
+export function convertSessionProtoToViewerModel(protoSession: ProtoSession, sourceType?: string): ViewerSession {
 	return {
 		buildId: protoSession.buildId,
-		connectionName,
+		sourceType,
 		createdAt: convertTimestampToDate(protoSession.createdAt),
 		updatedAt: convertTimestampToDate(protoSession.updatedAt),
 		entrypoint: protoSession.entrypoint as unknown as SessionEntrypoint,
