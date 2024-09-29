@@ -12,3 +12,7 @@ export {
 	ConfluenceIntegrationAddForm,
 	ConfluenceIntegrationEditForm,
 } from "@components/organisms/connections/integrations/confluence";
+export {
+	GoogleCalendarIntegrationAddForm,
+	GoogleCalendarIntegrationEditForm,
+} from "@components/organisms/connections/integrations/googlecalendar";
