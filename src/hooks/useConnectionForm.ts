@@ -95,10 +95,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		integrationName?: string
 	) => {
 		const connectionData = flattenFormData(getValues(), formSchema);
-		const formattedIntegrationName =
-			integrationName === Integrations.http ? `i/${integrationName}` : integrationName;
 
-		return { connectionData, formattedIntegrationName };
+		return { connectionData, formattedIntegrationName: integrationName };
 	};
 
 	const createConnection = async (

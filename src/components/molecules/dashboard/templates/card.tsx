@@ -25,11 +25,11 @@ export const ProjectTemplateCard = ({
 		<div className="relative flex flex-col rounded-md border border-gray-600 bg-white p-5 pr-3.5">
 			<div className="flex items-center justify-between gap-1.5">
 				<div className="flex gap-3">
-					{card.integrations.map(({ icon, title }, index) => (
+					{card.integrations.map(({ icon, label }, index) => (
 						<div
 							className="relative flex size-8 items-center justify-center rounded-full bg-gray-400 p-1"
 							key={index}
-							title={title}
+							title={label}
 						>
 							<IconSvg className="z-10 rounded-full bg-white p-1" size="xl" src={icon} />
 

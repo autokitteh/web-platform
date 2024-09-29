@@ -15,3 +15,7 @@ export { default as DiscordIcon } from "@assets/image/icons/connections/Discord.
 export { default as GoogleDriveIcon } from "@assets/image/icons/connections/GoogleDrive.svg?react";
 export { default as RedisIcon } from "@assets/image/icons/connections/Redis.svg?react";
 export { default as GoogleGeminiIcon } from "@assets/image/icons/connections/GoogleGemini.svg?react";
+export { default as SqliteIcon } from "@assets/image/icons/connections/Sqlite.svg?react";
+export { default as GithubCopilotIcon } from "@assets/image/icons/connections/GithubCopilot.svg?react";
+export { default as SchedulerIcon } from "@assets/image/icons/connections/Scheduler.svg?react";
+export { default as GrpcIcon } from "@assets/image/icons/connections/Grpc.svg?react";
