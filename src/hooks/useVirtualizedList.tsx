@@ -88,6 +88,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	}, [sessionId, type, session, reset, loadMoreRows, itemHeight]);
 
 	useEffect(() => {
+		if (!pageSize) return;
 		loadMoreRows();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [pageSize]);
