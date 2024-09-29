@@ -35,13 +35,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
-				title: "Create Jira Ticket on HTTP request",
-				description: "Create a Jira ticket based on HTTP request",
-				integrations: [HiddenIntegrationsForTemplates.http, IntegrationsMap.jira],
-				assetDirectory: "create_jira_issue",
-				files: ["README.md", "autokitteh.yaml", "program.py"],
-			},
-			{
 				title: "Create Jira ticket from Google form",
 				description:
 					"Trigger by HTTP request, continue polling Google forms, and create Jira ticket based on the form's data",
