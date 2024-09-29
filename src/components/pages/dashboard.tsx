@@ -39,7 +39,7 @@ export const Dashboard = () => {
 				) : null}
 			</div>
 
-			{/* eslint-disable-next-line tailwindcss/no-custom-classname, @liferay/empty-line-between-elements */}
+			{/* eslint-disable-next-line tailwindcss/no-custom-classname */}
 			<div className="resize-handle-horizontal z-10 -ml-2 w-1 cursor-ew-resize transition hover:bg-gray-750" />
 
 			<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>

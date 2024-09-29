@@ -12,3 +12,9 @@ export type {
 } from "@interfaces/store/projectValidationStore.interface";
 export type { CacheStore } from "@interfaces/store/cacheStore.interface";
 export type { FileStore } from "@interfaces/store/fileStore.interface";
+export type {
+	ActivitiesStore,
+	ActivitySession,
+	OutputsStore,
+	OutputSession,
+} from "@interfaces/store/activitiesAndOutputsCache.store.interface";

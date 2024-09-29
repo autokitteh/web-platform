@@ -4,12 +4,14 @@ import { get, omit } from "lodash";
 import {
 	Session as ProtoSession,
 	SessionLogRecord as ProtoSessionLogRecord,
+	SessionLogRecord_Type,
 } from "@ak-proto-ts/sessions/v1/session_pb";
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
 import { convertSessionProtoToModel } from "@models";
 import { ConnectionService, EnvironmentsService, LoggerService } from "@services";
+import { SessionLogType } from "@src/enums";
 import { convertSessionProtoToViewerModel } from "@src/models/session.model";
 import { ViewerSession } from "@src/types/models/session.type";
 import { ServiceResponse, StartSessionArgsType } from "@type";
@@ -33,15 +35,24 @@ export class SessionsService {
 	static async getLogRecordsBySessionId(
 		sessionId: string,
 		pageToken?: string,
-		pageSize?: number
+		pageSize?: number,
+		logType?: SessionLogType
 	): Promise<ServiceResponse<{ count: number; nextPageToken?: string; records: Array<ProtoSessionLogRecord> }>> {
 		try {
+			const selectedTypes =
+				logType === SessionLogType.Output
+					? SessionLogRecord_Type.PRINT
+					: SessionLogRecord_Type.CALL_SPEC |
+						SessionLogRecord_Type.CALL_ATTEMPT_START |
+						SessionLogRecord_Type.CALL_ATTEMPT_COMPLETE;
+
 			const response = await sessionsClient.getLog({
 				sessionId,
 				pageSize,
 				pageToken,
 				jsonValues: true,
 				ascending: false,
+				types: selectedTypes,
 			});
 
 			if (!response?.log?.records) {

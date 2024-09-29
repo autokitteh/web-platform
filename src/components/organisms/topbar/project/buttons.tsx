@@ -7,10 +7,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import { useCacheStore } from "@src/store/useCacheStore";
+import { useCacheStore, useModalStore, useProjectStore, useProjectValidationStore, useToastStore } from "@src/store";
 
 import { useFileOperations } from "@hooks";
-import { useModalStore, useProjectStore, useProjectValidationStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";

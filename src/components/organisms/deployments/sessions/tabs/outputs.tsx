@@ -1,18 +1,35 @@
-import React from "react";
+import React, { CSSProperties, memo, useCallback, useEffect, useRef } from "react";
 
-import { AutoSizer, CellMeasurer, InfiniteLoader, List } from "react-virtualized";
+import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
 import { useVirtualizedList } from "@hooks/useVirtualizedList";
-import { convertSessionLogProtoToViewerOutput } from "@src/models";
+import { SessionLogType } from "@src/enums";
 import { SessionOutput } from "@src/types/models";
 
 import { Loader } from "@components/atoms";
 
+const OutputRow = memo(({ log, measure, style }: { log: SessionOutput; measure: () => void; style: CSSProperties }) => {
+	const rowRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		measure();
+	}, [measure]);
+
+	return (
+		<div ref={rowRef} style={style}>
+			<div className="flex">
+				<div className="w-52 text-yellow-500">[{log.time}]: </div>
+
+				<div className="w-full whitespace-pre-line">{log.print}</div>
+			</div>
+		</div>
+	);
+});
+
+OutputRow.displayName = "OutputRow";
+
 export const SessionOutputs = () => {
 	const {
-		cache,
-		frameRef,
-		handleResize,
 		handleScroll,
 		isRowLoaded,
 		items: outputs,
@@ -21,47 +38,41 @@ export const SessionOutputs = () => {
 		loading,
 		nextPageToken,
 		t,
-	} = useVirtualizedList<SessionOutput>(convertSessionLogProtoToViewerOutput);
+	} = useVirtualizedList<SessionOutput>(SessionLogType.Output);
 
-	const rowRenderer = ({
-		index,
-		key,
-		parent,
-		style,
-	}: {
-		index: number;
-		key: string;
-		parent: any;
-		style: React.CSSProperties;
-	}) => {
-		const log = outputs[index] || {};
+	const cacheRef = useRef(
+		new CellMeasurerCache({
+			fixedWidth: true,
+			minHeight: 22,
+		})
+	);
 
-		return (
-			<CellMeasurer cache={cache} columnIndex={0} key={key} parent={parent} rowIndex={index}>
-				{({ measure, registerChild }) => (
-					<div ref={registerChild as React.LegacyRef<HTMLDivElement>} style={style}>
-						<script onLoad={measure} />
+	const customRowRenderer = useCallback(
+		({ index, key, parent, style }: ListRowProps) => {
+			const log = outputs[index];
 
-						<div className="flex">
-							<div className="w-52 text-yellow-500">[{log.time}]: </div>
+			return (
+				<CellMeasurer cache={cacheRef.current} columnIndex={0} key={key} parent={parent} rowIndex={index}>
+					{({ measure }) => <OutputRow log={log} measure={measure} style={style} />}
+				</CellMeasurer>
+			);
+		},
+		[outputs]
+	);
 
-							<div className="w-full whitespace-pre-line">{log.print}</div>
-						</div>
-					</div>
-				)}
-			</CellMeasurer>
-		);
-	};
+	const setListRef = useCallback((ref: List | null) => {
+		listRef.current = ref;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
-		<div className="scrollbar size-full" ref={frameRef}>
+		<div className="scrollbar size-full">
 			{loading && !outputs.length ? (
 				<Loader isCenter size="xl" />
 			) : (
-				<AutoSizer onResize={handleResize}>
+				<AutoSizer>
 					{({ height, width }) => (
 						<InfiniteLoader
-							className="scrollbar"
 							isRowLoaded={isRowLoaded}
 							loadMoreRows={loadMoreRows}
 							rowCount={nextPageToken ? outputs.length + 1 : outputs.length}
@@ -69,18 +80,18 @@ export const SessionOutputs = () => {
 						>
 							{({ onRowsRendered, registerChild }) => (
 								<List
-									deferredMeasurementCache={cache}
+									deferredMeasurementCache={cacheRef.current}
 									height={height}
 									onRowsRendered={onRowsRendered}
 									onScroll={handleScroll}
 									overscanRowCount={10}
 									ref={(ref) => {
+										setListRef(ref);
 										registerChild(ref);
-										listRef.current = ref;
 									}}
 									rowCount={outputs.length}
-									rowHeight={cache.rowHeight}
-									rowRenderer={rowRenderer}
+									rowHeight={cacheRef.current.rowHeight}
+									rowRenderer={customRowRenderer}
 									width={width}
 								/>
 							)}

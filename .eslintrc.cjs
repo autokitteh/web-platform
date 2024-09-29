@@ -88,6 +88,7 @@ module.exports = {
 		"local-rules/no-abbreviations": "error",
 		"@liferay/no-anonymous-exports": "off",
 		"@liferay/sort-class-names": "off",
+		"@liferay/empty-line-between-elements": "off",
 		"@typescript-eslint/member-ordering": [
 			"error",
 			{
