@@ -1,3 +1,10 @@
+# [2.15.0](https://github.com/autokitteh/web-platform/compare/v2.14.2...v2.15.0) (2024-09-29)
+
+
+### Features
+
+* new sample templates ([#393](https://github.com/autokitteh/web-platform/issues/393)) ([af9417c](https://github.com/autokitteh/web-platform/commit/af9417c4a02dc2397180beafcb5618718ef1c394))
+
 ## [2.14.2](https://github.com/autokitteh/web-platform/compare/v2.14.1...v2.14.2) (2024-09-29)
 
 
