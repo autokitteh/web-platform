@@ -123,9 +123,9 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			addToast({
 				message: t("connectionCreatedSuccessfully"),
-				type: "error",
+				type: "success",
 			});
-			LoggerService.error(namespaces.hooks.connectionForm, t("connectionCreatedSuccessfully"));
+			LoggerService.info(namespaces.hooks.connectionForm, t("connectionCreatedSuccessfully"));
 
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
