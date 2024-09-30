@@ -83,6 +83,7 @@ export const ConnectionsTable = () => {
 		if (!connectionId) {
 			return;
 		}
+
 		setIsLoadingDeleteConnection(true);
 		const { error } = await ConnectionService.delete(connectionId);
 		setIsLoadingDeleteConnection(false);
@@ -96,6 +97,7 @@ export const ConnectionsTable = () => {
 			return;
 		}
 		setConnectionId(undefined);
+		resetChecker();
 
 		addToast({
 			message: t("connectionRemoveSuccess"),
