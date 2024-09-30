@@ -1,3 +1,10 @@
+## [2.16.2](https://github.com/autokitteh/web-platform/compare/v2.16.1...v2.16.2) (2024-09-30)
+
+
+### Bug Fixes
+
+* deployments time in deployments table ([#400](https://github.com/autokitteh/web-platform/issues/400)) ([e7646ae](https://github.com/autokitteh/web-platform/commit/e7646ae41694a2e2275738f38e68984e190ecf67))
+
 ## [2.16.1](https://github.com/autokitteh/web-platform/compare/v2.16.0...v2.16.1) (2024-09-30)
 
 
