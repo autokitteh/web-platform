@@ -28,7 +28,6 @@ export const JsonKeyGoogleFormsForm = ({
 					label={t("google.labels.formId")}
 					{...register("form_id")}
 					aria-label={t("google.placeholders.formId")}
-					isError={!!errors.json}
 					placeholder={t("google.placeholders.formId")}
 				/>
 			</div>
