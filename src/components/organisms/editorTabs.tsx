@@ -23,7 +23,6 @@ export const EditorTabs = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeOpenedFile, fetchResources, getResources, openFileAsActive, openFiles, openProjectId, saveFile } =
 		useFileOperations(projectId!);
-	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const addToast = useToastStore((state) => state.addToast);
 
 	const activeEditorFileName =
@@ -38,12 +37,13 @@ export const EditorTabs = () => {
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
-		if (resource) {
-			const byteArray = Array.from(resource);
-			setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
-		} else {
-			setContent(t("noFileText"));
+		if (!resource) {
+			setContent("");
+
+			return;
 		}
+		const byteArray = Array.from(resource);
+		setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
 	};
 
 	const loadContent = async () => {
@@ -89,6 +89,12 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
+		if (!newContent) {
+			setContent("");
+
+			return;
+		}
+
 		const handleError = (key: string, options?: Record<string, unknown>) => {
 			addToast({
 				message: tErrors("codeSaveFailed"),
@@ -105,12 +111,6 @@ export const EditorTabs = () => {
 
 		if (!activeEditorFileName) {
 			handleError("codeSaveFailedMissingFileName", { projectId });
-
-			return;
-		}
-
-		if (newContent === t("noFileText") || newContent === undefined) {
-			handleError("codeSaveFailedMissingContent", { projectId });
 
 			return;
 		}
@@ -152,9 +152,9 @@ export const EditorTabs = () => {
 
 		setContent(newContent);
 
-		if (autosave && newContent !== tTabsEditor("noFileText")) {
-			debouncedUpdateContent(newContent);
-		}
+		if (!autosave) return;
+
+		debouncedUpdateContent(newContent);
 	};
 
 	const activeCloseIcon = (fileName: string) => {
@@ -236,26 +236,30 @@ export const EditorTabs = () => {
 						) : null}
 					</div>
 
-					<Editor
-						aria-label={activeEditorFileName}
-						beforeMount={handleEditorWillMount}
-						className="absolute -ml-6 mt-2 h-full"
-						language={languageEditor}
-						loading={<Loader size="lg" />}
-						onChange={handleUpdateContent}
-						onMount={handleEditorDidMount}
-						options={{
-							minimap: {
-								enabled: false,
-							},
-							readOnly: content === t("noFileText"),
-							renderLineHighlight: "none",
-							scrollBeyondLastLine: false,
-							wordWrap: "on",
-						}}
-						theme="vs-dark"
-						value={content}
-					/>
+					{content ? (
+						<Editor
+							aria-label={activeEditorFileName}
+							beforeMount={handleEditorWillMount}
+							className="absolute -ml-6 mt-2 h-full"
+							language={languageEditor}
+							loading={<Loader size="lg" />}
+							onChange={handleUpdateContent}
+							onMount={handleEditorDidMount}
+							options={{
+								fontFamily: "monospace, sans-serif",
+								minimap: {
+									enabled: false,
+								},
+								renderLineHighlight: "none",
+								scrollBeyondLastLine: false,
+								wordWrap: "on",
+							}}
+							theme="vs-dark"
+							value={content}
+						/>
+					) : (
+						<div className="font-mono font-bold">{t("noFileText")}</div>
+					)}
 				</>
 			) : null}
 		</div>
