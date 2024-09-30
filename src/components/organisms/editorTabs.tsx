@@ -248,6 +248,7 @@ export const EditorTabs = () => {
 							onMount={handleEditorDidMount}
 							options={{
 								fontFamily: "monospace, sans-serif",
+								fontSize: 14,
 								minimap: {
 									enabled: false,
 								},
