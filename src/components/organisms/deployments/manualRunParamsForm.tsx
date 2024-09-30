@@ -8,7 +8,7 @@ import { ManualFormParamsErrors } from "@src/types/components";
 import { Button, ErrorMessage, IconButton, Input } from "@components/atoms";
 
 import { PlusCircle } from "@assets/image";
-import { InfoIcon, TrashIcon } from "@assets/image/icons";
+import { InfoIcon, TrashManualRunIcon } from "@assets/image/icons";
 
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
@@ -90,10 +90,10 @@ export const ManualRunParamsForm = () => {
 
 					<IconButton
 						ariaLabel={t("ariaDeleteParam")}
-						className="self-center bg-gray-1300 hover:bg-black"
+						className="self-center hover:bg-black"
 						onClick={() => remove(index)}
 					>
-						<TrashIcon className="size-4 fill-white" />
+						<TrashManualRunIcon className="size-5 stroke-white" />
 					</IconButton>
 				</div>
 			))}
