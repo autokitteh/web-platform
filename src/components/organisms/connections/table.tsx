@@ -11,7 +11,7 @@ import { useSort } from "@hooks";
 import { useConnectionCheckerStore, useModalStore, useProjectValidationStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { ConnectionTableStatus, SortButton } from "@components/molecules";
+import { ConnectionTableStatus, EmptyTableAddButton, SortButton } from "@components/molecules";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 
 import { PlusCircle } from "@assets/image";
@@ -228,7 +228,7 @@ export const ConnectionsTable = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-center text-xl font-semibold text-gray-500">{t("titleNoAvailable")}</div>
+				<EmptyTableAddButton buttonText={t("titleEmptyConnections")} onClick={() => navigate("add")} />
 			)}
 			{connectionId ? (
 				<DeleteConnectionModal

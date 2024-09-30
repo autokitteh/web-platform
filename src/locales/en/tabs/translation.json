@@ -22,7 +22,7 @@
 	},
 	"connections": {
 		"buttons": {
-			"addNew": "Add new",
+			"addNew": "Add Connection",
 			"loading": "Loading"
 		},
 		"table": {
@@ -47,8 +47,8 @@
 				"warning": "Warning"
 			}
 		},
-		"titleAvailable": "Available Connections",
-		"titleNoAvailable": "No connections available.",
+		"titleAvailable": "Connections",
+		"titleEmptyConnections": "Add connection",
 		"connectionRemoveSuccess": "Connection removed successfully"
 	},
 	"editor": {
@@ -64,14 +64,14 @@
 	},
 	"triggers": {
 		"buttons": {
-			"addNew": "Add new",
+			"addNew": "Add Trigger",
 			"loading": "Loading"
 		},
 		"form": {
 			"createdSuccessfully": "Trigger created successfully",
 			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
 			"cronSchedulerConnectionTitle": "Scheduler",
-			"addNewTrigger": "Add new trigger",
+			"addNewTrigger": "Add trigger",
 			"ariaDeleteData": "Delete {{name}} data",
 			"buttonAddNewData": "Add new data",
 			"updatedSuccessfully": "Trigger updated successfully",
@@ -135,8 +135,8 @@
 				"name": "Name"
 			}
 		},
-		"titleAvailable": "Available Triggers",
-		"titleNoAvailable": "No triggers available."
+		"titleAvailable": "Triggers",
+		"titleEmptyTriggers": "Add Trigger"
 	},
 	"variables": {
 		"buttons": {
@@ -186,7 +186,7 @@
 				"value": "Value"
 			}
 		},
-		"titleAvailable": "Available Variables",
-		"titleNoAvailable": "No variables available."
+		"titleAvailable": "Variables",
+		"titleEmptyVariablesButton": "Add Variable"
 	}
 }
