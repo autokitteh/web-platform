@@ -69,8 +69,8 @@
 	"deleteProject": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete",
-		"line": "Name - <strong>{{name}}</strong> <br /> ID - <strong>{{projectId}}</strong>",
-		"line2": "You will not be able to recover it",
-		"title": "Delete {{name}} project?"
+		"line": "Name: <strong>{{name}}</strong> <br /> ID: <strong>{{projectId}}</strong>",
+		"line2": "Warning: You will not be able to recover it",
+		"title": "Delete Project?"
 	}
 }
