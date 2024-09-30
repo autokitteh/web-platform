@@ -97,7 +97,7 @@ export const ProjectTopbarName = () => {
 
 	return (
 		<div className="flex items-center py-2">
-			<div className="relative flex items-end gap-3 font-fira-code text-gray-500">
+			<div className="relative flex items-center gap-3 font-fira-code text-gray-500">
 				<span
 					className={inputClass}
 					contentEditable={true}
@@ -116,7 +116,7 @@ export const ProjectTopbarName = () => {
 					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
 				</ErrorMessage>
 
-				<span className="font-fira-code font-semibold">
+				<span className="flex items-center font-fira-code font-semibold">
 					ID
 					<CopyButton className="ml-2 inline p-1 pl-1.5" size="xs" text={project?.id || ""} />
 				</span>
