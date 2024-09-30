@@ -99,6 +99,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		return { connectionData, formattedIntegrationName: integrationName };
 	};
 
+	const getSpecificParams = (connectionData: Record<string, string>, specificKeys: string[]) => {
+		return specificKeys
+			.map((key) => (connectionData[key] ? `${key}=${connectionData[key]}` : ""))
+			.filter((param) => param !== "")
+			.join("&");
+	};
+
 	const createConnection = async (
 		connectionId: string,
 		connectionAuthType: ConnectionAuthType,
@@ -312,9 +319,12 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			});
 
 			const { connectionData } = getFormattedConnectionData(getValues, formSchema);
-			const authScopes = connectionData.auth_scopes ? `auth_scopes=${connectionData.auth_scopes}` : "";
+			const specificKeys = ["auth_scopes", "cal_id", "form_id"];
+
+			const urlParams = getSpecificParams(connectionData, specificKeys);
+
 			openPopup(
-				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${authScopes}`,
+				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);
