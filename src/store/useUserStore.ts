@@ -1,3 +1,4 @@
+import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -12,19 +13,25 @@ const defaultState = {
 
 const store: StateCreator<UserStore> = (set) => ({
 	...defaultState,
-	getLoggedInUser: async () => {
-		const { data, error } = await AuthService.whoAmI();
+	getLoggedInUser: async (): Promise<string> => {
+		const { data: user, error } = await AuthService.whoAmI();
 
 		if (error) {
-			return { data: undefined, error };
+			return error as string;
+		}
+
+		if (!user) {
+			const errorMsg = i18n.t("userNotFound", { ns: "services" });
+
+			return errorMsg;
 		}
 
 		set((state) => ({
 			...state,
-			user: data,
+			user,
 		}));
 
-		return { data, error: undefined };
+		return "";
 	},
 	logoutFunction: () => {},
 	setLogoutFunction: (logoutFn) => {

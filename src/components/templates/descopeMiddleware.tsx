@@ -58,7 +58,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
 					withCredentials: true,
 				});
-				const { error } = await getLoggedInUser();
+				const error = await getLoggedInUser();
 				if (error) {
 					addToast({
 						message: t("errors.loginFailed", { error }),
@@ -70,7 +70,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					message: t("errors.loginFailed", { error }),
 					type: "error",
 				});
-				LoggerService.error(namespaces.ui.loginPage, t("errors.logoutFailed", { error }));
+				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailed", { error }));
 			} finally {
 				setDescopeRenderKey((prevKey) => prevKey + 1);
 			}

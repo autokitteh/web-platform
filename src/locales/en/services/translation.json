@@ -71,5 +71,10 @@
 	"errorGettingConnectionByEventId": "Error getting connection by event ID: {{eventId}}",
 	"errorGettingConnectionByEventIdExtended": "Error getting connection by event ID: {{eventId}}, error: {{error}}",
 	"errorGettingConnectionByIdExtended": "Error getting connection by ID: {{connectionId}}, error: {{error}}",
-	"noMatchingIntegrationDetailsForConnection": "No matching integration for the connection found. Connection name: {{connectionName}}, connection ID: {{connectionId}}"
+	"noMatchingIntegrationDetailsForConnection": "No matching integration for the connection found. Connection name: {{connectionName}}, connection ID: {{connectionId}}",
+	"deployments": {
+		"activateFailed": "Deployment activation failed - deployment: {{deploymentId}}, error: {{error}}",
+		"deactivateFailed": "Deployment deactivation failed - deployment: {{deploymentId}}, error: {{error}}",
+		"createFailed": "Deployment creation failed - build: {{buildId}}, environment: {{envId}}, error: {{error}}"
+	}
 }
