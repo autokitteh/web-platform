@@ -34,8 +34,9 @@
 	"deleteFile": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete",
-		"line": "You will not be able to recover it.",
-		"title": "Delete {{name}}"
+		"line1": "Name: ",
+		"line2": "Warning: you will not be able to recover it.",
+		"title": "Delete File?"
 	},
 	"deleteTrigger": {
 		"cancelButton": "Cancel",

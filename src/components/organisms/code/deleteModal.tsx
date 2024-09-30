@@ -18,9 +18,12 @@ export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 	return (
 		<Modal name={ModalName.deleteFile}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("title", { name: fileName })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
-				<p>{t("line")}</p>
+				<p>
+					{t("line1")} <strong>{fileName}</strong>
+				</p>
+				<p>{t("line2")}</p>
 			</div>
 
 			<div className="mt-14 flex justify-end gap-1">
