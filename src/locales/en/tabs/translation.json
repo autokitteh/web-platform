@@ -59,7 +59,8 @@
 		"autoSave": "Auto save",
 		"lastSaved": "Last saved",
 		"initialContentForNewFile": "// Start typing here...",
-		"noFileText": "// Click on a file to start editing or create a new one"
+		"noFileTextLine1": "Click on a file to start editing ",
+		"noFileTextLine2": "or create a new one"
 	},
 	"triggers": {
 		"buttons": {

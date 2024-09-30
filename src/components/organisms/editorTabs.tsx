@@ -15,6 +15,7 @@ import { useFileOperations } from "@hooks";
 
 import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
 
+import { AKRoundLogo } from "@assets/image";
 import { Close, SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = () => {
@@ -258,7 +259,13 @@ export const EditorTabs = () => {
 							value={content}
 						/>
 					) : (
-						<div className="font-mono font-bold">{t("noFileText")}</div>
+						<div className="flex h-full flex-col items-center justify-center pb-24">
+							<IconSvg className="mb-12 fill-gray-800" size="4xl" src={AKRoundLogo} />
+							<div className="text-center font-mono text-gray-800">
+								<div>{t("noFileTextLine1")}</div>
+								<div>{t("noFileTextLine2")}</div>
+							</div>
+						</div>
 					)}
 				</>
 			) : null}

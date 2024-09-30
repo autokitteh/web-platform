@@ -89,7 +89,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	return (
 		<div className="flex h-screen">
 			<div className="my-6 flex w-1/2 flex-col items-center justify-center rounded-r-xl bg-gray-1250 p-8 font-averta text-white">
-				<IconSvg className="mb-4" size="3xl" src={AKRoundLogo} />
+				<IconSvg className="mb-4 fill-white" size="3xl" src={AKRoundLogo} />
 
 				<h1 className="text-center font-averta text-4xl font-semibold">
 					{t("leftSide.welcomeTitle")}
