@@ -140,11 +140,11 @@
 	},
 	"variables": {
 		"buttons": {
-			"addNew": "Add new",
+			"addNew": "Add Variable",
 			"loading": "Loading"
 		},
 		"form": {
-			"addNewVariable": "Add new variable",
+			"addNewVariable": "Add variable",
 			"ariaNameRequired": "Name is required",
 			"ariaValueRequired": "Value is required",
 			"buttons": {
