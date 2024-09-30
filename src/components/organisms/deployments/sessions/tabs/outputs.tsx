@@ -17,8 +17,8 @@ const OutputRow = memo(({ log, measure, style }: { log: SessionOutput; measure: 
 
 	return (
 		<div ref={rowRef} style={style}>
-			<div className="flex">
-				<div className="w-52 text-yellow-500">[{log.time}]: </div>
+			<div className="flex font-mono">
+				<div className="w-72 text-yellow-500">[{log.time}]: </div>
 
 				<div className="w-full whitespace-pre-line">{log.print}</div>
 			</div>
