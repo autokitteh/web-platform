@@ -45,7 +45,7 @@ export const ProjectTopbarNavigation = () => {
 						"active bg-black font-semibold": isSelected,
 					}
 				);
-				const iconClassName = cn("text-white -mr-2 -mt-1", {
+				const iconClassName = cn("text-white", {
 					"text-green-200": isSelected,
 				});
 				const href = `/projects/${projectId}${item.path.replace("{deploymentId}", deploymentId || "")}`;
@@ -78,7 +78,7 @@ export const ProjectTopbarNavigation = () => {
 					>
 						<IconSvg className={iconClassName} size="lg" src={icon} />
 
-						<span className="ml-2 group-hover:text-white">{label}</span>
+						<span className="group-hover:text-white">{label}</span>
 					</Button>
 				)
 			)}
