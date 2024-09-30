@@ -3,7 +3,7 @@
 		"ariaLabelNewFile": "New file name",
 		"placeholderName": "Name",
 		"selectExtension": "Extension",
-		"title": "Create new"
+		"title": "Create File"
 	},
 	"deleteConnection": {
 		"cancelButton": "Cancel",
