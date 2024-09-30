@@ -1,3 +1,10 @@
+## [2.16.3](https://github.com/autokitteh/web-platform/compare/v2.16.2...v2.16.3) (2024-09-30)
+
+
+### Bug Fixes
+
+* reset connection checker after connection deleted ([#415](https://github.com/autokitteh/web-platform/issues/415)) ([8a7f73f](https://github.com/autokitteh/web-platform/commit/8a7f73f5016f091c03de00fcabe123ac90249c53))
+
 ## [2.16.2](https://github.com/autokitteh/web-platform/compare/v2.16.1...v2.16.2) (2024-09-30)
 
 
