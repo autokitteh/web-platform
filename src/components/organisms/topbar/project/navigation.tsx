@@ -40,9 +40,9 @@ export const ProjectTopbarNavigation = () => {
 					item.key === "sessions" && (!deployments || !deployments.length);
 				const isSelected = selectedSection === item.key;
 				const buttonClassName = cn(
-					"group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-black",
+					"group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-gray-1050",
 					{
-						"active bg-black": isSelected,
+						"active bg-black font-semibold": isSelected,
 					}
 				);
 				const iconClassName = cn("text-white", {
@@ -78,7 +78,7 @@ export const ProjectTopbarNavigation = () => {
 					>
 						<IconSvg className={iconClassName} size="lg" src={icon} />
 
-						<span className="ml-2 group-hover:text-white">{label}</span>
+						<span className="group-hover:text-white">{label}</span>
 					</Button>
 				)
 			)}
