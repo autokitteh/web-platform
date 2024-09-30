@@ -74,7 +74,11 @@ export const IntegrationEditForm = ({
 
 	const handleFormSubmit = () => {
 		if (connectionId && connectionType === ConnectionAuthType.Oauth) {
-			if (integrationType === Integrations.google) {
+			if (
+				integrationType === Integrations.google ||
+				integrationType === Integrations.calendar ||
+				integrationType === Integrations.forms
+			) {
 				handleGoogleOauth(connectionId);
 
 				return;
