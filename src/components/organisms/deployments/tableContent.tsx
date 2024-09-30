@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
 import { DeploymentsService } from "@services";
+import { dateTimeFormat } from "@src/constants";
 import { Deployment } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -115,7 +116,7 @@ export const DeploymentsTableContent = ({
 							key={deploymentId}
 							onClick={() => navigate(`${deploymentId}/sessions`)}
 						>
-							<Td className="font-semibold">{moment(createdAt).fromNow()}</Td>
+							<Td className="font-semibold">{moment(createdAt).format(dateTimeFormat)}</Td>
 
 							<Td>
 								<DeploymentSessionStats sessionStats={sessionStats} />
