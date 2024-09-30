@@ -6,4 +6,5 @@ export interface DrawerProps {
 	children: ReactNode;
 	name: string;
 	variant?: ColorSchemes;
+	className?: string;
 }

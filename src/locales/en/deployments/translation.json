@@ -33,16 +33,19 @@
 			"noFunctionsAvailable": "No functions available",
 			"titleParams": "Params",
 			"ariaDeleteParam": "Delete parameter",
+			"configuration": "Configuration",
 			"placeholders": {
 				"selectFile": "Select file",
 				"file": "File",
 				"selectEntrypoint": "Select entrypoint function",
 				"entrypoint": "Entrypoint",
 				"key": "Key",
-				"value": "Value"
+				"value": "Value",
+				"enterKey": "Enter Key",
+				"enterValue": "Enter Value"
 			},
 			"buttons": {
-				"addNewParameter": "Add new"
+				"addNewParameter": "Add Parameter"
 			},
 			"completeAllParams": "Please complete all parameters",
 			"executionFailed": "Session execution failed",
