@@ -1,3 +1,2 @@
-def init(event):
-    print("Hello World!")
-    
+def on_trigger(event):
+    print("Hello World!") 
