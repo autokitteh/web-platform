@@ -1,3 +1,10 @@
+## [2.16.1](https://github.com/autokitteh/web-platform/compare/v2.16.0...v2.16.1) (2024-09-30)
+
+
+### Bug Fixes
+
+* framer motion error in console - bad svg ([#397](https://github.com/autokitteh/web-platform/issues/397)) ([8cdf589](https://github.com/autokitteh/web-platform/commit/8cdf589d89111ec179454ce1dcfa41a75cc23c99))
+
 # [2.16.0](https://github.com/autokitteh/web-platform/compare/v2.15.4...v2.16.0) (2024-09-30)
 
 
