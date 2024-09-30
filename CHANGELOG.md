@@ -1,3 +1,10 @@
+# [2.16.0](https://github.com/autokitteh/web-platform/compare/v2.15.4...v2.16.0) (2024-09-30)
+
+
+### Features
+
+* add optional calendar id field to google calendar connection form ([#409](https://github.com/autokitteh/web-platform/issues/409)) ([a03c3de](https://github.com/autokitteh/web-platform/commit/a03c3dece750f908e81206c3381d5736cea85520))
+
 ## [2.15.4](https://github.com/autokitteh/web-platform/compare/v2.15.3...v2.15.4) (2024-09-30)
 
 
