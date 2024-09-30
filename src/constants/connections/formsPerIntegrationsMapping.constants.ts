@@ -7,6 +7,10 @@ import {
 } from "@components/organisms/connections/integrations/confluence/authMethods";
 import { OauthForm, PatForm } from "@components/organisms/connections/integrations/github/authMethods";
 import { JsonKeyGoogleForm, OauthGoogleForm } from "@components/organisms/connections/integrations/google/authMethods";
+import {
+	JsonKeyGoogleCalendarForm,
+	OauthGoogleCalendarForm,
+} from "@components/organisms/connections/integrations/googlecalendar/authMethods";
 import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connections/integrations/jira/authMethods";
 import {
 	OauthForm as SlackOauthForm,
@@ -35,6 +39,10 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.google]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
 		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
+	},
+	[Integrations.calendar]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleCalendarForm,
+		[ConnectionAuthType.JsonKey]: JsonKeyGoogleCalendarForm,
 	},
 	[Integrations.jira]: {
 		[ConnectionAuthType.ApiToken]: ApiTokenJiraForm,

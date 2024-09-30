@@ -1,6 +1,9 @@
 import { Integrations } from "@src/enums/components";
 
-import { ConfluenceIntegrationEditForm } from "@components/organisms/connections/integrations";
+import {
+	ConfluenceIntegrationEditForm,
+	GoogleCalendarIntegrationEditForm,
+} from "@components/organisms/connections/integrations";
 import { AwsIntegrationEditForm } from "@components/organisms/connections/integrations/aws";
 import { DiscordIntegrationEditForm } from "@components/organisms/connections/integrations/discord";
 import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
@@ -22,8 +25,8 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.googlegemini]: GoogleGeminiIntegrationEditForm,
 	[Integrations.confluence]: ConfluenceIntegrationEditForm,
 	[Integrations.google]: GoogleIntegrationEditForm,
+	[Integrations.calendar]: GoogleCalendarIntegrationEditForm,
 	[Integrations.sheets]: GoogleIntegrationEditForm,
-	[Integrations.calendar]: GoogleIntegrationEditForm,
 	[Integrations.gmail]: GoogleIntegrationEditForm,
 	[Integrations.drive]: GoogleIntegrationEditForm,
 	[Integrations.forms]: GoogleIntegrationEditForm,

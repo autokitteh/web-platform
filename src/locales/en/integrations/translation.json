@@ -47,8 +47,12 @@
 			"serviceAccount": "Create and delete service account keys",
 			"uisingOAuth": "Using OAuth 2.0 for web server applications"
 		},
+		"labels":{
+			"calendarId":"Calendar ID (optional)"
+		},
 		"placeholders": {
-			"jsonKey": "JSON Key"
+			"jsonKey": "JSON Key",
+			"calendarId": "Optional: Calendar ID (To Receive Events, e.g. 'primary')"
 		}
 	},
 	"slack": {
