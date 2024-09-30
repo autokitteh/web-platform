@@ -22,7 +22,7 @@
 	},
 	"connections": {
 		"buttons": {
-			"addNew": "Add Connection",
+			"addNew": "Add new",
 			"loading": "Loading"
 		},
 		"table": {
@@ -64,7 +64,7 @@
 	},
 	"triggers": {
 		"buttons": {
-			"addNew": "Add Trigger",
+			"addNew": "Add new",
 			"loading": "Loading"
 		},
 		"form": {
@@ -140,11 +140,11 @@
 	},
 	"variables": {
 		"buttons": {
-			"addNew": "Add Variable",
+			"addNew": "Add new",
 			"loading": "Loading"
 		},
 		"form": {
-			"addNewVariable": "Add variable",
+			"addNewVariable": "Add new",
 			"ariaNameRequired": "Name is required",
 			"ariaValueRequired": "Value is required",
 			"buttons": {

@@ -11,7 +11,7 @@ async function createTriggerScheduler(
 	fileName: string,
 	functionName: string
 ) {
-	await page.getByRole("link", { name: "Add Trigger" }).click();
+	await page.getByRole("link", { name: "Add new" }).click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
@@ -112,7 +112,7 @@ test.describe("Project Triggers Suite", () => {
 	});
 
 	test("Create trigger without a values", async ({ page }) => {
-		await page.getByRole("link", { name: "Add Trigger" }).click();
+		await page.getByRole("link", { name: "Add new" }).click();
 		await page.getByTestId("select-trigger-type").click();
 		await page.getByRole("option", { name: "Scheduler" }).click();
 		await page.getByTestId("select-file").click();
