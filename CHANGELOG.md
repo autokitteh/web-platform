@@ -1,3 +1,10 @@
+## [2.16.4](https://github.com/autokitteh/web-platform/compare/v2.16.3...v2.16.4) (2024-09-30)
+
+
+### Bug Fixes
+
+* google connections calendar and forms oauth ([#416](https://github.com/autokitteh/web-platform/issues/416)) ([79047c3](https://github.com/autokitteh/web-platform/commit/79047c3456eda37512a1c77691964118ca1e1cd8))
+
 ## [2.16.3](https://github.com/autokitteh/web-platform/compare/v2.16.2...v2.16.3) (2024-09-30)
 
 
