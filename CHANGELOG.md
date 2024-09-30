@@ -1,3 +1,10 @@
+## [2.15.4](https://github.com/autokitteh/web-platform/compare/v2.15.3...v2.15.4) (2024-09-30)
+
+
+### Bug Fixes
+
+* project navigation menu states (active and hover) ([#399](https://github.com/autokitteh/web-platform/issues/399)) ([3758c92](https://github.com/autokitteh/web-platform/commit/3758c92b2502036ca91f206dd6ac8981070fd5d0))
+
 ## [2.15.3](https://github.com/autokitteh/web-platform/compare/v2.15.2...v2.15.3) (2024-09-29)
 
 
