@@ -184,7 +184,7 @@ export const ProjectTopbarButtons = () => {
 			<DropdownButton
 				contentMenu={
 					<Button className="h-8 px-4" onClick={openModalDeleteProject} variant="filledGray">
-						<IconSvg className="fill-white" size="md" src={TrashIcon} />
+						<IconSvg className="-mt-0.5 stroke-white" src={TrashIcon} />
 
 						{t("topbar.buttons.delete")}
 					</Button>

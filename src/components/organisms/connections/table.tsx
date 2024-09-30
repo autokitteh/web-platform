@@ -218,7 +218,7 @@ export const ConnectionsTable = () => {
 												onClick={() => handleOpenModalDeleteConnection(connectionId)}
 												title={t("table.buttons.titleRemoveConnection")}
 											>
-												<TrashIcon className="size-3 fill-white" />
+												<TrashIcon className="size-4 stroke-white" />
 											</IconButton>
 										</div>
 									</Td>

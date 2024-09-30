@@ -173,7 +173,7 @@ export const TriggersTable = () => {
 											})}
 											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
 										>
-											<TrashIcon className="size-3 fill-white" />
+											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>
 									</div>
 								</Td>

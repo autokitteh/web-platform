@@ -8,7 +8,7 @@ import { ManualFormParamsErrors } from "@src/types/components";
 import { Button, ErrorMessage, IconButton, Input } from "@components/atoms";
 
 import { PlusCircle } from "@assets/image";
-import { InfoIcon, TrashManualRunIcon } from "@assets/image/icons";
+import { InfoIcon, TrashIcon } from "@assets/image/icons";
 
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
@@ -93,7 +93,7 @@ export const ManualRunParamsForm = () => {
 						className="self-center hover:bg-black"
 						onClick={() => remove(index)}
 					>
-						<TrashManualRunIcon className="size-5 stroke-white" />
+						<TrashIcon className="size-5 stroke-white" />
 					</IconButton>
 				</div>
 			))}
