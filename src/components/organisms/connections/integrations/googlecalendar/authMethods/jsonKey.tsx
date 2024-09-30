@@ -28,7 +28,6 @@ export const JsonKeyGoogleCalendarForm = ({
 					label={t("google.placeholders.calendarId")}
 					{...register("cal_id")}
 					aria-label={t("google.placeholders.calendarId")}
-					isError={!!errors.json}
 					placeholder={t("google.placeholders.calendarId")}
 				/>
 			</div>
