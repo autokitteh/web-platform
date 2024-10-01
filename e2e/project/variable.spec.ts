@@ -51,6 +51,8 @@ test.describe("Project Variables Suite", () => {
 		await page.getByRole("button", { name: "Delete nameVariable variable" }).click();
 		await page.getByRole("button", { name: "Yes, delete" }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
+		const emptyTableMessage = page.getByText("ADD VARIABLE");
+		await expect(emptyTableMessage).toBeVisible();
 		await expect(newVariableInTable).not.toBeVisible();
 	});
 });

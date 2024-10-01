@@ -11,3 +11,4 @@ export { Select } from "@components/molecules/select";
 export { CopyButton } from "@components/molecules/copyButton";
 export { Drawer } from "@components/molecules/drawer";
 export { RefreshButton } from "@components/molecules/refreshButton";
+export { EmptyTableAddButton } from "@components/molecules/emptyTableAddButton";

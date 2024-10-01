@@ -11,7 +11,7 @@ import { useSort } from "@hooks";
 import { useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { SortButton } from "@components/molecules";
+import { EmptyTableAddButton, SortButton } from "@components/molecules";
 import { DeleteVariableModal } from "@components/organisms/variables";
 
 import { PlusCircle } from "@assets/image";
@@ -171,7 +171,7 @@ export const VariablesTable = () => {
 					</TBody>
 				</Table>
 			) : (
-				<div className="mt-10 text-center text-xl font-semibold text-gray-500"> {t("titleNoAvailable")}</div>
+				<EmptyTableAddButton buttonText={t("titleEmptyVariablesButton")} onClick={() => navigate("add")} />
 			)}
 
 			<DeleteVariableModal onDelete={handleDeleteVariable} variable={deleteVariable!} />

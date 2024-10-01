@@ -107,7 +107,7 @@ test.describe("Project Triggers Suite", () => {
 		await page.getByRole("button", { name: "Yes, delete" }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newVariableInTable).not.toBeVisible();
-		const noTriggersMessage = page.getByText("No triggers available.");
+		const noTriggersMessage = page.getByText("ADD TRIGGER");
 		await expect(noTriggersMessage).toBeVisible();
 	});
 
