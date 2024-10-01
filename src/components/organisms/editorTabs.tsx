@@ -4,7 +4,7 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { debounce, last } from "lodash";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
@@ -47,16 +47,27 @@ export const EditorTabs = () => {
 		setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
 	};
 
+	const location = useLocation();
+	const fileToOpen = location.state?.fileToOpen;
+
+	const openDefaultFile = () => {
+		if (fileToOpen) {
+			openFileAsActive(fileToOpen);
+		}
+	};
+
 	const loadContent = async () => {
 		const resources = await fetchResources(true);
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
+		openDefaultFile();
 	};
 
 	const loadFileResource = async () => {
 		const resources = await getResources();
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
+		openDefaultFile();
 	};
 
 	useEffect(() => {
@@ -68,7 +79,7 @@ export const EditorTabs = () => {
 		}
 		loadFileResource();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, projectId]);
+	}, [activeEditorFileName, projectId, fileToOpen]);
 
 	useEffect(() => {
 		setLastSaved(undefined);
@@ -237,7 +248,7 @@ export const EditorTabs = () => {
 						) : null}
 					</div>
 
-					{content ? (
+					{openFiles[projectId]?.length ? (
 						<Editor
 							aria-label={activeEditorFileName}
 							beforeMount={handleEditorWillMount}
@@ -261,7 +272,7 @@ export const EditorTabs = () => {
 						/>
 					) : (
 						<div className="flex h-full flex-col items-center justify-center pb-24">
-							<IconSvg className="mb-12 fill-gray-800" size="4xl" src={AKRoundLogo} />
+							<IconSvg className="mb-12 fill-gray-800" size="36" src={AKRoundLogo} />
 							<div className="text-center font-mono text-gray-800">
 								<div>{t("noFileTextLine1")}</div>
 								<div>{t("noFileTextLine2")}</div>
