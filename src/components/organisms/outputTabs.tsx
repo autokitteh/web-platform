@@ -19,7 +19,7 @@ export const OutputTabs = () => {
 	const ouputTextStyle = {
 		[LoggerLevel.debug]: "",
 		[LoggerLevel.error]: "text-error-200",
-		[LoggerLevel.info]: "",
+		[LoggerLevel.info]: "text-green-300",
 		[LoggerLevel.log]: "",
 		[LoggerLevel.warn]: "text-yellow-500",
 	} as const;
@@ -44,9 +44,9 @@ export const OutputTabs = () => {
 			<div className="scrollbar h-48 flex-auto overflow-auto pt-5">
 				{logs.map(({ id, message, status, timestamp }) => (
 					<div className="mb-4 font-mono" key={id}>
-						<div className="font-medium text-gray-250">
-							{timestamp}: <div className={cn("inline", ouputTextStyle[status])}>{message}</div>
-						</div>
+						<span className="font-medium text-gray-250">{timestamp}</span>
+
+						<p className={cn("inline ml-2", ouputTextStyle[status])}>{message}</p>
 					</div>
 				))}
 			</div>
