@@ -26,7 +26,7 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 				ns: "services",
 				error: trigger.error,
 			});
-			throw errorMessage;
+			throw new Error(errorMessage);
 		}
 		destinationName = trigger.data?.name;
 		sourceType = trigger.data?.sourceType;
@@ -41,7 +41,7 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 				error: connection.error,
 			});
 
-			throw errorMessage;
+			throw new Error(errorMessage);
 		}
 		destinationName = connection.data?.name;
 		sourceType = i18n.t("connection", {
