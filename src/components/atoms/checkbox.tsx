@@ -30,15 +30,13 @@ export const Checkbox = ({ checked, className, label, onChange, title }: Checkbo
 
 			<div className="relative flex select-none items-center" onKeyDown={handleKeyDown} role="presentation">
 				{label ? (
-					<label className="cursor-pointer text-sm text-gray-250" htmlFor={id}>
-						<label
-							aria-checked={checked}
-							className="flex cursor-pointer items-center justify-center gap-2 text-sm text-gray-250"
-							htmlFor={id}
-						>
-							<IconSvg className="size-3.5 fill-gray-250" src={checked ? Check : Square} />
-							{label}
-						</label>
+					<label
+						aria-checked={checked}
+						className="flex cursor-pointer items-center justify-center gap-2 text-sm text-gray-250"
+						htmlFor={id}
+					>
+						<IconSvg className="size-3.5 fill-gray-250" src={checked ? Check : Square} />
+						{label}
 					</label>
 				) : null}
 			</div>
