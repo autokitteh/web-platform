@@ -19,7 +19,7 @@ export const OutputTabs = () => {
 	const ouputTextStyle = {
 		[LoggerLevel.debug]: "",
 		[LoggerLevel.error]: "text-error-200",
-		[LoggerLevel.info]: "text-green-300",
+		[LoggerLevel.info]: "",
 		[LoggerLevel.log]: "",
 		[LoggerLevel.warn]: "text-yellow-500",
 	} as const;
