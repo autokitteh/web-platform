@@ -2,5 +2,13 @@
 	"success": "Success",
 	"copyFailure": "Could not copy",
 	"copySuccess": "Copied to clipboard successfully",
-	"copy": "Copy"
+	"copy": "Copy",
+	"pageTitles":{
+		"base": "AutoKitteh",
+		"template": "AutoKitteh - {{page}}",
+		"home": "Home",
+		"404": "404 Not Found",
+		"intro": "Introduction"
+	}
+		
 }
