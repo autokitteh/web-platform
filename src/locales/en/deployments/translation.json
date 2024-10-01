@@ -8,7 +8,7 @@
 		"deleteDisabled": "Cannot delete active deployment",
 		"loading": "Loading",
 		"noDeployments": "No deployments found",
-		"manual": "Manual run",
+		"manual": "Manual",
 		"ariaSettingsRun": "Settings manual run",
 		"buildInformationForSingleshotNotLoaded": "Couldn't load build information for manual run",
 		"table": {

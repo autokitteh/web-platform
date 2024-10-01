@@ -18,8 +18,7 @@ import {
 	ManualRunSuccessToastMessage,
 } from "@components/organisms/deployments";
 
-import { RunIcon } from "@assets/image";
-import { GearIcon } from "@assets/image/icons";
+import { GearIcon, RunIcon } from "@assets/image/icons";
 
 export const DeploymentsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
@@ -147,26 +146,34 @@ export const DeploymentsTable = () => {
 					/>
 				</div>
 
-				<div className="flex h-10 gap-2 rounded-3xl border border-gray-1000 p-1">
+				<div className="relative flex h-9 gap-1.5 rounded-3xl border border-gray-750 p-1 transition hover:border-white">
 					<Button
 						ariaLabel={t("ariaSettingsRun")}
-						className="h-full whitespace-nowrap bg-gray-1050"
+						className="group h-full whitespace-nowrap hover:bg-gray-1050 active:bg-black"
 						disabled={!isManualRunEnabled}
 						onClick={openManualRunSettings}
 						title={t("ariaSettingsRun")}
-						variant="filled"
+						variant="light"
 					>
-						<IconSvg className="fill-white" src={GearIcon} />
+						<IconSvg
+							className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+							src={GearIcon}
+						/>
 					</Button>
+
+					<div className="w-0.5 bg-gray-750 transition" />
 
 					<Button
 						ariaLabel={t("manual")}
-						className="h-full whitespace-nowrap bg-gray-1050 px-3.5"
+						className="group h-full gap-2 whitespace-nowrap hover:bg-gray-1050 active:bg-black"
 						disabled={!isManualRunEnabled || !entrypointFunction?.value || savingManualRun}
 						onClick={startManualRun}
-						variant="filled"
+						variant="light"
 					>
-						<IconSvg src={!savingManualRun ? RunIcon : Spinner} />
+						<IconSvg
+							className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+							src={!savingManualRun ? RunIcon : Spinner}
+						/>
 
 						{t("manual")}
 					</Button>
