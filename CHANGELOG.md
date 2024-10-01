@@ -1,3 +1,10 @@
+# [2.18.0](https://github.com/autokitteh/web-platform/compare/v2.17.1...v2.18.0) (2024-10-01)
+
+
+### Features
+
+* convert wrapped objects from the backend ([#401](https://github.com/autokitteh/web-platform/issues/401)) ([776cc1f](https://github.com/autokitteh/web-platform/commit/776cc1f3011e55a3f2116edf2feefc59a7310c91))
+
 ## [2.17.1](https://github.com/autokitteh/web-platform/compare/v2.17.0...v2.17.1) (2024-10-01)
 
 
