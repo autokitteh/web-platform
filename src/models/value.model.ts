@@ -1,7 +1,7 @@
-import { Value } from "@src/autokitteh/proto/gen/ts/autokitteh/values/v1/values_pb";
-import { WrappedJsonObject } from "@src/interfaces/utilities";
+import { Value as ProtoValue } from "@src/autokitteh/proto/gen/ts/autokitteh/values/v1/values_pb";
+import { Value } from "@src/types/models";
 
-export const convertValue = (value?: Value): WrappedJsonObject[string] => {
+export const convertValue = (value?: ProtoValue): Value[string] => {
 	if (!value) return { nothing: undefined };
 
 	if (value.nothing) return { nothing: undefined };
