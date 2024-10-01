@@ -16,7 +16,7 @@ export const Checkbox = ({ checked, className, label, onChange, title }: Checkbo
 		}
 	};
 
-	const checkboxClass = cn("inline-flex cursor-pointer items-center h-8 justify-center", className);
+	const checkboxClass = cn("inline-flex cursor-pointer items-center h-6 justify-center px-2", className);
 
 	return (
 		<div className={checkboxClass} title={title}>
@@ -29,12 +29,13 @@ export const Checkbox = ({ checked, className, label, onChange, title }: Checkbo
 			/>
 
 			<div className="relative flex select-none items-center" onKeyDown={handleKeyDown} role="presentation">
-				<div aria-checked={checked} className="flex items-center justify-center" role="checkbox" tabIndex={0}>
-					<IconSvg className="size-3.5 fill-gray-250" src={checked ? Check : Square} />
-				</div>
-
 				{label ? (
-					<label className="ml-2 cursor-pointer text-sm text-gray-250" htmlFor={id}>
+					<label
+						aria-checked={checked}
+						className="flex cursor-pointer items-center justify-center gap-2 text-sm text-gray-250"
+						htmlFor={id}
+					>
+						<IconSvg className="size-3.5 fill-gray-250" src={checked ? Check : Square} />
 						{label}
 					</label>
 				) : null}

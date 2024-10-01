@@ -227,7 +227,7 @@ export const EditorTabs = () => {
 								<div className="inline-flex gap-2 rounded-3xl border border-gray-1000 p-1">
 									{autosave ? null : (
 										<Button
-											className="whitespace-nowrap px-4 py-1"
+											className="h-6 whitespace-nowrap px-4 py-1"
 											disabled={loadingSave || autosave}
 											onClick={() => debouncedSaveContent(content)}
 											variant="filledGray"
