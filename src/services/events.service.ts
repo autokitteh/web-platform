@@ -22,7 +22,7 @@ export class EventsService {
 				namespaces.eventsService,
 				i18n.t("fetchFailedForEvent", {
 					eventId,
-					error: (error as Error).message,
+					error: new Error(error).message,
 					ns: "services",
 				})
 			);
