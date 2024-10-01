@@ -1,3 +1,10 @@
+# [2.19.0](https://github.com/autokitteh/web-platform/compare/v2.18.0...v2.19.0) (2024-10-01)
+
+
+### Features
+
+* add optional form id field to google forms connection form ([#410](https://github.com/autokitteh/web-platform/issues/410)) ([aeb1a4b](https://github.com/autokitteh/web-platform/commit/aeb1a4b69c5d239241d0eee49daa082c8e50e0b2))
+
 # [2.18.0](https://github.com/autokitteh/web-platform/compare/v2.17.1...v2.18.0) (2024-10-01)
 
 
