@@ -1,3 +1,10 @@
+## [2.16.6](https://github.com/autokitteh/web-platform/compare/v2.16.5...v2.16.6) (2024-10-01)
+
+
+### Bug Fixes
+
+* deployments cache fix ([#418](https://github.com/autokitteh/web-platform/issues/418)) ([17fffa4](https://github.com/autokitteh/web-platform/commit/17fffa4930d329a7db78c47171411bb2a1d7a305))
+
 ## [2.16.5](https://github.com/autokitteh/web-platform/compare/v2.16.4...v2.16.5) (2024-10-01)
 
 
