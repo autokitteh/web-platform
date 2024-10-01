@@ -34,7 +34,8 @@ export const DeploymentsTable = () => {
 
 	useEffect(() => {
 		fetchDeployments(projectId!, true);
-	}, [fetchDeployments, projectId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const [isManualRunEnabled, setIsManualRunEnabled] = useState(false);
 	const [savingManualRun, setSavingManualRun] = useState(false);
