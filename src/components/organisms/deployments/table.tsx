@@ -175,7 +175,7 @@ export const DeploymentsTable = () => {
 							src={!savingManualRun ? RunIcon : Spinner}
 						/>
 
-						{t("manual")}
+						<span className="mt-0.5">{t("manual")}</span>
 					</Button>
 				</div>
 			</div>
