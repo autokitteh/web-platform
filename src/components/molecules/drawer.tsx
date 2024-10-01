@@ -6,21 +6,25 @@ import { DrawerProps } from "@src/interfaces/components";
 import { useDrawerStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-export const Drawer = ({ children, name, variant }: DrawerProps) => {
+export const Drawer = ({ children, className, name, variant }: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
 		isOpen: state.drawers[name],
 		onClose: state.closeDrawer,
 	}));
 
-	const baseClass = cn("bg-indigo-900 h-full w-full rounded-l-lg bg-white p-5 text-black shadow-lg", {
-		"bg-gray-1100 text-white": variant === "dark",
-	});
+	const baseClass = cn(
+		"bg-indigo-900 h-full border-l border-gray-950 w-full bg-white p-5 text-black shadow-lg",
+		{
+			"bg-gray-1100 text-white": variant === "dark",
+		},
+		className
+	);
 
 	return (
 		<AnimatePresence>
 			{isOpen ? (
 				<>
-					<div className="fixed right-0 top-0 z-50 h-screen w-500 py-2">
+					<div className="fixed right-0 top-0 z-50 h-screen w-550">
 						<motion.aside
 							animate={{
 								x: 0,

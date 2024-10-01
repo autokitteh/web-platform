@@ -11,7 +11,7 @@ import { DrawerName } from "@src/enums/components";
 import { useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
 import { manualRunSchema } from "@validations";
 
-import { Button, ErrorMessage, IconSvg, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, IconSvg, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/deployments";
 
@@ -105,32 +105,35 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	};
 
 	return (
-		<Drawer name={DrawerName.projectManualRunSettings} variant="dark">
+		<Drawer className="p-10" name={DrawerName.projectManualRunSettings} variant="dark">
 			<FormProvider {...methods}>
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<div className="flex items-center justify-end gap-6">
-						<Button
-							ariaLabel={tButtons("cancel")}
-							className="p-0 font-semibold text-gray-500 hover:text-white"
-							onClick={() => closeDrawer(DrawerName.projectManualRunSettings)}
-						>
-							{tButtons("cancel")}
-						</Button>
+					<div className="flex items-center justify-between gap-3">
+						<Typography className="text-gray-500">{t("configuration")}</Typography>
+						<div className="flex items-center justify-end gap-6">
+							<Button
+								ariaLabel={tButtons("cancel")}
+								className="p-0 font-semibold text-gray-500 hover:text-white"
+								onClick={() => closeDrawer(DrawerName.projectManualRunSettings)}
+							>
+								{tButtons("cancel")}
+							</Button>
 
-						<Button
-							ariaLabel={tButtons("saveAndRun")}
-							className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
-							disabled={!isValid}
-							type="submit"
-							variant="outline"
-						>
-							<IconSvg src={!sendingManualRun ? RunIcon : Spinner} />
+							<Button
+								ariaLabel={tButtons("saveAndRun")}
+								className="border-white px-4 py-2.5 font-semibold text-white hover:bg-black"
+								disabled={!isValid}
+								type="submit"
+								variant="outline"
+							>
+								<IconSvg src={!sendingManualRun ? RunIcon : Spinner} />
 
-							{tButtons("saveAndRun")}
-						</Button>
+								{tButtons("saveAndRun")}
+							</Button>
+						</div>
 					</div>
 
-					<div className="relative mt-6">
+					<div className="relative mt-16">
 						<Controller
 							control={control}
 							name="filePath"
@@ -157,7 +160,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
 					</div>
 
-					<div className="relative mt-3">
+					<div className="relative mt-6">
 						<Controller
 							control={control}
 							name="entrypointFunction"

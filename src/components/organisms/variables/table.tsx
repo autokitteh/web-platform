@@ -162,7 +162,7 @@ export const VariablesTable = () => {
 											ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
 											onClick={() => showDeleteModal(name, value, scopeId!)}
 										>
-											<TrashIcon className="size-3 fill-white" />
+											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>
 									</div>
 								</Td>

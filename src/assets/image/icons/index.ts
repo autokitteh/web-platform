@@ -39,7 +39,6 @@ export { default as GearIcon } from "@assets/image/icons/Gear.svg?react";
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
 export { default as PipeCircleIcon } from "@assets/image/icons/PipeCircle.svg?react";
 export { default as PipeCircleDarkIcon } from "@assets/image/icons/PipeCircleDark.svg?react";
-export { default as TrashCanIcon } from "@assets/image/icons/TrashCan.svg?react";
 export { default as UnlockedLockIcon } from "@assets/image/icons/Lock.svg?react";
 export { default as LockIcon } from "@assets/image/icons/UnlockedLock.svg?react";
 export { default as PlusIcon } from "@assets/image/icons/Plus.svg?react";

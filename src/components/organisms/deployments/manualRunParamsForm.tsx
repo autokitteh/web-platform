@@ -27,8 +27,8 @@ export const ManualRunParamsForm = () => {
 	const errors = formState.errors?.params as FieldErrors<FieldValues> & ManualFormParamsErrors;
 
 	return (
-		<form className="mt-5">
-			<div className="flex items-center gap-1 text-base text-gray-500">
+		<form className="mt-9">
+			<div className="mb-4 flex items-center gap-1 text-base text-gray-500">
 				{t("titleParams")}
 
 				<div className="cursor-pointer" title={t("titleParams")}>
@@ -37,7 +37,7 @@ export const ManualRunParamsForm = () => {
 			</div>
 
 			{fields.map((field, index) => (
-				<div className="mb-3 flex items-end gap-2" key={field.id}>
+				<div className="mb-6 flex items-end gap-3.5" key={field.id}>
 					<Controller
 						control={control}
 						name={`params.${index}.key`}
@@ -52,6 +52,7 @@ export const ManualRunParamsForm = () => {
 										field.onChange(event);
 										await trigger("params");
 									}}
+									placeholder={t("placeholders.enterKey")}
 								/>
 
 								{errors?.params?.[index]?.key ? (
@@ -76,6 +77,7 @@ export const ManualRunParamsForm = () => {
 										field.onChange(event);
 										await trigger("params");
 									}}
+									placeholder={t("placeholders.enterValue")}
 								/>
 
 								{errors?.params?.[index]?.value ? (
@@ -88,16 +90,16 @@ export const ManualRunParamsForm = () => {
 
 					<IconButton
 						ariaLabel={t("ariaDeleteParam")}
-						className="self-center bg-gray-1300 hover:bg-black"
+						className="self-center hover:bg-black"
 						onClick={() => remove(index)}
 					>
-						<TrashIcon className="size-4 fill-white" />
+						<TrashIcon className="size-5 stroke-white" />
 					</IconButton>
 				</div>
 			))}
 
 			<Button
-				className="group ml-auto w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
+				className="group mt-5 w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
 				onClick={handleAddParam}
 				type="button"
 			>

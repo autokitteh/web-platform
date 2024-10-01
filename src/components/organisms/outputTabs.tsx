@@ -10,7 +10,7 @@ import { useLoggerStore } from "@store";
 
 import { Button, IconSvg, Tab } from "@components/atoms";
 
-import { TrashCanIcon } from "@assets/image/icons";
+import { TrashIcon } from "@assets/image/icons";
 
 export const OutputTabs = () => {
 	const { clearLogs, logs } = useLoggerStore((state) => state);
@@ -37,7 +37,7 @@ export const OutputTabs = () => {
 				</Tab>
 
 				<Button className="ml-auto" onClick={() => clearLogs()} title={t("clear")}>
-					<IconSvg className="fill-white" src={TrashCanIcon} />
+					<IconSvg className="stroke-white" src={TrashIcon} />
 				</Button>
 			</div>
 

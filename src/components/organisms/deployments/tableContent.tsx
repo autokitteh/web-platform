@@ -157,7 +157,7 @@ export const DeploymentsTableContent = ({
 										onClick={(event) => showDeleteModal(event, deploymentId)}
 										title={t("ariaDeleteDeploy")}
 									>
-										<TrashIcon className="size-3 fill-white" />
+										<TrashIcon className="size-4 stroke-white" />
 									</IconButton>
 								</div>
 							</Td>
