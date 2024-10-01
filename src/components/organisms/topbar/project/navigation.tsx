@@ -42,7 +42,7 @@ export const ProjectTopbarNavigation = () => {
 				const buttonClassName = cn(
 					"group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-gray-1050",
 					{
-						"bg-black font-semibold": isSelected,
+						"bg-black font-semibold active": isSelected,
 					}
 				);
 				const iconClassName = cn("text-white group-hover:text-green-200  group-active:text-green-800", {
