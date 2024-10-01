@@ -53,6 +53,13 @@
 			"filePathDoesNotExistExtended": "File path {{filePath}} does not exist or has no entry points."
 		}
 	},
+	"sessionStats": {
+		"created": "Created",
+		"stopped": "Manually stopped",
+		"running": "Currently running",
+		"completed": "Completed",
+		"error": "Stopped due to error"
+	},
 	"sessions": {
 		"ariaLabelReturnBack": "Return back",
 		"buttons": {

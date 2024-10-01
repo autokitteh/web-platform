@@ -3,7 +3,7 @@
 		"ariaLabelNewFile": "New file name",
 		"placeholderName": "Name",
 		"selectExtension": "Extension",
-		"title": "Create new"
+		"title": "Create File"
 	},
 	"deleteConnection": {
 		"cancelButton": "Cancel",
@@ -34,8 +34,9 @@
 	"deleteFile": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete",
-		"line": "You will not be able to recover it.",
-		"title": "Delete {{name}}"
+		"line1": "Name: ",
+		"line2": "Warning: you will not be able to recover it.",
+		"title": "Delete File?"
 	},
 	"deleteTrigger": {
 		"cancelButton": "Cancel",
@@ -68,8 +69,8 @@
 	"deleteProject": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete",
-		"line": "Name - <strong>{{name}}</strong> <br /> ID - <strong>{{projectId}}</strong>",
-		"line2": "You will not be able to recover it",
-		"title": "Delete {{name}} project?"
+		"line": "Name: <strong>{{name}}</strong> <br /> ID: <strong>{{projectId}}</strong>",
+		"line2": "Warning: You will not be able to recover it",
+		"title": "Delete Project?"
 	}
 }

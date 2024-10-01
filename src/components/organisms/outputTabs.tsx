@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { LoggerLevel } from "@enums";
 import { OutputTabsVariants } from "@enums/components";
+import { cn } from "@src/utilities";
 
 import { useLoggerStore } from "@store";
 
@@ -42,10 +43,10 @@ export const OutputTabs = () => {
 
 			<div className="scrollbar h-48 flex-auto overflow-auto pt-5">
 				{logs.map(({ id, message, status, timestamp }) => (
-					<div className="mb-4" key={id}>
-						<p className="font-medium text-gray-250">{timestamp}</p>
-
-						<p className={ouputTextStyle[status]}>{message}</p>
+					<div className="mb-4 font-mono" key={id}>
+						<div className="font-medium text-gray-250">
+							{timestamp}: <div className={cn("inline", ouputTextStyle[status])}>{message}</div>
+						</div>
 					</div>
 				))}
 			</div>

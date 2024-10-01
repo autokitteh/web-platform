@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { useFileOperations } from "@src/hooks";
 import { useProjectValidationStore } from "@src/store";
 import { calculatePathDepth } from "@utilities";
 
@@ -15,9 +14,7 @@ import { WarningTriangleIcon } from "@assets/image/icons";
 export const Project = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { projectId } = useParams();
 	const { projectValidationState } = useProjectValidationStore();
-	const { openFileAsActive } = useFileOperations(projectId!);
 
 	const activeTab = useMemo(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
@@ -26,21 +23,6 @@ export const Project = () => {
 	}, [location.pathname]);
 
 	const displayTabs = useMemo(() => calculatePathDepth(location.pathname) < 4, [location.pathname]);
-
-	const fileToOpen = location.state?.fileToOpen;
-
-	const openDefaultFile = useCallback(
-		async (filename: string) => {
-			openFileAsActive(filename);
-		},
-		[openFileAsActive]
-	);
-
-	useEffect(() => {
-		if (fileToOpen) {
-			openDefaultFile(fileToOpen);
-		}
-	}, [fileToOpen, openDefaultFile]);
 
 	const goTo = (path: string) => {
 		navigate(path.toLowerCase());

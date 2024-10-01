@@ -4,7 +4,7 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { debounce, last } from "lodash";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 import { monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
@@ -15,6 +15,7 @@ import { useFileOperations } from "@hooks";
 
 import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
 
+import { AKRoundLogo } from "@assets/image";
 import { Close, SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = () => {
@@ -23,7 +24,6 @@ export const EditorTabs = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeOpenedFile, fetchResources, getResources, openFileAsActive, openFiles, openProjectId, saveFile } =
 		useFileOperations(projectId!);
-	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const addToast = useToastStore((state) => state.addToast);
 
 	const activeEditorFileName =
@@ -38,11 +38,21 @@ export const EditorTabs = () => {
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
-		if (resource) {
-			const byteArray = Array.from(resource);
-			setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
-		} else {
-			setContent(t("noFileText"));
+		if (!resource) {
+			setContent("");
+
+			return;
+		}
+		const byteArray = Array.from(resource);
+		setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
+	};
+
+	const location = useLocation();
+	const fileToOpen = location.state?.fileToOpen;
+
+	const openDefaultFile = () => {
+		if (fileToOpen) {
+			openFileAsActive(fileToOpen);
 		}
 	};
 
@@ -50,12 +60,14 @@ export const EditorTabs = () => {
 		const resources = await fetchResources(true);
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
+		openDefaultFile();
 	};
 
 	const loadFileResource = async () => {
 		const resources = await getResources();
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
+		openDefaultFile();
 	};
 
 	useEffect(() => {
@@ -67,7 +79,7 @@ export const EditorTabs = () => {
 		}
 		loadFileResource();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, projectId]);
+	}, [activeEditorFileName, projectId, fileToOpen]);
 
 	useEffect(() => {
 		setLastSaved(undefined);
@@ -89,6 +101,12 @@ export const EditorTabs = () => {
 	};
 
 	const updateContent = async (newContent?: string) => {
+		if (!newContent) {
+			setContent("");
+
+			return;
+		}
+
 		const handleError = (key: string, options?: Record<string, unknown>) => {
 			addToast({
 				message: tErrors("codeSaveFailed"),
@@ -105,12 +123,6 @@ export const EditorTabs = () => {
 
 		if (!activeEditorFileName) {
 			handleError("codeSaveFailedMissingFileName", { projectId });
-
-			return;
-		}
-
-		if (newContent === t("noFileText") || newContent === undefined) {
-			handleError("codeSaveFailedMissingContent", { projectId });
 
 			return;
 		}
@@ -152,9 +164,9 @@ export const EditorTabs = () => {
 
 		setContent(newContent);
 
-		if (autosave && newContent !== tTabsEditor("noFileText")) {
-			debouncedUpdateContent(newContent);
-		}
+		if (!autosave) return;
+
+		debouncedUpdateContent(newContent);
 	};
 
 	const activeCloseIcon = (fileName: string) => {
@@ -236,26 +248,37 @@ export const EditorTabs = () => {
 						) : null}
 					</div>
 
-					<Editor
-						aria-label={activeEditorFileName}
-						beforeMount={handleEditorWillMount}
-						className="absolute -ml-6 mt-2 h-full"
-						language={languageEditor}
-						loading={<Loader size="lg" />}
-						onChange={handleUpdateContent}
-						onMount={handleEditorDidMount}
-						options={{
-							minimap: {
-								enabled: false,
-							},
-							readOnly: content === t("noFileText"),
-							renderLineHighlight: "none",
-							scrollBeyondLastLine: false,
-							wordWrap: "on",
-						}}
-						theme="vs-dark"
-						value={content}
-					/>
+					{openFiles[projectId]?.length ? (
+						<Editor
+							aria-label={activeEditorFileName}
+							beforeMount={handleEditorWillMount}
+							className="absolute -ml-6 mt-2 h-full"
+							language={languageEditor}
+							loading={<Loader size="lg" />}
+							onChange={handleUpdateContent}
+							onMount={handleEditorDidMount}
+							options={{
+								fontFamily: "monospace, sans-serif",
+								fontSize: 14,
+								minimap: {
+									enabled: false,
+								},
+								renderLineHighlight: "none",
+								scrollBeyondLastLine: false,
+								wordWrap: "on",
+							}}
+							theme="vs-dark"
+							value={content}
+						/>
+					) : (
+						<div className="flex h-full flex-col items-center justify-center pb-24">
+							<IconSvg className="mb-12 fill-gray-800" size="36" src={AKRoundLogo} />
+							<div className="text-center font-mono text-gray-800">
+								<div>{t("noFileTextLine1")}</div>
+								<div>{t("noFileTextLine2")}</div>
+							</div>
+						</div>
+					)}
 				</>
 			) : null}
 		</div>

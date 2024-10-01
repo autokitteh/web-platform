@@ -22,7 +22,7 @@ export const DeleteProjectModal = ({ onDelete }: ModalDeleteTriggerProps) => {
 	return (
 		<Modal name={ModalName.deleteProject}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("title", { name: projectName })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
 				<div className="font-medium">
 					<Trans
@@ -35,7 +35,7 @@ export const DeleteProjectModal = ({ onDelete }: ModalDeleteTriggerProps) => {
 					/>
 				</div>
 
-				<p className="mt-2">{t("line2")}</p>
+				<p>{t("line2")}</p>
 			</div>
 
 			<div className="mt-10 flex justify-end gap-1">
