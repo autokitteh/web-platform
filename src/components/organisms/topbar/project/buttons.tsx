@@ -147,7 +147,7 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const isDeployOrBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
+	const isDeployAndBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
 
 	return (
 		<div className="flex items-center gap-3">
@@ -155,7 +155,7 @@ export const ProjectTopbarButtons = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaBuildProject")}
 					className="group h-8 whitespace-nowrap px-3.5"
-					disabled={isDeployOrBuildDisabled}
+					disabled={isDeployAndBuildDisabled}
 					onClick={debouncedBuild}
 					variant="outline"
 				>
@@ -177,7 +177,7 @@ export const ProjectTopbarButtons = () => {
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="group h-8 whitespace-nowrap px-3.5"
-					disabled={isDeployOrBuildDisabled}
+					disabled={isDeployAndBuildDisabled}
 					onClick={debouncedDeploy}
 					variant="outline"
 				>
