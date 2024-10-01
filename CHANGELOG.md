@@ -1,3 +1,10 @@
+## [2.19.1](https://github.com/autokitteh/web-platform/compare/v2.19.0...v2.19.1) (2024-10-01)
+
+
+### Bug Fixes
+
+* check if axios error, if so, display error from response ([#411](https://github.com/autokitteh/web-platform/issues/411)) ([66f47c6](https://github.com/autokitteh/web-platform/commit/66f47c6f1687545990480186a63d69e45dd3ac23))
+
 # [2.19.0](https://github.com/autokitteh/web-platform/compare/v2.18.0...v2.19.0) (2024-10-01)
 
 
