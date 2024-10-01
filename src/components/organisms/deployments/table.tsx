@@ -32,6 +32,11 @@ export const DeploymentsTable = () => {
 		loading: { deployments: loadingDeployments },
 	} = useCacheStore();
 
+	useEffect(() => {
+		fetchDeployments(projectId!, true);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
 	const [isManualRunEnabled, setIsManualRunEnabled] = useState(false);
 	const [savingManualRun, setSavingManualRun] = useState(false);
 	const { entrypointFunction, lastDeploymentStore, saveProjectManualRun, updateProjectManualRun } = useManualRunStore(
