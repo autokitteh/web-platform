@@ -9,56 +9,46 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 	let destinationName;
 	let sourceType;
 
-	try {
-		if (!protoEvent.destinationId) {
-			const errorMessage = i18n.t("eventNoDestinationId", {
-				eventId: protoEvent.eventId,
-				ns: "services",
-			});
-
-			LoggerService.error(namespaces.eventsService, errorMessage);
-		}
-
-		if (protoEvent.destinationId.startsWith("trg_")) {
-			const trigger = await TriggersService.get(protoEvent.destinationId);
-			if (trigger.error) {
-				const errorMessage = i18n.t("eventNoDestinationIdExtended", {
-					eventId: protoEvent.eventId,
-					ns: "services",
-					error: trigger.error,
-				});
-				throw errorMessage;
-			}
-			destinationName = trigger.data?.name;
-			sourceType = trigger.data?.sourceType;
-		}
-
-		if (protoEvent.destinationId.startsWith("con_")) {
-			const connection = await ConnectionService.get(protoEvent.destinationId);
-			if (connection.error) {
-				const errorMessage = i18n.t("eventNoDestinationIdExtended", {
-					eventId: protoEvent.eventId,
-					ns: "services",
-					error: connection.error,
-				});
-
-				throw errorMessage;
-			}
-			destinationName = connection.data?.name;
-			sourceType = i18n.t("connection", {
-				connectionName: connection.data?.name,
-				ns: "services",
-				error: connection.error,
-			});
-		}
-	} catch (error) {
-		const errorMessage = i18n.t("eventNoDestinationIdExtended", {
+	if (!protoEvent.destinationId) {
+		const errorMessage = i18n.t("eventNoDestinationId", {
 			eventId: protoEvent.eventId,
 			ns: "services",
-			error,
 		});
 
 		LoggerService.error(namespaces.eventsService, errorMessage);
+	}
+
+	if (protoEvent.destinationId.startsWith("trg_")) {
+		const trigger = await TriggersService.get(protoEvent.destinationId);
+		if (trigger.error) {
+			const errorMessage = i18n.t("eventNoTriggerExtended", {
+				eventId: protoEvent.eventId,
+				ns: "services",
+				error: trigger.error,
+			});
+			throw errorMessage;
+		}
+		destinationName = trigger.data?.name;
+		sourceType = trigger.data?.sourceType;
+	}
+
+	if (protoEvent.destinationId.startsWith("con_")) {
+		const connection = await ConnectionService.get(protoEvent.destinationId);
+		if (connection.error) {
+			const errorMessage = i18n.t("eventNoConnectionExtended", {
+				eventId: protoEvent.eventId,
+				ns: "services",
+				error: connection.error,
+			});
+
+			throw errorMessage;
+		}
+		destinationName = connection.data?.name;
+		sourceType = i18n.t("connection", {
+			connectionName: connection.data?.name,
+			ns: "services",
+			error: connection.error,
+		});
 	}
 
 	return {
