@@ -32,7 +32,7 @@ export const Project = () => {
 	useEffect(() => {
 		loadProject(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [projectId]);
 	const activeTab = useMemo(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
 
