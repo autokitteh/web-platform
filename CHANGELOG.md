@@ -1,3 +1,10 @@
+## [2.19.2](https://github.com/autokitteh/web-platform/compare/v2.19.1...v2.19.2) (2024-10-01)
+
+
+### Bug Fixes
+
+* error CellMeasurer in console ([#420](https://github.com/autokitteh/web-platform/issues/420)) ([6da2db5](https://github.com/autokitteh/web-platform/commit/6da2db5f6230cb766656066de09e4084d5cda0d8))
+
 ## [2.19.1](https://github.com/autokitteh/web-platform/compare/v2.19.0...v2.19.1) (2024-10-01)
 
 
