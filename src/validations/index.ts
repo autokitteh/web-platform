@@ -15,6 +15,7 @@ export {
 	googleGeminiIntegrationSchema,
 	confluenceIntegrationSchema,
 	googleCalendarIntegrationSchema,
+	googleFormsIntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export type { TriggerFormData } from "@validations/trigger.schema";

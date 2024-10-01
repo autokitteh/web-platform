@@ -11,6 +11,10 @@ import {
 	JsonKeyGoogleCalendarForm,
 	OauthGoogleCalendarForm,
 } from "@components/organisms/connections/integrations/googlecalendar/authMethods";
+import {
+	JsonKeyGoogleFormsForm,
+	OauthGoogleFormsForm,
+} from "@components/organisms/connections/integrations/googleforms/authMethods";
 import { ApiTokenJiraForm, OauthJiraForm } from "@components/organisms/connections/integrations/jira/authMethods";
 import {
 	OauthForm as SlackOauthForm,
@@ -43,6 +47,10 @@ export const formsPerIntegrationsMapping: Partial<
 	[Integrations.calendar]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleCalendarForm,
 		[ConnectionAuthType.JsonKey]: JsonKeyGoogleCalendarForm,
+	},
+	[Integrations.forms]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleFormsForm,
+		[ConnectionAuthType.JsonKey]: JsonKeyGoogleFormsForm,
 	},
 	[Integrations.jira]: {
 		[ConnectionAuthType.ApiToken]: ApiTokenJiraForm,

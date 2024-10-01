@@ -3,6 +3,7 @@ import { Integrations } from "@src/enums/components";
 import {
 	ConfluenceIntegrationEditForm,
 	GoogleCalendarIntegrationEditForm,
+	GoogleFormsIntegrationEditForm,
 } from "@components/organisms/connections/integrations";
 import { AwsIntegrationEditForm } from "@components/organisms/connections/integrations/aws";
 import { DiscordIntegrationEditForm } from "@components/organisms/connections/integrations/discord";
@@ -29,5 +30,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.sheets]: GoogleIntegrationEditForm,
 	[Integrations.gmail]: GoogleIntegrationEditForm,
 	[Integrations.drive]: GoogleIntegrationEditForm,
-	[Integrations.forms]: GoogleIntegrationEditForm,
+	[Integrations.forms]: GoogleFormsIntegrationEditForm,
 };

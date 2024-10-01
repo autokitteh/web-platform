@@ -17,6 +17,12 @@ export const googleCalendarIntegrationSchema = z.object({
 	auth_type: z.string(),
 });
 
+export const googleFormsIntegrationSchema = z.object({
+	json: z.string().min(1, "Json Key is required"),
+	form_id: z.string().optional(),
+	auth_type: z.string(),
+});
+
 export const connectionSchema = z.object({
 	connectionName: z.string().min(1, "Name is required"),
 });

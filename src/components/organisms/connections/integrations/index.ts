@@ -16,3 +16,7 @@ export {
 	GoogleCalendarIntegrationAddForm,
 	GoogleCalendarIntegrationEditForm,
 } from "@components/organisms/connections/integrations/googlecalendar";
+export {
+	GoogleFormsIntegrationAddForm,
+	GoogleFormsIntegrationEditForm,
+} from "@components/organisms/connections/integrations/googleforms";
