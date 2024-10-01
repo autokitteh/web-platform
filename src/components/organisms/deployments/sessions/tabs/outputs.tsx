@@ -1,4 +1,4 @@
-import React, { CSSProperties, memo, useCallback, useEffect, useRef } from "react";
+import React, { memo, useCallback, useEffect, useRef } from "react";
 
 import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
@@ -8,7 +8,7 @@ import { SessionOutput } from "@src/types/models";
 
 import { Loader } from "@components/atoms";
 
-const OutputRow = memo(({ log, measure, style }: { log: SessionOutput; measure: () => void; style: CSSProperties }) => {
+const OutputRow = memo(({ log, measure }: { log: SessionOutput; measure: () => void }) => {
 	const rowRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -16,7 +16,7 @@ const OutputRow = memo(({ log, measure, style }: { log: SessionOutput; measure: 
 	}, [measure]);
 
 	return (
-		<div ref={rowRef} style={style}>
+		<div ref={rowRef}>
 			<div className="flex font-mono">
 				<div className="mr-3 whitespace-nowrap text-yellow-500">[{log.time}]: </div>
 
@@ -53,7 +53,18 @@ export const SessionOutputs = () => {
 
 			return (
 				<CellMeasurer cache={cacheRef.current} columnIndex={0} key={key} parent={parent} rowIndex={index}>
-					{({ measure }) => <OutputRow log={log} measure={measure} style={style} />}
+					{({ measure, registerChild }) => (
+						<div
+							ref={(element): void => {
+								if (element && registerChild) {
+									registerChild(element);
+								}
+							}}
+							style={style}
+						>
+							<OutputRow log={log} measure={measure} />
+						</div>
+					)}
 				</CellMeasurer>
 			);
 		},
