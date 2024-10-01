@@ -1,3 +1,10 @@
+## [2.17.1](https://github.com/autokitteh/web-platform/compare/v2.17.0...v2.17.1) (2024-10-01)
+
+
+### Bug Fixes
+
+* 'invalid prefix' error ([#402](https://github.com/autokitteh/web-platform/issues/402)) ([a039934](https://github.com/autokitteh/web-platform/commit/a039934ec1df5630fa7b38b8790ff5e2995c09fe))
+
 # [2.17.0](https://github.com/autokitteh/web-platform/compare/v2.16.6...v2.17.0) (2024-10-01)
 
 
