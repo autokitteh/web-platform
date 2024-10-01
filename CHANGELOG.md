@@ -1,3 +1,10 @@
+## [2.16.5](https://github.com/autokitteh/web-platform/compare/v2.16.4...v2.16.5) (2024-10-01)
+
+
+### Bug Fixes
+
+* manual run ([#404](https://github.com/autokitteh/web-platform/issues/404)) ([a6b8845](https://github.com/autokitteh/web-platform/commit/a6b8845ca5b49da81cb21182310d0f07b7a2ad6d))
+
 ## [2.16.4](https://github.com/autokitteh/web-platform/compare/v2.16.3...v2.16.4) (2024-09-30)
 
 
