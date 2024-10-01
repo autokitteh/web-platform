@@ -83,5 +83,6 @@
 	},
 	"sessionTriggerSource": "Trigger {{triggerName}}",
 	"sessionConnectionSource": "Trigger {{connectionName}}",
-	"connection": "Connection - {{connectionName}}"
+	"connection": "Connection - {{connectionName}}",
+	"convertWrappedJsonError": "Error parsing JSON for key '{{key}}': {{error}} in parseNestedJson function"
 }

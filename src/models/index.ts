@@ -9,3 +9,4 @@ export { convertUserProtoToModel } from "@models/user.model";
 export { convertVariableProtoToModel } from "@models/variable.model";
 export { convertIntegrationProtoToModel } from "@models/integration.model";
 export { convertSessionLogRecordsProtoToActivitiesModel } from "@models/activity.model";
+export { convertValue } from "@models/value.model";
