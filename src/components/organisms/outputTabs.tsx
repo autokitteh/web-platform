@@ -44,9 +44,9 @@ export const OutputTabs = () => {
 			<div className="scrollbar h-48 flex-auto overflow-auto pt-5">
 				{logs.map(({ id, message, status, timestamp }) => (
 					<div className="mb-4 font-mono" key={id}>
-						<span className="font-medium text-gray-250">{timestamp}</span>
+						<span className="font-medium text-gray-250">{timestamp}:</span>
 
-						<p className={cn("inline ml-2", ouputTextStyle[status])}>{message}</p>
+						<div className={cn("inline ml-2", ouputTextStyle[status])}>{message}</div>
 					</div>
 				))}
 			</div>
