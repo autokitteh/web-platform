@@ -14,7 +14,7 @@ export class EventsService {
 			if (!event) {
 				return { data: undefined, error: undefined };
 			}
-			const eventConverted = convertEventProtoToModel(event);
+			const eventConverted = await convertEventProtoToModel(event);
 
 			return { data: eventConverted, error: undefined };
 		} catch (error) {
@@ -22,7 +22,7 @@ export class EventsService {
 				namespaces.eventsService,
 				i18n.t("fetchFailedForEvent", {
 					eventId,
-					error: (error as Error).message,
+					error: new Error(error).message,
 					ns: "services",
 				})
 			);

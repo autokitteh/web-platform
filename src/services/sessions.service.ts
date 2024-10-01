@@ -10,7 +10,7 @@ import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
 import { convertSessionProtoToModel } from "@models";
-import { ConnectionService, EnvironmentsService, LoggerService } from "@services";
+import { EnvironmentsService, EventsService, LoggerService } from "@services";
 import { SessionLogType } from "@src/enums";
 import { convertSessionProtoToViewerModel } from "@src/models/session.model";
 import { ViewerSession } from "@src/types/models/session.type";
@@ -108,13 +108,17 @@ export class SessionsService {
 				};
 			}
 
-			const { data: connection, error } = await ConnectionService.getByEventId(session.eventId);
+			const { data: event, error } = await EventsService.get(session.eventId);
 
 			if (error) {
 				return { data: undefined, error };
 			}
 
-			const sessionConverted = convertSessionProtoToViewerModel(session!, connection?.name);
+			const sessionConverted = convertSessionProtoToViewerModel(
+				session!,
+				event?.sourceType,
+				event?.destinationName
+			);
 
 			return { data: sessionConverted, error: undefined };
 		} catch (error) {

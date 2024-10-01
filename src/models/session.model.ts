@@ -1,3 +1,5 @@
+import i18n from "i18next";
+
 import { Session as ProtoSession } from "@ak-proto-ts/sessions/v1/session_pb";
 import { SessionEntrypoint, ViewerSession } from "@src/types/models/session.type";
 import { EntrypointTrigger, Session } from "@type/models";
@@ -17,10 +19,17 @@ export function convertSessionProtoToModel(protoSession: ProtoSession): Session 
 		state: protoSession.state,
 	};
 }
-export function convertSessionProtoToViewerModel(protoSession: ProtoSession, connectionName?: string): ViewerSession {
+export function convertSessionProtoToViewerModel(
+	protoSession: ProtoSession,
+	sourceType?: string,
+	destinationName?: string
+): ViewerSession {
+	const sourceTypeEnriched = sourceType ? sourceType : i18n.t("sessions.viewer.manualRun", { ns: "deployments" });
+
 	return {
 		buildId: protoSession.buildId,
-		connectionName,
+		sourceType: sourceTypeEnriched,
+		destinationName,
 		createdAt: convertTimestampToDate(protoSession.createdAt),
 		updatedAt: convertTimestampToDate(protoSession.updatedAt),
 		entrypoint: protoSession.entrypoint as unknown as SessionEntrypoint,

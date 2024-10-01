@@ -99,7 +99,9 @@
 			},
 			"connectionName": "Connection",
 			"trigger": "Trigger",
+			"source": "Source",
 			"entrypoint": "Entrypoint",
+			"manualRun": "Manual Run",
 			"eventId": "Event ID",
 			"buildId": "Build ID",
 			"copyButton": "Copy"
