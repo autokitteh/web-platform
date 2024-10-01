@@ -1,3 +1,10 @@
+# [2.17.0](https://github.com/autokitteh/web-platform/compare/v2.16.6...v2.17.0) (2024-10-01)
+
+
+### Features
+
+* add page title to home, intro, 404 and project ([#398](https://github.com/autokitteh/web-platform/issues/398)) ([1d7c37b](https://github.com/autokitteh/web-platform/commit/1d7c37b85a0d8ed235a01d08b44a0fea574f886c))
+
 ## [2.16.6](https://github.com/autokitteh/web-platform/compare/v2.16.5...v2.16.6) (2024-10-01)
 
 
