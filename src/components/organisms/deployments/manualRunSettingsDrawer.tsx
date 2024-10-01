@@ -15,7 +15,7 @@ import { Button, ErrorMessage, IconSvg, Spinner, Typography } from "@components/
 import { Drawer, Select } from "@components/molecules";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/deployments";
 
-import { RunIcon } from "@assets/image";
+import { RunIcon } from "@assets/image/icons";
 
 export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	const { t: tButtons } = useTranslation("buttons");
@@ -121,12 +121,12 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 
 							<Button
 								ariaLabel={tButtons("saveAndRun")}
-								className="border-white px-4 py-2.5 font-semibold text-white hover:bg-black"
+								className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
 								disabled={!isValid}
 								type="submit"
 								variant="outline"
 							>
-								<IconSvg src={!sendingManualRun ? RunIcon : Spinner} />
+								<IconSvg className="stroke-white" src={!sendingManualRun ? RunIcon : Spinner} />
 
 								{tButtons("saveAndRun")}
 							</Button>
