@@ -8,7 +8,7 @@ import { TriggersService } from "@services";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useModalStore, useToastStore } from "@store";
+import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, SortButton } from "@components/molecules";
@@ -23,37 +23,18 @@ export const TriggersTable = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
-	const [isLoading, setIsLoading] = useState(true);
+	const {
+		fetchTriggers,
+		loading: { triggers: loadingTriggers },
+		triggers,
+	} = useCacheStore();
 
-	const [triggers, setTriggers] = useState<Trigger[]>([]);
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
 
-	const fetchTriggers = async () => {
-		setIsLoading(true);
-		try {
-			const { data: triggers, error } = await TriggersService.listByProjectId(projectId!);
-			if (error) {
-				throw error;
-			}
-			if (!triggers) {
-				return;
-			}
-
-			setTriggers(triggers);
-		} catch (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
 	useEffect(() => {
-		fetchTriggers();
+		fetchTriggers(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
@@ -72,7 +53,7 @@ export const TriggersTable = () => {
 
 			return;
 		}
-		fetchTriggers();
+		fetchTriggers(projectId!, true);
 	};
 
 	const handleOpenModalDeleteTrigger = useCallback(
@@ -84,7 +65,7 @@ export const TriggersTable = () => {
 		[triggerId]
 	);
 
-	return isLoading ? (
+	return loadingTriggers ? (
 		<Loader isCenter size="xl" />
 	) : (
 		<>
