@@ -3,12 +3,13 @@ import i18n from "i18next";
 import { namespaces } from "@constants";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { Event as ProtoEvent } from "@src/autokitteh/proto/gen/ts/autokitteh/events/v1/event_pb";
-import { Event } from "@src/types/models/event.type";
+import { EnrichedEvent, EventDestinationTypes, SimpleEvent } from "@src/types/models";
 import { convertTimestampToDate } from "@src/utilities";
 
-export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<Event> => {
+export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent): Promise<EnrichedEvent> => {
 	let destinationName;
 	let sourceType;
+	let destinationType: EventDestinationTypes = "unknown";
 
 	if (!protoEvent.destinationId) {
 		const errorMessage = i18n.t("eventNoDestinationId", {
@@ -31,6 +32,7 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 		}
 		destinationName = trigger.data?.name;
 		sourceType = trigger.data?.sourceType;
+		destinationType = "trigger";
 	}
 
 	if (protoEvent.destinationId.startsWith("con_")) {
@@ -50,13 +52,21 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 			ns: "services",
 			error: connection.error,
 		});
+		destinationType = "connection";
 	}
 
 	return {
 		destinationId: protoEvent.destinationId,
+		destinationType,
 		eventId: protoEvent.eventId,
 		destinationName,
 		sourceType,
 		createdAt: convertTimestampToDate(protoEvent.createdAt),
 	};
 };
+
+export const convertEventProtoToSimplifiedModel = (protoEvent: ProtoEvent): SimpleEvent => ({
+	destinationId: protoEvent.destinationId,
+	eventId: protoEvent.eventId,
+	createdAt: convertTimestampToDate(protoEvent.createdAt),
+});

@@ -108,7 +108,7 @@ export class SessionsService {
 				};
 			}
 
-			const { data: event, error } = await EventsService.get(session.eventId);
+			const { data: event, error } = await EventsService.getEnriched(session.eventId);
 
 			if (error) {
 				return { data: undefined, error };

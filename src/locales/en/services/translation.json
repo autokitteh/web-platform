@@ -37,6 +37,7 @@
 	"coulndtFetchConnectionByEventId": "Couldn't fetch connection by event ID",
 	"coulndtFetchConnectionByEventIdExtended": "Couldn't fetch connection by event ID, event ID: {{eventId}}, error: {{error}}",
 	"destinationNotExistOnEvent": "Event doesn't have destination ID, event ID: {{eventId}}",
+	"destinationIsNotConnection": "Event destination is not connection, event ID: {{eventId}}, destinationID: {{destinationId}}",
 	"intergrationsNotFound": "Couldn't fetch intergrations for connections",
 	"issueListingConnectionsExtended": "Couldn't list connections, error: {{error}}",
 	"errorFetchingVariablesByEnvironmentId": "Error fetching variables by environment ID",

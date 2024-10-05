@@ -18,7 +18,7 @@ export const EventsLayout = () => {
 				<div className="flex w-full flex-col transition">
 					<TitleTopbar title={t("title")} />
 
-					<div className="relative flex size-full overflow-hidden py-4">
+					<div className="relative flex size-full overflow-hidden">
 						<Outlet />
 
 						<div className="absolute !-bottom-5 !-right-5">

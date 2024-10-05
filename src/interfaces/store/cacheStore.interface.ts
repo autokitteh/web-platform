@@ -1,4 +1,4 @@
-import { Deployment, Event, Trigger } from "@src/types/models";
+import { Deployment, SimpleEvent, Trigger } from "@src/types/models";
 
 interface LoadingState {
 	deployments: boolean;
@@ -10,9 +10,9 @@ export interface CacheStore {
 	deployments?: Deployment[];
 	triggers: Trigger[];
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;
-	events?: Event[];
+	events?: SimpleEvent[];
 	loading: LoadingState;
 	currentProjectId?: string;
 	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;
-	fetchEvents: (force?: boolean) => Promise<Event[] | void>;
+	fetchEvents: (force?: boolean) => Promise<SimpleEvent[] | void>;
 }

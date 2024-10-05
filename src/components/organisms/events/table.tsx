@@ -7,7 +7,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { dateTimeFormat } from "@src/constants";
 import { useResize, useSort } from "@src/hooks";
 import { useCacheStore } from "@src/store";
-import { Event } from "@src/types/models";
+import { SimpleEvent } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Button, Frame, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
@@ -24,7 +24,7 @@ export const EventsTable = () => {
 	} = useCacheStore();
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10 });
 	const { eventId } = useParams();
-	const { items: sortedEvents, requestSort, sortConfig } = useSort<Event>(events || []);
+	const { items: sortedEvents, requestSort, sortConfig } = useSort<SimpleEvent>(events || []);
 
 	const navigate = useNavigate();
 
