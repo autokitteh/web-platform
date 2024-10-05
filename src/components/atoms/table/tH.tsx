@@ -5,7 +5,7 @@ import { cn } from "@utilities";
 
 export const Th = ({ children, className, hasFixedWidth = false, onClick }: TableProps) => {
 	const thStyle = cn(
-		"flex h-9.5 items-center gap-1 truncate px-4",
+		"flex h-9.5 items-center gap-1 truncate",
 		{
 			"w-full": !hasFixedWidth,
 		},

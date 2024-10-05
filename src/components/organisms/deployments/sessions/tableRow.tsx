@@ -10,7 +10,7 @@ import { cn } from "@utilities";
 
 import { useToastStore } from "@store";
 
-import { IconButton } from "@components/atoms";
+import { IconButton, Td, Tr } from "@components/atoms";
 import { SessionsTableState } from "@components/organisms/deployments";
 
 import { ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
@@ -71,27 +71,24 @@ export const SessionsTableRow = memo(
 			session.state === SessionState.running ? "h-4 w-4 transition group-hover:fill-white" : "h-4 w-4 transition";
 
 		return (
-			<div
+			<Tr
 				className={sessionRowClass(session.sessionId)}
 				onClick={() => openSessionLog(session.sessionId)}
-				onKeyDown={() => openSessionLog(session.sessionId)}
-				role="button"
 				style={{ ...style }}
-				tabIndex={0}
 			>
-				<div className="flex w-56 px-2.5">{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</div>
+				<Td className="w-56">{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
 
-				<div className="flex w-32 px-2.5">
+				<Td className="w-32">
 					<SessionsTableState sessionState={session.state} />
-				</div>
+				</Td>
 
-				<div className="flex w-32 px-2.5">{session.triggerName}</div>
+				<Td className="w-32">{session.triggerName}</Td>
 
-				<div className="flex w-32 px-2.5">{session.connectionName}</div>
+				<Td className="w-32">{session.connectionName}</Td>
 
-				<div className="flex w-32 justify-end px-2.5">
+				<Td className="flex w-32">
 					<IconButton
-						className="p-1"
+						className="inline p-0"
 						disabled={session.state !== SessionState.running}
 						onClick={handleStopSession}
 						title={t("table.stopSession")}
@@ -99,11 +96,11 @@ export const SessionsTableRow = memo(
 						<ActionStoppedIcon className={actionStoppedIconClass} />
 					</IconButton>
 
-					<IconButton className="p-1.5" onClick={handleDeleteClick}>
+					<IconButton className="inline" onClick={handleDeleteClick}>
 						<TrashIcon className="size-4 stroke-white" />
 					</IconButton>
-				</div>
-			</div>
+				</Td>
+			</Tr>
 		);
 	},
 	areEqual

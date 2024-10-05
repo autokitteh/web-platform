@@ -14,7 +14,7 @@ import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
-import { Button, Frame, Loader } from "@components/atoms";
+import { Button, Frame, Loader, THead, Table, Td, Th } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
@@ -40,7 +40,7 @@ export const SessionsTable = () => {
 
 	const frameClass = useMemo(
 		() =>
-			cn("h-full w-full overflow-hidden bg-gray-1100 pb-3 pl-7 transition-all", {
+			cn("size-full bg-gray-1100 pb-3 pl-7 transition-all", {
 				"rounded-r-none": !sessionId,
 			}),
 		[sessionId]
@@ -181,39 +181,29 @@ export const SessionsTable = () => {
 					</div>
 
 					{sessions.length ? (
-						<div className="relative flex h-full flex-col overflow-hidden">
-							<div className="scrollbar mt-6 overflow-hidden rounded-t-14 text-white">
-								<div className="sticky top-0 z-10 overflow-hidden bg-gray-1250 text-gray-500">
-									<div className="flex justify-between border-b-2 border-gray-1050 transition hover:bg-gray-1250">
-										<div className="flex h-9.5 w-56 items-center gap-1 truncate px-4 font-normal">
-											{t("table.columns.startTime")}
-										</div>
+						<div className="relative my-6 flex h-full flex-col overflow-hidden">
+							<Table className="h-full overflow-y-visible">
+								<THead className="rounded-t-14">
+									<Th>
+										<Td className="w-56">{t("table.columns.startTime")}</Td>
 
-										<div className="flex h-9.5 w-32 items-center gap-1 truncate px-4 font-normal">
-											{t("table.columns.status")}
-										</div>
+										<Td className="w-32">{t("table.columns.status")}</Td>
 
-										<div className="flex h-9.5 w-32 items-center gap-1 truncate px-4 font-normal">
-											{t("table.columns.triggerName")}
-										</div>
+										<Td className="w-32">{t("table.columns.triggerName")}</Td>
 
-										<div className="flex h-9.5 w-32 items-center gap-1 truncate px-4 font-normal">
-											{t("table.columns.connectionName")}
-										</div>
+										<Td className="w-32">{t("table.columns.connectionName")}</Td>
 
-										<div className="flex h-9.5 w-32 items-center gap-1 truncate px-4 font-normal">
-											{t("table.columns.actions")}
-										</div>
-									</div>
-								</div>
-							</div>
+										<Td className="w-32">{t("table.columns.actions")}</Td>
+									</Th>
+								</THead>
 
-							<SessionsTableList
-								onItemsRendered={handleItemsRendered}
-								onSelectedSessionId={setSelectedSessionId}
-								onSessionRemoved={debouncedFetchDeployments}
-								sessions={sessions}
-							/>
+								<SessionsTableList
+									onItemsRendered={handleItemsRendered}
+									onSelectedSessionId={setSelectedSessionId}
+									onSessionRemoved={debouncedFetchDeployments}
+									sessions={sessions}
+								/>
+							</Table>
 
 							{isLoading ? (
 								<div className="absolute bottom-0 z-20 flex h-10 w-full items-center bg-gray-1100">
