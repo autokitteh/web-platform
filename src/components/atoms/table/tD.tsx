@@ -17,15 +17,15 @@ export const Td = ({ children, className, hasFixedWidth = false, onClick, title 
 	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
 		if (event.key === "Enter" || event.key === " ") {
 			event.preventDefault();
-			onClick?.();
+			onClick?.(event);
 		}
 	};
 
 	return (
-		<td className={tdStyle} title={title}>
+		<div className={tdStyle} role="cell" title={title}>
 			<div className="w-full truncate" onClick={onClick} onKeyDown={handleKeyDown}>
 				{children}
 			</div>
-		</td>
+		</div>
 	);
 };

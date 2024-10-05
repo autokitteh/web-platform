@@ -5,7 +5,7 @@ import { cn } from "@utilities";
 
 import { useTableVariant } from "@components/atoms/table";
 
-export const Tr = ({ children, className, onClick, style }: TableProps) => {
+export const Tr = ({ children, className, style }: TableProps) => {
 	const { variant } = useTableVariant();
 	const tRStyle = cn(
 		"flex border-b-2 border-gray-1050 transition hover:bg-gray-1250",
@@ -16,8 +16,8 @@ export const Tr = ({ children, className, onClick, style }: TableProps) => {
 	);
 
 	return (
-		<tr className={tRStyle} onClick={onClick} style={style}>
+		<div className={tRStyle} role="rowgroup" style={style}>
 			{children}
-		</tr>
+		</div>
 	);
 };
