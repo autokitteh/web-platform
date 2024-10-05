@@ -1,3 +1,10 @@
+## [2.19.3](https://github.com/autokitteh/web-platform/compare/v2.19.2...v2.19.3) (2024-10-05)
+
+
+### Bug Fixes
+
+* deployments deployed in the wrong project ([#430](https://github.com/autokitteh/web-platform/issues/430)) ([c69b98f](https://github.com/autokitteh/web-platform/commit/c69b98f7ed68519da83952d0566d89f50f91b2cd))
+
 ## [2.19.2](https://github.com/autokitteh/web-platform/compare/v2.19.1...v2.19.2) (2024-10-01)
 
 
