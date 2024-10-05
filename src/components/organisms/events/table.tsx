@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { AutoSizer } from "react-virtualized";
 
 import { dateTimeFormat } from "@src/constants";
 import { useResize, useSort } from "@src/hooks";
@@ -14,6 +15,9 @@ import { Button, Frame, Loader, TBody, THead, Table, Td, Th, Tr } from "@compone
 import { SortButton } from "@components/molecules";
 
 import { CatImage } from "@assets/image";
+
+const rowHeight = 40;
+const headerHeight = 40;
 
 export const EventsTable = () => {
 	const { t } = useTranslation("events");
@@ -27,11 +31,11 @@ export const EventsTable = () => {
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<SimpleEvent>(events || []);
 
 	const navigate = useNavigate();
+	const [visibleRows, setVisibleRows] = useState({ start: 0, end: 20 });
 
 	useEffect(() => {
 		fetchEvents();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [fetchEvents]);
 
 	const resizeClass = useMemo(
 		() =>
@@ -43,16 +47,85 @@ export const EventsTable = () => {
 			),
 		[eventId]
 	);
+
 	const frameClass = useMemo(
 		() =>
-			cn("h-full w-full overflow-hidden bg-gray-1100 pb-3 pl-7 transition-all", {
+			cn("size-full bg-gray-1100 pb-3 pl-7 transition-all", {
 				"rounded-r-none": !eventId,
 			}),
 		[eventId]
 	);
 
+	const handleSort = useCallback(
+		(key: keyof SimpleEvent) => {
+			return (event: React.MouseEvent | React.KeyboardEvent) => {
+				if (event.type === "click" || (event as React.KeyboardEvent).key === "Enter") {
+					requestSort(key);
+				}
+			};
+		},
+		[requestSort]
+	);
+
+	const renderSortableHeader = useCallback(
+		(columnKey: keyof SimpleEvent, columnLabel: string) => {
+			return (
+				<div
+					className="group cursor-pointer font-normal outline-none focus:ring-2 focus:ring-blue-500"
+					onClick={handleSort(columnKey)}
+					onKeyDown={handleSort(columnKey)}
+					role="button"
+					tabIndex={0}
+				>
+					{columnLabel}
+					<SortButton
+						className="opacity-0 group-hover:opacity-100 group-focus:opacity-100"
+						isActive={columnKey === sortConfig.key}
+						sortDirection={sortConfig.direction}
+					/>
+				</div>
+			);
+		},
+		[handleSort, sortConfig]
+	);
+
+	const onScroll = useCallback(
+		(event: React.UIEvent<HTMLDivElement>, height: number) => {
+			const { scrollTop } = event.currentTarget;
+			const start = Math.floor(scrollTop / rowHeight);
+			const end = Math.min(sortedEvents.length, Math.ceil((scrollTop + height) / rowHeight) + 1);
+			setVisibleRows({ start, end });
+		},
+		[sortedEvents.length]
+	);
+
+	const renderRows = useCallback(
+		({ height }: { height: number }) => {
+			const start = visibleRows.start;
+			const end = Math.min(visibleRows.end, Math.ceil(height / rowHeight) + start);
+
+			return sortedEvents.slice(start, end).map((event, index) => (
+				<Tr
+					className="cursor-pointer hover:bg-gray-200"
+					key={event.eventId}
+					onClick={() => navigate(`events/${event.eventId}`)}
+					style={{
+						height: rowHeight,
+						transform: `translateY(${(start + index) * rowHeight + headerHeight}px)`,
+						position: "absolute",
+						width: "100%",
+					}}
+				>
+					<Td>{moment(event.createdAt).format(dateTimeFormat)}</Td>
+					<Td>{event.eventId}</Td>
+				</Tr>
+			));
+		},
+		[sortedEvents, visibleRows, navigate]
+	);
+
 	return (
-		<div className="my-2 flex w-full">
+		<div className="my-2 flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					{loadingEvents ? <Loader isCenter size="xl" /> : null}
@@ -62,51 +135,37 @@ export const EventsTable = () => {
 					) : null}
 
 					{!loadingEvents && !!sortedEvents?.length ? (
-						<Table className="mt-4">
-							<THead>
-								<Tr>
-									<Th
-										className="group cursor-pointer font-normal"
-										onClick={() => requestSort("createdAt")}
+						<div className="mt-4 h-full">
+							<AutoSizer>
+								{({ height, width }) => (
+									<div
+										className="overflow-auto"
+										onScroll={(event) => onScroll(event, height)}
+										style={{ width, height }}
 									>
-										{t("table.columns.createdAt")}
-
-										<SortButton
-											className="opacity-0 group-hover:opacity-100"
-											isActive={"createdAt" === sortConfig.key}
-											sortDirection={sortConfig.direction}
-										/>
-									</Th>
-
-									<Th
-										className="group cursor-pointer font-normal"
-										onClick={() => requestSort("eventId")}
-									>
-										{t("table.columns.eventId")}
-
-										<SortButton
-											className="opacity-0 group-hover:opacity-100"
-											isActive={"eventId" === sortConfig.key}
-											sortDirection={sortConfig.direction}
-										/>
-									</Th>
-								</Tr>
-							</THead>
-
-							<TBody>
-								{sortedEvents.map(({ createdAt, eventId }) => (
-									<Tr
-										className="group cursor-pointer"
-										key={eventId}
-										onClick={() => navigate(`events/${eventId}`)}
-									>
-										<Td className="font-semibold">{moment(createdAt).format(dateTimeFormat)}</Td>
-
-										<Td className="font-semibold">{eventId}</Td>
-									</Tr>
-								))}
-							</TBody>
-						</Table>
+										<Table
+											className="relative w-full"
+											style={{ height: sortedEvents.length * rowHeight + headerHeight }}
+										>
+											<THead>
+												<Tr>
+													<Th>
+														{renderSortableHeader(
+															"createdAt",
+															t("table.columns.createdAt")
+														)}
+													</Th>
+													<Th>
+														{renderSortableHeader("eventId", t("table.columns.eventId"))}
+													</Th>
+												</Tr>
+											</THead>
+											<TBody>{renderRows({ height })}</TBody>
+										</Table>
+									</div>
+								)}
+							</AutoSizer>
+						</div>
 					) : null}
 				</Frame>
 			</div>
@@ -120,7 +179,6 @@ export const EventsTable = () => {
 					<Frame className="w-full rounded-l-none bg-gray-1100 pt-20 transition">
 						<div className="mt-20 flex flex-col items-center">
 							<p className="mb-8 text-lg font-bold text-gray-750">{t("history.noEventSelected")}</p>
-
 							<CatImage className="border-b border-gray-750 fill-gray-750" />
 						</div>
 					</Frame>
