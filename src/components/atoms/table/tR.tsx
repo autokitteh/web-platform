@@ -26,15 +26,15 @@ export const Tr = ({ children, className, onClick, style }: TableProps) => {
 	const interactiveProps = onClick
 		? {
 				onClick,
-				onKeyDown: handleKeyDown,
-				role: "rowgroup",
-				tabIndex: 0,
-				style: { ...style, cursor: "pointer" },
+				"onKeyDown": handleKeyDown,
+				"tabIndex": 0,
+				"aria-label": "Select row",
+				"style": { ...style, cursor: "pointer" },
 			}
 		: { style };
 
 	return (
-		<div className={tRStyle} {...interactiveProps}>
+		<div className={tRStyle} role="row" {...interactiveProps}>
 			{children}
 		</div>
 	);
