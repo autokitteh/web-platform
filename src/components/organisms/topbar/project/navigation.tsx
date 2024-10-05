@@ -17,7 +17,7 @@ export const ProjectTopbarNavigation = () => {
 	const fetchDeployments = useCallback(() => {
 		getCachedDeployments(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [projectId]);
 
 	useEffect(() => {
 		fetchDeployments();

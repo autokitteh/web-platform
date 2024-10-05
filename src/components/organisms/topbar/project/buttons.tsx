@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -106,10 +106,10 @@ export const ProjectTopbarButtons = () => {
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [projectId]);
 
-	const debouncedBuild = useRef(debounce(build, 1000, { leading: true, trailing: false })).current;
-	const debouncedDeploy = useRef(debounce(deploy, 1000, { leading: true, trailing: false })).current;
+	const debouncedBuild = useMemo(() => debounce(build, 1000, { leading: true, trailing: false }), [build]);
+	const debouncedDeploy = useMemo(() => debounce(deploy, 1000, { leading: true, trailing: false }), [deploy]);
 
 	useEffect(() => {
 		return () => {
