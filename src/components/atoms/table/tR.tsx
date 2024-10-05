@@ -27,7 +27,7 @@ export const Tr = ({ children, className, onClick, style }: TableProps) => {
 		? {
 				onClick,
 				onKeyDown: handleKeyDown,
-				role: "button",
+				role: "rowgroup",
 				tabIndex: 0,
 				style: { ...style, cursor: "pointer" },
 			}
