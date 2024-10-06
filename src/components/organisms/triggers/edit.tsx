@@ -14,7 +14,7 @@ import { SelectOption } from "@src/interfaces/components";
 import { triggerSchema } from "@validations";
 
 import { useFetchConnections, useFetchTrigger, useFileOperations } from "@hooks";
-import { useToastStore } from "@store";
+import { useCacheStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -36,6 +36,7 @@ export const EditTrigger = () => {
 	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const { fetchResources } = useFileOperations(projectId!);
+	const { fetchTriggers } = useCacheStore();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isSaving, setIsSaving] = useState(false);
@@ -123,7 +124,7 @@ export const EditTrigger = () => {
 
 				return;
 			}
-
+			await fetchTriggers(projectId!, true);
 			addToast({
 				message: t("updatedSuccessfully"),
 				type: "success",

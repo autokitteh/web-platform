@@ -12,7 +12,7 @@ import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
 
 import { useFetchConnections, useFileOperations } from "@hooks";
-import { useProjectValidationStore, useToastStore } from "@store";
+import { useCacheStore, useProjectValidationStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -31,6 +31,7 @@ export const AddTrigger = () => {
 	const [isSaving, setIsSaving] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const { checkState } = useProjectValidationStore();
+	const { fetchTriggers } = useCacheStore();
 
 	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { fetchResources } = useFileOperations(projectId!);
@@ -105,7 +106,7 @@ export const AddTrigger = () => {
 			});
 
 			checkState(projectId!, true);
-
+			await fetchTriggers(projectId!, true);
 			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
