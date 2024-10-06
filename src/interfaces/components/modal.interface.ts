@@ -28,6 +28,10 @@ export interface DeleteFile {
 	onDelete?: () => void;
 }
 
+export interface DeleteAccount {
+	onDelete?: () => void;
+}
+
 export interface ModalDeleteDeploymentProps {
 	onDelete?: () => void;
 }
