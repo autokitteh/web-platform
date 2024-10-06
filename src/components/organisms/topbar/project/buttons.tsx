@@ -160,7 +160,7 @@ export const ProjectTopbarButtons = () => {
 					variant="outline"
 				>
 					{loadingButton[TopbarButton.build] ? (
-						<Spinner />
+						<Spinner className="size-4" />
 					) : (
 						<IconSvg
 							className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
@@ -182,7 +182,7 @@ export const ProjectTopbarButtons = () => {
 					variant="outline"
 				>
 					{loadingButton[TopbarButton.deploy] ? (
-						<Spinner />
+						<Spinner className="size-4" />
 					) : (
 						<IconSvg
 							className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
