@@ -1,3 +1,10 @@
+## [2.19.4](https://github.com/autokitteh/web-platform/compare/v2.19.3...v2.19.4) (2024-10-06)
+
+
+### Bug Fixes
+
+* prevent button size change on click in project topbar ([#422](https://github.com/autokitteh/web-platform/issues/422)) ([183c22a](https://github.com/autokitteh/web-platform/commit/183c22a3f7215f6e18366d09f7e6aaabfcbc3482))
+
 ## [2.19.3](https://github.com/autokitteh/web-platform/compare/v2.19.2...v2.19.3) (2024-10-05)
 
 
