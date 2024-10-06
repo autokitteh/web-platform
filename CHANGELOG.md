@@ -1,3 +1,10 @@
+## [2.20.1](https://github.com/autokitteh/web-platform/compare/v2.20.0...v2.20.1) (2024-10-06)
+
+
+### Bug Fixes
+
+* fix the look of outline button styling ([#426](https://github.com/autokitteh/web-platform/issues/426)) ([321f8fb](https://github.com/autokitteh/web-platform/commit/321f8fb35dd1dd5c71083d46c717525e1b900d55))
+
 # [2.20.0](https://github.com/autokitteh/web-platform/compare/v2.19.4...v2.20.0) (2024-10-06)
 
 
