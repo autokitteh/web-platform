@@ -113,7 +113,7 @@ In this project we used:
 
 ## License 📜
 
-The [autokitteh](https://autokitteh.com) license identifier for this project is `Apache-2.0` - [LICENSE.md].
+The [autokitteh](https://autokitteh.com) license identifier for this project is `Apache-2.0` - [LICENSE.md](LICENSE.md).
 
 ## Contact 📬
 
