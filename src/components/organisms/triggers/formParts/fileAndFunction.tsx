@@ -49,6 +49,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 				<Input
 					aria-label={t("placeholders.functionName")}
 					{...register("entryFunction")}
+					autoComplete="off"
 					isError={!!errors.entryFunction}
 					label={t("placeholders.functionName")}
 					value={watchedFunctionName}
@@ -63,6 +64,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 						<Input
 							aria-label={t("placeholders.eventType")}
 							{...register("eventType")}
+							autoComplete="off"
 							isError={!!errors.eventType}
 							label={t("placeholders.eventType")}
 							value={watchedEventType}
@@ -75,6 +77,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 						<Input
 							aria-label={t("placeholders.filter")}
 							{...register("filter")}
+							autoComplete="off"
 							isError={!!errors.filter}
 							label={t("placeholders.filter")}
 							value={watchedFilter}
