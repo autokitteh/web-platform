@@ -5,19 +5,17 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
-import { Integrations } from "@src/enums/components";
+import { Integrations, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 
 import { Select } from "@components/molecules";
 
 export const IntegrationEditForm = ({
-	googleIntegrationApplication,
 	integrationType,
 	schemas,
 	selectOptions,
 }: {
-	googleIntegrationApplication?: string;
 	integrationType: Integrations;
 	schemas: Partial<Record<ConnectionAuthType, any>>;
 	selectOptions: Array<{ label: string; value: string }>;
@@ -43,9 +41,9 @@ export const IntegrationEditForm = ({
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (googleIntegrationApplication) {
+		if (isGoogleIntegration(integrationType)) {
 			setValue("auth_type", ConnectionAuthType.Oauth);
-			setValue("auth_scopes", googleIntegrationApplication);
+			setValue("auth_scopes", integrationType);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -74,11 +72,7 @@ export const IntegrationEditForm = ({
 
 	const handleFormSubmit = () => {
 		if (connectionId && connectionType === ConnectionAuthType.Oauth) {
-			if (
-				integrationType === Integrations.google ||
-				integrationType === Integrations.calendar ||
-				integrationType === Integrations.forms
-			) {
+			if (isGoogleIntegration(integrationType)) {
 				handleGoogleOauth(connectionId);
 
 				return;

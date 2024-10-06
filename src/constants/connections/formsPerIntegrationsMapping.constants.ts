@@ -40,7 +40,15 @@ export const formsPerIntegrationsMapping: Partial<
 		[ConnectionAuthType.ApiKey]: ApiKeyTwilioForm,
 		[ConnectionAuthType.AuthToken]: AuthTokenTwilioForm,
 	},
-	[Integrations.google]: {
+	[Integrations.gmail]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleForm,
+		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
+	},
+	[Integrations.sheets]: {
+		[ConnectionAuthType.Oauth]: OauthGoogleForm,
+		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
+	},
+	[Integrations.drive]: {
 		[ConnectionAuthType.Oauth]: OauthGoogleForm,
 		[ConnectionAuthType.JsonKey]: JsonKeyGoogleForm,
 	},

@@ -12,7 +12,6 @@ import {
 	GoogleFormsIcon,
 	GoogleGeminiIcon,
 	GoogleGmailIcon,
-	GoogleIcon,
 	GoogleSheetsIcon,
 	GrpcIcon,
 	HttpIcon,
@@ -35,7 +34,6 @@ export enum Integrations {
 	github = "github",
 	slack = "slack",
 	gmail = "gmail",
-	google = "google",
 	sheets = "sheets",
 	calendar = "calendar",
 	drive = "drive",
@@ -47,6 +45,23 @@ export enum Integrations {
 	discord = "discord",
 	chatgpt = "chatgpt",
 	confluence = "confluence",
+}
+
+export type GoogleIntegrationType = Extract<
+	Integrations,
+	Integrations.gmail | Integrations.sheets | Integrations.calendar | Integrations.drive | Integrations.forms
+>;
+
+export const defaultGoogleConnectionName = "google";
+
+export function isGoogleIntegration(integration: Integrations): integration is GoogleIntegrationType {
+	return [
+		Integrations.gmail,
+		Integrations.sheets,
+		Integrations.calendar,
+		Integrations.drive,
+		Integrations.forms,
+	].includes(integration);
 }
 
 export enum IntegrationForTemplates {
@@ -68,7 +83,6 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 	jira: { label: "Jira", value: Integrations.jira, icon: JiraIcon },
 	confluence: { label: "Atlassian Confluence", value: Integrations.confluence, icon: ConfluenceIcon },
 	discord: { label: "Discord", value: Integrations.discord, icon: DiscordIcon },
-	google: { label: "Google (All APIs)", value: Integrations.google, icon: GoogleIcon },
 	sheets: { label: "Google Sheets", value: Integrations.sheets, icon: GoogleSheetsIcon },
 	calendar: { label: "Google Calendar", value: Integrations.calendar, icon: GoogleCalendarIcon },
 	drive: { label: "Google Drive", value: Integrations.drive, icon: GoogleDriveIcon },

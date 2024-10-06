@@ -7,7 +7,7 @@ import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { Integrations } from "@src/enums/components";
+import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { googleIntegrationSchema, oauthSchema } from "@validations";
 
@@ -41,7 +41,7 @@ export const GoogleIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.JsonKey:
-				await createConnection(connectionId, ConnectionAuthType.JsonKey, Integrations.google);
+				await createConnection(connectionId, ConnectionAuthType.JsonKey, defaultGoogleConnectionName);
 				break;
 			case ConnectionAuthType.Oauth:
 				await handleGoogleOauth(connectionId);
@@ -56,15 +56,7 @@ export const GoogleIntegrationAddForm = ({
 			return;
 		}
 
-		if (type === Integrations.google) {
-			setValue("auth_type", ConnectionAuthType.Oauth);
-			setValue("auth_scopes", "");
-			setValidationSchema(oauthSchema);
-
-			return;
-		}
-
-		if (connectionType.value === ConnectionAuthType.Oauth && type !== Integrations.google) {
+		if (connectionType.value === ConnectionAuthType.Oauth && isGoogleIntegration(type as Integrations)) {
 			setValue("auth_type", ConnectionAuthType.Oauth);
 			setValue("auth_scopes", type);
 			setValidationSchema(oauthSchema);
@@ -90,7 +82,7 @@ export const GoogleIntegrationAddForm = ({
 	}, [type]);
 
 	const ConnectionTypeComponent =
-		formsPerIntegrationsMapping[Integrations.google]?.[connectionType?.value as ConnectionAuthType];
+		formsPerIntegrationsMapping[type as keyof typeof Integrations]?.[connectionType?.value as ConnectionAuthType];
 
 	return (
 		<>

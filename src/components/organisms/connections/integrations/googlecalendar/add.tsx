@@ -7,7 +7,7 @@ import { formsPerIntegrationsMapping } from "@constants";
 import { selectIntegrationGoogle } from "@constants/lists";
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { Integrations } from "@src/enums/components";
+import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { googleCalendarIntegrationSchema, googleIntegrationSchema, oauthSchema } from "@validations";
 
@@ -41,7 +41,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 	const configureConnection = async (connectionId: string) => {
 		switch (connectionType?.value) {
 			case ConnectionAuthType.JsonKey:
-				await createConnection(connectionId, ConnectionAuthType.JsonKey, Integrations.google);
+				await createConnection(connectionId, ConnectionAuthType.JsonKey, defaultGoogleConnectionName);
 				break;
 			case ConnectionAuthType.Oauth:
 				await handleGoogleOauth(connectionId);
@@ -56,15 +56,7 @@ export const GoogleCalendarIntegrationAddForm = ({
 			return;
 		}
 
-		if (type === Integrations.google) {
-			setValue("auth_type", ConnectionAuthType.Oauth);
-			setValue("auth_scopes", "");
-			setValidationSchema(oauthSchema);
-
-			return;
-		}
-
-		if (connectionType.value === ConnectionAuthType.Oauth && type !== Integrations.google) {
+		if (connectionType.value === ConnectionAuthType.Oauth) {
 			setValue("auth_type", ConnectionAuthType.Oauth);
 			setValue("auth_scopes", type);
 			setValidationSchema(oauthSchema);
