@@ -1,3 +1,10 @@
+# [2.21.0](https://github.com/autokitteh/web-platform/compare/v2.20.1...v2.21.0) (2024-10-06)
+
+
+### Features
+
+* cache triggers ([#435](https://github.com/autokitteh/web-platform/issues/435)) ([5a09c96](https://github.com/autokitteh/web-platform/commit/5a09c96f2dcd6204f6876ed38381b65428b62ea7))
+
 ## [2.20.1](https://github.com/autokitteh/web-platform/compare/v2.20.0...v2.20.1) (2024-10-06)
 
 
