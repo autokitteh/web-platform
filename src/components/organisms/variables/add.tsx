@@ -74,6 +74,7 @@ export const AddVariable = () => {
 					<Input
 						{...register("name", { required: t("nameRequired") })}
 						aria-label={tForm("placeholders.name")}
+						autoComplete="off"
 						className={dirtyFields["name"] ? "border-white" : ""}
 						isError={!!errors.name}
 						label={tForm("placeholders.name")}
@@ -91,6 +92,7 @@ export const AddVariable = () => {
 						label={tForm("placeholders.value")}
 						{...register("value")}
 						aria-label={tForm("placeholders.value")}
+						autoComplete="off"
 						handleInputChange={(newValue) => setValue("value", newValue)}
 					/>
 
