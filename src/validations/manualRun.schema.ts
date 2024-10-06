@@ -22,15 +22,31 @@ i18n.on("initialized", () => {
 		params: z
 			.array(paramSchema)
 			.superRefine((items, ctx) => {
+				const keys = new Set<string>();
 				items.forEach((item, index) => {
-					if (item.key?.trim().length === 0) {
+					if (!item.key?.trim()) {
 						ctx.addIssue({
 							code: z.ZodIssueCode.custom,
 							message: i18n.t("keyIsRequired", { ns: "validations" }),
 							path: [`params.${index}.key`],
 						});
+
+						return;
 					}
-					if (item.value?.trim().length === 0) {
+
+					if (keys.has(item.key)) {
+						ctx.addIssue({
+							code: z.ZodIssueCode.custom,
+							message: i18n.t("duplicateKeyError", { ns: "validations" }),
+							path: [`params.${index}.key`],
+						});
+
+						return;
+					}
+
+					keys.add(item.key);
+
+					if (!item.value?.trim()) {
 						ctx.addIssue({
 							code: z.ZodIssueCode.custom,
 							message: i18n.t("valueIsRequired", { ns: "validations" }),
