@@ -61,7 +61,7 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 ### Testing 🧪
 
-1.   **Run End-to-End Tests**: Run the Playwright end-to-end tests.
+1.  **Run End-to-End Tests**: Run the Playwright end-to-end tests.
 
     `npm run test:e2e`
 
@@ -108,7 +108,8 @@ Create a `.env` file in the root of the project directory and add the necessary 
 ## Tools We Used 🛠️
 
 In this project we used:
- - [FontAwesome](https://fontawesome.com) our icons.
+
+-   [FontAwesome](https://fontawesome.com) our icons.
 
 ## License 📜
 
