@@ -11,7 +11,7 @@ import { ZodObject, ZodRawShape } from "zod";
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
-import { Integrations } from "@src/enums/components";
+import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { useConnectionCheckerStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
@@ -244,7 +244,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			} = getValues();
 
 			const integrationUniqueName = GoogleIntegrationsPrefixRequired.includes(integrationName)
-				? `${Integrations.google}${integrationName}`
+				? `${defaultGoogleConnectionName}${integrationName}`
 				: integrationName;
 
 			const { data: responseConnectionId, error } = await ConnectionService.create(
@@ -334,7 +334,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			const urlParams = getSpecificParams(connectionData, specificKeys);
 
 			openPopup(
-				`${apiBaseUrl}/${Integrations.google}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
+				`${apiBaseUrl}/${defaultGoogleConnectionName}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);

@@ -7,13 +7,8 @@ import { googleCalendarIntegrationSchema, oauthSchema } from "@validations";
 
 import { IntegrationEditForm } from "@components/organisms/connections/integrations";
 
-export const GoogleCalendarIntegrationEditForm = ({
-	googleIntegrationApplication,
-}: {
-	googleIntegrationApplication: string;
-}) => (
+export const GoogleCalendarIntegrationEditForm = () => (
 	<IntegrationEditForm
-		googleIntegrationApplication={googleIntegrationApplication}
 		integrationType={Integrations.calendar}
 		schemas={{
 			[ConnectionAuthType.JsonKey]: googleCalendarIntegrationSchema,

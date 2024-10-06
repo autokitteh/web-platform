@@ -1,15 +1,15 @@
-import { Integrations } from "@src/enums/components";
+import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 
 export const stripGoogleConnectionName = (connectionName: string) => {
 	if (!connectionName) return "";
 
 	if (
-		!connectionName.includes(Integrations.google) ||
+		!connectionName.includes(defaultGoogleConnectionName) ||
 		connectionName.includes(Integrations.googlegemini) ||
-		connectionName === Integrations.google
+		connectionName === defaultGoogleConnectionName
 	) {
 		return connectionName;
 	}
 
-	return connectionName.substring(Integrations.google.length);
+	return connectionName.substring(defaultGoogleConnectionName.length);
 };
