@@ -20,3 +20,7 @@ export {
 	GoogleFormsIntegrationAddForm,
 	GoogleFormsIntegrationEditForm,
 } from "@components/organisms/connections/integrations/googleforms";
+export {
+	AsanaIntegrationAddForm,
+	AsanaIntegrationEditForm,
+} from "@components/organisms/connections/integrations/asana";

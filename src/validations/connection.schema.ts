@@ -87,4 +87,8 @@ export const googleGeminiIntegrationSchema = z.object({
 	key: z.string().min(1, "Key is required"),
 });
 
+export const asanaIntegrationSchema = z.object({
+	pat: z.string().min(1, "PAT is required"),
+});
+
 export const oauthSchema = z.object({});

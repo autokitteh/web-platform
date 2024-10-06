@@ -2,6 +2,7 @@ import { IntegrationSelectOption } from "@src/interfaces/components/forms";
 
 import { AKRoundLogo } from "@assets/image";
 import {
+	AsanaIcon,
 	AwsIcon,
 	ConfluenceIcon,
 	DiscordIcon,
@@ -31,6 +32,7 @@ export enum ConnectionStatus {
 }
 
 export enum Integrations {
+	asana = "asana",
 	github = "github",
 	slack = "slack",
 	gmail = "gmail",
@@ -74,6 +76,7 @@ export enum IntegrationForTemplates {
 }
 
 export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
+	asana: { label: "Asana", value: Integrations.asana, icon: AsanaIcon },
 	github: { label: "GitHub", value: Integrations.github, icon: GithubIcon },
 	slack: { label: "Slack", value: Integrations.slack, icon: SlackIcon },
 	aws: { label: "AWS", value: Integrations.aws, icon: AwsIcon },

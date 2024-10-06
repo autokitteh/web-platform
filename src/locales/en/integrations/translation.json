@@ -148,6 +148,14 @@
 			"devPlatform": "Discord developer platform"
 		}
 	},
+	"asana": {
+		"placeholders": {
+			"pat": "PAT"
+		},
+		"information": {
+			"devPlatform": "Asana developer platform"
+		}
+	},
 	"gemini": {
 		"placeholders": {
 			"key": "Secret API Key"

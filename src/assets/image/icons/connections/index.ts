@@ -19,3 +19,6 @@ export { default as SqliteIcon } from "@assets/image/icons/connections/Sqlite.sv
 export { default as GithubCopilotIcon } from "@assets/image/icons/connections/GithubCopilot.svg?react";
 export { default as SchedulerIcon } from "@assets/image/icons/connections/Scheduler.svg?react";
 export { default as GrpcIcon } from "@assets/image/icons/connections/Grpc.svg?react";
+
+// Asana icon token from here: https://github.com/detain/svg-logos/blob/master/svg/a/asana-logo.svg under MIT license
+export { default as AsanaIcon } from "@assets/image/icons/connections/Asana.svg?react";

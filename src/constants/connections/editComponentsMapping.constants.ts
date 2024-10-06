@@ -5,6 +5,7 @@ import {
 	GoogleCalendarIntegrationEditForm,
 	GoogleFormsIntegrationEditForm,
 } from "@components/organisms/connections/integrations";
+import { AsanaIntegrationEditForm } from "@components/organisms/connections/integrations/asana";
 import { AwsIntegrationEditForm } from "@components/organisms/connections/integrations/aws";
 import { DiscordIntegrationEditForm } from "@components/organisms/connections/integrations/discord";
 import { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
@@ -16,6 +17,7 @@ import { SlackIntegrationEditForm } from "@components/organisms/connections/inte
 import { TwilioIntegrationEditForm } from "@components/organisms/connections/integrations/twilio";
 
 export const integrationToEditComponent: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
+	[Integrations.asana]: AsanaIntegrationEditForm,
 	[Integrations.github]: GithubIntegrationEditForm,
 	[Integrations.discord]: DiscordIntegrationEditForm,
 	[Integrations.jira]: JiraIntegrationEditForm,
