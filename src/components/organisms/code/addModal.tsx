@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -37,12 +37,17 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 		handleSubmit,
 		register,
 		reset,
+		setValue,
 	} = useForm({
 		defaultValues: {
 			extension: { label: defalutFileExtension, value: defalutFileExtension },
 			name: "",
 		},
 		resolver: zodResolver(codeAssetsSchema),
+	});
+
+	useEffect(() => {
+		setValue("name", "");
 	});
 
 	const onSubmit = async () => {
