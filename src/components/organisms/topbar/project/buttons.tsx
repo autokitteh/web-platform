@@ -154,7 +154,7 @@ export const ProjectTopbarButtons = () => {
 			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaBuildProject")}
-					className="group h-8 whitespace-nowrap px-3.5"
+					className="group h-8 whitespace-nowrap px-3.5 text-white"
 					disabled={isDeployAndBuildDisabled}
 					onClick={debouncedBuild}
 					variant="outline"
@@ -176,7 +176,7 @@ export const ProjectTopbarButtons = () => {
 			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
-					className="group h-8 whitespace-nowrap px-3.5"
+					className="group h-8 whitespace-nowrap px-3.5 text-white"
 					disabled={isDeployAndBuildDisabled}
 					onClick={debouncedDeploy}
 					variant="outline"
@@ -197,7 +197,7 @@ export const ProjectTopbarButtons = () => {
 
 			<DropdownButton
 				contentMenu={
-					<Button className="group h-8 px-4" onClick={openModalDeleteProject} variant="outline">
+					<Button className="group h-8 px-4 text-white" onClick={openModalDeleteProject} variant="outline">
 						<IconSvg
 							className="-mt-0.5 stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 							size="md"
@@ -208,7 +208,7 @@ export const ProjectTopbarButtons = () => {
 					</Button>
 				}
 			>
-				<Button className="group h-8 whitespace-nowrap px-4" variant="outline">
+				<Button className="group h-8 whitespace-nowrap px-4 text-white" variant="outline">
 					<IconSvg
 						className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
 						size="md"
