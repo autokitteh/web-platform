@@ -86,9 +86,15 @@ export const Security = () => {
 							</Button>
 						</div>
 					) : (
-						<Button className="flex border-2 border-black" onClick={createToken} variant="light">
+						<Button
+							className="border border-white px-3 font-medium text-white hover:bg-gray-1300"
+							onClick={createToken}
+							variant="filled"
+						>
 							<div className="flex items-center">
-								{!isLoading ? <IconSvg alt="New Project" size="md" src={NewProject} /> : null}
+								{!isLoading ? (
+									<IconSvg alt="New Project" className="fill-white" size="md" src={NewProject} />
+								) : null}
 
 								{isLoading ? <Loader size="sm" /> : null}
 							</div>
