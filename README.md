@@ -17,14 +17,6 @@
 -   **Work and Marketing Automation**: Facilitate tasks using systems like Gmail, Docs, Slack, Calendar, etc.
 -   **Corporate Operations Automation**: Enhance enterprise-specific procedures for HR, sales, etc.
 
-## Contact 📬
-
-For inquiries, contact: meow@autokitteh.com
-
-# Contributing to autokitteh
-
-We'd love to get your input! We want to make contributing to this project as easy and transparent as possible.
-
 ## How to Install and Run 🛠️
 
 ### Prerequisites 📋
@@ -43,7 +35,7 @@ Ensure you have the following installed on your system:
 
 2.  **Get AutoKitteh Submodule**: Use git to install the AutoKitteh submodule:
 
-    `git submodule update --remote`
+    `git submodule update --init`
 
 3.  **Install Dependencies**: Use npm to install all the required dependencies:
 
@@ -69,19 +61,15 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 ### Testing 🧪
 
-1.  **Run Unit Tests**: Execute the test suite.
-
-    `npm run test`
-
-2.  **Run End-to-End Tests**: Run the Playwright end-to-end tests.
+1.   **Run End-to-End Tests**: Run the Playwright end-to-end tests.
 
     `npm run test:e2e`
 
-3.  **View E2E Test UI**: Launch the Playwright test runner UI.
+2.  **View E2E Test UI**: Launch the Playwright test runner UI.
 
     `npm run test:e2e:ui`
 
-4.  **Generate E2E Test Report**: Generate and view the test report.
+3.  **Generate E2E Test Report**: Generate and view the test report.
 
     `npm run test:e2e:report`
 
@@ -116,3 +104,22 @@ Create a `.env` file in the root of the project directory and add the necessary 
 3.  **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
 
     `npm run tailwind-config-viewer`
+
+## Tools We Used 🛠️
+
+In this project we used:
+ - [FontAwesome](https://fontawesome.com) our icons.
+
+## License 📜
+
+The [autokitteh](https://autokitteh.com) license identifier for this project is `Apache-2.0` - [LICENSE.md].
+
+## Contact 📬
+
+For inquiries, contact: meow@autokitteh.com
+
+## How to Contribute 🤝
+
+To contribute to autokitteh, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+
+We appreciate contributions from everyone!
