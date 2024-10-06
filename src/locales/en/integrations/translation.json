@@ -49,13 +49,12 @@
 		},
 		"labels":{
 			"calendarId":"Calendar ID (optional)",
-			"formId": "Form ID"
+			"formId": "Form ID (optional)"
 		},
 		"placeholders": {
 			"jsonKey": "JSON Key",
 			"calendarId": "Optional: Calendar ID (To Receive Events, e.g. 'primary')",
 			"formId": "Optional: Form ID (To Receive Events)"
-
 		}
 	},
 	"slack": {
