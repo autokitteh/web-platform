@@ -12,6 +12,12 @@
 		"howToUseTokenText": "Create, copy and use  the token in your application - using CLI or our VSCode Extension.",
 		"title": "Security"
 	},
+	"profile":{
+		"title": "My Profile",
+		"name": "Name: {{name}}",
+		"email": "Email: {{email}}",
+		"deleteAccount": "Delete My Account"
+	},
 	"topbar": {
 		"title": "Settings"
 	}
