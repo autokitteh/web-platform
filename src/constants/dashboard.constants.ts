@@ -172,7 +172,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Samples using GitHub APIs",
 				integrations: [IntegrationsMap.github],
 				assetDirectory: "samples/github",
-				files: ["README.md", "autokitteh.yaml", "workflow.star", "program.star"],
+				files: ["README.md", "autokitteh.yaml", "workflow.py", "program.py"],
 			},
 			{
 				title: "Google Calendar",
@@ -201,13 +201,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				integrations: [IntegrationsMap.sheets],
 				assetDirectory: "samples/google/sheets",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
-			},
-			{
-				title: "gRPC",
-				description: "Samples using gRPC",
-				integrations: [HiddenIntegrationsForTemplates.grpc],
-				assetDirectory: "samples/grpc",
-				files: ["README.md", "autokitteh.yaml", "program.star"],
 			},
 			{
 				title: "HTTP",
@@ -242,7 +235,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Samples using cron scheduler for workflows",
 				integrations: [HiddenIntegrationsForTemplates.scheduler],
 				assetDirectory: "samples/scheduler",
-				files: ["README.md", "autokitteh.yaml", "program.star"],
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Slack",
