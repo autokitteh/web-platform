@@ -7,7 +7,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import { useCacheStore, useModalStore, useProjectStore, useProjectValidationStore, useToastStore } from "@src/store";
+import {
+	useCacheStore,
+	useConnectionCheckerStore,
+	useModalStore,
+	useProjectStore,
+	useProjectValidationStore,
+	useToastStore,
+} from "@src/store";
 
 import { useFileOperations } from "@hooks";
 
@@ -27,6 +34,7 @@ export const ProjectTopbarButtons = () => {
 	const { isValid, projectValidationState } = useProjectValidationStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
+	const { resetChecker } = useConnectionCheckerStore();
 
 	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
@@ -133,6 +141,9 @@ export const ProjectTopbarButtons = () => {
 
 			return;
 		}
+
+		resetChecker();
+
 		addToast({
 			message: t("topbar.deleteProjectSuccess"),
 			type: "success",
