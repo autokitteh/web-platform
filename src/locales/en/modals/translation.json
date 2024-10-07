@@ -6,24 +6,32 @@
 		"title": "Create File"
 	},
 	"deleteConnection": {
+		"cancelButton": "Cancel",
 		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"content": "Are you sure you want to delete {{name}}?",
+		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Connection",
 		"fetchFailed": "Failed to fetch the connection"
 	},
 	"deleteDeployment": {
+		"cancelButton": "Cancel",
 		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete deployment {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"content": "Are you sure you want to delete deployment {{name}}?",
+		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Deployment"
 	},
 	"deleteDeploymentSession": {
-		"content": "Are you sure you want to delete session {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"cancelButton": "Cancel",
+		"content": "Are you sure you want to delete session {{name}}?",
+		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"deleteButton": "Ok",
 		"title": "Delete Session"
 	},
 	"deleteFile": {
+		"cancelButton": "Cancel",
 		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"content": "Are you sure you want to delete {{name}}?",
+		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete File"
 	},
 	"deleteAccount": {
@@ -34,18 +42,24 @@
 		"title": "Delete the account?"
 	},
 	"deleteTrigger": {
+		"cancelButton": "Cancel",
 		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"content": "Are you sure you want to delete {{name}}?",
+		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Trigger"
 	},
 	"deleteVariable": {
+		"cancelButton": "Cancel",
 		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"content": "Are you sure you want to delete {{name}}?",
+		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Variable"
 	},
 	"deleteProject": {
+		"cancelButton": "Cancel",
 		"deleteButton": "Ok",
-		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"content": "Are you sure you want to delete {{name}}?",
+		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Project"
 	}
 }

@@ -4,6 +4,7 @@ export interface ModalProps {
 	children: React.ReactNode;
 	className?: string;
 	name: string;
+	hideCloseButton?: boolean;
 }
 
 export interface ModalAddCodeAssetsProps {
