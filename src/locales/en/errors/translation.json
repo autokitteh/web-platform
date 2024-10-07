@@ -25,6 +25,7 @@
 	"failedRemoveSession": "Failed to remove session",
 	"failedRemoveSessionExtended": "Failed to remove session, ID: {{sessionId}}",
 	"failedStopSession": "Failed to stop session",
+	"failedStopSessionExtended": "Failed to stop session ID: {{sessionId}}, error: {{error}}",
 	"fileAddFailedExtended": "File with code add failed, project ID: {{projectId}}, File Name: {{fileName}}",
 	"fileAddFailed": "File creation failed for: {{fileName}}",
 	"nameRequired": "Name is required",
