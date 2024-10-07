@@ -14,7 +14,7 @@ Use the following command to run the application with Docker
 
 * `docker compose -f development.compose.yml up`
 
-## How to Install and Run  🛠️
+## How to Install and Run ⚙️
 
 ### Prerequisites 📋
 
@@ -40,7 +40,9 @@ Ensure you have the following installed on your system:
 
 ### Environment Setup 🌐
 
-Create a `.env` file in the root of the project directory and add the necessary environment variables. Refer to the `validateEnv` script for required variables: `sh cp .env.example .env # Edit .env with your environment-specific settings`
+Create a `.env` file in the root of the project directory and add the necessary environment variables. Refer to the `validateEnv` script for required variables: 
+
+`sh cp .env.example .env # Edit .env with your environment-specific settings`
 
 ### Running the Project 🏃
 
@@ -70,35 +72,14 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
     `npm run test:e2e:report`
 
-### Linting and Formatting 🧹
-
-1.  **Lint the Code**: Lint the codebase to ensure code quality.
-
-    `npm run lint`
-
-2.  **Fix Linting Issues**: Automatically fix linting issues where possible.
-
-    `npm run lint-fix`
-
-3.  **Check Code Formatting**: Check if the code meets the formatting standards.
-
-    `npm run prettier`
-
-4.  **Fix Code Formatting**: Automatically format the codebase.
-
-    `npm run fixed-format:staged`
 
 ### Additional Commands 📜
 
-1.  **Type Checking**: Perform type checking without emitting output files and compile the project.
-
-    `npm run type-check`
-
-2.  **Storybook**: Launch the Storybook development environment.
+1.  **Storybook**: Launch the Storybook development environment.
 
     `npm run storybook`
 
-3.  **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
+2.  **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
 
     `npm run tailwind-config-viewer`
 
