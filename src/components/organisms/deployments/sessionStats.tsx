@@ -10,16 +10,16 @@ export const DeploymentSessionStats = ({ sessionStats }: { sessionStats?: Deploy
 	const { t } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 	const countStyle = (state?: SessionStateType) =>
 		cn("2xl:w-22 inline-block w-14 border-0 p-0 text-sm font-medium", {
-			"text-white": state === SessionStateType.created,
-			"text-gray-650": state === SessionStateType.stopped,
+			"text-white": state === SessionStateType.running,
+			"text-yellow-500": state === SessionStateType.stopped,
 			"text-green-800": state === SessionStateType.completed,
 			"text-red": state === SessionStateType.error,
 		});
 
 	const sessionStatsOrdered = [
-		sessionStats?.find(({ state }) => state === SessionStateType.created) || {
+		sessionStats?.find(({ state }) => state === SessionStateType.running) || {
 			count: 0,
-			state: SessionStateType.created,
+			state: SessionStateType.running,
 		},
 		sessionStats?.find(({ state }) => state === SessionStateType.stopped) || {
 			count: 0,
