@@ -23,7 +23,7 @@ export const OauthGoogleFormsForm = ({ register }: { register: UseFormRegister<{
 					placeholder={t("google.placeholders.formId")}
 				/>
 			</div>
-			<Button aria-label={t("buttons.startOAuthFlow")} className="ml-auto px-3" type="submit" variant="outline">
+			<Button aria-label={t("buttons.startOAuthFlow")} className="ml-auto" type="submit" variant="outline">
 				{t("buttons.startOAuthFlow")}
 			</Button>
 			<Accordion title={t("information")}>

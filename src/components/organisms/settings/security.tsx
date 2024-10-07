@@ -78,7 +78,7 @@ export const Security = () => {
 
 							<Button
 								aria-label={t("copyButton")}
-								className="ml-4 rounded-md px-3 font-semibold"
+								className="ml-4 rounded-md font-semibold"
 								onClick={() => copyToClipboard(token)}
 								variant="inverse"
 							>
@@ -86,7 +86,7 @@ export const Security = () => {
 							</Button>
 						</div>
 					) : (
-						<Button className="border border-gray-500 px-3" onClick={createToken} variant="filled">
+						<Button className="border border-gray-500" onClick={createToken} variant="filled">
 							<div className="flex items-center">
 								{!isLoading ? (
 									<IconSvg alt="Create Token" className="fill-gray-100" size="md" src={Plus} />

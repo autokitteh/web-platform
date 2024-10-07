@@ -36,7 +36,7 @@ export const OauthForm = () => {
 
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
-				className="ml-auto px-3 font-medium"
+				className="ml-auto font-medium"
 				type="submit"
 				variant="outline"
 			>

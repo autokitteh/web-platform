@@ -50,7 +50,7 @@ export const TabFormHeader = ({
 
 						<Button
 							ariaLabel={t("save")}
-							className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
+							className="border-white py-2 font-semibold text-white hover:bg-black"
 							disabled={isLoading}
 							form={form}
 							type="submit"

@@ -27,7 +27,7 @@ export const Submenu = ({ submenuInfo }: SubmenuProps) => {
 		>
 			{submenuInfo.submenu?.map(({ href, id, name }) => (
 				<Button
-					className={cn("text-fira-code whitespace-nowrap px-4 text-gray-1100 hover:bg-green-200", {
+					className={cn("text-fira-code whitespace-nowrap text-gray-1100 hover:bg-green-200", {
 						"bg-gray-1100 text-white hover:bg-gray-1100": id === projectId,
 					})}
 					href={href}

@@ -208,24 +208,24 @@ export const ProjectTopbarButtons = () => {
 
 			<DropdownButton
 				contentMenu={
-					<Button className="group h-8 px-4 text-white" onClick={openModalDeleteProject} variant="outline">
+					<Button className="group h-8 text-white" onClick={openModalDeleteProject} variant="outline">
+						{" "}
 						<IconSvg
 							className="-mt-0.5 stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 							size="md"
 							src={TrashIcon}
 						/>
-
 						{t("topbar.buttons.delete")}
 					</Button>
 				}
 			>
-				<Button className="group h-8 whitespace-nowrap px-4 text-white" variant="outline">
+				<Button className="group h-8 whitespace-nowrap text-white" variant="outline">
+					{" "}
 					<IconSvg
 						className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
 						size="md"
 						src={MoreIcon}
 					/>
-
 					{t("more", { ns: "buttons" })}
 				</Button>
 			</DropdownButton>

@@ -21,13 +21,13 @@ export const Button = ({
 }: Partial<ButtonProps>) => {
 	const buttonClass = cn(
 		"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
-		"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",
+		"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250 text-white px-3",
 		{
-			"bg-black text-white": variant === ButtonVariant.filled,
-			"bg-gray-1200 text-white hover:bg-gray-1050": variant === ButtonVariant.filledGray,
-			"bg-transparent text-white hover:bg-gray-500": variant === ButtonVariant.light,
-			"border-black bg-white hover:bg-gray-950": variant === ButtonVariant.inverse,
-			"border border-gray-750 hover:bg-black w-fit border-white text-white": variant === ButtonVariant.outline,
+			"bg-black": variant === ButtonVariant.filled,
+			"bg-gray-1200 hover:bg-gray-1050": variant === ButtonVariant.filledGray,
+			"bg-transparent hover:bg-gray-500": variant === ButtonVariant.light,
+			"border border-gray-750 hover:bg-black hover:border-white": variant === ButtonVariant.outline,
+			"border border-gray-750 hover:border-white border-black bg-white": variant === ButtonVariant.inverse,
 		},
 		{
 			"pointer-events-none opacity-30": disabled,

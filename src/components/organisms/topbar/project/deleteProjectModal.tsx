@@ -40,13 +40,14 @@ export const DeleteProjectModal = ({ onDelete }: ModalDeleteTriggerProps) => {
 
 			<div className="mt-10 flex justify-end gap-1">
 				<Button
-					className="w-auto px-4 py-3 font-semibold hover:text-white"
+					className="w-auto py-3 font-semibold hover:text-white"
 					onClick={() => closeModal(ModalName.deleteProject)}
 				>
+					{" "}
 					{t("cancelButton")}
 				</Button>
 
-				<Button className="w-auto px-4 py-3 font-semibold" onClick={onDelete} variant="filled">
+				<Button className="w-auto py-3 font-semibold" onClick={onDelete} variant="filled">
 					{t("deleteButton")}
 				</Button>
 			</div>

@@ -65,20 +65,22 @@ export const DeleteConnectionModal = ({ connectionId, loading, onDelete }: Modal
 
 			<div className="mt-14 flex justify-end gap-1">
 				<Button
-					className="w-auto px-4 py-3 font-semibold hover:text-white"
+					className="w-auto py-3 font-semibold hover:text-white"
 					disabled={loading}
 					onClick={() => closeModal(ModalName.deleteConnection)}
 				>
+					{" "}
 					{t("cancelButton")}
 				</Button>
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="w-auto bg-gray-1100 px-4 py-3 font-semibold"
+					className="w-auto bg-gray-1100 py-3 font-semibold"
 					disabled={loading}
 					onClick={onDelete}
 					variant="filled"
 				>
+					{" "}
 					{loading ? <Spinner /> : null} {t("deleteButton")}
 				</Button>
 			</div>

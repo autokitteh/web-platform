@@ -117,7 +117,7 @@ export const ConfluenceApiTokenForm = ({
 
 			<Button
 				aria-label={t("buttons.saveConnection")}
-				className="ml-auto px-3 font-medium"
+				className="ml-auto font-medium"
 				disabled={isLoading}
 				type="submit"
 				variant="outline"

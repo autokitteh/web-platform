@@ -25,18 +25,20 @@ export const DeleteDeploymentModal = ({ onDelete }: ModalDeleteDeploymentProps) 
 			<div className="mt-10 flex justify-end gap-1">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="w-auto px-4 py-3 font-semibold hover:text-white"
+					className="w-auto py-3 font-semibold hover:text-white"
 					onClick={() => closeModal(ModalName.deleteDeployment)}
 				>
+					{" "}
 					{t("cancelButton")}
 				</Button>
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="w-auto bg-gray-1100 px-4 py-3 font-semibold"
+					className="w-auto bg-gray-1100 py-3 font-semibold"
 					onClick={onDelete}
 					variant="filled"
 				>
+					{" "}
 					{t("deleteButton")}
 				</Button>
 			</div>
