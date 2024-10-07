@@ -8,11 +8,11 @@ This repository contains the web UI for the AutoKitteh backend. The application 
 
 ![Screenshot 2024-10-07 at 17 08 57](https://github.com/user-attachments/assets/3ea42fbd-f74d-4b00-b0d4-dd3b40ea12ee)
 
-
 ## How to run the application using Docker Compose 🐳
+
 Use the following command to run the application with Docker
 
-* `docker compose -f development.compose.yml up`
+-   `docker compose -f development.compose.yml up`
 
 ## How to Install and Run ⚙️
 
@@ -40,7 +40,7 @@ Ensure you have the following installed on your system:
 
 ### Environment Setup 🌐
 
-Create a `.env` file in the root of the project directory and add the necessary environment variables. Refer to the `validateEnv` script for required variables: 
+Create a `.env` file in the root of the project directory and add the necessary environment variables. Refer to the `validateEnv` script for required variables:
 
 `sh cp .env.example .env # Edit .env with your environment-specific settings`
 
@@ -71,7 +71,6 @@ Create a `.env` file in the root of the project directory and add the necessary 
 3.  **Generate E2E Test Report**: Generate and view the test report.
 
     `npm run test:e2e:report`
-
 
 ### Additional Commands 📜
 
