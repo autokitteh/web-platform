@@ -220,7 +220,6 @@ export const ProjectTopbarButtons = () => {
 				}
 			>
 				<Button className="group h-8 whitespace-nowrap text-white" variant="outline">
-					{" "}
 					<IconSvg
 						className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
 						size="md"

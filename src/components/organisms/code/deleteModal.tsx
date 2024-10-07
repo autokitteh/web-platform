@@ -29,8 +29,9 @@ export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 			<div className="mt-14 flex justify-end gap-1">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="w-auto py-3 font-semibold hover:text-white"
+					className="w-auto py-3 font-semibold text-gray-1100 hover:text-white"
 					onClick={() => closeModal(ModalName.deleteFile)}
+					variant="outline"
 				>
 					{t("cancelButton")}
 				</Button>

@@ -25,10 +25,10 @@ export const DeleteSessionModal = ({ onDelete }: ModalDeleteDeploymentSessionPro
 			<div className="mt-10 flex justify-end gap-1">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="w-auto py-3 font-semibold hover:text-white"
+					className="w-auto py-3 font-semibold text-gray-1100 hover:text-white"
 					onClick={() => closeModal(ModalName.deleteDeploymentSession)}
+					variant="outline"
 				>
-					{" "}
 					{t("cancelButton")}
 				</Button>
 
@@ -38,7 +38,6 @@ export const DeleteSessionModal = ({ onDelete }: ModalDeleteDeploymentSessionPro
 					onClick={onDelete}
 					variant="filled"
 				>
-					{" "}
 					{t("deleteButton")}
 				</Button>
 			</div>
