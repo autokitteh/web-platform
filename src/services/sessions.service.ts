@@ -89,6 +89,7 @@ export class SessionsService {
 
 			if (!session) {
 				const errorMessage = i18n.t("sessionNotFound", {
+					sessionId,
 					ns: "services",
 				});
 				LoggerService.error(namespaces.sessionsService, errorMessage);
@@ -100,6 +101,12 @@ export class SessionsService {
 			}
 
 			if (!session?.eventId) {
+				const errorMessage = i18n.t("sessionMissingEventExtended", {
+					sessionId,
+					ns: "services",
+				});
+				LoggerService.error(namespaces.sessionsService, errorMessage);
+
 				const sessionConverted = convertSessionProtoToViewerModel(session!);
 
 				return {
@@ -111,6 +118,14 @@ export class SessionsService {
 			const { data: event, error } = await EventsService.get(session.eventId);
 
 			if (error) {
+				const errorMessage = i18n.t("sessionMissingEventInfoExtended", {
+					error: (error as Error).message,
+					sessionId,
+					eventId: session.eventId,
+					ns: "services",
+				});
+				LoggerService.error(namespaces.sessionsService, errorMessage);
+
 				return { data: undefined, error };
 			}
 
@@ -122,7 +137,12 @@ export class SessionsService {
 
 			return { data: sessionConverted, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.sessionsService, (error as Error).message);
+			const errorMessage = i18n.t("sessionInfoFetchFailedExtended", {
+				error: (error as Error).message,
+				sessionId,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.sessionsService, errorMessage);
 
 			return { data: undefined, error };
 		}
