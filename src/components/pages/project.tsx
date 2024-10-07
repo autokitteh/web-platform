@@ -5,7 +5,7 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
 import { useProjectStore, useProjectValidationStore } from "@src/store";
-import { calculatePathDepth } from "@utilities";
+import { calculatePathDepth, cn } from "@utilities";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
 import { SplitFrame } from "@components/organisms";
@@ -53,12 +53,13 @@ export const Project = () => {
 				{displayTabs ? (
 					<div className="flex h-full flex-1 flex-col">
 						<div className="sticky -top-8 z-20 -mt-5 bg-gray-1100 pb-0 pt-3">
-							<div className="scrollbar sm:px-4 md:px-6 flex shrink-0 select-none items-center overflow-x-auto overflow-y-hidden whitespace-nowrap px-2 pb-5 pt-1">
+							<div className="scrollbar flex shrink-0 select-none items-center overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
 								{projectTabs.map((tabKey, index) => {
 									const tabState =
 										projectValidationState[tabKey.value as keyof typeof projectValidationState];
 									const warning = tabState.level === "warning" ? tabState.message : "";
 									const error = tabState.level === "error" ? tabState.message : "";
+									const tabClass = cn("py-1 pr-1", { "ml-2": index !== 0 });
 
 									return (
 										<div className="flex items-center" key={tabKey.value}>
@@ -66,7 +67,7 @@ export const Project = () => {
 											<Tab
 												activeTab={activeTab}
 												ariaLabel={tabState?.message || tabKey.label}
-												className="p-1"
+												className={tabClass}
 												onClick={() => goTo(tabKey.value)}
 												title={tabState?.message || tabKey.label}
 												value={tabKey.value}

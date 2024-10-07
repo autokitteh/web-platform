@@ -8,7 +8,7 @@ import { TabsContext } from "@components/atoms/tabs/tabsContext";
 export const Tab = ({ activeTab, ariaLabel, children, className, onClick, title, value, variant }: TabProps) => {
 	const { setActiveTab } = useContext(TabsContext);
 	const tabStyle = cn(
-		"cursor-pointer border-b-2 border-transparent pb-1 uppercase tracking-tight text-gray-500 ml-2",
+		"cursor-pointer border-b-2 border-transparent pb-1 uppercase tracking-tight text-gray-500",
 		{
 			"border-white text-white": activeTab === value,
 			"text-gray-1200": variant === "dark",
