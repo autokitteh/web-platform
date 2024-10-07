@@ -50,7 +50,7 @@ export const OpenAiIntegrationAddForm = ({
 
 			<Button
 				aria-label={t("buttons.saveConnection")}
-				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
+				className="ml-auto px-3 font-medium"
 				disabled={isLoading}
 				type="submit"
 				variant="outline"

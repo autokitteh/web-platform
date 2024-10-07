@@ -23,12 +23,7 @@ export const OauthGoogleCalendarForm = ({ register }: { register: UseFormRegiste
 					placeholder={t("google.placeholders.calendarId")}
 				/>
 			</div>
-			<Button
-				aria-label={t("buttons.startOAuthFlow")}
-				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
-				type="submit"
-				variant="outline"
-			>
+			<Button aria-label={t("buttons.startOAuthFlow")} className="ml-auto px-3" type="submit" variant="outline">
 				{t("buttons.startOAuthFlow")}
 			</Button>
 			<Accordion title={t("information")}>

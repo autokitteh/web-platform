@@ -8,7 +8,7 @@ import { getApiBaseUrl } from "@src/utilities";
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
 import { Accordion, CopyButton, ImageMotion } from "@components/molecules";
 
-import { NewProject } from "@assets/image";
+import { Plus } from "@assets/image";
 
 export const ClientConfiguration = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "clientConfiguration" });
@@ -48,14 +48,15 @@ export const ClientConfiguration = () => {
 							/>
 						</div>
 					) : (
-						<Button
-							className="border border-white px-3 font-medium text-white hover:bg-gray-1300"
-							onClick={createToken}
-							variant="filled"
-						>
+						<Button className="border border-gray-500 px-3" onClick={createToken} variant="filled">
 							<div className="flex items-center">
 								{!isLoading ? (
-									<IconSvg alt="New Project" className="fill-white" size="md" src={NewProject} />
+									<IconSvg
+										alt={t("getToken.actionButton")}
+										className="fill-gray-100"
+										size="md"
+										src={Plus}
+									/>
 								) : null}
 
 								{isLoading ? <Loader size="sm" /> : null}

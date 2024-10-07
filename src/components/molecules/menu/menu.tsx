@@ -14,7 +14,7 @@ import { useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg } from "@components/atoms";
 
-import { NewProject, ProjectsIcon } from "@assets/image";
+import { Plus, ProjectsIcon } from "@assets/image";
 
 export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
@@ -91,7 +91,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 						title="New Project"
 					>
 						<div className="flex size-9 items-center justify-center">
-							<IconSvg alt="New Project" size="xl" src={NewProject} />
+							<IconSvg alt="New Project" size="xl" src={Plus} />
 						</div>
 
 						<AnimatePresence>
