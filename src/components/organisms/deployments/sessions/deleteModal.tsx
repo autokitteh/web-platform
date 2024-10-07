@@ -14,7 +14,7 @@ export const DeleteSessionModal = ({ onDelete }: ModalDeleteDeploymentSessionPro
 	const { closeModal, data } = useModalStore();
 
 	return (
-		<Modal name={ModalName.deleteDeploymentSession}>
+		<Modal hideCloseButton name={ModalName.deleteDeploymentSession}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 

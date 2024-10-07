@@ -16,7 +16,7 @@ export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 	const { closeModal } = useModalStore();
 
 	return (
-		<Modal name={ModalName.deleteFile}>
+		<Modal hideCloseButton name={ModalName.deleteFile}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 

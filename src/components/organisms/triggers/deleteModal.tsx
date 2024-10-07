@@ -33,7 +33,7 @@ export const DeleteTriggerModal = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 	}, [triggerId]);
 
 	return (
-		<Modal name={ModalName.deleteTrigger}>
+		<Modal hideCloseButton name={ModalName.deleteTrigger}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p>{t("content", { name: trigger?.name })}</p>

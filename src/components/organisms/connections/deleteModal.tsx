@@ -41,7 +41,7 @@ export const DeleteConnectionModal = ({ connectionId, onDelete }: ModalDeleteCon
 	}, [connectionId]);
 
 	return (
-		<Modal name={ModalName.deleteConnection}>
+		<Modal hideCloseButton name={ModalName.deleteConnection}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p>{t("content", { name: connection?.name })}</p>

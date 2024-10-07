@@ -20,7 +20,7 @@ export const DeleteProjectModal = ({ onDelete }: ModalDeleteTriggerProps) => {
 	const projectName = projectsList.find(({ id }) => id === projectId)?.name;
 
 	return (
-		<Modal name={ModalName.deleteProject}>
+		<Modal hideCloseButton name={ModalName.deleteProject}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p>{t("content", { name: projectName })}</p>

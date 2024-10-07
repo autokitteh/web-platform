@@ -14,7 +14,7 @@ export const DeleteDeploymentModal = ({ deploymentId, onDelete }: ModalDeleteDep
 	const { closeModal } = useModalStore();
 
 	return (
-		<Modal name={ModalName.deleteDeployment}>
+		<Modal hideCloseButton name={ModalName.deleteDeployment}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
