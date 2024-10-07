@@ -1,23 +1,19 @@
-# 🐾 AutoKitteh
+# 🐾 AutoKitteh - Web UI
 
 ## Overview 🌟
 
 [AutoKitteh](https://www.autokitteh.com) is an open-source, developer-first framework aimed at simplifying the automation of distributed systems. It supports various deployment models including on-prem, cloud, and hybrid systems.
 
-## Key Features 🔑
+This repository contains the web UI for the AutoKitteh backend. The application allows users to create projects from a list of templates or start blank projects. It provides functionality to manage project entities such as code files, connections, triggers, and variables. Users can build and deploy projects on the server, view a list of deployments, and monitor sessions within those deployments. This interface facilitates the process of working with AutoKitteh, making it easier to develop, manage, and deploy automation projects.
 
--   **Automation as Code**: Focus on writing automation scripts.
--   **Versatile Deployment**: Compatible with on-prem, cloud, and hybrid environments.
--   **Integrated Tools**: Includes API connectivity, debugging, monitoring, and error handling features.
+// ADD IMAGE
 
-## Use Cases 🚀
+## How to run the application using Docker Compose 🐳
+Use the following command to run the application with Docker
 
--   **DevOps Automation**: Automate workflows with tools like GitHub, Slack, Jira, etc.
--   **Cybersecurity - SOAR**: Develop Security Orchestration, Automation, and Response tools.
--   **Work and Marketing Automation**: Facilitate tasks using systems like Gmail, Docs, Slack, Calendar, etc.
--   **Corporate Operations Automation**: Enhance enterprise-specific procedures for HR, sales, etc.
+* `docker compose -f development.compose.yml up`
 
-## How to Install and Run 🛠️
+## How to Install and Run  🛠️
 
 ### Prerequisites 📋
 
