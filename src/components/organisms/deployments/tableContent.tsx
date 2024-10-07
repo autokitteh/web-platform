@@ -165,7 +165,10 @@ export const DeploymentsTableContent = ({
 					))}
 				</TBody>
 			</Table>
-			<DeleteDeploymentModal onDelete={() => handleDeploymentAction(deploymentId!, "delete")} />
+			<DeleteDeploymentModal
+				deploymentId={deploymentId}
+				onDelete={() => handleDeploymentAction(deploymentId!, "delete")}
+			/>
 		</>
 	);
 };

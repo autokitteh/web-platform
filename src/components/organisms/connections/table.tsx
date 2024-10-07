@@ -27,7 +27,6 @@ export const ConnectionsTable = () => {
 	const { checkState } = useProjectValidationStore();
 
 	const [isLoading, setIsLoading] = useState(false);
-	const [isLoadingDeleteConnection, setIsLoadingDeleteConnection] = useState(false);
 	const [connections, setConnections] = useState<Connection[]>([]);
 	const [connectionId, setConnectionId] = useState<string>();
 
@@ -85,9 +84,7 @@ export const ConnectionsTable = () => {
 			return;
 		}
 
-		setIsLoadingDeleteConnection(true);
 		const { error } = await ConnectionService.delete(connectionId);
-		setIsLoadingDeleteConnection(false);
 		closeModal(ModalName.deleteConnection);
 		if (error) {
 			addToast({
@@ -239,11 +236,7 @@ export const ConnectionsTable = () => {
 				<EmptyTableAddButton buttonText={t("titleEmptyConnections")} onClick={() => navigate("add")} />
 			)}
 			{connectionId ? (
-				<DeleteConnectionModal
-					connectionId={connectionId}
-					loading={isLoadingDeleteConnection}
-					onDelete={handleDeleteConnection}
-				/>
+				<DeleteConnectionModal connectionId={connectionId} onDelete={handleDeleteConnection} />
 			) : null}
 		</>
 	);

@@ -34,6 +34,7 @@ export interface DeleteAccount {
 
 export interface ModalDeleteDeploymentProps {
 	onDelete?: () => void;
+	deploymentId?: string;
 }
 
 export interface ModalDeleteDeploymentSessionProps {
@@ -42,6 +43,5 @@ export interface ModalDeleteDeploymentSessionProps {
 
 export interface ModalDeleteConnectionProps {
 	connectionId: string;
-	loading: boolean;
 	onDelete: () => void;
 }

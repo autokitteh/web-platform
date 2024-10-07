@@ -13,31 +13,19 @@ import { Modal } from "@components/molecules";
 export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteFile" });
 	const fileName = useModalStore((state) => state.data as string);
-	const { closeModal } = useModalStore();
 
 	return (
 		<Modal name={ModalName.deleteFile}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
-				<p>
-					{t("line1")} <strong>{fileName}</strong>
-				</p>
-				<p>{t("line2")}</p>
+				<p>{t("content", { name: fileName })}</p>
 			</div>
 
-			<div className="mt-14 flex justify-end gap-1">
-				<Button
-					ariaLabel={t("cancelButton")}
-					className="w-auto px-4 py-3 font-semibold hover:text-white"
-					onClick={() => closeModal(ModalName.deleteFile)}
-				>
-					{t("cancelButton")}
-				</Button>
-
+			<div className="flex w-full justify-end">
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="w-auto bg-gray-1100 px-4 py-3 font-semibold"
+					className="mt-8 bg-gray-1100 px-4 py-3 font-semibold"
 					onClick={onDelete}
 					variant="filled"
 				>

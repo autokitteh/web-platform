@@ -6,37 +6,25 @@
 		"title": "Create File"
 	},
 	"deleteConnection": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete",
-		"line": "This connection you are about to delete uses:",
-		"line2": "Connection name - <strong>{{name}}</strong> <br /> App name - <icon /> <strong>{{appName}}</strong>",
-		"line3": "Deleting the connection may cause failure of projects.",
-		"line4": "Are you sure you want to delete this connection?",
-		"title": "Delete  {{name}} Connection",
-		"deleteFailed": "Failed to delete connection",
-		"fetchFailed": "Failed to fetch the connection",
-		"connectionNotFound": "Connection not found",
-		"connectionNotFoundExtended": "Connection not found, connection ID: {{connectionId}}"
-
+		"deleteButton": "Ok",
+		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"title": "Delete Connection",
+		"fetchFailed": "Failed to fetch the connection"
 	},
 	"deleteDeployment": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete",
-		"line": "You will not be able to recover it",
-		"title": "Delete this deployment?"
+		"deleteButton": "Ok",
+		"content": "Are you sure you want to delete deployment {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"title": "Delete Deployment"
 	},
 	"deleteDeploymentSession": {
-		"cancelButton": "Cancel",
-		"content": "You will not be able to recover it",
-		"deleteButton": "Yes, delete",
-		"title": "Delete this session?"
+		"content": "Are you sure you want to delete session {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"deleteButton": "Ok",
+		"title": "Delete Session"
 	},
 	"deleteFile": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete",
-		"line1": "Name: ",
-		"line2": "Warning: you will not be able to recover it.",
-		"title": "Delete File?"
+		"deleteButton": "Ok",
+		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"title": "Delete File"
 	},
 	"deleteAccount": {
 		"cancelButton": "Cancel",
@@ -46,28 +34,18 @@
 		"title": "Delete the account?"
 	},
 	"deleteTrigger": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete",
-		"line": "This trigger you are about to delete uses:",
-		"line2": "Connection - <strong>{{connection}}</strong> <br /> Call - <strong>{{call}}</strong> <br /> Event Type - <strong>{{eventType}}</strong>",
-		"line3": "Deleting the trigger may cause failure of project.",
-		"line4": "Are you sure you want to delete this trigger?",
-		"title": "Delete {{name}} Trigger"
+		"deleteButton": "Ok",
+		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"title": "Delete Trigger"
 	},
 	"deleteVariable": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete",
-		"line": "This variable you are about to delete uses:",
-		"line2": "Name - <strong>{{name}}</strong> <br /> Value - <strong>{{value}}</strong>",
-		"line3": "Deleting the variable may cause failure of projects.",
-		"line4": "Are you sure you want to delete this variable?",
+		"deleteButton": "Ok",
+		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Variable"
 	},
 	"deleteProject": {
-		"cancelButton": "Cancel",
-		"deleteButton": "Yes, delete",
-		"line": "Name: <strong>{{name}}</strong> <br /> ID: <strong>{{projectId}}</strong>",
-		"line2": "Warning: You will not be able to recover it",
-		"title": "Delete Project?"
+		"deleteButton": "Ok",
+		"content": "Are you sure you want to delete {{name}}? This action cannot be undone, and all related data will be permanently removed.",
+		"title": "Delete Project"
 	}
 }
