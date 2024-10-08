@@ -66,10 +66,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	saveProjectManualRun: async (projectId, params) => {
 		const project = get().projectManualRun[projectId];
 
-		if (!project?.lastDeployment || !project?.entrypointFunction) {
+		if (!project?.lastDeployment) {
 			return {
 				data: undefined,
-				error: i18n.t("history.manualRun.missingDeploymentOrEntrypoint", { ns: "deployments" }),
+				error: i18n.t("history.manualRun.missingLastDeployment", { ns: "deployments" }),
 			};
 		}
 

@@ -51,7 +51,7 @@
 			"executionFailed": "Session execution failed",
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
 			"executionSucceed": "Session execution succeed for session ID",
-			"missingDeploymentOrEntrypoint": "Missing deployment or entrypoint",
+			"missingLastDeployment": "Missing last deployment",
 			"noFunctionsFound": "No functions found"
 		}
 	},
