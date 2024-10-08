@@ -7,13 +7,13 @@ import { useCacheStore } from "@src/store";
 import { useFileOperations } from "@hooks";
 
 import {
+	ManualRunButtons,
 	ManualRunSettingsDrawer,
-	ProjectTopbarButtons,
 	ProjectTopbarName,
 	ProjectTopbarNavigation,
 } from "@components/organisms/topbar/project";
 
-export const ProjectConfigTopbar = () => {
+export const ProjectConfigWithManualTopbar = () => {
 	const { projectId } = useParams();
 	const { openProjectId, setOpenProjectId } = useFileOperations(projectId!);
 	const { fetchDeployments } = useCacheStore();
@@ -33,7 +33,7 @@ export const ProjectConfigTopbar = () => {
 
 			<ProjectTopbarNavigation />
 
-			<ProjectTopbarButtons />
+			<ManualRunButtons />
 			<ManualRunSettingsDrawer onRun={() => fetchDeployments(projectId!)} />
 		</div>
 	);

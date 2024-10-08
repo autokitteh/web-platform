@@ -4,14 +4,16 @@ import { Outlet } from "react-router-dom";
 
 import { cn } from "@utilities";
 
-import { ProjectConfigTopbar, Sidebar } from "@components/organisms";
+import { ProjectConfigTopbar, ProjectConfigWithManualTopbar, Sidebar } from "@components/organisms";
 
 export const AppLayout = ({
 	className,
-	displayConfigurationTopbar,
+	displayMainTopbar,
+	displayManualRunTopbar,
 }: {
 	className?: string;
-	displayConfigurationTopbar?: boolean;
+	displayMainTopbar?: boolean;
+	displayManualRunTopbar?: boolean;
 }) => {
 	const appLayoutClasses = cn("h-screen w-screen pr-5", className);
 
@@ -21,7 +23,8 @@ export const AppLayout = ({
 				<Sidebar />
 
 				<div className="flex flex-1 flex-col overflow-auto transition">
-					{displayConfigurationTopbar ? <ProjectConfigTopbar /> : null}
+					{displayMainTopbar ? <ProjectConfigTopbar /> : null}
+					{displayManualRunTopbar ? <ProjectConfigWithManualTopbar /> : null}
 
 					<div className="h-full">
 						<div className="flex h-full gap-6">
