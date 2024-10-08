@@ -1,3 +1,10 @@
+## [2.22.2](https://github.com/autokitteh/web-platform/compare/v2.22.1...v2.22.2) (2024-10-08)
+
+
+### Bug Fixes
+
+* google form connection issues with the connection form ([#445](https://github.com/autokitteh/web-platform/issues/445)) ([f92b2ae](https://github.com/autokitteh/web-platform/commit/f92b2aebc0ca850e58f162078ae6a09422f1b4f8))
+
 ## [2.22.1](https://github.com/autokitteh/web-platform/compare/v2.22.0...v2.22.1) (2024-10-08)
 
 
