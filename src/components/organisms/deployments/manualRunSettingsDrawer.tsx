@@ -11,7 +11,7 @@ import { DrawerName } from "@src/enums/components";
 import { useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
 import { manualRunSchema } from "@validations";
 
-import { Button, ErrorMessage, IconSvg, Spinner, Typography } from "@components/atoms";
+import { Button, ErrorMessage, IconSvg, Input, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/deployments";
 
@@ -31,8 +31,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 		saveProjectManualRun: state.saveProjectManualRun,
 	}));
 
-	const { entrypointFunction, entrypointFunctions, fileOptions, filePath, lastDeployment, params } =
-		projectManualRun || {};
+	const { entrypointFunction, fileOptions, filePath, lastDeployment, params } = projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
@@ -48,6 +47,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 		formState: { errors, isValid },
 		getValues,
 		handleSubmit,
+		register,
 		setValue,
 	} = methods;
 
@@ -160,33 +160,16 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
 					</div>
 
-					<div className="relative mt-6">
-						<Controller
-							control={control}
-							name="entrypointFunction"
-							render={({ field }) => (
-								<Select
-									{...field}
-									aria-label={t("placeholders.selectEntrypoint")}
-									dataTestid="select-entrypoint"
-									isError={entrypointFunctions?.length ? !!errors.entrypointFunction : false}
-									label={t("placeholders.entrypoint")}
-									noOptionsLabel={t("noFunctionsFound")}
-									onChange={(selected) => {
-										field.onChange(selected);
-										setValue("params", []);
-										updateProjectManualRun(projectId!, { entrypointFunction: selected! }, false);
-									}}
-									options={entrypointFunctions}
-									placeholder={t("placeholders.selectEntrypoint")}
-									value={field.value}
-								/>
-							)}
+					<div className="relative mt-3">
+						<Input
+							{...register("entrypointFunction")}
+							aria-label={t("placeholders.selectEntrypoint")}
+							isError={!!errors.entrypointFunction}
+							isRequired
+							label={t("placeholders.entrypoint")}
 						/>
 
-						{entrypointFunctions?.length ? (
-							<ErrorMessage>{errors.entrypointFunction?.message}</ErrorMessage>
-						) : null}
+						<ErrorMessage className="relative">{errors.entrypointFunction?.message as string}</ErrorMessage>
 					</div>
 				</form>
 
