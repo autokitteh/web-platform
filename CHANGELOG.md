@@ -1,3 +1,10 @@
+## [2.22.1](https://github.com/autokitteh/web-platform/compare/v2.22.0...v2.22.1) (2024-10-08)
+
+
+### Bug Fixes
+
+* remove redundant trigger fetch after deletion ([#441](https://github.com/autokitteh/web-platform/issues/441)) ([cf2e178](https://github.com/autokitteh/web-platform/commit/cf2e1789aa5ac4979f6a940ce93933304b20ffeb))
+
 # [2.22.0](https://github.com/autokitteh/web-platform/compare/v2.21.0...v2.22.0) (2024-10-08)
 
 
