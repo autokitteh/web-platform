@@ -78,7 +78,6 @@
 			"columns": {
 				"actions": "Actions",
 				"startTime": "Start time",
-				"sessionId": "Session ID",
 				"status": "Status",
 				"triggerName": "Trigger",
 				"connectionName": "Connection"

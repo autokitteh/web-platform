@@ -89,10 +89,6 @@ export const SessionsTableRow = memo(
 
 				<div className="flex w-32 px-2.5">{session.connectionName}</div>
 
-				<div className="flex w-80 px-2.5" title={session.sessionId}>
-					{session.sessionId}
-				</div>
-
 				<div className="flex w-32 justify-end px-2.5">
 					<IconButton
 						className="p-1"
