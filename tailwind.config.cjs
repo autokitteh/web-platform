@@ -109,6 +109,7 @@ module.exports = {
         1350: "#4c4c4c", 
         1400: "#464646", 
         1450: "#1c1c1c", 
+        1500: "#afafb6", 
       },
       error: {
         DEFAULT: "#FF6B61",
