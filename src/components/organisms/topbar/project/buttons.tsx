@@ -38,7 +38,7 @@ export const ProjectTopbarButtons = () => {
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { projectsList } = useProjectStore();
 
-	const { deleteProject } = useProjectStore();
+	const { deleteProject, getProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const { fetchDeployments } = useCacheStore();
@@ -164,8 +164,42 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const exportProject = useCallback(() => {
-		ProjectsService.export(projectId!);
+	const exportProject = useCallback(async () => {
+		const { data: akProjectArchiveZip, error } = await ProjectsService.export(projectId!);
+		if (error || !akProjectArchiveZip) {
+			return;
+		}
+
+		const blob = new Blob([akProjectArchiveZip], { type: "application/zip" });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = url;
+
+		const { data: project } = await getProject(projectId!);
+
+		// Get current date and time
+		const now = new Date();
+		const dateTime = now
+			.toLocaleString("en-GB", {
+				day: "2-digit",
+				month: "2-digit",
+				year: "numeric",
+				hour: "2-digit",
+				minute: "2-digit",
+				hour12: false,
+			})
+			.replace(/[/:]/g, "")
+			.replace(", ", "-");
+
+		// Construct filename
+		const fileName = `ak-${project?.name}-${dateTime}-archive.zip`;
+		link.download = fileName;
+
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
 	const isDeployAndBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
