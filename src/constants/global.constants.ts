@@ -15,4 +15,5 @@ export const apiRequestTimeout = isDevelopment ? 1000 * 60 : 5000;
 
 export const dateTimeFormat = "MM-DD-YYYY HH:mm:ss";
 
+export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = [".py", ".star"];

@@ -1,10 +1,14 @@
-import { allowedManualRunExtensions, namespaces } from "@constants";
+import { allowedManualRunExtensions, namespaces, supportedProgrammingLanguages } from "@constants";
 import { LoggerService } from "@services";
 import { BuildInfoRuntimes } from "@type/models";
 
 const processRuntime = (runtime: BuildInfoRuntimes): string[] => {
+	if (!runtime.artifact.compiled_data) {
+		return [];
+	}
+
 	const fileNames = Object.keys(runtime.artifact.compiled_data).filter((fileName) =>
-		allowedManualRunExtensions.some((ext) => fileName.endsWith(ext))
+		supportedProgrammingLanguages.some((ext) => fileName.endsWith(ext))
 	);
 
 	return fileNames;
@@ -12,9 +16,7 @@ const processRuntime = (runtime: BuildInfoRuntimes): string[] => {
 
 export const convertBuildRuntimesToViewTriggers = (runtimes: BuildInfoRuntimes[]): string[] => {
 	try {
-		const supportedRuntimes = ["python", "starlark"];
-
-		const runtime = runtimes.find((runtime) => supportedRuntimes.includes(runtime.info.name));
+		const runtime = runtimes.find((runtime) => allowedManualRunExtensions.includes(runtime.info.name));
 
 		if (runtime) {
 			return processRuntime(runtime);
