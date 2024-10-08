@@ -7,8 +7,6 @@
 	"errorRetrieveOauthURL": "Failed to retrieve OAuth URL",
 	"errorEditingNewConnection": "Error while editing a connection",
 	"errorEditingNewConnectionExtended": "Error while editing a connection, error: {{error}}",
-	"errorFetchingVariabls": "Error fetching variables",
-	"errorFetchingVariablsExtended": "Error fetching variables, error: {{error}}",
 	"errorFetchingConnection": "Error while fetching connection, connection ID: {{connectionId}}",
 	"errorFetchingDeployments": "Error fetching deployments",
 	"errorFetchingDeploymentsExtended": "Error fetching deployments, error: {{error}}",

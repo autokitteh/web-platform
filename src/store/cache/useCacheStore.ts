@@ -1,26 +1,33 @@
 import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
-import { DeploymentsService, LoggerService, TriggersService } from "@services";
+import { DeploymentsService, EnvironmentsService, LoggerService, TriggersService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
 import { CacheStore } from "@src/interfaces/store";
+import { Environment } from "@src/types/models";
 
 import { useToastStore } from "@store";
 
-const initialState: Pick<CacheStore, "loading" | "triggers" | "deployments" | "currentProjectId"> = {
+const initialState: Pick<
+	CacheStore,
+	"loading" | "deployments" | "triggers" | "variables" | "envId" | "currentProjectId"
+> = {
 	loading: {
 		deployments: false,
 		triggers: false,
+		variables: false,
 	},
 	deployments: undefined,
+	variables: [],
 	triggers: [],
 	currentProjectId: undefined,
+	envId: undefined,
 };
 
 const store: StateCreator<CacheStore> = (set, get) => ({
 	...initialState,
 
-	fetchDeployments: async (projectId: string, force?: boolean) => {
+	fetchDeployments: async (projectId, force) => {
 		const { currentProjectId, deployments } = get();
 		if (currentProjectId === projectId && !force) {
 			return deployments;
@@ -109,6 +116,50 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			LoggerService.error(namespaces.stores.cache, errorLog);
 
 			set((state) => ({ ...state, loading: { ...state.loading, triggers: false } }));
+		}
+	},
+
+	fetchVariables: async (projectId, force) => {
+		const { currentProjectId, variables } = get();
+
+		if (currentProjectId === projectId && !force && variables.length) {
+			return variables;
+		}
+
+		set((state) => ({
+			...state,
+			currentProjectId: projectId,
+			loading: { ...state.loading, variables: true },
+		}));
+
+		try {
+			const { data: envs, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
+			if (errorEnvs) {
+				throw errorEnvs;
+			}
+
+			const newEnvId = (envs as Environment[])[0].envId;
+			const { data: vars, error } = await VariablesService.list(newEnvId);
+			if (error) {
+				throw error;
+			}
+
+			set((state) => ({
+				...state,
+				envId: newEnvId,
+				variables: vars,
+				loading: { ...state.loading, variables: false },
+			}));
+
+			return vars;
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			useToastStore.getState().addToast({
+				message: i18n.t("errorFetchingVariables", { ns: "errors" }),
+				type: "error",
+			});
+
+			set((state) => ({ ...state, loading: { ...state.loading, variables: false } }));
 		}
 	},
 });

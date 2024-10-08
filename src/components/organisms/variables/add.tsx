@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
+import { useCacheStore } from "@src/store";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
@@ -19,6 +20,7 @@ export const AddVariable = () => {
 	const { projectId } = useParams();
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
+	const { fetchVariables } = useCacheStore();
 
 	const {
 		control,
@@ -57,6 +59,7 @@ export const AddVariable = () => {
 
 			return;
 		}
+		await fetchVariables(projectId!, true);
 		navigate(-1);
 	};
 

@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
+import { useCacheStore } from "@src/store";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
@@ -17,6 +18,7 @@ export const EditVariable = () => {
 		keyPrefix: "variables.form",
 	});
 	const addToast = useToastStore((state) => state.addToast);
+	const { fetchVariables } = useCacheStore();
 
 	const { environmentId, projectId, variableName } = useParams();
 	const navigate = useNavigate();
@@ -86,7 +88,7 @@ export const EditVariable = () => {
 				type: "error",
 			});
 		}
-
+		await fetchVariables(projectId!, true);
 		navigate(-1);
 	};
 

@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { EnvironmentsService, VariablesService } from "@services";
-import { Environment, Variable } from "@type/models";
+import { VariablesService } from "@services";
+import { Variable } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useModalStore, useToastStore } from "@store";
+import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, SortButton } from "@components/molecules";
@@ -19,47 +19,22 @@ import { EditIcon, LockSolid, TrashIcon } from "@assets/image/icons";
 
 export const VariablesTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
-	const [isLoadingVariables, setIsLoadingVariables] = useState(true);
-	const [variables, setVariables] = useState<Variable[]>([]);
-	const [envId, setEnvId] = useState<string>();
 	const [deleteVariable, setDeleteVariable] = useState<Variable>();
 
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { closeModal, openModal } = useModalStore();
+	const {
+		envId,
+		fetchVariables,
+		loading: { variables: loadingVariables },
+		variables,
+	} = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedVariables, requestSort, sortConfig } = useSort<Variable>(variables, "name");
 
-	const fetchVariables = async () => {
-		try {
-			const { data: envs, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId!);
-			if (errorEnvs) {
-				throw errorEnvs;
-			}
-
-			const envId = (envs as Environment[])[0].envId;
-			setEnvId(envId);
-			const { data: vars, error } = await VariablesService.list(envId);
-			if (error) {
-				throw error;
-			}
-			if (!vars) {
-				return;
-			}
-
-			setVariables(vars);
-		} catch (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-		} finally {
-			setIsLoadingVariables(false);
-		}
-	};
-
 	useEffect(() => {
-		fetchVariables();
+		fetchVariables(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
@@ -77,7 +52,7 @@ export const VariablesTable = () => {
 			});
 		}
 
-		fetchVariables();
+		fetchVariables(projectId!, true);
 	};
 
 	const showDeleteModal = (variableName: string, variableValue: string, scopeId: string) => {
@@ -85,7 +60,7 @@ export const VariablesTable = () => {
 		setDeleteVariable({ isSecret: false, name: variableName, scopeId, value: variableValue });
 	};
 
-	return isLoadingVariables ? (
+	return loadingVariables ? (
 		<Loader isCenter size="xl" />
 	) : (
 		<>
