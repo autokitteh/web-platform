@@ -17,6 +17,7 @@ export function convertSessionProtoToModel(protoSession: ProtoSession): Session 
 		inputs: parseNestedJson(protoSession.inputs as Value),
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
+		triggerName: protoSession.memo.trigger_name,
 	};
 }
 export function convertSessionProtoToViewerModel(

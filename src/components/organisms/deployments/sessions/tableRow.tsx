@@ -85,6 +85,10 @@ export const SessionsTableRow = memo(
 					<SessionsTableState sessionState={session.state} />
 				</div>
 
+				<div className="flex w-32 px-2.5">{session.triggerName}</div>
+
+				<div className="flex w-32 px-2.5">{session.connectionName}</div>
+
 				<div className="flex w-80 px-2.5" title={session.sessionId}>
 					{session.sessionId}
 				</div>

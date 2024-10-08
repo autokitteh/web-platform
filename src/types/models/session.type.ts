@@ -9,6 +9,7 @@ export type Session = {
 	inputs: object;
 	sessionId: string;
 	state: number;
+	triggerName?: string;
 };
 export type ViewerSession = {
 	buildId: string;
