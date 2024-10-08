@@ -152,12 +152,17 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			}));
 
 			return vars;
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
+			const errorMsg = i18n.t("errorFetchingVariables", { ns: "errors" });
+			const errorLog = i18n.t("errorFetchingVariablesExtended", {
+				ns: "errors",
+				error: (error as Error).message,
+			});
 			useToastStore.getState().addToast({
-				message: i18n.t("errorFetchingVariables", { ns: "errors" }),
+				message: errorMsg,
 				type: "error",
 			});
+			LoggerService.error(namespaces.stores.cache, errorLog);
 
 			set((state) => ({ ...state, loading: { ...state.loading, variables: false } }));
 		}
