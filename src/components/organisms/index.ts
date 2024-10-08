@@ -7,6 +7,7 @@ export { SplitFrame } from "@components/organisms/splitFrame";
 export {
 	ProjectConfigTopbar,
 	ProjectConfigWithManualTopbar,
+	ProjectConfigWithoutButtonsTopbar,
 	DashboardTopbar,
 	DeleteProjectModal,
 } from "@components/organisms/topbar";
