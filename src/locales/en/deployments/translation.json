@@ -72,7 +72,7 @@
 		"noSelectedSession": "No session selected",
 		"noSessions": "No sessions found",
 		"output": "Output",
-		"sessionsName": "Sessions",
+		"sessions": "Sessions",
 		"sessionsRefreshed": "Sessions refreshed successfully",
 		"sessionsStillOld": "Sessions are still old",
 		"table": {

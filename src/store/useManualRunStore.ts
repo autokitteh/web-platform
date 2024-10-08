@@ -13,14 +13,23 @@ const defaultProjectState = {
 	filePath: { label: "", value: "" },
 	entrypointFunction: "",
 	params: [],
+	isManualRunEnabled: false,
 };
 
 const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 
-	updateManualRunConfiguration: (projectId, { entrypointFunction, filePath, files, lastDeployment, params }) => {
+	updateManualRunConfiguration: (
+		projectId,
+		{ entrypointFunction, filePath, files, isManualRunEnabled, lastDeployment, params }
+	) => {
 		set((state) => {
 			const projectData = state.projectManualRun[projectId] || { ...defaultProjectState };
+
+			if (isManualRunEnabled !== undefined) {
+				projectData.isManualRunEnabled = isManualRunEnabled;
+			}
+
 			if (files) {
 				projectData.files = files;
 

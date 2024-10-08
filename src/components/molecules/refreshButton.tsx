@@ -43,7 +43,7 @@ export const RefreshButton = ({ isLoading, onRefresh }: RefreshButtonProps) => {
 
 	const rotateIconClass = useMemo(
 		() =>
-			cn("animate-spin fill-white transition group-hover:fill-green-800", {
+			cn("animate-spin fill-gray-500 transition group-hover:fill-green-800", {
 				"animation-running": isSpinning,
 				"animation-paused": !isSpinning,
 			}),
@@ -52,7 +52,7 @@ export const RefreshButton = ({ isLoading, onRefresh }: RefreshButtonProps) => {
 
 	return (
 		<IconButton
-			className="group size-[2.125rem] rounded-md bg-gray-1050 hover:bg-gray-1250"
+			className="group size-[1.875rem] rounded-full bg-gray-1050 p-1 hover:bg-gray-1250"
 			disabled={isSpinning}
 			onClick={handleRefreshClick}
 			title={t("refresh")}
