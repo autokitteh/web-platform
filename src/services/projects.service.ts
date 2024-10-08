@@ -206,17 +206,17 @@ export class ProjectsService {
 		}
 	}
 
-	static async export(projectId: string): Promise<ServiceResponse<void>> {
+	static async export(projectId: string): Promise<ServiceResponse<Uint8Array>> {
 		try {
-			const project = await projectsClient.export({ projectId });
+			const { zipArchive: akProjectArchiveZip } = await projectsClient.export({ projectId });
 
-			if (!project) {
+			if (!akProjectArchiveZip) {
 				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
 
 				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
 			}
 
-			return { data: undefined, error: undefined };
+			return { data: akProjectArchiveZip, error: undefined };
 		} catch (error) {
 			LoggerService.error(namespaces.projectService, (error as Error).message);
 
