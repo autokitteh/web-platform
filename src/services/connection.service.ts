@@ -69,7 +69,28 @@ export class ConnectionService {
 				return { data: undefined, error: errorMessage };
 			}
 
-			const { data: connection } = await ConnectionService.get(event.destinationId);
+			if (event.destination !== "connection") {
+				const errorMessage = i18n.t("destinationNotConnectionForEvent", {
+					ns: "services",
+					eventId,
+					destinationId: event.destinationId,
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return { data: undefined, error: errorMessage };
+			}
+
+			const { data: connection, error } = await ConnectionService.get(event.destinationId);
+			if (error) {
+				const errorMessage = i18n.t("coulndtFetchConnectionByEventIdExtended", {
+					ns: "services",
+					eventId,
+					error,
+				});
+				LoggerService.error(namespaces.connectionService, errorMessage);
+
+				return { data: undefined, error: errorMessage };
+			}
 
 			return {
 				data: connection,

@@ -8,6 +8,7 @@ import { Event } from "@src/types/models/event.type";
 export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<Event> => {
 	let destinationName;
 	let sourceType;
+	let destination = "unknown" as Event["destination"];
 
 	if (!protoEvent.destinationId) {
 		const errorMessage = i18n.t("eventNoDestinationId", {
@@ -31,30 +32,32 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 			i18n.t("unknownSourceForSessionModel", {
 				ns: "services",
 			});
+		destination = "trigger";
 	}
 
 	if (protoEvent.destinationId.startsWith("con_")) {
-		const connection = await ConnectionService.get(protoEvent.destinationId);
+		const { data: connection } = await ConnectionService.get(protoEvent.destinationId);
 
 		destinationName =
-			connection.data?.name ||
-			i18n.t("triggerNotFoundForSessionModel", {
+			connection?.name ||
+			i18n.t("connectionNotFoundForSessionModel", {
 				ns: "services",
 			});
-		sourceType = connection.data?.name
+		sourceType = connection?.name
 			? i18n.t("connection", {
-					connectionName: connection.data?.name,
+					connectionName: connection?.name,
 					ns: "services",
-					error: connection.error,
 				})
 			: i18n.t("unknownSourceForSessionModel", {
 					ns: "services",
 				});
+		destination = "connection";
 	}
 
 	return {
-		destinationId: protoEvent.destinationId,
 		eventId: protoEvent.eventId,
+		destination,
+		destinationId: protoEvent.destinationId,
 		destinationName,
 		sourceType,
 	};
