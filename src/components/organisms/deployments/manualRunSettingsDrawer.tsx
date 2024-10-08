@@ -42,6 +42,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 		},
 		mode: "onBlur",
 	});
+
 	const {
 		control,
 		formState: { errors, isValid },
@@ -54,7 +55,6 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	useEffect(() => {
 		if (filePath) {
 			setValue("filePath", filePath);
-			setValue("entrypointFunction", entrypointFunction);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filePath]);
@@ -167,6 +167,9 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 							isError={!!errors.entrypointFunction}
 							isRequired
 							label={t("placeholders.entrypoint")}
+							onChange={({ target }) => {
+								updateProjectManualRun(projectId!, { entrypointFunction: target.value }, false);
+							}}
 						/>
 
 						<ErrorMessage className="relative">{errors.entrypointFunction?.message as string}</ErrorMessage>

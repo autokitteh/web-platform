@@ -4,9 +4,8 @@ import { Deployment, SessionEntrypoint } from "@src/types/models";
 export interface ManualProjectData {
 	files: Record<string, SessionEntrypoint[]>;
 	fileOptions: { label: string; value: string }[];
-	entrypointFunctions: { label: string; value: string }[];
 	filePath: { label: string; value: string };
-	entrypointFunction: { label: string; value: string };
+	entrypointFunction: string;
 	params: { key: string; value: string }[];
 	lastDeployment?: Deployment;
 	selectedEntrypoint?: SessionEntrypoint;

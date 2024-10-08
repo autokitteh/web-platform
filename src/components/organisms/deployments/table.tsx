@@ -166,7 +166,7 @@ export const DeploymentsTable = () => {
 					<Button
 						ariaLabel={t("manual")}
 						className="group h-full gap-2 whitespace-nowrap hover:bg-gray-1050 active:bg-black"
-						disabled={!isManualRunEnabled || !entrypointFunction?.value || savingManualRun}
+						disabled={!isManualRunEnabled || !entrypointFunction || savingManualRun}
 						onClick={startManualRun}
 						variant="light"
 					>

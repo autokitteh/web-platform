@@ -12,13 +12,12 @@ import { useToastStore } from "@store";
 const defaultProjectState = {
 	files: {},
 	fileOptions: [],
-	entrypointFunctions: [],
 	filePath: { label: "", value: "" },
-	entrypointFunction: { label: "", value: "" },
+	entrypointFunction: "",
 	params: [],
 };
 
-const updateFilePathAndEntrypointFunctions = (
+const updateFilePath = (
 	projectData: ManualProjectData,
 	filePath: { label: string; value: string },
 	isInitialLoad?: boolean
@@ -39,11 +38,6 @@ const updateFilePathAndEntrypointFunctions = (
 	}
 
 	projectData.filePath = filePath;
-
-	projectData.entrypointFunctions = selectedFile.map((entry) => ({
-		label: entry.name,
-		value: entry.name,
-	}));
 };
 
 const store: StateCreator<ManualRunStore> = (set, get) => ({
@@ -73,17 +67,17 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				projectData.files = filteredFiles;
 
 				const firstFile = fileOptions[0];
-				updateFilePathAndEntrypointFunctions(projectData, firstFile, isInitialLoad);
+				updateFilePath(projectData, firstFile, isInitialLoad);
 			}
 
 			if (filePath) {
-				updateFilePathAndEntrypointFunctions(projectData, filePath);
+				updateFilePath(projectData, filePath);
 			}
 
 			if (entrypointFunction) {
 				projectData.entrypointFunction = entrypointFunction;
 				projectData.selectedEntrypoint = projectData.files[projectData.filePath.value]?.find(
-					(entry) => entry.name === entrypointFunction.value
+					(entry) => entry.name === entrypointFunction
 				);
 			}
 
@@ -105,7 +99,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const project = get().projectManualRun[projectId];
 
 		if (!project?.lastDeployment || !project?.selectedEntrypoint) {
-			return { data: undefined, error: i18n.t("manualRun.missingDeploymentOrEntrypoint", { ns: "deployments" }) };
+			return {
+				data: undefined,
+				error: i18n.t("history.manualRun.missingDeploymentOrEntrypoint", { ns: "deployments" }),
+			};
 		}
 
 		const actualParams = params || project?.params || [];
