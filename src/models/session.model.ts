@@ -18,6 +18,7 @@ export function convertSessionProtoToModel(protoSession: ProtoSession): Session 
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
 		triggerName: protoSession.memo.trigger_name,
+		connectionName: protoSession.memo.connection_name,
 	};
 }
 export function convertSessionProtoToViewerModel(
