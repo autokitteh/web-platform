@@ -100,10 +100,9 @@ export const DeploymentsTable = () => {
 	}, []);
 
 	const startManualRun = useCallback(async () => {
-		if (!projectId) return;
 		try {
 			setSavingManualRun(true);
-			const { data: sessionId, error } = await saveProjectManualRun(projectId);
+			const { data: sessionId, error } = await saveProjectManualRun(projectId!);
 			if (error) {
 				addToast({
 					message: t("manualRun.executionFailed"),
@@ -127,7 +126,7 @@ export const DeploymentsTable = () => {
 				type: "success",
 			});
 			setTimeout(() => {
-				fetchDeployments(projectId, true);
+				fetchDeployments(projectId!, true);
 			}, 100);
 		} finally {
 			setSavingManualRun(false);
