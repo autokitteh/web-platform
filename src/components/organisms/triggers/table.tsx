@@ -54,6 +54,7 @@ export const TriggersTable = () => {
 			return;
 		}
 		fetchTriggers(projectId!, true);
+		setTriggerId(undefined);
 	};
 
 	const handleOpenModalDeleteTrigger = useCallback(
