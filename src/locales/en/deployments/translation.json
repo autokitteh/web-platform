@@ -81,7 +81,9 @@
 				"sessionId": "Session ID",
 				"triggerName": "Trigger Name",
 				"connectionName": "Connection Name",
-				"status": "Status"
+				"status": "Status",
+				"trigger": "Trigger",
+				"connection": "Connection"
 			},
 			"statuses": {
 				"all": "All",

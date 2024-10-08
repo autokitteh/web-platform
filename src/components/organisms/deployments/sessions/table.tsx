@@ -193,6 +193,14 @@ export const SessionsTable = () => {
 											{t("table.columns.status")}
 										</div>
 
+										<div className="flex h-9.5 w-32 items-center gap-1 truncate px-4 font-normal">
+											{t("table.columns.trigger")}
+										</div>
+
+										<div className="flex h-9.5 w-32 items-center gap-1 truncate px-4 font-normal">
+											{t("table.columns.connection")}
+										</div>
+
 										<div className="flex h-9.5 w-80 items-center gap-1 truncate px-4 font-normal">
 											{t("table.columns.sessionId")}
 										</div>
