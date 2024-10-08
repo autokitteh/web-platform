@@ -5,58 +5,22 @@ import { immer } from "zustand/middleware/immer";
 
 import { StoreName } from "@enums";
 import { SessionsService } from "@services";
-import { ManualProjectData, ManualRunStore } from "@src/interfaces/store";
-
-import { useToastStore } from "@store";
+import { ManualRunStore } from "@src/interfaces/store";
 
 const defaultProjectState = {
 	files: {},
 	fileOptions: [],
-	entrypointFunctions: [],
 	filePath: { label: "", value: "" },
-	entrypointFunction: { label: "", value: "" },
+	entrypointFunction: "",
 	params: [],
-};
-
-const updateFilePathAndEntrypointFunctions = (
-	projectData: ManualProjectData,
-	filePath: { label: string; value: string },
-	isInitialLoad?: boolean
-) => {
-	const selectedFile = projectData.files[filePath.value];
-	if (!isInitialLoad && (!selectedFile || !selectedFile.length)) {
-		const addToast = useToastStore.getState().addToast;
-
-		addToast({
-			message: i18n.t("history.manualRun.filePathDoesNotExistExtended", {
-				ns: "deployments",
-				filePath: filePath.value,
-			}),
-			type: "error",
-		});
-
-		return;
-	}
-
-	projectData.filePath = filePath;
-
-	projectData.entrypointFunctions = selectedFile.map((entry) => ({
-		label: entry.name,
-		value: entry.name,
-	}));
 };
 
 const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 
-	updateProjectManualRun: (
-		projectId,
-		{ entrypointFunction, filePath, files, lastDeployment, params },
-		isInitialLoad
-	) => {
+	updateManualRunConfiguration: (projectId, { entrypointFunction, filePath, files, lastDeployment, params }) => {
 		set((state) => {
 			const projectData = state.projectManualRun[projectId] || { ...defaultProjectState };
-
 			if (files) {
 				const filteredFiles = Object.fromEntries(
 					Object.entries(files)
@@ -73,18 +37,16 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				projectData.files = filteredFiles;
 
 				const firstFile = fileOptions[0];
-				updateFilePathAndEntrypointFunctions(projectData, firstFile, isInitialLoad);
+				projectData.filePath = firstFile;
 			}
 
 			if (filePath) {
-				updateFilePathAndEntrypointFunctions(projectData, filePath);
+				projectData.filePath = filePath;
+				projectData.entrypointFunction = "";
 			}
 
-			if (entrypointFunction) {
+			if (entrypointFunction !== undefined) {
 				projectData.entrypointFunction = entrypointFunction;
-				projectData.selectedEntrypoint = projectData.files[projectData.filePath.value]?.find(
-					(entry) => entry.name === entrypointFunction.value
-				);
 			}
 
 			if (params) {
@@ -101,11 +63,14 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		});
 	},
 
-	saveProjectManualRun: async (projectId, params) => {
+	saveAndExecuteManualRun: async (projectId, params) => {
 		const project = get().projectManualRun[projectId];
 
-		if (!project?.lastDeployment || !project?.selectedEntrypoint) {
-			return { data: undefined, error: i18n.t("manualRun.missingDeploymentOrEntrypoint", { ns: "deployments" }) };
+		if (!project?.lastDeployment) {
+			return {
+				data: undefined,
+				error: i18n.t("history.manualRun.missingLastDeployment", { ns: "deployments" }),
+			};
 		}
 
 		const actualParams = params || project?.params || [];
@@ -117,7 +82,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const sessionArgs = {
 			buildId: project.lastDeployment.buildId,
 			deploymentId: project.lastDeployment.deploymentId,
-			entrypoint: project.selectedEntrypoint,
+			entrypoint: { col: 0, row: 0, path: project.filePath.value, name: project.entrypointFunction },
 			jsonInputs,
 		};
 
@@ -139,4 +104,4 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	},
 });
 
-export const useManualRunStore = create(persist(immer(store), { name: StoreName.manualRun }));
+export const useManualRunStore = create(persist(immer(store), { name: StoreName.manualRun, version: 1 }));

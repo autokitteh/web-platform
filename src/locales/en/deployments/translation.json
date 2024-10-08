@@ -51,9 +51,8 @@
 			"executionFailed": "Session execution failed",
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
 			"executionSucceed": "Session execution succeed for session ID",
-			"missingDeploymentOrEntrypoint": "Missing deployment or entrypoint",
-			"noFunctionsFound": "No functions found",
-			"filePathDoesNotExistExtended": "File path {{filePath}} does not exist or has no entry points."
+			"missingLastDeployment": "Missing last deployment",
+			"noFunctionsFound": "No functions found"
 		}
 	},
 	"sessionStats": {

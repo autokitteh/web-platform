@@ -11,7 +11,7 @@ import { DrawerName } from "@src/enums/components";
 import { useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
 import { manualRunSchema } from "@validations";
 
-import { Button, ErrorMessage, IconSvg, Spinner, Typography } from "@components/atoms";
+import { Button, ErrorMessage, IconSvg, Input, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/deployments";
 
@@ -25,14 +25,13 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	const { projectId } = useParams();
 	const [sendingManualRun, setSendingManualRun] = useState(false);
 
-	const { projectManualRun, saveProjectManualRun, updateProjectManualRun } = useManualRunStore((state) => ({
+	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
 		projectManualRun: state.projectManualRun[projectId!],
-		updateProjectManualRun: state.updateProjectManualRun,
-		saveProjectManualRun: state.saveProjectManualRun,
+		updateManualRunConfiguration: state.updateManualRunConfiguration,
+		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 	}));
 
-	const { entrypointFunction, entrypointFunctions, fileOptions, filePath, lastDeployment, params } =
-		projectManualRun || {};
+	const { entrypointFunction, fileOptions, filePath, lastDeployment, params } = projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
@@ -41,8 +40,9 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 			entrypointFunction,
 			params,
 		},
-		mode: "onBlur",
+		mode: "onChange",
 	});
+
 	const {
 		control,
 		formState: { errors, isValid },
@@ -54,15 +54,13 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	useEffect(() => {
 		if (filePath) {
 			setValue("filePath", filePath);
-			setValue("entrypointFunction", entrypointFunction);
+			setValue("params", []);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filePath]);
 
 	useEffect(() => {
-		if (entrypointFunction) {
-			setValue("entrypointFunction", entrypointFunction);
-		}
+		setValue("entrypointFunction", entrypointFunction);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [entrypointFunction]);
 
@@ -79,7 +77,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 		setSendingManualRun(true);
 		const { params } = getValues();
 
-		const { data: sessionId, error } = await saveProjectManualRun(projectId, params);
+		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, params);
 		setSendingManualRun(false);
 		onRun();
 		if (error) {
@@ -148,7 +146,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 									noOptionsLabel={t("noFilesAvailable")}
 									onChange={(selected) => {
 										field.onChange(selected);
-										updateProjectManualRun(projectId!, { filePath: selected! }, false);
+										updateManualRunConfiguration(projectId!, { filePath: selected! });
 									}}
 									options={fileOptions}
 									placeholder={t("placeholders.selectFile")}
@@ -160,33 +158,28 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 						<ErrorMessage>{errors.filePath?.message}</ErrorMessage>
 					</div>
 
-					<div className="relative mt-6">
+					<div className="relative mt-3">
 						<Controller
 							control={control}
 							name="entrypointFunction"
 							render={({ field }) => (
-								<Select
+								<Input
 									{...field}
 									aria-label={t("placeholders.selectEntrypoint")}
-									dataTestid="select-entrypoint"
-									isError={entrypointFunctions?.length ? !!errors.entrypointFunction : false}
+									isError={!!errors.entrypointFunction}
+									isRequired
 									label={t("placeholders.entrypoint")}
-									noOptionsLabel={t("noFunctionsFound")}
-									onChange={(selected) => {
-										field.onChange(selected);
-										setValue("params", []);
-										updateProjectManualRun(projectId!, { entrypointFunction: selected! }, false);
+									onChange={(event) => {
+										field.onChange(event);
+										updateManualRunConfiguration(projectId!, {
+											entrypointFunction: event.target.value,
+										});
 									}}
-									options={entrypointFunctions}
-									placeholder={t("placeholders.selectEntrypoint")}
-									value={field.value}
 								/>
 							)}
 						/>
 
-						{entrypointFunctions?.length ? (
-							<ErrorMessage>{errors.entrypointFunction?.message}</ErrorMessage>
-						) : null}
+						<ErrorMessage className="relative">{errors.entrypointFunction?.message as string}</ErrorMessage>
 					</div>
 				</form>
 
