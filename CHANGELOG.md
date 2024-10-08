@@ -1,3 +1,10 @@
+## [2.22.4](https://github.com/autokitteh/web-platform/compare/v2.22.3...v2.22.4) (2024-10-08)
+
+
+### Bug Fixes
+
+* deployments - remove created column and add running column ([#459](https://github.com/autokitteh/web-platform/issues/459)) ([08ad685](https://github.com/autokitteh/web-platform/commit/08ad6853f48d30daabb7becdebd34ffd43634e5d))
+
 ## [2.22.3](https://github.com/autokitteh/web-platform/compare/v2.22.2...v2.22.3) (2024-10-08)
 
 
