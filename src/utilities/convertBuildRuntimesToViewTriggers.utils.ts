@@ -3,7 +3,7 @@ import { LoggerService } from "@services";
 import { BuildInfoRuntimes } from "@type/models";
 
 const processRuntime = (runtime: BuildInfoRuntimes): string[] => {
-	if (!runtime.artifact.compiled_data) {
+	if (!runtime?.artifact?.compiled_data) {
 		return [];
 	}
 
