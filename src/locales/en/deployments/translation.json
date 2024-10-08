@@ -79,11 +79,9 @@
 				"actions": "Actions",
 				"startTime": "Start time",
 				"sessionId": "Session ID",
-				"triggerName": "Trigger Name",
-				"connectionName": "Connection Name",
 				"status": "Status",
-				"trigger": "Trigger",
-				"connection": "Connection"
+				"triggerName": "Trigger",
+				"connectionName": "Connection"
 			},
 			"statuses": {
 				"all": "All",
