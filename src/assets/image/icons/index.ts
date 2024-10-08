@@ -60,3 +60,4 @@ export { default as CircleMinusIcon } from "@assets/image/icons/CircleMinus.svg?
 export { default as CirclePlusIcon } from "@assets/image/icons/CirclePlus.svg?react";
 export { default as FileIcon } from "@assets/image/icons/File.svg?react";
 export { default as ExportIcon } from "@assets/image/icons/Export.svg?react";
+export { default as DownloadIcon } from "@assets/image/icons/Download.svg?react";
