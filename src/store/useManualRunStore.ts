@@ -8,7 +8,7 @@ import { SessionsService } from "@services";
 import { ManualRunStore } from "@src/interfaces/store";
 
 const defaultProjectState = {
-	files: {},
+	files: [],
 	fileOptions: [],
 	filePath: { label: "", value: "" },
 	entrypointFunction: "",
@@ -22,15 +22,14 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		set((state) => {
 			const projectData = state.projectManualRun[projectId] || { ...defaultProjectState };
 			if (files) {
-				const filteredFiles = Object.fromEntries(Object.entries(files).map(([key, value]) => [key, value]));
+				projectData.files = files;
 
-				const fileOptions = Object.keys(filteredFiles).map((file) => ({
+				const fileOptions = files.map((file) => ({
 					label: file,
 					value: file,
 				}));
 
 				projectData.fileOptions = fileOptions;
-				projectData.files = filteredFiles;
 
 				const firstFile = fileOptions[0];
 				projectData.filePath = firstFile;

@@ -1,41 +1,16 @@
-import { uniqBy } from "lodash";
-
-import { namespaces } from "@constants";
+import { allowedManualRunExtensions, namespaces } from "@constants";
 import { LoggerService } from "@services";
-import { BuildInfoRuntimes, SessionEntrypoint } from "@type/models";
+import { BuildInfoRuntimes } from "@type/models";
 
-const processRuntime = (runtime: BuildInfoRuntimes): Record<string, SessionEntrypoint[]> => {
-	const result: Record<string, SessionEntrypoint[]> = {};
-	const allowedExtensions = [".py", ".star"];
+const processRuntime = (runtime: BuildInfoRuntimes): string[] => {
+	const fileNames = Object.keys(runtime.artifact.compiled_data).filter((fileName) =>
+		allowedManualRunExtensions.some((ext) => fileName.endsWith(ext))
+	);
 
-	const fileNames = Object.keys(runtime.artifact.compiled_data)
-		?.filter((fileName) => fileName !== "archive")
-		.filter((fileName) => allowedExtensions.some((ext) => fileName.endsWith(ext)));
-
-	fileNames?.forEach((fileName) => {
-		const entrypointsForFile = runtime.artifact.exports
-			?.filter(({ location: { path }, symbol: name }) => path === fileName && !name.startsWith("_"))
-			.map(({ location: { col, path, row }, symbol: name }) => ({
-				path,
-				row,
-				col,
-				name,
-			}));
-
-		const uniqueEntrypoints = uniqBy(
-			entrypointsForFile,
-			({ col, name, path, row }) => `${path}:${row}:${col}:${name}`
-		);
-
-		result[fileName] = uniqueEntrypoints;
-	});
-
-	return result;
+	return fileNames;
 };
 
-export const convertBuildRuntimesToViewTriggers = (
-	runtimes: BuildInfoRuntimes[]
-): Record<string, SessionEntrypoint[]> => {
+export const convertBuildRuntimesToViewTriggers = (runtimes: BuildInfoRuntimes[]): string[] => {
 	try {
 		const supportedRuntimes = ["python", "starlark"];
 
@@ -47,8 +22,8 @@ export const convertBuildRuntimesToViewTriggers = (
 	} catch (error) {
 		LoggerService.error(namespaces.buildRuntimeEntrypoints, (error as Error).message);
 
-		return {};
+		return [];
 	}
 
-	return {};
+	return [];
 };

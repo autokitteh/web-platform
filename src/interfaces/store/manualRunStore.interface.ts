@@ -2,7 +2,7 @@ import { ServiceResponse } from "@src/types";
 import { Deployment, SessionEntrypoint } from "@src/types/models";
 
 export interface ManualProjectData {
-	files: Record<string, SessionEntrypoint[]>;
+	files: string[];
 	fileOptions: { label: string; value: string }[];
 	filePath: { label: string; value: string };
 	entrypointFunction: string;
