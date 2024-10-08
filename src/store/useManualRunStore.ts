@@ -18,7 +18,7 @@ const defaultProjectState = {
 const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 
-	updateProjectManualRun: (projectId, { entrypointFunction, filePath, files, lastDeployment, params }) => {
+	updateManualRunConfiguration: (projectId, { entrypointFunction, filePath, files, lastDeployment, params }) => {
 		set((state) => {
 			const projectData = state.projectManualRun[projectId] || { ...defaultProjectState };
 			if (files) {
@@ -63,7 +63,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		});
 	},
 
-	saveProjectManualRun: async (projectId, params) => {
+	saveAndExecuteManualRun: async (projectId, params) => {
 		const project = get().projectManualRun[projectId];
 
 		if (!project?.lastDeployment) {

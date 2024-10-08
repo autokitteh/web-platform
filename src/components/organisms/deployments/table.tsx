@@ -38,14 +38,13 @@ export const DeploymentsTable = () => {
 
 	const [isManualRunEnabled, setIsManualRunEnabled] = useState(false);
 	const [savingManualRun, setSavingManualRun] = useState(false);
-	const { entrypointFunction, lastDeploymentStore, saveProjectManualRun, updateProjectManualRun } = useManualRunStore(
-		(state) => ({
+	const { entrypointFunction, lastDeploymentStore, saveAndExecuteManualRun, updateManualRunConfiguration } =
+		useManualRunStore((state) => ({
 			lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
 			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
-			updateProjectManualRun: state.updateProjectManualRun,
-			saveProjectManualRun: state.saveProjectManualRun,
-		})
-	);
+			updateManualRunConfiguration: state.updateManualRunConfiguration,
+			saveAndExecuteManualRun: state.saveAndExecuteManualRun,
+		}));
 
 	const loadSingleshotArgs = async () => {
 		if (!deployments?.length) {
@@ -85,7 +84,7 @@ export const DeploymentsTable = () => {
 
 		if (!Object.values(files).length) return;
 
-		updateProjectManualRun(projectId!, { files, lastDeployment });
+		updateManualRunConfiguration(projectId!, { files, lastDeployment });
 		setIsManualRunEnabled(true);
 	};
 
@@ -102,7 +101,7 @@ export const DeploymentsTable = () => {
 	const startManualRun = useCallback(async () => {
 		try {
 			setSavingManualRun(true);
-			const { data: sessionId, error } = await saveProjectManualRun(projectId!);
+			const { data: sessionId, error } = await saveAndExecuteManualRun(projectId!);
 			if (error) {
 				addToast({
 					message: t("manualRun.executionFailed"),

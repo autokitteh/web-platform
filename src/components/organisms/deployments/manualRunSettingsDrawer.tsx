@@ -25,10 +25,10 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	const { projectId } = useParams();
 	const [sendingManualRun, setSendingManualRun] = useState(false);
 
-	const { projectManualRun, saveProjectManualRun, updateProjectManualRun } = useManualRunStore((state) => ({
+	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
 		projectManualRun: state.projectManualRun[projectId!],
-		updateProjectManualRun: state.updateProjectManualRun,
-		saveProjectManualRun: state.saveProjectManualRun,
+		updateManualRunConfiguration: state.updateManualRunConfiguration,
+		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 	}));
 
 	const { entrypointFunction, fileOptions, filePath, lastDeployment, params } = projectManualRun || {};
@@ -77,7 +77,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 		setSendingManualRun(true);
 		const { params } = getValues();
 
-		const { data: sessionId, error } = await saveProjectManualRun(projectId, params);
+		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, params);
 		setSendingManualRun(false);
 		onRun();
 		if (error) {
@@ -146,7 +146,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 									noOptionsLabel={t("noFilesAvailable")}
 									onChange={(selected) => {
 										field.onChange(selected);
-										updateProjectManualRun(projectId!, { filePath: selected! });
+										updateManualRunConfiguration(projectId!, { filePath: selected! });
 									}}
 									options={fileOptions}
 									placeholder={t("placeholders.selectFile")}
@@ -171,7 +171,9 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 									label={t("placeholders.entrypoint")}
 									onChange={(event) => {
 										field.onChange(event);
-										updateProjectManualRun(projectId!, { entrypointFunction: event.target.value });
+										updateManualRunConfiguration(projectId!, {
+											entrypointFunction: event.target.value,
+										});
 									}}
 								/>
 							)}
