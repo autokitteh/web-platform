@@ -6,7 +6,11 @@ import { BuildInfoRuntimes, SessionEntrypoint } from "@type/models";
 
 const processRuntime = (runtime: BuildInfoRuntimes): Record<string, SessionEntrypoint[]> => {
 	const result: Record<string, SessionEntrypoint[]> = {};
-	const fileNames = Object.keys(runtime.artifact.compiled_data)?.filter((fileName) => fileName !== "archive");
+	const allowedExtensions = [".py", ".star"];
+
+	const fileNames = Object.keys(runtime.artifact.compiled_data)
+		?.filter((fileName) => fileName !== "archive")
+		.filter((fileName) => allowedExtensions.some((ext) => fileName.endsWith(ext)));
 
 	fileNames?.forEach((fileName) => {
 		const entrypointsForFile = runtime.artifact.exports

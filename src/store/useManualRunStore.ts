@@ -22,11 +22,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		set((state) => {
 			const projectData = state.projectManualRun[projectId] || { ...defaultProjectState };
 			if (files) {
-				const filteredFiles = Object.fromEntries(
-					Object.entries(files)
-						.filter(([key]) => key !== "archive")
-						.map(([key, value]) => [key, value.filter((entry) => !entry.name.startsWith("_"))])
-				);
+				const filteredFiles = Object.fromEntries(Object.entries(files).map(([key, value]) => [key, value]));
 
 				const fileOptions = Object.keys(filteredFiles).map((file) => ({
 					label: file,
