@@ -88,16 +88,12 @@ In this project we used:
 
 -   [FontAwesome](https://fontawesome.com) our icons.
 
-## License 📜
-
-The [autokitteh](https://autokitteh.com) license identifier for this project is `Apache-2.0` - [LICENSE.md](LICENSE.md).
-
 ## Contact 📬
 
 For inquiries, contact: meow@autokitteh.com
 
 ## How to Contribute 🤝
 
-To contribute to autokitteh, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+To contribute to AutoKitteh, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 We appreciate contributions from everyone!
