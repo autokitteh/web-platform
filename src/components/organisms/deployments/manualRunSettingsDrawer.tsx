@@ -146,7 +146,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 									noOptionsLabel={t("noFilesAvailable")}
 									onChange={(selected) => {
 										field.onChange(selected);
-										updateProjectManualRun(projectId!, { filePath: selected! }, false);
+										updateProjectManualRun(projectId!, { filePath: selected! });
 									}}
 									options={fileOptions}
 									placeholder={t("placeholders.selectFile")}
@@ -171,11 +171,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 									label={t("placeholders.entrypoint")}
 									onChange={(event) => {
 										field.onChange(event);
-										updateProjectManualRun(
-											projectId!,
-											{ entrypointFunction: event.target.value },
-											false
-										);
+										updateProjectManualRun(projectId!, { entrypointFunction: event.target.value });
 									}}
 								/>
 							)}

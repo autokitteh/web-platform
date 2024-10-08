@@ -5,9 +5,7 @@ import { immer } from "zustand/middleware/immer";
 
 import { StoreName } from "@enums";
 import { SessionsService } from "@services";
-import { ManualProjectData, ManualRunStore } from "@src/interfaces/store";
-
-import { useToastStore } from "@store";
+import { ManualRunStore } from "@src/interfaces/store";
 
 const defaultProjectState = {
 	files: {},
@@ -17,40 +15,12 @@ const defaultProjectState = {
 	params: [],
 };
 
-const updateFilePath = (
-	projectData: ManualProjectData,
-	filePath: { label: string; value: string },
-	isInitialLoad?: boolean
-) => {
-	const selectedFile = projectData.files[filePath.value];
-	if (!isInitialLoad && (!selectedFile || !selectedFile.length)) {
-		const addToast = useToastStore.getState().addToast;
-
-		addToast({
-			message: i18n.t("history.manualRun.filePathDoesNotExistExtended", {
-				ns: "deployments",
-				filePath: filePath.value,
-			}),
-			type: "error",
-		});
-
-		return;
-	}
-
-	projectData.filePath = filePath;
-};
-
 const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 
-	updateProjectManualRun: (
-		projectId,
-		{ entrypointFunction, filePath, files, lastDeployment, params },
-		isInitialLoad
-	) => {
+	updateProjectManualRun: (projectId, { entrypointFunction, filePath, files, lastDeployment, params }) => {
 		set((state) => {
 			const projectData = state.projectManualRun[projectId] || { ...defaultProjectState };
-
 			if (files) {
 				const filteredFiles = Object.fromEntries(
 					Object.entries(files)
@@ -67,15 +37,15 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				projectData.files = filteredFiles;
 
 				const firstFile = fileOptions[0];
-				updateFilePath(projectData, firstFile, isInitialLoad);
+				projectData.filePath = firstFile;
 			}
 
 			if (filePath) {
-				updateFilePath(projectData, filePath);
+				projectData.filePath = filePath;
 				projectData.entrypointFunction = "";
 			}
 
-			if (entrypointFunction) {
+			if (entrypointFunction !== undefined) {
 				projectData.entrypointFunction = entrypointFunction;
 			}
 
@@ -112,7 +82,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const sessionArgs = {
 			buildId: project.lastDeployment.buildId,
 			deploymentId: project.lastDeployment.deploymentId,
-			entrypoint: { path: project.entrypointFunction },
+			entrypoint: { col: 0, row: 0, path: project.filePath.value, name: project.entrypointFunction },
 			jsonInputs,
 		};
 

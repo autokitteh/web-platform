@@ -48,9 +48,13 @@ export const DeploymentsTable = () => {
 	);
 
 	const loadSingleshotArgs = async () => {
-		if (!deployments?.length || !projectId) return;
+		if (!deployments?.length || !projectId) {
+			setIsManualRunEnabled(false);
 
-		const lastDeployment = deployments?.[0];
+			return;
+		}
+
+		const lastDeployment = deployments[0];
 
 		if (lastDeployment.state !== DeploymentStateVariant.active) {
 			setIsManualRunEnabled(false);
@@ -81,7 +85,7 @@ export const DeploymentsTable = () => {
 
 		if (!Object.values(files).length) return;
 
-		updateProjectManualRun(projectId, { files, lastDeployment }, true);
+		updateProjectManualRun(projectId, { files, lastDeployment });
 		setIsManualRunEnabled(true);
 	};
 
