@@ -205,4 +205,22 @@ export class ProjectsService {
 			return { data: undefined, error };
 		}
 	}
+
+	static async export(projectId: string): Promise<ServiceResponse<void>> {
+		try {
+			const project = await projectsClient.export({ projectId });
+
+			if (!project) {
+				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
+
+				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
+			}
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.projectService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
 }
