@@ -23,7 +23,7 @@ import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
-import { ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
+import { DownloadIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
@@ -228,7 +228,7 @@ export const ProjectTopbarButtons = () => {
 				</Button>
 			</div>
 
-			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
+			<div title={isValid ? t("topbar.buttons.deploy") : projectErrors}>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="group h-8 whitespace-nowrap px-3.5 text-white"
@@ -257,10 +257,10 @@ export const ProjectTopbarButtons = () => {
 							<IconSvg
 								className="fill-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 								size="md"
-								src={ExportIcon}
+								src={DownloadIcon}
 							/>
 
-							{t("topbar.buttons.export")}
+							<div className="mt-0.5">{t("topbar.buttons.export")}</div>
 						</Button>
 						<Button
 							className="group mt-2 h-8 px-4 text-white"
@@ -273,7 +273,7 @@ export const ProjectTopbarButtons = () => {
 								src={TrashIcon}
 							/>
 
-							{t("topbar.buttons.delete")}
+							<div className="mt-0.5">{t("topbar.buttons.delete")}</div>
 						</Button>
 					</>
 				}
