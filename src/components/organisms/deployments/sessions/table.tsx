@@ -168,7 +168,9 @@ export const SessionsTable = () => {
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center justify-between gap-2.5">
-						<Typography className="text-base">{t("sessions")}</Typography>
+						<Typography className="text-base" element="h2">
+							{t("tableTitle")}
+						</Typography>
 						<div className="flex flex-wrap items-center justify-between gap-2.5">
 							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 							<RefreshButton isLoading={isLoading} onRefresh={fetchDeployments} />

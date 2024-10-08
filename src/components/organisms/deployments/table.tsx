@@ -84,7 +84,7 @@ export const DeploymentsTable = () => {
 		<Frame className="my-2 bg-gray-1100">
 			<div className="flex items-center justify-between">
 				<h1 className="text-base">
-					{t("tableTitle")} ({deployments?.length || 0})
+					{t("tableTitle")} ({deployments?.length || "0"})
 				</h1>
 
 				<RefreshButton isLoading={loadingDeployments} onRefresh={() => fetchDeployments(projectId!, true)} />
