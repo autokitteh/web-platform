@@ -1,3 +1,10 @@
+# [2.22.0](https://github.com/autokitteh/web-platform/compare/v2.21.0...v2.22.0) (2024-10-08)
+
+
+### Features
+
+* update sessions table component to include trigger and connection columns ([#425](https://github.com/autokitteh/web-platform/issues/425)) ([6275912](https://github.com/autokitteh/web-platform/commit/627591268dc63cf6958f567a70e9020319c3e4b2))
+
 # [2.21.0](https://github.com/autokitteh/web-platform/compare/v2.20.1...v2.21.0) (2024-10-06)
 
 
