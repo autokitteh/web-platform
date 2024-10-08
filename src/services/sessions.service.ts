@@ -240,6 +240,13 @@ export class SessionsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
+			const log = i18n.t("failedStopSessionExtended", {
+				sessionId,
+				error,
+				ns: "errors",
+			});
+			LoggerService.error(namespaces.sessionsService, log);
+
 			return { data: undefined, error };
 		}
 	}
