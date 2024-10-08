@@ -26,8 +26,8 @@ export const ManualRunButtons = () => {
 			lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
 			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
 			isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
-			updateProjectManualRun: state.updateProjectManualRun,
-			saveProjectManualRun: state.saveProjectManualRun,
+			updateProjectManualRun: state.updateManualRunConfiguration,
+			saveProjectManualRun: state.saveAndExecuteManualRun,
 		})
 	);
 
@@ -72,7 +72,7 @@ export const ManualRunButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const isRunDisabled = !isManualRunEnabled || !entrypointFunction?.value || savingManualRun;
+	const isRunDisabled = !isManualRunEnabled || !entrypointFunction || savingManualRun;
 
 	return (
 		<div className="relative flex h-8 gap-1.5 self-center rounded-3xl border border-gray-750 p-1 transition hover:border-white">
