@@ -2,7 +2,7 @@ import React from "react";
 
 import { selectIntegrationGoogle } from "@constants/lists/connections";
 import { ConnectionAuthType } from "@enums";
-import { Integrations } from "@src/enums/components";
+import { GoogleIntegrationType } from "@src/enums/components/connection.enum";
 import { googleIntegrationSchema, oauthSchema } from "@validations";
 
 import { IntegrationEditForm } from "@components/organisms/connections/integrations";
@@ -10,11 +10,10 @@ import { IntegrationEditForm } from "@components/organisms/connections/integrati
 export const GoogleIntegrationEditForm = ({
 	googleIntegrationApplication,
 }: {
-	googleIntegrationApplication: string;
+	googleIntegrationApplication: GoogleIntegrationType;
 }) => (
 	<IntegrationEditForm
-		googleIntegrationApplication={googleIntegrationApplication}
-		integrationType={Integrations.google}
+		integrationType={googleIntegrationApplication}
 		schemas={{
 			[ConnectionAuthType.JsonKey]: googleIntegrationSchema,
 			[ConnectionAuthType.Oauth]: oauthSchema,

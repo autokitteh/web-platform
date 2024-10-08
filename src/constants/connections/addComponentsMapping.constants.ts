@@ -19,7 +19,6 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	github: GithubIntegrationAddForm,
 	slack: SlackIntegrationAddForm,
 	gmail: GoogleIntegrationAddForm,
-	google: GoogleIntegrationAddForm,
 	sheets: GoogleIntegrationAddForm,
 	calendar: GoogleCalendarIntegrationAddForm,
 	drive: GoogleIntegrationAddForm,

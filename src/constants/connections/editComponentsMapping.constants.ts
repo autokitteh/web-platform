@@ -25,7 +25,6 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.aws]: AwsIntegrationEditForm,
 	[Integrations.googlegemini]: GoogleGeminiIntegrationEditForm,
 	[Integrations.confluence]: ConfluenceIntegrationEditForm,
-	[Integrations.google]: GoogleIntegrationEditForm,
 	[Integrations.calendar]: GoogleCalendarIntegrationEditForm,
 	[Integrations.sheets]: GoogleIntegrationEditForm,
 	[Integrations.gmail]: GoogleIntegrationEditForm,
