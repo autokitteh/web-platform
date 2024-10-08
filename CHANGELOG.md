@@ -1,3 +1,10 @@
+## [2.22.3](https://github.com/autokitteh/web-platform/compare/v2.22.2...v2.22.3) (2024-10-08)
+
+
+### Bug Fixes
+
+* add missing log on session stop error ([#458](https://github.com/autokitteh/web-platform/issues/458)) ([9e84e4b](https://github.com/autokitteh/web-platform/commit/9e84e4b08ba4a411b75b4445392f21712983d9c6))
+
 ## [2.22.2](https://github.com/autokitteh/web-platform/compare/v2.22.1...v2.22.2) (2024-10-08)
 
 
