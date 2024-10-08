@@ -23,14 +23,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	} = props;
 
 	const [isFocused, setIsFocused] = useState(false);
-	const [inputValue, setInputValue] = useState(value || defaultValue || "");
+	const [inputValue, setInputValue] = useState(value || defaultValue || "" || undefined);
 	const [hasValue, setHasValue] = useState<boolean>(!!inputValue);
 
 	useEffect(() => {
-		if (value) {
-			setInputValue(value);
-			setHasValue(!!value);
-		}
+		setInputValue(value);
+		setHasValue(!!value);
 	}, [value]);
 
 	const handleFocus = useCallback(() => setIsFocused(true), []);

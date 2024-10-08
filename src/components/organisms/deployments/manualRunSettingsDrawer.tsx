@@ -40,7 +40,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 			entrypointFunction,
 			params,
 		},
-		mode: "onBlur",
+		mode: "onChange",
 	});
 
 	const {
@@ -48,21 +48,19 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 		formState: { errors, isValid },
 		getValues,
 		handleSubmit,
-		register,
 		setValue,
 	} = methods;
 
 	useEffect(() => {
 		if (filePath) {
 			setValue("filePath", filePath);
+			setValue("params", []);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filePath]);
 
 	useEffect(() => {
-		if (entrypointFunction) {
-			setValue("entrypointFunction", entrypointFunction);
-		}
+		setValue("entrypointFunction", entrypointFunction);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [entrypointFunction]);
 
@@ -161,15 +159,26 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 					</div>
 
 					<div className="relative mt-3">
-						<Input
-							{...register("entrypointFunction")}
-							aria-label={t("placeholders.selectEntrypoint")}
-							isError={!!errors.entrypointFunction}
-							isRequired
-							label={t("placeholders.entrypoint")}
-							onChange={({ target }) => {
-								updateProjectManualRun(projectId!, { entrypointFunction: target.value }, false);
-							}}
+						<Controller
+							control={control}
+							name="entrypointFunction"
+							render={({ field }) => (
+								<Input
+									{...field}
+									aria-label={t("placeholders.selectEntrypoint")}
+									isError={!!errors.entrypointFunction}
+									isRequired
+									label={t("placeholders.entrypoint")}
+									onChange={(event) => {
+										field.onChange(event);
+										updateProjectManualRun(
+											projectId!,
+											{ entrypointFunction: event.target.value },
+											false
+										);
+									}}
+								/>
+							)}
 						/>
 
 						<ErrorMessage className="relative">{errors.entrypointFunction?.message as string}</ErrorMessage>

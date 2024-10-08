@@ -72,13 +72,11 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 			if (filePath) {
 				updateFilePath(projectData, filePath);
+				projectData.entrypointFunction = "";
 			}
 
 			if (entrypointFunction) {
 				projectData.entrypointFunction = entrypointFunction;
-				projectData.selectedEntrypoint = projectData.files[projectData.filePath.value]?.find(
-					(entry) => entry.name === entrypointFunction
-				);
 			}
 
 			if (params) {
@@ -98,7 +96,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	saveProjectManualRun: async (projectId, params) => {
 		const project = get().projectManualRun[projectId];
 
-		if (!project?.lastDeployment || !project?.selectedEntrypoint) {
+		if (!project?.lastDeployment || !project?.entrypointFunction) {
 			return {
 				data: undefined,
 				error: i18n.t("history.manualRun.missingDeploymentOrEntrypoint", { ns: "deployments" }),
@@ -114,7 +112,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const sessionArgs = {
 			buildId: project.lastDeployment.buildId,
 			deploymentId: project.lastDeployment.deploymentId,
-			entrypoint: project.selectedEntrypoint,
+			entrypoint: { path: project.entrypointFunction },
 			jsonInputs,
 		};
 
@@ -136,4 +134,4 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	},
 });
 
-export const useManualRunStore = create(persist(immer(store), { name: StoreName.manualRun }));
+export const useManualRunStore = create(persist(immer(store), { name: StoreName.manualRun, version: 1 }));
