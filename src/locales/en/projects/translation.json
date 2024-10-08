@@ -13,6 +13,7 @@
             "goToProject": "Go to project",
             "deployments": "Deployments",
             "delete": "Delete",
+            "export": "Export",
             "ariaSettingsRun": "Settings manual run"
         },
         "deployedProjectSuccess": "Project deployment completed successfully",

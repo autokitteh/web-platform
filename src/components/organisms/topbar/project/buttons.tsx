@@ -23,7 +23,7 @@ import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
-import { RocketIcon, TrashIcon } from "@assets/image/icons";
+import { ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
@@ -164,6 +164,10 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const exportProject = useCallback(() => {
+		ProjectsService.export(projectId!);
+	}, [projectId]);
+
 	const isDeployAndBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
 
 	return (
@@ -214,15 +218,30 @@ export const ProjectTopbarButtons = () => {
 
 			<DropdownButton
 				contentMenu={
-					<Button className="group h-8 px-4 text-white" onClick={openModalDeleteProject} variant="outline">
-						<IconSvg
-							className="-mt-0.5 stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-							size="md"
-							src={TrashIcon}
-						/>
+					<>
+						<Button className="group h-8 px-4 text-white" onClick={exportProject} variant="outline">
+							<IconSvg
+								className="fill-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+								size="md"
+								src={ExportIcon}
+							/>
 
-						{t("topbar.buttons.delete")}
-					</Button>
+							{t("topbar.buttons.export")}
+						</Button>
+						<Button
+							className="group mt-2 h-8 px-4 text-white"
+							onClick={openModalDeleteProject}
+							variant="outline"
+						>
+							<IconSvg
+								className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+								size="md"
+								src={TrashIcon}
+							/>
+
+							{t("topbar.buttons.delete")}
+						</Button>
+					</>
 				}
 			>
 				<Button className="group h-8 whitespace-nowrap px-4 text-white" variant="outline">
