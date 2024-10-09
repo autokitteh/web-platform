@@ -1,3 +1,10 @@
+## [2.23.1](https://github.com/autokitteh/web-platform/compare/v2.23.0...v2.23.1) (2024-10-09)
+
+
+### Bug Fixes
+
+* add check if manual run parameters keys are unique ([#442](https://github.com/autokitteh/web-platform/issues/442)) ([e5db180](https://github.com/autokitteh/web-platform/commit/e5db1808e77476676ca65a2b6cfa43112b93caf7))
+
 # [2.23.0](https://github.com/autokitteh/web-platform/compare/v2.22.4...v2.23.0) (2024-10-09)
 
 
