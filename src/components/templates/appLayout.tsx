@@ -2,26 +2,12 @@ import React from "react";
 
 import { Outlet } from "react-router-dom";
 
+import { TopbarType } from "@src/types/components";
 import { cn } from "@utilities";
 
-import {
-	ProjectHeaderBasic,
-	ProjectTopbarWithActions,
-	ProjectTopbarWithManualRun,
-	Sidebar,
-} from "@components/organisms";
+import { ProjectConfigTopbar, Sidebar } from "@components/organisms";
 
-export const AppLayout = ({
-	className,
-	displayMainTopbar,
-	displayManualRunTopbar,
-	displayWithoutButtonsTopbar,
-}: {
-	className?: string;
-	displayMainTopbar?: boolean;
-	displayManualRunTopbar?: boolean;
-	displayWithoutButtonsTopbar?: boolean;
-}) => {
+export const AppLayout = ({ className, variantTopbar }: { className?: string; variantTopbar?: TopbarType }) => {
 	const appLayoutClasses = cn("h-screen w-screen pr-5", className);
 
 	return (
@@ -30,9 +16,7 @@ export const AppLayout = ({
 				<Sidebar />
 
 				<div className="flex flex-1 flex-col overflow-auto transition">
-					{displayMainTopbar ? <ProjectTopbarWithActions /> : null}
-					{displayManualRunTopbar ? <ProjectTopbarWithManualRun /> : null}
-					{displayWithoutButtonsTopbar ? <ProjectHeaderBasic /> : null}
+					{variantTopbar ? <ProjectConfigTopbar variant={variantTopbar} /> : null}
 
 					<div className="h-full">
 						<div className="flex h-full gap-6">
