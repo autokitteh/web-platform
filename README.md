@@ -44,6 +44,32 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 `sh cp .env.example .env # Edit .env with your environment-specific settings`
 
+`VITE_HOST_URL`
+
+-   Default: A predefined default host URL mentioned in [getApiBaseUrlFile](https://github.com/autokitteh/web-platform/blob/main/src/utilities/getApiBaseUrl.utils.ts)
+-   Description: Defines the backend URL that the application will use as its host. If not set, the application will use a default host URL.
+-   Example: VITE_HOST_URL=http://localhost:1234
+
+`VITE_AUTH_ENABLED`
+
+-   Default: false
+-   Description: Determines whether the application should restrict access to logged-in users or users with a valid JWT token. Set to true to enable authentication protection.
+-   Example: VITE_AUTH_ENABLED=false
+
+`VITE_DESCOPE_PROJECT_ID`
+
+-   Default: None
+-   Description: Required for OAuth authentication using Descope. If you want to allow users to connect to the app using OAuth, you need to provide your Descope project ID here.
+-   Example: VITE_DESCOPE_PROJECT_ID=your_descope_project_id
+
+`TESTS_JWT_AUTH_TOKEN`
+
+-   Default: None
+-   Description: Used for running E2E tests when authentication is enabled on the backend. This JWT token allows the test runner to authenticate and access the application during testing.
+-   Example: TESTS_JWT_AUTH_TOKEN=your_jwt_auth_token_for_e2e_tests
+   
+**Note:** These environment variables are optional. The application will use default values or fall back to certain behaviors if these variables are not set. However, setting them allows for greater customization and functionality, especially in different deployment environments or when running tests.
+
 ### Running the Project 🏃
 
 1.  **Development Mode**: Start the development server with hot reloading.
