@@ -41,7 +41,7 @@ export class SessionsService {
 		try {
 			const selectedTypes =
 				logType === SessionLogType.Output
-					? SessionLogRecord_Type.PRINT
+					? SessionLogRecord_Type.PRINT | SessionLogRecord_Type.STATE
 					: SessionLogRecord_Type.CALL_SPEC |
 						SessionLogRecord_Type.CALL_ATTEMPT_START |
 						SessionLogRecord_Type.CALL_ATTEMPT_COMPLETE;
