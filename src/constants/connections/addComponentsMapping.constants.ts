@@ -1,6 +1,7 @@
 import { Integrations } from "@src/enums/components";
 
 import {
+	AsanaIntegrationAddForm,
 	AwsIntegrationAddForm,
 	ConfluenceIntegrationAddForm,
 	DiscordIntegrationAddForm,
@@ -16,6 +17,7 @@ import {
 } from "@components/organisms/connections/integrations";
 
 export const integrationAddFormComponents: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
+	asana: AsanaIntegrationAddForm,
 	github: GithubIntegrationAddForm,
 	slack: SlackIntegrationAddForm,
 	gmail: GoogleIntegrationAddForm,
