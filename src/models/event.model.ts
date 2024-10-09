@@ -8,6 +8,7 @@ import { Event } from "@src/types/models/event.type";
 export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<Event> => {
 	let destinationName;
 	let sourceType;
+	let destination = "unknown" as Event["destination"];
 
 	if (!protoEvent.destinationId) {
 		const errorMessage = i18n.t("eventNoDestinationId", {
@@ -19,41 +20,44 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 	}
 
 	if (protoEvent.destinationId.startsWith("trg_")) {
-		const trigger = await TriggersService.get(protoEvent.destinationId);
-		if (trigger.error) {
-			const errorMessage = i18n.t("eventNoTriggerExtended", {
-				eventId: protoEvent.eventId,
+		const { data: trigger } = await TriggersService.get(protoEvent.destinationId);
+
+		destinationName =
+			trigger?.name ||
+			i18n.t("triggerNotFoundForSessionModel", {
 				ns: "services",
-				error: trigger.error,
 			});
-			throw new Error(errorMessage);
-		}
-		destinationName = trigger.data?.name;
-		sourceType = trigger.data?.sourceType;
+		sourceType =
+			trigger?.sourceType ||
+			i18n.t("unknownSourceForSessionModel", {
+				ns: "services",
+			});
+		destination = "trigger";
 	}
 
 	if (protoEvent.destinationId.startsWith("con_")) {
-		const connection = await ConnectionService.get(protoEvent.destinationId);
-		if (connection.error) {
-			const errorMessage = i18n.t("eventNoConnectionExtended", {
-				eventId: protoEvent.eventId,
-				ns: "services",
-				error: connection.error,
-			});
+		const { data: connection } = await ConnectionService.get(protoEvent.destinationId);
 
-			throw new Error(errorMessage);
-		}
-		destinationName = connection.data?.name;
-		sourceType = i18n.t("connection", {
-			connectionName: connection.data?.name,
-			ns: "services",
-			error: connection.error,
-		});
+		destinationName =
+			connection?.name ||
+			i18n.t("connectionNotFoundForSessionModel", {
+				ns: "services",
+			});
+		sourceType = connection?.name
+			? i18n.t("connection", {
+					connectionName: connection?.name,
+					ns: "services",
+				})
+			: i18n.t("unknownSourceForSessionModel", {
+					ns: "services",
+				});
+		destination = "connection";
 	}
 
 	return {
-		destinationId: protoEvent.destinationId,
 		eventId: protoEvent.eventId,
+		destination,
+		destinationId: protoEvent.destinationId,
 		destinationName,
 		sourceType,
 	};
