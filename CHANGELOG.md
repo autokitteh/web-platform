@@ -1,3 +1,10 @@
+## [2.23.5](https://github.com/autokitteh/web-platform/compare/v2.23.4...v2.23.5) (2024-10-09)
+
+
+### Bug Fixes
+
+* prevent auto-complete for form textual inputs ([#438](https://github.com/autokitteh/web-platform/issues/438)) ([3daac27](https://github.com/autokitteh/web-platform/commit/3daac273c1151722bf0533613a8f52b75f26127f))
+
 ## [2.23.4](https://github.com/autokitteh/web-platform/compare/v2.23.3...v2.23.4) (2024-10-09)
 
 
