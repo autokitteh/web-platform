@@ -1,3 +1,10 @@
+## [2.23.4](https://github.com/autokitteh/web-platform/compare/v2.23.3...v2.23.4) (2024-10-09)
+
+
+### Bug Fixes
+
+* reset file name each time create file modal is opened ([#444](https://github.com/autokitteh/web-platform/issues/444)) ([b39678b](https://github.com/autokitteh/web-platform/commit/b39678bfb4951cbeaea3d3533a18945449a5c361))
+
 ## [2.23.3](https://github.com/autokitteh/web-platform/compare/v2.23.2...v2.23.3) (2024-10-09)
 
 
