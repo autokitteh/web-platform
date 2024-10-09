@@ -1,7 +1,7 @@
 export {
-	ProjectConfigTopbar,
-	ProjectConfigWithManualTopbar,
+	ProjectTopbarWithActions,
+	ProjectTopbarWithManualRun,
 	DeleteProjectModal,
-	ProjectConfigWithoutButtonsTopbar,
+	ProjectHeaderBasic,
 } from "@components/organisms/topbar/project";
 export { DashboardTopbar } from "@components/organisms/topbar/dashboard";

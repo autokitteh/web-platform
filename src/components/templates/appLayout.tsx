@@ -5,9 +5,9 @@ import { Outlet } from "react-router-dom";
 import { cn } from "@utilities";
 
 import {
-	ProjectConfigTopbar,
-	ProjectConfigWithManualTopbar,
-	ProjectConfigWithoutButtonsTopbar,
+	ProjectHeaderBasic,
+	ProjectTopbarWithActions,
+	ProjectTopbarWithManualRun,
 	Sidebar,
 } from "@components/organisms";
 
@@ -30,9 +30,9 @@ export const AppLayout = ({
 				<Sidebar />
 
 				<div className="flex flex-1 flex-col overflow-auto transition">
-					{displayMainTopbar ? <ProjectConfigTopbar /> : null}
-					{displayManualRunTopbar ? <ProjectConfigWithManualTopbar /> : null}
-					{displayWithoutButtonsTopbar ? <ProjectConfigWithoutButtonsTopbar /> : null}
+					{displayMainTopbar ? <ProjectTopbarWithActions /> : null}
+					{displayManualRunTopbar ? <ProjectTopbarWithManualRun /> : null}
+					{displayWithoutButtonsTopbar ? <ProjectHeaderBasic /> : null}
 
 					<div className="h-full">
 						<div className="flex h-full gap-6">

@@ -1,6 +1,6 @@
-export { ProjectConfigTopbar } from "@components/organisms/topbar/project/projectConfig";
-export { ProjectConfigWithManualTopbar } from "@components/organisms/topbar/project/projectConfigWithManual";
-export { ProjectConfigWithoutButtonsTopbar } from "@components/organisms/topbar/project/projectConfigWithoutButtons";
+export { ProjectTopbarWithActions } from "@components/organisms/topbar/project/projectWithActions";
+export { ProjectTopbarWithManualRun } from "@components/organisms/topbar/project/projectWithManual";
+export { ProjectHeaderBasic } from "@components/organisms/topbar/project/projectHeaderBasic";
 export { DeleteProjectModal } from "@components/organisms/topbar/project/deleteProjectModal";
 export { ProjectTopbarButtons } from "@components/organisms/topbar/project/buttons";
 export { ProjectTopbarNavigation } from "@components/organisms/topbar/project/navigation";

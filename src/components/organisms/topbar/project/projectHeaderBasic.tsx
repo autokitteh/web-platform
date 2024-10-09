@@ -10,7 +10,7 @@ import {
 	ProjectTopbarNavigation,
 } from "@components/organisms/topbar/project";
 
-export const ProjectConfigWithoutButtonsTopbar = () => {
+export const ProjectHeaderBasic = () => {
 	const { projectId } = useParams();
 	const { fetchDeployments } = useCacheStore();
 

@@ -5,9 +5,9 @@ export { OutputTabs } from "@components/organisms/outputTabs";
 export { Sidebar } from "@components/organisms/sidebar/sidebar";
 export { SplitFrame } from "@components/organisms/splitFrame";
 export {
-	ProjectConfigTopbar,
-	ProjectConfigWithManualTopbar,
-	ProjectConfigWithoutButtonsTopbar,
+	ProjectTopbarWithActions,
+	ProjectTopbarWithManualRun,
+	ProjectHeaderBasic,
 	DashboardTopbar,
 	DeleteProjectModal,
 } from "@components/organisms/topbar";
