@@ -45,7 +45,6 @@ export const ManualRunParamsForm = () => {
 							<div className="w-1/2">
 								<Input
 									{...field}
-									autoComplete="off"
 									isError={!!errors?.params?.[index]?.key}
 									isRequired
 									label={t("placeholders.key")}
@@ -71,7 +70,6 @@ export const ManualRunParamsForm = () => {
 							<div className="w-1/2">
 								<Input
 									{...field}
-									autoComplete="off"
 									isError={!!errors?.params?.[index]?.value}
 									isRequired
 									label={t("placeholders.value")}

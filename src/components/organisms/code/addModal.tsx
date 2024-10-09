@@ -83,7 +83,6 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 							<Input
 								{...register("name")}
 								aria-label={t("addCodeAssets.ariaLabelNewFile", { ns: "modals" })}
-								autoComplete="off"
 								isError={!!errors.name}
 								isRequired
 								label={t("addCodeAssets.placeholderName", { ns: "modals" })}

@@ -41,7 +41,6 @@ export const AddConnection = () => {
 					<Input
 						aria-label={t("placeholders.name")}
 						{...register("connectionName")}
-						autoComplete="off"
 						disabled={!!connectionId}
 						isError={!!errors.connectionName}
 						isRequired

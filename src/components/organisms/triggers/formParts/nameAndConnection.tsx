@@ -26,7 +26,6 @@ export const NameAndConnectionFields = ({ connections, isEdit }: { connections: 
 				<Input
 					aria-label={t("placeholders.name")}
 					{...register("name")}
-					autoComplete="off"
 					disabled={isEdit}
 					isError={!!errors.name}
 					label={t("placeholders.name")}
