@@ -92,6 +92,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			<div className={baseClass}>
 				<input
 					{...rest}
+					autoComplete="off"
 					className={inputClass}
 					disabled={disabled}
 					id={id}
