@@ -89,13 +89,7 @@ export const ProjectTopbarNavigation = () => {
 						<IconSvg className={iconClassName} size="lg" src={icon} />
 						<span className="group-hover:text-white">{label}</span>
 
-						{isSelected ? (
-							<motion.div
-								className="absolute inset-x-0 -bottom-2 h-2 bg-gray-750"
-								layoutId="underline"
-								transition={{ type: "spring", stiffness: 300, damping: 30 }}
-							/>
-						) : null}
+						{isSelected ? <motion.div className="absolute inset-x-0 -bottom-2 h-2 bg-gray-750" /> : null}
 					</Button>
 				)
 			)}
