@@ -1,3 +1,10 @@
+# [2.23.0](https://github.com/autokitteh/web-platform/compare/v2.22.4...v2.23.0) (2024-10-09)
+
+
+### Features
+
+* add asana connection ([#449](https://github.com/autokitteh/web-platform/issues/449)) ([91edb8a](https://github.com/autokitteh/web-platform/commit/91edb8a077457e757592dc83734e1b43554a9531))
+
 ## [2.22.4](https://github.com/autokitteh/web-platform/compare/v2.22.3...v2.22.4) (2024-10-08)
 
 
