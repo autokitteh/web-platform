@@ -333,10 +333,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 			const urlParams = getSpecificParams(connectionData, specificKeys);
 
-			openPopup(
-				`${apiBaseUrl}/${defaultGoogleConnectionName}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
-				"Authorize"
-			);
+			const googleOAuthURL = `${apiBaseUrl}/${defaultGoogleConnectionName}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`;
+			console.log("google OAuth URL", googleOAuthURL);
+
+			openPopup(googleOAuthURL, "Authorize");
 			startCheckingStatus(oauthConnectionId);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
