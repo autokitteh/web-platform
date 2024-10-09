@@ -1,3 +1,10 @@
+## [2.23.3](https://github.com/autokitteh/web-platform/compare/v2.23.2...v2.23.3) (2024-10-09)
+
+
+### Bug Fixes
+
+* display session which trigger or connection was deleted ([#460](https://github.com/autokitteh/web-platform/issues/460)) ([1b2d066](https://github.com/autokitteh/web-platform/commit/1b2d066b2038944a9f0a9dba61c8a358a7464a67))
+
 ## [2.23.2](https://github.com/autokitteh/web-platform/compare/v2.23.1...v2.23.2) (2024-10-09)
 
 
