@@ -1,3 +1,10 @@
+## [2.23.2](https://github.com/autokitteh/web-platform/compare/v2.23.1...v2.23.2) (2024-10-09)
+
+
+### Bug Fixes
+
+* fetch missing logs state to display the final error ([#461](https://github.com/autokitteh/web-platform/issues/461)) ([e77365d](https://github.com/autokitteh/web-platform/commit/e77365d303cfb9b6b49012833e2bee0dc3ba775b))
+
 ## [2.23.1](https://github.com/autokitteh/web-platform/compare/v2.23.0...v2.23.1) (2024-10-09)
 
 
