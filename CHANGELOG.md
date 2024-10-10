@@ -1,3 +1,10 @@
+## [2.24.1](https://github.com/autokitteh/web-platform/compare/v2.24.0...v2.24.1) (2024-10-10)
+
+
+### Bug Fixes
+
+* project files list max-height and project list homepage ([#453](https://github.com/autokitteh/web-platform/issues/453)) ([54a4093](https://github.com/autokitteh/web-platform/commit/54a4093344a603e755610d628a03facff7ec385c))
+
 # [2.24.0](https://github.com/autokitteh/web-platform/compare/v2.23.6...v2.24.0) (2024-10-10)
 
 
