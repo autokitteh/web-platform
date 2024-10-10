@@ -24,7 +24,7 @@ export const Project = () => {
 	const loadProject = async (projectId: string) => {
 		const { data: project } = await getProject(projectId!);
 		if (!project?.name) {
-			setPageTitle(t("template", { page: t("home") }));
+			setPageTitle(t("base"));
 		}
 		setPageTitle(t("template", { page: project!.name }));
 	};
@@ -33,6 +33,11 @@ export const Project = () => {
 		loadProject(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
+
+	useEffect(() => {
+		return () => setPageTitle(t("base"));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const activeTab = useMemo(() => {
 		const pathParts = location.pathname.split("/").filter(Boolean);
