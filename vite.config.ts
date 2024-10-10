@@ -11,6 +11,9 @@ import { reactVirtualized } from "./fixReactVirtualized";
 dotenv.config();
 
 export default defineConfig({
+	preview: {
+		port: 8000,
+	},
 	build: {
 		rollupOptions: {
 			output: {
