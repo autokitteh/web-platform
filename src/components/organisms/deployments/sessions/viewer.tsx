@@ -17,7 +17,7 @@ import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms
 import { Accordion, CopyButton, RefreshButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { ArrowRightIcon, CircleMinusIcon, Close } from "@assets/image/icons";
+import { ArrowRightIcon, CircleMinusIcon, CirclePlusIcon, Close } from "@assets/image/icons";
 
 export const SessionViewer = () => {
 	const { deploymentId, projectId, sessionId } = useParams<{
@@ -206,7 +206,7 @@ export const SessionViewer = () => {
 						classChildren="border-none pt-3 pb-0"
 						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white"
 						closeIcon={CircleMinusIcon}
-						openIcon={CircleMinusIcon}
+						openIcon={CirclePlusIcon}
 						title="Inputs"
 					>
 						<JsonView

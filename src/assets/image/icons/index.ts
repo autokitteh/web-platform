@@ -57,3 +57,4 @@ export { default as Square } from "@assets/image/icons/Square.svg?react";
 export { default as HelpIcon } from "@assets/image/icons/Question.svg?react";
 export { default as RunIcon } from "@assets/image/icons/Run.svg?react";
 export { default as CircleMinusIcon } from "@assets/image/icons/CircleMinus.svg?react";
+export { default as CirclePlusIcon } from "@assets/image/icons/CirclePlus.svg?react";
