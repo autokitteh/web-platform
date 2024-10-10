@@ -1,3 +1,10 @@
+# [2.24.0](https://github.com/autokitteh/web-platform/compare/v2.23.6...v2.24.0) (2024-10-10)
+
+
+### Features
+
+* cache variables ([#432](https://github.com/autokitteh/web-platform/issues/432)) ([d246cd3](https://github.com/autokitteh/web-platform/commit/d246cd326ddede8b3642770bf4f01a7ae91a7327))
+
 ## [2.23.6](https://github.com/autokitteh/web-platform/compare/v2.23.5...v2.23.6) (2024-10-10)
 
 
