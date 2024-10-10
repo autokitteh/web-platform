@@ -187,7 +187,7 @@ export const CodeTable = () => {
 				onDrop={handleDrop}
 			>
 				{!isEmpty(sortedResources) ? (
-					<Table className="max-h-96">
+					<Table>
 						<THead>
 							<Tr>
 								<Th className="group cursor-pointer border-r-0 font-normal">

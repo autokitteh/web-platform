@@ -41,9 +41,9 @@ export const DashboardProjectsTable = () => {
 	};
 
 	return (
-		<div className="z-10 mt-10 h-full select-none">
+		<div className="z-10 mt-10 h-2/3 select-none">
 			{sortedProjects.length ? (
-				<Table className="mt-2.5 max-h-96 rounded-t-20 shadow-2xl">
+				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
 					<THead>
 						<Tr className="border-none pl-6">
 							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("name")}>
@@ -70,7 +70,7 @@ export const DashboardProjectsTable = () => {
 				</Table>
 			) : null}
 
-			<div className="mt-5 flex flex-col items-center justify-center">
+			<div className="mt-10 flex flex-col items-center justify-center">
 				<Button
 					className="gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 font-averta text-base font-semibold"
 					disabled={creatingProject}
