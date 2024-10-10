@@ -37,7 +37,7 @@ export const Profile = () => {
 			<p className="mb-4">{t("name", { name: user?.name })}</p>
 			<p className="mb-4">{t("email", { email: user?.email })}</p>
 			<div className="mt-16">
-				<Button className="mt-4" onClick={handleDeleteAccountClick} variant="outline">
+				<Button className="mt-4 text-white" onClick={handleDeleteAccountClick} variant="outline">
 					{t("deleteAccount")}
 				</Button>
 			</div>
