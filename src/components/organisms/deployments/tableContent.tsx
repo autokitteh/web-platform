@@ -70,7 +70,7 @@ export const DeploymentsTableContent = ({
 			<Table className="mt-4">
 				<THead>
 					<Tr>
-						<Th className="group cursor-pointer font-normal" onClick={() => requestSort("createdAt")}>
+						<Th className="group cursor-pointer pl-4 font-normal" onClick={() => requestSort("createdAt")}>
 							{t("table.columns.deploymentTime")}
 
 							<SortButton
