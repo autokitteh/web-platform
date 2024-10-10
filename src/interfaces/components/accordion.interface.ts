@@ -4,6 +4,6 @@ export interface AccordionProps {
 	className?: string;
 	classIcon?: string;
 	title: React.ReactNode;
-	customOpenIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	customCloseIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	openIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	closeIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }

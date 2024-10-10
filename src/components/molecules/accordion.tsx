@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -14,29 +14,32 @@ export const Accordion = ({
 	classChildren,
 	classIcon,
 	className,
-	customCloseIcon,
-	customOpenIcon,
+	closeIcon,
+	openIcon,
 	title,
 }: AccordionProps) => {
 	const [isOpen, setIsOpen] = useState(false);
+
+	const toggleAccordion = useCallback(() => setIsOpen((prev) => !prev), []);
+
 	const classDescription = cn("border-b border-gray-950 py-3", classChildren);
 	const classSvgIcon = cn("w-3.5 fill-gray-500 transition group-hover:fill-green-800", classIcon);
+
+	const icon = isOpen ? (
+		<IconSvg className={classSvgIcon} src={closeIcon || MinusAccordionIcon} />
+	) : (
+		<IconSvg className={classSvgIcon} src={openIcon || PlusAccordionIcon} />
+	);
 
 	return (
 		<div className={className}>
 			<Button
 				className="group flex w-full cursor-pointer gap-2.5 p-0 text-white hover:bg-transparent"
-				onClick={() => setIsOpen(!isOpen)}
+				onClick={toggleAccordion}
 			>
-				{!isOpen ? (
-					<IconSvg className={classSvgIcon} src={customOpenIcon || PlusAccordionIcon} />
-				) : (
-					<IconSvg className={classSvgIcon} src={customCloseIcon || MinusAccordionIcon} />
-				)}
-
+				{icon}
 				{title}
 			</Button>
-
 			<AnimatePresence>
 				{isOpen ? (
 					<motion.div
