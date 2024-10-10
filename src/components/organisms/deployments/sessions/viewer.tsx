@@ -114,21 +114,22 @@ export const SessionViewer = () => {
 		<Frame className="overflow-hidden rounded-l-none pb-3 font-fira-code">
 			{sessionInfo ? (
 				<>
-					<div className="relative flex items-center justify-between border-b border-gray-950 pb-3.5">
+					<div className="flex items-center justify-between border-b border-gray-950 pb-3.5">
 						<div className="flex gap-3 font-fira-sans text-base text-gray-500">
 							<span>{moment(sessionInfo.createdAt).format("MM.DD.YY  HH:mm")}</span>
 							{sessionInfo.triggerName}
 						</div>
 
-						{sessionInfo ? <RefreshButton isLoading={isLoading} onRefresh={fetchSessions} /> : null}
-
-						<IconButton
-							ariaLabel={t("buttons.ariaCloseEditor")}
-							className="absolute -right-8 -top-5 size-7 bg-gray-1100 p-0.5"
-							onClick={closeEditor}
-						>
-							<Close className="size-3 fill-white" />
-						</IconButton>
+						<div className="flex items-center gap-3">
+							{sessionInfo ? <RefreshButton isLoading={isLoading} onRefresh={fetchSessions} /> : null}
+							<IconButton
+								ariaLabel={t("buttons.ariaCloseEditor")}
+								className="size-7 bg-gray-1100 p-0.5"
+								onClick={closeEditor}
+							>
+								<Close className="size-3 fill-white" />
+							</IconButton>
+						</div>
 					</div>
 					<div className="mt-2.5 flex justify-between gap-6">
 						<div className="flex flex-col gap-0.5 leading-6">
