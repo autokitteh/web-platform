@@ -34,7 +34,7 @@ export const TriggersTable = () => {
 	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
 
 	useEffect(() => {
-		fetchTriggers(projectId!, true);
+		fetchTriggers(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 

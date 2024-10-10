@@ -32,7 +32,7 @@ export const DeploymentsTable = () => {
 	} = useCacheStore();
 
 	useEffect(() => {
-		fetchDeployments(projectId!, true);
+		fetchDeployments(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 

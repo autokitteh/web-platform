@@ -35,7 +35,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		set((state) => ({
 			...state,
-			currentProjectId: projectId,
 			loading: { ...state.loading, deployments: true },
 		}));
 
