@@ -1,3 +1,10 @@
+## [2.24.2](https://github.com/autokitteh/web-platform/compare/v2.24.1...v2.24.2) (2024-10-10)
+
+
+### Bug Fixes
+
+* page titles when navigating between pages ([#451](https://github.com/autokitteh/web-platform/issues/451)) ([6bfa71a](https://github.com/autokitteh/web-platform/commit/6bfa71a82d99cbfaa44f741a88d4de2b1d4a6ecc))
+
 ## [2.24.1](https://github.com/autokitteh/web-platform/compare/v2.24.0...v2.24.1) (2024-10-10)
 
 
