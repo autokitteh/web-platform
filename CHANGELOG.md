@@ -1,3 +1,10 @@
+# [2.25.0](https://github.com/autokitteh/web-platform/compare/v2.24.2...v2.25.0) (2024-10-10)
+
+
+### Features
+
+* profile page in settings ([#450](https://github.com/autokitteh/web-platform/issues/450)) ([f96a14c](https://github.com/autokitteh/web-platform/commit/f96a14c0c634eaeabe0590b3f682a40b47a3a438))
+
 ## [2.24.2](https://github.com/autokitteh/web-platform/compare/v2.24.1...v2.24.2) (2024-10-10)
 
 
