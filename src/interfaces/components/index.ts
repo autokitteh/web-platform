@@ -45,3 +45,4 @@ export type { ActivityRowProps } from "@interfaces/components/activity.interface
 export type { DrawerProps } from "@interfaces/components/drawer.interface";
 export type { WelcomeInfoCardProps } from "@interfaces/components/welcomePageCard.interface";
 export type { CheckboxProps } from "@interfaces/components/checkbox.interface";
+export type { AccordionProps } from "@interfaces/components/accordion.interface";

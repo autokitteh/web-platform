@@ -17,7 +17,7 @@ import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms
 import { Accordion, CopyButton, RefreshButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { ArrowRightIcon, Close } from "@assets/image/icons";
+import { ArrowRightIcon, CircleMinusIcon, Close } from "@assets/image/icons";
 
 export const SessionViewer = () => {
 	const { deploymentId, projectId, sessionId } = useParams();
@@ -111,154 +111,109 @@ export const SessionViewer = () => {
 	}
 
 	return (
-		<Frame className="overflow-hidden pb-3">
+		<Frame className="overflow-hidden rounded-l-none pb-3 font-fira-code">
 			{sessionInfo ? (
 				<>
-					<div className="mb-4 flex items-center justify-between">
-						<div className="flex items-center font-bold" title="Session ID">
-							<div className="mr-1">{sessionInfo.sessionId}</div>
-							<CopyButton size="sm" text={sessionInfo.sessionId} />
+					<div className="relative flex items-center justify-between border-b border-gray-950 pb-3.5">
+						<div className="flex gap-3 font-fira-sans text-base text-gray-500">
+							<span>{moment(sessionInfo.createdAt).format("MM.DD.YY  HH:mm")}</span>
+							{sessionInfo.triggerName}
 						</div>
 
-						<div className="flex items-center font-bold" title="Created">
-							<ReactTimeAgo date={sessionInfo.createdAt} locale="en-US" />
+						{sessionInfo ? <RefreshButton isLoading={isLoading} onRefresh={fetchSessions} /> : null}
 
-							<IconButton
-								ariaLabel={t("buttons.ariaCloseEditor")}
-								className="relative -right-4 -top-3 size-7 bg-gray-1100 p-0.5"
-								onClick={closeEditor}
-							>
-								<Close className="size-3 fill-white transition" />
-							</IconButton>
-						</div>
+						<IconButton
+							ariaLabel={t("buttons.ariaCloseEditor")}
+							className="absolute -right-8 -top-5 size-7 bg-gray-1100 p-0.5"
+							onClick={closeEditor}
+						>
+							<Close className="size-3 fill-white" />
+						</IconButton>
 					</div>
-					<div className="flex gap-6">
-						<div className="flex w-1/4 flex-col gap-2">
-							{sessionInfo.state === SessionState.completed ||
-							sessionInfo.state === SessionState.error ? (
-								<>
-									<div className="flex items-center gap-2">
-										<div className="w-3/5">Status</div>
-										<div className="w-full">
-											<SessionsTableState
-												className="font-semibold"
-												sessionState={sessionInfo.state}
-											/>
-										</div>
-									</div>
-									<div className="flex items-center gap-2 font-semibold">
-										<div className="w-3/5" title="Start Time">
-											{moment(sessionInfo.createdAt).format("HH:mm:ss")}
-										</div>
-										<div className="flex w-full flex-row items-center">
-											<IconSvg className="mr-2 fill-white" size="sm" src={ArrowRightIcon} />
-
-											<div title="End Time">
-												{moment(sessionInfo.updatedAt).format("HH:mm:ss")}
-											</div>
-										</div>
-									</div>
-
-									<div className="flex items-center gap-2">
-										<div className="w-3/5">Duration</div>
-										<div className="w-full font-semibold">
-											{formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)}
-										</div>
-									</div>
-								</>
-							) : (
-								<>
-									<div className="flex items-center gap-2">
-										<div className="w-3/5">Status</div>
-										<div className="w-full">
-											<SessionsTableState
-												className="font-semibold"
-												sessionState={sessionInfo.state}
-											/>
-										</div>
-									</div>
-									<div className="flex items-center gap-2 font-semibold">
-										<div className="w-3/5" title="Start Time">
-											{moment(sessionInfo.createdAt).format("HH:mm:ss")}
-										</div>
-										<div className="flex w-full flex-row items-center">
-											<IconSvg className="mr-2 fill-white" size="sm" src={ArrowRightIcon} />
-
-											<SessionsTableState
-												className="font-semibold"
-												sessionState={sessionInfo.state}
-											/>
-										</div>
-									</div>
-
-									<div className="flex items-center gap-2">
-										<div className="w-3/5">Duration</div>
-										<div className="w-full font-semibold">
-											<ReactTimeAgo
-												date={sessionInfo.createdAt}
-												locale="en-US"
-												timeStyle="mini"
-											/>
-										</div>
-									</div>
-								</>
-							)}
-						</div>
-
-						<div className="flex w-1/2 flex-col gap-2">
-							{sessionInfo?.sourceType ? (
-								<div className="flex items-center gap-2">
-									<div className="w-1/3">{t("source")}</div>
-									<span className="font-semibold">{sessionInfo.sourceType}</span>
-								</div>
-							) : null}
-
-							{sessionInfo?.triggerName ? (
-								<div className="flex items-center gap-2">
-									<div className="w-1/3">{t("trigger")}</div>
-									<span className="font-semibold">{sessionInfo.triggerName}</span>
-								</div>
-							) : null}
-
-							<div className="flex items-center gap-2">
-								{t("entrypoint")}
-								<div className="inline font-semibold">
+					<div className="mt-2.5 flex justify-between gap-6">
+						<div className="flex flex-col gap-0.5 leading-6">
+							<div className="flex items-center gap-4">
+								<div className="w-44 text-gray-1550">{t("status")}</div>
+								<SessionsTableState sessionState={sessionInfo.state} />
+							</div>
+							<div className="flex items-center gap-4">
+								<div className="w-44 text-gray-1550">{t("connectionName")}</div>
+							</div>
+							<div className="flex items-center gap-4">
+								<div className="w-44 text-gray-1550">{t("entrypoint")}</div>
+								<div className="inline">
 									<div className="inline">{sessionInfo.entrypoint.path}</div>
 									<IconSvg className="mx-2 inline fill-white" size="sm" src={ArrowRightIcon} />
 									<div className="inline">{sessionInfo.entrypoint.name}</div>
 								</div>
 							</div>
+							<div className="flex items-center gap-4">
+								<div className="w-44 text-gray-1550" title="Start Time">
+									Time:
+								</div>
+								<div className="flex flex-row items-center">
+									{moment(sessionInfo.createdAt).format("HH:mm:ss")}
+									<IconSvg className="mx-2 fill-white" size="sm" src={ArrowRightIcon} />
+									{sessionInfo.state === SessionState.completed ||
+									sessionInfo.state === SessionState.error ? (
+										<div title="End Time">{moment(sessionInfo.updatedAt).format("HH:mm:ss")}</div>
+									) : (
+										<SessionsTableState sessionState={sessionInfo.state} />
+									)}
+								</div>
+							</div>
+							<div className="flex items-center gap-4">
+								<div className="w-44 text-gray-1550">Duration</div>
+								{sessionInfo.state === SessionState.completed ||
+								sessionInfo.state === SessionState.error ? (
+									formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)
+								) : (
+									<ReactTimeAgo date={sessionInfo.createdAt} locale="en-US" timeStyle="mini" />
+								)}
+							</div>
 						</div>
 
-						<div className="ml-auto flex w-auto flex-col gap-2">
-							<div className="flex items-center gap-2">
-								<div>{t("eventId")}</div>
-								<CopyButton size="sm" text={sessionInfo.eventId} />
+						<div className="flex flex-col gap-0.5">
+							<div className="flex items-center justify-end gap-4">
+								<div className="leading-6">{t("sessionId")}</div>
+								<CopyButton className="p-0" size="xs" text={sessionInfo.sessionId} />
 							</div>
-							<div className="flex items-center gap-2">
-								<div>{t("buildId")}</div>
-								<CopyButton size="sm" text={sessionInfo.buildId} />
+							<div className="flex items-center justify-end gap-4">
+								<div className="leading-6">{t("eventId")}</div>
+								<CopyButton className="p-0" size="xs" text={sessionInfo.eventId} />
+							</div>
+							<div className="flex items-center justify-end gap-4">
+								<div className="leading-6">{t("buildId")}</div>
+								<CopyButton className="p-0" size="xs" text={sessionInfo.buildId} />
 							</div>
 						</div>
 					</div>
 				</>
 			) : null}
 			{sessionInfo?.inputs ? (
-				<Accordion className="mb-4 mt-6" title="Inputs">
-					<JsonView
-						className="scrollbar max-h-72 overflow-auto"
-						style={githubDarkTheme}
-						value={sessionInfo.inputs}
-					/>
-				</Accordion>
+				<div className="mt-3 border-b border-gray-950 pb-3.5">
+					<Accordion
+						classChildren="border-none pt-3 pb-0 "
+						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white"
+						customCloseIcon={CircleMinusIcon}
+						customOpenIcon={CircleMinusIcon}
+						title="Inputs"
+					>
+						<JsonView
+							className="scrollbar max-h-72 overflow-auto"
+							style={githubDarkTheme}
+							value={sessionInfo.inputs}
+						/>
+					</Accordion>
+				</div>
 			) : null}
-			<div className="mt-4 flex items-center justify-between">
-				<div className="scrollbar xl:gap-4 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase 2xl:gap-6">
+			<div className="flex items-center justify-between">
+				<div className="scrollbar xl:gap-4 my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase 2xl:gap-6">
 					{sessionTabs.map((singleTab) => (
 						<Tab
 							activeTab={activeTab}
 							ariaLabel={singleTab.label}
-							className="p-0"
+							className="p-0 font-fira-sans"
 							key={singleTab.value}
 							onClick={() => goTo(singleTab.value)}
 							value={singleTab.value}
@@ -267,8 +222,6 @@ export const SessionViewer = () => {
 						</Tab>
 					))}
 				</div>
-
-				{sessionInfo ? <RefreshButton isLoading={isLoading} onRefresh={fetchSessions} /> : null}
 			</div>
 			<Outlet />
 			<LogoCatLarge />

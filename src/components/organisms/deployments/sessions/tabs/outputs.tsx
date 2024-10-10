@@ -16,9 +16,9 @@ const OutputRow = memo(({ log, measure }: { log: SessionOutput; measure: () => v
 	}, [measure]);
 
 	return (
-		<div ref={rowRef}>
-			<div className="flex font-mono">
-				<div className="mr-3 whitespace-nowrap text-yellow-500">[{log.time}]: </div>
+		<div className="mb-6" ref={rowRef}>
+			<div className="flex font-fira-code">
+				<div className="mr-5 whitespace-nowrap text-gray-1550">[{log.time}]: </div>
 
 				<div className="w-full whitespace-pre-line">{log.print}</div>
 			</div>
@@ -91,6 +91,7 @@ export const SessionOutputs = () => {
 						>
 							{({ onRowsRendered, registerChild }) => (
 								<List
+									className="scrollbar"
 									deferredMeasurementCache={cacheRef.current}
 									height={height}
 									onRowsRendered={onRowsRendered}
