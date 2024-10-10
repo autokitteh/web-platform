@@ -1,41 +1,45 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
+
+import { AccordionProps } from "@src/interfaces/components";
+import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
 import { MinusAccordionIcon, PlusAccordionIcon } from "@assets/image/icons";
 
-type AccordionProps = {
-	children: React.ReactNode;
-	className?: string;
-	title: React.ReactNode;
-};
-
-export const Accordion = ({ children, className, title }: AccordionProps) => {
+export const Accordion = ({
+	children,
+	classChildren,
+	classIcon,
+	className,
+	closeIcon,
+	openIcon,
+	title,
+}: AccordionProps) => {
 	const [isOpen, setIsOpen] = useState(false);
+
+	const toggleAccordion = useCallback(() => setIsOpen((prev) => !prev), []);
+
+	const classDescription = cn("border-b border-gray-950 py-3", classChildren);
+	const classSvgIcon = cn("w-3.5 fill-gray-500 transition group-hover:fill-green-800", classIcon);
+
+	const icon = isOpen ? (
+		<IconSvg className={classSvgIcon} src={closeIcon || MinusAccordionIcon} />
+	) : (
+		<IconSvg className={classSvgIcon} src={openIcon || PlusAccordionIcon} />
+	);
 
 	return (
 		<div className={className}>
 			<Button
 				className="group flex w-full cursor-pointer gap-2.5 p-0 text-white hover:bg-transparent"
-				onClick={() => setIsOpen(!isOpen)}
+				onClick={toggleAccordion}
 			>
-				{!isOpen ? (
-					<IconSvg
-						className="w-3.5 fill-gray-500 transition group-hover:fill-green-800"
-						src={PlusAccordionIcon}
-					/>
-				) : (
-					<IconSvg
-						className="w-3.5 fill-gray-500 transition group-hover:fill-green-800"
-						src={MinusAccordionIcon}
-					/>
-				)}
-
+				{icon}
 				{title}
 			</Button>
-
 			<AnimatePresence>
 				{isOpen ? (
 					<motion.div
@@ -45,7 +49,7 @@ export const Accordion = ({ children, className, title }: AccordionProps) => {
 						initial={{ height: 0 }}
 						transition={{ duration: 0.3 }}
 					>
-						<div className="border-b border-gray-950 py-3">{children}</div>
+						<div className={classDescription}>{children}</div>
 					</motion.div>
 				) : null}
 			</AnimatePresence>

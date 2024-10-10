@@ -9,7 +9,7 @@ export const SessionsTableState = ({ className, sessionState }: { className?: st
 	const sessionsTableStateStyle = {
 		[SessionState.completed]: "text-green-800",
 		[SessionState.created]: "text-white",
-		[SessionState.error]: "text-red",
+		[SessionState.error]: "text-error",
 		[SessionState.running]: "text-blue-500",
 		[SessionState.stopped]: "text-yellow-500",
 		[SessionState.unspecified]: "text-blue-500",

@@ -22,7 +22,7 @@ import { DeleteSessionModal, SessionsTableList } from "@components/organisms/dep
 import { CatImage } from "@assets/image";
 
 export const SessionsTable = () => {
-	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10 });
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 45, max: 75, min: 25 });
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
@@ -38,13 +38,8 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
 
-	const frameClass = useMemo(
-		() =>
-			cn("size-full bg-gray-1100 pb-3 pl-7 transition-all", {
-				"rounded-r-none": !sessionId,
-			}),
-		[sessionId]
-	);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const frameClass = useMemo(() => cn("size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none"), [sessionId]);
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {
@@ -160,9 +155,9 @@ export const SessionsTable = () => {
 	const resizeClass = useMemo(
 		() =>
 			cn(
-				"resize-handle-horizontal bg-gray-white z-0 h-[97%] cursor-ew-resize self-center rounded-none p-1.5 transition hover:bg-gray-750",
+				"resize-handle-horizontal bg-gray-1050 z-0 h-full cursor-ew-resize self-center rounded-none p-0.5 transition hover:bg-gray-750",
 				{
-					"h-full bg-gray-1100 p-1": !sessionId,
+					"bg-gray-1100": !sessionId,
 				}
 			),
 		[sessionId]

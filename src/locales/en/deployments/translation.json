@@ -99,14 +99,16 @@
 			"buttons":{
 				"ariaCloseEditor": "Close session log viewer"
 			},
-			"connectionName": "Connection",
 			"trigger": "Trigger",
 			"source": "Source",
 			"entrypoint": "Entrypoint",
 			"manualRun": "Manual Run",
 			"eventId": "Event ID",
 			"buildId": "Build ID",
-			"copyButton": "Copy"
+			"sessionId": "Session ID",
+			"copyButton": "Copy",
+			"status": "Status",
+			"connectionName": "Connection Name"
 		}
 	},
 	"activities":{

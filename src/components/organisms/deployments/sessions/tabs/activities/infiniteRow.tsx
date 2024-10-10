@@ -43,7 +43,10 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 			style={style}
 			tabIndex={0}
 		>
-			<IconSvg className="w-3.5 fill-gray-500 transition group-hover:fill-green-800" src={PlusAccordionIcon} />
+			<IconSvg
+				className="mt-1 w-3.5 fill-gray-500 transition group-hover:fill-green-800"
+				src={PlusAccordionIcon}
+			/>
 
 			<div className="flex w-full gap-3">
 				<div className="mt-0.5">{displayTime}</div>
