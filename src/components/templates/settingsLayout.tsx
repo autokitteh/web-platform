@@ -26,10 +26,10 @@ export const SettingsLayout = () => {
 				<div className="flex size-full">
 					<Sidebar />
 
-					<div className="flex w-full flex-col transition">
+					<div className="flex w-full flex-col">
 						<SettingsTopbar />
 
-						<div className="relative flex size-full overflow-hidden py-4">
+						<div className="relative flex size-full overflow-hidden py-2">
 							<SettingsMenu />
 
 							<div className="flex h-full w-1/3 flex-5 flex-col rounded-r-lg bg-gray-1250 pl-6 pt-10">
