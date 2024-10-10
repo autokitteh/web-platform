@@ -37,8 +37,11 @@ export const IntroMainBlock = () => {
 	return (
 		<div className="z-10 mt-7 grid select-none gap-5">
 			<div className="col-span-1 grid grid-cols-auto-fit-350 items-stretch gap-4 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pl-6 pr-4 font-averta text-white">
-				<div className="flex flex-col">
-					<div className="flex min-h-64 w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-gray-1400">
+				<div className="flex h-[91%] flex-col">
+					<div
+						className="flex w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-contain bg-center bg-no-repeat"
+						style={{ backgroundImage: "url(src/assets/image/pages/intro/main.png)" }}
+					>
 						<IconButton
 							className="group size-20 overflow-hidden rounded-full p-0 focus:scale-90"
 							onClick={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
@@ -112,6 +115,7 @@ export const IntroMainBlock = () => {
 							</Link>
 						</Typography>
 					}
+					videoCoverStyle={{ backgroundImage: "url(src/assets/image/pages/intro/startingProject.png)" }}
 				>
 					<ul className="font-averta font-semibold leading-normal">
 						{infoCardPythonCode.map(({ linkHref, linkText, text }, index) => (
@@ -137,6 +141,7 @@ export const IntroMainBlock = () => {
 							</Link>
 						</Typography>
 					}
+					videoCoverStyle={{ backgroundImage: "url(src/assets/image/pages/intro/usingVSCode.png)" }}
 				>
 					<ul className="font-averta font-semibold leading-normal">
 						{infoCardVSCode.map(({ text }, index) => (
