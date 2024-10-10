@@ -7,7 +7,7 @@ import { cn } from "@utilities";
 
 import { ProjectConfigTopbar, Sidebar } from "@components/organisms";
 
-export const AppLayout = ({ className, variantTopbar }: { className?: string; variantTopbar?: TopbarType }) => {
+export const AppLayout = ({ className, topbarVariant }: { className?: string; topbarVariant?: TopbarType }) => {
 	const appLayoutClasses = cn("h-screen w-screen pr-5", className);
 
 	return (
@@ -16,7 +16,7 @@ export const AppLayout = ({ className, variantTopbar }: { className?: string; va
 				<Sidebar />
 
 				<div className="flex flex-1 flex-col overflow-auto transition">
-					{variantTopbar ? <ProjectConfigTopbar variant={variantTopbar} /> : null}
+					{topbarVariant ? <ProjectConfigTopbar variant={topbarVariant} /> : null}
 
 					<div className="h-full">
 						<div className="flex h-full gap-6">
