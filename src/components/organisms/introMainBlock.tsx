@@ -49,7 +49,7 @@ export const IntroMainBlock = () => {
 							className="group size-20 overflow-hidden rounded-full p-0 focus:scale-90"
 							onClick={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
 						>
-							<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
+							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-70" />
 						</IconButton>
 					</div>
 
