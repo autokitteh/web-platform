@@ -1,3 +1,10 @@
+# [2.27.0](https://github.com/autokitteh/web-platform/compare/v2.26.0...v2.27.0) (2024-10-10)
+
+
+### Features
+
+* change refresh button and topbar config ([#427](https://github.com/autokitteh/web-platform/issues/427)) ([5643bc9](https://github.com/autokitteh/web-platform/commit/5643bc90e65171358a6c370e32da2ec828603996))
+
 # [2.26.0](https://github.com/autokitteh/web-platform/compare/v2.25.1...v2.26.0) (2024-10-10)
 
 
