@@ -1,31 +1,20 @@
-# 🐾 AutoKitteh
+# 🐾 AutoKitteh - Web UI
 
 ## Overview 🌟
 
 [AutoKitteh](https://www.autokitteh.com) is an open-source, developer-first framework aimed at simplifying the automation of distributed systems. It supports various deployment models including on-prem, cloud, and hybrid systems.
 
-## Key Features 🔑
+This repository contains the web UI for the AutoKitteh backend. The application allows users to create projects from a list of templates or start blank projects. It provides functionality to manage project entities such as code files, connections, triggers, and variables. Users can build and deploy projects on the server, view a list of deployments, and monitor sessions within those deployments. This interface facilitates the process of working with AutoKitteh, making it easier to develop, manage, and deploy automation projects.
 
--   **Automation as Code**: Focus on writing automation scripts.
--   **Versatile Deployment**: Compatible with on-prem, cloud, and hybrid environments.
--   **Integrated Tools**: Includes API connectivity, debugging, monitoring, and error handling features.
+![Screenshot 2024-10-07 at 17 08 57](https://github.com/user-attachments/assets/3ea42fbd-f74d-4b00-b0d4-dd3b40ea12ee)
 
-## Use Cases 🚀
+## How to run the application using Docker Compose 🐳
 
--   **DevOps Automation**: Automate workflows with tools like GitHub, Slack, Jira, etc.
--   **Cybersecurity - SOAR**: Develop Security Orchestration, Automation, and Response tools.
--   **Work and Marketing Automation**: Facilitate tasks using systems like Gmail, Docs, Slack, Calendar, etc.
--   **Corporate Operations Automation**: Enhance enterprise-specific procedures for HR, sales, etc.
+Use the following command to run the application with Docker
 
-## Contact 📬
+-   `docker compose -f development.compose.yml up`
 
-For inquiries, contact: meow@autokitteh.com
-
-# Contributing to autokitteh
-
-We'd love to get your input! We want to make contributing to this project as easy and transparent as possible.
-
-## How to Install and Run 🛠️
+## How to Install and Run ⚙️
 
 ### Prerequisites 📋
 
@@ -43,7 +32,7 @@ Ensure you have the following installed on your system:
 
 2.  **Get AutoKitteh Submodule**: Use git to install the AutoKitteh submodule:
 
-    `git submodule update --remote`
+    `git submodule update --init`
 
 3.  **Install Dependencies**: Use npm to install all the required dependencies:
 
@@ -51,7 +40,35 @@ Ensure you have the following installed on your system:
 
 ### Environment Setup 🌐
 
-Create a `.env` file in the root of the project directory and add the necessary environment variables. Refer to the `validateEnv` script for required variables: `sh cp .env.example .env # Edit .env with your environment-specific settings`
+Create a `.env` file in the root of the project directory and add the necessary environment variables. Refer to the `validateEnv` script for required variables:
+
+`sh cp .env.example .env # Edit .env with your environment-specific settings`
+
+`VITE_HOST_URL`
+
+-   Default: A predefined default host URL mentioned in [getApiBaseUrlFile](https://github.com/autokitteh/web-platform/blob/main/src/utilities/getApiBaseUrl.utils.ts)
+-   Description: Defines the backend URL that the application will use as its host. If not set, the application will use a default host URL.
+-   Example: VITE_HOST_URL=http://localhost:1234
+
+`VITE_AUTH_ENABLED`
+
+-   Default: false
+-   Description: Determines whether the application should restrict access to logged-in users or users with a valid JWT token. Set to true to enable authentication protection.
+-   Example: VITE_AUTH_ENABLED=false
+
+`VITE_DESCOPE_PROJECT_ID`
+
+-   Default: None
+-   Description: Required for OAuth authentication using Descope. If you want to allow users to connect to the app using OAuth, you need to provide your Descope project ID here.
+-   Example: VITE_DESCOPE_PROJECT_ID=your_descope_project_id
+
+`TESTS_JWT_AUTH_TOKEN`
+
+-   Default: None
+-   Description: Used for running E2E tests when authentication is enabled on the backend. This JWT token allows the test runner to authenticate and access the application during testing.
+-   Example: TESTS_JWT_AUTH_TOKEN=your_jwt_auth_token_for_e2e_tests
+
+**Note:** These environment variables are optional. The application will use default values or fall back to certain behaviors if these variables are not set. However, setting them allows for greater customization and functionality, especially in different deployment environments or when running tests.
 
 ### Running the Project 🏃
 
@@ -69,50 +86,40 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 ### Testing 🧪
 
-1.  **Run Unit Tests**: Execute the test suite.
-
-    `npm run test`
-
-2.  **Run End-to-End Tests**: Run the Playwright end-to-end tests.
+1.  **Run End-to-End Tests**: Run the Playwright end-to-end tests.
 
     `npm run test:e2e`
 
-3.  **View E2E Test UI**: Launch the Playwright test runner UI.
+2.  **View E2E Test UI**: Launch the Playwright test runner UI.
 
     `npm run test:e2e:ui`
 
-4.  **Generate E2E Test Report**: Generate and view the test report.
+3.  **Generate E2E Test Report**: Generate and view the test report.
 
     `npm run test:e2e:report`
 
-### Linting and Formatting 🧹
-
-1.  **Lint the Code**: Lint the codebase to ensure code quality.
-
-    `npm run lint`
-
-2.  **Fix Linting Issues**: Automatically fix linting issues where possible.
-
-    `npm run lint-fix`
-
-3.  **Check Code Formatting**: Check if the code meets the formatting standards.
-
-    `npm run prettier`
-
-4.  **Fix Code Formatting**: Automatically format the codebase.
-
-    `npm run fixed-format:staged`
-
 ### Additional Commands 📜
 
-1.  **Type Checking**: Perform type checking without emitting output files and compile the project.
-
-    `npm run type-check`
-
-2.  **Storybook**: Launch the Storybook development environment.
+1.  **Storybook**: Launch the Storybook development environment.
 
     `npm run storybook`
 
-3.  **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
+2.  **Tailwind Config Viewer**: Open the Tailwind CSS configuration viewer.
 
     `npm run tailwind-config-viewer`
+
+## Tools We Used 🛠️
+
+In this project we used:
+
+-   [FontAwesome](https://fontawesome.com) our icons.
+
+## Contact 📬
+
+For inquiries, contact: meow@autokitteh.com
+
+## How to Contribute 🤝
+
+To contribute to AutoKitteh, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+
+We appreciate contributions from everyone!
