@@ -17,6 +17,7 @@ export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
 export type { MenuProps, SubmenuInfo, SubmenuProps } from "@interfaces/components/menu.interface";
 export type {
 	DeleteFile,
+	DeleteAccount,
 	ModalAddCodeAssetsProps,
 	ModalDeleteConnectionProps,
 	ModalDeleteDeploymentProps,
