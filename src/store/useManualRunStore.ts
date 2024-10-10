@@ -99,4 +99,12 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	},
 });
 
-export const useManualRunStore = create(persist(immer(store), { name: StoreName.manualRun, version: 1 }));
+export const useManualRunStore = create(
+	persist(immer(store), {
+		name: StoreName.manualRun,
+		version: 1,
+		migrate: () => {
+			return {};
+		},
+	})
+);
