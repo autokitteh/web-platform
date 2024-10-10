@@ -1,3 +1,15 @@
+## [2.23.6](https://github.com/autokitteh/web-platform/compare/v2.23.5...v2.23.6) (2024-10-10)
+
+
+### Bug Fixes
+
+* prevent connections-checker retries to fetch connection status after a project is deleted ([#454](https://github.com/autokitteh/web-platform/issues/454)) ([69e8870](https://github.com/autokitteh/web-platform/commit/69e8870ca2edf6df7ffbd0dc54934386df3de301))
+
+
+### Reverts
+
+* "refactor: add google URL log on oauth for debugging ([#463](https://github.com/autokitteh/web-platform/issues/463))" ([#464](https://github.com/autokitteh/web-platform/issues/464)) ([11133e1](https://github.com/autokitteh/web-platform/commit/11133e1150dc37273cf17fffc56ae1108825e7b3))
+
 ## [2.23.5](https://github.com/autokitteh/web-platform/compare/v2.23.4...v2.23.5) (2024-10-09)
 
 
