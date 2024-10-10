@@ -38,13 +38,8 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
 
-	const frameClass = useMemo(
-		() =>
-			cn("size-full bg-gray-1100 pb-3 pl-7 transition-all", {
-				"rounded-r-none": !sessionId,
-			}),
-		[sessionId]
-	);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const frameClass = useMemo(() => cn("size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none"), [sessionId]);
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string) => {

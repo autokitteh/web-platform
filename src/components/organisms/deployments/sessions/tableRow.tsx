@@ -96,7 +96,7 @@ export const SessionsTableRow = memo(
 						<ActionStoppedIcon className={actionStoppedIconClass} />
 					</IconButton>
 
-					<IconButton className="inline" onClick={handleDeleteClick}>
+					<IconButton className="ml-1 inline p-1.5" onClick={handleDeleteClick}>
 						<TrashIcon className="size-4 stroke-white" />
 					</IconButton>
 				</Td>
