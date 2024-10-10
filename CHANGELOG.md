@@ -1,3 +1,10 @@
+# [2.26.0](https://github.com/autokitteh/web-platform/compare/v2.25.1...v2.26.0) (2024-10-10)
+
+
+### Features
+
+* video covers on intro page ([#474](https://github.com/autokitteh/web-platform/issues/474)) ([e509408](https://github.com/autokitteh/web-platform/commit/e5094080cc3120ccf0240943523fc66e5466684d))
+
 ## [2.25.1](https://github.com/autokitteh/web-platform/compare/v2.25.0...v2.25.1) (2024-10-10)
 
 
