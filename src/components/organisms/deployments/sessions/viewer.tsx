@@ -204,7 +204,7 @@ export const SessionViewer = () => {
 				<div className="mt-3 border-b border-gray-950 pb-3.5">
 					<Accordion
 						classChildren="border-none pt-3 pb-0"
-						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5"
+						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
 						closeIcon={CircleMinusIcon}
 						openIcon={CirclePlusIcon}
 						title="Inputs"
