@@ -41,8 +41,8 @@
 				"entrypoint": "Entrypoint",
 				"key": "Key",
 				"value": "Value",
-				"enterKey": "Enter Key",
-				"enterValue": "Enter Value"
+				"enterKey": "Enter key",
+				"enterValue": "Enter value"
 			},
 			"buttons": {
 				"addNewParameter": "Add Parameter"
