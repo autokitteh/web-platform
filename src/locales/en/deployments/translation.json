@@ -16,7 +16,8 @@
 				"buildId": "Build ID",
 				"deploymentTime": "Deployment Time",
 				"sessions": "Sessions",
-				"status": "Status"
+				"status": "Status",
+				"actions": "Actions"
 			},
 			"statuses": {
 				"active": "Active",

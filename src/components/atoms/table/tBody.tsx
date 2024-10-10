@@ -9,8 +9,11 @@ export const TBody = ({ children, className }: TableProps) => {
 	const { variant } = useTableVariant();
 
 	return (
-		<tbody className={cn("bg-gray-1100", { "bg-gray-250 text-gray-1150": variant === "light" }, className)}>
+		<div
+			className={cn("bg-gray-1100", { "bg-gray-250 text-gray-1150": variant === "light" }, className)}
+			role="rowgroup"
+		>
 			{children}
-		</tbody>
+		</div>
 	);
 };

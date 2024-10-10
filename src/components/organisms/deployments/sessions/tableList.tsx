@@ -8,6 +8,7 @@ import { SessionsTableListProps } from "@interfaces/components";
 
 import { useModalStore } from "@store";
 
+import { TBody } from "@components/atoms";
 import { SessionsTableRow } from "@components/organisms/deployments/sessions";
 
 export const SessionsTableList = ({
@@ -55,25 +56,27 @@ export const SessionsTableList = ({
 	}, []);
 
 	return (
-		<AutoSizer onResize={handleResize}>
-			{({ height, width }) => (
-				<List
-					className="scrollbar"
-					height={resizeHeight || height * 0.9}
-					onRowsRendered={({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }) =>
-						onItemsRendered({
-							visibleStartIndex: startIndex,
-							visibleStopIndex: stopIndex,
-							overscanStartIndex,
-							overscanStopIndex,
-						})
-					}
-					rowCount={sessions.length}
-					rowHeight={40}
-					rowRenderer={rowRenderer}
-					width={width}
-				/>
-			)}
-		</AutoSizer>
+		<TBody className="h-full">
+			<AutoSizer onResize={handleResize}>
+				{({ height, width }) => (
+					<List
+						className="scrollbar"
+						height={resizeHeight || height * 0.9}
+						onRowsRendered={({ overscanStartIndex, overscanStopIndex, startIndex, stopIndex }) =>
+							onItemsRendered({
+								visibleStartIndex: startIndex,
+								visibleStopIndex: stopIndex,
+								overscanStartIndex,
+								overscanStopIndex,
+							})
+						}
+						rowCount={sessions.length}
+						rowHeight={40}
+						rowRenderer={rowRenderer}
+						width={width}
+					/>
+				)}
+			</AutoSizer>
+		</TBody>
 	);
 };

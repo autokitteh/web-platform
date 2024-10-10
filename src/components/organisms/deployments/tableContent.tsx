@@ -69,8 +69,8 @@ export const DeploymentsTableContent = ({
 		<>
 			<Table className="mt-4">
 				<THead>
-					<Tr>
-						<Th className="group cursor-pointer font-normal" onClick={() => requestSort("createdAt")}>
+					<Th>
+						<Td className="group cursor-pointer pl-4 font-normal" onClick={() => requestSort("createdAt")}>
 							{t("table.columns.deploymentTime")}
 
 							<SortButton
@@ -78,11 +78,11 @@ export const DeploymentsTableContent = ({
 								isActive={"createdAt" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
-						</Th>
+						</Td>
 
-						<Th className="group cursor-pointer font-normal">{t("table.columns.sessions")}</Th>
+						<Td className="group cursor-pointer font-normal">{t("table.columns.sessions")}</Td>
 
-						<Th className="group cursor-pointer font-normal" onClick={() => requestSort("buildId")}>
+						<Td className="group cursor-pointer font-normal" onClick={() => requestSort("buildId")}>
 							{t("table.columns.buildId")}
 
 							<SortButton
@@ -90,9 +90,9 @@ export const DeploymentsTableContent = ({
 								isActive={"buildId" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
-						</Th>
+						</Td>
 
-						<Th
+						<Td
 							className="group cursor-pointer border-r-0 font-normal"
 							onClick={() => requestSort("state")}
 						>
@@ -103,10 +103,10 @@ export const DeploymentsTableContent = ({
 								isActive={"state" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
-						</Th>
+						</Td>
 
-						<Th className="max-w-20 text-right font-normal">Actions</Th>
-					</Tr>
+						<Td className="max-w-20 text-right font-normal">{t("table.columns.actions")}</Td>
+					</Th>
 				</THead>
 
 				<TBody>

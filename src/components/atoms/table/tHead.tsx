@@ -15,5 +15,9 @@ export const THead = ({ children, className }: TableProps) => {
 		className
 	);
 
-	return <thead className={headStyle}>{children}</thead>;
+	return (
+		<div className={headStyle} role="rowgroup">
+			{children}
+		</div>
+	);
 };

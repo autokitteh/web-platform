@@ -22,7 +22,9 @@ export const Table = ({
 	return (
 		<TableVariantProvider variant={variant}>
 			<div className={tableStyle}>
-				<table className="h-full min-w-full">{children}</table>
+				<div className="h-full min-w-full" role="table">
+					{children}
+				</div>
 			</div>
 		</TableVariantProvider>
 	);

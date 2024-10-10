@@ -29,7 +29,7 @@ const PrimaryTable = ({ variant = "dark" }: { variant?: ColorSchemes }) => {
 		<Table variant={variantProp}>
 			<THead>
 				<Tr className={trClass}>
-					<Th className="group max-w-40 cursor-pointer border-r-0 font-normal">Id</Th>
+					<Th className="group max-w-40 cursor-pointer border-r-0 pl-4 font-normal">Id</Th>
 
 					<Th className="group cursor-pointer border-r-0 font-normal">Name</Th>
 				</Tr>
