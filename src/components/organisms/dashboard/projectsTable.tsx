@@ -43,7 +43,7 @@ export const DashboardProjectsTable = () => {
 	return (
 		<div className="z-10 mt-10 h-2/3 select-none">
 			{sortedProjects.length ? (
-				<Table className="mt-2.5 h-full rounded-t-20 shadow-2xl">
+				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
 					<THead>
 						<Tr className="border-none pl-6">
 							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("name")}>
