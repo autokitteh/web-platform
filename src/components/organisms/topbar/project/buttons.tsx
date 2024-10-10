@@ -208,7 +208,7 @@ export const ProjectTopbarButtons = () => {
 
 			<DropdownButton
 				contentMenu={
-					<Button className="group h-8 text-white" onClick={openModalDeleteProject} variant="outline">
+					<Button className="group h-8 gap-1.5 text-white" onClick={openModalDeleteProject} variant="outline">
 						{" "}
 						<IconSvg
 							className="-mt-0.5 stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"

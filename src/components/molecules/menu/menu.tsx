@@ -65,7 +65,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 	const isButtonActive = (href: string) => location.pathname.startsWith(href);
 
 	const buttonMenuStyle = (href: string) =>
-		cn("relative z-10 w-full gap-1.5 p-0.5 pl-1 group-hover:bg-green-200", {
+		cn("relative z-10 w-full gap-1.5 p-0.5 pl-1 group-hover:bg-green-200 justify-center", {
 			"bg-gray-1100": isButtonActive(href) && isOpen,
 			"text-white hover:bg-gray-1100": isButtonActive(href),
 		});
@@ -86,7 +86,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
 						ariaLabel="New Project"
-						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200"
+						className="w-full justify-center gap-1.5 p-0.5 pl-1 hover:bg-green-200"
 						onClick={handleCreateProject}
 						title="New Project"
 					>

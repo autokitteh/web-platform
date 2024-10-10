@@ -68,7 +68,7 @@ export const Sidebar = () => {
 
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
-							className="mt-10 w-full gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
+							className="mt-10 w-full justify-center gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
 							onClick={() => setIsOpen(!isOpen)}
 							title={isOpen ? t("closeSidebar") : t("openSidebar")}
 						>
@@ -151,7 +151,11 @@ export const Sidebar = () => {
 						</Button>
 						{isAuthEnabled ? (
 							<div>
-								<Button className="hover:bg-green-200" href="/settings" title={t("settings")}>
+								<Button
+									className="justify-center hover:bg-green-200"
+									href="/settings"
+									title={t("settings")}
+								>
 									<SettingsIcon className="size-7" fill="black" />
 
 									<AnimatePresence>
@@ -170,7 +174,7 @@ export const Sidebar = () => {
 								</Button>
 
 								<Button
-									className="hover:bg-green-200"
+									className="justify-center hover:bg-green-200"
 									onClick={() => logoutFunction()}
 									title={t("logout")}
 								>
