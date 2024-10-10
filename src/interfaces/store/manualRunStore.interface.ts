@@ -9,6 +9,7 @@ export interface ManualProjectData {
 	params: { key: string; value: string }[];
 	lastDeployment?: Deployment;
 	selectedEntrypoint?: SessionEntrypoint;
+	isManualRunEnabled?: boolean;
 }
 
 export interface ManualRunStore {

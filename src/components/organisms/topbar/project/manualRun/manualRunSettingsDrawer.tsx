@@ -13,7 +13,7 @@ import { manualRunSchema } from "@validations";
 
 import { Button, ErrorMessage, IconSvg, Input, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
-import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/deployments";
+import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
 
 import { RunIcon } from "@assets/image/icons";
 

@@ -14,7 +14,7 @@ import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
-import { Button, Frame, Loader, THead, Table, Td, Th } from "@components/atoms";
+import { Button, Frame, Loader, THead, Table, Td, Th, Typography } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
@@ -168,11 +168,13 @@ export const SessionsTable = () => {
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center justify-between gap-2.5">
-						<div className="flex flex-wrap items-center gap-2.5">
+						<Typography className="text-base" element="h2">
+							{t("tableTitle")}
+						</Typography>
+						<div className="flex flex-wrap items-center justify-between gap-2.5">
+							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 							<RefreshButton isLoading={isLoading} onRefresh={fetchDeployments} />
 						</div>
-
-						<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 					</div>
 
 					{sessions.length ? (

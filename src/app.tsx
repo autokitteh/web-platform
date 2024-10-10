@@ -27,7 +27,6 @@ import { Profile, Security } from "@components/organisms/settings";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import { Connections, Dashboard, Intro, NotFound404, Project, Sessions, Triggers, Variables } from "@components/pages";
-import { Deployments } from "@components/pages/deployments";
 import { AppLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
@@ -102,7 +101,7 @@ export const App = () => {
 					/>
 				</Route>
 
-				<Route element={<AppLayout displayConfigurationTopbar />} path="projects">
+				<Route element={<AppLayout topbarVariant="actions" />} path="projects">
 					<Route element={<Project />} path=":projectId">
 						<Route element={<Navigate replace to="code" />} index />
 
@@ -144,26 +143,21 @@ export const App = () => {
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
-				<Route element={<AppLayout displayConfigurationTopbar />} path="projects/:projectId">
-					<Route element={<Deployments />} path="deployments">
-						<Route element={<DeploymentsTable />} index />
+				<Route element={<AppLayout topbarVariant="manual" />} path="projects/:projectId/deployments">
+					<Route element={<DeploymentsTable />} index />
+					<Route element={<Navigate replace to="/404" />} path="*" />
+				</Route>
 
-						<Route element={<Sessions />} path=":deploymentId">
-							<Route element={<SessionsTable />} path="sessions">
-								<Route element={<SessionViewer />} path=":sessionId">
-									<Route element={<SessionOutputs />} index />
-
-									<Route element={<ActivityList />} path="executionflow" />
-								</Route>
-
-								<Route element={<Navigate replace to="/404" />} path="*" />
+				<Route element={<AppLayout topbarVariant="basic" />} path="projects/:projectId/deployments">
+					<Route element={<Sessions />} path=":deploymentId">
+						<Route element={<SessionsTable />} path="sessions">
+							<Route element={<SessionViewer />} path=":sessionId">
+								<Route element={<SessionOutputs />} index />
+								<Route element={<ActivityList />} path="executionflow" />
 							</Route>
-
-							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>
-
-						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
+					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
 				<Route element={<SettingsLayout />} path="settings">
