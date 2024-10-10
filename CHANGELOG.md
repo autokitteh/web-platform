@@ -1,3 +1,10 @@
+## [2.25.1](https://github.com/autokitteh/web-platform/compare/v2.25.0...v2.25.1) (2024-10-10)
+
+
+### Bug Fixes
+
+* update cache store after switch project ([#472](https://github.com/autokitteh/web-platform/issues/472)) ([ec7fc4e](https://github.com/autokitteh/web-platform/commit/ec7fc4e2a8aab921c566d39f6ea95f3be4abaaf4))
+
 # [2.25.0](https://github.com/autokitteh/web-platform/compare/v2.24.2...v2.25.0) (2024-10-10)
 
 
