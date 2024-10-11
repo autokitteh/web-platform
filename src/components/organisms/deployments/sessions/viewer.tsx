@@ -65,7 +65,7 @@ export const SessionViewer = () => {
 	useEffect(() => {
 		fetchSessionInfo();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [sessionId]);
 
 	const fetchSessions = useCallback(async () => {
 		if (!sessionInfo) return;
