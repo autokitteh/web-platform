@@ -1,3 +1,10 @@
+## [2.27.2](https://github.com/autokitteh/web-platform/compare/v2.27.1...v2.27.2) (2024-10-11)
+
+
+### Bug Fixes
+
+* fetch session info on refresh button click in viewer ([#475](https://github.com/autokitteh/web-platform/issues/475)) ([203ee51](https://github.com/autokitteh/web-platform/commit/203ee51004dbb76ec1c8c9737f816590ad57bb66))
+
 ## [2.27.1](https://github.com/autokitteh/web-platform/compare/v2.27.0...v2.27.1) (2024-10-11)
 
 
