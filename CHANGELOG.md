@@ -1,3 +1,10 @@
+## [2.27.4](https://github.com/autokitteh/web-platform/compare/v2.27.3...v2.27.4) (2024-10-11)
+
+
+### Bug Fixes
+
+* session info doesn't change moving between sessions ([#478](https://github.com/autokitteh/web-platform/issues/478)) ([ff64787](https://github.com/autokitteh/web-platform/commit/ff647873e17d83d502acadeccfe7c7772f21bcaa))
+
 ## [2.27.3](https://github.com/autokitteh/web-platform/compare/v2.27.2...v2.27.3) (2024-10-11)
 
 
