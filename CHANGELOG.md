@@ -1,3 +1,10 @@
+## [2.27.1](https://github.com/autokitteh/web-platform/compare/v2.27.0...v2.27.1) (2024-10-11)
+
+
+### Bug Fixes
+
+* fix broken output logs for session view ([#476](https://github.com/autokitteh/web-platform/issues/476)) ([71bd596](https://github.com/autokitteh/web-platform/commit/71bd596f19f5f1f119f1b6f23a4544af6dc63da1))
+
 # [2.27.0](https://github.com/autokitteh/web-platform/compare/v2.26.0...v2.27.0) (2024-10-10)
 
 
