@@ -43,12 +43,6 @@ export const SessionViewer = () => {
 		[navigate, projectId, deploymentId]
 	);
 
-	const fetchSessions = useCallback(async () => {
-		if (!sessionInfo) return;
-		reloadOutputs(sessionInfo.sessionId);
-		reloadActivities(sessionInfo.sessionId);
-	}, [sessionInfo, reloadOutputs, reloadActivities]);
-
 	const fetchSessionInfo = useCallback(async () => {
 		if (!sessionId) return;
 		setIsLoading(true);
@@ -70,7 +64,15 @@ export const SessionViewer = () => {
 
 	useEffect(() => {
 		fetchSessionInfo();
-	}, [fetchSessionInfo]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const fetchSessions = useCallback(async () => {
+		if (!sessionInfo) return;
+		fetchSessionInfo();
+		reloadOutputs(sessionInfo.sessionId);
+		reloadActivities(sessionInfo.sessionId);
+	}, [sessionInfo, fetchSessionInfo, reloadOutputs, reloadActivities]);
 
 	useEffect(() => {
 		const activeTabIndex = location.pathname.split("/").filter(Boolean)[6] || defaultSessionTab;
