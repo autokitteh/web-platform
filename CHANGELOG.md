@@ -1,3 +1,10 @@
+## [2.27.3](https://github.com/autokitteh/web-platform/compare/v2.27.2...v2.27.3) (2024-10-11)
+
+
+### Bug Fixes
+
+* rename the yaml for the categorize-emails template ([#477](https://github.com/autokitteh/web-platform/issues/477)) ([65d6109](https://github.com/autokitteh/web-platform/commit/65d6109c0521635724aa5f99a24af601fbf57ef8))
+
 ## [2.27.2](https://github.com/autokitteh/web-platform/compare/v2.27.1...v2.27.2) (2024-10-11)
 
 
