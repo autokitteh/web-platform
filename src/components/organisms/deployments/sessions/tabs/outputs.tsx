@@ -12,14 +12,17 @@ const OutputRow = memo(({ log, measure }: { log: SessionOutput; measure: () => v
 	const rowRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		measure();
-	}, [measure]);
+		const timer = setTimeout(() => {
+			measure();
+		}, 0);
+
+		return () => clearTimeout(timer);
+	}, [measure, log]);
 
 	return (
 		<div className="mb-6" ref={rowRef}>
 			<div className="flex font-fira-code">
 				<div className="mr-5 whitespace-nowrap text-gray-1550">[{log.time}]: </div>
-
 				<div className="w-full whitespace-pre-line">{log.print}</div>
 			</div>
 		</div>
@@ -44,8 +47,18 @@ export const SessionOutputs = () => {
 		new CellMeasurerCache({
 			fixedWidth: true,
 			minHeight: 22,
+			defaultHeight: 44,
+			keyMapper: (index) => index,
 		})
 	);
+
+	useEffect(() => {
+		if (listRef.current) {
+			cacheRef.current.clearAll();
+			listRef.current.recomputeRowHeights();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [outputs]);
 
 	const customRowRenderer = useCallback(
 		({ index, key, parent, style }: ListRowProps) => {
@@ -71,10 +84,12 @@ export const SessionOutputs = () => {
 		[outputs]
 	);
 
-	const setListRef = useCallback((ref: List | null) => {
-		listRef.current = ref;
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const setListRef = useCallback(
+		(ref: List | null) => {
+			listRef.current = ref;
+		},
+		[listRef]
+	);
 
 	return (
 		<div className="scrollbar size-full">
