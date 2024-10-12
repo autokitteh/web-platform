@@ -252,7 +252,12 @@ export const ProjectTopbarButtons = () => {
 			<DropdownButton
 				contentMenu={
 					<>
-						<Button className="group h-8 px-4 text-white" onClick={exportProject} variant="outline">
+						<Button
+							ariaLabel={t("topbar.buttons.export")}
+							className="group h-8 px-4 text-white"
+							onClick={exportProject}
+							variant="outline"
+						>
 							<IconSvg
 								className="fill-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 								size="md"
@@ -262,6 +267,7 @@ export const ProjectTopbarButtons = () => {
 							<div className="mt-0.5">{t("topbar.buttons.export")}</div>
 						</Button>
 						<Button
+							ariaLabel={t("topbar.buttons.delete")}
 							className="group mt-2 h-8 px-4 text-white"
 							onClick={openModalDeleteProject}
 							variant="outline"
