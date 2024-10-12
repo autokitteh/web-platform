@@ -30,7 +30,7 @@ export class ConnectionService {
 
 	static async getByEventId(eventId: string): Promise<ServiceResponse<Connection>> {
 		try {
-			const { data: event, error: eventError } = await EventsService.get(eventId);
+			const { data: event, error: eventError } = await EventsService.getEnriched(eventId);
 			if (eventError) {
 				const errorMessage = i18n.t("coulndtFetchConnectionByEventIdExtended", {
 					ns: "services",
@@ -65,7 +65,7 @@ export class ConnectionService {
 				return { data: undefined, error: errorMessage };
 			}
 
-			if (event.destination !== "connection") {
+			if (event.destinationType !== "connection") {
 				const errorMessage = i18n.t("destinationNotConnectionForEvent", {
 					ns: "services",
 					eventId,

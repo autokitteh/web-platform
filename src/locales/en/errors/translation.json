@@ -78,8 +78,10 @@
 	"activityLogsFetchError": "Couldn't fetch the activity logs",
 	"activityLogsFetchErrorExtended": "Couldn't fetch the activity logs, {{error}}",
 	"outputLogsFetchError": "Couldn't fetch the output logs",
-	"outputLogsFetchErrorExtended": "Couldn't fetch the output logs, {{error}}",
-	"fetchSessionFailed": "Failed to fetch session logs",
 	"fetchExportFailed": "Export project failed, empty response",
-	"fetchExportFailedUnexpectedError": "Export project failed, unexpected error: {{error}}"
+	"fetchExportFailedUnexpectedError": "Export project failed, unexpected error: {{error}}",
+	"outputLogsFetchErrorExtended": "Couldn't fetch the output logs, {{error}}",	
+	"errorFetchingEvents": "Couldn't fetch events",
+	"errorFetchingEventsExtended": "Couldn't fetch events, error: {{error}}",
+	"fetchSessionFailed": "Failed to fetch session logs"
 }

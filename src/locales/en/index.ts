@@ -5,6 +5,7 @@ import select from "@locales/en/components/select/translation.json";
 import dashboard from "@locales/en/dashboard/translation.json";
 import deployments from "@locales/en/deployments/translation.json";
 import errors from "@locales/en/errors/translation.json";
+import events from "@locales/en/events/translation.json";
 import global from "@locales/en/global/translation.json";
 import integrations from "@locales/en/integrations/translation.json";
 import login from "@locales/en/login/translation.json";
@@ -29,6 +30,7 @@ export default {
 	},
 	deployments,
 	errors,
+	events,
 	global,
 	integrations,
 	login,

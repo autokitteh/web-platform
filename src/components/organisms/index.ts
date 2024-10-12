@@ -7,3 +7,5 @@ export { ProjectConfigTopbar, DashboardTopbar, DeleteProjectModal } from "@compo
 export { DashboardProjectsTable, DashboardWelcomeMainBlock } from "@components/organisms/dashboard";
 export { IntroMainBlock } from "@components/organisms/introMainBlock";
 export { SystemLog } from "@components/organisms/systemLog";
+export { EventsTable } from "@components/organisms/events/table";
+export { TitleTopbar } from "@components/organisms/topbar";
