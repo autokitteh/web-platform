@@ -1,6 +1,8 @@
 import React, { Suspense } from "react";
+
 import type { Preview } from "@storybook/react";
 import { I18nextProvider } from "react-i18next";
+import "@utilities/getApiBaseUrl.utils";
 
 import i18n from "../src/i18n";
 import "./storybook-tailwind.css";

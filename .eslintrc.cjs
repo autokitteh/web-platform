@@ -59,7 +59,7 @@ module.exports = {
 			},
 		},
 	},
-	ignorePatterns: ["dist", ".eslintrc.cjs"],
+	ignorePatterns: ["dist", ".eslintrc.cjs", "!.storybook"],
 	parser: "@typescript-eslint/parser",
 	plugins: [
 		"react-refresh",
