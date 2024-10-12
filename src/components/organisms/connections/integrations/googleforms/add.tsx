@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { googleFormsIntegrationSchema, googleIntegrationSchema, oauthSchema } from "@validations";
+import { googleFormsIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -64,7 +64,7 @@ export const GoogleFormsIntegrationAddForm = ({
 			return;
 		}
 		setValue("auth_type", ConnectionAuthType.Json);
-		setValidationSchema(googleIntegrationSchema);
+		setValidationSchema(googleFormsIntegrationSchema);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionType, type]);
