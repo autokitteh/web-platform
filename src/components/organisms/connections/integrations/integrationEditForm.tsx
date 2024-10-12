@@ -25,6 +25,7 @@ export const IntegrationEditForm = ({
 	const {
 		connectionId,
 		connectionType,
+		connectionVariables,
 		copyToClipboard,
 		errors,
 		handleGoogleOauth,
@@ -84,6 +85,22 @@ export const IntegrationEditForm = ({
 		}
 		onSubmitEdit();
 	};
+
+	useEffect(() => {
+		const formId = connectionVariables?.find((variable) => variable.name === "FormID")?.value;
+		if (formId) {
+			setValue("form_id", formId);
+		}
+		const calendarId = connectionVariables?.find((variable) => variable.name === "CalendarID")?.value;
+		if (calendarId) {
+			setValue("cal_id", calendarId);
+		}
+		const jsonKey = connectionVariables?.find((variable) => variable.name === "JSON")?.value;
+		if (jsonKey) {
+			setValue("json", jsonKey);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
 
 	const handleConnectionTypeChange = (option: SingleValue<SelectOption>) => {
 		setIsFirstConnectionType(false);
