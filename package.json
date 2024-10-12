@@ -39,7 +39,7 @@
 		"@uiw/react-json-view": "^2.0.0-alpha.26",
 		"axios": "^1.7.2",
 		"clsx": "^2.1.1",
-		"framer-motion": "^11.3.19",
+		"framer-motion": "^11.11.7",
 		"idb": "^8.0.0",
 		"immer": "^10.1.1",
 		"javascript-time-ago": "^2.5.10",
