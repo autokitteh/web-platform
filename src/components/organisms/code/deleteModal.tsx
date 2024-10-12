@@ -3,14 +3,14 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { DeleteFile } from "@interfaces/components";
+import { DeleteModalProps } from "@interfaces/components";
 
 import { useModalStore } from "@store";
 
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
+export const DeleteFileModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteFile" });
 	const fileName = useModalStore((state) => state.data as string);
 	const { closeModal } = useModalStore();
@@ -41,7 +41,7 @@ export const DeleteFileModal = ({ onDelete }: DeleteFile) => {
 					onClick={onDelete}
 					variant="filled"
 				>
-					{t("deleteButton")}
+					{isDeleting ? <Loader size="sm" /> : t("deleteButton")}
 				</Button>
 			</div>
 		</Modal>

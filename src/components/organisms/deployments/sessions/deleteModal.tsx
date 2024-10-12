@@ -3,13 +3,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { ModalDeleteDeploymentSessionProps } from "@interfaces/components";
+import { DeleteModalProps } from "@interfaces/components";
 import { useModalStore } from "@src/store";
 
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteSessionModal = ({ onDelete }: ModalDeleteDeploymentSessionProps) => {
+export const DeleteSessionModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteDeploymentSession" });
 	const { closeModal, data } = useModalStore();
 
@@ -39,7 +39,7 @@ export const DeleteSessionModal = ({ onDelete }: ModalDeleteDeploymentSessionPro
 					onClick={onDelete}
 					variant="filled"
 				>
-					{t("deleteButton")}
+					{isDeleting ? <Loader size="sm" /> : t("deleteButton")}
 				</Button>
 			</div>
 		</Modal>

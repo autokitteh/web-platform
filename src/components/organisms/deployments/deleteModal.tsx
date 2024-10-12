@@ -3,13 +3,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { ModalDeleteDeploymentProps } from "@interfaces/components";
+import { DeleteModalProps } from "@interfaces/components";
 import { useModalStore } from "@src/store";
 
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteDeploymentModal = ({ deploymentId, onDelete }: ModalDeleteDeploymentProps) => {
+export const DeleteDeploymentModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteDeployment" });
 	const { closeModal } = useModalStore();
 
@@ -18,7 +18,7 @@ export const DeleteDeploymentModal = ({ deploymentId, onDelete }: ModalDeleteDep
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
-				<p>{t("content", { name: deploymentId })}</p>
+				<p>{t("content", { name: id })}</p>
 
 				<p>{t("deleteWarning")}</p>
 			</div>
@@ -39,7 +39,7 @@ export const DeleteDeploymentModal = ({ deploymentId, onDelete }: ModalDeleteDep
 					onClick={onDelete}
 					variant="filled"
 				>
-					{t("deleteButton")}
+					{isDeleting ? <Loader size="sm" /> : t("deleteButton")}
 				</Button>
 			</div>
 		</Modal>

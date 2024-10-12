@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { TriggersService } from "@services";
+import { LoggerService, TriggersService } from "@services";
+import { namespaces } from "@src/constants";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -28,6 +29,7 @@ export const TriggersTable = () => {
 		loading: { triggers: loadingTriggers },
 		triggers,
 	} = useCacheStore();
+	const [isDeleting, setIsDeleting] = useState(false);
 
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
@@ -42,8 +44,10 @@ export const TriggersTable = () => {
 		if (!triggerId) {
 			return;
 		}
-
+		setIsDeleting(true);
 		const { error } = await TriggersService.delete(triggerId);
+		setIsDeleting(false);
+
 		closeModal(ModalName.deleteTrigger);
 		if (error) {
 			addToast({
@@ -53,6 +57,12 @@ export const TriggersTable = () => {
 
 			return;
 		}
+		addToast({
+			message: t("triggerRemovedSuccessfully"),
+			type: "success",
+		});
+		LoggerService.info(namespaces.ui.triggers, t("triggerRemovedSuccessfullyExtended", { triggerId }));
+
 		fetchTriggers(projectId!, true);
 		setTriggerId(undefined);
 	};
@@ -167,7 +177,7 @@ export const TriggersTable = () => {
 				<EmptyTableAddButton buttonText={t("titleEmptyTriggers")} onClick={() => navigate("add")} />
 			)}
 
-			<DeleteTriggerModal onDelete={handleDeleteTrigger} triggerId={triggerId} />
+			<DeleteTriggerModal id={triggerId} isDeleting={isDeleting} onDelete={handleDeleteTrigger} />
 		</>
 	);
 };

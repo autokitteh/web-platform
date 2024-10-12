@@ -11,38 +11,22 @@ export interface ModalAddCodeAssetsProps {
 	onSuccess: () => void;
 }
 
-export interface ModalDeleteTriggerProps {
+export interface DeleteModalProps {
 	onDelete?: () => void;
-	triggerId?: string;
+	id?: string;
+	isDeleting: boolean;
 }
 
 export interface ModalDeleteVariableProps {
 	onDelete?: () => void;
 	variable?: Variable;
+	isDeleting?: boolean;
 }
 
 export interface ModalModifyVariableProps {
 	onError: (message: string) => void;
 }
 
-export interface DeleteFile {
-	onDelete?: () => void;
-}
-
 export interface DeleteAccount {
 	onDelete?: () => void;
-}
-
-export interface ModalDeleteDeploymentProps {
-	onDelete?: () => void;
-	deploymentId?: string;
-}
-
-export interface ModalDeleteDeploymentSessionProps {
-	onDelete?: () => void;
-}
-
-export interface ModalDeleteConnectionProps {
-	connectionId: string;
-	onDelete: () => void;
 }

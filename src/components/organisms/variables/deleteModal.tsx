@@ -3,13 +3,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { ModalDeleteVariableProps } from "@interfaces/components";
+import { DeleteModalProps } from "@interfaces/components";
 import { useModalStore } from "@src/store";
 
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteVariableModal = ({ onDelete, variable }: ModalDeleteVariableProps) => {
+export const DeleteVariableModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteVariable" });
 	const { closeModal } = useModalStore();
 
@@ -19,7 +19,7 @@ export const DeleteVariableModal = ({ onDelete, variable }: ModalDeleteVariableP
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
 				<div>
-					<p>{t("content", { name: variable?.name })}</p>
+					<p>{t("content", { name: id })}</p>
 					<p>{t("deleteWarning")}</p>
 				</div>
 			</div>
@@ -40,7 +40,7 @@ export const DeleteVariableModal = ({ onDelete, variable }: ModalDeleteVariableP
 					onClick={onDelete}
 					variant="filled"
 				>
-					{t("deleteButton")}
+					{isDeleting ? <Loader size="sm" /> : t("deleteButton")}
 				</Button>
 			</div>
 		</Modal>

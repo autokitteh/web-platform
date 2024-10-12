@@ -3,26 +3,26 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { ModalDeleteConnectionProps } from "@interfaces/components";
+import { DeleteModalProps } from "@interfaces/components";
 import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
 import { useModalStore, useToastStore } from "@store";
 
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteConnectionModal = ({ connectionId, onDelete }: ModalDeleteConnectionProps) => {
+export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });
 	const [connection, setConnection] = useState<Connection>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
 
 	const fetchConnection = async () => {
-		if (!connectionId) {
+		if (!id) {
 			return;
 		}
-		const { data, error } = await ConnectionService.get(connectionId);
+		const { data, error } = await ConnectionService.get(id);
 		if (error) {
 			addToast({
 				message: t("fetchFailed"),
@@ -38,7 +38,7 @@ export const DeleteConnectionModal = ({ connectionId, onDelete }: ModalDeleteCon
 	useEffect(() => {
 		fetchConnection();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connectionId]);
+	}, [id]);
 
 	return (
 		<Modal hideCloseButton name={ModalName.deleteConnection}>
@@ -65,7 +65,7 @@ export const DeleteConnectionModal = ({ connectionId, onDelete }: ModalDeleteCon
 					onClick={onDelete}
 					variant="filled"
 				>
-					{t("deleteButton")}
+					{isDeleting ? <Loader size="sm" /> : t("deleteButton")}
 				</Button>
 			</div>
 		</Modal>

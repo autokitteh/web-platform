@@ -1,16 +1,17 @@
-import React, { CSSProperties, memo } from "react";
+import React, { CSSProperties, memo, useState } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 
 import { SessionState } from "@enums";
 import { SessionsTableRowProps } from "@interfaces/components";
-import { SessionsService } from "@services";
+import { LoggerService, SessionsService } from "@services";
+import { namespaces } from "@src/constants";
 import { cn } from "@utilities";
 
 import { useToastStore } from "@store";
 
-import { IconButton, Td, Tr } from "@components/atoms";
+import { IconButton, Loader, Td, Tr } from "@components/atoms";
 import { SessionsTableState } from "@components/organisms/deployments";
 
 import { ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
@@ -36,6 +37,7 @@ export const SessionsTableRow = memo(
 		const addToast = useToastStore((state) => state.addToast);
 		const { onSessionRemoved, openSessionLog, selectedSessionId, sessions, showDeleteModal } = data;
 		const session = sessions[index];
+		const [isStopping, setIsStopping] = useState(false);
 
 		if (!session) {
 			return null;
@@ -54,8 +56,9 @@ export const SessionsTableRow = memo(
 		const handleStopSession = async (event: React.MouseEvent<HTMLButtonElement>) => {
 			event.stopPropagation();
 			if (session.state !== SessionState.running) return;
-
+			setIsStopping(true);
 			const { error } = await SessionsService.stop(session.sessionId);
+			setIsStopping(false);
 			if (error) {
 				addToast({
 					message: tErrors("failedStopSession"),
@@ -64,6 +67,16 @@ export const SessionsTableRow = memo(
 
 				return;
 			}
+
+			addToast({
+				message: t("actions.sessionStoppedSuccessfully"),
+				type: "success",
+			});
+			LoggerService.info(
+				namespaces.ui.sessions,
+				t("actions.sessionStoppedSuccessfullyExtended", { sessionId: selectedSessionId })
+			);
+
 			onSessionRemoved();
 		};
 
@@ -93,7 +106,7 @@ export const SessionsTableRow = memo(
 						onClick={handleStopSession}
 						title={t("table.stopSession")}
 					>
-						<ActionStoppedIcon className={actionStoppedIconClass} />
+						{isStopping ? <Loader size="sm" /> : <ActionStoppedIcon className={actionStoppedIconClass} />}
 					</IconButton>
 
 					<IconButton className="ml-1 inline p-1.5" onClick={handleDeleteClick}>

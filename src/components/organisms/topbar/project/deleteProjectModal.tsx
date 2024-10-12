@@ -4,19 +4,18 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { ModalDeleteTriggerProps } from "@interfaces/components";
+import { DeleteModalProps } from "@interfaces/components";
 
 import { useModalStore, useProjectStore } from "@store";
 
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteProjectModal = ({ onDelete }: ModalDeleteTriggerProps) => {
+export const DeleteProjectModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteProject" });
-	const { projectsList } = useProjectStore();
 	const { projectId } = useParams();
 	const { closeModal } = useModalStore();
-
+	const { projectsList } = useProjectStore();
 	const projectName = projectsList.find(({ id }) => id === projectId)?.name;
 
 	return (
@@ -43,7 +42,7 @@ export const DeleteProjectModal = ({ onDelete }: ModalDeleteTriggerProps) => {
 					onClick={onDelete}
 					variant="filled"
 				>
-					{t("deleteButton")}
+					{isDeleting ? <Loader size="sm" /> : t("deleteButton")}
 				</Button>
 			</div>
 		</Modal>

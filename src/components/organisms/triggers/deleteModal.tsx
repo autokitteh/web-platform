@@ -3,24 +3,24 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { ModalDeleteTriggerProps } from "@interfaces/components";
+import { DeleteModalProps } from "@interfaces/components";
 import { TriggersService } from "@services";
 import { useModalStore } from "@src/store";
 import { Trigger } from "@type/models";
 
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteTriggerModal = ({ onDelete, triggerId }: ModalDeleteTriggerProps) => {
+export const DeleteTriggerModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
 	const [trigger, setTrigger] = useState<Trigger>();
 	const { closeModal } = useModalStore();
 
 	const fetchTrigger = async () => {
-		if (!triggerId) {
+		if (!id) {
 			return;
 		}
-		const { data } = await TriggersService.get(triggerId);
+		const { data } = await TriggersService.get(id);
 		if (!data) {
 			return;
 		}
@@ -30,7 +30,7 @@ export const DeleteTriggerModal = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 	useEffect(() => {
 		fetchTrigger();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [triggerId]);
+	}, [id]);
 
 	return (
 		<Modal hideCloseButton name={ModalName.deleteTrigger}>
@@ -57,7 +57,7 @@ export const DeleteTriggerModal = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 					onClick={onDelete}
 					variant="filled"
 				>
-					{t("deleteButton")}
+					{isDeleting ? <Loader size="sm" /> : t("deleteButton")}
 				</Button>
 			</div>
 		</Modal>

@@ -25,6 +25,12 @@ export const namespaces = {
 		profilePage: "Profile Page",
 		deleteModal: "Delete Modal",
 		projectCodeEditor: "Project Code Editor",
+		code: "Code UI",
+		triggers: "Triggers UI",
+		deployments: "Deployments UI",
+		connections: "Connections UI",
+		variables: "Variables UI",
+		sessions: "Sessions UI",
 	},
 	hooks: {
 		connectionForm: "Connection Form",
