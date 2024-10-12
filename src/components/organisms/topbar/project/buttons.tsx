@@ -166,18 +166,18 @@ export const ProjectTopbarButtons = () => {
 
 	const exportProject = useCallback(async () => {
 		const { data: akProjectArchiveZip, error } = await ProjectsService.export(projectId!);
-		if (error || !akProjectArchiveZip) {
+
+		if (error) {
 			return;
 		}
 
-		const blob = new Blob([akProjectArchiveZip], { type: "application/zip" });
+		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement("a");
 		link.href = url;
 
 		const { data: project } = await getProject(projectId!);
 
-		// Get current date and time
 		const now = new Date();
 		const dateTime = now
 			.toLocaleString("en-GB", {
@@ -191,7 +191,6 @@ export const ProjectTopbarButtons = () => {
 			.replace(/[/:]/g, "")
 			.replace(", ", "-");
 
-		// Construct filename
 		const fileName = `ak-${project?.name}-${dateTime}-archive.zip`;
 		link.download = fileName;
 
