@@ -38,7 +38,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 	fetchConnections: async (projectId, force) => {
 		const { connections, currentProjectId } = get();
-		if (currentProjectId === projectId && !force && connections) {
+		if (currentProjectId === projectId && !force && connections.length) {
 			return connections;
 		}
 
