@@ -52,6 +52,10 @@ export default defineConfig({
 					src: "src/assets/templates/**/*",
 					dest: "assets/templates",
 				},
+				{
+					src: "src/assets/image/pages/intro/**/*",
+					dest: "image/pages/intro",
+				},
 			],
 		}),
 		reactVirtualized(),
