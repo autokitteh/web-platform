@@ -211,16 +211,20 @@ export class ProjectsService {
 			const { zipArchive: akProjectArchiveZip } = await projectsClient.export({ projectId });
 
 			if (!akProjectArchiveZip) {
-				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
+				LoggerService.error(namespaces.projectService, i18n.t("fetchExportFailed", { ns: "errors" }));
 
-				return { data: undefined, error: new Error(i18n.t("projectNotFound", { ns: "services" })) };
+				return { data: undefined, error: new Error(i18n.t("fetchExportFailed", { ns: "errors" })) };
 			}
 
 			return { data: akProjectArchiveZip, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.projectService, (error as Error).message);
+			const errorMessage = i18n.t("fetchExportFailedUnexpectedError", {
+				ns: "errors",
+				error: (error as Error).message,
+			});
+			LoggerService.error(namespaces.projectService, errorMessage);
 
-			return { data: undefined, error };
+			return { data: undefined, error: errorMessage };
 		}
 	}
 }
