@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
@@ -22,6 +22,20 @@ export const ActivityList = () => {
 		nextPageToken,
 		t,
 	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, 60);
+
+	const [rowHeight, setRowHeight] = useState(60);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setRowHeight(window.innerWidth < 1500 ? 80 : 60);
+		};
+
+		handleResize();
+
+		window.addEventListener("resize", handleResize);
+
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	const customRowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => (
@@ -85,7 +99,7 @@ export const ActivityList = () => {
 									}
 								}}
 								rowCount={activities.length}
-								rowHeight={60}
+								rowHeight={rowHeight}
 								rowRenderer={customRowRenderer}
 								width={width}
 							/>
