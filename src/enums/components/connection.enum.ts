@@ -76,21 +76,81 @@ export enum IntegrationForTemplates {
 }
 
 export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
-	asana: { label: "Asana", value: Integrations.asana, icon: AsanaIcon },
-	github: { label: "GitHub", value: Integrations.github, icon: GithubIcon },
-	slack: { label: "Slack", value: Integrations.slack, icon: SlackIcon },
-	aws: { label: "AWS", value: Integrations.aws, icon: AwsIcon },
-	chatgpt: { label: "OpenAI ChatGPT", value: Integrations.chatgpt, icon: OpenAiIcon },
-	twilio: { label: "Twilio", value: Integrations.twilio, icon: TwilioIcon },
-	gmail: { label: "Gmail", value: Integrations.gmail, icon: GoogleGmailIcon },
-	jira: { label: "Jira", value: Integrations.jira, icon: JiraIcon },
-	confluence: { label: "Atlassian Confluence", value: Integrations.confluence, icon: ConfluenceIcon },
-	discord: { label: "Discord", value: Integrations.discord, icon: DiscordIcon },
-	sheets: { label: "Google Sheets", value: Integrations.sheets, icon: GoogleSheetsIcon },
-	calendar: { label: "Google Calendar", value: Integrations.calendar, icon: GoogleCalendarIcon },
-	drive: { label: "Google Drive", value: Integrations.drive, icon: GoogleDriveIcon },
-	forms: { label: "Google Forms", value: Integrations.forms, icon: GoogleFormsIcon },
-	googlegemini: { label: "Google Gemini", value: Integrations.googlegemini, icon: GoogleGeminiIcon },
+	asana: {
+		icon: AsanaIcon,
+		label: "Asana",
+		value: Integrations.asana,
+	},
+	aws: {
+		icon: AwsIcon,
+		label: "AWS",
+		value: Integrations.aws,
+	},
+	calendar: {
+		icon: GoogleCalendarIcon,
+		label: "Google Calendar",
+		value: Integrations.calendar,
+	},
+	chatgpt: {
+		icon: OpenAiIcon,
+		label: "OpenAI ChatGPT",
+		value: Integrations.chatgpt,
+	},
+	confluence: {
+		icon: ConfluenceIcon,
+		label: "Atlassian Confluence",
+		value: Integrations.confluence,
+	},
+	discord: {
+		icon: DiscordIcon,
+		label: "Discord",
+		value: Integrations.discord,
+	},
+	drive: {
+		icon: GoogleDriveIcon,
+		label: "Google Drive",
+		value: Integrations.drive,
+	},
+	forms: {
+		icon: GoogleFormsIcon,
+		label: "Google Forms",
+		value: Integrations.forms,
+	},
+	github: {
+		icon: GithubIcon,
+		label: "GitHub",
+		value: Integrations.github,
+	},
+	gmail: {
+		icon: GoogleGmailIcon,
+		label: "Gmail",
+		value: Integrations.gmail,
+	},
+	googlegemini: {
+		icon: GoogleGeminiIcon,
+		label: "Google Gemini",
+		value: Integrations.googlegemini,
+	},
+	jira: {
+		icon: JiraIcon,
+		label: "Jira",
+		value: Integrations.jira,
+	},
+	sheets: {
+		icon: GoogleSheetsIcon,
+		label: "Google Sheets",
+		value: Integrations.sheets,
+	},
+	slack: {
+		icon: SlackIcon,
+		label: "Slack",
+		value: Integrations.slack,
+	},
+	twilio: {
+		icon: TwilioIcon,
+		label: "Twilio",
+		value: Integrations.twilio,
+	},
 };
 
 export const HiddenIntegrationsForTemplates: Record<IntegrationForTemplates, IntegrationSelectOption> = {
