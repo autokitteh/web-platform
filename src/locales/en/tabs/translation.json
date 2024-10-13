@@ -49,7 +49,8 @@
 		},
 		"titleAvailable": "Connections",
 		"titleEmptyConnections": "Add connection",
-		"connectionRemoveSuccess": "Connection removed successfully"
+		"connectionRemoveSuccess": "{{connectionName}} removed successfully",
+		"connectionRemoveSuccessExtended": "Connection removed successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}"
 	},
 	"editor": {
 		"buttons": {

@@ -79,6 +79,11 @@ export class ProjectsService {
 			envId: defaultEnvironment!.envId,
 		});
 
+		LoggerService.info(
+			namespaces.projectService,
+			i18n.t("deploymentCreatedSuccessfully", { ns: "services", deploymentId })
+		);
+
 		if (error) {
 			return { data: undefined, error };
 		}

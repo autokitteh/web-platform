@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { ConnectionService } from "@services";
+import { ConnectionService, LoggerService } from "@services";
+import { namespaces } from "@src/constants";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -99,10 +100,17 @@ export const ConnectionsTable = () => {
 		setConnectionId(undefined);
 		resetChecker();
 
+		const connection = connections.find((connection) => connection.connectionId === connectionId);
+
 		addToast({
-			message: t("connectionRemoveSuccess"),
+			message: t("connectionRemoveSuccess", { connectionName: connection?.name }),
 			type: "success",
 		});
+
+		LoggerService.info(
+			namespaces.ui.connectionsTable,
+			t("connectionRemoveSuccessExtended", { connectionId, connectionName: connection?.name })
+		);
 
 		fetchConnections();
 	};

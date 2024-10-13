@@ -1,3 +1,5 @@
+import i18n from "i18next";
+
 import { authClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertUserProtoToModel } from "@models";
@@ -13,7 +15,11 @@ export class AuthService {
 
 			return { data: convertedUser, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.authService, new Error(error).message);
+			const errorMessage = i18n.t("accountFetchErrorExtended", {
+				ns: "services",
+				error: new Error(error).message,
+			});
+			LoggerService.error(namespaces.authService, errorMessage);
 
 			return { data: undefined, error };
 		}

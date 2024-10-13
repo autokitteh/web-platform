@@ -19,6 +19,7 @@ import { EditIcon, LockSolid, TrashIcon } from "@assets/image/icons";
 
 export const VariablesTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
+	const { t: tErrors } = useTranslation("tabs", { keyPrefix: "variables" });
 	const [deleteVariable, setDeleteVariable] = useState<Variable>();
 
 	const navigate = useNavigate();
@@ -33,8 +34,20 @@ export const VariablesTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedVariables, requestSort, sortConfig } = useSort<Variable>(variables, "name");
 
+	const loadVariables = async (projectId: string, force?: boolean) => {
+		try {
+			fetchVariables(projectId, force);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			addToast({
+				message: tErrors("errorFetchingVariables"),
+				type: "error",
+			});
+		}
+	};
+
 	useEffect(() => {
-		fetchVariables(projectId!);
+		loadVariables(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
@@ -52,7 +65,7 @@ export const VariablesTable = () => {
 			});
 		}
 
-		fetchVariables(projectId!, true);
+		loadVariables(projectId!, true);
 	};
 
 	const showDeleteModal = (variableName: string, variableValue: string, scopeId: string) => {

@@ -86,18 +86,15 @@ export class VariablesService {
 			const { data: defaultEnvironment, error } = await EnvironmentsService.getDefaultEnvironment(projectId);
 
 			if (error) {
-				LoggerService.error(
-					namespaces.variableService,
-					i18n.t("variableNotCreatedByProjectIdExtended", {
-						name: singleVariable.name,
-						ns: "services",
-						value: singleVariable.value,
-						projectId,
-						error,
-					})
-				);
+				const errorMessage = i18n.t("variableNotCreatedByProjectIdExtended", {
+					name: singleVariable.name,
+					ns: "services",
+					value: singleVariable.value,
+					projectId,
+					error,
+				});
 
-				return { data: undefined, error };
+				return { data: undefined, error: errorMessage };
 			}
 
 			await variablesClient.set({ vars: [{ ...singleVariable, scopeId: defaultEnvironment!.envId }] });

@@ -49,21 +49,22 @@ export const SessionViewer = () => {
 	);
 
 	const fetchSessionInfo = useCallback(async () => {
+		if (!sessionId) return;
 		setIsLoading(true);
-		try {
-			const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId!);
-			if (error) {
-				addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
-
-				return;
-			}
-			setSessionInfo(sessionInfoResponse!);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
+		const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId);
+		if (error) {
 			addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
-		} finally {
-			setIsLoading(false);
+
+			return;
 		}
+		if (!sessionInfoResponse) {
+			addToast({ message: t("sessionNotFound"), type: "error" });
+
+			return;
+		}
+		setSessionInfo(sessionInfoResponse);
+		setIsLoading(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId, addToast, tErrors]);
 
 	useEffect(() => {

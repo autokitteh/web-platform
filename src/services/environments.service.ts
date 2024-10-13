@@ -15,7 +15,12 @@ export class EnvironmentsService {
 
 			return { data: environments, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.environmentsService, (error as Error).message);
+			const errorMessage = i18n.t("listEnvironmentsByProjectIdExtended", {
+				error: (error as Error).message,
+				projectId,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.environmentsService, errorMessage);
 
 			return { data: undefined, error };
 		}
@@ -25,12 +30,19 @@ export class EnvironmentsService {
 			const { data: environments, error } = await this.listByProjectId(projectId);
 
 			if (error) {
-				return { data: undefined, error };
+				const errorMessage = i18n.t("defaultEnvironmentNotFoundExtended", {
+					error: (error as Error).message,
+					projectId,
+					ns: "services",
+				});
+				LoggerService.error(namespaces.environmentsService, errorMessage);
+
+				return { data: undefined, error: errorMessage };
 			}
 
 			if (!environments?.length) {
 				LoggerService.error(
-					namespaces.variableService,
+					namespaces.environmentsService,
 					i18n.t("defaulEnvironmentNotFound", { ns: "services", projectId })
 				);
 
@@ -38,12 +50,10 @@ export class EnvironmentsService {
 			}
 
 			if (environments.length !== 1) {
-				LoggerService.error(
-					namespaces.variableService,
-					i18n.t("multipleEnvironmentsFoundExtended", { ns: "services", projectId })
-				);
+				const errorMessage = i18n.t("multipleEnvironmentsFoundExtended", { ns: "services", projectId });
+				LoggerService.error(namespaces.environmentsService, errorMessage);
 
-				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
+				return { data: undefined, error: errorMessage };
 			}
 
 			return { data: environments[0], error: undefined };

@@ -17,6 +17,8 @@ export const EditVariable = () => {
 	const { t: tForm } = useTranslation("tabs", {
 		keyPrefix: "variables.form",
 	});
+	const { t: tErrors } = useTranslation("errors");
+
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
 
@@ -88,7 +90,15 @@ export const EditVariable = () => {
 				type: "error",
 			});
 		}
-		await fetchVariables(projectId!, true);
+		try {
+			await fetchVariables(projectId!, true);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		} catch (error) {
+			addToast({
+				message: tErrors("errorFetchingVariables"),
+				type: "error",
+			});
+		}
 		navigate(-1);
 	};
 

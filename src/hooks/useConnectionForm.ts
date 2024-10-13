@@ -130,10 +130,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 			addToast({
-				message: t("connectionCreatedSuccessfully"),
+				message: t("connectionCreateSuccess"),
 				type: "success",
 			});
-			LoggerService.info(namespaces.hooks.connectionForm, t("connectionCreatedSuccessfully"));
+			LoggerService.info(
+				namespaces.hooks.connectionForm,
+				t("connectionCreateSuccessExtendedID", { connectionId })
+			);
 
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
@@ -183,7 +186,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				message: t("connectionEditedSuccessfully"),
 				type: "error",
 			});
-			LoggerService.info(namespaces.hooks.connectionForm, t("connectionEditedSuccessfully"));
+			LoggerService.info(
+				namespaces.hooks.connectionForm,
+				t("connectionEditedSuccessfullyExtended", { connectionId, connectionName })
+			);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
 			addToast({
@@ -259,6 +265,11 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					type: "error",
 				});
 			}
+
+			LoggerService.info(
+				namespaces.hooks.connectionForm,
+				t("connectionUpdatedSuccessExtended", { connectionName, connectionId: responseConnectionId })
+			);
 
 			setConnectionId(responseConnectionId);
 		} catch (error) {

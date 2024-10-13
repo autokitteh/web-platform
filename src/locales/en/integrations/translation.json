@@ -1,8 +1,11 @@
 {
 	"addNewConnection": "Add new connection",
 	"editConnection": "Edit connection",
-	"connectionCreatedSuccessfully": "Connection created successfully",
+	"connectionCreateSuccess": "Connection created successfully",
+	"connectionCreateSuccessExtendedID": "Connection created successfully, connection ID: {{connectionId}}",
+	"connectionUpdatedSuccessExtended": "Connection configured successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
 	"connectionEditedSuccessfully": "Connection edited successfully",
+	"connectionEditedSuccessfullyExtended": "Connection edited successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
 	"information": "More Information",
 	"copyFailure": "Could not copy",
 	"copyFailureExtended": "Could not copy, error: {{error}}",
