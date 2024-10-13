@@ -11,8 +11,8 @@ export const integrationIcons: Record<string, React.ComponentType<React.SVGProps
 );
 
 export const githubIntegrationAuthMethods: SelectOption[] = [
-	{ label: "OAuth", value: ConnectionAuthType.Oauth },
-	{ label: "Personal Access Token (PAT)", value: ConnectionAuthType.Pat },
+	{ label: "GitHub App", value: ConnectionAuthType.Oauth },
+	{ label: "PAT + Webhook", value: ConnectionAuthType.Pat },
 ];
 
 export const selectIntegrationGoogle: SelectOption[] = [
