@@ -6,7 +6,8 @@
 
 This repository contains the web UI for the AutoKitteh backend. The application allows users to create projects from a list of templates or start blank projects. It provides functionality to manage project entities such as code files, connections, triggers, and variables. Users can build and deploy projects on the server, view a list of deployments, and monitor sessions within those deployments. This interface facilitates the process of working with AutoKitteh, making it easier to develop, manage, and deploy automation projects.
 
-![Screenshot 2024-10-07 at 17 08 57](https://github.com/user-attachments/assets/3ea42fbd-f74d-4b00-b0d4-dd3b40ea12ee)
+![Screenshot 2024-10-13 at 17 51 54](https://github.com/user-attachments/assets/8454bbf4-d31b-4119-840b-e7c16c945315)
+
 
 ## How to run the application using Docker Compose 🐳
 
