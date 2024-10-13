@@ -63,7 +63,7 @@ export const SingleActivityInfo = ({
 						<Table>
 							<THead>
 								<Tr>
-									<Th>{t("kwArgumentsKey")}</Th>
+									<Th className="pl-4">{t("kwArgumentsKey")}</Th>
 
 									<Th>{t("kwArgumentsValue")}</Th>
 								</Tr>
