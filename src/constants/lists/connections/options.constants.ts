@@ -11,18 +11,18 @@ export const integrationIcons: Record<string, React.ComponentType<React.SVGProps
 );
 
 export const githubIntegrationAuthMethods: SelectOption[] = [
-	{ label: "Personal Access Token (PAT)", value: ConnectionAuthType.Pat },
 	{ label: "OAuth", value: ConnectionAuthType.Oauth },
+	{ label: "Personal Access Token (PAT)", value: ConnectionAuthType.Pat },
 ];
 
 export const selectIntegrationGoogle: SelectOption[] = [
-	{ label: "Service Account (JSON Key)", value: ConnectionAuthType.JsonKey },
 	{ label: "User (OAuth v2)", value: ConnectionAuthType.Oauth },
+	{ label: "Service Account (JSON Key)", value: ConnectionAuthType.JsonKey },
 ];
 
 export const selectIntegrationSlack: SelectOption[] = [
-	{ label: "Socket Mode", value: ConnectionAuthType.Socket },
 	{ label: "OAuth v2", value: ConnectionAuthType.Oauth },
+	{ label: "Socket Mode", value: ConnectionAuthType.Socket },
 ];
 
 export const selectIntegrationAws: SelectOption[] = [
