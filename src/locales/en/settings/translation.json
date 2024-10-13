@@ -4,15 +4,14 @@
 		"billing": "Billing",
 		"myProfile": "My Profile",
 		"notifications": "Notifications",
-		"security": "Security"
+		"clientConfiguration": "Client Setup"
 	},
-	"security": {
-		"title": "Security",
+	"clientConfiguration": {
+		"copyFailure": "Failed to copy to clipboard",
 		"getToken": {
 			"title": "CLI & VSCode Configuration",
 			"subtitle": "Generate new API token for CLI or VSCode",
 			"copyButton": "Copy connection token",
-			"copyFailure": "Failed to copy token to clipboard",
 			"copyInputAriaLabel": "API Token",
 			"copySuccess": "Token copied to clipboard",
 			"actionButton": "Generate Token"
@@ -20,7 +19,8 @@
 		"hostURL": {
 			"title": "Host URL",
 			"subtitle": "Application server URL",
-			"copyInputAriaLabel": "Host URL"
+			"copyInputAriaLabel": "Host URL",
+			"copySuccess": "Host URL copied to clipboard"
 		},
 		"vscodeConfigExample": "VSCode Configuration Example"
 	},

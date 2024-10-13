@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import FsLightbox from "fslightbox-react";
 import { useTranslation } from "react-i18next";
 
 import { HttpService } from "@services";
@@ -13,12 +14,13 @@ import { Accordion } from "@components/molecules";
 import { NewProject } from "@assets/image";
 import { CopyIcon } from "@assets/image/icons";
 
-export const Security = () => {
-	const { t } = useTranslation("settings", { keyPrefix: "security" });
+export const ClientConfiguration = () => {
+	const { t } = useTranslation("settings", { keyPrefix: "clientConfiguration" });
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const [token, setToken] = useState<string>("");
 	const hostURL = getApiBaseUrl();
+	const [isExampleLightboxOpened, setIsExampleLightboxOpened] = useState(false);
 
 	const createToken = async () => {
 		setIsLoading(true);
@@ -27,12 +29,12 @@ export const Security = () => {
 		setIsLoading(false);
 	};
 
-	const copyToClipboard = async (text: string) => {
+	const copyToClipboard = async (text: string, successMessage: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
 
 			addToast({
-				message: t("getToken.copySuccess"),
+				message: successMessage,
 				type: "success",
 			});
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -65,7 +67,7 @@ export const Security = () => {
 							<Button
 								aria-label={t("getToken.copyButton")}
 								className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
-								onClick={() => copyToClipboard(token)}
+								onClick={() => copyToClipboard(token, t("getToken.copySuccess"))}
 								variant="outline"
 							>
 								<CopyIcon className="h-6 w-4 fill-black" />
@@ -103,7 +105,7 @@ export const Security = () => {
 						<Button
 							aria-label={t("hostURL.copyButton")}
 							className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
-							onClick={() => copyToClipboard(token)}
+							onClick={() => copyToClipboard(hostURL, t("hostURL.copySuccess"))}
 							variant="outline"
 						>
 							<CopyIcon className="h-6 w-4 fill-black" />
@@ -112,11 +114,17 @@ export const Security = () => {
 				</div>
 
 				<Accordion className="mt-8 w-2/3" title={t("vscodeConfigExample")}>
-					<img
-						alt={t("vscodeConfigExample")}
-						src="/assets/image/pages/settings/vscodeConfigurationExample.png"
-					/>
+					<Button onClick={() => setIsExampleLightboxOpened(!isExampleLightboxOpened)}>
+						<img
+							alt={t("vscodeConfigExample")}
+							src="/assets/image/pages/settings/vscodeConfigurationExample.png"
+						/>
+					</Button>
 				</Accordion>
+				<FsLightbox
+					sources={["/assets/image/pages/settings/vscodeConfigurationExample.png"]}
+					toggler={isExampleLightboxOpened}
+				/>
 			</div>
 		</>
 	);
