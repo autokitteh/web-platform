@@ -61,6 +61,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 				"border-white": hasValue && variant !== InputVariant.light,
 				"pointer-events-none select-none border-gray-950": disabled,
 				"border-error": isError,
+				"border-gray-950": hasValue,
 			},
 			className
 		);

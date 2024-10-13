@@ -107,7 +107,9 @@ export const AddTrigger = () => {
 
 			checkState(projectId!, true);
 			await fetchTriggers(projectId!, true);
-			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
+			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
+				state: { highlightWebhookUrl: true },
+			});
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
@@ -142,11 +144,11 @@ export const AddTrigger = () => {
 				>
 					<NameAndConnectionFields connections={connections} />
 
-					{connectionType === TriggerTypes.webhook ? <WebhookFields /> : null}
-
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 
 					<TriggerSpecificFields filesNameList={filesNameList} />
+
+					{connectionType === TriggerTypes.webhook ? <WebhookFields /> : null}
 				</form>
 
 				{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
