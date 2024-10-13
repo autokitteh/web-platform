@@ -8,7 +8,6 @@ This repository contains the web UI for the AutoKitteh backend. The application 
 
 ![Screenshot 2024-10-13 at 17 51 54](https://github.com/user-attachments/assets/8454bbf4-d31b-4119-840b-e7c16c945315)
 
-
 ## How to run the application using Docker Compose 🐳
 
 Use the following command to run the application with Docker
