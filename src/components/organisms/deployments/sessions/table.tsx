@@ -216,7 +216,7 @@ export const SessionsTable = () => {
 
 			<Button className={resizeClass} />
 
-			<div className="flex" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+			<div className="flex bg-black" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				{sessionId ? (
 					<Outlet />
 				) : (
