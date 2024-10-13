@@ -1,3 +1,10 @@
+## [2.27.5](https://github.com/autokitteh/web-platform/compare/v2.27.4...v2.27.5) (2024-10-13)
+
+
+### Bug Fixes
+
+* fix prettier styling in README file ([#494](https://github.com/autokitteh/web-platform/issues/494)) ([fbbbed3](https://github.com/autokitteh/web-platform/commit/fbbbed3e28d6d2b3da19c0562a9c6b547657582f))
+
 ## [2.27.4](https://github.com/autokitteh/web-platform/compare/v2.27.3...v2.27.4) (2024-10-11)
 
 
