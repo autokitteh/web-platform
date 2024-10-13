@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import { HttpService } from "@services";
+import { getApiBaseUrl } from "@src/utilities";
 
 import { useToastStore } from "@store";
 
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
+import { Accordion } from "@components/molecules";
 
 import { NewProject } from "@assets/image";
 import { CopyIcon } from "@assets/image/icons";
 
 export const Security = () => {
-	const { t: tSettings } = useTranslation("settings");
-	const { t } = useTranslation("modals", { keyPrefix: "getToken" });
+	const { t } = useTranslation("settings", { keyPrefix: "security" });
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const [token, setToken] = useState<string>("");
+	const hostURL = getApiBaseUrl();
 
 	const createToken = async () => {
 		setIsLoading(true);
@@ -30,13 +32,13 @@ export const Security = () => {
 			await navigator.clipboard.writeText(text);
 
 			addToast({
-				message: t("copySuccess"),
+				message: t("getToken.copySuccess"),
 				type: "success",
 			});
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
-				message: t("copyFailure"),
+				message: t("getToken.copyFailure"),
 				type: "error",
 			});
 		}
@@ -45,39 +47,23 @@ export const Security = () => {
 	return (
 		<>
 			<Typography className="mb-4 text-settings-title font-bold" element="h1" size="large">
-				{tSettings("security.title")}
+				{t("getToken.title")}
 			</Typography>
 			<div>
-				<p className="mb-4 w-2/3">
-					<Trans
-						components={{
-							anchor: (
-								<a
-									href="https://marketplace.visualstudio.com/items?itemName=autokitteh.autokitteh"
-									key="extensionLink"
-									rel="noreferrer"
-									target="_blank"
-									title="AutoKitteh Extension"
-								/>
-							),
-						}}
-						i18nKey={t("line")}
-					/>
-				</p>
-
-				<div className="w-2/3">
+				<div className="mt-6 w-2/3">
+					<p className="mb-4 w-2/3">{t("getToken.subtitle")}</p>
 					{token ? (
 						<div className="flex w-full">
 							<Input
-								aria-label={t("copyInputAriaLabel")}
+								aria-label={t("getToken.copyInputAriaLabel")}
 								className="flex-1 rounded-3xl hover:border-gray-1100"
 								disabled
-								label={t("copyInputAriaLabel")}
+								label={t("getToken.copyInputAriaLabel")}
 								value={token}
 							/>
 
 							<Button
-								aria-label={t("copyButton")}
+								aria-label={t("getToken.copyButton")}
 								className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
 								onClick={() => copyToClipboard(token)}
 								variant="outline"
@@ -99,10 +85,38 @@ export const Security = () => {
 								{isLoading ? <Loader size="sm" /> : null}
 							</div>
 
-							<div className="mr-1 flex">{tSettings("security.creatTokenButton")}</div>
+							<div className="mr-1 flex">{t("getToken.actionButton")}</div>
 						</Button>
 					)}
 				</div>
+				<div className="mt-10 w-2/3">
+					<p className="mb-4 w-2/3">{t("hostURL.subtitle")}</p>
+					<div className="flex w-full">
+						<Input
+							aria-label={t("hostURL.copyInputAriaLabel")}
+							className="flex-1 rounded-3xl hover:border-gray-1100"
+							disabled
+							label={t("hostURL.copyInputAriaLabel")}
+							value={hostURL}
+						/>
+
+						<Button
+							aria-label={t("hostURL.copyButton")}
+							className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
+							onClick={() => copyToClipboard(token)}
+							variant="outline"
+						>
+							<CopyIcon className="h-6 w-4 fill-black" />
+						</Button>
+					</div>
+				</div>
+
+				<Accordion className="mt-8 w-2/3" title={t("vscodeConfigExample")}>
+					<img
+						alt={t("vscodeConfigExample")}
+						src="/assets/image/pages/settings/vscodeConfigurationExample.png"
+					/>
+				</Accordion>
 			</div>
 		</>
 	);

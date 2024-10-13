@@ -53,8 +53,8 @@ export default defineConfig({
 					dest: "assets/templates",
 				},
 				{
-					src: "src/assets/image/pages/intro/**/*",
-					dest: "image/pages/intro",
+					src: "src/assets/image/pages/**/*",
+					dest: "assets/image/pages",
 				},
 			],
 		}),

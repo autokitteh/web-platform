@@ -7,10 +7,22 @@
 		"security": "Security"
 	},
 	"security": {
-		"creatTokenButton": "Create Token",
-		"creatTokenTextAreaPlaceholder": "Click the button below to create a token",
-		"howToUseTokenText": "Create, copy and use  the token in your application - using CLI or our VSCode Extension.",
-		"title": "Security"
+		"title": "Security",
+		"getToken": {
+			"title": "CLI & VSCode Configuration",
+			"subtitle": "Generate new API token for CLI or VSCode",
+			"copyButton": "Copy connection token",
+			"copyFailure": "Failed to copy token to clipboard",
+			"copyInputAriaLabel": "API Token",
+			"copySuccess": "Token copied to clipboard",
+			"actionButton": "Generate Token"
+		},
+		"hostURL": {
+			"title": "Host URL",
+			"subtitle": "Application server URL",
+			"copyInputAriaLabel": "Host URL"
+		},
+		"vscodeConfigExample": "VSCode Configuration Example"
 	},
 	"profile":{
 		"title": "My Profile",
