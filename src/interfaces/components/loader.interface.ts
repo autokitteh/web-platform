@@ -1,6 +1,7 @@
 import { SystemSizes } from "@type";
 
 export interface LoaderProps {
+	className?: string;
 	firstColor?: LoaderColorType;
 	isCenter?: boolean;
 	secondColor?: LoaderColorType;
