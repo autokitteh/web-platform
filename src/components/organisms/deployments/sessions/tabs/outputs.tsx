@@ -20,7 +20,7 @@ const OutputRow = memo(({ log, measure }: { log: SessionOutput; measure: () => v
 	}, [measure, log]);
 
 	return (
-		<div className="mb-6" ref={rowRef}>
+		<div className="mb-1" ref={rowRef}>
 			<div className="flex font-fira-code">
 				<div className="mr-5 whitespace-nowrap text-gray-1550">[{log.time}]: </div>
 				<div className="w-full whitespace-pre-line">{log.print}</div>
