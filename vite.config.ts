@@ -31,7 +31,6 @@ export default defineConfig({
 		"import.meta.env.VITE_AUTH_ENABLED": JSON.stringify(process.env.VITE_AUTH_ENABLED),
 		"import.meta.env.VITE_DESCOPE_PROJECT_ID": JSON.stringify(process.env.VITE_DESCOPE_PROJECT_ID),
 		"import.meta.env.VITE_HOST_URL": JSON.stringify(process.env.VITE_HOST_URL),
-		"import.meta.env.SENTRY_AUTH_TOKEN": JSON.stringify(process.env.SENTRY_AUTH_TOKEN),
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
 	},
@@ -42,8 +41,8 @@ export default defineConfig({
 		react(),
 		svgr({ svgrOptions: { ref: true } }),
 		sentryVitePlugin({
-			org: "autokitteh",
-			project: "web-ui",
+			org: process.env.SENTRY_ORG,
+			project: process.env.SENTRY_PROJECT,
 			reactComponentAnnotation: { enabled: true },
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 		}),
