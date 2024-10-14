@@ -41,7 +41,7 @@ export const DashboardProjectsTable = () => {
 	};
 
 	return (
-		<div className="z-10 mt-10 h-2/3 select-none">
+		<div className="z-10 h-2/3 select-none pt-10">
 			{sortedProjects.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
 					<THead>
