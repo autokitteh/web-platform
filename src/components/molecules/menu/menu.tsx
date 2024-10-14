@@ -95,6 +95,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 						<Button
 							ariaLabel="New Project"
 							className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200"
+							disabled={isCreatingProject}
 							onClick={handleCreateProject}
 							title="New Project"
 						>
