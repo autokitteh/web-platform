@@ -14,7 +14,7 @@ export type { CacheStore } from "@interfaces/store/cacheStore.interface";
 export type { FileStore } from "@interfaces/store/fileStore.interface";
 export type {
 	ActivitiesStore,
-	ActivitySession,
+	SessionActivityData,
 	OutputsStore,
-	OutputSession,
+	SessionOutputData,
 } from "@interfaces/store/activitiesAndOutputsCache.store.interface";

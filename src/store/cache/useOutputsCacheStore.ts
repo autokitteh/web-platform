@@ -3,7 +3,7 @@ import { StateCreator, create } from "zustand";
 
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
-import { minimumSessionLogsRecordsFrameHeightFallback, namespaces } from "@src/constants";
+import { namespaces } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { OutputsStore } from "@src/interfaces/store";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
@@ -22,9 +22,9 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			},
 		})),
 
-	reload: (sessionId: string) => {
+	reload: (sessionId: string, pageSize: number) => {
 		get().reset(sessionId);
-		get().loadLogs(sessionId, minimumSessionLogsRecordsFrameHeightFallback);
+		get().loadLogs(sessionId, pageSize);
 	},
 
 	loadLogs: async (sessionId, pageSize) => {

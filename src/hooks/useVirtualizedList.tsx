@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -7,7 +7,7 @@ import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
 import { defaultSessionLogRecordsListRowHeight, minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { VirtualizedListHookResult } from "@src/interfaces/hooks";
-import { ActivitySession, OutputSession } from "@src/interfaces/store";
+import { SessionActivityData, SessionOutputData } from "@src/interfaces/store";
 import { SessionActivity, SessionOutput } from "@src/types/models";
 
 import { useActivitiesCacheStore, useOutputsCacheStore } from "@store";
@@ -25,14 +25,20 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const activitiesCacheStore = useActivitiesCacheStore();
 
 	const store = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
-	const session = sessionId ? store.sessions[sessionId] : null;
+
+	const [session, setSession] = useState<SessionOutputData | SessionActivityData>();
+	useEffect(() => {
+		if (!sessionId) return;
+		const sessionData = store.sessions[sessionId];
+		setSession(sessionData);
+	}, [store.sessions, sessionId]);
 	const listRef = useRef<List | null>(null);
 
 	const items = useMemo(() => {
 		return session
 			? ((type === SessionLogType.Output
-					? (session as OutputSession).outputs
-					: (session as ActivitySession).activities) as T[])
+					? (session as SessionOutputData).outputs
+					: (session as SessionActivityData).activities) as T[])
 			: [];
 	}, [session, type]);
 
@@ -51,7 +57,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 	const shouldLoadMore = useMemo(() => !(loading || (session && session.fullyLoaded)), [loading, session]);
 
-	const loadMoreRows = useCallback(async (): Promise<void> => {
+	const loadMoreRows = async (): Promise<void> => {
 		if (!sessionId || !shouldLoadMore) {
 			return;
 		}
@@ -60,13 +66,15 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 		const pageSize = Math.ceil(frameHeight / itemHeight) * 2;
 
 		await loadLogs(sessionId, pageSize);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId, shouldLoadMore, loadLogs]);
+	};
 
 	useEffect(() => {
 		if (!sessionId) return;
 
-		if (!session) {
+		const haveRecords =
+			(session as SessionOutputData)?.outputs?.length || (session as SessionActivityData)?.activities?.length;
+
+		if (!session || !haveRecords) {
 			reset(sessionId);
 			loadMoreRows();
 		}
