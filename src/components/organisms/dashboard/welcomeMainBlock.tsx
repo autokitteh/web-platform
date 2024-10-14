@@ -34,12 +34,12 @@ export const DashboardWelcomeMainBlock = () => {
 		<div className="z-10 mt-7 grid select-none gap-5">
 			<div className="col-span-1 grid grid-cols-auto-fit-350 items-stretch gap-4 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pl-6 pr-4 font-averta text-white">
 				<div className="flex flex-col">
-					<div className="flex min-h-64 w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-gray-1400">
+					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-[#1d2226] bg-[url('/assets/image/pages/intro/main.png')] bg-contain bg-center bg-no-repeat">
 						<IconButton
 							className="group size-20 overflow-hidden rounded-full p-0 focus:scale-90"
 							onClick={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
 						>
-							<CirclePlayIcon className="rounded-full transition group-hover:fill-white" />
+							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-70" />
 						</IconButton>
 					</div>
 
@@ -98,6 +98,10 @@ export const DashboardWelcomeMainBlock = () => {
 							</Link>
 						</Typography>
 					}
+					videoStyle={{
+						backgroundColor: "#1d2226",
+						backgroundImage: "url(/assets/image/pages/intro/startingProject.png)",
+					}}
 				>
 					<ul className="font-averta font-semibold leading-normal">
 						{infoCardPythonCode.map(({ linkHref, linkText, text }, index) => (
@@ -123,6 +127,10 @@ export const DashboardWelcomeMainBlock = () => {
 							</Link>
 						</Typography>
 					}
+					videoStyle={{
+						backgroundColor: "#1d2226",
+						backgroundImage: "url(/assets/image/pages/intro/usingVSCode.png)",
+					}}
 				>
 					<ul className="font-averta font-semibold leading-normal">
 						{infoCardVSCode.map(({ text }, index) => (
