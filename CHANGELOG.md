@@ -1,3 +1,10 @@
+## [2.29.1](https://github.com/autokitteh/web-platform/compare/v2.29.0...v2.29.1) (2024-10-14)
+
+
+### Bug Fixes
+
+* pull session log by page-size ([#503](https://github.com/autokitteh/web-platform/issues/503)) ([596f8aa](https://github.com/autokitteh/web-platform/commit/596f8aac2ca0af993e182d522c407d20f7901f2d))
+
 # [2.29.0](https://github.com/autokitteh/web-platform/compare/v2.28.5...v2.29.0) (2024-10-14)
 
 
