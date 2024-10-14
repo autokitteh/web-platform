@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -27,7 +27,6 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const store = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
 	const session = sessionId ? store.sessions[sessionId] : null;
 	const listRef = useRef<List | null>(null);
-	const [pageSize, setPageSize] = useState(0);
 
 	const items = useMemo(() => {
 		return session
@@ -56,14 +55,13 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 		if (!sessionId || !shouldLoadMore) {
 			return;
 		}
-		await loadLogs(sessionId, pageSize * 2);
-	}, [sessionId, shouldLoadMore, loadLogs, pageSize]);
-
-	const calculatePageSize = useCallback(() => {
 		const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsFrameHeightFallback;
 
-		return Math.ceil(frameHeight / itemHeight) * 2;
-	}, [itemHeight]);
+		const pageSize = Math.ceil(frameHeight / itemHeight) * 2;
+
+		await loadLogs(sessionId, pageSize);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId, shouldLoadMore, loadLogs]);
 
 	useEffect(() => {
 		if (!sessionId) return;
@@ -75,20 +73,9 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 		if (!session) {
 			reset(sessionId);
-			if (!pageSize) {
-				setPageSize(calculatePageSize());
-
-				return;
-			}
 			loadMoreRows();
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId, type, session, reset, loadMoreRows, itemHeight]);
-
-	useEffect(() => {
-		loadMoreRows();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [pageSize]);
 
 	const rowRenderer = useCallback(
 		(props: ListRowProps): React.ReactNode => {
