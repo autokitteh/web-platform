@@ -6,6 +6,6 @@
 		"openSidebar": "Open Sidebar",
 		"intro": "Introduction",
 		"systemLog": "System Log",
-		"logToReview": "New system logs to review"
+		"logToReview": "Unread system logs"
 	}
 }

@@ -11,7 +11,7 @@ export const Badge = ({
 	children,
 	className,
 	content,
-	isVisible,
+	isVisible = true,
 	style,
 	variant,
 }: BadgeProps) => {
@@ -33,7 +33,7 @@ export const Badge = ({
 		<div className="relative inline-block" style={style}>
 			{children}
 			<AnimatePresence>
-				{!isVisible ? (
+				{isVisible ? (
 					<motion.span
 						animate={{ opacity: 1, scale: 1 }}
 						aria-label={ariaLabel}

@@ -8,9 +8,9 @@ import { Badge, IconSvg } from "@components/atoms";
 
 import { FileIcon } from "@assets/image/icons";
 
-const BadgeWrapper = ({ anchorOrigin, ariaLabel, className }: Partial<BadgeProps>) => {
+const BadgeWrapper = (props: Partial<BadgeProps>) => {
 	return (
-		<Badge anchorOrigin={anchorOrigin} ariaLabel={ariaLabel} className={className} variant="dot">
+		<Badge {...props}>
 			<IconSvg className="size-7 stroke-gray-1300 transition" src={FileIcon} />
 		</Badge>
 	);
@@ -22,17 +22,24 @@ const meta = {
 	argTypes: {
 		anchorOrigin: {
 			control: "object",
+			description: "Controls the position of the badge.",
+			table: {
+				type: { summary: "{ vertical: 'top' | 'bottom', horizontal: 'left' | 'right' }" },
+			},
 		},
-		ariaLabel: { control: "text" },
-		className: { control: "text" },
-		content: { control: "text" },
-		isVisible: { control: "boolean" },
-		style: { control: "object" },
 		variant: {
 			control: "inline-radio",
 			options: ["dot", "standard"],
 		},
-		children: { control: "text" },
+		content: { control: "text" },
+		className: { control: "text" },
+		ariaLabel: { control: "text" },
+		isVisible: { control: "boolean" },
+		children: { control: false },
+		style: { control: false },
+	},
+	parameters: {
+		controls: { expanded: true },
 	},
 } satisfies Meta<typeof Badge>;
 
@@ -43,9 +50,10 @@ type Story = StoryObj<typeof meta>;
 export const Primary = {
 	args: {
 		anchorOrigin: { vertical: "top", horizontal: "left" },
-		ariaLabel: "Badge",
-		className: "absolute",
+		variant: "dot",
 		isVisible: true,
-		variant: "standard",
+		content: "",
+		className: "absolute text-black",
+		ariaLabel: "Badge",
 	},
 } satisfies Story;
