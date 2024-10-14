@@ -1,3 +1,10 @@
+# [2.28.0](https://github.com/autokitteh/web-platform/compare/v2.27.7...v2.28.0) (2024-10-14)
+
+
+### Features
+
+* settings - client configuration ([#490](https://github.com/autokitteh/web-platform/issues/490)) ([28270ec](https://github.com/autokitteh/web-platform/commit/28270ecd6bf456b6c5e1659c13e9412f1ea974a4))
+
 ## [2.27.7](https://github.com/autokitteh/web-platform/compare/v2.27.6...v2.27.7) (2024-10-14)
 
 
