@@ -12,7 +12,7 @@ import { cn } from "@utilities";
 
 import { useProjectStore, useToastStore } from "@store";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Button, IconSvg, Loader } from "@components/atoms";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
 
@@ -23,6 +23,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 	const { createProject, getProjectsList, projectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
+	const [isCreatingProject, setIsCreatingProject] = useState(false);
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -35,7 +36,9 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 	};
 
 	const handleCreateProject = async () => {
+		setIsCreatingProject(true);
 		const { data, error } = await createProject(true);
+		setIsCreatingProject(false);
 
 		if (error) {
 			addToast({
@@ -84,30 +87,36 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
 			<ul className="ml-0 flex flex-col gap-2">
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
-					<Button
-						ariaLabel="New Project"
-						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200"
-						onClick={handleCreateProject}
-						title="New Project"
-					>
-						<div className="flex size-9 items-center justify-center">
-							<IconSvg alt="New Project" size="xl" src={NewProject} />
+					{isCreatingProject ? (
+						<div className="pointer-events-none mb-1 size-9 p-0.5 pl-1 pt-1">
+							<Loader className="ml-1 before:size-3 after:size-3 disabled:opacity-100" isCenter />
 						</div>
+					) : (
+						<Button
+							ariaLabel="New Project"
+							className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200"
+							onClick={handleCreateProject}
+							title="New Project"
+						>
+							<div className="flex size-9 items-center justify-center">
+								<IconSvg alt="New Project" size="xl" src={NewProject} />
+							</div>
 
-						<AnimatePresence>
-							{isOpen ? (
-								<motion.span
-									animate="visible"
-									className="overflow-hidden whitespace-nowrap"
-									exit="hidden"
-									initial="hidden"
-									variants={animateVariant}
-								>
-									{t("newProject")}
-								</motion.span>
-							) : null}
-						</AnimatePresence>
-					</Button>
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										{t("newProject")}
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
+					)}
 				</li>
 
 				<li

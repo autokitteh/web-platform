@@ -4,6 +4,7 @@ import { LoaderProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
 export const Loader = ({
+	className,
 	firstColor = "light-gray",
 	isCenter = false,
 	secondColor = "gray",
@@ -29,7 +30,8 @@ export const Loader = ({
 		},
 		{
 			"absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2": isCenter,
-		}
+		},
+		className
 	);
 
 	return <div className={spinnerClass} data-testid="loader" />;
