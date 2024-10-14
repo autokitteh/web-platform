@@ -8,10 +8,10 @@ import { cn } from "@src/utilities";
 export const Badge = ({
 	anchorOrigin = { vertical: "top", horizontal: "right" },
 	ariaLabel,
-	badgeInvisible,
 	children,
 	className,
 	content,
+	isVisible,
 	style,
 	variant,
 }: BadgeProps) => {
@@ -33,7 +33,7 @@ export const Badge = ({
 		<div className="relative inline-block" style={style}>
 			{children}
 			<AnimatePresence>
-				{!badgeInvisible ? (
+				{!isVisible ? (
 					<motion.span
 						animate={{ opacity: 1, scale: 1 }}
 						aria-label={ariaLabel}

@@ -3,7 +3,7 @@ export interface BadgeProps {
 	content?: React.ReactNode;
 	className?: string;
 	style?: React.CSSProperties;
-	badgeInvisible?: boolean;
+	isVisible?: boolean;
 	variant?: "standard" | "dot";
 	anchorOrigin?: {
 		horizontal: "left" | "right";
