@@ -54,13 +54,9 @@ export const App = () => {
 			// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
 			tracePropagationTargets: [
 				"localhost",
-				/^https:\/\/staging.autokitteh\.cloud/,
-				/^https:\/\/ak-cloud.netlify\.app/,
+				/^https:\/\/[\w.-]+\.autokitteh\.cloud/,
+				/^https:\/\/autokitteh\.cloud/,
 			],
-			// Capture Replay for 10% of all sessions,
-			// plus for 100% of sessions with an error
-			replaysSessionSampleRate: 0.1,
-			replaysOnErrorSampleRate: 1.0,
 		});
 		AKRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 	}
