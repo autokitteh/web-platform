@@ -9,12 +9,12 @@ import { SubmenuInfo } from "@interfaces/components";
 
 import { useUserStore } from "@store";
 
-import { Button, IconSvg, Loader } from "@components/atoms";
+import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { HelpIcon } from "@assets/image/icons";
+import { FileIcon, HelpIcon } from "@assets/image/icons";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
@@ -98,28 +98,45 @@ export const Sidebar = () => {
 						/>
 					</div>
 
-					<div className="h-full" />
+					<div className="flex flex-col justify-end gap-5">
+						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
+							<div className="relative">
+								<Badge className="absolute -top-1 left-0 size-3 p-0.5 before:size-full before:rounded-full before:bg-error" />
+								<IconSvg className="size-7 stroke-gray-1300 transition" src={FileIcon} />
+							</div>
 
-					<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
-						<IconSvg className="size-7 transition" src={HelpIcon} />
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										{t("systemLog")}
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
+						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
+							<IconSvg className="size-7 transition" src={HelpIcon} />
 
-						<AnimatePresence>
-							{isOpen ? (
-								<motion.span
-									animate="visible"
-									className="overflow-hidden whitespace-nowrap"
-									exit="hidden"
-									initial="hidden"
-									variants={animateVariant}
-								>
-									{t("intro")}
-								</motion.span>
-							) : null}
-						</AnimatePresence>
-					</Button>
-
-					{isAuthEnabled ? (
-						<div className="flex flex-col justify-end gap-5">
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										{t("intro")}
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
+						{isAuthEnabled ? (
 							<div>
 								<Button className="hover:bg-green-200" href="/settings" title={t("settings")}>
 									<SettingsIcon className="size-7" fill="black" />
@@ -160,8 +177,8 @@ export const Sidebar = () => {
 									</AnimatePresence>
 								</Button>
 							</div>
-						</div>
-					) : null}
+						) : null}
+					</div>
 				</div>
 
 				<AnimatePresence>

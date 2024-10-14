@@ -18,3 +18,4 @@ export { Status } from "@components/atoms/status";
 export { SecretInput } from "@components/atoms/secretInput";
 export { Checkbox } from "@components/atoms/checkbox";
 export { PageTitle } from "@components/atoms/pageTitle";
+export { Badge } from "@components/atoms/badge";
