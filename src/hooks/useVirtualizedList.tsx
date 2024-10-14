@@ -59,7 +59,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 		const pageSize = Math.ceil(frameHeight / itemHeight) * 2;
 
-		await loadLogs(sessionId, pageSize * 2);
+		await loadLogs(sessionId, pageSize);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId, shouldLoadMore, loadLogs]);
 
