@@ -87,37 +87,35 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
 			<ul className="ml-0 flex flex-col gap-2">
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
-					{isCreatingProject ? (
-						<div className="pointer-events-none mb-1 size-9 p-0.5 pl-1 pt-1">
-							<Loader className="ml-1 before:size-3 after:size-3 disabled:opacity-100" isCenter />
-						</div>
-					) : (
-						<Button
-							ariaLabel="New Project"
-							className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200"
-							disabled={isCreatingProject}
-							onClick={handleCreateProject}
-							title="New Project"
-						>
-							<div className="flex size-9 items-center justify-center">
+					<Button
+						ariaLabel="New Project"
+						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200 disabled:opacity-100"
+						disabled={isCreatingProject}
+						onClick={handleCreateProject}
+						title="New Project"
+					>
+						<div className="flex size-9 items-center justify-center">
+							{isCreatingProject ? (
+								<Loader className="ml-1 before:size-3 after:size-3" isCenter />
+							) : (
 								<IconSvg alt="New Project" size="xl" src={NewProject} />
-							</div>
+							)}
+						</div>
 
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="overflow-hidden whitespace-nowrap"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
-									>
-										{t("newProject")}
-									</motion.span>
-								) : null}
-							</AnimatePresence>
-						</Button>
-					)}
+						<AnimatePresence>
+							{isOpen ? (
+								<motion.span
+									animate="visible"
+									className="overflow-hidden whitespace-nowrap"
+									exit="hidden"
+									initial="hidden"
+									variants={animateVariant}
+								>
+									{t("newProject")}
+								</motion.span>
+							) : null}
+						</AnimatePresence>
+					</Button>
 				</li>
 
 				<li
