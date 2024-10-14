@@ -66,16 +66,12 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	useEffect(() => {
 		if (!sessionId) return;
 
-		const savedScrollPosition = sessionStorage.getItem(`scrollPosition_${sessionId}_${type}`);
-		if (savedScrollPosition && listRef.current) {
-			listRef.current.scrollToPosition(parseInt(savedScrollPosition, 10));
-		}
-
 		if (!session) {
 			reset(sessionId);
 			loadMoreRows();
 		}
-	}, [sessionId, type, session, reset, loadMoreRows, itemHeight]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId]);
 
 	const rowRenderer = useCallback(
 		(props: ListRowProps): React.ReactNode => {
