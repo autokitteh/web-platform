@@ -6,15 +6,16 @@ import { Link, useLocation } from "react-router-dom";
 
 import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
+import { featureFlags } from "@src/featureFlags";
 
 import { useUserStore } from "@store";
 
-import { Button, IconSvg, Loader } from "@components/atoms";
+import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { HelpIcon } from "@assets/image/icons";
+import { FileIcon, HelpIcon } from "@assets/image/icons";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
@@ -98,28 +99,52 @@ export const Sidebar = () => {
 						/>
 					</div>
 
-					<div className="h-full" />
-
-					<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
-						<IconSvg className="size-7 transition" src={HelpIcon} />
-
-						<AnimatePresence>
-							{isOpen ? (
-								<motion.span
-									animate="visible"
-									className="overflow-hidden whitespace-nowrap"
-									exit="hidden"
-									initial="hidden"
-									variants={animateVariant}
+					<div className="flex flex-col justify-end gap-5">
+						{featureFlags.systemLog ? (
+							<Button className="hover:bg-green-200" title={t("systemLog")}>
+								<Badge
+									anchorOrigin={{ vertical: "top", horizontal: "left" }}
+									ariaLabel={t("logToReview")}
+									className="absolute"
+									variant="dot"
 								>
-									{t("intro")}
-								</motion.span>
-							) : null}
-						</AnimatePresence>
-					</Button>
+									<IconSvg className="size-7 stroke-gray-1300 transition" src={FileIcon} />
+								</Badge>
 
-					{isAuthEnabled ? (
-						<div className="flex flex-col justify-end gap-5">
+								<AnimatePresence>
+									{isOpen ? (
+										<motion.span
+											animate="visible"
+											className="overflow-hidden whitespace-nowrap"
+											exit="hidden"
+											initial="hidden"
+											variants={animateVariant}
+										>
+											{t("systemLog")}
+										</motion.span>
+									) : null}
+								</AnimatePresence>
+							</Button>
+						) : null}
+
+						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
+							<IconSvg className="size-7 transition" src={HelpIcon} />
+
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										{t("intro")}
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
+						{isAuthEnabled ? (
 							<div>
 								<Button className="hover:bg-green-200" href="/settings" title={t("settings")}>
 									<SettingsIcon className="size-7" fill="black" />
@@ -160,8 +185,8 @@ export const Sidebar = () => {
 									</AnimatePresence>
 								</Button>
 							</div>
-						</div>
-					) : null}
+						) : null}
+					</div>
 				</div>
 
 				<AnimatePresence>

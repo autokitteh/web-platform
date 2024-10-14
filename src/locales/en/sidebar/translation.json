@@ -4,6 +4,8 @@
 		"settings": "Settings",
 		"closeSidebar": "Close Sidebar",
 		"openSidebar": "Open Sidebar",
-		"intro": "Introduction"
+		"intro": "Introduction",
+		"systemLog": "System Log",
+		"logToReview": "Unread system logs"
 	}
 }
