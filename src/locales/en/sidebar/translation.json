@@ -5,6 +5,7 @@
 		"closeSidebar": "Close Sidebar",
 		"openSidebar": "Open Sidebar",
 		"intro": "Introduction",
-		"systemLog": "System Log"
+		"systemLog": "System Log",
+		"logToReview": "New system logs to review"
 	}
 }

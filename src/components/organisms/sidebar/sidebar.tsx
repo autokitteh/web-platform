@@ -9,12 +9,12 @@ import { SubmenuInfo } from "@interfaces/components";
 
 import { useUserStore } from "@store";
 
-import { Badge, Button, IconSvg, Loader } from "@components/atoms";
+import { Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { FileIcon, HelpIcon } from "@assets/image/icons";
+import { HelpIcon } from "@assets/image/icons";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
@@ -99,11 +99,15 @@ export const Sidebar = () => {
 					</div>
 
 					<div className="flex flex-col justify-end gap-5">
-						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
-							<div className="relative">
-								<Badge className="absolute -top-1 left-0 size-3 p-0.5 before:size-full before:rounded-full before:bg-error" />
+						{/* <Button className="hover:bg-green-200" title={t("systemLog")}>
+							<Badge
+								anchorOrigin={{ vertical: "top", horizontal: "left" }}
+								ariaLabel={t("logToReview")}
+								className="absolute"
+								variant="dot"
+							>
 								<IconSvg className="size-7 stroke-gray-1300 transition" src={FileIcon} />
-							</div>
+							</Badge>
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -118,7 +122,7 @@ export const Sidebar = () => {
 									</motion.span>
 								) : null}
 							</AnimatePresence>
-						</Button>
+						</Button> */}
 						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
 							<IconSvg className="size-7 transition" src={HelpIcon} />
 
