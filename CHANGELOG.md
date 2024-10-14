@@ -1,3 +1,10 @@
+## [2.28.5](https://github.com/autokitteh/web-platform/compare/v2.28.4...v2.28.5) (2024-10-14)
+
+
+### Bug Fixes
+
+* prevent scroll in dashboard projects table ([#491](https://github.com/autokitteh/web-platform/issues/491)) ([f870974](https://github.com/autokitteh/web-platform/commit/f87097404a1ac6ec4ee975a60a5b07920e91ae74))
+
 ## [2.28.4](https://github.com/autokitteh/web-platform/compare/v2.28.3...v2.28.4) (2024-10-14)
 
 
