@@ -1,3 +1,10 @@
+# [2.29.0](https://github.com/autokitteh/web-platform/compare/v2.28.5...v2.29.0) (2024-10-14)
+
+
+### Features
+
+* add icon to sidebar for system log and Badge components ([#479](https://github.com/autokitteh/web-platform/issues/479)) ([8b2fa84](https://github.com/autokitteh/web-platform/commit/8b2fa840f6a16d7748c62252f5838ebf0cf26a4a))
+
 ## [2.28.5](https://github.com/autokitteh/web-platform/compare/v2.28.4...v2.28.5) (2024-10-14)
 
 
