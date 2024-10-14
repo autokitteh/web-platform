@@ -4,21 +4,17 @@ import { motion, useDomEvent } from "framer-motion";
 
 import { cn } from "@src/utilities";
 
-const openTransition = {
-	type: "spring",
-	damping: 25,
-	stiffness: 120,
-};
-
-const closeTransition = {
-	type: "tween",
-	duration: 0.1,
+const transitions = {
+	open: { type: "spring", damping: 25, stiffness: 120 },
+	close: { duration: 0 },
 };
 
 export const ImageMotion = ({ alt, className, src }: { alt?: string; className?: string; src: string }) => {
 	const [isOpen, setOpen] = useState(false);
 
 	useDomEvent(useRef(window), "scroll", () => isOpen && setOpen(false));
+
+	const transition = isOpen ? transitions.open : transitions.close;
 
 	const baseClass = cn("min-h-32 cursor-zoom-in", { "cursor-zoom-out": isOpen }, className);
 	const imageClass = cn("z-50 object-cover", {
@@ -34,7 +30,7 @@ export const ImageMotion = ({ alt, className, src }: { alt?: string; className?:
 				animate={{ opacity: isOpen ? 1 : 0 }}
 				className={overlayClass}
 				onClick={() => setOpen(false)}
-				transition={isOpen ? openTransition : closeTransition}
+				transition={transition}
 			/>
 			<motion.img
 				alt={alt}
@@ -42,7 +38,7 @@ export const ImageMotion = ({ alt, className, src }: { alt?: string; className?:
 				layout
 				onClick={() => setOpen(!isOpen)}
 				src={src}
-				transition={isOpen ? openTransition : closeTransition}
+				transition={transition}
 			/>
 		</div>
 	);
