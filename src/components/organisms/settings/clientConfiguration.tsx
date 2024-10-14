@@ -78,8 +78,8 @@ export const ClientConfiguration = () => {
 
 						<CopyButton
 							className="ml-4 rounded-md bg-gray-900 px-3 hover:bg-gray-950"
-							successMessage={t("getToken.copySuccess")}
-							text={token}
+							successMessage={t("hostURL.copySuccess")}
+							text={hostURL}
 						/>
 					</div>
 				</div>
