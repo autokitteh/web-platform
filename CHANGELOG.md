@@ -1,3 +1,10 @@
+## [2.27.7](https://github.com/autokitteh/web-platform/compare/v2.27.6...v2.27.7) (2024-10-14)
+
+
+### Bug Fixes
+
+* add session viewer loading state ([#485](https://github.com/autokitteh/web-platform/issues/485)) ([0000051](https://github.com/autokitteh/web-platform/commit/00000514bab03a797a418a92cb986acdb136bbd5))
+
 ## [2.27.6](https://github.com/autokitteh/web-platform/compare/v2.27.5...v2.27.6) (2024-10-14)
 
 
