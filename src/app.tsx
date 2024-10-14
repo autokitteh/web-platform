@@ -47,7 +47,6 @@ export const App = () => {
 					createRoutesFromChildren,
 					matchRoutes,
 				}),
-				Sentry.replayIntegration(),
 			],
 			// Set tracesSampleRate to 1.0 to capture 100%
 			// of transactions for tracing.
