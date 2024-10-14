@@ -14,7 +14,6 @@ export const ActivityList = () => {
 	const [selectedActivity, setSelectedActivity] = useState<SessionActivity>();
 
 	const {
-		handleScroll,
 		isRowLoaded,
 		items: activities,
 		listRef,
@@ -79,7 +78,6 @@ export const ActivityList = () => {
 								className="scrollbar"
 								height={height}
 								onRowsRendered={onRowsRendered}
-								onScroll={handleScroll}
 								ref={(ref) => {
 									if (ref) {
 										registerChild(ref);
