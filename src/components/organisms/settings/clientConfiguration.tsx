@@ -87,7 +87,7 @@ export const ClientConfiguration = () => {
 				<Accordion className="mt-10 w-2/3" title={t("vscodeConfigExample")}>
 					<ImageMotion
 						alt={t("vscodeConfigExample")}
-						src="/assets/image/pages/settings/vscodeConfigurationExample.png"
+						src="/assets/image/pages/settings/vscodeConfigurationExample.jpg"
 					/>
 				</Accordion>
 			</div>
