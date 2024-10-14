@@ -5,18 +5,14 @@ import { useTranslation } from "react-i18next";
 import { HttpService } from "@services";
 import { getApiBaseUrl } from "@src/utilities";
 
-import { useToastStore } from "@store";
-
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
-import { Accordion, ImageMotion } from "@components/molecules";
+import { Accordion, CopyButton, ImageMotion } from "@components/molecules";
 
 import { NewProject } from "@assets/image";
-import { CopyIcon } from "@assets/image/icons";
 
 export const ClientConfiguration = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "clientConfiguration" });
 	const [isLoading, setIsLoading] = useState(false);
-	const addToast = useToastStore((state) => state.addToast);
 	const [token, setToken] = useState<string>("");
 	const hostURL = getApiBaseUrl();
 
@@ -27,49 +23,29 @@ export const ClientConfiguration = () => {
 		setIsLoading(false);
 	};
 
-	const copyToClipboard = async (text: string, successMessage: string) => {
-		try {
-			await navigator.clipboard.writeText(text);
-
-			addToast({
-				message: successMessage,
-				type: "success",
-			});
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			addToast({
-				message: t("getToken.copyFailure"),
-				type: "error",
-			});
-		}
-	};
-
 	return (
 		<>
 			<Typography className="mb-4 text-settings-title font-bold" element="h1" size="large">
 				{t("getToken.title")}
 			</Typography>
 			<div>
-				<div className="mt-6 h-20 w-2/3">
-					<p className="mb-4 w-2/3">{t("getToken.subtitle")}</p>
+				<div className="mt-6 w-2/3">
+					<p className="mb-4">{t("getToken.subtitle")}</p>
 					{token ? (
 						<div className="flex w-full">
 							<Input
 								aria-label={t("getToken.copyInputAriaLabel")}
-								className="flex-1 rounded-3xl hover:border-gray-1100"
+								className="flex-1 rounded-xl hover:border-gray-1100"
 								disabled
 								label={t("getToken.copyInputAriaLabel")}
 								value={token}
 							/>
 
-							<Button
-								aria-label={t("getToken.copyButton")}
-								className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
-								onClick={() => copyToClipboard(token, t("getToken.copySuccess"))}
-								variant="outline"
-							>
-								<CopyIcon className="h-6 w-4 fill-black" />
-							</Button>
+							<CopyButton
+								className="ml-4 rounded-md bg-gray-900 px-3 hover:bg-gray-950"
+								successMessage={t("getToken.copySuccess")}
+								text={token}
+							/>
 						</div>
 					) : (
 						<Button
@@ -90,24 +66,21 @@ export const ClientConfiguration = () => {
 					)}
 				</div>
 				<div className="mt-10 w-2/3">
-					<p className="mb-4 w-2/3">{t("hostURL.subtitle")}</p>
+					<p className="mb-4">{t("hostURL.subtitle")}</p>
 					<div className="flex w-full">
 						<Input
 							aria-label={t("hostURL.copyInputAriaLabel")}
-							className="flex-1 rounded-3xl hover:border-gray-1100"
+							className="flex-1 rounded-xl hover:border-gray-1100"
 							disabled
 							label={t("hostURL.copyInputAriaLabel")}
 							value={hostURL}
 						/>
 
-						<Button
-							aria-label={t("hostURL.copyButton")}
-							className="ml-4 rounded-md border-black bg-white px-3 font-semibold hover:bg-gray-950"
-							onClick={() => copyToClipboard(hostURL, t("hostURL.copySuccess"))}
-							variant="outline"
-						>
-							<CopyIcon className="h-6 w-4 fill-black" />
-						</Button>
+						<CopyButton
+							className="ml-4 rounded-md bg-gray-900 px-3 hover:bg-gray-950"
+							successMessage={t("getToken.copySuccess")}
+							text={token}
+						/>
 					</div>
 				</div>
 
