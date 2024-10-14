@@ -27,11 +27,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const store = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
 
 	const [session, setSession] = useState<SessionOutputData | SessionActivityData>();
-	useEffect(() => {
-		if (!sessionId) return;
-		const sessionData = store.sessions[sessionId];
-		setSession(sessionData);
-	}, [store.sessions, sessionId]);
+
 	const listRef = useRef<List | null>(null);
 
 	const items = useMemo(() => {
@@ -42,7 +38,14 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 			: [];
 	}, [session, type]);
 
-	const { loadLogs, loading, reset } = store;
+	useEffect(() => {
+		if (!sessionId) return;
+
+		setSession(store.sessions[sessionId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [store.sessions]);
+
+	const { loadLogs, loading } = store;
 
 	const cache = useMemo(
 		() =>
@@ -71,11 +74,13 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	useEffect(() => {
 		if (!sessionId) return;
 
-		const haveRecords =
-			(session as SessionOutputData)?.outputs?.length || (session as SessionActivityData)?.activities?.length;
+		const cachedSessionLogs = store.sessions[sessionId];
 
-		if (!session || !haveRecords) {
-			reset(sessionId);
+		const haveRecords =
+			(cachedSessionLogs as SessionOutputData)?.outputs?.length ||
+			(cachedSessionLogs as SessionActivityData)?.activities?.length;
+
+		if (!cachedSessionLogs || !haveRecords) {
 			loadMoreRows();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
