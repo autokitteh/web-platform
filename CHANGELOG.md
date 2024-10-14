@@ -1,3 +1,10 @@
+## [2.28.3](https://github.com/autokitteh/web-platform/compare/v2.28.2...v2.28.3) (2024-10-14)
+
+
+### Bug Fixes
+
+* re-fetch sessions always and remove last-time-scroll ([#498](https://github.com/autokitteh/web-platform/issues/498)) ([63c3a6e](https://github.com/autokitteh/web-platform/commit/63c3a6e7520a76f942e8f23e82d90f771c05690b))
+
 ## [2.28.2](https://github.com/autokitteh/web-platform/compare/v2.28.1...v2.28.2) (2024-10-14)
 
 
