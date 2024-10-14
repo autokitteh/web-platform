@@ -63,16 +63,6 @@
 		"line4": "Are you sure you want to delete this variable?",
 		"title": "Delete Variable"
 	},
-	"getToken": {
-		"closeButton": "Close",
-		"copyButton": "Copy connection token",
-		"copyFailure": "Failed to copy token to clipboard",
-		"copyInputAriaLabel": "Copy this token to be able to use it in your application",
-		"copyInputLabel": "Copy Me",
-		"copySuccess": "Token copied to clipboard",
-		"line": "Create, copy and use  the token in your application - using CLI or our VSCode Extension <anchor>(click here to get the extension)</anchor> - to connect to the platform.",
-		"title": "Connection Token"
-	},
 	"deleteProject": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Yes, delete",

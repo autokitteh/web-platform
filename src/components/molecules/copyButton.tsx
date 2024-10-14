@@ -14,20 +14,23 @@ import { CopyIcon } from "@assets/image/icons";
 export const CopyButton = ({
 	className,
 	size = "md",
+	successMessage,
 	text,
 }: {
 	className?: string;
 	size?: Extract<SystemSizes, "xs" | "sm" | "md">;
+	successMessage?: string;
 	text: string;
 }) => {
 	const { t } = useTranslation("components", { keyPrefix: "buttons" });
 	const addToast = useToastStore((state) => state.addToast);
 
 	const copyTextToClipboard = debounce(async (text: string) => {
-		const copyResponse = await copyToClipboard(text);
+		const { isError, message } = await copyToClipboard(text);
+
 		addToast({
-			message: copyResponse.message,
-			type: copyResponse.isError ? "error" : "success",
+			message: successMessage && !isError ? successMessage : message,
+			type: isError ? "error" : "success",
 		});
 	}, 300);
 
