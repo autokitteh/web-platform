@@ -1,3 +1,10 @@
+## [2.27.6](https://github.com/autokitteh/web-platform/compare/v2.27.5...v2.27.6) (2024-10-14)
+
+
+### Bug Fixes
+
+* display images in intro page correctly ([#482](https://github.com/autokitteh/web-platform/issues/482)) ([4151a1b](https://github.com/autokitteh/web-platform/commit/4151a1bf69ecbc9e289a331bc1842bc269a34555))
+
 ## [2.27.5](https://github.com/autokitteh/web-platform/compare/v2.27.4...v2.27.5) (2024-10-13)
 
 
