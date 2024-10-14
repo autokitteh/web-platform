@@ -33,7 +33,6 @@ OutputRow.displayName = "OutputRow";
 
 export const SessionOutputs = () => {
 	const {
-		handleScroll,
 		isRowLoaded,
 		items: outputs,
 		listRef,
@@ -110,7 +109,6 @@ export const SessionOutputs = () => {
 									deferredMeasurementCache={cacheRef.current}
 									height={height}
 									onRowsRendered={onRowsRendered}
-									onScroll={handleScroll}
 									overscanRowCount={10}
 									ref={(ref) => {
 										setListRef(ref);

@@ -39,8 +39,6 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 	const { loadLogs, loading, reset } = store;
 
-	const [scrollPosition, setScrollPosition] = useState(0);
-
 	const cache = useMemo(
 		() =>
 			new CellMeasurerCache({
@@ -60,10 +58,6 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 		}
 		await loadLogs(sessionId, pageSize * 2);
 	}, [sessionId, shouldLoadMore, loadLogs, pageSize]);
-
-	const handleScroll = useCallback(({ scrollTop }: { scrollTop: number }): void => {
-		if (scrollTop !== 0) setScrollPosition(scrollTop);
-	}, []);
 
 	const calculatePageSize = useCallback(() => {
 		const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsFrameHeightFallback;
@@ -92,18 +86,9 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	}, [sessionId, type, session, reset, loadMoreRows, itemHeight]);
 
 	useEffect(() => {
-		if (!pageSize) return;
 		loadMoreRows();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [pageSize]);
-
-	useEffect(() => {
-		return () => {
-			if (sessionId) {
-				sessionStorage.setItem(`scrollPosition_${sessionId}_${type}`, scrollPosition.toString());
-			}
-		};
-	}, [sessionId, type, scrollPosition]);
 
 	const rowRenderer = useCallback(
 		(props: ListRowProps): React.ReactNode => {
@@ -125,7 +110,6 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 		loading,
 		isRowLoaded,
 		loadMoreRows,
-		handleScroll,
 		cache,
 		listRef,
 		frameRef,
