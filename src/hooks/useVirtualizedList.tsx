@@ -80,7 +80,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 			(cachedSessionLogs as SessionOutputData)?.outputs?.length ||
 			(cachedSessionLogs as SessionActivityData)?.activities?.length;
 
-		if (!cachedSessionLogs || !haveRecords) {
+		if (!haveRecords) {
 			loadMoreRows();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
