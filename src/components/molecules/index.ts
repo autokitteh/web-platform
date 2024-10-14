@@ -12,3 +12,4 @@ export { CopyButton } from "@components/molecules/copyButton";
 export { Drawer } from "@components/molecules/drawer";
 export { RefreshButton } from "@components/molecules/refreshButton";
 export { EmptyTableAddButton } from "@components/molecules/emptyTableAddButton";
+export { ImageMotion } from "@components/molecules/imageMotion";

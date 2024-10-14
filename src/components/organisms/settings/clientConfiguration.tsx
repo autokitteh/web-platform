@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import FsLightbox from "fslightbox-react";
 import { useTranslation } from "react-i18next";
 
 import { HttpService } from "@services";
@@ -9,7 +8,7 @@ import { getApiBaseUrl } from "@src/utilities";
 import { useToastStore } from "@store";
 
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
-import { Accordion } from "@components/molecules";
+import { Accordion, ImageMotion } from "@components/molecules";
 
 import { NewProject } from "@assets/image";
 import { CopyIcon } from "@assets/image/icons";
@@ -20,7 +19,6 @@ export const ClientConfiguration = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const [token, setToken] = useState<string>("");
 	const hostURL = getApiBaseUrl();
-	const [isExampleLightboxOpened, setIsExampleLightboxOpened] = useState(false);
 
 	const createToken = async () => {
 		setIsLoading(true);
@@ -114,17 +112,11 @@ export const ClientConfiguration = () => {
 				</div>
 
 				<Accordion className="mt-10 w-2/3" title={t("vscodeConfigExample")}>
-					<Button onClick={() => setIsExampleLightboxOpened(!isExampleLightboxOpened)}>
-						<img
-							alt={t("vscodeConfigExample")}
-							src="/assets/image/pages/settings/vscodeConfigurationExample.png"
-						/>
-					</Button>
+					<ImageMotion
+						alt={t("vscodeConfigExample")}
+						src="/assets/image/pages/settings/vscodeConfigurationExample.png"
+					/>
 				</Accordion>
-				<FsLightbox
-					sources={["/assets/image/pages/settings/vscodeConfigurationExample.png"]}
-					toggler={isExampleLightboxOpened}
-				/>
 			</div>
 		</>
 	);
