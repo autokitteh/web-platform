@@ -4,10 +4,15 @@ import { motion, useDomEvent } from "framer-motion";
 
 import { cn } from "@src/utilities";
 
-const transition = {
+const openTransition = {
 	type: "spring",
 	damping: 25,
 	stiffness: 120,
+};
+
+const closeTransition = {
+	type: "tween",
+	duration: 0.1,
 };
 
 export const ImageMotion = ({ alt, className, src }: { alt?: string; className?: string; src: string }) => {
@@ -29,7 +34,7 @@ export const ImageMotion = ({ alt, className, src }: { alt?: string; className?:
 				animate={{ opacity: isOpen ? 1 : 0 }}
 				className={overlayClass}
 				onClick={() => setOpen(false)}
-				transition={transition}
+				transition={isOpen ? openTransition : closeTransition}
 			/>
 			<motion.img
 				alt={alt}
@@ -37,7 +42,7 @@ export const ImageMotion = ({ alt, className, src }: { alt?: string; className?:
 				layout
 				onClick={() => setOpen(!isOpen)}
 				src={src}
-				transition={transition}
+				transition={isOpen ? openTransition : closeTransition}
 			/>
 		</div>
 	);

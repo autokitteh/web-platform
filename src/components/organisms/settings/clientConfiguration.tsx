@@ -29,7 +29,7 @@ export const ClientConfiguration = () => {
 				{t("getToken.title")}
 			</Typography>
 			<div>
-				<div className="mt-6 w-2/3">
+				<div className="mt-6 h-20 w-2/3">
 					<p className="mb-4">{t("getToken.subtitle")}</p>
 					{token ? (
 						<div className="flex w-full">
