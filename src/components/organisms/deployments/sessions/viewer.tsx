@@ -13,7 +13,7 @@ import { SessionState } from "@src/enums";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 import { ViewerSession } from "@src/types/models/session.type";
 
-import { Frame, IconButton, IconSvg, LogoCatLarge, Tab } from "@components/atoms";
+import { Frame, IconButton, IconSvg, Loader, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion, CopyButton, RefreshButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
@@ -44,10 +44,9 @@ export const SessionViewer = () => {
 	);
 
 	const fetchSessionInfo = useCallback(async () => {
-		if (!sessionId) return;
 		setIsLoading(true);
 		try {
-			const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId);
+			const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId!);
 			if (error) {
 				addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
 
@@ -121,7 +120,9 @@ export const SessionViewer = () => {
 
 	if (!sessionInfo) return null;
 
-	return (
+	return isLoading ? (
+		<Loader size="xl" />
+	) : (
 		<Frame className="overflow-hidden rounded-l-none pb-3 font-fira-code">
 			<div className="flex items-center justify-between border-b border-gray-950 pb-3.5">
 				<div className="flex gap-3 font-fira-sans text-base text-gray-500">
