@@ -1,3 +1,10 @@
+## [2.28.2](https://github.com/autokitteh/web-platform/compare/v2.28.1...v2.28.2) (2024-10-14)
+
+
+### Bug Fixes
+
+* images on intro/welcome pages not displayed ([#500](https://github.com/autokitteh/web-platform/issues/500)) ([87d076e](https://github.com/autokitteh/web-platform/commit/87d076e12de884cc21ef84b4a4a444625175cf5a))
+
 ## [2.28.1](https://github.com/autokitteh/web-platform/compare/v2.28.0...v2.28.1) (2024-10-14)
 
 
