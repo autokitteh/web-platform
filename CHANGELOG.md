@@ -1,3 +1,10 @@
+## [2.28.4](https://github.com/autokitteh/web-platform/compare/v2.28.3...v2.28.4) (2024-10-14)
+
+
+### Bug Fixes
+
+* update image welcome and intro pages ([#502](https://github.com/autokitteh/web-platform/issues/502)) ([ec9915d](https://github.com/autokitteh/web-platform/commit/ec9915dedf5393b62a9e09bad3373052067c2ca3))
+
 ## [2.28.3](https://github.com/autokitteh/web-platform/compare/v2.28.2...v2.28.3) (2024-10-14)
 
 
