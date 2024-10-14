@@ -23,7 +23,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 	const { createProject, getProjectsList, projectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
-	const [isCreatingProject, setIsCreatingProject] = useState(true);
+	const [isCreatingProject, setIsCreatingProject] = useState(false);
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
