@@ -144,7 +144,7 @@ export class SessionLogRecord {
 			});
 		}
 		if (this.isFinished()) {
-			const finishedMessagePrint = `\n\n${i18n.t("lastPrintForSessionLog", {
+			const finishedMessagePrint = `${i18n.t("lastPrintForSessionLog", {
 				ns: "services",
 				sessionState: this.state || "unknown",
 			})}`;
@@ -167,7 +167,12 @@ export const convertSessionLogProtoToViewerOutput = (logRecords: ProtoSessionLog
 		.map((state: ProtoSessionLogRecord) => {
 			const record = new SessionLogRecord(state);
 
-			if (record.type !== SessionLogRecordType.print && record.state !== SessionStateType.error) {
+			if (
+				record.type !== SessionLogRecordType.print &&
+				record.state !== SessionStateType.error &&
+				record.state !== SessionStateType.completed &&
+				record.state !== SessionStateType.stopped
+			) {
 				return undefined;
 			}
 			const formattedDateTime = moment(record.dateTime).format("MM-DD-YYYY HH:mm:ss");
