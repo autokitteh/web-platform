@@ -54,8 +54,7 @@ export const App = () => {
 			// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
 			tracePropagationTargets: [
 				"localhost",
-				/^https:\/\/[\w.-]+\.autokitteh\.cloud/,
-				/^https:\/\/autokitteh\.cloud/,
+				/^https:\/\/(?:[\w.-]+\.)?autokitteh\.cloud/,
 			],
 		});
 		AKRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
