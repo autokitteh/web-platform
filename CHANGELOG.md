@@ -1,3 +1,10 @@
+## [2.28.1](https://github.com/autokitteh/web-platform/compare/v2.28.0...v2.28.1) (2024-10-14)
+
+
+### Bug Fixes
+
+* copy host url button in client configuration ([#499](https://github.com/autokitteh/web-platform/issues/499)) ([1549bb2](https://github.com/autokitteh/web-platform/commit/1549bb2b8d713b2e4f06cb7da29ff7e9c102e158))
+
 # [2.28.0](https://github.com/autokitteh/web-platform/compare/v2.27.7...v2.28.0) (2024-10-14)
 
 
