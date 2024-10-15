@@ -13,7 +13,7 @@ import { useResize } from "@src/hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 
-import { Frame, Loader, ResizeButton, THead, Table, Td, Th, Typography } from "@components/atoms";
+import { Frame, Loader, ResizeButton, THead, Table, Th, Tr, Typography } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
@@ -214,13 +214,17 @@ export const SessionsTable = () => {
 						) : sessions.length ? (
 							<Table className="h-full overflow-y-visible">
 								<THead className="rounded-t-14">
-									<Th className="justify-between">
-										<Td className="w-56 pl-4">{t("table.columns.startTime")}</Td>
-										<Td className="w-32">{t("table.columns.status")}</Td>
-										<Td className="w-32">{t("table.columns.triggerName")}</Td>
-										<Td className="w-32">{t("table.columns.connectionName")}</Td>
-										<Td className="w-32">{t("table.columns.actions")}</Td>
-									</Th>
+									<Tr className="justify-between">
+										<Th className="w-56 pl-4">{t("table.columns.startTime")}</Th>
+
+										<Th className="w-32">{t("table.columns.status")}</Th>
+
+										<Th className="w-32">{t("table.columns.triggerName")}</Th>
+
+										<Th className="w-32">{t("table.columns.connectionName")}</Th>
+
+										<Th className="w-32">{t("table.columns.actions")}</Th>
+									</Tr>
 								</THead>
 
 								<SessionsTableList
