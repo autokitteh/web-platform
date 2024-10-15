@@ -11,7 +11,7 @@ test.describe("Project Topbar Suite", () => {
 
 		const deployButton = page.getByRole("button", { name: "Deploy project" });
 		await deployButton.click();
-		const toast = await waitForToast(page, "Project deploy completed successfully.");
+		const toast = await waitForToast(page, "Project deployment completed successfully");
 		await expect(toast).toBeVisible();
 
 		await expect(page.getByRole("button", { name: "Sessions" })).not.toBeDisabled();
