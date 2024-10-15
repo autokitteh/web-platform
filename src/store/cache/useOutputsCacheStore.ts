@@ -37,12 +37,6 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				fullyLoaded: false,
 			};
 
-			if (currentSession.fullyLoaded) {
-				set({ loading: false });
-
-				return;
-			}
-
 			const { data, error } = await SessionsService.getLogRecordsBySessionId(
 				sessionId,
 				currentSession.nextPageToken || undefined,

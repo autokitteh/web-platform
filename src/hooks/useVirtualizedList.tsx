@@ -24,7 +24,8 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const outputsCacheStore = useOutputsCacheStore();
 	const activitiesCacheStore = useActivitiesCacheStore();
 
-	const { loadLogs, loading, sessions } = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
+	const { loadLogs, loading, reload, sessions } =
+		type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
 
 	const [session, setSession] = useState<SessionOutputData | SessionActivityData>();
 
@@ -58,13 +59,13 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 	const shouldLoadMore = useMemo(() => !(loading || (session && session.fullyLoaded)), [loading, session]);
 
+	const frameHeight = frameRef?.current?.offsetHeight || standardScreenHeightFallback;
+	const pageSize = Math.ceil(frameHeight / itemHeight) * 1.5;
+
 	const loadMoreRows = async (): Promise<void> => {
 		if (!sessionId || !shouldLoadMore) {
 			return;
 		}
-		const frameHeight = frameRef?.current?.offsetHeight || standardScreenHeightFallback;
-
-		const pageSize = Math.ceil(frameHeight / itemHeight) * 1.5;
 
 		await loadLogs(sessionId, pageSize);
 	};
@@ -72,15 +73,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	useEffect(() => {
 		if (!sessionId) return;
 
-		const cachedSessionLogs = sessions[sessionId];
-
-		const haveRecords =
-			(cachedSessionLogs as SessionOutputData)?.outputs?.length ||
-			(cachedSessionLogs as SessionActivityData)?.activities?.length;
-
-		if (!haveRecords) {
-			loadMoreRows();
-		}
+		reload(sessionId, pageSize);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 
