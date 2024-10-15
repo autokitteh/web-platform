@@ -84,7 +84,7 @@ export class TriggersService {
 			}
 
 			if (!environment) {
-				return { data: undefined, error: i18n.t("environmentNotFoundExtended", { ns: "services" }) };
+				return { data: undefined, error: i18n.t("environmentNotFoundExtended", { ns: "services", projectId }) };
 			}
 
 			const { triggers } = await triggersClient.list({ envId: environment.envId });
@@ -108,7 +108,7 @@ export class TriggersService {
 			}
 
 			if (!environment) {
-				return { data: undefined, error: i18n.t("environmentNotFoundExtended", { ns: "services" }) };
+				return { data: undefined, error: i18n.t("environmentNotFoundExtended", { ns: "services", projectId }) };
 			}
 
 			const {
