@@ -37,7 +37,7 @@ export {
 	defaultSessionsListRowHeight,
 	defaultSessionLogRecordsPageSize,
 	defaultSessionLogRecordsListRowHeight,
-	minimumSessionLogsRecordsFrameHeightFallback,
+	maximumScreenHeightFallback,
 	sessionsEditorLineHeight,
 } from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";

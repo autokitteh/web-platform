@@ -10,7 +10,7 @@ import ReactTimeAgo from "react-time-ago";
 import {
 	defaultSessionLogRecordsListRowHeight,
 	defaultSessionTab,
-	minimumSessionLogsRecordsFrameHeightFallback,
+	maximumScreenHeightFallback,
 	namespaces,
 	sessionTabs,
 } from "@constants";
@@ -79,8 +79,7 @@ export const SessionViewer = () => {
 	const fetchSessions = useCallback(async () => {
 		if (!sessionInfo) return;
 		fetchSessionInfo();
-		const pageSize =
-			Math.ceil(minimumSessionLogsRecordsFrameHeightFallback / defaultSessionLogRecordsListRowHeight) * 2;
+		const pageSize = Math.ceil(maximumScreenHeightFallback / defaultSessionLogRecordsListRowHeight) * 2;
 
 		reloadOutputs(sessionInfo.sessionId, pageSize);
 		reloadActivities(sessionInfo.sessionId, pageSize);

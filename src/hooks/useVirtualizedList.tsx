@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
 
-import { defaultSessionLogRecordsListRowHeight, minimumSessionLogsRecordsFrameHeightFallback } from "@src/constants";
+import { defaultSessionLogRecordsListRowHeight, maximumScreenHeightFallback } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { VirtualizedListHookResult } from "@src/interfaces/hooks";
 import { SessionActivityData, SessionOutputData } from "@src/interfaces/store";
@@ -62,7 +62,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 		if (!sessionId || !shouldLoadMore) {
 			return;
 		}
-		const frameHeight = frameRef?.current?.offsetHeight || minimumSessionLogsRecordsFrameHeightFallback;
+		const frameHeight = frameRef?.current?.offsetHeight || maximumScreenHeightFallback;
 
 		const pageSize = Math.ceil(frameHeight / itemHeight) * 2;
 
