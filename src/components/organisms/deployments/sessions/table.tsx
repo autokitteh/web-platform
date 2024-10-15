@@ -114,24 +114,16 @@ export const SessionsTable = () => {
 		async (forceRefresh = false) => {
 			setIsLoading(true);
 			const deploymentsUpdated = await fetchDeployments();
-			let sessionsUpdated = false;
 
 			if (deploymentsUpdated || forceRefresh) {
 				setSessions([]);
 				setSessionsNextPageToken(undefined);
-				sessionsUpdated = await fetchSessions(undefined, true);
+				await fetchSessions(undefined, true);
 			}
 
 			setIsLoading(false);
-
-			if (!deploymentsUpdated && !sessionsUpdated && !forceRefresh) {
-				addToast({
-					message: t("noUpdatesAvailable"),
-					type: "info",
-				});
-			}
 		},
-		[fetchDeployments, fetchSessions, addToast, t]
+		[fetchDeployments, fetchSessions]
 	);
 
 	useEffect(() => {
