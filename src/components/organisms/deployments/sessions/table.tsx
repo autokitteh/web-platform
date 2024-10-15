@@ -36,6 +36,7 @@ export const SessionsTable = () => {
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
 
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
@@ -64,9 +65,9 @@ export const SessionsTable = () => {
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string, forceRefresh = false) => {
-			const loaderTimeout = setTimeout(() => {
+			if (!forceRefresh) {
 				setIsLoading(true);
-			}, 1000);
+			}
 
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
@@ -75,8 +76,6 @@ export const SessionsTable = () => {
 				},
 				nextPageToken
 			);
-			clearTimeout(loaderTimeout);
-			setIsLoading(false);
 
 			if (error) {
 				addToast({
@@ -88,11 +87,17 @@ export const SessionsTable = () => {
 					tErrors("sessionsFetchErrorExtended", { error: (error as Error).message })
 				);
 
+				setIsLoading(false);
+
 				return;
 			}
+
 			if (!data?.sessions) {
+				setIsLoading(false);
+
 				return;
 			}
+
 			setSessions((prevSessions) => {
 				if (!nextPageToken || forceRefresh) {
 					return data.sessions;
@@ -101,9 +106,10 @@ export const SessionsTable = () => {
 				return [...prevSessions, ...data.sessions];
 			});
 			setSessionsNextPageToken(data.nextPageToken);
+			setIsLoading(false);
+			setIsInitialLoad(false);
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deploymentId, sessionStateType]
+		[deploymentId, sessionStateType, addToast, tErrors]
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
@@ -114,12 +120,10 @@ export const SessionsTable = () => {
 			const deploymentsUpdated = await fetchDeployments();
 
 			if (deploymentsUpdated || forceRefresh) {
-				setSessions([]);
-				setSessionsNextPageToken(undefined);
 				await fetchSessions(undefined, true);
+			} else {
+				setIsLoading(false);
 			}
-
-			setIsLoading(false);
 		},
 		[fetchDeployments, fetchSessions]
 	);
@@ -203,12 +207,16 @@ export const SessionsTable = () => {
 						</Typography>
 						<div className="flex flex-wrap items-center justify-between gap-2.5">
 							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
-							<RefreshButton isLoading={isLoading} onRefresh={fetchDeployments} />
+							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData(true)} />
 						</div>
 					</div>
 
-					{sessions.length ? (
-						<div className="relative my-6 flex h-full flex-col overflow-hidden">
+					<div className="relative my-6 flex h-full flex-col overflow-hidden">
+						{isInitialLoad ? (
+							<div className="flex h-full items-center justify-center">
+								<Loader firstColor="light-gray" size="md" />
+							</div>
+						) : sessions.length ? (
 							<Table className="h-full overflow-y-visible">
 								<THead className="rounded-t-14">
 									<Th className="justify-between">
@@ -227,16 +235,16 @@ export const SessionsTable = () => {
 									sessions={sessions}
 								/>
 							</Table>
+						) : (
+							<div className="mt-10 text-center text-xl font-semibold">{t("noSessions")}</div>
+						)}
 
-							{isLoading ? (
-								<div className="absolute bottom-0 z-20 flex h-10 w-full items-center bg-gray-1100">
-									<Loader firstColor="light-gray" size="md" />
-								</div>
-							) : null}
-						</div>
-					) : (
-						<div className="mt-10 text-center text-xl font-semibold">{t("noSessions")}</div>
-					)}
+						{isLoading && !isInitialLoad ? (
+							<div className="absolute bottom-0 z-20 flex h-10 w-full items-center bg-gray-1100">
+								<Loader firstColor="light-gray" size="md" />
+							</div>
+						) : null}
+					</div>
 				</Frame>
 			</div>
 
