@@ -30,23 +30,14 @@ export class EnvironmentsService {
 			const { data: environments, error } = await this.listByProjectId(projectId);
 
 			if (error) {
-				const errorMessage = i18n.t("defaultEnvironmentNotFoundExtended", {
-					error: (error as Error).message,
-					projectId,
-					ns: "services",
-				});
-				LoggerService.error(namespaces.environmentsService, errorMessage);
-
-				return { data: undefined, error: errorMessage };
+				return { data: undefined, error };
 			}
 
 			if (!environments?.length) {
-				LoggerService.error(
-					namespaces.environmentsService,
-					i18n.t("defaulEnvironmentNotFound", { ns: "services", projectId })
-				);
+				const errorMessage = i18n.t("environmentNotFoundExtended", { ns: "services", projectId });
+				LoggerService.error(namespaces.environmentsService, errorMessage);
 
-				return { data: undefined, error: i18n.t("defaulEnvironmentNotFound", { ns: "services" }) };
+				return { data: undefined, error: errorMessage };
 			}
 
 			if (environments.length !== 1) {

@@ -36,7 +36,7 @@ export const VariablesTable = () => {
 
 	const loadVariables = async (projectId: string, force?: boolean) => {
 		try {
-			fetchVariables(projectId, force);
+			await fetchVariables(projectId, force);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({

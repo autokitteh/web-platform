@@ -111,7 +111,8 @@
 			"copyButton": "Copy",
 			"status": "Status",
 			"connectionName": "Connection Name",
-			"sessionNotFound": "Session details not found, session ID: {{sessionId}}"
+			"sessionNotFound": "Session details not found",
+			"sessionNotFoundExtended": "Session details not found, session ID: {{sessionId}}"
 		}
 	},
 	"activities":{

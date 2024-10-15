@@ -11,8 +11,10 @@ import {
 	defaultSessionLogRecordsListRowHeight,
 	defaultSessionTab,
 	minimumSessionLogsRecordsFrameHeightFallback,
+	namespaces,
 	sessionTabs,
 } from "@constants";
+import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
@@ -59,13 +61,14 @@ export const SessionViewer = () => {
 		}
 		if (!sessionInfoResponse) {
 			addToast({ message: t("sessionNotFound"), type: "error" });
+			LoggerService.error(namespaces.ui.sessionsViewer, t("sessionNotFound", { sessionId }));
 
 			return;
 		}
 		setSessionInfo(sessionInfoResponse);
 		setIsLoading(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId, addToast, tErrors]);
+	}, [sessionId]);
 
 	useEffect(() => {
 		fetchSessionInfo();
