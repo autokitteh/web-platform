@@ -11,8 +11,10 @@ import {
 	defaultSessionLogRecordsListRowHeight,
 	defaultSessionTab,
 	minimumSessionLogsRecordsFrameHeightFallback,
+	namespaces,
 	sessionTabs,
 } from "@constants";
+import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
@@ -49,22 +51,25 @@ export const SessionViewer = () => {
 	);
 
 	const fetchSessionInfo = useCallback(async () => {
+		if (!sessionId) return;
 		setIsLoading(true);
-		try {
-			const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId!);
-			if (error) {
-				addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
+		const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId);
+		setIsLoading(false);
 
-				return;
-			}
-			setSessionInfo(sessionInfoResponse!);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
+		if (error) {
 			addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
-		} finally {
-			setIsLoading(false);
+
+			return;
 		}
-	}, [sessionId, addToast, tErrors]);
+		if (!sessionInfoResponse) {
+			addToast({ message: t("sessionNotFound"), type: "error" });
+			LoggerService.error(namespaces.ui.sessionsViewer, t("sessionNotFound", { sessionId }));
+
+			return;
+		}
+		setSessionInfo(sessionInfoResponse);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionId]);
 
 	useEffect(() => {
 		fetchSessionInfo();

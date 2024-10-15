@@ -77,18 +77,17 @@ export class TriggersService {
 
 	static async listByProjectId(projectId: string): Promise<ServiceResponse<Trigger[]>> {
 		try {
-			const { data: environments, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
+			const { data: environment, error: errorEnvs } = await EnvironmentsService.getDefaultEnvironment(projectId);
 
 			if (errorEnvs) {
-				LoggerService.error(
-					namespaces.triggerService,
-					i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services", error: errorEnvs })
-				);
-
 				return { data: undefined, error: errorEnvs };
 			}
 
-			const { triggers } = await triggersClient.list({ envId: environments && environments[0].envId });
+			if (!environment) {
+				return { data: undefined, error: i18n.t("environmentNotFoundExtended", { ns: "services", projectId }) };
+			}
+
+			const { triggers } = await triggersClient.list({ envId: environment.envId });
 
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
 
@@ -102,23 +101,14 @@ export class TriggersService {
 
 	static async update(projectId: string, trigger: Trigger): Promise<ServiceResponse<void>> {
 		try {
-			const { data: environments, error } = await EnvironmentsService.listByProjectId(projectId);
+			const { data: environment, error: errorEnvs } = await EnvironmentsService.getDefaultEnvironment(projectId);
 
-			if (error) {
-				LoggerService.error(
-					namespaces.triggerService,
-					i18n.t("defaultEnvironmentNotFoundExtended", { projectId, ns: "services", error })
-				);
-
-				return { data: undefined, error };
+			if (errorEnvs) {
+				return { data: undefined, error: errorEnvs };
 			}
 
-			if (!environments?.length) {
-				return { data: undefined, error: i18n.t("environmentNotFound", { ns: "services" }) };
-			}
-
-			if (environments.length !== 1) {
-				return { data: undefined, error: i18n.t("multipleEnvironments", { ns: "services" }) };
+			if (!environment) {
+				return { data: undefined, error: i18n.t("environmentNotFoundExtended", { ns: "services", projectId }) };
 			}
 
 			const {
@@ -141,7 +131,7 @@ export class TriggersService {
 					webhookSlug,
 					codeLocation: { name: entryFunction, path },
 					connectionId,
-					envId: environments && environments[0].envId,
+					envId: environment.envId,
 					eventType,
 					filter,
 					name,

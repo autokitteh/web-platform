@@ -25,7 +25,11 @@ export class SessionsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("sessionStopFailedExtended", { ns: "services", sessionId });
+			const errorMessage = i18n.t("sessionStopFailedExtended", {
+				ns: "services",
+				sessionId,
+				error: (error as Error).message,
+			});
 			LoggerService.error(namespaces.sessionsService, errorMessage);
 
 			return { data: undefined, error };
@@ -55,50 +59,32 @@ export class SessionsService {
 				types: selectedTypes,
 			});
 
-			if (!response?.log?.records) {
-				const errorMessage = i18n.t("sessionLogNotFound", {
-					sessionId,
-					ns: "services",
-				});
-				LoggerService.error(namespaces.sessionsService, errorMessage);
-
-				return {
-					data: undefined,
-					error: new Error(errorMessage),
-				};
-			}
-
 			return {
 				data: {
-					records: response.log.records,
+					records: response?.log?.records || [],
 					nextPageToken: response.nextPageToken,
 					count: Number(response.count),
 				},
 				error: undefined,
 			};
 		} catch (error) {
-			LoggerService.error(namespaces.sessionsService, (error as Error).message);
+			const errorMessage = i18n.t("failedFetchingLogRecordsBySessionId", {
+				ns: "services",
+				sessionId,
+				error: (error as Error).message,
+				pageToken,
+				pageSize,
+				logType,
+			});
+			LoggerService.error(namespaces.sessionsService, errorMessage);
 
-			return { data: undefined, error };
+			return { data: undefined, error: errorMessage };
 		}
 	}
 
 	static async getSessionInfo(sessionId: string): Promise<ServiceResponse<ViewerSession>> {
 		try {
 			const { session } = await sessionsClient.get({ sessionId, jsonValues: true });
-
-			if (!session) {
-				const errorMessage = i18n.t("sessionNotFound", {
-					sessionId,
-					ns: "services",
-				});
-				LoggerService.error(namespaces.sessionsService, errorMessage);
-
-				return {
-					data: undefined,
-					error: new Error(errorMessage),
-				};
-			}
 
 			if (!session?.eventId) {
 				const errorMessage = i18n.t("sessionMissingEventExtended", {
@@ -192,8 +178,6 @@ export class SessionsService {
 				await EnvironmentsService.listByProjectId(projectId);
 
 			if (environmentsError) {
-				LoggerService.error(namespaces.sessionsService, (environmentsError as Error).message);
-
 				return { data: undefined, error: environmentsError };
 			}
 			const sessionsPromises = (projecEnvironments || []).map(async (environment) => {

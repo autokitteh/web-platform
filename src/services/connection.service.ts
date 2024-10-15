@@ -14,10 +14,6 @@ export class ConnectionService {
 	static async delete(connectionId: string): Promise<ServiceResponse<void>> {
 		try {
 			await connectionsClient.delete({ connectionId });
-			LoggerService.info(
-				namespaces.connectionService,
-				i18n.t("connectionRemoveSuccessExtended", { ns: "services", connectionId })
-			);
 
 			return { data: undefined, error: undefined };
 		} catch (error) {

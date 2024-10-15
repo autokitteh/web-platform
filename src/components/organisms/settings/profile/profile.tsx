@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
-import { useModalStore, useUserStore } from "@src/store";
+import { useModalStore, useToastStore, useUserStore } from "@src/store";
 
 import { Button, Typography } from "@components/atoms";
 import { DeleteAccountModal } from "@components/organisms/settings/profile";
@@ -12,10 +12,21 @@ export const Profile = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "profile" });
 	const { getLoggedInUser, user } = useUserStore();
 	const { closeModal, openModal } = useModalStore();
+	const addToast = useToastStore((state) => state.addToast);
+
+	const loadUser = async () => {
+		const error = await getLoggedInUser();
+		if (error) {
+			addToast({
+				message: t("accountFetchError", { error }),
+				type: "error",
+			});
+		}
+	};
 
 	useEffect(() => {
 		if (!user) {
-			getLoggedInUser();
+			loadUser();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

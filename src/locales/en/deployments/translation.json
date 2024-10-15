@@ -92,7 +92,9 @@
 				"stopped": "Stopped",
 				"unspecified": "Unspecified"
 			},
-			"stopSession": "Stop session"
+			"stopSession": "Stop session",
+			"sessionDeletedSuccessfully": "Session deleted successfully",
+			"sessionDeletedSuccessfullyExtended": "Session deleted successfully, session ID: {{sessionId}}"
 		},
 		"totalSessions": "Total {{total}}",
 		"viewer":{
@@ -108,7 +110,9 @@
 			"sessionId": "Session ID",
 			"copyButton": "Copy",
 			"status": "Status",
-			"connectionName": "Connection Name"
+			"connectionName": "Connection Name",
+			"sessionNotFound": "Session details not found",
+			"sessionNotFoundExtended": "Session details not found, session ID: {{sessionId}}"
 		}
 	},
 	"activities":{

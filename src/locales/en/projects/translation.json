@@ -1,7 +1,8 @@
 {
     "topbar": {
-        "buildProjectSuccess": "Project build completed successfully.",
-        "deleteProjectSuccess": "Delete project completed successfully.",
+        "buildProjectSuccess": "Project build completed successfully",
+        "buildProjectSuccessExtended": "Project build completed successfully, error: {{error}}",
+        "deleteProjectSuccess": "Delete project completed successfully",
         "buttons": {
             "ariaBuildProject": "Build project",
             "ariaDeployProject": "Deploy project",
@@ -13,7 +14,8 @@
             "delete": "Delete",
             "ariaSettingsRun": "Settings manual run"
         },
-        "deployedProjectSuccess": "Project deploy completed successfully.",
+        "deployedProjectSuccess": "Project deployment completed successfully",
+        "deployedProjectSuccessExtended": "Project deployment completed successfully, deployment ID: {{deploymentId}}",
         "projectNotFound": "Project not found",
         "rename": "Rename",
         "success": "Success"

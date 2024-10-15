@@ -164,14 +164,19 @@ export const SessionsTable = () => {
 				message: tErrors("failedRemoveSession"),
 				type: "error",
 			});
-			LoggerService.error(
-				namespaces.sessionsService,
-				tErrors("failedRemoveSessionExtended", { sessionId: selectedSessionId })
-			);
 
 			return;
 		}
 
+		addToast({
+			message: tErrors("sessionDeletedSuccessfully"),
+			type: "success",
+		});
+
+		LoggerService.info(
+			namespaces.ui.sessionsTable,
+			tErrors("sessionDeletedSuccessfullyExtended", { sessionId: selectedSessionId })
+		);
 		closeModal(ModalName.deleteDeploymentSession);
 		closeSessionLog();
 		fetchDeployments();

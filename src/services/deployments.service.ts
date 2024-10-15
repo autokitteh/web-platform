@@ -124,12 +124,28 @@ export class DeploymentsService {
 				.filter((response): response is PromiseRejectedResult => response.status === "rejected")
 				.map((response) => response.reason);
 
+			if (unsettledResponses.length) {
+				for (const error of unsettledResponses) {
+					LoggerService.error(
+						namespaces.deploymentsService,
+						i18n.t("deploymentFetchByEnvironmentIdErrorExtended", {
+							error: (error as Error).message,
+							ns: "services",
+						})
+					);
+				}
+			}
+
 			return {
 				data: deploymentsSettled,
 				error: unsettledResponses.length ? unsettledResponses : undefined,
 			};
 		} catch (error) {
-			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
+			const errorMessage = i18n.t("deploymentFetchByEnvironmentIdErrorExtended", {
+				error: (error as Error).message,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.deploymentsService, errorMessage);
 
 			return { data: undefined, error };
 		}
@@ -141,8 +157,6 @@ export class DeploymentsService {
 				await EnvironmentsService.listByProjectId(projectId);
 
 			if (lisEnvironmentsError) {
-				LoggerService.error(namespaces.deploymentsService, (lisEnvironmentsError as Error).message);
-
 				return { data: undefined, error: lisEnvironmentsError };
 			}
 
@@ -151,17 +165,20 @@ export class DeploymentsService {
 				await this.listByEnvironmentIds(environmentIds);
 
 			if (listDeploymentsError) {
-				LoggerService.error(namespaces.deploymentsService, (listDeploymentsError as Error).message);
-
 				return { data: undefined, error: listDeploymentsError };
 			}
 			sortArray(projectDeployments, "createdAt", SortOrder.DESC);
 
 			return { data: projectDeployments!, error: undefined };
 		} catch (error) {
-			LoggerService.error(namespaces.deploymentsService, (error as Error).message);
+			const errorMessage = i18n.t("listDeploymentsByProjectIdExtended", {
+				projectId,
+				error: (error as Error).message,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.deploymentsService, errorMessage);
 
-			return { data: undefined, error: (error as Error).message };
+			return { data: undefined, error: errorMessage };
 		}
 	}
 }

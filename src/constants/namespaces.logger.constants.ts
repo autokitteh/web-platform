@@ -19,6 +19,10 @@ export const namespaces = {
 	eventsService: "Events Service",
 	ui: {
 		loginPage: "Login Page",
+		connectionsTable: "Connections Table",
+		sessionsTable: "Sessions Table",
+		sessionsViewer: "Sessions Viewer",
+		profilePage: "Profile Page",
 		deleteModal: "Delete Modal",
 		projectCodeEditor: "Project Code Editor",
 	},

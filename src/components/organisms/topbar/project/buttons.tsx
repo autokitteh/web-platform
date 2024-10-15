@@ -65,7 +65,7 @@ export const ProjectTopbarButtons = () => {
 		try {
 			setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: true }));
 
-			const { error } = await ProjectsService.build(projectId!, resources);
+			const { data: buildId, error } = await ProjectsService.build(projectId!, resources);
 			if (error) {
 				addToast({
 					message: t("projectBuildFailed", { ns: "errors" }),
@@ -79,7 +79,7 @@ export const ProjectTopbarButtons = () => {
 				message: t("topbar.buildProjectSuccess"),
 				type: "success",
 			});
-			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccess"));
+			LoggerService.info(namespaces.projectUI, t("topbar.buildProjectSuccessExtended", { buildId }));
 		} finally {
 			setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
 		}
@@ -92,7 +92,7 @@ export const ProjectTopbarButtons = () => {
 
 		try {
 			setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: true }));
-			const { error } = await ProjectsService.run(projectId!, resources);
+			const { data: deploymentId, error } = await ProjectsService.run(projectId!, resources);
 			if (error) {
 				addToast({
 					message: t("projectDeployFailed", { ns: "errors" }),
@@ -108,7 +108,7 @@ export const ProjectTopbarButtons = () => {
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
 			});
-			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccess"));
+			LoggerService.info(namespaces.projectUI, t("topbar.deployedProjectSuccessExtended", { deploymentId }));
 		} finally {
 			setLoadingButton((prev) => ({ ...prev, [TopbarButton.deploy]: false }));
 		}

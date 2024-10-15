@@ -28,7 +28,8 @@
 		"title": "My Profile",
 		"name": "Name: {{name}}",
 		"email": "Email: {{email}}",
-		"deleteAccount": "Delete My Account"
+		"deleteAccount": "Delete My Account",
+		"accountFetchError": "Error occurred during the account fetch, try again later"
 	},
 	"topbar": {
 		"title": "Settings"

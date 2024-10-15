@@ -15,14 +15,17 @@ export class IntegrationsService {
 			const integrationsConverted = integrations.map(convertIntegrationProtoToModel);
 
 			return { data: integrationsConverted, error: undefined };
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
-			const errorMessage = i18n.t("intergrationsNotFound", { ns: "services" });
+			const errorMessage = i18n.t("intergrationsNotFoundExtendedError", {
+				ns: "services",
+				error: new Error(error).message,
+			});
+
 			LoggerService.error(namespaces.integrationService, errorMessage);
 
 			return {
 				data: undefined,
-				error: new Error(errorMessage),
+				error: errorMessage,
 			};
 		}
 	}
