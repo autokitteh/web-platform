@@ -34,6 +34,7 @@ export {
 export {
 	sessionTabs,
 	defaultSessionTab,
+	defaultSessionsListRowHeight,
 	defaultSessionLogRecordsPageSize,
 	defaultSessionLogRecordsListRowHeight,
 	minimumSessionLogsRecordsFrameHeightFallback,
