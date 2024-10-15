@@ -14,7 +14,7 @@ import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
-import { Button, Frame, Loader, THead, Table, Td, Th, Typography } from "@components/atoms";
+import { Button, Frame, Loader, THead, Table, Th, Tr, Typography } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
@@ -181,17 +181,17 @@ export const SessionsTable = () => {
 						<div className="relative my-6 flex h-full flex-col overflow-hidden">
 							<Table className="h-full overflow-y-visible">
 								<THead className="rounded-t-14">
-									<Th className="justify-between">
-										<Td className="w-56 pl-4">{t("table.columns.startTime")}</Td>
+									<Tr className="justify-between">
+										<Th className="w-56 pl-4">{t("table.columns.startTime")}</Th>
 
-										<Td className="w-32">{t("table.columns.status")}</Td>
+										<Th className="w-32">{t("table.columns.status")}</Th>
 
-										<Td className="w-32">{t("table.columns.triggerName")}</Td>
+										<Th className="w-32">{t("table.columns.triggerName")}</Th>
 
-										<Td className="w-32">{t("table.columns.connectionName")}</Td>
+										<Th className="w-32">{t("table.columns.connectionName")}</Th>
 
-										<Td className="w-32">{t("table.columns.actions")}</Td>
-									</Th>
+										<Th className="w-32">{t("table.columns.actions")}</Th>
+									</Tr>
 								</THead>
 
 								<SessionsTableList
