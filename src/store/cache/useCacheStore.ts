@@ -73,7 +73,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	fetchTriggers: async (projectId: string, force?: boolean) => {
+	fetchTriggers: async (projectId, force?) => {
 		const { currentProjectId, triggers } = get();
 		if (currentProjectId === projectId && triggers?.length && !force) {
 			return triggers;

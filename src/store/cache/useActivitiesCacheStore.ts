@@ -2,7 +2,7 @@ import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
 import { LoggerService, SessionsService } from "@services";
-import { minimumSessionLogsRecordsFrameHeightFallback, namespaces } from "@src/constants";
+import { namespaces } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
@@ -13,7 +13,7 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
 
-	reset: (sessionId: string) =>
+	reset: (sessionId) =>
 		set((state) => ({
 			sessions: {
 				...state.sessions,
@@ -21,9 +21,9 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 			},
 		})),
 
-	reload: (sessionId: string) => {
+	reload: (sessionId, pageSize) => {
 		get().reset(sessionId);
-		get().loadLogs(sessionId, minimumSessionLogsRecordsFrameHeightFallback);
+		get().loadLogs(sessionId, pageSize);
 	},
 
 	loadLogs: async (sessionId, pageSize) => {
