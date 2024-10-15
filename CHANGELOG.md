@@ -1,3 +1,10 @@
+## [2.29.3](https://github.com/autokitteh/web-platform/compare/v2.29.2...v2.29.3) (2024-10-15)
+
+
+### Bug Fixes
+
+* sessions filter and loading states smoother experience ([#511](https://github.com/autokitteh/web-platform/issues/511)) ([300ea4c](https://github.com/autokitteh/web-platform/commit/300ea4cd6b582b66a1393ed9db744feca88f3901))
+
 ## [2.29.2](https://github.com/autokitteh/web-platform/compare/v2.29.1...v2.29.2) (2024-10-15)
 
 
