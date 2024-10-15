@@ -109,7 +109,8 @@ export const SessionsTable = () => {
 			setIsLoading(false);
 			setIsInitialLoad(false);
 		},
-		[deploymentId, sessionStateType, addToast, tErrors]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[deploymentId, sessionStateType]
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
@@ -207,7 +208,7 @@ export const SessionsTable = () => {
 						</Typography>
 						<div className="flex flex-wrap items-center justify-between gap-2.5">
 							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
-							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData(true)} />
+							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
 						</div>
 					</div>
 
