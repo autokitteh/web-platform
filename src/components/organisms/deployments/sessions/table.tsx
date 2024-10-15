@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
-import { defaultSessionsListRowHeight, maximumScreenHeightFallback, namespaces } from "@constants";
+import { namespaces, sessionRowHeight } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
@@ -69,15 +69,13 @@ export const SessionsTable = () => {
 				setIsLoading(true);
 			}
 
-			const pageSize = Math.ceil(maximumScreenHeightFallback / defaultSessionsListRowHeight) * 2;
-
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
 				{
 					stateType: sessionStateType,
 				},
 				nextPageToken,
-				pageSize
+				sessionRowHeight
 			);
 
 			if (error) {

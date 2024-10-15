@@ -7,13 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
-import {
-	defaultSessionLogRecordsListRowHeight,
-	defaultSessionTab,
-	maximumScreenHeightFallback,
-	namespaces,
-	sessionTabs,
-} from "@constants";
+import { defaultSessionTab, namespaces, sessionLogRowHeight, sessionTabs } from "@constants";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
@@ -79,10 +73,8 @@ export const SessionViewer = () => {
 	const fetchSessions = useCallback(async () => {
 		if (!sessionInfo) return;
 		fetchSessionInfo();
-		const pageSize = Math.ceil(maximumScreenHeightFallback / defaultSessionLogRecordsListRowHeight) * 2;
-
-		reloadOutputs(sessionInfo.sessionId, pageSize);
-		reloadActivities(sessionInfo.sessionId, pageSize);
+		reloadOutputs(sessionInfo.sessionId, sessionLogRowHeight);
+		reloadActivities(sessionInfo.sessionId, sessionLogRowHeight);
 	}, [sessionInfo, fetchSessionInfo, reloadOutputs, reloadActivities]);
 
 	useEffect(() => {
