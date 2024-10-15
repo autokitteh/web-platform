@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
-import { namespaces } from "@constants";
+import { namespaces, sessionRowHeight } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
@@ -74,7 +74,8 @@ export const SessionsTable = () => {
 				{
 					stateType: sessionStateType,
 				},
-				nextPageToken
+				nextPageToken,
+				sessionRowHeight
 			);
 
 			if (error) {
