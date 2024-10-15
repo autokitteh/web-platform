@@ -89,10 +89,10 @@ export const SessionsTable = () => {
 					tErrors("sessionsFetchErrorExtended", { error: (error as Error).message })
 				);
 
-				return false;
+				return;
 			}
 			if (!data?.sessions) {
-				return false;
+				return;
 			}
 			setSessions((prevSessions) => {
 				if (!nextPageToken || forceRefresh) {
@@ -102,8 +102,6 @@ export const SessionsTable = () => {
 				return [...prevSessions, ...data.sessions];
 			});
 			setSessionsNextPageToken(data.nextPageToken);
-
-			return true;
 		},
 		[deploymentId, addToast, tErrors]
 	);
