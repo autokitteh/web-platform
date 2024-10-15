@@ -22,7 +22,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			},
 		})),
 
-	reload: (sessionId: string, pageSize: number) => {
+	reload: (sessionId, pageSize) => {
 		get().reset(sessionId);
 		get().loadLogs(sessionId, pageSize);
 	},

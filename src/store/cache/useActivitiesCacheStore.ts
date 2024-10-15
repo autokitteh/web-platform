@@ -13,7 +13,7 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
 
-	reset: (sessionId: string) =>
+	reset: (sessionId) =>
 		set((state) => ({
 			sessions: {
 				...state.sessions,
@@ -21,7 +21,7 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 			},
 		})),
 
-	reload: (sessionId: string, pageSize: number) => {
+	reload: (sessionId, pageSize) => {
 		get().reset(sessionId);
 		get().loadLogs(sessionId, pageSize);
 	},
