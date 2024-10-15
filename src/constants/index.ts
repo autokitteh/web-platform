@@ -36,7 +36,7 @@ export {
 	defaultSessionTab,
 	defaultSessionsListRowHeight,
 	defaultSessionLogRecordsListRowHeight,
-	maximumScreenHeightFallback,
+	standardScreenHeightFallback,
 	sessionsEditorLineHeight,
 	sessionLogRowHeight,
 	sessionRowHeight,
