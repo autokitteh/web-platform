@@ -25,7 +25,11 @@ export class SessionsService {
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("sessionStopFailedExtended", { ns: "services", sessionId });
+			const errorMessage = i18n.t("sessionStopFailedExtended", {
+				ns: "services",
+				sessionId,
+				error: (error as Error).message,
+			});
 			LoggerService.error(namespaces.sessionsService, errorMessage);
 
 			return { data: undefined, error };
