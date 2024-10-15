@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -32,7 +32,6 @@ export const SessionsTable = () => {
 
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionStateType, setSessionStateType] = useState<number>();
-	const sessionStateTypeRef = useRef<number>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
@@ -72,7 +71,7 @@ export const SessionsTable = () => {
 			const { data, error } = await SessionsService.listByDeploymentId(
 				deploymentId!,
 				{
-					stateType: sessionStateTypeRef.current,
+					stateType: sessionStateType,
 				},
 				nextPageToken
 			);
@@ -103,7 +102,8 @@ export const SessionsTable = () => {
 			});
 			setSessionsNextPageToken(data.nextPageToken);
 		},
-		[deploymentId, addToast, tErrors]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[deploymentId, sessionStateType]
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
@@ -125,7 +125,6 @@ export const SessionsTable = () => {
 	);
 
 	useEffect(() => {
-		sessionStateTypeRef.current = sessionStateType;
 		refreshData(true);
 
 		return () => {
