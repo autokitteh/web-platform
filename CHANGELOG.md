@@ -1,3 +1,10 @@
+## [2.29.2](https://github.com/autokitteh/web-platform/compare/v2.29.1...v2.29.2) (2024-10-15)
+
+
+### Bug Fixes
+
+* session filters fetching wrong statuses ([#510](https://github.com/autokitteh/web-platform/issues/510)) ([0bbf36f](https://github.com/autokitteh/web-platform/commit/0bbf36fc63968b599bb3cd92e6c5f60f1c04191a))
+
 ## [2.29.1](https://github.com/autokitteh/web-platform/compare/v2.29.0...v2.29.1) (2024-10-14)
 
 
