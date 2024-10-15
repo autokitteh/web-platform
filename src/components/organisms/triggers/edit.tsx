@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { z } from "zod";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
@@ -32,7 +32,9 @@ export const EditTrigger = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
-
+	const location = useLocation();
+	const navigationData = location.state;
+	const [webhookUrlHighlight, setWebhookUrlHighlight] = useState(false);
 	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const { fetchResources } = useFileOperations(projectId!);
@@ -40,6 +42,10 @@ export const EditTrigger = () => {
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isSaving, setIsSaving] = useState(false);
+
+	useEffect(() => {
+		setWebhookUrlHighlight(navigationData?.highlightWebhookUrl || false);
+	}, [navigationData]);
 
 	const methods = useForm<TriggerFormData>({
 		defaultValues: {
@@ -164,11 +170,11 @@ export const EditTrigger = () => {
 
 					{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 
-					{trigger?.sourceType === TriggerTypes.webhook ? (
-						<WebhookFields webhookSlug={trigger.webhookSlug || ""} />
-					) : null}
-
 					<TriggerSpecificFields filesNameList={filesNameList} />
+
+					{trigger?.sourceType === TriggerTypes.webhook ? (
+						<WebhookFields highlight={webhookUrlHighlight} webhookSlug={trigger.webhookSlug || ""} />
+					) : null}
 				</form>
 
 				{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerInfo /> : null}

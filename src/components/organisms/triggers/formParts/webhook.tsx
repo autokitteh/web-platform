@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { getApiBaseUrl } from "@src/utilities";
+import { cn, getApiBaseUrl } from "@src/utilities";
 
 import { Input } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
 
-export const WebhookFields = ({ webhookSlug }: { webhookSlug?: string }) => {
+export const WebhookFields = ({ highlight, webhookSlug }: { highlight?: boolean; webhookSlug?: string }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const apiBaseUrl = getApiBaseUrl();
 
@@ -18,11 +18,13 @@ export const WebhookFields = ({ webhookSlug }: { webhookSlug?: string }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const webhookClassName = cn("w-full", { "shadow-sm shadow-green-200/80": highlight });
+
 	return (
 		<div className="relative flex gap-2">
 			<Input
 				aria-label={t("placeholders.webhookUrl")}
-				className="w-full"
+				className={webhookClassName}
 				disabled
 				label={t("placeholders.webhookUrl")}
 				name="webhookUrl"
