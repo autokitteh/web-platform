@@ -31,8 +31,8 @@ export const SessionsTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 
 	const [sessions, setSessions] = useState<Session[]>([]);
-	const [sessionStateType, setSessionStateType] = useState<number | undefined>(undefined);
-	const sessionStateTypeRef = useRef<number | undefined>(undefined);
+	const [sessionStateType, setSessionStateType] = useState<number>();
+	const sessionStateTypeRef = useRef<number>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
@@ -152,7 +152,6 @@ export const SessionsTable = () => {
 			const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
 			setSessionStateType(selectedSessionStateFilter);
 			closeSessionLog();
-			// We don't need to call refreshData here, as the useEffect will handle it
 		},
 		[closeSessionLog]
 	);
