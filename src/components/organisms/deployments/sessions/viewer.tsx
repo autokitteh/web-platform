@@ -54,6 +54,8 @@ export const SessionViewer = () => {
 		if (!sessionId) return;
 		setIsLoading(true);
 		const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId);
+		setIsLoading(false);
+
 		if (error) {
 			addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
 
@@ -66,7 +68,6 @@ export const SessionViewer = () => {
 			return;
 		}
 		setSessionInfo(sessionInfoResponse);
-		setIsLoading(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 
