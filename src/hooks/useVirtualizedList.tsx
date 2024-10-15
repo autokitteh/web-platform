@@ -64,7 +64,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 		}
 		const frameHeight = frameRef?.current?.offsetHeight || standardScreenHeightFallback;
 
-		const pageSize = Math.ceil(frameHeight / itemHeight) * 2;
+		const pageSize = Math.ceil(frameHeight / itemHeight) * 1.5;
 
 		await loadLogs(sessionId, pageSize);
 	};

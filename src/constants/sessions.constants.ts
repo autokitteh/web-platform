@@ -8,5 +8,7 @@ export const sessionTabs = [
 	{ label: "Execution Flow", value: "executionflow" },
 ];
 
-export const sessionLogRowHeight = Math.ceil(standardScreenHeightFallback / defaultSessionLogRecordsListRowHeight) * 2;
-export const sessionRowHeight = Math.ceil(standardScreenHeightFallback / defaultSessionsListRowHeight) * 2;
+export const sessionLogRowHeight = Math.ceil(
+	(standardScreenHeightFallback / defaultSessionLogRecordsListRowHeight) * 1.5
+);
+export const sessionRowHeight = Math.ceil((standardScreenHeightFallback / defaultSessionsListRowHeight) * 1.5);
