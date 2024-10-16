@@ -13,6 +13,7 @@ import { ProjectConfigTopbar, Sidebar, SystemLog } from "@components/organisms";
 export const AppLayout = ({ className, topbarVariant }: { className?: string; topbarVariant?: TopbarType }) => {
 	const appLayoutClasses = cn("h-screen w-screen pr-5 flex", className);
 	const { isLoggerEnabled, switchLogger } = useLoggerStore();
+
 	const resizeId = useId();
 	const [systemLogHeight, setSystemLogHeight] = useResize({
 		direction: "vertical",
@@ -33,6 +34,7 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 
 			return;
 		}
+
 		if (isLoggerEnabled === false && systemLogHeight > 0) {
 			switchLogger(true);
 		}

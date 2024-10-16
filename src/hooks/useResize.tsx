@@ -20,28 +20,24 @@ export const useResize = ({ direction, id, initial, max, min }: ResizeHook) => {
 				direction === "horizontal" ? currentCoordinate - startCoordinate : startCoordinate - currentCoordinate;
 			const newValue = (delta / dimension) * 100 + value;
 
-			if (newValue > 94 && direction === "vertical") {
-				setValue(100);
+			if (direction === "vertical") {
+				if (newValue > 94) {
+					setValue(100);
 
-				return;
-			}
+					return;
+				} else if (newValue > 91) {
+					setValue(91);
 
-			if (newValue > 91 && direction === "vertical") {
-				setValue(91);
+					return;
+				} else if (newValue < 5) {
+					setValue(0);
 
-				return;
-			}
+					return;
+				} else if (newValue < 10) {
+					setValue(10);
 
-			if (newValue < 5 && direction === "vertical") {
-				setValue(0);
-
-				return;
-			}
-
-			if (newValue < 10 && direction === "vertical") {
-				setValue(10);
-
-				return;
+					return;
+				}
 			}
 
 			setValue(Math.max(min, Math.min(max, newValue)));
