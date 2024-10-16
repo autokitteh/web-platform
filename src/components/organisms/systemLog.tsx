@@ -26,7 +26,7 @@ export const SystemLog = () => {
 		<Frame className="h-full overflow-hidden border border-none px-7 py-4">
 			<div className="flex justify-between">
 				<Typography className="font-semibold" element="h2" size="large">
-					{t("clear")}
+					{t("systemLog")}
 				</Typography>
 				<div className="flex items-center gap-2.5">
 					<IconButton
