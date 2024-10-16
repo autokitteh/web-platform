@@ -64,7 +64,7 @@ export const App = () => {
 	return (
 		<BrowserRouter>
 			<AKRoutes>
-				<Route element={<AppLayout className="pr-0" />} path="/">
+				<Route element={<AppLayout />} path="/">
 					<Route
 						element={
 							<>

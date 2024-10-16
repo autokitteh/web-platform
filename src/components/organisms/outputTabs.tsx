@@ -13,7 +13,7 @@ import { Button, IconSvg, Tab } from "@components/atoms";
 import { TrashIcon } from "@assets/image/icons";
 
 export const OutputTabs = () => {
-	const { clearLogs, logs } = useLoggerStore((state) => state);
+	const { clearLogs, logs } = useLoggerStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
 	const ouputTextStyle = {
@@ -28,7 +28,7 @@ export const OutputTabs = () => {
 		<div className="flex h-full flex-col pb-3">
 			<div
 				className={
-					`static top-4 flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
+					`static -my-2 flex h-14 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
 					`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
 				}
 			>

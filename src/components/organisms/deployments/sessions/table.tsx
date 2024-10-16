@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
-import { Button, Frame, Loader, THead, Table, Td, Th, Typography } from "@components/atoms";
+import { Frame, Loader, THead, Table, Td, Th, Typography } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
@@ -22,7 +22,8 @@ import { DeleteSessionModal, SessionsTableList } from "@components/organisms/dep
 import { CatImage } from "@assets/image";
 
 export const SessionsTable = () => {
-	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 45, max: 75, min: 25 });
+	const resizeId = useId();
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 45, max: 75, min: 25, id: resizeId });
 	const { t: tErrors } = useTranslation(["errors", "services"]);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 	const { closeModal } = useModalStore();
@@ -200,7 +201,7 @@ export const SessionsTable = () => {
 	);
 
 	return (
-		<div className="my-2 flex w-full">
+		<div className="my-1.5 flex w-full flex-1">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center justify-between gap-2.5">
@@ -250,9 +251,9 @@ export const SessionsTable = () => {
 				</Frame>
 			</div>
 
-			<Button className={resizeClass} />
+			<div className={resizeClass} data-resize-id={resizeId} />
 
-			<div className="flex bg-black" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+			<div className="flex rounded-r-2xl bg-black" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				{sessionId ? (
 					<Outlet />
 				) : (

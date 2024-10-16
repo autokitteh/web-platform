@@ -21,7 +21,8 @@
         "success": "Success"
     },
     "outputLog":{
-        "clear": "Clear logs"
+        "clear": "Clear logs",
+        "systemLog": "System log"
     },
     "manualRun":{
         "noFilesAvailable": "No files available",

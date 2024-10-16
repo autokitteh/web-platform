@@ -7,3 +7,4 @@ export { SplitFrame } from "@components/organisms/splitFrame";
 export { ProjectConfigTopbar, DashboardTopbar, DeleteProjectModal } from "@components/organisms/topbar";
 export { DashboardProjectsTable, DashboardWelcomeMainBlock } from "@components/organisms/dashboard";
 export { IntroMainBlock } from "@components/organisms/introMainBlock";
+export { SystemLog } from "@components/organisms/systemLog";

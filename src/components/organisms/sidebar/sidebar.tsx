@@ -8,7 +8,7 @@ import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 import { featureFlags } from "@src/featureFlags";
 
-import { useUserStore } from "@store";
+import { useLoggerStore, useUserStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
@@ -22,6 +22,7 @@ export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
 	const { logoutFunction } = useUserStore();
+	const { toggleLogger } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
 	const submenuRef = useRef<HTMLDivElement | null>(null);
@@ -101,7 +102,11 @@ export const Sidebar = () => {
 
 					<div className="flex flex-col justify-end gap-5">
 						{featureFlags.systemLog ? (
-							<Button className="hover:bg-green-200" title={t("systemLog")}>
+							<Button
+								className="hover:bg-green-200"
+								onClick={() => toggleLogger(true)}
+								title={t("systemLog")}
+							>
 								<Badge
 									anchorOrigin={{ vertical: "top", horizontal: "left" }}
 									ariaLabel={t("logToReview")}
