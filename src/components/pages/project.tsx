@@ -52,11 +52,11 @@ export const Project = () => {
 	};
 
 	return (
-		<div className="flex flex-1">
+		<>
 			<PageTitle title={pageTitle} />
 			<SplitFrame>
 				{displayTabs ? (
-					<div className="flex flex-1 flex-col">
+					<div className="flex flex-col">
 						<div className="sticky -top-8 z-20 -mt-5 bg-gray-1100 pb-0 pt-3">
 							<div className="scrollbar flex shrink-0 select-none items-center overflow-x-auto overflow-y-hidden whitespace-nowrap pb-5 pt-1">
 								{projectTabs.map((tabKey, index) => {
@@ -102,6 +102,6 @@ export const Project = () => {
 					<Outlet />
 				)}
 			</SplitFrame>
-		</div>
+		</>
 	);
 };

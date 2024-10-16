@@ -13,7 +13,7 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 	const resizeId = useId();
 	const [systemLogHeight] = useResize({
 		direction: "vertical",
-		initial: 25,
+		initial: 100,
 		max: 100,
 		min: 15,
 		id: resizeId,
@@ -27,15 +27,15 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 		<div className={appLayoutClasses}>
 			<Sidebar />
 
-			<div className="flex flex-1 flex-col overflow-hidden">
+			<div className="mb-2 flex flex-1 flex-col">
 				{topbarVariant ? <ProjectConfigTopbar variant={topbarVariant} /> : null}
-				<div className="flex" style={{ height: `${100 - systemLogHeight}%` }}>
+				<div className="flex overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
 					<Outlet />
 				</div>
 
 				<button className={buttonResizeClasses} data-resize-id={resizeId} />
 
-				<div className="z-20 mb-2" style={{ height: `${systemLogHeight}%` }}>
+				<div className="z-20" style={{ height: `${systemLogHeight}%` }}>
 					<SystemLog />
 				</div>
 			</div>
