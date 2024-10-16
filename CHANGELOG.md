@@ -1,3 +1,10 @@
+## [2.29.4](https://github.com/autokitteh/web-platform/compare/v2.29.3...v2.29.4) (2024-10-16)
+
+
+### Bug Fixes
+
+* load logs each time we enter the session ([#513](https://github.com/autokitteh/web-platform/issues/513)) ([5ef2ffa](https://github.com/autokitteh/web-platform/commit/5ef2ffa4ad538a7b6d38d495c70041226a4a3c34))
+
 ## [2.29.3](https://github.com/autokitteh/web-platform/compare/v2.29.2...v2.29.3) (2024-10-15)
 
 
