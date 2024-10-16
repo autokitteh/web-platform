@@ -13,7 +13,7 @@ import { Button, IconSvg, Tab } from "@components/atoms";
 import { TrashIcon } from "@assets/image/icons";
 
 export const OutputTabs = () => {
-	const { clearLogs, logs } = useLoggerStore((state) => state);
+	const { clearLogs, logs } = useLoggerStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
 	const ouputTextStyle = {

@@ -21,7 +21,12 @@ const store: StateCreator<LoggerStore> = (set) => ({
 		set(() => ({
 			logs: [],
 		})),
+	switchLogger: (enabled) =>
+		set(() => ({
+			isLoggerEnabled: enabled,
+		})),
 	logs: [],
+	isLoggerEnabled: false,
 });
 
 export const useLoggerStore = create(persist(store, { name: StoreName.logger }));

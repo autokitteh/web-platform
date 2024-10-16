@@ -32,6 +32,18 @@ export const useResize = ({ direction, id, initial, max, min }: ResizeHook) => {
 				return;
 			}
 
+			if (newValue < 5 && direction === "vertical") {
+				setValue(0);
+
+				return;
+			}
+
+			if (newValue < 10 && direction === "vertical") {
+				setValue(10);
+
+				return;
+			}
+
 			setValue(Math.max(min, Math.min(max, newValue)));
 		};
 
