@@ -213,7 +213,7 @@ export const SessionsTable = () => {
 						</div>
 					</div>
 
-					<div className="relative my-6 flex h-full flex-col overflow-hidden">
+					<div className="relative my-6 flex h-full flex-col overflow-hidden pb-5">
 						{isInitialLoad ? (
 							<div className="flex h-full items-center justify-center">
 								<Loader firstColor="light-gray" size="md" />
