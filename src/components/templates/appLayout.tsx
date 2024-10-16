@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 
 import { Outlet } from "react-router-dom";
 
@@ -6,27 +6,37 @@ import { useResize } from "@src/hooks";
 import { TopbarType } from "@src/types/components";
 import { cn } from "@utilities";
 
-import { Button } from "@components/atoms";
 import { ProjectConfigTopbar, Sidebar, SystemLog } from "@components/organisms";
 
 export const AppLayout = ({ className, topbarVariant }: { className?: string; topbarVariant?: TopbarType }) => {
-	const appLayoutClasses = cn("h-screen w-screen pr-5", className);
-	const [outputHeight] = useResize({ direction: "vertical", initial: 30, max: 70, min: 25 });
+	const appLayoutClasses = cn("h-screen w-screen pr-5 flex", className);
+	const resizeId = useId();
+	const [systemLogHeight] = useResize({
+		direction: "vertical",
+		initial: 25,
+		max: 100,
+		min: 15,
+		id: resizeId,
+	});
+	const buttonResizeClasses = cn(
+		"relative -top-1 z-20 m-auto w-32 cursor-ns-resize rounded-14 bg-gray-1000 p-1 transition hover:bg-gray-750",
+		{ "top-0": systemLogHeight === 100 }
+	);
 
 	return (
 		<div className={appLayoutClasses}>
-			<div className="flex h-full">
-				<Sidebar />
+			<Sidebar />
 
-				<div className="flex h-full flex-1 flex-col overflow-auto">
-					{topbarVariant ? <ProjectConfigTopbar variant={topbarVariant} /> : null}
+			<div className="flex flex-1 flex-col overflow-hidden">
+				{topbarVariant ? <ProjectConfigTopbar variant={topbarVariant} /> : null}
+				<div className="flex" style={{ height: `${100 - systemLogHeight}%` }}>
 					<Outlet />
-					{/* eslint-disable tailwindcss/no-custom-classname */}
-					<Button className="resize-handle-vertical relative -top-1 m-auto w-32 cursor-ns-resize bg-gray-1100 p-1 hover:bg-gray-750" />
+				</div>
 
-					<div className="mb-2" style={{ height: `${outputHeight as number}%` }}>
-						<SystemLog />
-					</div>
+				<button className={buttonResizeClasses} data-resize-id={resizeId} />
+
+				<div className="z-20 mb-2" style={{ height: `${systemLogHeight}%` }}>
+					<SystemLog />
 				</div>
 			</div>
 		</div>

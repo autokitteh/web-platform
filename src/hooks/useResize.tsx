@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 
 import { ResizeHook } from "@interfaces/hooks";
 
-export const useResize = ({ direction, initial, max, min }: ResizeHook) => {
+export const useResize = ({ direction, id, initial, max, min }: ResizeHook) => {
 	const initialValue = initial ? Math.min(max, Math.max(min, initial)) : max;
 	const [value, setValue] = useState(initialValue);
 
 	const onMouseDown = (event: MouseEvent) => {
-		if (!(event.target instanceof HTMLElement) || !event.target.classList.contains(`resize-handle-${direction}`)) {
+		if (!(event.target instanceof HTMLElement) || event.target.getAttribute(`data-resize-id`) !== id) {
 			return;
 		}
 
@@ -19,6 +19,18 @@ export const useResize = ({ direction, initial, max, min }: ResizeHook) => {
 			const delta =
 				direction === "horizontal" ? currentCoordinate - startCoordinate : startCoordinate - currentCoordinate;
 			const newValue = (delta / dimension) * 100 + value;
+
+			if (newValue > 94 && direction === "vertical") {
+				setValue(100);
+
+				return;
+			}
+
+			if (newValue > 91 && direction === "vertical") {
+				setValue(91);
+
+				return;
+			}
 
 			setValue(Math.max(min, Math.min(max, newValue)));
 		};
@@ -39,7 +51,7 @@ export const useResize = ({ direction, initial, max, min }: ResizeHook) => {
 			document.removeEventListener("mousedown", onMouseDown);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value]);
+	}, [value, id, direction, max, min]);
 
-	return [value, setValue];
+	return [value, setValue] as const;
 };

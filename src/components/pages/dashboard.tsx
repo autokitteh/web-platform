@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useId, useMemo } from "react";
 
 import { useResize } from "@src/hooks";
 import { useProjectStore } from "@src/store";
@@ -10,8 +10,9 @@ import { ProjectTemplatesSection } from "@components/organisms/dashboard/templat
 import { CatDashboardImage } from "@assets/image";
 
 export const Dashboard = () => {
+	const resizeId = useId();
 	const { isLoadingProjectsList, projectsList } = useProjectStore();
-	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 78, min: 30 });
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 78, min: 30, id: resizeId });
 
 	const hasProjects = !!projectsList.length;
 
@@ -39,8 +40,7 @@ export const Dashboard = () => {
 				) : null}
 			</div>
 
-			{/* eslint-disable-next-line tailwindcss/no-custom-classname */}
-			<div className="resize-handle-horizontal z-10 -ml-2 w-1 cursor-ew-resize transition hover:bg-gray-750" />
+			<div className="z-10 -ml-2 w-1 cursor-ew-resize transition hover:bg-gray-750" data-resize-id={resizeId} />
 
 			<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				<ProjectTemplatesSection />

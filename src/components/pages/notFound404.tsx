@@ -11,7 +11,7 @@ export const NotFound404 = () => {
 	const { t } = useTranslation(["notFound404"]);
 
 	return (
-		<div className="flex size-full flex-col items-center justify-center">
+		<div className="flex w-full flex-col items-center justify-center py-5">
 			<Error404 className="w-1/3" />
 
 			<div className="mt-16 font-fira-code text-lg text-black">{t("pageNotFound404")}</div>

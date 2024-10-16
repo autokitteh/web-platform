@@ -23,9 +23,9 @@ export const SystemLog = () => {
 	} as const;
 
 	return (
-		<Frame className="h-full overflow-hidden border border-error px-7 py-4">
+		<Frame className="h-full overflow-hidden border px-7 py-4">
 			<div className="flex justify-between">
-				<Typography className="font-semibold text-error" element="h2" size="large">
+				<Typography className="font-semibold" element="h2" size="large">
 					System Log
 				</Typography>
 				<div className="flex items-center gap-2.5">
