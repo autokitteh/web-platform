@@ -201,7 +201,7 @@ export const SessionsTable = () => {
 	);
 
 	return (
-		<div className="my-2 flex w-full flex-1">
+		<div className="my-1.5 flex w-full flex-1">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center justify-between gap-2.5">

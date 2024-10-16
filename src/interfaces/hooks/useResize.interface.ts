@@ -2,7 +2,7 @@ import { ResizeDirection } from "@type/hooks";
 
 export interface ResizeHook {
 	direction: ResizeDirection;
-	initial?: number;
+	initial: number;
 	id: string;
 	max: number;
 	min: number;

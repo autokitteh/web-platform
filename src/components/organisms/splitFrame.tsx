@@ -1,6 +1,7 @@
 import React, { useId } from "react";
 
 import { SplitFrameProps } from "@interfaces/components";
+import { defaultSplitFrameSize } from "@src/constants";
 import { cn } from "@utilities";
 
 import { useResize } from "@hooks";
@@ -13,9 +14,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const resizeVerticalId = useId();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
-		initial: 50,
-		max: 70,
-		min: 35,
+		...defaultSplitFrameSize,
 		id: resizeHorizontalId,
 	});
 	const [outputHeight] = useResize({ direction: "vertical", initial: 30, max: 90, min: 20, id: resizeVerticalId });
@@ -27,7 +26,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`);
 
 	return (
-		<div className="flex size-full justify-end py-2">
+		<div className="flex size-full justify-end py-1.5">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 			</div>

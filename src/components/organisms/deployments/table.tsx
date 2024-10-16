@@ -75,7 +75,7 @@ export const DeploymentsTable = () => {
 	}, [deployments]);
 
 	return (
-		<Frame className="my-2 flex-1 bg-gray-1100">
+		<Frame className="my-1.5 flex-1 bg-gray-1100">
 			<div className="flex items-center justify-between">
 				<h1 className="text-base">
 					{t("tableTitle")} ({deployments?.length || "0"})

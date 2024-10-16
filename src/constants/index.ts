@@ -46,3 +46,4 @@ export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
 export { mainNavigationItems } from "@constants/navigation.constnants";
+export { defaultSystemLogSize, defaultSplitFrameSize } from "@constants/resize.constants";
