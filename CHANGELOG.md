@@ -1,3 +1,10 @@
+# [2.30.0](https://github.com/autokitteh/web-platform/compare/v2.29.4...v2.30.0) (2024-10-16)
+
+
+### Features
+
+* add system log ([#480](https://github.com/autokitteh/web-platform/issues/480)) ([0e6d5b1](https://github.com/autokitteh/web-platform/commit/0e6d5b17fe469877397a7d23916ab6c41f82e3f7))
+
 ## [2.29.4](https://github.com/autokitteh/web-platform/compare/v2.29.3...v2.29.4) (2024-10-16)
 
 
