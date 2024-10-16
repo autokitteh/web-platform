@@ -26,7 +26,7 @@ export const Dashboard = () => {
 	}, [isLoadingProjectsList, hasProjects]);
 
 	return (
-		<div className="m-4 ml-0 flex w-full overflow-hidden rounded-2xl">
+		<div className="my-2 flex w-full flex-1 overflow-hidden rounded-2xl">
 			<div className="relative flex w-2/3 flex-col" style={{ width: `${leftSideWidth}%` }}>
 				<Frame className="h-full flex-1 rounded-r-none bg-gray-1100">
 					<DashboardTopbar />

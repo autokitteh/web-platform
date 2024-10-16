@@ -52,7 +52,7 @@ export const Project = () => {
 	};
 
 	return (
-		<>
+		<div className="flex-1">
 			<PageTitle title={pageTitle} />
 			<SplitFrame>
 				{displayTabs ? (
@@ -102,6 +102,6 @@ export const Project = () => {
 					<Outlet />
 				)}
 			</SplitFrame>
-		</>
+		</div>
 	);
 };

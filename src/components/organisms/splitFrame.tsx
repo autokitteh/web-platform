@@ -19,7 +19,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`);
 
 	return (
-		<div className="flex w-full justify-end py-2">
+		<div className="flex size-full justify-end py-2">
 			<div className="flex items-center" style={{ width: `${leftSideWidth}%` }}>
 				{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 			</div>
