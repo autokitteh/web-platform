@@ -21,7 +21,7 @@ const store: StateCreator<LoggerStore> = (set) => ({
 		set(() => ({
 			logs: [],
 		})),
-	switchLogger: (enabled) =>
+	toggleLogger: (enabled) =>
 		set(() => ({
 			isLoggerEnabled: enabled,
 		})),

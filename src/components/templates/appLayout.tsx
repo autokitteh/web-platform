@@ -13,7 +13,7 @@ import { ProjectConfigTopbar, Sidebar, SystemLog } from "@components/organisms";
 
 export const AppLayout = ({ className, topbarVariant }: { className?: string; topbarVariant?: TopbarType }) => {
 	const appLayoutClasses = cn("h-screen w-screen pr-5 flex", className);
-	const { isLoggerEnabled, switchLogger } = useLoggerStore();
+	const { isLoggerEnabled, toggleLogger } = useLoggerStore();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 	const resizeId = useId();
 	const [systemLogHeight, setSystemLogHeight] = useResize({
@@ -35,7 +35,7 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 		}
 
 		if (isLoggerEnabled !== systemLogHeight > 0) {
-			switchLogger(systemLogHeight > 0);
+			toggleLogger(systemLogHeight > 0);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [systemLogHeight]);

@@ -11,7 +11,7 @@ import { Frame, IconButton, Typography } from "@components/atoms";
 import { Close, TrashIcon } from "@assets/image/icons";
 
 export const SystemLog = () => {
-	const { clearLogs, logs, switchLogger } = useLoggerStore();
+	const { clearLogs, logs, toggleLogger } = useLoggerStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
 	const ouputTextStyle = {
@@ -26,7 +26,7 @@ export const SystemLog = () => {
 		<Frame className="h-full overflow-hidden border border-none px-7 py-4">
 			<div className="flex justify-between">
 				<Typography className="font-semibold" element="h2" size="large">
-					System Log
+					{t("clear")}
 				</Typography>
 				<div className="flex items-center gap-2.5">
 					<IconButton
@@ -38,7 +38,7 @@ export const SystemLog = () => {
 					</IconButton>
 					<IconButton
 						className="size-7 bg-gray-1100 p-0.5 hover:bg-gray-1050"
-						onClick={() => switchLogger(false)}
+						onClick={() => toggleLogger(false)}
 					>
 						<Close className="size-3 fill-white" />
 					</IconButton>

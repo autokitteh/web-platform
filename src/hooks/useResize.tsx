@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ResizeHook } from "@interfaces/hooks";
 
 export const useResize = ({ direction, id, initial, max, min }: ResizeHook) => {
-	const initialValue = initial < -1 ? Math.min(max, Math.max(min, initial)) : max;
+	const initialValue = initial > -1 ? Math.min(max, Math.max(min, initial)) : max;
 	const [value, setValue] = useState(initialValue);
 
 	const onMouseDown = (event: MouseEvent) => {

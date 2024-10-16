@@ -22,7 +22,7 @@ export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
 	const { logoutFunction } = useUserStore();
-	const { switchLogger } = useLoggerStore();
+	const { toggleLogger } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
 	const submenuRef = useRef<HTMLDivElement | null>(null);
@@ -104,7 +104,7 @@ export const Sidebar = () => {
 						{featureFlags.systemLog ? (
 							<Button
 								className="hover:bg-green-200"
-								onClick={() => switchLogger(true)}
+								onClick={() => toggleLogger(true)}
 								title={t("systemLog")}
 							>
 								<Badge
