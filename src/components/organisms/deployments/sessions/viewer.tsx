@@ -127,7 +127,7 @@ export const SessionViewer = () => {
 	return isLoading ? (
 		<Loader size="xl" />
 	) : (
-		<Frame className="overflow-hidden rounded-l-none pb-3 font-fira-code">
+		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
 			<div className="flex items-center justify-between border-b border-gray-950 pb-3.5">
 				<div className="flex gap-3 font-fira-sans text-base text-gray-500">
 					<span>{sessionDetails?.createdAt}</span>

@@ -126,8 +126,8 @@ export const SessionOutputs = () => {
 			)}
 
 			{!outputs.length && !loading ? (
-				<div className="mt-20 flex flex-col">
-					<div className="mt-10 text-center text-xl font-semibold">{t("noLogsFound")}</div>
+				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
+					{t("noLogsFound")}
 				</div>
 			) : null}
 		</div>
