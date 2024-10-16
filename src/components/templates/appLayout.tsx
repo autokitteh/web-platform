@@ -19,7 +19,7 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 		id: resizeId,
 	});
 	const buttonResizeClasses = cn(
-		"relative -top-1 z-20 m-auto w-32 cursor-ns-resize rounded-14 bg-gray-1000 p-1 transition hover:bg-gray-750",
+		"relative -top-1 z-20 mx-auto w-32 cursor-ns-resize rounded-14 bg-gray-1000 p-1 transition hover:bg-gray-750",
 		{ "top-0": systemLogHeight === 100 }
 	);
 
@@ -33,9 +33,9 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 					<Outlet />
 				</div>
 
-				<button className={buttonResizeClasses} data-resize-id={resizeId} />
+				<div className={buttonResizeClasses} data-resize-id={resizeId} />
 
-				<div className="z-20" style={{ height: `${systemLogHeight}%` }}>
+				<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
 					<SystemLog />
 				</div>
 			</div>
