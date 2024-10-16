@@ -60,7 +60,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const shouldLoadMore = useMemo(() => !(loading || (session && session.fullyLoaded)), [loading, session]);
 
 	const frameHeight = frameRef?.current?.offsetHeight || standardScreenHeightFallback;
-	const pageSize = Math.ceil(frameHeight / itemHeight) * 1.5;
+	const pageSize = Math.ceil((frameHeight / itemHeight) * 1.5);
 
 	const loadMoreRows = async (): Promise<void> => {
 		if (!sessionId || !shouldLoadMore) {
