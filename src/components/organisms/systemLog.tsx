@@ -23,7 +23,7 @@ export const SystemLog = () => {
 	} as const;
 
 	return (
-		<Frame className="mb-2 overflow-hidden border border-error px-7 py-4">
+		<Frame className="h-full overflow-hidden border border-error px-7 py-4">
 			<div className="flex justify-between">
 				<Typography className="font-semibold text-error" element="h2" size="large">
 					System Log
