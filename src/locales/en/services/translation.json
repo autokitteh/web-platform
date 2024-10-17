@@ -88,12 +88,10 @@
 		"deactivateFailed": "Deployment deactivation failed - deployment: {{deploymentId}}, error: {{error}}",
 		"createFailed": "Deployment creation failed - build: {{buildId}}, environment: {{envId}}, error: {{error}}"
 	},
-	"sessionTriggerSource": "Trigger {{triggerName}}",
-	"sessionConnectionSource": "Trigger {{connectionName}}",
-	"connection": "Connection - {{connectionName}}",
 	"convertWrappedJsonError": "Error parsing JSON for key '{{key}}': {{error}} in parseNestedJson function",
 	"accountFetchErrorExtended": "Error occurred during the account fetch, error: {{error}}",
 	"deploymentCreatedSuccessfully": "Deployment created with id: {{deploymentId}}",
-	"failedFetchingLogRecordsBySessionId": "Failed to fetch log records by session ID: {{sessionId}}, error: {{error}}, page token: {{pageToken}}, page size: {{pageSize}}, log type: {{logType}}"
+	"failedFetchingLogRecordsBySessionId": "Failed to fetch log records by session ID: {{sessionId}}, error: {{error}}, page token: {{pageToken}}, page size: {{pageSize}}, log type: {{logType}}",
+	"connection": "Connection"
 
 }
