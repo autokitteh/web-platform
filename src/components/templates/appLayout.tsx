@@ -9,6 +9,7 @@ import { useLoggerStore } from "@src/store";
 import { TopbarType } from "@src/types/components";
 import { cn } from "@utilities";
 
+import { ResizeButton } from "@components/atoms";
 import { ProjectConfigTopbar, Sidebar, SystemLog } from "@components/organisms";
 
 export const AppLayout = ({ className, topbarVariant }: { className?: string; topbarVariant?: TopbarType }) => {
@@ -41,7 +42,7 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 	}, [systemLogHeight]);
 
 	const buttonResizeClasses = cn(
-		"relative top z-20 mx-auto w-32 cursor-ns-resize rounded-14 bg-gray-1000 -mt-1 mb-0.5 p-1 transition hover:bg-gray-750",
+		"-mt-1 mb-0.5",
 		{ "top-0 mt-0 mb-0": systemLogHeight === 100 },
 		{ "top-0 -mt-1 -mb-1.5": systemLogHeight === 0 }
 	);
@@ -58,7 +59,7 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 
 				{featureFlags.systemLog ? (
 					<>
-						<div className={buttonResizeClasses} data-resize-id={resizeId} />
+						<ResizeButton className={buttonResizeClasses} direction="vertical" resizeId={resizeId} />
 
 						<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
 							<SystemLog />

@@ -12,9 +12,8 @@ import { LoggerService, SessionsService } from "@services";
 import { useResize } from "@src/hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
-import { cn } from "@utilities";
 
-import { Frame, Loader, THead, Table, Td, Th, Typography } from "@components/atoms";
+import { Frame, Loader, ResizeButton, THead, Table, Td, Th, Typography } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
@@ -193,17 +192,6 @@ export const SessionsTable = () => {
 		fetchDeployments();
 	};
 
-	const resizeClass = useMemo(
-		() =>
-			cn(
-				"resize-handle-horizontal bg-gray-1050 z-0 h-full cursor-ew-resize self-center rounded-none p-0.5 transition hover:bg-gray-750",
-				{
-					"bg-gray-1100": !sessionId,
-				}
-			),
-		[sessionId]
-	);
-
 	return (
 		<div className="my-1.5 flex w-full flex-1">
 			<div style={{ width: `${leftSideWidth}%` }}>
@@ -255,7 +243,7 @@ export const SessionsTable = () => {
 				</Frame>
 			</div>
 
-			<div className={resizeClass} data-resize-id={resizeId} />
+			<ResizeButton direction="horizontal" resizeId={resizeId} />
 
 			<div className="flex rounded-r-2xl bg-black" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				{sessionId ? (
