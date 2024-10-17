@@ -156,9 +156,6 @@ export const SessionViewer = () => {
 						{sessionInfo.sourceType}
 					</div>
 					<div className="flex items-center gap-4">
-						<div className="w-44 text-gray-1550">{t("connectionName")}</div>
-					</div>
-					<div className="flex items-center gap-4">
 						<div className="w-44 text-gray-1550">{t("entrypoint")}</div>
 						<div className="inline">
 							<div className="inline">{sessionInfo.entrypoint.path}</div>
