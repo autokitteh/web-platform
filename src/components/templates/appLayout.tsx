@@ -51,7 +51,7 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 		<div className={appLayoutClasses}>
 			<Sidebar />
 
-			<div className="mb-2 flex flex-1 flex-col">
+			<div className="mb-2 flex flex-1 flex-col overflow-hidden">
 				{topbarVariant ? <ProjectConfigTopbar variant={topbarVariant} /> : null}
 				<div className="flex overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
 					<Outlet />

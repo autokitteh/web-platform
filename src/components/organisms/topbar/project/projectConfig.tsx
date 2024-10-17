@@ -34,8 +34,10 @@ export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 		<div className="flex justify-between rounded-b-xl bg-gray-1250 pl-7 pr-3">
 			<ProjectTopbarName />
 			<ProjectTopbarNavigation />
-
-			{variant === TopbaButtonVariant.actions ? <ProjectTopbarButtons /> : null}
+			<div className="scrollbar flex overflow-auto">
+				<div className="w-350 shrink-0" />
+				{variant === TopbaButtonVariant.actions ? <ProjectTopbarButtons /> : null}
+			</div>
 
 			{variant === TopbaButtonVariant.manual ? (
 				<>
