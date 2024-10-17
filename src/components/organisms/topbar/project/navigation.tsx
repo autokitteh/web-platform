@@ -64,7 +64,7 @@ export const ProjectTopbarNavigation = () => {
 	);
 
 	return (
-		<div className="ml-5 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
+		<div className="ml-50 mr-auto flex items-stretch divide-x divide-gray-750 border-x border-gray-750">
 			{navigationItems.map(
 				({
 					buttonClassName,

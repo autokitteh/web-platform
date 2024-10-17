@@ -20,7 +20,7 @@ export const ProjectTopbarName = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
 	const { t: tErrors } = useTranslation("errors");
 	const inputClass = cn(
-		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0",
+		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0 max-w-245 text-gray-500",
 		{
 			"outline-2 outline-error": !isNameValid,
 		}
@@ -63,11 +63,11 @@ export const ProjectTopbarName = () => {
 	};
 
 	const handleInputChange = async (
-		event: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>
+		event: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement>
 	) => {
-		const newName = (event.target as HTMLSpanElement).textContent?.trim() || "";
+		const newName = (event.target as HTMLInputElement).value.trim();
 		const isValidName = validateName(newName);
-		const isEnterKey = (event as React.KeyboardEvent<HTMLSpanElement>).key === "Enter";
+		const isEnterKey = (event as React.KeyboardEvent<HTMLInputElement>).key === "Enter";
 		const isBlur = event.type === "blur";
 
 		if (isEnterKey) {
@@ -77,50 +77,42 @@ export const ProjectTopbarName = () => {
 		if ((isEnterKey || isBlur) && isValidName && projectId) {
 			const { error } = await ProjectsService.update(projectId, newName);
 			if (error) {
-				addToast({
-					message: tErrors("projectUpdateFailed"),
-					type: "error",
-				});
+				addToast({ message: tErrors("projectUpdateFailed"), type: "error" });
 
 				return;
 			}
-			(event.target as HTMLSpanElement).blur();
-			setIsNameValid(isValidName);
+			(event.target as HTMLInputElement).blur();
 			renameProject(projectId, newName);
 		}
 	};
 
-	const handleInput = (event: React.ChangeEvent<HTMLSpanElement>) => {
-		const newName = event.target.textContent?.trim() || "";
+	const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const newName = event.target.value.trim();
+		setProject((prev) => (prev ? { ...prev, name: newName } : undefined));
 		setIsNameValid(validateName(newName));
 	};
 
 	return (
-		<div className="flex items-center py-2">
-			<div className="relative flex items-center gap-3 font-fira-code text-gray-500">
-				<span
-					className={inputClass}
-					contentEditable={true}
-					onBlur={handleInputChange}
-					onInput={handleInput}
-					onKeyDown={handleInputChange}
-					role="textbox"
-					suppressContentEditableWarning={true}
-					tabIndex={0}
-					title={t("topbar.rename")}
-				>
-					{project?.name}
-				</span>
+		<div className="flex items-center gap-3 py-2 font-fira-code">
+			<input
+				autoComplete="off"
+				className={inputClass}
+				onBlur={handleInputChange}
+				onChange={handleInput}
+				onKeyDown={handleInputChange}
+				tabIndex={0}
+				title={t("topbar.rename")}
+				value={project?.name}
+			/>
 
-				<ErrorMessage className="-bottom-3.5 text-xs">
-					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
-				</ErrorMessage>
+			<ErrorMessage className="-bottom-3.5 text-xs">
+				{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
+			</ErrorMessage>
 
-				<span className="flex items-center font-fira-code font-semibold">
-					ID
-					<CopyButton className="ml-2 inline p-1 pl-1.5" size="xs" text={project?.id || ""} />
-				</span>
-			</div>
+			<span className="flex items-center font-fira-code font-semibold text-gray-500">
+				ID
+				<CopyButton className="ml-2 inline p-1 pl-1.5" size="xs" text={project?.id || ""} />
+			</span>
 		</div>
 	);
 };
