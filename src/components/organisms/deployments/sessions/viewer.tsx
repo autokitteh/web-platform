@@ -193,10 +193,12 @@ export const SessionViewer = () => {
 						<div className="leading-6">{t("sessionId")}</div>
 						<CopyButton className="p-0" size="xs" text={sessionInfo.sessionId} />
 					</div>
-					<div className="flex items-center justify-end gap-4">
-						<div className="leading-6">{t("eventId")}</div>
-						<CopyButton className="p-0" size="xs" text={sessionInfo.eventId} />
-					</div>
+					{sessionInfo.eventId ? (
+						<div className="flex items-center justify-end gap-4">
+							<div className="leading-6">{t("eventId")}</div>
+							<CopyButton className="p-0" size="xs" text={sessionInfo.eventId} />
+						</div>
+					) : null}
 					<div className="flex items-center justify-end gap-4">
 						<div className="leading-6">{t("buildId")}</div>
 						<CopyButton className="p-0" size="xs" text={sessionInfo.buildId} />
