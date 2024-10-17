@@ -1,4 +1,4 @@
-export { Button, IconButton } from "@components/atoms/buttons";
+export { Button, IconButton, ResizeButton } from "@components/atoms/buttons";
 export { DropdownMenu } from "@components/atoms/dropdownMenu";
 export { ErrorMessage } from "@components/atoms/errorMessage";
 export { Frame } from "@components/atoms/frame";

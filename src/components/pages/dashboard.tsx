@@ -3,7 +3,7 @@ import React, { useId, useMemo } from "react";
 import { useResize } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
-import { Frame, Loader } from "@components/atoms";
+import { Frame, Loader, ResizeButton } from "@components/atoms";
 import { DashboardProjectsTable, DashboardTopbar, DashboardWelcomeMainBlock } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
 
@@ -39,8 +39,7 @@ export const Dashboard = () => {
 					<CatDashboardImage className="absolute -bottom-6 -right-5 hidden minHeightLg:block" />
 				) : null}
 			</div>
-
-			<div className="z-10 -ml-2 w-1 cursor-ew-resize transition hover:bg-gray-750" data-resize-id={resizeId} />
+			<ResizeButton className="right-0.5 bg-white hover:bg-gray-700" direction="horizontal" resizeId={resizeId} />
 
 			<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				<ProjectTemplatesSection />
