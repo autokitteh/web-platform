@@ -87,12 +87,6 @@ export class SessionsService {
 			const { session } = await sessionsClient.get({ sessionId, jsonValues: true });
 
 			if (!session?.eventId) {
-				const errorMessage = i18n.t("sessionMissingEventExtended", {
-					sessionId,
-					ns: "services",
-				});
-				LoggerService.error(namespaces.sessionsService, errorMessage);
-
 				const sessionConverted = convertSessionProtoToViewerModel(session!);
 
 				return {
