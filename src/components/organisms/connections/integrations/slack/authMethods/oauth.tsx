@@ -31,9 +31,6 @@ export const OauthForm = () => {
 					))}
 				</div>
 			</Accordion>
-
-			<p className="ml-2 mt-1">{t("slack.clickButtonInstall")}</p>
-
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-500 hover:text-white"
