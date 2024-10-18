@@ -96,10 +96,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		integrationName?: string
 	) => {
 		const connectionData = flattenFormData(getValues(), formSchema);
-		let formattedIntegrationName = integrationName;
-		if (integrationName && isGoogleIntegration(stripGoogleConnectionName(integrationName) as Integrations)) {
-			formattedIntegrationName = defaultGoogleConnectionName;
-		}
+		const formattedIntegrationName =
+			integrationName && isGoogleIntegration(stripGoogleConnectionName(integrationName) as Integrations)
+				? defaultGoogleConnectionName
+				: integrationName;
 
 		return { connectionData, formattedIntegrationName };
 	};
