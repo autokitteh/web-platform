@@ -3,7 +3,6 @@ import React, { useEffect, useId, useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
-import { featureFlags } from "@src/featureFlags";
 import { useResize } from "@src/hooks";
 import { useLoggerStore } from "@src/store";
 import { TopbarType } from "@src/types/components";
@@ -15,6 +14,7 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 	const appLayoutClasses = cn("h-screen w-screen pr-5 flex", className);
 	const { isLoggerEnabled, toggleLogger } = useLoggerStore();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
+
 	const resizeId = useId();
 	const [systemLogHeight, setSystemLogHeight] = useResize({
 		direction: "vertical",
@@ -56,15 +56,11 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 					<Outlet />
 				</div>
 
-				{featureFlags.systemLog ? (
-					<>
-						<div className={buttonResizeClasses} data-resize-id={resizeId} />
+				<div className={buttonResizeClasses} data-resize-id={resizeId} />
 
-						<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
-							<SystemLog />
-						</div>
-					</>
-				) : null}
+				<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
+					<SystemLog />
+				</div>
 			</div>
 		</div>
 	);
