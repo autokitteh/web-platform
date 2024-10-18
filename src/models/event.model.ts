@@ -45,7 +45,6 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 			});
 		sourceType = connection?.name
 			? i18n.t("connection", {
-					connectionName: connection?.name,
 					ns: "services",
 				})
 			: i18n.t("unknownSourceForSessionModel", {

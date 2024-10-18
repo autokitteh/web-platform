@@ -103,6 +103,7 @@
 			},
 			"trigger": "Trigger",
 			"source": "Source",
+			"sourceType": "Source Type",
 			"entrypoint": "Entrypoint",
 			"manualRun": "Manual Run",
 			"eventId": "Event ID",

@@ -151,12 +151,15 @@ export const SessionViewer = () => {
 						<div className="w-44 text-gray-1550">{t("status")}</div>
 						<SessionsTableState sessionState={sessionInfo.state} />
 					</div>
+					{sessionInfo.destinationName ? (
+						<div className="flex items-center gap-4">
+							<div className="w-44 text-gray-1550">{t("source")}</div>
+							{sessionInfo.destinationName}
+						</div>
+					) : null}
 					<div className="flex items-center gap-4">
-						<div className="w-44 text-gray-1550">{t("source")}</div>
+						<div className="w-44 text-gray-1550">{t("sourceType")}</div>
 						{sessionInfo.sourceType}
-					</div>
-					<div className="flex items-center gap-4">
-						<div className="w-44 text-gray-1550">{t("connectionName")}</div>
 					</div>
 					<div className="flex items-center gap-4">
 						<div className="w-44 text-gray-1550">{t("entrypoint")}</div>
@@ -196,10 +199,12 @@ export const SessionViewer = () => {
 						<div className="leading-6">{t("sessionId")}</div>
 						<CopyButton className="p-0" size="xs" text={sessionInfo.sessionId} />
 					</div>
-					<div className="flex items-center justify-end gap-4">
-						<div className="leading-6">{t("eventId")}</div>
-						<CopyButton className="p-0" size="xs" text={sessionInfo.eventId} />
-					</div>
+					{sessionInfo.eventId ? (
+						<div className="flex items-center justify-end gap-4">
+							<div className="leading-6">{t("eventId")}</div>
+							<CopyButton className="p-0" size="xs" text={sessionInfo.eventId} />
+						</div>
+					) : null}
 					<div className="flex items-center justify-end gap-4">
 						<div className="leading-6">{t("buildId")}</div>
 						<CopyButton className="p-0" size="xs" text={sessionInfo.buildId} />
