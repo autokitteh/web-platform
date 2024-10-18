@@ -30,6 +30,7 @@ export const SessionsTable = () => {
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
+	const [isDeleting, setIsDeleting] = useState(false);
 
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionStateType, setSessionStateType] = useState<number>();
@@ -165,7 +166,9 @@ export const SessionsTable = () => {
 		if (!selectedSessionId) {
 			return;
 		}
+		setIsDeleting(true);
 		const { error } = await SessionsService.deleteSession(selectedSessionId);
+		setIsDeleting(false);
 		if (error) {
 			addToast({
 				message: tErrors("failedRemoveSession"),
@@ -176,14 +179,15 @@ export const SessionsTable = () => {
 		}
 
 		addToast({
-			message: tErrors("sessionDeletedSuccessfully"),
+			message: tErrors("actions.sessionRemovedSuccessfully"),
 			type: "success",
 		});
 
 		LoggerService.info(
 			namespaces.ui.sessionsTable,
-			tErrors("sessionDeletedSuccessfullyExtended", { sessionId: selectedSessionId })
+			tErrors("actions.sessionRemovedSuccessfullyExtended", { sessionId: selectedSessionId })
 		);
+
 		closeModal(ModalName.deleteDeploymentSession);
 		closeSessionLog();
 		fetchDeployments();
@@ -266,7 +270,7 @@ export const SessionsTable = () => {
 				)}
 			</div>
 
-			<DeleteSessionModal onDelete={handleRemoveSession} />
+			<DeleteSessionModal isDeleting={isDeleting} onDelete={handleRemoveSession} />
 		</div>
 	);
 };

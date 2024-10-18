@@ -1,8 +1,9 @@
 {
     "topbar": {
-        "buildProjectSuccess": "Project build completed successfully",
         "buildProjectSuccessExtended": "Project build completed successfully, error: {{error}}",
-        "deleteProjectSuccess": "Delete project completed successfully",
+        "buildProjectSuccess": "Project build completed successfully.",
+        "deleteProjectSuccess": "Project deletion completed successfully.",
+        "deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
         "buttons": {
             "ariaBuildProject": "Build project",
             "ariaDeployProject": "Deploy project",

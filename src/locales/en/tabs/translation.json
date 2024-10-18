@@ -50,7 +50,8 @@
 		"titleAvailable": "Connections",
 		"titleEmptyConnections": "Add connection",
 		"connectionRemoveSuccess": "{{connectionName}} removed successfully",
-		"connectionRemoveSuccessExtended": "Connection removed successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}"
+		"connectionRemoveSuccessExtended": "Connection removed successfully, connection name: {{connectionName}}, connection ID: {{connectionId}}",
+		"connectionRemoveSuccessWithID": "Connection removed successfully, connection ID: {{connectionId}}"
 	},
 	"editor": {
 		"buttons": {
@@ -134,7 +135,9 @@
 				"eventType": "Event Type",
 				"filter": "Filter",
 				"name": "Name"
-			}
+			},
+			"triggerRemovedSuccessfully": "Trigger removed successfully",
+			"triggerRemovedSuccessfullyExtended": "Trigger removed successfully, trigger ID: {{triggerId}}"
 		},
 		"titleAvailable": "Triggers",
 		"titleEmptyTriggers": "Add Trigger"
@@ -188,6 +191,9 @@
 			}
 		},
 		"titleAvailable": "Variables",
-		"titleEmptyVariablesButton": "Add Variable"
+		"titleEmptyVariablesButton": "Add Variable",
+		"variableRemovedSuccessfully": "{{variableName}} removed successfully",
+		"variableRemovedSuccessfullyExtended": "{{variableName}} removed successfully, variable ID: {{variableId}}"
+
 	}
 }

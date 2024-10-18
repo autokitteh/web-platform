@@ -35,6 +35,8 @@ export const ProjectTopbarButtons = () => {
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 	const { resetChecker } = useConnectionCheckerStore();
+	const [isDeleting, setIsDeleting] = useState(false);
+	const { projectsList } = useProjectStore();
 
 	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
@@ -131,7 +133,10 @@ export const ProjectTopbarButtons = () => {
 			return;
 		}
 
+		setIsDeleting(true);
 		const { error } = await deleteProject(projectId);
+		setIsDeleting(false);
+
 		closeModal(ModalName.deleteProject);
 		if (error) {
 			addToast({
@@ -148,7 +153,8 @@ export const ProjectTopbarButtons = () => {
 			message: t("topbar.deleteProjectSuccess"),
 			type: "success",
 		});
-		LoggerService.info(namespaces.projectUI, t("topbar.deleteProjectSuccess"));
+		const projectName = projectsList.find(({ id }) => id === projectId)?.name;
+		LoggerService.info(namespaces.projectUI, t("topbar.deleteProjectSuccessExtended", { projectId, projectName }));
 
 		navigate("/");
 	};
@@ -230,7 +236,7 @@ export const ProjectTopbarButtons = () => {
 				</Button>
 			</DropdownButton>
 
-			<DeleteProjectModal onDelete={handleDeleteProject} />
+			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleDeleteProject} />
 		</div>
 	);
 };

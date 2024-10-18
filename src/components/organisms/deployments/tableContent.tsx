@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
-import { DeploymentsService } from "@services";
-import { dateTimeFormat } from "@src/constants";
+import { DeploymentsService, LoggerService } from "@services";
+import { dateTimeFormat, namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -32,6 +32,8 @@ export const DeploymentsTableContent = ({
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal, openModal } = useModalStore();
 	const [deploymentId, setDeploymentId] = useState<string>();
+	const [isDeleting, setIsDeleting] = useState(false);
+
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
 		setDeploymentId(id);
@@ -42,11 +44,20 @@ export const DeploymentsTableContent = ({
 		async (id: string, action: "activate" | "deactivate" | "delete", event?: React.MouseEvent) => {
 			event?.stopPropagation();
 
-			const { error } = await (action === "activate"
-				? DeploymentsService.activate(id)
-				: action === "deactivate"
-					? DeploymentsService.deactivate(id)
-					: DeploymentsService.delete(id));
+			let error;
+
+			if (action === "activate") {
+				const result = await DeploymentsService.activate(id);
+				error = result.error;
+			} else if (action === "deactivate") {
+				const result = await DeploymentsService.deactivate(id);
+				error = result.error;
+			} else if (action === "delete") {
+				setIsDeleting(true);
+				const result = await DeploymentsService.delete(id);
+				setIsDeleting(false);
+				error = result.error;
+			}
 
 			if (error) {
 				addToast({
@@ -56,9 +67,38 @@ export const DeploymentsTableContent = ({
 
 				return;
 			}
-			if (action === "delete") {
+
+			if (action === "activate") {
+				addToast({
+					message: t("actions.deploymentActivatedSuccessfully"),
+					type: "success",
+				});
+				LoggerService.info(
+					namespaces.ui.deployments,
+					t("deploymentActivatedSuccessfullyExtended", { deploymentId: id })
+				);
+			} else if (action === "deactivate") {
+				addToast({
+					message: t("actions.deploymentDeactivatedSuccessfully"),
+					type: "success",
+				});
+				LoggerService.info(
+					namespaces.ui.deployments,
+					t("deploymentDeactivatedSuccessfullyExtended", { deploymentId: id })
+				);
+			} else if (action === "delete") {
 				closeModal(ModalName.deleteDeployment);
+
+				addToast({
+					message: t("actions.deploymentRemovedSuccessfully"),
+					type: "success",
+				});
+				LoggerService.info(
+					namespaces.ui.deployments,
+					t("deploymentRemovedSuccessfullyExtended", { deploymentId: id })
+				);
 			}
+
 			updateDeployments();
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -165,7 +205,11 @@ export const DeploymentsTableContent = ({
 					))}
 				</TBody>
 			</Table>
-			<DeleteDeploymentModal onDelete={() => handleDeploymentAction(deploymentId!, "delete")} />
+			<DeleteDeploymentModal
+				id={deploymentId}
+				isDeleting={isDeleting}
+				onDelete={() => handleDeploymentAction(deploymentId!, "delete")}
+			/>
 		</>
 	);
 };

@@ -20,6 +20,7 @@
 	"connectionExistsExtended": "Connection already exists, connectionId: {{connectionId}}",
 	"errorFetchingConnectionExtended": "Error while fetching connection, connection ID: {{connectionId}}, error: {{error}}",
 	"errorOccured": "An error occurred",
+	"successRemoveFile": "{{fileName}} succesfully removed",
 	"failedRemoveFile": "Failed to remove file: {{fileName}}",
 	"failedRemoveSession": "Failed to remove session",
 	"failedRemoveSessionExtended": "Failed to remove session, ID: {{sessionId}}",

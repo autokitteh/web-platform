@@ -32,7 +32,7 @@ export const SessionsTableList = ({
 
 	const showDeleteModal = useCallback((id: string) => {
 		onSelectedSessionId(id);
-		openModal(ModalName.deleteDeploymentSession);
+		openModal(ModalName.deleteDeploymentSession, id);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

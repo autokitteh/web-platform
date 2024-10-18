@@ -38,7 +38,7 @@ test.describe("Project Deployment Suite", () => {
 		const deleteButton = page.getByRole("button", { name: "Delete deployment" });
 		await deleteButton.click();
 
-		await page.getByRole("button", { name: "Yes, delete" }).click();
+		await page.getByRole("button", { name: "Ok" }).click();
 		await expect(deleteButton).not.toBeVisible();
 		await expect(page.getByText("No deployments found")).toBeVisible();
 	});

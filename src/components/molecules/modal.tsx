@@ -22,7 +22,7 @@ const modalVariants = {
 	visible: { opacity: 1, scale: 1, transition: { delay: 0.1, duration: 0.2 } },
 };
 
-export const Modal = ({ children, className, name }: ModalProps) => {
+export const Modal = ({ children, className, hideCloseButton, name }: ModalProps) => {
 	const { isOpen, onClose } = useModalStore((state) => ({
 		isOpen: state.modals[name],
 		onClose: state.closeModal,
@@ -51,12 +51,14 @@ export const Modal = ({ children, className, name }: ModalProps) => {
 						initial="hidden"
 						variants={modalVariants}
 					>
-						<IconButton
-							className="group ml-auto h-default-icon w-default-icon bg-gray-250 p-0"
-							onClick={() => onClose(name)}
-						>
-							<Close className="size-3 fill-black transition group-hover:fill-white" />
-						</IconButton>
+						{hideCloseButton ? null : (
+							<IconButton
+								className="group ml-auto h-default-icon w-default-icon bg-gray-250 p-0"
+								onClick={() => onClose(name)}
+							>
+								<Close className="size-3 fill-black transition group-hover:fill-white" />
+							</IconButton>
+						)}
 
 						{children}
 					</motion.div>
