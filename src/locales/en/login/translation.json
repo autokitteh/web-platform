@@ -2,13 +2,13 @@
     "leftSide": {
         "autokittehGreenTitle": "AutoKitteh",
         "welcomeTitle": "Welcome to",
-        "register": "Register"
+        "whatIsAutoKitteh": "What is AutoKitteh?"
     },
     "rightSide": {
         "titleFirstLine": "Reliable Automation",
         "titleSecondLine": "Few Lines of Code",
-        "descriptionFirstLine": "All you need to easily develop",
-        "descriptionSecondLine": "robust automations in Python",
+        "descriptionFirstLine": "Build automations in code in minutes",
+        "descriptionSecondLine": "All you need to easily develop automations automations in Python code  ",
         "benefitsList":{
             "bullet1": "Serverless Python environment",
             "bullet2": "Super fast deploys",
