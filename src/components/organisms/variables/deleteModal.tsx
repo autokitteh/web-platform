@@ -37,10 +37,18 @@ export const DeleteVariableModal = ({ id, isDeleting, onDelete }: DeleteModalPro
 				<Button
 					ariaLabel={t("deleteButton")}
 					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
+					disabled={isDeleting}
 					onClick={onDelete}
 					variant="filled"
 				>
-					{isDeleting ? <Loader size="sm" /> : t("deleteButton")}
+					{isDeleting ? (
+						<div className="flex flex-row gap-2">
+							<Loader size="sm" />
+							{t("deleteButton")}
+						</div>
+					) : (
+						t("deleteButton")
+					)}
 				</Button>
 			</div>
 		</Modal>
