@@ -6,7 +6,7 @@ import { cn } from "@utilities";
 
 import { useResize } from "@hooks";
 
-import { Frame, LogoCatLarge } from "@components/atoms";
+import { Frame, LogoCatLarge, ResizeButton } from "@components/atoms";
 import { EditorTabs, OutputTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children }: SplitFrameProps) => {
@@ -31,7 +31,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 				{children ? <Frame className={leftFrameClass}>{children}</Frame> : null}
 			</div>
 
-			<div className="z-10 -ml-2 w-2 cursor-ew-resize" data-resize-id={resizeHorizontalId} />
+			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeHorizontalId} />
 
 			<div
 				className="relative flex items-center overflow-hidden"
