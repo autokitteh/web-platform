@@ -12,7 +12,7 @@ import { cn } from "@utilities";
 
 import { useProjectStore, useToastStore } from "@store";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Button, IconSvg, Loader } from "@components/atoms";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
 
@@ -23,6 +23,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 	const { createProject, getProjectsList, projectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
+	const [isCreatingProject, setIsCreatingProject] = useState(false);
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -35,7 +36,9 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 	};
 
 	const handleCreateProject = async () => {
+		setIsCreatingProject(true);
 		const { data, error } = await createProject(true);
+		setIsCreatingProject(false);
 
 		if (error) {
 			addToast({
@@ -86,12 +89,17 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
 						ariaLabel="New Project"
-						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200"
+						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200 disabled:opacity-100"
+						disabled={isCreatingProject}
 						onClick={handleCreateProject}
 						title="New Project"
 					>
 						<div className="flex size-9 items-center justify-center">
-							<IconSvg alt="New Project" size="xl" src={NewProject} />
+							{isCreatingProject ? (
+								<Loader className="ml-1 before:size-3 after:size-3" isCenter />
+							) : (
+								<IconSvg alt="New Project" size="xl" src={NewProject} />
+							)}
 						</div>
 
 						<AnimatePresence>
