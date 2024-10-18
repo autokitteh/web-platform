@@ -11,12 +11,12 @@ import { ZodObject, ZodRawShape } from "zod";
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
-import { Integrations, defaultGoogleConnectionName } from "@src/enums/components";
+import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { useConnectionCheckerStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
-import { flattenFormData, getApiBaseUrl, openPopup } from "@src/utilities";
+import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@src/utilities";
 
 const GoogleIntegrationsPrefixRequired = [
 	Integrations.sheets,
@@ -96,8 +96,12 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		integrationName?: string
 	) => {
 		const connectionData = flattenFormData(getValues(), formSchema);
+		const formattedIntegrationName =
+			integrationName && isGoogleIntegration(stripGoogleConnectionName(integrationName) as Integrations)
+				? defaultGoogleConnectionName
+				: integrationName;
 
-		return { connectionData, formattedIntegrationName: integrationName };
+		return { connectionData, formattedIntegrationName };
 	};
 
 	const getSpecificParams = (connectionData: Record<string, string>, specificKeys: string[]) => {
