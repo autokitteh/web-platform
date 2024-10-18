@@ -87,18 +87,14 @@ export const IntegrationEditForm = ({
 	};
 
 	useEffect(() => {
-		const formId = connectionVariables?.find((variable) => variable.name === "FormID")?.value;
-		if (formId) {
-			setValue("form_id", formId);
-		}
-		const calendarId = connectionVariables?.find((variable) => variable.name === "CalendarID")?.value;
-		if (calendarId) {
-			setValue("cal_id", calendarId);
-		}
-		const jsonKey = connectionVariables?.find((variable) => variable.name === "JSON")?.value;
-		if (jsonKey) {
-			setValue("json", jsonKey);
-		}
+		const setFormValue = (fieldName: string, variableName: string) => {
+			const value = connectionVariables?.find((variable) => variable.name === variableName)?.value;
+			if (!value) return;
+			setValue(fieldName, value);
+		};
+		setFormValue("form_id", "FormID");
+		setFormValue("cal_id", "CalendarID");
+		setFormValue("json", "JSON");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
