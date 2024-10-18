@@ -48,7 +48,7 @@ export const Sidebar = () => {
 			<div className="relative z-40 flex h-full min-w-[65px] items-start">
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
-						<Link className="ml-1 flex items-center gap-2.5" to="/">
+						<Link className="ml-1 flex items-center justify-center gap-2.5" to="/">
 							<IconLogo className="size-8" />
 
 							<AnimatePresence>
@@ -68,14 +68,11 @@ export const Sidebar = () => {
 
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
-							className="mt-10 w-full justify-center gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
+							className="mt-10 w-full items-center justify-start gap-2.5 rounded-full p-0.5 pl-4 text-gray-1100 hover:bg-green-200"
 							onClick={() => setIsOpen(!isOpen)}
 							title={isOpen ? t("closeSidebar") : t("openSidebar")}
 						>
-							<MenuToggle
-								className="-mr-2 flex w-9 items-center justify-center pb-1 pt-2"
-								isOpen={isOpen}
-							/>
+							<MenuToggle className="my-2 flex" isOpen={isOpen} />
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -103,7 +100,7 @@ export const Sidebar = () => {
 					<div className="flex flex-col justify-end gap-5">
 						{featureFlags.systemLog ? (
 							<Button
-								className="hover:bg-green-200"
+								className="text-gray-1100 hover:bg-green-200"
 								onClick={() => toggleLogger(true)}
 								title={t("systemLog")}
 							>
@@ -132,7 +129,7 @@ export const Sidebar = () => {
 							</Button>
 						) : null}
 
-						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
+						<Button className="text-gray-1100 hover:bg-green-200" href="/intro" title={t("intro")}>
 							<IconSvg className="size-7 transition" src={HelpIcon} />
 
 							<AnimatePresence>
