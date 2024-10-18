@@ -14,13 +14,13 @@ export const EventsLayout = () => {
 			<div className="flex size-full">
 				<Sidebar />
 
-				<div className="mb-2 flex w-full flex-col transition">
+				<div className="mb-2 flex w-full flex-col">
 					<TitleTopbar title={t("title")} />
 
 					<div className="relative flex size-full overflow-hidden rounded-2xl">
 						<Outlet />
 
-						<div className="absolute !-bottom-5 !-right-5">
+						<div className="absolute -bottom-5 -right-5">
 							<LogoCatLarge />
 						</div>
 					</div>

@@ -34,7 +34,8 @@ export const EventsTable = () => {
 
 	useEffect(() => {
 		fetchEvents();
-	}, [fetchEvents]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const resizeClass = useMemo(
 		() =>
