@@ -1,3 +1,1 @@
-export const featureFlags = {
-	systemLog: true,
-};
+export const featureFlags = {};
