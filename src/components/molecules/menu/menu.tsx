@@ -78,7 +78,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 		);
 
 	const buttonMenuIconStyle = (href: string) =>
-		cn("size-7 transition", {
+		cn("size-6 transition", {
 			"fill-white": isButtonActive(href),
 			"fill-gray-1100": !isButtonActive(href),
 		});
