@@ -88,58 +88,59 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<div className="flex h-screen">
-			<div className="my-6 flex w-1/2 flex-col items-center justify-center rounded-r-xl bg-gray-1250 p-8 font-averta text-white">
-				<IconSvg className="mb-4 fill-white" size="3xl" src={AKRoundLogo} />
+			<div className="relative z-10 flex w-2/3 items-center justify-center rounded-3xl pb-32 pl-16 text-black">
+				<div className="z-10 bg-white p-5">
+					<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleFirstLine")}</h2>
 
-				<h1 className="text-center font-averta text-4xl font-semibold">
+					<div className="flex">
+						<IconSvg className="ml-4 mr-2 h-10 w-24" size="3xl" src={inJustTitle} />
+
+						<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleSecondLine")}</h2>
+					</div>
+
+					<h4 className="mt-3 font-fira-code text-xl">{t("rightSide.descriptionFirstLine")}</h4>
+
+					<h3 className="mt-12 max-w-485 font-averta text-2xl font-bold">
+						{t("rightSide.descriptionSecondLine")}
+					</h3>
+
+					<ul className="ml-4 mt-10 font-averta text-xl font-semibold">
+						{benefitsList?.length
+							? Object.values(benefitsList).map((benefit) => (
+									<li className="mt-2 before:size-1 before:bg-black" key={benefit}>
+										{benefit}
+									</li>
+								))
+							: null}
+					</ul>
+				</div>
+				<img
+					alt="autokitteh logo with integrations"
+					className="absolute bottom-0 left-8 w-11/12 object-contain object-bottom"
+					src={LoginLogos}
+				/>
+			</div>
+
+			<div className="z-10 flex w-7/12 shrink-0 flex-col items-center justify-center rounded-l-2xl bg-gray-1250 p-8 font-averta text-white">
+				<h1 className="mt-auto text-center font-averta text-4xl font-semibold">
 					{t("leftSide.welcomeTitle")}
-
-					<span className="flex items-center justify-center rounded-full bg-green-800 p-1 pt-0 font-bold text-black">
-						{t("leftSide.autokittehGreenTitle")}
-					</span>
+					<br />
+					{t("leftSide.autokittehGreenTitle")}
 				</h1>
 
 				<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
 
 				<a
-					className="font-averta text-lg text-green-800 hover:text-gray-500"
-					href="https://autokitteh.com/get-a-demo/"
+					className="mb-10 font-averta text-lg text-green-800 hover:text-gray-500"
+					href="https://docs.autokitteh.com/?_gl=1*i4q5*_ga*ODU4OTc4NjAwLjE3MjkyNDU5MTM.*_ga_DD62H8RGVW*MTcyOTI0NTkxMy4xLjEuMTcyOTI0NTkzMi4wLjAuMA.."
 					rel="noreferrer"
 					target="_blank"
 				>
-					{t("leftSide.register")}
+					{t("leftSide.whatIsAutoKitteh")}
 				</a>
+
+				<IconSvg className="mt-auto size-80 fill-white opacity-10" src={AKRoundLogo} />
 			</div>
-
-			<div className="relative z-10 m-10 mr-20 flex w-2/3 flex-col justify-center rounded-3xl pb-32 pl-16 text-black">
-				<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleFirstLine")}</h2>
-
-				<div className="mb-4 flex">
-					<IconSvg className="ml-4 mr-2 h-10 w-24" size="3xl" src={inJustTitle} />
-
-					<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleSecondLine")}</h2>
-				</div>
-
-				<h3 className="font-averta text-2xl font-bold">{t("rightSide.descriptionFirstLine")}</h3>
-
-				<h3 className="mb-12 font-averta text-2xl font-bold">{t("rightSide.descriptionSecondLine")}</h3>
-
-				<ul className="font-averta text-xl font-semibold">
-					{benefitsList?.length
-						? Object.values(benefitsList).map((benefit) => (
-								<li className="before:size-1.5 before:bg-black" key={benefit}>
-									{benefit}
-								</li>
-							))
-						: null}
-				</ul>
-			</div>
-
-			<img
-				alt="autokitteh logo with integrations"
-				className="absolute bottom-0 right-8 h-screen/27 w-1/2 object-contain object-bottom"
-				src={LoginLogos}
-			/>
 		</div>
 	);
 };
