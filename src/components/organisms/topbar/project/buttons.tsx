@@ -18,7 +18,7 @@ import {
 
 import { useFileOperations } from "@hooks";
 
-import { Button, IconSvg, Spinner } from "@components/atoms";
+import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
 
@@ -37,6 +37,7 @@ export const ProjectTopbarButtons = () => {
 	const { resetChecker } = useConnectionCheckerStore();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { projectsList } = useProjectStore();
+	const [isExporting, setIsExporting] = useState(false);
 
 	const { deleteProject, getProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
@@ -165,16 +166,21 @@ export const ProjectTopbarButtons = () => {
 	}, []);
 
 	const exportProject = useCallback(async () => {
+		setIsExporting(true);
 		const { data: akProjectArchiveZip, error } = await ProjectsService.export(projectId!);
+		setIsExporting(false);
 
 		if (error) {
+			addToast({
+				message: t("topbar.exportProjectFailed"),
+				type: "error",
+			});
+
 			return;
 		}
 
 		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
 		const url = URL.createObjectURL(blob);
-		const link = document.createElement("a");
-		link.href = url;
 
 		const { data: project } = await getProject(projectId!);
 
@@ -192,7 +198,10 @@ export const ProjectTopbarButtons = () => {
 			.replace(", ", "-");
 
 		const fileName = `ak-${project?.name}-${dateTime}-archive.zip`;
-		link.download = fileName;
+		const link = Object.assign(document.createElement("a"), {
+			href: url,
+			download: fileName,
+		});
 
 		document.body.appendChild(link);
 		link.click();
@@ -258,13 +267,21 @@ export const ProjectTopbarButtons = () => {
 							onClick={exportProject}
 							variant="outline"
 						>
-							<IconSvg
-								className="fill-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-								size="md"
-								src={DownloadIcon}
-							/>
-
-							<div className="mt-0.5">{t("topbar.buttons.export")}</div>
+							{isExporting ? (
+								<>
+									<Loader size="sm" />
+									<div className="mt-0.5">{t("topbar.buttons.export")}</div>
+								</>
+							) : (
+								<>
+									<IconSvg
+										className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
+										size="md"
+										src={DownloadIcon}
+									/>
+									<div className="mt-0.5">{t("topbar.buttons.export")}</div>
+								</>
+							)}
 						</Button>
 						<Button
 							ariaLabel={t("topbar.buttons.delete")}
