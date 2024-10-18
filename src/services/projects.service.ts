@@ -205,4 +205,26 @@ export class ProjectsService {
 			return { data: undefined, error };
 		}
 	}
+
+	static async export(projectId: string): Promise<ServiceResponse<Uint8Array>> {
+		try {
+			const { zipArchive: akProjectArchiveZip } = await projectsClient.export({ projectId });
+
+			if (!akProjectArchiveZip) {
+				LoggerService.error(namespaces.projectService, i18n.t("fetchExportFailed", { ns: "errors" }));
+
+				return { data: undefined, error: new Error(i18n.t("fetchExportFailed", { ns: "errors" })) };
+			}
+
+			return { data: akProjectArchiveZip, error: undefined };
+		} catch (error) {
+			const errorMessage = i18n.t("fetchExportFailedUnexpectedError", {
+				ns: "errors",
+				error: (error as Error).message,
+			});
+			LoggerService.error(namespaces.projectService, errorMessage);
+
+			return { data: undefined, error: errorMessage };
+		}
+	}
 }
