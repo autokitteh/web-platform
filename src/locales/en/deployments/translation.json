@@ -102,7 +102,10 @@
 				"stopped": "Stopped",
 				"unspecified": "Unspecified"
 			},
-			"stopSession": "Stop session"
+			"filter": "Filter",
+			"stopSession": "Stop session",
+			"sessionDeletedSuccessfully": "Session deleted successfully",
+			"sessionDeletedSuccessfullyExtended": "Session deleted successfully, session ID: {{sessionId}}"
 		},
 		"totalSessions": "Total {{total}}",
 		"viewer":{
