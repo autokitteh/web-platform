@@ -13,7 +13,11 @@ import { useResize } from "@src/hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 
+<<<<<<< HEAD
 import { Frame, Loader, ResizeButton, THead, Table, Th, Tr, Typography } from "@components/atoms";
+=======
+import { Frame, Loader, THead, Table, Th, Tr, Typography } from "@components/atoms";
+>>>>>>> d195ffcb (feat: fix sessions table - on low resolution filter button was moving when change)
 import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
@@ -196,34 +200,39 @@ export const SessionsTable = () => {
 		<div className="my-1.5 flex w-full flex-1">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
-					<div className="flex items-center justify-between gap-2.5">
+					<div className="flex w-full items-center">
 						<Typography className="text-base" element="h2">
 							{t("tableTitle")}
 						</Typography>
-						<div className="flex flex-wrap items-center justify-between gap-2.5">
-							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
-							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
-						</div>
+						<div className="w-full" />
+						<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
+						<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
 					</div>
 
-					<div className="relative my-6 flex h-full flex-col overflow-hidden pb-5">
+					<div className="my-6 flex h-full flex-col pb-5">
 						{isInitialLoad ? (
 							<div className="flex h-full items-center justify-center">
 								<Loader firstColor="light-gray" size="md" />
 							</div>
 						) : sessions.length ? (
-							<Table className="h-full overflow-y-visible">
+							<Table className="flex h-full overflow-y-visible">
 								<THead className="rounded-t-14">
-									<Tr className="justify-between">
-										<Th className="w-56">{t("table.columns.startTime")}</Th>
-
-										<Th className="w-32">{t("table.columns.status")}</Th>
-
-										<Th className="w-32">{t("table.columns.triggerName")}</Th>
-
-										<Th className="w-32">{t("table.columns.connectionName")}</Th>
-
-										<Th className="w-32">{t("table.columns.actions")}</Th>
+									<Tr>
+										<Th className="w-1/3 pl-4" hasFixedWidth>
+											{t("table.columns.startTime")}
+										</Th>
+										<Th className="w-1/6 pl-2" hasFixedWidth>
+											{t("table.columns.status")}
+										</Th>
+										<Th className="w-1/6 pl-2" hasFixedWidth>
+											{t("table.columns.triggerName")}
+										</Th>
+										<Th className="w-1/6 pl-2" hasFixedWidth>
+											{t("table.columns.connectionName")}
+										</Th>
+										<Th className="w-1/6 pl-2" hasFixedWidth>
+											{t("table.columns.actions")}
+										</Th>
 									</Tr>
 								</THead>
 
