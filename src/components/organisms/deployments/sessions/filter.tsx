@@ -42,6 +42,10 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 		[SessionStateType.stopped]: 0,
 	};
 
+	const filterIconClass = cn("border border-transparent rounded-full p-1", {
+		"border-white": activeState,
+	});
+
 	const sessionCounts = useMemo(
 		() =>
 			sessionStats.reduce(
@@ -100,7 +104,9 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 					className="h-8 whitespace-nowrap border-0 px-4 text-white hover:bg-transparent"
 					variant="outline"
 				>
-					<IconSvg className="fill-white" size="md" src={FilterIcon} />
+					<div className={filterIconClass}>
+						<IconSvg className="fill-white" size="md" src={FilterIcon} />
+					</div>
 					{tTable("filter")}
 				</Button>
 			</DropdownButton>
