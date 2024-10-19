@@ -92,6 +92,7 @@
 				"stopped": "Stopped",
 				"unspecified": "Unspecified"
 			},
+			"filter": "Filter",
 			"stopSession": "Stop session",
 			"sessionDeletedSuccessfully": "Session deleted successfully",
 			"sessionDeletedSuccessfullyExtended": "Session deleted successfully, session ID: {{sessionId}}"
