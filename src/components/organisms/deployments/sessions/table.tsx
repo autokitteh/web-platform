@@ -200,7 +200,7 @@ export const SessionsTable = () => {
 		<div className="my-1.5 flex w-full flex-1">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
-					<div className="flex w-full items-center">
+					<div className="flex items-center">
 						<Typography className="text-base" element="h2">
 							{t("tableTitle")}
 						</Typography>
