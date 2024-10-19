@@ -7,16 +7,20 @@ import { SessionTableFilterProps } from "@interfaces/components";
 import { SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
-import { Button } from "@components/atoms";
+import { Button, IconSvg } from "@components/atoms";
+import { DropdownButton } from "@components/molecules";
+
+import { FilterIcon } from "@assets/image/icons";
 
 export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilterProps) => {
 	const [activeState, setActiveState] = useState<SessionStateKeyType>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
+	const { t: tTable } = useTranslation("deployments", { keyPrefix: "sessions.table" });
 
 	const buttonClassText = {
 		[SessionStateType.completed]: "text-green-800",
 		[SessionStateType.error]: "text-red",
-		[SessionStateType.running]: "",
+		[SessionStateType.running]: "text-blue-500",
 		[SessionStateType.stopped]: "text-yellow-500",
 	} as const;
 
@@ -55,37 +59,51 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 
 	return (
 		<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-			<Button className={buttonClass()} onClick={() => handleButtonClick()}>
-				{t("all")} ({sessionCounts.total})
-			</Button>
+			<DropdownButton
+				contentMenu={
+					<div className="flex flex-col gap-y-2">
+						<Button className={buttonClass()} onClick={() => handleButtonClick()}>
+							{t("all")} ({sessionCounts.total})
+						</Button>
 
-			<Button
-				className={buttonClass(SessionStateType.running)}
-				onClick={() => handleButtonClick(SessionStateType.running)}
-			>
-				{t("running")} ({sessionCounts.running})
-			</Button>
+						<Button
+							className={buttonClass(SessionStateType.running)}
+							onClick={() => handleButtonClick(SessionStateType.running)}
+						>
+							{t("running")} ({sessionCounts.running})
+						</Button>
 
-			<Button
-				className={buttonClass(SessionStateType.stopped)}
-				onClick={() => handleButtonClick(SessionStateType.stopped)}
-			>
-				{t("stopped")} ({sessionCounts.stopped})
-			</Button>
+						<Button
+							className={buttonClass(SessionStateType.stopped)}
+							onClick={() => handleButtonClick(SessionStateType.stopped)}
+						>
+							{t("stopped")} ({sessionCounts.stopped})
+						</Button>
 
-			<Button
-				className={buttonClass(SessionStateType.error)}
-				onClick={() => handleButtonClick(SessionStateType.error)}
-			>
-				{t("error")} ({sessionCounts.error})
-			</Button>
+						<Button
+							className={buttonClass(SessionStateType.error)}
+							onClick={() => handleButtonClick(SessionStateType.error)}
+						>
+							{t("error")} ({sessionCounts.error})
+						</Button>
 
-			<Button
-				className={buttonClass(SessionStateType.completed)}
-				onClick={() => handleButtonClick(SessionStateType.completed)}
+						<Button
+							className={buttonClass(SessionStateType.completed)}
+							onClick={() => handleButtonClick(SessionStateType.completed)}
+						>
+							{t("completed")} ({sessionCounts.completed})
+						</Button>
+					</div>
+				}
 			>
-				{t("completed")} ({sessionCounts.completed})
-			</Button>
+				<Button
+					className="h-8 whitespace-nowrap border-0 px-4 text-white hover:bg-transparent"
+					variant="outline"
+				>
+					<IconSvg className="fill-white" size="md" src={FilterIcon} />
+					{tTable("filter")}
+				</Button>
+			</DropdownButton>
 		</div>
 	);
 };
