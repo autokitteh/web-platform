@@ -7,6 +7,7 @@ export interface ManualProjectData {
 	filePath: { label: string; value: string };
 	entrypointFunction: string;
 	params: { key: string; value: string }[];
+	isJson: boolean;
 	lastDeployment?: Deployment;
 	selectedEntrypoint?: SessionEntrypoint;
 	isManualRunEnabled?: boolean;

@@ -26,7 +26,6 @@ export const ManualRunButtons = () => {
 			lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
 			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
 			isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
-			updateProjectManualRun: state.updateManualRunConfiguration,
 			saveProjectManualRun: state.saveAndExecuteManualRun,
 		})
 	);
@@ -46,8 +45,8 @@ export const ManualRunButtons = () => {
 					type: "error",
 				});
 				LoggerService.error(
-					namespaces.sessionsService,
-					`${t("manualRun.executionFailedExtended", { projectId, error })}`
+					namespaces.ui.manualRun,
+					t("manualRun.executionFailedExtended", { projectId, error })
 				);
 
 				return;

@@ -7,5 +7,6 @@
     "nameIsRequired": "Name is required",
     "valueIsRequired": "Value is required",
     "keyIsRequired": "Key is required",
-    "duplicateKeyError": "Key must be unique"
+    "duplicateKeyError": "Key must be unique",
+    "invalidJsonFormat": "Invalid JSON format"
 }
