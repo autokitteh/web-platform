@@ -218,21 +218,11 @@ export const SessionsTable = () => {
 							<Table className="flex h-full overflow-y-visible">
 								<THead className="rounded-t-14">
 									<Tr>
-										<Th className="w-1/3 pl-4" hasFixedWidth>
-											{t("table.columns.startTime")}
-										</Th>
-										<Th className="w-1/6 pl-2" hasFixedWidth>
-											{t("table.columns.status")}
-										</Th>
-										<Th className="w-1/6 pl-2" hasFixedWidth>
-											{t("table.columns.triggerName")}
-										</Th>
-										<Th className="w-1/6 pl-2" hasFixedWidth>
-											{t("table.columns.connectionName")}
-										</Th>
-										<Th className="w-1/6 pl-2" hasFixedWidth>
-											{t("table.columns.actions")}
-										</Th>
+										<Th className="w-1/3 pl-4">{t("table.columns.startTime")}</Th>
+										<Th className="w-1/6 pl-2">{t("table.columns.status")}</Th>
+										<Th className="w-1/6 pl-2">{t("table.columns.triggerName")}</Th>
+										<Th className="w-1/6 pl-2">{t("table.columns.connectionName")}</Th>
+										<Th className="w-1/6 pl-2">{t("table.columns.actions")}</Th>
 									</Tr>
 								</THead>
 
