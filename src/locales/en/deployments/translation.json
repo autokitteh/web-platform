@@ -52,10 +52,7 @@
 			"executionFailed": "Session execution failed",
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
 			"executionSucceed": "Session execution succeed for session ID",
-			"missingLastDeployment": "Missing last deployment",
-			"missingDeploymentOrEntrypoint": "Missing deployment or entrypoint",
-			"noFunctionsFound": "No functions found",
-			"filePathDoesNotExistExtended": "File path {{filePath}} does not exist or has no entry points."
+			"missingLastDeployment": "Missing last deployment"
 		},
 		"actions":{
 			"deploymentRemovedSuccessfully": "Deployment removed successfully",
@@ -63,7 +60,8 @@
 			"deploymentActivatedSuccessfully": "Deployment activated successfully",
 			"deploymentActivatedSuccessfullyExtended": "Deployment activated successfully, deployment ID: {{deploymentId}}",
 			"deploymentDeactivatedSuccessfully": "Deployment deactivated successfully",
-			"deploymentDeactivatedSuccessfullyExtended": "Deployment deactivated successfully, deployment ID: {{deploymentId}}"
+			"deploymentDeactivatedSuccessfullyExtended": "Deployment deactivated successfully, deployment ID: {{deploymentId}}",
+			"useJsonEditor": "Use JSON editor"
 		}
 	},
 	"sessionStats": {
