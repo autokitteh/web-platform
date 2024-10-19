@@ -58,7 +58,7 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 	);
 
 	return (
-		<div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+		<div className="flex items-center">
 			<DropdownButton
 				contentMenu={
 					<div className="flex flex-col gap-y-2">
