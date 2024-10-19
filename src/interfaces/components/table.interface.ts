@@ -7,7 +7,6 @@ export interface TableProps {
 	className?: string;
 	onClick?: (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
 	style?: React.CSSProperties;
-	hasFixedWidth?: boolean;
 	title?: string;
 }
 
