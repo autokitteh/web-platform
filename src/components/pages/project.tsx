@@ -25,6 +25,8 @@ export const Project = () => {
 		const { data: project } = await getProject(projectId!);
 		if (!project?.name) {
 			setPageTitle(t("base"));
+
+			return;
 		}
 		setPageTitle(t("template", { page: project!.name }));
 	};
