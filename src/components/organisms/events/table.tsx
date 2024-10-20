@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -25,7 +25,9 @@ export const EventsTable = () => {
 		fetchEvents,
 		loading: { events: loadingEvents },
 	} = useCacheStore();
-	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10 });
+	const resizeId = useId();
+
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
 	const { eventId } = useParams();
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
 
