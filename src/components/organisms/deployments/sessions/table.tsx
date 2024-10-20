@@ -215,7 +215,7 @@ export const SessionsTable = () => {
 							<Table className="h-full overflow-y-visible">
 								<THead className="rounded-t-14">
 									<Tr className="justify-between">
-										<Th className="w-56 pl-4">{t("table.columns.startTime")}</Th>
+										<Th className="w-56">{t("table.columns.startTime")}</Th>
 
 										<Th className="w-32">{t("table.columns.status")}</Th>
 
