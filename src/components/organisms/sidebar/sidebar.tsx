@@ -149,7 +149,7 @@ export const Sidebar = () => {
 						{isAuthEnabled ? (
 							<div>
 								<Button
-									className="justify-center hover:bg-green-200"
+									className="justify-center text-gray-1100 hover:bg-green-200"
 									href="/settings"
 									title={t("settings")}
 								>
@@ -171,7 +171,7 @@ export const Sidebar = () => {
 								</Button>
 
 								<Button
-									className="justify-center hover:bg-green-200"
+									className="justify-center text-gray-1100 hover:bg-green-200"
 									onClick={() => logoutFunction()}
 									title={t("logout")}
 								>
