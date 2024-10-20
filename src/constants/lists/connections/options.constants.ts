@@ -59,11 +59,11 @@ export const selectIntegrationTwilio: SelectOption[] = [
 ];
 
 export const selectIntegrationJira: SelectOption[] = [
-	{ label: "User API Token / PAT", value: ConnectionAuthType.ApiToken },
 	{ label: "OAuth 2.0 App", value: ConnectionAuthType.Oauth },
+	{ label: "User API Token / PAT", value: ConnectionAuthType.ApiToken },
 ];
 
 export const selectIntegrationConfluence: SelectOption[] = [
-	{ label: "User API Token / PAT", value: ConnectionAuthType.ApiToken },
 	{ label: "OAuth 2.0 App", value: ConnectionAuthType.Oauth },
+	{ label: "User API Token / PAT", value: ConnectionAuthType.ApiToken },
 ];
