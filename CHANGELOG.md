@@ -1,3 +1,10 @@
+## [2.30.1](https://github.com/autokitteh/web-platform/compare/v2.30.0...v2.30.1) (2024-10-20)
+
+
+### Bug Fixes
+
+* display form and cal IDs and json in google connection forms ([#483](https://github.com/autokitteh/web-platform/issues/483)) ([57aae5f](https://github.com/autokitteh/web-platform/commit/57aae5fc08ea199993fda437f32fc75bc83912b1))
+
 # [2.30.0](https://github.com/autokitteh/web-platform/compare/v2.29.4...v2.30.0) (2024-10-16)
 
 
