@@ -15,7 +15,6 @@ export { ArrowDown, ArrowUp, InfoIcon, Minimize, PlusCircle, SmallArrowDown, Thr
 export {
 	ConnectionsIcon as Connections,
 	DashboardIcon as Dashboard,
-	NewProject,
 	NotificationIcon as IconNotification,
 	ProjectsIcon,
 	StatsBlackIcon as StatsBlack,
@@ -23,3 +22,4 @@ export {
 export { BuildIcon, FullScreenIcon, MoreIcon, StatsIcon } from "@assets/image/topbar";
 export { default as inJustTitle } from "@assets/image/inJustLoginTitle.svg?react";
 export { default as AKRoundLogo } from "@assets/image/AKRoundLogo.svg?react";
+export { default as Plus } from "@assets/image/Plus.svg?react";

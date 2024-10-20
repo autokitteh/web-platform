@@ -111,7 +111,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 						<div className="flex items-center justify-end gap-6">
 							<Button
 								ariaLabel={tButtons("cancel")}
-								className="p-0 font-semibold text-gray-500 hover:text-white"
+								className="p-0 font-semibold text-gray-500"
 								onClick={() => closeDrawer(DrawerName.projectManualRunSettings)}
 							>
 								{tButtons("cancel")}
@@ -119,7 +119,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 
 							<Button
 								ariaLabel={tButtons("saveAndRun")}
-								className="border-white px-4 py-2 font-semibold text-white hover:bg-black"
+								className="py-2 font-semibold"
 								disabled={!isValid}
 								type="submit"
 								variant="outline"
