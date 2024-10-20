@@ -1,3 +1,10 @@
+# [2.33.0](https://github.com/autokitteh/web-platform/compare/v2.32.1...v2.33.0) (2024-10-20)
+
+
+### Features
+
+* add new drag pane separator ([#515](https://github.com/autokitteh/web-platform/issues/515)) ([fcee51a](https://github.com/autokitteh/web-platform/commit/fcee51aa0c223b670fd0f70e82dc0dc3262c8912))
+
 ## [2.32.1](https://github.com/autokitteh/web-platform/compare/v2.32.0...v2.32.1) (2024-10-20)
 
 
