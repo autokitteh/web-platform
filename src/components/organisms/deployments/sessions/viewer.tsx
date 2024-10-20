@@ -145,21 +145,24 @@ export const SessionViewer = () => {
 				</div>
 			</div>
 
-			<div className="mt-2.5 flex justify-between gap-6">
+			<div className="mt-2.5 flex justify-between">
 				<div className="flex flex-col gap-0.5 leading-6">
 					<div className="flex items-center gap-4">
-						<div className="w-44 text-gray-1550">{t("status")}</div>
+						<div className="w-32 text-gray-1550">{t("status")}</div>
 						<SessionsTableState sessionState={sessionInfo.state} />
 					</div>
+					{sessionInfo.destinationName ? (
+						<div className="flex items-center gap-4">
+							<div className="w-32 text-gray-1550">{t("source")}</div>
+							{sessionInfo.destinationName}
+						</div>
+					) : null}
 					<div className="flex items-center gap-4">
-						<div className="w-44 text-gray-1550">{t("source")}</div>
+						<div className="w-32 text-gray-1550">{t("sourceType")}</div>
 						{sessionInfo.sourceType}
 					</div>
 					<div className="flex items-center gap-4">
-						<div className="w-44 text-gray-1550">{t("connectionName")}</div>
-					</div>
-					<div className="flex items-center gap-4">
-						<div className="w-44 text-gray-1550">{t("entrypoint")}</div>
+						<div className="w-32 text-gray-1550">{t("entrypoint")}</div>
 						<div className="inline">
 							<div className="inline">{sessionInfo.entrypoint.path}</div>
 							<IconSvg className="mx-2 inline fill-white" size="sm" src={ArrowRightIcon} />
@@ -167,7 +170,7 @@ export const SessionViewer = () => {
 						</div>
 					</div>
 					<div className="flex items-center gap-4">
-						<div className="w-44 text-gray-1550" title="Start Time">
+						<div className="w-32 text-gray-1550" title="Start Time">
 							Time:
 						</div>
 						<div className="flex flex-row items-center">
@@ -182,7 +185,7 @@ export const SessionViewer = () => {
 						</div>
 					</div>
 					<div className="flex items-center gap-4">
-						<div className="w-44 text-gray-1550">Duration</div>
+						<div className="w-32 text-gray-1550">Duration</div>
 						{sessionInfo.state === SessionState.completed || sessionInfo.state === SessionState.error ? (
 							formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)
 						) : (
@@ -196,10 +199,12 @@ export const SessionViewer = () => {
 						<div className="leading-6">{t("sessionId")}</div>
 						<CopyButton className="p-0" size="xs" text={sessionInfo.sessionId} />
 					</div>
-					<div className="flex items-center justify-end gap-4">
-						<div className="leading-6">{t("eventId")}</div>
-						<CopyButton className="p-0" size="xs" text={sessionInfo.eventId} />
-					</div>
+					{sessionInfo.eventId ? (
+						<div className="flex items-center justify-end gap-4">
+							<div className="leading-6">{t("eventId")}</div>
+							<CopyButton className="p-0" size="xs" text={sessionInfo.eventId} />
+						</div>
+					) : null}
 					<div className="flex items-center justify-end gap-4">
 						<div className="leading-6">{t("buildId")}</div>
 						<CopyButton className="p-0" size="xs" text={sessionInfo.buildId} />
