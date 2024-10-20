@@ -36,7 +36,7 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 
 	return (
 		<div
-			className="group flex w-full cursor-pointer gap-2.5 p-2 text-white hover:bg-gray-700"
+			className="scrollbar group flex w-full cursor-pointer gap-2.5 overflow-x-auto p-2 text-white hover:bg-gray-700"
 			onClick={handleClick}
 			onKeyDown={handleKeyDown}
 			role="button"
