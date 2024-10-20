@@ -1,9 +1,10 @@
 {
     "topbar": {
         "buildProjectSuccessExtended": "Project build completed successfully, error: {{error}}",
-        "buildProjectSuccess": "Project build completed successfully.",
-        "deleteProjectSuccess": "Project deletion completed successfully.",
+        "buildProjectSuccess": "Project build completed successfully",
+        "deleteProjectSuccess": "Project deletion completed successfully",
         "deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}",
+        "exportProjectFailed": "Couldn't export project",
         "buttons": {
             "ariaBuildProject": "Build project",
             "ariaDeployProject": "Deploy project",
@@ -13,6 +14,7 @@
             "goToProject": "Go to project",
             "deployments": "Deployments",
             "delete": "Delete",
+            "export": "Export",
             "ariaSettingsRun": "Settings manual run"
         },
         "deployedProjectSuccess": "Project deployment completed successfully",

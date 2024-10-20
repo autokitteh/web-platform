@@ -18,12 +18,12 @@ import {
 
 import { useFileOperations } from "@hooks";
 
-import { Button, IconSvg, Spinner } from "@components/atoms";
+import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
-import { RocketIcon, TrashIcon } from "@assets/image/icons";
+import { DownloadIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
@@ -37,8 +37,9 @@ export const ProjectTopbarButtons = () => {
 	const { resetChecker } = useConnectionCheckerStore();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { projectsList } = useProjectStore();
+	const [isExporting, setIsExporting] = useState(false);
 
-	const { deleteProject } = useProjectStore();
+	const { deleteProject, getProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 	const { fetchDeployments } = useCacheStore();
@@ -164,6 +165,51 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const exportProject = useCallback(async () => {
+		setIsExporting(true);
+		const { data: akProjectArchiveZip, error } = await ProjectsService.export(projectId!);
+		setIsExporting(false);
+
+		if (error) {
+			addToast({
+				message: t("topbar.exportProjectFailed"),
+				type: "error",
+			});
+
+			return;
+		}
+
+		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
+		const url = URL.createObjectURL(blob);
+
+		const { data: project } = await getProject(projectId!);
+
+		const now = new Date();
+		const dateTime = now
+			.toLocaleString("en-GB", {
+				day: "2-digit",
+				month: "2-digit",
+				year: "numeric",
+				hour: "2-digit",
+				minute: "2-digit",
+				hour12: false,
+			})
+			.replace(/[/:]/g, "")
+			.replace(", ", "-");
+
+		const fileName = `ak-${project?.name}-${dateTime}-archive.zip`;
+		const link = Object.assign(document.createElement("a"), {
+			href: url,
+			download: fileName,
+		});
+
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
 	const isDeployAndBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
 
 	return (
@@ -190,7 +236,7 @@ export const ProjectTopbarButtons = () => {
 				</Button>
 			</div>
 
-			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
+			<div title={isValid ? t("topbar.buttons.deploy") : projectErrors}>
 				<Button
 					ariaLabel={t("topbar.buttons.ariaDeployProject")}
 					className="group h-8 whitespace-nowrap px-3.5 text-white"
@@ -214,15 +260,44 @@ export const ProjectTopbarButtons = () => {
 
 			<DropdownButton
 				contentMenu={
-					<Button className="group h-8 px-4 text-white" onClick={openModalDeleteProject} variant="outline">
-						<IconSvg
-							className="-mt-0.5 stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-							size="md"
-							src={TrashIcon}
-						/>
+					<>
+						<Button
+							ariaLabel={t("topbar.buttons.export")}
+							className="group h-8 px-4 text-white"
+							onClick={exportProject}
+							variant="outline"
+						>
+							{isExporting ? (
+								<>
+									<Loader size="sm" />
+									<div className="mt-0.5">{t("topbar.buttons.export")}</div>
+								</>
+							) : (
+								<>
+									<IconSvg
+										className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
+										size="md"
+										src={DownloadIcon}
+									/>
+									<div className="mt-0.5">{t("topbar.buttons.export")}</div>
+								</>
+							)}
+						</Button>
+						<Button
+							ariaLabel={t("topbar.buttons.delete")}
+							className="group mt-2 h-8 px-4 text-white"
+							onClick={openModalDeleteProject}
+							variant="outline"
+						>
+							<IconSvg
+								className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+								size="md"
+								src={TrashIcon}
+							/>
 
-						{t("topbar.buttons.delete")}
-					</Button>
+							<div className="mt-0.5">{t("topbar.buttons.delete")}</div>
+						</Button>
+					</>
 				}
 			>
 				<Button className="group h-8 whitespace-nowrap px-4 text-white" variant="outline">
