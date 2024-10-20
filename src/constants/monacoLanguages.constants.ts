@@ -8,4 +8,5 @@ export const monacoLanguages = {
 	".txt": "text",
 	".yaml": "yaml",
 	".yml": "yaml",
+	".md": "markdown",
 };
