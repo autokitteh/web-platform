@@ -249,7 +249,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Samples using Twilio APIs",
 				integrations: [IntegrationsMap.twilio],
 				assetDirectory: "samples/twilio",
-				files: ["README.md", "autokitteh.yaml", "program.star"],
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Quickstart",
@@ -277,12 +277,19 @@ export const templateProjectsCategories: TemplateCategory[] = [
 		name: "Office Automation",
 		cards: [
 			{
+				title: "Slack-Discord Message Mirroring",
+				description: "mirroring messages between Slack and Discord channels",
+				integrations: [IntegrationsMap.slack, IntegrationsMap.discord],
+				assetDirectory: "slack_discord_sync",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
+			},
+			{
 				title: "Slack notify on important Email",
 				description:
 					"Categorizing incoming emails and notifying relevant Slack channels by integrating Gmail, ChatGPT, and Slack",
 				integrations: [IntegrationsMap.gmail, IntegrationsMap.slack, IntegrationsMap.chatgpt],
 				assetDirectory: "categorize_emails",
-				files: ["README.md", "autokitteh-python.yaml", "program.py"],
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Ad-hoc room reservation via Slack",
