@@ -24,8 +24,6 @@ export const ConfluenceOauthForm = () => {
 				</Link>
 			</Accordion>
 
-			<p className="mt-2">{t("confluence.clickButtonAuthorize")}</p>
-
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
