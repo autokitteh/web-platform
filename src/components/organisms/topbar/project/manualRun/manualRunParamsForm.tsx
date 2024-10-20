@@ -63,7 +63,11 @@ export const ManualRunParamsForm = () => {
 		if (value) {
 			try {
 				const parsedJson = JSON.parse(value);
-				const newParams = Object.entries(parsedJson).map(([key, value]) => ({ key, value: String(value) }));
+				const newParams = Object.entries(parsedJson).map(([key, value]) => {
+					if (typeof value === "object") return { key, value: JSON.stringify(value) };
+
+					return { key, value: String(value) };
+				});
 				setValue("params", newParams, { shouldValidate: false });
 			} catch {
 				// If JSON is invalid, don't update params
