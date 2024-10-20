@@ -206,6 +206,12 @@ jobs:
       - name: Create ZIP of the dist directory
         run: zip -r dist.zip dist
 
+      - name: Calculate SHA256 hash of dist.zip
+        run: |
+          SHA256=$(sha256sum dist.zip | awk '{ print $1 }')
+          echo "$SHA256" > dist.zip.sha256
+          echo "SHA256=$SHA256" >> $GITHUB_ENV
+
       - name: Release and tag a new version
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
