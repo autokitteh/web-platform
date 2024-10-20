@@ -7,7 +7,7 @@ import { StoreName } from "@enums";
 import { ConnectionCheckerStore } from "@interfaces/store";
 import { ConnectionService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
-import { ConnectionStatusType } from "@type/models";
+import { Connection, ConnectionStatusType } from "@type/models";
 
 import { useToastStore } from "@store";
 
@@ -15,7 +15,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 	retries: 0,
 	recheckIntervalId: null,
 	avoidNextRerenderCleanup: true,
-	fetchConnectionsCallback: () => {},
+	fetchConnectionsCallback: null,
 
 	incrementRetries: () => {
 		set((state) => {
@@ -25,7 +25,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		});
 	},
 
-	setFetchConnectionsCallback: (callback: (() => void) | null) => {
+	setFetchConnectionsCallback: (callback: (() => Promise<void | Connection[]>) | null) => {
 		set((state) => {
 			state.fetchConnectionsCallback = callback;
 
