@@ -30,7 +30,7 @@ export const DeleteProjectModal = ({ isDeleting, onDelete }: DeleteModalProps) =
 				<Button
 					ariaLabel={t("cancelButton")}
 					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-					onClick={() => closeModal(ModalName.deleteFile)}
+					onClick={() => closeModal(ModalName.deleteProject)}
 					variant="outline"
 				>
 					{t("cancelButton")}
