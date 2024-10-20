@@ -24,9 +24,6 @@ export const OauthForm = () => {
 					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 				</Link>
 			</Accordion>
-
-			<p className="mt-2">{t("github.clickButtonInstall")}</p>
-
 			<Button
 				aria-label={t("buttons.startOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
