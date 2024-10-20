@@ -33,6 +33,7 @@ export const CodeTable = () => {
 		saveFile,
 	} = useFileOperations(projectId!);
 	const [isDragOver, setIsDragOver] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
 
 	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
 	const selectedRemoveFileName = useModalStore((state) => state.data as string);
@@ -115,9 +116,16 @@ export const CodeTable = () => {
 	};
 
 	const handleRemoveFile = async () => {
-		closeModal(ModalName.deleteFile);
 		try {
+			setIsDeleting(true);
 			await deleteFile(selectedRemoveFileName);
+			setIsDeleting(false);
+			closeModal(ModalName.deleteFile);
+			addToast({
+				message: t("successRemoveFile", { fileName: selectedRemoveFileName }),
+				type: "success",
+			});
+			LoggerService.info(namespaces.ui.code, t("successRemoveFile", { fileName: selectedRemoveFileName }));
 
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
@@ -236,7 +244,7 @@ export const CodeTable = () => {
 				</div>
 			</div>
 
-			<DeleteFileModal onDelete={handleRemoveFile} />
+			<DeleteFileModal isDeleting={isDeleting} onDelete={handleRemoveFile} />
 
 			<AddFileModal onSuccess={fetchResources} />
 		</div>

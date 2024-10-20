@@ -25,9 +25,9 @@ export const ConnectionsTable = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { checkState } = useProjectValidationStore();
+	const [isDeleting, setIsDeleting] = useState(false);
 
 	const [isLoading, setIsLoading] = useState(false);
-	const [isLoadingDeleteConnection, setIsLoadingDeleteConnection] = useState(false);
 	const [connections, setConnections] = useState<Connection[]>([]);
 	const [connectionId, setConnectionId] = useState<string>();
 
@@ -84,10 +84,9 @@ export const ConnectionsTable = () => {
 		if (!connectionId) {
 			return;
 		}
-
-		setIsLoadingDeleteConnection(true);
+		setIsDeleting(true);
 		const { error } = await ConnectionService.delete(connectionId);
-		setIsLoadingDeleteConnection(false);
+		setIsDeleting(false);
 		closeModal(ModalName.deleteConnection);
 		if (error) {
 			addToast({
@@ -106,6 +105,7 @@ export const ConnectionsTable = () => {
 			message: t("connectionRemoveSuccess", { connectionName: connection?.name }),
 			type: "success",
 		});
+		LoggerService.info(namespaces.ui.connections, t("connectionRemoveSuccessWithID", { connectionId }));
 
 		LoggerService.info(
 			namespaces.ui.connectionsTable,
@@ -239,11 +239,7 @@ export const ConnectionsTable = () => {
 				<EmptyTableAddButton buttonText={t("titleEmptyConnections")} onClick={() => navigate("add")} />
 			)}
 			{connectionId ? (
-				<DeleteConnectionModal
-					connectionId={connectionId}
-					loading={isLoadingDeleteConnection}
-					onDelete={handleDeleteConnection}
-				/>
+				<DeleteConnectionModal id={connectionId} isDeleting={isDeleting} onDelete={handleDeleteConnection} />
 			) : null}
 		</>
 	);

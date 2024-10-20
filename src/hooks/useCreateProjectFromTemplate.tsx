@@ -87,6 +87,11 @@ export const useCreateProjectFromTemplate = () => {
 				return;
 			}
 
+			LoggerService.error(
+				namespaces.manifestService,
+				`${t("projectCreatedSuccessfullyExtended", { projectId: newProjectId })}`
+			);
+
 			setProjectId(newProjectId);
 			setAssetDirectory(assetDir);
 		} catch (error) {

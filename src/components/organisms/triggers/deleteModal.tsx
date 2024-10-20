@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
 
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { ModalDeleteTriggerProps } from "@interfaces/components";
+import { DeleteModalProps } from "@interfaces/components";
 import { TriggersService } from "@services";
+import { useModalStore } from "@src/store";
 import { Trigger } from "@type/models";
 
-import { useModalStore } from "@store";
-
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteTriggerModal = ({ onDelete, triggerId }: ModalDeleteTriggerProps) => {
+export const DeleteTriggerModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
-	const { closeModal } = useModalStore();
 	const [trigger, setTrigger] = useState<Trigger>();
+	const { closeModal } = useModalStore();
 
 	const fetchTrigger = async () => {
-		if (!triggerId) {
+		if (!id) {
 			return;
 		}
-		const { data } = await TriggersService.get(triggerId);
+		const { data } = await TriggersService.get(id);
 		if (!data) {
 			return;
 		}
@@ -31,42 +30,42 @@ export const DeleteTriggerModal = ({ onDelete, triggerId }: ModalDeleteTriggerPr
 	useEffect(() => {
 		fetchTrigger();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [triggerId]);
+	}, [id]);
 
 	return (
-		<Modal name={ModalName.deleteTrigger}>
+		<Modal hideCloseButton name={ModalName.deleteTrigger}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("title", { name: trigger?.name })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
+				<p>{t("content", { name: trigger?.name })}</p>
 
-				<p>{t("line")}</p>
-
-				<div className="font-medium">
-					<Trans
-						i18nKey="line2"
-						t={t}
-						values={{
-							call: `${trigger?.path}:${trigger?.entryFunction}`,
-							connection: trigger?.connectionName,
-							eventType: trigger?.eventType,
-						}}
-					/>
-				</div>
-
-				<p className="mt-1">{t("line3")}</p>
-
-				<p className="mt-1">{t("line4")}</p>
+				<p>{t("deleteWarning")}</p>
 			</div>
 
-			<div className="mt-14 flex justify-end gap-1">
+			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button
-					className="w-auto px-4 py-3 font-semibold hover:text-white"
+					ariaLabel={t("cancelButton")}
+					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
 					onClick={() => closeModal(ModalName.deleteTrigger)}
+					variant="outline"
 				>
 					{t("cancelButton")}
 				</Button>
 
-				<Button className="w-auto bg-gray-1100 px-4 py-3 font-semibold" onClick={onDelete} variant="filled">
-					{t("deleteButton")}
+				<Button
+					ariaLabel={t("deleteButton")}
+					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
+					disabled={isDeleting}
+					onClick={onDelete}
+					variant="filled"
+				>
+					{isDeleting ? (
+						<div className="flex flex-row gap-2">
+							<Loader size="sm" />
+							{t("deleteButton")}
+						</div>
+					) : (
+						t("deleteButton")
+					)}
 				</Button>
 			</div>
 		</Modal>

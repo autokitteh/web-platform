@@ -3,41 +3,51 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { ModalDeleteDeploymentProps } from "@interfaces/components";
+import { DeleteModalProps } from "@interfaces/components";
+import { useModalStore } from "@src/store";
 
-import { useModalStore } from "@store";
-
-import { Button } from "@components/atoms";
+import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteDeploymentModal = ({ onDelete }: ModalDeleteDeploymentProps) => {
+export const DeleteDeploymentModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteDeployment" });
 	const { closeModal } = useModalStore();
 
 	return (
-		<Modal name={ModalName.deleteDeployment}>
+		<Modal hideCloseButton name={ModalName.deleteDeployment}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
-				<p>{t("line")}</p>
+				<p>{t("content", { name: id })}</p>
+
+				<p>{t("deleteWarning")}</p>
 			</div>
 
-			<div className="mt-10 flex justify-end gap-1">
+			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button
 					ariaLabel={t("cancelButton")}
-					className="w-auto px-4 py-3 font-semibold hover:text-white"
+					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
 					onClick={() => closeModal(ModalName.deleteDeployment)}
+					variant="outline"
 				>
 					{t("cancelButton")}
 				</Button>
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="w-auto bg-gray-1100 px-4 py-3 font-semibold"
+					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
+					disabled={isDeleting}
 					onClick={onDelete}
 					variant="filled"
 				>
-					{t("deleteButton")}
+					{isDeleting ? (
+						<div className="flex flex-row gap-2">
+							<Loader size="sm" />
+							{t("deleteButton")}
+						</div>
+					) : (
+						t("deleteButton")
+					)}
 				</Button>
 			</div>
 		</Modal>

@@ -53,7 +53,17 @@
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
 			"executionSucceed": "Session execution succeed for session ID",
 			"missingLastDeployment": "Missing last deployment",
-			"noFunctionsFound": "No functions found"
+			"missingDeploymentOrEntrypoint": "Missing deployment or entrypoint",
+			"noFunctionsFound": "No functions found",
+			"filePathDoesNotExistExtended": "File path {{filePath}} does not exist or has no entry points."
+		},
+		"actions":{
+			"deploymentRemovedSuccessfully": "Deployment removed successfully",
+			"deploymentRemovedSuccessfullyExtended": "Deployment removed successfully, deployment ID: {{deploymentId}}",
+			"deploymentActivatedSuccessfully": "Deployment activated successfully",
+			"deploymentActivatedSuccessfullyExtended": "Deployment activated successfully, deployment ID: {{deploymentId}}",
+			"deploymentDeactivatedSuccessfully": "Deployment deactivated successfully",
+			"deploymentDeactivatedSuccessfullyExtended": "Deployment deactivated successfully, deployment ID: {{deploymentId}}"
 		}
 	},
 	"sessionStats": {
@@ -92,9 +102,7 @@
 				"stopped": "Stopped",
 				"unspecified": "Unspecified"
 			},
-			"stopSession": "Stop session",
-			"sessionDeletedSuccessfully": "Session deleted successfully",
-			"sessionDeletedSuccessfullyExtended": "Session deleted successfully, session ID: {{sessionId}}"
+			"stopSession": "Stop session"
 		},
 		"totalSessions": "Total {{total}}",
 		"viewer":{
@@ -112,7 +120,12 @@
 			"status": "Status",
 			"connectionName": "Connection Name",
 			"sessionNotFound": "Session details not found",
-			"sessionNotFoundExtended": "Session details not found, session ID: {{sessionId}}"
+			"sessionNotFoundExtended": "Session details not found, session ID: {{sessionId}}"		},
+		"actions":{
+			"sessionStoppedSuccessfully": "Session request successfully sent",
+			"sessionStoppedSuccessfullyExtended": "Session request successfully sent, session ID: {{sessionId}}",
+			"sessionRemovedSuccessfully": "Session removed successfully",
+			"sessionRemovedSuccessfullyExtended": "Session removed successfully, session ID: {{sessionId}}"
 		}
 	},
 	"activities":{

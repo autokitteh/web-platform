@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { VariablesService } from "@services";
+import { LoggerService, VariablesService } from "@services";
+import { namespaces } from "@src/constants";
 import { Variable } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -21,7 +22,7 @@ export const VariablesTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const { t: tErrors } = useTranslation("tabs", { keyPrefix: "variables" });
 	const [deleteVariable, setDeleteVariable] = useState<Variable>();
-
+	const [isDeleting, setIsDeleting] = useState(false);
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { closeModal, openModal } = useModalStore();
@@ -52,10 +53,12 @@ export const VariablesTable = () => {
 	}, [projectId]);
 
 	const handleDeleteVariable = async () => {
+		setIsDeleting(true);
 		const { error } = await VariablesService.delete({
 			name: deleteVariable!.name,
 			scopeId: deleteVariable!.scopeId!,
 		});
+		setIsDeleting(false);
 		closeModal(ModalName.deleteVariable);
 
 		if (error) {
@@ -64,6 +67,19 @@ export const VariablesTable = () => {
 				type: "error",
 			});
 		}
+		addToast({
+			message: t("variableRemovedSuccessfully", { variableName: deleteVariable!.name }),
+			type: "success",
+		});
+		LoggerService.info(
+			namespaces.ui.variables,
+			t("variableRemovedSuccessfullyExtended", {
+				variableName: deleteVariable!.name,
+				variableId: deleteVariable!.name,
+			})
+		);
+
+		setDeleteVariable(undefined);
 
 		loadVariables(projectId!, true);
 	};
@@ -162,7 +178,7 @@ export const VariablesTable = () => {
 				<EmptyTableAddButton buttonText={t("titleEmptyVariablesButton")} onClick={() => navigate("add")} />
 			)}
 
-			<DeleteVariableModal onDelete={handleDeleteVariable} variable={deleteVariable!} />
+			<DeleteVariableModal id={deleteVariable?.name} isDeleting={isDeleting} onDelete={handleDeleteVariable} />
 		</>
 	);
 };
