@@ -1,8 +1,10 @@
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { IntegrationsMap } from "@src/enums/components/connection.enum";
+import { sortIntegrationsMapByLabel } from "@src/utilities";
 
-export const integrationTypes: SelectOption[] = Object.values(IntegrationsMap);
+const sortedIntegrationsMap = sortIntegrationsMapByLabel(IntegrationsMap);
+export const integrationTypes: SelectOption[] = Object.values(sortedIntegrationsMap);
 
 export const integrationIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = Object.fromEntries(
 	Object.entries(IntegrationsMap)
