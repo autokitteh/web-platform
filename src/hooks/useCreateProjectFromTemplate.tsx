@@ -87,9 +87,9 @@ export const useCreateProjectFromTemplate = () => {
 				return;
 			}
 
-			LoggerService.error(
+			LoggerService.info(
 				namespaces.manifestService,
-				`${t("projectCreatedSuccessfullyExtended", { projectId: newProjectId })}`
+				t("projectCreatedSuccessfullyExtended", { projectId: newProjectId })
 			);
 
 			setProjectId(newProjectId);
