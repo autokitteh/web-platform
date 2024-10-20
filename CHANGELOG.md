@@ -1,3 +1,10 @@
+## [2.31.1](https://github.com/autokitteh/web-platform/compare/v2.31.0...v2.31.1) (2024-10-20)
+
+
+### Bug Fixes
+
+* enlarge row height when the window is smaller ([#486](https://github.com/autokitteh/web-platform/issues/486)) ([7298b56](https://github.com/autokitteh/web-platform/commit/7298b56b7331502d01ad057d5037215c67a4a98e))
+
 # [2.31.0](https://github.com/autokitteh/web-platform/compare/v2.30.1...v2.31.0) (2024-10-20)
 
 
