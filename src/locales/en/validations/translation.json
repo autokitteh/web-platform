@@ -8,5 +8,6 @@
     "valueIsRequired": "Value is required",
     "keyIsRequired": "Key is required",
     "duplicateKeyError": "Key must be unique",
-    "invalidJsonFormat": "Invalid JSON format"
+    "invalidJsonFormat": "Invalid JSON format",
+    "jsonMustBeSingleLevel": "JSON must be single level"
 }
