@@ -1,3 +1,10 @@
+## [2.31.2](https://github.com/autokitteh/web-platform/compare/v2.31.1...v2.31.2) (2024-10-20)
+
+
+### Bug Fixes
+
+* add left padding to kw-args table in session activity ([#489](https://github.com/autokitteh/web-platform/issues/489)) ([a72cff3](https://github.com/autokitteh/web-platform/commit/a72cff32c7cce50949e5b78eb5b91473f2fc39dc))
+
 ## [2.31.1](https://github.com/autokitteh/web-platform/compare/v2.31.0...v2.31.1) (2024-10-20)
 
 
