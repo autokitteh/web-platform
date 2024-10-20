@@ -1,3 +1,10 @@
+# [2.31.0](https://github.com/autokitteh/web-platform/compare/v2.30.1...v2.31.0) (2024-10-20)
+
+
+### Features
+
+* export project files and manifest ([#462](https://github.com/autokitteh/web-platform/issues/462)) ([f640f2a](https://github.com/autokitteh/web-platform/commit/f640f2a9d102c241da80cc95c9df7484ff483f2e))
+
 ## [2.30.1](https://github.com/autokitteh/web-platform/compare/v2.30.0...v2.30.1) (2024-10-20)
 
 
