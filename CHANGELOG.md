@@ -1,3 +1,10 @@
+## [2.32.1](https://github.com/autokitteh/web-platform/compare/v2.32.0...v2.32.1) (2024-10-20)
+
+
+### Bug Fixes
+
+* display success message when connection successfully edited, not error ([#517](https://github.com/autokitteh/web-platform/issues/517)) ([846994c](https://github.com/autokitteh/web-platform/commit/846994c0bf6788a061b38a32301eea2f4308e0c0))
+
 # [2.32.0](https://github.com/autokitteh/web-platform/compare/v2.31.2...v2.32.0) (2024-10-20)
 
 
