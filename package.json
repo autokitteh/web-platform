@@ -107,7 +107,7 @@
 		"eslint-plugin-sort-keys-fix": "^1.1.2",
 		"eslint-plugin-storybook": "^0.8.0",
 		"eslint-plugin-tailwindcss": "^3.17.4",
-		"eslint-plugin-unicorn": "^55.0.0",
+		"eslint-plugin-unicorn": "^56.0.0",
 		"husky": "^9.1.4",
 		"i18next": "^23.12.2",
 		"lint-staged": "^15.2.7",
