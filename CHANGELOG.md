@@ -1,3 +1,10 @@
+# [2.32.0](https://github.com/autokitteh/web-platform/compare/v2.31.2...v2.32.0) (2024-10-20)
+
+
+### Features
+
+* display markdown colored in our editor ([#518](https://github.com/autokitteh/web-platform/issues/518)) ([800780c](https://github.com/autokitteh/web-platform/commit/800780c0b26c83d8048b2202d97ce1261ea1cfa7))
+
 ## [2.31.2](https://github.com/autokitteh/web-platform/compare/v2.31.1...v2.31.2) (2024-10-20)
 
 
