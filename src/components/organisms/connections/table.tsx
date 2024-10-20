@@ -90,7 +90,7 @@ export const ConnectionsTable = () => {
 			t("connectionRemoveSuccessExtended", { connectionId, connectionName: connection?.name })
 		);
 
-		fetchConnections(projectId!);
+		fetchConnections(projectId!, true);
 	};
 
 	const handleConnectionEditClick = useCallback(
