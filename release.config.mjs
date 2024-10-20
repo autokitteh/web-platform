@@ -38,7 +38,7 @@ export default {
 					{
 						path: "dist.zip.sha256",
 						name: "autokitteh-web-${nextRelease.gitTag}.zip.sha256",
-						label: "SHA256 hash of autokitteh-web-${nextRelease.gitTag}.zip",
+						label: "autokitteh-web-${nextRelease.gitTag}.zip.sha256",
 					},
 				],
 			},
