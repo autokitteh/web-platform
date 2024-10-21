@@ -1,22 +1,20 @@
 {
     "leftSide": {
+        "logoText": "autokitteh",
         "autokittehGreenTitle": "AutoKitteh",
         "welcomeTitle": "Welcome to",
-        "register": "Register"
+        "signupLink": "Sign Up",
+        "signupText": "Don't have an account yet?"
     },
     "rightSide": {
         "titleFirstLine": "Reliable Automation",
         "titleSecondLine": "Few Lines of Code",
-        "descriptionFirstLine": "All you need to easily develop",
-        "descriptionSecondLine": "robust automations in Python",
+        "descriptionFirstLine": "All you need to easily develop automations automations in Python code",
         "benefitsList":{
             "bullet1": "Serverless Python environment",
             "bullet2": "Super fast deploys",
-            "bullet3": "Super fast ramp-up",
             "bullet4": "Builtin integrations",
-            "bullet5": "Scalable",
-            "bullet6": "Secure",
-            "bullet7": "Easy management",
+            "bullet5": "Secure & Scalable",
             "bullet8": "Long-running workflows",
             "bullet9": "Ready-to-use templates"
         }

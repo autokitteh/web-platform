@@ -43,3 +43,4 @@ export type { WelcomeInfoCardProps } from "@interfaces/components/welcomePageCar
 export type { CheckboxProps } from "@interfaces/components/checkbox.interface";
 export type { AccordionProps } from "@interfaces/components/accordion.interface";
 export type { BadgeProps } from "@interfaces/components/badge.interface";
+export type { HrefProps } from "@interfaces/components/href.interface";
