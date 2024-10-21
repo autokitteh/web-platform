@@ -7,6 +7,9 @@ import { StoreName } from "@enums";
 import { LoggerStore } from "@interfaces/store";
 
 const store: StateCreator<LoggerStore> = (set) => ({
+	logs: [],
+	isLoggerEnabled: false,
+	isNewLogs: false,
 	addLog: (log) =>
 		set((state) => {
 			const newLog = { ...log, id: randomatic("Aa0", 5) };
@@ -15,7 +18,7 @@ const store: StateCreator<LoggerStore> = (set) => ({
 				updatedLogs.splice(maxLogs);
 			}
 
-			return { logs: updatedLogs };
+			return { logs: updatedLogs, isNewLogs: !state.isLoggerEnabled };
 		}),
 	clearLogs: () =>
 		set(() => ({
@@ -24,9 +27,8 @@ const store: StateCreator<LoggerStore> = (set) => ({
 	toggleLogger: (enabled) =>
 		set(() => ({
 			isLoggerEnabled: enabled,
+			isNewLogs: false,
 		})),
-	logs: [],
-	isLoggerEnabled: false,
 });
 
 export const useLoggerStore = create(persist(store, { name: StoreName.logger }));
