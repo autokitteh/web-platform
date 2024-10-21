@@ -112,7 +112,6 @@
 		}
 	},
 	"jira": {
-		"clickButtonAuthorize": "Click the button below to authorize the Atlassian AutoKitteh app",
 		"placeholders": {
 			"baseUrl": "Base URL",
 			"pat": "API Token / Personal Access Token (PAT)",
@@ -127,7 +126,6 @@
 		}
 	},
 	"confluence": {
-		"clickButtonAuthorize": "Click the button below to authorize the Atlassian",
 		"placeholders": {
 			"baseUrl": "Base URL",
 			"pat": "API Token / Personal Access Token (PAT)",
