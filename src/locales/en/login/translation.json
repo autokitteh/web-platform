@@ -1,9 +1,10 @@
 {
     "leftSide": {
+        "logoText": "autokitteh",
         "autokittehGreenTitle": "AutoKitteh",
         "welcomeTitle": "Welcome to",
-        "whatIsAutoKitteh": "What is AutoKitteh?",
-        "register": "Register"
+        "signupLink": "Sign Up",
+        "signupText": "Don't have an account yet?"
     },
     "rightSide": {
         "titleFirstLine": "Reliable Automation",
@@ -12,11 +13,8 @@
         "benefitsList":{
             "bullet1": "Serverless Python environment",
             "bullet2": "Super fast deploys",
-            "bullet3": "Super fast ramp-up",
             "bullet4": "Builtin integrations",
-            "bullet5": "Scalable",
-            "bullet6": "Secure",
-            "bullet7": "Easy management",
+            "bullet5": "Secure & Scalable",
             "bullet8": "Long-running workflows",
             "bullet9": "Ready-to-use templates"
         }

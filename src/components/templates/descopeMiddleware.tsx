@@ -13,7 +13,7 @@ import { useUserStore } from "@store/useUserStore";
 
 import { useToastStore } from "@store";
 
-import { IconSvg } from "@components/atoms";
+import { AHref, IconSvg } from "@components/atoms";
 
 import { AKRoundLogo, LoginLogos, inJustTitle } from "@assets/image";
 
@@ -88,9 +88,20 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<div className="flex h-screen">
-			<div className="relative z-10 flex w-2/3 items-center justify-center rounded-3xl pb-32 pl-16 text-black">
-				<div className="z-10 bg-white p-5">
-					<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleFirstLine")}</h2>
+			<div className="relative flex w-2/3 items-center justify-center rounded-3xl pb-32 pl-16 text-black">
+				<div className="z-10 p-5">
+					<AHref
+						ariaLabel={t("leftSide.logoText")}
+						className="absolute left-4 top-4 flex h-auto items-center"
+						href="https://autokitteh.com/"
+						relationship="noreferrer"
+						target="_blank"
+						title={t("leftSide.logoText")}
+					>
+						<IconSvg className="top-8 size-10" src={AKRoundLogo} />{" "}
+						<div className="ml-3 font-averta text-2xl font-bold">{t("leftSide.logoText")}</div>
+					</AHref>
+					<h2 className="mt-16 font-averta text-4xl font-bold">{t("rightSide.titleFirstLine")}</h2>
 
 					<div className="flex">
 						<IconSvg className="ml-4 mr-2 h-10 w-24" size="3xl" src={inJustTitle} />
@@ -114,13 +125,13 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				</div>
 				<img
 					alt="autokitteh logo with integrations"
-					className="absolute bottom-0 left-8 w-11/12 object-contain object-bottom"
+					className="absolute bottom-0 right-8 w-9/12 object-contain object-bottom"
 					src={LoginLogos}
 				/>
 			</div>
 
 			<div className="z-10 flex w-7/12 shrink-0 flex-col items-center justify-center rounded-l-2xl bg-gray-1250 p-8 font-averta text-white">
-				<h1 className="mt-auto text-center font-averta text-4xl font-semibold">
+				<h1 className="text-center font-averta text-4xl font-semibold">
 					{t("leftSide.welcomeTitle")}
 					<br />
 					{t("leftSide.autokittehGreenTitle")}
@@ -128,24 +139,17 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 				<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
 
-				<a
-					className="font-averta text-lg text-green-800 hover:text-gray-500"
-					href="https://docs.autokitteh.com/?_gl=1*i4q5*_ga*ODU4OTc4NjAwLjE3MjkyNDU5MTM.*_ga_DD62H8RGVW*MTcyOTI0NTkxMy4xLjEuMTcyOTI0NTkzMi4wLjAuMA.."
-					rel="noreferrer"
-					target="_blank"
-				>
-					{t("leftSide.whatIsAutoKitteh")}
-				</a>
-				<a
-					className="font-averta text-lg text-green-800 hover:text-gray-500"
-					href="https://autokitteh.com/get-a-demo/"
-					rel="noreferrer"
-					target="_blank"
-				>
-					{t("leftSide.register")}
-				</a>
-
-				<IconSvg className="mt-auto size-80 fill-white opacity-10" src={AKRoundLogo} />
+				<div>
+					{t("leftSide.signupText")}{" "}
+					<AHref
+						className="font-averta text-green-800 hover:text-gray-500"
+						href="https://autokitteh.com/get-a-demo/"
+						relationship="noreferrer"
+						target="_blank"
+					>
+						{t("leftSide.signupLink")}
+					</AHref>
+				</div>
 			</div>
 		</div>
 	);
