@@ -1,3 +1,10 @@
+## [2.33.3](https://github.com/autokitteh/web-platform/compare/v2.33.2...v2.33.3) (2024-10-21)
+
+
+### Bug Fixes
+
+* align columns headers for all tables ([#509](https://github.com/autokitteh/web-platform/issues/509)) ([37132a8](https://github.com/autokitteh/web-platform/commit/37132a84cdf9f8234c2262de295f7a54fdcc31c2))
+
 ## [2.33.2](https://github.com/autokitteh/web-platform/compare/v2.33.1...v2.33.2) (2024-10-21)
 
 
