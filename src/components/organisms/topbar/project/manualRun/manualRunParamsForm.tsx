@@ -5,6 +5,7 @@ import { Controller, FieldErrors, FieldValues, useFieldArray, useFormContext } f
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { ManualRunJsonObject, ManualRunParam } from "@src/interfaces/components/forms";
 import { useManualRunStore } from "@src/store";
 import { ManualFormParamsErrors } from "@src/types/components";
 
@@ -15,6 +16,7 @@ import { InfoIcon, TrashIcon } from "@assets/image/icons";
 
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
+	const { t: tValidations } = useTranslation("validations", { keyPrefix: "manualRun" });
 	const { clearErrors, control, formState, getValues, setError, setValue, trigger } = useFormContext();
 	const { append, fields, remove } = useFieldArray({
 		control,
@@ -29,6 +31,7 @@ export const ManualRunParamsForm = () => {
 	}));
 
 	const { isJson } = projectManualRun || {};
+	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
 
 	const convertParamsToJson = (currentParams: { key: string; value: string }[]) => {
 		const jsonObject = Object.fromEntries(
@@ -51,8 +54,6 @@ export const ManualRunParamsForm = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
-
 	const errors = formState.errors as FieldErrors<FieldValues> & ManualFormParamsErrors;
 
 	const validateParams = () => {
@@ -63,14 +64,14 @@ export const ManualRunParamsForm = () => {
 			if (!param.key.trim()) {
 				setError(`params.${index}.key`, {
 					type: "manual",
-					message: t("keyIsRequired"),
+					message: tValidations("keyIsRequired"),
 				});
 				isValid = false;
 			}
 			if (!param.value.trim()) {
 				setError(`params.${index}.value`, {
 					type: "manual",
-					message: t("valueIsRequired"),
+					message: tValidations("valueIsRequired"),
 				});
 				isValid = false;
 			}
@@ -90,48 +91,74 @@ export const ManualRunParamsForm = () => {
 		trigger(`params.${index}.${field}`);
 	};
 
-	const handleJsonChange = (value?: string) => {
-		setValue("jsonParams", value, { shouldValidate: true });
-		if (value) {
-			try {
-				const parsedJson = JSON.parse(value);
-				const newParams = Object.entries(parsedJson).map(([key, value]) => {
-					if (typeof value === "object") return { key, value: JSON.stringify(value) };
-
-					return { key, value: String(value) };
-				});
-				setValue("params", newParams, { shouldValidate: false });
-			} catch {
-				// If JSON is invalid, don't update params
-			}
-		} else {
-			setValue("params", [], { shouldValidate: false });
+	const safeJsonParse = (value: string) => {
+		try {
+			return JSON.parse(value);
+		} catch {
+			return null;
 		}
 	};
 
+	const handleJsonToParamsConversion = () => {
+		const jsonValue = getValues("jsonParams");
+		if (!jsonValue) return;
+
+		const parsedJson = safeJsonParse(jsonValue);
+		if (!parsedJson) return;
+
+		const newParams: ManualRunParam[] = Object.entries(parsedJson).map(([key, value]) => ({
+			key,
+			value: typeof value === "string" ? value : JSON.stringify(value),
+		}));
+
+		setValue("params", newParams, { shouldValidate: true });
+		clearErrors("jsonParams");
+	};
+
+	const handleParamsToJsonConversion = () => {
+		const currentParams: ManualRunParam[] = getValues("params");
+		const jsonObject = currentParams.reduce<ManualRunJsonObject>((acc, { key, value }) => {
+			acc[key] = safeJsonParse(value) ?? value;
+
+			return acc;
+		}, {});
+
+		const jsonString = JSON.stringify(jsonObject, null, 2);
+		setValue("jsonParams", jsonString, { shouldValidate: true });
+	};
+
 	const toggleEditorMode = () => {
-		updateManualRunConfiguration(projectId!, { isJson: !useJsonEditor });
-		setValue("isJson", !useJsonEditor, { shouldValidate: true });
-		if (useJsonEditor) {
-			const jsonValue = getValues("jsonParams");
-			if (jsonValue) {
-				try {
-					const parsedJson = JSON.parse(jsonValue);
-					const newParams = Object.entries(parsedJson).map(([key, value]) => ({
-						key,
-						value: JSON.stringify(value),
-					}));
-					setValue("params", newParams, { shouldValidate: true });
-					clearErrors("jsonParams");
-				} catch {
-					// If JSON is invalid, keep the current params
-				}
-			}
+		const newJsonEditorState = !useJsonEditor;
+		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
+		setValue("isJson", newJsonEditorState, { shouldValidate: true });
+
+		if (newJsonEditorState) {
+			handleParamsToJsonConversion();
 		} else {
-			const currentParams = getValues("params");
-			convertParamsToJson(currentParams);
+			handleJsonToParamsConversion();
 		}
-		setUseJsonEditor(!useJsonEditor);
+
+		setUseJsonEditor(newJsonEditorState);
+	};
+
+	const handleJsonChange = (value?: string) => {
+		setValue("jsonParams", value, { shouldValidate: true });
+
+		if (!value) {
+			setValue("params", [], { shouldValidate: false });
+
+			return;
+		}
+
+		const parsedJson = safeJsonParse(value);
+		if (!parsedJson) return;
+
+		const newParams = Object.entries(parsedJson).map(([key, value]) => ({
+			key,
+			value: typeof value === "object" ? JSON.stringify(value) : String(value),
+		}));
+
+		setValue("params", newParams, { shouldValidate: false });
 	};
 
 	return (
