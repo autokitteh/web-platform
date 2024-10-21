@@ -198,7 +198,7 @@ export const CodeTable = () => {
 					<Table>
 						<THead>
 							<Tr>
-								<Th className="group cursor-pointer border-r-0 pl-4 font-normal">
+								<Th className="group cursor-pointer border-r-0 font-normal">
 									{t("table.columns.name")}
 								</Th>
 							</Tr>

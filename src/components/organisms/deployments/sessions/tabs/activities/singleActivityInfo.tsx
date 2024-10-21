@@ -41,7 +41,7 @@ export const SingleActivityInfo = ({
 						<Table>
 							<THead>
 								<Tr>
-									<Th className="pl-4">{t("argumentsKey")}</Th>
+									<Th>{t("argumentsKey")}</Th>
 								</Tr>
 							</THead>
 

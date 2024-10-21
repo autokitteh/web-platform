@@ -45,7 +45,7 @@ export const DashboardProjectsTable = () => {
 			{sortedProjects.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
 					<THead>
-						<Tr className="border-none pl-6">
+						<Tr className="border-none">
 							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("name")}>
 								{t("table.columns.projectName")}
 
@@ -60,7 +60,7 @@ export const DashboardProjectsTable = () => {
 
 					<TBody>
 						{sortedProjects.map(({ href, id, name }) => (
-							<Tr className="group cursor-pointer pl-6" key={id}>
+							<Tr className="group cursor-pointer" key={id}>
 								<Td className="group-hover:font-bold" onClick={() => navigate(href)}>
 									{name}
 								</Td>

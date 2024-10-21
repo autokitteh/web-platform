@@ -97,7 +97,7 @@ export const TriggersTable = () => {
 				<Table className="mt-2.5">
 					<THead>
 						<Tr>
-							<Th className="group cursor-pointer pl-4 font-normal" onClick={() => requestSort("name")}>
+							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("name")}>
 								{t("table.columns.name")}
 
 								<SortButton
