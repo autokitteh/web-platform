@@ -84,17 +84,7 @@ export const SocketForm = ({
 
 				<ErrorMessage>{errors.app_token?.message as string}</ErrorMessage>
 			</div>
-			<Button
-				aria-label={t("buttons.saveConnection")}
-				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
-				disabled={isLoading}
-				type="submit"
-				variant="outline"
-			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-4 w-5 fill-white transition" />}
 
-				{t("buttons.saveConnection")}
-			</Button>
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
 					{infoSlackModeLinks.map(({ text, url }, index) => (
@@ -111,6 +101,18 @@ export const SocketForm = ({
 					))}
 				</div>
 			</Accordion>
+
+			<Button
+				aria-label={t("buttons.saveConnection")}
+				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
+				disabled={isLoading}
+				type="submit"
+				variant="outline"
+			>
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-4 w-5 fill-white transition" />}
+
+				{t("buttons.saveConnection")}
+			</Button>
 		</>
 	);
 };
