@@ -13,7 +13,8 @@ export const maxLogs = 20;
 export const fileSizeUploadLimit = 50 * 1024; // 50KB
 export const apiRequestTimeout = isDevelopment ? 1000 * 60 : 5000;
 
-export const dateTimeFormat = "MM-DD-YYYY HH:mm:ss";
+export const dateTimeFormat = "YYYY-DD-MM HH:mm:ss";
+export const timeFormat = "HH:mm:ss";
 
 export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];

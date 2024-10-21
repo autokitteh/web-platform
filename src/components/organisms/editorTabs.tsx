@@ -6,7 +6,7 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
-import { monacoLanguages, namespaces } from "@constants";
+import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { useToastStore } from "@src/store";
 import { cn } from "@utilities";
@@ -131,7 +131,7 @@ export const EditorTabs = () => {
 		try {
 			await saveFile(activeEditorFileName, newContent);
 			setContent(newContent);
-			setLastSaved(moment().local().format("YYYY-MM-DD HH:mm:ss"));
+			setLastSaved(moment().local().format(dateTimeFormat));
 		} catch (error) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
