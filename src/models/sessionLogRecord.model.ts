@@ -3,7 +3,7 @@ import moment from "moment";
 
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { Value } from "@ak-proto-ts/values/v1/values_pb";
-import { namespaces } from "@constants";
+import { dateTimeFormat, namespaces } from "@constants";
 import { SessionLogRecordType, SessionStateType } from "@enums";
 import { convertErrorProtoToModel } from "@models/error.model";
 import { LoggerService } from "@services";
@@ -175,7 +175,7 @@ export const convertSessionLogProtoToViewerOutput = (logRecords: ProtoSessionLog
 			) {
 				return undefined;
 			}
-			const formattedDateTime = moment(record.dateTime).local().format("MM-DD-YYYY HH:mm:ss");
+			const formattedDateTime = moment(record.dateTime).local().format(dateTimeFormat);
 
 			const output: SessionOutput = {
 				print: record.logs || "",
