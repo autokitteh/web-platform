@@ -144,7 +144,10 @@ export const ConnectionsTable = () => {
 				<Table className="mt-2.5">
 					<THead>
 						<Tr>
-							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("name")}>
+							<Th
+								className="group w-1/4 cursor-pointer pl-4 font-normal"
+								onClick={() => requestSort("name")}
+							>
 								{t("table.columns.name")}
 
 								<SortButton
@@ -155,7 +158,7 @@ export const ConnectionsTable = () => {
 							</Th>
 
 							<Th
-								className="group cursor-pointer font-normal"
+								className="group w-1/4 cursor-pointer font-normal"
 								onClick={() => requestSort("integrationName")}
 							>
 								{t("table.columns.app")}
@@ -168,7 +171,7 @@ export const ConnectionsTable = () => {
 							</Th>
 
 							<Th
-								className="group max-w-32 cursor-pointer font-normal"
+								className="group w-1/4 cursor-pointer font-normal"
 								onClick={() => requestSort("status")}
 							>
 								{t("table.columns.status")}
@@ -180,9 +183,7 @@ export const ConnectionsTable = () => {
 								/>
 							</Th>
 
-							<Th className="group cursor-pointer font-normal">{t("table.columns.information")}</Th>
-
-							<Th className="max-w-20 text-right font-normal">{t("table.columns.actions")}</Th>
+							<Th className="w-1/4 text-right font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
@@ -190,9 +191,9 @@ export const ConnectionsTable = () => {
 						{sortedConnections.map(
 							({ connectionId, integrationName, logo, name, status, statusInfoMessage }) => (
 								<Tr className="group" key={connectionId}>
-									<Td className="font-semibold">{name}</Td>
+									<Td className="w-1/4 font-semibold">{name}</Td>
 
-									<Td>
+									<Td className="w-1/4">
 										<div className="flex items-center gap-2" title={integrationName}>
 											<IconSvg
 												alt={integrationName}
@@ -204,13 +205,13 @@ export const ConnectionsTable = () => {
 										</div>
 									</Td>
 
-									<Td className="max-w-32">
-										<ConnectionTableStatus status={status} />
+									<Td className="w-1/4">
+										<div className="inline">
+											<ConnectionTableStatus status={status} />: {statusInfoMessage}
+										</div>
 									</Td>
 
-									<Td>{statusInfoMessage}</Td>
-
-									<Td className="max-w-20 pr-0">
+									<Td className="w-1/4">
 										<div className="flex space-x-1">
 											<IconButton
 												ariaLabel={t("table.buttons.titleEditConnection")}
