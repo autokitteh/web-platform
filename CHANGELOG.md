@@ -1,3 +1,10 @@
+## [2.33.1](https://github.com/autokitteh/web-platform/compare/v2.33.0...v2.33.1) (2024-10-21)
+
+
+### Bug Fixes
+
+* fix 'cannot read project name' on project load ([#535](https://github.com/autokitteh/web-platform/issues/535)) ([0bf142c](https://github.com/autokitteh/web-platform/commit/0bf142c50f2de82852ba01b2dbd97121a72ba765))
+
 # [2.33.0](https://github.com/autokitteh/web-platform/compare/v2.32.1...v2.33.0) (2024-10-20)
 
 
