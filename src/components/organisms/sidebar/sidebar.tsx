@@ -101,6 +101,7 @@ export const Sidebar = () => {
 
 					<div className="flex flex-col justify-end gap-5">
 						<Button
+							ariaLabel={t("systemLog")}
 							className="hover:bg-green-200"
 							onClick={() => toggleLogger(true)}
 							title={t("systemLog")}
