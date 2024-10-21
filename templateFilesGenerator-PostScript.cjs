@@ -14,13 +14,10 @@ async function refineDashboardConstants() {
     let constantsContent = await fs.readFile(CONSTANTS_FILE, "utf-8");
     console.log("Successfully read the constants file.");
 
-    // Replace all occurrences of '" with "
     constantsContent = constantsContent.replace(/'"/g, '"');
     constantsContent = constantsContent.replace(/""/g, '"');
     constantsContent = constantsContent.replace(/" "/g, '"');
     constantsContent = constantsContent.replace(/",",/g, '",');
-
-    // Replace all occurrences of ",', with ",
     constantsContent = constantsContent.replace(/",',/g, '",');
 
     // Additional replacements to clean up description fields
