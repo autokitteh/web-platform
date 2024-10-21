@@ -84,7 +84,10 @@ export const ManualRunParamsForm = () => {
 			if (jsonValue) {
 				try {
 					const parsedJson = JSON.parse(jsonValue);
-					const newParams = Object.entries(parsedJson).map(([key, value]) => ({ key, value: String(value) }));
+					const newParams = Object.entries(parsedJson).map(([key, value]) => ({
+						key,
+						value: JSON.stringify(value),
+					}));
 					setValue("params", newParams, { shouldValidate: true });
 					clearErrors("jsonParams");
 				} catch {
@@ -94,7 +97,13 @@ export const ManualRunParamsForm = () => {
 		} else {
 			const currentParams = getValues("params");
 			const jsonObject = Object.fromEntries(
-				currentParams.map((param: { key: string; value: string }) => [param.key, param.value])
+				currentParams.map((param: { key: string; value: any }) => {
+					try {
+						return [param.key, JSON.parse(param.value)];
+					} catch {
+						return [param.key, param.value];
+					}
+				})
 			);
 			setValue("jsonParams", JSON.stringify(jsonObject, null, 2), { shouldValidate: true });
 		}
