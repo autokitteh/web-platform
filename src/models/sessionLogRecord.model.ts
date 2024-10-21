@@ -175,7 +175,7 @@ export const convertSessionLogProtoToViewerOutput = (logRecords: ProtoSessionLog
 			) {
 				return undefined;
 			}
-			const formattedDateTime = moment(record.dateTime).format("MM-DD-YYYY HH:mm:ss");
+			const formattedDateTime = moment(record.dateTime).local().format("MM-DD-YYYY HH:mm:ss");
 
 			const output: SessionOutput = {
 				print: record.logs || "",
