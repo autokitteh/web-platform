@@ -1,3 +1,10 @@
+## [2.33.2](https://github.com/autokitteh/web-platform/compare/v2.33.1...v2.33.2) (2024-10-21)
+
+
+### Bug Fixes
+
+* display whitespaces in session log prints ([#536](https://github.com/autokitteh/web-platform/issues/536)) ([771d579](https://github.com/autokitteh/web-platform/commit/771d579ddef01ff4393b04b0e5ec80201f304939))
+
 ## [2.33.1](https://github.com/autokitteh/web-platform/compare/v2.33.0...v2.33.1) (2024-10-21)
 
 
