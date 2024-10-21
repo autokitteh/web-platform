@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+/* eslint-disable no-console */
 import fs from "fs/promises";
 import path from "path";
 
@@ -7,8 +10,14 @@ const TEMPLATES_DIR = "src/assets/templates";
 async function reconstructTemplateCategories() {
 	console.log("Starting to reconstruct template categories...");
 
-	const constantsContent = await fs.readFile(CONSTANTS_FILE, "utf-8");
+	let constantsContent = await fs.readFile(CONSTANTS_FILE, "utf-8");
 	console.log("Successfully read the constants file.");
+
+	// Replace all occurrences of description: '"SOME-TEXT",'
+	constantsContent = constantsContent.replace(/description:\s*'\"(.*?)\"',/g, 'description: "$1",');
+
+	// Replace specific case of extra space and double quotes around description value
+	constantsContent = constantsContent.replace(/"description":\s*"\s*"(.*?)"",/g, '"description": "$1",');
 
 	const templateProjectsCategoriesMatch = constantsContent.match(
 		/export const templateProjectsCategories:[^=]+=\s*(\[[\s\S]*?\n\];)/
@@ -61,7 +70,7 @@ async function reconstructCategories(categoriesString: string): Promise<string> 
 				if (line.startsWith("integrations:") || line.startsWith("assetDirectory:")) {
 					accumulatingDescription = false;
 				} else {
-					currentCard.description += lines[i].trim();
+					currentCard.description += " " + lines[i].trim();
 				}
 			}
 
@@ -88,7 +97,11 @@ async function reconstructCategories(categoriesString: string): Promise<string> 
 		categories.push(currentCategory);
 	}
 
-	return JSON.stringify(categories, null, 2).replace(/"integrations":\s*"\[(.*?)\]"/g, '"integrations": [$1]');
+	return JSON.stringify(categories, null, 2)
+		.replace(/"integrations":\s*"\[(.*?)\]"/g, '"integrations": [$1]')
+		.replace(/\\"/g, '"') // Remove unnecessary escape characters
+		.replace(/"\s*"(.*?)"",/g, '"$1",') // Remove extra spaces and double quotes
+		.replace(/""(.*?)"",/g, '"$1",'); // Handle double quotes at the beginning and end
 }
 
 async function getActualFiles(assetDirectory: string): Promise<string[]> {
@@ -105,3 +118,22 @@ async function getActualFiles(assetDirectory: string): Promise<string[]> {
 }
 
 reconstructTemplateCategories().catch(console.error);
+
+// Additional script to replace all occurrences of '" with " and ",', with ",
+async function refineDashboardConstants() {
+	console.log("Starting to refine dashboard.constants.ts...");
+
+	let constantsContent = await fs.readFile(CONSTANTS_FILE, "utf-8");
+	console.log("Successfully read the constants file.");
+
+	// Replace all occurrences of '" with "
+	constantsContent = constantsContent.replace(/'"/g, '"');
+
+	// Replace all occurrences of ",', with ",
+	constantsContent = constantsContent.replace(/",',/g, '",');
+
+	await fs.writeFile(CONSTANTS_FILE, constantsContent, "utf-8");
+	console.log("Refinement of dashboard.constants.ts completed successfully!");
+}
+
+refineDashboardConstants().catch(console.error);
