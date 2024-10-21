@@ -18,8 +18,8 @@ i18n.on("initialized", () => {
 		params: z
 			.array(
 				z.object({
-					key: z.string().min(1, i18n.t("keyIsRequired", { ns: "validations" })),
-					value: z.string().min(1, i18n.t("valueIsRequired", { ns: "validations" })),
+					key: z.string().min(1, i18n.t("manualRun.keyIsRequired", { ns: "validations" })),
+					value: z.string().min(1, i18n.t("manualRun.valueIsRequired", { ns: "validations" })),
 				})
 			)
 			.optional()

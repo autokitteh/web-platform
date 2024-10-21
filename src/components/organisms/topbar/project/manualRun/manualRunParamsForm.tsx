@@ -33,16 +33,19 @@ export const ManualRunParamsForm = () => {
 	const { isJson } = projectManualRun || {};
 	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
 
-	const convertParamsToJson = (currentParams: { key: string; value: string }[]) => {
+	const safeJsonParse = (value: string) => {
+		try {
+			return JSON.parse(value);
+		} catch {
+			return null;
+		}
+	};
+
+	const convertParamsToJson = (currentParams: ManualRunParam[]) => {
 		const jsonObject = Object.fromEntries(
-			currentParams.map((param: { key: string; value: any }) => {
-				try {
-					return [param.key, JSON.parse(param.value)];
-				} catch {
-					return [param.key, param.value];
-				}
-			})
+			currentParams.map(({ key, value }) => [key, safeJsonParse(value) ?? value])
 		);
+
 		setValue("jsonParams", JSON.stringify(jsonObject, null, 2), { shouldValidate: true });
 	};
 
@@ -89,14 +92,6 @@ export const ManualRunParamsForm = () => {
 	const handleFieldChange = (index: number, field: "key" | "value", value: string) => {
 		setValue(`params.${index}.${field}`, value, { shouldValidate: true });
 		trigger(`params.${index}.${field}`);
-	};
-
-	const safeJsonParse = (value: string) => {
-		try {
-			return JSON.parse(value);
-		} catch {
-			return null;
-		}
 	};
 
 	const handleJsonToParamsConversion = () => {

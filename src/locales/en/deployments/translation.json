@@ -52,7 +52,9 @@
 			"executionFailed": "Session execution failed",
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
 			"executionSucceed": "Session execution succeed for session ID",
-			"missingLastDeployment": "Missing last deployment"
+			"missingLastDeployment": "Missing last deployment",
+			"useJsonEditor": "Use JSON editor"
+
 		},
 		"actions":{
 			"deploymentRemovedSuccessfully": "Deployment removed successfully",
@@ -60,8 +62,7 @@
 			"deploymentActivatedSuccessfully": "Deployment activated successfully",
 			"deploymentActivatedSuccessfullyExtended": "Deployment activated successfully, deployment ID: {{deploymentId}}",
 			"deploymentDeactivatedSuccessfully": "Deployment deactivated successfully",
-			"deploymentDeactivatedSuccessfullyExtended": "Deployment deactivated successfully, deployment ID: {{deploymentId}}",
-			"useJsonEditor": "Use JSON editor"
+			"deploymentDeactivatedSuccessfullyExtended": "Deployment deactivated successfully, deployment ID: {{deploymentId}}"
 		}
 	},
 	"sessionStats": {
