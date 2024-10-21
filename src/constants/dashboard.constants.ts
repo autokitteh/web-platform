@@ -95,7 +95,13 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"Submit emergency AWS access requests via Slack, which are then approved or denied based on a set of predefined conditions",
 				integrations: [IntegrationsMap.aws, IntegrationsMap.slack],
 				assetDirectory: "break_glass",
-				files: ["README.md", "autokitteh.yaml", "program.py"],
+				files: [
+					"README.md",
+					"autokitteh.yaml",
+					"program.py",
+					"approval_message.json.txt",
+					"request_modal.json.txt",
+				],
 			},
 			{
 				title: "Parse a file in S3 and insert to database",
