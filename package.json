@@ -4,6 +4,7 @@
 	"type": "module",
 	"version": "1.48.2",
 	"scripts": {
+		"regenerate-templates-file": "npx tsx templateFilesGenerator.ts && node templateFilesGenerator-PostScript.cjs",
 		"build": "vite build",
 		"build-storybook": "storybook build",
 		"build:prod": "NODE_ENV=production npm run build",

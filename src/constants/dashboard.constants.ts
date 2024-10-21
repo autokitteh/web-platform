@@ -64,6 +64,8 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				integrations: [IntegrationsMap.github, IntegrationsMap.slack],
 				assetDirectory: "purrr",
 				files: [
+					"README.md",
+					"autokitteh.yaml",
 					"debug.star",
 					"github_helpers.star",
 					"github_issue_comment.star",
@@ -77,8 +79,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"slack_helpers.star",
 					"slack_message.star",
 					"slack_reaction.star",
-					"test.md",
-					"test.yaml",
 					"user_helpers.star",
 				],
 			},
@@ -87,7 +87,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Create a Slack channel for each PR, update team leads until completion",
 				integrations: [IntegrationsMap.slack, IntegrationsMap.github, IntegrationsMap.sheets],
 				assetDirectory: "reviewkitteh",
-				files: ["README.md", "autokitteh.yaml", "program.star"],
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Manage emergency AWS access requests via Slack",
@@ -121,6 +121,11 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"subscription-event.json",
 				],
 			},
+		],
+	},
+	{
+		name: "Samples",
+		cards: [
 			{
 				title: "Log Discord messages to Sheets",
 				description: "Logging Discord messages to a Google Sheets document",
@@ -136,11 +141,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				assetDirectory: "github_copilot_seats",
 				files: ["README.md", "autokitteh.yaml", "helpers.star", "msg.json", "seats.star", "triggers.star"],
 			},
-		],
-	},
-	{
-		name: "Samples",
-		cards: [
 			{
 				title: "Create Jira Ticket from a Webhook data",
 				description: "Create Jira Ticket from a Webhook data",
@@ -239,6 +239,11 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				assetDirectory: "samples/scheduler",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
+		],
+	},
+	{
+		name: "Durable workflows",
+		cards: [
 			{
 				title: "Slack",
 				description: "Samples using Slack APIs",
@@ -246,6 +251,11 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				assetDirectory: "samples/slack",
 				files: ["README.md", "approval_message.json.txt", "autokitteh.yaml", "message.json", "program.py"],
 			},
+		],
+	},
+	{
+		name: "Office Automation",
+		cards: [
 			{
 				title: "Twilio",
 				description: "Samples using Twilio APIs",
@@ -253,11 +263,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				assetDirectory: "samples/twilio",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
-		],
-	},
-	{
-		name: "Durable workflows",
-		cards: [
 			{
 				title: "Quickstart",
 				description: "Sample for quickstart",
@@ -265,11 +270,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				assetDirectory: "quickstart",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
-		],
-	},
-	{
-		name: "Office Automation",
-		cards: [
 			{
 				title: "Fault tolerant workflow with manual Slack approvals",
 				description:

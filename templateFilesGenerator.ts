@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 /* eslint-disable no-console */
@@ -107,6 +108,7 @@ async function reconstructCategories(categoriesString: string): Promise<string> 
 async function getActualFiles(assetDirectory: string): Promise<string[]> {
 	const dirPath = path.join(TEMPLATES_DIR, assetDirectory);
 	try {
+		// eslint-disable-next-line security/detect-non-literal-fs-filename
 		const files = await fs.readdir(dirPath);
 
 		return files.filter((file) => !file.startsWith("."));
