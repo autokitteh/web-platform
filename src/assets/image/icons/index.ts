@@ -60,4 +60,5 @@ export { default as CircleMinusIcon } from "@assets/image/icons/CircleMinus.svg?
 export { default as CirclePlusIcon } from "@assets/image/icons/CirclePlus.svg?react";
 export { default as FileIcon } from "@assets/image/icons/File.svg?react";
 export { default as DownloadIcon } from "@assets/image/icons/Download.svg?react";
+// Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/filter.svg
 export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";

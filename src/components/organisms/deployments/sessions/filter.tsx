@@ -10,7 +10,7 @@ import { cn } from "@utilities";
 import { Button, IconSvg } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 
-import { FilterIcon } from "@assets/image/icons";
+import { Close, FilterIcon } from "@assets/image/icons";
 
 export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilterProps) => {
 	const [activeState, setActiveState] = useState<SessionStateKeyType>();
@@ -42,10 +42,6 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 		[SessionStateType.stopped]: 0,
 	};
 
-	const filterIconClass = cn("border border-transparent rounded-full p-1", {
-		"border-white": activeState,
-	});
-
 	const sessionCounts = useMemo(
 		() =>
 			sessionStats.reduce(
@@ -60,6 +56,10 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[sessionStats]
 	);
+
+	const clearFilterClass = cn("fill-white p-0.5 border border-transparent mb-1 rounded-full hidden", {
+		"border-white block": activeState,
+	});
 
 	return (
 		<div className="flex items-center">
@@ -100,15 +100,18 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 					</div>
 				}
 			>
-				<Button
-					className="h-8 whitespace-nowrap border-0 px-4 text-white hover:bg-transparent"
-					variant="outline"
-				>
-					<div className={filterIconClass}>
-						<IconSvg className="fill-white" size="md" src={FilterIcon} />
-					</div>
-					{tTable("filter")}
-				</Button>
+				<div className="flex">
+					<Button className="p-0" onClick={() => handleButtonClick()}>
+						<IconSvg className={clearFilterClass} size="md" src={Close} />
+					</Button>
+					<Button
+						className="h-8 whitespace-nowrap border-0 pr-4 text-white hover:bg-transparent"
+						variant="outline"
+					>
+						<IconSvg className="mb-1" size="md" src={FilterIcon} />
+						{tTable("filter")}
+					</Button>
+				</div>
 			</DropdownButton>
 		</div>
 	);
