@@ -31,10 +31,11 @@ export const Sidebar = () => {
 	}, [location.pathname]);
 
 	const handleMouseLeave = (event: React.MouseEvent) => {
-		if (submenuRef.current && submenuRef.current.contains(event.relatedTarget as Node)) {
+		const relatedTarget = event.relatedTarget as Node | null;
+		if (submenuRef.current && relatedTarget && submenuRef.current.contains(relatedTarget)) {
 			return;
 		}
-		setSubmenuInfo?.({ submenu: undefined, top: 0 });
+		setSubmenuInfo({ submenu: undefined, top: 0 });
 	};
 
 	const animateVariant = {
