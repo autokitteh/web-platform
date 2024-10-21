@@ -2,7 +2,8 @@
     "leftSide": {
         "autokittehGreenTitle": "AutoKitteh",
         "welcomeTitle": "Welcome to",
-        "whatIsAutoKitteh": "What is AutoKitteh?"
+        "whatIsAutoKitteh": "What is AutoKitteh?",
+        "register": "Register"
     },
     "rightSide": {
         "titleFirstLine": "Reliable Automation",

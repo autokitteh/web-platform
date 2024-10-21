@@ -129,12 +129,20 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
 
 				<a
-					className="mt-8 font-averta text-lg text-green-800 hover:text-gray-500"
+					className="font-averta text-lg text-green-800 hover:text-gray-500"
 					href="https://docs.autokitteh.com/?_gl=1*i4q5*_ga*ODU4OTc4NjAwLjE3MjkyNDU5MTM.*_ga_DD62H8RGVW*MTcyOTI0NTkxMy4xLjEuMTcyOTI0NTkzMi4wLjAuMA.."
 					rel="noreferrer"
 					target="_blank"
 				>
 					{t("leftSide.whatIsAutoKitteh")}
+				</a>
+				<a
+					className="font-averta text-lg text-green-800 hover:text-gray-500"
+					href="https://autokitteh.com/get-a-demo/"
+					rel="noreferrer"
+					target="_blank"
+				>
+					{t("leftSide.register")}
 				</a>
 
 				<IconSvg className="mt-auto size-80 fill-white opacity-10" src={AKRoundLogo} />
