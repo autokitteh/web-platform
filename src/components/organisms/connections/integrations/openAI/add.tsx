@@ -48,18 +48,6 @@ export const OpenAiIntegrationAddForm = ({
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>
 
-			<Button
-				aria-label={t("buttons.saveConnection")}
-				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
-				disabled={isLoading}
-				type="submit"
-				variant="outline"
-			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
-				{t("buttons.saveConnection")}
-			</Button>
-
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
 					{infoOpenAiLinks.map(({ text, url }, index) => (
@@ -76,6 +64,18 @@ export const OpenAiIntegrationAddForm = ({
 					))}
 				</div>
 			</Accordion>
+
+			<Button
+				aria-label={t("buttons.saveConnection")}
+				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
+				disabled={isLoading}
+				type="submit"
+				variant="outline"
+			>
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
+
+				{t("buttons.saveConnection")}
+			</Button>
 		</form>
 	);
 };
