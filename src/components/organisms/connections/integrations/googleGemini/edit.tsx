@@ -37,18 +37,6 @@ export const GoogleGeminiIntegrationEditForm = () => {
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>
 
-			<Button
-				aria-label={t("buttons.saveConnection")}
-				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
-				disabled={isLoading}
-				type="submit"
-				variant="outline"
-			>
-				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
-				{t("buttons.saveConnection")}
-			</Button>
-
 			<Accordion title={t("information")}>
 				<Link
 					className="group inline-flex items-center gap-2.5 text-green-800"
@@ -70,6 +58,18 @@ export const GoogleGeminiIntegrationEditForm = () => {
 					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 				</Link>
 			</Accordion>
+
+			<Button
+				aria-label={t("buttons.saveConnection")}
+				className="ml-auto w-fit border-white px-3 font-medium text-white hover:bg-black"
+				disabled={isLoading}
+				type="submit"
+				variant="outline"
+			>
+				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
+
+				{t("buttons.saveConnection")}
+			</Button>
 		</form>
 	);
 };
