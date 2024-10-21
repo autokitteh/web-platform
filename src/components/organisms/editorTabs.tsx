@@ -131,7 +131,7 @@ export const EditorTabs = () => {
 		try {
 			await saveFile(activeEditorFileName, newContent);
 			setContent(newContent);
-			setLastSaved(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
+			setLastSaved(moment().local().format("YYYY-MM-DD HH:mm:ss"));
 		} catch (error) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
