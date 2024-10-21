@@ -16,23 +16,7 @@ import { convertSessionProtoToViewerModel } from "@src/models/session.model";
 import { ViewerSession } from "@src/types/models/session.type";
 import { ServiceResponse, StartSessionArgsType } from "@type";
 import { Session, SessionFilter } from "@type/models";
-import { flattenArray } from "@utilities";
-
-function transformAndStringifyValues(object: object) {
-	const transformed = Object.fromEntries(
-		Object.entries(object).map(([key, value]) => {
-			let parsedValue = value.slice(1, -1).replace(/\\"/g, '"');
-
-			if (parsedValue.startsWith("{") && parsedValue.endsWith("}")) {
-				parsedValue = parsedValue.replace(/"/g, "'");
-			}
-
-			return [key, parsedValue];
-		})
-	);
-
-	return Object.fromEntries(Object.entries(transformed).map(([key, value]) => [key, JSON.stringify(value)]));
-}
+import { flattenArray, transformAndStringifyValues } from "@utilities";
 
 export class SessionsService {
 	static async deleteSession(sessionId: string): Promise<ServiceResponse<void>> {
