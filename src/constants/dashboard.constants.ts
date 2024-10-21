@@ -47,7 +47,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Set Assignee in Jira ticket to the person currently on-call",
 				integrations: [IntegrationsMap.jira, IntegrationsMap.calendar],
 				assetDirectory: "jira_google_calendar/assignee_from_schedule",
-				files: ["README.md", "autokitteh.yaml", "program.py"],
+				files: ["README.md", "autokitteh.yaml", "images", "program.py"],
 			},
 			{
 				title: "Create calendar due date event for Jira ticket",
@@ -64,8 +64,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				integrations: [IntegrationsMap.github, IntegrationsMap.slack],
 				assetDirectory: "purrr",
 				files: [
-					"README.md",
-					"autokitteh.yaml",
 					"debug.star",
 					"github_helpers.star",
 					"github_issue_comment.star",
@@ -79,6 +77,8 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"slack_helpers.star",
 					"slack_message.star",
 					"slack_reaction.star",
+					"test.md",
+					"test.yaml",
 					"user_helpers.star",
 				],
 			},
@@ -95,17 +95,19 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"Submit emergency AWS access requests via Slack, which are then approved or denied based on a set of predefined conditions",
 				integrations: [IntegrationsMap.aws, IntegrationsMap.slack],
 				assetDirectory: "break_glass",
-				files: ["README.md", "autokitteh.yaml", "program.py"],
+				files: [
+					"README.md",
+					"approval_message.json.txt",
+					"autokitteh.yaml",
+					"program.py",
+					"request_modal.json.txt",
+				],
 			},
 			{
 				title: "Parse a file in S3 and insert to database",
 				description:
 					"Triggered by a new GPX file on an S3 bucket, the pipeline code will parse the GPX file and insert it into a database.",
-				integrations: [
-					IntegrationsMap.aws,
-					HiddenIntegrationsForTemplates.http,
-					HiddenIntegrationsForTemplates.sqlite3,
-				],
+				integrations: [],
 				assetDirectory: "data_pipeline",
 				files: [
 					"Makefile",
@@ -132,8 +134,13 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"If Copilot was not used in a preceding period by users, the workflow automatically unregisters and notifies them. Users can ask for their subscription to be reinstated.",
 				integrations: [HiddenIntegrationsForTemplates.githubcopilot, IntegrationsMap.slack],
 				assetDirectory: "github_copilot_seats",
-				files: ["README.md", "autokitteh.yaml", "helpers.star", "msg.star", "seats.star", "triggers.star"],
+				files: ["README.md", "autokitteh.yaml", "helpers.star", "msg.json", "seats.star", "triggers.star"],
 			},
+		],
+	},
+	{
+		name: "Samples",
+		cards: [
 			{
 				title: "Create Jira Ticket from a Webhook data",
 				description: "Create Jira Ticket from a Webhook data",
@@ -141,11 +148,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				assetDirectory: "webhook_to_jira",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
-		],
-	},
-	{
-		name: "Samples",
-		cards: [
 			{
 				title: "Jira",
 				description: "Samples using Jira APIs",
@@ -172,7 +174,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Samples using GitHub APIs",
 				integrations: [IntegrationsMap.github],
 				assetDirectory: "samples/github",
-				files: ["README.md", "autokitteh.yaml", "workflow.py", "program.py"],
+				files: ["README.md", "autokitteh.yaml", "program.py", "workflow.py"],
 			},
 			{
 				title: "Google Calendar",
@@ -186,7 +188,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Samples using Google Forms APIs",
 				integrations: [IntegrationsMap.forms],
 				assetDirectory: "samples/google/forms",
-				files: ["README.md", "autokitteh.yaml", "program.py", "new_question.json"],
+				files: ["README.md", "autokitteh.yaml", "new_question.json", "program.py"],
 			},
 			{
 				title: "Gmail",
@@ -242,15 +244,20 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Samples using Slack APIs",
 				integrations: [IntegrationsMap.slack],
 				assetDirectory: "samples/slack",
-				files: ["README.md", "autokitteh.yaml", "program.py", "approval_message.json.txt"],
+				files: ["README.md", "approval_message.json.txt", "autokitteh.yaml", "message.json", "program.py"],
 			},
 			{
 				title: "Twilio",
 				description: "Samples using Twilio APIs",
 				integrations: [IntegrationsMap.twilio],
 				assetDirectory: "samples/twilio",
-				files: ["README.md", "autokitteh.yaml", "program.star"],
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
+		],
+	},
+	{
+		name: "Durable workflows",
+		cards: [
 			{
 				title: "Quickstart",
 				description: "Sample for quickstart",
@@ -261,7 +268,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 		],
 	},
 	{
-		name: "Durable workflows",
+		name: "Office Automation",
 		cards: [
 			{
 				title: "Fault tolerant workflow with manual Slack approvals",
@@ -269,20 +276,15 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"Runs a sequence of tasks with fault tolerance. In case of failure, user can decide to terminate or retry from the point of failure.",
 				integrations: [IntegrationsMap.slack],
 				assetDirectory: "task_chain/single_workflow/basic",
-				files: ["interactive_message.json.txt", "autokitteh.yaml", "program.py"],
+				files: ["autokitteh.yaml", "interactive_message.json.txt", "program.py"],
 			},
-		],
-	},
-	{
-		name: "Office Automation",
-		cards: [
 			{
 				title: "Slack notify on important Email",
 				description:
 					"Categorizing incoming emails and notifying relevant Slack channels by integrating Gmail, ChatGPT, and Slack",
 				integrations: [IntegrationsMap.gmail, IntegrationsMap.slack, IntegrationsMap.chatgpt],
 				assetDirectory: "categorize_emails",
-				files: ["README.md", "autokitteh-python.yaml", "program.py"],
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Ad-hoc room reservation via Slack",
@@ -304,7 +306,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"Slack bot: request for assistance is inferred using Google's Gemini AI. The appropriate person is mentioned according to a predetermined table of expertise in a Google Doc. The person can then !take the request and later !resolve it.",
 				integrations: [IntegrationsMap.slack, IntegrationsMap.googlegemini],
 				assetDirectory: "slack_support",
-				files: ["README.md", "autokitteh.yaml", "directory.py", "gemini.py", "main.py"],
+				files: ["README.md", "autokitteh.yaml", "demo.png", "directory.py", "gemini.py", "main.py"],
 			},
 		],
 	},
