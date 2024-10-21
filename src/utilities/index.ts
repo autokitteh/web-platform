@@ -19,3 +19,4 @@ export { stripGoogleConnectionName } from "@utilities/stripGoogleConnectionName.
 export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
 export { convertBuildRuntimesToViewTriggers } from "@utilities/convertBuildRuntimesToViewTriggers.utils";
 export { parseNestedJson } from "@src/utilities/convertWrappedJson.utils";
+export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
