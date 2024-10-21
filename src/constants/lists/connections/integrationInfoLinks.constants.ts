@@ -15,6 +15,10 @@ let infoJiraLinks: { text: string; url: string }[] = [];
 i18n.on("initialized", () => {
 	infoGithubLinks = [
 		{
+			text: i18n.t("github.informationPat.initConnection", { ns: "integrations" }),
+			url: "https://docs.autokitteh.com/integrations/github/connection",
+		},
+		{
 			text: i18n.t("github.informationPat.auth", { ns: "integrations" }),
 			url: "https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api?apiVersion=2022-11-28#authenticating-with-a-personal-access-token",
 		},
