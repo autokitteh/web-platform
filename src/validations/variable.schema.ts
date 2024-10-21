@@ -5,8 +5,8 @@ let newVariableShema: ZodObject<Record<string, ZodTypeAny>>;
 
 i18n.on("initialized", () => {
 	newVariableShema = z.object({
-		name: z.string().min(2, i18n.t("nameIsRequired", { ns: "validations" })),
-		value: z.string().min(2, i18n.t("valueIsRequired", { ns: "validations" })),
+		name: z.string().min(1, i18n.t("variables.nameIsRequired", { ns: "validations" })),
+		value: z.string().min(1, i18n.t("variables.valueIsRequired", { ns: "validations" })),
 	});
 });
 
