@@ -18,6 +18,7 @@
 	"connectionStatusFetchFailExtended": "Failed to fetch the connection status with the error: {{error}}.",
 	"defaultEnvironmentNotFoundExtended": "Default environment fetch failed, project ID: {{projectId}}, error: {{error}}",
 	"issueFetchingDefaultEnvironment": "Couldn't fetch the default environment, project ID: {{projectId}}, error: {{error}}",
+	"fetchFailedForEventList": "Couldn't fetch event list, error: {{error}}",
 	"connectionsNotFound": "Couldn't fetch the connections details",
 	"connectionsNotFoundExtended": "Failed to fetch the connections for the project {{projectId}}",
 	"deleteFailedIdError": "Deployment deletion failed - deployment: {{deploymentId}}, error: {{error}}",

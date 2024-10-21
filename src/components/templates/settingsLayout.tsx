@@ -4,12 +4,13 @@ import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 
 import { LogoCatLarge, PageTitle } from "@components/atoms";
-import { Sidebar } from "@components/organisms";
-import { SettingsMenu, SettingsTopbar } from "@components/organisms/settings";
+import { Sidebar, TitleTopbar } from "@components/organisms";
+import { SettingsMenu } from "@components/organisms/settings";
 
 export const SettingsLayout = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
+	const { t: tSettings } = useTranslation("settings", { keyPrefix: "topbar" });
 
 	useEffect(() => {
 		setPageTitle(t("template", { page: t("settings") }));
@@ -27,12 +28,12 @@ export const SettingsLayout = () => {
 					<Sidebar />
 
 					<div className="flex w-full flex-col">
-						<SettingsTopbar />
+						<TitleTopbar title={tSettings("title")} />
 
 						<div className="relative flex size-full overflow-hidden py-2">
 							<SettingsMenu />
 
-							<div className="flex h-full w-1/3 flex-5 flex-col rounded-r-lg bg-gray-1250 pl-6 pt-10">
+							<div className="flex h-full w-1/3 flex-5 flex-col rounded-2xl bg-gray-1250 pl-6 pt-10">
 								<Outlet />
 
 								<div className="absolute !-bottom-5 !-right-5">

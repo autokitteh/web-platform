@@ -3,12 +3,13 @@ import i18n from "i18next";
 import { namespaces } from "@constants";
 import { ConnectionService, LoggerService, TriggersService } from "@services";
 import { Event as ProtoEvent } from "@src/autokitteh/proto/gen/ts/autokitteh/events/v1/event_pb";
-import { Event } from "@src/types/models/event.type";
+import { BaseEvent, EnrichedEvent, EventDestinationTypes } from "@src/types/models";
+import { convertTimestampToDate } from "@src/utilities";
 
-export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<Event> => {
+export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent): Promise<EnrichedEvent> => {
 	let destinationName;
 	let sourceType;
-	let destination = "unknown" as Event["destination"];
+	let destinationType: EventDestinationTypes = "unknown";
 
 	if (!protoEvent.destinationId) {
 		const errorMessage = i18n.t("eventNoDestinationId", {
@@ -20,44 +21,35 @@ export const convertEventProtoToModel = async (protoEvent: ProtoEvent): Promise<
 	}
 
 	if (protoEvent.destinationId.startsWith("trg_")) {
-		const { data: trigger } = await TriggersService.get(protoEvent.destinationId);
-
-		destinationName =
-			trigger?.name ||
-			i18n.t("triggerNotFoundForSessionModel", {
-				ns: "services",
-			});
-		sourceType =
-			trigger?.sourceType ||
-			i18n.t("unknownSourceForSessionModel", {
-				ns: "services",
-			});
-		destination = "trigger";
+		const trigger = await TriggersService.get(protoEvent.destinationId);
+		destinationName = trigger.data?.name;
+		sourceType = trigger.data?.sourceType;
+		destinationType = "trigger";
 	}
 
 	if (protoEvent.destinationId.startsWith("con_")) {
-		const { data: connection } = await ConnectionService.get(protoEvent.destinationId);
-
-		destinationName =
-			connection?.name ||
-			i18n.t("connectionNotFoundForSessionModel", {
-				ns: "services",
-			});
-		sourceType = connection?.name
-			? i18n.t("connection", {
-					ns: "services",
-				})
-			: i18n.t("unknownSourceForSessionModel", {
-					ns: "services",
-				});
-		destination = "connection";
+		const connection = await ConnectionService.get(protoEvent.destinationId);
+		destinationName = connection.data?.name;
+		sourceType = i18n.t("connection", {
+			connectionName: connection.data?.name,
+			ns: "services",
+			error: connection.error,
+		});
+		destinationType = "connection";
 	}
 
 	return {
-		eventId: protoEvent.eventId,
-		destination,
 		destinationId: protoEvent.destinationId,
+		destinationType,
+		eventId: protoEvent.eventId,
 		destinationName,
 		sourceType,
+		createdAt: convertTimestampToDate(protoEvent.createdAt),
 	};
 };
+
+export const convertEventProtoToSimplifiedModel = (protoEvent: ProtoEvent): BaseEvent => ({
+	destinationId: protoEvent.destinationId,
+	eventId: protoEvent.eventId,
+	createdAt: convertTimestampToDate(protoEvent.createdAt),
+});
