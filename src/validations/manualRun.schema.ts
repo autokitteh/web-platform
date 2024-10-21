@@ -6,11 +6,6 @@ const selectSchema = z.object({
 	value: z.string(),
 });
 
-const paramSchema = z.object({
-	key: z.string().min(1, i18n.t("keyIsRequired", { ns: "validations" })),
-	value: z.string().min(1, i18n.t("valueIsRequired", { ns: "validations" })),
-});
-
 let manualRunSchema: ZodObject<Record<string, ZodTypeAny>>;
 
 i18n.on("initialized", () => {
@@ -21,22 +16,17 @@ i18n.on("initialized", () => {
 		}),
 		entrypointFunction: z.string().min(1, i18n.t("functionNameIsRequired", { ns: "validations" })),
 		params: z
-			.array(paramSchema)
+			.array(
+				z.object({
+					key: z.string().min(1, i18n.t("keyIsRequired", { ns: "validations" })),
+					value: z.string().min(1, i18n.t("valueIsRequired", { ns: "validations" })),
+				})
+			)
 			.optional()
 			.superRefine((items, ctx) => {
 				if (items && !!items.length) {
 					const keys = new Set<string>();
 					items.forEach((item, index) => {
-						if (!item.key?.trim()) {
-							ctx.addIssue({
-								code: z.ZodIssueCode.custom,
-								message: i18n.t("keyIsRequired", { ns: "validations" }),
-								path: [`${index}.key`],
-							});
-
-							return;
-						}
-
 						if (keys.has(item.key)) {
 							ctx.addIssue({
 								code: z.ZodIssueCode.custom,
@@ -48,14 +38,6 @@ i18n.on("initialized", () => {
 						}
 
 						keys.add(item.key);
-
-						if (!item.value?.trim()) {
-							ctx.addIssue({
-								code: z.ZodIssueCode.custom,
-								message: i18n.t("valueIsRequired", { ns: "validations" }),
-								path: [`${index}.value`],
-							});
-						}
 					});
 				}
 			}),
@@ -74,7 +56,7 @@ i18n.on("initialized", () => {
 					}
 				},
 				{
-					message: i18n.t("invalidJsonFormat", { ns: "validations" }),
+					message: i18n.t("manualRun.invalidJsonFormat", { ns: "validations" }),
 				}
 			),
 	});
