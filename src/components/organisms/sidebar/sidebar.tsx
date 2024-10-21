@@ -21,7 +21,7 @@ export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
 	const { logoutFunction } = useUserStore();
-	const { isNewLogs, toggleLogger } = useLoggerStore();
+	const { isLoggerEnabled, isNewLogs, toggleLogger } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
 	const submenuRef = useRef<HTMLDivElement | null>(null);
@@ -103,7 +103,7 @@ export const Sidebar = () => {
 						<Button
 							ariaLabel={t("systemLog")}
 							className="hover:bg-green-200"
-							onClick={() => toggleLogger(true)}
+							onClick={() => toggleLogger(!isLoggerEnabled)}
 							title={t("systemLog")}
 						>
 							<Badge
