@@ -13,4 +13,5 @@ export interface LoggerStore {
 	toggleLogger: (enabled: boolean) => void;
 	logs: Log[];
 	isLoggerEnabled: boolean;
+	isNewLogs: boolean;
 }
