@@ -11,7 +11,7 @@ import { useCacheStore } from "@src/store";
 import { BaseEvent } from "@src/types/models";
 import { cn } from "@src/utilities";
 
-import { Button, Frame, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Frame, Loader, ResizeButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 
 import { CatImage } from "@assets/image";
@@ -38,17 +38,6 @@ export const EventsTable = () => {
 		fetchEvents();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const resizeClass = useMemo(
-		() =>
-			cn(
-				"resize-handle-horizontal bg-gray-white z-0 h-[97%] cursor-ew-resize self-center rounded-none p-1.5 transition hover:bg-gray-750",
-				{
-					"h-full bg-gray-1100 p-1": !eventId,
-				}
-			),
-		[eventId]
-	);
 
 	const frameClass = useMemo(
 		() =>
@@ -163,7 +152,7 @@ export const EventsTable = () => {
 				</Frame>
 			</div>
 
-			<Button className={resizeClass} />
+			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeId} />
 
 			<div className="flex" style={{ width: `${100 - (leftSideWidth as number)}%` }}>
 				{eventId ? (
