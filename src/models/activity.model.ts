@@ -48,7 +48,11 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 		}
 
 		if (callAttemptComplete && currentActivity) {
-			currentActivity.status = "completed" as keyof ActivityState;
+			if (callAttemptComplete.result?.error) {
+				currentActivity.status = "error" as keyof ActivityState;
+			} else {
+				currentActivity.status = "completed" as keyof ActivityState;
+			}
 			currentActivity.endTime = convertTimestampToDate(callAttemptComplete.completedAt);
 
 			const convertedValue = convertValue(callAttemptComplete.result?.value);
