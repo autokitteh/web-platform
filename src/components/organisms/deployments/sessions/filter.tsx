@@ -10,7 +10,7 @@ import { cn } from "@utilities";
 import { Button, IconSvg } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 
-import { Close, FilterIcon } from "@assets/image/icons";
+import { FilterIcon } from "@assets/image/icons";
 
 export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilterProps) => {
 	const [activeState, setActiveState] = useState<SessionStateKeyType>();
@@ -57,10 +57,6 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 		[sessionStats]
 	);
 
-	const clearFilterClass = cn("fill-white p-0.5 border border-transparent mb-1 rounded-full hidden", {
-		"border-white block": activeState,
-	});
-
 	return (
 		<div className="flex items-center">
 			<DropdownButton
@@ -101,15 +97,12 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 				}
 			>
 				<div className="flex">
-					<Button className="p-0" onClick={() => handleButtonClick()}>
-						<IconSvg className={clearFilterClass} size="md" src={Close} />
-					</Button>
 					<Button
 						className="h-8 whitespace-nowrap border-0 pr-4 text-white hover:bg-transparent"
 						variant="outline"
 					>
 						<IconSvg className="mb-1" size="md" src={FilterIcon} />
-						{tTable("filter")}
+						{activeState ? t(activeState) : tTable("filter")}
 					</Button>
 				</div>
 			</DropdownButton>
