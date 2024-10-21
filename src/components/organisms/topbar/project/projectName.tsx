@@ -100,6 +100,7 @@ export const ProjectTopbarName = () => {
 				onBlur={handleInputChange}
 				onChange={handleInput}
 				onKeyDown={handleInputChange}
+				size={project?.name?.length || 1}
 				tabIndex={0}
 				title={t("topbar.rename")}
 				value={project?.name}
@@ -110,7 +111,7 @@ export const ProjectTopbarName = () => {
 			</ErrorMessage>
 
 			<span className="flex items-center font-fira-code font-semibold text-gray-500">
-				ID
+				{t("topbar.id")}
 				<CopyButton className="ml-2 inline p-1 pl-1.5" size="xs" text={project?.id || ""} />
 			</span>
 		</div>
