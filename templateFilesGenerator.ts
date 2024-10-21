@@ -14,7 +14,7 @@ async function reconstructTemplateCategories() {
 	console.log("Successfully read the constants file.");
 
 	// Replace all occurrences of description: '"SOME-TEXT",'
-	constantsContent = constantsContent.replace(/description:\s*'\"(.*?)\"',/g, 'description: "$1",');
+	constantsContent = constantsContent.replace(/description:\s*'"(.*?)"',/g, 'description: "$1",');
 
 	// Replace specific case of extra space and double quotes around description value
 	constantsContent = constantsContent.replace(/"description":\s*"\s*"(.*?)"",/g, '"description": "$1",');
