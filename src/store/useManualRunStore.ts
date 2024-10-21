@@ -44,6 +44,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				const firstFile = fileOptions[0];
 				projectData.filePath = firstFile;
 				projectData.entrypointFunction = "";
+				projectData.params = [];
 			}
 
 			if (filePath) {

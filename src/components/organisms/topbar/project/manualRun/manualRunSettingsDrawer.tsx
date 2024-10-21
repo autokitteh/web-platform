@@ -31,7 +31,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 	}));
 
-	const { entrypointFunction, fileOptions, filePath, isJson, lastDeployment, params } = projectManualRun || {};
+	const { entrypointFunction, fileOptions, filePath, lastDeployment, params } = projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
@@ -39,7 +39,6 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 			filePath,
 			entrypointFunction,
 			params,
-			isJson,
 		},
 		mode: "onChange",
 	});

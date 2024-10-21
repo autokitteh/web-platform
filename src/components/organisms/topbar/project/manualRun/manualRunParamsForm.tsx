@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Editor from "@monaco-editor/react";
 import { Controller, FieldErrors, FieldValues, useFieldArray, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
+import { useManualRunStore } from "@src/store";
 import { ManualFormParamsErrors } from "@src/types/components";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Toggle } from "@components/atoms";
@@ -19,7 +21,37 @@ export const ManualRunParamsForm = () => {
 		name: "params",
 	});
 
-	const [useJsonEditor, setUseJsonEditor] = useState(!!getValues("isJson"));
+	const { projectId } = useParams();
+
+	const { projectManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
+		projectManualRun: state.projectManualRun[projectId!],
+		updateManualRunConfiguration: state.updateManualRunConfiguration,
+	}));
+
+	const { isJson } = projectManualRun || {};
+
+	const convertParamsToJson = (currentParams: { key: string; value: string }[]) => {
+		const jsonObject = Object.fromEntries(
+			currentParams.map((param: { key: string; value: any }) => {
+				try {
+					return [param.key, JSON.parse(param.value)];
+				} catch {
+					return [param.key, param.value];
+				}
+			})
+		);
+		setValue("jsonParams", JSON.stringify(jsonObject, null, 2), { shouldValidate: true });
+	};
+
+	useEffect(() => {
+		if (isJson) {
+			const currentParams = getValues("params");
+			convertParamsToJson(currentParams);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
+
+	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
 
 	const errors = formState.errors as FieldErrors<FieldValues> & ManualFormParamsErrors;
 
@@ -78,6 +110,7 @@ export const ManualRunParamsForm = () => {
 	};
 
 	const toggleEditorMode = () => {
+		updateManualRunConfiguration(projectId!, { isJson: !useJsonEditor });
 		setValue("isJson", !useJsonEditor, { shouldValidate: true });
 		if (useJsonEditor) {
 			const jsonValue = getValues("jsonParams");
@@ -96,16 +129,7 @@ export const ManualRunParamsForm = () => {
 			}
 		} else {
 			const currentParams = getValues("params");
-			const jsonObject = Object.fromEntries(
-				currentParams.map((param: { key: string; value: any }) => {
-					try {
-						return [param.key, JSON.parse(param.value)];
-					} catch {
-						return [param.key, param.value];
-					}
-				})
-			);
-			setValue("jsonParams", JSON.stringify(jsonObject, null, 2), { shouldValidate: true });
+			convertParamsToJson(currentParams);
 		}
 		setUseJsonEditor(!useJsonEditor);
 	};
