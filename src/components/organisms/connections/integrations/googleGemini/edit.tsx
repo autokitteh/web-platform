@@ -50,25 +50,27 @@ export const GoogleGeminiIntegrationEditForm = () => {
 			</Button>
 
 			<Accordion title={t("information")}>
-				<Link
-					className="group inline-flex items-center gap-2.5 text-green-800"
-					target="_blank"
-					to="https://aistudio.google.com/app"
-				>
-					{t("gemini.information.aiStudio")}
+				<div className="flex flex-col gap-2">
+					<Link
+						className="group inline-flex items-center gap-2.5 text-green-800"
+						target="_blank"
+						to="https://aistudio.google.com/app"
+					>
+						{t("gemini.information.aiStudio")}
 
-					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
-				</Link>
+						<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+					</Link>
 
-				<Link
-					className="group inline-flex items-center gap-2.5 text-green-800"
-					target="_blank"
-					to="https://aistudio.google.com/app/apikey"
-				>
-					{t("gemini.information.apiKeys")}
+					<Link
+						className="group inline-flex items-center gap-2.5 text-green-800"
+						target="_blank"
+						to="https://aistudio.google.com/app/apikey"
+					>
+						{t("gemini.information.apiKeys")}
 
-					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
-				</Link>
+						<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+					</Link>
+				</div>
 			</Accordion>
 		</form>
 	);
