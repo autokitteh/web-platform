@@ -98,10 +98,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 						<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleSecondLine")}</h2>
 					</div>
 
-					<h4 className="mt-3 font-fira-code text-xl">{t("rightSide.descriptionFirstLine")}</h4>
-
 					<h3 className="mt-12 max-w-485 font-averta text-2xl font-bold">
-						{t("rightSide.descriptionSecondLine")}
+						{t("rightSide.descriptionFirstLine")}
 					</h3>
 
 					<ul className="ml-4 mt-10 font-averta text-xl font-semibold">
@@ -131,7 +129,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
 
 				<a
-					className="mb-10 font-averta text-lg text-green-800 hover:text-gray-500"
+					className="mt-8 font-averta text-lg text-green-800 hover:text-gray-500"
 					href="https://docs.autokitteh.com/?_gl=1*i4q5*_ga*ODU4OTc4NjAwLjE3MjkyNDU5MTM.*_ga_DD62H8RGVW*MTcyOTI0NTkxMy4xLjEuMTcyOTI0NTkzMi4wLjAuMA.."
 					rel="noreferrer"
 					target="_blank"

@@ -7,8 +7,7 @@
     "rightSide": {
         "titleFirstLine": "Reliable Automation",
         "titleSecondLine": "Few Lines of Code",
-        "descriptionFirstLine": "Build automations in code in minutes",
-        "descriptionSecondLine": "All you need to easily develop automations automations in Python code  ",
+        "descriptionFirstLine": "All you need to easily develop automations automations in Python code",
         "benefitsList":{
             "bullet1": "Serverless Python environment",
             "bullet2": "Super fast deploys",
