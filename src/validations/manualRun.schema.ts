@@ -76,21 +76,6 @@ i18n.on("initialized", () => {
 				{
 					message: i18n.t("invalidJsonFormat", { ns: "validations" }),
 				}
-			)
-			.refine(
-				(value) => {
-					if (!value) return true;
-					try {
-						const parsed = JSON.parse(value);
-
-						return Object.values(parsed).every((val) => typeof val !== "object" || val === null);
-					} catch {
-						return true;
-					}
-				},
-				{
-					message: i18n.t("jsonMustBeSingleLevel", { ns: "validations" }),
-				}
 			),
 	});
 });
