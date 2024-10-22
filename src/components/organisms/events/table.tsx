@@ -96,6 +96,7 @@ export const EventsTable = () => {
 	);
 
 	const rowRenderer = useCallback(
+		// eslint-disable-next-line react/no-unused-prop-types
 		({ index, key, style }: { index: number; key: string; style: React.CSSProperties }) => {
 			const event = sortedEvents[index];
 
@@ -129,8 +130,6 @@ export const EventsTable = () => {
 					<TableHeader onSort={handleSort} sortConfig={sortConfig} />
 					<TBody>
 						<div className="h-[calc(100vh-200px)]">
-							{" "}
-							{/* Adjust height as needed */}
 							<AutoSizer>
 								{({ height, width }) => (
 									<List
