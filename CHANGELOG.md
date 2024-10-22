@@ -1,3 +1,10 @@
+# [2.36.0](https://github.com/autokitteh/web-platform/compare/v2.35.3...v2.36.0) (2024-10-22)
+
+
+### Features
+
+* events viewer table ([#484](https://github.com/autokitteh/web-platform/issues/484)) ([9389d7c](https://github.com/autokitteh/web-platform/commit/9389d7cc69546ece3899747cbc76dc41f3f1b176))
+
 ## [2.35.3](https://github.com/autokitteh/web-platform/compare/v2.35.2...v2.35.3) (2024-10-22)
 
 
