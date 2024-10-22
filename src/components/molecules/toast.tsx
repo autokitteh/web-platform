@@ -4,16 +4,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
 import { ToasterTypes } from "@interfaces/components/toast.interface";
-import { useToastStore } from "@store/useToastStore";
 import { cn } from "@utilities";
 
-import { IconButton } from "@components/atoms";
+import { useLoggerStore, useToastStore } from "@store";
+
+import { Button, IconButton } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
 
-import { Close } from "@assets/image/icons";
+import { Close, ExternalLinkIcon } from "@assets/image/icons";
 
 export const Toast = () => {
 	const { removeToast, toasts } = useToastStore();
+	const { toggleLogger } = useLoggerStore();
 	const { t } = useTranslation("toasts");
 	const toastRefs = useRef<(HTMLDivElement | null)[]>([]);
 	const timerRefs = useRef<{ [id: string]: NodeJS.Timeout }>({});
@@ -114,6 +116,13 @@ export const Toast = () => {
 								<p className={titleStyle(type)}>{title}</p>
 
 								{message}
+								<Button
+									className="cursor-pointer gap-1.5 p-0 font-medium text-error underline"
+									onClick={() => toggleLogger(true)}
+								>
+									Show more
+									<ExternalLinkIcon className="size-3.5 fill-error duration-200" />
+								</Button>
 
 								{showCopyButton ? <CopyButton text={textCopyButton} /> : null}
 							</div>
