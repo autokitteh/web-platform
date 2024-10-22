@@ -10,3 +10,4 @@ export type {
 } from "@src/types/components/projectTemplates.type";
 export type { FormMode, ManualFormParamsErrors } from "@src/types/components/form.type";
 export type { TopbarType } from "@src/types/components/topbar.type";
+export type { TableHeaderProps, SortableHeaderProps } from "@src/types/components/eventsTable.type";
