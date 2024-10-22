@@ -178,13 +178,13 @@ export const SessionsTable = () => {
 		}
 
 		addToast({
-			message: tErrors("actions.sessionRemovedSuccessfully"),
+			message: t("actions.sessionRemovedSuccessfully"),
 			type: "success",
 		});
 
 		LoggerService.info(
 			namespaces.ui.sessionsTable,
-			tErrors("actions.sessionRemovedSuccessfullyExtended", { sessionId: selectedSessionId })
+			t("actions.sessionRemovedSuccessfullyExtended", { sessionId: selectedSessionId })
 		);
 
 		closeModal(ModalName.deleteDeploymentSession);
@@ -200,9 +200,10 @@ export const SessionsTable = () => {
 						<Typography className="text-base" element="h2">
 							{t("tableTitle")}
 						</Typography>
-						<div className="w-full" />
-						<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
-						<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
+						<div className="ml-auto flex items-center">
+							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
+							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
+						</div>
 					</div>
 
 					<div className="my-6 flex h-full flex-col pb-5">

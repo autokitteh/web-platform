@@ -25,9 +25,13 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 	} as const;
 
 	const buttonClass = (state?: keyof typeof buttonClassText) =>
-		cn("w-auto rounded-lg border border-gray-950 px-2.5 py-1.5 text-white", state && buttonClassText[state], {
-			"border-white bg-gray-1250": activeState === state,
-		});
+		cn(
+			"w-auto rounded-lg border border-gray-950 px-2.5 py-1.5 text-white hover:bg-gray-1150",
+			state && buttonClassText[state],
+			{
+				"border-white bg-gray-1250": activeState === state,
+			}
+		);
 
 	const filterClass = (
 		state?:
