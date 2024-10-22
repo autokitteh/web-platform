@@ -34,6 +34,7 @@ export const namespaces = {
 	},
 	hooks: {
 		connectionForm: "Connection Form",
+		createProjectFromTemplate: "Create Project From Template",
 	},
 	stores: {
 		connectionCheckerStore: "Connection Checker Store",

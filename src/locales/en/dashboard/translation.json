@@ -11,7 +11,7 @@
 	"templates":{ 
 		"title": "Start From Template",
 		"projectCreatedSuccessfully": "Project created successfully",
-		"projectCreatedSuccessfullyExtended": "Project created successfully, project ID: {{projectId}}",
+		"projectCreatedSuccessfullyExtended": "Project created successfully, project template name: {{templateName}}, project ID: {{projectId}}",
 		"projectCreationFailed": "Project creation failed",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 		"projectNameExist": "Project name already exists",
