@@ -285,7 +285,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 			{
 				title: "Slack Discord Sync",
 				description: "",
-				integrations: [],
+				integrations: [IntegrationsMap.slack, IntegrationsMap.discord],
 				assetDirectory: "slack_discord_sync",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
