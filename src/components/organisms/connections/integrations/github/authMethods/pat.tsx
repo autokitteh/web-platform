@@ -46,7 +46,7 @@ export const PatForm = ({
 
 	const getWebhookOnInit = async () => {
 		if (!connectionId) {
-			setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+			setWebhook(`${apiBaseUrl}/github/webhook/${randomatic("Aa0", 8)}`);
 
 			return;
 		}
