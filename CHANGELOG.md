@@ -1,3 +1,10 @@
+## [2.33.6](https://github.com/autokitteh/web-platform/compare/v2.33.5...v2.33.6) (2024-10-22)
+
+
+### Bug Fixes
+
+* modify project successfully created message type from error to info ([#528](https://github.com/autokitteh/web-platform/issues/528)) ([c33c2fa](https://github.com/autokitteh/web-platform/commit/c33c2faf355b81022ec9ded184354aae573614f9))
+
 ## [2.33.5](https://github.com/autokitteh/web-platform/compare/v2.33.4...v2.33.5) (2024-10-22)
 
 
