@@ -1,3 +1,10 @@
+## [2.33.7](https://github.com/autokitteh/web-platform/compare/v2.33.6...v2.33.7) (2024-10-22)
+
+
+### Bug Fixes
+
+* sort integrations in add or edit connection page ([#531](https://github.com/autokitteh/web-platform/issues/531)) ([4ad91f8](https://github.com/autokitteh/web-platform/commit/4ad91f82ed8551170505124ea04fdc87675ee54e))
+
 ## [2.33.6](https://github.com/autokitteh/web-platform/compare/v2.33.5...v2.33.6) (2024-10-22)
 
 
