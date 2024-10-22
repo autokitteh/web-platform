@@ -2,5 +2,6 @@
 	"titles": {
 		"error": "Error",
 		"success": "Success"
-	}
+	},
+	"showMore": "Show more"
 }
