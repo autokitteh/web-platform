@@ -52,6 +52,7 @@
 			"executionFailed": "Session execution failed",
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
 			"executionSucceed": "Session execution succeed for session ID",
+			"showMore": "Show more",
 			"missingLastDeployment": "Missing last deployment",
 			"useJsonEditor": "Use JSON editor"
 

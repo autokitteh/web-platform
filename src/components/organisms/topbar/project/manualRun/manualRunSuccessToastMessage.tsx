@@ -22,16 +22,13 @@ export const ManualRunSuccessToastMessage = ({
 	return (
 		<>
 			{t("executionSucceed")}:
-			<div className="flex items-center gap-1">
-				<Button
-					className="cursor-pointer p-0 text-white underline"
-					onClick={() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)}
-				>
-					{sessionId}
-				</Button>
-
-				<ExternalLinkIcon className="size-3.5 fill-white duration-200" />
-			</div>
+			<Button
+				className="flex cursor-pointer items-center gap-1 p-0 text-green-800"
+				onClick={() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)}
+			>
+				{t("showMore")}
+				<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+			</Button>
 		</>
 	);
 };
