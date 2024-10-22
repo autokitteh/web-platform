@@ -1,3 +1,10 @@
+## [2.33.8](https://github.com/autokitteh/web-platform/compare/v2.33.7...v2.33.8) (2024-10-22)
+
+
+### Bug Fixes
+
+* divide info link for gemini connection into two lines ([#532](https://github.com/autokitteh/web-platform/issues/532)) ([f04f69e](https://github.com/autokitteh/web-platform/commit/f04f69ef0699168ff3466e3a09a162f37dad8399))
+
 ## [2.33.7](https://github.com/autokitteh/web-platform/compare/v2.33.6...v2.33.7) (2024-10-22)
 
 
