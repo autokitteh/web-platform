@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import { SessionStateType } from "@enums";
 import { SessionTableFilterProps } from "@interfaces/components";
-import { SessionStateKeyType } from "@type/models";
 import { cn } from "@utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -13,12 +12,13 @@ import { DropdownButton } from "@components/molecules";
 import { FilterIcon } from "@assets/image/icons";
 
 export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilterProps) => {
-	const [activeState, setActiveState] = useState<SessionStateKeyType>();
+	const [activeState, setActiveState] = useState<SessionStateType>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
 	const { t: tTable } = useTranslation("deployments", { keyPrefix: "sessions.table" });
 
 	const buttonClassText = {
 		[SessionStateType.completed]: "text-green-800",
+		[SessionStateType.created]: "text-blue-500",
 		[SessionStateType.error]: "text-red",
 		[SessionStateType.running]: "text-blue-500",
 		[SessionStateType.stopped]: "text-yellow-500",
@@ -29,7 +29,21 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 			"border-white bg-gray-1250": activeState === state,
 		});
 
-	const handleButtonClick = (state?: SessionStateKeyType) => {
+	const filterClass = (
+		state?:
+			| SessionStateType.completed
+			| SessionStateType.created
+			| SessionStateType.error
+			| SessionStateType.running
+			| SessionStateType.stopped
+			| undefined
+	) =>
+		cn(
+			"h-8 whitespace-nowrap border-0 pr-4 text-white hover:bg-transparent text-white",
+			state && buttonClassText[state]
+		);
+
+	const handleButtonClick = (state?: SessionStateType) => {
 		setActiveState(state);
 		onChange(state);
 	};
@@ -97,11 +111,8 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 				}
 			>
 				<div className="flex">
-					<Button
-						className="h-8 whitespace-nowrap border-0 pr-4 text-white hover:bg-transparent"
-						variant="outline"
-					>
-						<IconSvg className="mb-1" size="md" src={FilterIcon} />
+					<Button className={filterClass(activeState)} variant="outline">
+						<IconSvg className="mb-1 text-white" size="md" src={FilterIcon} />
 						{activeState ? t(activeState) : tTable("filter")}
 					</Button>
 				</div>
