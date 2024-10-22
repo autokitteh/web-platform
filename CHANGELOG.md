@@ -1,3 +1,10 @@
+## [2.33.5](https://github.com/autokitteh/web-platform/compare/v2.33.4...v2.33.5) (2024-10-22)
+
+
+### Bug Fixes
+
+* change project build info message ([#524](https://github.com/autokitteh/web-platform/issues/524)) ([187c61f](https://github.com/autokitteh/web-platform/commit/187c61f6ab5f40816d40e371052ddb684d9ed7e6))
+
 ## [2.33.4](https://github.com/autokitteh/web-platform/compare/v2.33.3...v2.33.4) (2024-10-22)
 
 
