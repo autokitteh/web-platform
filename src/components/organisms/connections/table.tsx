@@ -171,7 +171,7 @@ export const ConnectionsTable = () => {
 							</Th>
 
 							<Th
-								className="group w-1/4 cursor-pointer font-normal"
+								className="group w-4/12 cursor-pointer font-normal"
 								onClick={() => requestSort("status")}
 							>
 								{t("table.columns.status")}
@@ -183,7 +183,7 @@ export const ConnectionsTable = () => {
 								/>
 							</Th>
 
-							<Th className="w-1/4 text-right font-normal">{t("table.columns.actions")}</Th>
+							<Th className="w-2/12 text-right font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
@@ -205,13 +205,13 @@ export const ConnectionsTable = () => {
 										</div>
 									</Td>
 
-									<Td className="w-1/4">
+									<Td className="w-4/12">
 										<div className="inline">
 											<ConnectionTableStatus status={status} />: {statusInfoMessage}
 										</div>
 									</Td>
 
-									<Td className="w-1/4">
+									<Td className="w-2/12">
 										<div className="flex space-x-1">
 											<IconButton
 												ariaLabel={t("table.buttons.titleEditConnection")}
