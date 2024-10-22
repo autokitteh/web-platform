@@ -116,13 +116,16 @@ export const Toast = () => {
 								<p className={titleStyle(type)}>{title}</p>
 
 								{message}
-								<Button
-									className="cursor-pointer gap-1.5 p-0 font-medium text-error underline"
-									onClick={() => toggleLogger(true)}
-								>
-									Show more
-									<ExternalLinkIcon className="size-3.5 fill-error duration-200" />
-								</Button>
+
+								{type === "error" ? (
+									<Button
+										className="cursor-pointer gap-1.5 p-0 font-medium text-error underline"
+										onClick={() => toggleLogger(true)}
+									>
+										{t("showMore")}
+										<ExternalLinkIcon className="size-3.5 fill-error duration-200" />
+									</Button>
+								) : null}
 
 								{showCopyButton ? <CopyButton text={textCopyButton} /> : null}
 							</div>
