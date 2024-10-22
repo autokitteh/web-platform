@@ -24,6 +24,7 @@ export const GoogleGeminiIntegrationEditForm = () => {
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
+					type="password"
 					{...register("key")}
 					aria-label={t("gemini.placeholders.key")}
 					handleInputChange={(newValue) => setValue("key", newValue)}

@@ -24,6 +24,7 @@ export const AsanaIntegrationEditForm = () => {
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
+					type="password"
 					{...register("pat")}
 					aria-label={t("asana.placeholders.pat")}
 					handleInputChange={(newValue) => setValue("pat", newValue)}

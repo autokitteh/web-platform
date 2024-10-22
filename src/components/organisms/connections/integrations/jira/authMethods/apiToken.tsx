@@ -36,6 +36,7 @@ export const ApiTokenJiraForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("base_url")}
 						aria-label={t("jira.placeholders.baseUrl")}
 						handleInputChange={(newValue) => setValue("base_url", newValue)}
@@ -64,6 +65,7 @@ export const ApiTokenJiraForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("token")}
 						aria-label={t("jira.placeholders.pat")}
 						handleInputChange={(newValue) => setValue("token", newValue)}
@@ -90,6 +92,7 @@ export const ApiTokenJiraForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("email")}
 						aria-label={t("jira.placeholders.email")}
 						handleInputChange={(newValue) => setValue("email", newValue)}

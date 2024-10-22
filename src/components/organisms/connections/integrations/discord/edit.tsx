@@ -24,6 +24,7 @@ export const DiscordIntegrationEditForm = () => {
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
+					type="password"
 					{...register("botToken")}
 					aria-label={t("discord.placeholders.botToken")}
 					handleInputChange={(newValue) => setValue("botToken", newValue)}

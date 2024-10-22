@@ -9,7 +9,7 @@ import { cn } from "@utilities";
 
 import { IconSvg } from "@components/atoms/icons";
 
-import { LockIcon, UnlockedLockIcon } from "@assets/image/icons";
+import { EyeCloseIcon, EyeIcon, LockIcon, UnlockedLockIcon } from "@assets/image/icons";
 
 export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props, ref) => {
 	const {
@@ -27,6 +27,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 		onChange,
 		onFocus,
 		placeholder,
+		type,
 		value,
 		variant,
 		...rest
@@ -123,7 +124,13 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const inputType = isLocked ? "password" : "text";
 
-	const lockedIcon = isLocked ? UnlockedLockIcon : LockIcon;
+	const lockedIcon = (() => {
+		if (type === "password") {
+			return isLocked ? EyeCloseIcon : EyeIcon;
+		}
+
+		return isLocked ? UnlockedLockIcon : LockIcon;
+	})();
 
 	const buttonTitle = isLocked ? t("secretInput.unlock") : t("secretInput.lock");
 	const buttonVariant = (variant === InputVariant.light ? "light" : "dark") as ButtonVariant;
