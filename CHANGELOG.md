@@ -1,3 +1,10 @@
+## [2.34.1](https://github.com/autokitteh/web-platform/compare/v2.34.0...v2.34.1) (2024-10-22)
+
+
+### Bug Fixes
+
+* align local time and date formats ([#537](https://github.com/autokitteh/web-platform/issues/537)) ([7c10076](https://github.com/autokitteh/web-platform/commit/7c1007694cd396627ebb0aae4a1f501f2a9aa4cb))
+
 # [2.34.0](https://github.com/autokitteh/web-platform/compare/v2.33.8...v2.34.0) (2024-10-22)
 
 
