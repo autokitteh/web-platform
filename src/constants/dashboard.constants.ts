@@ -47,7 +47,7 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				description: "Set Assignee in Jira ticket to the person currently on-call",
 				integrations: [IntegrationsMap.jira, IntegrationsMap.calendar],
 				assetDirectory: "jira_google_calendar/assignee_from_schedule",
-				files: ["README.md", "autokitteh.yaml", "images", "program.py"],
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
 				title: "Create calendar due date event for Jira ticket",

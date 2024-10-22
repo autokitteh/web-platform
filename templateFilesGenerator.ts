@@ -1,3 +1,7 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
+/* eslint-disable no-console */
+/* eslint-disable @liferay/no-abbreviations */
+/* eslint-disable @typescript-eslint/naming-convention */
 import fs from "fs/promises";
 import path from "path";
 
@@ -17,36 +21,12 @@ interface TemplateCategory {
 	cards: TemplateCard[];
 }
 
-async function reconstructTemplateCategories() {
-	console.log("Starting to reconstruct template categories...");
+function isValidFileList(files: string[]): boolean {
+	// Filter out empty file lists or those with only README.md
+	if (!files.length) return false;
+	if (files.length === 1 && files[0] === "README.md") return false;
 
-	const originalContent = await fs.readFile(CONSTANTS_FILE, "utf-8");
-
-	const categoryMatch = originalContent.match(/export const templateProjectsCategories:[^=]+=\s*(\[[\s\S]*?\n\];)/);
-
-	if (!categoryMatch) {
-		throw new Error("Could not find templateProjectsCategories in file");
-	}
-
-	const existingCategories = await parseExistingCategories(originalContent);
-	const newTemplates = await findNewTemplates(existingCategories);
-
-	if (newTemplates.length) {
-		const uncategorizedIndex = existingCategories.findIndex((cat) => cat.name === "Uncategorized");
-		if (uncategorizedIndex === -1) {
-			existingCategories.push({
-				name: "Uncategorized",
-				cards: newTemplates,
-			});
-		} else {
-			existingCategories[uncategorizedIndex].cards.push(...newTemplates);
-		}
-	}
-
-	// Generate the complete file content
-	const fileContent = generateCompleteFileContent(existingCategories);
-	await fs.writeFile(CONSTANTS_FILE, fileContent, "utf-8");
-	console.log("Template categories reconstructed and updated successfully!");
+	return true;
 }
 
 async function parseExistingCategories(content: string): Promise<TemplateCategory[]> {
@@ -67,7 +47,6 @@ async function parseExistingCategories(content: string): Promise<TemplateCategor
 			cards: [],
 		};
 
-		// Find all card blocks in the category
 		const cardRegex = /{\s*title:\s*["']([^"']+)["']/g;
 		const cardMatches = categoryContent.matchAll(cardRegex);
 
@@ -88,13 +67,11 @@ async function parseExistingCategories(content: string): Promise<TemplateCategor
 			if (descriptionStart !== -1) {
 				const desc = cardContent.slice(descriptionStart);
 
-				// Find the first quote after "description:"
 				const firstQuoteMatch = desc.match(/description:\s*["']/);
 				if (firstQuoteMatch) {
 					const quoteChar = desc[firstQuoteMatch.index! + firstQuoteMatch[0].length - 1];
 					const startIndex = firstQuoteMatch.index! + firstQuoteMatch[0].length;
 
-					// Find the matching end quote
 					let endIndex = startIndex;
 					let escaped = false;
 
@@ -138,17 +115,114 @@ async function parseExistingCategories(content: string): Promise<TemplateCategor
 			if (assetMatch) {
 				card.assetDirectory = assetMatch[1];
 				card.files = await getActualFiles(assetMatch[1]);
-			}
 
-			if (card.assetDirectory) {
-				category.cards.push(card);
+				// Only add the card if it has valid files
+				if (card.assetDirectory && isValidFileList(card.files)) {
+					category.cards.push(card);
+				} else {
+					console.log(`Skipping card "${card.title}" due to insufficient files`);
+				}
 			}
 		}
 
-		categories.push(category);
+		// Only add categories that have cards
+		if (category.cards.length) {
+			categories.push(category);
+		} else {
+			console.log(`Skipping empty category "${category.name}"`);
+		}
 	}
 
 	return categories;
+}
+
+async function findNewTemplates(existingCategories: TemplateCategory[]): Promise<TemplateCard[]> {
+	const existingDirs = new Set(existingCategories.flatMap((cat) => cat.cards.map((card) => card.assetDirectory)));
+
+	try {
+		const allDirs = await fs.readdir(TEMPLATES_DIR);
+		const newTemplates: TemplateCard[] = [];
+
+		for (const dir of allDirs) {
+			if (dir.startsWith(".")) continue;
+
+			const fullPath = path.join(TEMPLATES_DIR, dir);
+			try {
+				const stat = await fs.stat(fullPath);
+				if (!stat.isDirectory()) continue;
+
+				if (!existingDirs.has(dir)) {
+					const files = await getActualFiles(dir);
+
+					// Only add templates with valid files
+					if (isValidFileList(files)) {
+						newTemplates.push({
+							title: formatTitle(dir),
+							description: "",
+							integrations: [],
+							assetDirectory: dir,
+							files,
+						});
+					} else {
+						console.log(`Skipping new template "${dir}" due to insufficient files`);
+					}
+				}
+			} catch (error) {
+				console.warn(`Error processing directory ${dir}:`, error);
+			}
+		}
+
+		return newTemplates;
+	} catch (error) {
+		console.error("Error finding new templates:", error);
+
+		return [];
+	}
+}
+
+async function getActualFiles(assetDirectory: string): Promise<string[]> {
+	const dirPath = path.join(TEMPLATES_DIR, assetDirectory);
+	try {
+		const items = await fs.readdir(dirPath, { withFileTypes: true });
+
+		return items.filter((item) => item.isFile() && !item.name.startsWith(".")).map((item) => item.name);
+	} catch (error) {
+		console.warn(`Error reading directory ${dirPath}:`, error);
+
+		return [];
+	}
+}
+
+async function reconstructTemplateCategories() {
+	console.log("Starting to reconstruct template categories...");
+
+	const originalContent = await fs.readFile(CONSTANTS_FILE, "utf-8");
+
+	const categoryMatch = originalContent.match(/export const templateProjectsCategories:[^=]+=\s*(\[[\s\S]*?\n\];)/);
+
+	if (!categoryMatch) {
+		throw new Error("Could not find templateProjectsCategories in file");
+	}
+
+	const existingCategories = await parseExistingCategories(originalContent);
+	const newTemplates = await findNewTemplates(existingCategories);
+
+	if (newTemplates.length) {
+		const uncategorizedIndex = existingCategories.findIndex((cat) => cat.name === "Uncategorized");
+		if (uncategorizedIndex === -1) {
+			existingCategories.push({
+				name: "Uncategorized",
+				cards: newTemplates,
+			});
+		} else {
+			existingCategories[uncategorizedIndex].cards.push(...newTemplates);
+		}
+	}
+
+	// Generate the complete file content
+	const fileContent = generateCompleteFileContent(existingCategories);
+	await fs.writeFile(CONSTANTS_FILE, fileContent, "utf-8");
+	console.log("Template categories reconstructed and updated successfully!");
 }
 
 function generateTypeScriptContent(categories: TemplateCategory[]): string {
@@ -224,61 +298,11 @@ function findBalancedContent(content: string): string | null {
 	return null;
 }
 
-async function findNewTemplates(existingCategories: TemplateCategory[]): Promise<TemplateCard[]> {
-	const existingDirs = new Set(existingCategories.flatMap((cat) => cat.cards.map((card) => card.assetDirectory)));
-
-	try {
-		const allDirs = await fs.readdir(TEMPLATES_DIR);
-		const newTemplates: TemplateCard[] = [];
-
-		for (const dir of allDirs) {
-			if (dir.startsWith(".")) continue;
-
-			const fullPath = path.join(TEMPLATES_DIR, dir);
-			try {
-				const stat = await fs.stat(fullPath);
-				if (!stat.isDirectory()) continue;
-
-				if (!existingDirs.has(dir)) {
-					newTemplates.push({
-						title: formatTitle(dir),
-						description: "",
-						integrations: [],
-						assetDirectory: dir,
-						files: await getActualFiles(dir),
-					});
-				}
-			} catch (error) {
-				console.warn(`Error processing directory ${dir}:`, error);
-			}
-		}
-
-		return newTemplates;
-	} catch (error) {
-		console.error("Error finding new templates:", error);
-
-		return [];
-	}
-}
-
 function formatTitle(dirName: string): string {
 	return dirName
 		.split(/[-_]/)
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
 		.join(" ");
-}
-
-async function getActualFiles(assetDirectory: string): Promise<string[]> {
-	const dirPath = path.join(TEMPLATES_DIR, assetDirectory);
-	try {
-		const items = await fs.readdir(dirPath, { withFileTypes: true });
-
-		return items.filter((item) => item.isFile() && !item.name.startsWith(".")).map((item) => item.name);
-	} catch (error) {
-		console.warn(`Error reading directory ${dirPath}:`, error);
-
-		return [];
-	}
 }
 
 function generateCompleteFileContent(categories: TemplateCategory[]): string {
