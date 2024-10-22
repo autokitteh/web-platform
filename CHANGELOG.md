@@ -1,3 +1,10 @@
+## [2.35.2](https://github.com/autokitteh/web-platform/compare/v2.35.1...v2.35.2) (2024-10-22)
+
+
+### Bug Fixes
+
+* remove redundant info from atlassian and jira oauth forms  ([#533](https://github.com/autokitteh/web-platform/issues/533)) ([4927669](https://github.com/autokitteh/web-platform/commit/492766957cac89e5fc1016c15ed850d01fa8285c))
+
 ## [2.35.1](https://github.com/autokitteh/web-platform/compare/v2.35.0...v2.35.1) (2024-10-22)
 
 
