@@ -14,6 +14,7 @@ const defaultProjectState = {
 	entrypointFunction: "",
 	params: [],
 	isManualRunEnabled: false,
+	isJson: false,
 };
 
 const store: StateCreator<ManualRunStore> = (set, get) => ({
@@ -21,7 +22,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 	updateManualRunConfiguration: (
 		projectId,
-		{ entrypointFunction, filePath, files, isManualRunEnabled, lastDeployment, params }
+		{ entrypointFunction, filePath, files, isJson, isManualRunEnabled, lastDeployment, params }
 	) => {
 		set((state) => {
 			const projectData = state.projectManualRun[projectId] || { ...defaultProjectState };
@@ -42,6 +43,8 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 				const firstFile = fileOptions[0];
 				projectData.filePath = firstFile;
+				projectData.entrypointFunction = "";
+				projectData.params = [];
 			}
 
 			if (filePath) {
@@ -59,6 +62,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 			if (lastDeployment) {
 				projectData.lastDeployment = lastDeployment;
+			}
+
+			if (isJson !== undefined) {
+				projectData.isJson = isJson;
 			}
 
 			state.projectManualRun[projectId] = projectData;

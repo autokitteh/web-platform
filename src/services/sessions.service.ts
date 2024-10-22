@@ -16,7 +16,7 @@ import { convertSessionProtoToViewerModel } from "@src/models/session.model";
 import { ViewerSession } from "@src/types/models/session.type";
 import { ServiceResponse, StartSessionArgsType } from "@type";
 import { Session, SessionFilter } from "@type/models";
-import { flattenArray } from "@utilities";
+import { flattenArray, transformAndStringifyValues } from "@utilities";
 
 export class SessionsService {
 	static async deleteSession(sessionId: string): Promise<ServiceResponse<void>> {
@@ -215,7 +215,7 @@ export class SessionsService {
 			const sessionToStart = { ...omit(startSessionArgs, "jsonInputs"), envId: defaultEnvironment!.envId };
 			const sessionAsStartRequest = {
 				session: sessionToStart,
-				jsonInputs: startSessionArgs?.jsonInputs,
+				jsonInputs: transformAndStringifyValues(startSessionArgs?.jsonInputs || {}),
 			} as unknown as StartRequest;
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
 

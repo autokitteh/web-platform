@@ -31,6 +31,7 @@ export const namespaces = {
 		connections: "Connections UI",
 		variables: "Variables UI",
 		sessions: "Sessions UI",
+		manualRun: "Manual Run UI",
 	},
 	hooks: {
 		connectionForm: "Connection Form",

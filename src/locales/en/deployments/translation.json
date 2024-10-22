@@ -53,9 +53,8 @@
 			"executionFailedExtended": "Session execution failed, projectID - {{projectId}}, error - {{error}}",
 			"executionSucceed": "Session execution succeed for session ID",
 			"missingLastDeployment": "Missing last deployment",
-			"missingDeploymentOrEntrypoint": "Missing deployment or entrypoint",
-			"noFunctionsFound": "No functions found",
-			"filePathDoesNotExistExtended": "File path {{filePath}} does not exist or has no entry points."
+			"useJsonEditor": "Use JSON editor"
+
 		},
 		"actions":{
 			"deploymentRemovedSuccessfully": "Deployment removed successfully",
