@@ -310,6 +310,18 @@ export const templateProjectsCategories: TemplateCategory[] = [
 			},
 		],
 	},
+	{
+		name: "Uncategorized",
+		cards: [
+			{
+				title: "Slack Discord Sync",
+				description: "",
+				integrations: [],
+				assetDirectory: "slack_discord_sync",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
+			},
+		],
+	},
 ];
 
 export const findTemplateFilesByAssetDirectory = async (assetDirectory: string) => {

@@ -8,4 +8,4 @@ export const projectTabs = [
 ] as { label: string; value: string }[];
 
 export const defaultProjectFile = "program.py";
-export const defaultProjectDirectory = "default_project_program";
+export const defaultProjectDirectory = "/assets/defaultTemplate/default_project_program";

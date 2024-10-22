@@ -47,9 +47,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}
 
 		if (isDefault) {
-			const defaultResource = await fetchFileContent(
-				`/assets/templates/${defaultProjectDirectory}/${defaultProjectFile}`
-			);
+			const defaultResource = await fetchFileContent(`${defaultProjectDirectory}/${defaultProjectFile}`);
 
 			const defaultResources = {
 				[defaultProjectFile.toString()]: new TextEncoder().encode(defaultResource || ""),
