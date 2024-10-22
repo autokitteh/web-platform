@@ -27,10 +27,12 @@
 	},
 	"github": {
 		"aboutGitHubApps": "About using GitHub Apps",
+		"akConfigure": "AutoKitteh guide: configuring the GitHub integration",
 		"informationPat": {
 			"auth": "Authenticating with a personal access token",
 			"endpoints": "Endpoints available for fine-grained PATs",
 			"manage": "Managing your personal access tokens",
+			"initConnection": "AutoKitteh guide: initializing a connection with a PAT and/or a webhook",
 			"setting": "Setting a PAT policy for your organization"
 		},
 		"placeholders": {
