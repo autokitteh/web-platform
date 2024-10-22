@@ -239,6 +239,13 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				assetDirectory: "samples/scheduler",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
+			{
+				title: "Twilio",
+				description: "Samples using Twilio APIs",
+				integrations: [IntegrationsMap.twilio],
+				assetDirectory: "samples/twilio",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
+			},
 		],
 	},
 	{
@@ -256,13 +263,6 @@ export const templateProjectsCategories: TemplateCategory[] = [
 	{
 		name: "Office Automation",
 		cards: [
-			{
-				title: "Twilio",
-				description: "Samples using Twilio APIs",
-				integrations: [IntegrationsMap.twilio],
-				assetDirectory: "samples/twilio",
-				files: ["README.md", "autokitteh.yaml", "program.py"],
-			},
 			{
 				title: "Quickstart",
 				description: "Sample for quickstart",
