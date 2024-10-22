@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { SessionState } from "@enums";
 import { SessionsTableRowProps } from "@interfaces/components";
 import { LoggerService, SessionsService } from "@services";
-import { namespaces } from "@src/constants";
+import { dateTimeFormat, namespaces } from "@src/constants";
 import { cn } from "@utilities";
 
 import { useToastStore } from "@store";
@@ -89,7 +89,7 @@ export const SessionsTableRow = memo(
 				onClick={() => openSessionLog(session.sessionId)}
 				style={{ ...style }}
 			>
-				<Td className="w-56">{moment(session.createdAt).utc().format("YYYY-MM-DD HH:mm:ss")}</Td>
+				<Td className="w-56">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
 
 				<Td className="w-32">
 					<SessionsTableState sessionState={session.state} />

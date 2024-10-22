@@ -1,6 +1,7 @@
 import moment from "moment";
 
 import { LoggerLevel } from "@enums";
+import { dateTimeFormat } from "@src/constants";
 
 import { useLoggerStore } from "@store";
 
@@ -28,7 +29,7 @@ export class LoggerService {
 	}
 
 	private static output(namespace: string, message: string, level: LoggerLevel = LoggerLevel.info): void {
-		const timestamp = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+		const timestamp = moment().utc().local().format(dateTimeFormat);
 		const formattedMessage = `[${namespace}] [${level}] ${message}`;
 
 		switch (level) {

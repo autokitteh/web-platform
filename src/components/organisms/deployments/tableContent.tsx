@@ -156,7 +156,7 @@ export const DeploymentsTableContent = ({
 							key={deploymentId}
 							onClick={() => navigate(`${deploymentId}/sessions`)}
 						>
-							<Td className="font-semibold">{moment(createdAt).format(dateTimeFormat)}</Td>
+							<Td className="font-semibold">{moment(createdAt).local().format(dateTimeFormat)}</Td>
 
 							<Td>
 								<DeploymentSessionStats sessionStats={sessionStats} />

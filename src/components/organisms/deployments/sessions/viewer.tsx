@@ -7,7 +7,14 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactTimeAgo from "react-time-ago";
 
-import { defaultSessionTab, namespaces, sessionLogRowHeight, sessionTabs } from "@constants";
+import {
+	dateTimeFormat,
+	defaultSessionTab,
+	namespaces,
+	sessionLogRowHeight,
+	sessionTabs,
+	timeFormat,
+} from "@constants";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
@@ -111,9 +118,13 @@ export const SessionViewer = () => {
 		const isCompleted = state === SessionState.completed || state === SessionState.error;
 
 		return {
-			createdAt: moment(createdAt).format("MM.DD.YY  HH:mm"),
-			startTime: moment(createdAt).format("HH:mm:ss"),
-			endTime: isCompleted ? moment(updatedAt).format("HH:mm:ss") : <SessionsTableState sessionState={state} />,
+			createdAt: moment(createdAt).local().format(dateTimeFormat),
+			startTime: moment(createdAt).local().format(timeFormat),
+			endTime: isCompleted ? (
+				moment(updatedAt).local().format(timeFormat)
+			) : (
+				<SessionsTableState sessionState={state} />
+			),
 			duration: isCompleted ? (
 				formatTimeDifference(updatedAt, createdAt)
 			) : (
@@ -174,11 +185,11 @@ export const SessionViewer = () => {
 							Time:
 						</div>
 						<div className="flex flex-row items-center">
-							{moment(sessionInfo.createdAt).format("HH:mm:ss")}
+							{moment(sessionInfo.createdAt).local().format(timeFormat)}
 							<IconSvg className="mx-2 fill-white" size="sm" src={ArrowRightIcon} />
 							{sessionInfo.state === SessionState.completed ||
 							sessionInfo.state === SessionState.error ? (
-								<div title="End Time">{moment(sessionInfo.updatedAt).format("HH:mm:ss")}</div>
+								<div title="End Time">{moment(sessionInfo.updatedAt).local().format(timeFormat)}</div>
 							) : (
 								<SessionsTableState sessionState={sessionInfo.state} />
 							)}
