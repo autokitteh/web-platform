@@ -13,11 +13,7 @@ import { useResize } from "@src/hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
 
-<<<<<<< HEAD
 import { Frame, Loader, ResizeButton, THead, Table, Th, Tr, Typography } from "@components/atoms";
-=======
-import { Frame, Loader, THead, Table, Th, Tr, Typography } from "@components/atoms";
->>>>>>> d195ffcb (feat: fix sessions table - on low resolution filter button was moving when change)
 import { RefreshButton } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
