@@ -1,62 +1,19 @@
 import React, { useCallback, useEffect, useId, useMemo } from "react";
 
-import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { AutoSizer, List } from "react-virtualized";
+import { AutoSizer, ListRowProps } from "react-virtualized";
 
-import { dateTimeFormat, defaultEventsTableRowHeight } from "@src/constants";
+import { TableHeader } from "./table/header";
+import { NoEventsSelected } from "./table/notSelected";
+import { EventRow } from "./table/row";
+import { VirtualizedList } from "./table/virtualizer";
 import { useResize, useSort } from "@src/hooks";
 import { useCacheStore } from "@src/store";
-import { SortConfig } from "@src/types";
 import { BaseEvent } from "@src/types/models";
 import { cn } from "@src/utilities";
 
-import { Frame, Loader, ResizeButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { SortButton } from "@components/molecules";
-
-import { CatImage } from "@assets/image";
-
-const TableHeader = ({
-	onSort,
-	sortConfig,
-}: {
-	onSort: (key: keyof BaseEvent) => (event: React.MouseEvent | React.KeyboardEvent) => void;
-	sortConfig: SortConfig<BaseEvent>;
-}) => {
-	const { t } = useTranslation("events");
-
-	const renderSortableHeader = useCallback(
-		(columnKey: keyof BaseEvent, columnLabel: string) => {
-			return (
-				<div
-					className="group cursor-pointer font-normal outline-none focus:ring-2 focus:ring-blue-500"
-					onClick={onSort(columnKey)}
-					onKeyDown={onSort(columnKey)}
-					role="button"
-					tabIndex={0}
-				>
-					{columnLabel}
-					<SortButton
-						className="opacity-0 group-hover:opacity-100 group-focus:opacity-100"
-						isActive={columnKey === sortConfig?.key}
-						sortDirection={sortConfig.direction}
-					/>
-				</div>
-			);
-		},
-		[onSort, sortConfig]
-	);
-
-	return (
-		<THead>
-			<Th>
-				<Td>{renderSortableHeader("createdAt", t("table.columns.createdAt"))}</Td>
-				<Td>{renderSortableHeader("eventId", t("table.columns.eventId"))}</Td>
-			</Th>
-		</THead>
-	);
-};
+import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
 
 export const EventsTable = () => {
 	const { t } = useTranslation("events");
@@ -85,37 +42,26 @@ export const EventsTable = () => {
 	);
 
 	const handleSort = useCallback(
-		(key: keyof BaseEvent) => {
-			return (event: React.MouseEvent | React.KeyboardEvent) => {
-				if (event.type === "click" || (event as React.KeyboardEvent).key === "Enter") {
-					requestSort(key);
-				}
-			};
+		(key: keyof BaseEvent) => (event: React.MouseEvent | React.KeyboardEvent) => {
+			if (event.type === "click" || (event as React.KeyboardEvent).key === "Enter") {
+				requestSort(key);
+			}
 		},
 		[requestSort]
 	);
 
 	const rowRenderer = useCallback(
-		// eslint-disable-next-line react/no-unused-prop-types
-		({ index, key, style }: { index: number; key: string; style: React.CSSProperties }) => {
+		({ index, key, style }: ListRowProps) => {
 			const event = sortedEvents[index];
 
 			return (
-				<Tr
-					className="cursor-pointer hover:bg-gray-750"
-					key={key}
-					onClick={() => navigate(`events/${event.eventId}`)}
-					style={style}
-				>
-					<Td>{moment(event.createdAt).format(dateTimeFormat)}</Td>
-					<Td>{event.eventId}</Td>
-				</Tr>
+				<EventRow event={event} key={key} onClick={() => navigate(`events/${event.eventId}`)} style={style} />
 			);
 		},
 		[sortedEvents, navigate]
 	);
 
-	const renderContent = () => {
+	const renderContent = useMemo(() => {
 		if (loadingEvents) {
 			return <Loader isCenter size="xl" />;
 		}
@@ -132,12 +78,10 @@ export const EventsTable = () => {
 						<div className="h-[calc(100vh-200px)]">
 							<AutoSizer>
 								{({ height, width }) => (
-									<List
+									<VirtualizedList
 										height={height}
-										overscanRowCount={5}
-										rowCount={sortedEvents.length}
-										rowHeight={defaultEventsTableRowHeight}
 										rowRenderer={rowRenderer}
+										sortedEvents={sortedEvents}
 										width={width}
 									/>
 								)}
@@ -147,27 +91,18 @@ export const EventsTable = () => {
 				</Table>
 			</div>
 		);
-	};
+	}, [loadingEvents, sortedEvents, t, handleSort, sortConfig, rowRenderer]);
 
 	return (
 		<div className="my-2 flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
-				<Frame className={frameClass}>{renderContent()}</Frame>
+				<Frame className={frameClass}>{renderContent}</Frame>
 			</div>
 
 			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeId} />
 
 			<div className="flex" style={{ width: `${100 - leftSideWidth}%` }}>
-				{eventId ? (
-					<Outlet />
-				) : (
-					<Frame className="w-full rounded-l-none bg-gray-1100 pt-20 transition">
-						<div className="mt-20 flex flex-col items-center">
-							<p className="mb-8 text-lg font-bold text-gray-750">{t("history.noEventSelected")}</p>
-							<CatImage className="border-b border-gray-750 fill-gray-750" />
-						</div>
-					</Frame>
-				)}
+				{eventId ? <Outlet /> : <NoEventsSelected />}
 			</div>
 		</div>
 	);
