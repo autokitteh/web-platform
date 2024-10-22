@@ -5,6 +5,7 @@
 		"noTriggers": "No triggers available"
 	},
 	"code&assets": {
+		"successRemoveFile": "{{fileName}} succesfully removed",
 		"buttons": {
 			"addCodeAndAssets": "Add Code & Assets",
 			"addNewFile": "Upload File",
