@@ -1,3 +1,10 @@
+# [2.34.0](https://github.com/autokitteh/web-platform/compare/v2.33.8...v2.34.0) (2024-10-22)
+
+
+### Features
+
+* remove logger in project assets and adjust system log ([#514](https://github.com/autokitteh/web-platform/issues/514)) ([c8bea4f](https://github.com/autokitteh/web-platform/commit/c8bea4f00ca6fe20975c008300b6d76a4c246aad))
+
 ## [2.33.8](https://github.com/autokitteh/web-platform/compare/v2.33.7...v2.33.8) (2024-10-22)
 
 
