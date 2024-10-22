@@ -1,3 +1,10 @@
+## [2.33.4](https://github.com/autokitteh/web-platform/compare/v2.33.3...v2.33.4) (2024-10-22)
+
+
+### Bug Fixes
+
+* align add icon in project assets ([#542](https://github.com/autokitteh/web-platform/issues/542)) ([d20c6d9](https://github.com/autokitteh/web-platform/commit/d20c6d96ffc18c950d55f50adab89cbed0f266cf))
+
 ## [2.33.3](https://github.com/autokitteh/web-platform/compare/v2.33.2...v2.33.3) (2024-10-21)
 
 
