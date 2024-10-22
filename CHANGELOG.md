@@ -1,3 +1,10 @@
+## [2.35.3](https://github.com/autokitteh/web-platform/compare/v2.35.2...v2.35.3) (2024-10-22)
+
+
+### Bug Fixes
+
+* translation key for successful file removal ([#550](https://github.com/autokitteh/web-platform/issues/550)) ([caa19da](https://github.com/autokitteh/web-platform/commit/caa19da43fb043d5b8200f79644b9113961ca91a))
+
 ## [2.35.2](https://github.com/autokitteh/web-platform/compare/v2.35.1...v2.35.2) (2024-10-22)
 
 
