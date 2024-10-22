@@ -18,7 +18,9 @@ const store: StateCreator<LoggerStore> = (set) => ({
 				updatedLogs.splice(maxLogs);
 			}
 
-			return { logs: updatedLogs, isNewLogs: !state.isLoggerEnabled };
+			const shouldDisplayNotification = log.status === "ERROR" || log.status === "WARNING";
+
+			return { logs: updatedLogs, isNewLogs: !state.isLoggerEnabled && shouldDisplayNotification };
 		}),
 	clearLogs: () =>
 		set(() => ({
