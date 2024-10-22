@@ -7,7 +7,7 @@ import { InputProps } from "@interfaces/components";
 
 import { Input } from "@components/atoms";
 
-import { Eye } from "@assets/image/icons";
+import { EyeIcon } from "@assets/image/icons";
 
 const InputWrapper = (props: InputProps) => {
 	const [value, setValue] = useState("");
@@ -54,5 +54,5 @@ export const Primary: Story = {
 		isRequired: false,
 		disabled: false,
 	},
-	render: (args) => <InputWrapper {...args} icon={args.icon ? <Eye className="fill-gray-750" /> : null} />,
+	render: (args) => <InputWrapper {...args} icon={args.icon ? <EyeIcon className="fill-gray-750" /> : null} />,
 };

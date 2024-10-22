@@ -58,6 +58,7 @@ export const AwsIntegrationEditForm = () => {
 
 			<div className="relative">
 				<SecretInput
+					type="password"
 					{...register("access_key")}
 					aria-label={t("aws.placeholders.accessKey")}
 					handleInputChange={(newValue) => setValue("access_key", newValue)}
@@ -75,6 +76,7 @@ export const AwsIntegrationEditForm = () => {
 
 			<div className="relative">
 				<SecretInput
+					type="password"
 					{...register("secret_key")}
 					aria-label={t("aws.placeholders.secretKey")}
 					handleInputChange={(newValue) => setValue("secret_key", newValue)}
@@ -92,6 +94,7 @@ export const AwsIntegrationEditForm = () => {
 
 			<div className="relative">
 				<SecretInput
+					type="password"
 					{...register("token")}
 					aria-label={t("aws.placeholders.token")}
 					handleInputChange={(newValue) => setValue("token", newValue)}

@@ -86,6 +86,7 @@ export const PatForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("pat")}
 						aria-label={t("github.placeholders.pat")}
 						handleInputChange={(newPatValue) => setValue("pat", newPatValue)}
@@ -133,6 +134,7 @@ export const PatForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("secret")}
 						aria-label={t("github.placeholders.secret")}
 						handleInputChange={(newSecretValue) => setValue("secret", newSecretValue)}

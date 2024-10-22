@@ -43,6 +43,7 @@ export const AuthTokenTwilioForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("account_sid")}
 						aria-label={t("twilio.placeholders.sid")}
 						handleInputChange={(newSidValue) => setValue("account_sid", newSidValue)}
@@ -69,6 +70,7 @@ export const AuthTokenTwilioForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("auth_token")}
 						aria-label={t("twilio.placeholders.token")}
 						handleInputChange={(newTokenValue) => setValue("auth_token", newTokenValue)}
