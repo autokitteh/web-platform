@@ -6,7 +6,6 @@ import { Link, useLocation } from "react-router-dom";
 
 import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
-import { featureFlags } from "@src/featureFlags";
 
 import { useLoggerStore, useUserStore } from "@store";
 
@@ -22,7 +21,7 @@ export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
 	const { logoutFunction } = useUserStore();
-	const { toggleLogger } = useLoggerStore();
+	const { isLoggerEnabled, isNewLogs, toggleLogger } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
 	const submenuRef = useRef<HTMLDivElement | null>(null);
@@ -101,36 +100,36 @@ export const Sidebar = () => {
 					</div>
 
 					<div className="flex flex-col justify-end gap-5">
-						{featureFlags.systemLog ? (
-							<Button
-								className="hover:bg-green-200"
-								onClick={() => toggleLogger(true)}
-								title={t("systemLog")}
+						<Button
+							ariaLabel={t("systemLog")}
+							className="hover:bg-green-200"
+							onClick={() => toggleLogger(!isLoggerEnabled)}
+							title={t("systemLog")}
+						>
+							<Badge
+								anchorOrigin={{ vertical: "top", horizontal: "left" }}
+								ariaLabel={t("logToReview")}
+								className="absolute"
+								isVisible={isNewLogs}
+								variant="dot"
 							>
-								<Badge
-									anchorOrigin={{ vertical: "top", horizontal: "left" }}
-									ariaLabel={t("logToReview")}
-									className="absolute"
-									variant="dot"
-								>
-									<IconSvg className="size-7 stroke-gray-1300 transition" src={FileIcon} />
-								</Badge>
+								<IconSvg className="size-7 stroke-gray-1300 transition" src={FileIcon} />
+							</Badge>
 
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="overflow-hidden whitespace-nowrap"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											{t("systemLog")}
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</Button>
-						) : null}
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										{t("systemLog")}
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
 
 						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
 							<IconSvg className="size-7 transition" src={HelpIcon} />

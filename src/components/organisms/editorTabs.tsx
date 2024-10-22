@@ -252,7 +252,7 @@ export const EditorTabs = () => {
 						<Editor
 							aria-label={activeEditorFileName}
 							beforeMount={handleEditorWillMount}
-							className="absolute -ml-6 mt-2 h-full"
+							className="absolute -ml-6 mt-2 h-full pb-5"
 							language={languageEditor}
 							loading={<Loader size="lg" />}
 							onChange={handleUpdateContent}
