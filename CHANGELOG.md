@@ -1,3 +1,10 @@
+## [2.35.1](https://github.com/autokitteh/web-platform/compare/v2.35.0...v2.35.1) (2024-10-22)
+
+
+### Bug Fixes
+
+* activity display completed status when it should be error ([#529](https://github.com/autokitteh/web-platform/issues/529)) ([b63816f](https://github.com/autokitteh/web-platform/commit/b63816f252f11b80e253d4a6da42283b5b880728))
+
 # [2.35.0](https://github.com/autokitteh/web-platform/compare/v2.34.3...v2.35.0) (2024-10-22)
 
 
