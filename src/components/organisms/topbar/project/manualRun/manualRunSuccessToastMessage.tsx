@@ -21,7 +21,7 @@ export const ManualRunSuccessToastMessage = ({
 
 	return (
 		<>
-			{t("executionSucceed")}:
+			{t("executionSucceed")}
 			<Button
 				className="flex cursor-pointer items-center gap-1 p-0 text-green-800"
 				onClick={() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`)}
