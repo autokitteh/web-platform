@@ -61,12 +61,12 @@ export const PatForm = ({
 
 		const webhookKey = connectionVariables?.find((variable) => variable.name === "pat_key")?.value;
 		if (webhookKey) {
-			setWebhook(`${apiBaseUrl}/${webhookKey}`);
+			setWebhook(`${apiBaseUrl}/github/webhook/${webhookKey}`);
 
 			return;
 		}
 
-		setWebhook(`${apiBaseUrl}/${randomatic("Aa0", 8)}`);
+		setWebhook(`${apiBaseUrl}/github/webhook/${randomatic("Aa0", 8)}`);
 	};
 
 	useEffect(() => {
