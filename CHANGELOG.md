@@ -1,3 +1,10 @@
+# [2.35.0](https://github.com/autokitteh/web-platform/compare/v2.34.3...v2.35.0) (2024-10-22)
+
+
+### Features
+
+* manual run with json ([#522](https://github.com/autokitteh/web-platform/issues/522)) ([18e380c](https://github.com/autokitteh/web-platform/commit/18e380c0deb96a2bbb9b64aee9941dc7ad7aa79d))
+
 ## [2.34.3](https://github.com/autokitteh/web-platform/compare/v2.34.2...v2.34.3) (2024-10-22)
 
 
