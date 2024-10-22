@@ -1,3 +1,6 @@
 [submodule "src/autokitteh"]
 	path = src/autokitteh
 	url = https://github.com/autokitteh/autokitteh
+[submodule "src/assets/templates"]
+	path = src/assets/templates
+	url = https://github.com/autokitteh/kittehub.git
