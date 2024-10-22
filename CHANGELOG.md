@@ -1,3 +1,10 @@
+## [2.34.3](https://github.com/autokitteh/web-platform/compare/v2.34.2...v2.34.3) (2024-10-22)
+
+
+### Bug Fixes
+
+* add missing url path in github pat for new connection configuration ([#549](https://github.com/autokitteh/web-platform/issues/549)) ([752aedc](https://github.com/autokitteh/web-platform/commit/752aedcbc221ef9fa1746ca01fbffbbf9302d3cf))
+
 ## [2.34.2](https://github.com/autokitteh/web-platform/compare/v2.34.1...v2.34.2) (2024-10-22)
 
 
