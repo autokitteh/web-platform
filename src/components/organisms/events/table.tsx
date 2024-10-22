@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { AutoSizer } from "react-virtualized";
 
-import { dateTimeFormat } from "@src/constants";
+import { dateTimeFormat, defaultEventsTableRowHeight } from "@src/constants";
 import { useResize, useSort } from "@src/hooks";
 import { useCacheStore } from "@src/store";
 import { BaseEvent } from "@src/types/models";
@@ -15,8 +15,6 @@ import { Frame, Loader, ResizeButton, TBody, THead, Table, Td, Th, Tr } from "@c
 import { SortButton } from "@components/molecules";
 
 import { CatImage } from "@assets/image";
-
-const rowHeight = 40;
 
 export const EventsTable = () => {
 	const { t } = useTranslation("events");
@@ -83,8 +81,11 @@ export const EventsTable = () => {
 	const onScroll = useCallback(
 		(event: React.UIEvent<HTMLDivElement>, height: number) => {
 			const { scrollTop } = event.currentTarget;
-			const start = Math.floor(scrollTop / rowHeight);
-			const end = Math.min(sortedEvents.length, Math.ceil((scrollTop + height) / rowHeight) + 1);
+			const start = Math.floor(scrollTop / defaultEventsTableRowHeight);
+			const end = Math.min(
+				sortedEvents.length,
+				Math.ceil((scrollTop + height) / defaultEventsTableRowHeight) + 1
+			);
 			setVisibleRows({ start, end });
 		},
 		[sortedEvents.length]
@@ -93,7 +94,7 @@ export const EventsTable = () => {
 	const renderRows = useCallback(
 		({ height }: { height: number }) => {
 			const start = visibleRows.start;
-			const end = Math.min(visibleRows.end, Math.ceil(height / rowHeight) + start);
+			const end = Math.min(visibleRows.end, Math.ceil(height / defaultEventsTableRowHeight) + start);
 
 			return sortedEvents.slice(start, end).map((event) => (
 				<Tr

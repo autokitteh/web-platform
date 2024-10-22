@@ -48,3 +48,4 @@ export { integrationToEditComponent } from "@constants/connections/editComponent
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
 export { mainNavigationItems } from "@constants/navigation.constnants";
 export { defaultSystemLogSize, defaultSplitFrameSize } from "@constants/resize.constants";
+export { defaultEventsTableRowHeight } from "@constants/events.constants";
