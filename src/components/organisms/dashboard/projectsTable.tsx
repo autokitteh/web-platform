@@ -45,7 +45,7 @@ export const DashboardProjectsTable = () => {
 			{sortedProjects.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
 					<THead>
-						<Tr className="border-none">
+						<Tr className="border-none pl-4">
 							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("name")}>
 								{t("table.columns.projectName")}
 
