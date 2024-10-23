@@ -198,7 +198,7 @@ export const CodeTable = () => {
 					<Table>
 						<THead>
 							<Tr>
-								<Th className="group cursor-pointer border-r-0 font-normal">
+								<Th className="group cursor-pointer border-r-0 pl-4 font-normal">
 									{t("table.columns.name")}
 								</Th>
 							</Tr>
@@ -207,9 +207,9 @@ export const CodeTable = () => {
 						<TBody>
 							{sortedResources.map((name) => (
 								<Tr className={activeBodyRow(name)} key={name} onClick={() => openFileAsActive(name)}>
-									<Td className="cursor-pointer font-medium">{name}</Td>
+									<Td className="cursor-pointer pl-4 font-medium">{name}</Td>
 
-									<Td className="mr-1 max-w-12 pr-0">
+									<Td className="max-w-12 pr-4">
 										<IconButton onClick={(event) => handleTrashIconClick(event, name)}>
 											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>

@@ -29,18 +29,18 @@ const PrimaryTable = ({ variant = "dark" }: { variant?: ColorSchemes }) => {
 		<Table variant={variantProp}>
 			<THead>
 				<Tr className={trClass}>
-					<Th className="group max-w-40 cursor-pointer border-r-0 pl-4 font-normal">Id</Th>
+					<Th className="group w-1/2 max-w-40 cursor-pointer border-r-0 pl-4 font-normal">Id</Th>
 
-					<Th className="group cursor-pointer border-r-0 font-normal">Name</Th>
+					<Th className="group w-1/2 cursor-pointer border-r-0 font-normal">Name</Th>
 				</Tr>
 			</THead>
 
 			<TBody>
 				{list.map(({ id, name }) => (
 					<Tr className={bodyTrClass} key={id}>
-						<Td className="max-w-40 cursor-pointer font-medium">{id}</Td>
+						<Td className="w-1/2 max-w-40 cursor-pointer font-medium">{id}</Td>
 
-						<Td className="group cursor-pointer font-medium">{name}</Td>
+						<Td className="group w-1/2 cursor-pointer font-medium">{name}</Td>
 					</Tr>
 				))}
 			</TBody>

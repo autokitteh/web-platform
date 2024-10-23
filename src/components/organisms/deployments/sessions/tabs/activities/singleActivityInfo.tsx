@@ -41,14 +41,14 @@ export const SingleActivityInfo = ({
 						<Table>
 							<THead>
 								<Tr>
-									<Th>{t("argumentsKey")}</Th>
+									<Th className="pl-4">{t("argumentsKey")}</Th>
 								</Tr>
 							</THead>
 
 							<TBody>
 								{activity.args.map((argument) => (
 									<Tr key={argument}>
-										<Td>{argument} </Td>
+										<Td className="pl-4">{argument} </Td>
 									</Tr>
 								))}
 							</TBody>
@@ -63,18 +63,20 @@ export const SingleActivityInfo = ({
 						<Table>
 							<THead>
 								<Tr>
-									<Th className="pl-4">{t("kwArgumentsKey")}</Th>
+									<Th className="w-1/2 pl-4">{t("kwArgumentsKey")}</Th>
 
-									<Th>{t("kwArgumentsValue")}</Th>
+									<Th className="w-1/2">{t("kwArgumentsValue")}</Th>
 								</Tr>
 							</THead>
 
 							<TBody>
 								{Object.entries(activity.kwargs).map(([key, value]) => (
 									<Tr key={key}>
-										<Td>{key}</Td>
+										<Td className="w-1/2 pl-4">{key}</Td>
 
-										<Td>{typeof value === "object" ? JSON.stringify(value) : String(value)}</Td>
+										<Td className="w-1/2">
+											{typeof value === "object" ? JSON.stringify(value) : String(value)}
+										</Td>
 									</Tr>
 								))}
 							</TBody>

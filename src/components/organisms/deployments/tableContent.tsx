@@ -110,7 +110,10 @@ export const DeploymentsTableContent = ({
 			<Table className="mt-4">
 				<THead>
 					<Tr>
-						<Th className="group cursor-pointer font-normal" onClick={() => requestSort("createdAt")}>
+						<Th
+							className="group w-1/5 cursor-pointer pl-4 font-normal"
+							onClick={() => requestSort("createdAt")}
+						>
 							{t("table.columns.deploymentTime")}
 
 							<SortButton
@@ -120,9 +123,9 @@ export const DeploymentsTableContent = ({
 							/>
 						</Th>
 
-						<Td className="group cursor-pointer font-normal">{t("table.columns.sessions")}</Td>
+						<Th className="group w-1/5 cursor-pointer font-normal">{t("table.columns.sessions")}</Th>
 
-						<Td className="group cursor-pointer font-normal" onClick={() => requestSort("buildId")}>
+						<Th className="group w-1/5 cursor-pointer font-normal" onClick={() => requestSort("buildId")}>
 							{t("table.columns.buildId")}
 
 							<SortButton
@@ -130,10 +133,10 @@ export const DeploymentsTableContent = ({
 								isActive={"buildId" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
-						</Td>
+						</Th>
 
-						<Td
-							className="group cursor-pointer border-r-0 font-normal"
+						<Th
+							className="group w-1/5 cursor-pointer border-r-0 font-normal"
 							onClick={() => requestSort("state")}
 						>
 							{t("table.columns.status")}
@@ -143,9 +146,9 @@ export const DeploymentsTableContent = ({
 								isActive={"state" === sortConfig.key}
 								sortDirection={sortConfig.direction}
 							/>
-						</Td>
+						</Th>
 
-						<Td className="max-w-20 text-right font-normal">{t("table.columns.actions")}</Td>
+						<Th className="w-1/5 text-right font-normal">{t("table.columns.actions")}</Th>
 					</Tr>
 				</THead>
 
@@ -156,24 +159,26 @@ export const DeploymentsTableContent = ({
 							key={deploymentId}
 							onClick={() => navigate(`${deploymentId}/sessions`)}
 						>
-							<Td className="font-semibold">{moment(createdAt).local().format(dateTimeFormat)}</Td>
+							<Td className="w-1/5 pl-4 font-semibold">
+								{moment(createdAt).local().format(dateTimeFormat)}
+							</Td>
 
-							<Td>
+							<Td className="w-1/5">
 								<DeploymentSessionStats sessionStats={sessionStats} />
 							</Td>
 
-							<Td>{buildId}</Td>
+							<Td className="w-1/5">{buildId}</Td>
 
-							<Td className="border-r-0">
+							<Td className="w-1/5 border-r-0">
 								<DeploymentState deploymentState={state} />
 							</Td>
 
-							<Td className="max-w-20 pr-0">
+							<Td className="w-1/5 pr-0">
 								<div className="flex space-x-1">
 									{state === DeploymentStateVariant.active ? (
 										<IconButton
 											ariaLabel={t("ariaDeactivateDeploy")}
-											className="p-1"
+											className="size-8 p-1"
 											onClick={(event) =>
 												handleDeploymentAction(deploymentId, "deactivate", event)
 											}
@@ -184,7 +189,7 @@ export const DeploymentsTableContent = ({
 									) : (
 										<IconButton
 											ariaLabel={t("ariaActivateDeploy")}
-											className="p-1"
+											className="size-8 p-1"
 											onClick={(event) => handleDeploymentAction(deploymentId, "activate", event)}
 										>
 											<ActionActiveIcon className="size-4 transition group-hover:fill-green-800" />

@@ -91,15 +91,15 @@ export const SessionsTableRow = memo(
 			>
 				<Td className="w-1/3 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
 
-				<Td className="w-1/6 pl-2">
+				<Td className="w-1/6">
 					<SessionsTableState sessionState={session.state} />
 				</Td>
 
-				<Td className="w-1/6 pl-2">{session.triggerName}</Td>
+				<Td className="w-1/6">{session.triggerName}</Td>
 
-				<Td className="w-1/6 pl-2">{session.connectionName}</Td>
+				<Td className="w-1/6">{session.connectionName}</Td>
 
-				<Td className="w-1/6 pl-2">
+				<Td className="w-1/6">
 					<IconButton
 						className="inline p-0"
 						disabled={session.state !== SessionState.running}

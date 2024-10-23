@@ -191,7 +191,7 @@ export const ConnectionsTable = () => {
 						{sortedConnections.map(
 							({ connectionId, integrationName, logo, name, status, statusInfoMessage }) => (
 								<Tr className="group" key={connectionId}>
-									<Td className="w-1/4 font-semibold">{name}</Td>
+									<Td className="w-1/4 pl-4 font-semibold">{name}</Td>
 
 									<Td className="w-1/4">
 										<div className="flex items-center gap-2" title={integrationName}>
@@ -215,7 +215,7 @@ export const ConnectionsTable = () => {
 										<div className="flex space-x-1">
 											<IconButton
 												ariaLabel={t("table.buttons.titleEditConnection")}
-												className="p-1.5"
+												className="size-8 p-1.5"
 												onClick={() => handleConnectionEditClick(connectionId)}
 												title={t("table.buttons.titleEditConnection")}
 											>

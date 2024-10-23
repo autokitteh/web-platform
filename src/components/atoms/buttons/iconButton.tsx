@@ -21,7 +21,7 @@ export const IconButton = ({
 	variant,
 }: IconButtonProps) => {
 	const iconButtonClass = cn(
-		"flex shrink-0 items-center justify-center rounded-full p-2 outline-0 transition duration-300 hover:bg-gray-1100",
+		"flex shrink-0 items-center justify-center rounded-full p-2 outline-0 transition duration-300 hover:bg-gray-850",
 		{
 			"bg-black": variant === ButtonVariant.filled,
 			"border border-gray-750 hover:border-transparent": variant === ButtonVariant.outline,
