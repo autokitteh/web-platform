@@ -178,13 +178,13 @@ export const SessionsTable = () => {
 		}
 
 		addToast({
-			message: tErrors("actions.sessionRemovedSuccessfully"),
+			message: t("actions.sessionRemovedSuccessfully"),
 			type: "success",
 		});
 
 		LoggerService.info(
 			namespaces.ui.sessionsTable,
-			tErrors("actions.sessionRemovedSuccessfullyExtended", { sessionId: selectedSessionId })
+			t("actions.sessionRemovedSuccessfullyExtended", { sessionId: selectedSessionId })
 		);
 
 		closeModal(ModalName.deleteDeploymentSession);
@@ -196,34 +196,30 @@ export const SessionsTable = () => {
 		<div className="my-1.5 flex w-full flex-1">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
-					<div className="flex items-center justify-between gap-2.5">
+					<div className="flex items-center">
 						<Typography className="text-base" element="h2">
 							{t("tableTitle")}
 						</Typography>
-						<div className="flex flex-wrap items-center justify-between gap-2.5">
+						<div className="ml-auto flex items-center">
 							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
 						</div>
 					</div>
 
-					<div className="relative my-6 flex h-full flex-col overflow-hidden pb-5">
+					<div className="my-6 flex h-full flex-col pb-5">
 						{isInitialLoad ? (
 							<div className="flex h-full items-center justify-center">
 								<Loader firstColor="light-gray" size="md" />
 							</div>
 						) : sessions.length ? (
-							<Table className="h-full overflow-y-visible">
+							<Table className="flex h-full overflow-y-visible">
 								<THead className="rounded-t-14">
-									<Tr className="justify-between">
-										<Th className="w-56">{t("table.columns.startTime")}</Th>
-
-										<Th className="w-32">{t("table.columns.status")}</Th>
-
-										<Th className="w-32">{t("table.columns.triggerName")}</Th>
-
-										<Th className="w-32">{t("table.columns.connectionName")}</Th>
-
-										<Th className="w-32">{t("table.columns.actions")}</Th>
+									<Tr>
+										<Th className="w-1/3 pl-4">{t("table.columns.startTime")}</Th>
+										<Th className="w-1/6 pl-2">{t("table.columns.status")}</Th>
+										<Th className="w-1/6 pl-2">{t("table.columns.triggerName")}</Th>
+										<Th className="w-1/6 pl-2">{t("table.columns.connectionName")}</Th>
+										<Th className="w-1/6 pl-2">{t("table.columns.actions")}</Th>
 									</Tr>
 								</THead>
 
