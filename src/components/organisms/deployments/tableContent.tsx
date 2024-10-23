@@ -178,7 +178,7 @@ export const DeploymentsTableContent = ({
 									{state === DeploymentStateVariant.active ? (
 										<IconButton
 											ariaLabel={t("ariaDeactivateDeploy")}
-											className="p-1"
+											className="size-8 p-1"
 											onClick={(event) =>
 												handleDeploymentAction(deploymentId, "deactivate", event)
 											}
@@ -189,7 +189,7 @@ export const DeploymentsTableContent = ({
 									) : (
 										<IconButton
 											ariaLabel={t("ariaActivateDeploy")}
-											className="p-1"
+											className="size-8 p-1"
 											onClick={(event) => handleDeploymentAction(deploymentId, "activate", event)}
 										>
 											<ActionActiveIcon className="size-4 transition group-hover:fill-green-800" />
