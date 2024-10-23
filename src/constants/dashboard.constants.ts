@@ -306,9 +306,9 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"README.md",
 					"autokitteh.yaml",
 					"available_rooms.py",
-					"google_sheets.py",
 					"reserve_room.py",
 					"room_status.py",
+					"util.py",
 				],
 			},
 			{
@@ -317,7 +317,26 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"Slack bot: request for assistance is inferred using Google's Gemini AI. The appropriate person is mentioned according to a predetermined table of expertise in a Google Doc. The person can then !take the request and later !resolve it.",
 				integrations: [IntegrationsMap.slack, IntegrationsMap.googlegemini],
 				assetDirectory: "slack_support",
-				files: ["README.md", "autokitteh.yaml", "directory.py", "gemini.py", "main.py"],
+				files: ["README.md", "autokitteh.yaml", "demo.png", "directory.py", "gemini.py", "main.py"],
+			},
+		],
+	},
+	{
+		name: "Uncategorized",
+		cards: [
+			{
+				title: "Github Actions",
+				description: "",
+				integrations: [],
+				assetDirectory: "github_actions",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
+			},
+			{
+				title: "Google Cal To Asana",
+				description: "",
+				integrations: [],
+				assetDirectory: "google_cal_to_asana",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 		],
 	},
