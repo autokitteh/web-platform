@@ -5,7 +5,6 @@ export { default as GithubIcon } from "@assets/image/icons/connections/Github.sv
 export { default as GoogleSheetsIcon } from "@assets/image/icons/connections/GoogleSheets.svg?react";
 export { default as GoogleGmailIcon } from "@assets/image/icons/connections/GoogleGmail.svg?react";
 export { default as GoogleCalendarIcon } from "@assets/image/icons/connections/GoogleCalendar.svg?react";
-export { default as GoogleIcon } from "@assets/image/icons/connections/Google.svg?react";
 export { default as HttpIcon } from "@assets/image/icons/connections/Http.svg?react";
 export { default as OpenAiIcon } from "@assets/image/icons/connections/OpenAi.svg?react";
 export { default as JiraIcon } from "@assets/image/icons/connections/Jira.svg?react";
