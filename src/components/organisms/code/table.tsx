@@ -207,9 +207,9 @@ export const CodeTable = () => {
 						<TBody>
 							{sortedResources.map((name) => (
 								<Tr className={activeBodyRow(name)} key={name} onClick={() => openFileAsActive(name)}>
-									<Td className="cursor-pointer font-medium">{name}</Td>
+									<Td className="cursor-pointer pl-4 font-medium">{name}</Td>
 
-									<Td className="mr-1 max-w-12 pr-0">
+									<Td className="max-w-12 pl-4 pr-0">
 										<IconButton onClick={(event) => handleTrashIconClick(event, name)}>
 											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>

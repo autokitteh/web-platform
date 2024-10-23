@@ -97,7 +97,10 @@ export const TriggersTable = () => {
 				<Table className="mt-2.5">
 					<THead>
 						<Tr>
-							<Th className="group cursor-pointer pl-4 font-normal" onClick={() => requestSort("name")}>
+							<Th
+								className="group w-1/4 cursor-pointer pl-4 font-normal"
+								onClick={() => requestSort("name")}
+							>
 								{t("table.columns.name")}
 
 								<SortButton
@@ -107,7 +110,10 @@ export const TriggersTable = () => {
 								/>
 							</Th>
 
-							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("sourceType")}>
+							<Th
+								className="group w-1/4 cursor-pointer font-normal"
+								onClick={() => requestSort("sourceType")}
+							>
 								{t("table.columns.connection")}
 
 								<SortButton
@@ -117,7 +123,10 @@ export const TriggersTable = () => {
 								/>
 							</Th>
 
-							<Th className="group cursor-pointer font-normal" onClick={() => requestSort("entrypoint")}>
+							<Th
+								className="group w-1/4 cursor-pointer font-normal"
+								onClick={() => requestSort("entrypoint")}
+							>
 								{t("table.columns.call")}
 
 								<SortButton
@@ -127,28 +136,28 @@ export const TriggersTable = () => {
 								/>
 							</Th>
 
-							<Th className="max-w-20 text-right font-normal">{t("table.columns.actions")}</Th>
+							<Th className="w-1/4 max-w-20 text-right font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
 					<TBody>
 						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
-								<Td className="font-semibold">
+								<Td className="w-1/4 pl-4 font-semibold">
 									<div className="flex gap-3">
 										<div>{trigger.name}</div>
 									</div>
 								</Td>
 
-								<Td>
+								<Td className="w-1/4">
 									<span className="capitalize" title={trigger.sourceType}>
 										{trigger.sourceType}
 									</span>
 								</Td>
 
-								<Td>{trigger.entrypoint}</Td>
+								<Td className="w-1/4">{trigger.entrypoint}</Td>
 
-								<Td className="max-w-20 pr-0">
+								<Td className="w-1/4 max-w-20 pr-0">
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", {
