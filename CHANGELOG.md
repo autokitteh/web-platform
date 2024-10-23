@@ -1,3 +1,10 @@
+# [2.37.0](https://github.com/autokitteh/web-platform/compare/v2.36.0...v2.37.0) (2024-10-23)
+
+
+### Features
+
+* session state filter dropdown ([#523](https://github.com/autokitteh/web-platform/issues/523)) ([735dfed](https://github.com/autokitteh/web-platform/commit/735dfed8b5fb43268fd65fb1654ec24c93828c1d))
+
 # [2.36.0](https://github.com/autokitteh/web-platform/compare/v2.35.3...v2.36.0) (2024-10-22)
 
 
