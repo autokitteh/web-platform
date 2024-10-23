@@ -112,7 +112,7 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 In this project we used:
 
--   [FontAwesome](https://fontawesome.com) our icons.
+-   [FontAwesome](https://fontawesome.com) and [tabler-icons](https://github.com/tabler/tabler-icons) for our icons.
 
 ## Contact 📬
 
