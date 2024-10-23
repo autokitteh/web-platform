@@ -23,13 +23,6 @@ export default defineConfig({
 						return id.toString().split("node_modules/")[1].split("/")[0].toString();
 					}
 				},
-				assetFileNames: (assetInfo) => {
-					if (assetInfo.name?.includes("assets/image/pages/login/logos.svg")) {
-						return "assets/login/[name]-[hash][extname]";
-					}
-
-					return "assets/[name]-[hash][extname]";
-				},
 			},
 		},
 	},
@@ -49,7 +42,12 @@ export default defineConfig({
 		svgr({
 			svgrOptions: {
 				ref: true,
+				icon: false,
+				replaceAttrValues: {
+					"#000": "currentColor",
+				},
 				svgoConfig: {
+					multipass: true,
 					plugins: [
 						{
 							name: "preset-default",
@@ -59,14 +57,27 @@ export default defineConfig({
 									cleanupIDs: false,
 									removeUselessStrokeAndFill: false,
 									removeUnknownsAndDefaults: false,
+									convertPathData: {
+										floatPrecision: 2,
+										transformPrecision: 4,
+									},
+									cleanupNumericValues: {
+										floatPrecision: 2,
+									},
+									collapseGroups: true,
+									mergePaths: true,
+									convertTransform: true,
+									convertShapeToPath: true,
+									removeEmptyAttrs: true,
+									removeEmptyContainers: true,
+									removeUnusedNS: true,
+									sortAttrs: true,
 								},
 							},
 						},
 					],
 				},
 			},
-			// Add specific include for the login logos
-			include: /\/src\/assets\/image\/pages\/login\/.*\.svg$/,
 		}),
 		sentryVitePlugin({
 			org: process.env.SENTRY_ORG,
