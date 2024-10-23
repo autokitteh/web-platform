@@ -15,7 +15,8 @@ import { useToastStore } from "@store";
 
 import { AHref, IconSvg } from "@components/atoms";
 
-import { AKRoundLogo, LoginLogos, inJustTitle } from "@assets/image";
+import { AKRoundLogo, inJustTitle } from "@assets/image";
+import { LoginLogos } from "@assets/image/pages/login";
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
@@ -123,9 +124,9 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 							: null}
 					</ul>
 				</div>
-				<img
+				<IconSvg
 					alt="autokitteh logo with integrations"
-					className="absolute bottom-0 right-8 w-9/12 object-contain object-bottom"
+					className="absolute bottom-0 right-8 h-36 w-9/12 object-contain object-bottom"
 					src={LoginLogos}
 				/>
 			</div>
