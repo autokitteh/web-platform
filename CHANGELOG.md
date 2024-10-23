@@ -1,3 +1,10 @@
+## [2.37.2](https://github.com/autokitteh/web-platform/compare/v2.37.1...v2.37.2) (2024-10-23)
+
+
+### Bug Fixes
+
+* place back missing new project program file ([#568](https://github.com/autokitteh/web-platform/issues/568)) ([04cc2dc](https://github.com/autokitteh/web-platform/commit/04cc2dc7cf115b1a61304f57c0919a0f2348c581))
+
 ## [2.37.1](https://github.com/autokitteh/web-platform/compare/v2.37.0...v2.37.1) (2024-10-23)
 
 
