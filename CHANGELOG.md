@@ -1,3 +1,10 @@
+## [2.37.1](https://github.com/autokitteh/web-platform/compare/v2.37.0...v2.37.1) (2024-10-23)
+
+
+### Bug Fixes
+
+* tables broken widths ([#563](https://github.com/autokitteh/web-platform/issues/563)) ([e4afeaf](https://github.com/autokitteh/web-platform/commit/e4afeafba9ed16dc3ff2a76230bded553cdd9dc3))
+
 # [2.37.0](https://github.com/autokitteh/web-platform/compare/v2.36.0...v2.37.0) (2024-10-23)
 
 
