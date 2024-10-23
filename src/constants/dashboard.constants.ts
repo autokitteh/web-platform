@@ -58,6 +58,13 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
 			{
+				title: "Github Actions",
+				description: "GitHub actions: GitHub workflows that interact across multiple repositories",
+				integrations: [IntegrationsMap.github],
+				assetDirectory: "github_actions",
+				files: ["README.md", "autokitteh.yaml", "program.py"],
+			},
+			{
 				title: "Pull Request Review Reminder (Purrr)",
 				description:
 					"Purrr integrates GitHub and Slack efficiently, to streamline code reviews and cut down the turnaround time to merge pull requests.",
@@ -319,22 +326,10 @@ export const templateProjectsCategories: TemplateCategory[] = [
 				assetDirectory: "slack_support",
 				files: ["README.md", "autokitteh.yaml", "demo.png", "directory.py", "gemini.py", "main.py"],
 			},
-		],
-	},
-	{
-		name: "Uncategorized",
-		cards: [
 			{
-				title: "Github Actions",
-				description: "",
-				integrations: [],
-				assetDirectory: "github_actions",
-				files: ["README.md", "autokitteh.yaml", "program.py"],
-			},
-			{
-				title: "Google Cal To Asana",
-				description: "",
-				integrations: [],
+				title: "Google Calendar To Asana",
+				description: "Creates Asana tasks based on Google Calendar events",
+				integrations: [IntegrationsMap.calendar, IntegrationsMap.asana],
 				assetDirectory: "google_cal_to_asana",
 				files: ["README.md", "autokitteh.yaml", "program.py"],
 			},
