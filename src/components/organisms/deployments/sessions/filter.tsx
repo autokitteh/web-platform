@@ -114,12 +114,10 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 					</div>
 				}
 			>
-				<div className="flex">
-					<Button className={filterClass(activeState)} variant="outline">
-						<IconSvg className="mb-1 text-white" size="md" src={FilterIcon} />
-						{activeState ? t(activeState) : tTable("filter")}
-					</Button>
-				</div>
+				<Button className={filterClass(activeState)} variant="outline">
+					<IconSvg className="mb-1 text-white" size="md" src={FilterIcon} />
+					{activeState ? t(activeState) : tTable("filter")}
+				</Button>
 			</DropdownButton>
 		</div>
 	);
