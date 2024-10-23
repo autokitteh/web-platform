@@ -183,6 +183,9 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	): void => {
 		event.stopPropagation();
 		closeOpenedFile(name);
+		if (isExpanded && openFiles[projectId!]?.length === 1) {
+			onExpand();
+		}
 	};
 
 	return (
