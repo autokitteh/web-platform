@@ -195,11 +195,13 @@ export const ConnectionsTable = () => {
 
 									<Td className="w-1/4">
 										<div className="flex items-center gap-2" title={integrationName}>
-											<IconSvg
-												alt={integrationName}
-												className="size-6 shrink-0 rounded-full bg-white p-0.5"
-												src={logo}
-											/>
+											{logo ? (
+												<IconSvg
+													alt={integrationName}
+													className="size-6 shrink-0 rounded-full bg-white p-0.5"
+													src={logo}
+												/>
+											) : null}
 
 											{integrationName}
 										</div>
