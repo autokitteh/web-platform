@@ -111,7 +111,7 @@ export const VariablesTable = () => {
 					<THead>
 						<Tr>
 							<Th
-								className="group w-1/3 cursor-pointer pl-4 font-normal"
+								className="group w-2/6 cursor-pointer pl-4 font-normal"
 								onClick={() => requestSort("name")}
 							>
 								{t("table.columns.name")}
@@ -124,7 +124,7 @@ export const VariablesTable = () => {
 								/>
 							</Th>
 
-							<Th className="group w-1/3 cursor-pointer font-normal" onClick={() => requestSort("value")}>
+							<Th className="group w-3/6 cursor-pointer font-normal" onClick={() => requestSort("value")}>
 								{t("table.columns.value")}
 
 								<SortButton
@@ -135,16 +135,16 @@ export const VariablesTable = () => {
 								/>
 							</Th>
 
-							<Th className="w-1/3 max-w-20 text-right font-normal">{t("table.columns.actions")}</Th>
+							<Th className="w-1/6 max-w-20 text-right font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
 					<TBody>
 						{sortedVariables.map(({ isSecret, name, scopeId, value }, index) => (
 							<Tr className="group" key={index}>
-								<Td className="w-1/3 pl-4 font-semibold">{name}</Td>
+								<Td className="w-2/6 pl-4 font-semibold">{name}</Td>
 
-								<Td className="w-1/3">
+								<Td className="w-3/6">
 									{!isSecret ? (
 										value
 									) : (
@@ -156,7 +156,7 @@ export const VariablesTable = () => {
 									)}
 								</Td>
 
-								<Td className="w-1/3 max-w-20 pr-0">
+								<Td className="w-1/6 max-w-20 pr-0">
 									<div className="flex space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyVariable size-8", { name })}
