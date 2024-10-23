@@ -17,7 +17,7 @@ export const SystemLog = () => {
 	const ouputTextStyle = {
 		[LoggerLevel.debug]: "",
 		[LoggerLevel.error]: "text-error-200",
-		[LoggerLevel.info]: "",
+		[LoggerLevel.info]: "text-blue-500",
 		[LoggerLevel.log]: "",
 		[LoggerLevel.warn]: "text-yellow-500",
 	} as const;
@@ -47,10 +47,12 @@ export const SystemLog = () => {
 
 			<div className="scrollbar h-48 flex-auto overflow-auto pt-5">
 				{logs.map(({ id, message, status, timestamp }) => (
-					<div className="mb-4 font-mono" key={id}>
-						<span className="font-medium text-gray-250">{timestamp}:</span>
+					<div className="mb-3 font-mono" key={id}>
+						<span className="text-gray-250">{timestamp}</span>
 
-						<div className={cn("inline ml-2", ouputTextStyle[status])}>{message}</div>
+						<div className="ml-2 inline">
+							<span className={cn(ouputTextStyle[status])}>{status}</span>: {message}
+						</div>
 					</div>
 				))}
 			</div>

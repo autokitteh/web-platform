@@ -30,21 +30,21 @@ export class LoggerService {
 
 	private static output(namespace: string, message: string, level: LoggerLevel = LoggerLevel.info): void {
 		const timestamp = moment().utc().local().format(dateTimeFormat);
-		const formattedMessage = `[${namespace}] [${level}] ${message}`;
+		const formattedMessage = `[${namespace}] ${message}`;
 
 		switch (level) {
 			case LoggerLevel.error:
-				console.error(`${timestamp} - ${formattedMessage}`);
+				console.error(`${timestamp} - [${level}] ${formattedMessage}`);
 				break;
 			case LoggerLevel.warn:
-				console.warn(`${timestamp} - ${formattedMessage}`);
+				console.warn(`${timestamp} - [${level}] ${formattedMessage}`);
 				break;
 			case LoggerLevel.debug:
-				console.debug(`${timestamp} - ${formattedMessage}`);
+				console.debug(`${timestamp} - [${level}] ${formattedMessage}`);
 				break;
 			case LoggerLevel.info:
 			default:
-				console.log(`${timestamp} - ${formattedMessage}`);
+				console.log(`${timestamp} - [${level}] ${formattedMessage}`);
 				break;
 		}
 
