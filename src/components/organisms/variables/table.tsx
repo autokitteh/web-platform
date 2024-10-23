@@ -159,7 +159,7 @@ export const VariablesTable = () => {
 								<Td className="w-1/3 max-w-20 pr-0">
 									<div className="flex space-x-1">
 										<IconButton
-											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
+											ariaLabel={t("table.buttons.ariaModifyVariable size-8", { name })}
 											onClick={() => navigate(`edit/${envId}/${name}`)}
 										>
 											<EditIcon className="size-3 fill-white" />

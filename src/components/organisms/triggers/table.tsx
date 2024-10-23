@@ -163,6 +163,7 @@ export const TriggersTable = () => {
 											ariaLabel={t("table.buttons.ariaModifyTrigger", {
 												name: trigger.name,
 											})}
+											className="size-8"
 											onClick={() => navigate(`${trigger.triggerId}/edit`)}
 										>
 											<EditIcon className="size-3 fill-white" />
