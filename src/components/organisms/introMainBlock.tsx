@@ -114,7 +114,7 @@ export const IntroMainBlock = () => {
 					}
 					videoStyle={{
 						backgroundColor: "#1d2226",
-						backgroundImage: "url(/assets/image/pages/intro/startingProject.jpg)",
+						backgroundImage: "url(assets/image/pages/intro/startingProject.jpg)",
 					}}
 				>
 					<ul className="font-averta font-semibold leading-normal">
@@ -143,7 +143,7 @@ export const IntroMainBlock = () => {
 					}
 					videoStyle={{
 						backgroundColor: "#1d2226",
-						backgroundImage: "url(/assets/image/pages/intro/usingVSCode.jpg)",
+						backgroundImage: "url(assets/image/pages/intro/usingVSCode.jpg)",
 					}}
 				>
 					<ul className="font-averta font-semibold leading-normal">
