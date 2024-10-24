@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Editor } from "@monaco-editor/react";
 import { useForm } from "react-hook-form";
@@ -7,10 +7,10 @@ import { useTranslation } from "react-i18next";
 import { ModalName } from "@enums/components";
 import { CreateProjectModalProps } from "@interfaces/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useModalStore } from "@src/store";
+import { useModalStore, useProjectStore } from "@src/store";
 import { fetchFileContent } from "@src/utilities";
 
-import { Button, IconSvg, Input, Loader, Status, Typography } from "@components/atoms";
+import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
 import { PipeCircleDarkIcon, ReadmeIcon } from "@assets/image/icons";
@@ -22,16 +22,26 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 	const { assetDirectory, description, integrations } = cardTemplate;
 	const { closeModal } = useModalStore();
 	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
+	const { projectsList } = useProjectStore();
+
+	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 
 	const {
 		formState: { errors },
 		handleSubmit,
 		register,
 	} = useForm<{ projectName: string }>({
+		mode: "onChange",
 		defaultValues: {
 			projectName: "",
 		},
 	});
+
+	const validateProjectName = (value: string) => {
+		if (projectNamesSet.has(value)) {
+			return t("nameTaken");
+		}
+	};
 
 	const fetchManifestData = async () => {
 		if (!assetDirectory) return;
@@ -47,6 +57,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 	const onSubmit = async (data: { projectName: string }) => {
 		const { projectName } = data;
 		if (!assetDirectory || !projectName) return;
+
 		setIsCreating(true);
 		await createProjectFromTemplate(assetDirectory, projectName);
 		setIsCreating(false);
@@ -77,15 +88,17 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 				<Input
 					label={t("projectName")}
 					variant="light"
-					{...register("projectName", { required: true })}
+					{...register("projectName", {
+						required: t("nameRequired"),
+						validate: validateProjectName,
+					})}
 					isError={!!errors.projectName}
 				/>
 				{errors.projectName ? (
-					<Typography className="mt-1 text-error" element="p">
-						{t("projectNameRequired")}
-					</Typography>
+					<ErrorMessage className="relative">{errors.projectName.message}</ErrorMessage>
 				) : null}
-				<Typography className="mt-2 font-semibold" element="h4" size="medium">
+
+				<Typography className="mt-3 font-semibold" element="h4" size="medium">
 					{description}
 				</Typography>
 				<div className="mt-4 flex items-center gap-1 text-base uppercase">
@@ -119,7 +132,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 					<Button
 						ariaLabel={t("createButton")}
 						className="bg-gray-1100 px-4 py-3 font-semibold"
-						disabled={isCreating}
+						disabled={isCreating || !!errors.projectName}
 						type="submit"
 						variant="filled"
 					>

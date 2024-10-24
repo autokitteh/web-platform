@@ -66,6 +66,8 @@
 		"cancelButton": "Cancel",
 		"createButton": "Create",
 		"projectName": "Project Name",
-		"readme": "Readme"
+		"readme": "Readme",
+		"nameRequired": "Name is required",
+		"nameTaken": "Name is already taken"
 	}
 }
