@@ -22,6 +22,7 @@ export type {
 	ModalDeleteVariableProps,
 	ModalModifyVariableProps,
 	ModalProps,
+	WarningDeploymentActivetedModalProps,
 } from "@interfaces/components/modal.interface";
 export type {
 	SessionTableFilterProps,

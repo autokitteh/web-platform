@@ -9,3 +9,4 @@ export { IntroMainBlock } from "@components/organisms/introMainBlock";
 export { SystemLog } from "@components/organisms/systemLog";
 export { EventsTable } from "@components/organisms/events/table";
 export { TitleTopbar } from "@components/organisms/topbar";
+export { WarningDeploymentActivetedModal } from "@components/organisms/warningDeploymentActivetedModal";
