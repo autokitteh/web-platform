@@ -2,18 +2,15 @@ import React, { useCallback, useMemo, useState } from "react";
 
 import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
 import { ModalName } from "@src/enums/components";
-import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useModalStore, useProjectStore } from "@src/store";
+import { useModalStore } from "@src/store";
+import { TemplateCardType } from "@src/types/components";
 
 import { Tab } from "@components/atoms";
 import { ProjectTemplateCard, ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
 
 export const ProjectTemplatesTabs = () => {
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
-	const [cardAssetDirectory, setCardAssetDirectory] = useState<string>();
-	const [isCreating, setIsCreating] = useState(false);
-	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
-	const { projectsList } = useProjectStore();
+	const [card, setCard] = useState<TemplateCardType>();
 	const { openModal } = useModalStore();
 
 	const activeCategory = useMemo(
@@ -21,38 +18,17 @@ export const ProjectTemplatesTabs = () => {
 		[activeTab]
 	);
 
-	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
-
-	const isProjectDisabled = useCallback(
-		(assetDirectory: string) => projectNamesSet.has(assetDirectory),
-		[projectNamesSet]
-	);
-
 	const handleTabClick = useCallback((category: string) => {
 		setActiveTab(category);
 	}, []);
 
 	const handleCardCreateClick = useCallback(
-		(assetDirectory: string) => {
-			setCardAssetDirectory(assetDirectory);
+		(card: TemplateCardType) => {
+			setCard(card);
 			openModal(ModalName.templateCreateProject);
 		},
 		[openModal]
 	);
-
-	const createProjectFromAsset = async (assetDirectory: string) => {
-		setIsCreating(true);
-		await createProjectFromTemplate(assetDirectory);
-		setIsCreating(false);
-		setCardAssetDirectory(undefined);
-	};
-
-	const handleCreate = useCallback(() => {
-		if (cardAssetDirectory) {
-			createProjectFromAsset(cardAssetDirectory);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cardAssetDirectory]);
 
 	return (
 		<div className="flex h-full flex-1 flex-col">
@@ -84,16 +60,13 @@ export const ProjectTemplatesTabs = () => {
 							<ProjectTemplateCard
 								card={card}
 								category={activeCategory.name}
-								disabled={isProjectDisabled(card.assetDirectory)}
-								isCreating={cardAssetDirectory === card.assetDirectory}
 								key={index}
-								onCreateClick={() => handleCardCreateClick(card.assetDirectory)}
+								onCreateClick={() => handleCardCreateClick(card)}
 							/>
 						))
 					: null}
 			</div>
-
-			<ProjectTemplateCreateModal isCreating={isCreating} onCreate={handleCreate} />
+			{card ? <ProjectTemplateCreateModal cardTemplate={card} category={activeCategory?.name} /> : null}
 		</div>
 	);
 };
