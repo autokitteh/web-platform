@@ -126,7 +126,7 @@ export const SecretInput = forwardRef<HTMLInputElement, SecretInputProps>((props
 
 	const lockedIcon = (() => {
 		if (type === "password") {
-			return isLocked ? EyeCloseIcon : EyeIcon;
+			return isLocked ? EyeIcon : EyeCloseIcon;
 		}
 
 		return isLocked ? UnlockedLockIcon : LockIcon;
