@@ -34,7 +34,7 @@ export const DashboardWelcomeMainBlock = () => {
 		<div className="z-10 mt-7 grid select-none gap-5">
 			<div className="col-span-1 grid grid-cols-auto-fit-350 items-stretch gap-4 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pl-6 pr-4 font-averta text-white">
 				<div className="flex min-h-52 flex-col">
-					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-[#1d2226] bg-[url('@assets/image/pages/intro/main.jpg')] bg-contain bg-center bg-no-repeat">
+					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-[#1d2226] bg-[url('image/pages/intro/main.jpg')] bg-contain bg-center bg-no-repeat">
 						<IconButton
 							className="group size-20 overflow-hidden rounded-full p-0 focus:scale-90"
 							onClick={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
@@ -100,7 +100,7 @@ export const DashboardWelcomeMainBlock = () => {
 					}
 					videoStyle={{
 						backgroundColor: "#1d2226",
-						backgroundImage: "url(@assets/image/pages/intro/startingProject.jpg)",
+						backgroundImage: "url(assets/image/pages/intro/startingProject.jpg)",
 					}}
 				>
 					<ul className="font-averta font-semibold leading-normal">
@@ -129,7 +129,7 @@ export const DashboardWelcomeMainBlock = () => {
 					}
 					videoStyle={{
 						backgroundColor: "#1d2226",
-						backgroundImage: "url(@assets/image/pages/intro/usingVSCode.jpg)",
+						backgroundImage: "url(assets/image/pages/intro/usingVSCode.jpg)",
 					}}
 				>
 					<ul className="font-averta font-semibold leading-normal">
