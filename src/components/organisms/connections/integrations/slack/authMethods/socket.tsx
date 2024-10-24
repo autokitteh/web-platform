@@ -35,6 +35,7 @@ export const SocketForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("bot_token")}
 						aria-label={t("slack.placeholders.botToken")}
 						handleInputChange={(newValue) => setValue("bot_token", newValue)}
@@ -61,6 +62,7 @@ export const SocketForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("app_token")}
 						aria-label={t("slack.placeholders.appToken")}
 						handleInputChange={(newValue) => setValue("app_token", newValue)}
