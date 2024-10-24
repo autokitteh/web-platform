@@ -16,7 +16,7 @@ export const WarningDeploymentActivetedModal = ({ onClick }: WarningDeploymentAc
 	return (
 		<Modal hideCloseButton name={ModalName.warningDeploymentActive}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
+				<h3 className="mb-5 text-xl font-bold text-error-200">{t("title")}</h3>
 
 				<p className="text-base font-medium">{t("warning")}</p>
 			</div>
@@ -33,7 +33,7 @@ export const WarningDeploymentActivetedModal = ({ onClick }: WarningDeploymentAc
 
 				<Button
 					ariaLabel={t("agreeButton")}
-					className="bg-gray-1100 px-4 py-3 font-semibold"
+					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error-200"
 					onClick={onClick}
 					variant="filled"
 				>
