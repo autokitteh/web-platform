@@ -144,6 +144,7 @@ export default defineConfig({
 			"@interfaces": path.resolve(__dirname, "./src/interfaces"),
 			"@locales": path.resolve(__dirname, "./src/locales"),
 			"@models": path.resolve(__dirname, "./src/models"),
+			"@pages": path.resolve(__dirname, "./pages"),
 			"@routing": path.resolve(__dirname, "./src/routing"),
 			"@services": path.resolve(__dirname, "./src/services"),
 			"@store": path.resolve(__dirname, "./src/store"),
