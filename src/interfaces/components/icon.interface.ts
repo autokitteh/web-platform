@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FunctionComponent, LazyExoticComponent, SVGProps } from "react";
 
 export interface IconProps {
 	alt?: string;
@@ -11,5 +11,5 @@ export interface IconProps {
 }
 
 export interface IconSvgProps extends Omit<IconProps, "src"> {
-	src: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+	src: React.ComponentType<SVGProps<SVGSVGElement>> | LazyExoticComponent<FunctionComponent<SVGProps<SVGSVGElement>>>;
 }
