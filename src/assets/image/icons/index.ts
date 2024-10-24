@@ -62,3 +62,6 @@ export { default as FileIcon } from "@assets/image/icons/File.svg?react";
 export { default as DownloadIcon } from "@assets/image/icons/Download.svg?react";
 // Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/filter.svg
 export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";
+
+export { default as ExpandIcon } from "@assets/image/icons/Expand.svg?react";
+export { default as CompressIcon } from "@assets/image/icons/Compress.svg?react";

@@ -16,9 +16,9 @@ import { useFileOperations } from "@hooks";
 import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
-import { Close, SaveIcon } from "@assets/image/icons";
+import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
 
-export const EditorTabs = () => {
+export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onExpand: () => void }) => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
@@ -183,6 +183,9 @@ export const EditorTabs = () => {
 	): void => {
 		event.stopPropagation();
 		closeOpenedFile(name);
+		if (isExpanded && openFiles[projectId!]?.length === 1) {
+			onExpand();
+		}
 	};
 
 	return (
@@ -221,10 +224,10 @@ export const EditorTabs = () => {
 
 						{openFiles[projectId]?.length ? (
 							<div
-								className="relative -right-4 -top-2 z-10 flex flex-col items-end whitespace-nowrap"
+								className="relative -right-4 -top-2 z-10 flex items-center gap-1 whitespace-nowrap"
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
 							>
-								<div className="inline-flex gap-2 rounded-3xl border border-gray-1000 p-1">
+								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
 									{autosave ? null : (
 										<Button
 											className="h-6 whitespace-nowrap px-4 py-1"
@@ -244,6 +247,13 @@ export const EditorTabs = () => {
 										onChange={() => setAutosave(!autosave)}
 									/>
 								</div>
+								<IconButton className="hover:bg-gray-1100" onClick={onExpand}>
+									{isExpanded ? (
+										<CompressIcon className="size-4 fill-white" />
+									) : (
+										<ExpandIcon className="size-4 fill-white" />
+									)}
+								</IconButton>
 							</div>
 						) : null}
 					</div>
