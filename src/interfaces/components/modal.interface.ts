@@ -30,3 +30,7 @@ export interface ModalModifyVariableProps {
 export interface DeleteAccount {
 	onDelete?: () => void;
 }
+
+export interface WarningDeploymentActivetedModalProps {
+	onClick?: () => void;
+}

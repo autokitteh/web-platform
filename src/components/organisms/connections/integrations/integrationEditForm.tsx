@@ -4,12 +4,14 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { ConnectionAuthType } from "@enums";
-import { Integrations, isGoogleIntegration } from "@src/enums/components";
+import { ConnectionAuthType, DeploymentStateVariant } from "@enums";
+import { Integrations, ModalName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
+import { useCacheStore, useModalStore } from "@src/store";
 
 import { Select } from "@components/molecules";
+import { WarningDeploymentActivetedModal } from "@components/organisms";
 
 export const IntegrationEditForm = ({
 	integrationType,
@@ -38,8 +40,12 @@ export const IntegrationEditForm = ({
 		setValidationSchema,
 		setValue,
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit");
+
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState<boolean>(true);
+
+	const { deployments } = useCacheStore();
+	const { closeModal, openModal } = useModalStore();
 
 	useEffect(() => {
 		if (isGoogleIntegration(integrationType)) {
@@ -71,19 +77,28 @@ export const IntegrationEditForm = ({
 		[connectionType, selectOptions]
 	);
 
-	const handleFormSubmit = () => {
+	const onSubmit = () => {
 		if (connectionId && connectionType === ConnectionAuthType.Oauth) {
+			closeModal(ModalName.warningDeploymentActive);
 			if (isGoogleIntegration(integrationType)) {
 				handleGoogleOauth(connectionId);
 
 				return;
 			}
-
 			handleOAuth(connectionId, integrationType);
 
 			return;
 		}
 		onSubmitEdit();
+	};
+
+	const handleFormSubmit = () => {
+		if (deployments?.length && deployments[0].state === DeploymentStateVariant.active) {
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+		onSubmit();
 	};
 
 	useEffect(() => {
@@ -126,6 +141,8 @@ export const IntegrationEditForm = ({
 					/>
 				) : null}
 			</form>
+
+			<WarningDeploymentActivetedModal onClick={onSubmit} />
 		</>
 	);
 };

@@ -61,5 +61,11 @@
 		"content": "Are you sure you want to delete {{name}}?",
 		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
 		"title": "Delete Project"
+	},
+	"warningActiveDeployment": {
+		"title": "Warning",
+		"warning": "This might affect running deployment",
+		"cancelButton": "Cancel",
+		"agreeButton": "Ok"
 	}
 }
