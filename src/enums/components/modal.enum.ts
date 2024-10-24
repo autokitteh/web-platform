@@ -10,4 +10,5 @@ export enum ModalName {
 	getToken = "getToken",
 	deleteProject = "deleteProject",
 	welcomePage = "welcomePage",
+	templateCreateProject = "templateCreateProject",
 }

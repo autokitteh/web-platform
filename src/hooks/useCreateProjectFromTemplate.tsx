@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -56,7 +57,7 @@ export const useCreateProjectFromTemplate = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const createProjectFromTemplate = async (assetDir: string) => {
+	const createProjectFromTemplate = async (assetDir: string, projectName?: string) => {
 		try {
 			const manifestURL = `/assets/templates/${assetDir}/autokitteh.yaml`;
 			const manifestData = await fetchFileContent(manifestURL);
@@ -75,7 +76,17 @@ export const useCreateProjectFromTemplate = () => {
 				return;
 			}
 
-			const { data: newProjectId, error } = await createProjectFromManifest(manifestData);
+			const manifestObject = yaml.load(manifestData) as {
+				project?: { name: string };
+			};
+
+			if (manifestObject && manifestObject.project && projectName) {
+				manifestObject.project.name = projectName;
+			}
+
+			const updatedManifestData = yaml.dump(manifestObject);
+
+			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestData);
 
 			if (error || !newProjectId) {
 				addToast({
