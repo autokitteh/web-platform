@@ -12,7 +12,7 @@ import { InJustTitle } from "@assets/image/pages/login";
 const LoginLogos = lazy(() => import("@assets/image/pages/login/BottomLogos.svg?react"));
 
 const LazyLoginLogos = () => (
-	<Suspense fallback={<div className="absolute bottom-0 right-8 h-36 w-9/12" />}>
+	<Suspense fallback={<div />}>
 		<IconSvg
 			alt="autokitteh logo with integrations"
 			className="absolute bottom-0 right-8 h-36 w-9/12 object-contain object-bottom"
