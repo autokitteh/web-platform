@@ -10,7 +10,7 @@ import { CatDashboardImage } from "@assets/image";
 
 export const Intro = () => {
 	const resizeId = useId();
-	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 78, min: 30, id: resizeId });
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
 
 	return (
 		<div className="my-1.5 flex w-full overflow-hidden rounded-2xl">
