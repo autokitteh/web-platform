@@ -82,6 +82,8 @@
 	"fetchExportFailedUnexpectedError": "Export project failed, unexpected error: {{error}}",
 	"outputLogsFetchErrorExtended": "Couldn't fetch the output logs, {{error}}",	
 	"errorFetchingEvents": "Couldn't fetch events",
-	"errorFetchingEventsExtended": "Couldn't fetch events, error: {{error}}",
+	"errorFetchingEventsExtended": "Couldn't fetch events, error: {{error}}",	
+	"errorFetchingTemplateFiles": "Couldn't fetch template files",
+	"errorFetchingTemplateFilesExtended": "Couldn't fetch template files, error: {{error}}",
 	"fetchSessionFailed": "Failed to fetch session logs"
 }

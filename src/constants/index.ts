@@ -31,6 +31,7 @@ export {
 	templateProjectsCategories,
 	findTemplateFilesByAssetDirectory,
 	meowWorldProjectName,
+	templateFilesURL,
 } from "@constants/dashboard.constants";
 export {
 	sessionTabs,

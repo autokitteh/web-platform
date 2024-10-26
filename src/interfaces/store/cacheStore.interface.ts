@@ -7,6 +7,12 @@ interface LoadingState {
 	events: boolean;
 }
 
+export interface ExtractedFile {
+	filename: string;
+	content: Uint8Array;
+	size: number;
+}
+
 export interface CacheStore {
 	deployments?: Deployment[];
 	triggers: Trigger[];
@@ -19,4 +25,12 @@ export interface CacheStore {
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;
 	fetchVariables: (projectId: string, force?: boolean) => Promise<void | Variable[]>;
 	fetchEvents: (force?: boolean) => Promise<void | BaseEvent[]>;
+}
+
+export interface PersistCacheStore {
+	loading: {
+		templateFiles: boolean;
+	};
+	templateFiles: ExtractedFile[];
+	fetchTemplateFiles: (force?: boolean) => Promise<void | ExtractedFile[]>;
 }

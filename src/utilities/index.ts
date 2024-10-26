@@ -21,3 +21,4 @@ export { convertBuildRuntimesToViewTriggers } from "@utilities/convertBuildRunti
 export { parseNestedJson } from "@src/utilities/convertWrappedJson.utils";
 export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
 export { transformAndStringifyValues } from "@utilities/transformAndStringifyValues.utils";
+export { fetchAndUnpackTarGz } from "@utilities/tarGzUnpacker.utils";
