@@ -1,8 +1,9 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
+import { defaultTemplateProjectCategory, templateFilesURL, templateProjectsCategories } from "@constants";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useProjectStore } from "@src/store";
+import { useTemplateStore } from "@src/store/useTemplatesStore";
 
 import { Tab } from "@components/atoms";
 import { ProjectTemplateCard } from "@components/organisms/dashboard/templates/tabs";
@@ -12,6 +13,13 @@ export const ProjectTemplatesTabs = () => {
 	const [loadingCardId, setLoadingCardId] = useState<string>();
 	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
 	const { projectsList } = useProjectStore();
+
+	const { fetchAndProcessArchive } = useTemplateStore();
+
+	useEffect(() => {
+		// Replace with your actual archive URL
+		fetchAndProcessArchive(templateFilesURL);
+	}, [fetchAndProcessArchive]);
 
 	const activeCategory = useMemo(
 		() => templateProjectsCategories.find((category) => category.name === activeTab),

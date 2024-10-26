@@ -349,4 +349,4 @@ export const findTemplateFilesByAssetDirectory = async (assetDirectory: string) 
 	return undefined;
 };
 
-export const templateFilesURL = "http://localhost:3000/templates.tar.gz";
+export const templateFilesURL = "http://localhost:8080/templates.tar.gz";

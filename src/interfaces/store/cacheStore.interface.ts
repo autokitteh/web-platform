@@ -26,11 +26,3 @@ export interface CacheStore {
 	fetchVariables: (projectId: string, force?: boolean) => Promise<void | Variable[]>;
 	fetchEvents: (force?: boolean) => Promise<void | BaseEvent[]>;
 }
-
-export interface PersistCacheStore {
-	loading: {
-		templateFiles: boolean;
-	};
-	templateFiles: ExtractedFile[];
-	fetchTemplateFiles: (force?: boolean) => Promise<void | ExtractedFile[]>;
-}
