@@ -1,6 +1,8 @@
 import axios from "axios";
 import pako from "pako";
 
+import { ExtractedFile, TarHeader } from "@src/interfaces/store";
+
 class TarReader {
 	private buffer: Uint8Array;
 	private position: number;
@@ -32,12 +34,10 @@ class TarReader {
 	}
 
 	private readHeader(): TarHeader | null {
-		// Check if we've reached the end of the archive (two consecutive zero blocks)
 		if (this.position + 512 > this.buffer.length) {
 			return null;
 		}
 
-		// Check if we've reached a zero block
 		const block = this.buffer.slice(this.position, this.position + 512);
 		if (block.every((b) => b === 0)) {
 			this.position += 512;
@@ -49,7 +49,6 @@ class TarReader {
 		const size = this.parseOctal(this.readBytes(12));
 		const type = this.readBytes(1)[0];
 
-		// Skip remaining header bytes
 		this.position += 255;
 
 		return {
@@ -63,18 +62,14 @@ class TarReader {
 		const files: ExtractedFile[] = [];
 
 		while (this.position < this.buffer.length - 512) {
-			// Leave room for header
 			const header = this.readHeader();
 			if (!header) {
-				// Skip empty block
 				continue;
 			}
 
 			const { fileSize, filename, type } = header;
 
-			// Skip directories (type '5') and special files
 			if (fileSize > 0 && type !== 53) {
-				// 53 is ASCII for '5'
 				const content = this.readBytes(fileSize);
 				files.push({
 					filename,
@@ -82,13 +77,11 @@ class TarReader {
 					size: fileSize,
 				});
 
-				// Handle padding
 				const padding = 512 - (fileSize % 512);
 				if (padding < 512) {
 					this.position += padding;
 				}
 			} else {
-				// For directories and empty files, still handle padding
 				const padding = 512 - (fileSize % 512);
 				if (padding < 512) {
 					this.position += padding;
@@ -122,16 +115,3 @@ export const fetchAndUnpackTarGz = async (url: string): Promise<ExtractedFile[]>
 		throw new Error("Unknown error occurred while fetching or unpacking tar.gz");
 	}
 };
-
-// Updated interfaces
-interface TarHeader {
-	filename: string;
-	fileSize: number;
-	type: number;
-}
-
-interface ExtractedFile {
-	filename: string;
-	content: Uint8Array;
-	size: number;
-}

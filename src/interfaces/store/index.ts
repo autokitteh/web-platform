@@ -10,7 +10,7 @@ export type {
 	ProjectValidationStore,
 	ProjectValidationLevel,
 } from "@interfaces/store/projectValidationStore.interface";
-export type { CacheStore, ExtractedFile } from "@interfaces/store/cacheStore.interface";
+export type { CacheStore } from "@interfaces/store/cacheStore.interface";
 export type { FileStore } from "@interfaces/store/fileStore.interface";
 export type {
 	ActivitiesStore,
@@ -18,3 +18,4 @@ export type {
 	OutputsStore,
 	SessionOutputData,
 } from "@interfaces/store/activitiesAndOutputsCache.store.interface";
+export type { TarHeader, ArchivedFile, ProcessedTemplate, ExtractedFile } from "@interfaces/store/templates.interface";

@@ -1,23 +1,22 @@
-import { IntegrationSelectOption } from "../components/forms";
+import { TemplateCardType } from "@src/types/components";
 
 export interface ArchivedFile {
 	path: string;
 	content: string;
 }
 
-export interface TemplateCategory {
-	name: string;
-	cards: TemplateCard[];
-}
-
-export interface TemplateCard {
-	title: string;
-	description: string;
-	integrations: IntegrationSelectOption[];
-	assetDirectory: string;
-	files: string[];
-}
-
-export interface ProcessedTemplate extends TemplateCard {
+export interface ProcessedTemplate extends TemplateCardType {
 	fileContents: { [key: string]: string };
+}
+
+export interface TarHeader {
+	filename: string;
+	fileSize: number;
+	type: number;
+}
+
+export interface ExtractedFile {
+	filename: string;
+	content: Uint8Array;
+	size: number;
 }

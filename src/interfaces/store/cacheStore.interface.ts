@@ -7,12 +7,6 @@ interface LoadingState {
 	events: boolean;
 }
 
-export interface ExtractedFile {
-	filename: string;
-	content: Uint8Array;
-	size: number;
-}
-
 export interface CacheStore {
 	deployments?: Deployment[];
 	triggers: Trigger[];
