@@ -104,7 +104,11 @@ export const DashboardWelcomeMainBlock = () => {
 					<ul className="font-averta font-semibold leading-normal">
 						{infoCardPythonCode.map(({ href, text }, index) => (
 							<li aria-label={text} key={index}>
-								<Link className="font-semibold text-green-800 underline hover:text-green-200" to={href}>
+								<Link
+									className="font-semibold text-green-800 underline hover:text-green-200"
+									target="_blank"
+									to={href}
+								>
 									{text}
 								</Link>
 							</li>
