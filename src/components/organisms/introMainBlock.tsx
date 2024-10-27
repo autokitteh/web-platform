@@ -101,6 +101,7 @@ export const IntroMainBlock = () => {
 					</div>
 				</div>
 			</div>
+
 			<div className="grid grid-cols-auto-fit-350 gap-5">
 				<WelcomeInfoCard
 					onPlay={() => handleOpenModal("https://youtube.com/embed/60DQ9Py4LqU")}
@@ -117,7 +118,7 @@ export const IntroMainBlock = () => {
 					<ul className="font-averta font-semibold leading-normal">
 						{infoCardPythonCode.map(({ href, text }, index) => (
 							<li aria-label={text} key={index}>
-								<Link className="font-semibold text-green-800" to={href}>
+								<Link className="font-semibold text-green-800 underline" to={href}>
 									{text}
 								</Link>
 							</li>
@@ -128,9 +129,9 @@ export const IntroMainBlock = () => {
 				<WelcomeInfoCard
 					onPlay={() => handleOpenModal("https://www.youtube.com/embed/zNtJ8OBPUmY")}
 					title={
-						<Typography className="text-xl font-bold" element="h3">
+						<Typography className="flex flex-row text-xl font-bold" element="h3">
 							{t("cards.developInVSCode.developInVSCode")}{" "}
-							<div className="text-green-800">{t("cards.developInVSCode.usingVSCodeExtension")}</div>
+							<div className="ml-2 text-green-800">{t("cards.developInVSCode.usingVSCodeExtension")}</div>
 						</Typography>
 					}
 					videoStyle={{
