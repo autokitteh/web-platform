@@ -1,26 +1,26 @@
 import i18n from "i18next";
 
-let infoCardPythonCode: { linkHref?: string; linkText?: string; text: string }[] = [];
+let infoCardPythonCode: { href: string; text: string }[] = [];
 let infoCardVSCode: { text: string }[] = [];
 
 i18n.on("initialized", () => {
 	infoCardPythonCode = [
 		{
-			text: i18n.t("welcome.cards.startingProject.developPythonCode", { ns: "dashboard" }),
-			linkText: i18n.t("welcome.cards.startingProject.docs", { ns: "dashboard" }),
-			linkHref: "#",
+			text: i18n.t("welcome.cards.startingProject.firstBullet", { ns: "dashboard" }),
+			href: "https://docs.autokitteh.com/develop/python",
 		},
 		{
-			text: i18n.t("welcome.cards.startingProject.configure", { ns: "dashboard" }),
-			linkText: i18n.t("welcome.cards.startingProject.connectionsToApplications", { ns: "dashboard" }),
-			linkHref: "#",
+			text: i18n.t("welcome.cards.startingProject.secondBullet", { ns: "dashboard" }),
+			href: "https://docs.autokitteh.com/develop/python",
 		},
 		{
-			text: i18n.t("welcome.cards.startingProject.configure", { ns: "dashboard" }),
-			linkText: i18n.t("welcome.cards.startingProject.triggers", { ns: "dashboard" }),
-			linkHref: "#",
+			text: i18n.t("welcome.cards.startingProject.thirdBullet", { ns: "dashboard" }),
+			href: "https://docs.autokitteh.com/integrations",
 		},
-		{ text: i18n.t("welcome.cards.startingProject.setVarsOptional", { ns: "dashboard" }) },
+		{
+			text: i18n.t("welcome.cards.startingProject.fourthBullet", { ns: "dashboard" }),
+			href: "https://github.com/autokitteh/kittehub",
+		},
 	];
 
 	infoCardVSCode = [
