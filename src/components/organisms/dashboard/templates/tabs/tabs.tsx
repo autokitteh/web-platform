@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
+import { fetchAndUnpackZip, processReadmeFiles } from "./extractZip";
 import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
 import { ModalName } from "@src/enums/components";
 import { useModalStore } from "@src/store";
 import { TemplateCardType } from "@src/types/components";
+import { IntegrationsMap } from "@src/enums/components/connection.enum";
 
 import { Tab } from "@components/atoms";
 import { ProjectTemplateCard, ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
@@ -17,6 +19,19 @@ export const ProjectTemplatesTabs = () => {
 		() => templateProjectsCategories.find((category) => category.name === activeTab),
 		[activeTab]
 	);
+
+	const getFiles = async () => {
+		const result = await fetchAndUnpackZip();
+		if ("structure" in result) {
+			const processedCategories = processReadmeFiles(result.structure, IntegrationsMap);
+			// eslint-disable-next-line no-console
+			console.log("Processed categories:", processedCategories);
+		}
+	};
+
+	useEffect(() => {
+		getFiles();
+	}, []);
 
 	const handleTabClick = useCallback((category: string) => {
 		setActiveTab(category);

@@ -36,6 +36,7 @@
 		"@sentry/react": "^8.33.1",
 		"@sentry/vite-plugin": "^2.22.6",
 		"@types/lodash": "^4.17.10",
+		"@types/pako": "^2.0.3",
 		"@uiw/react-json-view": "^2.0.0-alpha.26",
 		"axios": "^1.7.2",
 		"clsx": "^2.1.1",
@@ -45,8 +46,13 @@
 		"immer": "^10.1.1",
 		"javascript-time-ago": "^2.5.10",
 		"js-cookie": "^3.0.5",
+<<<<<<< HEAD
 		"js-yaml": "^4.1.0",
+=======
+		"jszip": "^3.10.1",
+>>>>>>> 4c6fa952 (feat: parse readme and get templates from zip)
 		"lodash": "^4.17.21",
+		"pako": "^2.1.0",
 		"psl": "^1.9.0",
 		"randomatic": "^3.1.1",
 		"react": "^18.3.1",
