@@ -5,26 +5,14 @@ import { LoggerService } from "@services";
 import { templateDB } from "@services/templates.services";
 import { namespaces, templateProjectsCategories } from "@src/constants";
 import { HiddenIntegrationsForTemplates, IntegrationsMap } from "@src/enums/components/connection.enum";
-import { IntegrationSelectOption } from "@src/interfaces/components/forms";
-import { ProcessedTemplate } from "@src/interfaces/store/templates.interface";
-import { TemplateCategory } from "@src/types/components";
+import { ProcessedTemplate, TemplateState } from "@src/interfaces/store/templates.interface";
 import { fetchAndUnpackTarGz } from "@src/utilities";
 
 import { useToastStore } from "@store";
 
-interface TemplateState {
-	categories: TemplateCategory[];
-	processedTemplates: { [key: string]: ProcessedTemplate };
-	isLoading: boolean;
-	fetchAndProcessArchive: (url: string) => Promise<void>;
-	getTemplateContent: (assetDirectory: string, fileName: string) => Promise<string | null>;
-}
-
-export const useTemplateStore = create<TemplateState>((set, get) => ({
-	categories: templateProjectsCategories,
+export const useTemplateStore = create<TemplateState>((set) => ({
 	processedTemplates: {},
 	isLoading: false,
-	error: null,
 
 	fetchAndProcessArchive: async (url: string) => {
 		set({ isLoading: true });
@@ -72,20 +60,18 @@ export const useTemplateStore = create<TemplateState>((set, get) => ({
 						}
 					}
 
-					const mappedIntegrations = card.integrations
-						.map((integration) => {
-							const integrationKey = integration as unknown as
-								| keyof typeof IntegrationsMap
-								| keyof typeof HiddenIntegrationsForTemplates;
+					const mappedIntegrations = card.integrations.map((integration) => {
+						const integrationKey = integration as unknown as
+							| keyof typeof IntegrationsMap
+							| keyof typeof HiddenIntegrationsForTemplates;
 
-							return (
-								IntegrationsMap[integrationKey as keyof typeof IntegrationsMap] ||
-								HiddenIntegrationsForTemplates[
-									integrationKey as keyof typeof HiddenIntegrationsForTemplates
-								]
-							);
-						})
-						.filter((integration): integration is IntegrationSelectOption => integration !== undefined);
+						return (
+							IntegrationsMap[integrationKey as keyof typeof IntegrationsMap] ||
+							HiddenIntegrationsForTemplates[
+								integrationKey as keyof typeof HiddenIntegrationsForTemplates
+							]
+						);
+					});
 
 					const processedTemplate: ProcessedTemplate = {
 						title: card.title,
@@ -116,20 +102,5 @@ export const useTemplateStore = create<TemplateState>((set, get) => ({
 				isLoading: false,
 			});
 		}
-	},
-
-	getTemplateContent: async (assetDirectory: string, fileName: string) => {
-		const { processedTemplates } = get();
-
-		if (processedTemplates[assetDirectory]?.fileContents[fileName]) {
-			return processedTemplates[assetDirectory].fileContents[fileName];
-		}
-
-		const template = await templateDB.getTemplate(assetDirectory);
-		if (template?.fileContents[fileName]) {
-			return template.fileContents[fileName];
-		}
-
-		return null;
 	},
 }));

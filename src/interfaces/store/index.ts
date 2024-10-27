@@ -18,4 +18,10 @@ export type {
 	OutputsStore,
 	SessionOutputData,
 } from "@interfaces/store/activitiesAndOutputsCache.store.interface";
-export type { TarHeader, ArchivedFile, ProcessedTemplate, ExtractedFile } from "@interfaces/store/templates.interface";
+export type {
+	TarHeader,
+	ArchivedFile,
+	ProcessedTemplate,
+	ExtractedFile,
+	TemplateState,
+} from "@interfaces/store/templates.interface";

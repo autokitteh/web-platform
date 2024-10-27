@@ -20,3 +20,9 @@ export interface ExtractedFile {
 	content: Uint8Array;
 	size: number;
 }
+
+export interface TemplateState {
+	processedTemplates: { [key: string]: ProcessedTemplate };
+	isLoading: boolean;
+	fetchAndProcessArchive: (url: string) => Promise<void>;
+}
