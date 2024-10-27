@@ -129,9 +129,11 @@ export const IntroMainBlock = () => {
 				<WelcomeInfoCard
 					onPlay={() => handleOpenModal("https://www.youtube.com/embed/zNtJ8OBPUmY")}
 					title={
-						<Typography className="flex flex-row text-xl font-bold" element="h3">
-							{t("cards.developInVSCode.developInVSCode")}{" "}
-							<div className="ml-2 text-green-800">{t("cards.developInVSCode.usingVSCodeExtension")}</div>
+						<Typography className="text-xl font-bold" element="h3">
+							<div className="inline">{t("cards.developInVSCode.developInVSCode")}</div>{" "}
+							<div className="inline text-green-800">
+								{t("cards.developInVSCode.usingVSCodeExtension")}
+							</div>
 						</Typography>
 					}
 					videoStyle={{
