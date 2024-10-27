@@ -90,7 +90,7 @@ export const DashboardWelcomeMainBlock = () => {
 
 			<div className="grid grid-cols-auto-fit-350 gap-5">
 				<WelcomeInfoCard
-					onPlay={() => handleOpenModal("https://youtube.com/embed/60DQ9Py4LqU")}
+					onPlay={() => handleOpenModal("https://www.youtube.com/embed/60DQ9Py4LqU")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
 							{t("cards.startingProject.startingAProject")}
