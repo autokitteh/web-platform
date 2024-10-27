@@ -126,7 +126,7 @@ export const IntroMainBlock = () => {
 				</WelcomeInfoCard>
 
 				<WelcomeInfoCard
-					onPlay={() => handleOpenModal("https://youtube.com/embed/zNtJ8OBPUmY")}
+					onPlay={() => handleOpenModal("https://www.youtube.com/embed/zNtJ8OBPUmY")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
 							{t("cards.developInVSCode.developInVSCode")}{" "}
