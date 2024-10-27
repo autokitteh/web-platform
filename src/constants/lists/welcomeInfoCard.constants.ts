@@ -7,7 +7,7 @@ i18n.on("initialized", () => {
 	infoCardPythonCode = [
 		{
 			text: i18n.t("welcome.cards.startingProject.firstBullet", { ns: "dashboard" }),
-			href: "https://docs.autokitteh.com/develop/python",
+			href: "https://docs.autokitteh.com",
 		},
 		{
 			text: i18n.t("welcome.cards.startingProject.secondBullet", { ns: "dashboard" }),
