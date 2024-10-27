@@ -1,117 +1,167 @@
-import axios from "axios";
 import pako from "pako";
 
-import { ExtractedFile, TarHeader } from "@src/interfaces/store";
-
-class TarReader {
-	private buffer: Uint8Array;
-	private position: number;
-
-	constructor(arrayBuffer: ArrayBuffer) {
-		this.buffer = new Uint8Array(arrayBuffer);
-		this.position = 0;
-	}
-
-	private readBytes(length: number): Uint8Array {
-		const bytes = this.buffer.slice(this.position, this.position + length);
-		this.position += length;
-
-		return bytes;
-	}
-
-	private readString(length: number): string {
-		const bytes = this.readBytes(length);
-		const nullIndex = bytes.indexOf(0);
-		const endIndex = nullIndex === -1 ? length : nullIndex;
-
-		return new TextDecoder().decode(bytes.slice(0, endIndex));
-	}
-
-	private parseOctal(bytes: Uint8Array): number {
-		const str = new TextDecoder().decode(bytes).trim();
-
-		return str ? parseInt(str, 8) : 0;
-	}
-
-	private readHeader(): TarHeader | null {
-		if (this.position + 512 > this.buffer.length) {
-			return null;
-		}
-
-		const block = this.buffer.slice(this.position, this.position + 512);
-		if (block.every((b) => b === 0)) {
-			this.position += 512;
-
-			return null;
-		}
-
-		const filename = this.readString(100);
-		const size = this.parseOctal(this.readBytes(12));
-		const type = this.readBytes(1)[0];
-
-		this.position += 255;
-
-		return {
-			filename,
-			fileSize: size,
-			type: type || 0,
-		};
-	}
-
-	public extract(): ExtractedFile[] {
-		const files: ExtractedFile[] = [];
-
-		while (this.position < this.buffer.length - 512) {
-			const header = this.readHeader();
-			if (!header) {
-				continue;
-			}
-
-			const { fileSize, filename, type } = header;
-
-			if (fileSize > 0 && type !== 53) {
-				const content = this.readBytes(fileSize);
-				files.push({
-					filename,
-					content,
-					size: fileSize,
-				});
-
-				const padding = 512 - (fileSize % 512);
-				if (padding < 512) {
-					this.position += padding;
-				}
-			} else {
-				const padding = 512 - (fileSize % 512);
-				if (padding < 512) {
-					this.position += padding;
-				}
-			}
-		}
-
-		return files;
-	}
+interface FileEntry {
+	name: string;
+	type: "file";
+	content?: string;
+	path: string;
+	size?: number;
+	lastModified?: Date;
 }
 
-export const fetchAndUnpackTarGz = async (url: string): Promise<ExtractedFile[]> => {
+interface ExtractOptions {
+	onProgress?: (progress: number) => void;
+	includeContent?: boolean;
+}
+
+interface TarHeader {
+	fileName: string;
+	fileSize: number;
+	fileType: string;
+	modificationTime: number;
+}
+
+function shouldIncludeFile(path: string): boolean {
+	const parts = path.split("/");
+
+	// List of excluded patterns and extensions
+	const excludedPatterns = [
+		"._", // macOS resource forks
+		".DS_Store", // macOS system files
+		"__MACOSX", // macOS system directory
+		"PaxHeader", // PaxHeader entries
+	];
+
+	const excludedExtensions = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".webp", ".svg", ".ico"];
+
+	// Check if any part of the path matches excluded patterns
+	if (parts.some((part) => excludedPatterns.some((pattern) => part.includes(pattern)))) {
+		return false;
+	}
+
+	// Check file extension
+	if (excludedExtensions.some((ext) => path.toLowerCase().endsWith(ext))) {
+		return false;
+	}
+
+	return true;
+}
+
+function readTarHeader(buffer: Uint8Array, offset: number): TarHeader | null {
+	// Check for end of archive (two consecutive zero blocks)
+	if (buffer.slice(offset, offset + 512).every((byte) => byte === 0)) {
+		return null;
+	}
+
+	const nameBuffer = buffer.slice(offset, offset + 100);
+	const sizeBuffer = buffer.slice(offset + 124, offset + 136);
+	const typeBuffer = buffer.slice(offset + 156, offset + 157);
+	const timeBuffer = buffer.slice(offset + 136, offset + 148);
+
+	// Get filename (null-terminated string)
+	let fileName = "";
+	for (let i = 0; i < 100 && nameBuffer[i] !== 0; i++) {
+		fileName += String.fromCharCode(nameBuffer[i]);
+	}
+
+	// Get file size (octal string)
+	let sizeStr = "";
+	for (let i = 0; i < 12 && sizeBuffer[i] !== 0; i++) {
+		sizeStr += String.fromCharCode(sizeBuffer[i]);
+	}
+	const fileSize = parseInt(sizeStr.trim(), 8);
+
+	// Get file type
+	const fileType = String.fromCharCode(typeBuffer[0]);
+
+	// Get modification time (octal string)
+	let timeStr = "";
+	for (let i = 0; i < 12 && timeBuffer[i] !== 0; i++) {
+		timeStr += String.fromCharCode(timeBuffer[i]);
+	}
+	const modificationTime = parseInt(timeStr.trim(), 8);
+
+	return {
+		fileName,
+		fileSize,
+		fileType,
+		modificationTime,
+	};
+}
+
+async function extractTar(buffer: Uint8Array): Promise<FileEntry[]> {
+	const files: FileEntry[] = [];
+	let offset = 0;
+
+	while (offset < buffer.length) {
+		const header = readTarHeader(buffer, offset);
+		if (!header) break;
+
+		const path = header.fileName;
+
+		// Skip files we don't want to include
+		if (shouldIncludeFile(path)) {
+			const isDirectory = header.fileType === "5" || header.fileName.endsWith("/");
+
+			// Only process files, not directories
+			if (!isDirectory) {
+				const name = path.split("/").pop() || path;
+				const content = new TextDecoder().decode(buffer.slice(offset + 512, offset + 512 + header.fileSize));
+
+				files.push({
+					name,
+					type: "file",
+					content,
+					path,
+					size: header.fileSize,
+					lastModified: new Date(header.modificationTime * 1000),
+				});
+			}
+		}
+
+		// Move to next header (512-byte aligned)
+		offset += 512 + Math.ceil(header.fileSize / 512) * 512;
+	}
+
+	return files;
+}
+
+export async function fetchAndUnpackTarGz(url: string, options: ExtractOptions = {}): Promise<FileEntry[]> {
+	const { includeContent = true, onProgress } = options;
+
 	try {
-		const response = await axios.get(url, {
-			responseType: "arraybuffer",
-			headers: {
-				Accept: "application/gzip",
-			},
+		// Fetch the tar.gz file
+		const response = await fetch(url);
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
+		// Get the compressed data
+		const compressedData = await response.arrayBuffer();
+
+		// Decompress using pako
+		const inflated = pako.inflate(new Uint8Array(compressedData));
+
+		// Extract the tar content
+		const files = await extractTar(inflated);
+
+		// Sort files by path
+		const sortedFiles = files.sort((a, b) => {
+			// Sort by path depth (shorter paths first)
+			const aDepth = a.path.split("/").length;
+			const bDepth = b.path.split("/").length;
+			if (aDepth !== bDepth) return aDepth - bDepth;
+
+			// Alpha sort for same depth
+			return a.path.localeCompare(b.path);
 		});
 
-		const decompressed = pako.inflate(new Uint8Array(response.data));
-		const tar = new TarReader(decompressed.buffer);
-		const files = tar.extract();
+		// Log the sorted files
+		console.log("Sorted files:", sortedFiles);
 
-		return files;
+		return sortedFiles;
 	} catch (error) {
-		console.error("Error details:", error);
-		if (error instanceof Error) {
-			throw new Error(`Error fetching or unpacking tar.gz: ${error.message}`);
-		}
-		throw new Error("Unknown error occurred while fetching or unpacking tar.gz");
+		console.error("Error extracting templates:", error);
+		throw error;
 	}
-};
+}

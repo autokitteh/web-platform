@@ -1,11 +1,12 @@
 import { DBSchema, IDBPDatabase, openDB } from "idb";
 
 import { ArchivedFile, ProcessedTemplate } from "@src/interfaces/store/templates.interface";
+import { StorableTemplate, createStorableTemplate, rehydrateTemplate } from "@src/store/useTemplatesStore";
 
 interface TemplateDB extends DBSchema {
 	templates: {
 		key: string;
-		value: ProcessedTemplate;
+		value: StorableTemplate;
 	};
 	archives: {
 		key: string;
@@ -25,32 +26,35 @@ class TemplateDatabase {
 		});
 	}
 
-	async saveTemplate(key: string, template: ProcessedTemplate) {
-		const db = await this.db;
-		await db.put("templates", template, key);
-	}
-
 	async saveArchive(key: string, archive: ArchivedFile) {
 		const db = await this.db;
 		await db.put("archives", archive, key);
-	}
-
-	async getTemplate(key: string) {
-		const db = await this.db;
-
-		return db.get("templates", key);
-	}
-
-	async getAllTemplates() {
-		const db = await this.db;
-
-		return db.getAll("templates");
 	}
 
 	async clearAll() {
 		const db = await this.db;
 		await db.clear("templates");
 		await db.clear("archives");
+	}
+
+	async saveTemplate(key: string, template: ProcessedTemplate) {
+		const db = await this.db;
+		const storableTemplate = createStorableTemplate(template);
+		await db.put("templates", storableTemplate, key);
+	}
+
+	async getTemplate(key: string): Promise<ProcessedTemplate | null> {
+		const db = await this.db;
+		const storedTemplate = await db.get("templates", key);
+
+		return storedTemplate ? rehydrateTemplate(storedTemplate as StorableTemplate) : null;
+	}
+
+	async getAllTemplates(): Promise<ProcessedTemplate[]> {
+		const db = await this.db;
+		const storedTemplates = await db.getAll("templates");
+
+		return storedTemplates.map((template) => rehydrateTemplate(template as unknown as StorableTemplate));
 	}
 }
 
