@@ -4,8 +4,8 @@ export type { PopopverContextType } from "@src/types/components/popover.type";
 export type {
 	TemplateCategory,
 	TemplateCardType,
-	DashboardFooterTemplateCardType,
 	RemoteTemplateCategory,
+	Integration,
 } from "@src/types/components/projectTemplates.type";
 export type { TopbarType } from "@src/types/components/topbar.type";
 export type { ButtonType } from "@type/components/button.type";

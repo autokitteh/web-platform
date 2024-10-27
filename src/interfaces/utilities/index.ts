@@ -5,4 +5,6 @@ export type {
 	MarkdownAttributes,
 	FileStructure,
 	FileWithContent,
-} from "@interfaces/utilities/fetchAndExtractZipWithReadme.interface";
+	ProcessedZipError,
+	ProcessedZipOutput,
+} from "@interfaces/utilities/zipFilesExctraction.interface";

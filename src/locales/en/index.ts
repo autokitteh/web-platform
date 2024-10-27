@@ -48,4 +48,5 @@ export default {
 	validations,
 	dashboard,
 	templates,
+	utilities,
 };

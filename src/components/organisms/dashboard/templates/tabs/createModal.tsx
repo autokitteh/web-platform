@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 
 import { ModalName } from "@enums/components";
 import { CreateProjectModalProps } from "@interfaces/components";
+import { Integrations, IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useProjectStore } from "@src/store";
 import { fetchFileContent } from "@src/utilities";
@@ -23,7 +24,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 	const [manifestData, setManifestData] = useState<string | null>(null);
 	const { assetDirectory, description, integrations, title } = cardTemplate;
 	const { closeModal } = useModalStore();
-	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
+	const { createProjectFromAsset } = useCreateProjectFromTemplate();
 	const { projectsList } = useProjectStore();
 
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
@@ -64,7 +65,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 		if (!assetDirectory || !projectName) return;
 
 		setIsCreating(true);
-		await createProjectFromTemplate(assetDirectory, projectName);
+		await createProjectFromAsset(assetDirectory, projectName);
 		setIsCreating(false);
 		closeModal(ModalName.templateCreateProject);
 	};
@@ -76,18 +77,24 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 					<h3 className="mb-5 mr-auto text-xl font-bold">{t("title", { name: title })}</h3>
 					<Status>{category}</Status>
 					<div className="flex gap-3">
-						{integrations.map(({ icon, label }, index) => (
-							<div
-								className="relative flex size-8 items-center justify-center rounded-full bg-gray-400 p-1"
-								key={index}
-								title={label}
-							>
-								<IconSvg className="z-10 rounded-full p-1" size="xl" src={icon} />
-								{index < integrations.length - 1 ? (
-									<PipeCircleIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-400" />
-								) : null}
-							</div>
-						))}
+						{integrations.map((integration, index) => {
+							const enrichedIntegration = IntegrationsMap[integration as keyof typeof Integrations];
+
+							const { icon, label } = enrichedIntegration;
+
+							return (
+								<div
+									className="relative flex size-8 items-center justify-center rounded-full bg-gray-400 p-1"
+									key={index}
+									title={label}
+								>
+									<IconSvg className="z-10 rounded-full p-1" size="xl" src={icon} />
+									{index < integrations.length - 1 ? (
+										<PipeCircleIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-400" />
+									) : null}
+								</div>
+							);
+						})}
 					</div>
 				</div>
 				<Input
