@@ -38,7 +38,7 @@ export const DashboardWelcomeMainBlock = () => {
 					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-[#1d2226] bg-[url('image/pages/intro/main.jpg')] bg-contain bg-center bg-no-repeat">
 						<IconButton
 							className="group size-20 overflow-hidden rounded-full p-0 focus:scale-90"
-							onClick={() => handleOpenModal("https://youtu.be/BkUvIJc_kms")}
+							onClick={() => handleOpenModal("https://www.youtube.com/embed/BkUvIJc_kms")}
 						>
 							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-70" />
 						</IconButton>
@@ -90,7 +90,7 @@ export const DashboardWelcomeMainBlock = () => {
 
 			<div className="grid grid-cols-auto-fit-350 gap-5">
 				<WelcomeInfoCard
-					onPlay={() => handleOpenModal("https://youtu.be/60DQ9Py4LqU")}
+					onPlay={() => handleOpenModal("https://youtube.com/embed/60DQ9Py4LqU")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
 							{t("cards.startingProject.startingAProject")}
@@ -113,7 +113,7 @@ export const DashboardWelcomeMainBlock = () => {
 				</WelcomeInfoCard>
 
 				<WelcomeInfoCard
-					onPlay={() => handleOpenModal("https://youtu.be/zNtJ8OBPUmY")}
+					onPlay={() => handleOpenModal("https://youtube.com/embed/zNtJ8OBPUmY")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
 							{t("cards.developInVSCode.developInVSCode")}{" "}
