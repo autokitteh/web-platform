@@ -156,7 +156,11 @@ export const IntroMainBlock = () => {
 			<div className="w-full rounded-2xl border border-gray-950 bg-gray-1250 py-5 pl-6 pr-4 font-averta text-white">
 				<Typography className="flex flex-row items-center justify-center text-lg" element="p">
 					{t("cards.footer.haveAQuestion")}
-					<Link className="flex flex-row items-center" target="_blank" to="https://discord.gg/UhnJuBarZQ">
+					<Link
+						className="flex flex-row items-center hover:text-green-200"
+						target="_blank"
+						to="https://discord.gg/UhnJuBarZQ"
+					>
 						<IconSvg className="ml-2 mr-1" size="lg" src={DiscordIcon} />{" "}
 						<div className="underline">{t("cards.footer.joinDiscord")}</div>
 					</Link>
