@@ -1,18 +1,21 @@
+import i18n from "i18next";
 import { create } from "zustand";
 
+import { LoggerService } from "@services";
 import { templateDB } from "@services/templates.services";
-import { templateProjectsCategories } from "@src/constants";
+import { namespaces, templateProjectsCategories } from "@src/constants";
 import { HiddenIntegrationsForTemplates, IntegrationsMap } from "@src/enums/components/connection.enum";
 import { IntegrationSelectOption } from "@src/interfaces/components/forms";
 import { ProcessedTemplate } from "@src/interfaces/store/templates.interface";
 import { TemplateCategory } from "@src/types/components";
 import { fetchAndUnpackTarGz } from "@src/utilities";
 
+import { useToastStore } from "@store";
+
 interface TemplateState {
 	categories: TemplateCategory[];
 	processedTemplates: { [key: string]: ProcessedTemplate };
 	isLoading: boolean;
-	error: string | null;
 	fetchAndProcessArchive: (url: string) => Promise<void>;
 	getTemplateContent: (assetDirectory: string, fileName: string) => Promise<string | null>;
 }
@@ -24,30 +27,21 @@ export const useTemplateStore = create<TemplateState>((set, get) => ({
 	error: null,
 
 	fetchAndProcessArchive: async (url: string) => {
-		set({ isLoading: true, error: null });
+		set({ isLoading: true });
 
 		try {
-			// Fetch and unpack the archive
 			const extractedFiles = await fetchAndUnpackTarGz(url);
 
-			// Filter out macOS metadata files and process content
 			const processedFiles = extractedFiles
-				.filter(
-					(file) =>
-						// Filter out macOS metadata and empty directories
-						!file.filename.includes("/._") && !file.filename.endsWith("/") && file.size > 0
-				)
+				.filter((file) => !file.filename.includes("/._") && !file.filename.endsWith("/") && file.size > 0)
 				.map((file) => {
-					// Remove the 'templates/' prefix if it exists
 					const cleanPath = file.filename.replace(/^templates\//, "");
 
-					// Convert content to string, handling potential encoding issues
 					let content: string;
 					try {
 						content = new TextDecoder().decode(file.content);
 						// eslint-disable-next-line @typescript-eslint/no-unused-vars
 					} catch (error) {
-						console.warn(`Failed to decode file ${cleanPath}, using fallback method`);
 						content = Buffer.from(file.content).toString("utf8");
 					}
 
@@ -57,10 +51,8 @@ export const useTemplateStore = create<TemplateState>((set, get) => ({
 					};
 				});
 
-			// Save cleaned files to IndexedDB
 			await Promise.all(processedFiles.map((file) => templateDB.saveArchive(file.path, file)));
 
-			// Merge with template categories
 			const processed: { [key: string]: ProcessedTemplate } = {};
 
 			for (const category of templateProjectsCategories) {
@@ -68,7 +60,6 @@ export const useTemplateStore = create<TemplateState>((set, get) => ({
 					const cardFiles: { [key: string]: string } = {};
 
 					for (const fileName of card.files) {
-						// Try to find the file with or without the templates/ prefix
 						const filePath = card.assetDirectory + "/" + fileName;
 						const archiveFile = processedFiles.find(
 							(f) => f.path === filePath || f.path === `templates/${filePath}`
@@ -81,7 +72,6 @@ export const useTemplateStore = create<TemplateState>((set, get) => ({
 						}
 					}
 
-					// Transform integrations
 					const mappedIntegrations = card.integrations
 						.map((integration) => {
 							const integrationKey = integration as unknown as
@@ -113,9 +103,16 @@ export const useTemplateStore = create<TemplateState>((set, get) => ({
 
 			set({ processedTemplates: processed, isLoading: false });
 		} catch (error) {
-			console.error("Error processing archive:", error);
+			useToastStore.getState().addToast({
+				message: i18n.t("templatesProcessError", { ns: "errors" }),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.stores.outputStore,
+				i18n.t("templatesProcessErrorExtended", { ns: "errors", error: (error as Error).message })
+			);
+
 			set({
-				error: error instanceof Error ? error.message : "Failed to process archive",
 				isLoading: false,
 			});
 		}
