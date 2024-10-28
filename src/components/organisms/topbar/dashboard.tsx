@@ -40,7 +40,7 @@ export const DashboardTopbar = () => {
 	};
 
 	return (
-		<div className="flex flex-wrap">
+		<div className="z-10 flex flex-wrap">
 			<div className="flex w-full items-end justify-between">
 				<Typography className="w-full font-averta text-4xl font-semibold" element="h1">
 					{t("welcome")}

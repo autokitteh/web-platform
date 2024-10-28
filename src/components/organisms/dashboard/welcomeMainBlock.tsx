@@ -31,7 +31,7 @@ export const DashboardWelcomeMainBlock = () => {
 	};
 
 	return (
-		<div className="z-10 mt-7 grid select-none gap-5">
+		<div className="z-10 mt-7 grid h-2/3 select-none gap-5">
 			<div className="col-span-1 grid grid-cols-auto-fit-350 items-stretch gap-4 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pl-6 pr-4 font-averta text-white">
 				<div className="flex min-h-52 flex-col">
 					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-[#1d2226] bg-[url('image/pages/intro/main.jpg')] bg-contain bg-center bg-no-repeat">
@@ -48,8 +48,8 @@ export const DashboardWelcomeMainBlock = () => {
 					</Typography>
 				</div>
 
-				<div className="m-auto mt-2 w-full">
-					<div className="m-auto w-4/5">
+				<div className="flex w-full flex-col justify-center">
+					<div className="mx-auto w-4/5">
 						<Typography className="text-3xl font-bold" element="h2">
 							{t("cards.main.reliableAutomation")}
 						</Typography>
