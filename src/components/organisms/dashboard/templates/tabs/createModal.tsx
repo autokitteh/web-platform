@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { Editor } from "@monaco-editor/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import { ModalName } from "@enums/components";
 import { CreateProjectModalProps } from "@interfaces/components";
@@ -14,12 +15,13 @@ import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from
 import { Modal } from "@components/molecules";
 
 import { PipeCircleDarkIcon, ReadmeIcon } from "@assets/image/icons";
+import "github-markdown-css";
 
 export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreateProjectModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectWithTemplate" });
 	const [isCreating, setIsCreating] = useState(false);
 	const [manifestData, setManifestData] = useState<string | null>(null);
-	const { assetDirectory, description, integrations } = cardTemplate;
+	const { assetDirectory, description, integrations, title } = cardTemplate;
 	const { closeModal } = useModalStore();
 	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
 	const { projectsList } = useProjectStore();
@@ -65,7 +67,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 	};
 
 	return (
-		<Modal className="p-5" hideCloseButton name={ModalName.templateCreateProject}>
+		<Modal className="w-550 p-5" hideCloseButton name={ModalName.templateCreateProject}>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="mb-3 flex items-center justify-end gap-5">
 					<Status>{category}</Status>
@@ -84,7 +86,6 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 						))}
 					</div>
 				</div>
-
 				<Input
 					label={t("projectName")}
 					variant="light"
@@ -97,29 +98,21 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 				{errors.projectName ? (
 					<ErrorMessage className="relative">{errors.projectName.message}</ErrorMessage>
 				) : null}
-
-				<Typography className="mt-3 font-semibold" element="h4" size="medium">
+				<Typography className="mt-3 font-bold" element="h3" size="xl">
+					{title}
+				</Typography>
+				<Typography className="mt-1" element="h4" size="medium">
 					{description}
 				</Typography>
 				<div className="mt-4 flex items-center gap-1 text-base uppercase">
 					<ReadmeIcon className="size-4" /> {t("readme")}
 				</div>
-				<Editor
-					className="h-96"
-					defaultLanguage="markdown"
-					options={{
-						fontFamily: "monospace, sans-serif",
-						fontSize: 14,
-						minimap: { enabled: false },
-						renderLineHighlight: "none",
-						scrollBeyondLastLine: false,
-						wordWrap: "on",
-						readOnly: true,
-						lineNumbers: "off",
-					}}
-					theme="vs-dark"
-					value={manifestData || ""}
-				/>
+				<Markdown
+					className="scrollbar markdown-body h-96 overflow-hidden overflow-y-auto"
+					remarkPlugins={[remarkGfm]}
+				>
+					{manifestData}
+				</Markdown>
 				<div className="mt-8 flex w-full justify-end gap-2">
 					<Button
 						ariaLabel={t("cancelButton")}

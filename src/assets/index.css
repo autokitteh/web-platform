@@ -136,3 +136,8 @@ ul li::before {
 	background-color: white;
 	border-radius: 50%;
 }
+
+/* react-markdown */
+.markdown-body ul li::before {
+	background-color: black;
+}
