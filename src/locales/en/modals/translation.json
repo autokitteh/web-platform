@@ -65,6 +65,7 @@
 	"createProjectWithTemplate": {
 		"cancelButton": "Cancel",
 		"createButton": "Create",
-		"projectName": "Project Name"
+		"projectName": "Project Name",
+		"readme": "Readme"
 	}
 }

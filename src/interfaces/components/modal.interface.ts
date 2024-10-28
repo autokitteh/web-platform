@@ -1,3 +1,4 @@
+import { TemplateCardType } from "@src/types/components";
 import { Variable } from "@type/models";
 
 export interface ModalProps {
@@ -32,6 +33,6 @@ export interface DeleteAccount {
 }
 
 export interface CreateProjectModalProps {
-	onCreate?: () => void;
-	isCreating: boolean;
+	category?: string;
+	cardTemplate: TemplateCardType;
 }
