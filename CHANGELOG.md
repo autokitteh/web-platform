@@ -1,3 +1,10 @@
+## [2.39.1](https://github.com/autokitteh/web-platform/compare/v2.39.0...v2.39.1) (2024-10-28)
+
+
+### Bug Fixes
+
+* login page loading state ([#570](https://github.com/autokitteh/web-platform/issues/570)) ([039b75c](https://github.com/autokitteh/web-platform/commit/039b75cb9f6896c7e7e12a7779a36ec77f1894da))
+
 # [2.39.0](https://github.com/autokitteh/web-platform/compare/v2.38.1...v2.39.0) (2024-10-28)
 
 
