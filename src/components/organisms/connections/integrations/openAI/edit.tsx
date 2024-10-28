@@ -24,6 +24,7 @@ export const OpenAiIntegrationEditForm = () => {
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
+					type="password"
 					{...register("key")}
 					aria-label={t("openAi.placeholders.apiKey")}
 					handleInputChange={(newValue) => setValue("key", newValue)}

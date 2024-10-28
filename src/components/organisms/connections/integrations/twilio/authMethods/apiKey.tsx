@@ -37,6 +37,7 @@ export const ApiKeyTwilioForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("account_sid")}
 						aria-label={t("twilio.placeholders.sid")}
 						handleInputChange={(newSidValue) => setValue("account_sid", newSidValue)}
@@ -63,6 +64,7 @@ export const ApiKeyTwilioForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("api_key")}
 						aria-label={t("twilio.placeholders.key")}
 						handleInputChange={(newKeyValue) => setValue("api_key", newKeyValue)}
@@ -89,6 +91,7 @@ export const ApiKeyTwilioForm = ({
 			<div className="relative">
 				{isEditMode ? (
 					<SecretInput
+						type="password"
 						{...register("api_secret")}
 						aria-label={t("twilio.placeholders.secret")}
 						handleInputChange={(newSecretValue) => setValue("api_secret", newSecretValue)}
