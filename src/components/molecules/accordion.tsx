@@ -14,6 +14,7 @@ export const Accordion = ({
 	classChildren,
 	classIcon,
 	className,
+	classNameButton,
 	closeIcon,
 	openIcon,
 	title,
@@ -31,12 +32,14 @@ export const Accordion = ({
 		<IconSvg className={classSvgIcon} src={openIcon || PlusAccordionIcon} />
 	);
 
+	const buttonClass = cn(
+		"group flex w-full cursor-pointer gap-2.5 p-0 text-white hover:bg-transparent",
+		classNameButton
+	);
+
 	return (
 		<div className={className}>
-			<Button
-				className="group flex w-full cursor-pointer gap-2.5 p-0 text-white hover:bg-transparent"
-				onClick={toggleAccordion}
-			>
+			<Button className={buttonClass} onClick={toggleAccordion}>
 				{icon}
 				{title}
 			</Button>

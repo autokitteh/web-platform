@@ -1,39 +1,34 @@
 import React, { useCallback, useMemo, useState } from "react";
 
 import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
-import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useProjectStore } from "@src/store";
+import { ModalName } from "@src/enums/components";
+import { useModalStore } from "@src/store";
+import { TemplateCardType } from "@src/types/components";
 
 import { Tab } from "@components/atoms";
-import { ProjectTemplateCard } from "@components/organisms/dashboard/templates/tabs";
+import { ProjectTemplateCard, ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
 
 export const ProjectTemplatesTabs = () => {
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
-	const [loadingCardId, setLoadingCardId] = useState<string>();
-	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
-	const { projectsList } = useProjectStore();
+	const [card, setCard] = useState<TemplateCardType>();
+	const { openModal } = useModalStore();
 
 	const activeCategory = useMemo(
 		() => templateProjectsCategories.find((category) => category.name === activeTab),
 		[activeTab]
 	);
 
-	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
-
-	const isProjectDisabled = useCallback(
-		(assetDirectory: string) => projectNamesSet.has(assetDirectory),
-		[projectNamesSet]
-	);
-
 	const handleTabClick = useCallback((category: string) => {
 		setActiveTab(category);
 	}, []);
 
-	const createProjectFromAsset = async (assetDirectory: string) => {
-		setLoadingCardId(assetDirectory);
-		await createProjectFromTemplate(assetDirectory);
-		setLoadingCardId(undefined);
-	};
+	const handleCardCreateClick = useCallback(
+		(card: TemplateCardType) => {
+			setCard(card);
+			openModal(ModalName.templateCreateProject);
+		},
+		[openModal]
+	);
 
 	return (
 		<div className="flex h-full flex-1 flex-col">
@@ -65,14 +60,13 @@ export const ProjectTemplatesTabs = () => {
 							<ProjectTemplateCard
 								card={card}
 								category={activeCategory.name}
-								disabled={isProjectDisabled(card.assetDirectory)}
-								isCreating={loadingCardId === card.assetDirectory}
 								key={index}
-								onCreateClick={() => createProjectFromAsset(card.assetDirectory)}
+								onCreateClick={() => handleCardCreateClick(card)}
 							/>
 						))
 					: null}
 			</div>
+			{card ? <ProjectTemplateCreateModal cardTemplate={card} category={activeCategory?.name} /> : null}
 		</div>
 	);
 };

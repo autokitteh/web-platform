@@ -63,3 +63,4 @@ export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";
 
 export { default as ExpandIcon } from "@assets/image/icons/Expand.svg?react";
 export { default as CompressIcon } from "@assets/image/icons/Compress.svg?react";
+export { default as ReadmeIcon } from "@assets/image/icons/Readme.svg?react";
