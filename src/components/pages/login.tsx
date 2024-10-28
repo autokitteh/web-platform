@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 
 import { Descope } from "@descope/react-sdk";
+import { useTranslation } from "react-i18next";
 
 import { LoginPageProps } from "@src/interfaces/components";
 
@@ -21,7 +22,8 @@ const LazyLoginLogos = () => (
 	</Suspense>
 );
 
-const Login = ({ descopeRenderKey, handleSuccess, t }: LoginPageProps) => {
+const Login = ({ descopeRenderKey, handleSuccess }: LoginPageProps) => {
+	const { t } = useTranslation("login");
 	const benefitsList = Object.values(t("rightSide.benefitsList", { returnObjects: true }));
 
 	return (

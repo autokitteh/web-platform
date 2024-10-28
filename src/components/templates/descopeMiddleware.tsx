@@ -83,7 +83,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<Suspense fallback={<Loader isCenter />}>
-			<LoginPage descopeRenderKey={descopeRenderKey} handleSuccess={handleSuccess} t={t} />
+			<LoginPage descopeRenderKey={descopeRenderKey} handleSuccess={handleSuccess} />
 		</Suspense>
 	);
 };
