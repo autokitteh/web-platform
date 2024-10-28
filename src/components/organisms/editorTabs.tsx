@@ -282,8 +282,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 						/>
 					) : (
 						<div className="flex h-full flex-col items-center justify-center pb-24">
-							<IconSvg className="mb-12 fill-gray-800" size="36" src={AKRoundLogo} />
-							<div className="text-center font-mono text-gray-800">
+							<IconSvg className="mb-12 fill-gray-1100" size="36" src={AKRoundLogo} />
+							<div className="text-center font-mono text-gray-1100">
 								<div>{t("noFileTextLine1")}</div>
 								<div>{t("noFileTextLine2")}</div>
 							</div>
