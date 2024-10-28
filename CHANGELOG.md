@@ -1,3 +1,10 @@
+# [2.38.0](https://github.com/autokitteh/web-platform/compare/v2.37.2...v2.38.0) (2024-10-28)
+
+
+### Features
+
+* add expand and compress code file ([#564](https://github.com/autokitteh/web-platform/issues/564)) ([e7ba378](https://github.com/autokitteh/web-platform/commit/e7ba37877c5e3cb4faa8b1bc56f259c75eb512c7))
+
 ## [2.37.2](https://github.com/autokitteh/web-platform/compare/v2.37.1...v2.37.2) (2024-10-23)
 
 
