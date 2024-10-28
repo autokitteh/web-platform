@@ -134,10 +134,8 @@ export const IntroMainBlock = () => {
 					onPlay={() => handleOpenModal("https://www.youtube.com/embed/zNtJ8OBPUmY")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
-							<div className="inline">{t("cards.developInVSCode.developInVSCode")}</div>{" "}
-							<div className="inline text-green-800">
-								{t("cards.developInVSCode.usingVSCodeExtension")}
-							</div>
+							{t("cards.developInVSCode.developInVSCode")}{" "}
+							<span className="text-green-800">{t("cards.developInVSCode.usingVSCodeExtension")}</span>
 						</Typography>
 					}
 					videoStyle={{
@@ -153,11 +151,11 @@ export const IntroMainBlock = () => {
 				</WelcomeInfoCard>
 			</div>
 
-			<div className="w-full rounded-2xl border border-gray-950 bg-gray-1250 py-5 pl-6 pr-4 font-averta text-white">
-				<Typography className="flex flex-row items-center justify-center text-lg" element="p">
+			<div className="rounded-xl border border-gray-950 bg-gray-1250 py-2 pl-6 pr-4 font-averta">
+				<Typography className="flex h-full flex-row items-center justify-center text-lg" element="p">
 					{t("cards.footer.haveAQuestion")}
 					<Link
-						className="flex flex-row items-center hover:text-green-200"
+						className="flex flex-row items-center gap-0.5 hover:text-green-200"
 						target="_blank"
 						to="https://discord.gg/UhnJuBarZQ"
 					>
