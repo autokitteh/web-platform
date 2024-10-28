@@ -108,7 +108,6 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 						<ReadmeIcon className="size-4" /> {t("readme")}
 					</div>
 					<Markdown
-						// eslint-disable-next-line tailwindcss/no-custom-classname
 						className="scrollbar markdown-body h-96 overflow-hidden overflow-y-auto"
 						remarkPlugins={[remarkGfm]}
 					>
