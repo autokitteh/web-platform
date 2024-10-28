@@ -39,7 +39,46 @@ export default defineConfig({
 	},
 	plugins: [
 		react(),
-		svgr({ svgrOptions: { ref: true } }),
+		svgr({
+			svgrOptions: {
+				ref: true,
+				icon: false,
+				replaceAttrValues: {
+					"#000": "currentColor",
+				},
+				svgoConfig: {
+					multipass: true,
+					plugins: [
+						{
+							name: "preset-default",
+							params: {
+								overrides: {
+									removeViewBox: false,
+									cleanupIDs: false,
+									removeUselessStrokeAndFill: false,
+									removeUnknownsAndDefaults: false,
+									convertPathData: {
+										floatPrecision: 2,
+										transformPrecision: 4,
+									},
+									cleanupNumericValues: {
+										floatPrecision: 2,
+									},
+									collapseGroups: true,
+									mergePaths: true,
+									convertTransform: true,
+									convertShapeToPath: true,
+									removeEmptyAttrs: true,
+									removeEmptyContainers: true,
+									removeUnusedNS: true,
+									sortAttrs: true,
+								},
+							},
+						},
+					],
+				},
+			},
+		}),
 		sentryVitePlugin({
 			org: process.env.SENTRY_ORG,
 			project: process.env.SENTRY_PROJECT,

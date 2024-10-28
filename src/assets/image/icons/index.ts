@@ -13,8 +13,6 @@ export { default as ExternalLinkIcon } from "@assets/image/icons/ExternalLink.sv
 export { default as EyeIcon } from "@assets/image/icons/Eye.svg?react";
 export { default as EyeCloseIcon } from "@assets/image/icons/EyeClose.svg?react";
 export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?react";
-export { default as GitHubIcon } from "@assets/image/icons/Github.png";
-export { default as GoogleIcon } from "@assets/image/icons/Google.png";
 export { default as InfoIcon } from "@assets/image/icons/Info.svg?react";
 export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
 export { default as LockSolid } from "@assets/image/icons/LockSolid.svg?react";
