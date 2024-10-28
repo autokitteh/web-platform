@@ -1,3 +1,10 @@
+# [2.39.0](https://github.com/autokitteh/web-platform/compare/v2.38.1...v2.39.0) (2024-10-28)
+
+
+### Features
+
+* project template component and add create project modal ([#567](https://github.com/autokitteh/web-platform/issues/567)) ([b58b8d7](https://github.com/autokitteh/web-platform/commit/b58b8d7b59627a3ec0352602ea0866563f727c66))
+
 ## [2.38.1](https://github.com/autokitteh/web-platform/compare/v2.38.0...v2.38.1) (2024-10-28)
 
 
