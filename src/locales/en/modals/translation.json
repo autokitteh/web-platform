@@ -63,10 +63,13 @@
 		"title": "Delete Project"
 	},
 	"createProjectWithTemplate": {
+		"title": "Create from template - {{name}}",
 		"cancelButton": "Cancel",
 		"createButton": "Create",
 		"projectName": "Project Name",
-		"readme": "Readme",
+		"description": "Description: {{description}}",
+		"moreInformaton": "About This Template",
+		"readme": "README",
 		"nameRequired": "Name is required",
 		"nameTaken": "Name is already taken"
 	}

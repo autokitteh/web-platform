@@ -12,10 +12,10 @@ import { useModalStore, useProjectStore } from "@src/store";
 import { fetchFileContent } from "@src/utilities";
 
 import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from "@components/atoms";
-import { Modal } from "@components/molecules";
+import { Accordion, Modal } from "@components/molecules";
 
-import { PipeCircleDarkIcon, ReadmeIcon } from "@assets/image/icons";
-import "github-markdown-css";
+import { PipeCircleIcon, ReadmeIcon } from "@assets/image/icons";
+import "github-markdown-css/github-markdown-light.css";
 
 export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreateProjectModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectWithTemplate" });
@@ -67,20 +67,21 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 	};
 
 	return (
-		<Modal className="w-550 p-5" hideCloseButton name={ModalName.templateCreateProject}>
+		<Modal className="w-1/2 min-w-550 p-5" hideCloseButton name={ModalName.templateCreateProject}>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="mb-3 flex items-center justify-end gap-5">
+					<h3 className="mb-5 mr-auto text-xl font-bold">{t("title", { name: title })}</h3>
 					<Status>{category}</Status>
 					<div className="flex gap-3">
 						{integrations.map(({ icon, label }, index) => (
 							<div
-								className="relative flex size-8 items-center justify-center rounded-full bg-gray-1400 p-1"
+								className="relative flex size-8 items-center justify-center rounded-full bg-gray-400 p-1"
 								key={index}
 								title={label}
 							>
 								<IconSvg className="z-10 rounded-full p-1" size="xl" src={icon} />
 								{index < integrations.length - 1 ? (
-									<PipeCircleDarkIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-500" />
+									<PipeCircleIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-400" />
 								) : null}
 							</div>
 						))}
@@ -88,6 +89,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 				</div>
 				<Input
 					label={t("projectName")}
+					placeholder="Enter project name"
 					variant="light"
 					{...register("projectName", {
 						required: t("nameRequired"),
@@ -98,21 +100,21 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 				{errors.projectName ? (
 					<ErrorMessage className="relative">{errors.projectName.message}</ErrorMessage>
 				) : null}
-				<Typography className="mt-3 font-bold" element="h3" size="xl">
-					{title}
-				</Typography>
-				<Typography className="mt-1" element="h4" size="medium">
-					{description}
-				</Typography>
-				<div className="mt-4 flex items-center gap-1 text-base uppercase">
-					<ReadmeIcon className="size-4" /> {t("readme")}
-				</div>
-				<Markdown
-					className="scrollbar markdown-body h-96 overflow-hidden overflow-y-auto"
-					remarkPlugins={[remarkGfm]}
-				>
-					{manifestData}
-				</Markdown>
+				<Accordion className="mt-6" classNameButton="text-black" title={t("moreInformaton")}>
+					<Typography className="mt-1" element="h4" size="medium">
+						{t("description", { description })}
+					</Typography>
+					<div className="mt-4 flex items-center gap-1 text-base uppercase">
+						<ReadmeIcon className="size-4" /> {t("readme")}
+					</div>
+					<Markdown
+						// eslint-disable-next-line tailwindcss/no-custom-classname
+						className="scrollbar markdown-body h-96 overflow-hidden overflow-y-auto"
+						remarkPlugins={[remarkGfm]}
+					>
+						{manifestData}
+					</Markdown>
+				</Accordion>
 				<div className="mt-8 flex w-full justify-end gap-2">
 					<Button
 						ariaLabel={t("cancelButton")}
