@@ -92,12 +92,8 @@ export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 			mode: "no-cors",
 		});
 
+		// eslint-disable-next-line no-console
 		console.log("zipballResponse", zipballResponse);
-
-		if (!zipballResponse.ok) {
-			throw new Error(`Failed to download zip file: ${zipballResponse.statusText}`);
-		}
-
 		// eslint-disable-next-line no-console
 		console.log("Zipball downloaded, processing...");
 		const zipData = await zipballResponse.arrayBuffer();
