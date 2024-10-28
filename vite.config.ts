@@ -42,22 +42,12 @@ export default defineConfig({
 		svgr({
 			svgrOptions: {
 				ref: true,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 2b2c4d14 (refactor: modify code to remove the use of pngs and optimize the use of svgs)
 				icon: false,
 				replaceAttrValues: {
 					"#000": "currentColor",
 				},
 				svgoConfig: {
 					multipass: true,
-<<<<<<< HEAD
-=======
-				svgoConfig: {
->>>>>>> 856d7570 (refactor: modify code to remove the use of pngs and optimize the use of svgs)
-=======
->>>>>>> 2b2c4d14 (refactor: modify code to remove the use of pngs and optimize the use of svgs)
 					plugins: [
 						{
 							name: "preset-default",
@@ -67,10 +57,6 @@ export default defineConfig({
 									cleanupIDs: false,
 									removeUselessStrokeAndFill: false,
 									removeUnknownsAndDefaults: false,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 2b2c4d14 (refactor: modify code to remove the use of pngs and optimize the use of svgs)
 									convertPathData: {
 										floatPrecision: 2,
 										transformPrecision: 4,
@@ -86,25 +72,12 @@ export default defineConfig({
 									removeEmptyContainers: true,
 									removeUnusedNS: true,
 									sortAttrs: true,
-<<<<<<< HEAD
-=======
->>>>>>> 856d7570 (refactor: modify code to remove the use of pngs and optimize the use of svgs)
-=======
->>>>>>> 2b2c4d14 (refactor: modify code to remove the use of pngs and optimize the use of svgs)
 								},
 							},
 						},
 					],
 				},
 			},
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-			// Add specific include for the login logos
-			include: /\/src\/assets\/image\/pages\/login\/.*\.svg$/,
->>>>>>> 856d7570 (refactor: modify code to remove the use of pngs and optimize the use of svgs)
-=======
->>>>>>> 2b2c4d14 (refactor: modify code to remove the use of pngs and optimize the use of svgs)
 		}),
 		sentryVitePlugin({
 			org: process.env.SENTRY_ORG,
