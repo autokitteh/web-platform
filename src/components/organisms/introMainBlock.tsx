@@ -13,6 +13,7 @@ import { WelcomeInfoCard, WelcomeVideoModal } from "@components/organisms/dashbo
 
 import { OrStartFromTemplateImage, ProjectsIcon, StartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
+import { DiscordIcon } from "@assets/image/icons/connections";
 
 export const IntroMainBlock = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
@@ -40,10 +41,10 @@ export const IntroMainBlock = () => {
 				<div className="flex min-h-52 flex-col">
 					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-[#1d2226] bg-[url('image/pages/intro/main.jpg')] bg-contain bg-center bg-no-repeat">
 						<IconButton
-							className="group size-20 overflow-hidden rounded-full p-0 focus:scale-90"
-							onClick={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
+							className="group size-20 overflow-hidden rounded-full bg-black/75 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
+							onClick={() => handleOpenModal("https://www.youtube.com/embed/BkUvIJc_kms")}
 						>
-							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-70" />
+							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-100" />
 						</IconButton>
 					</div>
 
@@ -103,13 +104,10 @@ export const IntroMainBlock = () => {
 
 			<div className="grid grid-cols-auto-fit-350 gap-5">
 				<WelcomeInfoCard
-					onPlay={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
+					onPlay={() => handleOpenModal("https://www.youtube.com/embed/60DQ9Py4LqU")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
-							{t("cards.startingProject.startingAProject")}{" "}
-							<Link className="font-normal text-green-800" to="#">
-								{t("cards.startingProject.docs")}
-							</Link>
+							{t("cards.startingProject.startingAProject")}
 						</Typography>
 					}
 					videoStyle={{
@@ -118,27 +116,26 @@ export const IntroMainBlock = () => {
 					}}
 				>
 					<ul className="font-averta font-semibold leading-normal">
-						{infoCardPythonCode.map(({ linkHref, linkText, text }, index) => (
-							<li key={index}>
-								{text}{" "}
-								{linkHref ? (
-									<Link className="font-normal text-green-800" to={linkHref}>
-										{linkText}
-									</Link>
-								) : null}
+						{infoCardPythonCode.map(({ href, text }, index) => (
+							<li aria-label={text} key={index}>
+								<Link
+									className="font-semibold text-green-800 underline hover:text-green-200"
+									target="_blank"
+									to={href}
+								>
+									{text}
+								</Link>
 							</li>
 						))}
 					</ul>
 				</WelcomeInfoCard>
 
 				<WelcomeInfoCard
-					onPlay={() => handleOpenModal("https://www.youtube.com/embed/QWSa0etwTDE")}
+					onPlay={() => handleOpenModal("https://www.youtube.com/embed/zNtJ8OBPUmY")}
 					title={
 						<Typography className="text-xl font-bold" element="h3">
 							{t("cards.developInVSCode.developInVSCode")}{" "}
-							<Link className="font-normal text-green-800" to="#">
-								{t("cards.developInVSCode.usingVSCodeExtension")}
-							</Link>
+							<span className="text-green-800">{t("cards.developInVSCode.usingVSCodeExtension")}</span>
 						</Typography>
 					}
 					videoStyle={{
@@ -152,6 +149,20 @@ export const IntroMainBlock = () => {
 						))}
 					</ul>
 				</WelcomeInfoCard>
+			</div>
+
+			<div className="rounded-xl border border-gray-950 bg-gray-1250 py-2 pl-6 pr-4 font-averta">
+				<Typography className="flex h-full flex-row items-center justify-center text-lg" element="p">
+					{t("cards.footer.haveAQuestion")}
+					<Link
+						className="flex flex-row items-center gap-0.5 hover:text-green-200"
+						target="_blank"
+						to="https://discord.gg/UhnJuBarZQ"
+					>
+						<IconSvg className="ml-2 mr-1" size="lg" src={DiscordIcon} />{" "}
+						<div className="underline">{t("cards.footer.joinDiscord")}</div>
+					</Link>
+				</Typography>
 			</div>
 			<WelcomeVideoModal />
 		</div>
