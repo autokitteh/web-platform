@@ -1,17 +1,20 @@
 import React, { useCallback, useMemo, useState } from "react";
 
 import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
+import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useProjectStore } from "@src/store";
+import { useModalStore, useProjectStore } from "@src/store";
 
 import { Tab } from "@components/atoms";
-import { ProjectTemplateCard } from "@components/organisms/dashboard/templates/tabs";
+import { ProjectTemplateCard, ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
 
 export const ProjectTemplatesTabs = () => {
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
-	const [loadingCardId, setLoadingCardId] = useState<string>();
+	const [cardAssetDirectory, setCardAssetDirectory] = useState<string>();
+	const [isCreating, setIsCreating] = useState(false);
 	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
 	const { projectsList } = useProjectStore();
+	const { openModal } = useModalStore();
 
 	const activeCategory = useMemo(
 		() => templateProjectsCategories.find((category) => category.name === activeTab),
@@ -29,11 +32,27 @@ export const ProjectTemplatesTabs = () => {
 		setActiveTab(category);
 	}, []);
 
+	const handleCardCreateClick = useCallback(
+		(assetDirectory: string) => {
+			setCardAssetDirectory(assetDirectory);
+			openModal(ModalName.templateCreateProject);
+		},
+		[openModal]
+	);
+
 	const createProjectFromAsset = async (assetDirectory: string) => {
-		setLoadingCardId(assetDirectory);
+		setIsCreating(true);
 		await createProjectFromTemplate(assetDirectory);
-		setLoadingCardId(undefined);
+		setIsCreating(false);
+		setCardAssetDirectory(undefined);
 	};
+
+	const handleCreate = useCallback(() => {
+		if (cardAssetDirectory) {
+			createProjectFromAsset(cardAssetDirectory);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cardAssetDirectory]);
 
 	return (
 		<div className="flex h-full flex-1 flex-col">
@@ -66,13 +85,15 @@ export const ProjectTemplatesTabs = () => {
 								card={card}
 								category={activeCategory.name}
 								disabled={isProjectDisabled(card.assetDirectory)}
-								isCreating={loadingCardId === card.assetDirectory}
+								isCreating={cardAssetDirectory === card.assetDirectory}
 								key={index}
-								onCreateClick={() => createProjectFromAsset(card.assetDirectory)}
+								onCreateClick={() => handleCardCreateClick(card.assetDirectory)}
 							/>
 						))
 					: null}
 			</div>
+
+			<ProjectTemplateCreateModal isCreating={isCreating} onCreate={handleCreate} />
 		</div>
 	);
 };

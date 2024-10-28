@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@src/utilities";
 import { TemplateCardType } from "@type/components";
 
-import { Button, IconSvg, Loader, Status, Typography } from "@components/atoms";
+import { Button, IconSvg, Status, Typography } from "@components/atoms";
 
 import { DownloadDownArrowIcon, PipeCircleDarkIcon } from "@assets/image/icons";
 
@@ -64,13 +64,7 @@ export const ProjectTemplateCard = ({
 					onClick={onCreateClick}
 					variant="filledGray"
 				>
-					{isCreating ? (
-						<div className="flex h-3 w-4 items-center">
-							<Loader size="sm" />
-						</div>
-					) : (
-						<IconSvg className="h-3" size="xl" src={DownloadDownArrowIcon} />
-					)}
+					<IconSvg className="h-3" size="xl" src={DownloadDownArrowIcon} />
 
 					{t("start")}
 				</Button>

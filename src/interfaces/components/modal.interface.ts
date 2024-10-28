@@ -30,3 +30,8 @@ export interface ModalModifyVariableProps {
 export interface DeleteAccount {
 	onDelete?: () => void;
 }
+
+export interface CreateProjectModalProps {
+	onCreate?: () => void;
+	isCreating: boolean;
+}
