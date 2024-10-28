@@ -1,3 +1,10 @@
+## [2.38.1](https://github.com/autokitteh/web-platform/compare/v2.38.0...v2.38.1) (2024-10-28)
+
+
+### Bug Fixes
+
+* change website language in index.html to english ([#569](https://github.com/autokitteh/web-platform/issues/569)) ([f1cdc55](https://github.com/autokitteh/web-platform/commit/f1cdc5578c0e623ecd0393baaa57f5b8a07d4aa7))
+
 # [2.38.0](https://github.com/autokitteh/web-platform/compare/v2.37.2...v2.38.0) (2024-10-28)
 
 
