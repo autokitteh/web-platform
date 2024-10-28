@@ -37,10 +37,10 @@ export const DashboardWelcomeMainBlock = () => {
 				<div className="flex min-h-52 flex-col">
 					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-[#1d2226] bg-[url('image/pages/intro/main.jpg')] bg-contain bg-center bg-no-repeat">
 						<IconButton
-							className="group size-20 overflow-hidden rounded-full p-0 focus:scale-90"
+							className="group size-20 overflow-hidden rounded-full bg-black/75 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
 							onClick={() => handleOpenModal("https://www.youtube.com/embed/BkUvIJc_kms")}
 						>
-							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-70" />
+							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-100" />
 						</IconButton>
 					</div>
 

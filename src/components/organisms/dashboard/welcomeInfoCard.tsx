@@ -15,8 +15,11 @@ export const WelcomeInfoCard = ({ children, onPlay, title, videoStyle }: Welcome
 				className="flex min-h-32 w-2/5 items-center justify-center rounded-2xl border border-gray-750 bg-contain bg-center bg-no-repeat"
 				style={videoStyle}
 			>
-				<IconButton className="group size-11 overflow-hidden rounded-full p-0 focus:scale-90" onClick={onPlay}>
-					<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-70" />
+				<IconButton
+					className="group size-11 overflow-hidden rounded-full bg-black/75 p-0 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
+					onClick={onPlay}
+				>
+					<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-100" />
 				</IconButton>
 			</div>
 
