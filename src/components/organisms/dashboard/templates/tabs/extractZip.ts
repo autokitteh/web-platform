@@ -1,6 +1,6 @@
 import { ComponentType, SVGProps } from "react";
 
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import JSZip from "jszip";
 
 interface FileNode {
@@ -74,18 +74,32 @@ type ProcessedZipOutput = ProcessedZipResult | ProcessedZipError;
 
 export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 	try {
-		const { data } = await axios.get("https://github.com/autokitteh/kittehub/archive/refs/tags/v1.zip");
+		// // First fetch to get the latest release info
+		// const response = await fetch("https://api.github.com/repos/autokitteh/kittehub/releases/latest");
 
-		const zipData = await data.arrayBuffer();
+		// if (!response.ok) {
+		// 	throw new Error(`Failed to fetch release info: ${response.statusText}`);
+		// }
+
+		// const releaseData = await response.json();
+
+		// Fetch the zipball using the URL from the release data
+		const downloadUrl = `https://github.com/autokitteh/kittehub/archive/refs/tags/v1.zip`;
+
+		const zipballResponse = await fetch(downloadUrl);
+
+		if (!zipballResponse.ok) {
+			throw new Error(`Failed to download zip file: ${zipballResponse.statusText}`);
+		}
+
+		const zipData = await zipballResponse.arrayBuffer();
 		const zip = new JSZip();
 		const content = await zip.loadAsync(zipData);
 		const structure = await processZipContent(content);
 
 		return { structure };
 	} catch (error) {
-		if (error instanceof AxiosError) {
-			console.log("Couldnt fetch release from github ", new AxiosError(error));
-		}
+		console.error("Error in fetchAndUnpackZip:", error);
 
 		return {
 			error: error instanceof Error ? error.message : "Unknown error occurred",
