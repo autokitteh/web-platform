@@ -137,7 +137,7 @@ ul li::before {
 	border-radius: 50%;
 }
 
-
-.markdown-body ul li::before, .markdown-body ol li::before {
+.markdown-body ul li::before,
+.markdown-body ol li::before {
 	background-color: black !important;
 }
