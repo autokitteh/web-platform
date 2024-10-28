@@ -92,6 +92,8 @@ export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 			mode: "no-cors",
 		});
 
+		console.log("zipballResponse", zipballResponse);
+
 		if (!zipballResponse.ok) {
 			throw new Error(`Failed to download zip file: ${zipballResponse.statusText}`);
 		}
@@ -111,7 +113,12 @@ export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 
 		return { structure };
 	} catch (error) {
-		console.error("Error in fetchAndUnpackZip:", error);
+		// Enhanced error logging
+		console.error("Detailed error in fetchAndUnpackZip:", {
+			name: error instanceof Error ? error.name : "Unknown",
+			message: error instanceof Error ? error.message : "Unknown error occurred",
+			stack: error instanceof Error ? error.stack : undefined,
+		});
 
 		return {
 			error: error instanceof Error ? error.message : "Unknown error occurred",
