@@ -85,6 +85,8 @@ export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 
 		// Fetch the zipball using the URL from the release data
 		const downloadUrl = `https://github.com/autokitteh/kittehub/archive/refs/tags/v1.zip`;
+		// eslint-disable-next-line no-console
+		console.log("Fetching zipball from:", downloadUrl);
 
 		const zipballResponse = await fetch(downloadUrl);
 
@@ -92,9 +94,17 @@ export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 			throw new Error(`Failed to download zip file: ${zipballResponse.statusText}`);
 		}
 
+		// eslint-disable-next-line no-console
+		console.log("Zipball downloaded, processing...");
 		const zipData = await zipballResponse.arrayBuffer();
+		// eslint-disable-next-line no-console
+		console.log("Creating JSZip instance...");
 		const zip = new JSZip();
+		// eslint-disable-next-line no-console
+		console.log("Loading zip data...");
 		const content = await zip.loadAsync(zipData);
+		// eslint-disable-next-line no-console
+		console.log("Processing zip content...");
 		const structure = await processZipContent(content);
 
 		return { structure };
