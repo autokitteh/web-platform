@@ -46,11 +46,8 @@
 		"immer": "^10.1.1",
 		"javascript-time-ago": "^2.5.10",
 		"js-cookie": "^3.0.5",
-<<<<<<< HEAD
 		"js-yaml": "^4.1.0",
-=======
 		"jszip": "^3.10.1",
->>>>>>> 4c6fa952 (feat: parse readme and get templates from zip)
 		"lodash": "^4.17.21",
 		"pako": "^2.1.0",
 		"psl": "^1.9.0",

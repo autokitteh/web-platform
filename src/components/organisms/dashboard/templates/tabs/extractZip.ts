@@ -1,5 +1,6 @@
 import { ComponentType, SVGProps } from "react";
 
+import axios, { AxiosError } from "axios";
 import JSZip from "jszip";
 
 interface FileNode {
@@ -73,16 +74,19 @@ type ProcessedZipOutput = ProcessedZipResult | ProcessedZipError;
 
 export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 	try {
-		const response = await fetch("/assets/templates/kittehub.zip");
-		if (!response.ok) throw new Error("Failed to download zip file");
+		const { data } = await axios.get("https://github.com/autokitteh/kittehub/archive/refs/tags/v1.zip");
 
-		const zipData = await response.arrayBuffer();
+		const zipData = await data.arrayBuffer();
 		const zip = new JSZip();
 		const content = await zip.loadAsync(zipData);
 		const structure = await processZipContent(content);
 
 		return { structure };
 	} catch (error) {
+		if (error instanceof AxiosError) {
+			console.log("Couldnt fetch release from github ", new AxiosError(error));
+		}
+
 		return {
 			error: error instanceof Error ? error.message : "Unknown error occurred",
 		};
