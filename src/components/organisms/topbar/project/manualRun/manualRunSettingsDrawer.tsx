@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { useShallow } from "zustand/shallow";
 
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
@@ -26,13 +25,11 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	const { projectId } = useParams();
 	const [sendingManualRun, setSendingManualRun] = useState(false);
 
-	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore(
-		useShallow((state) => ({
-			projectManualRun: state.projectManualRun[projectId!],
-			updateManualRunConfiguration: state.updateManualRunConfiguration,
-			saveAndExecuteManualRun: state.saveAndExecuteManualRun,
-		}))
-	);
+	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
+		projectManualRun: state.projectManualRun[projectId!],
+		updateManualRunConfiguration: state.updateManualRunConfiguration,
+		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
+	}));
 
 	const { entrypointFunction, fileOptions, filePath, lastDeployment, params } = projectManualRun || {};
 

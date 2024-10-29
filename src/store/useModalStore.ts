@@ -1,4 +1,5 @@
-import { StateCreator, create } from "zustand";
+import { StateCreator } from "zustand";
+import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { ModalStore } from "@interfaces/store";
 
