@@ -1,4 +1,4 @@
-export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
+// eslint-disable-next-line @liferay/sort-exports
 export {
 	defaultSessionsVisiblePageSize,
 	descopeProjectId,
@@ -17,21 +17,27 @@ export {
 	allowedManualRunExtensions,
 	timeFormat,
 } from "@constants/global.constants";
-export { menuItems } from "@constants/menuItems.constants";
-export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
-export { namespaces } from "@constants/namespaces.logger.constants";
-export {
-	defaultProjectTab,
-	projectTabs,
-	defaultProjectFile,
-	defaultProjectDirectory,
-} from "@constants/project.constants";
+export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
+export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
 export {
 	defaultTemplateProjectCategory,
 	templateProjectsCategories,
 	findTemplateFilesByAssetDirectory,
 	meowWorldProjectName,
 } from "@constants/dashboard.constants";
+export { defaultEventsTableRowHeight } from "@constants/events.constants";
+export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
+export { menuItems } from "@constants/menuItems.constants";
+export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
+export { namespaces } from "@constants/namespaces.logger.constants";
+export { mainNavigationItems } from "@constants/navigation.constnants";
+export {
+	defaultProjectTab,
+	projectTabs,
+	defaultProjectFile,
+	defaultProjectDirectory,
+} from "@constants/project.constants";
+export { defaultSystemLogSize, defaultSplitFrameSize } from "@constants/resize.constants";
 export {
 	sessionTabs,
 	defaultSessionTab,
@@ -44,8 +50,3 @@ export {
 } from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
-export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
-export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
-export { mainNavigationItems } from "@constants/navigation.constnants";
-export { defaultSystemLogSize, defaultSplitFrameSize } from "@constants/resize.constants";
-export { defaultEventsTableRowHeight } from "@constants/events.constants";
