@@ -1,3 +1,10 @@
+## [2.39.3](https://github.com/autokitteh/web-platform/compare/v2.39.2...v2.39.3) (2024-10-29)
+
+
+### Performance Improvements
+
+* upgrade zustand to v5  ([#586](https://github.com/autokitteh/web-platform/issues/586)) ([f67af7d](https://github.com/autokitteh/web-platform/commit/f67af7d9d5adf6319881805de23596e321667afb))
+
 ## [2.39.2](https://github.com/autokitteh/web-platform/compare/v2.39.1...v2.39.2) (2024-10-29)
 
 
