@@ -1,13 +1,4 @@
-export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
-export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
-export {
-	defaultTemplateProjectCategory,
-	templateProjectsCategories,
-	findTemplateFilesByAssetDirectory,
-	meowWorldProjectName,
-} from "@constants/dashboard.constants";
-export { defaultEventsTableRowHeight } from "@constants/events.constants";
-export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
+// eslint-disable-next-line @liferay/sort-exports
 export {
 	defaultSessionsVisiblePageSize,
 	descopeProjectId,
@@ -26,6 +17,16 @@ export {
 	allowedManualRunExtensions,
 	timeFormat,
 } from "@constants/global.constants";
+export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
+export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
+export {
+	defaultTemplateProjectCategory,
+	templateProjectsCategories,
+	findTemplateFilesByAssetDirectory,
+	meowWorldProjectName,
+} from "@constants/dashboard.constants";
+export { defaultEventsTableRowHeight } from "@constants/events.constants";
+export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export { menuItems } from "@constants/menuItems.constants";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
