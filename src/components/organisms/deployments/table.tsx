@@ -27,8 +27,12 @@ export const DeploymentsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const lastDeploymentStore = useManualRunStore((state) => state.projectManualRun[projectId!]?.lastDeployment);
-	const updateManualRunConfiguration = useManualRunStore((state) => state.updateManualRunConfiguration);
+	const { lastDeploymentStore, updateManualRunConfiguration } = useManualRunStore((state) => ({
+		lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
+		entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
+		updateManualRunConfiguration: state.updateManualRunConfiguration,
+		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
+	}));
 
 	const loadSingleshotArgs = async () => {
 		if (!deployments?.length || deployments[0].state !== DeploymentStateVariant.active) {

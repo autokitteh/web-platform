@@ -20,14 +20,16 @@ import { RunIcon } from "@assets/image/icons";
 export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	const { t: tButtons } = useTranslation("buttons");
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
-	const closeDrawer = useDrawerStore((state) => state.closeDrawer);
+	const { closeDrawer } = useDrawerStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { projectId } = useParams();
 	const [sendingManualRun, setSendingManualRun] = useState(false);
 
-	const projectManualRun = useManualRunStore((state) => state.projectManualRun[projectId!]);
-	const saveAndExecuteManualRun = useManualRunStore((state) => state.saveAndExecuteManualRun);
-	const updateManualRunConfiguration = useManualRunStore((state) => state.updateManualRunConfiguration);
+	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
+		projectManualRun: state.projectManualRun[projectId!],
+		updateManualRunConfiguration: state.updateManualRunConfiguration,
+		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
+	}));
 
 	const { entrypointFunction, fileOptions, filePath, lastDeployment, params } = projectManualRun || {};
 

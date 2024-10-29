@@ -1,7 +1,9 @@
 import i18n from "i18next";
-import { StateCreator, create } from "zustand";
+import { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { StoreName } from "@enums";
 import { SessionsService } from "@services";
@@ -122,5 +124,6 @@ export const useManualRunStore = create(
 		migrate: () => {
 			return {};
 		},
-	})
+	}),
+	shallow
 );

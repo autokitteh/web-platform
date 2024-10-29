@@ -17,15 +17,18 @@ export const ManualRunButtons = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const { projectId } = useParams();
 	const addToast = useToastStore((state) => state.addToast);
-	const openDrawer = useDrawerStore((state) => state.openDrawer);
-
+	const { openDrawer } = useDrawerStore();
 	const { fetchDeployments } = useCacheStore();
 	const [savingManualRun, setSavingManualRun] = useState(false);
 
-	const entrypointFunction = useManualRunStore((state) => state.projectManualRun[projectId!]?.entrypointFunction);
-	const isManualRunEnabled = useManualRunStore((state) => state.projectManualRun[projectId!]?.isManualRunEnabled);
-	const lastDeploymentStore = useManualRunStore((state) => state.projectManualRun[projectId!]?.lastDeployment);
-	const saveProjectManualRun = useManualRunStore((state) => state.saveAndExecuteManualRun);
+	const { entrypointFunction, isManualRunEnabled, lastDeploymentStore, saveProjectManualRun } = useManualRunStore(
+		(state) => ({
+			lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
+			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
+			isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
+			saveProjectManualRun: state.saveAndExecuteManualRun,
+		})
+	);
 
 	const openManualRunSettings = useCallback(() => {
 		openDrawer(DrawerName.projectManualRunSettings);

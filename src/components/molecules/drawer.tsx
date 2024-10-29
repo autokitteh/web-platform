@@ -7,8 +7,10 @@ import { useDrawerStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 export const Drawer = ({ children, className, name, variant }: DrawerProps) => {
-	const isOpen = useDrawerStore((state) => state.drawers[name]);
-	const onClose = useDrawerStore((state) => state.closeDrawer);
+	const { isOpen, onClose } = useDrawerStore((state) => ({
+		isOpen: state.drawers[name],
+		onClose: state.closeDrawer,
+	}));
 
 	const baseClass = cn(
 		"bg-indigo-900 h-full border-l border-gray-950 w-full bg-white p-5 text-black shadow-lg",
