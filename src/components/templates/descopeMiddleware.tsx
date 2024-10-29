@@ -73,7 +73,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
-			handleLogin(event.detail.sessionJwt || event.detail.magicLinkToken);
+			handleLogin(event?.detail?.sessionJwt || event?.detail?.magicLinkToken || "");
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getLoggedInUser]
