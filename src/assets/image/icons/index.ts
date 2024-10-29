@@ -20,7 +20,6 @@ export { default as CompressIcon } from "@assets/image/icons/Compress.svg?react"
 export { default as CopyIcon } from "@assets/image/icons/Copy.svg?react";
 export { default as DeploymentsIcon } from "@assets/image/icons/Deployments.svg?react";
 export { default as DownloadIcon } from "@assets/image/icons/Download.svg?react";
-// Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/filter.svg
 export { default as DownloadDownArrowIcon } from "@assets/image/icons/DownloadDownArrow.svg?react";
 export { default as EditIcon } from "@assets/image/icons/Edit.svg?react";
 export { default as ExpandIcon } from "@assets/image/icons/Expand.svg?react";
@@ -28,6 +27,8 @@ export { default as ExternalLinkIcon } from "@assets/image/icons/ExternalLink.sv
 export { default as EyeIcon } from "@assets/image/icons/Eye.svg?react";
 export { default as EyeCloseIcon } from "@assets/image/icons/EyeClose.svg?react";
 export { default as FileIcon } from "@assets/image/icons/File.svg?react";
+
+// Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/filter.svg
 export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";
 export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?react";
 export { default as GearIcon } from "@assets/image/icons/Gear.svg?react";
