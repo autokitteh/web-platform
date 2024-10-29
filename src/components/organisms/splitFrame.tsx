@@ -6,7 +6,7 @@ import { cn } from "@utilities";
 
 import { useResize } from "@hooks";
 
-import { Frame, LogoCatLarge, ResizeButton } from "@components/atoms";
+import { Frame, ResizeButton } from "@components/atoms";
 import { EditorTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children }: SplitFrameProps) => {
@@ -42,8 +42,6 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 				<Frame className={rightFrameClass}>
 					<EditorTabs isExpanded={isExpanded} onExpand={() => setIsExpanded(!isExpanded)} />
 				</Frame>
-
-				<LogoCatLarge />
 			</div>
 		</div>
 	);
