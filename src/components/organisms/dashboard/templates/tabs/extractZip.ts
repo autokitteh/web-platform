@@ -84,7 +84,7 @@ export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 		// const releaseData = await response.json();
 
 		// Fetch the zipball using the URL from the release data
-		const downloadUrl = `https://codeload.github.com/autokitteh/kittehub/zip/refs/tags/v1`;
+		const downloadUrl = "assets/templates/kittehub.zip"; // releaseData.zipball_url;
 		// eslint-disable-next-line no-console
 		console.log("Fetching zipball from:", downloadUrl);
 
