@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { useShallow } from "zustand/shallow";
 
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
@@ -22,12 +23,12 @@ export const ManualRunButtons = () => {
 	const [savingManualRun, setSavingManualRun] = useState(false);
 
 	const { entrypointFunction, isManualRunEnabled, lastDeploymentStore, saveProjectManualRun } = useManualRunStore(
-		(state) => ({
+		useShallow((state) => ({
 			lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
 			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
 			isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
 			saveProjectManualRun: state.saveAndExecuteManualRun,
-		})
+		}))
 	);
 
 	const openManualRunSettings = useCallback(() => {

@@ -4,6 +4,7 @@ import Editor from "@monaco-editor/react";
 import { Controller, FieldErrors, FieldValues, useFieldArray, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { useShallow } from "zustand/shallow";
 
 import { ManualRunJsonObject, ManualRunParam } from "@src/interfaces/components/forms";
 import { useManualRunStore } from "@src/store";
@@ -25,10 +26,12 @@ export const ManualRunParamsForm = () => {
 
 	const { projectId } = useParams();
 
-	const { projectManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
-		projectManualRun: state.projectManualRun[projectId!],
-		updateManualRunConfiguration: state.updateManualRunConfiguration,
-	}));
+	const { projectManualRun, updateManualRunConfiguration } = useManualRunStore(
+		useShallow((state) => ({
+			projectManualRun: state.projectManualRun[projectId!],
+			updateManualRunConfiguration: state.updateManualRunConfiguration,
+		}))
+	);
 
 	const { isJson } = projectManualRun || {};
 	const [useJsonEditor, setUseJsonEditor] = useState(isJson);

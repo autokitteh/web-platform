@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { useShallow } from "zustand/shallow";
 
 import { BuildsService } from "@services";
 import { DeploymentStateVariant } from "@src/enums";
@@ -14,7 +15,7 @@ import { DeploymentsTableContent } from "@components/organisms/deployments";
 
 export const DeploymentsTable = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
-	const addToast = useToastStore((state) => state.addToast);
+	const addToast = useToastStore(useShallow((state) => state.addToast));
 	const { projectId } = useParams();
 	const {
 		deployments,
@@ -27,12 +28,14 @@ export const DeploymentsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const { lastDeploymentStore, updateManualRunConfiguration } = useManualRunStore((state) => ({
-		lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
-		entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
-		updateManualRunConfiguration: state.updateManualRunConfiguration,
-		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
-	}));
+	const { lastDeploymentStore, updateManualRunConfiguration } = useManualRunStore(
+		useShallow((state) => ({
+			lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
+			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
+			updateManualRunConfiguration: state.updateManualRunConfiguration,
+			saveAndExecuteManualRun: state.saveAndExecuteManualRun,
+		}))
+	);
 
 	const loadSingleshotArgs = async () => {
 		if (!deployments?.length || deployments[0].state !== DeploymentStateVariant.active) {
