@@ -1,6 +1,4 @@
-import { StateCreator } from "zustand";
-import { shallow } from "zustand/shallow";
-import { createWithEqualityFn as create } from "zustand/traditional";
+import { StateCreator, create } from "zustand";
 
 import { ModalStore } from "@interfaces/store";
 
@@ -19,4 +17,4 @@ const store: StateCreator<ModalStore> = (set) => ({
 		})),
 });
 
-export const useModalStore = create(store, shallow);
+export const useModalStore = create(store);
