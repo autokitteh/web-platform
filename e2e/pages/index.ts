@@ -1,2 +1,2 @@
-export { DashboardPage } from "./dashboard";
 export { ConnectionPage } from "./connection";
+export { DashboardPage } from "./dashboard";
