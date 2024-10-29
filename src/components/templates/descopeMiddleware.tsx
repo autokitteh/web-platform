@@ -5,7 +5,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import psl from "psl";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 import { authBearer, isLoggedInCookie, namespaces } from "@constants";
 import { LoggerService } from "@services/index";
@@ -23,7 +22,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
 	const addToast = useToastStore((state) => state.addToast);
-	const { t: magicLinkToken } = useParams();
 
 	const handleLogout = useCallback(async () => {
 		await logout();
@@ -49,7 +47,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		setLogoutFunction(handleLogout);
 	}, [handleLogout, setLogoutFunction]);
 
-	const handleLogin = useCallback(async (descopeToken: string) => {
+	const handleLogin = async (descopeToken: string) => {
 		try {
 			const apiBaseUrl = getApiBaseUrl();
 			await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${descopeToken}`, {
@@ -71,20 +69,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		} finally {
 			setDescopeRenderKey((prevKey) => prevKey + 1);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
-		// eslint-disable-next-line no-console
-		console.log("magicLinkToken", magicLinkToken);
-
-		if (magicLinkToken) handleLogin(magicLinkToken);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [magicLinkToken]);
+	};
 
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
-			handleLogin(event.detail.sessionJwt);
+			handleLogin(event.detail.sessionJwt || event.detail.magicLinkToken);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getLoggedInUser]
