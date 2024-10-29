@@ -75,8 +75,12 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, []);
 
 	useEffect(() => {
+		// eslint-disable-next-line no-console
+		console.log("magicLinkToken", magicLinkToken);
+
 		if (magicLinkToken) handleLogin(magicLinkToken);
-	}, [handleLogin, magicLinkToken]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [magicLinkToken]);
 
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
