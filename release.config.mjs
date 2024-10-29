@@ -56,7 +56,6 @@ export default {
 						"and it's purr-fectly packed with features!\n\n \n\n" +
 						":yasss_cat: What's New:\n" +
 						"$release_notes	\n\n" +
-						"File Hash (SHA256): ${process.env.SHA256}\n\n" +
 						"Let's make some paw-some progress!\n\n" +
 						"*Happy Coding, Furr-iends!* " +
 						":cat-roomba-exceptionally-fast: " +
