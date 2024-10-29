@@ -34,7 +34,7 @@
 		"@hookform/resolvers": "^3.9.0",
 		"@monaco-editor/react": "^4.6.0",
 		"@sentry/react": "^8.33.1",
-		"@sentry/vite-plugin": "^2.22.5",
+		"@sentry/vite-plugin": "^2.22.6",
 		"@types/lodash": "^4.17.10",
 		"@uiw/react-json-view": "^2.0.0-alpha.26",
 		"axios": "^1.7.2",
