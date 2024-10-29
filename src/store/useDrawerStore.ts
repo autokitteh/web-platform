@@ -1,4 +1,6 @@
-import { StateCreator, create } from "zustand";
+import { StateCreator } from "zustand";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { DrawerStore } from "@interfaces/store";
 
@@ -14,4 +16,4 @@ const store: StateCreator<DrawerStore> = (set) => ({
 		})),
 });
 
-export const useDrawerStore = create(store);
+export const useDrawerStore = create(store, shallow);
