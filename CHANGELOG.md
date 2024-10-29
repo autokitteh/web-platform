@@ -1,3 +1,10 @@
+## [2.39.2](https://github.com/autokitteh/web-platform/compare/v2.39.1...v2.39.2) (2024-10-29)
+
+
+### Performance Improvements
+
+* dynamic svg import warning in build ([#585](https://github.com/autokitteh/web-platform/issues/585)) ([3586c9b](https://github.com/autokitteh/web-platform/commit/3586c9b550c4d76090353e2b811c6068a4a89d6c))
+
 ## [2.39.1](https://github.com/autokitteh/web-platform/compare/v2.39.0...v2.39.1) (2024-10-28)
 
 
