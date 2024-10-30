@@ -191,7 +191,7 @@ export const DeploymentsTableContent = ({
 
 				<TBody>
 					{sortedDeployments.map(({ buildId, createdAt, deploymentId, sessionStats, state }) => (
-						<Tr className="group hover:bg-gray-1300" key={deploymentId}>
+						<Tr className="hover:bg-gray-1300" key={deploymentId}>
 							<Td
 								className="w-1/8 cursor-pointer pl-4"
 								onClick={() => navigate(`${deploymentId}/sessions`)}
@@ -227,7 +227,7 @@ export const DeploymentsTableContent = ({
 											}
 											title={t("ariaDeactivateDeploy")}
 										>
-											<ActionStoppedIcon className="size-4 transition group-hover:fill-white" />
+											<ActionStoppedIcon className="size-4 transition hover:fill-white" />
 										</IconButton>
 									) : (
 										<IconButton
@@ -235,7 +235,7 @@ export const DeploymentsTableContent = ({
 											className="size-8 p-1"
 											onClick={(event) => handleDeploymentAction(deploymentId, "activate", event)}
 										>
-											<ActionActiveIcon className="size-4 transition group-hover:fill-green-800" />
+											<ActionActiveIcon className="size-4 transition hover:fill-green-800" />
 										</IconButton>
 									)}
 
