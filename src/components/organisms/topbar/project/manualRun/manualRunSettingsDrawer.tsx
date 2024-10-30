@@ -54,7 +54,6 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 	useEffect(() => {
 		if (filePath) {
 			setValue("filePath", filePath);
-			setValue("params", []);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filePath]);
