@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
 import { TriggersService } from "@services";
-import { useModalStore } from "@src/store";
+import { useCacheStore, useModalStore } from "@src/store";
 import { Trigger } from "@type/models";
 
 import { Button, Loader } from "@components/atoms";
@@ -13,8 +13,10 @@ import { Modal } from "@components/molecules";
 
 export const DeleteTriggerModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteTrigger" });
+	const { t: tWarning } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
 	const [trigger, setTrigger] = useState<Trigger>();
 	const { closeModal } = useModalStore();
+	const { hasActiveDeployments } = useCacheStore();
 
 	const fetchTrigger = async () => {
 		if (!id) {
@@ -37,8 +39,8 @@ export const DeleteTriggerModal = ({ id, isDeleting, onDelete }: DeleteModalProp
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p>{t("content", { name: trigger?.name })}</p>
-
-				<p>{t("deleteWarning")}</p>
+				<p className="mt-1">{t("deleteWarning")}</p>
+				{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("content")}</p> : null}
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">

@@ -49,7 +49,7 @@ export const EditConnection = () => {
 
 	return (
 		<div className="min-w-80">
-			<TabFormHeader className="mb-11" title={t("editConnection")} />
+			<TabFormHeader className="mb-11" isHiddenButtons={true} title={t("editConnection")} />
 
 			<div className="mb-6 flex w-5/6 flex-col">
 				<div className="relative mb-6">

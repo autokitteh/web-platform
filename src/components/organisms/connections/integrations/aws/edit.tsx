@@ -4,17 +4,20 @@ import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
+import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { useCacheStore, useModalStore } from "@src/store";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
 import { Select } from "@components/molecules";
+import { WarningDeploymentActivetedModal } from "@components/organisms";
 
 import { FloppyDiskIcon } from "@assets/image/icons";
 
 export const AwsIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState<{ access_key: boolean; secret_key: boolean; token: boolean }>({
+	const [lockState, setLockState] = useState({
 		access_key: true,
 		secret_key: true,
 		token: true,
@@ -22,6 +25,9 @@ export const AwsIntegrationEditForm = () => {
 
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(awsIntegrationSchema, "edit");
+
+	const { hasActiveDeployments } = useCacheStore();
+	const { openModal } = useModalStore();
 
 	useEffect(() => {
 		if (!connectionVariables) return;
@@ -35,8 +41,17 @@ export const AwsIntegrationEditForm = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
+	const handleFormSubmit = () => {
+		if (hasActiveDeployments) {
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+		onSubmitEdit();
+	};
+
 	return (
-		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleFormSubmit)}>
 			<div className="relative">
 				<Controller
 					control={control}
@@ -52,7 +67,6 @@ export const AwsIntegrationEditForm = () => {
 						/>
 					)}
 				/>
-
 				<ErrorMessage>{errors.region?.message as string}</ErrorMessage>
 			</div>
 
@@ -70,7 +84,6 @@ export const AwsIntegrationEditForm = () => {
 					isRequired
 					label={t("aws.placeholders.accessKey")}
 				/>
-
 				<ErrorMessage>{errors.access_key?.message as string}</ErrorMessage>
 			</div>
 
@@ -88,7 +101,6 @@ export const AwsIntegrationEditForm = () => {
 					isRequired
 					label={t("aws.placeholders.secretKey")}
 				/>
-
 				<ErrorMessage>{errors.secret_key?.message as string}</ErrorMessage>
 			</div>
 
@@ -106,7 +118,6 @@ export const AwsIntegrationEditForm = () => {
 					isRequired
 					label={t("aws.placeholders.token")}
 				/>
-
 				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>
 			</div>
 
@@ -118,9 +129,10 @@ export const AwsIntegrationEditForm = () => {
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
+
+			<WarningDeploymentActivetedModal onClick={onSubmitEdit} />
 		</form>
 	);
 };

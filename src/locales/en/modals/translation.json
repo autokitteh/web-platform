@@ -72,5 +72,11 @@
 		"readme": "README",
 		"nameRequired": "Name is required",
 		"nameTaken": "Name is already taken"
+	},
+	"warningActiveDeployment": {
+		"title": "Warning",
+		"content": "Changes might affect the currently running deployments",
+		"cancelButton": "Cancel",
+		"agreeButton": "Ok"
 	}
 }

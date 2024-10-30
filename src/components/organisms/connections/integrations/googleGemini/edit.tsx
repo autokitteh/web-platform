@@ -3,11 +3,14 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
+import { useCacheStore, useModalStore } from "@src/store";
 import { googleGeminiIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
+import { WarningDeploymentActivetedModal } from "@components/organisms";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
@@ -15,13 +18,24 @@ export const GoogleGeminiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
+	const { hasActiveDeployments } = useCacheStore();
+	const { openModal } = useModalStore();
 	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
 		googleGeminiIntegrationSchema,
 		"edit"
 	);
 
+	const handleFormSubmit = () => {
+		if (hasActiveDeployments) {
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+		onSubmitEdit();
+	};
+
 	return (
-		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
+		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
 			<div className="relative">
 				<SecretInput
 					type="password"
@@ -34,7 +48,6 @@ export const GoogleGeminiIntegrationEditForm = () => {
 					isRequired
 					label={t("gemini.placeholders.key")}
 				/>
-
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>
 
@@ -46,7 +59,6 @@ export const GoogleGeminiIntegrationEditForm = () => {
 						to="https://aistudio.google.com/app"
 					>
 						{t("gemini.information.aiStudio")}
-
 						<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 					</Link>
 
@@ -56,7 +68,6 @@ export const GoogleGeminiIntegrationEditForm = () => {
 						to="https://aistudio.google.com/app/apikey"
 					>
 						{t("gemini.information.apiKeys")}
-
 						<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 					</Link>
 				</div>
@@ -70,9 +81,10 @@ export const GoogleGeminiIntegrationEditForm = () => {
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
+
+			<WarningDeploymentActivetedModal onClick={onSubmitEdit} />
 		</form>
 	);
 };

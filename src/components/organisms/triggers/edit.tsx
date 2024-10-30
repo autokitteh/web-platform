@@ -9,15 +9,16 @@ import { z } from "zod";
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
 import { TriggerTypes } from "@src/enums";
-import { TriggerFormIds } from "@src/enums/components";
+import { ModalName, TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { triggerSchema } from "@validations";
 
 import { useFetchConnections, useFetchTrigger, useFileOperations } from "@hooks";
-import { useCacheStore, useToastStore } from "@store";
+import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
+import { WarningDeploymentActivetedModal } from "@components/organisms";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
@@ -38,10 +39,12 @@ export const EditTrigger = () => {
 	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const { fetchResources } = useFileOperations(projectId!);
-	const { fetchTriggers } = useCacheStore();
+	const { fetchTriggers, hasActiveDeployments } = useCacheStore();
+	const { closeModal, openModal } = useModalStore();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isSaving, setIsSaving] = useState(false);
+	const [formData, setFormData] = useState<TriggerFormData>();
 
 	useEffect(() => {
 		setWebhookUrlHighlight(navigationData?.highlightWebhookUrl || false);
@@ -105,20 +108,22 @@ export const EditTrigger = () => {
 	}, [trigger, connections]);
 
 	const onSubmit = async (data: TriggerFormData) => {
+		closeModal(ModalName.warningDeploymentActive);
 		setIsSaving(true);
+		const { connection, cron, entryFunction, eventType, filePath, filter, name } = data;
 		try {
-			const sourceType = data.connection.value in TriggerTypes ? data.connection.value : TriggerTypes.connection;
-			const connectionId = data.connection.value in TriggerTypes ? undefined : data.connection.value;
+			const sourceType = connection.value in TriggerTypes ? connection.value : TriggerTypes.connection;
+			const connectionId = connection.value in TriggerTypes ? undefined : connection.value;
 
 			const { error } = await TriggersService.update(projectId!, {
 				sourceType,
 				connectionId,
-				name: data.name,
-				path: data.filePath.value,
-				entryFunction: data.entryFunction,
-				schedule: data.cron,
-				eventType: data.eventType,
-				filter: data.filter,
+				name,
+				path: filePath.value,
+				entryFunction,
+				schedule: cron,
+				eventType,
+				filter,
 				triggerId: triggerId!,
 			});
 
@@ -146,6 +151,16 @@ export const EditTrigger = () => {
 		}
 	};
 
+	const handleFormSubmit = (data: TriggerFormData) => {
+		if (hasActiveDeployments) {
+			setFormData(data);
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+		onSubmit(data);
+	};
+
 	if (isLoadingConnections || isLoadingTrigger) {
 		return <Loader isCenter size="xl" />;
 	}
@@ -164,7 +179,7 @@ export const EditTrigger = () => {
 				<form
 					className="flex flex-col gap-6"
 					id={TriggerFormIds.modifyTriggerForm}
-					onSubmit={handleSubmit(onSubmit)}
+					onSubmit={handleSubmit(handleFormSubmit)}
 				>
 					<NameAndConnectionFields connections={connections} isEdit />
 
@@ -178,6 +193,8 @@ export const EditTrigger = () => {
 				</form>
 
 				{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
+
+				{formData ? <WarningDeploymentActivetedModal onClick={() => onSubmit(formData)} /> : null}
 			</div>
 		</FormProvider>
 	);

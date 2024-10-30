@@ -10,15 +10,13 @@ import {
 	VariablesService,
 } from "@services";
 import { namespaces } from "@src/constants";
+import { DeploymentStateVariant } from "@src/enums";
 import { CacheStore } from "@src/interfaces/store";
 import { Environment } from "@src/types/models";
 
 import { useToastStore } from "@store";
 
-const initialState: Pick<
-	CacheStore,
-	"loading" | "deployments" | "triggers" | "variables" | "events" | "envId" | "currentProjectId"
-> = {
+const initialState: Omit<CacheStore, "fetchDeployments" | "fetchTriggers" | "fetchVariables" | "fetchEvents"> = {
 	loading: {
 		deployments: false,
 		triggers: false,
@@ -26,6 +24,7 @@ const initialState: Pick<
 		events: false,
 	},
 	deployments: undefined,
+	hasActiveDeployments: false,
 	variables: [],
 	triggers: [],
 	events: undefined,
@@ -62,6 +61,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			set((state) => ({
 				...state,
 				deployments: incomingDeployments,
+				hasActiveDeployments: incomingDeployments?.some((dep) => dep.state === DeploymentStateVariant.active),
 				loading: { ...state.loading, deployments: false },
 			}));
 
