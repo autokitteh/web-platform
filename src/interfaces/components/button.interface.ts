@@ -53,4 +53,5 @@ export interface SortButtonProps {
 export interface RefreshButtonProps {
 	onRefresh: () => Promise<void | Deployment[]>;
 	isLoading: boolean;
+	disabled?: boolean;
 }
