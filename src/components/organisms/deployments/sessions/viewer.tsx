@@ -174,15 +174,13 @@ export const SessionViewer = () => {
 						<div className="w-32 text-gray-1550">{t("status")}</div>
 						<SessionsTableState sessionState={sessionInfo.state} />
 					</div>
-					{sessionInfo.destinationName ? (
-						<div className="flex items-center gap-4">
-							<div className="w-32 text-gray-1550">{t("source")}</div>
-							{sessionInfo.destinationName}
-						</div>
-					) : null}
 					<div className="flex items-center gap-4">
-						<div className="w-32 text-gray-1550">{t("sourceType")}</div>
-						{sessionInfo.sourceType}
+						<div className="w-32 text-gray-1550">{t("source")}</div>
+						{sessionInfo.sourceType === "Connection" ? (
+							sessionInfo.destinationName
+						) : (
+							<span className="capitalize">{sessionInfo.sourceType}</span>
+						)}
 					</div>
 					<div className="flex items-center gap-4">
 						<div className="w-32 text-gray-1550">{t("entrypoint")}</div>
