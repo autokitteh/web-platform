@@ -206,7 +206,7 @@ export const DeploymentsTableContent = ({
 							<Td className="w-1/12" />
 
 							<Td className="w-1/8 pl-4">
-								<IdCopyButton text={buildId} />
+								<IdCopyButton id={buildId} />
 							</Td>
 
 							<Td
