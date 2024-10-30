@@ -4,6 +4,7 @@ export { CopyButton } from "@components/molecules/copyButton";
 export { Drawer } from "@components/molecules/drawer";
 export { DropdownButton } from "@components/molecules/dropdownButton";
 export { EmptyTableAddButton } from "@components/molecules/emptyTableAddButton";
+export { IdCopyButton } from "@components/molecules/idCopyButton";
 export { ImageMotion } from "@components/molecules/imageMotion";
 export { MapMenu } from "@components/molecules/mapMenu";
 export { Menu } from "@components/molecules/menu";
