@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -21,9 +21,14 @@ export const DeploymentsTable = () => {
 		fetchDeployments,
 		loading: { deployments: loadingDeployments },
 	} = useCacheStore();
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
 
 	useEffect(() => {
 		fetchDeployments(projectId!, true);
+		if (isInitialLoad) {
+			setIsInitialLoad(false);
+		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
@@ -84,13 +89,13 @@ export const DeploymentsTable = () => {
 				<RefreshButton isLoading={loadingDeployments} onRefresh={() => fetchDeployments(projectId!, true)} />
 			</div>
 
-			{loadingDeployments ? <Loader isCenter size="xl" /> : null}
+			{loadingDeployments && isInitialLoad ? <Loader isCenter size="xl" /> : null}
 
 			{!loadingDeployments && !deployments?.length ? (
 				<div className="mt-10 text-center text-xl font-semibold">{t("noDeployments")}</div>
 			) : null}
 
-			{!loadingDeployments && !!deployments?.length ? (
+			{!isInitialLoad && !!deployments?.length ? (
 				<DeploymentsTableContent
 					deployments={deployments}
 					updateDeployments={() => fetchDeployments(projectId!, true)}

@@ -9,7 +9,7 @@ import { IconButton, IconSvg } from "@components/atoms";
 
 import { RotateIcon } from "@assets/image/icons";
 
-export const RefreshButton = ({ isLoading, onRefresh }: RefreshButtonProps) => {
+export const RefreshButton = ({ disabled, isLoading, onRefresh }: RefreshButtonProps) => {
 	const { t } = useTranslation("buttons");
 	const [isSpinning, setIsSpinning] = useState(false);
 	const [spinStartTime, setSpinStartTime] = useState<number | null>(null);
@@ -41,19 +41,29 @@ export const RefreshButton = ({ isLoading, onRefresh }: RefreshButtonProps) => {
 		}
 	};
 
+	const iconButtonClass = useMemo(
+		() =>
+			cn("group size-[1.875rem] rounded-full bg-gray-1050 p-1", {
+				"hover:bg-gray-1250": !disabled,
+				"hover:bg-gray-1050 ": disabled,
+			}),
+		[disabled]
+	);
+
 	const rotateIconClass = useMemo(
 		() =>
-			cn("animate-spin fill-gray-500 transition group-hover:fill-green-800", {
+			cn("animate-spin fill-gray-500 transition", {
 				"animation-running": isSpinning,
 				"animation-paused": !isSpinning,
+				"group-hover:fill-green-800": !disabled,
 			}),
-		[isSpinning]
+		[isSpinning, disabled]
 	);
 
 	return (
 		<IconButton
-			className="group size-[1.875rem] rounded-full bg-gray-1050 p-1 hover:bg-gray-1250"
-			disabled={isSpinning}
+			className={iconButtonClass}
+			disabled={isSpinning || disabled}
 			onClick={handleRefreshClick}
 			title={t("refresh")}
 		>

@@ -133,6 +133,14 @@ export const SessionViewer = () => {
 		};
 	}, [sessionInfo, formatTimeDifference]);
 
+	const isRefreshButtonDisabled = useMemo(
+		() =>
+			sessionInfo?.state !== SessionState.completed &&
+			sessionInfo?.state !== SessionState.error &&
+			sessionInfo?.state !== SessionState.stopped,
+		[sessionInfo?.state]
+	);
+
 	if (!sessionInfo) return null;
 
 	return isLoading ? (
@@ -145,7 +153,11 @@ export const SessionViewer = () => {
 					{sessionInfo.triggerName}
 				</div>
 				<div className="flex items-center gap-3">
-					<RefreshButton isLoading={isLoading} onRefresh={fetchSessions} />
+					<RefreshButton
+						disabled={!isRefreshButtonDisabled}
+						isLoading={isLoading}
+						onRefresh={fetchSessions}
+					/>
 					<IconButton
 						ariaLabel={t("buttons.ariaCloseEditor")}
 						className="size-7 bg-gray-1100 p-0.5"
