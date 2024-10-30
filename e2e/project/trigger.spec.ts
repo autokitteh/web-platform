@@ -49,6 +49,7 @@ async function modifyTrigger(page: Page, name: string, cronExpression: string, f
 	await functionNameInput.fill(functionName);
 
 	await page.getByRole("button", { name: "Save", exact: true }).click();
+	await page.getByRole("button", { name: "Ok" }).click();
 }
 
 test.beforeEach(async ({ dashboardPage, page }) => {
