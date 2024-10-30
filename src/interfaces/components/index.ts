@@ -30,6 +30,7 @@ export type {
 	ModalDeleteVariableProps,
 	ModalModifyVariableProps,
 	ModalProps,
+	WarningDeploymentActivetedModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
 export type {

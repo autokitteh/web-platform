@@ -6,21 +6,24 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
-import { useCacheStore } from "@src/store";
+import { DeploymentStateVariant } from "@src/enums";
+import { ModalName } from "@src/enums/components";
+import { useCacheStore, useModalStore } from "@src/store";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
+import { WarningDeploymentActivetedModal } from "@components/organisms";
 
 export const EditVariable = () => {
 	const { t: tForm } = useTranslation("tabs", {
 		keyPrefix: "variables.form",
 	});
 	const { t: tErrors } = useTranslation("errors");
-
+	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { fetchVariables } = useCacheStore();
+	const { deployments, fetchVariables } = useCacheStore();
 
 	const { environmentId, projectId, variableName } = useParams();
 	const navigate = useNavigate();
@@ -74,23 +77,22 @@ export const EditVariable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const onSubmit = async () => {
+	const handleModalConfirm = async () => {
+		closeModal(ModalName.warningDeploymentActive);
 		const { isSecret, name, value } = getValues();
 		setIsLoading(true);
-		const { error } = await VariablesService.setByProjectId(projectId!, {
-			isSecret,
-			name,
-			scopeId: "",
-			value,
-		});
 
-		if (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-		}
 		try {
+			const { error } = await VariablesService.setByProjectId(projectId!, {
+				isSecret,
+				name,
+				scopeId: "",
+				value,
+			});
+
+			if (error) {
+				throw error;
+			}
 			await fetchVariables(projectId!, true);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
@@ -98,8 +100,20 @@ export const EditVariable = () => {
 				message: tErrors("errorFetchingVariables"),
 				type: "error",
 			});
+		} finally {
+			setIsLoading(false);
 		}
+
 		navigate(-1);
+	};
+
+	const handleFormSubmit = () => {
+		if (deployments?.length && deployments[0].state === DeploymentStateVariant.active) {
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+		handleModalConfirm();
 	};
 
 	return isLoadingData ? (
@@ -113,7 +127,7 @@ export const EditVariable = () => {
 				title={tForm("modifyVariable")}
 			/>
 
-			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
+			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(handleFormSubmit)}>
 				<div className="relative">
 					<Input
 						value={name}
@@ -143,6 +157,8 @@ export const EditVariable = () => {
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
 			</form>
+
+			<WarningDeploymentActivetedModal onClick={handleModalConfirm} />
 		</div>
 	);
 };

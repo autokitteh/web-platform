@@ -36,3 +36,7 @@ export interface CreateProjectModalProps {
 	category?: string;
 	cardTemplate: TemplateCardType;
 }
+
+export interface WarningDeploymentActivetedModalProps {
+	onClick?: () => void;
+}
