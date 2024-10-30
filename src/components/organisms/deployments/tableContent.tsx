@@ -14,7 +14,7 @@ import { useSort } from "@hooks";
 import { useModalStore, useToastStore } from "@store";
 
 import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { SortButton } from "@components/molecules";
+import { IdCopyButton, SortButton } from "@components/molecules";
 import { DeleteDeploymentModal, DeploymentSessionStats, DeploymentState } from "@components/organisms/deployments";
 
 import { ActionActiveIcon, ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
@@ -112,10 +112,10 @@ export const DeploymentsTableContent = ({
 				<THead>
 					<Tr>
 						<Th
-							className="group w-1/5 cursor-pointer pl-4 font-normal"
+							className="group w-1/8 cursor-pointer pl-4 font-normal"
 							onClick={() => requestSort("createdAt")}
 						>
-							{t("table.columns.deploymentTime")}
+							<span className="w-full truncate">{t("table.columns.deploymentTime")}</span>
 
 							<SortButton
 								className="opacity-0 group-hover:opacity-100"
@@ -123,41 +123,46 @@ export const DeploymentsTableContent = ({
 								sortDirection={sortConfig.direction}
 							/>
 						</Th>
+						<Th className="w-1/12" />
 
-						<Th className="group w-1/5 cursor-pointer font-normal">
-							<div className="flex w-full flex-row">
+						<Th className="group w-1/3 cursor-pointer font-normal">
+							<div className="flex w-full flex-row text-center">
 								<div
 									aria-label={tSessionsStats("running")}
-									className="w-1/12"
+									className="w-1/4 truncate"
 									title={tSessionsStats("running")}
 								>
 									{t("table.columns.running")}
 								</div>
 								<div
 									aria-label={tSessionsStats("stopped")}
-									className="w-1/12"
+									className="w-1/4 truncate"
 									title={tSessionsStats("stopped")}
 								>
 									{t("table.columns.stopped")}
 								</div>
 								<div
 									aria-label={tSessionsStats("completed")}
-									className="w-1/12"
+									className="w-1/4 truncate"
 									title={tSessionsStats("completed")}
 								>
 									{t("table.columns.completed")}
 								</div>
 								<div
 									aria-label={tSessionsStats("error")}
-									className="w-1/12"
+									className="w-1/4 truncate"
 									title={tSessionsStats("error")}
 								>
 									{t("table.columns.error")}
 								</div>
 							</div>
 						</Th>
+						<Th className="w-1/12" />
 
-						<Th className="group w-1/5 cursor-pointer font-normal" onClick={() => requestSort("buildId")}>
+						<Th
+							className="group w-1/8 cursor-pointer truncate pl-4 font-normal"
+							onClick={() => requestSort("buildId")}
+						>
 							{t("table.columns.buildId")}
 
 							<SortButton
@@ -168,7 +173,7 @@ export const DeploymentsTableContent = ({
 						</Th>
 
 						<Th
-							className="group w-1/5 cursor-pointer border-r-0 font-normal"
+							className="group w-1/8 cursor-pointer truncate border-r-0 font-normal"
 							onClick={() => requestSort("state")}
 						>
 							{t("table.columns.status")}
@@ -180,30 +185,38 @@ export const DeploymentsTableContent = ({
 							/>
 						</Th>
 
-						<Th className="w-1/5 text-right font-normal">{t("table.columns.actions")}</Th>
+						<Th className="w-1/8 text-right font-normal">{t("table.columns.actions")}</Th>
 					</Tr>
 				</THead>
 
 				<TBody>
 					{sortedDeployments.map(({ buildId, createdAt, deploymentId, sessionStats, state }) => (
-						<Tr
-							className="group cursor-pointer"
-							key={deploymentId}
-							onClick={() => navigate(`${deploymentId}/sessions`)}
-						>
-							<Td className="w-1/5 pl-4">{moment(createdAt).local().format(dateTimeFormat)}</Td>
+						<Tr className="group" key={deploymentId}>
+							<Td
+								className="w-1/8 cursor-pointer pl-4"
+								onClick={() => navigate(`${deploymentId}/sessions`)}
+							>
+								{moment(createdAt).local().format(dateTimeFormat)}
+							</Td>
+							<Td className="w-1/12" />
 
-							<Td className="w-1/5">
+							<Td className="w-1/3 cursor-pointer" onClick={() => navigate(`${deploymentId}/sessions`)}>
 								<DeploymentSessionStats sessionStats={sessionStats} />
 							</Td>
+							<Td className="w-1/12" />
 
-							<Td className="w-1/5">{buildId}</Td>
+							<Td className="w-1/8 pl-4">
+								<IdCopyButton text={buildId} />
+							</Td>
 
-							<Td className="w-1/5 border-r-0">
+							<Td
+								className="w-1/8 cursor-pointer border-r-0"
+								onClick={() => navigate(`${deploymentId}/sessions`)}
+							>
 								<DeploymentState deploymentState={state} />
 							</Td>
 
-							<Td className="w-1/5 pr-0">
+							<Td className="w-1/8 pr-0">
 								<div className="flex space-x-1">
 									{state === DeploymentStateVariant.active ? (
 										<IconButton

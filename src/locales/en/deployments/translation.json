@@ -15,10 +15,10 @@
 			"columns": {
 				"buildId": "Build ID",
 				"deploymentTime": "Deployment Time",
-				"running": "R",
-				"stopped": "S",
-				"completed": "C",
-				"error": "E",
+				"running": "Running",
+				"stopped": "Stopped",
+				"completed": "Completed",
+				"error": "Error",
 				"status": "Status",
 				"actions": "Actions"
 			},

@@ -9,8 +9,8 @@ import { cn } from "@utilities";
 export const DeploymentSessionStats = ({ sessionStats }: { sessionStats?: DeploymentSession[] }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 	const countStyle = (state?: SessionStateType) =>
-		cn("2xl:w-22 inline-block w-1/12 border-0 p-0 text-sm font-medium", {
-			"text-white": state === SessionStateType.running,
+		cn("2xl:w-22 inline-block w-1/4 text-center border-0 p-0 text-sm font-medium", {
+			"text-blue-500": state === SessionStateType.running,
 			"text-yellow-500": state === SessionStateType.stopped,
 			"text-green-800": state === SessionStateType.completed,
 			"text-red": state === SessionStateType.error,
