@@ -191,7 +191,7 @@ export const DeploymentsTableContent = ({
 
 				<TBody>
 					{sortedDeployments.map(({ buildId, createdAt, deploymentId, sessionStats, state }) => (
-						<Tr className="group" key={deploymentId}>
+						<Tr className="group hover:bg-gray-1300" key={deploymentId}>
 							<Td
 								className="w-1/8 cursor-pointer pl-4"
 								onClick={() => navigate(`${deploymentId}/sessions`)}

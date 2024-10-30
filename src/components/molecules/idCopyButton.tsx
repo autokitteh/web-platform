@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { CopyButton } from "./copyButton";
+import { CopyButton } from "@components/molecules/copyButton";
 
 export const IdCopyButton = ({ id }: { id: string }) => {
 	const { t } = useTranslation("components", { keyPrefix: "buttons" });
