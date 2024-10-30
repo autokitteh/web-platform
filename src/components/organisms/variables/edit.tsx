@@ -77,7 +77,7 @@ export const EditVariable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handleModalConfirm = async () => {
+	const onSubmit = async () => {
 		closeModal(ModalName.warningDeploymentActive);
 		const { isSecret, name, value } = getValues();
 		setIsLoading(true);
@@ -113,7 +113,7 @@ export const EditVariable = () => {
 
 			return;
 		}
-		handleModalConfirm();
+		onSubmit();
 	};
 
 	return isLoadingData ? (
@@ -158,7 +158,7 @@ export const EditVariable = () => {
 				</div>
 			</form>
 
-			<WarningDeploymentActivetedModal onClick={handleModalConfirm} />
+			<WarningDeploymentActivetedModal onClick={onSubmit} />
 		</div>
 	);
 };
