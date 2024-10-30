@@ -33,6 +33,7 @@ export const DeploymentsTableContent = ({
 	const { closeModal, openModal } = useModalStore();
 	const [deploymentId, setDeploymentId] = useState<string>();
 	const [isDeleting, setIsDeleting] = useState(false);
+	const { t: tSessionsStats } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
@@ -123,7 +124,38 @@ export const DeploymentsTableContent = ({
 							/>
 						</Th>
 
-						<Th className="group w-1/5 cursor-pointer font-normal">{t("table.columns.sessions")}</Th>
+						<Th className="group w-1/5 cursor-pointer font-normal">
+							<div className="flex w-full flex-row">
+								<div
+									aria-label={tSessionsStats("running")}
+									className="w-1/12"
+									title={tSessionsStats("running")}
+								>
+									{t("table.columns.running")}
+								</div>
+								<div
+									aria-label={tSessionsStats("stopped")}
+									className="w-1/12"
+									title={tSessionsStats("stopped")}
+								>
+									{t("table.columns.stopped")}
+								</div>
+								<div
+									aria-label={tSessionsStats("completed")}
+									className="w-1/12"
+									title={tSessionsStats("completed")}
+								>
+									{t("table.columns.completed")}
+								</div>
+								<div
+									aria-label={tSessionsStats("error")}
+									className="w-1/12"
+									title={tSessionsStats("error")}
+								>
+									{t("table.columns.error")}
+								</div>
+							</div>
+						</Th>
 
 						<Th className="group w-1/5 cursor-pointer font-normal" onClick={() => requestSort("buildId")}>
 							{t("table.columns.buildId")}
@@ -159,9 +191,7 @@ export const DeploymentsTableContent = ({
 							key={deploymentId}
 							onClick={() => navigate(`${deploymentId}/sessions`)}
 						>
-							<Td className="w-1/5 pl-4 font-semibold">
-								{moment(createdAt).local().format(dateTimeFormat)}
-							</Td>
+							<Td className="w-1/5 pl-4">{moment(createdAt).local().format(dateTimeFormat)}</Td>
 
 							<Td className="w-1/5">
 								<DeploymentSessionStats sessionStats={sessionStats} />

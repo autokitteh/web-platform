@@ -15,7 +15,10 @@
 			"columns": {
 				"buildId": "Build ID",
 				"deploymentTime": "Deployment Time",
-				"sessions": "Sessions",
+				"running": "R",
+				"stopped": "S",
+				"completed": "C",
+				"error": "E",
 				"status": "Status",
 				"actions": "Actions"
 			},
