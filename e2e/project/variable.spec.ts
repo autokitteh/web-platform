@@ -34,7 +34,7 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Value").click();
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
-		await page.getByRole("button", { name: "Ok" }).click();
+		await page.getByRole("button", { name: "Ok", exact: true }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
 		await expect(newVariableInTable).toBeVisible();
 	});
@@ -50,7 +50,7 @@ test.describe("Project Variables Suite", () => {
 
 	test("Delete variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Delete nameVariable variable" }).click();
-		await page.getByRole("button", { name: "Ok" }).click();
+		await page.getByRole("button", { name: "Ok", exact: true }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
 		const emptyTableMessage = page.getByText("ADD VARIABLE");
 		await expect(emptyTableMessage).toBeVisible();

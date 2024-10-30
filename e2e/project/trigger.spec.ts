@@ -49,7 +49,7 @@ async function modifyTrigger(page: Page, name: string, cronExpression: string, f
 	await functionNameInput.fill(functionName);
 
 	await page.getByRole("button", { name: "Save", exact: true }).click();
-	await page.getByRole("button", { name: "Ok" }).click();
+	await page.getByRole("button", { name: "Ok", exact: true }).click();
 }
 
 test.beforeEach(async ({ dashboardPage, page }) => {
@@ -105,7 +105,7 @@ test.describe("Project Triggers Suite", () => {
 		await expect(newRowInTable).toBeVisible();
 
 		await page.getByRole("button", { name: "Delete triggerName trigger" }).click();
-		await page.getByRole("button", { name: "Ok" }).click();
+		await page.getByRole("button", { name: "Ok", exact: true }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "triggerName" });
 		await expect(newVariableInTable).not.toBeVisible();
 		const noTriggersMessage = page.getByText("ADD TRIGGER");
