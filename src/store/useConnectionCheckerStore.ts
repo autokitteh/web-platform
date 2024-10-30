@@ -25,7 +25,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		});
 	},
 
-	setFetchConnectionsCallback: (callback: (() => void) | null) => {
+	setFetchConnectionsCallback: (callback) => {
 		set((state) => {
 			state.fetchConnectionsCallback = callback;
 
@@ -59,7 +59,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 		});
 	},
 
-	startCheckingStatus: (connectionId: string) => {
+	startCheckingStatus: (connectionId) => {
 		const { incrementRetries, resetChecker } = get();
 		const addToast = useToastStore.getState().addToast;
 

@@ -1,3 +1,5 @@
+import { Connection } from "@src/types/models";
+
 export interface ConnectionCheckerStore {
 	retries: number;
 	incrementRetries: () => void;
@@ -6,5 +8,5 @@ export interface ConnectionCheckerStore {
 	startCheckingStatus: (connectionId: string) => void;
 	avoidNextRerenderCleanup: boolean;
 	fetchConnectionsCallback: (() => void) | null;
-	setFetchConnectionsCallback: (callback: (() => Promise<void>) | null) => void;
+	setFetchConnectionsCallback: (callback: (() => Promise<void | Connection[]>) | null) => void;
 }

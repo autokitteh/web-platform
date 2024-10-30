@@ -9,7 +9,7 @@ import { namespaces } from "@src/constants";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useConnectionCheckerStore, useModalStore, useProjectValidationStore, useToastStore } from "@store";
+import { useCacheStore, useConnectionCheckerStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ConnectionTableStatus, EmptyTableAddButton, SortButton } from "@components/molecules";
@@ -24,45 +24,22 @@ export const ConnectionsTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const { projectId } = useParams();
 	const navigate = useNavigate();
-	const { checkState } = useProjectValidationStore();
 	const [isDeleting, setIsDeleting] = useState(false);
 
-	const [isLoading, setIsLoading] = useState(false);
-	const [connections, setConnections] = useState<Connection[]>([]);
 	const [connectionId, setConnectionId] = useState<string>();
 
 	const addToast = useToastStore((state) => state.addToast);
+	const {
+		connections,
+		fetchConnections,
+		loading: { connections: isLoading },
+	} = useCacheStore();
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections, "name");
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
 
-	const fetchConnections = useCallback(async () => {
-		setIsLoading(true);
-		try {
-			const { data: connectionsResponse, error } = await ConnectionService.listByProjectId(projectId!);
-			if (error) {
-				throw error;
-			}
-			if (!connectionsResponse) {
-				return;
-			}
-
-			setConnections(connectionsResponse);
-			checkState(projectId!, true);
-		} catch (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-		} finally {
-			setIsLoading(false);
-		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	useEffect(() => {
-		fetchConnections();
-		setFetchConnectionsCallback(fetchConnections);
+		fetchConnections(projectId!);
+		setFetchConnectionsCallback(() => fetchConnections(projectId!));
 
 		return () => {
 			resetChecker();
@@ -112,7 +89,7 @@ export const ConnectionsTable = () => {
 			t("connectionRemoveSuccessExtended", { connectionId, connectionName: connection?.name })
 		);
 
-		fetchConnections();
+		fetchConnections(projectId!, true);
 	};
 
 	const handleConnectionEditClick = useCallback(
