@@ -1,4 +1,3 @@
-// eslint-disable-next-line @liferay/sort-exports
 export {
 	defaultSessionsVisiblePageSize,
 	descopeProjectId,
