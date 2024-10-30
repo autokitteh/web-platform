@@ -32,7 +32,7 @@ const initialState: Omit<
 	hasActiveDeployments: false,
 	variables: [],
 	triggers: [],
-	connections: [],
+	connections: undefined,
 	events: undefined,
 	currentProjectId: undefined,
 	envId: undefined,
@@ -231,7 +231,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 	fetchConnections: async (projectId, force) => {
 		const { connections, currentProjectId } = get();
 
-		if (currentProjectId === projectId && !force && connections.length) {
+		if (currentProjectId === projectId && !force && connections) {
 			return connections;
 		}
 

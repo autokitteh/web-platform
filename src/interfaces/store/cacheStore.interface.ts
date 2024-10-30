@@ -14,7 +14,7 @@ export interface CacheStore {
 	triggers: Trigger[];
 	events?: BaseEvent[];
 	variables: Variable[];
-	connections: Connection[];
+	connections?: Connection[];
 	loading: LoadingState;
 	currentProjectId?: string;
 	envId?: string;

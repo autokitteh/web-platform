@@ -25,7 +25,6 @@ export const ConnectionsTable = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const [isDeleting, setIsDeleting] = useState(false);
-
 	const [connectionId, setConnectionId] = useState<string>();
 
 	const addToast = useToastStore((state) => state.addToast);
@@ -34,7 +33,7 @@ export const ConnectionsTable = () => {
 		fetchConnections,
 		loading: { connections: isLoading },
 	} = useCacheStore();
-	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections, "name");
+	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
 
 	useEffect(() => {
@@ -76,7 +75,7 @@ export const ConnectionsTable = () => {
 		setConnectionId(undefined);
 		resetChecker();
 
-		const connection = connections.find((connection) => connection.connectionId === connectionId);
+		const connection = connections?.find((connection) => connection.connectionId === connectionId);
 
 		addToast({
 			message: t("connectionRemoveSuccess", { connectionName: connection?.name }),
@@ -117,7 +116,7 @@ export const ConnectionsTable = () => {
 					{t("buttons.addNew")}
 				</Button>
 			</div>
-			{connections.length ? (
+			{connections?.length ? (
 				<Table className="mt-2.5">
 					<THead>
 						<Tr>
