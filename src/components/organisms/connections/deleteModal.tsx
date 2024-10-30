@@ -7,16 +7,18 @@ import { DeleteModalProps } from "@interfaces/components";
 import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
-import { useModalStore, useToastStore } from "@store";
+import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
 export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteConnection" });
+	const { t: tWarning } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
 	const [connection, setConnection] = useState<Connection>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
+	const { hasActiveDeployments } = useCacheStore();
 
 	const fetchConnection = async () => {
 		if (!id) {
@@ -44,9 +46,9 @@ export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalP
 		<Modal hideCloseButton name={ModalName.deleteConnection}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
-				<p>{t("content", { name: connection?.name })}</p>
-
-				<p>{t("deleteWarning")}</p>
+				<p className="mt-1">{t("content", { name: connection?.name })}</p>
+				<p className="mt-1">{t("deleteWarning")}</p>
+				{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("warning")}</p> : null}
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">

@@ -4,14 +4,16 @@ import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
-import { useModalStore } from "@src/store";
+import { useCacheStore, useModalStore } from "@src/store";
 
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
 export const DeleteVariableModal = ({ id, isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteVariable" });
+	const { t: tWarning } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
 	const { closeModal } = useModalStore();
+	const { hasActiveDeployments } = useCacheStore();
 
 	return (
 		<Modal hideCloseButton name={ModalName.deleteVariable}>
@@ -20,7 +22,8 @@ export const DeleteVariableModal = ({ id, isDeleting, onDelete }: DeleteModalPro
 
 				<div>
 					<p>{t("content", { name: id })}</p>
-					<p>{t("deleteWarning")}</p>
+					<p className="mt-1">{t("deleteWarning")}</p>
+					{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("warning")}</p> : null}
 				</div>
 			</div>
 
