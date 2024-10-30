@@ -1,3 +1,10 @@
+# [2.40.0](https://github.com/autokitteh/web-platform/compare/v2.39.3...v2.40.0) (2024-10-30)
+
+
+### Features
+
+* add Warning Modal triggers/connections/variables ([#571](https://github.com/autokitteh/web-platform/issues/571)) ([6cf7538](https://github.com/autokitteh/web-platform/commit/6cf7538a5b63f63fca6bbc1a88de14b250727fff))
+
 ## [2.39.3](https://github.com/autokitteh/web-platform/compare/v2.39.2...v2.39.3) (2024-10-29)
 
 
