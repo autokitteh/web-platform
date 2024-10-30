@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
-import { DeploymentStateVariant, TriggerTypes } from "@src/enums";
+import { TriggerTypes } from "@src/enums";
 import { ModalName, TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { triggerSchema } from "@validations";
@@ -39,7 +39,7 @@ export const EditTrigger = () => {
 	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const { fetchResources } = useFileOperations(projectId!);
-	const { deployments, fetchTriggers } = useCacheStore();
+	const { fetchTriggers, hasActiveDeployments } = useCacheStore();
 	const { closeModal, openModal } = useModalStore();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
@@ -152,7 +152,7 @@ export const EditTrigger = () => {
 	};
 
 	const handleFormSubmit = (data: TriggerFormData) => {
-		if (deployments?.length && deployments[0].state === DeploymentStateVariant.active) {
+		if (hasActiveDeployments) {
 			setFormData(data);
 			openModal(ModalName.warningDeploymentActive);
 

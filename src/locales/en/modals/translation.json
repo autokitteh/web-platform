@@ -75,7 +75,7 @@
 	},
 	"warningActiveDeployment": {
 		"title": "Warning",
-		"warning": "This might affect running deployment",
+		"warning": "Changes might affect the currently running deployments",
 		"cancelButton": "Cancel",
 		"agreeButton": "Ok"
 	}

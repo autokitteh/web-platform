@@ -9,6 +9,7 @@ interface LoadingState {
 
 export interface CacheStore {
 	deployments?: Deployment[];
+	hasActiveDeployments?: boolean;
 	triggers: Trigger[];
 	events?: BaseEvent[];
 	variables: Variable[];

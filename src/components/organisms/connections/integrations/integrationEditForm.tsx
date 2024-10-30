@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
-import { ConnectionAuthType, DeploymentStateVariant } from "@enums";
+import { ConnectionAuthType } from "@enums";
 import { Integrations, ModalName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
@@ -44,7 +44,7 @@ export const IntegrationEditForm = ({
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState<boolean>(true);
 
-	const { deployments } = useCacheStore();
+	const { hasActiveDeployments } = useCacheStore();
 	const { closeModal, openModal } = useModalStore();
 
 	useEffect(() => {
@@ -93,7 +93,7 @@ export const IntegrationEditForm = ({
 	};
 
 	const handleFormSubmit = () => {
-		if (deployments?.length && deployments[0].state === DeploymentStateVariant.active) {
+		if (hasActiveDeployments) {
 			openModal(ModalName.warningDeploymentActive);
 
 			return;

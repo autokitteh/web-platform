@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
-import { DeploymentStateVariant } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useCacheStore, useModalStore } from "@src/store";
 import { useToastStore } from "@store/useToastStore";
@@ -23,7 +22,7 @@ export const EditVariable = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { deployments, fetchVariables } = useCacheStore();
+	const { fetchVariables, hasActiveDeployments } = useCacheStore();
 
 	const { environmentId, projectId, variableName } = useParams();
 	const navigate = useNavigate();
@@ -108,7 +107,7 @@ export const EditVariable = () => {
 	};
 
 	const handleFormSubmit = () => {
-		if (deployments?.length && deployments[0].state === DeploymentStateVariant.active) {
+		if (hasActiveDeployments) {
 			openModal(ModalName.warningDeploymentActive);
 
 			return;

@@ -4,7 +4,6 @@ import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
-import { DeploymentStateVariant } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
@@ -27,7 +26,7 @@ export const AwsIntegrationEditForm = () => {
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(awsIntegrationSchema, "edit");
 
-	const { deployments } = useCacheStore();
+	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
 
 	useEffect(() => {
@@ -43,7 +42,7 @@ export const AwsIntegrationEditForm = () => {
 	}, [connectionVariables]);
 
 	const handleFormSubmit = () => {
-		if (deployments?.length && deployments[0].state === DeploymentStateVariant.active) {
+		if (hasActiveDeployments) {
 			openModal(ModalName.warningDeploymentActive);
 
 			return;

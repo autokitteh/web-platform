@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { DeploymentStateVariant } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
@@ -19,7 +18,7 @@ export const GoogleGeminiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
 
-	const { deployments } = useCacheStore();
+	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
 	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
 		googleGeminiIntegrationSchema,
@@ -27,7 +26,7 @@ export const GoogleGeminiIntegrationEditForm = () => {
 	);
 
 	const handleFormSubmit = () => {
-		if (deployments?.length && deployments[0].state === DeploymentStateVariant.active) {
+		if (hasActiveDeployments) {
 			openModal(ModalName.warningDeploymentActive);
 
 			return;
