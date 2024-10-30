@@ -107,25 +107,23 @@ export const EditTrigger = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger, connections]);
 
-	const onSubmit = async () => {
+	const onSubmit = async (data: TriggerFormData) => {
 		closeModal(ModalName.warningDeploymentActive);
-		if (!formData) return;
 		setIsSaving(true);
-
+		const { connection, cron, entryFunction, eventType, filePath, filter, name } = data;
 		try {
-			const sourceType =
-				formData?.connection.value in TriggerTypes ? formData.connection.value : TriggerTypes.connection;
-			const connectionId = formData.connection.value in TriggerTypes ? undefined : formData.connection.value;
+			const sourceType = connection.value in TriggerTypes ? connection.value : TriggerTypes.connection;
+			const connectionId = connection.value in TriggerTypes ? undefined : connection.value;
 
 			const { error } = await TriggersService.update(projectId!, {
 				sourceType,
 				connectionId,
-				name: formData.name,
-				path: formData.filePath.value,
-				entryFunction: formData.entryFunction,
-				schedule: formData.cron,
-				eventType: formData.eventType,
-				filter: formData.filter,
+				name,
+				path: filePath.value,
+				entryFunction,
+				schedule: cron,
+				eventType,
+				filter,
 				triggerId: triggerId!,
 			});
 
@@ -154,13 +152,13 @@ export const EditTrigger = () => {
 	};
 
 	const handleFormSubmit = (data: TriggerFormData) => {
-		setFormData(data);
 		if (deployments?.length && deployments[0].state === DeploymentStateVariant.active) {
+			setFormData(data);
 			openModal(ModalName.warningDeploymentActive);
 
 			return;
 		}
-		onSubmit();
+		onSubmit(data);
 	};
 
 	if (isLoadingConnections || isLoadingTrigger) {
@@ -196,7 +194,7 @@ export const EditTrigger = () => {
 
 				{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
 
-				<WarningDeploymentActivetedModal onClick={onSubmit} />
+				{formData ? <WarningDeploymentActivetedModal onClick={() => onSubmit(formData)} /> : null}
 			</div>
 		</FormProvider>
 	);

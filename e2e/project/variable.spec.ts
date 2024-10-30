@@ -1,4 +1,5 @@
-import { expect, test } from "../fixtures";
+import { expect, test } from "e2e/fixtures";
+import { waitForToast } from "e2e/utils";
 
 test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
@@ -34,7 +35,22 @@ test.describe("Project Variables Suite", () => {
 		await page.getByLabel("Value").click();
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
-		await page.getByRole("button", { name: "Ok", exact: true }).click();
+
+		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
+		await expect(newVariableInTable).toBeVisible();
+	});
+
+	test("Modify variable with active deployment", async ({ page }) => {
+		const deployButton = page.getByRole("button", { name: "Deploy project" });
+		await deployButton.click();
+		const toast = await waitForToast(page, "Project deployment completed successfully");
+		await expect(toast).toBeVisible();
+
+		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
+		await page.getByLabel("Value").click();
+		await page.getByLabel("Value").fill("newValueVariable");
+		await page.getByRole("button", { name: "Save", exact: true }).click();
+		await page.getByRole("button", { name: "Ok" }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
 		await expect(newVariableInTable).toBeVisible();
 	});
@@ -50,7 +66,7 @@ test.describe("Project Variables Suite", () => {
 
 	test("Delete variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Delete nameVariable variable" }).click();
-		await page.getByRole("button", { name: "Ok", exact: true }).click();
+		await page.getByRole("button", { name: "Ok" }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
 		const emptyTableMessage = page.getByText("ADD VARIABLE");
 		await expect(emptyTableMessage).toBeVisible();
