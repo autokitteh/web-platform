@@ -50,7 +50,7 @@ export const useCreateProjectFromTemplate = () => {
 
 			getProjectsList();
 
-			navigate(`/projects/${projectId}/connections`);
+			navigate(`/projects/${projectId}`);
 		};
 
 		getAndSaveFiles();
