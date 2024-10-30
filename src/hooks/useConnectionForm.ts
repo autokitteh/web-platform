@@ -11,9 +11,9 @@ import { ZodObject, ZodRawShape } from "zod";
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
-import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
+import { Integrations, ModalName, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useConnectionCheckerStore, useToastStore } from "@src/store";
+import { useConnectionCheckerStore, useModalStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@src/utilities";
@@ -57,6 +57,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const [connectionName, setConnectionName] = useState<string>();
 	const [integration, setIntegration] = useState<SingleValue<SelectOption>>();
 	const addToast = useToastStore((state) => state.addToast);
+	const { closeModal } = useModalStore();
 
 	const getConnectionAuthType = async (connectionId: string) => {
 		const { data: vars, error } = await VariablesService.list(connectionId);
@@ -301,6 +302,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const onSubmitEdit = async () => {
+		closeModal(ModalName.warningDeploymentActive);
 		editConnection(connectionId!, connectionIntegrationName);
 	};
 
