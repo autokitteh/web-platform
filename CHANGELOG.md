@@ -1,3 +1,10 @@
+## [2.40.1](https://github.com/autokitteh/web-platform/compare/v2.40.0...v2.40.1) (2024-10-30)
+
+
+### Bug Fixes
+
+* display multiline logs in session viewer ([#592](https://github.com/autokitteh/web-platform/issues/592)) ([2115094](https://github.com/autokitteh/web-platform/commit/211509415d346e41b93e1ae8154f063f947f3a2f))
+
 # [2.40.0](https://github.com/autokitteh/web-platform/compare/v2.39.3...v2.40.0) (2024-10-30)
 
 
