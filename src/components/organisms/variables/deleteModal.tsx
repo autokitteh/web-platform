@@ -23,7 +23,7 @@ export const DeleteVariableModal = ({ id, isDeleting, onDelete }: DeleteModalPro
 				<div>
 					<p>{t("content", { name: id })}</p>
 					<p className="mt-1">{t("deleteWarning")}</p>
-					{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("warning")}</p> : null}
+					{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("content")}</p> : null}
 				</div>
 			</div>
 

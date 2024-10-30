@@ -40,7 +40,7 @@ export const DeleteTriggerModal = ({ id, isDeleting, onDelete }: DeleteModalProp
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p>{t("content", { name: trigger?.name })}</p>
 				<p className="mt-1">{t("deleteWarning")}</p>
-				{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("warning")}</p> : null}
+				{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("content")}</p> : null}
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">

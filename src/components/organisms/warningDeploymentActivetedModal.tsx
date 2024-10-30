@@ -18,7 +18,7 @@ export const WarningDeploymentActivetedModal = ({ onClick }: WarningDeploymentAc
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 
-				<p className="text-base">{t("warning")}</p>
+				<p className="text-base">{t("content")}</p>
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">

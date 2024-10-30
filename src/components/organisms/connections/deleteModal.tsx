@@ -48,7 +48,7 @@ export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalP
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
 				<p className="mt-1">{t("content", { name: connection?.name })}</p>
 				<p className="mt-1">{t("deleteWarning")}</p>
-				{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("warning")}</p> : null}
+				{hasActiveDeployments ? <p className="mt-1 font-normal">{tWarning("content")}</p> : null}
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">
