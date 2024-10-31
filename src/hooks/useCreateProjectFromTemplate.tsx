@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import axios from "axios";
 import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +22,18 @@ interface TemplateState {
 	templateMap: Map<string, TemplateCardType>;
 	fetchTemplates: () => Promise<void>;
 	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateCardType | undefined;
+	lastCommitDate?: Date;
+}
+
+interface GitHubCommit {
+	sha: string;
+	commit: {
+		author: {
+			date: string;
+			name: string;
+		};
+		message: string;
+	};
 }
 
 export const useTemplateStore = create<TemplateState>((set, get) => ({
@@ -28,15 +41,41 @@ export const useTemplateStore = create<TemplateState>((set, get) => ({
 	isLoading: false,
 	error: null,
 	templateMap: new Map(),
+	lastCommitDate: undefined,
 
 	fetchTemplates: async () => {
 		set({ isLoading: true, error: null });
 		try {
+			try {
+				const response = await axios.get<GitHubCommit[]>(
+					`https://api.github.com/repos/autokitteh/kittehub/commits`,
+					{
+						params: {
+							per_page: 1,
+						},
+						headers: {
+							Accept: "application/vnd.github.v3+json",
+						},
+					}
+				);
+
+				if (response.data.length) {
+					const latestCommit = response.data[0];
+					set((prev) => ({ ...prev, lastCommitDate: new Date(latestCommit.commit.author.date) }));
+				} else {
+					throw new Error("No commits found");
+				}
+			} catch (error) {
+				set((prev) => ({
+					...prev,
+					error: error instanceof Error ? error.message : "Failed to fetch repository information",
+				}));
+			}
+
 			const result = await fetchAndUnpackZip();
 			if ("structure" in result) {
 				const processedCategories = processReadmeFiles(result.structure);
 
-				// Create a map of assetDirectory to template for quick lookups
 				const templateMap = new Map<string, TemplateCardType>();
 				processedCategories.forEach((category) => {
 					category.cards.forEach((card) => {
