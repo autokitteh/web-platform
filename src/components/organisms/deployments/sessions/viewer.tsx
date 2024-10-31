@@ -44,8 +44,8 @@ export const SessionViewer = () => {
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
 
-	const { reload: reloadOutputs } = useOutputsCacheStore();
-	const { reload: reloadActivities } = useActivitiesCacheStore();
+	const { loading: loadingOutputs, reload: reloadOutputs } = useOutputsCacheStore();
+	const { loading: loadingActivities, reload: reloadActivities } = useActivitiesCacheStore();
 
 	const closeEditor = useCallback(
 		() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`),
@@ -54,9 +54,8 @@ export const SessionViewer = () => {
 
 	const fetchSessionInfo = useCallback(async () => {
 		if (!sessionId) return;
-		setIsLoading(true);
+
 		const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId);
-		setIsLoading(false);
 
 		if (error) {
 			addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
@@ -70,6 +69,9 @@ export const SessionViewer = () => {
 			return;
 		}
 		setSessionInfo(sessionInfoResponse);
+		if (isInitialLoad) {
+			setIsInitialLoad(false);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 
@@ -80,14 +82,11 @@ export const SessionViewer = () => {
 
 	const fetchSessions = useCallback(async () => {
 		if (!sessionInfo) return;
+		setIsLoading(true);
 		await fetchSessionInfo();
-		reloadOutputs(sessionInfo.sessionId, sessionLogRowHeight);
-		reloadActivities(sessionInfo.sessionId, sessionLogRowHeight);
-
-		if (isInitialLoad) {
-			setIsInitialLoad(false);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		await reloadOutputs(sessionInfo.sessionId, sessionLogRowHeight);
+		await reloadActivities(sessionInfo.sessionId, sessionLogRowHeight);
+		setIsLoading(false);
 	}, [sessionInfo, fetchSessionInfo, reloadOutputs, reloadActivities]);
 
 	useEffect(() => {
@@ -272,6 +271,11 @@ export const SessionViewer = () => {
 						</Tab>
 					))}
 				</div>
+				{loadingOutputs || loadingActivities ? (
+					<div>
+						<Loader />
+					</div>
+				) : null}
 			</div>
 
 			<Outlet />
