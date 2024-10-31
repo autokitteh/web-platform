@@ -1,24 +1,36 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { SelectOption } from "@src/interfaces/components";
+import { extraTriggerTypes } from "@src/constants";
+import { useCacheStore } from "@src/store";
 import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";
 
-export const NameAndConnectionFields = ({ connections, isEdit }: { connections: SelectOption[]; isEdit?: boolean }) => {
+export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const {
 		control,
 		formState: { errors },
 		register,
 	} = useFormContext<TriggerFormData>();
+	const { connections } = useCacheStore();
 
 	const watchedName = useWatch({ control, name: "name" });
 	const watchedConnection = useWatch({ control, name: "connection" });
+	const formattedConnections = useMemo(
+		() => [
+			...extraTriggerTypes,
+			...(connections?.map((item) => ({
+				label: item.name,
+				value: item.connectionId,
+			})) || []),
+		],
+		[connections]
+	);
 
 	return (
 		<>
@@ -48,7 +60,7 @@ export const NameAndConnectionFields = ({ connections, isEdit }: { connections: 
 							isError={!!errors.connection}
 							label={t("placeholders.connection")}
 							noOptionsLabel={t("noConnectionsAvailable")}
-							options={connections}
+							options={formattedConnections}
 							placeholder={t("placeholders.selectConnection")}
 							value={watchedConnection}
 						/>
