@@ -11,7 +11,7 @@ import { namespaces } from "@src/constants";
 import { useToastStore } from "@src/store";
 import { BaseEvent } from "@src/types/models";
 
-import { Frame, IconButton, Loader, Tab } from "@components/atoms";
+import { Frame, IconButton, Loader, Typography } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
 
 import { Close } from "@assets/image/icons";
@@ -75,6 +75,7 @@ export const EventViewer = () => {
 			</div>
 			{eventInfo ? (
 				<div className="mt-3 border-b border-gray-950 pb-3.5">
+					<Typography className="mb-2 mt-1 font-fira-sans">{t("inputs")}</Typography>
 					<JsonView
 						className="scrollbar max-h-72 overflow-auto"
 						style={githubDarkTheme}
@@ -83,9 +84,7 @@ export const EventViewer = () => {
 				</div>
 			) : null}
 			<div className="mt-5 flex items-center justify-between">
-				<Tab activeTab="output" className="p-0 font-fira-sans" value="output">
-					{t("output")}
-				</Tab>
+				<Typography className="font-fira-sans">{t("output")}</Typography>
 			</div>
 			{eventInfo?.data ? (
 				<JsonView className="scrollbar mt-3 overflow-auto" style={githubDarkTheme} value={eventInfo.data} />
