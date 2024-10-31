@@ -24,6 +24,7 @@ export {
 	templateProjectsCategories,
 	findTemplateFilesByAssetDirectory,
 	meowWorldProjectName,
+	remoteTemplatesRepositoryURL,
 } from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";

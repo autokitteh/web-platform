@@ -4,6 +4,8 @@ export type {
 	TemplateCategory,
 	TemplateCardType,
 	DashboardFooterTemplateCardType,
+	RemoteTemplateCategory,
+	RemoteTemplateCardType,
 } from "@src/types/components/projectTemplates.type";
 export type { TopbarType } from "@src/types/components/topbar.type";
 export type { ButtonType } from "@type/components/button.type";

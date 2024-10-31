@@ -1,0 +1,12 @@
+{
+	"fetchAndExtract":{
+		"noFileStructure": "No file structure provided to processReadmeFiles",
+		"fetchAndExtractError": "Error in fetchAndExtract, name: {name}, error: {error}, stack: {stack}",
+		"invalidStructurePath": "Invalid structure path provided to processDirectory, path: {path}",
+		"nullOrUndefinedFound": "Null or undefined node found for {name} at {currentPath}",
+		"couldNotFindDirectory": "Could not find directory structure for {path}",
+		"skippingPathMissingMetadata": "Skipping path {path} as it is missing metadata, attributes: ",
+		"errorProcessingFile": "Error processing file {path}, error: {error}",
+		"errorProcessingFileStructure": "Error processing file structure, error: {error}"
+	}
+}

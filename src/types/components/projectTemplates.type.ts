@@ -8,6 +8,14 @@ export type TemplateCardType = {
 	title: string;
 };
 
+export type RemoteTemplateCardType = {
+	assetDirectory: string;
+	description: string;
+	files: Record<string, string>;
+	integrations: string[];
+	title: string;
+};
+
 export type DashboardFooterTemplateCardType = {
 	assetDirectory: string;
 	description: string;
@@ -17,6 +25,11 @@ export type DashboardFooterTemplateCardType = {
 
 export type TemplateCategory = {
 	cards: TemplateCardType[];
+	name: string;
+};
+
+export type RemoteTemplateCategory = {
+	cards: RemoteTemplateCardType[];
 	name: string;
 };
 
