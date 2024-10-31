@@ -1,3 +1,10 @@
+# [2.42.0](https://github.com/autokitteh/web-platform/compare/v2.41.2...v2.42.0) (2024-10-31)
+
+
+### Features
+
+* integrate cache store for connection management and refactor connection fetching logic ([#598](https://github.com/autokitteh/web-platform/issues/598)) ([439c59e](https://github.com/autokitteh/web-platform/commit/439c59e8e70d9cc91c355e50ef511d644de501cc))
+
 ## [2.41.2](https://github.com/autokitteh/web-platform/compare/v2.41.1...v2.41.2) (2024-10-31)
 
 
