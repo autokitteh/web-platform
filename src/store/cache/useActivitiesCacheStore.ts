@@ -12,18 +12,12 @@ import { useToastStore } from "@store";
 const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
+	isReloading: false,
 
-	reset: (sessionId) =>
-		set((state) => ({
-			sessions: {
-				...state.sessions,
-				[sessionId]: { activities: [], nextPageToken: undefined, fullyLoaded: false },
-			},
-		})),
-
-	reload: (sessionId, pageSize) => {
-		get().reset(sessionId);
-		get().loadLogs(sessionId, pageSize);
+	reload: async (sessionId, pageSize) => {
+		set({ isReloading: true });
+		await get().loadLogs(sessionId, pageSize);
+		set({ isReloading: false });
 	},
 
 	loadLogs: async (sessionId, pageSize) => {
@@ -61,10 +55,12 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 					sessions: {
 						...state.sessions,
 						[sessionId]: {
-							activities: [
-								...currentSession.activities,
-								...convertSessionLogRecordsProtoToActivitiesModel(data.records),
-							],
+							activities: get().isReloading
+								? convertSessionLogRecordsProtoToActivitiesModel(data.records)
+								: [
+										...currentSession.activities,
+										...convertSessionLogRecordsProtoToActivitiesModel(data.records),
+									],
 							nextPageToken: data.nextPageToken,
 							fullyLoaded: !data.nextPageToken,
 						},

@@ -41,10 +41,11 @@ export const SessionViewer = () => {
 	const [activeTab, setActiveTab] = useState(defaultSessionTab);
 	const [sessionInfo, setSessionInfo] = useState<ViewerSession | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
 
-	const { reload: reloadOutputs } = useOutputsCacheStore();
-	const { reload: reloadActivities } = useActivitiesCacheStore();
+	const { loading: loadingOutputs, reload: reloadOutputs } = useOutputsCacheStore();
+	const { loading: loadingActivities, reload: reloadActivities } = useActivitiesCacheStore();
 
 	const closeEditor = useCallback(
 		() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`),
@@ -53,9 +54,8 @@ export const SessionViewer = () => {
 
 	const fetchSessionInfo = useCallback(async () => {
 		if (!sessionId) return;
-		setIsLoading(true);
+
 		const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId);
-		setIsLoading(false);
 
 		if (error) {
 			addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
@@ -69,6 +69,9 @@ export const SessionViewer = () => {
 			return;
 		}
 		setSessionInfo(sessionInfoResponse);
+		if (isInitialLoad) {
+			setIsInitialLoad(false);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 
@@ -79,9 +82,11 @@ export const SessionViewer = () => {
 
 	const fetchSessions = useCallback(async () => {
 		if (!sessionInfo) return;
-		fetchSessionInfo();
-		reloadOutputs(sessionInfo.sessionId, sessionLogRowHeight);
-		reloadActivities(sessionInfo.sessionId, sessionLogRowHeight);
+		setIsLoading(true);
+		await fetchSessionInfo();
+		await reloadOutputs(sessionInfo.sessionId, sessionLogRowHeight);
+		await reloadActivities(sessionInfo.sessionId, sessionLogRowHeight);
+		setIsLoading(false);
 	}, [sessionInfo, fetchSessionInfo, reloadOutputs, reloadActivities]);
 
 	useEffect(() => {
@@ -143,7 +148,7 @@ export const SessionViewer = () => {
 
 	if (!sessionInfo) return null;
 
-	return isLoading ? (
+	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
 	) : (
 		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
@@ -266,6 +271,11 @@ export const SessionViewer = () => {
 						</Tab>
 					))}
 				</div>
+				{!loadingOutputs || !loadingActivities ? (
+					<div>
+						<Loader size="sm" />
+					</div>
+				) : null}
 			</div>
 
 			<Outlet />

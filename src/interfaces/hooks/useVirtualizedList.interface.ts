@@ -2,7 +2,6 @@ import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
 
 export interface VirtualizedListHookResult<T> {
 	items: T[];
-	loading: boolean;
 	isRowLoaded: (params: { index: number }) => boolean;
 	loadMoreRows: (params: { startIndex: number; stopIndex: number }) => Promise<void>;
 	cache: CellMeasurerCache;

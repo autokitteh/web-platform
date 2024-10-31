@@ -13,30 +13,19 @@ import { useToastStore } from "@store";
 const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
+	isReloading: false,
 
-	reset: (sessionId: string) =>
-		set((state) => ({
-			sessions: {
-				...state.sessions,
-				[sessionId]: { outputs: [], nextPageToken: undefined, fullyLoaded: false },
-			},
-		})),
-
-	reload: (sessionId, pageSize) => {
-		get().reset(sessionId);
-		get().loadLogs(sessionId, pageSize);
+	reload: async (sessionId, pageSize) => {
+		set({ isReloading: true });
+		await get().loadLogs(sessionId, pageSize);
+		set({ isReloading: false });
 	},
 
 	loadLogs: async (sessionId, pageSize) => {
 		set({ loading: true });
+		const currentSession = get().sessions[sessionId] || { outputs: [], nextPageToken: null, fullyLoaded: false };
 
 		try {
-			const currentSession = get().sessions[sessionId] || {
-				outputs: [],
-				nextPageToken: null,
-				fullyLoaded: false,
-			};
-
 			const { data, error } = await SessionsService.getLogRecordsBySessionId(
 				sessionId,
 				currentSession.nextPageToken || undefined,
@@ -45,10 +34,9 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			);
 
 			if (error) {
-				useToastStore.getState().addToast({
-					message: i18n.t("outputLogsFetchError", { ns: "errors" }),
-					type: "error",
-				});
+				useToastStore
+					.getState()
+					.addToast({ message: i18n.t("outputLogsFetchError", { ns: "errors" }), type: "error" });
 			}
 
 			if (data) {
@@ -56,7 +44,9 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 					sessions: {
 						...state.sessions,
 						[sessionId]: {
-							outputs: [...currentSession.outputs, ...convertSessionLogProtoToViewerOutput(data.records)],
+							outputs: get().isReloading
+								? convertSessionLogProtoToViewerOutput(data.records)
+								: [...currentSession.outputs, ...convertSessionLogProtoToViewerOutput(data.records)],
 							nextPageToken: data.nextPageToken,
 							fullyLoaded: !data.nextPageToken,
 						},
@@ -64,10 +54,9 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				}));
 			}
 		} catch (error) {
-			useToastStore.getState().addToast({
-				message: i18n.t("outputLogsFetchError", { ns: "errors" }),
-				type: "error",
-			});
+			useToastStore
+				.getState()
+				.addToast({ message: i18n.t("outputLogsFetchError", { ns: "errors" }), type: "error" });
 			LoggerService.error(
 				namespaces.stores.outputStore,
 				i18n.t("outputLogsFetchErrorExtended", { ns: "errors", error: (error as Error).message })

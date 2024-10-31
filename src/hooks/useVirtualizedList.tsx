@@ -94,7 +94,6 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 
 	return {
 		items,
-		loading,
 		isRowLoaded,
 		loadMoreRows,
 		cache,

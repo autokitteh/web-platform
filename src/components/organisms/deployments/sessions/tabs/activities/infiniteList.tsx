@@ -7,7 +7,7 @@ import { useVirtualizedList } from "@src/hooks";
 import { SessionActivity } from "@src/types/models";
 import { cn } from "@src/utilities";
 
-import { Frame, Loader } from "@components/atoms";
+import { Frame } from "@components/atoms";
 import { ActivityRow, SingleActivityInfo } from "@components/organisms/deployments/sessions/tabs/activities";
 
 export const ActivityList = () => {
@@ -18,7 +18,6 @@ export const ActivityList = () => {
 		items: activities,
 		listRef,
 		loadMoreRows,
-		loading,
 		nextPageToken,
 		t,
 	} = useVirtualizedList<SessionActivity>(SessionLogType.Activity, 60);
@@ -57,22 +56,6 @@ export const ActivityList = () => {
 		[activities.length, nextPageToken]
 	);
 
-	if (loading && !activities.length) {
-		return (
-			<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
-				<Loader isCenter size="xl" />
-			</Frame>
-		);
-	}
-
-	if (!activities.length) {
-		return (
-			<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
-				<div className="mt-10 text-center text-xl font-semibold">{t("noActivitiesFound")}</div>
-			</Frame>
-		);
-	}
-
 	return (
 		<Frame className="mr-3 h-4/5 w-full rounded-b-none pb-0 transition">
 			{selectedActivity ? (
@@ -107,6 +90,12 @@ export const ActivityList = () => {
 					</InfiniteLoader>
 				)}
 			</AutoSizer>
+
+			{!activities.length ? (
+				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
+					{t("noActivitiesFound")}
+				</div>
+			) : null}
 		</Frame>
 	);
 };

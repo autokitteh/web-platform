@@ -15,15 +15,15 @@ export interface SessionOutputData {
 export interface ActivitiesStore {
 	sessions: Record<string, SessionActivityData>;
 	loading: boolean;
-	reset: (sessionId: string) => void;
-	reload: (sessionId: string, pageSize: number) => void;
+	isReloading: boolean;
+	reload: (sessionId: string, pageSize: number) => Promise<void>;
 	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
 }
 
 export interface OutputsStore {
 	sessions: Record<string, SessionOutputData>;
 	loading: boolean;
-	reset: (sessionId: string) => void;
-	reload: (sessionId: string, pageSize: number) => void;
+	isReloading: boolean;
+	reload: (sessionId: string, pageSize: number) => Promise<void>;
 	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
 }

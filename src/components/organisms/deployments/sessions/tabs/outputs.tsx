@@ -1,12 +1,10 @@
-import React, { memo, useCallback, useEffect, useRef } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
 import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
 import { useVirtualizedList } from "@hooks/useVirtualizedList";
 import { SessionLogType } from "@src/enums";
 import { SessionOutput } from "@src/types/models";
-
-import { Loader } from "@components/atoms";
 
 const OutputRow = memo(({ log, measure }: { log: SessionOutput; measure: () => void }) => {
 	const rowRef = useRef<HTMLDivElement>(null);
@@ -37,11 +35,10 @@ export const SessionOutputs = () => {
 		items: outputs,
 		listRef,
 		loadMoreRows,
-		loading,
 		nextPageToken,
 		t,
 	} = useVirtualizedList<SessionOutput>(SessionLogType.Output);
-
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const cacheRef = useRef(
 		new CellMeasurerCache({
 			fixedWidth: true,
@@ -55,6 +52,9 @@ export const SessionOutputs = () => {
 		if (listRef.current) {
 			cacheRef.current.clearAll();
 			listRef.current.recomputeRowHeights();
+		}
+		if (isInitialLoad) {
+			setIsInitialLoad(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [outputs]);
@@ -92,40 +92,36 @@ export const SessionOutputs = () => {
 
 	return (
 		<div className="scrollbar size-full">
-			{loading && !outputs.length ? (
-				<Loader isCenter size="xl" />
-			) : (
-				<AutoSizer>
-					{({ height, width }) => (
-						<InfiniteLoader
-							isRowLoaded={isRowLoaded}
-							loadMoreRows={loadMoreRows}
-							rowCount={nextPageToken ? outputs.length + 1 : outputs.length}
-							threshold={15}
-						>
-							{({ onRowsRendered, registerChild }) => (
-								<List
-									className="scrollbar"
-									deferredMeasurementCache={cacheRef.current}
-									height={height}
-									onRowsRendered={onRowsRendered}
-									overscanRowCount={10}
-									ref={(ref) => {
-										setListRef(ref);
-										registerChild(ref);
-									}}
-									rowCount={outputs.length}
-									rowHeight={cacheRef.current.rowHeight}
-									rowRenderer={customRowRenderer}
-									width={width}
-								/>
-							)}
-						</InfiniteLoader>
-					)}
-				</AutoSizer>
-			)}
+			<AutoSizer>
+				{({ height, width }) => (
+					<InfiniteLoader
+						isRowLoaded={isRowLoaded}
+						loadMoreRows={loadMoreRows}
+						rowCount={nextPageToken ? outputs.length + 1 : outputs.length}
+						threshold={15}
+					>
+						{({ onRowsRendered, registerChild }) => (
+							<List
+								className="scrollbar"
+								deferredMeasurementCache={cacheRef.current}
+								height={height}
+								onRowsRendered={onRowsRendered}
+								overscanRowCount={10}
+								ref={(ref) => {
+									setListRef(ref);
+									registerChild(ref);
+								}}
+								rowCount={outputs.length}
+								rowHeight={cacheRef.current.rowHeight}
+								rowRenderer={customRowRenderer}
+								width={width}
+							/>
+						)}
+					</InfiniteLoader>
+				)}
+			</AutoSizer>
 
-			{!outputs.length && !loading ? (
+			{!outputs.length ? (
 				<div className="flex h-full items-center justify-center py-5 text-xl font-semibold">
 					{t("noLogsFound")}
 				</div>
