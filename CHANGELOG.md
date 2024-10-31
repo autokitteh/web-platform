@@ -1,3 +1,10 @@
+## [2.41.1](https://github.com/autokitteh/web-platform/compare/v2.41.0...v2.41.1) (2024-10-31)
+
+
+### Bug Fixes
+
+* save manual run configuration state when we move between deployments ([#596](https://github.com/autokitteh/web-platform/issues/596)) ([2dcbf3d](https://github.com/autokitteh/web-platform/commit/2dcbf3d9fc19f5656ecf5cd7b1526e69f3af1a20))
+
 # [2.41.0](https://github.com/autokitteh/web-platform/compare/v2.40.1...v2.41.0) (2024-10-31)
 
 
