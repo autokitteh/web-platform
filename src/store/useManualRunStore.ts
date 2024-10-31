@@ -7,9 +7,9 @@ import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { StoreName } from "@enums";
 import { SessionsService } from "@services";
-import { ManualProjectData, ManualRunStore } from "@src/interfaces/store";
+import { ManualRunStore } from "@src/interfaces/store";
 
-const createDefaultProjectState = (): ManualProjectData => ({
+const defaultManualRunState = {
 	files: [],
 	fileOptions: [],
 	filePath: { label: "", value: "" },
@@ -17,7 +17,7 @@ const createDefaultProjectState = (): ManualProjectData => ({
 	params: [],
 	isManualRunEnabled: false,
 	isJson: false,
-});
+};
 
 const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
@@ -28,7 +28,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	) => {
 		set((state) => {
 			const projectData = {
-				...createDefaultProjectState(),
+				...defaultManualRunState,
 				...state.projectManualRun[projectId],
 			};
 
