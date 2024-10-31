@@ -2,6 +2,7 @@ import axios from "axios";
 import frontMatter from "front-matter";
 import i18n from "i18next";
 import JSZip from "jszip";
+import { memoize } from "lodash";
 
 import {
 	DirectoryNode,
@@ -14,28 +15,30 @@ import {
 import { remoteTemplatesRepositoryURL } from "@src/constants";
 import { RemoteTemplateCardType, RemoteTemplateCategory } from "@src/types/components";
 
+const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
+
+const isDirectoryNode = memoize((node: FileNode | DirectoryNode): node is DirectoryNode => node?.type === "directory");
+
+const directoryCache = new Map<string, FileStructure>();
+
 const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 	const fileStructure: FileStructure = {};
-	const promises: Promise<void>[] = [];
 
-	zip.forEach((relativePath: string, file: JSZip.JSZipObject) => {
-		const pathParts = relativePath.split("/");
-		let currentLevel = fileStructure;
+	const batchSize = 50;
+	const entries = Object.entries(zip.files);
+	const batches = Math.ceil(entries.length / batchSize);
 
-		const processFile = async () => {
-			for (let i = 0; i < pathParts.length; i++) {
-				const part = pathParts[i];
+	for (let i = 0; i < batches; i++) {
+		const batchEntries = entries.slice(i * batchSize, (i + 1) * batchSize);
+		await Promise.all(
+			batchEntries.map(async ([relativePath, file]: [string, JSZip.JSZipObject]) => {
+				if (file.dir) return;
 
-				if (i === pathParts.length - 1) {
-					if (!file.dir) {
-						const content = await file.async("string");
-						currentLevel[part] = {
-							type: "file",
-							content,
-							path: relativePath,
-						};
-					}
-				} else {
+				const pathParts = relativePath.split("/");
+				let currentLevel = fileStructure;
+
+				for (let j = 0; j < pathParts.length - 1; j++) {
+					const part = pathParts[j];
 					if (!currentLevel[part] || isFileNode(currentLevel[part])) {
 						currentLevel[part] = {
 							type: "directory",
@@ -44,53 +47,75 @@ const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 					}
 					currentLevel = (currentLevel[part] as DirectoryNode).children;
 				}
-			}
-		};
 
-		promises.push(processFile());
-	});
-
-	await Promise.all(promises);
+				const fileName = pathParts[pathParts.length - 1];
+				const content = await file.async("string");
+				currentLevel[fileName] = {
+					type: "file",
+					content,
+					path: relativePath,
+				};
+			})
+		);
+	}
 
 	return fileStructure;
 };
 
-export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
+export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 	try {
-		const downloadUrl = remoteTemplatesRepositoryURL;
-		const { data: zipballResponse } = await axios.get(downloadUrl, { responseType: "arraybuffer" });
+		const { data: zipData } = await axios.get(remoteTemplatesRepositoryURL, {
+			responseType: "arraybuffer",
+			timeout: 30000,
+			validateStatus: (status) => status === 200,
+		});
 
-		const zipData = await zipballResponse;
 		const zip = new JSZip();
 		const content = await zip.loadAsync(zipData);
 		const structure = await processZipContent(content);
 
 		return { structure };
 	} catch (error) {
+		const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : "Unknown error occurred";
+
 		console.error(
 			i18n.t("fetchAndExtract.fetchAndExtractError", {
 				namespace: "utilities",
-				name: error instanceof Error ? error.name : "Unknown",
-				message: error instanceof Error ? error.message : "Unknown error occurred",
-				stack: error instanceof Error ? error.stack : undefined,
+				error: errorMessage,
 			})
 		);
 
-		return {
-			error: error instanceof Error ? error.message : "Unknown error occurred",
-		};
+		return { error: errorMessage };
 	}
-}
+};
 
-function isFileNode(node: FileNode | DirectoryNode): node is FileNode {
-	return node?.type === "file";
-}
+const getFileName = memoize((path: string): string => path.split("/").pop() || path);
 
-function isDirectoryNode(node: FileNode | DirectoryNode): node is DirectoryNode {
-	return node?.type === "directory";
-}
+const getDirectoryStructure = (fileStructure: FileStructure, targetPath: string): FileStructure | null => {
+	if (!targetPath) return fileStructure;
 
-function getAllFilesInDirectory(structure: FileStructure, currentPath: string = ""): FileWithContent[] {
+	const cacheKey = targetPath;
+	if (directoryCache.has(cacheKey)) {
+		return directoryCache.get(cacheKey)!;
+	}
+
+	const pathParts = targetPath.split("/").filter(Boolean);
+	let currentLevel = fileStructure;
+
+	for (const part of pathParts) {
+		const node = currentLevel[part];
+		if (!node || !isDirectoryNode(node)) {
+			return null;
+		}
+		currentLevel = node.children;
+	}
+
+	directoryCache.set(cacheKey, currentLevel);
+
+	return currentLevel;
+};
+
+const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = ""): FileWithContent[] => {
 	const files: FileWithContent[] = [];
 
 	Object.entries(structure).forEach(([name, node]) => {
@@ -104,47 +129,23 @@ function getAllFilesInDirectory(structure: FileStructure, currentPath: string = 
 				content: node.content,
 			});
 		} else if (isDirectoryNode(node)) {
-			const subFiles = getAllFilesInDirectory(node.children, fullPath);
-			files.push(...subFiles);
+			files.push(...getAllFilesInDirectory(node.children, fullPath));
 		}
 	});
 
 	return files;
-}
+};
 
-function getDirectoryStructure(fileStructure: FileStructure, targetPath: string): FileStructure | null {
-	if (!targetPath) return fileStructure;
-
-	const pathParts = targetPath.split("/").filter(Boolean);
-	let currentLevel = fileStructure;
-
-	for (const part of pathParts) {
-		const node = currentLevel[part];
-		if (!node || !isDirectoryNode(node)) {
-			return null;
-		}
-		currentLevel = node.children;
-	}
-
-	return currentLevel;
-}
-
-const getFileName = (path: string): string => path.split("/").pop() || path;
-
-export function processReadmeFiles(fileStructure: FileStructure | null | undefined): RemoteTemplateCategory[] {
+export const processReadmeFiles = (fileStructure: FileStructure | null | undefined): RemoteTemplateCategory[] => {
 	if (!fileStructure) {
-		console.warn(
-			i18n.t("fetchAndExtract.noFileStructure", {
-				ns: "utilities",
-			})
-		);
+		console.warn(i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }));
 
 		return [];
 	}
 
-	const categoriesMap = new Map<string, RemoteTemplateCardType[]>();
+	const categoriesMap = new Map<string, Set<RemoteTemplateCardType>>();
 
-	function processDirectory(structure: FileStructure, currentPath: string = ""): void {
+	const processDirectory = (structure: FileStructure, currentPath: string = ""): void => {
 		if (!structure || typeof structure !== "object") {
 			console.warn(
 				i18n.t("fetchAndExtract.invalidStructurePath", {
@@ -156,45 +157,20 @@ export function processReadmeFiles(fileStructure: FileStructure | null | undefin
 			return;
 		}
 
-		Object.entries(structure).forEach(([name, node]) => {
-			if (!node) {
-				console.warn(
-					i18n.t("fetchAndExtract.nullOrUndefinedFound", {
-						ns: "utilities",
-						currentPath,
-						name,
-					})
-				);
-
-				return;
-			}
+		for (const [name, node] of Object.entries(structure)) {
+			if (!node) continue;
 
 			if (isDirectoryNode(node)) {
 				processDirectory(node.children, `${currentPath}/${name}`.replace(/^\//, ""));
 			} else if (isFileNode(node) && name.toLowerCase() === "readme.md") {
 				try {
-					const directoryPath = currentPath;
-					const directoryStructure = fileStructure
-						? getDirectoryStructure(fileStructure, directoryPath)
-						: null;
-
-					if (!directoryStructure) {
-						console.warn(
-							i18n.t("fetchAndExtract.couldNotFindDirectory", {
-								ns: "utilities",
-								path: directoryPath,
-							})
-						);
-
-						return;
-					}
+					const directoryStructure = getDirectoryStructure(fileStructure, currentPath);
+					if (!directoryStructure) continue;
 
 					const filesWithContent = getAllFilesInDirectory(directoryStructure);
-					const filesRecord: Record<string, string> = {};
-					filesWithContent.forEach((file) => {
-						const fileName = getFileName(file.path);
-						filesRecord[fileName] = file.content;
-					});
+					const filesRecord = Object.fromEntries(
+						filesWithContent.map((file) => [getFileName(file.path), file.content])
+					);
 
 					const { attributes } = frontMatter<MarkdownAttributes>(node.content);
 
@@ -203,11 +179,9 @@ export function processReadmeFiles(fileStructure: FileStructure | null | undefin
 							i18n.t("fetchAndExtract.skippingPathMissingMetadata", {
 								ns: "utilities",
 								path: `${currentPath}/${name}`,
-							}),
-							attributes
+							})
 						);
-
-						return;
+						continue;
 					}
 
 					const templateCard: RemoteTemplateCardType = {
@@ -227,8 +201,10 @@ export function processReadmeFiles(fileStructure: FileStructure | null | undefin
 						: [attributes.categories];
 
 					categories.forEach((category) => {
-						const existingCards = categoriesMap.get(category) || [];
-						categoriesMap.set(category, [...existingCards, templateCard]);
+						if (!categoriesMap.has(category)) {
+							categoriesMap.set(category, new Set());
+						}
+						categoriesMap.get(category)!.add(templateCard);
 					});
 				} catch (error) {
 					console.error(
@@ -240,16 +216,16 @@ export function processReadmeFiles(fileStructure: FileStructure | null | undefin
 					);
 				}
 			}
-		});
-	}
+		}
+	};
 
 	try {
 		processDirectory(fileStructure);
 
 		return Array.from(categoriesMap.entries())
-			.map(([name, cards]) => ({
+			.map(([name, cardsSet]) => ({
 				name,
-				cards: cards.filter(Boolean),
+				cards: Array.from(cardsSet),
 			}))
 			.filter((category) => !!category.cards.length);
 	} catch (error) {
@@ -262,4 +238,4 @@ export function processReadmeFiles(fileStructure: FileStructure | null | undefin
 
 		return [];
 	}
-}
+};
