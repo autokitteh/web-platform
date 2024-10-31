@@ -80,7 +80,7 @@ export const SessionViewer = () => {
 
 	const fetchSessions = useCallback(async () => {
 		if (!sessionInfo) return;
-		fetchSessionInfo();
+		await fetchSessionInfo();
 		reloadOutputs(sessionInfo.sessionId, sessionLogRowHeight);
 		reloadActivities(sessionInfo.sessionId, sessionLogRowHeight);
 

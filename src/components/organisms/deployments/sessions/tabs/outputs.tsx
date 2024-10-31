@@ -41,7 +41,6 @@ export const SessionOutputs = () => {
 		nextPageToken,
 		t,
 	} = useVirtualizedList<SessionOutput>(SessionLogType.Output);
-
 	const cacheRef = useRef(
 		new CellMeasurerCache({
 			fixedWidth: true,
