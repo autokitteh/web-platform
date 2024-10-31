@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchAndUnpackZip, processReadmeFiles } from "./extractZip";
 import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
 import { ModalName } from "@src/enums/components";
-import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useModalStore } from "@src/store";
 import { TemplateCardType } from "@src/types/components";
 
@@ -23,7 +22,7 @@ export const ProjectTemplatesTabs = () => {
 	const getFiles = async () => {
 		const result = await fetchAndUnpackZip();
 		if ("structure" in result) {
-			const processedCategories = processReadmeFiles(result.structure, IntegrationsMap);
+			const processedCategories = processReadmeFiles(result.structure);
 			// eslint-disable-next-line no-console
 			console.log("Processed categories:", processedCategories);
 		}

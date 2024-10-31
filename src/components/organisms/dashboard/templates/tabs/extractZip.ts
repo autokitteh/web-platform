@@ -4,6 +4,8 @@ import axios from "axios";
 import frontMatter from "front-matter";
 import JSZip from "jszip";
 
+import { Integrations, IntegrationsMap } from "@src/enums/components/connection.enum";
+
 interface FileNode {
 	type: "file";
 	content: string;
@@ -219,10 +221,7 @@ function getFileName(path: string): string {
 	return path.split("/").pop() || path;
 }
 
-export function processReadmeFiles(
-	fileStructure: FileStructure | null | undefined,
-	integrationsMap: Record<string, Integration>
-): TemplateCategory[] {
+export function processReadmeFiles(fileStructure: FileStructure | null | undefined): TemplateCategory[] {
 	if (!fileStructure) {
 		console.warn("No file structure provided to processReadmeFiles");
 
@@ -284,7 +283,7 @@ export function processReadmeFiles(
 							: attributes.description,
 						files: filesRecord,
 						integrations: (Array.isArray(attributes.integrations) ? attributes.integrations : [])
-							.map((int) => integrationsMap[int])
+							.map((int) => IntegrationsMap[int as keyof typeof Integrations])
 							.filter(Boolean),
 						title: Array.isArray(attributes.title) ? attributes.title.join(", ") : attributes.title,
 					};
