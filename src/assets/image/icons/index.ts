@@ -35,6 +35,8 @@ export { default as GearIcon } from "@assets/image/icons/Gear.svg?react";
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
 export { default as InfoIcon } from "@assets/image/icons/Info.svg?react";
 export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
+// Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/list-details.svg
+export { default as ListDetailsIcon } from "@assets/image/icons/ListDetails.svg?react";
 export { default as UnlockedLockIcon } from "@assets/image/icons/Lock.svg?react";
 export { default as LockSolid } from "@assets/image/icons/LockSolid.svg?react";
 export { default as MenuCircleIcon } from "@assets/image/icons/MenuCircle.svg?react";

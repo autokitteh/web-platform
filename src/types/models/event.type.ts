@@ -1,3 +1,5 @@
+import { Value } from "@type/models";
+
 export type EventDestinationTypes = "connection" | "trigger" | "unknown";
 
 export type EnrichedEvent = {
@@ -10,9 +12,11 @@ export type EnrichedEvent = {
 };
 export type BaseEvent = {
 	createdAt: Date;
+	data?: Value;
 	destination?: "trigger" | "connection" | "unknown";
 	destinationId?: string;
 	destinationName?: string;
 	eventId: string;
+	eventType: string;
 	sourceType?: string;
 };

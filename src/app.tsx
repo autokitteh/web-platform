@@ -17,7 +17,7 @@ import { isProduction } from "@constants";
 
 import { PageTitle } from "@components/atoms";
 import { Toast } from "@components/molecules";
-import { DeploymentsTable, EventsTable, SessionsTable } from "@components/organisms";
+import { DeploymentsTable, EventViewer, EventsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
@@ -162,8 +162,10 @@ export const App = () => {
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
-				<Route element={<EventsLayout />} path="events">
-					<Route element={<EventsTable />} index />
+				<Route element={<EventsLayout />}>
+					<Route element={<EventsTable />} path="events">
+						<Route element={<EventViewer />} path=":eventId" />
+					</Route>
 
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>

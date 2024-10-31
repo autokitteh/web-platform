@@ -88,17 +88,17 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 			<ul className="ml-0 flex flex-col gap-2">
 				<li onMouseEnter={(event) => handleMouseEnter(event)}>
 					<Button
-						ariaLabel="New Project"
+						ariaLabel={t("newProject")}
 						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200 disabled:opacity-100"
 						disabled={isCreatingProject}
 						onClick={handleCreateProject}
-						title="New Project"
+						title={t("newProject")}
 					>
 						<div className="flex size-9 items-center justify-center">
 							{isCreatingProject ? (
 								<Loader className="ml-1 before:size-3 after:size-3" isCenter />
 							) : (
-								<IconSvg alt="New Project" size="xl" src={NewProject} />
+								<IconSvg alt={t("newProject")} size="xl" src={NewProject} />
 							)}
 						</div>
 

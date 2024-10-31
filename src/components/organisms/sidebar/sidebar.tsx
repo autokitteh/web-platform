@@ -14,7 +14,7 @@ import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { FileIcon, HelpIcon } from "@assets/image/icons";
+import { FileIcon, HelpIcon, ListDetailsIcon } from "@assets/image/icons";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
@@ -101,6 +101,29 @@ export const Sidebar = () => {
 					</div>
 
 					<div className="flex flex-col justify-end gap-5">
+						<Button
+							ariaLabel={t("events")}
+							className="hover:bg-green-200"
+							href="/events"
+							title={t("events")}
+						>
+							<IconSvg className="size-7 transition" src={ListDetailsIcon} />
+
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										{t("events")}
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
+
 						<Button
 							ariaLabel={t("systemLog")}
 							className="hover:bg-green-200"
