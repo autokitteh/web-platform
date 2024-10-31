@@ -9,7 +9,9 @@
 	"table": {
 		"columns": {
 			"eventId": "Event ID",
-			"createdAt": "Creation time"
+			"createdAt": "Creation time",
+			"destinationId": "Destination ID",
+			"type": "Type"
 		}
 	},
 	"viewer":{

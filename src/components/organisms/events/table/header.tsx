@@ -27,7 +27,7 @@ export const SortableHeader = memo(({ columnKey, columnLabel, onSort, sortConfig
 SortableHeader.displayName = "SortableHeader";
 
 export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
-	const { t } = useTranslation("events");
+	const { t } = useTranslation("events", { keyPrefix: "table.columns" });
 
 	return (
 		<THead className="pl-3">
@@ -35,7 +35,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 				<Td>
 					<SortableHeader
 						columnKey="createdAt"
-						columnLabel={t("table.columns.createdAt")}
+						columnLabel={t("createdAt")}
 						onSort={onSort}
 						sortConfig={sortConfig}
 					/>
@@ -43,7 +43,23 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 				<Td className="-ml-2">
 					<SortableHeader
 						columnKey="eventId"
-						columnLabel={t("table.columns.eventId")}
+						columnLabel={t("eventId")}
+						onSort={onSort}
+						sortConfig={sortConfig}
+					/>
+				</Td>
+				<Td className="-ml-2">
+					<SortableHeader
+						columnKey="destinationId"
+						columnLabel={t("destinationId")}
+						onSort={onSort}
+						sortConfig={sortConfig}
+					/>
+				</Td>
+				<Td className="-ml-2 mr-2 w-56">
+					<SortableHeader
+						columnKey="eventType"
+						columnLabel={t("type")}
 						onSort={onSort}
 						sortConfig={sortConfig}
 					/>

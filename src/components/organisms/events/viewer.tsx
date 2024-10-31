@@ -12,9 +12,9 @@ import { useToastStore } from "@src/store";
 import { BaseEvent } from "@src/types/models";
 
 import { Frame, IconButton, Loader, Tab } from "@components/atoms";
-import { Accordion, CopyButton } from "@components/molecules";
+import { CopyButton } from "@components/molecules";
 
-import { CircleMinusIcon, CirclePlusIcon, Close } from "@assets/image/icons";
+import { Close } from "@assets/image/icons";
 
 export const EventViewer = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -75,19 +75,11 @@ export const EventViewer = () => {
 			</div>
 			{eventInfo ? (
 				<div className="mt-3 border-b border-gray-950 pb-3.5">
-					<Accordion
-						classChildren="border-none pt-3 pb-0"
-						classIcon="fill-none group-hover:fill-none group-hover:stroke-green-800 stroke-white size-5 mb-0.5"
-						closeIcon={CircleMinusIcon}
-						openIcon={CirclePlusIcon}
-						title="Inputs"
-					>
-						<JsonView
-							className="scrollbar max-h-72 overflow-auto"
-							style={githubDarkTheme}
-							value={eventInputs}
-						/>
-					</Accordion>
+					<JsonView
+						className="scrollbar max-h-72 overflow-auto"
+						style={githubDarkTheme}
+						value={eventInputs}
+					/>
 				</div>
 			) : null}
 			<div className="mt-5 flex items-center justify-between">
