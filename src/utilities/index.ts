@@ -18,6 +18,6 @@ export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
 export { sortArray } from "@utilities/sortArray.utils";
 export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
 export { stripGoogleConnectionName } from "@utilities/stripGoogleConnectionName.utils";
-export { fetchAllFilesContent, fetchFileContent } from "@utilities/templateFilesFetch";
+export { fetchFileContent } from "@utilities/templateFilesFetch";
 export { transformAndStringifyValues } from "@utilities/transformAndStringifyValues.utils";
 export { ValidateURL } from "@utilities/validateUrl.utils";

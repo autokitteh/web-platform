@@ -1,21 +1,10 @@
-import { ComponentType, SVGProps } from "react";
-
 import axios from "axios";
 import frontMatter from "front-matter";
 import JSZip from "jszip";
 
+import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipOutput } from "@interfaces/utilities";
 import { Integrations, IntegrationsMap } from "@src/enums/components/connection.enum";
-
-interface FileNode {
-	type: "file";
-	content: string;
-	path: string;
-}
-
-interface DirectoryNode {
-	type: "directory";
-	children: FileStructure;
-}
+import { TemplateCardType, TemplateCategory } from "@src/types/components";
 
 const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 	const fileStructure: FileStructure = {};
@@ -31,7 +20,6 @@ const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 
 				if (i === pathParts.length - 1) {
 					if (!file.dir) {
-						// Get file content as text
 						const content = await file.async("string");
 						currentLevel[part] = {
 							type: "file",
@@ -54,60 +42,23 @@ const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 		promises.push(processFile());
 	});
 
-	// Wait for all file contents to be processed
 	await Promise.all(promises);
 
 	return fileStructure;
 };
 
-interface ProcessedZipResult {
-	structure: FileStructure;
-	error?: never;
-}
-
-interface ProcessedZipError {
-	structure?: never;
-	error: string;
-}
-
-type ProcessedZipOutput = ProcessedZipResult | ProcessedZipError;
-
 export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 	try {
-		// // First fetch to get the latest release info
-		// const response = await fetch("https://api.github.com/repos/autokitteh/kittehub/releases/latest");
-
-		// if (!response.ok) {
-		// 	throw new Error(`Failed to fetch release info: ${response.statusText}`);
-		// }
-
-		// const releaseData = await response.json();
-
-		// Fetch the zipball using the URL from the release data
 		const downloadUrl = "https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip"; // releaseData.zipball_url;
-		// eslint-disable-next-line no-console
-		console.log("Fetching zipball from:", downloadUrl);
-
 		const { data: zipballResponse } = await axios.get(downloadUrl, { responseType: "arraybuffer" });
 
-		// eslint-disable-next-line no-console
-		console.log("zipballResponse", zipballResponse);
-		// eslint-disable-next-line no-console
-		console.log("Zipball downloaded, processing...");
 		const zipData = await zipballResponse;
-		// eslint-disable-next-line no-console
-		console.log("Creating JSZip instance...");
 		const zip = new JSZip();
-		// eslint-disable-next-line no-console
-		console.log("Loading zip data...");
 		const content = await zip.loadAsync(zipData);
-		// eslint-disable-next-line no-console
-		console.log("Processing zip content...");
 		const structure = await processZipContent(content);
 
 		return { structure };
 	} catch (error) {
-		// Enhanced error logging
 		console.error("Detailed error in fetchAndUnpackZip:", {
 			name: error instanceof Error ? error.name : "Unknown",
 			message: error instanceof Error ? error.message : "Unknown error occurred",
@@ -118,50 +69,6 @@ export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 			error: error instanceof Error ? error.message : "Unknown error occurred",
 		};
 	}
-}
-
-// Types
-export type TemplateCardType = {
-	assetDirectory: string;
-	description: string;
-	files: Record<string, string>; // Changed from string[] to Record<string, string>
-	integrations: Integration[];
-	title: string;
-};
-
-export type TemplateCategory = {
-	cards: TemplateCardType[];
-	name: string;
-};
-// Update the interfaces to match front-matter's types
-interface MarkdownAttributes {
-	[key: string]: unknown;
-	title?: string;
-	description?: string;
-	categories?: string | string[];
-	integrations?: string[];
-}
-
-// Your existing types remain the same
-type Integration = {
-	icon: ComponentType<SVGProps<SVGSVGElement>>;
-	label: string;
-	value: string;
-};
-
-interface FileNode {
-	type: "file";
-	content: string;
-	path: string;
-}
-
-interface DirectoryNode {
-	type: "directory";
-	children: FileStructure;
-}
-
-interface FileStructure {
-	[key: string]: FileNode | DirectoryNode;
 }
 
 function isFileNode(node: FileNode | DirectoryNode): node is FileNode {

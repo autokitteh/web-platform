@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -18,8 +18,7 @@ import { DiscordIcon } from "@assets/image/icons/connections";
 export const IntroMainBlock = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { openModal } = useModalStore();
-	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
-	const [creatingTemplate, setCreatingTemplate] = useState(false);
+	const { createProjectFromAsset, isCreating } = useCreateProjectFromTemplate();
 
 	const { projectsList } = useProjectStore();
 
@@ -27,12 +26,6 @@ export const IntroMainBlock = () => {
 
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });
-	};
-
-	const createProjectFromAsset = async (assetDirectory: string) => {
-		setCreatingTemplate(true);
-		await createProjectFromTemplate(assetDirectory);
-		setCreatingTemplate(false);
 	};
 
 	return (
@@ -81,7 +74,7 @@ export const IntroMainBlock = () => {
 									className="min-w-64 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
 									onClick={() => createProjectFromAsset(meowWorldProjectName)}
 								>
-									<IconSvg size="lg" src={!creatingTemplate ? ProjectsIcon : Spinner} />
+									<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
 									{t("cards.main.meowWorld")}
 								</Button>
 							)}

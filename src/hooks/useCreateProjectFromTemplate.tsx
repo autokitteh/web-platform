@@ -3,45 +3,93 @@ import { useEffect, useState } from "react";
 import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { create } from "zustand";
 
-import { findTemplateFilesByAssetDirectory, namespaces } from "@constants";
+import { namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { useFileOperations } from "@src/hooks";
-import { fetchAllFilesContent, fetchFileContent } from "@src/utilities";
+import { TemplateCardType, TemplateCategory } from "@src/types/components";
 
 import { useProjectStore, useToastStore } from "@store";
+
+import { fetchAndUnpackZip, processReadmeFiles } from "@components/organisms/dashboard/templates/tabs/extractZip";
+
+interface TemplateState {
+	categories: TemplateCategory[];
+	isLoading: boolean;
+	error: string | null;
+	templateMap: Map<string, TemplateCardType>;
+	fetchTemplates: () => Promise<void>;
+	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateCardType | undefined;
+}
+
+export const useTemplateStore = create<TemplateState>((set, get) => ({
+	categories: [],
+	isLoading: false,
+	error: null,
+	templateMap: new Map(),
+
+	fetchTemplates: async () => {
+		set({ isLoading: true, error: null });
+		try {
+			const result = await fetchAndUnpackZip();
+			if ("structure" in result) {
+				const processedCategories = processReadmeFiles(result.structure);
+
+				// Create a map of assetDirectory to template for quick lookups
+				const templateMap = new Map<string, TemplateCardType>();
+				processedCategories.forEach((category) => {
+					category.cards.forEach((card) => {
+						templateMap.set(card.assetDirectory, card);
+					});
+				});
+
+				set({
+					categories: processedCategories,
+					templateMap,
+					isLoading: false,
+				});
+			} else {
+				throw new Error(result.error);
+			}
+		} catch (error) {
+			set({
+				error: error instanceof Error ? error.message : "Failed to fetch templates",
+				isLoading: false,
+			});
+		}
+	},
+
+	findTemplateByAssetDirectory: (assetDirectory: string) => {
+		return get().templateMap.get(assetDirectory);
+	},
+}));
 
 export const useCreateProjectFromTemplate = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { createProjectFromManifest, getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
+	const { findTemplateByAssetDirectory } = useTemplateStore();
+	const [isCreating, setIsCreating] = useState(false);
 
 	const [projectId, setProjectId] = useState<string | null>(null);
-	const [assetDirectory, setAssetDirectory] = useState<string | null>(null);
+	const [templateFiles, setTemplateFiles] = useState<Record<string, string>>();
 
 	const { saveAllFiles } = useFileOperations(projectId || "");
 
 	useEffect(() => {
 		const getAndSaveFiles = async () => {
-			if (!projectId || !assetDirectory) return;
+			if (!projectId || !templateFiles) return;
 
-			const filesPerProject = await findTemplateFilesByAssetDirectory(assetDirectory);
-
-			if (!filesPerProject) {
-				addToast({
-					message: t("projectTemplateFilesNotFound"),
-					type: "error",
-				});
-
-				LoggerService.error(namespaces.manifestService, `${t("projectTemplateFilesNotFound")}`);
-
-				return;
-			}
-
-			const filesData = await fetchAllFilesContent(`/assets/templates/${assetDirectory}/`, filesPerProject);
-
-			await saveAllFiles(filesData);
+			await saveAllFiles(
+				Object.fromEntries(
+					Object.entries(templateFiles).map(([path, content]) => [
+						path,
+						new Uint8Array(new TextEncoder().encode(content)),
+					])
+				)
+			);
 
 			addToast({
 				message: t("projectCreatedSuccessfully"),
@@ -57,10 +105,9 @@ export const useCreateProjectFromTemplate = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const createProjectFromTemplate = async (assetDir: string, projectName?: string) => {
+	const createProjectFromTemplate = async (template: TemplateCardType, projectName?: string) => {
 		try {
-			const manifestURL = `/assets/templates/${assetDir}/autokitteh.yaml`;
-			const manifestData = await fetchFileContent(manifestURL);
+			const manifestData = template.files["autokitteh.yaml"];
 
 			if (!manifestData) {
 				addToast({
@@ -100,11 +147,11 @@ export const useCreateProjectFromTemplate = () => {
 
 			LoggerService.info(
 				namespaces.hooks.createProjectFromTemplate,
-				t("projectCreatedSuccessfullyExtended", { templateName: assetDir, projectId: newProjectId })
+				t("projectCreatedSuccessfullyExtended", { templateName: template.title, projectId: newProjectId })
 			);
 
 			setProjectId(newProjectId);
-			setAssetDirectory(assetDir);
+			setTemplateFiles(template.files);
 		} catch (error) {
 			addToast({
 				message: t("projectCreationFailed"),
@@ -115,5 +162,24 @@ export const useCreateProjectFromTemplate = () => {
 		}
 	};
 
-	return { createProjectFromTemplate };
+	const createProjectFromAsset = async (templateAssetDirectory: string, projectName?: string) => {
+		setIsCreating(true);
+		try {
+			const template = findTemplateByAssetDirectory(templateAssetDirectory);
+			if (!template) {
+				throw new Error(`Template not found for asset directory: ${templateAssetDirectory}`);
+			}
+			await createProjectFromTemplate(template, projectName);
+		} catch (error) {
+			addToast({
+				message: t("projectCreationFailed"),
+				type: "error",
+			});
+			console.error("Error creating project from template:", error);
+		} finally {
+			setIsCreating(false);
+		}
+	};
+
+	return { createProjectFromAsset, isCreating };
 };

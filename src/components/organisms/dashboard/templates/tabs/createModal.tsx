@@ -23,7 +23,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 	const [manifestData, setManifestData] = useState<string | null>(null);
 	const { assetDirectory, description, integrations, title } = cardTemplate;
 	const { closeModal } = useModalStore();
-	const { createProjectFromTemplate } = useCreateProjectFromTemplate();
+	const { createProjectFromAsset } = useCreateProjectFromTemplate();
 	const { projectsList } = useProjectStore();
 
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
@@ -61,7 +61,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 		if (!assetDirectory || !projectName) return;
 
 		setIsCreating(true);
-		await createProjectFromTemplate(assetDirectory, projectName);
+		await createProjectFromAsset(assetDirectory, projectName);
 		setIsCreating(false);
 		closeModal(ModalName.templateCreateProject);
 	};

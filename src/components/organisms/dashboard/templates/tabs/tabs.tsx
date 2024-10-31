@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { fetchAndUnpackZip, processReadmeFiles } from "./extractZip";
-import { defaultTemplateProjectCategory, templateProjectsCategories } from "@constants";
+import { defaultTemplateProjectCategory } from "@constants";
 import { ModalName } from "@src/enums/components";
 import { useModalStore } from "@src/store";
-import { TemplateCardType } from "@src/types/components";
+import { TemplateCardType, TemplateCategory } from "@src/types/components";
 
 import { Tab } from "@components/atoms";
 import { ProjectTemplateCard, ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
@@ -13,9 +13,11 @@ export const ProjectTemplatesTabs = () => {
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
 	const [card, setCard] = useState<TemplateCardType>();
 	const { openModal } = useModalStore();
+	const [templateCategories, setTemplateCategories] = useState<TemplateCategory[]>([]);
 
 	const activeCategory = useMemo(
-		() => templateProjectsCategories.find((category) => category.name === activeTab),
+		() => templateCategories.find((category) => category.name === activeTab),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[activeTab]
 	);
 
@@ -25,6 +27,7 @@ export const ProjectTemplatesTabs = () => {
 			const processedCategories = processReadmeFiles(result.structure);
 			// eslint-disable-next-line no-console
 			console.log("Processed categories:", processedCategories);
+			setTemplateCategories(processedCategories);
 		}
 	};
 
@@ -53,7 +56,7 @@ export const ProjectTemplatesTabs = () => {
 						"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2"
 					}
 				>
-					{templateProjectsCategories.map(({ name }) => (
+					{templateCategories.map(({ name }) => (
 						<Tab
 							activeTab={activeTab}
 							ariaLabel={name}

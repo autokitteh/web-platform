@@ -3,7 +3,7 @@ import { ComponentType, SVGProps } from "react";
 export type TemplateCardType = {
 	assetDirectory: string;
 	description: string;
-	files: string[];
+	files: Record<string, string>;
 	integrations: Integration[];
 	title: string;
 };
@@ -20,7 +20,7 @@ export type TemplateCategory = {
 	name: string;
 };
 
-type Integration = {
+export type Integration = {
 	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	label: string;
 	value: string;
