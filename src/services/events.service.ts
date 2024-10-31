@@ -33,7 +33,7 @@ export class EventsService {
 
 	static async get(eventId: string): Promise<ServiceResponse<BaseEvent | undefined>> {
 		try {
-			const { event } = await eventsClient.get({ eventId });
+			const { event } = await eventsClient.get({ eventId, jsonValues: true });
 			if (!event) {
 				return { data: undefined, error: undefined };
 			}
