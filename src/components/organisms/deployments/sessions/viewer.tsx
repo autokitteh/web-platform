@@ -41,6 +41,7 @@ export const SessionViewer = () => {
 	const [activeTab, setActiveTab] = useState(defaultSessionTab);
 	const [sessionInfo, setSessionInfo] = useState<ViewerSession | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
 
 	const { reload: reloadOutputs } = useOutputsCacheStore();
@@ -82,6 +83,11 @@ export const SessionViewer = () => {
 		fetchSessionInfo();
 		reloadOutputs(sessionInfo.sessionId, sessionLogRowHeight);
 		reloadActivities(sessionInfo.sessionId, sessionLogRowHeight);
+
+		if (isInitialLoad) {
+			setIsInitialLoad(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionInfo, fetchSessionInfo, reloadOutputs, reloadActivities]);
 
 	useEffect(() => {
@@ -143,7 +149,7 @@ export const SessionViewer = () => {
 
 	if (!sessionInfo) return null;
 
-	return isLoading ? (
+	return isLoading && isInitialLoad ? (
 		<Loader size="xl" />
 	) : (
 		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
