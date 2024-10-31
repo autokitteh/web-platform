@@ -84,19 +84,17 @@ export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
 		// const releaseData = await response.json();
 
 		// Fetch the zipball using the URL from the release data
-		const downloadUrl = "assets/templates/kittehub.zip"; // releaseData.zipball_url;
+		const downloadUrl = "https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip"; // releaseData.zipball_url;
 		// eslint-disable-next-line no-console
 		console.log("Fetching zipball from:", downloadUrl);
 
-		const zipballResponse = await fetch(downloadUrl, {
-			mode: "no-cors",
-		});
+		const { data: zipballResponse } = await axios.get(downloadUrl, { responseType: "arraybuffer" });
 
 		// eslint-disable-next-line no-console
 		console.log("zipballResponse", zipballResponse);
 		// eslint-disable-next-line no-console
 		console.log("Zipball downloaded, processing...");
-		const zipData = await zipballResponse.arrayBuffer();
+		const zipData = await zipballResponse;
 		// eslint-disable-next-line no-console
 		console.log("Creating JSZip instance...");
 		const zip = new JSZip();
