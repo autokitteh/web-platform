@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
@@ -8,12 +8,13 @@ import { z } from "zod";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
+import { extraTriggerTypes } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { ModalName, TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { triggerSchema } from "@validations";
 
-import { useFetchConnections, useFetchTrigger, useFileOperations } from "@hooks";
+import { useFetchTrigger, useFileOperations } from "@hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
@@ -36,10 +37,14 @@ export const EditTrigger = () => {
 	const location = useLocation();
 	const navigationData = location.state;
 	const [webhookUrlHighlight, setWebhookUrlHighlight] = useState(false);
-	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
 	const { fetchResources } = useFileOperations(projectId!);
-	const { fetchTriggers, hasActiveDeployments } = useCacheStore();
+	const {
+		connections,
+		fetchTriggers,
+		hasActiveDeployments,
+		loading: { connections: isLoadingConnections },
+	} = useCacheStore();
 	const { closeModal, openModal } = useModalStore();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
@@ -87,11 +92,22 @@ export const EditTrigger = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const formattedConnections = useMemo(
+		() => [
+			...extraTriggerTypes,
+			...(connections?.map((item) => ({
+				label: item.name,
+				value: item.connectionId,
+			})) || []),
+		],
+		[connections]
+	);
+
 	useEffect(() => {
 		let selectedConnection;
-		if (trigger && connections.length && !isLoadingTrigger && !isLoadingConnections) {
-			selectedConnection = connections.find(
-				(item) => item.value === trigger.connectionId || item.value === trigger.sourceType
+		if (trigger && formattedConnections?.length && !isLoadingTrigger && !isLoadingConnections) {
+			selectedConnection = formattedConnections.find(
+				(item) => item.value === trigger.sourceType || item.value === trigger.connectionId
 			);
 		}
 
@@ -181,7 +197,7 @@ export const EditTrigger = () => {
 					id={TriggerFormIds.modifyTriggerForm}
 					onSubmit={handleSubmit(handleFormSubmit)}
 				>
-					<NameAndConnectionFields connections={connections} isEdit />
+					<NameAndConnectionFields isEdit />
 
 					{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 

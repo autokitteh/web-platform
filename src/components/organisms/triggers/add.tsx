@@ -11,7 +11,7 @@ import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
 
-import { useFetchConnections, useFileOperations } from "@hooks";
+import { useFileOperations } from "@hooks";
 import { useCacheStore, useProjectValidationStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
@@ -31,9 +31,11 @@ export const AddTrigger = () => {
 	const [isSaving, setIsSaving] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const { checkState } = useProjectValidationStore();
-	const { fetchTriggers } = useCacheStore();
+	const {
+		fetchTriggers,
+		loading: { connections: isLoadingConnections },
+	} = useCacheStore();
 
-	const { connections, isLoading: isLoadingConnections } = useFetchConnections(projectId!);
 	const { fetchResources } = useFileOperations(projectId!);
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
@@ -142,7 +144,7 @@ export const AddTrigger = () => {
 					id={TriggerFormIds.addTriggerForm}
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					<NameAndConnectionFields connections={connections} />
+					<NameAndConnectionFields />
 
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 

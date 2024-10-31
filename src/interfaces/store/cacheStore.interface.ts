@@ -18,6 +18,7 @@ export interface CacheStore {
 	loading: LoadingState;
 	currentProjectId?: string;
 	envId?: string;
+	initCache: (projectId: string, force?: boolean) => Promise<void>;
 	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;
 	fetchVariables: (projectId: string, force?: boolean) => Promise<void | Variable[]>;

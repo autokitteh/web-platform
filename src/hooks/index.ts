@@ -1,4 +1,3 @@
-export { useFetchConnections } from "@hooks/triggers/useFetchConnections";
 export { useFetchTrigger } from "@hooks/triggers/useFetchTrigger";
 export { useConnectionForm } from "@hooks/useConnectionForm";
 export { useCreateProjectFromTemplate } from "@hooks/useCreateProjectFromTemplate";
