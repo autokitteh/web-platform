@@ -1,6 +1,7 @@
 import { ComponentType, SVGProps } from "react";
 
 import axios from "axios";
+import frontMatter from "front-matter";
 import JSZip from "jszip";
 
 interface FileNode {
@@ -13,9 +14,6 @@ interface DirectoryNode {
 	type: "directory";
 	children: FileStructure;
 }
-
-type FrontmatterValue = string | string[];
-type FrontmatterData = Record<string, FrontmatterValue>;
 
 const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 	const fileStructure: FileStructure = {};
@@ -133,7 +131,16 @@ export type TemplateCategory = {
 	cards: TemplateCardType[];
 	name: string;
 };
+// Update the interfaces to match front-matter's types
+interface MarkdownAttributes {
+	[key: string]: unknown;
+	title?: string;
+	description?: string;
+	categories?: string | string[];
+	integrations?: string[];
+}
 
+// Your existing types remain the same
 type Integration = {
 	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	label: string;
@@ -208,43 +215,6 @@ function getDirectoryStructure(fileStructure: FileStructure, targetPath: string)
 	return currentLevel;
 }
 
-function parseFrontmatter(content: string): { content: string; data: FrontmatterData } {
-	if (!content) {
-		return { data: {}, content: "" };
-	}
-
-	const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
-	const match = content.match(frontmatterRegex);
-
-	if (!match) {
-		return { data: {}, content };
-	}
-
-	const [, frontmatter, markdownContent] = match;
-	const data: FrontmatterData = {};
-
-	frontmatter.split("\n").forEach((line) => {
-		const [key, ...valueParts] = line.split(":");
-		if (key && valueParts.length) {
-			let value: FrontmatterValue = valueParts.join(":").trim();
-
-			if (value.startsWith("[") && value.endsWith("]")) {
-				value = value
-					.slice(1, -1)
-					.split(",")
-					.map((v) => v.trim().replace(/^["']|["']$/g, ""));
-			}
-
-			data[key.trim()] = value;
-		}
-	});
-
-	return {
-		data,
-		content: markdownContent?.trim() ?? "",
-	};
-}
-
 function getFileName(path: string): string {
 	return path.split("/").pop() || path;
 }
@@ -292,34 +262,36 @@ export function processReadmeFiles(
 
 					// Get all files with their contents
 					const filesWithContent = getAllFilesInDirectory(directoryStructure);
-
-					// Convert to Record<string, string> using only filenames as keys
 					const filesRecord: Record<string, string> = {};
 					filesWithContent.forEach((file) => {
 						const fileName = getFileName(file.path);
 						filesRecord[fileName] = file.content;
 					});
 
-					// Parse the markdown frontmatter
-					const { data } = parseFrontmatter(node.content);
+					// Parse using front-matter instead of gray-matter
+					const { attributes } = frontMatter<MarkdownAttributes>(node.content);
 
-					if (!data.title || !data.description || !data.categories) {
-						console.warn(`Skipping ${currentPath}/${name}: Missing required metadata`, data);
+					if (!attributes.title || !attributes.description || !attributes.categories) {
+						console.warn(`Skipping ${currentPath}/${name}: Missing required metadata`, attributes);
 
 						return;
 					}
 
 					const templateCard: TemplateCardType = {
 						assetDirectory: currentPath,
-						description: Array.isArray(data.description) ? data.description.join(", ") : data.description,
+						description: Array.isArray(attributes.description)
+							? attributes.description.join(", ")
+							: attributes.description,
 						files: filesRecord,
-						integrations: (Array.isArray(data.integrations) ? data.integrations : [])
+						integrations: (Array.isArray(attributes.integrations) ? attributes.integrations : [])
 							.map((int) => integrationsMap[int])
 							.filter(Boolean),
-						title: Array.isArray(data.title) ? data.title.join(", ") : data.title,
+						title: Array.isArray(attributes.title) ? attributes.title.join(", ") : attributes.title,
 					};
 
-					const categories = Array.isArray(data.categories) ? data.categories : [data.categories];
+					const categories = Array.isArray(attributes.categories)
+						? attributes.categories
+						: [attributes.categories];
 
 					categories.forEach((category) => {
 						const existingCards = categoriesMap.get(category) || [];
