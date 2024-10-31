@@ -271,9 +271,9 @@ export const SessionViewer = () => {
 						</Tab>
 					))}
 				</div>
-				{loadingOutputs || loadingActivities ? (
+				{!loadingOutputs || !loadingActivities ? (
 					<div>
-						<Loader />
+						<Loader size="sm" />
 					</div>
 				) : null}
 			</div>
