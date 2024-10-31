@@ -3,7 +3,6 @@ import frontMatter from "front-matter";
 import JSZip from "jszip";
 
 import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipOutput } from "@interfaces/utilities";
-import { Integrations, IntegrationsMap } from "@src/enums/components/connection.enum";
 import { TemplateCardType, TemplateCategory } from "@src/types/components";
 
 const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
@@ -189,9 +188,9 @@ export function processReadmeFiles(fileStructure: FileStructure | null | undefin
 							? attributes.description.join(", ")
 							: attributes.description,
 						files: filesRecord,
-						integrations: (Array.isArray(attributes.integrations) ? attributes.integrations : [])
-							.map((int) => IntegrationsMap[int as keyof typeof Integrations])
-							.filter(Boolean),
+						integrations: (Array.isArray(attributes.integrations) ? attributes.integrations : []).filter(
+							Boolean
+						),
 						title: Array.isArray(attributes.title) ? attributes.title.join(", ") : attributes.title,
 					};
 

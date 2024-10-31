@@ -5,25 +5,17 @@ import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
+import { StoreName } from "@src/enums";
 import { useFileOperations } from "@src/hooks";
 import { TemplateCardType, TemplateCategory } from "@src/types/components";
 
 import { useProjectStore, useToastStore } from "@store";
 
 import { fetchAndUnpackZip, processReadmeFiles } from "@components/organisms/dashboard/templates/tabs/extractZip";
-
-interface TemplateState {
-	categories: TemplateCategory[];
-	isLoading: boolean;
-	error: string | null;
-	templateMap: Map<string, TemplateCardType>;
-	fetchTemplates: () => Promise<void>;
-	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateCardType | undefined;
-	lastCommitDate?: Date;
-}
 
 interface GitHubCommit {
 	sha: string;
@@ -36,73 +28,100 @@ interface GitHubCommit {
 	};
 }
 
-export const useTemplateStore = create<TemplateState>((set, get) => ({
+interface TemplateState {
+	categories: TemplateCategory[];
+	isLoading: boolean;
+	error: string | null;
+	templateMap: Record<string, TemplateCardType>;
+	lastCommitDate?: string;
+	fetchTemplates: () => Promise<void>;
+	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateCardType | undefined;
+}
+
+const store = (set: any, get: any): TemplateState => ({
 	categories: [],
 	isLoading: false,
 	error: null,
-	templateMap: new Map(),
+	templateMap: {},
 	lastCommitDate: undefined,
 
 	fetchTemplates: async () => {
 		set({ isLoading: true, error: null });
+
 		try {
-			try {
-				const response = await axios.get<GitHubCommit[]>(
-					`https://api.github.com/repos/autokitteh/kittehub/commits`,
-					{
-						params: {
-							per_page: 1,
-						},
-						headers: {
-							Accept: "application/vnd.github.v3+json",
-						},
-					}
-				);
-
-				if (response.data.length) {
-					const latestCommit = response.data[0];
-					set((prev) => ({ ...prev, lastCommitDate: new Date(latestCommit.commit.author.date) }));
-				} else {
-					throw new Error("No commits found");
+			// Check for new commits first
+			const response = await axios.get<GitHubCommit[]>(
+				`https://api.github.com/repos/autokitteh/kittehub/commits`,
+				{
+					params: {
+						per_page: 1,
+					},
+					headers: {
+						Accept: "application/vnd.github.v3+json",
+					},
 				}
-			} catch (error) {
-				set((prev) => ({
-					...prev,
-					error: error instanceof Error ? error.message : "Failed to fetch repository information",
-				}));
-			}
+			);
 
-			const result = await fetchAndUnpackZip();
-			if ("structure" in result) {
-				const processedCategories = processReadmeFiles(result.structure);
+			if (response.data.length) {
+				const latestCommit = response.data[0];
+				const newCommitDate = latestCommit.commit.author.date;
+				const currentCommitDate = get().lastCommitDate;
 
-				const templateMap = new Map<string, TemplateCardType>();
-				processedCategories.forEach((category) => {
-					category.cards.forEach((card) => {
-						templateMap.set(card.assetDirectory, card);
-					});
-				});
+				// Only fetch new data if there's no cached data or there's a new commit
+				if (!currentCommitDate || new Date(newCommitDate) > new Date(currentCommitDate)) {
+					const result = await fetchAndUnpackZip();
 
-				set({
-					categories: processedCategories,
-					templateMap,
-					isLoading: false,
-				});
+					if ("structure" in result) {
+						const processedCategories = processReadmeFiles(result.structure);
+						const templateMap: Record<string, TemplateCardType> = {};
+
+						// Convert categories to templateMap
+						processedCategories.forEach((category) => {
+							category.cards.forEach((card) => {
+								templateMap[card.assetDirectory] = card;
+							});
+						});
+
+						set({
+							categories: processedCategories,
+							templateMap,
+							lastCommitDate: newCommitDate,
+							isLoading: false,
+							error: null,
+						});
+					} else {
+						throw new Error(result.error);
+					}
+				} else {
+					// No new commits, use cached data
+					// eslint-disable-next-line no-console
+					console.log("Using cached template data, no new commits found");
+					set({ isLoading: false });
+				}
 			} else {
-				throw new Error(result.error);
+				throw new Error("No commits found");
 			}
 		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : "Failed to fetch templates";
+			console.error("Error fetching templates:", errorMessage);
+
 			set({
-				error: error instanceof Error ? error.message : "Failed to fetch templates",
+				error: errorMessage,
 				isLoading: false,
 			});
 		}
 	},
 
 	findTemplateByAssetDirectory: (assetDirectory: string) => {
-		return get().templateMap.get(assetDirectory);
+		return get().templateMap[assetDirectory];
 	},
-}));
+});
+
+export const useTemplateStore = create(
+	persist(store, {
+		name: StoreName.templates,
+	})
+);
 
 export const useCreateProjectFromTemplate = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });

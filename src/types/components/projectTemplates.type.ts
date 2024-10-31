@@ -4,7 +4,7 @@ export type TemplateCardType = {
 	assetDirectory: string;
 	description: string;
 	files: Record<string, string>;
-	integrations: Integration[];
+	integrations: string[];
 	title: string;
 };
 
