@@ -22,6 +22,7 @@ export const namespaces = {
 		connectionsTable: "Connections Table",
 		sessionsTable: "Sessions Table",
 		sessionsViewer: "Sessions Viewer",
+		eventsViewer: "Sessions Viewer",
 		profilePage: "Profile Page",
 		deleteModal: "Delete Modal",
 		projectCodeEditor: "Project Code Editor",

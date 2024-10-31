@@ -33,13 +33,8 @@ export const EventsTable = () => {
 		fetchEvents();
 	}, [fetchEvents]);
 
-	const frameClass = useMemo(
-		() =>
-			cn("size-full bg-gray-1100 pb-3 pl-7 transition-all", {
-				"rounded-r-none": !eventId,
-			}),
-		[eventId]
-	);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const frameClass = useMemo(() => cn("size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none"), [eventId]);
 
 	const handleSort = useCallback(
 		(key: keyof BaseEvent) => (event: React.MouseEvent | React.KeyboardEvent) => {
@@ -55,13 +50,13 @@ export const EventsTable = () => {
 			const event = sortedEvents[index];
 
 			return (
-				<EventRow event={event} key={key} onClick={() => navigate(`events/${event.eventId}`)} style={style} />
+				<EventRow event={event} key={key} onClick={() => navigate(`/events/${event.eventId}`)} style={style} />
 			);
 		},
 		[sortedEvents, navigate]
 	);
 
-	const renderContent = useMemo(() => {
+	const tableContent = useMemo(() => {
 		if (loadingEvents) {
 			return <Loader isCenter size="xl" />;
 		}
@@ -71,7 +66,7 @@ export const EventsTable = () => {
 		}
 
 		return (
-			<div className="mt-4 h-full">
+			<div className="mt-2 h-full">
 				<Table className="relative w-full overflow-visible">
 					<TableHeader onSort={handleSort} sortConfig={sortConfig} />
 					<TBody>
@@ -96,12 +91,12 @@ export const EventsTable = () => {
 	return (
 		<div className="my-2 flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
-				<Frame className={frameClass}>{renderContent}</Frame>
+				<Frame className={frameClass}>{tableContent}</Frame>
 			</div>
 
 			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeId} />
 
-			<div className="flex" style={{ width: `${100 - leftSideWidth}%` }}>
+			<div className="flex bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
 				{eventId ? <Outlet /> : <NoEventsSelected />}
 			</div>
 		</div>

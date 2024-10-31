@@ -10,9 +10,11 @@ export type EnrichedEvent = {
 };
 export type BaseEvent = {
 	createdAt: Date;
+	data?: object;
 	destination?: "trigger" | "connection" | "unknown";
 	destinationId?: string;
 	destinationName?: string;
 	eventId: string;
+	eventType: string;
 	sourceType?: string;
 };

@@ -18,6 +18,7 @@ export const VirtualizedList = memo(
 		width: number;
 	}) => (
 		<List
+			className="scrollbar"
 			height={height}
 			overscanRowCount={5}
 			rowCount={sortedEvents.length}

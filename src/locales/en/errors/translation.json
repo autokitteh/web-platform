@@ -83,5 +83,8 @@
 	"outputLogsFetchErrorExtended": "Couldn't fetch the output logs, {{error}}",	
 	"errorFetchingEvents": "Couldn't fetch events",
 	"errorFetchingEventsExtended": "Couldn't fetch events, error: {{error}}",
+	"errorFetchingEvent": "Couldn't fetch event",
+	"eventNotFound": "Event details not found",
+	"eventNotFoundExtended": "Event details not found, {{eventId}} - error: {{error}}",
 	"fetchSessionFailed": "Failed to fetch session logs"
 }

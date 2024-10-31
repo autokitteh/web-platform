@@ -30,7 +30,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 	const { t } = useTranslation("events");
 
 	return (
-		<THead>
+		<THead className="pl-3">
 			<Th>
 				<Td>
 					<SortableHeader
@@ -40,7 +40,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 						sortConfig={sortConfig}
 					/>
 				</Td>
-				<Td>
+				<Td className="-ml-2">
 					<SortableHeader
 						columnKey="eventId"
 						columnLabel={t("table.columns.eventId")}

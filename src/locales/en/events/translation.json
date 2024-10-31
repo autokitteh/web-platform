@@ -11,5 +11,9 @@
 			"eventId": "Event ID",
 			"createdAt": "Creation time"
 		}
+	},
+	"viewer":{
+		"event": "Event",
+		"output": "Output"
 	}
 }
