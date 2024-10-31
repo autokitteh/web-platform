@@ -1,3 +1,10 @@
+## [2.41.2](https://github.com/autokitteh/web-platform/compare/v2.41.1...v2.41.2) (2024-10-31)
+
+
+### Bug Fixes
+
+* prevent loader flickering in viewer session ([#597](https://github.com/autokitteh/web-platform/issues/597)) ([74d2c2b](https://github.com/autokitteh/web-platform/commit/74d2c2b9c4dac40b435bd8f05467bc7d13a2f9aa))
+
 ## [2.41.1](https://github.com/autokitteh/web-platform/compare/v2.41.0...v2.41.1) (2024-10-31)
 
 
