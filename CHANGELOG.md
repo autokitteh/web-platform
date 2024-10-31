@@ -1,3 +1,10 @@
+# [2.41.0](https://github.com/autokitteh/web-platform/compare/v2.40.1...v2.41.0) (2024-10-31)
+
+
+### Features
+
+* add events view([#574](https://github.com/autokitteh/web-platform/issues/574)) ([5ad6b00](https://github.com/autokitteh/web-platform/commit/5ad6b00304ab97ce145781b839deb01fa7feac2f))
+
 ## [2.40.1](https://github.com/autokitteh/web-platform/compare/v2.40.0...v2.40.1) (2024-10-30)
 
 
