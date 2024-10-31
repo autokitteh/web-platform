@@ -1,32 +1,36 @@
 import axios from "axios";
 import frontMatter from "front-matter";
+import i18n from "i18next";
 import JSZip from "jszip";
+import { memoize } from "lodash";
 
 import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipOutput } from "@interfaces/utilities";
 import { TemplateCardType, TemplateCategory } from "@src/types/components";
 
+const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
+
+const isDirectoryNode = memoize((node: FileNode | DirectoryNode): node is DirectoryNode => node?.type === "directory");
+
+const directoryCache = new Map<string, FileStructure>();
+
 const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 	const fileStructure: FileStructure = {};
-	const promises: Promise<void>[] = [];
 
-	zip.forEach((relativePath: string, file: JSZip.JSZipObject) => {
-		const pathParts = relativePath.split("/");
-		let currentLevel = fileStructure;
+	const batchSize = 50;
+	const entries = Object.entries(zip.files);
+	const batches = Math.ceil(entries.length / batchSize);
 
-		const processFile = async () => {
-			for (let i = 0; i < pathParts.length; i++) {
-				const part = pathParts[i];
+	for (let i = 0; i < batches; i++) {
+		const batchEntries = entries.slice(i * batchSize, (i + 1) * batchSize);
+		await Promise.all(
+			batchEntries.map(async ([relativePath, file]: [string, JSZip.JSZipObject]) => {
+				if (file.dir) return;
 
-				if (i === pathParts.length - 1) {
-					if (!file.dir) {
-						const content = await file.async("string");
-						currentLevel[part] = {
-							type: "file",
-							content,
-							path: relativePath,
-						};
-					}
-				} else {
+				const pathParts = relativePath.split("/");
+				let currentLevel = fileStructure;
+
+				for (let j = 0; j < pathParts.length - 1; j++) {
+					const part = pathParts[j];
 					if (!currentLevel[part] || isFileNode(currentLevel[part])) {
 						currentLevel[part] = {
 							type: "directory",
@@ -35,55 +39,83 @@ const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 					}
 					currentLevel = (currentLevel[part] as DirectoryNode).children;
 				}
-			}
-		};
 
-		promises.push(processFile());
-	});
-
-	await Promise.all(promises);
+				const fileName = pathParts[pathParts.length - 1];
+				const content = await file.async("string");
+				currentLevel[fileName] = {
+					type: "file",
+					content,
+					path: relativePath,
+				};
+			})
+		);
+	}
 
 	return fileStructure;
 };
 
-export async function fetchAndUnpackZip(): Promise<ProcessedZipOutput> {
+export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 	try {
-		const downloadUrl = "https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip"; // releaseData.zipball_url;
-		const { data: zipballResponse } = await axios.get(downloadUrl, { responseType: "arraybuffer" });
+		const { data: zipData } = await axios.get(
+			"https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip",
+			{
+				responseType: "arraybuffer",
+				timeout: 30000,
+				validateStatus: (status) => status === 200,
+			}
+		);
 
-		const zipData = await zipballResponse;
 		const zip = new JSZip();
 		const content = await zip.loadAsync(zipData);
 		const structure = await processZipContent(content);
 
 		return { structure };
 	} catch (error) {
-		console.error("Detailed error in fetchAndUnpackZip:", {
-			name: error instanceof Error ? error.name : "Unknown",
-			message: error instanceof Error ? error.message : "Unknown error occurred",
-			stack: error instanceof Error ? error.stack : undefined,
-		});
+		const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : "Unknown error occurred";
 
-		return {
-			error: error instanceof Error ? error.message : "Unknown error occurred",
-		};
+		console.error(
+			i18n.t("fetchAndExtract.fetchAndExtractError", {
+				namespace: "utilities",
+				error: errorMessage,
+			})
+		);
+
+		return { error: errorMessage };
 	}
-}
+};
 
-function isFileNode(node: FileNode | DirectoryNode): node is FileNode {
-	return node?.type === "file";
-}
+const getFileName = memoize((path: string): string => path.split("/").pop() || path);
 
-function isDirectoryNode(node: FileNode | DirectoryNode): node is DirectoryNode {
-	return node?.type === "directory";
-}
+const getDirectoryStructure = (fileStructure: FileStructure, targetPath: string): FileStructure | null => {
+	if (!targetPath) return fileStructure;
+
+	const cacheKey = targetPath;
+	if (directoryCache.has(cacheKey)) {
+		return directoryCache.get(cacheKey)!;
+	}
+
+	const pathParts = targetPath.split("/").filter(Boolean);
+	let currentLevel = fileStructure;
+
+	for (const part of pathParts) {
+		const node = currentLevel[part];
+		if (!node || !isDirectoryNode(node)) {
+			return null;
+		}
+		currentLevel = node.children;
+	}
+
+	directoryCache.set(cacheKey, currentLevel);
+
+	return currentLevel;
+};
 
 interface FileWithContent {
 	path: string;
 	content: string;
 }
 
-function getAllFilesInDirectory(structure: FileStructure, currentPath: string = ""): FileWithContent[] {
+const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = ""): FileWithContent[] => {
 	const files: FileWithContent[] = [];
 
 	Object.entries(structure).forEach(([name, node]) => {
@@ -97,89 +129,59 @@ function getAllFilesInDirectory(structure: FileStructure, currentPath: string = 
 				content: node.content,
 			});
 		} else if (isDirectoryNode(node)) {
-			// Recursively get files from subdirectories
-			const subFiles = getAllFilesInDirectory(node.children, fullPath);
-			files.push(...subFiles);
+			files.push(...getAllFilesInDirectory(node.children, fullPath));
 		}
 	});
 
 	return files;
-}
+};
 
-function getDirectoryStructure(fileStructure: FileStructure, targetPath: string): FileStructure | null {
-	if (!targetPath) return fileStructure;
-
-	const pathParts = targetPath.split("/").filter(Boolean);
-	let currentLevel = fileStructure;
-
-	for (const part of pathParts) {
-		const node = currentLevel[part];
-		if (!node || !isDirectoryNode(node)) {
-			return null;
-		}
-		currentLevel = node.children;
-	}
-
-	return currentLevel;
-}
-
-function getFileName(path: string): string {
-	return path.split("/").pop() || path;
-}
-
-export function processReadmeFiles(fileStructure: FileStructure | null | undefined): TemplateCategory[] {
+export const processReadmeFiles = (fileStructure: FileStructure | null | undefined): TemplateCategory[] => {
 	if (!fileStructure) {
-		console.warn("No file structure provided to processReadmeFiles");
+		console.warn(i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }));
 
 		return [];
 	}
 
-	const categoriesMap = new Map<string, TemplateCardType[]>();
+	const categoriesMap = new Map<string, Set<TemplateCardType>>();
 
-	function processDirectory(structure: FileStructure, currentPath: string = ""): void {
+	const processDirectory = (structure: FileStructure, currentPath: string = ""): void => {
 		if (!structure || typeof structure !== "object") {
-			console.warn(`Invalid structure at path: ${currentPath}`);
+			console.warn(
+				i18n.t("fetchAndExtract.invalidStructurePath", {
+					ns: "utilities",
+					path: currentPath,
+				})
+			);
 
 			return;
 		}
 
-		Object.entries(structure).forEach(([name, node]) => {
-			if (!node) {
-				console.warn(`Null or undefined node found for ${name} at ${currentPath}`);
-
-				return;
-			}
+		for (const [name, node] of Object.entries(structure)) {
+			if (!node) continue;
 
 			if (isDirectoryNode(node)) {
 				processDirectory(node.children, `${currentPath}/${name}`.replace(/^\//, ""));
 			} else if (isFileNode(node) && name.toLowerCase() === "readme.md") {
 				try {
-					const directoryPath = currentPath;
-					const directoryStructure = fileStructure
-						? getDirectoryStructure(fileStructure, directoryPath)
-						: null;
+					const directoryStructure = getDirectoryStructure(fileStructure, currentPath);
+					if (!directoryStructure) continue;
 
-					if (!directoryStructure) {
-						console.warn(`Could not find directory structure for ${directoryPath}`);
-
-						return;
-					}
-
-					// Get all files with their contents
 					const filesWithContent = getAllFilesInDirectory(directoryStructure);
-					const filesRecord: Record<string, string> = {};
-					filesWithContent.forEach((file) => {
-						const fileName = getFileName(file.path);
-						filesRecord[fileName] = file.content;
-					});
+					const filesRecord = Object.fromEntries(
+						filesWithContent.map((file) => [getFileName(file.path), file.content])
+					);
 
-					// Parse using front-matter instead of gray-matter
 					const { attributes } = frontMatter<MarkdownAttributes>(node.content);
 
 					if (!attributes.title || !attributes.description || !attributes.categories) {
-						console.warn(`Skipping ${currentPath}/${name}: Missing required metadata`, attributes);
-
-						return;
+						console.warn(
+							i18n.t("fetchAndExtract.skippingPathMissingMetadata", {
+								ns: "utilities",
+								path: `${currentPath}/${name}`,
+							})
+						);
+						continue;
 					}
 
 					const templateCard: TemplateCardType = {
@@ -199,28 +201,41 @@ export function processReadmeFiles(fileStructure: FileStructure | null | undefin
 						: [attributes.categories];
 
 					categories.forEach((category) => {
-						const existingCards = categoriesMap.get(category) || [];
-						categoriesMap.set(category, [...existingCards, templateCard]);
+						if (!categoriesMap.has(category)) {
+							categoriesMap.set(category, new Set());
+						}
+						categoriesMap.get(category)!.add(templateCard);
 					});
 				} catch (error) {
-					console.error(`Error processing ${currentPath}/${name}:`, error);
+					console.error(
+						i18n.t("fetchAndExtract.errorProcessingFile", {
+							ns: "utilities",
+							path: `${currentPath}/${name}`,
+							error,
+						})
+					);
 				}
 			}
-		});
-	}
+		}
+	};
 
 	try {
 		processDirectory(fileStructure);
 
 		return Array.from(categoriesMap.entries())
-			.map(([name, cards]) => ({
+			.map(([name, cardsSet]) => ({
 				name,
-				cards: cards.filter(Boolean),
+				cards: Array.from(cardsSet),
 			}))
 			.filter((category) => !!category.cards.length);
 	} catch (error) {
-		console.error("Error processing file structure:", error);
+		console.error(
+			i18n.t("fetchAndExtract.errorProcessingFileStructure", {
+				ns: "utilities",
+				error,
+			})
+		);
 
 		return [];
 	}
-}
+};
