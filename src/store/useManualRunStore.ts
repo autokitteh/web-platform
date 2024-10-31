@@ -9,7 +9,7 @@ import { StoreName } from "@enums";
 import { SessionsService } from "@services";
 import { ManualRunStore } from "@src/interfaces/store";
 
-const defaultProjectState = {
+const defaultManualRunState = {
 	files: [],
 	fileOptions: [],
 	filePath: { label: "", value: "" },
@@ -27,48 +27,33 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		{ entrypointFunction, filePath, files, isJson, isManualRunEnabled, lastDeployment, params }
 	) => {
 		set((state) => {
-			const projectData = state.projectManualRun[projectId] || { ...defaultProjectState };
-
-			if (isManualRunEnabled !== undefined) {
-				projectData.isManualRunEnabled = isManualRunEnabled;
-			}
+			const projectData = {
+				...defaultManualRunState,
+				...state.projectManualRun[projectId],
+			};
 
 			if (files) {
-				projectData.files = files;
-
 				const fileOptions = files.map((file) => ({
 					label: file,
 					value: file,
 				}));
-
-				projectData.fileOptions = fileOptions;
-
-				const firstFile = fileOptions[0];
-				projectData.filePath = firstFile;
-				projectData.entrypointFunction = "";
-				projectData.params = [];
+				Object.assign(projectData, {
+					files,
+					fileOptions,
+					filePath: fileOptions[0],
+					entrypointFunction: "",
+					params: [],
+				});
 			}
 
-			if (filePath) {
-				projectData.filePath = filePath;
-				projectData.entrypointFunction = "";
-			}
-
-			if (entrypointFunction !== undefined) {
-				projectData.entrypointFunction = entrypointFunction;
-			}
-
-			if (params) {
-				projectData.params = [...params];
-			}
-
-			if (lastDeployment) {
-				projectData.lastDeployment = lastDeployment;
-			}
-
-			if (isJson !== undefined) {
-				projectData.isJson = isJson;
-			}
+			Object.assign(projectData, {
+				...(isManualRunEnabled !== undefined && { isManualRunEnabled }),
+				...(filePath && { filePath }),
+				...(entrypointFunction !== undefined && { entrypointFunction }),
+				...(params && { params: [...params] }),
+				...(lastDeployment && { lastDeployment }),
+				...(isJson !== undefined && { isJson }),
+			});
 
 			state.projectManualRun[projectId] = projectData;
 
@@ -86,16 +71,24 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			};
 		}
 
-		const actualParams = params || project?.params || [];
-
-		const jsonInputs = actualParams.length
-			? Object.fromEntries(actualParams.map(({ key, value }) => [key, `"${value}"`]))
-			: {};
+		const actualParams = params || project.params || [];
+		const jsonInputs = actualParams.reduce(
+			(acc, { key, value }) => ({
+				...acc,
+				[key]: `"${value}"`,
+			}),
+			{}
+		);
 
 		const sessionArgs = {
 			buildId: project.lastDeployment.buildId,
 			deploymentId: project.lastDeployment.deploymentId,
-			entrypoint: { col: 0, row: 0, path: project.filePath.value, name: project.entrypointFunction },
+			entrypoint: {
+				col: 0,
+				row: 0,
+				path: project.filePath.value,
+				name: project.entrypointFunction,
+			},
 			jsonInputs,
 		};
 
@@ -105,13 +98,16 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			return { data: undefined, error };
 		}
 
-		set((state) => {
-			if (params?.length) {
-				state.projectManualRun[projectId] = { ...project, params: [...params] };
-			}
+		if (params?.length) {
+			set((state) => {
+				state.projectManualRun[projectId] = {
+					...project,
+					params: [...params],
+				};
 
-			return state;
-		});
+				return state;
+			});
+		}
 
 		return { data: sessionId, error: undefined };
 	},
@@ -121,9 +117,7 @@ export const useManualRunStore = create(
 	persist(immer(store), {
 		name: StoreName.manualRun,
 		version: 1,
-		migrate: () => {
-			return {};
-		},
+		migrate: () => ({}),
 	}),
 	shallow
 );
