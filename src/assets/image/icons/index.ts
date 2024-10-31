@@ -1,4 +1,3 @@
-// eslint-disable-next-line @liferay/sort-exports
 export { default as ActionActiveIcon } from "@assets/image/icons/ActionActive.svg?react";
 export { default as ActionStoppedIcon } from "@assets/image/icons/ActionStopped.svg?react";
 export { default as ArrowDown } from "@assets/image/icons/ArrowDown.svg?react";
@@ -36,10 +35,9 @@ export { default as GearIcon } from "@assets/image/icons/Gear.svg?react";
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
 export { default as InfoIcon } from "@assets/image/icons/Info.svg?react";
 export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
-export { default as UnlockedLockIcon } from "@assets/image/icons/Lock.svg?react";
 // Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/list-details.svg
 export { default as ListDetailsIcon } from "@assets/image/icons/ListDetails.svg?react";
-export { default as LockIcon } from "@assets/image/icons/UnlockedLock.svg?react";
+export { default as UnlockedLockIcon } from "@assets/image/icons/Lock.svg?react";
 export { default as LockSolid } from "@assets/image/icons/LockSolid.svg?react";
 export { default as MenuCircleIcon } from "@assets/image/icons/MenuCircle.svg?react";
 export { default as Minimize } from "@assets/image/icons/Minimize.svg?react";
@@ -65,5 +63,6 @@ export { default as Square } from "@assets/image/icons/Square.svg?react";
 export { default as TestIcon } from "@assets/image/icons/Test.svg?react";
 export { default as ThreeDots } from "@assets/image/icons/ThreeDots.svg?react";
 export { default as TrashIcon } from "@assets/image/icons/Trash.svg?react";
+export { default as LockIcon } from "@assets/image/icons/UnlockedLock.svg?react";
 export { default as UserIcon } from "@assets/image/icons/User.svg?react";
 export { default as WarningTriangleIcon } from "@assets/image/icons/WarningTriangle.svg?react";
