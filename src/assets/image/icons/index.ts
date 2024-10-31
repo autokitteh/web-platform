@@ -64,3 +64,5 @@ export { default as TrashIcon } from "@assets/image/icons/Trash.svg?react";
 export { default as LockIcon } from "@assets/image/icons/UnlockedLock.svg?react";
 export { default as UserIcon } from "@assets/image/icons/User.svg?react";
 export { default as WarningTriangleIcon } from "@assets/image/icons/WarningTriangle.svg?react";
+// Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/list-details.svg
+export { default as ListDetailsIcon } from "@assets/image/icons/ListDetails.svg?react";

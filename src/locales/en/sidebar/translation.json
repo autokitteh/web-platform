@@ -6,6 +6,7 @@
 		"openSidebar": "Open Sidebar",
 		"intro": "Introduction",
 		"systemLog": "System Log",
-		"logToReview": "Unread system logs"
+		"logToReview": "Unread system logs",
+		"events": "Events"
 	}
 }

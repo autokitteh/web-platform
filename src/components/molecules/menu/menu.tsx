@@ -150,33 +150,6 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 						</AnimatePresence>
 					</Button>
 				</li>
-
-				<li>
-					<Button
-						ariaLabel={t("events")}
-						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200 disabled:opacity-100"
-						href="/events"
-						title={t("events")}
-					>
-						<div className="flex size-9 items-center justify-center">
-							<IconSvg alt="New Project" size="xl" src={NewProject} />
-						</div>
-
-						<AnimatePresence>
-							{isOpen ? (
-								<motion.span
-									animate="visible"
-									className="overflow-hidden whitespace-nowrap"
-									exit="hidden"
-									initial="hidden"
-									variants={animateVariant}
-								>
-									{t("events")}
-								</motion.span>
-							) : null}
-						</AnimatePresence>
-					</Button>
-				</li>
 			</ul>
 		</nav>
 	);
