@@ -19,12 +19,6 @@ const createDefaultProjectState = (): ManualProjectData => ({
 	isJson: false,
 });
 
-const createFileOptions = (files: string[]): { label: string; value: string }[] =>
-	files.map((file) => ({
-		label: file,
-		value: file,
-	}));
-
 const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
 
@@ -39,7 +33,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			};
 
 			if (files) {
-				const fileOptions = createFileOptions(files);
+				const fileOptions = files.map((file) => ({
+					label: file,
+					value: file,
+				}));
 				Object.assign(projectData, {
 					files,
 					fileOptions,
