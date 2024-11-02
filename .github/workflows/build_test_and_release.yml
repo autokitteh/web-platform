@@ -158,15 +158,15 @@ jobs:
       - name: Update kittehub.zip
         run: |
           # Backup current kittehub.zip if it exists
-          cp src/assets/kittehub.zip src/assets/kittehub.zip.backup>/dev/null || true
+          cp src/assets/templates/kittehub.zip src/assets/templates/kittehub.zip.backup>/dev/null || true
           
           # Check if dist.zip exists in the checked out kittehub
           if [ -f "temp-kittehub/dist.zip" ]; then
-            cp temp-kittehub/dist.zip src/assets/kittehub.zip
+            cp temp-kittehub/dist.zip src/assets/templates/kittehub.zip
             echo "Successfully updated kittehub.zip"
           else
             echo "dist.zip not found in kittehub release branch, keeping current version"
-            mv src/assets/kittehub.zip.backup src/assets/kittehub.zip>/dev/null || true
+            mv src/assets/templates/kittehub.zip.backup src/assets/templates/kittehub.zip>/dev/null || true
           fi
           
           # Cleanup
