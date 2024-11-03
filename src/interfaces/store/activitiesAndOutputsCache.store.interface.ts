@@ -17,7 +17,7 @@ export interface ActivitiesStore {
 	loading: boolean;
 	isReloading: boolean;
 	reload: (sessionId: string, pageSize: number) => Promise<void>;
-	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
+	loadLogs: (sessionId: string, pageSize?: number, force?: boolean) => Promise<void>;
 }
 
 export interface OutputsStore {
@@ -25,5 +25,5 @@ export interface OutputsStore {
 	loading: boolean;
 	isReloading: boolean;
 	reload: (sessionId: string, pageSize: number) => Promise<void>;
-	loadLogs: (sessionId: string, pageSize?: number) => Promise<void>;
+	loadLogs: (sessionId: string, pageSize?: number, force?: boolean) => Promise<void>;
 }
