@@ -29,7 +29,16 @@ export default defineConfig({
 
 		{
 			name: "Safari",
-			use: { ...devices["Desktop Safari"] },
+			use: {
+				...devices["Desktop Safari"],
+				permissions: ["clipboard-read"],
+				launchOptions: {
+					args: ["--allow-clipboard-read", "--allow-clipboard-write"],
+				},
+				contextOptions: {
+					permissions: ["clipboard-read"],
+				},
+			},
 		},
 
 		// {
