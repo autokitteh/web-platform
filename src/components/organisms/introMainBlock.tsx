@@ -152,7 +152,7 @@ export const IntroMainBlock = () => {
 			</div>
 
 			<div className="rounded-xl border border-gray-950 bg-gray-1250 py-2 pl-6 pr-4 font-averta">
-				<Typography className="flex h-full flex-row items-center justify-center text-lg" element="p">
+				<Typography className="flex h-full flex-row items-center justify-center text-lg">
 					{t("cards.footer.haveAQuestion")}
 					<Link
 						className="flex flex-row items-center gap-0.5 hover:text-green-200"
