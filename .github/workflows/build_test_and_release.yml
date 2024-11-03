@@ -54,9 +54,18 @@ jobs:
       id-token: write
       contents: read
     strategy:
-      matrix:
-        browser: ["Chrome", "Edge", "Firefox", "Safari"]
-    runs-on: ubuntu-latest
+        matrix:
+          browser: ["Chrome", "Edge", "Firefox", "Safari"]
+          include:
+            - browser: Safari
+              os: macos-latest
+            - browser: Chrome
+              os: ubuntu-latest
+            - browser: Edge
+              os: ubuntu-latest
+            - browser: Firefox
+              os: ubuntu-latest
+    runs-on: ${{ matrix.os }} 
 
     if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
     steps:
@@ -120,19 +129,16 @@ jobs:
 
       - name: Install system dependencies for safari
         if: matrix.browser == 'Safari'
-        run: npx playwright install-deps webkit
-
-
-      - name: Start Xvfb for safari
-        if: matrix.browser == 'Safari'
         run: |
-          Xvfb :99 &
-          echo "DISPLAY=:99" >> $GITHUB_ENV
+          npx playwright install-deps webkit
+          defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+          defaults write com.apple.Safari WebKitPreferences.developerExtrasEnabled -bool true
+          defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
         
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
-          DISPLAY: :99
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1 
         run: npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload Playwright Test Results

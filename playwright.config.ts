@@ -31,11 +31,6 @@ export default defineConfig({
 			name: "Safari",
 			use: {
 				...devices["Desktop Safari"],
-				launchOptions: {
-					// Force a non-headless mode in CI for WebKit
-					headless: false,
-					args: process.env.CI ? ["--disable-dev-shm-usage"] : [],
-				},
 			},
 		},
 
