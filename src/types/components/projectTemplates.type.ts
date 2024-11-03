@@ -8,14 +8,6 @@ export type TemplateCardType = {
 	title: string;
 };
 
-export type RemoteTemplateCardType = {
-	assetDirectory: string;
-	description: string;
-	files: Record<string, string>;
-	integrations: string[];
-	title: string;
-};
-
 export type DashboardFooterTemplateCardType = {
 	assetDirectory: string;
 	description: string;
@@ -29,7 +21,7 @@ export type TemplateCategory = {
 };
 
 export type RemoteTemplateCategory = {
-	cards: RemoteTemplateCardType[];
+	cards: RemoteTemplateMetadata[];
 	name: string;
 };
 
@@ -37,3 +29,31 @@ type Integration = {
 	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	label: string;
 };
+
+export interface TemplateFile {
+	id: string;
+	templateId: string;
+	path: string;
+	content: string;
+}
+
+export interface RemoteTemplateMetadata {
+	assetDirectory: string;
+	title: string;
+	description: string;
+	integrations: string[];
+	filesIndex: string[];
+}
+
+export interface RemoteTemplateCardWithFiles {
+	assetDirectory: string;
+	title: string;
+	description: string;
+	integrations: string[];
+	files: Record<string, string>;
+}
+
+export interface ProcessedRemoteCategory {
+	name: string;
+	cards: RemoteTemplateCardWithFiles[];
+}

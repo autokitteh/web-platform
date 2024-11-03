@@ -5,7 +5,7 @@ import JSZip from "jszip";
 import { memoize } from "lodash";
 
 import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipOutput } from "@interfaces/utilities";
-import { RemoteTemplateCardType, RemoteTemplateCategory } from "@src/types/components";
+import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/types/components";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
 
@@ -65,7 +65,7 @@ const fetchZipFromUrl = async (url: string): Promise<ArrayBuffer> => {
 };
 
 export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
-	const githubUrl = "https://raw.githubuserconte---nt.com/autokitteh/kittehub/refs/heads/release/dist.zip";
+	const githubUrl = "https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip";
 	const fallbackUrl = "/assets/templates/kittehub.zip";
 
 	try {
@@ -76,13 +76,13 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 			// eslint-disable-next-line no-console
 			console.log(
 				i18n.t("fetchAndExtract.fetchedFromGithub", {
-					namespace: "utilities",
+					ns: "utilities",
 				})
 			);
 		} catch (githubError) {
 			console.warn(
 				i18n.t("fetchAndExtract.githubFetchFailed", {
-					namespace: "utilities",
+					ns: "utilities",
 					error: githubError instanceof Error ? githubError.message : "Unknown error",
 				})
 			);
@@ -92,13 +92,13 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 				// eslint-disable-next-line no-console
 				console.log(
 					i18n.t("fetchAndExtract.fetchedFromFallback", {
-						namespace: "utilities",
+						ns: "utilities",
 					})
 				);
 			} catch (fallbackError) {
 				throw new Error(
 					i18n.t("fetchAndExtract.allSourcesFailed", {
-						namespace: "utilities",
+						ns: "utilities",
 						githubError: githubError instanceof Error ? githubError.message : "Unknown error",
 						fallbackError: fallbackError instanceof Error ? fallbackError.message : "Unknown error",
 					})
@@ -116,7 +116,7 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 
 		console.error(
 			i18n.t("fetchAndExtract.fetchAndExtractError", {
-				namespace: "utilities",
+				ns: "utilities",
 				error: errorMessage,
 			})
 		);
@@ -177,14 +177,14 @@ const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = 
 	return files;
 };
 
-export const processReadmeFiles = (fileStructure: FileStructure | null | undefined): RemoteTemplateCategory[] => {
+export const processReadmeFiles = (fileStructure: FileStructure | null | undefined): ProcessedRemoteCategory[] => {
 	if (!fileStructure) {
 		console.warn(i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }));
 
 		return [];
 	}
 
-	const categoriesMap = new Map<string, Set<RemoteTemplateCardType>>();
+	const categoriesMap = new Map<string, Set<RemoteTemplateCardWithFiles>>();
 
 	const processDirectory = (structure: FileStructure, currentPath: string = ""): void => {
 		if (!structure || typeof structure !== "object") {
@@ -225,7 +225,7 @@ export const processReadmeFiles = (fileStructure: FileStructure | null | undefin
 						continue;
 					}
 
-					const templateCard: RemoteTemplateCardType = {
+					const templateCard: RemoteTemplateCardWithFiles = {
 						assetDirectory: currentPath,
 						description: Array.isArray(attributes.description)
 							? attributes.description.join(", ")
