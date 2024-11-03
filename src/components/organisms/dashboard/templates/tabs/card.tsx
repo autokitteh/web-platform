@@ -52,6 +52,7 @@ export const ProjectTemplateCard = ({
 
 			<div className={cn("mt-auto")} title={t("createProject")}>
 				<Button
+					ariaLabel={t("createProjectFromTemplate", { template: card.title })}
 					className="ml-auto mt-1 w-auto gap-1.5 rounded-full border-gray-1350 bg-gray-1450 p-2 px-3.5 leading-none text-white"
 					onClick={onCreateClick}
 					variant="filledGray"
