@@ -7,6 +7,10 @@
 		"couldNotFindDirectory": "Could not find directory structure for {path}",
 		"skippingPathMissingMetadata": "Skipping path {path} as it is missing metadata, attributes: ",
 		"errorProcessingFile": "Error processing file {path}, error: {error}",
-		"errorProcessingFileStructure": "Error processing file structure, error: {error}"
+		"errorProcessingFileStructure": "Error processing file structure, error: {error}",
+		"fetchedFromGithub": "Fetched from Github",
+		"githubFetchFailed": "Github fetch failed, error: {error}",
+		"fetchedFromFallback": "Fetched from fallback",
+		"allSourcesFailed": "All sources failed, error: {error}"
 	}
 }
