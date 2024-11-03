@@ -11,8 +11,6 @@ interface SetupParams {
 }
 
 async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
-	let lastStatus: string | undefined = undefined;
-
 	await expect(async () => {
 		const refreshButton = page.getByRole("button", { name: "Refresh" });
 		const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
@@ -20,14 +18,6 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 		if (!isDisabled) {
 			await refreshButton.click();
 			await page.waitForTimeout(500);
-		}
-
-		const statusElement = page.getByRole("status", { name: "completed" });
-		const isVisible = await statusElement.isVisible();
-		const text = isVisible ? (await statusElement.textContent()) || "no text" : "not visible";
-
-		if (text !== lastStatus) {
-			lastStatus = text;
 		}
 
 		const hasCompletedStatus = await page
