@@ -12,79 +12,42 @@ interface SetupParams {
 
 async function getClipboardContent(page: Page): Promise<string | null> {
 	const browserType = page?.context()?.browser()?.browserType().name();
-	const isFirefox = browserType === "firefox";
-	const isSafari = browserType === "webkit";
 
-	if (isFirefox || isSafari) {
-		try {
-			await page.evaluate(() => {
-				const textarea = document.createElement("textarea");
-				textarea.id = "clipboard-textarea";
-				textarea.style.position = "fixed";
-				textarea.style.top = "0";
-				textarea.style.left = "0";
-				textarea.style.opacity = "1";
-				document.body.appendChild(textarea);
-			});
-
-			await page.focus("#clipboard-textarea");
-
-			if (process.platform === "darwin") {
-				await page.keyboard.press("Meta+V");
-			} else {
-				await page.keyboard.press("Control+V");
-			}
-
-			if (isSafari) {
-				await page.waitForTimeout(100);
-			}
-
-			const clipboardText = await page.$eval(
-				"#clipboard-textarea",
-				(element) => (element as HTMLTextAreaElement).value
-			);
-
-			await page.evaluate(() => {
-				const textarea = document.getElementById("clipboard-textarea");
-				if (textarea) {
-					document.body.removeChild(textarea);
-				}
-			});
-
-			if (!clipboardText) {
-				console.warn(`No clipboard content found in ${browserType}`);
-			}
-
-			return clipboardText;
-		} catch (error) {
-			console.error(`Error reading clipboard in ${browserType}:`, error);
-
-			return null;
-		}
-	} else {
-		try {
+	try {
+		// For Chrome/Chromium, we can use the Clipboard API directly
+		if (browserType === "chromium") {
 			return await page.evaluate(async () => {
 				try {
-					const permission = await navigator.permissions.query({
-						name: "clipboard-read" as PermissionName,
-					});
-
-					if (permission.state === "granted" || permission.state === "prompt") {
-						return await navigator.clipboard.readText();
-					} else {
-						throw new Error("Clipboard permission denied");
-					}
+					return await navigator.clipboard.readText();
 				} catch (error) {
 					console.error("Failed to read clipboard:", error);
 
 					return null;
 				}
 			});
-		} catch (error) {
-			console.error("Clipboard API error:", error);
-
-			return null;
 		}
+
+		// For Firefox and Safari, still use the textarea approach as it's more reliable
+		await page.evaluate(() => {
+			const element = document.createElement("textarea");
+			element.id = "clipboard-textarea";
+			document.body.appendChild(element);
+
+			return element.id;
+		});
+
+		await page.focus("#clipboard-textarea");
+		await page.keyboard.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
+
+		// Get content and cleanup
+		const content = await page.$eval("#clipboard-textarea", (element) => (element as HTMLTextAreaElement).value);
+		await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
+
+		return content;
+	} catch (error) {
+		console.error(`Clipboard operation failed in ${browserType}:`, error);
+
+		return null;
 	}
 }
 

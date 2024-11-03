@@ -43,11 +43,25 @@ export default defineConfig({
 
 		{
 			name: "Edge",
-			use: { ...devices["Desktop Edge"], channel: "msedge" },
+			use: {
+				...devices["Desktop Edge"],
+				channel: "msedge",
+				permissions: ["clipboard-read", "clipboard-write"],
+				launchOptions: {
+					args: ["--allow-clipboard-read", "--allow-clipboard-write"],
+				},
+			},
 		},
 		{
 			name: "Chrome",
-			use: { ...devices["Desktop Chrome"], channel: "chrome" },
+			use: {
+				...devices["Desktop Chrome"],
+				channel: "chrome",
+				permissions: ["clipboard-read", "clipboard-write"],
+				launchOptions: {
+					args: ["--allow-clipboard-read", "--allow-clipboard-write"],
+				},
+			},
 		},
 	],
 
