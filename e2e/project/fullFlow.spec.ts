@@ -126,12 +126,10 @@ test.beforeEach(async ({ dashboardPage, page, request }) => {
 	await expect(deploymentTableRow).toHaveCount(1);
 
 	await waitForDeploymentCompletion(page);
-	deploymentTableRow.click();
-	// await page.getByRole("button", { name: "Deployments" }).click();
 });
 
-test.describe("Project Deployment Suite", () => {
-	test("New deployment has been created", async ({ page }) => {
+test.describe("Full flow Suite", () => {
+	test("Create project from template and run a session", async ({ page }) => {
 		const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
 
 		await expect(deploymentTableRow).toHaveCount(1);
