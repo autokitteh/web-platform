@@ -14,15 +14,13 @@ export type Session = {
 export type ViewerSession = {
 	buildId: string;
 	createdAt: Date;
-	destinationName?: string;
 	entrypoint: SessionEntrypoint;
 	eventId: string;
-	eventType: string;
 	inputs: object;
 	sessionId: string;
 	sourceType?: string;
 	state: number;
-	triggerName: string;
+	triggerName?: string;
 	updatedAt: Date;
 };
 

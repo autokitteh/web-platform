@@ -21,17 +21,15 @@ export function convertSessionProtoToModel(protoSession: ProtoSession): Session 
 		connectionName: protoSession.memo.connection_name,
 	};
 }
-export function convertSessionProtoToViewerModel(
-	protoSession: ProtoSession,
-	sourceType?: string,
-	destinationName?: string
-): ViewerSession {
-	const sourceTypeEnriched = sourceType ? sourceType : i18n.t("sessions.viewer.manualRun", { ns: "deployments" });
+export function convertSessionProtoToViewerModel(protoSession: ProtoSession): ViewerSession {
+	const sourceTypeEnriched = protoSession?.memo?.trigger_type
+		? protoSession?.memo?.trigger_type
+		: i18n.t("sessions.viewer.manualRun", { ns: "deployments" });
 
 	return {
 		buildId: protoSession.buildId,
 		sourceType: sourceTypeEnriched,
-		destinationName,
+		triggerName: protoSession?.memo?.trigger_name,
 		createdAt: convertTimestampToDate(protoSession.createdAt),
 		updatedAt: convertTimestampToDate(protoSession.updatedAt),
 		entrypoint: protoSession.entrypoint as unknown as SessionEntrypoint,
@@ -39,7 +37,5 @@ export function convertSessionProtoToViewerModel(
 		inputs: parseNestedJson(protoSession.inputs as Value),
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
-		triggerName: JSON.parse(protoSession?.inputs?.trigger?.string?.v || "{}")?.name || "",
-		eventType: JSON.parse(protoSession?.inputs?.event?.string?.v || "{}")?.id || "",
 	};
 }

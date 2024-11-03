@@ -182,7 +182,7 @@ export const SessionViewer = () => {
 					<div className="flex items-center gap-4">
 						<div className="w-32 text-gray-1550">{t("source")}</div>
 						{sessionInfo.sourceType === "Connection" ? (
-							sessionInfo.destinationName
+							sessionInfo.triggerName
 						) : (
 							<span className="capitalize">{sessionInfo.sourceType}</span>
 						)}
