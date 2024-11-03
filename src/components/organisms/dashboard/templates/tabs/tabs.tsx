@@ -36,7 +36,7 @@ export const ProjectTemplatesTabs = () => {
 				<div
 					className={
 						"flex select-none items-center gap-2 xl:gap-4 2xl:gap-5 3xl:gap-6 " +
-						"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2"
+						"shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2"
 					}
 				>
 					{templateProjectsCategories.map(({ name }) => (
