@@ -11,13 +11,13 @@ import { Button, IconSvg, Status, Typography } from "@components/atoms";
 import { DownloadDownArrowIcon, PipeCircleDarkIcon } from "@assets/image/icons";
 
 export const ProjectTemplateCard = ({
-	card,
 	category,
 	onCreateClick,
+	template,
 }: {
-	card: TemplateCardType;
 	category: string;
 	onCreateClick: () => void;
+	template: TemplateCardType;
 }) => {
 	const { t } = useTranslation("templates");
 
@@ -27,9 +27,8 @@ export const ProjectTemplateCard = ({
 				<Status>{category}</Status>
 
 				<div className="ml-auto flex gap-3">
-					{card.integrations.map((integration, index) => {
+					{template.integrations.map((integration, index) => {
 						const enrichedIntegration = IntegrationsMap[integration as keyof typeof Integrations];
-
 						const { icon, label } = enrichedIntegration;
 
 						return (
@@ -39,8 +38,7 @@ export const ProjectTemplateCard = ({
 								title={label}
 							>
 								<IconSvg className="z-10 rounded-full p-1" size="xl" src={icon} />
-
-								{index < card.integrations.length - 1 ? (
+								{index < template.integrations.length - 1 ? (
 									<PipeCircleDarkIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-500" />
 								) : null}
 							</div>
@@ -50,11 +48,11 @@ export const ProjectTemplateCard = ({
 			</div>
 
 			<Typography className="mt-4 font-bold" element="h3" size="xl">
-				{card.title}
+				{template.title}
 			</Typography>
 
 			<Typography className="mb-2 mt-1" element="p">
-				{card.description}
+				{template.description}
 			</Typography>
 
 			<div className={cn("mt-auto")} title={t("createProject")}>
@@ -64,7 +62,6 @@ export const ProjectTemplateCard = ({
 					variant="filledGray"
 				>
 					<IconSvg className="h-3" size="xl" src={DownloadDownArrowIcon} />
-
 					{t("start")}
 				</Button>
 			</div>

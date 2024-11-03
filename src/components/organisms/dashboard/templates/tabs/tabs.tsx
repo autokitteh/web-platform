@@ -11,10 +11,11 @@ import { ProjectTemplateCard, ProjectTemplateCreateModal } from "@components/org
 
 export const ProjectTemplatesTabs = () => {
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
-	const [card, setCard] = useState<TemplateCardType>();
-	const { openModal } = useModalStore();
+	const [selectedTemplate, setSelectedTemplate] = useState<TemplateCardType>();
 
-	const { categories, error, fetchTemplates, isLoading } = useTemplateStore();
+	const { openModal } = useModalStore();
+	const { error, fetchTemplates, getCategories, isLoading } = useTemplateStore();
+	const categories = getCategories();
 
 	const activeCategory = useMemo(
 		() => categories?.find((category) => category.name === activeTab),
@@ -30,8 +31,8 @@ export const ProjectTemplatesTabs = () => {
 	}, []);
 
 	const handleCardCreateClick = useCallback(
-		(card: TemplateCardType) => {
-			setCard(card);
+		(template: TemplateCardType) => {
+			setSelectedTemplate(template);
 			openModal(ModalName.templateCreateProject);
 		},
 		[openModal]
@@ -45,12 +46,7 @@ export const ProjectTemplatesTabs = () => {
 			) : (
 				<>
 					<div className="sticky -top-8 z-20 -mt-5 bg-gray-1250 pb-0 pt-3">
-						<div
-							className={
-								"flex select-none items-center gap-2 xl:gap-4 2xl:gap-5 3xl:gap-6 " +
-								"scrollbar shrink-0 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2"
-							}
-						>
+						<div className="xl:gap-4 scrollbar flex shrink-0 select-none items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2 2xl:gap-5 3xl:gap-6">
 							{categories.map(({ name }) => (
 								<Tab
 									activeTab={activeTab}
@@ -67,20 +63,20 @@ export const ProjectTemplatesTabs = () => {
 					</div>
 
 					<div className="mt-4 grid grid-cols-auto-fit-248 gap-x-4 gap-y-5 pb-5 text-black">
-						{activeCategory
-							? activeCategory.cards.map((card, index) => (
-									<ProjectTemplateCard
-										card={card}
-										category={activeCategory.name}
-										key={index}
-										onCreateClick={() => handleCardCreateClick(card)}
-									/>
-								))
-							: null}
+						{activeCategory?.templates.map((template, index) => (
+							<ProjectTemplateCard
+								category={activeCategory.name}
+								key={index}
+								onCreateClick={() => handleCardCreateClick(template)}
+								template={template}
+							/>
+						))}
 					</div>
 				</>
 			)}
-			{card ? <ProjectTemplateCreateModal cardTemplate={card} category={activeCategory?.name} /> : null}
+			{selectedTemplate ? (
+				<ProjectTemplateCreateModal cardTemplate={selectedTemplate} category={activeCategory?.name} />
+			) : null}
 		</div>
 	);
 };

@@ -5,7 +5,7 @@ import JSZip from "jszip";
 import { memoize } from "lodash";
 
 import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipOutput } from "@interfaces/utilities";
-import { TemplateCardType, TemplateCategory } from "@src/types/components";
+import { ProcessedCategory, TemplateCardWithFiles } from "@src/types/components/projectTemplates.type";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
 
@@ -65,7 +65,7 @@ const fetchZipFromUrl = async (url: string): Promise<ArrayBuffer> => {
 };
 
 export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
-	const githubUrl = "https://raw.githubuserconte---nt.com/autokitteh/kittehub/refs/heads/release/dist.zip";
+	const githubUrl = "https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip";
 	const fallbackUrl = "/assets/templates/kittehub.zip";
 
 	try {
@@ -177,14 +177,14 @@ const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = 
 	return files;
 };
 
-export const processReadmeFiles = (fileStructure: FileStructure | null | undefined): TemplateCategory[] => {
+export const processReadmeFiles = (fileStructure: FileStructure | null | undefined): ProcessedCategory[] => {
 	if (!fileStructure) {
 		console.warn(i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }));
 
 		return [];
 	}
 
-	const categoriesMap = new Map<string, Set<TemplateCardType>>();
+	const categoriesMap = new Map<string, Set<TemplateCardWithFiles>>();
 
 	const processDirectory = (structure: FileStructure, currentPath: string = ""): void => {
 		if (!structure || typeof structure !== "object") {
@@ -225,7 +225,7 @@ export const processReadmeFiles = (fileStructure: FileStructure | null | undefin
 						continue;
 					}
 
-					const templateCard: TemplateCardType = {
+					const templateCard: TemplateCardWithFiles = {
 						assetDirectory: currentPath,
 						description: Array.isArray(attributes.description)
 							? attributes.description.join(", ")
