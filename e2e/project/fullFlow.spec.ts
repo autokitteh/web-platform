@@ -11,48 +11,39 @@ interface SetupParams {
 }
 
 async function getClipboardContent(page: Page): Promise<string | null> {
-	// Check browser type
 	const browserType = page?.context()?.browser()?.browserType().name();
 	const isFirefox = browserType === "firefox";
 	const isSafari = browserType === "webkit";
 
 	if (isFirefox || isSafari) {
-		// Handle both Firefox and Safari
 		try {
-			// Create a temporary input element
 			await page.evaluate(() => {
 				const textarea = document.createElement("textarea");
 				textarea.id = "clipboard-textarea";
-				// Make sure the textarea is visible and focused
 				textarea.style.position = "fixed";
 				textarea.style.top = "0";
 				textarea.style.left = "0";
-				textarea.style.opacity = "1"; // Safari might need the element to be visible
+				textarea.style.opacity = "1";
 				document.body.appendChild(textarea);
 			});
 
-			// Focus the textarea
 			await page.focus("#clipboard-textarea");
 
-			// Use keyboard shortcut to paste
 			if (process.platform === "darwin") {
 				await page.keyboard.press("Meta+V");
 			} else {
 				await page.keyboard.press("Control+V");
 			}
 
-			// Add a small delay for Safari
 			if (isSafari) {
 				await page.waitForTimeout(100);
 			}
 
-			// Get the pasted content
 			const clipboardText = await page.$eval(
 				"#clipboard-textarea",
 				(element) => (element as HTMLTextAreaElement).value
 			);
 
-			// Clean up
 			await page.evaluate(() => {
 				const textarea = document.getElementById("clipboard-textarea");
 				if (textarea) {
@@ -71,7 +62,6 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 			return null;
 		}
 	} else {
-		// For Chrome and other browsers, use the Clipboard API
 		try {
 			return await page.evaluate(async () => {
 				try {
@@ -99,26 +89,20 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 }
 
 async function waitForDeploymentStatus(page: Page, timeoutMs = 30000) {
-	// Use expect with polling to check for completion
 	await expect(async () => {
-		// Get the refresh button
 		const refreshButton = page.getByRole("button", { name: "Refresh" });
 
-		// Check if button is not disabled
 		const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
 
 		if (!isDisabled) {
-			// Click the refresh button if it's not disabled
 			await refreshButton.click();
 		}
 
-		// Check if the status element is visible and contains "1"
 		const hasCompletedStatus = await page
 			.getByRole("status", { name: "completed" })
 			.filter({ hasText: "1" })
 			.isVisible();
 
-		// This will throw if condition is not met, causing the expect to retry
 		expect(hasCompletedStatus).toBe(true);
 	}).toPass({
 		timeout: timeoutMs,
@@ -158,7 +142,6 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		throw new Error("Failed to get webhook URL from clipboard");
 	}
 
-	// Trigger session
 	try {
 		const response = await request.get(webhookUrl, {
 			timeout: 5000,
@@ -172,7 +155,6 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		throw error;
 	}
 
-	// Verify deployment status
 	await page.getByRole("button", { name: "Deployments" }).click();
 	await expect(page.getByRole("heading", { name: "Deployment History (1)" })).toBeVisible();
 	await expect(page.getByRole("status", { name: "Active" })).toBeVisible();
