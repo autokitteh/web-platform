@@ -122,6 +122,13 @@ jobs:
         if: matrix.browser == 'Safari'
         run: npx playwright install-deps webkit
 
+
+      - name: Start Xvfb for safari
+        if: matrix.browser == 'Safari'
+        run: |
+          Xvfb :99 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+        
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
