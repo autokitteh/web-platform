@@ -22,7 +22,7 @@ export class DashboardPage {
 		await this.page.getByRole("tab", { name: "Samples" }).click();
 		await this.page.locator("//h3[contains(text(),'HTTP')]").scrollIntoViewIfNeeded();
 		await this.page.getByRole("button", { name: "Create Project From Template: HTTP" }).click();
-		await this.page.getByPlaceholder("Enter project name").fill("My-HTTP-Project");
+		await this.page.getByPlaceholder("Enter project name").fill("MyHTTPProject");
 		await this.page.getByRole("button", { name: "Create", exact: true }).click();
 	}
 }

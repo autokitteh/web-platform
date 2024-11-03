@@ -31,7 +31,7 @@ export const WebhookFields = ({ highlight, webhookSlug }: { highlight?: boolean;
 				value={webhookUrl}
 			/>
 
-			<CopyButton text={webhookUrl} />
+			<CopyButton text={webhookUrl} title={t("placeholders.webhookUrl")} />
 		</div>
 	);
 };

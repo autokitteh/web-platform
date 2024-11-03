@@ -16,11 +16,13 @@ export const CopyButton = ({
 	size = "md",
 	successMessage,
 	text,
+	title,
 }: {
 	className?: string;
 	size?: Extract<SystemSizes, "xs" | "sm" | "md">;
 	successMessage?: string;
 	text: string;
+	title?: string;
 }) => {
 	const { t } = useTranslation("components", { keyPrefix: "buttons" });
 	const addToast = useToastStore((state) => state.addToast);
@@ -51,10 +53,10 @@ export const CopyButton = ({
 
 	return (
 		<IconButton
-			aria-label={t("copyButton")}
+			ariaLabel={t("copyButtonText", { text: title })}
 			className={copyButtonStyle}
 			onClick={() => copyTextToClipboard(text)}
-			title={text}
+			title={title}
 			type="button"
 		>
 			<CopyIcon className={copyButtonIconStyle} />
