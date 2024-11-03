@@ -56,16 +56,7 @@ jobs:
     strategy:
         matrix:
           browser: ["Chrome", "Edge", "Firefox", "Safari"]
-          include:
-            - browser: Safari
-              os: macos-latest
-            - browser: Chrome
-              os: ubuntu-latest
-            - browser: Edge
-              os: ubuntu-latest
-            - browser: Firefox
-              os: ubuntu-latest
-    runs-on: ${{ matrix.os }} 
+    runs-on: 'ubuntu-latest'
 
     if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
     steps:
@@ -127,19 +118,49 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
 
-      - name: Install system dependencies for safari
+      - name: Install system dependencies for Safari
         if: matrix.browser == 'Safari'
         run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwoff1 \
+            libopus0 \
+            libwebp7 \
+            libwebpdemux2 \
+            libenchant-2-2 \
+            libgudev-1.0-0 \
+            libsecret-1-0 \
+            libhyphen0 \
+            libgdk-pixbuf2.0-0 \
+            libegl1 \
+            libnotify4 \
+            libxslt1.1 \
+            libevent-2.1-7 \
+            libgles2 \
+            libvpx7 \
+            libxcomposite1 \
+            libatk1.0-0 \
+            libatk-bridge2.0-0 \
+            libepoxy0 \
+            libgtk-3-0 \
+            libharfbuzz-icu0
+          
           npx playwright install-deps webkit
-          defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-          defaults write com.apple.Safari WebKitPreferences.developerExtrasEnabled -bool true
-          defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
-        
+  
+      - name: Start Xvfb
+        if: matrix.browser == 'Safari'
+        run: |
+          Xvfb :99 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+          sleep 3  # Give Xvfb a moment to start
+
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1 
-        run: npx playwright test --project=${{ matrix.browser }}
+          DISPLAY: :99
+          WEBKIT_FORCE_COMPLEX_TEXT: 0 
+        run: xvfb-run --server-args="-screen 0 1280x960x24" npx playwright test --project=${{ matrix.browser }}
 
       - name: Upload Playwright Test Results
         uses: actions/upload-artifact@v4
