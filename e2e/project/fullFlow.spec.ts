@@ -10,7 +10,7 @@ interface SetupParams {
 	request: APIRequestContext;
 }
 
-async function waitForDeploymentStatus(page: Page, timeoutMs = 60000) {
+async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 	let lastStatus: string | undefined = undefined;
 
 	await expect(async () => {
@@ -103,5 +103,5 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
 	await expect(deploymentTableRow).toHaveCount(1);
 
-	await waitForDeploymentStatus(page);
+	await waitForFirstCompletedSession(page);
 }
