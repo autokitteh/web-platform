@@ -10,11 +10,11 @@ interface SetupParams {
 	page: Page;
 	request: APIRequestContext;
 }
-
 async function getClipboardContent(page: Page): Promise<string | null> {
 	const browserType = page?.context()?.browser()?.browserType().name();
 
 	try {
+		// Try Clipboard API first for Chromium
 		if (browserType === "chromium") {
 			const clipboardText = await page.evaluate(async () => {
 				try {
@@ -33,33 +33,62 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 			return clipboardText;
 		}
 
+		// For Safari/WebKit, use a more robust approach
 		await page.evaluate(() => {
-			const element = document.createElement("textarea");
-			element.id = "clipboard-textarea";
-			element.style.position = "fixed";
-			element.style.top = "0";
-			element.style.left = "0";
-			element.style.width = "2em";
-			element.style.height = "2em";
-			element.style.padding = "0";
-			element.style.border = "none";
-			element.style.outline = "none";
-			element.style.boxShadow = "none";
-			element.style.background = "transparent";
-			document.body.appendChild(element);
+			const textarea = document.createElement("textarea");
+			textarea.id = "clipboard-textarea";
+			// Make the textarea visible and more accessible for Safari
+			textarea.style.position = "fixed";
+			textarea.style.top = "0";
+			textarea.style.left = "0";
+			textarea.style.width = "100px"; // Increased size for better interaction
+			textarea.style.height = "100px"; // Increased size for better interaction
+			textarea.style.opacity = "1"; // Make it visible for debugging
+			textarea.style.padding = "10px";
+			textarea.style.zIndex = "999999";
+			document.body.appendChild(textarea);
 		});
 
 		if (browserType === "webkit") {
-			await page.waitForTimeout(1000);
-			await page.$eval("#clipboard-textarea", (element) => element.focus());
+			// Add extra steps for Safari
+			await page.waitForTimeout(500);
+
+			// Ensure the textarea is focused
+			await page.click("#clipboard-textarea");
+
+			// Try multiple times to ensure the paste command is received
+			for (let i = 0; i < 3; i++) {
+				await page.keyboard.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
+				await page.waitForTimeout(500);
+
+				// Check if we got content
+				const content = await page.$eval(
+					"#clipboard-textarea",
+					(element) => (element as HTMLTextAreaElement).value
+				);
+
+				if (content) {
+					// Clean up
+					await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
+
+					return content;
+				}
+
+				// If no content, wait a bit before trying again
+				await page.waitForTimeout(500);
+			}
+
+			throw new Error("Failed to paste content after multiple attempts");
 		}
 
+		// For other browsers
 		await page.focus("#clipboard-textarea");
 		await page.keyboard.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
-		await page.waitForTimeout(browserType === "webkit" ? 1000 : 500);
+		await page.waitForTimeout(500);
 
 		const content = await page.$eval("#clipboard-textarea", (element) => (element as HTMLTextAreaElement).value);
 
+		// Clean up
 		await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
 
 		if (!content) {
@@ -70,6 +99,11 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : "Unknown error";
 		console.error(`Clipboard operation failed in ${browserType}:`, errorMessage);
+
+		// Take a screenshot for debugging if the operation fails
+		await page.screenshot({
+			path: `clipboard-operation-failed-${browserType}-${Date.now()}.png`,
+		});
 
 		return null;
 	}
