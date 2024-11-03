@@ -51,3 +51,4 @@ export {
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
 export { remoteTemplatesRepositoryURL, remoteTemplatesFilesFallback } from "@constants/templates.constants";
+export { featureFlags } from "@constants/featureFlags.constants";

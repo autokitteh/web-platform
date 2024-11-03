@@ -9,6 +9,7 @@ interface ImportMetaEnv {
 	readonly TESTS_JWT_AUTH_TOKEN: string;
 	readonly SENTRY_DSN: string;
 	readonly VITE_HOST_URL: string;
+	readonly FF_DISPLAY_SOCKET_INTEGRATIONS: string;
 }
 
 interface ImportMeta {

@@ -1,5 +1,6 @@
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
+import { featureFlags } from "@src/constants";
 import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { sortIntegrationsMapByLabel } from "@src/utilities";
 
@@ -22,10 +23,13 @@ export const selectIntegrationGoogle: SelectOption[] = [
 	{ label: "Service Account (JSON Key)", value: ConnectionAuthType.JsonKey },
 ];
 
-export const selectIntegrationSlack: SelectOption[] = [
-	{ label: "OAuth v2", value: ConnectionAuthType.Oauth },
-	{ label: "Socket Mode", value: ConnectionAuthType.Socket },
-];
+const slackSocketMode = { label: "Socket Mode", value: ConnectionAuthType.Socket };
+
+const baseSelectIntegrationSlack = [{ label: "OAuth v2", value: ConnectionAuthType.Oauth }];
+
+export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySocketIntegrations
+	? baseSelectIntegrationSlack.concat(slackSocketMode)
+	: baseSelectIntegrationSlack;
 
 export const selectIntegrationAws: SelectOption[] = [
 	{ value: "ap-northeast-1", label: "ap-northeast-1" },
