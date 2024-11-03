@@ -1,3 +1,4 @@
+import { featureFlags } from "@src/constants";
 import { IntegrationSelectOption } from "@src/interfaces/components/forms";
 
 import { AKRoundLogo } from "@assets/image";
@@ -152,6 +153,14 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		value: Integrations.twilio,
 	},
 };
+
+export const getFilteredIntegrations = () => {
+	return Object.fromEntries(
+		Object.entries(IntegrationsMap).filter(([key]) => key !== "discord" || featureFlags.displaySocketIntegrations)
+	) as Record<Integrations, IntegrationSelectOption>;
+};
+
+export const fitleredIntegrationsMap = getFilteredIntegrations();
 
 export const HiddenIntegrationsForTemplates: Record<IntegrationForTemplates, IntegrationSelectOption> = {
 	githubcopilot: { label: "GitHub Copilot", value: IntegrationForTemplates.githubcopilot, icon: GithubCopilotIcon },

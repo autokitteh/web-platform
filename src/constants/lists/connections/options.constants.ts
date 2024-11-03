@@ -1,14 +1,14 @@
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
 import { featureFlags } from "@src/constants";
-import { IntegrationsMap } from "@src/enums/components/connection.enum";
+import { fitleredIntegrationsMap } from "@src/enums/components";
 import { sortIntegrationsMapByLabel } from "@src/utilities";
 
-const sortedIntegrationsMap = sortIntegrationsMapByLabel(IntegrationsMap);
+const sortedIntegrationsMap = sortIntegrationsMapByLabel(fitleredIntegrationsMap);
 export const integrationTypes: SelectOption[] = Object.values(sortedIntegrationsMap);
 
 export const integrationIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = Object.fromEntries(
-	Object.entries(IntegrationsMap)
+	Object.entries(fitleredIntegrationsMap)
 		.filter(([_, value]) => value.icon !== undefined)
 		.map(([key, value]) => [key, value.icon!])
 );
