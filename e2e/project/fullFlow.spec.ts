@@ -88,17 +88,12 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 	const webhookUrl = await getWebhookUrl(page);
 
-	try {
-		const response = await request.get(webhookUrl, {
-			timeout: 5000,
-		});
+	const response = await request.get(webhookUrl, {
+		timeout: 5000,
+	});
 
-		if (!response.ok()) {
-			throw new Error(`Webhook request failed with status ${response.status()}`);
-		}
-	} catch (error) {
-		console.error("Webhook request failed:", error);
-		throw error;
+	if (!response.ok()) {
+		throw new Error(`Webhook request failed with status ${response.status()}`);
 	}
 
 	await page.getByRole("button", { name: "Deployments" }).click();
