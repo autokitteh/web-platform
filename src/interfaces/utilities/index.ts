@@ -2,8 +2,6 @@ export type {
 	FileNode,
 	DirectoryNode,
 	ProcessedZipResult,
-	ProcessedZipError,
-	ProcessedZipOutput,
 	MarkdownAttributes,
 	FileStructure,
 	FileWithContent,

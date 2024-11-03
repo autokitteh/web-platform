@@ -4,7 +4,7 @@ import i18n from "i18next";
 import JSZip from "jszip";
 import { memoize } from "lodash";
 
-import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipOutput } from "@interfaces/utilities";
+import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipResult } from "@interfaces/utilities";
 import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/types/components";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
@@ -64,7 +64,7 @@ const fetchZipFromUrl = async (url: string): Promise<ArrayBuffer> => {
 	return zipData;
 };
 
-export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
+export const fetchAndUnpackZip = async (): Promise<ProcessedZipResult> => {
 	const githubUrl = "https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip";
 	const fallbackUrl = "/assets/templates/kittehub.zip";
 
@@ -121,7 +121,7 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 			})
 		);
 
-		return { error: errorMessage };
+		return { error: errorMessage, structure: undefined };
 	}
 };
 

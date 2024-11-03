@@ -10,16 +10,9 @@ export interface DirectoryNode {
 }
 
 export interface ProcessedZipResult {
-	structure: FileStructure;
-	error?: never;
+	structure?: FileStructure;
+	error?: string;
 }
-
-export interface ProcessedZipError {
-	structure?: never;
-	error: string;
-}
-
-export type ProcessedZipOutput = ProcessedZipResult | ProcessedZipError;
 
 export interface MarkdownAttributes {
 	[key: string]: unknown;
