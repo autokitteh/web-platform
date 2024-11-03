@@ -54,16 +54,57 @@ const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 	return fileStructure;
 };
 
+const fetchZipFromUrl = async (url: string): Promise<ArrayBuffer> => {
+	const { data: zipData } = await axios.get(url, {
+		responseType: "arraybuffer",
+		timeout: 30000,
+		validateStatus: (status) => status === 200,
+	});
+
+	return zipData;
+};
+
 export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
+	const githubUrl = "https://raw.githubuserconte---nt.com/autokitteh/kittehub/refs/heads/release/dist.zip";
+	const fallbackUrl = "/assets/templates/kittehub.zip";
+
 	try {
-		const { data: zipData } = await axios.get(
-			"https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip",
-			{
-				responseType: "arraybuffer",
-				timeout: 30000,
-				validateStatus: (status) => status === 200,
+		let zipData: ArrayBuffer;
+
+		try {
+			zipData = await fetchZipFromUrl(githubUrl);
+			// eslint-disable-next-line no-console
+			console.log(
+				i18n.t("fetchAndExtract.fetchedFromGithub", {
+					namespace: "utilities",
+				})
+			);
+		} catch (githubError) {
+			console.warn(
+				i18n.t("fetchAndExtract.githubFetchFailed", {
+					namespace: "utilities",
+					error: githubError instanceof Error ? githubError.message : "Unknown error",
+				})
+			);
+
+			try {
+				zipData = await fetchZipFromUrl(fallbackUrl);
+				// eslint-disable-next-line no-console
+				console.log(
+					i18n.t("fetchAndExtract.fetchedFromFallback", {
+						namespace: "utilities",
+					})
+				);
+			} catch (fallbackError) {
+				throw new Error(
+					i18n.t("fetchAndExtract.allSourcesFailed", {
+						namespace: "utilities",
+						githubError: githubError instanceof Error ? githubError.message : "Unknown error",
+						fallbackError: fallbackError instanceof Error ? fallbackError.message : "Unknown error",
+					})
+				);
 			}
-		);
+		}
 
 		const zip = new JSZip();
 		const content = await zip.loadAsync(zipData);

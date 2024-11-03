@@ -19,6 +19,7 @@ import sidebar from "@locales/en/sidebar/translation.json";
 import tabs from "@locales/en/tabs/translation.json";
 import templates from "@locales/en/templates/translation.json";
 import toasts from "@locales/en/toasts/translation.json";
+import utilities from "@locales/en/utilities/translation.json";
 import validations from "@locales/en/validations/translation.json";
 
 export default {
@@ -46,4 +47,5 @@ export default {
 	validations,
 	dashboard,
 	templates,
+	utilities,
 };
