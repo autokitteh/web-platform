@@ -90,7 +90,7 @@ export default defineConfig({
 		video: "on",
 		screenshot: "on",
 		extraHTTPHeaders: {
-			Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}`,
+			// Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}`,
 		},
 	},
 

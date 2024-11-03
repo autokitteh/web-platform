@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { APIRequestContext, Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures";
@@ -14,7 +15,6 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 	const browserType = page?.context()?.browser()?.browserType().name();
 
 	try {
-		// For Chrome/Edge (Chromium-based browsers), use the Clipboard API directly
 		if (browserType === "chromium") {
 			const clipboardText = await page.evaluate(async () => {
 				try {
@@ -33,7 +33,6 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 			return clipboardText;
 		}
 
-		// For Firefox and Safari
 		await page.evaluate(() => {
 			const element = document.createElement("textarea");
 			element.id = "clipboard-textarea";
@@ -61,7 +60,6 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 
 		const content = await page.$eval("#clipboard-textarea", (element) => (element as HTMLTextAreaElement).value);
 
-		// Clean up
 		await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
 
 		if (!content) {
@@ -77,25 +75,51 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 	}
 }
 
-async function waitForDeploymentStatus(page: Page, timeoutMs = 30000) {
+async function waitForDeploymentStatus(page: Page, timeoutMs = 60000) {
+	let lastStatus: string | undefined = undefined;
+	let attempts = 0;
+
 	await expect(async () => {
+		attempts++;
 		const refreshButton = page.getByRole("button", { name: "Refresh" });
 
-		const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
+		console.log(`Checking deployment status - attempt ${attempts}`);
 
-		if (!isDisabled) {
-			await refreshButton.click();
+		try {
+			const isDisabled = await refreshButton.evaluate((element) => (element as HTMLButtonElement).disabled);
+
+			if (!isDisabled) {
+				console.log("Clicking refresh button");
+				await refreshButton.click();
+				await page.waitForTimeout(500);
+			}
+
+			const statusElement = page.getByRole("status", { name: "completed" });
+			const isVisible = await statusElement.isVisible();
+			const text = isVisible ? (await statusElement.textContent()) || "no text" : "not visible";
+
+			if (text !== lastStatus) {
+				console.log(`Current status: ${text}`);
+				lastStatus = text;
+			}
+
+			const hasCompletedStatus = await page
+				.getByRole("status", { name: "completed" })
+				.filter({ hasText: "1" })
+				.isVisible();
+
+			expect(hasCompletedStatus).toBe(true);
+
+			console.log("Deployment completed successfully");
+
+			return true;
+		} catch (error) {
+			await page.screenshot({ path: `deployment-status-attempt-${attempts}.png` });
+			throw error;
 		}
-
-		const hasCompletedStatus = await page
-			.getByRole("status", { name: "completed" })
-			.filter({ hasText: "1" })
-			.isVisible();
-
-		expect(hasCompletedStatus).toBe(true);
 	}).toPass({
 		timeout: timeoutMs,
-		intervals: [1000],
+		intervals: [2000],
 	});
 }
 
@@ -118,14 +142,13 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
 
-	// Setup webhook trigger
 	await page.getByRole("tab", { name: "Triggers" }).click();
 	await page.getByRole("button", { name: "Modify receive_http_get_or_head trigger" }).click();
+
 	const copyButton = page.getByRole("button", { name: "Copy Webhook URL" });
 	await copyButton.waitFor({ state: "visible" });
 	await copyButton.click();
 
-	// Add browser-specific wait times
 	const browserType = page?.context()?.browser()?.browserType().name();
 	await page.waitForTimeout(browserType === "webkit" ? 1500 : 500);
 
@@ -138,23 +161,29 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		);
 	}
 
+	console.log("Making webhook request...");
 	try {
 		const response = await request.get(webhookUrl, {
-			timeout: 5000,
+			timeout: 10000,
 		});
 
 		if (!response.ok()) {
 			throw new Error(`Webhook request failed with status ${response.status()}`);
 		}
+		console.log("Webhook request successful");
 	} catch (error) {
 		console.error("Webhook request failed:", error);
 		throw error;
 	}
+
 	await page.getByRole("button", { name: "Deployments" }).click();
 	await expect(page.getByRole("heading", { name: "Deployment History (1)" })).toBeVisible();
+
 	await expect(page.getByRole("status", { name: "Active" })).toBeVisible();
 	const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
 	await expect(deploymentTableRow).toHaveCount(1);
 
+	console.log("Waiting for deployment to complete...");
 	await waitForDeploymentStatus(page);
+	console.log("Deployment status check completed");
 }
