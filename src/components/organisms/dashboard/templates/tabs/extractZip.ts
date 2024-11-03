@@ -76,13 +76,13 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 			// eslint-disable-next-line no-console
 			console.log(
 				i18n.t("fetchAndExtract.fetchedFromGithub", {
-					namespace: "utilities",
+					ns: "utilities",
 				})
 			);
 		} catch (githubError) {
 			console.warn(
 				i18n.t("fetchAndExtract.githubFetchFailed", {
-					namespace: "utilities",
+					ns: "utilities",
 					error: githubError instanceof Error ? githubError.message : "Unknown error",
 				})
 			);
@@ -92,13 +92,13 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 				// eslint-disable-next-line no-console
 				console.log(
 					i18n.t("fetchAndExtract.fetchedFromFallback", {
-						namespace: "utilities",
+						ns: "utilities",
 					})
 				);
 			} catch (fallbackError) {
 				throw new Error(
 					i18n.t("fetchAndExtract.allSourcesFailed", {
-						namespace: "utilities",
+						ns: "utilities",
 						githubError: githubError instanceof Error ? githubError.message : "Unknown error",
 						fallbackError: fallbackError instanceof Error ? fallbackError.message : "Unknown error",
 					})
@@ -116,7 +116,7 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 
 		console.error(
 			i18n.t("fetchAndExtract.fetchAndExtractError", {
-				namespace: "utilities",
+				ns: "utilities",
 				error: errorMessage,
 			})
 		);
