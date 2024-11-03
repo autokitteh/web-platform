@@ -16,7 +16,7 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 	try {
 		// For Chrome/Edge (Chromium-based browsers), use the Clipboard API directly
 		if (browserType === "chromium") {
-			return await page.evaluate(async () => {
+			const clipboardText = await page.evaluate(async () => {
 				try {
 					return await navigator.clipboard.readText();
 				} catch (error) {
@@ -25,14 +25,18 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 					return null;
 				}
 			});
+
+			if (!clipboardText) {
+				throw new Error("Clipboard API returned empty content");
+			}
+
+			return clipboardText;
 		}
 
 		// For Firefox and Safari
-		// Create textarea with specific styling for Safari
 		await page.evaluate(() => {
 			const element = document.createElement("textarea");
 			element.id = "clipboard-textarea";
-			// Safari-specific styling to ensure visibility and focus
 			element.style.position = "fixed";
 			element.style.top = "0";
 			element.style.left = "0";
@@ -46,52 +50,28 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 			document.body.appendChild(element);
 		});
 
-		// For Safari, we need more explicit focus handling
 		if (browserType === "webkit") {
-			await page.waitForTimeout(1000); // Longer wait for Safari
+			await page.waitForTimeout(1000);
 			await page.$eval("#clipboard-textarea", (element) => element.focus());
 		}
 
 		await page.focus("#clipboard-textarea");
+		await page.keyboard.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
+		await page.waitForTimeout(browserType === "webkit" ? 1000 : 500);
 
-		// Press paste command with retry for Safari
-		if (browserType === "webkit") {
-			for (let i = 0; i < 3; i++) {
-				// Try up to 3 times
-				await page.keyboard.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
-				await page.waitForTimeout(500);
+		const content = await page.$eval("#clipboard-textarea", (element) => (element as HTMLTextAreaElement).value);
 
-				const content = await page.$eval(
-					"#clipboard-textarea",
-					(element) => (element as HTMLTextAreaElement).value
-				);
+		// Clean up
+		await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
 
-				if (content) {
-					// Clean up
-					await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
-
-					return content;
-				}
-
-				// Wait before retry
-				await page.waitForTimeout(500);
-			}
-			throw new Error("Failed to paste content after multiple attempts");
-		} else {
-			// Firefox and other browsers
-			await page.keyboard.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
-			const content = await page.$eval(
-				"#clipboard-textarea",
-				(element) => (element as HTMLTextAreaElement).value
-			);
-
-			// Clean up
-			await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
-
-			return content;
+		if (!content) {
+			throw new Error("No content found in textarea after paste operation");
 		}
+
+		return content;
 	} catch (error) {
-		console.error(`Clipboard operation failed in ${browserType}:`, error);
+		const errorMessage = error instanceof Error ? error.message : "Unknown error";
+		console.error(`Clipboard operation failed in ${browserType}:`, errorMessage);
 
 		return null;
 	}
@@ -141,20 +121,21 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	// Setup webhook trigger
 	await page.getByRole("tab", { name: "Triggers" }).click();
 	await page.getByRole("button", { name: "Modify receive_http_get_or_head trigger" }).click();
-	await page.getByRole("button", { name: "Copy Webhook URL" }).click();
+	const copyButton = page.getByRole("button", { name: "Copy Webhook URL" });
+	await copyButton.waitFor({ state: "visible" });
+	await copyButton.click();
 
-	await page.waitForTimeout(500);
-
+	// Add browser-specific wait times
 	const browserType = page?.context()?.browser()?.browserType().name();
-	if (browserType === "webkit") {
-		await page.waitForTimeout(1500); // Longer initial wait for Safari
-	} else {
-		await page.waitForTimeout(500);
-	}
+	await page.waitForTimeout(browserType === "webkit" ? 1500 : 500);
 
 	const webhookUrl = await getClipboardContent(page);
+
 	if (!webhookUrl) {
-		throw new Error("Failed to get webhook URL from clipboard");
+		throw new Error(
+			`Failed to get webhook URL from clipboard in ${browserType} browser. ` +
+				`Make sure the URL was copied correctly and clipboard permissions are granted.`
+		);
 	}
 
 	try {
@@ -169,7 +150,6 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 		console.error("Webhook request failed:", error);
 		throw error;
 	}
-
 	await page.getByRole("button", { name: "Deployments" }).click();
 	await expect(page.getByRole("heading", { name: "Deployment History (1)" })).toBeVisible();
 	await expect(page.getByRole("status", { name: "Active" })).toBeVisible();
