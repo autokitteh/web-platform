@@ -1,4 +1,4 @@
-import { SessionActivity, SessionOutput } from "@src/types/models";
+import { SessionActivity, SessionOutput } from "@src/interfaces/models";
 
 export interface SessionActivityData {
 	activities: SessionActivity[];

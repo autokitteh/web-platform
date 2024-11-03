@@ -4,7 +4,7 @@ import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { useTranslation } from "react-i18next";
 
-import { SessionActivity } from "@src/types/models";
+import { SessionActivity } from "@src/interfaces/models";
 
 import { Button, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { Accordion } from "@components/molecules";

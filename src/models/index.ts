@@ -4,7 +4,7 @@ export { convertDeploymentProtoToModel } from "@models/deployment.model";
 export { convertErrorProtoToModel } from "@models/error.model";
 export { convertIntegrationProtoToModel } from "@models/integration.model";
 export { convertProjectProtoToModel } from "@models/project.model";
-export { convertSessionProtoToModel } from "@models/session.model";
+export { convertSessionProtoToModel, convertSessionProtoToViewerModel } from "@models/session.model";
 export { SessionLogRecord, convertSessionLogProtoToViewerOutput } from "@models/sessionLogRecord.model";
 export { convertTriggerProtoToModel } from "@models/trigger.model";
 export { convertUserProtoToModel } from "@models/user.model";

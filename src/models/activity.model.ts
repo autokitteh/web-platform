@@ -1,7 +1,7 @@
 import { convertValue } from "./value.model";
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
 import { ActivityState } from "@src/enums";
-import { SessionActivity } from "@src/types/models";
+import { SessionActivity } from "@src/interfaces/models";
 import { isWrappedJsonValueWithBytes, isWrappedJsonValueWithString } from "@src/types/models/value.type";
 import { convertTimestampToEpoch } from "@src/utilities/convertTimestampToDate.utils";
 import { convertPythonStringToJSON, convertTimestampToDate } from "@utilities";

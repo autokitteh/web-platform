@@ -7,7 +7,7 @@ import { dateTimeFormat, namespaces } from "@constants";
 import { SessionLogRecordType, SessionStateType } from "@enums";
 import { convertErrorProtoToModel } from "@models/error.model";
 import { LoggerService } from "@services";
-import { Callstack, SessionOutput } from "@type/models";
+import { Callstack, SessionOutput } from "@src/interfaces/models";
 import { convertTimestampToDate, convertTimestampToEpoch } from "@utilities";
 
 export class SessionLogRecord {

@@ -6,16 +6,6 @@ export type { BaseEvent, EnrichedEvent, EventDestinationTypes } from "@type/mode
 export type { Integration } from "@type/models/integration.type";
 export type { Project } from "@type/models/project.type";
 export type { ProtoSessionHistoryState } from "@type/models/protoSessionHistoryState.type";
-export type {
-	Callstack,
-	EntrypointTrigger,
-	Session,
-	SessionEntrypoint,
-	SessionFilter,
-	SessionStateKeyType,
-	SessionOutput,
-	SessionActivity,
-} from "@type/models/session.type";
 export type { Trigger, TriggerObj, TriggerTypeKeyType } from "@type/models/trigger.type";
 export type { User } from "@type/models/user.type";
 export type { Value, WrappedJsonValue } from "@type/models/value.type";

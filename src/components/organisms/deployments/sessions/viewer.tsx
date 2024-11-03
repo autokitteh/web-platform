@@ -18,8 +18,8 @@ import {
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
+import { ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
-import { ViewerSession } from "@src/types/models/session.type";
 
 import { Frame, IconButton, IconSvg, Loader, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion, CopyButton, RefreshButton } from "@components/molecules";

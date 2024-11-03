@@ -7,8 +7,8 @@ import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
 import { defaultSessionLogRecordsListRowHeight, standardScreenHeightFallback } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { VirtualizedListHookResult } from "@src/interfaces/hooks";
+import { SessionActivity, SessionOutput } from "@src/interfaces/models";
 import { SessionActivityData, SessionOutputData } from "@src/interfaces/store";
-import { SessionActivity, SessionOutput } from "@src/types/models";
 
 import { useActivitiesCacheStore, useOutputsCacheStore } from "@store";
 
