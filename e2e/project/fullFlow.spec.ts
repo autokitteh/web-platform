@@ -14,7 +14,7 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 	const browserType = page?.context()?.browser()?.browserType().name();
 
 	try {
-		// For Chrome/Chromium, we can use the Clipboard API directly
+		// For Chrome/Edge (Chromium-based browsers), use the Clipboard API directly
 		if (browserType === "chromium") {
 			return await page.evaluate(async () => {
 				try {
@@ -27,23 +27,69 @@ async function getClipboardContent(page: Page): Promise<string | null> {
 			});
 		}
 
-		// For Firefox and Safari, still use the textarea approach as it's more reliable
+		// For Firefox and Safari
+		// Create textarea with specific styling for Safari
 		await page.evaluate(() => {
 			const element = document.createElement("textarea");
 			element.id = "clipboard-textarea";
+			// Safari-specific styling to ensure visibility and focus
+			element.style.position = "fixed";
+			element.style.top = "0";
+			element.style.left = "0";
+			element.style.width = "2em";
+			element.style.height = "2em";
+			element.style.padding = "0";
+			element.style.border = "none";
+			element.style.outline = "none";
+			element.style.boxShadow = "none";
+			element.style.background = "transparent";
 			document.body.appendChild(element);
-
-			return element.id;
 		});
 
+		// For Safari, we need more explicit focus handling
+		if (browserType === "webkit") {
+			await page.waitForTimeout(1000); // Longer wait for Safari
+			await page.$eval("#clipboard-textarea", (element) => element.focus());
+		}
+
 		await page.focus("#clipboard-textarea");
-		await page.keyboard.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
 
-		// Get content and cleanup
-		const content = await page.$eval("#clipboard-textarea", (element) => (element as HTMLTextAreaElement).value);
-		await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
+		// Press paste command with retry for Safari
+		if (browserType === "webkit") {
+			for (let i = 0; i < 3; i++) {
+				// Try up to 3 times
+				await page.keyboard.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
+				await page.waitForTimeout(500);
 
-		return content;
+				const content = await page.$eval(
+					"#clipboard-textarea",
+					(element) => (element as HTMLTextAreaElement).value
+				);
+
+				if (content) {
+					// Clean up
+					await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
+
+					return content;
+				}
+
+				// Wait before retry
+				await page.waitForTimeout(500);
+			}
+			throw new Error("Failed to paste content after multiple attempts");
+		} else {
+			// Firefox and other browsers
+			await page.keyboard.press(process.platform === "darwin" ? "Meta+V" : "Control+V");
+			const content = await page.$eval(
+				"#clipboard-textarea",
+				(element) => (element as HTMLTextAreaElement).value
+			);
+
+			// Clean up
+			await page.evaluate(() => document.getElementById("clipboard-textarea")?.remove());
+
+			return content;
+		}
 	} catch (error) {
 		console.error(`Clipboard operation failed in ${browserType}:`, error);
 
@@ -99,8 +145,14 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 	await page.waitForTimeout(500);
 
-	const webhookUrl = await getClipboardContent(page);
+	const browserType = page?.context()?.browser()?.browserType().name();
+	if (browserType === "webkit") {
+		await page.waitForTimeout(1500); // Longer initial wait for Safari
+	} else {
+		await page.waitForTimeout(500);
+	}
 
+	const webhookUrl = await getClipboardContent(page);
 	if (!webhookUrl) {
 		throw new Error("Failed to get webhook URL from clipboard");
 	}

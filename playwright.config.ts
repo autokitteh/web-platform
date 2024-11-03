@@ -30,6 +30,8 @@ export default defineConfig({
 		{
 			name: "Safari",
 			use: { ...devices["Desktop Safari"] },
+			actionTimeout: 10000,
+			navigationTimeout: 30000,
 		},
 
 		// {
