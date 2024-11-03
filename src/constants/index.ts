@@ -51,3 +51,4 @@ export {
 } from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
+export { githubUrl, fallbackUrl } from "@constants/templates.constants";

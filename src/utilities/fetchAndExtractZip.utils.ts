@@ -5,6 +5,7 @@ import JSZip from "jszip";
 import { memoize } from "lodash";
 
 import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipResult } from "@interfaces/utilities";
+import { fallbackUrl, githubUrl } from "@src/constants";
 import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
@@ -65,9 +66,6 @@ const fetchZipFromUrl = async (url: string): Promise<ArrayBuffer> => {
 };
 
 export const fetchAndUnpackZip = async (): Promise<ProcessedZipResult> => {
-	const githubUrl = "https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip";
-	const fallbackUrl = "/assets/templates/kittehub.zip";
-
 	try {
 		let zipData: ArrayBuffer;
 
