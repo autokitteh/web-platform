@@ -62,6 +62,7 @@ export const RefreshButton = ({ disabled, isLoading, onRefresh }: RefreshButtonP
 
 	return (
 		<IconButton
+			ariaLabel={t("refresh")}
 			className={iconButtonClass}
 			disabled={isSpinning || disabled}
 			onClick={handleRefreshClick}
