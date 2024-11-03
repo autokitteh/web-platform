@@ -5,7 +5,7 @@ import JSZip from "jszip";
 import { memoize } from "lodash";
 
 import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipResult } from "@interfaces/utilities";
-import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/types/components";
+import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
 
