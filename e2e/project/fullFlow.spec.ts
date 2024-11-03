@@ -1,65 +1,104 @@
-import { Page } from "@playwright/test";
+import { APIRequestContext, Page } from "@playwright/test";
 
 import { expect, test } from "../fixtures";
 import { waitForToast } from "../utils";
+import { DashboardPage } from "e2e/pages";
 
-async function readClipboardText(page: Page) {
-	// For Firefox, we need to use a different approach using keyboard shortcuts
-	const isFirefox = page?.context()?.browser()?.browserType().name() === "firefox";
+interface SetupParams {
+	dashboardPage: DashboardPage;
+	page: Page;
+	request: APIRequestContext;
+}
 
-	if (isFirefox) {
-		// Create a temporary input element
-		await page.evaluate(() => {
-			const textarea = document.createElement("textarea");
-			textarea.id = "clipboard-textarea";
-			document.body.appendChild(textarea);
-		});
+async function getClipboardContent(page: Page): Promise<string | null> {
+	// Check browser type
+	const browserType = page?.context()?.browser()?.browserType().name();
+	const isFirefox = browserType === "firefox";
+	const isSafari = browserType === "webkit";
 
-		// Focus the textarea
-		await page.focus("#clipboard-textarea");
+	if (isFirefox || isSafari) {
+		// Handle both Firefox and Safari
+		try {
+			// Create a temporary input element
+			await page.evaluate(() => {
+				const textarea = document.createElement("textarea");
+				textarea.id = "clipboard-textarea";
+				// Make sure the textarea is visible and focused
+				textarea.style.position = "fixed";
+				textarea.style.top = "0";
+				textarea.style.left = "0";
+				textarea.style.opacity = "1"; // Safari might need the element to be visible
+				document.body.appendChild(textarea);
+			});
 
-		// Use keyboard shortcut to paste (Ctrl+V or Command+V)
-		if (process.platform === "darwin") {
-			await page.keyboard.press("Meta+V");
-		} else {
-			await page.keyboard.press("Control+V");
-		}
+			// Focus the textarea
+			await page.focus("#clipboard-textarea");
 
-		// Get the pasted content
-		const clipboardText = await page.$eval(
-			"#clipboard-textarea",
-			(element) => (element as HTMLTextAreaElement).value
-		);
-
-		// Clean up
-		await page.evaluate(() => {
-			const textarea = document.getElementById("clipboard-textarea");
-			if (textarea) {
-				document.body.removeChild(textarea);
+			// Use keyboard shortcut to paste
+			if (process.platform === "darwin") {
+				await page.keyboard.press("Meta+V");
+			} else {
+				await page.keyboard.press("Control+V");
 			}
-		});
 
-		return clipboardText;
-	} else {
-		// For other browsers, use the Clipboard API
-		return await page.evaluate(async () => {
-			try {
-				const permission = await navigator.permissions.query({ name: "clipboard-read" as PermissionName });
-				if (permission.state === "granted" || permission.state === "prompt") {
-					return await navigator.clipboard.readText();
-				} else {
-					throw new Error("Clipboard permission denied");
+			// Add a small delay for Safari
+			if (isSafari) {
+				await page.waitForTimeout(100);
+			}
+
+			// Get the pasted content
+			const clipboardText = await page.$eval(
+				"#clipboard-textarea",
+				(element) => (element as HTMLTextAreaElement).value
+			);
+
+			// Clean up
+			await page.evaluate(() => {
+				const textarea = document.getElementById("clipboard-textarea");
+				if (textarea) {
+					document.body.removeChild(textarea);
 				}
-			} catch (error) {
-				console.error("Failed to read clipboard:", error);
+			});
 
-				return null;
+			if (!clipboardText) {
+				console.warn(`No clipboard content found in ${browserType}`);
 			}
-		});
+
+			return clipboardText;
+		} catch (error) {
+			console.error(`Error reading clipboard in ${browserType}:`, error);
+
+			return null;
+		}
+	} else {
+		// For Chrome and other browsers, use the Clipboard API
+		try {
+			return await page.evaluate(async () => {
+				try {
+					const permission = await navigator.permissions.query({
+						name: "clipboard-read" as PermissionName,
+					});
+
+					if (permission.state === "granted" || permission.state === "prompt") {
+						return await navigator.clipboard.readText();
+					} else {
+						throw new Error("Clipboard permission denied");
+					}
+				} catch (error) {
+					console.error("Failed to read clipboard:", error);
+
+					return null;
+				}
+			});
+		} catch (error) {
+			console.error("Clipboard API error:", error);
+
+			return null;
+		}
 	}
 }
 
-async function waitForDeploymentCompletion(page: Page, timeoutMs = 30000) {
+async function waitForDeploymentStatus(page: Page, timeoutMs = 30000) {
 	// Use expect with polling to check for completion
 	await expect(async () => {
 		// Get the refresh button
@@ -87,51 +126,58 @@ async function waitForDeploymentCompletion(page: Page, timeoutMs = 30000) {
 	});
 }
 
-test.beforeEach(async ({ dashboardPage, page, request }) => {
+test.describe("Project Deployment and Session Flow", () => {
+	test.beforeEach(async ({ dashboardPage, page, request }: SetupParams) => {
+		await setupProjectAndTriggerSession({ dashboardPage, page, request });
+	});
+
+	test("should successfully deploy project and execute session via webhook", async ({ page }: { page: Page }) => {
+		const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
+		await expect(deploymentTableRow).toHaveCount(1);
+	});
+});
+
+async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
 	await dashboardPage.createProjectFromTemplate();
 
 	const deployButton = page.getByRole("button", { name: "Deploy project" });
 	await deployButton.click();
 	const toast = await waitForToast(page, "Project deployment completed successfully");
 	await expect(toast).toBeVisible();
+
+	// Setup webhook trigger
 	await page.getByRole("tab", { name: "Triggers" }).click();
 	await page.getByRole("button", { name: "Modify receive_http_get_or_head trigger" }).click();
 	await page.getByRole("button", { name: "Copy Webhook URL" }).click();
 
 	await page.waitForTimeout(500);
 
-	const clipboardText = await readClipboardText(page);
+	const webhookUrl = await getClipboardContent(page);
 
-	if (!clipboardText) {
-		throw new Error("Failed to read clipboard text");
+	if (!webhookUrl) {
+		throw new Error("Failed to get webhook URL from clipboard");
 	}
 
+	// Trigger session
 	try {
-		const response = await request.get(clipboardText, {
+		const response = await request.get(webhookUrl, {
 			timeout: 5000,
 		});
 
 		if (!response.ok()) {
-			throw new Error(`Request failed with status ${response.status()}`);
+			throw new Error(`Webhook request failed with status ${response.status()}`);
 		}
 	} catch (error) {
-		console.error("Request failed:", error);
+		console.error("Webhook request failed:", error);
 		throw error;
 	}
 
+	// Verify deployment status
 	await page.getByRole("button", { name: "Deployments" }).click();
 	await expect(page.getByRole("heading", { name: "Deployment History (1)" })).toBeVisible();
 	await expect(page.getByRole("status", { name: "Active" })).toBeVisible();
 	const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
 	await expect(deploymentTableRow).toHaveCount(1);
 
-	await waitForDeploymentCompletion(page);
-});
-
-test.describe("Full flow Suite", () => {
-	test("Create project from template and run a session", async ({ page }) => {
-		const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
-
-		await expect(deploymentTableRow).toHaveCount(1);
-	});
-});
+	await waitForDeploymentStatus(page);
+}
