@@ -1,41 +1,45 @@
 import i18n from "i18next";
 
 import { Session as ProtoSession } from "@ak-proto-ts/sessions/v1/session_pb";
-import { SessionEntrypoint, ViewerSession } from "@src/types/models/session.type";
-import { EntrypointTrigger, Session, Value } from "@type/models";
+import { Session, Value } from "@src/types/models";
+import { ViewerSession } from "@src/types/models/session.type";
 import { convertTimestampToDate, parseNestedJson } from "@utilities";
-/**
- * Converts a ProtoSession object to a SessionType object.
- * @param protoSession The ProtoSession object to convert.
- * @returns The SessionType object.
- */
-export function convertSessionProtoToModel(protoSession: ProtoSession): Session {
+
+function convertProtoSessionBase(protoSession: ProtoSession) {
 	return {
-		createdAt: convertTimestampToDate(protoSession.createdAt!),
-		deploymentId: protoSession.deploymentId,
-		entrypoint: protoSession.entrypoint as unknown as EntrypointTrigger,
+		createdAt: convertTimestampToDate(protoSession.createdAt),
 		inputs: parseNestedJson(protoSession.inputs as Value),
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
-		triggerName: protoSession.memo.trigger_name,
-		connectionName: protoSession.memo.connection_name,
+		triggerName: protoSession.memo?.trigger_name,
+		entrypoint: {
+			col: protoSession.entrypoint?.col,
+			name: protoSession.entrypoint?.name,
+			path: protoSession.entrypoint?.path,
+			row: protoSession.entrypoint?.row,
+		},
 	};
 }
-export function convertSessionProtoToViewerModel(protoSession: ProtoSession): ViewerSession {
-	const sourceTypeEnriched = protoSession?.memo?.trigger_type
-		? protoSession?.memo?.trigger_type
-		: i18n.t("sessions.viewer.manualRun", { ns: "deployments" });
+
+export function convertSessionProtoToModel(protoSession: ProtoSession): Session {
+	const baseSession = convertProtoSessionBase(protoSession);
 
 	return {
+		...baseSession,
+		deploymentId: protoSession.deploymentId,
+		connectionName: protoSession.memo?.connection_name,
+	} as Session;
+}
+
+export function convertSessionProtoToViewerModel(protoSession: ProtoSession): ViewerSession {
+	const baseSession = convertProtoSessionBase(protoSession);
+
+	return {
+		...baseSession,
 		buildId: protoSession.buildId,
-		sourceType: sourceTypeEnriched,
-		triggerName: protoSession?.memo?.trigger_name,
-		createdAt: convertTimestampToDate(protoSession.createdAt),
-		updatedAt: convertTimestampToDate(protoSession.updatedAt),
-		entrypoint: protoSession.entrypoint as unknown as SessionEntrypoint,
 		eventId: protoSession.eventId,
-		inputs: parseNestedJson(protoSession.inputs as Value),
-		sessionId: protoSession.sessionId,
-		state: protoSession.state,
-	};
+		sourceType:
+			protoSession.memo?.trigger_source_type || i18n.t("sessions.viewer.manualRun", { ns: "deployments" }),
+		updatedAt: convertTimestampToDate(protoSession.updatedAt!),
+	} as ViewerSession;
 }

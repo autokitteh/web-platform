@@ -114,29 +114,8 @@ export const SessionViewer = () => {
 		if (weeks >= 1) return `${weeks}w`;
 		if (days >= 1) return `${days}d`;
 
-		return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+		return `${hours ? `${String(hours).padStart(2, "0")}:` : ""}${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 	}, []);
-
-	const sessionDetails = useMemo(() => {
-		if (!sessionInfo) return null;
-		const { createdAt, state, updatedAt } = sessionInfo;
-		const isCompleted = state === SessionState.completed || state === SessionState.error;
-
-		return {
-			createdAt: moment(createdAt).local().format(dateTimeFormat),
-			startTime: moment(createdAt).local().format(timeFormat),
-			endTime: isCompleted ? (
-				moment(updatedAt).local().format(timeFormat)
-			) : (
-				<SessionsTableState sessionState={state} />
-			),
-			duration: isCompleted ? (
-				formatTimeDifference(updatedAt, createdAt)
-			) : (
-				<ReactTimeAgo date={createdAt} locale="en-US" timeStyle="mini" />
-			),
-		};
-	}, [sessionInfo, formatTimeDifference]);
 
 	const isRefreshButtonDisabled = useMemo(
 		() =>
@@ -152,11 +131,7 @@ export const SessionViewer = () => {
 		<Loader size="xl" />
 	) : (
 		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
-			<div className="flex items-center justify-between border-b border-gray-950 pb-3.5">
-				<div className="flex gap-3 font-fira-sans text-base text-gray-500">
-					<span>{sessionDetails?.createdAt}</span>
-					{sessionInfo.triggerName}
-				</div>
+			<div className="flex items-center justify-end border-b border-gray-950 pb-3.5">
 				<div className="flex items-center gap-3">
 					<RefreshButton
 						disabled={!isRefreshButtonDisabled}
@@ -181,11 +156,8 @@ export const SessionViewer = () => {
 					</div>
 					<div className="flex items-center gap-4">
 						<div className="w-32 text-gray-1550">{t("source")}</div>
-						{sessionInfo.sourceType === "Connection" ? (
-							sessionInfo.triggerName
-						) : (
-							<span className="capitalize">{sessionInfo.sourceType}</span>
-						)}
+						<span className="capitalize">{sessionInfo.sourceType?.toLowerCase()}</span>
+						<span> - {sessionInfo.triggerName}</span>
 					</div>
 					<div className="flex items-center gap-4">
 						<div className="w-32 text-gray-1550">{t("entrypoint")}</div>
@@ -200,7 +172,7 @@ export const SessionViewer = () => {
 							Time:
 						</div>
 						<div className="flex flex-row items-center">
-							{moment(sessionInfo.createdAt).local().format(timeFormat)}
+							{moment(sessionInfo.createdAt).local().format(dateTimeFormat)}
 							<IconSvg className="mx-2 fill-white" size="sm" src={ArrowRightIcon} />
 							{sessionInfo.state === SessionState.completed ||
 							sessionInfo.state === SessionState.error ? (
@@ -208,15 +180,17 @@ export const SessionViewer = () => {
 							) : (
 								<SessionsTableState sessionState={sessionInfo.state} />
 							)}
+							<div className="ml-2">
+								(
+								{sessionInfo.state === SessionState.completed ||
+								sessionInfo.state === SessionState.error ? (
+									formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)
+								) : (
+									<ReactTimeAgo date={sessionInfo.createdAt} locale="en-US" timeStyle="mini" />
+								)}
+								)
+							</div>
 						</div>
-					</div>
-					<div className="flex items-center gap-4">
-						<div className="w-32 text-gray-1550">Duration</div>
-						{sessionInfo.state === SessionState.completed || sessionInfo.state === SessionState.error ? (
-							formatTimeDifference(sessionInfo.updatedAt, sessionInfo.createdAt)
-						) : (
-							<ReactTimeAgo date={sessionInfo.createdAt} locale="en-US" timeStyle="mini" />
-						)}
 					</div>
 				</div>
 
