@@ -29,9 +29,7 @@ export default defineConfig({
 
 		{
 			name: "Safari",
-			use: {
-				...devices["Desktop Safari"],
-			},
+			use: { ...devices["Desktop Safari"] },
 		},
 
 		// {
@@ -45,25 +43,11 @@ export default defineConfig({
 
 		{
 			name: "Edge",
-			use: {
-				...devices["Desktop Edge"],
-				channel: "msedge",
-				permissions: ["clipboard-read", "clipboard-write"],
-				launchOptions: {
-					args: ["--allow-clipboard-read", "--allow-clipboard-write"],
-				},
-			},
+			use: { ...devices["Desktop Edge"], channel: "msedge" },
 		},
 		{
 			name: "Chrome",
-			use: {
-				...devices["Desktop Chrome"],
-				channel: "chrome",
-				permissions: ["clipboard-read", "clipboard-write"],
-				launchOptions: {
-					args: ["--allow-clipboard-read", "--allow-clipboard-write"],
-				},
-			},
+			use: { ...devices["Desktop Chrome"], channel: "chrome" },
 		},
 	],
 
