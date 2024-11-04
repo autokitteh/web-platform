@@ -156,7 +156,9 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 
 export const getFilteredIntegrations = () => {
 	return Object.fromEntries(
-		Object.entries(IntegrationsMap).filter(([key]) => key !== "discord" || featureFlags.displayDiscordIntegration)
+		Object.entries(IntegrationsMap).filter(
+			([key]) => key !== Integrations.discord || featureFlags.displayDiscordIntegration
+		)
 	) as Record<Integrations, IntegrationSelectOption>;
 };
 
