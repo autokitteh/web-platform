@@ -6,9 +6,12 @@ test.describe("Project Suite", () => {
 	});
 
 	test("Change project name", async ({ page }) => {
-		await page.getByRole("textbox", { name: "Rename" }).click();
-		await page.getByRole("textbox", { name: "Rename" }).fill("Grankie_0121");
-		expect(page.getByText("Grankie_0121")).toBeTruthy();
+		await page.getByRole("button", { name: "Change project name" }).click();
+		const input = page.getByRole("textbox", { name: "Rename" });
+		await input.fill("NewProjectName");
+		await input.press("Enter");
+
+		await expect(page.getByText("NewProjectName")).toBeVisible();
 	});
 
 	test("Create new file to project", async ({ page }) => {
