@@ -98,7 +98,7 @@ export default defineConfig({
 			reactComponentAnnotation: { enabled: true },
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 			sourcemaps: {
-				disable: true,
+				disable: process.env.VITE_NODE_ENV !== "production",
 			},
 		}),
 		viteStaticCopy({
