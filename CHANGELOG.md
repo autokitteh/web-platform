@@ -1,3 +1,10 @@
+# [2.43.0](https://github.com/autokitteh/web-platform/compare/v2.42.0...v2.43.0) (2024-11-04)
+
+
+### Features
+
+* fetch templates from github, extract the archive and sort by categories utility ([#599](https://github.com/autokitteh/web-platform/issues/599)) ([03bb609](https://github.com/autokitteh/web-platform/commit/03bb6096b65b3c6a57cbd11cfe0f6ed6a8d92f3b))
+
 # [2.42.0](https://github.com/autokitteh/web-platform/compare/v2.41.2...v2.42.0) (2024-10-31)
 
 
