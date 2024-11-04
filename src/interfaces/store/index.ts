@@ -17,4 +17,10 @@ export type {
 	ProjectValidationStore,
 	ProjectValidationLevel,
 } from "@interfaces/store/projectValidationStore.interface";
+export type {
+	TemplateFile,
+	ProcessedRemoteCategory,
+	RemoteTemplateCardWithFiles,
+	RemoteTemplateMetadata,
+} from "@interfaces/store/templates.interface";
 export type { UserStore } from "@interfaces/store/userStore.interface";

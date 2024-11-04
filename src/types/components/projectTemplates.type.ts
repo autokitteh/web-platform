@@ -1,5 +1,7 @@
 import { ComponentType, SVGProps } from "react";
 
+import { RemoteTemplateMetadata } from "@src/interfaces/store";
+
 export type TemplateCardType = {
 	assetDirectory: string;
 	description: string;
@@ -17,6 +19,11 @@ export type DashboardFooterTemplateCardType = {
 
 export type TemplateCategory = {
 	cards: TemplateCardType[];
+	name: string;
+};
+
+export type RemoteTemplateCategory = {
+	cards: RemoteTemplateMetadata[];
 	name: string;
 };
 
