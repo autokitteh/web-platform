@@ -5,6 +5,7 @@ export { DeploymentsService } from "@services/deployments.service";
 export { EnvironmentsService } from "@services/environments.service";
 export { EventsService } from "@services/events.service";
 export { HttpService, LocalDomainHttpService } from "@services/http.service";
+export { IndexedDBService } from "@services/indexedDb.service";
 export { IntegrationsService } from "@services/integrations.service";
 export { LoggerService } from "@services/logger.service";
 export { ProjectsService } from "@services/projects.service";
