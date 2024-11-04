@@ -2,8 +2,19 @@
 /* eslint-disable no-undef */
 import { execSync } from "child_process";
 
+console.log("All environment variables:", process.env);
+
 const context = process.env.CONTEXT;
-const commitMessage = process.env.COMMIT_REF_MESSAGE || "";
+let commitMessage = process.env.COMMIT_MESSAGE || process.env.COMMIT_REF_MESSAGE || "";
+
+if (!commitMessage) {
+	try {
+		commitMessage = execSync("git log -1 --pretty=%B").toString().trim();
+		console.log("Got commit message from git:", commitMessage);
+	} catch (error) {
+		console.log("Could not get git commit message:", error);
+	}
+}
 
 console.log("Deploy context:", context);
 console.log("Commit message:", commitMessage);
