@@ -27,7 +27,7 @@ const slackSocketMode = { label: "Socket Mode", value: ConnectionAuthType.Socket
 
 const baseSelectIntegrationSlack = [{ label: "OAuth v2", value: ConnectionAuthType.Oauth }];
 
-export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySocketIntegrations
+export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySlackSocketIntegration
 	? baseSelectIntegrationSlack.concat(slackSocketMode)
 	: baseSelectIntegrationSlack;
 
