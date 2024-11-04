@@ -15,8 +15,10 @@ export const Td = ({ children, className, onClick, title }: TableProps) => {
 		}
 	};
 
+	const cellTitle = title ? title : typeof children === "string" ? children : "";
+
 	return (
-		<div className={tdStyle} role="cell" title={title}>
+		<div aria-label={cellTitle} className={tdStyle} role="cell" title={cellTitle}>
 			<div className="w-full truncate" onClick={onClick} onKeyDown={handleKeyDown}>
 				{children}
 			</div>

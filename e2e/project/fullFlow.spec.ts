@@ -42,6 +42,16 @@ test.describe("Project Deployment and Session Flow", () => {
 	test("should successfully deploy project and execute session via webhook", async ({ page }: { page: Page }) => {
 		const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
 		await expect(deploymentTableRow).toHaveCount(1);
+		const completedSessionDeploymentColumn = page
+			.getByRole("status", { name: "completed" })
+			.filter({ hasText: "1" });
+		completedSessionDeploymentColumn.click();
+
+		const sessionRow = page.locator("role=row", {
+			has: page.getByRole("cell", { name: "receive_http_get_or_head" }),
+		});
+
+		await expect(sessionRow.getByRole("cell", { name: "Completed" })).toBeVisible();
 	});
 });
 
