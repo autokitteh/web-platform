@@ -12,12 +12,7 @@ function convertProtoSessionBase(protoSession: ProtoSession) {
 		sessionId: protoSession.sessionId,
 		state: protoSession.state,
 		triggerName: protoSession.memo?.trigger_name,
-		entrypoint: {
-			col: protoSession.entrypoint?.col,
-			name: protoSession.entrypoint?.name,
-			path: protoSession.entrypoint?.path,
-			row: protoSession.entrypoint?.row,
-		},
+		entrypoint: { ...protoSession.entrypoint },
 	};
 }
 

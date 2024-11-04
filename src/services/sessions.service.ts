@@ -83,7 +83,13 @@ export class SessionsService {
 	static async getSessionInfo(sessionId: string): Promise<ServiceResponse<ViewerSession>> {
 		try {
 			const { session } = await sessionsClient.get({ sessionId, jsonValues: true });
-			const sessionConverted = convertSessionProtoToViewerModel(session!);
+			if (!session) {
+				const errorMessage = i18n.t("sessionInfoFetchFailed", { sessionId, ns: "services" });
+				LoggerService.error(namespaces.sessionsService, errorMessage);
+
+				return { data: undefined, error: errorMessage };
+			}
+			const sessionConverted = convertSessionProtoToViewerModel(session);
 
 			return { data: sessionConverted, error: undefined };
 		} catch (error) {
