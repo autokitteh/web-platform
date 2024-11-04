@@ -1,13 +1,21 @@
+[build]
+  command = "npm run build:prod"
+  publish = "dist"
+
 [[headers]]
   for = "/*.map"
   [headers.values]
-    Access-Control-Allow-Origin = "*"
-    Content-Type = "application/json"
     X-Robots-Tag = "noindex"
 
-# Prevent access to source maps
 [[redirects]]
   from = "/*.map"
   to = "/404"
   status = 404
   force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
