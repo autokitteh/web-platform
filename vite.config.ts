@@ -15,9 +15,9 @@ export default defineConfig({
 		port: 8000,
 	},
 	build: {
+		sourcemap: process.env.VITE_NODE_ENV === "production" ? "hidden" : true,
 		rollupOptions: {
 			output: {
-				sourcemap: process.env.VITE_NODE_ENV === "production" ? "hidden" : true,
 				manualChunks(id) {
 					if (id.includes("node_modules") && !id.includes("node_modules/@sentry")) {
 						return id.toString().split("node_modules/")[1].split("/")[0].toString();
