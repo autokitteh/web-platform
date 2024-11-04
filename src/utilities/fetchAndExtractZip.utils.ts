@@ -202,7 +202,7 @@ export const processReadmeFiles = (fileStructure?: FileStructure | null): Proces
 			if (isDirectoryNode(node)) {
 				processDirectory(node.children, `${currentPath}/${name}`.replace(/^\//, ""));
 
-				return;
+				continue;
 			}
 			if (isFileNode(node) && name.toLowerCase() === "readme.md") {
 				try {
