@@ -16,7 +16,7 @@ export default defineConfig({
 		port: 8000,
 	},
 	build: {
-		sourcemap: process.env.VITE_NODE_ENV === "production" ? "hidden" : true,
+		sourcemap: process.env.CONTEXT === "production" ? "hidden" : true,
 		rollupOptions: {
 			output: {
 				manualChunks(id) {
@@ -99,7 +99,7 @@ export default defineConfig({
 			reactComponentAnnotation: { enabled: true },
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 			sourcemaps: {
-				disable: process.env.VITE_NODE_ENV !== "production",
+				disable: process.env.CONTEXT !== "production",
 				filesToDeleteAfterUpload: "**/*.map",
 			},
 			release: {
