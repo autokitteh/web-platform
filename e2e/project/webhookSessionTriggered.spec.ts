@@ -25,7 +25,10 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 			.filter({ hasText: "1" })
 			.isVisible();
 
-		const hasErroredStatus = await page.getByRole("status", { name: "error" }).filter({ hasText: "1" }).isVisible();
+		const hasErroredStatus = await page
+			.getByRole("status", { name: "Stopped due to error" })
+			.filter({ hasText: "1" })
+			.isVisible();
 
 		expect(hasCompletedStatus || hasErroredStatus).toBe(true);
 
