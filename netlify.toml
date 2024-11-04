@@ -2,11 +2,11 @@
   command = "npm run build:prod"
   publish = "dist"
 
-[context.production]
-  environment = { CONTEXT = "production" }
+[context.production.environment]
+  CONTEXT = "production"
 
-[context.branch-deploy]
-  environment = { CONTEXT = "branch" }
+[context.branch-deploy.environment]
+  CONTEXT = "branch"
 
-[context.deploy-preview]
-  environment = { CONTEXT = "deploy-preview" }
+[context.deploy-preview.environment]
+  CONTEXT = "deploy-preview"
