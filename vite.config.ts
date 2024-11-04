@@ -97,6 +97,9 @@ export default defineConfig({
 			project: process.env.SENTRY_PROJECT,
 			reactComponentAnnotation: { enabled: true },
 			authToken: process.env.SENTRY_AUTH_TOKEN,
+			sourcemaps: {
+				disable: true,
+			},
 		}),
 		viteStaticCopy({
 			targets: [
