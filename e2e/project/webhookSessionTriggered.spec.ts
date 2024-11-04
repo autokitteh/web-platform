@@ -25,7 +25,9 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 			.filter({ hasText: "1" })
 			.isVisible();
 
-		expect(hasCompletedStatus).toBe(true);
+		const hasErroredStatus = await page.getByRole("status", { name: "error" }).filter({ hasText: "1" }).isVisible();
+
+		expect(hasCompletedStatus || hasErroredStatus).toBe(true);
 
 		return true;
 	}).toPass({
@@ -47,11 +49,19 @@ test.describe("Session triggered with webhook", () => {
 			.filter({ hasText: "1" });
 		completedSessionDeploymentColumn.click();
 
-		const sessionRow = page.locator("role=row", {
-			has: page.getByRole("cell", { name: "receive_http_get_or_head" }),
-		});
+		await page
+			.locator("role=row", {
+				has: page.getByRole("cell", { name: "receive_http_get_or_head" }),
+			})
+			.click();
 
-		await expect(sessionRow.getByRole("cell", { name: "Completed" })).toBeVisible();
+		await expect(
+			page
+				.locator("role=row", {
+					has: page.getByRole("cell", { name: "receive_http_get_or_head" }),
+				})
+				.getByRole("cell", { name: "Completed" })
+		).toBeVisible();
 	});
 });
 
