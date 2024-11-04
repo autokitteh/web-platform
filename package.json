@@ -5,11 +5,8 @@
 	"version": "1.48.2",
 	"scripts": {
 		"build": "vite build",
-		"build:prod": "NODE_ENV=production npm run build && npm run handle-sourcemaps",
-		"handle-sourcemaps": "if [ \"$CONTEXT\" = \"production\" ] || [ \"$BRANCH\" = \"main\" ]; then npm run upload-sourcemaps; fi && npm run clean-sourcemaps && npm run verify-sourcemaps",
+		"build:prod": "NODE_ENV=production npm run build && npm run upload-sourcemaps",
 		"upload-sourcemaps": "sentry-cli releases new \"autokitteh@${npm_package_version}\" && sentry-cli releases files \"autokitteh@${npm_package_version}\" upload-sourcemaps --url-prefix '~/dist' dist/ && sentry-cli releases finalize \"autokitteh@${npm_package_version}\"",
-		"clean-sourcemaps": "find dist -type f -name '*.map' -delete",
-		"verify-sourcemaps": "find dist -type f -name '*.map' | (! grep -q .)",
 		"build-storybook": "storybook build",
 		"prettier": "prettier .",
 		"prettier:ci": "npm run prettier -- --check",
