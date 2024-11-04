@@ -16,6 +16,7 @@ export default defineConfig({
 		port: 8000,
 	},
 	build: {
+		sourcemap: true,
 		rollupOptions: {
 			output: {
 				manualChunks(id) {
@@ -99,6 +100,7 @@ export default defineConfig({
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 			sourcemaps: {
 				filesToDeleteAfterUpload: "**/*.map",
+				disable: process.env.CONTEXT !== "production",
 			},
 			release: {
 				name: pkg.version,
