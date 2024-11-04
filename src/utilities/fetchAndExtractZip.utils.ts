@@ -218,10 +218,11 @@ export const processReadmeFiles = (fileStructure?: FileStructure | null): Proces
 
 					if (!attributes.title || !attributes.description || !attributes.categories) {
 						console.warn(
-							i18n.t("fetchAndExtract.skippingPathMissingMetadata", {
+							`${i18n.t("fetchAndExtract.skippingPathMissingMetadata", {
 								ns: "utilities",
-								path: `: ${currentPath}/${name}`,
-							})
+								path: `${currentPath}/${name}`,
+							})}: `,
+							attributes
 						);
 						continue;
 					}
