@@ -23,7 +23,8 @@ module.exports = {
         9.5: "2.375rem",
         '3px': '3px',
         50: "50px",
-        120: "120px",
+        160: "160px",
+        240: "240px",
         300: "300px",
         500: "500px",
         550: "550px",
@@ -58,6 +59,7 @@ module.exports = {
       "2xl": "1536px",
       "3xl": "1736px",
       'minHeightLg': { 'raw': '(min-height: 1000px)' },
+      'maxScreenWidth-1600': { 'raw': '(max-width: 1600px)' },
     },
     colors: {
       transparent: {

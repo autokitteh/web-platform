@@ -23,7 +23,7 @@ export const ProjectTopbarName = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
 	const { t: tErrors } = useTranslation("errors");
 	const inputClass = cn(
-		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0 max-w-120 transition focus:bg-gray-1200",
+		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0 maxScreenWidth-1600:max-w-160 max-w-240 transition focus:bg-gray-1200",
 		{
 			"outline-2 outline-error": !isNameValid,
 		}
@@ -117,10 +117,13 @@ export const ProjectTopbarName = () => {
 					role="button"
 					tabIndex={0}
 				>
-					<span className="max-w-120 truncate text-xl font-bold" title={project?.name}>
+					<EditIcon className="absolute -left-4 size-4 bg-gray-1250 fill-white p-0.5 opacity-0 transition group-hover:opacity-100" />
+					<span
+						className="max-w-240 truncate text-xl font-bold maxScreenWidth-1600:max-w-160"
+						title={project?.name}
+					>
 						{project?.name}
 					</span>
-					<EditIcon className="absolute -right-1 size-4 bg-gray-1250 fill-white p-0.5 opacity-0 transition group-hover:opacity-100" />
 				</div>
 			)}
 
