@@ -15,7 +15,7 @@ export default defineConfig({
 		port: 8000,
 	},
 	build: {
-		sourcemap: true,
+		sourcemap: process.env.VITE_NODE_ENV === "production" ? "hidden" : true,
 		rollupOptions: {
 			output: {
 				manualChunks(id) {
