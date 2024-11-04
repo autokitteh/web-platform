@@ -8,7 +8,7 @@ const commitMessage = process.env.COMMIT_REF_MESSAGE || "";
 console.log("Deploy context:", context);
 console.log("Commit message:", commitMessage);
 
-if (context !== "production" && !commitMessage.includes("chore(release)")) {
+if (context === "production" && commitMessage.includes("chore(release)")) {
 	console.log("Production release deploy detected - uploading source maps");
 	try {
 		execSync("npm run upload-sourcemaps", { stdio: "inherit" });
