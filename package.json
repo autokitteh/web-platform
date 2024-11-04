@@ -5,7 +5,7 @@
 	"version": "1.48.2",
 	"scripts": {
 		"build": "vite build",
-		"build:prod": "NODE_ENV=production npm run build && npm run upload-sourcemaps",
+		"build:prod": "NODE_ENV=production npm run build && node scripts/handleSourceMaps.js",
 		"upload-sourcemaps": "sentry-cli releases new \"autokitteh@${npm_package_version}\" && sentry-cli releases files \"autokitteh@${npm_package_version}\" upload-sourcemaps --url-prefix '~/dist' dist/ && sentry-cli releases finalize \"autokitteh@${npm_package_version}\"",
 		"build-storybook": "storybook build",
 		"prettier": "prettier .",
