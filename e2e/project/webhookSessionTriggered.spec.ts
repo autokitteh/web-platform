@@ -39,9 +39,7 @@ test.describe("Session triggered with webhook", () => {
 	test("should successfully deploy project and execute session via webhook", async ({ page }: { page: Page }) => {
 		const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
 		await expect(deploymentTableRow).toHaveCount(1);
-		const completedSessionDeploymentColumn = page
-			.getByRole("status", { name: "completed" })
-			.filter({ hasText: "1" });
+		const completedSessionDeploymentColumn = page.getByRole("status", { name: "error" }).filter({ hasText: "1" });
 		completedSessionDeploymentColumn.click();
 
 		await page

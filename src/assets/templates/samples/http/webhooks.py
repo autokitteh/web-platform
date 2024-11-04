@@ -11,6 +11,7 @@ BASE_URL = os.getenv("HTTPBIN_BASE_URL")  # Set in "autokitteh.yaml".
 
 
 def on_http_get_or_head(event):
+    print(event.test.lala)
     """Handle incoming HTTP GET and HEAD requests.
 
     - https://www.rfc-editor.org/rfc/rfc9110#name-get
