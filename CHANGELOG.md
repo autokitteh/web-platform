@@ -1,3 +1,10 @@
+## [2.43.1](https://github.com/autokitteh/web-platform/compare/v2.43.0...v2.43.1) (2024-11-04)
+
+
+### Bug Fixes
+
+* don't show loader in session outputs when loading ended ([#602](https://github.com/autokitteh/web-platform/issues/602)) ([d54c467](https://github.com/autokitteh/web-platform/commit/d54c4679d6f1e22e721c7e553fc8c9692c2aa9f2))
+
 # [2.43.0](https://github.com/autokitteh/web-platform/compare/v2.42.0...v2.43.0) (2024-11-04)
 
 
