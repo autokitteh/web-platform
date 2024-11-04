@@ -99,6 +99,7 @@ export default defineConfig({
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 			sourcemaps: {
 				disable: process.env.VITE_NODE_ENV !== "production",
+				filesToDeleteAfterUpload: "**/*.map",
 			},
 		}),
 		viteStaticCopy({
