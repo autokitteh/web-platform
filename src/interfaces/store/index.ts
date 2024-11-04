@@ -15,6 +15,10 @@ export type { ModalStore } from "@interfaces/store/modalStore.interface";
 export type { ProjectStore } from "@interfaces/store/projectStore.interface";
 export type {
 	TemplateFile,
+	ProjectValidationStore,
+	ProjectValidationLevel,
+} from "@interfaces/store/projectValidationStore.interface";
+export type {
 	ProcessedRemoteCategory,
 	RemoteTemplateCardWithFiles,
 	RemoteTemplateMetadata,

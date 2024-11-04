@@ -1,6 +1,6 @@
 import { IndexedDBService } from "@services";
 
-class TemplateStorageService {
+export class TemplateStorageService {
 	private storage: IndexedDBService;
 
 	constructor() {
@@ -63,5 +63,3 @@ class TemplateStorageService {
 		return decoder.decode(array);
 	}
 }
-
-export default TemplateStorageService;

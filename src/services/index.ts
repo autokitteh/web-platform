@@ -9,5 +9,6 @@ export { IntegrationsService } from "@services/integrations.service";
 export { LoggerService } from "@services/logger.service";
 export { ProjectsService } from "@services/projects.service";
 export { SessionsService } from "@services/sessions.service";
+export { TemplateStorageService } from "@services/templatesIndexedDb.service";
 export { TriggersService } from "@services/triggers.service";
 export { VariablesService } from "@services/variables.service";

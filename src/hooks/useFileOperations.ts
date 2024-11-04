@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 
-import IndexedDBService from "@services/indexedDb.service";
+import { IndexedDBService } from "@services";
 import { LoggerService } from "@services/logger.service";
 import { ProjectsService } from "@services/projects.service";
 import { namespaces } from "@src/constants";

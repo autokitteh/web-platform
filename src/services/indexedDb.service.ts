@@ -55,5 +55,3 @@ export class IndexedDBService {
 		await tx.done;
 	}
 }
-
-export default IndexedDBService;

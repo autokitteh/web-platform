@@ -4,7 +4,14 @@ import i18n from "i18next";
 import JSZip from "jszip";
 import { memoize } from "lodash";
 
-import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipResult } from "@interfaces/utilities";
+import {
+	DirectoryNode,
+	FileNode,
+	FileStructure,
+	FileWithContent,
+	MarkdownAttributes,
+	ProcessedZipResult,
+} from "@interfaces/utilities";
 import { remoteTemplatesFilesFallback, remoteTemplatesRepositoryURL } from "@src/constants";
 import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
@@ -149,11 +156,6 @@ const getDirectoryStructure = (fileStructure: FileStructure, targetPath: string)
 	return currentLevel;
 };
 
-interface FileWithContent {
-	path: string;
-	content: string;
-}
-
 const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = ""): FileWithContent[] => {
 	const files: FileWithContent[] = [];
 
@@ -243,7 +245,7 @@ export const processReadmeFiles = (fileStructure?: FileStructure | null): Proces
 						? attributes.categories
 						: [attributes.categories];
 
-					categories.forEach((category) => {
+					categories.forEach((category: string) => {
 						if (!categoriesMap.has(category)) {
 							categoriesMap.set(category, new Set());
 						}

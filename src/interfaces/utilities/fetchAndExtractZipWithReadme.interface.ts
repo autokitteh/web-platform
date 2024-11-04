@@ -9,11 +9,6 @@ export interface DirectoryNode {
 	children: FileStructure;
 }
 
-export interface ProcessedZipResult {
-	structure?: FileStructure;
-	error?: string;
-}
-
 export interface MarkdownAttributes {
 	[key: string]: unknown;
 	title?: string;
@@ -29,4 +24,9 @@ export interface FileStructure {
 export interface FileWithContent {
 	path: string;
 	content: string;
+}
+
+export interface ProcessedZipResult {
+	structure?: FileStructure;
+	error?: string;
 }

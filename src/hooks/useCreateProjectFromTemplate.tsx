@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import axios from "axios";
-import { openDB } from "idb";
 import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -9,114 +8,17 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { namespaces } from "@constants";
-import { LoggerService } from "@services";
+import { LoggerService, TemplateStorageService } from "@services";
 import { StoreName } from "@src/enums";
 import { useFileOperations } from "@src/hooks";
 import {
 	ProcessedCategory,
 	TemplateCardType,
 	TemplateCardWithFiles,
-	TemplateFile,
 } from "@src/types/components/projectTemplates.type";
+import { fetchAndUnpackZip, processReadmeFiles } from "@utilities";
 
 import { useProjectStore, useToastStore } from "@store";
-
-import { fetchAndUnpackZip, processReadmeFiles } from "@components/organisms/dashboard/templates/tabs/extractZip";
-
-class TemplateStorageService {
-	private readonly DB_NAME = "TemplatesDB";
-	private readonly STORE_NAME = "templates-files";
-	private db: any;
-
-	async initDb() {
-		this.db = await openDB(this.DB_NAME, 1, {
-			upgrade(db) {
-				if (db.objectStoreNames.contains("templates-files")) {
-					db.deleteObjectStore("templates-files");
-				}
-				const store = db.createObjectStore("templates-files", { keyPath: "id" });
-				// Create an index for templateId
-				store.createIndex("templateId", "templateId", { unique: false });
-			},
-		});
-	}
-
-	async ensureDbInitialized() {
-		if (!this.db) {
-			await this.initDb();
-		}
-	}
-
-	async storeTemplateFiles(templateId: string, files: Record<string, string>) {
-		await this.ensureDbInitialized();
-
-		const filesArray = Object.entries(files).map(([path, content]) => ({
-			id: `${templateId}:${path}`,
-			templateId,
-			path,
-			content,
-		}));
-
-		const tx = this.db.transaction(this.STORE_NAME, "readwrite");
-		await Promise.all(filesArray.map((file) => tx.store.put(file)));
-		await tx.done;
-	}
-
-	// Get all files for a template
-	async getTemplateFiles(templateId: string): Promise<Record<string, string>> {
-		await this.ensureDbInitialized();
-
-		try {
-			const tx = this.db.transaction(this.STORE_NAME, "readonly");
-			const store = tx.objectStore(this.STORE_NAME);
-			const index = store.index("templateId");
-
-			// Get all records with matching templateId
-			const files = await index.getAll(templateId);
-
-			return files.reduce((acc: Record<string, string>, file: TemplateFile) => {
-				// Extract the filename from the composite path
-				const filename = file.path.split("/").pop() || file.path;
-				acc[filename] = file.content;
-
-				return acc;
-			}, {});
-		} catch (error) {
-			console.error("Error fetching template files:", error);
-			throw error;
-		}
-	}
-
-	// Get a single file
-	async getTemplateFile(templateId: string, filePath: string): Promise<string | null> {
-		await this.ensureDbInitialized();
-
-		const id = `${templateId}:${filePath}`;
-		const file = await this.db.get(this.STORE_NAME, id);
-
-		return file?.content ?? null;
-	}
-
-	// Delete all files for a template
-	async deleteTemplateFiles(templateId: string) {
-		await this.ensureDbInitialized();
-
-		const tx = this.db.transaction(this.STORE_NAME, "readwrite");
-		const store = tx.objectStore(this.STORE_NAME);
-		const index = store.index("templateId");
-		const keys = await index.getAllKeys(templateId);
-		await Promise.all(keys.map((id: string) => store.delete(id)));
-		await tx.done;
-	}
-
-	// Clear all templates
-	async clearAll() {
-		await this.ensureDbInitialized();
-		const tx = this.db.transaction(this.STORE_NAME, "readwrite");
-		await tx.store.clear();
-		await tx.done;
-	}
-}
 
 export const templateStorage = new TemplateStorageService();
 interface GitHubCommit {

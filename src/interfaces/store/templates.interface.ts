@@ -1,10 +1,3 @@
-export interface TemplateFile {
-	id: string;
-	templateId: string;
-	path: string;
-	content: string;
-}
-
 export interface RemoteTemplateMetadata {
 	assetDirectory: string;
 	title: string;

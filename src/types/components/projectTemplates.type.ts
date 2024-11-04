@@ -10,12 +10,6 @@ export interface TemplateCardType {
 	filesIndex: string[];
 	category: string;
 }
-export interface TemplateFile {
-	id: string;
-	templateId: string;
-	path: string;
-	content: string;
-}
 
 export interface TemplateMetadata {
 	assetDirectory: string;
