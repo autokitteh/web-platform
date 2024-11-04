@@ -154,15 +154,13 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 	},
 };
 
-export const getFilteredIntegrations = () => {
+export const fitleredIntegrationsMap = (() => {
 	return Object.fromEntries(
 		Object.entries(IntegrationsMap).filter(
 			([key]) => key !== Integrations.discord || featureFlags.displayDiscordIntegration
 		)
 	) as Record<Integrations, IntegrationSelectOption>;
-};
-
-export const fitleredIntegrationsMap = getFilteredIntegrations();
+})();
 
 export const HiddenIntegrationsForTemplates: Record<IntegrationForTemplates, IntegrationSelectOption> = {
 	githubcopilot: { label: "GitHub Copilot", value: IntegrationForTemplates.githubcopilot, icon: GithubCopilotIcon },
