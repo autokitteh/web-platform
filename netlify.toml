@@ -10,15 +10,3 @@
 
 [context.deploy-preview]
   environment = { CONTEXT = "deploy-preview" }
-
-# Prevent access to any remaining source maps
-[[headers]]
-  for = "/*.map"
-  [headers.values]
-    X-Robots-Tag = "noindex"
-
-[[redirects]]
-  from = "/*.map"
-  to = "/404"
-  status = 404
-  force = true
