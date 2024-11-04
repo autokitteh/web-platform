@@ -34,7 +34,7 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 	});
 }
 
-test.describe("Project Deployment and Session Flow", () => {
+test.describe("Session triggered with webhook", () => {
 	test.beforeEach(async ({ dashboardPage, page, request }: SetupParams) => {
 		await setupProjectAndTriggerSession({ dashboardPage, page, request });
 	});
@@ -55,24 +55,6 @@ test.describe("Project Deployment and Session Flow", () => {
 	});
 });
 
-async function getWebhookUrl(page: Page): Promise<string> {
-	const webhookUrl = await page.evaluate(() => {
-		const urlElement = document.querySelector('[data-testid="webhook-url"]');
-
-		if (!urlElement) {
-			throw new Error("Could not find webhook URL element");
-		}
-
-		return (urlElement as HTMLInputElement).value || urlElement.textContent;
-	});
-
-	if (!webhookUrl) {
-		throw new Error("Failed to get webhook URL from the page");
-	}
-
-	return webhookUrl;
-}
-
 async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
 	await dashboardPage.createProjectFromTemplate();
 
@@ -86,7 +68,19 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 
 	await page.waitForSelector('[data-testid="webhook-url"]');
 
-	const webhookUrl = await getWebhookUrl(page);
+	const webhookUrl = await page.evaluate(() => {
+		const urlElement = document.querySelector('[data-testid="webhook-url"]');
+
+		if (!urlElement) {
+			throw new Error("Could not find webhook URL element");
+		}
+
+		return (urlElement as HTMLInputElement).value || urlElement.textContent;
+	});
+
+	if (!webhookUrl) {
+		throw new Error("Failed to get webhook URL from the page");
+	}
 
 	const response = await request.get(webhookUrl, {
 		timeout: 5000,
