@@ -3,13 +3,13 @@
 import { execSync } from "child_process";
 
 const context = process.env.CONTEXT;
-const branch = process.env.BRANCH;
+const commitMessage = process.env.COMMIT_REF_MESSAGE || "";
 
 console.log("Deploy context:", context);
-console.log("Branch:", branch);
+console.log("Commit message:", commitMessage);
 
-if (context === "production" && branch === "main") {
-	console.log("Production deploy detected - uploading source maps");
+if (context === "production" && commitMessage.includes("chore(release)")) {
+	console.log("Production release deploy detected - uploading source maps");
 	try {
 		execSync("npm run upload-sourcemaps", { stdio: "inherit" });
 	} catch (error) {
@@ -17,5 +17,11 @@ if (context === "production" && branch === "main") {
 		process.exit(1);
 	}
 } else {
-	console.log("Not a production deploy - skipping source maps upload");
+	console.log("Not a release deploy - skipping source maps upload");
+	if (context !== "production") {
+		console.log("Reason: Not a production deploy");
+	}
+	if (!commitMessage.includes("chore(release)")) {
+		console.log("Reason: Not a release commit");
+	}
 }
