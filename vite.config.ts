@@ -7,6 +7,7 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 
 import { reactVirtualized } from "./fixReactVirtualized";
+import pkg from "./package.json";
 
 dotenv.config();
 
@@ -100,6 +101,9 @@ export default defineConfig({
 			sourcemaps: {
 				disable: process.env.VITE_NODE_ENV !== "production",
 				filesToDeleteAfterUpload: "**/*.map",
+			},
+			release: {
+				name: pkg.version,
 			},
 		}),
 		viteStaticCopy({
