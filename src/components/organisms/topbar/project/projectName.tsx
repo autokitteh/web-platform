@@ -9,7 +9,7 @@ import { cn } from "@utilities";
 
 import { useProjectStore, useToastStore } from "@store";
 
-import { ErrorMessage } from "@components/atoms";
+import { ErrorMessage, Input } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
 
 import { EditIcon } from "@assets/image/icons";
@@ -23,7 +23,7 @@ export const ProjectTopbarName = () => {
 	const { t } = useTranslation(["projects", "buttons"]);
 	const { t: tErrors } = useTranslation("errors");
 	const inputClass = cn(
-		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0 maxScreenWidth-1600:max-w-160 max-w-240 transition focus:bg-gray-1200",
+		"min-w-3 p-0 text-xl rounded-lg font-bold leading-6 leading-tight maxScreenWidth-1600:max-w-160 max-w-240 transition h-auto outline outline-0",
 		{
 			"outline-2 outline-error": !isNameValid,
 		}
@@ -74,7 +74,6 @@ export const ProjectTopbarName = () => {
 		if (isEnterKey) {
 			event.preventDefault();
 		}
-
 		if ((isEnterKey || isBlur) && isValidName && projectId) {
 			const { error } = await ProjectsService.update(projectId, newName);
 			if (error) {
@@ -96,11 +95,11 @@ export const ProjectTopbarName = () => {
 	return (
 		<div className="flex items-center gap-3 py-2 font-fira-code">
 			{isEditing ? (
-				<input
-					autoComplete="off"
+				<Input
 					// eslint-disable-next-line jsx-a11y/no-autofocus
 					autoFocus={true}
-					className={inputClass}
+					classInput={inputClass}
+					className="p-0"
 					onBlur={handleInputChange}
 					onChange={handleInput}
 					onKeyDown={handleInputChange}
