@@ -5,7 +5,7 @@ import JSZip from "jszip";
 import { memoize } from "lodash";
 
 import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipResult } from "@interfaces/utilities";
-import { fallbackUrl, githubUrl } from "@src/constants";
+import { remoteTemplatesFilesFallback, remoteTemplatesRepositoryURL } from "@src/constants";
 import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
@@ -70,7 +70,7 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipResult> => {
 		let zipData: ArrayBuffer;
 
 		try {
-			zipData = await fetchZipFromUrl(githubUrl);
+			zipData = await fetchZipFromUrl(remoteTemplatesRepositoryURL);
 			// eslint-disable-next-line no-console
 			console.log(
 				i18n.t("fetchAndExtract.fetchedFromGithub", {
@@ -86,7 +86,7 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipResult> => {
 			);
 
 			try {
-				zipData = await fetchZipFromUrl(fallbackUrl);
+				zipData = await fetchZipFromUrl(remoteTemplatesFilesFallback);
 				// eslint-disable-next-line no-console
 				console.log(
 					i18n.t("fetchAndExtract.fetchedFromFallback", {
@@ -175,7 +175,7 @@ const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = 
 	return files;
 };
 
-export const processReadmeFiles = (fileStructure: FileStructure | null | undefined): ProcessedRemoteCategory[] => {
+export const processReadmeFiles = (fileStructure?: FileStructure | null): ProcessedRemoteCategory[] => {
 	if (!fileStructure) {
 		console.warn(i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }));
 
@@ -201,7 +201,10 @@ export const processReadmeFiles = (fileStructure: FileStructure | null | undefin
 
 			if (isDirectoryNode(node)) {
 				processDirectory(node.children, `${currentPath}/${name}`.replace(/^\//, ""));
-			} else if (isFileNode(node) && name.toLowerCase() === "readme.md") {
+
+				return;
+			}
+			if (isFileNode(node) && name.toLowerCase() === "readme.md") {
 				try {
 					const directoryStructure = getDirectoryStructure(fileStructure, currentPath);
 					if (!directoryStructure) continue;
@@ -217,7 +220,7 @@ export const processReadmeFiles = (fileStructure: FileStructure | null | undefin
 						console.warn(
 							i18n.t("fetchAndExtract.skippingPathMissingMetadata", {
 								ns: "utilities",
-								path: `${currentPath}/${name}`,
+								path: `: ${currentPath}/${name}`,
 							})
 						);
 						continue;

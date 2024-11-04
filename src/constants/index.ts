@@ -24,7 +24,6 @@ export {
 	templateProjectsCategories,
 	findTemplateFilesByAssetDirectory,
 	meowWorldProjectName,
-	remoteTemplatesRepositoryURL,
 } from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
@@ -51,4 +50,4 @@ export {
 } from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
-export { githubUrl, fallbackUrl } from "@constants/templates.constants";
+export { remoteTemplatesRepositoryURL, remoteTemplatesFilesFallback } from "@constants/templates.constants";

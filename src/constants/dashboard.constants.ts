@@ -16,9 +16,6 @@ const hiddenTemplateProjectsCategories = [
 
 export const meowWorldProjectName = "quickstart";
 
-export const remoteTemplatesRepositoryURL =
-	"https://raw.githubusercontent.com/autokitteh/kittehub/refs/heads/release/dist.zip";
-
 export const templateProjectsCategories: TemplateCategory[] = [
 	{
 		name: "DevOps",
