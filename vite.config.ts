@@ -98,7 +98,7 @@ export default defineConfig({
 			reactComponentAnnotation: { enabled: true },
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 			sourcemaps: {
-				disable: process.env.VITE_NODE_ENV === "production",
+				disable: process.env.VITE_NODE_ENV !== "production",
 				filesToDeleteAfterUpload: "**/*.map",
 			},
 		}),
