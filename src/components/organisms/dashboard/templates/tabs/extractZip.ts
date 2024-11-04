@@ -121,7 +121,7 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipOutput> => {
 			})
 		);
 
-		return { error: errorMessage };
+		return { error: errorMessage, structure: undefined };
 	}
 };
 
@@ -177,7 +177,7 @@ const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = 
 	return files;
 };
 
-export const processReadmeFiles = (fileStructure: FileStructure | null | undefined): ProcessedCategory[] => {
+export const processReadmeFiles = (fileStructure?: FileStructure | null): ProcessedCategory[] => {
 	if (!fileStructure) {
 		console.warn(i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }));
 
@@ -203,7 +203,10 @@ export const processReadmeFiles = (fileStructure: FileStructure | null | undefin
 
 			if (isDirectoryNode(node)) {
 				processDirectory(node.children, `${currentPath}/${name}`.replace(/^\//, ""));
-			} else if (isFileNode(node) && name.toLowerCase() === "readme.md") {
+
+				return;
+			}
+			if (isFileNode(node) && name.toLowerCase() === "readme.md") {
 				try {
 					const directoryStructure = getDirectoryStructure(fileStructure, currentPath);
 					if (!directoryStructure) continue;
@@ -217,10 +220,11 @@ export const processReadmeFiles = (fileStructure: FileStructure | null | undefin
 
 					if (!attributes.title || !attributes.description || !attributes.categories) {
 						console.warn(
-							i18n.t("fetchAndExtract.skippingPathMissingMetadata", {
+							`${i18n.t("fetchAndExtract.skippingPathMissingMetadata", {
 								ns: "utilities",
 								path: `${currentPath}/${name}`,
-							})
+							})}: `,
+							attributes
 						);
 						continue;
 					}
