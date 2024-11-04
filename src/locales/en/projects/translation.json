@@ -5,6 +5,7 @@
         "exportProjectFailed": "Couldn't export project",
         "buildProjectSuccess": "Project build completed successfully",
         "buildProjectSuccessExtended": "Project build completed successfully, build ID: {{buildId}}",
+        "id": "ID",
         "buttons": {
             "ariaBuildProject": "Build project",
             "ariaDeployProject": "Deploy project",
@@ -21,6 +22,7 @@
         "deployedProjectSuccessExtended": "Project deployment completed successfully, deployment ID: {{deploymentId}}",
         "projectNotFound": "Project not found",
         "rename": "Rename",
+        "ariaEditProjectTitle": "Edit project title",
         "success": "Success"
     },
     "outputLog":{

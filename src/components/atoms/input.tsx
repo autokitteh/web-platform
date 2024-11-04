@@ -15,6 +15,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			isError = false,
 			isRequired = false,
 			label,
+			onBlur,
 			onChange,
 			placeholder,
 			type = "text",
@@ -36,10 +37,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 		}, [value]);
 
 		const handleFocus = useCallback(() => setIsFocused(true), []);
-		const handleBlur = useCallback(() => {
-			setIsFocused(false);
-			setHasValue(!!inputValue);
-		}, [inputValue]);
+		const handleBlur = useCallback(
+			(event: React.FocusEvent<HTMLInputElement>) => {
+				setIsFocused(false);
+				setHasValue(!!inputValue);
+				onBlur?.(event);
+			},
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+			[inputValue]
+		);
 
 		const handleChange = useCallback(
 			(event: React.ChangeEvent<HTMLInputElement>) => {

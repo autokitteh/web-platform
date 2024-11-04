@@ -9,18 +9,21 @@ import { cn } from "@utilities";
 
 import { useProjectStore, useToastStore } from "@store";
 
-import { ErrorMessage } from "@components/atoms";
+import { ErrorMessage, Input } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
+
+import { EditIcon } from "@assets/image/icons";
 
 export const ProjectTopbarName = () => {
 	const { projectId } = useParams();
 	const { getProject, renameProject } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState(true);
 	const [project, setProject] = useState<Project>();
+	const [isEditing, setIsEditing] = useState(false);
 	const { t } = useTranslation(["projects", "buttons"]);
 	const { t: tErrors } = useTranslation("errors");
 	const inputClass = cn(
-		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0",
+		"min-w-3 p-0 text-xl rounded-lg font-bold leading-6 leading-tight maxScreenWidth-1600:max-w-160 max-w-240 transition h-auto outline outline-0",
 		{
 			"outline-2 outline-error": !isNameValid,
 		}
@@ -30,7 +33,7 @@ export const ProjectTopbarName = () => {
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
 
-		if (error || !project) {
+		if (error) {
 			addToast({
 				message: tErrors("projectLoadingFailed"),
 				type: "error",
@@ -57,70 +60,81 @@ export const ProjectTopbarName = () => {
 	}, [projectId]);
 
 	const validateName = (name: string): boolean => {
-		const nameLength = name.trim().length;
-
-		return nameLength > 0;
+		return !!name.trim().length;
 	};
 
 	const handleInputChange = async (
-		event: React.ChangeEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLSpanElement>
+		event: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement>
 	) => {
-		const newName = (event.target as HTMLSpanElement).textContent?.trim() || "";
+		const newName = (event.target as HTMLInputElement).value.trim();
 		const isValidName = validateName(newName);
-		const isEnterKey = (event as React.KeyboardEvent<HTMLSpanElement>).key === "Enter";
+		const isEnterKey = (event as React.KeyboardEvent<HTMLInputElement>).key === "Enter";
 		const isBlur = event.type === "blur";
 
 		if (isEnterKey) {
 			event.preventDefault();
 		}
-
 		if ((isEnterKey || isBlur) && isValidName && projectId) {
 			const { error } = await ProjectsService.update(projectId, newName);
 			if (error) {
-				addToast({
-					message: tErrors("projectUpdateFailed"),
-					type: "error",
-				});
+				addToast({ message: tErrors("projectUpdateFailed"), type: "error" });
 
 				return;
 			}
-			(event.target as HTMLSpanElement).blur();
-			setIsNameValid(isValidName);
 			renameProject(projectId, newName);
+			setIsEditing(false);
 		}
 	};
 
-	const handleInput = (event: React.ChangeEvent<HTMLSpanElement>) => {
-		const newName = event.target.textContent?.trim() || "";
+	const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const newName = event.target.value;
+		setProject((prev) => (prev ? { ...prev, name: newName } : undefined));
 		setIsNameValid(validateName(newName));
 	};
 
 	return (
-		<div className="flex items-center py-2">
-			<div className="relative flex items-center gap-3 font-fira-code text-gray-500">
-				<span
-					className={inputClass}
-					contentEditable={true}
+		<div className="flex items-center gap-3 py-2 font-fira-code">
+			{isEditing ? (
+				<Input
+					// eslint-disable-next-line jsx-a11y/no-autofocus
+					autoFocus={true}
+					classInput={inputClass}
+					className="p-0"
 					onBlur={handleInputChange}
-					onInput={handleInput}
+					onChange={handleInput}
 					onKeyDown={handleInputChange}
-					role="textbox"
-					suppressContentEditableWarning={true}
+					size={project?.name?.length || 1}
 					tabIndex={0}
 					title={t("topbar.rename")}
+					value={project?.name}
+				/>
+			) : (
+				<div
+					aria-label={t("topbar.ariaEditProjectTitle")}
+					className="group relative flex cursor-pointer items-center"
+					onClick={() => setIsEditing(true)}
+					onKeyDown={() => setIsEditing(true)}
+					role="button"
+					tabIndex={0}
 				>
-					{project?.name}
-				</span>
+					<EditIcon className="absolute -left-4 size-4 bg-gray-1250 fill-white p-0.5 opacity-0 transition group-hover:opacity-100" />
+					<span
+						className="max-w-240 truncate text-xl font-bold maxScreenWidth-1600:max-w-160"
+						title={project?.name}
+					>
+						{project?.name}
+					</span>
+				</div>
+			)}
 
-				<ErrorMessage className="-bottom-3.5 text-xs">
-					{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
-				</ErrorMessage>
+			<ErrorMessage className="-bottom-3.5 text-xs">
+				{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}
+			</ErrorMessage>
 
-				<span className="flex items-center font-fira-code font-semibold">
-					ID
-					<CopyButton className="ml-2 inline p-1 pl-1.5" size="xs" text={project?.id || ""} />
-				</span>
-			</div>
+			<span className="flex items-center font-fira-code font-semibold text-gray-500">
+				{t("topbar.id")}
+				<CopyButton className="ml-2 inline p-1 pl-1.5" size="xs" text={project?.id || ""} />
+			</span>
 		</div>
 	);
 };
