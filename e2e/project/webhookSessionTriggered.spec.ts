@@ -21,13 +21,11 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 		}
 
 		const hasCompletedStatus = await page
-			.getByRole("status", { name: "completed" })
+			.getByRole("status", { name: "error" })
 			.filter({ hasText: "1" })
 			.isVisible();
 
-		const hasErroredStatus = await page.getByRole("status", { name: "error" }).filter({ hasText: "1" }).isVisible();
-
-		expect(hasCompletedStatus || hasErroredStatus).toBe(true);
+		expect(hasCompletedStatus).toBe(true);
 
 		return true;
 	}).toPass({
