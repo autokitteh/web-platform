@@ -2,6 +2,16 @@
   command = "npm run build:prod"
   publish = "dist"
 
+[context.production]
+  environment = { CONTEXT = "production" }
+
+[context.branch-deploy]
+  environment = { CONTEXT = "branch" }
+
+[context.deploy-preview]
+  environment = { CONTEXT = "deploy-preview" }
+
+# Prevent access to any remaining source maps
 [[headers]]
   for = "/*.map"
   [headers.values]
@@ -12,10 +22,3 @@
   to = "/404"
   status = 404
   force = true
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
