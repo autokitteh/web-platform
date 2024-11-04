@@ -73,17 +73,6 @@ body {
 	@apply bg-white;
 }
 
-@layer utilities {
-	.no-scrollbar::-webkit-scrollbar {
-		display: none;
-	}
-	.no-scrollbar {
-		-ms-overflow-style: none;
-		scrollbar-width: none;
-  }
-}
-
-
 .scrollbar::-webkit-scrollbar {
 	@apply h-1.5 w-1.5;
 }
