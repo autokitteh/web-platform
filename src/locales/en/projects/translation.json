@@ -22,7 +22,7 @@
         "deployedProjectSuccessExtended": "Project deployment completed successfully, deployment ID: {{deploymentId}}",
         "projectNotFound": "Project not found",
         "rename": "Rename",
-        "ariaChangeProjectName": "Change project name",
+        "ariaEditProjectTitle": "Edit project title",
         "success": "Success"
     },
     "outputLog":{

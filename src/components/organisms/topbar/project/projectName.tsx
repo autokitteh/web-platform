@@ -110,7 +110,7 @@ export const ProjectTopbarName = () => {
 				/>
 			) : (
 				<div
-					aria-label={t("topbar.ariaChangeProjectName")}
+					aria-label={t("topbar.ariaEditProjectTitle")}
 					className="group relative flex cursor-pointer items-center"
 					onClick={() => setIsEditing(true)}
 					onKeyDown={() => setIsEditing(true)}

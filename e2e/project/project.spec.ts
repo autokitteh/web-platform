@@ -6,7 +6,7 @@ test.describe("Project Suite", () => {
 	});
 
 	test("Change project name", async ({ page }) => {
-		await page.getByRole("button", { name: "Change project name" }).click();
+		await page.getByRole("button", { name: "Edit project title" }).click();
 		const input = page.getByRole("textbox", { name: "Rename" });
 		await input.fill("NewProjectName");
 		await input.press("Enter");
