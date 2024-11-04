@@ -12,15 +12,18 @@ import { useProjectStore, useToastStore } from "@store";
 import { ErrorMessage } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
 
+import { EditIcon } from "@assets/image/icons";
+
 export const ProjectTopbarName = () => {
 	const { projectId } = useParams();
 	const { getProject, renameProject } = useProjectStore();
 	const [isNameValid, setIsNameValid] = useState(true);
 	const [project, setProject] = useState<Project>();
+	const [isEditing, setIsEditing] = useState(false);
 	const { t } = useTranslation(["projects", "buttons"]);
 	const { t: tErrors } = useTranslation("errors");
 	const inputClass = cn(
-		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0 max-w-245 text-gray-500",
+		"min-w-3 rounded bg-transparent p-0 text-xl font-bold leading-6 leading-tight outline outline-0 max-w-120 transition focus:bg-gray-1200",
 		{
 			"outline-2 outline-error": !isNameValid,
 		}
@@ -30,7 +33,7 @@ export const ProjectTopbarName = () => {
 	const loadProject = async (projectId: string) => {
 		const { data: project, error } = await getProject(projectId);
 
-		if (error || !project) {
+		if (error) {
 			addToast({
 				message: tErrors("projectLoadingFailed"),
 				type: "error",
@@ -57,9 +60,7 @@ export const ProjectTopbarName = () => {
 	}, [projectId]);
 
 	const validateName = (name: string): boolean => {
-		const nameLength = name.trim().length;
-
-		return nameLength > 0;
+		return !!name.trim().length;
 	};
 
 	const handleInputChange = async (
@@ -81,30 +82,47 @@ export const ProjectTopbarName = () => {
 
 				return;
 			}
-			(event.target as HTMLInputElement).blur();
 			renameProject(projectId, newName);
+			setIsEditing(false);
 		}
 	};
 
 	const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newName = event.target.value.trim();
+		const newName = event.target.value;
 		setProject((prev) => (prev ? { ...prev, name: newName } : undefined));
 		setIsNameValid(validateName(newName));
 	};
 
 	return (
 		<div className="flex items-center gap-3 py-2 font-fira-code">
-			<input
-				autoComplete="off"
-				className={inputClass}
-				onBlur={handleInputChange}
-				onChange={handleInput}
-				onKeyDown={handleInputChange}
-				size={project?.name?.length || 1}
-				tabIndex={0}
-				title={t("topbar.rename")}
-				value={project?.name}
-			/>
+			{isEditing ? (
+				<input
+					autoComplete="off"
+					// eslint-disable-next-line jsx-a11y/no-autofocus
+					autoFocus={true}
+					className={inputClass}
+					onBlur={handleInputChange}
+					onChange={handleInput}
+					onKeyDown={handleInputChange}
+					size={project?.name?.length || 1}
+					tabIndex={0}
+					title={t("topbar.rename")}
+					value={project?.name}
+				/>
+			) : (
+				<div
+					className="group relative flex cursor-pointer items-center"
+					onClick={() => setIsEditing(true)}
+					onKeyDown={() => setIsEditing(true)}
+					role="button"
+					tabIndex={0}
+				>
+					<span className="max-w-120 truncate text-xl font-bold" title={project?.name}>
+						{project?.name}
+					</span>
+					<EditIcon className="absolute -right-1 size-4 bg-gray-1250 fill-white p-0.5 opacity-0 transition group-hover:opacity-100" />
+				</div>
+			)}
 
 			<ErrorMessage className="-bottom-3.5 text-xs">
 				{!isNameValid ? t("nameRequired", { ns: "errors" }) : null}

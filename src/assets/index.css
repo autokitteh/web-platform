@@ -64,13 +64,11 @@ input:-webkit-autofill:active {
 	-webkit-text-fill-color: black !important;
 }
 
-body {
-	overflow-x: hidden;
-}
-
 html,
 body {
 	@apply bg-white;
+	overflow-y: hidden;
+	overflow-x: auto;
 }
 
 .scrollbar::-webkit-scrollbar {
