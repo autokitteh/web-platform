@@ -1,3 +1,10 @@
+## [2.44.1](https://github.com/autokitteh/web-platform/compare/v2.44.0...v2.44.1) (2024-11-05)
+
+
+### Performance Improvements
+
+* optimize session model ([#607](https://github.com/autokitteh/web-platform/issues/607)) ([f44ac92](https://github.com/autokitteh/web-platform/commit/f44ac92dbfa81b0d4ea14903be7e46cdcb677ee5))
+
 # [2.44.0](https://github.com/autokitteh/web-platform/compare/v2.43.1...v2.44.0) (2024-11-05)
 
 
