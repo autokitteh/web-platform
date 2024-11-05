@@ -197,6 +197,15 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("errorEditingNewConnectionExtended", { error: error?.response?.data })
+				);
+				setIsLoading(false);
+
+				return;
+			}
 			addToast({
 				message: tErrors("errorEditingNewConnection"),
 				type: "error",
