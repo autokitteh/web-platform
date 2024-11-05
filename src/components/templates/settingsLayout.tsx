@@ -27,13 +27,13 @@ export const SettingsLayout = () => {
 				<div className="flex size-full">
 					<Sidebar />
 
-					<div className="flex w-full flex-col">
+					<div className="flex flex-1 flex-col">
 						<TitleTopbar title={tSettings("title")} />
 
 						<div className="relative flex size-full overflow-hidden py-2">
 							<SettingsMenu />
 
-							<div className="scrollbar flex h-full w-1/3 flex-5 flex-col overflow-y-auto rounded-r-2xl bg-gray-1250 pl-6 pt-10">
+							<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl bg-gray-1250 pl-6 pt-10">
 								<Outlet />
 
 								<div className="absolute !-bottom-5 !-right-5">
