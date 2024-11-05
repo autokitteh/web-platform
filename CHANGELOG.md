@@ -1,3 +1,10 @@
+## [2.45.2](https://github.com/autokitteh/web-platform/compare/v2.45.1...v2.45.2) (2024-11-05)
+
+
+### Bug Fixes
+
+* display play button in welcome-intro pages on safari browser ([#609](https://github.com/autokitteh/web-platform/issues/609)) ([8624ade](https://github.com/autokitteh/web-platform/commit/8624ade42baab85660b844f75319b22762909f5b))
+
 ## [2.45.1](https://github.com/autokitteh/web-platform/compare/v2.45.0...v2.45.1) (2024-11-05)
 
 
