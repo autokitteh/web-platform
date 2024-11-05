@@ -1,3 +1,10 @@
+# [2.44.0](https://github.com/autokitteh/web-platform/compare/v2.43.1...v2.44.0) (2024-11-05)
+
+
+### Features
+
+* template files service using indexed-db ([#611](https://github.com/autokitteh/web-platform/issues/611)) ([f283d1c](https://github.com/autokitteh/web-platform/commit/f283d1c2a71129ab0d263668f1c96ce2132552ef))
+
 ## [2.43.1](https://github.com/autokitteh/web-platform/compare/v2.43.0...v2.43.1) (2024-11-04)
 
 
