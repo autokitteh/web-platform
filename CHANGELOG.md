@@ -1,3 +1,10 @@
+## [2.45.1](https://github.com/autokitteh/web-platform/compare/v2.45.0...v2.45.1) (2024-11-05)
+
+
+### Bug Fixes
+
+* fix browser error for proper elements hierarchy ([#604](https://github.com/autokitteh/web-platform/issues/604)) ([9b33f38](https://github.com/autokitteh/web-platform/commit/9b33f381e4390aa6a93733547f18fb0f92a7a657))
+
 # [2.45.0](https://github.com/autokitteh/web-platform/compare/v2.44.2...v2.45.0) (2024-11-05)
 
 
