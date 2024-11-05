@@ -52,8 +52,6 @@ test.describe("Session triggered with webhook", () => {
 				has: page.getByRole("cell", { name: "receive_http_get_or_head" }),
 			})
 			.click();
-
-		await page.waitForTimeout(5000);
 	});
 });
 
