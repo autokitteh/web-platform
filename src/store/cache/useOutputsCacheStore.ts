@@ -17,13 +17,19 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 
 	reload: async (sessionId, pageSize) => {
 		set({ isReloading: true });
-		await get().loadLogs(sessionId, pageSize);
+		await get().loadLogs(sessionId, pageSize, true);
 		set({ isReloading: false });
 	},
 
-	loadLogs: async (sessionId, pageSize) => {
+	loadLogs: async (sessionId, pageSize, force) => {
 		set({ loading: true });
 		const currentSession = get().sessions[sessionId] || { outputs: [], nextPageToken: null, fullyLoaded: false };
+
+		if (currentSession.fullyLoaded && !force) {
+			set({ loading: false });
+
+			return;
+		}
 
 		try {
 			const { data, error } = await SessionsService.getLogRecordsBySessionId(

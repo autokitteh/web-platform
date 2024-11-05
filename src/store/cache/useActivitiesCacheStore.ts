@@ -16,11 +16,11 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 
 	reload: async (sessionId, pageSize) => {
 		set({ isReloading: true });
-		await get().loadLogs(sessionId, pageSize);
+		await get().loadLogs(sessionId, pageSize, true);
 		set({ isReloading: false });
 	},
 
-	loadLogs: async (sessionId, pageSize) => {
+	loadLogs: async (sessionId, pageSize, force) => {
 		set({ loading: true });
 
 		try {
@@ -30,7 +30,7 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 				fullyLoaded: false,
 			};
 
-			if (currentSession.fullyLoaded) {
+			if (currentSession.fullyLoaded && !force) {
 				set({ loading: false });
 
 				return;
