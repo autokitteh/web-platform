@@ -1,3 +1,10 @@
+# [2.45.0](https://github.com/autokitteh/web-platform/compare/v2.44.2...v2.45.0) (2024-11-05)
+
+
+### Features
+
+* update sample templates from kittehub ([#608](https://github.com/autokitteh/web-platform/issues/608)) ([c108760](https://github.com/autokitteh/web-platform/commit/c108760987732fb86f2d6f045aa6c53c1db0bd56))
+
 ## [2.44.2](https://github.com/autokitteh/web-platform/compare/v2.44.1...v2.44.2) (2024-11-05)
 
 
