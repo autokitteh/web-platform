@@ -2,7 +2,12 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Integrations, IntegrationsMap } from "@src/enums/components/connection.enum";
+import {
+	HiddenIntegrationsForTemplates,
+	IntegrationForTemplates,
+	Integrations,
+	IntegrationsMap,
+} from "@src/enums/components/connection.enum";
 import { cn } from "@src/utilities";
 import { TemplateCardType } from "@type/components";
 
@@ -28,7 +33,11 @@ export const ProjectTemplateCard = ({
 
 				<div className="ml-auto flex gap-3">
 					{template.integrations.map((integration, index) => {
-						const enrichedIntegration = IntegrationsMap[integration as keyof typeof Integrations];
+						const enrichedIntegration =
+							IntegrationsMap[integration as keyof typeof Integrations] ||
+							HiddenIntegrationsForTemplates[integration as keyof typeof IntegrationForTemplates] ||
+							{};
+
 						const { icon, label } = enrichedIntegration;
 
 						return (

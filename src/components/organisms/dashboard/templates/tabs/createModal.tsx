@@ -7,7 +7,12 @@ import remarkGfm from "remark-gfm";
 
 import { ModalName } from "@enums/components";
 import { CreateProjectModalProps } from "@interfaces/components";
-import { Integrations, IntegrationsMap } from "@src/enums/components/connection.enum";
+import {
+	HiddenIntegrationsForTemplates,
+	IntegrationForTemplates,
+	Integrations,
+	IntegrationsMap,
+} from "@src/enums/components/connection.enum";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useProjectStore } from "@src/store";
 import { fetchFileContent } from "@src/utilities";
@@ -78,7 +83,10 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 					<Status>{category}</Status>
 					<div className="flex gap-3">
 						{integrations.map((integration, index) => {
-							const enrichedIntegration = IntegrationsMap[integration as keyof typeof Integrations];
+							const enrichedIntegration =
+								IntegrationsMap[integration as keyof typeof Integrations] ||
+								HiddenIntegrationsForTemplates[integration as keyof typeof IntegrationForTemplates] ||
+								{};
 
 							const { icon, label } = enrichedIntegration;
 

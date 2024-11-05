@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { namespaces } from "@constants";
+import { namespaces, templateCategoriesOrder } from "@constants";
 import { LoggerService, TemplateStorageService } from "@services";
 import { StoreName } from "@src/enums";
 import { useFileOperations } from "@src/hooks";
@@ -37,10 +37,22 @@ export interface TemplateCategory {
 	templates: TemplateCardType[];
 }
 
-// templateStore.ts
+const sortCategories = (categories: TemplateCategory[], order: string[]) => {
+	return categories.sort((a, b) => {
+		const indexA = order.indexOf(a.name);
+		const indexB = order.indexOf(b.name);
+
+		if (indexA === -1) return 1;
+		if (indexB === -1) return -1;
+
+		return indexA - indexB;
+	});
+};
+
 interface TemplateState {
 	templateMap: Record<string, TemplateCardType>;
 	isLoading: boolean;
+	sortedCategories?: TemplateCategory[];
 	error: string | null;
 	lastCommitDate?: string;
 
@@ -48,9 +60,6 @@ interface TemplateState {
 	fetchTemplates: () => Promise<void>;
 	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateCardType | undefined;
 	getTemplateFiles: (assetDirectory: string) => Promise<Record<string, string>>;
-
-	// Computed
-	getCategories: () => TemplateCategory[];
 }
 
 const store = (set: any, get: any): TemplateState => ({
@@ -58,6 +67,7 @@ const store = (set: any, get: any): TemplateState => ({
 	isLoading: false,
 	error: null,
 	lastCommitDate: undefined,
+	sortedCategories: undefined,
 
 	fetchTemplates: async () => {
 		set({ isLoading: true, error: null });
@@ -107,8 +117,28 @@ const store = (set: any, get: any): TemplateState => ({
 							})
 						);
 
+						const categoriesMap = new Map<string, TemplateCardType[]>();
+
+						// Group templates by category
+						Object.values(templateMap).forEach((template) => {
+							const category = template.category;
+							if (!categoriesMap.has(category)) {
+								categoriesMap.set(category, []);
+							}
+							categoriesMap.get(category)!.push(template);
+						});
+
+						// Convert map to array of categories
+						const categories = Array.from(categoriesMap.entries()).map(([name, templates]) => ({
+							name,
+							templates,
+						}));
+
+						const sortedCategories = sortCategories(categories, templateCategoriesOrder);
+
 						set({
 							templateMap,
+							sortedCategories,
 							lastCommitDate: newCommitDate,
 							isLoading: false,
 							error: null,
@@ -136,26 +166,6 @@ const store = (set: any, get: any): TemplateState => ({
 	getTemplateFiles: async (assetDirectory: string) => {
 		return await templateStorage.getTemplateFiles(assetDirectory);
 	},
-
-	getCategories: () => {
-		const templateMap = get().templateMap as Record<string, TemplateCardType>;
-		const categoriesMap = new Map<string, TemplateCardType[]>();
-
-		// Group templates by category
-		Object.values(templateMap).forEach((template) => {
-			const category = template.category;
-			if (!categoriesMap.has(category)) {
-				categoriesMap.set(category, []);
-			}
-			categoriesMap.get(category)!.push(template);
-		});
-
-		// Convert map to array of categories
-		return Array.from(categoriesMap.entries()).map(([name, templates]) => ({
-			name,
-			templates,
-		}));
-	},
 });
 
 export const useTemplateStore = create(
@@ -164,6 +174,7 @@ export const useTemplateStore = create(
 		partialize: (state) => ({
 			templateMap: state.templateMap,
 			lastCommitDate: state.lastCommitDate,
+			sortedCategories: state.sortedCategories,
 		}),
 	})
 );

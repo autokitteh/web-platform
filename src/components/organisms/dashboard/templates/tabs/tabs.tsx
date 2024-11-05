@@ -14,8 +14,7 @@ export const ProjectTemplatesTabs = () => {
 	const [selectedTemplate, setSelectedTemplate] = useState<TemplateCardType>();
 
 	const { openModal } = useModalStore();
-	const { error, fetchTemplates, getCategories, isLoading } = useTemplateStore();
-	const categories = getCategories();
+	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplateStore();
 
 	const activeCategory = useMemo(
 		() => categories?.find((category) => category.name === activeTab),
@@ -47,7 +46,7 @@ export const ProjectTemplatesTabs = () => {
 				<>
 					<div className="sticky -top-8 z-20 -mt-5 bg-gray-1250 pb-0 pt-3">
 						<div className="xl:gap-4 scrollbar flex shrink-0 select-none items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap py-2 2xl:gap-5 3xl:gap-6">
-							{categories.map(({ name }) => (
+							{categories?.map(({ name }) => (
 								<Tab
 									activeTab={activeTab}
 									ariaLabel={name}

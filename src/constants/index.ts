@@ -20,7 +20,11 @@ export {
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
-export { defaultTemplateProjectCategory, meowWorldProjectName } from "@constants/dashboard.constants";
+export {
+	defaultTemplateProjectCategory,
+	meowWorldProjectName,
+	templateCategoriesOrder,
+} from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export { menuItems } from "@constants/menuItems.constants";
