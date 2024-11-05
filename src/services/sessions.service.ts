@@ -9,13 +9,11 @@ import {
 import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
-import { convertSessionProtoToModel } from "@models";
-import { EnvironmentsService, EventsService, LoggerService } from "@services";
+import { convertSessionProtoToModel, convertSessionProtoToViewerModel } from "@models";
+import { EnvironmentsService, LoggerService } from "@services";
 import { SessionLogType } from "@src/enums";
-import { convertSessionProtoToViewerModel } from "@src/models/session.model";
-import { ViewerSession } from "@src/types/models/session.type";
+import { Session, SessionFilter, ViewerSession } from "@src/interfaces/models";
 import { ServiceResponse, StartSessionArgsType } from "@type";
-import { Session, SessionFilter } from "@type/models";
 import { flattenArray, transformAndStringifyValues } from "@utilities";
 
 export class SessionsService {
@@ -85,35 +83,13 @@ export class SessionsService {
 	static async getSessionInfo(sessionId: string): Promise<ServiceResponse<ViewerSession>> {
 		try {
 			const { session } = await sessionsClient.get({ sessionId, jsonValues: true });
-
-			if (!session?.eventId) {
-				const sessionConverted = convertSessionProtoToViewerModel(session!);
-
-				return {
-					data: sessionConverted,
-					error: undefined,
-				};
-			}
-
-			const { data: event, error } = await EventsService.getEnriched(session.eventId);
-
-			if (error) {
-				const errorMessage = i18n.t("sessionMissingEventInfoExtended", {
-					error: (error as Error).message,
-					sessionId,
-					eventId: session.eventId,
-					ns: "services",
-				});
+			if (!session) {
+				const errorMessage = i18n.t("sessionInfoFetchFailed", { sessionId, ns: "services" });
 				LoggerService.error(namespaces.sessionsService, errorMessage);
 
-				return { data: undefined, error };
+				return { data: undefined, error: errorMessage };
 			}
-
-			const sessionConverted = convertSessionProtoToViewerModel(
-				session!,
-				event?.sourceType,
-				event?.destinationName
-			);
+			const sessionConverted = convertSessionProtoToViewerModel(session);
 
 			return { data: sessionConverted, error: undefined };
 		} catch (error) {

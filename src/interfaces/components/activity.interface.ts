@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 
-import { SessionActivity } from "@src/types/models";
+import { SessionActivity } from "@src/interfaces/models";
 
 export interface ActivityRowProps {
 	data: SessionActivity;

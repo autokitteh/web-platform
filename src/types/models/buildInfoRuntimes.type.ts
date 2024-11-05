@@ -1,4 +1,4 @@
-import { EntrypointTrigger } from "@type/models/session.type";
+import { EntrypointTrigger } from "@src/interfaces/models/session.interface";
 
 export type BuildInfoRuntimes = {
 	artifact: {

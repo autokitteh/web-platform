@@ -1,5 +1,6 @@
+import { SessionEntrypoint } from "@src/interfaces/models";
 import { ServiceResponse } from "@src/types";
-import { Deployment, SessionEntrypoint } from "@src/types/models";
+import { Deployment } from "@src/types/models";
 
 export interface ManualProjectData {
 	files: string[];

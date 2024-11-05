@@ -4,7 +4,7 @@ import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListR
 
 import { useVirtualizedList } from "@hooks/useVirtualizedList";
 import { SessionLogType } from "@src/enums";
-import { SessionOutput } from "@src/types/models";
+import { SessionOutput } from "@src/interfaces/models";
 
 const OutputRow = memo(({ log, measure }: { log: SessionOutput; measure: () => void }) => {
 	const rowRef = useRef<HTMLDivElement>(null);

@@ -10,8 +10,9 @@ import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
 import { useResize } from "@src/hooks";
+import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
-import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
+import { DeploymentSession } from "@type/models";
 
 import { Frame, Loader, ResizeButton, THead, Table, Th, Tr, Typography } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";

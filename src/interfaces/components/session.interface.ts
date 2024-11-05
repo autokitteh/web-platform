@@ -1,6 +1,7 @@
 import { ListOnItemsRenderedProps } from "react-window";
 
-import { DeploymentSession, Session, SessionStateKeyType } from "@type/models";
+import { Session, SessionStateKeyType } from "@src/interfaces/models";
+import { DeploymentSession } from "@type/models";
 
 export interface SessionTableFilterProps {
 	onChange: (sessionState?: SessionStateKeyType) => void;

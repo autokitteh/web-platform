@@ -62,6 +62,7 @@
 	"projectRemoveFailedExtended": "Project remove failed, ID: {{projectId}}, error: {{error}}",
 	"sessionMissingEventExtended": "Session missing event information, session ID: {{sessionId}}",
 	"sessionMissingEventInfoExtended": "Session missing event information, eventID: {{eventId}}, session ID: {{sessionId}}, error: {{error}}",
+	"sessionInfoFetchFailed": "Session information fetch failed",
 	"sessionInfoFetchFailedExtended": "Session information could not be fetched session ID: {{sessionId}}, error: {{error}}",
 	"sessionLogMissingError": "Session error log value is missing",
 	"sessionStartFailedExtended": "Error running session execution: {{error}} for build id: {{buildId}}",

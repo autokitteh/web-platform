@@ -4,7 +4,7 @@ import { AutoSizer, InfiniteLoader, List, ListRowProps } from "react-virtualized
 
 import { SessionLogType } from "@src/enums";
 import { useVirtualizedList } from "@src/hooks";
-import { SessionActivity } from "@src/types/models";
+import { SessionActivity } from "@src/interfaces/models";
 import { cn } from "@src/utilities";
 
 import { Frame } from "@components/atoms";
