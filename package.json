@@ -43,7 +43,6 @@
 		"framer-motion": "^11.11.7",
 		"front-matter": "^4.0.2",
 		"github-markdown-css": "^5.7.0",
-		"gray-matter": "^4.0.3",
 		"idb": "^8.0.0",
 		"immer": "^10.1.1",
 		"javascript-time-ago": "^2.5.10",
