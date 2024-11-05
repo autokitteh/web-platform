@@ -324,7 +324,15 @@ export const templateProjectsCategories: TemplateCategory[] = [
 					"Slack bot: request for assistance is inferred using Google's Gemini AI. The appropriate person is mentioned according to a predetermined table of expertise in a Google Doc. The person can then !take the request and later !resolve it.",
 				integrations: [IntegrationsMap.slack, IntegrationsMap.googlegemini],
 				assetDirectory: "slack_support",
-				files: ["README.md", "autokitteh.yaml", "demo.png", "directory.py", "gemini.py", "main.py"],
+				files: [
+					"README.md",
+					"autokitteh.yaml",
+					"demo.png",
+					"directory.py",
+					"gemini.py",
+					"main.py",
+					"requirements.txt",
+				],
 			},
 			{
 				title: "Google Calendar To Asana",
