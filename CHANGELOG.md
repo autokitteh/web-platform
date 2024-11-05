@@ -1,3 +1,10 @@
+## [2.45.4](https://github.com/autokitteh/web-platform/compare/v2.45.3...v2.45.4) (2024-11-05)
+
+
+### Bug Fixes
+
+* add missing filename to the slack_support template ([#620](https://github.com/autokitteh/web-platform/issues/620)) ([cdb5af0](https://github.com/autokitteh/web-platform/commit/cdb5af000a8593992a1d4812c0178170257460c8))
+
 ## [2.45.3](https://github.com/autokitteh/web-platform/compare/v2.45.2...v2.45.3) (2024-11-05)
 
 
