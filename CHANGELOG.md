@@ -1,3 +1,10 @@
+## [2.45.3](https://github.com/autokitteh/web-platform/compare/v2.45.2...v2.45.3) (2024-11-05)
+
+
+### Bug Fixes
+
+* change play buttons design ([#617](https://github.com/autokitteh/web-platform/issues/617)) ([0b791cf](https://github.com/autokitteh/web-platform/commit/0b791cf53fbf7532821259c30517fff3df3d702b))
+
 ## [2.45.2](https://github.com/autokitteh/web-platform/compare/v2.45.1...v2.45.2) (2024-11-05)
 
 
