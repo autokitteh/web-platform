@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 
-class IndexedDBService {
+export class IndexedDBService {
 	private dbName: string;
 	private storeName: string;
 	private db: any;
