@@ -55,6 +55,8 @@ test.describe("Session triggered with webhook", () => {
 async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
 	await dashboardPage.createProjectFromTemplate();
 
+	await page.getByText("webhooks.py").isVisible();
+
 	const deployButton = page.getByRole("button", { name: "Deploy project" });
 	await deployButton.click();
 	const toast = await waitForToast(page, "Project deployment completed successfully");
