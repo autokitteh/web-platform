@@ -76,12 +76,13 @@ body {
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-	@apply bg-gray-950;
+	@apply bg-transparent;
 	@apply rounded-xl;
 }
 
-.scrollbar::-webkit-scrollbar-thumb:hover {
-	@apply bg-gray-750;
+.scrollbar:hover::-webkit-scrollbar-thumb {
+	@apply bg-gray-950;
+	@apply rounded-xl;
 }
 
 textarea {
