@@ -33,7 +33,7 @@ export const SettingsLayout = () => {
 						<div className="relative flex size-full overflow-hidden py-2">
 							<SettingsMenu />
 
-							<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl bg-gray-1250 pl-6 pt-10">
+							<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl border-l bg-gray-1100 pl-9 pt-6">
 								<Outlet />
 
 								<div className="absolute !-bottom-5 !-right-5">

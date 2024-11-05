@@ -15,12 +15,12 @@ export const DeleteAccountModal = ({ onDelete }: DeleteAccount) => {
 	const { closeModal } = useModalStore();
 
 	return (
-		<Modal name={ModalName.deleteAccount}>
+		<Modal className="" name={ModalName.deleteAccount}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
+				<h3 className="mb-5 font-averta text-xl font-bold">{t("title")}</h3>
 
-				<p>{t("line1")}</p>
-				<p>{t("line2")}</p>
+				<p className="font-light">{t("line1")}</p>
+				<p className="mt-1 font-light">{t("line2")}</p>
 			</div>
 
 			<div className="mt-14 flex justify-end gap-1">
@@ -34,7 +34,7 @@ export const DeleteAccountModal = ({ onDelete }: DeleteAccount) => {
 
 				<Button
 					ariaLabel={t("deleteButton")}
-					className="w-auto bg-error px-4 py-3 font-semibold"
+					className="w-auto px-4 py-3 font-semibold hover:bg-error"
 					onClick={onDelete}
 					variant="filled"
 				>

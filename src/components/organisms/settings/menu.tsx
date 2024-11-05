@@ -18,21 +18,21 @@ export const SettingsMenu = () => {
 				const isCurrentPage = matchPath({ path, end: true }, location.pathname);
 
 				const settingsMenuButtonClass = cn(
-					"group mb-5 flex items-center text-white active:text-green-800 p-0 hover:bg-transparent gap-2",
+					"group mb-5 flex items-center text-white active:text-green-800 p-0 hover:bg-transparent gap-2 font-averta",
 					{
 						"font-bold": isCurrentPage,
 					}
 				);
 
 				const parentIconClass = cn(
-					"flex size-7.5 items-center justify-center rounded-full group-hover:bg-green-800",
+					"flex size-7.5 items-center justify-center rounded-full group-hover:bg-gray-950",
 					{
 						"bg-green-800": isCurrentPage,
 					}
 				);
-				const iconClass = cn("fill-white group-hover:fill-black", {
+				const iconClass = cn("fill-white group-hover:fill-white", {
 					"fill-black": isCurrentPage,
-					"stroke-white fill-transparent group-hover:fill-transparent group-hover:stroke-black": stroke,
+					"stroke-white fill-transparent group-hover:fill-transparent group-hover:stroke-white": stroke,
 					"stroke-black": stroke && isCurrentPage,
 				});
 

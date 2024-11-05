@@ -13,8 +13,8 @@ module.exports = {
     },
     extend: {
       fontSize: {
-        "settings-title": "1.3rem",
         10: "10px",
+        '1.5xl': '22px',
       },
       flex: {
         5: "5 5 0%",

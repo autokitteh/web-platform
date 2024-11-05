@@ -46,7 +46,7 @@ export const ClientConfiguration = () => {
 
 	return (
 		<>
-			<Typography className="mb-4 text-settings-title font-bold" element="h1" size="large">
+			<Typography className="mb-4 text-2xl font-bold" element="h1" size="large">
 				{t("getToken.title")}
 			</Typography>
 			<div>
