@@ -1,3 +1,10 @@
+## [2.44.2](https://github.com/autokitteh/web-platform/compare/v2.44.1...v2.44.2) (2024-11-05)
+
+
+### Bug Fixes
+
+* refresh output and activities state on hard reload ([#603](https://github.com/autokitteh/web-platform/issues/603)) ([facc0e8](https://github.com/autokitteh/web-platform/commit/facc0e83db5a243c8edc716275061fcca0099f08))
+
 ## [2.44.1](https://github.com/autokitteh/web-platform/compare/v2.44.0...v2.44.1) (2024-11-05)
 
 
