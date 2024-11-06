@@ -62,7 +62,7 @@ const initialState: Omit<
 	currentProjectId: undefined,
 	envId: undefined,
 	projectValidationState: defaultProjectValidationState,
-	isValid: false,
+	isValid: true,
 };
 
 const store: StateCreator<CacheStore> = (set, get) => ({
@@ -90,7 +90,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		try {
 			const { data: incomingDeployments, error } = await DeploymentsService.listByProjectId(projectId);
-
 			if (error) {
 				const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
 
@@ -151,6 +150,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				triggers,
 				loading: { ...state.loading, triggers: false },
 			}));
+
+			get().checkState(projectId!, { triggers });
 
 			return triggers;
 		} catch (error) {
@@ -247,6 +248,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				loading: { ...state.loading, variables: false },
 			}));
 
+			get().checkState(projectId!, { variables: vars });
+
 			return vars;
 		} catch (error) {
 			const errorMsg = i18n.t("errorFetchingVariables", { ns: "errors" });
@@ -289,7 +292,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				loading: { ...state.loading, connections: false },
 			}));
 
-			get().checkState(projectId!);
+			get().checkState(projectId!, { connections: connectionsResponse });
 
 			return connectionsResponse;
 		} catch (error) {
@@ -309,35 +312,46 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	checkState: async (projectId) => {
+	checkState: async (projectId, data) => {
 		set((state) => ({ ...state, isValid: false }));
-		const newProjectValidationState = { ...defaultProjectValidationState };
+		const newProjectValidationState = { ...get().projectValidationState };
 
-		const resources = get().deployments;
-
-		if (!resources || JSON.stringify(resources) === JSON.stringify({})) {
-			newProjectValidationState.code = {
-				message: i18n.t("validation.noCodeAndAssets", { ns: "tabs" }),
-				level: "error",
-			};
+		if (data?.resources) {
+			const resources = data.resources;
+			if (!Object.keys(resources).length) {
+				newProjectValidationState.code = {
+					message: i18n.t("validation.noCodeAndAssets", { ns: "tabs" }),
+					level: "error",
+				};
+			}
 		}
 
-		const connectionsData = get().connections;
-
-		const notInitiatedConnections = connectionsData?.filter((connection) => connection.status !== "ok")?.length;
-		if (notInitiatedConnections) {
-			newProjectValidationState.connections = {
-				...newProjectValidationState.connections,
-				message: i18n.t("validation.connectionsNotConfigured", { ns: "tabs" }),
-			};
+		if (data?.connections !== undefined) {
+			const connectionsData = data.connections;
+			const notInitiatedConnections = connectionsData?.filter((connection) => connection.status !== "ok")?.length;
+			if (notInitiatedConnections) {
+				newProjectValidationState.connections = {
+					...newProjectValidationState.connections,
+					message: i18n.t("validation.connectionsNotConfigured", { ns: "tabs" }),
+				};
+			}
 		}
 
-		const triggersData = get().triggers;
+		if (data?.triggers !== undefined) {
+			const triggersData = data.triggers;
 
-		if (!triggersData || !triggersData.length) {
 			newProjectValidationState.triggers = {
 				...newProjectValidationState.triggers,
-				message: i18n.t("validation.noTriggers", { ns: "tabs" }),
+				message: !triggersData.length ? i18n.t("validation.noTriggers", { ns: "tabs" }) : "",
+			};
+		}
+
+		if (data?.variables !== undefined) {
+			const variablesData = data.variables;
+			const isEmptyVarValue = variablesData?.find((varb) => varb.value === "");
+			newProjectValidationState.variables = {
+				...newProjectValidationState.variables,
+				message: isEmptyVarValue ? i18n.t("validation.emptyVariable", { ns: "tabs" }) : "",
 			};
 		}
 

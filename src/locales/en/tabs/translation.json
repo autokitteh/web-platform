@@ -2,7 +2,8 @@
 	"validation":{
 		"noCodeAndAssets": "No code assets available",
 		"connectionsNotConfigured": "Connections not configured",
-		"noTriggers": "No triggers available"
+		"noTriggers": "No triggers available",
+		"emptyVariable": "Variable name and value cannot be empty"
 	},
 	"code&assets": {
 		"successRemoveFile": "{{fileName}} succesfully removed",

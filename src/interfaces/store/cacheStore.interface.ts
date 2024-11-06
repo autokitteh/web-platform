@@ -33,8 +33,20 @@ export interface CacheStore {
 			level?: ProjectValidationLevel;
 			message?: string;
 		};
+		variables: {
+			level?: ProjectValidationLevel;
+			message?: string;
+		};
 	};
-	checkState: (projectId: string) => void;
+	checkState: (
+		projectId: string,
+		data?: {
+			connections?: Connection[];
+			resources?: Record<string, Uint8Array>;
+			triggers?: Trigger[];
+			variables?: Variable[];
+		}
+	) => void;
 	isValid: boolean;
 	initCache: (projectId: string, force?: boolean) => Promise<void>;
 	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;

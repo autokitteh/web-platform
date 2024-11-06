@@ -26,8 +26,9 @@ export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 
 		if (projectId !== openProjectId) {
 			setOpenProjectId(projectId);
-			initCache(projectId!, true);
 		}
+
+		initCache(projectId!, true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 

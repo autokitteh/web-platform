@@ -45,7 +45,7 @@ export function useFileOperations(projectId: string) {
 			}
 			const resources = await dbService.getAll();
 			if (resources) {
-				checkState(projectId!);
+				checkState(projectId!, { resources });
 				setFileList({ isLoading: false, list: Object.keys(resources) });
 			}
 
@@ -74,7 +74,7 @@ export function useFileOperations(projectId: string) {
 				const resources = await dbService.getAll();
 
 				const { error } = await ProjectsService.setResources(projectId, resources);
-				checkState(projectId!);
+				checkState(projectId!, { resources });
 				if (error) {
 					return;
 				}
@@ -112,7 +112,7 @@ export function useFileOperations(projectId: string) {
 			const resources = await dbService.getAll();
 			const { error } = await ProjectsService.setResources(projectId, resources);
 			setFileList({ isLoading: false, list: Object.keys(resources) });
-			checkState(projectId!);
+			checkState(projectId!, { resources });
 			if (error) {
 				addToast({
 					message: t("resourcesFetchError"),
@@ -132,7 +132,7 @@ export function useFileOperations(projectId: string) {
 				[name]: fileContent,
 			};
 			const { error } = await ProjectsService.setResources(projectId, resourcesWithAddedFile);
-			checkState(projectId!);
+			checkState(projectId!, { resources });
 			if (error) {
 				throw error;
 			}

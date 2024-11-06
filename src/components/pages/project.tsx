@@ -20,7 +20,6 @@ export const Project = () => {
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
 	const { getProject } = useProjectStore();
-
 	const loadProject = async (projectId: string) => {
 		const { data: project } = await getProject(projectId!);
 		if (!project?.name) {
