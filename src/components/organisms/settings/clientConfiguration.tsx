@@ -22,9 +22,9 @@ export const ClientConfiguration = () => {
 	const createToken = async () => {
 		setIsLoading(true);
 		const { data: token, error } = await AuthService.createToken();
+		setIsLoading(false);
 
 		if (error) {
-			setIsLoading(false);
 			addToast({
 				message: tErrors("tokenCreationError"),
 				type: "error",
@@ -33,7 +33,6 @@ export const ClientConfiguration = () => {
 			return;
 		}
 		if (!token) {
-			setIsLoading(false);
 			addToast({
 				message: tErrors("tokenCreationError"),
 				type: "error",
@@ -43,7 +42,6 @@ export const ClientConfiguration = () => {
 		}
 
 		setToken(token);
-		setIsLoading(false);
 	};
 
 	return (
