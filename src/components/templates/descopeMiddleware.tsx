@@ -22,6 +22,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
 	const addToast = useToastStore((state) => state.addToast);
+	const [isLoggingIn, setIsLoggingIn] = useState(false);
 
 	const handleLogout = useCallback(async () => {
 		await logout();
@@ -49,6 +50,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	const handleSuccess = useCallback(
 		async (event: CustomEvent<any>) => {
+			setIsLoggingIn(true);
 			try {
 				const apiBaseUrl = getApiBaseUrl();
 				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
@@ -68,6 +70,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				});
 				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailed", { error }));
 			} finally {
+				setIsLoggingIn(false);
 				setDescopeRenderKey((prevKey) => prevKey + 1);
 			}
 		},
@@ -83,7 +86,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<Suspense fallback={<Loader isCenter />}>
-			<LoginPage descopeRenderKey={descopeRenderKey} handleSuccess={handleSuccess} />
+			<LoginPage descopeRenderKey={descopeRenderKey} handleSuccess={handleSuccess} isLoggingIn={isLoggingIn} />
 		</Suspense>
 	);
 };
