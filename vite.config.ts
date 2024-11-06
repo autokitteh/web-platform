@@ -1,4 +1,3 @@
-import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
@@ -7,7 +6,6 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 
 import { reactVirtualized } from "./fixReactVirtualized";
-import pkg from "./package.json";
 
 dotenv.config();
 
@@ -91,19 +89,6 @@ export default defineConfig({
 						},
 					],
 				},
-			},
-		}),
-		sentryVitePlugin({
-			org: process.env.SENTRY_ORG,
-			project: process.env.SENTRY_PROJECT,
-			reactComponentAnnotation: { enabled: true },
-			authToken: process.env.SENTRY_AUTH_TOKEN,
-			sourcemaps: {
-				disable: process.env.CONTEXT !== "production",
-				filesToDeleteAfterUpload: "**/*.map",
-			},
-			release: {
-				name: pkg.version,
 			},
 		}),
 		viteStaticCopy({
