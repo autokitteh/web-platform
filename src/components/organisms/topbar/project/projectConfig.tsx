@@ -19,7 +19,7 @@ import {
 export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 	const { projectId } = useParams();
 	const { openProjectId, setOpenProjectId } = useFileOperations(projectId!);
-	const { fetchDeployments, initCache } = useCacheStore();
+	const { initCache } = useCacheStore();
 
 	useEffect(() => {
 		if (!projectId) return;
@@ -34,12 +34,6 @@ export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const handleMunaualRun = () => {
-		setTimeout(() => {
-			fetchDeployments(projectId!, true);
-		}, 100);
-	};
-
 	return (
 		<div className="flex justify-between rounded-b-xl bg-gray-1250 pl-7 pr-3">
 			<ProjectTopbarName />
@@ -52,7 +46,7 @@ export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 			{variant === TopbaButtonVariant.manual ? (
 				<>
 					<ManualRunButtons />
-					<ManualRunSettingsDrawer onRun={handleMunaualRun} />
+					<ManualRunSettingsDrawer />
 				</>
 			) : null}
 		</div>

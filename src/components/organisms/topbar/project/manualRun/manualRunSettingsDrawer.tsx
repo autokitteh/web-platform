@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { DrawerName } from "@src/enums/components";
-import { useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
+import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
 import { manualRunSchema } from "@validations";
 
 import { Button, ErrorMessage, IconSvg, Input, Spinner, Typography } from "@components/atoms";
@@ -17,13 +17,14 @@ import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/o
 
 import { RunIcon } from "@assets/image/icons";
 
-export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
+export const ManualRunSettingsDrawer = () => {
 	const { t: tButtons } = useTranslation("buttons");
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
 	const { closeDrawer } = useDrawerStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { projectId } = useParams();
 	const [sendingManualRun, setSendingManualRun] = useState(false);
+	const { fetchDeployments } = useCacheStore();
 
 	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
 		projectManualRun: state.projectManualRun[projectId!],
@@ -70,6 +71,12 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params]);
 
+	const handleMunaualRun = () => {
+		setTimeout(() => {
+			fetchDeployments(projectId!, true);
+		}, 100);
+	};
+
 	const onSubmit = async () => {
 		if (!projectId) return;
 
@@ -78,7 +85,7 @@ export const ManualRunSettingsDrawer = ({ onRun }: { onRun: () => void }) => {
 
 		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, params);
 		setSendingManualRun(false);
-		onRun();
+		handleMunaualRun();
 		if (error) {
 			addToast({
 				message: t("executionFailed"),

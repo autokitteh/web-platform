@@ -24,7 +24,7 @@ export const DeploymentsTable = () => {
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 
 	useEffect(() => {
-		if (isInitialLoad && !loadingDeployments) {
+		if (isInitialLoad && loadingDeployments) {
 			setIsInitialLoad(false);
 		}
 		if (!loadingDeployments) {
@@ -92,11 +92,11 @@ export const DeploymentsTable = () => {
 
 			{loadingDeployments && isInitialLoad ? <Loader isCenter size="xl" /> : null}
 
-			{!isInitialLoad && !deployments?.length ? (
+			{!loadingDeployments && !isInitialLoad && !deployments?.length ? (
 				<div className="mt-10 text-center text-xl font-semibold">{t("noDeployments")}</div>
 			) : null}
 
-			{!isInitialLoad && deployments?.length ? (
+			{deployments?.length ? (
 				<DeploymentsTableContent
 					deployments={deployments}
 					updateDeployments={() => fetchDeployments(projectId!, true)}
