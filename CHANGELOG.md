@@ -1,3 +1,10 @@
+## [2.48.1](https://github.com/autokitteh/web-platform/compare/v2.48.0...v2.48.1) (2024-11-06)
+
+
+### Bug Fixes
+
+* user auth token creation ([#626](https://github.com/autokitteh/web-platform/issues/626)) ([8e2116c](https://github.com/autokitteh/web-platform/commit/8e2116ce942e85269db73014e04ecef02be5773e))
+
 # [2.48.0](https://github.com/autokitteh/web-platform/compare/v2.47.0...v2.48.0) (2024-11-06)
 
 
