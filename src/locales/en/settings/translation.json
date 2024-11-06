@@ -8,9 +8,11 @@
 	},
 	"clientConfiguration": {
 		"copyFailure": "Failed to copy to clipboard",
+		"copy": "Copy",
 		"getToken": {
 			"title": "CLI & VSCode Configuration",
-			"subtitle": "Generate new API token for CLI or VSCode",
+			"desc": "Create, copy and use the token in your application - using CLI or our VSCode Extension (click here to get the extension) - to connect to the platform.",
+			"subtitle": "Copy this token to be able to use it in your application",
 			"copyButton": "Copy connection token",
 			"copyInputAriaLabel": "API Token",
 			"copySuccess": "Token copied to clipboard",

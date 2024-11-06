@@ -44,7 +44,7 @@ export const Profile = () => {
 
 	return (
 		<div className="font-averta">
-			<Typography className="mb-9 text-2xl font-bold" element="h1" size="large">
+			<Typography className="mb-9 font-bold" element="h1" size="2xl">
 				{t("title")}
 			</Typography>
 			<Typography className="mb-1.5 font-fira-sans opacity-90" element="p">

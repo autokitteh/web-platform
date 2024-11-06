@@ -15,6 +15,7 @@ export { default as Check } from "@assets/image/icons/Check.svg?react";
 export { default as CircleMinusIcon } from "@assets/image/icons/CircleMinus.svg?react";
 export { default as CirclePlayIcon } from "@assets/image/icons/CirclePlay.svg?react";
 export { default as CirclePlusIcon } from "@assets/image/icons/CirclePlus.svg?react";
+export { default as CircleTokenIcon } from "@assets/image/icons/CircleToken.svg?react";
 export { default as Close } from "@assets/image/icons/Close.svg?react";
 export { default as CompressIcon } from "@assets/image/icons/Compress.svg?react";
 export { default as CopyIcon } from "@assets/image/icons/Copy.svg?react";
@@ -26,8 +27,8 @@ export { default as ExpandIcon } from "@assets/image/icons/Expand.svg?react";
 export { default as ExternalLinkIcon } from "@assets/image/icons/ExternalLink.svg?react";
 export { default as EyeIcon } from "@assets/image/icons/Eye.svg?react";
 export { default as EyeCloseIcon } from "@assets/image/icons/EyeClose.svg?react";
-export { default as FileIcon } from "@assets/image/icons/File.svg?react";
 
+export { default as FileIcon } from "@assets/image/icons/File.svg?react";
 // Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/filter.svg
 export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";
 export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?react";
