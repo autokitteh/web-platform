@@ -95,6 +95,18 @@ jobs:
             -e AK_AUTHJWTTOKENS__SIGN_KEY="183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154" \
             ${{ steps.login-ecr.outputs.registry }}/autokitteh:latest up --mode=dev)
           echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
+
+          if [ -z "$CONTAINER_ID" ]; then
+            echo "Failed to start container"
+            exit 1
+          fi
+          docker logs -f $CONTAINER_ID > docker-logs.txt &
+          LOGS_PID=$!
+          if [ -z "$LOGS_PID" ]; then
+            echo "Failed to start logging"
+            exit 1
+          fi
+          echo "LOGS_PID=$LOGS_PID" >> $GITHUB_ENV
       
       - name: Wait for Backend to Start
         run: |
@@ -126,6 +138,28 @@ jobs:
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
         run: npx playwright test --project=${{ matrix.browser }}
+      
+      - name: Stop logging
+        if: always()
+        run: |
+          # Check if LOGS_PID exists before trying to kill it
+          if [ ! -z "${{ env.LOGS_PID }}" ]; then
+            kill ${{ env.LOGS_PID }} || true
+          fi
+          
+          # Check if CONTAINER_ID exists before getting final logs
+          if [ ! -z "${{ env.CONTAINER_ID }}" ]; then
+            docker logs ${{ env.CONTAINER_ID }} >> docker-logs.txt 2>&1 || true
+          fi
+
+      - name: Upload Docker logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-logs-${{ matrix.browser }}-${{ github.run_id }}
+          path: docker-logs.txt
+          retention-days: 2
+
 
       - name: Upload Playwright Test Results
         uses: actions/upload-artifact@v4

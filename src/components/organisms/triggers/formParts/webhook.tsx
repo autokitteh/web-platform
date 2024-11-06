@@ -25,6 +25,7 @@ export const WebhookFields = ({ highlight, webhookSlug }: { highlight?: boolean;
 			<Input
 				aria-label={t("placeholders.webhookUrl")}
 				className={webhookClassName}
+				data-testid="webhook-url"
 				disabled
 				label={t("placeholders.webhookUrl")}
 				name="webhookUrl"
