@@ -120,12 +120,18 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		setIsLoading(true);
 
 		try {
-			VariablesService.setByConnectiontId(connectionId!, {
+			const { error } = await VariablesService.setByConnectiontId(connectionId!, {
 				name: "auth_type",
 				value: connectionAuthType,
 				isSecret: false,
 				scopeId: connectionId,
 			});
+			if (error) {
+				addToast({
+					message: tErrors("errorSettingConnectionType"),
+					type: "error",
+				});
+			}
 
 			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
 				getValues,
@@ -169,24 +175,31 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const editConnection = async (connectionId: string, integrationName?: string): Promise<void> => {
 		setIsLoading(true);
-		if (connectionType) {
-			VariablesService.setByConnectiontId(connectionId!, {
-				name: "auth_type",
-				value: connectionType,
-				isSecret: false,
-				scopeId: connectionId,
-			});
-		}
-
-		const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
-			getValues,
-			formSchema,
-			integrationName!
-		);
-
 		try {
+			if (connectionType) {
+				const { error } = await VariablesService.setByConnectiontId(connectionId!, {
+					name: "auth_type",
+					value: connectionType,
+					isSecret: false,
+					scopeId: connectionId,
+				});
+				if (error) {
+					addToast({
+						message: tErrors("errorSettingConnectionType"),
+						type: "error",
+					});
+				}
+			}
+
+			const { connectionData, formattedIntegrationName } = getFormattedConnectionData(
+				getValues,
+				formSchema,
+				integrationName!
+			);
+
 			await HttpService.post(`/${formattedIntegrationName}/save?cid=${connectionId}&origin=web`, connectionData);
 
+			setIsLoading(false);
 			addToast({
 				message: t("connectionEditedSuccessfully"),
 				type: "success",
@@ -200,21 +213,18 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			if (axios.isAxiosError(error)) {
 				LoggerService.error(
 					namespaces.hooks.connectionForm,
-					tErrors("errorEditingNewConnectionExtended", { error: error?.response?.data })
+					tErrors("errorEditingConnectionExtended", { error: error?.response?.data })
 				);
 				setIsLoading(false);
 
 				return;
 			}
 			addToast({
-				message: tErrors("errorEditingNewConnection"),
+				message: tErrors("errorEditingConnection"),
 				type: "error",
 			});
-			LoggerService.error(
-				namespaces.hooks.connectionForm,
-				tErrors("errorEditingNewConnectionExtended", { error })
-			);
-
+			LoggerService.error(namespaces.hooks.connectionForm, tErrors("errorEditingConnectionExtended", { error }));
+		} finally {
 			setIsLoading(false);
 		}
 	};
