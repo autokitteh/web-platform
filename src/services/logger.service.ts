@@ -8,27 +8,32 @@ import { useLoggerStore } from "@store";
 /* eslint-disable no-console */
 
 export class LoggerService {
-	public static debug(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.debug);
+	public static debug(namespace: string, message: string, consoleOnly?: boolean): void {
+		this.output(namespace, message, LoggerLevel.debug, consoleOnly);
 	}
 
-	public static error(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.error);
+	public static error(namespace: string, message: string, consoleOnly?: boolean): void {
+		this.output(namespace, message, LoggerLevel.error, consoleOnly);
 	}
 
-	public static info(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.info);
+	public static info(namespace: string, message: string, consoleOnly?: boolean): void {
+		this.output(namespace, message, LoggerLevel.info, consoleOnly);
 	}
 
-	public static print(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.log);
+	public static print(namespace: string, message: string, consoleOnly?: boolean): void {
+		this.output(namespace, message, LoggerLevel.log, consoleOnly);
 	}
 
-	public static warn(namespace: string, message: string): void {
-		this.output(namespace, message, LoggerLevel.warn);
+	public static warn(namespace: string, message: string, consoleOnly?: boolean): void {
+		this.output(namespace, message, LoggerLevel.warn, consoleOnly);
 	}
 
-	private static output(namespace: string, message: string, level: LoggerLevel = LoggerLevel.info): void {
+	private static output(
+		namespace: string,
+		message: string,
+		level: LoggerLevel = LoggerLevel.info,
+		consoleOnly?: boolean
+	): void {
 		const timestamp = moment().utc().local().format(dateTimeFormat);
 		const formattedMessage = `[${namespace}] ${message}`;
 
@@ -46,6 +51,10 @@ export class LoggerService {
 			default:
 				console.log(`${timestamp} - [${level}] ${formattedMessage}`);
 				break;
+		}
+
+		if (consoleOnly) {
+			return;
 		}
 
 		useLoggerStore.getState().addLog({ message: formattedMessage, status: level, timestamp });

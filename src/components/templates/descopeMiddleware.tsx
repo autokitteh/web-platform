@@ -59,16 +59,30 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				const error = await getLoggedInUser();
 				if (error) {
 					addToast({
-						message: t("errors.loginFailed", { error }),
+						message: t("errors.loginFailedExtended", { error }),
 						type: "error",
 					});
+					LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
 				}
 			} catch (error) {
+				if (axios.isAxiosError(error)) {
+					addToast({
+						message: t("errors.loginFailed"),
+						type: "error",
+					});
+					LoggerService.error(
+						namespaces.hooks.connectionForm,
+						t("errors.loginFailedExtended", { error: error?.response?.data }),
+						true
+					);
+
+					return;
+				}
 				addToast({
-					message: t("errors.loginFailed", { error }),
+					message: t("errors.loginFailed"),
 					type: "error",
 				});
-				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailed", { error }));
+				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
 			} finally {
 				setIsLoggingIn(false);
 				setDescopeRenderKey((prevKey) => prevKey + 1);
