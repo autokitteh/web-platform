@@ -19,16 +19,23 @@ import {
 export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 	const { projectId } = useParams();
 	const { openProjectId, setOpenProjectId } = useFileOperations(projectId!);
-	const { fetchDeployments } = useCacheStore();
+	const { fetchDeployments, initCache } = useCacheStore();
 
 	useEffect(() => {
 		if (!projectId || variant !== TopbaButtonVariant.actions) return;
 
 		if (projectId !== openProjectId) {
 			setOpenProjectId(projectId);
+			initCache(projectId!, true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
+
+	const handleMunaualRun = () => {
+		setTimeout(() => {
+			fetchDeployments(projectId!, true);
+		}, 100);
+	};
 
 	return (
 		<div className="flex justify-between rounded-b-xl bg-gray-1250 pl-7 pr-3">
@@ -42,7 +49,7 @@ export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 			{variant === TopbaButtonVariant.manual ? (
 				<>
 					<ManualRunButtons />
-					<ManualRunSettingsDrawer onRun={() => fetchDeployments(projectId!)} />
+					<ManualRunSettingsDrawer onRun={handleMunaualRun} />
 				</>
 			) : null}
 		</div>

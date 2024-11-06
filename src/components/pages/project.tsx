@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { useCacheStore, useProjectStore, useProjectValidationStore } from "@src/store";
+import { useCacheStore, useProjectStore } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
@@ -15,12 +15,11 @@ import { WarningTriangleIcon } from "@assets/image/icons";
 export const Project = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { projectValidationState } = useProjectValidationStore();
+	const { projectValidationState } = useCacheStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
 	const { getProject } = useProjectStore();
-	const { initCache } = useCacheStore();
 
 	const loadProject = async (projectId: string) => {
 		const { data: project } = await getProject(projectId!);
@@ -34,7 +33,6 @@ export const Project = () => {
 
 	useEffect(() => {
 		loadProject(projectId!);
-		initCache(projectId!);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 

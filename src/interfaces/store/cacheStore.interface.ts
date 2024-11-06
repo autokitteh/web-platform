@@ -1,5 +1,7 @@
 import { BaseEvent, Connection, Deployment, Trigger, Variable } from "@src/types/models";
 
+export type ProjectValidationLevel = "error" | "warning";
+
 interface LoadingState {
 	deployments: boolean;
 	triggers: boolean;
@@ -18,6 +20,22 @@ export interface CacheStore {
 	loading: LoadingState;
 	currentProjectId?: string;
 	envId?: string;
+	projectValidationState: {
+		code: {
+			level?: ProjectValidationLevel;
+			message?: string;
+		};
+		connections: {
+			level?: ProjectValidationLevel;
+			message?: string;
+		};
+		triggers: {
+			level?: ProjectValidationLevel;
+			message?: string;
+		};
+	};
+	checkState: (projectId: string) => void;
+	isValid: boolean;
 	initCache: (projectId: string, force?: boolean) => Promise<void>;
 	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;

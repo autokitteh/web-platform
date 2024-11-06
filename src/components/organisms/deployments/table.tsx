@@ -24,11 +24,9 @@ export const DeploymentsTable = () => {
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 
 	useEffect(() => {
-		fetchDeployments(projectId!, true);
-		if (isInitialLoad) {
+		if (isInitialLoad && !loadingDeployments) {
 			setIsInitialLoad(false);
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 

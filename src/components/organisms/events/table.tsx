@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useId, useMemo } from "react";
+import React, { useCallback, useId, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
@@ -19,7 +19,6 @@ export const EventsTable = () => {
 	const { t } = useTranslation("events");
 	const {
 		events,
-		fetchEvents,
 		loading: { events: loadingEvents },
 	} = useCacheStore();
 	const resizeId = useId();
@@ -28,10 +27,6 @@ export const EventsTable = () => {
 	const { eventId } = useParams();
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		fetchEvents();
-	}, [fetchEvents]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const frameClass = useMemo(() => cn("size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none"), [eventId]);

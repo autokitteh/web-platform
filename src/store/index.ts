@@ -8,6 +8,5 @@ export { useLoggerStore } from "@store/useLoggerStore";
 export { useManualRunStore } from "@store/useManualRunStore";
 export { useModalStore } from "@store/useModalStore";
 export { useProjectStore } from "@store/useProjectStore";
-export { useProjectValidationStore } from "@store/useProjectValidationStore";
 export { useToastStore } from "@store/useToastStore";
 export { useUserStore } from "@store/useUserStore";

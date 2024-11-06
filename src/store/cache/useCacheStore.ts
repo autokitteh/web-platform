@@ -12,14 +12,39 @@ import {
 } from "@services";
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant } from "@src/enums";
-import { CacheStore } from "@src/interfaces/store";
+import { CacheStore, ProjectValidationLevel } from "@src/interfaces/store";
 import { Environment } from "@src/types/models";
 
-import { useProjectValidationStore, useToastStore } from "@store";
+import { useToastStore } from "@store";
+
+const defaultProjectValidationState = {
+	code: {
+		message: "",
+		level: "warning" as ProjectValidationLevel,
+	},
+	connections: {
+		message: "",
+		level: "warning" as ProjectValidationLevel,
+	},
+	triggers: {
+		message: "",
+		level: "warning" as ProjectValidationLevel,
+	},
+	variables: {
+		message: "",
+		level: "warning" as ProjectValidationLevel,
+	},
+};
 
 const initialState: Omit<
 	CacheStore,
-	"fetchDeployments" | "fetchTriggers" | "fetchVariables" | "fetchEvents" | "fetchConnections" | "initCache"
+	| "fetchDeployments"
+	| "fetchTriggers"
+	| "fetchVariables"
+	| "fetchEvents"
+	| "fetchConnections"
+	| "initCache"
+	| "checkState"
 > = {
 	loading: {
 		deployments: false,
@@ -36,6 +61,8 @@ const initialState: Omit<
 	events: undefined,
 	currentProjectId: undefined,
 	envId: undefined,
+	projectValidationState: defaultProjectValidationState,
+	isValid: false,
 };
 
 const store: StateCreator<CacheStore> = (set, get) => ({
@@ -262,7 +289,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				loading: { ...state.loading, connections: false },
 			}));
 
-			useProjectValidationStore.getState().checkState(projectId!, true);
+			get().checkState(projectId!);
 
 			return connectionsResponse;
 		} catch (error) {
@@ -280,6 +307,52 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			set((state) => ({ ...state, loading: { ...state.loading, connections: false } }));
 		}
+	},
+
+	checkState: async (projectId) => {
+		set((state) => ({ ...state, isValid: false }));
+		const newProjectValidationState = { ...defaultProjectValidationState };
+
+		const resources = get().deployments;
+
+		if (!resources || JSON.stringify(resources) === JSON.stringify({})) {
+			newProjectValidationState.code = {
+				message: i18n.t("validation.noCodeAndAssets", { ns: "tabs" }),
+				level: "error",
+			};
+		}
+
+		const connectionsData = get().connections;
+
+		const notInitiatedConnections = connectionsData?.filter((connection) => connection.status !== "ok")?.length;
+		if (notInitiatedConnections) {
+			newProjectValidationState.connections = {
+				...newProjectValidationState.connections,
+				message: i18n.t("validation.connectionsNotConfigured", { ns: "tabs" }),
+			};
+		}
+
+		const triggersData = get().triggers;
+
+		if (!triggersData || !triggersData.length) {
+			newProjectValidationState.triggers = {
+				...newProjectValidationState.triggers,
+				message: i18n.t("validation.noTriggers", { ns: "tabs" }),
+			};
+		}
+
+		const isInvalid = Object.values(newProjectValidationState).some(
+			(error) => !!error.message && error.level === "error"
+		);
+
+		set((state) => ({
+			...state,
+			projectValidationState: newProjectValidationState,
+			currentProjectId: projectId,
+			isValid: !isInvalid,
+		}));
+
+		return;
 	},
 });
 

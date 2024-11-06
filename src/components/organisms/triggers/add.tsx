@@ -12,7 +12,7 @@ import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
 
 import { useFileOperations } from "@hooks";
-import { useCacheStore, useProjectValidationStore, useToastStore } from "@store";
+import { useCacheStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
@@ -30,8 +30,8 @@ export const AddTrigger = () => {
 	const { projectId } = useParams();
 	const [isSaving, setIsSaving] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
-	const { checkState } = useProjectValidationStore();
 	const {
+		checkState,
 		fetchTriggers,
 		loading: { connections: isLoadingConnections },
 	} = useCacheStore();
@@ -107,8 +107,8 @@ export const AddTrigger = () => {
 				type: "success",
 			});
 
-			checkState(projectId!, true);
 			await fetchTriggers(projectId!, true);
+			checkState(projectId!);
 			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
 				state: { highlightWebhookUrl: true },
 			});
