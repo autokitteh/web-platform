@@ -4,14 +4,14 @@ import { defaultTemplateProjectCategory } from "@constants";
 import { ModalName } from "@src/enums/components";
 import { useTemplateStore } from "@src/hooks/useCreateProjectFromTemplate";
 import { useModalStore } from "@src/store";
-import { TemplateCardType } from "@src/types/components";
+import { TemplateMetadata } from "@src/types/components";
 
 import { Loader, Tab } from "@components/atoms";
 import { ProjectTemplateCard, ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
 
 export const ProjectTemplatesTabs = () => {
 	const [activeTab, setActiveTab] = useState<string>(defaultTemplateProjectCategory);
-	const [selectedTemplate, setSelectedTemplate] = useState<TemplateCardType>();
+	const [selectedTemplate, setSelectedTemplate] = useState<TemplateMetadata>();
 
 	const { openModal } = useModalStore();
 	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplateStore();
@@ -30,7 +30,7 @@ export const ProjectTemplatesTabs = () => {
 	}, []);
 
 	const handleCardCreateClick = useCallback(
-		(template: TemplateCardType) => {
+		(template: TemplateMetadata) => {
 			setSelectedTemplate(template);
 			openModal(ModalName.templateCreateProject);
 		},

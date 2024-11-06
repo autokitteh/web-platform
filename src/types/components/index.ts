@@ -3,9 +3,10 @@ export type { FormMode, ManualFormParamsErrors } from "@src/types/components/for
 export type { PopopverContextType } from "@src/types/components/popover.type";
 export type {
 	TemplateCategory,
-	TemplateCardType,
+	TemplateMetadata,
 	RemoteTemplateCategory,
 	Integration,
+	TemplateMetadataWithCategory,
 } from "@src/types/components/projectTemplates.type";
 export type { TopbarType } from "@src/types/components/topbar.type";
 export type { ButtonType } from "@type/components/button.type";

@@ -9,7 +9,7 @@ import {
 	IntegrationsMap,
 } from "@src/enums/components/connection.enum";
 import { cn } from "@src/utilities";
-import { TemplateCardType } from "@type/components";
+import { TemplateMetadata } from "@type/components";
 
 import { Button, IconSvg, Status, Typography } from "@components/atoms";
 
@@ -22,7 +22,7 @@ export const ProjectTemplateCard = ({
 }: {
 	category: string;
 	onCreateClick: () => void;
-	template: TemplateCardType;
+	template: TemplateMetadata;
 }) => {
 	const { t } = useTranslation("templates");
 

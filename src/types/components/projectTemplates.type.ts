@@ -2,21 +2,21 @@ import { ComponentType, SVGProps } from "react";
 
 import { RemoteTemplateMetadata } from "@src/interfaces/store";
 
-export interface TemplateCardType {
+export interface TemplateMetadata {
+	assetDirectory: string;
+	title: string;
+	description: string;
+	integrations: string[];
+	filesIndex: string[];
+}
+
+export interface TemplateMetadataWithCategory {
 	assetDirectory: string;
 	title: string;
 	description: string;
 	integrations: string[];
 	filesIndex: string[];
 	category: string;
-}
-
-export interface TemplateMetadata {
-	assetDirectory: string;
-	title: string;
-	description: string;
-	integrations: string[];
-	filesIndex: string[]; // List of file paths
 }
 
 export interface TemplateCategory {

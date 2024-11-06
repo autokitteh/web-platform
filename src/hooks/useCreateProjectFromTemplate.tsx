@@ -13,8 +13,10 @@ import { StoreName } from "@src/enums";
 import { useFileOperations } from "@src/hooks";
 import {
 	ProcessedCategory,
-	TemplateCardType,
 	TemplateCardWithFiles,
+	TemplateCategory,
+	TemplateMetadata,
+	TemplateMetadataWithCategory,
 } from "@src/types/components/projectTemplates.type";
 import { fetchAndUnpackZip, processReadmeFiles } from "@utilities";
 
@@ -32,11 +34,6 @@ interface GitHubCommit {
 	};
 }
 
-export interface TemplateCategory {
-	name: string;
-	templates: TemplateCardType[];
-}
-
 const sortCategories = (categories: TemplateCategory[], order: string[]) => {
 	return categories.sort((a, b) => {
 		const indexA = order.indexOf(a.name);
@@ -50,15 +47,14 @@ const sortCategories = (categories: TemplateCategory[], order: string[]) => {
 };
 
 interface TemplateState {
-	templateMap: Record<string, TemplateCardType>;
+	templateMap: Record<string, TemplateMetadata>;
 	isLoading: boolean;
 	sortedCategories?: TemplateCategory[];
 	error: string | null;
 	lastCommitDate?: string;
 
-	// Actions
 	fetchTemplates: () => Promise<void>;
-	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateCardType | undefined;
+	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateMetadata | undefined;
 	getTemplateFiles: (assetDirectory: string) => Promise<Record<string, string>>;
 }
 
@@ -91,7 +87,7 @@ const store = (set: any, get: any): TemplateState => ({
 
 					if ("structure" in result) {
 						const processedCategories: ProcessedCategory[] = processReadmeFiles(result.structure);
-						const templateMap: Record<string, TemplateCardType> = {};
+						const templateMap: Record<string, TemplateMetadataWithCategory> = {};
 
 						await Promise.all(
 							processedCategories.map(async (category) => {
@@ -117,9 +113,8 @@ const store = (set: any, get: any): TemplateState => ({
 							})
 						);
 
-						const categoriesMap = new Map<string, TemplateCardType[]>();
+						const categoriesMap = new Map<string, TemplateMetadata[]>();
 
-						// Group templates by category
 						Object.values(templateMap).forEach((template) => {
 							const category = template.category;
 							if (!categoriesMap.has(category)) {
@@ -128,7 +123,6 @@ const store = (set: any, get: any): TemplateState => ({
 							categoriesMap.get(category)!.push(template);
 						});
 
-						// Convert map to array of categories
 						const categories = Array.from(categoriesMap.entries()).map(([name, templates]) => ({
 							name,
 							templates,
@@ -218,7 +212,7 @@ export const useCreateProjectFromTemplate = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, templateFiles]);
 
-	const createProjectFromTemplate = async (template: TemplateCardType, projectName?: string) => {
+	const createProjectFromTemplate = async (template: TemplateMetadata, projectName?: string) => {
 		try {
 			// Fetch files from IndexedDB
 			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
@@ -269,7 +263,7 @@ export const useCreateProjectFromTemplate = () => {
 			);
 
 			setProjectId(newProjectId);
-			setTemplateFiles(files); // Use the files fetched from IndexedDB
+			setTemplateFiles(files);
 		} catch (error) {
 			addToast({
 				message: t("projectCreationFailed"),
