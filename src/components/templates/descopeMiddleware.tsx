@@ -59,7 +59,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				const error = await getLoggedInUser();
 				if (error) {
 					addToast({
-						message: t("errors.loginFailedExtended", { error }),
+						message: t("errors.loginFailed"),
 						type: "error",
 					});
 					LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
