@@ -15,7 +15,7 @@ export const ClientConfiguration = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "clientConfiguration" });
 	const { t: tErrors } = useTranslation("errors");
 	const [isLoading, setIsLoading] = useState(false);
-	const [token, setToken] = useState<string>("");
+	const [token, setToken] = useState("");
 	const hostURL = getApiBaseUrl();
 	const addToast = useToastStore((state) => state.addToast);
 
