@@ -101,7 +101,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 					isError={!!errors.projectName}
 				/>
 				{errors.projectName ? (
-					<ErrorMessage className="relative">{errors.projectName.message}</ErrorMessage>
+					<ErrorMessage className="relative mt-0.5">{errors.projectName.message}</ErrorMessage>
 				) : null}
 				<Accordion className="mt-6" classNameButton="text-black" title={t("moreInformaton")}>
 					<Typography className="mt-1" element="h4" size="medium">
