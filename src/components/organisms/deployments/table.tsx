@@ -92,7 +92,7 @@ export const DeploymentsTable = () => {
 
 			{loadingDeployments && isInitialLoad ? <Loader isCenter size="xl" /> : null}
 
-			{!deployments?.length ? (
+			{!isInitialLoad && !deployments?.length ? (
 				<div className="mt-10 text-center text-xl font-semibold">{t("noDeployments")}</div>
 			) : null}
 
