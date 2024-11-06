@@ -4,6 +4,7 @@ export {
 	Integrations,
 	isGoogleIntegration,
 	defaultGoogleConnectionName,
+	fitleredIntegrationsMap,
 } from "@enums/components/connection.enum";
 export { DrawerName } from "@enums/components/drawer.enum";
 export { InputVariant } from "@enums/components/input.enum";

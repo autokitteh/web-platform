@@ -1,13 +1,14 @@
 import { ConnectionAuthType } from "@enums";
 import { SelectOption } from "@interfaces/components";
-import { IntegrationsMap } from "@src/enums/components/connection.enum";
+import { featureFlags } from "@src/constants";
+import { fitleredIntegrationsMap } from "@src/enums/components";
 import { sortIntegrationsMapByLabel } from "@src/utilities";
 
-const sortedIntegrationsMap = sortIntegrationsMapByLabel(IntegrationsMap);
+const sortedIntegrationsMap = sortIntegrationsMapByLabel(fitleredIntegrationsMap);
 export const integrationTypes: SelectOption[] = Object.values(sortedIntegrationsMap);
 
 export const integrationIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = Object.fromEntries(
-	Object.entries(IntegrationsMap)
+	Object.entries(fitleredIntegrationsMap)
 		.filter(([_, value]) => value.icon !== undefined)
 		.map(([key, value]) => [key, value.icon!])
 );
@@ -22,10 +23,13 @@ export const selectIntegrationGoogle: SelectOption[] = [
 	{ label: "Service Account (JSON Key)", value: ConnectionAuthType.JsonKey },
 ];
 
-export const selectIntegrationSlack: SelectOption[] = [
-	{ label: "OAuth v2", value: ConnectionAuthType.Oauth },
-	{ label: "Socket Mode", value: ConnectionAuthType.Socket },
-];
+const slackSocketMode = { label: "Socket Mode", value: ConnectionAuthType.Socket };
+
+const baseSelectIntegrationSlack = [{ label: "OAuth v2", value: ConnectionAuthType.Oauth }];
+
+export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySlackSocketIntegration
+	? baseSelectIntegrationSlack.concat(slackSocketMode)
+	: baseSelectIntegrationSlack;
 
 export const selectIntegrationAws: SelectOption[] = [
 	{ value: "ap-northeast-1", label: "ap-northeast-1" },

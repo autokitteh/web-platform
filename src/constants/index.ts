@@ -1,4 +1,5 @@
 // eslint-disable-next-line @liferay/sort-exports
+export { featureFlags } from "@constants/featureFlags.constants";
 export {
 	defaultSessionsVisiblePageSize,
 	descopeProjectId,

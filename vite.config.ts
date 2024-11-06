@@ -1,4 +1,3 @@
-import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
@@ -25,12 +24,25 @@ export default defineConfig({
 				},
 			},
 		},
+		minify: "terser",
+		terserOptions: {
+			compress: {
+				dead_code: true,
+				if_return: true,
+				unused: true,
+				reduce_vars: true,
+				reduce_funcs: true,
+				passes: 2,
+			},
+		},
 	},
 	define: {
 		"import.meta.env.VITE_NODE_ENV": JSON.stringify(process.env.VITE_NODE_ENV),
 		"import.meta.env.VITE_AUTH_ENABLED": JSON.stringify(process.env.VITE_AUTH_ENABLED),
 		"import.meta.env.VITE_DESCOPE_PROJECT_ID": JSON.stringify(process.env.VITE_DESCOPE_PROJECT_ID),
 		"import.meta.env.VITE_HOST_URL": JSON.stringify(process.env.VITE_HOST_URL),
+		"import.meta.env.DISPLAY_DISCORD_INTEGRATION": process.env.DISPLAY_DISCORD_INTEGRATION,
+		"import.meta.env.DISPLAY_SLACK_SOCKET_INTEGRATION": process.env.DISPLAY_SLACK_SOCKET_INTEGRATION,
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
 	},
@@ -78,12 +90,6 @@ export default defineConfig({
 					],
 				},
 			},
-		}),
-		sentryVitePlugin({
-			org: process.env.SENTRY_ORG,
-			project: process.env.SENTRY_PROJECT,
-			reactComponentAnnotation: { enabled: true },
-			authToken: process.env.SENTRY_AUTH_TOKEN,
 		}),
 		viteStaticCopy({
 			targets: [
