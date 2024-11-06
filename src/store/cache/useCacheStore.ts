@@ -90,6 +90,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		try {
 			const { data: incomingDeployments, error } = await DeploymentsService.listByProjectId(projectId);
+
 			if (error) {
 				const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
 

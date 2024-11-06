@@ -22,13 +22,15 @@ export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 	const { fetchDeployments, initCache } = useCacheStore();
 
 	useEffect(() => {
-		if (!projectId || variant !== TopbaButtonVariant.actions) return;
+		if (!projectId) return;
+
+		initCache(projectId, true);
+
+		if (variant !== TopbaButtonVariant.actions) return;
 
 		if (projectId !== openProjectId) {
 			setOpenProjectId(projectId);
 		}
-
-		initCache(projectId!, true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 

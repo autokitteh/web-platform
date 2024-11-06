@@ -96,7 +96,7 @@ export const ProjectTopbarButtons = () => {
 
 				return;
 			}
-
+			fetchDeployments(projectId!, true);
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
