@@ -24,4 +24,19 @@ export class AuthService {
 			return { data: undefined, error };
 		}
 	}
+	static async createToken(): Promise<ServiceResponse<string>> {
+		try {
+			const { token } = await authClient.createToken({});
+
+			return { data: token, error: undefined };
+		} catch (error) {
+			const errorMessage = i18n.t("tokenCreationErrorExtended", {
+				ns: "services",
+				error: new Error(error).message,
+			});
+			LoggerService.error(namespaces.authService, errorMessage);
+
+			return { data: undefined, error };
+		}
+	}
 }
