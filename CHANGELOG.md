@@ -1,3 +1,10 @@
+## [2.48.3](https://github.com/autokitteh/web-platform/compare/v2.48.2...v2.48.3) (2024-11-06)
+
+
+### Bug Fixes
+
+* update scrollbar styles for improved visibility and interaction ([#619](https://github.com/autokitteh/web-platform/issues/619)) ([9924c1e](https://github.com/autokitteh/web-platform/commit/9924c1ef0fd812f9525263ce5f1925955f6ad2d7))
+
 ## [2.48.2](https://github.com/autokitteh/web-platform/compare/v2.48.1...v2.48.2) (2024-11-06)
 
 
