@@ -316,9 +316,11 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		set((state) => ({ ...state, isValid: false }));
 		const newProjectValidationState = { ...get().projectValidationState };
 
-		if (data?.resources && !Object.keys(data.resources).length) {
+		if (data?.resources) {
 			newProjectValidationState.code = {
-				message: i18n.t("validation.noCodeAndAssets", { ns: "tabs" }),
+				message: !Object.keys(data.resources).length
+					? i18n.t("validation.noCodeAndAssets", { ns: "tabs" })
+					: "",
 				level: "error",
 			};
 		}

@@ -72,7 +72,6 @@ export function useFileOperations(projectId: string) {
 				const contentUint8Array = new TextEncoder().encode(content);
 				await dbService.put(name, contentUint8Array);
 				const resources = await dbService.getAll();
-
 				const { error } = await ProjectsService.setResources(projectId, resources);
 				checkState(projectId!, { resources });
 				if (error) {
@@ -131,8 +130,9 @@ export function useFileOperations(projectId: string) {
 				...resources,
 				[name]: fileContent,
 			};
+
 			const { error } = await ProjectsService.setResources(projectId, resourcesWithAddedFile);
-			checkState(projectId!, { resources });
+			checkState(projectId!, { resources: resourcesWithAddedFile });
 			if (error) {
 				throw error;
 			}
