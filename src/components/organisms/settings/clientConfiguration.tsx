@@ -2,7 +2,8 @@ import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { HttpService } from "@services";
+import { AuthService } from "@services";
+import { useToastStore } from "@src/store";
 import { getApiBaseUrl } from "@src/utilities";
 
 import { Button, IconSvg, Input, Loader, Typography } from "@components/atoms";
@@ -12,14 +13,36 @@ import { NewProject } from "@assets/image";
 
 export const ClientConfiguration = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "clientConfiguration" });
+	const { t: tErrors } = useTranslation("errors");
 	const [isLoading, setIsLoading] = useState(false);
 	const [token, setToken] = useState<string>("");
 	const hostURL = getApiBaseUrl();
+	const addToast = useToastStore((state) => state.addToast);
 
 	const createToken = async () => {
 		setIsLoading(true);
-		const { data: jwtToken } = await HttpService.post("/auth/tokens");
-		setToken(jwtToken);
+		const { data: token, error } = await AuthService.createToken();
+
+		if (error) {
+			setIsLoading(false);
+			addToast({
+				message: tErrors("tokenCreationError"),
+				type: "error",
+			});
+
+			return;
+		}
+		if (!token) {
+			setIsLoading(false);
+			addToast({
+				message: tErrors("tokenCreationError"),
+				type: "error",
+			});
+
+			return;
+		}
+
+		setToken(token);
 		setIsLoading(false);
 	};
 

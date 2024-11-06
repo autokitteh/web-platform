@@ -92,6 +92,8 @@
 	},
 	"convertWrappedJsonError": "Error parsing JSON for key '{{key}}': {{error}} in parseNestedJson function",
 	"accountFetchErrorExtended": "Error occurred during the account fetch, error: {{error}}",
+	"tokenCreationErrorExtended": "Error occurred during the token creation, error: {{error}}",
+	"tokenCreationError": "Error occurred during the token creation",
 	"deploymentCreatedSuccessfully": "Deployment created with id: {{deploymentId}}",
 	"failedFetchingLogRecordsBySessionId": "Failed to fetch log records by session ID: {{sessionId}}, error: {{error}}, page token: {{pageToken}}, page size: {{pageSize}}, log type: {{logType}}",
 	"connection": "Connection"
