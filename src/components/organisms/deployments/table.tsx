@@ -26,6 +26,8 @@ export const DeploymentsTable = () => {
 	useEffect(() => {
 		if (isInitialLoad && !loadingDeployments) {
 			setIsInitialLoad(false);
+		}
+		if (!loadingDeployments) {
 			fetchDeployments(projectId!, true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,11 +92,11 @@ export const DeploymentsTable = () => {
 
 			{loadingDeployments && isInitialLoad ? <Loader isCenter size="xl" /> : null}
 
-			{!loadingDeployments && !deployments?.length ? (
+			{!deployments?.length ? (
 				<div className="mt-10 text-center text-xl font-semibold">{t("noDeployments")}</div>
 			) : null}
 
-			{!isInitialLoad && !!deployments?.length ? (
+			{!isInitialLoad && deployments?.length ? (
 				<DeploymentsTableContent
 					deployments={deployments}
 					updateDeployments={() => fetchDeployments(projectId!, true)}
