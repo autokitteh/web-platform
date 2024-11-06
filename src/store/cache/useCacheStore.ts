@@ -316,28 +316,25 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		set((state) => ({ ...state, isValid: false }));
 		const newProjectValidationState = { ...get().projectValidationState };
 
-		if (data?.resources) {
-			const resources = data.resources;
-			if (!Object.keys(resources).length) {
-				newProjectValidationState.code = {
-					message: i18n.t("validation.noCodeAndAssets", { ns: "tabs" }),
-					level: "error",
-				};
-			}
+		if (data?.resources && !Object.keys(data.resources).length) {
+			newProjectValidationState.code = {
+				message: i18n.t("validation.noCodeAndAssets", { ns: "tabs" }),
+				level: "error",
+			};
 		}
 
-		if (data?.connections !== undefined) {
+		if (data?.connections) {
 			const connectionsData = data.connections;
 			const notInitiatedConnections = connectionsData?.filter((connection) => connection.status !== "ok")?.length;
-			if (notInitiatedConnections) {
-				newProjectValidationState.connections = {
-					...newProjectValidationState.connections,
-					message: i18n.t("validation.connectionsNotConfigured", { ns: "tabs" }),
-				};
-			}
+			if (!notInitiatedConnections) return;
+
+			newProjectValidationState.connections = {
+				...newProjectValidationState.connections,
+				message: i18n.t("validation.connectionsNotConfigured", { ns: "tabs" }),
+			};
 		}
 
-		if (data?.triggers !== undefined) {
+		if (data?.triggers) {
 			const triggersData = data.triggers;
 
 			newProjectValidationState.triggers = {
@@ -346,7 +343,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			};
 		}
 
-		if (data?.variables !== undefined) {
+		if (data?.variables) {
 			const variablesData = data.variables;
 			const isEmptyVarValue = variablesData?.find((varb) => varb.value === "");
 			newProjectValidationState.variables = {

@@ -53,10 +53,10 @@ export const TriggersTable = () => {
 			return;
 		}
 		addToast({
-			message: t("triggerRemovedSuccessfully"),
+			message: t("table.triggerRemovedSuccessfully"),
 			type: "success",
 		});
-		LoggerService.info(namespaces.ui.triggers, t("triggerRemovedSuccessfullyExtended", { triggerId }));
+		LoggerService.info(namespaces.ui.triggers, t("table.triggerRemovedSuccessfullyExtended", { triggerId }));
 
 		fetchTriggers(projectId!, true);
 		setTriggerId(undefined);

@@ -31,7 +31,6 @@ export const AddTrigger = () => {
 	const [isSaving, setIsSaving] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const {
-		checkState,
 		fetchTriggers,
 		loading: { connections: isLoadingConnections },
 	} = useCacheStore();
@@ -108,7 +107,6 @@ export const AddTrigger = () => {
 			});
 
 			await fetchTriggers(projectId!, true);
-			checkState(projectId!);
 			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
 				state: { highlightWebhookUrl: true },
 			});
