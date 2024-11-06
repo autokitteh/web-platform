@@ -71,7 +71,8 @@
 		"moreInformaton": "About This Template",
 		"readme": "README",
 		"nameRequired": "Name is required",
-		"nameTaken": "Name is already taken"
+		"nameTaken": "Name is already taken",
+		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
 	},
 	"warningActiveDeployment": {
 		"title": "Warning",

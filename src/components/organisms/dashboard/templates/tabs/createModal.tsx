@@ -43,6 +43,9 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 		if (projectNamesSet.has(value)) {
 			return t("nameTaken");
 		}
+		if (!new RegExp("^[a-zA-Z_][\\w]*$").test(value)) {
+			return t("invalidName");
+		}
 	};
 
 	const fetchManifestData = async () => {
