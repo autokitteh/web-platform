@@ -1,3 +1,10 @@
+## [2.48.2](https://github.com/autokitteh/web-platform/compare/v2.48.1...v2.48.2) (2024-11-06)
+
+
+### Bug Fixes
+
+* display proper error on connection edit failure ([#622](https://github.com/autokitteh/web-platform/issues/622)) ([626a159](https://github.com/autokitteh/web-platform/commit/626a1594c5964496269437d41f284615d90659f6))
+
 ## [2.48.1](https://github.com/autokitteh/web-platform/compare/v2.48.0...v2.48.1) (2024-11-06)
 
 
