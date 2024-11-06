@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { expect, test as base } from "@playwright/test";
 
 import { ConnectionPage, DashboardPage } from "./pages";

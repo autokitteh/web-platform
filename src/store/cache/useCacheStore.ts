@@ -69,9 +69,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 	...initialState,
 	initCache: async (projectId, force = false) => {
 		await Promise.all([
-			get().fetchDeployments(projectId, force),
 			get().fetchTriggers(projectId, force),
-			get().fetchEvents(force),
 			get().fetchVariables(projectId, force),
 			get().fetchConnections(projectId, force),
 		]);
