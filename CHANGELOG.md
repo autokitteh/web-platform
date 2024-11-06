@@ -1,3 +1,10 @@
+# [2.48.0](https://github.com/autokitteh/web-platform/compare/v2.47.0...v2.48.0) (2024-11-06)
+
+
+### Features
+
+* add reg-exp validation to new project creation from template ([#625](https://github.com/autokitteh/web-platform/issues/625)) ([4435105](https://github.com/autokitteh/web-platform/commit/443510519613806f6cefb1fc3674d004abcd670b))
+
 # [2.47.0](https://github.com/autokitteh/web-platform/compare/v2.46.0...v2.47.0) (2024-11-06)
 
 
