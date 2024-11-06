@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import { TopbaButtonVariant } from "@enums/components";
-import { useCacheStore } from "@src/store";
 import { TopbarType } from "@src/types/components";
 
 import { useFileOperations } from "@hooks";
@@ -19,12 +18,9 @@ import {
 export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 	const { projectId } = useParams();
 	const { openProjectId, setOpenProjectId } = useFileOperations(projectId!);
-	const { initCache } = useCacheStore();
 
 	useEffect(() => {
 		if (!projectId) return;
-
-		initCache(projectId, true);
 
 		if (variant !== TopbaButtonVariant.actions) return;
 

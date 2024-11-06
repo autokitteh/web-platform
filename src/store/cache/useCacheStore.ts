@@ -47,7 +47,7 @@ const initialState: Omit<
 	| "checkState"
 > = {
 	loading: {
-		deployments: true,
+		deployments: false,
 		triggers: false,
 		variables: false,
 		events: false,
