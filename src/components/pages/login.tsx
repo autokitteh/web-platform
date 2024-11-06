@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { LoginPageProps } from "@src/interfaces/components";
 
-import { AHref, IconSvg } from "@components/atoms";
+import { AHref, IconSvg, Loader } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
 import { InJustTitle } from "@assets/image/pages/login";
@@ -22,7 +22,7 @@ const LazyLoginLogos = () => (
 	</Suspense>
 );
 
-const Login = ({ descopeRenderKey, handleSuccess }: LoginPageProps) => {
+const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps) => {
 	const { t } = useTranslation("login");
 	const benefitsList = Object.values(t("rightSide.benefitsList", { returnObjects: true }));
 
@@ -67,7 +67,11 @@ const Login = ({ descopeRenderKey, handleSuccess }: LoginPageProps) => {
 					<br />
 					{t("leftSide.autokittehGreenTitle")}
 				</h1>
-				<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
+				{isLoggingIn ? (
+					<Loader className="my-8 h-36" size="md" />
+				) : (
+					<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
+				)}
 				<div>
 					{t("leftSide.signupText")}{" "}
 					<AHref
