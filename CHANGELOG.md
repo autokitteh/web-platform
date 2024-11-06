@@ -1,3 +1,10 @@
+# [2.46.0](https://github.com/autokitteh/web-platform/compare/v2.45.4...v2.46.0) (2024-11-06)
+
+
+### Features
+
+* hide integrations using sockets (slack and discord) by feature flag and remove sentry-build plugin([#601](https://github.com/autokitteh/web-platform/issues/601)) ([c900f90](https://github.com/autokitteh/web-platform/commit/c900f90de845f5f58f9eb41a202fb8a16ece5ca0))
+
 ## [2.45.4](https://github.com/autokitteh/web-platform/compare/v2.45.3...v2.45.4) (2024-11-05)
 
 
