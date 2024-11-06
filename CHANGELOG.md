@@ -1,3 +1,10 @@
+# [2.47.0](https://github.com/autokitteh/web-platform/compare/v2.46.0...v2.47.0) (2024-11-06)
+
+
+### Features
+
+* add loader while login request sent to the ak server ([#624](https://github.com/autokitteh/web-platform/issues/624)) ([4bcf6f6](https://github.com/autokitteh/web-platform/commit/4bcf6f671a96a59de5975fb2fc17c34c44a57f94))
+
 # [2.46.0](https://github.com/autokitteh/web-platform/compare/v2.45.4...v2.46.0) (2024-11-06)
 
 
