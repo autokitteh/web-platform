@@ -16,7 +16,6 @@ import { useCacheStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { SelectCreatable } from "@components/molecules/select";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
@@ -39,12 +38,6 @@ export const AddTrigger = () => {
 	const { fetchResources } = useFileOperations(projectId!);
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
-	const [selectedOption, setSelectedOption] = useState<SelectOption | null>(null);
-	const [options, setOptions] = useState<SelectOption[]>([
-		{ value: "option1", label: "Option 1" },
-		{ value: "option2", label: "Option 2" },
-		{ value: "option3", label: "Option 3", disabled: true },
-	]);
 
 	const methods = useForm<TriggerFormData>({
 		defaultValues: {
@@ -134,19 +127,6 @@ export const AddTrigger = () => {
 		return <Loader isCenter size="xl" />;
 	}
 
-	const handleCreateOption = (inputValue: string) => {
-		const newOption: SelectOption = {
-			value: inputValue,
-			label: inputValue,
-		};
-		setOptions((prevOptions) => [...prevOptions, newOption]);
-		setSelectedOption(newOption);
-	};
-
-	const handleSelectChange = (option: SelectOption | null) => {
-		setSelectedOption(option);
-	};
-
 	return (
 		<FormProvider {...methods}>
 			<div className="min-w-80">
@@ -166,17 +146,6 @@ export const AddTrigger = () => {
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 					<TriggerSpecificFields filesNameList={filesNameList} />
 					{connectionType === TriggerTypes.webhook ? <WebhookFields /> : null}
-					<SelectCreatable
-						dataTestid="select-creatable"
-						disabled={false}
-						isError={false}
-						label="Choose an Event Type"
-						onChange={handleSelectChange}
-						onCreateOption={handleCreateOption}
-						options={options}
-						placeholder="Event Type"
-						value={selectedOption}
-					/>
 				</form>
 
 				{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}

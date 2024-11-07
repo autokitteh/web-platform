@@ -3,6 +3,7 @@
 // / <reference types="vite-plugin-svgr/client" />
 
 interface ImportMetaEnv {
+	DISPLAY_COMBOX_TRIGGER: any;
 	readonly VITE_NODE_ENV: "development" | "production";
 	readonly VITE_AUTH_ENABLED: string;
 	readonly VITE_DESCOPE_PROJECT_ID: string;
