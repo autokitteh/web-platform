@@ -13,7 +13,7 @@ import { namespaces } from "@src/constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations, ModalName, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useConnectionCheckerStore, useModalStore, useToastStore } from "@src/store";
+import { useCacheStore, useConnectionCheckerStore, useModalStore, useToastStore } from "@src/store";
 import { FormMode } from "@src/types/components";
 import { Variable } from "@src/types/models";
 import { flattenFormData, getApiBaseUrl, openPopup, stripGoogleConnectionName } from "@src/utilities";
@@ -32,7 +32,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const apiBaseUrl = getApiBaseUrl();
 	const [formSchema, setFormSchema] = useState<ZodObject<ZodRawShape>>(validationSchema);
 	const { startCheckingStatus } = useConnectionCheckerStore();
-
+	const { fetchConnections } = useCacheStore();
 	const {
 		clearErrors,
 		control,
@@ -288,7 +288,11 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					message: tErrors("connectionNotCreated"),
 					type: "error",
 				});
+
+				return;
 			}
+
+			await fetchConnections(projectId!, true);
 
 			LoggerService.info(
 				namespaces.hooks.connectionForm,
