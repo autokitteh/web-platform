@@ -83,11 +83,6 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Setup Playwright
-        run: |
-          npm install -D @playwright/test
-          npx playwright install --with-deps
-
       - name: Restore Playwright browsers
         uses: actions/cache@v4
         with:
@@ -112,7 +107,7 @@ jobs:
         with:
           browser: ${{ matrix.browser }}
           run-id: ${{ github.run_id }}
-          
+
   build:
     needs: setup
     runs-on: ubuntu-latest
