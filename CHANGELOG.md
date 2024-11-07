@@ -1,3 +1,10 @@
+# [2.49.0](https://github.com/autokitteh/web-platform/compare/v2.48.4...v2.49.0) (2024-11-07)
+
+
+### Features
+
+* settings re-design ([#621](https://github.com/autokitteh/web-platform/issues/621)) ([d3faed5](https://github.com/autokitteh/web-platform/commit/d3faed56b2090e9b8957dcfccfb688e1bf33b8af))
+
 ## [2.48.4](https://github.com/autokitteh/web-platform/compare/v2.48.3...v2.48.4) (2024-11-07)
 
 
