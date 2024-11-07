@@ -81,7 +81,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 			{connectionType !== TriggerTypes.webhook && connectionType !== TriggerTypes.schedule ? (
 				<>
 					<div className="relative">
-						{featureFlags.displayComBoxTrigger ? (
+						{featureFlags.displayComboxInTriggersForm ? (
 							<SelectCreatable
 								aria-label={t("placeholders.eventType")}
 								dataTestid="select-creatable"
