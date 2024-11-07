@@ -1,3 +1,10 @@
+# [2.51.0](https://github.com/autokitteh/web-platform/compare/v2.50.0...v2.51.0) (2024-11-07)
+
+
+### Features
+
+* create CreatableSelect component ([#627](https://github.com/autokitteh/web-platform/issues/627)) ([6695082](https://github.com/autokitteh/web-platform/commit/6695082bca259b2e86c22fb0ae3b537b79e0fa49))
+
 # [2.50.0](https://github.com/autokitteh/web-platform/compare/v2.49.0...v2.50.0) (2024-11-07)
 
 
