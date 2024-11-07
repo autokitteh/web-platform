@@ -1,34 +1,34 @@
-name: 'Update Kittehub.zip'
-description: 'Updates kittehub.zip from the kittehub release branch'
+name: "Update Kittehub.zip"
+description: "Updates kittehub.zip from the kittehub release branch"
 
 inputs:
-  pat-token:
-    description: 'GitHub Personal Access Token'
-    required: true
+    pat-token:
+        description: "GitHub Personal Access Token"
+        required: true
 
 runs:
-  using: "composite"
-  steps:
-    - name: Checkout kittehub release
-      uses: actions/checkout@v4
-      with:
-        repository: autokitteh/kittehub
-        ref: release
-        path: temp-kittehub
-        token: ${{ inputs.pat-token }}
-        
-    - name: Update kittehub.zip
-      shell: bash
-      run: |
-        cp src/assets/templates/kittehub.zip src/assets/templates/kittehub.zip.backup>/dev/null || true
-        
-        if [ -f "temp-kittehub/dist.zip" ]; then
-          cp temp-kittehub/dist.zip src/assets/templates/kittehub.zip
-          echo "Successfully updated kittehub.zip"
-        else
-          echo "dist.zip not found in kittehub release branch, keeping current version"
-          mv src/assets/templates/kittehub.zip.backup src/assets/templates/kittehub.zip>/dev/null || true
-        fi
-        
-        rm -rf temp-kittehub
-        rm -f src/assets/kittehub.zip.backup
+    using: "composite"
+    steps:
+        - name: Checkout kittehub release
+          uses: actions/checkout@v4
+          with:
+              repository: autokitteh/kittehub
+              ref: release
+              path: temp-kittehub
+              token: ${{ inputs.pat-token }}
+
+        - name: Update kittehub.zip
+          shell: bash
+          run: |
+              cp src/assets/templates/kittehub.zip src/assets/templates/kittehub.zip.backup>/dev/null || true
+
+              if [ -f "temp-kittehub/dist.zip" ]; then
+                cp temp-kittehub/dist.zip src/assets/templates/kittehub.zip
+                echo "Successfully updated kittehub.zip"
+              else
+                echo "dist.zip not found in kittehub release branch, keeping current version"
+                mv src/assets/templates/kittehub.zip.backup src/assets/templates/kittehub.zip>/dev/null || true
+              fi
+
+              rm -rf temp-kittehub
+              rm -f src/assets/kittehub.zip.backup
