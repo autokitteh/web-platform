@@ -45,6 +45,25 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
+          
+      - name: Update kittehub.zip
+        run: |
+          # Backup current kittehub.zip if it exists
+          cp src/assets/templates/kittehub.zip src/assets/templates/kittehub.zip.backup>/dev/null || true
+          
+          # Check if dist.zip exists in the checked out kittehub
+          if [ -f "temp-kittehub/dist.zip" ]; then
+            cp temp-kittehub/dist.zip src/assets/templates/kittehub.zip
+            echo "Successfully updated kittehub.zip"
+          else
+            echo "dist.zip not found in kittehub release branch, keeping current version"
+            mv src/assets/templates/kittehub.zip.backup src/assets/templates/kittehub.zip>/dev/null || true
+          fi
+          
+          # Cleanup
+          rm -rf temp-kittehub
+          rm -f src/assets/kittehub.zip.backup
+
 
   test:
     name: 🧪 Testing ${{ matrix.browser }}
