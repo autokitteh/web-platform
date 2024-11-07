@@ -62,7 +62,7 @@ export const ClientConfiguration = () => {
 						/>
 
 						<CopyButton
-							className="ml-2 gap-2 rounded-md hover:bg-gray-1050"
+							className="ml-2 gap-2 hover:bg-gray-1050"
 							successMessage={t("getToken.copySuccess")}
 							text={token}
 						/>
@@ -94,7 +94,7 @@ export const ClientConfiguration = () => {
 					/>
 
 					<CopyButton
-						className="ml-2 gap-2 rounded-md hover:bg-gray-1050"
+						className="ml-2 gap-2 hover:bg-gray-1050"
 						successMessage={t("hostURL.copySuccess")}
 						text={hostURL}
 					/>
