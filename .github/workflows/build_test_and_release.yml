@@ -47,22 +47,9 @@ jobs:
         run: npx playwright install --with-deps
           
       - name: Update kittehub.zip
-        run: |
-          # Backup current kittehub.zip if it exists
-          cp src/assets/templates/kittehub.zip src/assets/templates/kittehub.zip.backup>/dev/null || true
-          
-          # Check if dist.zip exists in the checked out kittehub
-          if [ -f "temp-kittehub/dist.zip" ]; then
-            cp temp-kittehub/dist.zip src/assets/templates/kittehub.zip
-            echo "Successfully updated kittehub.zip"
-          else
-            echo "dist.zip not found in kittehub release branch, keeping current version"
-            mv src/assets/templates/kittehub.zip.backup src/assets/templates/kittehub.zip>/dev/null || true
-          fi
-          
-          # Cleanup
-          rm -rf temp-kittehub
-          rm -f src/assets/kittehub.zip.backup
+        uses: ./.github/actions/update-kittehub
+        with:
+          pat-token: ${{ secrets.PAT_TOKEN }}
 
 
   test:
@@ -198,31 +185,10 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           submodules: true
 
-      - name: Checkout kittehub release
-        uses: actions/checkout@v4
-        with:
-          repository: autokitteh/kittehub
-          ref: release
-          path: temp-kittehub
-          token: ${{ secrets.PAT_TOKEN }}
-          
       - name: Update kittehub.zip
-        run: |
-          # Backup current kittehub.zip if it exists
-          cp src/assets/templates/kittehub.zip src/assets/templates/kittehub.zip.backup>/dev/null || true
-          
-          # Check if dist.zip exists in the checked out kittehub
-          if [ -f "temp-kittehub/dist.zip" ]; then
-            cp temp-kittehub/dist.zip src/assets/templates/kittehub.zip
-            echo "Successfully updated kittehub.zip"
-          else
-            echo "dist.zip not found in kittehub release branch, keeping current version"
-            mv src/assets/templates/kittehub.zip.backup src/assets/templates/kittehub.zip>/dev/null || true
-          fi
-          
-          # Cleanup
-          rm -rf temp-kittehub
-          rm -f src/assets/kittehub.zip.backup
+        uses: ./.github/actions/update-kittehub
+        with:
+          pat-token: ${{ secrets.PAT_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
