@@ -1,0 +1,39 @@
+name: 'Upload Test Artifacts'
+description: 'Uploads test artifacts and logs'
+
+inputs:
+  browser:
+    description: 'Browser name'
+    required: true
+  run-id:
+    description: 'GitHub run ID'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Stop logging
+      if: always()
+      shell: bash
+      run: |
+        if [ ! -z "${{ env.LOGS_PID }}" ]; then
+          kill ${{ env.LOGS_PID }} || true
+        fi
+        
+        if [ ! -z "${{ env.CONTAINER_ID }}" ]; then
+          docker logs ${{ env.CONTAINER_ID }} >> docker-logs.txt 2>&1 || true
+        fi
+
+    - name: Upload Docker logs
+      uses: actions/upload-artifact@v4
+      with:
+        name: docker-logs-${{ inputs.browser }}-${{ inputs.run-id }}
+        path: docker-logs.txt
+        retention-days: 2
+
+    - name: Upload Playwright Test Results
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-test-results-${{ inputs.browser }}-${{ inputs.run-id }}
+        path: test-results/
+        retention-days: 2

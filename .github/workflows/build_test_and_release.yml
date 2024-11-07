@@ -1,18 +1,23 @@
 name: Test, Build & Release
+
 on: push
 
 permissions:
   contents: read
+  id-token: write
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NODE_VERSION: "21.2.0"
+  SKIP_E2E_CHECK: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
 
 jobs:
-  install:
-    timeout-minutes: 5
-    name: 🔍 Install
+  setup:
+    name: 🔧 Setup
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
+    outputs:
+      cache-hit: ${{ steps.cache-node-modules.outputs.cache-hit }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,19 +26,18 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "21.2.0"
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
       - name: Cache node_modules
-        uses: actions/cache@v4
         id: cache-node-modules
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Cache Playwright binaries
         uses: actions/cache@v4
-        id: cache-playwright
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
@@ -43,137 +47,50 @@ jobs:
         run: npm ci
 
       - name: Install Playwright Browsers
-        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
-          
+
       - name: Update kittehub.zip
         uses: ./.github/actions/update-kittehub
         with:
           pat-token: ${{ secrets.PAT_TOKEN }}
 
-
   test:
     name: 🧪 Testing ${{ matrix.browser }}
+    needs: setup
+    runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: install
-    permissions:
-      id-token: write
-      contents: read
     strategy:
       matrix:
         browser: ["Chrome", "Edge", "Firefox", "Safari"]
-    runs-on: ubuntu-latest
-
-    if: ${{ !contains(github.event.head_commit.message, '[skip_e2e]') }}
+    
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
           submodules: true
 
-      - uses: actions/setup-node@v4
+      - name: Setup test environment
+        uses: ./.github/actions/setup-test-env
         with:
-          node-version: "21.2.0"
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_ROLE }}
-          role-session-name: Github_Action_E2E_Tests_Autokitteh
-          aws-region: us-east-1
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Start AutoKitteh container
-        run: |
-          CONTAINER_ID=$(docker run -d \
-            -p 9980:9980 \
-            -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
-            -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED="true" \
-            -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="${{ secrets.VITE_DESCOPE_PROJECT_ID }}" \
-            -e AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:8000" \
-            -e AK_AUTHSESSIONS__ALLOWED_CORS_COOKIE="true" \
-            -e AK_AUTHSESSIONS__COOKIE_KEYS="78d85f1c9fd9df7d3d459a75f1db315ef634dc854ba90bc5add3e6cb6f135bd6,d9591b1ab2d0e5de1fef96a5a8a50b883430884211f16a206f84ad57897f99d5" \
-            -e AK_AUTHJWTTOKENS__SIGN_KEY="183b1c8f4c64b3450907b3859be0b94044d3c92a3116f02213585a85dd0cb154" \
-            ${{ steps.login-ecr.outputs.registry }}/autokitteh:latest up --mode=dev --config db.seed_commands="insert into users(user_id,email,display_name) values('907c77b5-315e-fe88-cd07-01011832a4a3', 'test@autokitteh.com', 'Testim test')")
-          echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
-
-          if [ -z "$CONTAINER_ID" ]; then
-            echo "Failed to start container"
-            exit 1
-          fi
-          docker logs -f $CONTAINER_ID > docker-logs.txt &
-          LOGS_PID=$!
-          if [ -z "$LOGS_PID" ]; then
-            echo "Failed to start logging"
-            exit 1
-          fi
-          echo "LOGS_PID=$LOGS_PID" >> $GITHUB_ENV
-      
-      - name: Wait for Backend to Start
-        run: |
-          URL=http://localhost:9980
-          echo "Waiting for backend to start..."
-          until $(curl --output /dev/null --silent --head --fail -X POST $URL); do
-            printf '.'
-            sleep 5
-          done
-          echo "Backend is up!"
-
-      - name: Use cached node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('package-lock.json') }}
-
-      - name: Use cached Playwright
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ hashFiles('package-lock.json') }}
-
-      - name: Install system dependencies for safari
-        if: matrix.browser == 'Safari'
-        run: npx playwright install-deps webkit
+          aws-role: ${{ secrets.AWS_GITHUB_ROLE }}
+          descope-project-id: ${{ secrets.VITE_DESCOPE_PROJECT_ID }}
+          browser: ${{ matrix.browser }}
 
       - name: Run Playwright tests
         env:
           TESTS_JWT_AUTH_TOKEN: ${{ secrets.TESTS_JWT_AUTH_TOKEN }}
         run: npx playwright test --project=${{ matrix.browser }}
-      
-      - name: Stop logging
-        if: always()
-        run: |
-          # Check if LOGS_PID exists before trying to kill it
-          if [ ! -z "${{ env.LOGS_PID }}" ]; then
-            kill ${{ env.LOGS_PID }} || true
-          fi
-          
-          # Check if CONTAINER_ID exists before getting final logs
-          if [ ! -z "${{ env.CONTAINER_ID }}" ]; then
-            docker logs ${{ env.CONTAINER_ID }} >> docker-logs.txt 2>&1 || true
-          fi
 
-      - name: Upload Docker logs
+      - name: Upload test artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: ./.github/actions/upload-test-artifacts
         with:
-          name: docker-logs-${{ matrix.browser }}-${{ github.run_id }}
-          path: docker-logs.txt
-          retention-days: 2
-
-
-      - name: Upload Playwright Test Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-test-results-${{ matrix.browser }}-${{ github.run_id }}
-          path: test-results/
-          retention-days: 2
+          browser: ${{ matrix.browser }}
+          run-id: ${{ github.run_id }}
 
   build:
+    needs: setup
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -185,36 +102,30 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           submodules: true
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Restore cached dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Update kittehub.zip
         uses: ./.github/actions/update-kittehub
         with:
           pat-token: ${{ secrets.PAT_TOKEN }}
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "21.2.0"
-          cache: "npm"
-
-      - name: Pull submodule from remote
-        run: git submodule update --remote
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run TypeScript compilation test
-        run: npm run type-check
-
-      - name: Run eslint
-        run: "npm run lint:ci"
-
-      - name: Run prettier
-        run: "npm run prettier:ci"
-
-      - name: Run build
-        run: npm run build
-
-      - name: Override .gitignore
-        run: echo '!dist' >> .gitignore
+      - name: Build and verify
+        run: |
+          git submodule update --remote
+          npm run type-check
+          npm run lint:ci
+          npm run prettier:ci
+          npm run build
+          echo '!dist' >> .gitignore
 
       - name: Upload Built Files
         uses: actions/upload-artifact@v4
@@ -223,9 +134,9 @@ jobs:
           path: dist
 
   release:
-    needs: build
-    runs-on: ubuntu-latest
+    needs: [build, test]
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
     permissions: write-all
     steps:
       - uses: actions/checkout@v4
@@ -234,28 +145,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "21.2.0"
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: built-files
-          path: ./dist
-
-      - name: Create ZIP of the dist directory
-        run: zip -r dist.zip dist
-
-      - name: Calculate SHA256 hash of dist.zip
-        run: |
-          SHA256=$(sha256sum dist.zip | awk '{ print $1 }')
-          echo "$SHA256" > dist.zip.sha256
-          echo "SHA256=$SHA256" >> $GITHUB_ENV
-
-      - name: Release and tag a new version
+      - name: Create release
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           HUSKY: 0
-        run: npx semantic-release
+        run: |
+          npm ci
+          npx semantic-release
