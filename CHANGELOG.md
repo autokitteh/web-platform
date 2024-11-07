@@ -1,3 +1,10 @@
+## [2.48.4](https://github.com/autokitteh/web-platform/compare/v2.48.3...v2.48.4) (2024-11-07)
+
+
+### Bug Fixes
+
+* login page readable error on ak server error response ([#623](https://github.com/autokitteh/web-platform/issues/623)) ([3e54ff8](https://github.com/autokitteh/web-platform/commit/3e54ff8dd913cd5d8aef29d66bb24f62ba63f034))
+
 ## [2.48.3](https://github.com/autokitteh/web-platform/compare/v2.48.2...v2.48.3) (2024-11-06)
 
 
