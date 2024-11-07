@@ -50,4 +50,8 @@ export {
 } from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
-export { remoteTemplatesRepositoryURL, remoteTemplatesFilesFallback } from "@constants/templates.constants";
+export {
+	remoteTemplatesRepositoryURL,
+	localTemplatesArchiveFallback,
+	remoteTemplatesArchiveURL,
+} from "@constants/templates.constants";

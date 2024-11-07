@@ -1,18 +1,25 @@
 import axios from "axios";
+import i18n from "i18next";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { templateCategoriesOrder } from "@constants";
+import {
+	localTemplatesArchiveFallback,
+	remoteTemplatesArchiveURL,
+	remoteTemplatesRepositoryURL,
+	templateCategoriesOrder,
+} from "@constants";
 import { TemplateStorageService } from "@services";
 import { StoreName } from "@src/enums";
-import { GitHubCommit, TemplateState } from "@src/interfaces/store";
 import {
+	GitHubCommit,
 	ProcessedCategory,
 	TemplateCardWithFiles,
 	TemplateCategory,
 	TemplateMetadata,
 	TemplateMetadataWithCategory,
-} from "@src/interfaces/store/templates.interface";
+	TemplateState,
+} from "@src/interfaces/store";
 import { fetchAndUnpackZip, processReadmeFiles } from "@utilities";
 
 const sortCategories = (categories: TemplateCategory[], order: string[]) => {
@@ -38,88 +45,123 @@ const store = (set: any, get: any): TemplateState => ({
 	fetchTemplates: async () => {
 		set({ isLoading: true, error: null });
 
-		try {
-			const response = await axios.get<GitHubCommit[]>(
-				`https://api.github.com/repos/autokitteh/kittehub/commits`,
-				{
-					params: { per_page: 1 },
-					headers: { Accept: "application/vnd.github.v3+json" },
-				}
+		const processTemplates = async (zipUrl: string) => {
+			const result = await fetchAndUnpackZip(zipUrl);
+			if (!("structure" in result)) {
+				throw new Error(result.error);
+			}
+
+			const processedCategories: ProcessedCategory[] = processReadmeFiles(result.structure);
+			const templateMap: Record<string, TemplateMetadataWithCategory> = {};
+			const { templateStorage } = get();
+
+			await Promise.all(
+				processedCategories.map(async (category) => {
+					await Promise.all(
+						category.cards.map(async (cardWithFiles: TemplateCardWithFiles) => {
+							await templateStorage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
+
+							templateMap[cardWithFiles.assetDirectory] = {
+								assetDirectory: cardWithFiles.assetDirectory,
+								title: cardWithFiles.title,
+								description: cardWithFiles.description,
+								integrations: cardWithFiles.integrations,
+								filesIndex: Object.keys(cardWithFiles.files),
+								category: category.name,
+							};
+						})
+					);
+				})
 			);
 
-			if (response.data.length) {
-				const latestCommit = response.data[0];
-				const newCommitDate = latestCommit.commit.author.date;
-				const currentCommitDate = get().lastCommitDate;
+			const categoriesMap = new Map<string, TemplateMetadata[]>();
+			Object.values(templateMap).forEach((template) => {
+				const category = template.category;
+				if (!categoriesMap.has(category)) {
+					categoriesMap.set(category, []);
+				}
+				categoriesMap.get(category)!.push(template);
+			});
 
-				if (!currentCommitDate || new Date(newCommitDate) > new Date(currentCommitDate)) {
-					const result = await fetchAndUnpackZip();
+			const categories = Array.from(categoriesMap.entries()).map(([name, templates]) => ({
+				name,
+				templates,
+			}));
 
-					if ("structure" in result) {
-						const processedCategories: ProcessedCategory[] = processReadmeFiles(result.structure);
-						const templateMap: Record<string, TemplateMetadataWithCategory> = {};
-						const { templateStorage } = get();
-						await Promise.all(
-							processedCategories.map(async (category) => {
-								await Promise.all(
-									category.cards.map(async (cardWithFiles: TemplateCardWithFiles) => {
-										// Store files in IndexedDB
-										await templateStorage.storeTemplateFiles(
-											cardWithFiles.assetDirectory,
-											cardWithFiles.files
-										);
+			return { templateMap, categories };
+		};
 
-										// Store metadata in state
-										templateMap[cardWithFiles.assetDirectory] = {
-											assetDirectory: cardWithFiles.assetDirectory,
-											title: cardWithFiles.title,
-											description: cardWithFiles.description,
-											integrations: cardWithFiles.integrations,
-											filesIndex: Object.keys(cardWithFiles.files),
-											category: category.name,
-										};
-									})
-								);
-							})
-						);
+		try {
+			let shouldFetchTemplates = false;
+			let lastCommitDate = get().lastCommitDate;
 
-						const categoriesMap = new Map<string, TemplateMetadata[]>();
+			try {
+				const response = await axios.get<GitHubCommit[]>(remoteTemplatesRepositoryURL, {
+					params: { per_page: 1 },
+					headers: { Accept: "application/vnd.github.v3+json" },
+				});
 
-						Object.values(templateMap).forEach((template) => {
-							const category = template.category;
-							if (!categoriesMap.has(category)) {
-								categoriesMap.set(category, []);
-							}
-							categoriesMap.get(category)!.push(template);
-						});
+				if (response.data.length) {
+					const latestCommit = response.data[0];
+					const latestCommitDate = latestCommit.commit.author.date;
+					const currentCommitDate = get().lastCommitDate;
 
-						const categories = Array.from(categoriesMap.entries()).map(([name, templates]) => ({
-							name,
-							templates,
-						}));
-
-						const sortedCategories = sortCategories(categories, templateCategoriesOrder);
-
-						set({
-							templateMap,
-							sortedCategories,
-							lastCommitDate: newCommitDate,
-							isLoading: false,
-							error: null,
-						});
-					} else {
-						throw new Error(result.error);
+					if (!currentCommitDate || new Date(latestCommitDate) > new Date(currentCommitDate)) {
+						shouldFetchTemplates = true;
+						lastCommitDate = latestCommitDate;
 					}
-				} else {
-					// eslint-disable-next-line no-console
-					console.log("Using cached template data, no new commits found");
-					set({ isLoading: false });
+				}
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			} catch (error) {
+				shouldFetchTemplates = true;
+			}
+
+			if (shouldFetchTemplates) {
+				try {
+					const { categories, templateMap } = await processTemplates(remoteTemplatesArchiveURL);
+					const sortedCategories = sortCategories(categories, templateCategoriesOrder);
+					set({
+						templateMap,
+						sortedCategories,
+						lastCommitDate,
+						isLoading: false,
+						error: null,
+					});
+
+					return;
+					// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				} catch (error) {
+					const { categories, templateMap } = await processTemplates(localTemplatesArchiveFallback);
+					const sortedCategories = sortCategories(categories, templateCategoriesOrder);
+					set({
+						templateMap,
+						sortedCategories,
+						lastCommitDate,
+						isLoading: false,
+						error: null,
+					});
+
+					return;
 				}
 			}
+
+			set({ isLoading: false });
 		} catch (error) {
-			const errorMessage = error instanceof Error ? error.message : "Failed to fetch templates";
-			console.error("Error fetching templates:", errorMessage);
-			set({ error: errorMessage, isLoading: false });
+			const uiErrorMessage = i18n.t("templates.failedToFetch", { ns: "stores" });
+			let logErrorMessage = uiErrorMessage;
+			if (axios.isAxiosError(error)) {
+				logErrorMessage = i18n.t("templates.failedToFetchExtended", {
+					ns: "stores",
+					error: error?.response?.data,
+				});
+			} else {
+				logErrorMessage = i18n.t("templates.failedToFetchExtended", {
+					ns: "stores",
+					error: error?.message,
+				});
+			}
+			console.error(logErrorMessage);
+			set({ error: uiErrorMessage, isLoading: false });
 		}
 	},
 

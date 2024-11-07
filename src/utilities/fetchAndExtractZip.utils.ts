@@ -12,7 +12,6 @@ import {
 	MarkdownAttributes,
 	ProcessedZipResult,
 } from "@interfaces/utilities";
-import { remoteTemplatesFilesFallback, remoteTemplatesRepositoryURL } from "@src/constants";
 import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
@@ -72,43 +71,20 @@ const fetchZipFromUrl = async (url: string): Promise<ArrayBuffer> => {
 	return zipData;
 };
 
-export const fetchAndUnpackZip = async (): Promise<ProcessedZipResult> => {
+export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Promise<ProcessedZipResult> => {
 	try {
-		let zipData: ArrayBuffer;
+		let zipData: ArrayBuffer = new ArrayBuffer(0);
 
 		try {
-			zipData = await fetchZipFromUrl(remoteTemplatesRepositoryURL);
-			// eslint-disable-next-line no-console
-			console.log(
-				i18n.t("fetchAndExtract.fetchedFromGithub", {
-					ns: "utilities",
-				})
-			);
-		} catch (githubError) {
-			console.warn(
-				i18n.t("fetchAndExtract.githubFetchFailed", {
-					ns: "utilities",
-					error: githubError instanceof Error ? githubError.message : "Unknown error",
-				})
-			);
+			zipData = await fetchZipFromUrl(remoteTemplatesArchiveUrl);
+		} catch (fetchError) {
+			const errorMessage = i18n.t("fetchAndExtract.templatesArchiveFetchFailedExtended", {
+				ns: "utilities",
+				error: fetchError instanceof Error ? fetchError.message : "Unknown error",
+			});
+			console.warn(errorMessage);
 
-			try {
-				zipData = await fetchZipFromUrl(remoteTemplatesFilesFallback);
-				// eslint-disable-next-line no-console
-				console.log(
-					i18n.t("fetchAndExtract.fetchedFromFallback", {
-						ns: "utilities",
-					})
-				);
-			} catch (fallbackError) {
-				throw new Error(
-					i18n.t("fetchAndExtract.allSourcesFailed", {
-						ns: "utilities",
-						githubError: githubError instanceof Error ? githubError.message : "Unknown error",
-						fallbackError: fallbackError instanceof Error ? fallbackError.message : "Unknown error",
-					})
-				);
-			}
+			return { error: errorMessage, structure: undefined };
 		}
 
 		const zip = new JSZip();
@@ -219,13 +195,6 @@ export const processReadmeFiles = (fileStructure?: FileStructure | null): Proces
 					const { attributes } = frontMatter<MarkdownAttributes>(node.content);
 
 					if (!attributes.title || !attributes.description || !attributes.categories) {
-						console.warn(
-							`${i18n.t("fetchAndExtract.skippingPathMissingMetadata", {
-								ns: "utilities",
-								path: `${currentPath}/${name}`,
-							})}: `,
-							attributes
-						);
 						continue;
 					}
 

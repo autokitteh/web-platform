@@ -52,7 +52,6 @@ export const useCreateProjectFromTemplate = () => {
 
 	const createProjectFromTemplate = async (template: TemplateMetadata, projectName?: string) => {
 		try {
-			// Fetch files from IndexedDB
 			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
 			const manifestData = files["autokitteh.yaml"];
 
