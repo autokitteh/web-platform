@@ -9,6 +9,7 @@ export interface SelectProps {
 	label?: string;
 	onBlur?: () => void;
 	onChange?: (value: SingleValue<SelectOption>) => void;
+	onCreateOption?: (value: string) => void;
 	options: SelectOption[];
 	placeholder?: string;
 	value?: SelectOption | null;

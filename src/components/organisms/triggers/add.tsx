@@ -47,6 +47,7 @@ export const AddTrigger = () => {
 			entryFunction: "",
 			cron: "",
 			eventType: "",
+			eventTypeSelect: { label: "", value: "" },
 			filter: "",
 		},
 		resolver: triggerResolver,
@@ -143,11 +144,8 @@ export const AddTrigger = () => {
 					onSubmit={handleSubmit(onSubmit)}
 				>
 					<NameAndConnectionFields />
-
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
-
 					<TriggerSpecificFields filesNameList={filesNameList} />
-
 					{connectionType === TriggerTypes.webhook ? <WebhookFields /> : null}
 				</form>
 

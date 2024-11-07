@@ -46,7 +46,7 @@ export const TriggersTable = () => {
 		closeModal(ModalName.deleteTrigger);
 		if (error) {
 			addToast({
-				message: tError("triggerRemoveFailed") + (error as Error).message,
+				message: tError("triggerRemoveFailed"),
 				type: "error",
 			});
 
