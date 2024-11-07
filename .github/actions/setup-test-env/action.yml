@@ -26,6 +26,13 @@ runs:
           id: login-ecr
           uses: aws-actions/amazon-ecr-login@v2
 
+        - name: Install system dependencies for Safari
+          if: inputs.browser == 'Safari'
+          shell: bash
+          run: |
+              npx playwright install-deps webkit
+              npx playwright install webkit
+
         - name: Start AutoKitteh container
           shell: bash
           run: |
@@ -55,9 +62,4 @@ runs:
                 printf '.'
                 sleep 5
               done
-              echo "Backend is up!"
-
-        - name: Install browser-specific dependencies
-          if: inputs.browser == 'Safari'
-          shell: bash
-          run: npx playwright install-deps webkit
+              echo "Backend is up!""
