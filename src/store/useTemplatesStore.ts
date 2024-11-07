@@ -93,7 +93,6 @@ const store = (set: any, get: any): TemplateState => ({
 			return { templateMap, categories };
 		};
 
-		// Inside the fetchTemplates function
 		try {
 			let shouldFetchTemplates = false;
 			let shouldFetchTemplatesFromGithub = false;
