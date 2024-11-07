@@ -26,8 +26,8 @@
 	},
 	"profile":{
 		"title": "My Profile",
-		"name": "Name: {{name}}",
-		"email": "Email: {{email}}",
+		"name": "Name",
+		"email": "Email",
 		"deleteAccount": "Delete My Account",
 		"accountFetchError": "Error occurred during the account fetch, try again later"
 	},

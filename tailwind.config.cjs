@@ -13,13 +13,14 @@ module.exports = {
     },
     extend: {
       fontSize: {
-        "settings-title": "1.3rem",
         10: "10px",
+        '1.5xl': '22px',
       },
       flex: {
         5: "5 5 0%",
       },
       spacing: {
+        7.5: "1.875rem",
         9.5: "2.375rem",
         '3px': '3px',
         50: "50px",
@@ -29,6 +30,7 @@ module.exports = {
         500: "500px",
         550: "550px",
         650: "650px",
+        700: "700px",
       },
       maxWidth: {
         420: "420px",

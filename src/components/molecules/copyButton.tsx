@@ -45,7 +45,7 @@ export const CopyButton = ({
 		},
 		className
 	);
-	const copyButtonIconStyle = cn("h-5 w-5 fill-white", {
+	const copyButtonIconStyle = cn("fill-white", {
 		"size-5": size === "md",
 		"size-4": size === "sm",
 		"size-3": size === "xs",

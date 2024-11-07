@@ -8,6 +8,8 @@ import { useModalStore, useToastStore, useUserStore } from "@src/store";
 import { Button, Typography } from "@components/atoms";
 import { DeleteAccountModal } from "@components/organisms/settings/profile";
 
+import { TrashIcon } from "@assets/image/icons";
+
 export const Profile = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "profile" });
 	const { getLoggedInUser, user } = useUserStore();
@@ -41,18 +43,33 @@ export const Profile = () => {
 	};
 
 	return (
-		<>
-			<Typography className="mb-4 text-settings-title font-bold" element="h1" size="large">
+		<div className="font-averta">
+			<Typography className="mb-9 font-bold" element="h1" size="2xl">
 				{t("title")}
 			</Typography>
-			<p className="mb-4">{t("name", { name: user?.name })}</p>
-			<p className="mb-4">{t("email", { email: user?.email })}</p>
-			<div className="mt-16">
-				<Button className="mt-4 text-white" onClick={handleDeleteAccountClick} variant="outline">
+			<Typography className="mb-1.5 font-fira-sans opacity-90" element="p">
+				{t("name")}
+			</Typography>
+			<Typography className="mb-9" element="p" size="1.5xl">
+				{user?.name}
+			</Typography>
+			<Typography className="mb-1.5 font-fira-sans opacity-90" element="p">
+				{t("email")}
+			</Typography>
+			<Typography element="p" size="1.5xl">
+				{user?.email}
+			</Typography>
+			<div className="mt-9">
+				<Button
+					className="gap-3 px-4 text-base font-semibold text-white"
+					onClick={handleDeleteAccountClick}
+					variant="outline"
+				>
+					<TrashIcon className="size-4 stroke-white" />
 					{t("deleteAccount")}
 				</Button>
 			</div>
 			<DeleteAccountModal onDelete={onDeleteAccount} />
-		</>
+		</div>
 	);
 };

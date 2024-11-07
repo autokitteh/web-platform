@@ -13,23 +13,35 @@ export const SettingsMenu = () => {
 	const location = useLocation();
 
 	return (
-		<div className="flex h-full flex-1 flex-col rounded-l-lg bg-black pl-6 pt-8 text-lg">
-			{menuItems.map((item, index) => {
-				const isCurrentPage = matchPath({ path: item.path, end: true }, location.pathname);
+		<div className="flex h-full max-w-72 flex-1 flex-col rounded-l-2xl bg-black pl-7 pt-6 text-lg">
+			{menuItems.map(({ icon, label, path, stroke }, index) => {
+				const isCurrentPage = matchPath({ path, end: true }, location.pathname);
 
 				const settingsMenuButtonClass = cn(
-					"group mb-4 mr-2 flex cursor-pointer items-center text-white active:bg-black active:text-green-800",
+					"group mb-5 flex items-center text-white active:text-green-800 p-0 hover:bg-transparent gap-2 font-averta",
 					{
-						"bg-gray-950": isCurrentPage,
+						"font-bold": isCurrentPage,
 					}
 				);
 
+				const parentIconClass = cn(
+					"flex size-7.5 items-center justify-center rounded-full group-hover:bg-gray-950",
+					{
+						"bg-green-800": isCurrentPage,
+					}
+				);
+				const iconClass = cn("fill-white group-hover:fill-white", {
+					"fill-black": isCurrentPage,
+					"stroke-white fill-transparent group-hover:fill-transparent group-hover:stroke-white": stroke,
+					"stroke-black": stroke && isCurrentPage,
+				});
+
 				return (
-					<Button className={settingsMenuButtonClass} href={item.path} key={index}>
-						<div className="mr-2 rounded-full bg-gray-950 p-2">
-							<IconSvg className="fill-white group-hover:fill-green-800" src={item.icon} />
+					<Button className={settingsMenuButtonClass} href={path} key={index}>
+						<div className={parentIconClass}>
+							<IconSvg className={iconClass} src={icon} />
 						</div>
-						<div>{t(item.label)}</div>
+						{t(label)}
 					</Button>
 				);
 			})}
