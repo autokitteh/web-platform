@@ -45,6 +45,7 @@ export default defineConfig({
 		"import.meta.env.DISPLAY_SLACK_SOCKET_INTEGRATION": process.env.DISPLAY_SLACK_SOCKET_INTEGRATION,
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
+		"import.meta.env.FETCH_TEMPLATES_FROM_GITHUB": JSON.stringify(process.env.FETCH_TEMPLATES_FROM_GITHUB),
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],

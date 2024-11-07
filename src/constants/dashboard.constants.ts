@@ -16,6 +16,8 @@ const hiddenTemplateProjectsCategories = [
 
 export const meowWorldProjectName = "quickstart";
 
+export const templateCategoriesOrder = ["DevOps", "Samples", "Durable workflows", "Office Automation"];
+
 export const templateProjectsCategories: TemplateCategory[] = [
 	{
 		name: "DevOps",

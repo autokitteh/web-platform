@@ -4,23 +4,53 @@ import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { findTemplateFilesByAssetDirectory, namespaces } from "@constants";
+import { featureFlags, findTemplateFilesByAssetDirectory, namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { useFileOperations } from "@src/hooks";
+import { TemplateMetadata } from "@src/interfaces/store";
 import { fetchAllFilesContent, fetchFileContent } from "@src/utilities";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useProjectStore, useTemplatesStore, useToastStore } from "@store";
 
 export const useCreateProjectFromTemplate = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { createProjectFromManifest, getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
-
-	const [projectId, setProjectId] = useState<string | null>(null);
+	const { findTemplateByAssetDirectory, templateStorage } = useTemplatesStore();
+	const [isCreating, setIsCreating] = useState(false);
 	const [assetDirectory, setAssetDirectory] = useState<string | null>(null);
 
+	const [projectId, setProjectId] = useState<string | null>(null);
+	const [templateFiles, setTemplateFiles] = useState<Record<string, string>>();
+
 	const { saveAllFiles } = useFileOperations(projectId || "");
+
+	useEffect(() => {
+		const getAndSaveFiles = async () => {
+			if (!projectId || !templateFiles) return;
+
+			await saveAllFiles(
+				Object.fromEntries(
+					Object.entries(templateFiles).map(([path, content]) => [
+						path,
+						new Uint8Array(new TextEncoder().encode(content)),
+					])
+				)
+			);
+
+			addToast({
+				message: t("projectCreatedSuccessfully"),
+				type: "success",
+			});
+
+			getProjectsList();
+			navigate(`/projects/${projectId}`);
+		};
+
+		getAndSaveFiles();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	useEffect(() => {
 		const getAndSaveFiles = async () => {
@@ -57,7 +87,7 @@ export const useCreateProjectFromTemplate = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const createProjectFromTemplate = async (assetDir: string, projectName?: string) => {
+	const createProjectFromTemplateOld = async (assetDir: string, projectName?: string) => {
 		try {
 			const manifestURL = `/assets/templates/${assetDir}/autokitteh.yaml`;
 			const manifestData = await fetchFileContent(manifestURL);
@@ -115,5 +145,93 @@ export const useCreateProjectFromTemplate = () => {
 		}
 	};
 
-	return { createProjectFromTemplate };
+	const createProjectFromTemplateNew = async (template: TemplateMetadata, projectName?: string) => {
+		try {
+			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
+			const manifestData = files["autokitteh.yaml"];
+
+			if (!manifestData) {
+				addToast({
+					message: t("projectCreationFailed"),
+					type: "error",
+				});
+
+				LoggerService.error(
+					namespaces.manifestService,
+					`${t("projectCreationFailedExtended", { error: t("projectTemplateManifestNotFound") })}`
+				);
+
+				return;
+			}
+
+			const manifestObject = yaml.load(manifestData) as {
+				project?: { name: string };
+			};
+
+			if (manifestObject && manifestObject.project && projectName) {
+				manifestObject.project.name = projectName;
+			}
+
+			const updatedManifestData = yaml.dump(manifestObject);
+
+			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestData);
+
+			if (error || !newProjectId) {
+				addToast({
+					message: t("projectCreationFailed"),
+					type: "error",
+				});
+				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+
+				return;
+			}
+
+			LoggerService.info(
+				namespaces.hooks.createProjectFromTemplate,
+				t("projectCreatedSuccessfullyExtended", {
+					templateName: template.title,
+					projectId: newProjectId,
+				})
+			);
+
+			setProjectId(newProjectId);
+			setTemplateFiles(files);
+		} catch (error) {
+			addToast({
+				message: t("projectCreationFailed"),
+				type: "error",
+			});
+
+			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+		}
+	};
+
+	const createProjectFromAsset = async (templateAssetDirectory: string, projectName?: string) => {
+		setIsCreating(true);
+		try {
+			const template = findTemplateByAssetDirectory(templateAssetDirectory);
+			if (!template) {
+				throw new Error(`Template not found for asset directory: ${templateAssetDirectory}`);
+			}
+			await createProjectFromTemplateNew(template, projectName);
+		} catch (error) {
+			addToast({
+				message: t("projectCreationFailed"),
+				type: "error",
+			});
+			console.error("Error creating project from template:", error);
+		} finally {
+			setIsCreating(false);
+		}
+	};
+
+	const createProjectFromTemplate = (
+		featureFlags?.fetchTemplatesFromGithub ? createProjectFromTemplateNew : createProjectFromTemplateOld
+	) as (templateData: string | TemplateMetadata, projectName?: string) => Promise<void>;
+
+	return {
+		createProjectFromAsset,
+		createProjectFromTemplate,
+		isCreating,
+	};
 };

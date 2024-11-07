@@ -6,6 +6,7 @@ export { convertBuildRuntimesToViewTriggers } from "@utilities/convertBuildRunti
 export { convertTimestampToDate } from "@utilities/convertTimestampToDate.utils";
 export { convertTimestampToEpoch } from "@utilities/convertTimestampToDate.utils";
 export { copyToClipboard } from "@utilities/copyToClipboard.utils";
+export { fetchAndUnpackZip, processReadmeFiles } from "@utilities/fetchAndExtractZip.utils";
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
 export { flattenArray } from "@utilities/flattenArray.utils";
 export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.utils";
@@ -18,6 +19,6 @@ export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
 export { sortArray } from "@utilities/sortArray.utils";
 export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
 export { stripGoogleConnectionName } from "@utilities/stripGoogleConnectionName.utils";
-export { fetchAllFilesContent, fetchFileContent } from "@utilities/templateFilesFetch";
+export { fetchFileContent, fetchAllFilesContent } from "@utilities/templateFilesFetch";
 export { transformAndStringifyValues } from "@utilities/transformAndStringifyValues.utils";
 export { ValidateURL } from "@utilities/validateUrl.utils";
