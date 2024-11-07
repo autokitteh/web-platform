@@ -12,16 +12,12 @@ import { IconButton } from "@components/atoms";
 import { CopyIcon } from "@assets/image/icons";
 
 export const CopyButton = ({
-	children,
-	classIcon,
 	className,
 	size = "md",
 	successMessage,
 	text,
 	title,
 }: {
-	children?: React.ReactNode;
-	classIcon?: string;
 	className?: string;
 	size?: Extract<SystemSizes, "xs" | "sm" | "md">;
 	successMessage?: string;
@@ -47,18 +43,13 @@ export const CopyButton = ({
 			"size-8": size === "sm",
 			"size-6": size === "xs",
 		},
-		{ "w-auto h-auto": children },
 		className
 	);
-	const copyButtonIconStyle = cn(
-		"h-5 w-5 fill-white",
-		{
-			"size-5": size === "md",
-			"size-4": size === "sm",
-			"size-3": size === "xs",
-		},
-		classIcon
-	);
+	const copyButtonIconStyle = cn("fill-white", {
+		"size-5": size === "md",
+		"size-4": size === "sm",
+		"size-3": size === "xs",
+	});
 
 	return (
 		<IconButton
@@ -69,7 +60,6 @@ export const CopyButton = ({
 			type="button"
 		>
 			<CopyIcon className={copyButtonIconStyle} />
-			{children}
 		</IconButton>
 	);
 };

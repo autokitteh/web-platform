@@ -49,32 +49,24 @@ export const ClientConfiguration = () => {
 			<Typography className="mb-9 font-averta font-bold" element="h1" size="2xl">
 				{t("getToken.title")}
 			</Typography>
-			<Typography className="max-w-650 font-averta" element="h4" size="xl">
-				{t("getToken.desc")}
-			</Typography>
 			<div className="mt-9 max-w-700">
+				<p className="mb-3 text-base font-light">{t("getToken.subtitle")}</p>
 				{token ? (
-					<>
-						<p className="mb-3 text-base font-light capitalize">{t("getToken.subtitle")}</p>
-						<div className="flex">
-							<Input
-								aria-label={t("getToken.copyInputAriaLabel")}
-								className="h-12 flex-1 rounded-lg border-gray-950"
-								disabled
-								label={t("getToken.copyInputAriaLabel")}
-								value={token}
-							/>
+					<div className="flex">
+						<Input
+							aria-label={t("getToken.copyInputAriaLabel")}
+							className="h-12 flex-1 rounded-lg border-gray-950"
+							disabled
+							label={t("getToken.copyInputAriaLabel")}
+							value={token}
+						/>
 
-							<CopyButton
-								classIcon="fill-gray-750"
-								className="ml-5 gap-2 rounded-full border border-gray-750 px-5 py-3 hover:bg-gray-1050"
-								successMessage={t("getToken.copySuccess")}
-								text={token}
-							>
-								<span className="font-averta font-semibold">{t("copy")}</span>
-							</CopyButton>
-						</div>
-					</>
+						<CopyButton
+							className="ml-2 gap-2 rounded-md hover:bg-gray-1050"
+							successMessage={t("getToken.copySuccess")}
+							text={token}
+						/>
+					</div>
 				) : (
 					<Button
 						className="h-11 gap-2 border border-gray-750 pl-2.5 pr-3 font-averta font-semibold text-white"
@@ -102,13 +94,10 @@ export const ClientConfiguration = () => {
 					/>
 
 					<CopyButton
-						classIcon="fill-gray-750"
-						className="ml-5 gap-2 rounded-full border border-gray-750 px-5 py-3 hover:bg-gray-1050"
+						className="ml-2 gap-2 rounded-md hover:bg-gray-1050"
 						successMessage={t("hostURL.copySuccess")}
 						text={hostURL}
-					>
-						<span className="font-averta font-semibold">{t("copy")}</span>
-					</CopyButton>
+					/>
 				</div>
 			</div>
 

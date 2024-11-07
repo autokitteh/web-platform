@@ -15,7 +15,7 @@ export const DeleteAccountModal = ({ onDelete }: DeleteAccount) => {
 	const { closeModal } = useModalStore();
 
 	return (
-		<Modal className="" name={ModalName.deleteAccount}>
+		<Modal name={ModalName.deleteAccount}>
 			<div className="mx-6">
 				<h3 className="mb-5 font-averta text-xl font-bold">{t("title")}</h3>
 
