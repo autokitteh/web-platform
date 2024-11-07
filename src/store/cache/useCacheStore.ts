@@ -282,6 +282,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		try {
 			const { data: connectionsResponse, error } = await ConnectionService.listByProjectId(projectId!);
+
 			if (error) {
 				throw error;
 			}
@@ -326,28 +327,24 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 
 		if (data?.connections) {
-			const connectionsData = data.connections;
-			const notInitiatedConnections = connectionsData?.filter((connection) => connection.status !== "ok")?.length;
-			if (!notInitiatedConnections) return;
+			const notInitiatedConnections = data.connections.filter((c) => c.status !== "ok").length;
 
 			newProjectValidationState.connections = {
 				...newProjectValidationState.connections,
-				message: i18n.t("validation.connectionsNotConfigured", { ns: "tabs" }),
+				message:
+					notInitiatedConnections > 0 ? i18n.t("validation.connectionsNotConfigured", { ns: "tabs" }) : "",
 			};
 		}
 
 		if (data?.triggers) {
-			const triggersData = data.triggers;
-
 			newProjectValidationState.triggers = {
 				...newProjectValidationState.triggers,
-				message: !triggersData.length ? i18n.t("validation.noTriggers", { ns: "tabs" }) : "",
+				message: !data.triggers.length ? i18n.t("validation.noTriggers", { ns: "tabs" }) : "",
 			};
 		}
 
 		if (data?.variables) {
-			const variablesData = data.variables;
-			const isEmptyVarValue = variablesData?.find((varb) => varb.value === "");
+			const isEmptyVarValue = data.variables?.find((varb) => varb.value === "");
 			newProjectValidationState.variables = {
 				...newProjectValidationState.variables,
 				message: isEmptyVarValue ? i18n.t("validation.emptyVariable", { ns: "tabs" }) : "",
