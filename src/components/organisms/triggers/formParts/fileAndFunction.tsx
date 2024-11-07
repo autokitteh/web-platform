@@ -18,12 +18,14 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 		control,
 		formState: { errors },
 		register,
+		setValue,
 	} = useFormContext<TriggerFormData>();
 	const connectionType = useWatch({ name: "connection.value" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
 	const watchedEventType = useWatch({ control, name: "eventType" });
 	const watchedFilter = useWatch({ control, name: "filter" });
-	const [selectedOption, setSelectedOption] = useState<SelectOption | null>(null);
+	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
+
 	const [options, setOptions] = useState<SelectOption[]>([
 		{ value: "option1", label: "Option 1" },
 		{ value: "option2", label: "Option 2" },
@@ -36,11 +38,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 			label: inputValue,
 		};
 		setOptions((prevOptions) => [...prevOptions, newOption]);
-		setSelectedOption(newOption);
-	};
-
-	const handleSelectChange = (option: SelectOption | null) => {
-		setSelectedOption(option);
+		setValue("eventTypeSelect", newOption.value);
 	};
 
 	return (
@@ -62,7 +60,6 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 						/>
 					)}
 				/>
-
 				<ErrorMessage>{errors.filePath?.message as string}</ErrorMessage>
 			</div>
 
@@ -74,27 +71,34 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 					label={t("placeholders.functionName")}
 					value={watchedFunctionName}
 				/>
-
 				<ErrorMessage>{errors.entryFunction?.message as string}</ErrorMessage>
 			</div>
 
 			{connectionType !== TriggerTypes.webhook && connectionType !== TriggerTypes.schedule ? (
 				<>
-					<div className="relative">
-						{featureFlags.displayComboxInTriggersForm ? (
-							<SelectCreatable
-								aria-label={t("placeholders.eventType")}
-								dataTestid="select-creatable"
-								disabled={false}
-								isError={false}
-								label={t("placeholders.eventType")}
-								onChange={handleSelectChange}
-								onCreateOption={handleCreateOption}
-								options={options}
-								placeholder={t("placeholders.eventType")}
-								value={selectedOption}
+					{featureFlags.displayComboxInTriggersForm ? (
+						<div className="relative">
+							<Controller
+								control={control}
+								name="eventTypeSelect"
+								render={({ field }) => (
+									<SelectCreatable
+										{...field}
+										aria-label={t("placeholders.eventType")}
+										dataTestid="select-trigger-event-type"
+										isError={!!errors.eventTypeSelect}
+										label={t("placeholders.eventType")}
+										onCreateOption={handleCreateOption}
+										options={options}
+										placeholder={t("placeholders.eventType")}
+										value={options.find(({ value }) => value === watchedEventTypeSelect)}
+									/>
+								)}
 							/>
-						) : (
+							<ErrorMessage>{errors.eventTypeSelect?.message as string}</ErrorMessage>
+						</div>
+					) : (
+						<div className="relative">
 							<Input
 								aria-label={t("placeholders.eventType")}
 								{...register("eventType")}
@@ -102,11 +106,9 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 								label={t("placeholders.eventType")}
 								value={watchedEventType}
 							/>
-						)}
-
-						<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
-					</div>
-
+							<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
+						</div>
+					)}
 					<div className="relative">
 						<Input
 							aria-label={t("placeholders.filter")}
@@ -115,7 +117,6 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 							label={t("placeholders.filter")}
 							value={watchedFilter}
 						/>
-
 						<ErrorMessage>{errors.filter?.message as string}</ErrorMessage>
 					</div>
 				</>

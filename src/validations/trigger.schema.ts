@@ -30,6 +30,7 @@ i18n.on("initialized", () => {
 		}),
 		entryFunction: z.string().min(1, i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" })),
 		eventType: z.string().optional(),
+		eventTypeSelect: selectItemSchema.optional(),
 		filter: z.string().optional(),
 		cron: z.string().optional(),
 	});

@@ -47,6 +47,7 @@ export const AddTrigger = () => {
 			entryFunction: "",
 			cron: "",
 			eventType: "",
+			eventTypeSelect: { label: "", value: "" },
 			filter: "",
 		},
 		resolver: triggerResolver,
