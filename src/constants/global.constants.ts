@@ -13,6 +13,8 @@ export const maxLogs = 20;
 export const fileSizeUploadLimit = 50 * 1024; // 50KB
 export const apiRequestTimeout = isDevelopment ? 1000 * 60 : 5000;
 
+export const templatesUpdateCheckInterval = 24 * 60 * 60 * 1000; // 24 hours
+
 export const dateTimeFormat = "YYYY-DD-MM HH:mm:ss";
 export const timeFormat = "HH:mm:ss";
 

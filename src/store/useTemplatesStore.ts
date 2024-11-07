@@ -8,6 +8,7 @@ import {
 	remoteTemplatesArchiveURL,
 	remoteTemplatesRepositoryURL,
 	templateCategoriesOrder,
+	templatesUpdateCheckInterval,
 } from "@constants";
 import { TemplateStorageService } from "@services";
 import { StoreName } from "@src/enums";
@@ -39,6 +40,7 @@ const store = (set: any, get: any): TemplateState => ({
 	isLoading: false,
 	error: null,
 	lastCommitDate: undefined,
+	lastCheckDate: undefined,
 	sortedCategories: undefined,
 	templateStorage: new TemplateStorageService(),
 
@@ -91,61 +93,76 @@ const store = (set: any, get: any): TemplateState => ({
 			return { templateMap, categories };
 		};
 
+		// Inside the fetchTemplates function
 		try {
 			let shouldFetchTemplates = false;
+			let shouldFetchTemplatesFromGithub = false;
 			let lastCommitDate = get().lastCommitDate;
+			const currentTime = new Date();
+			const lastCheckDate = get().lastCheckDate;
 
-			try {
-				const response = await axios.get<GitHubCommit[]>(remoteTemplatesRepositoryURL, {
-					params: { per_page: 1 },
-					headers: { Accept: "application/vnd.github.v3+json" },
-				});
+			const shouldCheckGitHub =
+				!lastCheckDate ||
+				currentTime.getTime() - new Date(lastCheckDate).getTime() >= templatesUpdateCheckInterval;
 
-				if (response.data.length) {
-					const latestCommit = response.data[0];
-					const latestCommitDate = latestCommit.commit.author.date;
-					const currentCommitDate = get().lastCommitDate;
-
-					if (!currentCommitDate || new Date(latestCommitDate) > new Date(currentCommitDate)) {
-						shouldFetchTemplates = true;
-						lastCommitDate = latestCommitDate;
-					}
-				}
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			} catch (error) {
-				shouldFetchTemplates = true;
-			}
-
-			if (shouldFetchTemplates) {
+			if (shouldCheckGitHub) {
 				try {
-					const { categories, templateMap } = await processTemplates(remoteTemplatesArchiveURL);
-					const sortedCategories = sortCategories(categories, templateCategoriesOrder);
-					set({
-						templateMap,
-						sortedCategories,
-						lastCommitDate,
-						isLoading: false,
-						error: null,
+					const response = await axios.get<GitHubCommit[]>(remoteTemplatesRepositoryURL, {
+						params: { per_page: 1 },
+						headers: { Accept: "application/vnd.github.v3+json" },
 					});
 
-					return;
+					if (response.data.length) {
+						const latestCommit = response.data[0];
+						const latestCommitDate = latestCommit.commit.author.date;
+						const currentCommitDate = get().lastCommitDate;
+
+						if (!currentCommitDate || new Date(latestCommitDate) > new Date(currentCommitDate)) {
+							shouldFetchTemplates = true;
+							shouldFetchTemplatesFromGithub = true;
+							lastCommitDate = latestCommitDate;
+						}
+					} else {
+						shouldFetchTemplates = true;
+					}
+					set({ lastCheckDate: currentTime });
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				} catch (error) {
-					const { categories, templateMap } = await processTemplates(localTemplatesArchiveFallback);
-					const sortedCategories = sortCategories(categories, templateCategoriesOrder);
-					set({
-						templateMap,
-						sortedCategories,
-						lastCommitDate,
-						isLoading: false,
-						error: null,
-					});
-
-					return;
+					shouldFetchTemplates = true;
 				}
 			}
 
-			set({ isLoading: false });
+			if (!shouldFetchTemplates) {
+				set({ isLoading: false });
+
+				return;
+			}
+
+			if (shouldFetchTemplatesFromGithub) {
+				const { categories, templateMap } = await processTemplates(remoteTemplatesArchiveURL);
+				const sortedCategories = sortCategories(categories, templateCategoriesOrder);
+				set({
+					templateMap,
+					sortedCategories,
+					lastCommitDate,
+					isLoading: false,
+					error: null,
+				});
+
+				return;
+			}
+
+			const { categories, templateMap } = await processTemplates(localTemplatesArchiveFallback);
+			const sortedCategories = sortCategories(categories, templateCategoriesOrder);
+			set({
+				templateMap,
+				sortedCategories,
+				lastCommitDate,
+				isLoading: false,
+				error: null,
+			});
+
+			return;
 		} catch (error) {
 			const uiErrorMessage = i18n.t("templates.failedToFetch", { ns: "stores" });
 			let logErrorMessage = uiErrorMessage;
@@ -182,6 +199,7 @@ export const useTemplatesStore = create(
 		partialize: (state) => ({
 			templateMap: state.templateMap,
 			lastCommitDate: state.lastCommitDate,
+			lastCheckDate: state.lastCheckDate,
 			sortedCategories: state.sortedCategories,
 		}),
 	})
