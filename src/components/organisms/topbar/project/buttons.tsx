@@ -7,14 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import {
-	useCacheStore,
-	useConnectionCheckerStore,
-	useModalStore,
-	useProjectStore,
-	useProjectValidationStore,
-	useToastStore,
-} from "@src/store";
+import { useCacheStore, useConnectionCheckerStore, useModalStore, useProjectStore, useToastStore } from "@src/store";
 
 import { useFileOperations } from "@hooks";
 
@@ -31,7 +24,7 @@ export const ProjectTopbarButtons = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
-	const { isValid, projectValidationState } = useProjectValidationStore();
+	const { fetchDeployments, isValid, projectValidationState } = useCacheStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 	const { resetChecker } = useConnectionCheckerStore();
@@ -42,7 +35,6 @@ export const ProjectTopbarButtons = () => {
 	const { deleteProject, getProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
-	const { fetchDeployments } = useCacheStore();
 	const { getResources } = useFileOperations(projectId!);
 
 	const fetchResources = useCallback(async () => {
@@ -104,9 +96,7 @@ export const ProjectTopbarButtons = () => {
 
 				return;
 			}
-
 			fetchDeployments(projectId!, true);
-
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",

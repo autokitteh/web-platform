@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -35,11 +35,6 @@ export const TriggersTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
 
-	useEffect(() => {
-		fetchTriggers(projectId!);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
-
 	const handleDeleteTrigger = async () => {
 		if (!triggerId) {
 			return;
@@ -58,10 +53,10 @@ export const TriggersTable = () => {
 			return;
 		}
 		addToast({
-			message: t("triggerRemovedSuccessfully"),
+			message: t("table.triggerRemovedSuccessfully"),
 			type: "success",
 		});
-		LoggerService.info(namespaces.ui.triggers, t("triggerRemovedSuccessfullyExtended", { triggerId }));
+		LoggerService.info(namespaces.ui.triggers, t("table.triggerRemovedSuccessfullyExtended", { triggerId }));
 
 		fetchTriggers(projectId!, true);
 		setTriggerId(undefined);

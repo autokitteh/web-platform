@@ -8,7 +8,7 @@ import { LoggerService } from "@services/logger.service";
 import { ProjectsService } from "@services/projects.service";
 import { namespaces } from "@src/constants";
 
-import { useFileStore, useProjectValidationStore, useToastStore } from "@store";
+import { useCacheStore, useFileStore, useToastStore } from "@store";
 
 const dbService = new IndexedDBService("ProjectDB", "resources");
 
@@ -24,7 +24,7 @@ export function useFileOperations(projectId: string) {
 		setOpenFiles,
 		setOpenProjectId,
 	} = useFileStore();
-	const { checkState } = useProjectValidationStore();
+	const { checkState } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
 
 	const getResources = useCallback(async () => await dbService.getAll(), []);
@@ -45,7 +45,7 @@ export function useFileOperations(projectId: string) {
 			}
 			const resources = await dbService.getAll();
 			if (resources) {
-				checkState(projectId!, true);
+				checkState(projectId!, { resources });
 				setFileList({ isLoading: false, list: Object.keys(resources) });
 			}
 
@@ -72,9 +72,8 @@ export function useFileOperations(projectId: string) {
 				const contentUint8Array = new TextEncoder().encode(content);
 				await dbService.put(name, contentUint8Array);
 				const resources = await dbService.getAll();
-
 				const { error } = await ProjectsService.setResources(projectId, resources);
-				checkState(projectId!, true);
+				checkState(projectId!, { resources });
 				if (error) {
 					return;
 				}
@@ -112,7 +111,7 @@ export function useFileOperations(projectId: string) {
 			const resources = await dbService.getAll();
 			const { error } = await ProjectsService.setResources(projectId, resources);
 			setFileList({ isLoading: false, list: Object.keys(resources) });
-			checkState(projectId!, true);
+			checkState(projectId!, { resources });
 			if (error) {
 				addToast({
 					message: t("resourcesFetchError"),
@@ -131,8 +130,9 @@ export function useFileOperations(projectId: string) {
 				...resources,
 				[name]: fileContent,
 			};
+
 			const { error } = await ProjectsService.setResources(projectId, resourcesWithAddedFile);
-			checkState(projectId!, true);
+			checkState(projectId!, { resources: resourcesWithAddedFile });
 			if (error) {
 				throw error;
 			}

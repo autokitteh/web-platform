@@ -76,7 +76,7 @@ export const DeploymentsTableContent = ({
 				});
 				LoggerService.info(
 					namespaces.ui.deployments,
-					t("deploymentActivatedSuccessfullyExtended", { deploymentId: id })
+					t("actions.deploymentActivatedSuccessfullyExtended", { deploymentId: id })
 				);
 			} else if (action === "deactivate") {
 				addToast({
@@ -85,7 +85,7 @@ export const DeploymentsTableContent = ({
 				});
 				LoggerService.info(
 					namespaces.ui.deployments,
-					t("deploymentDeactivatedSuccessfullyExtended", { deploymentId: id })
+					t("actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId: id })
 				);
 			} else if (action === "delete") {
 				closeModal(ModalName.deleteDeployment);
@@ -96,7 +96,7 @@ export const DeploymentsTableContent = ({
 				});
 				LoggerService.info(
 					namespaces.ui.deployments,
-					t("deploymentRemovedSuccessfullyExtended", { deploymentId: id })
+					t("actions.deploymentRemovedSuccessfullyExtended", { deploymentId: id })
 				);
 			}
 

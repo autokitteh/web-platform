@@ -12,14 +12,39 @@ import {
 } from "@services";
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant } from "@src/enums";
-import { CacheStore } from "@src/interfaces/store";
+import { CacheStore, ProjectValidationLevel } from "@src/interfaces/store";
 import { Environment } from "@src/types/models";
 
-import { useProjectValidationStore, useToastStore } from "@store";
+import { useToastStore } from "@store";
+
+const defaultProjectValidationState = {
+	code: {
+		message: "",
+		level: "warning" as ProjectValidationLevel,
+	},
+	connections: {
+		message: "",
+		level: "warning" as ProjectValidationLevel,
+	},
+	triggers: {
+		message: "",
+		level: "warning" as ProjectValidationLevel,
+	},
+	variables: {
+		message: "",
+		level: "warning" as ProjectValidationLevel,
+	},
+};
 
 const initialState: Omit<
 	CacheStore,
-	"fetchDeployments" | "fetchTriggers" | "fetchVariables" | "fetchEvents" | "fetchConnections" | "initCache"
+	| "fetchDeployments"
+	| "fetchTriggers"
+	| "fetchVariables"
+	| "fetchEvents"
+	| "fetchConnections"
+	| "initCache"
+	| "checkState"
 > = {
 	loading: {
 		deployments: false,
@@ -36,6 +61,8 @@ const initialState: Omit<
 	events: undefined,
 	currentProjectId: undefined,
 	envId: undefined,
+	projectValidationState: defaultProjectValidationState,
+	isValid: true,
 };
 
 const store: StateCreator<CacheStore> = (set, get) => ({
@@ -44,7 +71,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		await Promise.all([
 			get().fetchDeployments(projectId, force),
 			get().fetchTriggers(projectId, force),
-			get().fetchEvents(force),
 			get().fetchVariables(projectId, force),
 			get().fetchConnections(projectId, force),
 		]);
@@ -124,6 +150,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				triggers,
 				loading: { ...state.loading, triggers: false },
 			}));
+
+			get().checkState(projectId!, { triggers });
 
 			return triggers;
 		} catch (error) {
@@ -220,6 +248,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				loading: { ...state.loading, variables: false },
 			}));
 
+			get().checkState(projectId!, { variables: vars });
+
 			return vars;
 		} catch (error) {
 			const errorMsg = i18n.t("errorFetchingVariables", { ns: "errors" });
@@ -252,6 +282,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		try {
 			const { data: connectionsResponse, error } = await ConnectionService.listByProjectId(projectId!);
+
 			if (error) {
 				throw error;
 			}
@@ -262,7 +293,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				loading: { ...state.loading, connections: false },
 			}));
 
-			useProjectValidationStore.getState().checkState(projectId!, true);
+			get().checkState(projectId!, { connections: connectionsResponse });
 
 			return connectionsResponse;
 		} catch (error) {
@@ -280,6 +311,58 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			set((state) => ({ ...state, loading: { ...state.loading, connections: false } }));
 		}
+	},
+
+	checkState: async (projectId, data) => {
+		set((state) => ({ ...state, isValid: false }));
+		const newProjectValidationState = { ...get().projectValidationState };
+
+		if (data?.resources) {
+			newProjectValidationState.code = {
+				message: !Object.keys(data.resources).length
+					? i18n.t("validation.noCodeAndAssets", { ns: "tabs" })
+					: "",
+				level: "error",
+			};
+		}
+
+		if (data?.connections) {
+			const notInitiatedConnections = data.connections.filter((c) => c.status !== "ok").length;
+
+			newProjectValidationState.connections = {
+				...newProjectValidationState.connections,
+				message:
+					notInitiatedConnections > 0 ? i18n.t("validation.connectionsNotConfigured", { ns: "tabs" }) : "",
+			};
+		}
+
+		if (data?.triggers) {
+			newProjectValidationState.triggers = {
+				...newProjectValidationState.triggers,
+				message: !data.triggers.length ? i18n.t("validation.noTriggers", { ns: "tabs" }) : "",
+			};
+		}
+
+		if (data?.variables) {
+			const isEmptyVarValue = data.variables?.find((varb) => varb.value === "");
+			newProjectValidationState.variables = {
+				...newProjectValidationState.variables,
+				message: isEmptyVarValue ? i18n.t("validation.emptyVariable", { ns: "tabs" }) : "",
+			};
+		}
+
+		const isInvalid = Object.values(newProjectValidationState).some(
+			(error) => !!error.message && error.level === "error"
+		);
+
+		set((state) => ({
+			...state,
+			projectValidationState: newProjectValidationState,
+			currentProjectId: projectId,
+			isValid: !isInvalid,
+		}));
+
+		return;
 	},
 });
 

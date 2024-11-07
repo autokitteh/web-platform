@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useId, useMemo } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
@@ -10,10 +10,11 @@ import { EventRow } from "./table/row";
 import { VirtualizedList } from "./table/virtualizer";
 import { useResize, useSort } from "@src/hooks";
 import { useCacheStore } from "@src/store";
-import { BaseEvent } from "@src/types/models";
+import { BaseEvent, Deployment } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
+import { RefreshButton } from "@components/molecules";
 
 export const EventsTable = () => {
 	const { t } = useTranslation("events");
@@ -23,6 +24,7 @@ export const EventsTable = () => {
 		loading: { events: loadingEvents },
 	} = useCacheStore();
 	const resizeId = useId();
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
 	const { eventId } = useParams();
@@ -30,8 +32,12 @@ export const EventsTable = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		if (isInitialLoad) {
+			setIsInitialLoad(false);
+		}
 		fetchEvents();
-	}, [fetchEvents]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const frameClass = useMemo(() => cn("size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none"), [eventId]);
@@ -57,11 +63,11 @@ export const EventsTable = () => {
 	);
 
 	const tableContent = useMemo(() => {
-		if (loadingEvents) {
+		if (loadingEvents && isInitialLoad) {
 			return <Loader isCenter size="xl" />;
 		}
 
-		if (!sortedEvents?.length) {
+		if (!loadingEvents && !sortedEvents?.length) {
 			return <div className="mt-10 text-center text-xl font-semibold">{t("history.noEvents")}</div>;
 		}
 
@@ -86,12 +92,21 @@ export const EventsTable = () => {
 				</Table>
 			</div>
 		);
-	}, [loadingEvents, sortedEvents, t, handleSort, sortConfig, rowRenderer]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isInitialLoad, sortedEvents]);
+
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const handleRefresh = useCallback(() => fetchEvents(true) as Promise<void | Deployment[]>, []);
 
 	return (
 		<div className="my-2 flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
-				<Frame className={frameClass}>{tableContent}</Frame>
+				<Frame className={frameClass}>
+					<div className="flex justify-end">
+						<RefreshButton isLoading={loadingEvents} onRefresh={handleRefresh} />
+					</div>
+					{tableContent}
+				</Frame>
 			</div>
 
 			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeId} />

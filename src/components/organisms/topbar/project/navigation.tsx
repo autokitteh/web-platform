@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 
 import { motion } from "framer-motion";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -12,18 +12,8 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const { pathname } = useLocation();
-	const { deployments, fetchDeployments: getCachedDeployments } = useCacheStore();
+	const { deployments } = useCacheStore();
 	const navigate = useNavigate();
-
-	const fetchDeployments = useCallback(() => {
-		getCachedDeployments(projectId!);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
-
-	useEffect(() => {
-		fetchDeployments();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [pathname]);
 
 	const deploymentId = paramDeploymentId || deployments?.[0]?.deploymentId;
 
