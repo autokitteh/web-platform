@@ -1,4 +1,4 @@
-import { TemplateMetadata } from "@src/types/components";
+import { TemplateMetadata } from "@interfaces/store";
 import { Variable } from "@type/models";
 
 export interface ModalProps {

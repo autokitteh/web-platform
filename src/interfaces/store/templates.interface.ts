@@ -1,5 +1,4 @@
 import { TemplateStorageService } from "@services";
-import { TemplateCategory, TemplateMetadata } from "@src/types/components";
 
 export interface RemoteTemplateMetadata {
 	assetDirectory: string;
@@ -22,17 +21,43 @@ export interface ProcessedRemoteCategory {
 	cards: RemoteTemplateCardWithFiles[];
 }
 
-export interface TemplateState {
-	templateMap: Record<string, TemplateMetadata>;
-	isLoading: boolean;
-	sortedCategories?: TemplateCategory[];
-	error: string | null;
-	lastCommitDate?: string;
-	templateStorage: TemplateStorageService;
+export interface TemplateMetadata {
+	assetDirectory: string;
+	title: string;
+	description: string;
+	integrations: string[];
+	filesIndex: string[];
+}
 
-	fetchTemplates: () => Promise<void>;
-	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateMetadata | undefined;
-	getTemplateFiles: (assetDirectory: string) => Promise<Record<string, string>>;
+export interface TemplateMetadataWithCategory {
+	assetDirectory: string;
+	title: string;
+	description: string;
+	integrations: string[];
+	filesIndex: string[];
+	category: string;
+}
+
+export interface TemplateCategory {
+	name: string;
+	templates: TemplateMetadata[];
+}
+
+export interface RemoteTemplateCategory {
+	cards: RemoteTemplateMetadata[];
+	name: string;
+}
+
+export interface TemplateCardWithFiles {
+	assetDirectory: string;
+	title: string;
+	description: string;
+	integrations: string[];
+	files: Record<string, string>;
+}
+export interface ProcessedCategory {
+	name: string;
+	cards: TemplateCardWithFiles[];
 }
 
 export interface GitHubCommit {
@@ -44,4 +69,17 @@ export interface GitHubCommit {
 		};
 		message: string;
 	};
+}
+
+export interface TemplateState {
+	templateMap: Record<string, TemplateMetadata>;
+	isLoading: boolean;
+	sortedCategories?: TemplateCategory[];
+	error: string | null;
+	lastCommitDate?: string;
+	templateStorage: TemplateStorageService;
+
+	fetchTemplates: () => Promise<void>;
+	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateMetadata | undefined;
+	getTemplateFiles: (assetDirectory: string) => Promise<Record<string, string>>;
 }

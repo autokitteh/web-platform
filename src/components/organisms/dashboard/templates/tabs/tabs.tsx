@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { defaultTemplateProjectCategory } from "@constants";
 import { ModalName } from "@src/enums/components";
+import { TemplateMetadata } from "@src/interfaces/store";
 import { useModalStore, useTemplatesStore } from "@src/store";
-import { TemplateMetadata } from "@src/types/components";
 
 import { Loader, Tab } from "@components/atoms";
 import { ProjectTemplateCard, ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";

@@ -8,8 +8,8 @@ import {
 	Integrations,
 	IntegrationsMap,
 } from "@src/enums/components/connection.enum";
+import { TemplateMetadata } from "@src/interfaces/store";
 import { cn } from "@src/utilities";
-import { TemplateMetadata } from "@type/components";
 
 import { Button, IconSvg, Status, Typography } from "@components/atoms";
 

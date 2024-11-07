@@ -12,7 +12,7 @@ import {
 	TemplateCategory,
 	TemplateMetadata,
 	TemplateMetadataWithCategory,
-} from "@src/types/components/projectTemplates.type";
+} from "@src/interfaces/store/templates.interface";
 import { fetchAndUnpackZip, processReadmeFiles } from "@utilities";
 
 const sortCategories = (categories: TemplateCategory[], order: string[]) => {

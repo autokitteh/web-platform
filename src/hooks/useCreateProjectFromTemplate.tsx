@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { useFileOperations } from "@src/hooks";
-import { TemplateMetadata } from "@src/types/components/projectTemplates.type";
+import { TemplateMetadata } from "@src/interfaces/store";
 
 import { useProjectStore, useTemplatesStore, useToastStore } from "@store";
 

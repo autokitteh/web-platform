@@ -23,6 +23,12 @@ export type {
 	RemoteTemplateCardWithFiles,
 	RemoteTemplateMetadata,
 	GitHubCommit,
+	TemplateState,
+	TemplateMetadata,
+	TemplateMetadataWithCategory,
+	TemplateCategory,
+	RemoteTemplateCategory,
+	TemplateCardWithFiles,
+	ProcessedCategory,
 } from "@interfaces/store/templates.interface";
-export type { TemplateState } from "@interfaces/store/templates.interface";
 export type { UserStore } from "@interfaces/store/userStore.interface";
