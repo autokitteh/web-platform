@@ -39,7 +39,7 @@ export interface TemplateCardWithFiles {
 
 export interface ProcessedCategory {
 	name: string;
-	cards: TemplateCardWithFiles[]; // Change this to use TemplateCardWithFiles
+	cards: TemplateCardWithFiles[];
 }
 
 export interface ProcessedCategory {

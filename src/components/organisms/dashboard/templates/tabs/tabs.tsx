@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { defaultTemplateProjectCategory } from "@constants";
 import { ModalName } from "@src/enums/components";
-import { useTemplateStore } from "@src/hooks/useCreateProjectFromTemplate";
-import { useModalStore } from "@src/store";
+import { useModalStore, useTemplatesStore } from "@src/store";
 import { TemplateMetadata } from "@src/types/components";
 
 import { Loader, Tab } from "@components/atoms";
@@ -14,7 +13,7 @@ export const ProjectTemplatesTabs = () => {
 	const [selectedTemplate, setSelectedTemplate] = useState<TemplateMetadata>();
 
 	const { openModal } = useModalStore();
-	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplateStore();
+	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
 
 	const activeCategory = useMemo(
 		() => categories?.find((category) => category.name === activeTab),
