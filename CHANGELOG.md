@@ -1,3 +1,10 @@
+# [2.50.0](https://github.com/autokitteh/web-platform/compare/v2.49.0...v2.50.0) (2024-11-07)
+
+
+### Features
+
+* update project cache ([#600](https://github.com/autokitteh/web-platform/issues/600)) ([429fd00](https://github.com/autokitteh/web-platform/commit/429fd00ed81d9421e0aa11b888f6ed842e5f169e))
+
 # [2.49.0](https://github.com/autokitteh/web-platform/compare/v2.48.4...v2.49.0) (2024-11-07)
 
 
