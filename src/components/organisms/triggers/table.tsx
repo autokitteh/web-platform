@@ -15,11 +15,18 @@ import { Trigger } from "@type/models";
 import { useSort } from "@hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@store";
 
-import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { EmptyTableAddButton, SortButton } from "@components/molecules";
+import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import {
+	EmptyTableAddButton,
+	Popover,
+	PopoverClose,
+	PopoverContent,
+	PopoverTrigger,
+	SortButton,
+} from "@components/molecules";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 
-import { ClockIcon, EditIcon, LinkIcon, PlusCircle, TrashIcon, WebhookIcon } from "@assets/image/icons";
+import { ClockIcon, EditIcon, InfoIcon, LinkIcon, PlusCircle, TrashIcon, WebhookIcon } from "@assets/image/icons";
 
 const triggerTypeConfig = {
 	[TriggerTypes.connection]: {
@@ -203,7 +210,7 @@ export const TriggersTable = () => {
 								</Td>
 								<Td className="w-4/12">{trigger.entrypoint}</Td>
 								<Td className="w-2/12 pr-0">
-									<div className="flex space-x-1">
+									<div className="flex">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", {
 												name: trigger.name,
@@ -221,6 +228,17 @@ export const TriggersTable = () => {
 										>
 											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>
+
+										<Popover>
+											<PopoverTrigger>
+												<IconButton>
+													<IconSvg className="fill-white" src={InfoIcon} />
+												</IconButton>
+											</PopoverTrigger>
+											<PopoverContent className="z-50 rounded-lg bg-black p-2">
+												<PopoverClose>Close</PopoverClose>
+											</PopoverContent>
+										</Popover>
 									</div>
 								</Td>
 							</Tr>

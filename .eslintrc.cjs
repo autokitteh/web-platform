@@ -31,6 +31,7 @@ module.exports = {
 					["@api", "./src/api"],
 					["@assets", "./src/assets"],
 					["@components", "./src/components"],
+					["@contexts", "./src/contexts"],
 					["@constants", "./src/constants"],
 					["@enums", "./src/enums"],
 					["@hooks", "./src/hooks"],

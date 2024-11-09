@@ -33,6 +33,7 @@ export type {
 	WarningDeploymentActivetedModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
+export type { PopoverOptions } from "@interfaces/components/popover.interface";
 export type {
 	SessionTableFilterProps,
 	SessionsTableListProps,
