@@ -50,7 +50,7 @@ export const PatForm = ({
 
 			return;
 		}
-		const { data: connectionVariables, error } = await VariablesService.list(connectionId);
+		const { data: connectionVariables, error } = await VariablesService.listByScopeId(connectionId);
 
 		if (error) {
 			addToast({

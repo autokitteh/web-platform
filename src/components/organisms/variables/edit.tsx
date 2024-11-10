@@ -19,12 +19,11 @@ export const EditVariable = () => {
 	const { t: tForm } = useTranslation("tabs", {
 		keyPrefix: "variables.form",
 	});
-	const { t: tErrors } = useTranslation("errors");
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables, hasActiveDeployments } = useCacheStore();
 
-	const { environmentId, projectId, variableName } = useParams();
+	const { projectId, variableName } = useParams();
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
@@ -51,7 +50,7 @@ export const EditVariable = () => {
 	const value = useWatch({ control, name: "value" });
 
 	const fetchVariable = async () => {
-		const { data: currentVar, error } = await VariablesService.get(environmentId!, variableName!);
+		const { data: currentVar, error } = await VariablesService.get(projectId!, variableName!);
 		setIsLoadingData(false);
 
 		if (error) {
@@ -80,28 +79,18 @@ export const EditVariable = () => {
 		closeModal(ModalName.warningDeploymentActive);
 		const { isSecret, name, value } = getValues();
 		setIsLoading(true);
+		const { error } = await VariablesService.setByProjectId(projectId!, {
+			isSecret,
+			name,
+			scopeId: "",
+			value,
+		});
 
-		try {
-			const { error } = await VariablesService.setByProjectId(projectId!, {
-				isSecret,
-				name,
-				scopeId: "",
-				value,
-			});
-
-			if (error) {
-				throw error;
-			}
-			await fetchVariables(projectId!, true);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch (error) {
-			addToast({
-				message: tErrors("errorFetchingVariables"),
-				type: "error",
-			});
-		} finally {
-			setIsLoading(false);
+		if (error) {
+			throw error;
 		}
+		await fetchVariables(projectId!, true);
+		setIsLoading(false);
 
 		navigate(-1);
 	};

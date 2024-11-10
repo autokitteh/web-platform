@@ -60,7 +60,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const { closeModal } = useModalStore();
 
 	const getConnectionAuthType = async (connectionId: string) => {
-		const { data: vars, error } = await VariablesService.list(connectionId);
+		const { data: vars, error } = await VariablesService.listByScopeId(connectionId);
 		if (error) {
 			addToast({
 				message: tErrors("errorFetchingVariables"),
@@ -78,7 +78,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const getConnectionVariables = async (connectionId: string) => {
-		const { data: vars, error } = await VariablesService.list(connectionId);
+		const { data: vars, error } = await VariablesService.listByScopeId(connectionId);
 		if (error) {
 			addToast({
 				message: tErrors("errorFetchingVariables"),

@@ -13,6 +13,8 @@
 	"errorFetchingDeploymentsExtended": "Error fetching deployments, error: {{error}}",
 	"errorFetchingConnectionType": "Error while fetching connection authentication type",
 	"errorFetchingConnectionTypeUnknown": "Unknown connection authentication type",
+	"errorFetchingVariable": "Error while fetching variable",
+	"errorFetchingVariableExtended": "Error while fetching variable, error: {{error}}",
 	"errorFetchingVariables": "Error while fetching variables",
 	"errorFetchingVariablesExtended": "Error while fetching variables, error: {{error}}",
 	"connectionNotFound": "Error while fetching connection",

@@ -3,7 +3,7 @@ import i18n from "i18next";
 import { variablesClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertVariableProtoToModel } from "@models/variable.model";
-import { EnvironmentsService, LoggerService } from "@services";
+import { LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Variable } from "@type/models";
 
@@ -23,12 +23,22 @@ export class VariablesService {
 		}
 	}
 
-	static async get(envId: string, name: string): Promise<ServiceResponse<Variable>> {
+	static async get(scopeId: string, name: string): Promise<ServiceResponse<Variable>> {
 		try {
-			const { data: environmentVariables } = await this.list(envId);
-			const variable = environmentVariables?.find((env) => env.name === name);
+			const { vars } = await variablesClient.get({ scopeId, names: [name] });
 
-			return { data: variable, error: undefined };
+			if (!vars || !vars.length) {
+				return { data: undefined, error: undefined };
+			}
+
+			if (vars.length > 1) {
+				const lenghtErrorMessage = i18n.t("variableGetMultipleFound", { name, ns: "services" });
+				LoggerService.error(namespaces.variableService, lenghtErrorMessage);
+
+				return { data: undefined, error: lenghtErrorMessage };
+			}
+
+			return { data: vars[0], error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.variableService,
@@ -39,9 +49,9 @@ export class VariablesService {
 		}
 	}
 
-	static async list(envId: string): Promise<ServiceResponse<Variable[]>> {
+	static async listByScopeId(scopeId: string): Promise<ServiceResponse<Variable[]>> {
 		try {
-			const { vars } = await variablesClient.get({ scopeId: envId });
+			const { vars } = await variablesClient.get({ scopeId });
 
 			const variables = vars.map(convertVariableProtoToModel);
 
@@ -49,7 +59,7 @@ export class VariablesService {
 		} catch (error) {
 			LoggerService.error(
 				namespaces.variableService,
-				i18n.t("errorFetchingVariablesByEnvironmentIdExtended", { envId, error, ns: "services" })
+				i18n.t("errorFetchingVariables", { scopeId, error, ns: "errors" })
 			);
 
 			return { data: undefined, error };
@@ -61,7 +71,7 @@ export class VariablesService {
 		singleVariable: Variable
 	): Promise<ServiceResponse<undefined>> {
 		try {
-			const { data: vars } = await this.list(connectionId);
+			const { data: vars } = await this.listByScopeId(connectionId);
 			await variablesClient.set({ vars: [...(vars || []), { ...singleVariable, scopeId: connectionId }] });
 
 			return { data: undefined, error: undefined };
@@ -83,21 +93,7 @@ export class VariablesService {
 
 	static async setByProjectId(projectId: string, singleVariable: Variable): Promise<ServiceResponse<undefined>> {
 		try {
-			const { data: defaultEnvironment, error } = await EnvironmentsService.getDefaultEnvironment(projectId);
-
-			if (error) {
-				const errorMessage = i18n.t("variableNotCreatedByProjectIdExtended", {
-					name: singleVariable.name,
-					ns: "services",
-					value: singleVariable.value,
-					projectId,
-					error,
-				});
-
-				return { data: undefined, error: errorMessage };
-			}
-
-			await variablesClient.set({ vars: [{ ...singleVariable, scopeId: defaultEnvironment!.envId }] });
+			await variablesClient.set({ vars: [{ ...singleVariable, scopeId: projectId }] });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {

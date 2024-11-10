@@ -4,7 +4,6 @@ import { StateCreator, create } from "zustand";
 import {
 	ConnectionService,
 	DeploymentsService,
-	EnvironmentsService,
 	EventsService,
 	LoggerService,
 	TriggersService,
@@ -13,7 +12,6 @@ import {
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant } from "@src/enums";
 import { CacheStore, ProjectValidationLevel } from "@src/interfaces/store";
-import { Environment } from "@src/types/models";
 
 import { useToastStore } from "@store";
 
@@ -60,7 +58,6 @@ const initialState: Omit<
 	connections: undefined,
 	events: undefined,
 	currentProjectId: undefined,
-	envId: undefined,
 	projectValidationState: defaultProjectValidationState,
 	isValid: true,
 };
@@ -230,20 +227,22 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: envs, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
-			if (errorEnvs) {
-				throw errorEnvs;
-			}
+			const { data: vars, error } = await VariablesService.listByScopeId(projectId);
 
-			const newEnvId = (envs as Environment[])[0].envId;
-			const { data: vars, error } = await VariablesService.list(newEnvId);
 			if (error) {
-				throw error;
+				const errorMsg = i18n.t("errorFetchingVariables", { ns: "errors" });
+				const errorLog = i18n.t("errorFetchingVariablesExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				});
+				useToastStore.getState().addToast({
+					message: errorMsg,
+					type: "error",
+				});
+				LoggerService.error(namespaces.stores.cache, errorLog);
 			}
-
 			set((state) => ({
 				...state,
-				envId: newEnvId,
 				variables: vars,
 				loading: { ...state.loading, variables: false },
 			}));
@@ -252,8 +251,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			return vars;
 		} catch (error) {
-			const errorMsg = i18n.t("errorFetchingVariables", { ns: "errors" });
-			const errorLog = i18n.t("errorFetchingVariablesExtended", {
+			const errorMsg = i18n.t("errorFetchingVariable", { ns: "errors" });
+			const errorLog = i18n.t("errorFetchingVariableExtended", {
 				ns: "errors",
 				error: (error as Error).message,
 			});

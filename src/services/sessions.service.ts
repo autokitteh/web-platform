@@ -1,5 +1,5 @@
 import i18n from "i18next";
-import { get, omit } from "lodash";
+import { omit } from "lodash";
 
 import {
 	Session as ProtoSession,
@@ -10,11 +10,11 @@ import { StartRequest } from "@ak-proto-ts/sessions/v1/svc_pb";
 import { sessionsClient } from "@api/grpc/clients.grpc.api";
 import { defaultSessionsVisiblePageSize, namespaces } from "@constants";
 import { convertSessionProtoToModel, convertSessionProtoToViewerModel } from "@models";
-import { EnvironmentsService, LoggerService } from "@services";
+import { LoggerService } from "@services";
 import { SessionLogType } from "@src/enums";
 import { Session, SessionFilter, ViewerSession } from "@src/interfaces/models";
 import { ServiceResponse, StartSessionArgsType } from "@type";
-import { flattenArray, transformAndStringifyValues } from "@utilities";
+import { transformAndStringifyValues } from "@utilities";
 
 export class SessionsService {
 	static async deleteSession(sessionId: string): Promise<ServiceResponse<void>> {
@@ -128,67 +128,12 @@ export class SessionsService {
 		}
 	}
 
-	static async listByEnvironmentId(environmentId: string): Promise<ServiceResponse<Session[]>> {
-		try {
-			const { sessions: sessionsResponse } = await sessionsClient.list({ envId: environmentId });
-
-			const sessions = sessionsResponse.map(convertSessionProtoToModel);
-
-			return { data: sessions, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.sessionsService, (error as Error).message);
-
-			return { data: undefined, error };
-		}
-	}
-
-	static async listByProjectId(projectId: string): Promise<ServiceResponse<Session[]>> {
-		try {
-			const { data: projecEnvironments, error: environmentsError } =
-				await EnvironmentsService.listByProjectId(projectId);
-
-			if (environmentsError) {
-				return { data: undefined, error: environmentsError };
-			}
-			const sessionsPromises = (projecEnvironments || []).map(async (environment) => {
-				const sessions = await this.listByEnvironmentId(environment.envId);
-
-				return sessions;
-			});
-
-			const sessionsResponses = await Promise.allSettled(sessionsPromises);
-
-			const sessions = flattenArray<Session>(
-				sessionsResponses
-					.filter((response) => response.status === "fulfilled")
-					.map((response) =>
-						get(response, "value.sessions", []).map((session) => convertSessionProtoToModel(session))
-					)
-			);
-
-			return { data: sessions, error: undefined };
-		} catch (error) {
-			LoggerService.error(namespaces.sessionsService, (error as Error).message);
-
-			return {
-				data: undefined,
-				error,
-			};
-		}
-	}
-
 	static async startSession(
 		startSessionArgs: StartSessionArgsType,
 		projectId: string
 	): Promise<ServiceResponse<string>> {
 		try {
-			const { data: defaultEnvironment, error: envError } =
-				await EnvironmentsService.getDefaultEnvironment(projectId);
-			if (envError) {
-				return { data: undefined, error: envError };
-			}
-
-			const sessionToStart = { ...omit(startSessionArgs, "jsonInputs"), envId: defaultEnvironment!.envId };
+			const sessionToStart = { ...omit(startSessionArgs, "jsonInputs"), projectId };
 			const sessionAsStartRequest = {
 				session: sessionToStart,
 				jsonInputs: transformAndStringifyValues(startSessionArgs?.jsonInputs || {}),
