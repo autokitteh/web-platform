@@ -1,0 +1,104 @@
+import React from "react";
+
+import { TriggerTypes } from "@src/enums";
+import { Trigger } from "@src/types/models";
+import { getApiBaseUrl } from "@src/utilities";
+
+import { IconSvg } from "@components/atoms";
+import { CopyButton, PopoverClose } from "@components/molecules";
+
+import { Close } from "@assets/image/icons";
+
+interface PopoverContentProps {
+	trigger: Trigger;
+}
+
+export const InformationPopoverContent: React.FC<PopoverContentProps> = ({ trigger }) => {
+	const apiBaseUrl = getApiBaseUrl();
+	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
+	switch (trigger.sourceType) {
+		case TriggerTypes.webhook:
+			return (
+				<div className="text-white">
+					<div className="mb-2 flex w-full">
+						<div className="w-64 font-semibold">Webhook URL</div>
+						<div className="w-full" />
+						<div>
+							<PopoverClose>
+								<IconSvg className="size-3 fill-white" src={Close} />
+							</PopoverClose>
+						</div>
+					</div>
+					<div className="flex items-center">
+						<div>{webhookUrl}</div>
+						<div className="w-full" />
+						<div className="w-8">
+							<CopyButton size="sm" text={webhookUrl} />
+						</div>
+					</div>
+				</div>
+			);
+		case TriggerTypes.schedule:
+			return (
+				<div className="text-white">
+					<div className="mb-2 flex w-full">
+						<div className="w-64 font-semibold">Cron expression</div>
+						<div className="w-full" />
+						<div>
+							<PopoverClose>
+								<IconSvg className="size-3 fill-white" src={Close} />
+							</PopoverClose>
+						</div>
+					</div>
+					<div className="flex w-full items-center">
+						<div>{trigger.schedule}</div>
+						<CopyButton size="sm" text={trigger?.schedule || ""} />
+					</div>
+				</div>
+			);
+		case TriggerTypes.connection:
+			return (
+				<div className="text-white">
+					<div className="mb-2 flex w-full">
+						<div className="w-64 font-semibold">Info</div>
+						<div className="w-full" />
+						<div>
+							<PopoverClose>
+								<IconSvg className="size-3 fill-white" src={Close} />
+							</PopoverClose>
+						</div>
+					</div>
+					{trigger.path ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">File:</div>
+							<div>{trigger.path}</div>
+							<CopyButton size="sm" text={trigger.path} />
+						</div>
+					) : null}
+					{trigger.entryFunction ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">Entrypoint:</div>
+							<div>{trigger.entryFunction}</div>
+							<CopyButton size="sm" text={trigger.entryFunction} />
+						</div>
+					) : null}
+					{trigger.eventType ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">Event type:</div>
+							<div>{trigger.eventType}</div>
+							<CopyButton size="sm" text={trigger.eventType} />
+						</div>
+					) : null}
+					{trigger.filter ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">Filter:</div>
+							<div>{trigger.filter}</div>
+							<CopyButton size="sm" text={trigger.filter} />
+						</div>
+					) : null}
+				</div>
+			);
+		default:
+			return null;
+	}
+};

@@ -3,6 +3,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { InformationPopoverContent } from "./table/popoverContent";
 import { ModalName } from "@enums/components";
 import { LoggerService, TriggersService } from "@services";
 import { namespaces } from "@src/constants";
@@ -16,14 +17,7 @@ import { useSort } from "@hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import {
-	EmptyTableAddButton,
-	Popover,
-	PopoverClose,
-	PopoverContent,
-	PopoverTrigger,
-	SortButton,
-} from "@components/molecules";
+import { EmptyTableAddButton, Popover, PopoverContent, PopoverTrigger, SortButton } from "@components/molecules";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 
 import { ClockIcon, EditIcon, InfoIcon, LinkIcon, PlusCircle, TrashIcon, WebhookIcon } from "@assets/image/icons";
@@ -235,8 +229,8 @@ export const TriggersTable = () => {
 													<IconSvg className="fill-white" src={InfoIcon} />
 												</IconButton>
 											</PopoverTrigger>
-											<PopoverContent className="z-50 rounded-lg bg-black p-2">
-												<PopoverClose>Close</PopoverClose>
+											<PopoverContent className="z-50 rounded-lg bg-black p-4">
+												<InformationPopoverContent trigger={trigger} />
 											</PopoverContent>
 										</Popover>
 									</div>
