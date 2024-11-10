@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { TriggerTypes } from "@src/enums";
 import { Trigger } from "@src/types/models";
 import { getApiBaseUrl } from "@src/utilities";
@@ -16,12 +18,14 @@ interface PopoverContentProps {
 export const InformationPopoverContent: React.FC<PopoverContentProps> = ({ trigger }) => {
 	const apiBaseUrl = getApiBaseUrl();
 	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
+	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
+
 	switch (trigger.sourceType) {
 		case TriggerTypes.webhook:
 			return (
 				<div className="text-white">
 					<div className="mb-2 flex w-full">
-						<div className="w-64 font-semibold">Webhook URL</div>
+						<div className="w-64 font-semibold">{t("webhookUrl")}</div>
 						<div className="w-full" />
 						<div>
 							<PopoverClose>

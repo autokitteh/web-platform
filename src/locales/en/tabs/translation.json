@@ -71,6 +71,9 @@
 			"addNew": "Add new",
 			"loading": "Loading"
 		},
+		"infoPopover":{
+			"webhookUrl": "Webhook URL"
+		},
 		"form": {
 			"createdSuccessfully": "Trigger created successfully",
 			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
