@@ -72,7 +72,13 @@
 			"loading": "Loading"
 		},
 		"infoPopover":{
-			"webhookUrl": "Webhook URL"
+			"webhookUrl": "Webhook URL",
+			"cron":"Cron expression",
+			"info": "Info",
+			"file": "File",
+			"entrypoint": "Entrypoint",
+			"eventType": "Event type",
+			"filter": "Filter"
 		},
 		"form": {
 			"createdSuccessfully": "Trigger created successfully",

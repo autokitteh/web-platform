@@ -46,7 +46,7 @@ export const InformationPopoverContent: React.FC<PopoverContentProps> = ({ trigg
 			return (
 				<div className="text-white">
 					<div className="mb-2 flex w-full">
-						<div className="w-64 font-semibold">Cron expression</div>
+						<div className="w-64 font-semibold">{t("cron")}</div>
 						<div className="w-full" />
 						<div>
 							<PopoverClose>
@@ -64,7 +64,7 @@ export const InformationPopoverContent: React.FC<PopoverContentProps> = ({ trigg
 			return (
 				<div className="text-white">
 					<div className="mb-2 flex w-full">
-						<div className="w-64 font-semibold">Info</div>
+						<div className="w-64 font-semibold">{t("info")}</div>
 						<div className="w-full" />
 						<div>
 							<PopoverClose>
@@ -74,28 +74,28 @@ export const InformationPopoverContent: React.FC<PopoverContentProps> = ({ trigg
 					</div>
 					{trigger.path ? (
 						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">File:</div>
+							<div className="font-semibold">{t("file")}:</div>
 							<div>{trigger.path}</div>
 							<CopyButton size="sm" text={trigger.path} />
 						</div>
 					) : null}
 					{trigger.entryFunction ? (
 						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">Entrypoint:</div>
+							<div className="font-semibold">{t("entrypoint")}:</div>
 							<div>{trigger.entryFunction}</div>
 							<CopyButton size="sm" text={trigger.entryFunction} />
 						</div>
 					) : null}
 					{trigger.eventType ? (
 						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">Event type:</div>
+							<div className="font-semibold">{t("eventType")}:</div>
 							<div>{trigger.eventType}</div>
 							<CopyButton size="sm" text={trigger.eventType} />
 						</div>
 					) : null}
 					{trigger.filter ? (
 						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">Filter:</div>
+							<div className="font-semibold">{t("filter")}:</div>
 							<div>{trigger.filter}</div>
 							<CopyButton size="sm" text={trigger.filter} />
 						</div>
