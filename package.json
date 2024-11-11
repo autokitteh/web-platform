@@ -148,7 +148,8 @@
 	"optionalDependencies": {
 		"@rollup/rollup-linux-x64-gnu": "^4.24.4",
 		"@rollup/rollup-linux-x64-musl": "^4.24.0",
-		"@rollup/rollup-win32-x64-msvc": "4.24.0"
+		"@rollup/rollup-win32-x64-msvc": "4.24.0",
+		"esbuild/win32-x64": "^0.24.0"
 	},
 	"overrides": {
 		"vite": {
