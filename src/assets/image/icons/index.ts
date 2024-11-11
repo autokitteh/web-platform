@@ -16,6 +16,8 @@ export { default as CircleMinusIcon } from "@assets/image/icons/CircleMinus.svg?
 export { default as CirclePlayIcon } from "@assets/image/icons/CirclePlay.svg?react";
 export { default as CirclePlusIcon } from "@assets/image/icons/CirclePlus.svg?react";
 export { default as CircleTokenIcon } from "@assets/image/icons/CircleToken.svg?react";
+// Taken from: https://tabler.io/icons/icon/clock
+export { default as ClockIcon } from "@assets/image/icons/Clock.svg?react";
 export { default as Close } from "@assets/image/icons/Close.svg?react";
 export { default as CompressIcon } from "@assets/image/icons/Compress.svg?react";
 export { default as CopyIcon } from "@assets/image/icons/Copy.svg?react";
@@ -27,7 +29,6 @@ export { default as ExpandIcon } from "@assets/image/icons/Expand.svg?react";
 export { default as ExternalLinkIcon } from "@assets/image/icons/ExternalLink.svg?react";
 export { default as EyeIcon } from "@assets/image/icons/Eye.svg?react";
 export { default as EyeCloseIcon } from "@assets/image/icons/EyeClose.svg?react";
-
 export { default as FileIcon } from "@assets/image/icons/File.svg?react";
 // Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/filter.svg
 export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";
@@ -35,6 +36,7 @@ export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?re
 export { default as GearIcon } from "@assets/image/icons/Gear.svg?react";
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
 export { default as InfoIcon } from "@assets/image/icons/Info.svg?react";
+// Taken from https://fontawesome.com/icons/link?f=classic&s=solid
 export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
 // Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/list-details.svg
 export { default as ListDetailsIcon } from "@assets/image/icons/ListDetails.svg?react";
@@ -67,3 +69,5 @@ export { default as TrashIcon } from "@assets/image/icons/Trash.svg?react";
 export { default as LockIcon } from "@assets/image/icons/UnlockedLock.svg?react";
 export { default as UserIcon } from "@assets/image/icons/User.svg?react";
 export { default as WarningTriangleIcon } from "@assets/image/icons/WarningTriangle.svg?react";
+// Taken from: https://tabler.io/icons/icon/webhook
+export { default as WebhookIcon } from "@assets/image/icons/Webhook.svg?react";

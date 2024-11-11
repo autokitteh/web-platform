@@ -133,9 +133,7 @@
 			"columns": {
 				"actions": "Actions",
 				"call": "Call",
-				"connection": "Source",
-				"eventType": "Event Type",
-				"filter": "Filter",
+				"type": "Type",
 				"name": "Name"
 			},
 			"triggerRemovedSuccessfully": "Trigger removed successfully",
