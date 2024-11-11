@@ -20,7 +20,10 @@
 		"projectTemplateFilesNotFound": "Project template files not found",
 		"projectFilesNotFound": "Project files not found",
 		"projectDirectoryNotConfigured": "Project directory not configured",
-		"projectFilesNotFoundExtended": "Project files not found, error: {{error}}"
+		"projectFilesNotFoundExtended": "Project files not found, error: {{error}}",
+		"templateNotFoundInTheResources": "Template not found in the resources",
+		"templateNotFoundInTheResourcesExtended": "Template not found in the resources directory: {{templateAssetDirectory}}"
+
 	},
 	"projects": {
 		"table": {

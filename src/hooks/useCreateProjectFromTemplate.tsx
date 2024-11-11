@@ -116,7 +116,16 @@ export const useCreateProjectFromTemplate = () => {
 		try {
 			const template = findTemplateByAssetDirectory(templateAssetDirectory);
 			if (!template) {
-				throw new Error(`Template not found for asset directory: ${templateAssetDirectory}`);
+				addToast({
+					message: t("templateNotFoundInTheResources"),
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.resourcesService,
+					t("templateNotFoundInTheResourcesExtended", { templateAssetDirectory })
+				);
+
+				return;
 			}
 			await createProjectFromTemplate(template, projectName);
 		} catch (error) {
@@ -124,7 +133,8 @@ export const useCreateProjectFromTemplate = () => {
 				message: t("projectCreationFailed"),
 				type: "error",
 			});
-			console.error("Error creating project from template:", error);
+
+			LoggerService.error(namespaces.resourcesService, t("projectCreationFailedExtended", { error }));
 		} finally {
 			setIsCreating(false);
 		}

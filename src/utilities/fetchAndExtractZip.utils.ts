@@ -214,7 +214,7 @@ export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemo
 						? attributes.categories
 						: [attributes.categories];
 
-					categories.forEach((category: string) => {
+					categories.forEach((category) => {
 						if (!categoriesMap.has(category)) {
 							categoriesMap.set(category, new Set());
 						}
