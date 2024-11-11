@@ -37,7 +37,7 @@ export const ConnectionsTable = () => {
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
 
 	useEffect(() => {
-		setFetchConnectionsCallback(() => fetchConnections(projectId!));
+		setFetchConnectionsCallback(() => fetchConnections(projectId!, true));
 
 		return () => {
 			resetChecker();
