@@ -9,6 +9,7 @@ import { namespaces } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { TableHeader } from "@src/interfaces/components";
 import { SortableColumns } from "@src/types/components";
+import { cn } from "@src/utilities";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -134,7 +135,8 @@ export const TriggersTable = () => {
 			closeModal(ModalName.deleteTrigger);
 			setTriggerId(undefined);
 		}
-	}, [triggerId, projectId, t, tError, addToast, closeModal, fetchTriggers]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [triggerId, projectId]);
 
 	const handleOpenModalDeleteTrigger = useCallback(
 		(id: string) => {
@@ -143,6 +145,9 @@ export const TriggersTable = () => {
 		},
 		[openModal]
 	);
+
+	const tableHeaderClass = (sortable: boolean, className: string) =>
+		cn("group font-normal", { "cursor-pointer": sortable }, className);
 
 	if (loadingTriggers) {
 		return <Loader isCenter size="xl" />;
@@ -168,7 +173,7 @@ export const TriggersTable = () => {
 						<Tr>
 							{tableHeaders.map(({ className, key, label, sortable }) => (
 								<Th
-									className={`group ${sortable ? "cursor-pointer" : ""} ${className} font-normal`}
+									className={tableHeaderClass(sortable, className)}
 									key={key}
 									onClick={() => sortable && key !== "actions" && handleSort(key as SortableColumns)}
 								>
