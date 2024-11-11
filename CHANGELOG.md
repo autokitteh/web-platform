@@ -1,3 +1,10 @@
+# [2.52.0](https://github.com/autokitteh/web-platform/compare/v2.51.2...v2.52.0) (2024-11-11)
+
+
+### Features
+
+* trigger table Icons ([#630](https://github.com/autokitteh/web-platform/issues/630)) ([6012223](https://github.com/autokitteh/web-platform/commit/60122234132cfcf4ed0000f0ca5e5a2a2eca09a0))
+
 ## [2.51.2](https://github.com/autokitteh/web-platform/compare/v2.51.1...v2.51.2) (2024-11-11)
 
 
