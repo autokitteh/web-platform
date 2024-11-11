@@ -58,11 +58,9 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 					<div className="mb-2 flex w-full">
 						<div className="w-64 font-semibold">{t("info")}</div>
 						<div className="w-full" />
-						<div>
-							<PopoverClose>
-								<IconSvg className="size-3 fill-white" src={Close} />
-							</PopoverClose>
-						</div>
+						<PopoverClose>
+							<IconSvg className="size-3 fill-white" src={Close} />
+						</PopoverClose>
 					</div>
 					{trigger.path ? (
 						<div className="flex items-center gap-x-1">

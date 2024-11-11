@@ -21,8 +21,8 @@ export const Popover = ({
 export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTMLElement> & PopoverTriggerProps>(
 	function PopoverTrigger({ children, ...props }, propRef) {
 		const context = usePopoverContext();
-		const childrenRef = (children as any).ref;
-		const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef]);
+		const childrenRef = React.isValidElement(children) ? (children as any).ref : null;
+		const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef].filter(Boolean));
 
 		return (
 			<button
