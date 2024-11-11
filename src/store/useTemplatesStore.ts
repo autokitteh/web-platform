@@ -45,24 +45,24 @@ const store = (set: any, get: any): TemplateState => ({
 	fetchTemplates: async () => {
 		set({ isLoading: true, error: null });
 
-		const processTemplateCard = async (
-			cardWithFiles: TemplateCardWithFiles,
-			categoryName: string,
-			templateStorage: TemplateStorageService
-		) => {
-			await templateStorage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
-
-			return {
-				assetDirectory: cardWithFiles.assetDirectory,
-				title: cardWithFiles.title,
-				description: cardWithFiles.description,
-				integrations: cardWithFiles.integrations,
-				filesIndex: Object.keys(cardWithFiles.files),
-				category: categoryName,
-			};
-		};
-
 		const processTemplates = async (zipUrl: string) => {
+			const processTemplateCard = async (
+				cardWithFiles: TemplateCardWithFiles,
+				categoryName: string,
+				templateStorage: TemplateStorageService
+			) => {
+				await templateStorage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
+
+				return {
+					assetDirectory: cardWithFiles.assetDirectory,
+					title: cardWithFiles.title,
+					description: cardWithFiles.description,
+					integrations: cardWithFiles.integrations,
+					filesIndex: Object.keys(cardWithFiles.files),
+					category: categoryName,
+				};
+			};
+
 			const result = await fetchAndUnpackZip(zipUrl);
 			if (!("structure" in result)) {
 				throw new Error(result.error);
