@@ -73,6 +73,7 @@
 		"@commitlint/config-conventional": "^19.2.2",
 		"@connectrpc/connect": "^1.4.0",
 		"@connectrpc/connect-web": "^1.4.0",
+		"@esbuild/win32-x64": "^0.24.0",
 		"@liferay/eslint-plugin": "^1.6.0",
 		"@playwright/test": "^1.48.1",
 		"@semantic-release/changelog": "^6.0.3",
@@ -146,7 +147,8 @@
 	},
 	"optionalDependencies": {
 		"@rollup/rollup-linux-x64-gnu": "^4.24.4",
-		"@rollup/rollup-linux-x64-musl": "^4.24.0"
+		"@rollup/rollup-linux-x64-musl": "^4.24.0",
+		"@rollup/rollup-win32-x64-msvc": "4.24.0"
 	},
 	"overrides": {
 		"vite": {
