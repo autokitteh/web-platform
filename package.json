@@ -31,6 +31,7 @@
 		"@bufbuild/protobuf": "^1.10.0",
 		"@descope/react-sdk": "^2.0.60",
 		"@estruyf/github-actions-reporter": "^1.8.0",
+		"@floating-ui/react": "^0.26.27",
 		"@hookform/resolvers": "^3.9.0",
 		"@monaco-editor/react": "^4.6.0",
 		"@sentry/react": "^8.33.1",

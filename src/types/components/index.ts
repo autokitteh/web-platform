@@ -1,5 +1,6 @@
 export type { TableHeaderProps, SortableHeaderProps } from "@src/types/components/eventsTable.type";
 export type { FormMode, ManualFormParamsErrors } from "@src/types/components/form.type";
+export type { PopopverContextType } from "@src/types/components/popover.type";
 export type {
 	TemplateCategory,
 	TemplateCardType,
