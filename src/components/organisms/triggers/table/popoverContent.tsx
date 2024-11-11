@@ -15,7 +15,7 @@ interface PopoverContentProps {
 	trigger: Trigger;
 }
 
-export const InformationPopoverContent: React.FC<PopoverContentProps> = ({ trigger }) => {
+export const InformationPopoverContent = ({ trigger }: {trigger: Trigger}) => {
 	const apiBaseUrl = getApiBaseUrl();
 	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
