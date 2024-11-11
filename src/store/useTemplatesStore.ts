@@ -110,27 +110,26 @@ const store = (set: any, get: any): TemplateState => ({
 
 			if (shouldCheckGitHub) {
 				try {
-					const response = await axios.get<GitHubCommit[]>(remoteTemplatesRepositoryURL, {
+					const { data } = await axios.get<GitHubCommit[]>(remoteTemplatesRepositoryURL, {
 						params: { per_page: 1 },
 						headers: { Accept: "application/vnd.github.v3+json" },
 					});
 
-					if (response.data.length) {
-						const latestCommit = response.data[0];
+					const latestCommit = data?.[0];
+					shouldFetchTemplates = !data?.length;
+
+					if (latestCommit) {
 						const latestCommitDate = latestCommit.commit.author.date;
 						const currentCommitDate = get().lastCommitDate;
 
 						if (!currentCommitDate || new Date(latestCommitDate) > new Date(currentCommitDate)) {
-							shouldFetchTemplates = true;
 							shouldFetchTemplatesFromGithub = true;
+							shouldFetchTemplates = true;
 							lastCommitDate = latestCommitDate;
 						}
-					} else {
-						shouldFetchTemplates = true;
 					}
 					set({ lastCheckDate: currentTime });
-					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				} catch (error) {
+				} catch {
 					shouldFetchTemplates = true;
 				}
 			}
@@ -141,22 +140,11 @@ const store = (set: any, get: any): TemplateState => ({
 				return;
 			}
 
-			if (shouldFetchTemplatesFromGithub) {
-				const { categories, templateMap } = await processTemplates(remoteTemplatesArchiveURL);
-				const sortedCategories = sortCategories(categories, templateCategoriesOrder);
-				set({
-					templateMap,
-					sortedCategories,
-					lastCommitDate,
-					isLoading: false,
-					error: null,
-				});
+			const zipUrl = shouldFetchTemplatesFromGithub ? remoteTemplatesArchiveURL : localTemplatesArchiveFallback;
 
-				return;
-			}
-
-			const { categories, templateMap } = await processTemplates(localTemplatesArchiveFallback);
+			const { categories, templateMap } = await processTemplates(zipUrl);
 			const sortedCategories = sortCategories(categories, templateCategoriesOrder);
+
 			set({
 				templateMap,
 				sortedCategories,
