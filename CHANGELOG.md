@@ -1,3 +1,10 @@
+## [2.51.1](https://github.com/autokitteh/web-platform/compare/v2.51.0...v2.51.1) (2024-11-11)
+
+
+### Bug Fixes
+
+* force fetch connections in connection checker ([#633](https://github.com/autokitteh/web-platform/issues/633)) ([222c448](https://github.com/autokitteh/web-platform/commit/222c44887431d0d249312b7f144bd594cdda8b40))
+
 # [2.51.0](https://github.com/autokitteh/web-platform/compare/v2.50.0...v2.51.0) (2024-11-07)
 
 
