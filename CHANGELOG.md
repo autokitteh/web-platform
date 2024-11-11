@@ -1,3 +1,10 @@
+## [2.51.2](https://github.com/autokitteh/web-platform/compare/v2.51.1...v2.51.2) (2024-11-11)
+
+
+### Bug Fixes
+
+* update aws connection regions list ([#634](https://github.com/autokitteh/web-platform/issues/634)) ([422330f](https://github.com/autokitteh/web-platform/commit/422330fd8eda6fcb2946aa6f7d72d51129b9e28b))
+
 ## [2.51.1](https://github.com/autokitteh/web-platform/compare/v2.51.0...v2.51.1) (2024-11-11)
 
 
