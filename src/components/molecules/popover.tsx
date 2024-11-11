@@ -4,7 +4,7 @@ import { FloatingFocusManager, FloatingPortal, useMergeRefs } from "@floating-ui
 
 import { PopoverContext, usePopoverContext } from "@contexts";
 import { usePopover } from "@src/hooks";
-import { PopoverOptions } from "@src/interfaces/components";
+import { PopoverOptions, PopoverTriggerProps } from "@src/interfaces/components";
 
 export const Popover = ({
 	children,
@@ -17,11 +17,6 @@ export const Popover = ({
 
 	return <PopoverContext.Provider value={popover}>{children}</PopoverContext.Provider>;
 };
-
-interface PopoverTriggerProps {
-	children: React.ReactNode;
-	asChild?: boolean;
-}
 
 export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTMLElement> & PopoverTriggerProps>(
 	function PopoverTrigger({ children, ...props }, propRef) {
@@ -55,11 +50,10 @@ export const PopoverContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
 		<FloatingPortal>
 			<FloatingFocusManager context={floatingContext} modal={context.modal}>
 				<div
-					aria-describedby={context.descriptionId}
-					aria-labelledby={context.labelId}
 					ref={ref}
 					style={{ ...context.floatingStyles, ...style }}
 					{...context.getFloatingProps(props)}
+					className={props?.className}
 				>
 					{props.children}
 				</div>

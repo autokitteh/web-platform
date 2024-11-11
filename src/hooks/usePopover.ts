@@ -14,19 +14,10 @@ import {
 
 import { PopoverOptions } from "@src/interfaces/components";
 
-export function usePopover({
-	initialOpen = false,
-	modal,
-	onOpenChange: setControlledOpen,
-	open: controlledOpen,
-	placement = "bottom",
-}: PopoverOptions = {}) {
-	const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
-	const [labelId, setLabelId] = useState<string | undefined>();
-	const [descriptionId, setDescriptionId] = useState<string | undefined>();
-
-	const open = controlledOpen ?? uncontrolledOpen;
-	const setOpen = setControlledOpen ?? setUncontrolledOpen;
+export function usePopover({ initialOpen = false, modal, placement = "bottom" }: PopoverOptions = {}) {
+	const [open, setOpen] = useState(initialOpen);
+	const [labelId, setLabelId] = useState<string>();
+	const [descriptionId, setDescriptionId] = useState<string>();
 
 	const data = useFloating({
 		placement,

@@ -7,3 +7,8 @@ export interface PopoverOptions {
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
 }
+
+export interface PopoverTriggerProps {
+	children: React.ReactNode;
+	asChild?: boolean;
+}

@@ -11,11 +11,7 @@ import { CopyButton, PopoverClose } from "@components/molecules";
 
 import { Close } from "@assets/image/icons";
 
-interface PopoverContentProps {
-	trigger: Trigger;
-}
-
-export const InformationPopoverContent = ({ trigger }: {trigger: Trigger}) => {
+export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => {
 	const apiBaseUrl = getApiBaseUrl();
 	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
@@ -27,11 +23,9 @@ export const InformationPopoverContent = ({ trigger }: {trigger: Trigger}) => {
 					<div className="mb-2 flex w-full">
 						<div className="w-64 font-semibold">{t("webhookUrl")}</div>
 						<div className="w-full" />
-						<div>
-							<PopoverClose>
-								<IconSvg className="size-3 fill-white" src={Close} />
-							</PopoverClose>
-						</div>
+						<PopoverClose>
+							<IconSvg className="size-3 fill-white" src={Close} />
+						</PopoverClose>
 					</div>
 					<div className="flex items-center">
 						<div>{webhookUrl}</div>
@@ -48,14 +42,12 @@ export const InformationPopoverContent = ({ trigger }: {trigger: Trigger}) => {
 					<div className="mb-2 flex w-full">
 						<div className="w-64 font-semibold">{t("cron")}</div>
 						<div className="w-full" />
-						<div>
-							<PopoverClose>
-								<IconSvg className="size-3 fill-white" src={Close} />
-							</PopoverClose>
-						</div>
+						<PopoverClose>
+							<IconSvg className="size-3 fill-white" src={Close} />
+						</PopoverClose>
 					</div>
 					<div className="flex w-full items-center">
-						<div>{trigger.schedule}</div>
+						{trigger.schedule}
 						<CopyButton size="sm" text={trigger?.schedule || ""} />
 					</div>
 				</div>
@@ -75,14 +67,14 @@ export const InformationPopoverContent = ({ trigger }: {trigger: Trigger}) => {
 					{trigger.path ? (
 						<div className="flex items-center gap-x-1">
 							<div className="font-semibold">{t("file")}:</div>
-							<div>{trigger.path}</div>
+							{trigger.path}
 							<CopyButton size="sm" text={trigger.path} />
 						</div>
 					) : null}
 					{trigger.entryFunction ? (
 						<div className="flex items-center gap-x-1">
 							<div className="font-semibold">{t("entrypoint")}:</div>
-							<div>{trigger.entryFunction}</div>
+							{trigger.entryFunction}
 							<CopyButton size="sm" text={trigger.entryFunction} />
 						</div>
 					) : null}
