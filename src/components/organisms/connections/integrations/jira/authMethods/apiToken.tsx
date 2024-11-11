@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { infoTwilioLinks } from "@constants/lists/connections";
+import { infoJiraLinks } from "@constants/lists/connections";
 
 import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -120,7 +120,7 @@ export const ApiTokenJiraForm = ({
 
 			<Accordion title={t("information")}>
 				<div className="flex flex-col gap-2">
-					{infoTwilioLinks.map(({ text, url }, index) => (
+					{infoJiraLinks.map(({ text, url }, index) => (
 						<Link
 							className="group inline-flex items-center gap-2.5 text-green-800"
 							key={index}
