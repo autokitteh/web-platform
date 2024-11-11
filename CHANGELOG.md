@@ -1,3 +1,10 @@
+## [2.53.1](https://github.com/autokitteh/web-platform/compare/v2.53.0...v2.53.1) (2024-11-11)
+
+
+### Bug Fixes
+
+* fix the information links in jira connection ([#636](https://github.com/autokitteh/web-platform/issues/636)) ([3e4b35d](https://github.com/autokitteh/web-platform/commit/3e4b35dbb9e3bc9f86bfb19d348aa2f5b7e885ca))
+
 # [2.53.0](https://github.com/autokitteh/web-platform/compare/v2.52.0...v2.53.0) (2024-11-11)
 
 
