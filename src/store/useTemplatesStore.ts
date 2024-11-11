@@ -116,17 +116,17 @@ const store = (set: any, get: any): TemplateState => ({
 					});
 
 					const latestCommit = data?.[0];
-					shouldFetchTemplates = !data?.length;
 
 					if (latestCommit) {
 						const latestCommitDate = latestCommit.commit.author.date;
 						const currentCommitDate = get().lastCommitDate;
 
-						if (!currentCommitDate || new Date(latestCommitDate) > new Date(currentCommitDate)) {
-							shouldFetchTemplatesFromGithub = true;
-							shouldFetchTemplates = true;
-							lastCommitDate = latestCommitDate;
+						if (currentCommitDate && new Date(latestCommitDate) <= new Date(currentCommitDate)) {
+							return;
 						}
+						shouldFetchTemplatesFromGithub = true;
+						shouldFetchTemplates = true;
+						lastCommitDate = latestCommitDate;
 					}
 					set({ lastCheckDate: currentTime });
 				} catch {
