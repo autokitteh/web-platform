@@ -78,7 +78,9 @@
 			"file": "File",
 			"entrypoint": "Entrypoint",
 			"eventType": "Event type",
-			"filter": "Filter"
+			"filter": "Filter",
+			"connection": "Connection",
+			"connectionId": "Connection ID"
 		},
 		"form": {
 			"createdSuccessfully": "Trigger created successfully",

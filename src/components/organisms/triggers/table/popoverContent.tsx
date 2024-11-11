@@ -3,11 +3,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { TriggerTypes } from "@src/enums";
+import { useCacheStore } from "@src/store";
 import { Trigger } from "@src/types/models";
 import { getApiBaseUrl } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
-import { CopyButton, PopoverClose } from "@components/molecules";
+import { CopyButton, IdCopyButton, PopoverClose } from "@components/molecules";
 
 import { Close } from "@assets/image/icons";
 
@@ -15,6 +16,8 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	const apiBaseUrl = getApiBaseUrl();
 	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
+	const { connections } = useCacheStore();
+	const triggerConnection = connections?.find((connection) => connection.connectionId === trigger.connectionId);
 
 	switch (trigger.sourceType) {
 		case TriggerTypes.webhook:
@@ -62,6 +65,19 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 							<IconSvg className="size-3 fill-white" src={Close} />
 						</PopoverClose>
 					</div>
+					{triggerConnection ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">{t("connection")}:</div>
+							{triggerConnection.name}
+							<CopyButton size="sm" text={triggerConnection.name} />
+						</div>
+					) : null}
+					{triggerConnection?.connectionId ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">{t("connectionId")}:</div>
+							<IdCopyButton id={trigger.connectionId || ""} />
+						</div>
+					) : null}
 					{trigger.path ? (
 						<div className="flex items-center gap-x-1">
 							<div className="font-semibold">{t("file")}:</div>
