@@ -1,3 +1,10 @@
+# [2.53.0](https://github.com/autokitteh/web-platform/compare/v2.52.0...v2.53.0) (2024-11-11)
+
+
+### Features
+
+* trigger table - popover ([#631](https://github.com/autokitteh/web-platform/issues/631)) ([70fd1a7](https://github.com/autokitteh/web-platform/commit/70fd1a72f42a57fd4c0f058608b3645b46b0d62a))
+
 # [2.52.0](https://github.com/autokitteh/web-platform/compare/v2.51.2...v2.52.0) (2024-11-11)
 
 
