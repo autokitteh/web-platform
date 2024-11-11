@@ -1,13 +1,5 @@
 import { TemplateStorageService } from "@services";
 
-export interface RemoteTemplateMetadata {
-	assetDirectory: string;
-	title: string;
-	description: string;
-	integrations: string[];
-	filesIndex: string[];
-}
-
 export interface RemoteTemplateCardWithFiles {
 	assetDirectory: string;
 	title: string;
@@ -41,11 +33,6 @@ export interface TemplateMetadataWithCategory {
 export interface TemplateCategory {
 	name: string;
 	templates: TemplateMetadata[];
-}
-
-export interface RemoteTemplateCategory {
-	cards: RemoteTemplateMetadata[];
-	name: string;
 }
 
 export interface TemplateCardWithFiles {

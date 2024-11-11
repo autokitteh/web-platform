@@ -14,16 +14,13 @@ export type { ManualRunStore, ManualProjectData } from "@interfaces/store/manual
 export type { ModalStore } from "@interfaces/store/modalStore.interface";
 export type { ProjectStore } from "@interfaces/store/projectStore.interface";
 export type {
-	ProcessedRemoteCategory,
 	RemoteTemplateCardWithFiles,
-	RemoteTemplateMetadata,
 	GitHubCommit,
 	TemplateState,
 	TemplateMetadata,
 	TemplateMetadataWithCategory,
 	TemplateCategory,
-	RemoteTemplateCategory,
 	TemplateCardWithFiles,
-	ProcessedCategory,
+	ProcessedRemoteCategory,
 } from "@interfaces/store/templates.interface";
 export type { UserStore } from "@interfaces/store/userStore.interface";

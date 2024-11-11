@@ -14,10 +14,8 @@ import { TemplateStorageService } from "@services";
 import { StoreName } from "@src/enums";
 import {
 	GitHubCommit,
-	ProcessedCategory,
 	TemplateCardWithFiles,
 	TemplateCategory,
-	TemplateMetadata,
 	TemplateMetadataWithCategory,
 	TemplateState,
 } from "@src/interfaces/store";
@@ -47,48 +45,54 @@ const store = (set: any, get: any): TemplateState => ({
 	fetchTemplates: async () => {
 		set({ isLoading: true, error: null });
 
+		const processTemplateCard = async (
+			cardWithFiles: TemplateCardWithFiles,
+			categoryName: string,
+			templateStorage: TemplateStorageService
+		) => {
+			await templateStorage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
+
+			return {
+				assetDirectory: cardWithFiles.assetDirectory,
+				title: cardWithFiles.title,
+				description: cardWithFiles.description,
+				integrations: cardWithFiles.integrations,
+				filesIndex: Object.keys(cardWithFiles.files),
+				category: categoryName,
+			};
+		};
+
 		const processTemplates = async (zipUrl: string) => {
 			const result = await fetchAndUnpackZip(zipUrl);
 			if (!("structure" in result)) {
 				throw new Error(result.error);
 			}
 
-			const processedCategories: ProcessedCategory[] = processReadmeFiles(result.structure);
-			const templateMap: Record<string, TemplateMetadataWithCategory> = {};
 			const { templateStorage } = get();
+			const processedCategories = processReadmeFiles(result.structure);
+			const templateMap: Record<string, TemplateMetadataWithCategory> = {};
 
 			await Promise.all(
-				processedCategories.map(async (category) => {
-					await Promise.all(
-						category.cards.map(async (cardWithFiles: TemplateCardWithFiles) => {
-							await templateStorage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
-
-							templateMap[cardWithFiles.assetDirectory] = {
-								assetDirectory: cardWithFiles.assetDirectory,
-								title: cardWithFiles.title,
-								description: cardWithFiles.description,
-								integrations: cardWithFiles.integrations,
-								filesIndex: Object.keys(cardWithFiles.files),
-								category: category.name,
-							};
-						})
+				processedCategories.map(async ({ cards, name }) => {
+					const processedCards = await Promise.all(
+						cards.map((card) => processTemplateCard(card, name, templateStorage))
 					);
+					processedCards.forEach((cardData) => {
+						templateMap[cardData.assetDirectory] = cardData;
+					});
 				})
 			);
 
-			const categoriesMap = new Map<string, TemplateMetadata[]>();
-			Object.values(templateMap).forEach((template) => {
-				const category = template.category;
-				if (!categoriesMap.has(category)) {
-					categoriesMap.set(category, []);
+			const categories = Object.values(templateMap).reduce((acc, template) => {
+				const category = acc.find((c) => c.name === template.category);
+				if (category) {
+					category.templates.push(template);
+				} else {
+					acc.push({ name: template.category, templates: [template] });
 				}
-				categoriesMap.get(category)!.push(template);
-			});
 
-			const categories = Array.from(categoriesMap.entries()).map(([name, templates]) => ({
-				name,
-				templates,
-			}));
+				return acc;
+			}, [] as TemplateCategory[]);
 
 			return { templateMap, categories };
 		};

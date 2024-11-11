@@ -153,7 +153,7 @@ const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = 
 	return files;
 };
 
-export const processReadmeFiles = (fileStructure?: FileStructure | null): ProcessedRemoteCategory[] => {
+export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemoteCategory[] => {
 	if (!fileStructure) {
 		console.warn(i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }));
 
