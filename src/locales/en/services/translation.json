@@ -18,6 +18,7 @@
 	"connectionStatusFetchFailExtended": "Failed to fetch the connection status with the error: {{error}}.",
 	"fetchFailedForEventList": "Couldn't fetch event list, error: {{error}}",
 	"connectionsNotFound": "Couldn't fetch the connections details",
+	"userNotFound": "User not found",
 	"connectionsNotFoundExtended": "Failed to fetch the connections for the project {{projectId}}",
 	"deleteFailedIdError": "Deployment deletion failed - deployment: {{deploymentId}}, error: {{error}}",
 	"deploymentFetchError": "Couldn't fetch the deployment details",
