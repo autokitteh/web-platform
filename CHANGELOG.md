@@ -1,3 +1,10 @@
+# [2.54.0](https://github.com/autokitteh/web-platform/compare/v2.53.1...v2.54.0) (2024-11-12)
+
+
+### Features
+
+* remove environments and modify users ([#632](https://github.com/autokitteh/web-platform/issues/632)) ([8468a9c](https://github.com/autokitteh/web-platform/commit/8468a9cbce487dd24be027fcedc87ea790dbdf8f))
+
 ## [2.53.1](https://github.com/autokitteh/web-platform/compare/v2.53.0...v2.53.1) (2024-11-11)
 
 
