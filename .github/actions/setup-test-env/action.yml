@@ -29,7 +29,7 @@ runs:
         - name: Start AutoKitteh container
           shell: bash
           env:
-            DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
+              DESCOPE_PROJECT_ID: ${{ inputs.descope-project-id }}
           run: |
               CONTAINER_ID=$(docker run -d \
                 -p 9980:9980 \
