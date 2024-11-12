@@ -84,9 +84,7 @@ jobs:
         run: |
           CONTAINER_ID=$(docker run -d \
             -p 9980:9980 \
-            -e AK_AUTHHTTPMIDDLEWARE__REQUIRED="true" \
             -e AK_AUTHHTTPMIDDLEWARE__USE_DEFAULT_USER="false" \
-            -e AK_AUTHLOGINHTTPSVC__ALLOWED_LOGINS="*" \
             -e AK_AUTHLOGINHTTPSVC__DESCOPE__ENABLED="true" \
             -e AK_AUTHLOGINHTTPSVC__DESCOPE__PROJECT_ID="${{ secrets.VITE_DESCOPE_PROJECT_ID }}" \
             -e AK_HTTP__CORS__ALLOWED_ORIGINS="http://localhost:8000" \
