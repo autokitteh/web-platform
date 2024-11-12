@@ -5,12 +5,13 @@ import { persist } from "zustand/middleware";
 
 import {
 	localTemplatesArchiveFallback,
+	namespaces,
 	remoteTemplatesArchiveURL,
 	remoteTemplatesRepositoryURL,
 	templateCategoriesOrder,
 	templatesUpdateCheckInterval,
 } from "@constants";
-import { TemplateStorageService } from "@services";
+import { LoggerService, TemplateStorageService } from "@services";
 import { StoreName } from "@src/enums";
 import {
 	GitHubCommit,
@@ -168,7 +169,8 @@ const store = (set: any, get: any): TemplateState => ({
 					error: error?.message,
 				});
 			}
-			console.error(logErrorMessage);
+
+			LoggerService.error(namespaces.stores.templatesStore, logErrorMessage, true);
 			set({ error: uiErrorMessage, isLoading: false });
 		}
 	},

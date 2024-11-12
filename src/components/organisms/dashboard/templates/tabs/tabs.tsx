@@ -15,14 +15,13 @@ export const ProjectTemplatesTabs = () => {
 	const { openModal } = useModalStore();
 	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
 
-	const activeCategory = useMemo(
-		() => categories?.find((category) => category.name === activeTab),
-		[activeTab, categories]
-	);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const activeCategory = useMemo(() => categories?.find((category) => category.name === activeTab), [activeTab]);
 
 	useEffect(() => {
 		fetchTemplates();
-	}, [fetchTemplates]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleTabClick = useCallback((category: string) => {
 		setActiveTab(category);

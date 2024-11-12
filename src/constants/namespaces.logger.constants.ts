@@ -43,5 +43,6 @@ export const namespaces = {
 		cache: "Cache Store",
 		activitiesStore: "Activity Logs Store",
 		outputStore: "Output Logs Store",
+		templatesStore: "Templates Store",
 	},
 };
