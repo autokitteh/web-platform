@@ -19,6 +19,8 @@ export const EditVariable = () => {
 	const { t: tForm } = useTranslation("tabs", {
 		keyPrefix: "variables.form",
 	});
+	const { t } = useTranslation("errors");
+
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables, hasActiveDeployments } = useCacheStore();
@@ -55,7 +57,7 @@ export const EditVariable = () => {
 
 		if (error) {
 			addToast({
-				message: (error as Error).message,
+				message: t("errorFetchingVariable"),
 				type: "error",
 			});
 		}
@@ -87,7 +89,10 @@ export const EditVariable = () => {
 		});
 
 		if (error) {
-			throw error;
+			addToast({
+				message: t("variableNotEdited"),
+				type: "error",
+			});
 		}
 		await fetchVariables(projectId!, true);
 		setIsLoading(false);

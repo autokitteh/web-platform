@@ -53,7 +53,7 @@ export const AddVariable = () => {
 
 		if (error) {
 			addToast({
-				message: t("variableNotCreated") + (error as Error).message,
+				message: t("variableNotCreated"),
 				type: "error",
 			});
 
