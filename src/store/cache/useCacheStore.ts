@@ -85,7 +85,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: incomingDeployments, error } = await DeploymentsService.listByProjectId(projectId);
+			const { data: incomingDeployments, error } = await DeploymentsService.list(projectId);
 
 			if (error) {
 				const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
@@ -133,7 +133,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: triggers, error } = await TriggersService.listByProjectId(projectId!);
+			const { data: triggers, error } = await TriggersService.list(projectId!);
 
 			if (error) {
 				throw error;
@@ -227,7 +227,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: vars, error } = await VariablesService.listByScopeId(projectId);
+			const { data: vars, error } = await VariablesService.list(projectId);
 
 			if (error) {
 				const errorMsg = i18n.t("errorFetchingVariables", { ns: "errors" });
@@ -280,7 +280,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: connectionsResponse, error } = await ConnectionService.listByProjectId(projectId!);
+			const { data: connectionsResponse, error } = await ConnectionService.list(projectId!);
 
 			if (error) {
 				throw error;

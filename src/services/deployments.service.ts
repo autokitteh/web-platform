@@ -100,7 +100,7 @@ export class DeploymentsService {
 		}
 	}
 
-	static async listByProjectId(projectId: string): Promise<ServiceResponse<Deployment[]>> {
+	static async list(projectId: string): Promise<ServiceResponse<Deployment[]>> {
 		try {
 			const { deployments: projectDeployments } = await deploymentsClient.list({
 				projectId,

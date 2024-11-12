@@ -69,7 +69,7 @@ export class TriggersService {
 		}
 	}
 
-	static async listByProjectId(projectId: string): Promise<ServiceResponse<Trigger[]>> {
+	static async list(projectId: string): Promise<ServiceResponse<Trigger[]>> {
 		try {
 			const { triggers } = await triggersClient.list({ projectId });
 

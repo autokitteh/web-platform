@@ -49,7 +49,7 @@ export class VariablesService {
 		}
 	}
 
-	static async listByScopeId(scopeId: string): Promise<ServiceResponse<Variable[]>> {
+	static async list(scopeId: string): Promise<ServiceResponse<Variable[]>> {
 		try {
 			const { vars } = await variablesClient.get({ scopeId });
 
@@ -71,7 +71,7 @@ export class VariablesService {
 		singleVariable: Variable
 	): Promise<ServiceResponse<undefined>> {
 		try {
-			const { data: vars } = await this.listByScopeId(connectionId);
+			const { data: vars } = await this.list(connectionId);
 			await variablesClient.set({ vars: [...(vars || []), { ...singleVariable, scopeId: connectionId }] });
 
 			return { data: undefined, error: undefined };
