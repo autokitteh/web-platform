@@ -75,6 +75,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 	fetchDeployments: async (projectId, force) => {
 		const { currentProjectId, deployments } = get();
+
 		if (currentProjectId === projectId && !force) {
 			return deployments;
 		}
