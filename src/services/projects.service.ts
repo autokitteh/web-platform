@@ -4,7 +4,7 @@ import { SetResourcesResponse } from "@ak-proto-ts/projects/v1/svc_pb";
 import { manifestApplyClient, projectsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertErrorProtoToModel, convertProjectProtoToModel } from "@models";
-import { DeploymentsService, EnvironmentsService, LoggerService } from "@services";
+import { DeploymentsService, LoggerService } from "@services";
 import { ServiceResponse } from "@type";
 import { Project } from "@type/models";
 
@@ -67,16 +67,9 @@ export class ProjectsService {
 		}
 	}
 	static async deploy(projectId: string, buildId: string): Promise<ServiceResponse<string>> {
-		const { data: defaultEnvironment, error: envError } =
-			await EnvironmentsService.getDefaultEnvironment(projectId);
-
-		if (envError) {
-			return { data: undefined, error: envError };
-		}
-
 		const { data: deploymentId, error } = await DeploymentsService.create({
 			buildId: buildId!,
-			envId: defaultEnvironment!.envId,
+			projectId,
 		});
 
 		if (error) {

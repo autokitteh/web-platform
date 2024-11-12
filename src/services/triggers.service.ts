@@ -3,7 +3,7 @@ import i18n from "i18next";
 import { triggersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertTriggerProtoToModel } from "@models";
-import { EnvironmentsService, LoggerService } from "@services";
+import { LoggerService } from "@services";
 import { reverseTriggerTypeConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { Trigger } from "@type/models";
@@ -11,19 +11,13 @@ import { Trigger } from "@type/models";
 export class TriggersService {
 	static async create(projectId: string, trigger: Trigger): Promise<ServiceResponse<string>> {
 		try {
-			const { data: defaultEnvironment, error } = await EnvironmentsService.getDefaultEnvironment(projectId);
-
-			if (error) {
-				return { data: undefined, error };
-			}
-
 			const { connectionId, entryFunction, eventType, filter, name, path, schedule, sourceType } = trigger;
 
 			const { triggerId } = await triggersClient.create({
 				trigger: {
 					codeLocation: { name: entryFunction, path },
 					connectionId,
-					envId: defaultEnvironment!.envId,
+					projectId,
 					eventType,
 					filter,
 					name,
@@ -75,19 +69,9 @@ export class TriggersService {
 		}
 	}
 
-	static async listByProjectId(projectId: string): Promise<ServiceResponse<Trigger[]>> {
+	static async list(projectId: string): Promise<ServiceResponse<Trigger[]>> {
 		try {
-			const { data: environment, error: errorEnvs } = await EnvironmentsService.getDefaultEnvironment(projectId);
-
-			if (errorEnvs) {
-				return { data: undefined, error: errorEnvs };
-			}
-
-			if (!environment) {
-				return { data: undefined, error: i18n.t("environmentNotFoundExtended", { ns: "services", projectId }) };
-			}
-
-			const { triggers } = await triggersClient.list({ envId: environment.envId });
+			const { triggers } = await triggersClient.list({ projectId });
 
 			const convertedTriggers = triggers.map(convertTriggerProtoToModel);
 
@@ -101,16 +85,6 @@ export class TriggersService {
 
 	static async update(projectId: string, trigger: Trigger): Promise<ServiceResponse<void>> {
 		try {
-			const { data: environment, error: errorEnvs } = await EnvironmentsService.getDefaultEnvironment(projectId);
-
-			if (errorEnvs) {
-				return { data: undefined, error: errorEnvs };
-			}
-
-			if (!environment) {
-				return { data: undefined, error: i18n.t("environmentNotFoundExtended", { ns: "services", projectId }) };
-			}
-
 			const {
 				connectionId,
 				entryFunction,
@@ -131,7 +105,7 @@ export class TriggersService {
 					webhookSlug,
 					codeLocation: { name: entryFunction, path },
 					connectionId,
-					envId: environment.envId,
+					projectId,
 					eventType,
 					filter,
 					name,

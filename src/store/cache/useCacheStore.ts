@@ -4,7 +4,6 @@ import { StateCreator, create } from "zustand";
 import {
 	ConnectionService,
 	DeploymentsService,
-	EnvironmentsService,
 	EventsService,
 	LoggerService,
 	TriggersService,
@@ -13,7 +12,6 @@ import {
 import { namespaces } from "@src/constants";
 import { DeploymentStateVariant } from "@src/enums";
 import { CacheStore, ProjectValidationLevel } from "@src/interfaces/store";
-import { Environment } from "@src/types/models";
 
 import { useToastStore } from "@store";
 
@@ -60,7 +58,6 @@ const initialState: Omit<
 	connections: undefined,
 	events: undefined,
 	currentProjectId: undefined,
-	envId: undefined,
 	projectValidationState: defaultProjectValidationState,
 	isValid: true,
 };
@@ -78,6 +75,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 	fetchDeployments: async (projectId, force) => {
 		const { currentProjectId, deployments } = get();
+
 		if (currentProjectId === projectId && !force) {
 			return deployments;
 		}
@@ -88,7 +86,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: incomingDeployments, error } = await DeploymentsService.listByProjectId(projectId);
+			const { data: incomingDeployments, error } = await DeploymentsService.list(projectId);
 
 			if (error) {
 				const errorMsg = i18n.t("errorFetchingDeployments", { ns: "errors" });
@@ -136,7 +134,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: triggers, error } = await TriggersService.listByProjectId(projectId!);
+			const { data: triggers, error } = await TriggersService.list(projectId!);
 
 			if (error) {
 				throw error;
@@ -230,20 +228,22 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: envs, error: errorEnvs } = await EnvironmentsService.listByProjectId(projectId);
-			if (errorEnvs) {
-				throw errorEnvs;
-			}
+			const { data: vars, error } = await VariablesService.list(projectId);
 
-			const newEnvId = (envs as Environment[])[0].envId;
-			const { data: vars, error } = await VariablesService.list(newEnvId);
 			if (error) {
-				throw error;
+				const errorMsg = i18n.t("errorFetchingVariables", { ns: "errors" });
+				const errorLog = i18n.t("errorFetchingVariablesExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				});
+				useToastStore.getState().addToast({
+					message: errorMsg,
+					type: "error",
+				});
+				LoggerService.error(namespaces.stores.cache, errorLog);
 			}
-
 			set((state) => ({
 				...state,
-				envId: newEnvId,
 				variables: vars,
 				loading: { ...state.loading, variables: false },
 			}));
@@ -252,8 +252,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 			return vars;
 		} catch (error) {
-			const errorMsg = i18n.t("errorFetchingVariables", { ns: "errors" });
-			const errorLog = i18n.t("errorFetchingVariablesExtended", {
+			const errorMsg = i18n.t("errorFetchingVariable", { ns: "errors" });
+			const errorLog = i18n.t("errorFetchingVariableExtended", {
 				ns: "errors",
 				error: (error as Error).message,
 			});
@@ -281,7 +281,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: connectionsResponse, error } = await ConnectionService.listByProjectId(projectId!);
+			const { data: connectionsResponse, error } = await ConnectionService.list(projectId!);
 
 			if (error) {
 				throw error;

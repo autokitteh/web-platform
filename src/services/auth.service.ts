@@ -11,6 +11,13 @@ export class AuthService {
 	static async whoAmI(): Promise<ServiceResponse<User>> {
 		try {
 			const { user } = await authClient.whoAmI({});
+			if (!user) {
+				throw new Error(
+					i18n.t("userNotFound", {
+						ns: "services",
+					})
+				);
+			}
 			const convertedUser = convertUserProtoToModel(user);
 
 			return { data: convertedUser, error: undefined };

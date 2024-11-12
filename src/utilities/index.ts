@@ -7,11 +7,9 @@ export { convertTimestampToDate } from "@utilities/convertTimestampToDate.utils"
 export { convertTimestampToEpoch } from "@utilities/convertTimestampToDate.utils";
 export { copyToClipboard } from "@utilities/copyToClipboard.utils";
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
-export { flattenArray } from "@utilities/flattenArray.utils";
 export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.utils";
 export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";
 export { getCookieDomain } from "@utilities/getCookieDomain.utils";
-export { getIds } from "@utilities/getIds.utils";
 export { openPopup } from "@utilities/openPopup.utils";
 export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils";
 export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
