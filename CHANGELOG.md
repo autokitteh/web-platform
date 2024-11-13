@@ -1,3 +1,10 @@
+# [2.56.0](https://github.com/autokitteh/web-platform/compare/v2.55.1...v2.56.0) (2024-11-13)
+
+
+### Features
+
+* display all topbar action buttons in all project pages  ([#642](https://github.com/autokitteh/web-platform/issues/642)) ([053819a](https://github.com/autokitteh/web-platform/commit/053819a9cc3515da8070e3a4a8bc7e5fb529a8dd))
+
 ## [2.55.1](https://github.com/autokitteh/web-platform/compare/v2.55.0...v2.55.1) (2024-11-13)
 
 
