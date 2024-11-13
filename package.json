@@ -9,7 +9,7 @@
 		"build:prod": "NODE_ENV=production npm run build",
 		"prettier": "prettier .",
 		"fetch-templates": "node scripts/fetchTemplates",
-		"prettier:ci": "npm run prettier -- --check",
+		"prettier:ci": "prettier . --check",
 		"dev": "npm run validate-env && vite",
 		"fix-format:staged": "prettier . --write",
 		"generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts",

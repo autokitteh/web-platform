@@ -41,10 +41,15 @@ jobs:
         run: npm ci
 
       - name: Cache Playwright browsers
+        id: cache-playwright
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright Browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
 
       - name: Update kittehub.zip
         uses: ./.github/actions/update-kittehub
@@ -166,4 +171,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           HUSKY: 0
-        run: npx semantic-release
+        run:  |
+          npm ci
+          npx semantic-release
