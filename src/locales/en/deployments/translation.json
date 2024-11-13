@@ -86,6 +86,7 @@
 		"noSessions": "No sessions found",
 		"output": "Output",
 		"tableTitle": "Sessions",
+		"selectDeployment": "Select deployment",
 		"sessionsRefreshed": "Sessions refreshed successfully",
 		"sessionsStillOld": "Sessions are still old",
 		"table": {

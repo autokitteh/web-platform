@@ -15,7 +15,7 @@ import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { DeploymentSession } from "@type/models";
 
 import { Frame, Loader, ResizeButton, THead, Table, Th, Tr, Typography } from "@components/atoms";
-import { RefreshButton } from "@components/molecules";
+import { RefreshButton, Select } from "@components/molecules";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
@@ -31,7 +31,6 @@ export const SessionsTable = () => {
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const [isDeleting, setIsDeleting] = useState(false);
-
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
@@ -39,7 +38,7 @@ export const SessionsTable = () => {
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
-	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
+	const { deployments, fetchDeployments: reloadDeploymentsCache } = useCacheStore();
 
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 
@@ -193,6 +192,16 @@ export const SessionsTable = () => {
 		fetchDeployments();
 	};
 
+	const deploymentOptions = useMemo(
+		() =>
+			(deployments || []).map((deployment) => ({
+				label: deployment.deploymentId,
+				value: deployment.deploymentId,
+			})),
+		[deployments]
+	);
+	const selectedDeployment = deploymentOptions.find((option) => option.value === deploymentId);
+
 	return (
 		<div className="my-1.5 flex w-full flex-1">
 			<div style={{ width: `${leftSideWidth}%` }}>
@@ -201,6 +210,20 @@ export const SessionsTable = () => {
 						<Typography className="text-base" element="h2">
 							{t("tableTitle")}
 						</Typography>
+						{deployments?.length ? (
+							<div className="ml-3 w-7/12">
+								<Select
+									aria-label={t("placeholders.selectDeployment")}
+									label={t("selectDeployment")}
+									onChange={(selected) =>
+										navigate(`/projects/${projectId}/deployments/${selected?.value}/sessions`)
+									}
+									options={deploymentOptions}
+									placeholder={t("selectDeployment")}
+									value={selectedDeployment}
+								/>
+							</div>
+						) : null}
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
 							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
