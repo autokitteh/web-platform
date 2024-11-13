@@ -17,14 +17,14 @@ export {
 	supportedProgrammingLanguages,
 	allowedManualRunExtensions,
 	timeFormat,
+	templatesUpdateCheckInterval,
 } from "@constants/global.constants";
 export { integrationToEditComponent } from "@constants/connections/editComponentsMapping.constants";
 export { formsPerIntegrationsMapping } from "@constants/connections/formsPerIntegrationsMapping.constants";
 export {
 	defaultTemplateProjectCategory,
-	templateProjectsCategories,
-	findTemplateFilesByAssetDirectory,
 	meowWorldProjectName,
+	templateCategoriesOrder,
 } from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
@@ -51,4 +51,8 @@ export {
 } from "@constants/sessions.constants";
 export { initialSortConfig } from "@constants/sortConfig.constants";
 export { infoCronExpressionsLinks, extraTriggerTypes } from "@constants/triggers.constants";
-export { remoteTemplatesRepositoryURL, remoteTemplatesFilesFallback } from "@constants/templates.constants";
+export {
+	remoteTemplatesRepositoryURL,
+	localTemplatesArchiveFallback,
+	remoteTemplatesArchiveURL,
+} from "@constants/templates.constants";

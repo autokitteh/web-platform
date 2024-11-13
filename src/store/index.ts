@@ -1,6 +1,7 @@
 export { useActivitiesCacheStore } from "@src/store/cache/useActivitiesCacheStore";
 export { useCacheStore } from "@src/store/cache/useCacheStore";
 export { useOutputsCacheStore } from "@src/store/cache/useOutputsCacheStore";
+export { useTemplatesStore } from "@src/store/useTemplatesStore";
 export { useConnectionCheckerStore } from "@store/useConnectionCheckerStore";
 export { useDrawerStore } from "@store/useDrawerStore";
 export { useFileStore } from "@store/useFileStore";

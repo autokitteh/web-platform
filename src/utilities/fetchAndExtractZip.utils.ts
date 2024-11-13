@@ -4,8 +4,16 @@ import i18n from "i18next";
 import JSZip from "jszip";
 import { memoize } from "lodash";
 
-import { DirectoryNode, FileNode, FileStructure, MarkdownAttributes, ProcessedZipResult } from "@interfaces/utilities";
-import { remoteTemplatesFilesFallback, remoteTemplatesRepositoryURL } from "@src/constants";
+import {
+	DirectoryNode,
+	FileNode,
+	FileStructure,
+	FileWithContent,
+	MarkdownAttributes,
+	ProcessedZipResult,
+} from "@interfaces/utilities";
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
@@ -65,43 +73,21 @@ const fetchZipFromUrl = async (url: string): Promise<ArrayBuffer> => {
 	return zipData;
 };
 
-export const fetchAndUnpackZip = async (): Promise<ProcessedZipResult> => {
+export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Promise<ProcessedZipResult> => {
 	try {
-		let zipData: ArrayBuffer;
+		let zipData: ArrayBuffer = new ArrayBuffer(0);
 
 		try {
-			zipData = await fetchZipFromUrl(remoteTemplatesRepositoryURL);
-			// eslint-disable-next-line no-console
-			console.log(
-				i18n.t("fetchAndExtract.fetchedFromGithub", {
-					ns: "utilities",
-				})
-			);
-		} catch (githubError) {
-			console.warn(
-				i18n.t("fetchAndExtract.githubFetchFailed", {
-					ns: "utilities",
-					error: githubError instanceof Error ? githubError.message : "Unknown error",
-				})
-			);
+			zipData = await fetchZipFromUrl(remoteTemplatesArchiveUrl);
+		} catch (fetchError) {
+			const errorMessage = i18n.t("fetchAndExtract.templatesArchiveFetchFailedExtended", {
+				ns: "utilities",
+				error: fetchError instanceof Error ? fetchError.message : "Unknown error",
+			});
 
-			try {
-				zipData = await fetchZipFromUrl(remoteTemplatesFilesFallback);
-				// eslint-disable-next-line no-console
-				console.log(
-					i18n.t("fetchAndExtract.fetchedFromFallback", {
-						ns: "utilities",
-					})
-				);
-			} catch (fallbackError) {
-				throw new Error(
-					i18n.t("fetchAndExtract.allSourcesFailed", {
-						ns: "utilities",
-						githubError: githubError instanceof Error ? githubError.message : "Unknown error",
-						fallbackError: fallbackError instanceof Error ? fallbackError.message : "Unknown error",
-					})
-				);
-			}
+			LoggerService.warn(namespaces.utilities.fetchAndExtract, errorMessage, true);
+
+			return { error: errorMessage, structure: undefined };
 		}
 
 		const zip = new JSZip();
@@ -111,12 +97,13 @@ export const fetchAndUnpackZip = async (): Promise<ProcessedZipResult> => {
 		return { structure };
 	} catch (error) {
 		const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : "Unknown error occurred";
-
-		console.error(
+		LoggerService.error(
+			namespaces.utilities.fetchAndExtract,
 			i18n.t("fetchAndExtract.fetchAndExtractError", {
 				ns: "utilities",
 				error: errorMessage,
-			})
+			}),
+			true
 		);
 
 		return { error: errorMessage, structure: undefined };
@@ -149,11 +136,6 @@ const getDirectoryStructure = (fileStructure: FileStructure, targetPath: string)
 	return currentLevel;
 };
 
-interface FileWithContent {
-	path: string;
-	content: string;
-}
-
 const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = ""): FileWithContent[] => {
 	const files: FileWithContent[] = [];
 
@@ -175,9 +157,13 @@ const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = 
 	return files;
 };
 
-export const processReadmeFiles = (fileStructure?: FileStructure | null): ProcessedRemoteCategory[] => {
+export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemoteCategory[] => {
 	if (!fileStructure) {
-		console.warn(i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }));
+		LoggerService.warn(
+			namespaces.utilities.fetchAndExtract,
+			i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }),
+			true
+		);
 
 		return [];
 	}
@@ -186,11 +172,10 @@ export const processReadmeFiles = (fileStructure?: FileStructure | null): Proces
 
 	const processDirectory = (structure: FileStructure, currentPath: string = ""): void => {
 		if (!structure || typeof structure !== "object") {
-			console.warn(
-				i18n.t("fetchAndExtract.invalidStructurePath", {
-					ns: "utilities",
-					path: currentPath,
-				})
+			LoggerService.warn(
+				namespaces.utilities.fetchAndExtract,
+				i18n.t("fetchAndExtract.invalidStructure", { path: currentPath, ns: "utilities" }),
+				true
 			);
 
 			return;
@@ -217,13 +202,6 @@ export const processReadmeFiles = (fileStructure?: FileStructure | null): Proces
 					const { attributes } = frontMatter<MarkdownAttributes>(node.content);
 
 					if (!attributes.title || !attributes.description || !attributes.categories) {
-						console.warn(
-							`${i18n.t("fetchAndExtract.skippingPathMissingMetadata", {
-								ns: "utilities",
-								path: `${currentPath}/${name}`,
-							})}: `,
-							attributes
-						);
 						continue;
 					}
 
@@ -250,12 +228,14 @@ export const processReadmeFiles = (fileStructure?: FileStructure | null): Proces
 						categoriesMap.get(category)!.add(templateCard);
 					});
 				} catch (error) {
-					console.error(
+					LoggerService.error(
+						namespaces.utilities.fetchAndExtract,
 						i18n.t("fetchAndExtract.errorProcessingFile", {
 							ns: "utilities",
 							path: `${currentPath}/${name}`,
 							error,
-						})
+						}),
+						true
 					);
 				}
 			}
@@ -272,11 +252,13 @@ export const processReadmeFiles = (fileStructure?: FileStructure | null): Proces
 			}))
 			.filter((category) => !!category.cards.length);
 	} catch (error) {
-		console.error(
+		LoggerService.error(
+			namespaces.utilities.fetchAndExtract,
 			i18n.t("fetchAndExtract.errorProcessingFileStructure", {
 				ns: "utilities",
 				error,
-			})
+			}),
+			true
 		);
 
 		return [];

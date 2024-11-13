@@ -1,8 +1,8 @@
 export type {
 	FileNode,
 	DirectoryNode,
-	ProcessedZipResult,
 	MarkdownAttributes,
 	FileStructure,
 	FileWithContent,
+	ProcessedZipResult,
 } from "@interfaces/utilities/fetchAndExtractZipWithReadme.interface";

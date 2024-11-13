@@ -6,4 +6,5 @@ export enum StoreName {
 	connectionChecker = "ConnectionCheckerStore",
 	manualRun = "ManualRunStore",
 	cache = "CacheStore",
+	templates = "TemplatesStore",
 }
