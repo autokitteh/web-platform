@@ -64,7 +64,7 @@ export const App = () => {
 	return (
 		<BrowserRouter>
 			<AKRoutes>
-				<Route element={<AppLayout topbarHidden={true} />} path="/">
+				<Route element={<AppLayout hideTopbar />} path="/">
 					<Route
 						element={
 							<>

@@ -10,7 +10,7 @@ import { cn } from "@utilities";
 import { ResizeButton } from "@components/atoms";
 import { ProjectConfigTopbar, Sidebar, SystemLog } from "@components/organisms";
 
-export const AppLayout = ({ className, topbarHidden }: { className?: string; topbarHidden?: boolean }) => {
+export const AppLayout = ({ className, hideTopbar }: { className?: string; hideTopbar?: boolean }) => {
 	const appLayoutClasses = cn("h-screen w-screen pr-5 flex", className);
 	const { isLoggerEnabled, toggleLogger } = useLoggerStore();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -51,7 +51,7 @@ export const AppLayout = ({ className, topbarHidden }: { className?: string; top
 			<Sidebar />
 
 			<div className="mb-2 flex flex-1 flex-col">
-				{!topbarHidden ? <ProjectConfigTopbar /> : null}
+				{!hideTopbar ? <ProjectConfigTopbar /> : null}
 				<div className="flex overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
 					<Outlet />
 				</div>
