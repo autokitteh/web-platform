@@ -2,27 +2,21 @@ import React, { useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 
-import { TopbaButtonVariant } from "@enums/components";
-import { TopbarType } from "@src/types/components";
-
 import { useFileOperations } from "@hooks";
 
 import {
-	ManualRunButtons,
 	ManualRunSettingsDrawer,
 	ProjectTopbarButtons,
 	ProjectTopbarName,
 	ProjectTopbarNavigation,
 } from "@components/organisms/topbar/project";
 
-export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
+export const ProjectConfigTopbar = () => {
 	const { projectId } = useParams();
 	const { openProjectId, setOpenProjectId } = useFileOperations(projectId!);
 
 	useEffect(() => {
 		if (!projectId) return;
-
-		if (variant !== TopbaButtonVariant.actions) return;
 
 		if (projectId !== openProjectId) {
 			setOpenProjectId(projectId);
@@ -36,15 +30,10 @@ export const ProjectConfigTopbar = ({ variant }: { variant: TopbarType }) => {
 			<ProjectTopbarNavigation />
 			<div className="scrollbar flex">
 				<div className="w-300 shrink-0" />
-				{variant === TopbaButtonVariant.actions ? <ProjectTopbarButtons /> : null}
+				<ProjectTopbarButtons />
 			</div>
 
-			{variant === TopbaButtonVariant.manual ? (
-				<>
-					<ManualRunButtons />
-					<ManualRunSettingsDrawer />
-				</>
-			) : null}
+			<ManualRunSettingsDrawer />
 		</div>
 	);
 };

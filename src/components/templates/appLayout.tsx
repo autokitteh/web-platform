@@ -5,13 +5,12 @@ import { Outlet } from "react-router-dom";
 import { defaultSystemLogSize } from "@src/constants";
 import { useResize } from "@src/hooks";
 import { useLoggerStore } from "@src/store";
-import { TopbarType } from "@src/types/components";
 import { cn } from "@utilities";
 
 import { ResizeButton } from "@components/atoms";
 import { ProjectConfigTopbar, Sidebar, SystemLog } from "@components/organisms";
 
-export const AppLayout = ({ className, topbarVariant }: { className?: string; topbarVariant?: TopbarType }) => {
+export const AppLayout = ({ className, hideTopbar }: { className?: string; hideTopbar?: boolean }) => {
 	const appLayoutClasses = cn("h-screen w-screen pr-5 flex", className);
 	const { isLoggerEnabled, toggleLogger } = useLoggerStore();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -52,7 +51,7 @@ export const AppLayout = ({ className, topbarVariant }: { className?: string; to
 			<Sidebar />
 
 			<div className="mb-2 flex flex-1 flex-col">
-				{topbarVariant ? <ProjectConfigTopbar variant={topbarVariant} /> : null}
+				{hideTopbar ? null : <ProjectConfigTopbar />}
 				<div className="flex overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
 					<Outlet />
 				</div>

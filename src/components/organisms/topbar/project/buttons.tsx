@@ -14,6 +14,7 @@ import { useFileOperations } from "@hooks";
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
+import { ManualRunButtons } from "@components/organisms/topbar/project";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
 import { DownloadIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
@@ -247,6 +248,8 @@ export const ProjectTopbarButtons = () => {
 					{t("topbar.buttons.deploy")}
 				</Button>
 			</div>
+
+			<ManualRunButtons />
 
 			<DropdownButton
 				contentMenu={

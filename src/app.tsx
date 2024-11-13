@@ -64,7 +64,7 @@ export const App = () => {
 	return (
 		<BrowserRouter>
 			<AKRoutes>
-				<Route element={<AppLayout />} path="/">
+				<Route element={<AppLayout hideTopbar />} path="/">
 					<Route
 						element={
 							<>
@@ -96,7 +96,7 @@ export const App = () => {
 					/>
 				</Route>
 
-				<Route element={<AppLayout topbarVariant="actions" />} path="projects">
+				<Route element={<AppLayout />} path="projects">
 					<Route element={<Project />} path=":projectId">
 						<Route element={<Navigate replace to="code" />} index />
 
@@ -138,12 +138,12 @@ export const App = () => {
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
-				<Route element={<AppLayout topbarVariant="manual" />} path="projects/:projectId/deployments">
+				<Route element={<AppLayout />} path="projects/:projectId/deployments">
 					<Route element={<DeploymentsTable />} index />
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
-				<Route element={<AppLayout topbarVariant="basic" />} path="projects/:projectId/deployments">
+				<Route element={<AppLayout />} path="projects/:projectId/deployments">
 					<Route element={<Sessions />} path=":deploymentId">
 						<Route element={<SessionsTable />} path="sessions">
 							<Route element={<SessionViewer />} path=":sessionId">
