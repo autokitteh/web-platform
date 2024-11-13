@@ -166,4 +166,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           HUSKY: 0
-        run: npx semantic-release
+        run:  |
+          npm ci
+          npx semantic-release
