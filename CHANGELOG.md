@@ -1,3 +1,15 @@
+# [2.55.0](https://github.com/autokitteh/web-platform/compare/v2.54.0...v2.55.0) (2024-11-13)
+
+
+### Bug Fixes
+
+* fix github actions releases ([#644](https://github.com/autokitteh/web-platform/issues/644)) ([4bfe0c3](https://github.com/autokitteh/web-platform/commit/4bfe0c33ee639102a90e8b5a3019dff609457a4f))
+
+
+### Features
+
+* get templates from github or from local file ([#610](https://github.com/autokitteh/web-platform/issues/610)) ([596dcd3](https://github.com/autokitteh/web-platform/commit/596dcd30d743b5137acf82fe38d16e459a3219a2))
+
 # [2.54.0](https://github.com/autokitteh/web-platform/compare/v2.53.1...v2.54.0) (2024-11-12)
 
 
