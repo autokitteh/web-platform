@@ -3,14 +3,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { TriggerTypes } from "@src/enums";
+import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useCacheStore } from "@src/store";
 import { Trigger } from "@src/types/models";
 import { getApiBaseUrl } from "@src/utilities";
 
-import { IconSvg } from "@components/atoms";
-import { CopyButton, IdCopyButton, PopoverClose } from "@components/molecules";
-
-import { Close } from "@assets/image/icons";
+import { CopyButton } from "@components/molecules";
 
 export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => {
 	const apiBaseUrl = getApiBaseUrl();
@@ -18,41 +16,63 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
 	const { connections } = useCacheStore();
 	const triggerConnection = connections?.find((connection) => connection.connectionId === trigger.connectionId);
+	const TriggerConnectionIntegrationKey = Object.keys(IntegrationsMap).find(
+		(integration) => integration === (triggerConnection?.integrationName?.toLowerCase() || "")
+	);
+
+	const TriggerConnectionItegrationIcon =
+		IntegrationsMap[(TriggerConnectionIntegrationKey || "") as keyof typeof IntegrationsMap]?.icon;
 
 	switch (trigger.sourceType) {
 		case TriggerTypes.webhook:
 			return (
 				<div className="text-white">
-					<div className="mb-2 flex w-full">
-						<div className="w-64 font-semibold">{t("webhookUrl")}</div>
-						<div className="w-full" />
-						<PopoverClose>
-							<IconSvg className="size-3 fill-white" src={Close} />
-						</PopoverClose>
-					</div>
-					<div className="flex items-center">
-						<div>{webhookUrl}</div>
-						<div className="w-full" />
+					<div className="mb-2 w-64 font-semibold">{t("info")}</div>
+					<div className="flex items-center gap-x-1">
+						<div className="font-semibold">{t("webhookUrl")}:</div>
+						{webhookUrl}
 						<div className="w-8">
 							<CopyButton size="sm" text={webhookUrl} />
 						</div>
 					</div>
+					{trigger.path ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">{t("file")}:</div>
+							{trigger.path}
+						</div>
+					) : null}
+					{trigger.entryFunction ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">{t("entrypoint")}:</div>
+							{trigger.entryFunction}
+						</div>
+					) : null}
 				</div>
 			);
 		case TriggerTypes.schedule:
 			return (
 				<div className="text-white">
 					<div className="mb-2 flex w-full">
-						<div className="w-64 font-semibold">{t("cron")}</div>
+						<div className="w-64 font-semibold">{t("info")}</div>
 						<div className="w-full" />
-						<PopoverClose>
-							<IconSvg className="size-3 fill-white" src={Close} />
-						</PopoverClose>
 					</div>
-					<div className="flex w-full items-center">
+
+					<div className="flex items-center gap-x-1">
+						<div className="font-semibold">{t("cron")}:</div>
 						{trigger.schedule}
-						<CopyButton size="sm" text={trigger?.schedule || ""} />
 					</div>
+					{trigger.path ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">{t("file")}:</div>
+							{trigger.path}
+						</div>
+					) : null}
+					{trigger.entryFunction ? (
+						<div className="flex items-center gap-x-1">
+							<div className="font-semibold">{t("entrypoint")}:</div>
+							{trigger.entryFunction}
+						</div>
+					) : null}
 				</div>
 			);
 		case TriggerTypes.connection:
@@ -61,49 +81,44 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 					<div className="mb-2 flex w-full">
 						<div className="w-64 font-semibold">{t("info")}</div>
 						<div className="w-full" />
-						<PopoverClose>
-							<IconSvg className="size-3 fill-white" src={Close} />
-						</PopoverClose>
 					</div>
 					{triggerConnection ? (
 						<div className="flex items-center gap-x-1">
 							<div className="font-semibold">{t("connection")}:</div>
+							{TriggerConnectionItegrationIcon ? (
+								<TriggerConnectionItegrationIcon className="size-4" />
+							) : null}
 							{triggerConnection.name}
-							<CopyButton size="sm" text={triggerConnection.name} />
 						</div>
 					) : null}
 					{triggerConnection?.connectionId ? (
 						<div className="flex items-center gap-x-1">
 							<div className="font-semibold">{t("connectionId")}:</div>
-							<IdCopyButton id={trigger.connectionId || ""} />
+							{triggerConnection.connectionId}
 						</div>
 					) : null}
 					{trigger.path ? (
 						<div className="flex items-center gap-x-1">
 							<div className="font-semibold">{t("file")}:</div>
 							{trigger.path}
-							<CopyButton size="sm" text={trigger.path} />
 						</div>
 					) : null}
 					{trigger.entryFunction ? (
 						<div className="flex items-center gap-x-1">
 							<div className="font-semibold">{t("entrypoint")}:</div>
 							{trigger.entryFunction}
-							<CopyButton size="sm" text={trigger.entryFunction} />
 						</div>
 					) : null}
 					{trigger.eventType ? (
 						<div className="flex items-center gap-x-1">
 							<div className="font-semibold">{t("eventType")}:</div>
 							<div>{trigger.eventType}</div>
-							<CopyButton size="sm" text={trigger.eventType} />
 						</div>
 					) : null}
 					{trigger.filter ? (
 						<div className="flex items-center gap-x-1">
 							<div className="font-semibold">{t("filter")}:</div>
 							<div>{trigger.filter}</div>
-							<CopyButton size="sm" text={trigger.filter} />
 						</div>
 					) : null}
 				</div>
