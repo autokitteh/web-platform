@@ -35,7 +35,7 @@
 		"manualRun":{
 			"noFilesAvailable": "No files available",
 			"noFunctionsAvailable": "No functions available",
-			"titleParams": "Params",
+			"titleParams": "Parameters",
 			"ariaDeleteParam": "Delete parameter",
 			"configuration": "Configuration",
 			"placeholders": {

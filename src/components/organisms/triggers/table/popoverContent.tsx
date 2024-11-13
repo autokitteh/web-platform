@@ -8,7 +8,10 @@ import { useCacheStore } from "@src/store";
 import { Trigger } from "@src/types/models";
 import { getApiBaseUrl } from "@src/utilities";
 
+import { IconSvg } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
+
+import { ClockIcon, LinkIcon, WebhookIcon } from "@assets/image/icons";
 
 export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => {
 	const apiBaseUrl = getApiBaseUrl();
@@ -27,7 +30,10 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 		case TriggerTypes.webhook:
 			return (
 				<div className="text-white">
-					<div className="mb-2 w-64 font-semibold">{t("info")}</div>
+					<div className="mb-2 flex w-64 font-semibold">
+						<IconSvg className="mr-2" src={WebhookIcon} />
+						{t("info")}
+					</div>
 					<div className="flex items-center gap-x-1">
 						<div className="font-semibold">{t("webhookUrl")}:</div>
 						{webhookUrl}
@@ -53,7 +59,10 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 			return (
 				<div className="text-white">
 					<div className="mb-2 flex w-full">
-						<div className="w-64 font-semibold">{t("info")}</div>
+						<div className="flex w-64 font-semibold">
+							<IconSvg className="mr-2" src={ClockIcon} />
+							{t("info")}
+						</div>
 						<div className="w-full" />
 					</div>
 
@@ -79,7 +88,10 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 			return (
 				<div className="text-white">
 					<div className="mb-2 flex w-full">
-						<div className="w-64 font-semibold">{t("info")}</div>
+						<div className="flex w-64 font-semibold">
+							<IconSvg className="mr-2 fill-white" src={LinkIcon} />
+							{t("info")}
+						</div>
 						<div className="w-full" />
 					</div>
 					{triggerConnection ? (
