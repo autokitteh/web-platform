@@ -1,3 +1,10 @@
+# [2.57.0](https://github.com/autokitteh/web-platform/compare/v2.56.0...v2.57.0) (2024-11-13)
+
+
+### Features
+
+* reduce api calls by resources (files) caching ([#629](https://github.com/autokitteh/web-platform/issues/629)) ([bdb8eb9](https://github.com/autokitteh/web-platform/commit/bdb8eb9894b6f188b009d803bb7aa7a51009a67c))
+
 # [2.56.0](https://github.com/autokitteh/web-platform/compare/v2.55.1...v2.56.0) (2024-11-13)
 
 
