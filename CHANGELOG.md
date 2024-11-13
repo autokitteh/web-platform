@@ -1,3 +1,10 @@
+## [2.55.1](https://github.com/autokitteh/web-platform/compare/v2.55.0...v2.55.1) (2024-11-13)
+
+
+### Bug Fixes
+
+* issues running the app on windows - missing dependency ([#635](https://github.com/autokitteh/web-platform/issues/635)) ([0a219d6](https://github.com/autokitteh/web-platform/commit/0a219d6dbfd8d4322e5204125b0523f723a3cf37))
+
 # [2.55.0](https://github.com/autokitteh/web-platform/compare/v2.54.0...v2.55.0) (2024-11-13)
 
 
