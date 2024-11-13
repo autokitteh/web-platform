@@ -9,8 +9,6 @@ import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
 import { useCacheStore, useConnectionCheckerStore, useModalStore, useProjectStore, useToastStore } from "@src/store";
 
-import { useFileOperations } from "@hooks";
-
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms";
@@ -25,7 +23,7 @@ export const ProjectTopbarButtons = () => {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
-	const { fetchDeployments, isValid, projectValidationState } = useCacheStore();
+	const { fetchDeployments, fetchResources, isValid, projectValidationState } = useCacheStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 	const { resetChecker } = useConnectionCheckerStore();
@@ -36,26 +34,9 @@ export const ProjectTopbarButtons = () => {
 	const { deleteProject, getProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
-	const { getResources } = useFileOperations(projectId!);
-
-	const fetchResources = useCallback(async () => {
-		const resources = await getResources();
-		if (!Object.keys(resources).length) {
-			addToast({
-				message: tError("assetsNotFound"),
-				type: "error",
-			});
-			LoggerService.error(namespaces.projectUI, tError("assetsNotFound"));
-
-			return;
-		}
-
-		return resources;
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [getResources]);
 
 	const build = useCallback(async () => {
-		const resources = await fetchResources();
+		const resources = await fetchResources(projectId!);
 		if (!resources) return;
 
 		try {
@@ -83,7 +64,7 @@ export const ProjectTopbarButtons = () => {
 	}, []);
 
 	const deploy = useCallback(async () => {
-		const resources = await fetchResources();
+		const resources = await fetchResources(projectId!);
 		if (!resources) return;
 
 		try {

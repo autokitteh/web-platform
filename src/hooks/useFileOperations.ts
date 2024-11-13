@@ -14,57 +14,10 @@ const dbService = new IndexedDBService("ProjectDB", "resources");
 
 export function useFileOperations(projectId: string) {
 	const { t: tErrors } = useTranslation("errors");
-	const {
-		closeOpenedFile,
-		fileList,
-		openFileAsActive,
-		openFiles,
-		openProjectId,
-		setFileList,
-		setOpenFiles,
-		setOpenProjectId,
-	} = useFileStore();
+	const { closeOpenedFile, fileList, openFileAsActive, openFiles, openProjectId, setFileList, setOpenProjectId } =
+		useFileStore();
 	const { checkState } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
-
-	const getResources = useCallback(async () => await dbService.getAll(), []);
-
-	const fetchResources = async (clearStore?: boolean) => {
-		try {
-			setFileList({ isLoading: true });
-			const { data, error } = await ProjectsService.getResources(projectId);
-
-			if (error) {
-				return;
-			}
-			if (clearStore) {
-				await dbService.clearStore();
-			}
-			for (const [name, content] of Object.entries(data || {})) {
-				await dbService.put(name, new Uint8Array(content));
-			}
-			const resources = await dbService.getAll();
-			if (resources) {
-				checkState(projectId!, { resources });
-				setFileList({ isLoading: false, list: Object.keys(resources) });
-			}
-
-			return resources;
-		} catch (error) {
-			addToast({
-				message: t("resourcesFetchError"),
-				type: "error",
-			});
-			LoggerService.error(
-				namespaces.resourcesService,
-				t("resourcesFetchErrorExtended", { projectId, error: error.message })
-			);
-
-			return;
-		} finally {
-			setFileList({ isLoading: false });
-		}
-	};
 
 	const saveFile = useCallback(
 		async (name: string, content: string) => {
@@ -105,18 +58,24 @@ export function useFileOperations(projectId: string) {
 
 	const deleteFile = useCallback(
 		async (name: string) => {
-			setFileList({ isLoading: true });
-			await dbService.delete(name);
-			closeOpenedFile(name);
-			const resources = await dbService.getAll();
-			const { error } = await ProjectsService.setResources(projectId, resources);
-			setFileList({ isLoading: false, list: Object.keys(resources) });
-			checkState(projectId!, { resources });
-			if (error) {
+			try {
+				setFileList({ isLoading: true });
+				await dbService.delete(name);
+				closeOpenedFile(name);
+				const resources = await dbService.getAll();
+				const { error } = await ProjectsService.setResources(projectId, resources);
+				setFileList({ isLoading: false, list: Object.keys(resources) });
+				checkState(projectId!, { resources });
+				if (error) throw error;
+			} catch (error) {
 				addToast({
 					message: t("resourcesFetchError"),
 					type: "error",
 				});
+				LoggerService.error(
+					namespaces.resourcesService,
+					t("resourcesFetchErrorExtended", { projectId, error: error.message })
+				);
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -145,16 +104,13 @@ export function useFileOperations(projectId: string) {
 		saveFile,
 		saveAllFiles,
 		deleteFile,
-		fetchResources,
-		openProjectId,
 		setOpenProjectId,
-		setOpenFiles,
 		openFiles,
 		openFileAsActive,
 		closeOpenedFile,
 		addFile,
 		setFileList,
 		fileList,
-		getResources,
+		openProjectId,
 	};
 }

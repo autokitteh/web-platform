@@ -8,7 +8,7 @@ import { useLocation, useParams } from "react-router-dom";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
-import { useToastStore } from "@src/store";
+import { useCacheStore, useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
@@ -22,8 +22,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, fetchResources, getResources, openFileAsActive, openFiles, openProjectId, saveFile } =
-		useFileOperations(projectId!);
+	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
+	const { currentProjectId, fetchResources } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
 
 	const activeEditorFileName =
@@ -31,11 +31,10 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
-	const [content, setContent] = useState<string>("");
+	const [content, setContent] = useState("");
 	const [autosave, setAutosave] = useState(true);
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
-	const [isFirstLoad, setIsFirstLoad] = useState(true);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
@@ -57,29 +56,32 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	};
 
 	const loadContent = async () => {
-		const resources = await fetchResources(true);
+		if (!projectId) return;
+
+		const resources = await fetchResources(projectId, true);
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
 		openDefaultFile();
 	};
 
 	const loadFileResource = async () => {
-		const resources = await getResources();
+		if (!projectId) return;
+
+		const resources = await fetchResources(projectId);
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
 		openDefaultFile();
 	};
 
 	useEffect(() => {
-		if (isFirstLoad || openProjectId !== projectId) {
+		if (currentProjectId !== projectId) {
 			loadContent();
-			setIsFirstLoad(false);
 
 			return;
 		}
 		loadFileResource();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, projectId, fileToOpen]);
+	}, [activeEditorFileName, projectId]);
 
 	useEffect(() => {
 		setLastSaved(undefined);

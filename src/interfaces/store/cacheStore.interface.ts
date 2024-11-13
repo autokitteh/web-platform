@@ -8,6 +8,7 @@ interface LoadingState {
 	variables: boolean;
 	events: boolean;
 	connections: boolean;
+	resourses: boolean;
 }
 
 export interface CacheStore {
@@ -17,6 +18,7 @@ export interface CacheStore {
 	events?: BaseEvent[];
 	variables: Variable[];
 	connections?: Connection[];
+	resourses?: Record<string, Uint8Array>;
 	loading: LoadingState;
 	currentProjectId?: string;
 	envId?: string;
@@ -50,6 +52,7 @@ export interface CacheStore {
 	isValid: boolean;
 	initCache: (projectId: string, force?: boolean) => Promise<void>;
 	fetchDeployments: (projectId: string, force?: boolean) => Promise<void | Deployment[]>;
+	fetchResources: (projectId: string, force?: boolean) => Promise<void | Record<string, Uint8Array>>;
 	fetchTriggers: (projectId: string, force?: boolean) => Promise<void | Trigger[]>;
 	fetchVariables: (projectId: string, force?: boolean) => Promise<void | Variable[]>;
 	fetchEvents: (force?: boolean) => Promise<void | BaseEvent[]>;

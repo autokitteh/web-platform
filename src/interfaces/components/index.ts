@@ -25,7 +25,6 @@ export type { MenuProps, SubmenuInfo, SubmenuProps } from "@interfaces/component
 export type {
 	CreateProjectModalProps,
 	DeleteAccount,
-	ModalAddCodeAssetsProps,
 	DeleteModalProps,
 	ModalDeleteVariableProps,
 	ModalModifyVariableProps,

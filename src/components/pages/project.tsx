@@ -15,13 +15,14 @@ import { WarningTriangleIcon } from "@assets/image/icons";
 export const Project = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { initCache, projectValidationState } = useCacheStore();
+	const { currentProjectId, initCache, projectValidationState } = useCacheStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
 	const { getProject } = useProjectStore();
 
 	const loadProject = async (projectId: string) => {
+		if (currentProjectId === projectId) return;
 		await initCache(projectId, true);
 		const { data: project } = await getProject(projectId!);
 		if (!project?.name) {

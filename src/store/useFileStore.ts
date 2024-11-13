@@ -22,12 +22,6 @@ const store: StateCreator<FileStore> = (set) => ({
 			return state;
 		}),
 	setOpenProjectId: (projectId) => set((state) => ({ ...state, openProjectId: projectId })),
-	setOpenFiles: (projectId, files) =>
-		set((state) => {
-			state.openFiles[projectId] = files;
-
-			return state;
-		}),
 
 	updateOpenedFiles: (fileName) =>
 		set((state) => {

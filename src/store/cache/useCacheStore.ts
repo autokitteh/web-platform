@@ -5,7 +5,9 @@ import {
 	ConnectionService,
 	DeploymentsService,
 	EventsService,
+	IndexedDBService,
 	LoggerService,
+	ProjectsService,
 	TriggersService,
 	VariablesService,
 } from "@services";
@@ -13,7 +15,7 @@ import { namespaces } from "@src/constants";
 import { DeploymentStateVariant } from "@src/enums";
 import { CacheStore, ProjectValidationLevel } from "@src/interfaces/store";
 
-import { useToastStore } from "@store";
+import { useFileStore, useToastStore } from "@store";
 
 const defaultProjectValidationState = {
 	code: {
@@ -41,6 +43,7 @@ const initialState: Omit<
 	| "fetchVariables"
 	| "fetchEvents"
 	| "fetchConnections"
+	| "fetchResources"
 	| "initCache"
 	| "checkState"
 > = {
@@ -50,12 +53,14 @@ const initialState: Omit<
 		variables: false,
 		events: false,
 		connections: false,
+		resourses: false,
 	},
 	deployments: undefined,
 	hasActiveDeployments: false,
 	variables: [],
 	triggers: [],
 	connections: undefined,
+	resourses: undefined,
 	events: undefined,
 	currentProjectId: undefined,
 	projectValidationState: defaultProjectValidationState,
@@ -66,11 +71,68 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 	...initialState,
 	initCache: async (projectId, force = false) => {
 		await Promise.all([
+			get().fetchResources(projectId, force),
 			get().fetchDeployments(projectId, force),
 			get().fetchTriggers(projectId, force),
 			get().fetchVariables(projectId, force),
 			get().fetchConnections(projectId, force),
 		]);
+	},
+
+	fetchResources: async (projectId, force) => {
+		const dbService = new IndexedDBService("ProjectDB", "resources");
+
+		const resourcesDB = await dbService.getAll();
+		const { currentProjectId } = get();
+
+		if (currentProjectId === projectId && !force) {
+			return resourcesDB;
+		}
+
+		set((state) => ({
+			...state,
+			loading: { ...state.loading, resourses: true },
+		}));
+		try {
+			const { data: resources, error } = await ProjectsService.getResources(projectId);
+
+			if (error) {
+				LoggerService.error(
+					namespaces.resourcesService,
+					i18n.t("resourcesFetchErrorExtended", { projectId, error: (error as Error).message, ns: "errors" }),
+					true
+				);
+
+				return;
+			}
+			await dbService.clearStore();
+			for (const [name, content] of Object.entries(resources || {})) {
+				await dbService.put(name, new Uint8Array(content));
+			}
+
+			if (resources) {
+				get().checkState(projectId, { resources });
+				useFileStore.getState().setFileList({ list: Object.keys(resources) });
+			}
+
+			return resources;
+		} catch (error) {
+			useToastStore.getState().addToast({
+				message: i18n.t("resourcesFetchError", { ns: "errors" }),
+				type: "error",
+			});
+			LoggerService.error(
+				namespaces.resourcesService,
+				i18n.t("resourcesFetchErrorExtended", { projectId, error: error.message, ns: "errors" })
+			);
+
+			return;
+		} finally {
+			set((state) => ({
+				...state,
+				loading: { ...state.loading, resourses: false },
+			}));
+		}
 	},
 
 	fetchDeployments: async (projectId, force) => {

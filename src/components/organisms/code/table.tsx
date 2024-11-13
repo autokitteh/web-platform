@@ -10,7 +10,7 @@ import { LoggerService } from "@services";
 import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
-import { useModalStore, useToastStore } from "@store";
+import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { AddFileModal, DeleteFileModal } from "@components/organisms/code";
@@ -26,12 +26,16 @@ export const CodeTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const {
 		deleteFile,
-		fetchResources,
-		fileList: { isLoading, list },
+		fileList: { list },
 		openFileAsActive,
 		openFiles,
 		saveFile,
 	} = useFileOperations(projectId!);
+
+	const {
+		loading: { resourses: isLoading },
+	} = useCacheStore();
+
 	const [isDragOver, setIsDragOver] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 
@@ -246,7 +250,7 @@ export const CodeTable = () => {
 
 			<DeleteFileModal isDeleting={isDeleting} onDelete={handleRemoveFile} />
 
-			<AddFileModal onSuccess={fetchResources} />
+			<AddFileModal />
 		</div>
 	);
 };
