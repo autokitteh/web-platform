@@ -15,8 +15,10 @@ export const ProjectTemplatesTabs = () => {
 	const { openModal } = useModalStore();
 	const { error, fetchTemplates, isLoading, sortedCategories: categories } = useTemplatesStore();
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const activeCategory = useMemo(() => categories?.find((category) => category.name === activeTab), [activeTab]);
+	const activeCategory = useMemo(
+		() => categories?.find((category) => category.name === activeTab),
+		[activeTab, categories]
+	);
 
 	useEffect(() => {
 		fetchTemplates();

@@ -12,6 +12,8 @@ import {
 	MarkdownAttributes,
 	ProcessedZipResult,
 } from "@interfaces/utilities";
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { ProcessedRemoteCategory, RemoteTemplateCardWithFiles } from "@src/interfaces/store";
 
 const isFileNode = memoize((node: FileNode | DirectoryNode): node is FileNode => node?.type === "file");
@@ -82,7 +84,8 @@ export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Prom
 				ns: "utilities",
 				error: fetchError instanceof Error ? fetchError.message : "Unknown error",
 			});
-			console.warn(errorMessage);
+
+			LoggerService.warn(namespaces.utilities.fetchAndExtract, errorMessage, true);
 
 			return { error: errorMessage, structure: undefined };
 		}
@@ -94,12 +97,13 @@ export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Prom
 		return { structure };
 	} catch (error) {
 		const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : "Unknown error occurred";
-
-		console.error(
+		LoggerService.error(
+			namespaces.utilities.fetchAndExtract,
 			i18n.t("fetchAndExtract.fetchAndExtractError", {
 				ns: "utilities",
 				error: errorMessage,
-			})
+			}),
+			true
 		);
 
 		return { error: errorMessage, structure: undefined };
@@ -155,7 +159,11 @@ const getAllFilesInDirectory = (structure: FileStructure, currentPath: string = 
 
 export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemoteCategory[] => {
 	if (!fileStructure) {
-		console.warn(i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }));
+		LoggerService.warn(
+			namespaces.utilities.fetchAndExtract,
+			i18n.t("fetchAndExtract.noFileStructure", { ns: "utilities" }),
+			true
+		);
 
 		return [];
 	}
@@ -164,11 +172,10 @@ export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemo
 
 	const processDirectory = (structure: FileStructure, currentPath: string = ""): void => {
 		if (!structure || typeof structure !== "object") {
-			console.warn(
-				i18n.t("fetchAndExtract.invalidStructurePath", {
-					ns: "utilities",
-					path: currentPath,
-				})
+			LoggerService.warn(
+				namespaces.utilities.fetchAndExtract,
+				i18n.t("fetchAndExtract.invalidStructure", { path: currentPath, ns: "utilities" }),
+				true
 			);
 
 			return;
@@ -221,12 +228,14 @@ export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemo
 						categoriesMap.get(category)!.add(templateCard);
 					});
 				} catch (error) {
-					console.error(
+					LoggerService.error(
+						namespaces.utilities.fetchAndExtract,
 						i18n.t("fetchAndExtract.errorProcessingFile", {
 							ns: "utilities",
 							path: `${currentPath}/${name}`,
 							error,
-						})
+						}),
+						true
 					);
 				}
 			}
@@ -243,11 +252,13 @@ export const processReadmeFiles = (fileStructure?: FileStructure): ProcessedRemo
 			}))
 			.filter((category) => !!category.cards.length);
 	} catch (error) {
-		console.error(
+		LoggerService.error(
+			namespaces.utilities.fetchAndExtract,
 			i18n.t("fetchAndExtract.errorProcessingFileStructure", {
 				ns: "utilities",
 				error,
-			})
+			}),
+			true
 		);
 
 		return [];
