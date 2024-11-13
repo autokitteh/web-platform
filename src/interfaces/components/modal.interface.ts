@@ -7,11 +7,6 @@ export interface ModalProps {
 	name: string;
 	hideCloseButton?: boolean;
 }
-
-export interface ModalAddCodeAssetsProps {
-	onSuccess: () => void;
-}
-
 export interface DeleteModalProps {
 	onDelete?: () => void;
 	id?: string;

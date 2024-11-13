@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 
 import { defalutFileExtension, monacoLanguages, namespaces } from "@constants";
 import { ModalName } from "@enums/components";
-import { ModalAddCodeAssetsProps } from "@interfaces/components";
 import { LoggerService } from "@services";
 import { codeAssetsSchema } from "@validations";
 
@@ -17,7 +16,7 @@ import { useModalStore, useToastStore } from "@store";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal, Select } from "@components/molecules";
 
-export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
+export const AddFileModal = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
@@ -67,8 +66,6 @@ export const AddFileModal = ({ onSuccess }: ModalAddCodeAssetsProps) => {
 			LoggerService.error(namespaces.projectUICode, t("fileAddFailedExtended", { fileName: name, projectId }));
 		}
 		closeModal(ModalName.addCodeAssets);
-
-		onSuccess();
 		reset({ extension, name: "" });
 	};
 

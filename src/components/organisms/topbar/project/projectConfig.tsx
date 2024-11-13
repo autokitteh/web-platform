@@ -21,6 +21,7 @@ export const ProjectConfigTopbar = () => {
 		if (projectId !== openProjectId) {
 			setOpenProjectId(projectId);
 		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 

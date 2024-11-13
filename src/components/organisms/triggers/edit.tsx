@@ -14,7 +14,7 @@ import { ModalName, TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { triggerSchema } from "@validations";
 
-import { useFetchTrigger, useFileOperations } from "@hooks";
+import { useFetchTrigger } from "@hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
@@ -38,9 +38,9 @@ export const EditTrigger = () => {
 	const navigationData = location.state;
 	const [webhookUrlHighlight, setWebhookUrlHighlight] = useState(false);
 	const { isLoading: isLoadingTrigger, trigger } = useFetchTrigger(triggerId!);
-	const { fetchResources } = useFileOperations(projectId!);
 	const {
 		connections,
+		fetchResources,
 		fetchTriggers,
 		hasActiveDeployments,
 		loading: { connections: isLoadingConnections },
@@ -73,7 +73,7 @@ export const EditTrigger = () => {
 	useEffect(() => {
 		const loadFiles = async () => {
 			try {
-				const resources = await fetchResources();
+				const resources = await fetchResources(projectId!);
 				if (!resources) return;
 				const formattedResources = Object.keys(resources).map((name) => ({
 					label: name,

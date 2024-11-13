@@ -11,7 +11,6 @@ import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
 
-import { useFileOperations } from "@hooks";
 import { useCacheStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
@@ -31,11 +30,11 @@ export const AddTrigger = () => {
 	const [isSaving, setIsSaving] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const {
+		fetchResources,
 		fetchTriggers,
 		loading: { connections: isLoadingConnections },
 	} = useCacheStore();
 
-	const { fetchResources } = useFileOperations(projectId!);
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
 
@@ -59,7 +58,7 @@ export const AddTrigger = () => {
 		const loadFiles = async () => {
 			setIsLoadingFiles(true);
 			try {
-				const resources = await fetchResources();
+				const resources = await fetchResources(projectId!);
 				if (!resources) return;
 				const formattedResources = Object.keys(resources).map((name) => ({
 					label: name,
