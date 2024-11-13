@@ -51,7 +51,7 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 			<Sidebar />
 
 			<div className="mb-2 flex flex-1 flex-col">
-				{!hideTopbar ? <ProjectConfigTopbar /> : null}
+				{hideTopbar ? null : <ProjectConfigTopbar />}
 				<div className="flex overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
 					<Outlet />
 				</div>
