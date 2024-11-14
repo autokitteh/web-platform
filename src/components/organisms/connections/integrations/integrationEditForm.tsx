@@ -48,12 +48,20 @@ export const IntegrationEditForm = ({
 	const { closeModal, openModal } = useModalStore();
 
 	useEffect(() => {
-		if (isGoogleIntegration(integrationType)) {
+		if (!isGoogleIntegration(integrationType)) {
+			return;
+		}
+
+		if (connectionType === ConnectionAuthType.Oauth) {
 			setValue("auth_type", ConnectionAuthType.Oauth);
 			setValue("auth_scopes", integrationType);
+
+			return;
 		}
+		setValue("auth_type", ConnectionAuthType.Json);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [connectionType]);
 
 	useEffect(() => {
 		if (connectionType && schemas[connectionType as ConnectionAuthType]) {
