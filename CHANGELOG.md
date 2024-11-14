@@ -1,3 +1,10 @@
+## [2.58.2](https://github.com/autokitteh/web-platform/compare/v2.58.1...v2.58.2) (2024-11-14)
+
+
+### Bug Fixes
+
+* fix saving google connection with json key on edit ([#649](https://github.com/autokitteh/web-platform/issues/649)) ([54b0270](https://github.com/autokitteh/web-platform/commit/54b02707adf3ae092cfcc422361794ae101cb3bd))
+
 ## [2.58.1](https://github.com/autokitteh/web-platform/compare/v2.58.0...v2.58.1) (2024-11-14)
 
 
