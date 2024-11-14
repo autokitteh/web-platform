@@ -78,7 +78,7 @@ i18n.on("initialized", () => {
 	];
 	infoSlackOAuthLinks = [
 		{
-			url: "https://docs.autokitteh.com/config/integrations/slack",
+			url: "https://docs.autokitteh.com/integrations/slack/config",
 			text: i18n.t("slack.information.configSlack", { ns: "integrations" }),
 		},
 		{
