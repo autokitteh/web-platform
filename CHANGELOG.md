@@ -1,3 +1,10 @@
+# [2.58.0](https://github.com/autokitteh/web-platform/compare/v2.57.0...v2.58.0) (2024-11-14)
+
+
+### Features
+
+* add 'fetch templates' script to run on production build ([#647](https://github.com/autokitteh/web-platform/issues/647)) ([0958968](https://github.com/autokitteh/web-platform/commit/095896847daa39592242c3672a2654749e845ba1))
+
 # [2.57.0](https://github.com/autokitteh/web-platform/compare/v2.56.0...v2.57.0) (2024-11-13)
 
 
