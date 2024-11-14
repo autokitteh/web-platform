@@ -11,7 +11,7 @@ import { LoggerService } from "@services/index";
 import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
-import { useToastStore } from "@store";
+import { useLoggerStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 
@@ -22,6 +22,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
 	const addToast = useToastStore((state) => state.addToast);
+	const clearLogs = useLoggerStore((state) => state.clearLogs);
 	const [isLoggingIn, setIsLoggingIn] = useState(false);
 
 	const handleLogout = useCallback(async () => {
@@ -56,6 +57,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
 					withCredentials: true,
 				});
+
 				const error = await getLoggedInUser();
 				if (error) {
 					addToast({
@@ -63,7 +65,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 						type: "error",
 					});
 					LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
+
+					return;
 				}
+				clearLogs();
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
 					addToast({
