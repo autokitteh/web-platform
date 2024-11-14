@@ -6,7 +6,7 @@
 	"scripts": {
 		"build": "vite build",
 		"build-storybook": "storybook build",
-		"build:prod": "NODE_ENV=production npm run build",
+		"build:prod": "node scripts/fetchTemplates && NODE_ENV=production npm run build",
 		"prettier": "prettier .",
 		"fetch-templates": "node scripts/fetchTemplates",
 		"prettier:ci": "prettier . --check",
