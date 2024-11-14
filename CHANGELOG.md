@@ -1,3 +1,10 @@
+## [2.58.1](https://github.com/autokitteh/web-platform/compare/v2.58.0...v2.58.1) (2024-11-14)
+
+
+### Bug Fixes
+
+* update documentation broken link to slack configuration ([#648](https://github.com/autokitteh/web-platform/issues/648)) ([e9d1654](https://github.com/autokitteh/web-platform/commit/e9d1654041fbc1d04517efdd5a86dd0d2196f034))
+
 # [2.58.0](https://github.com/autokitteh/web-platform/compare/v2.57.0...v2.58.0) (2024-11-14)
 
 
