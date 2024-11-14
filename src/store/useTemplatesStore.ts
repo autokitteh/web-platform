@@ -159,8 +159,6 @@ const store = (set: any, get: any): TemplateState => ({
 			}
 
 			if (!shouldFetchTemplates) {
-				set({ isLoading: false });
-
 				return;
 			}
 
@@ -172,7 +170,7 @@ const store = (set: any, get: any): TemplateState => ({
 		} catch (error) {
 			if (error.message === couldntFetchGithubTemplates) {
 				await processZipFromUrlToState(localTemplatesArchiveFallback);
-				set({ isLoading: false, error: error.message });
+				set({ error: error.message });
 
 				return;
 			}
@@ -191,7 +189,9 @@ const store = (set: any, get: any): TemplateState => ({
 			}
 
 			LoggerService.error(namespaces.stores.templatesStore, logErrorMessage, true);
-			set({ error: uiErrorMessage, isLoading: false });
+			set({ error: uiErrorMessage });
+		} finally {
+			set({ isLoading: false });
 		}
 	},
 
