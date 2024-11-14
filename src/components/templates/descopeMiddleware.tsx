@@ -58,18 +58,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				});
 				const error = await getLoggedInUser();
 				if (error) {
-					addToast({
-						message: t("errors.loginFailed"),
-						type: "error",
-					});
 					LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
 				}
 			} catch (error) {
 				if (axios.isAxiosError(error)) {
-					addToast({
-						message: t("errors.loginFailed"),
-						type: "error",
-					});
 					LoggerService.error(
 						namespaces.hooks.connectionForm,
 						t("errors.loginFailedExtended", { error: error?.response?.data }),
@@ -78,10 +70,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 					return;
 				}
-				addToast({
-					message: t("errors.loginFailed"),
-					type: "error",
-				});
 				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
 			} finally {
 				setIsLoggingIn(false);
