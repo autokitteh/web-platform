@@ -22,7 +22,7 @@ export const SlackIntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema } =
+	const { control, createConnection, errors, handleOAuth, handleSubmit, isLoading, register, setValidationSchema } =
 		useConnectionForm(slackIntegrationSchema, "create");
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
@@ -75,7 +75,12 @@ export const SlackIntegrationAddForm = ({
 			/>
 			<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				{ConnectionTypeComponent ? (
-					<ConnectionTypeComponent errors={errors} isLoading={isLoading} register={register} />
+					<ConnectionTypeComponent
+						control={control}
+						errors={errors}
+						isLoading={isLoading}
+						register={register}
+					/>
 				) : null}
 			</form>
 		</>

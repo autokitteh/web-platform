@@ -43,7 +43,7 @@ export const IntegrationEditForm = ({
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit");
 
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
-	const [isFirstConnectionType, setIsFirstConnectionType] = useState<boolean>(true);
+	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
 
 	const { hasActiveDeployments } = useCacheStore();
 	const { closeModal, openModal } = useModalStore();
@@ -123,6 +123,14 @@ export const IntegrationEditForm = ({
 		setFormValue("account_sid", "accountSID");
 		setFormValue("api_key", "apiKey");
 		setFormValue("api_secret", "apiSecret");
+		// slack
+		setFormValue("bot_token", "botToken");
+		setFormValue("app_token", "appToken");
+		// atlassian- jira, confluence
+		setFormValue("base_url", "BaseURL");
+		setFormValue("token", "Token");
+		setFormValue("email", "Email");
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
