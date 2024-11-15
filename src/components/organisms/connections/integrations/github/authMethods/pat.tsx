@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import randomatic from "randomatic";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -10,30 +10,26 @@ import { VariablesService } from "@services";
 import { useToastStore } from "@src/store";
 import { getApiBaseUrl } from "@src/utilities";
 
-import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const PatForm = ({
+	control,
 	copyToClipboard,
 	errors,
 	isLoading,
-	mode,
 	register,
 	setValue,
 }: {
+	control: any;
 	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
-	mode: "create" | "edit";
 	register: UseFormRegister<{ [x: string]: any }>;
 	setValue: any;
 }) => {
-	const [lockState, setLockState] = useState<{ pat: boolean; secret: boolean }>({
-		pat: true,
-		secret: true,
-	});
 	const addToast = useToastStore((state) => state.addToast);
 
 	const { connectionId } = useParams();
@@ -42,7 +38,9 @@ export const PatForm = ({
 
 	const { t } = useTranslation("integrations");
 	const [webhook, setWebhook] = useState("");
-	const isEditMode = mode === "edit";
+
+	const pat = useWatch({ control, name: "pat" });
+	const secret = useWatch({ control, name: "secret" });
 
 	const getWebhookOnInit = async () => {
 		if (!connectionId) {
@@ -84,30 +82,15 @@ export const PatForm = ({
 	return (
 		<>
 			<div className="relative">
-				{isEditMode ? (
-					<SecretInput
-						type="password"
-						{...register("pat")}
-						aria-label={t("github.placeholders.pat")}
-						handleInputChange={(newPatValue) => setValue("pat", newPatValue)}
-						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, pat: newLockState }))
-						}
-						isError={!!errors.pat}
-						isLocked={lockState.pat}
-						isRequired
-						label={t("github.placeholders.pat")}
-					/>
-				) : (
-					<Input
-						{...register("pat")}
-						aria-label={t("github.placeholders.pat")}
-						isError={!!errors.pat}
-						isRequired
-						label={t("github.placeholders.pat")}
-					/>
-				)}
-
+				<Input
+					{...register("pat")}
+					aria-label={t("github.placeholders.pat")}
+					isError={!!errors.pat}
+					isRequired
+					label={t("github.placeholders.pat")}
+					onChange={(newValue) => setValue("pat", newValue)}
+					value={pat}
+				/>
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative flex gap-2">
@@ -127,33 +110,18 @@ export const PatForm = ({
 					variant="outline"
 				>
 					<CopyIcon className="size-3.5 fill-black" />
-
 					{t("buttons.copy")}
 				</Button>
 			</div>
 			<div className="relative">
-				{isEditMode ? (
-					<SecretInput
-						type="password"
-						{...register("secret")}
-						aria-label={t("github.placeholders.secret")}
-						handleInputChange={(newSecretValue) => setValue("secret", newSecretValue)}
-						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, secret: newLockState }))
-						}
-						isError={!!errors.secret}
-						isLocked={lockState.secret}
-						label={t("github.placeholders.secret")}
-					/>
-				) : (
-					<Input
-						{...register("secret")}
-						aria-label={t("github.placeholders.secret")}
-						isError={!!errors.secret}
-						label={t("github.placeholders.secret")}
-					/>
-				)}
-
+				<Input
+					{...register("secret")}
+					aria-label={t("github.placeholders.secret")}
+					isError={!!errors.secret}
+					label={t("github.placeholders.secret")}
+					onChange={(newValue) => setValue("secret", newValue)}
+					value={secret}
+				/>
 				<ErrorMessage>{errors.secret?.message as string}</ErrorMessage>
 			</div>
 
@@ -167,7 +135,6 @@ export const PatForm = ({
 							to={url}
 						>
 							{text}
-
 							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
@@ -182,7 +149,6 @@ export const PatForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
 		</>

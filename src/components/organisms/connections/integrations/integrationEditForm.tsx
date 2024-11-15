@@ -116,6 +116,7 @@ export const IntegrationEditForm = ({
 			if (!value) return;
 			setValue(fieldName, value);
 		};
+		// google / calendar / forms
 		setFormValue("form_id", "FormID");
 		setFormValue("cal_id", "CalendarID");
 		setFormValue("json", "JSON");
@@ -130,6 +131,9 @@ export const IntegrationEditForm = ({
 		setFormValue("base_url", "BaseURL");
 		setFormValue("token", "Token");
 		setFormValue("email", "Email");
+		// github
+		setFormValue("pat", "pat");
+		setFormValue("secret", "Secret");
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
