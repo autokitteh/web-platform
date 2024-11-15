@@ -18,7 +18,6 @@ export const AuthTokenTwilioForm = ({
 	register,
 	setValue,
 }: {
-	connectionVariables: any;
 	control: any;
 	errors: FieldErrors<any>;
 	isLoading: boolean;

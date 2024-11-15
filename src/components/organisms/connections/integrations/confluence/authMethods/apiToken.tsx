@@ -1,22 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoConfluenceLinks } from "@constants/lists/connections";
 
-import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const ConfluenceApiTokenForm = ({
+	control,
 	errors,
 	isLoading,
-	mode,
 	register,
 	setValue,
 }: {
+	control: any;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	mode: "create" | "edit";
@@ -24,97 +25,49 @@ export const ConfluenceApiTokenForm = ({
 	setValue: any;
 }) => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState<{ base_url: boolean; email: boolean; token: boolean }>({
-		base_url: true,
-		token: true,
-		email: true,
-	});
-	const isEditMode = mode === "edit";
+
+	const baseUrl = useWatch({ control, name: "base_url" });
+	const token = useWatch({ control, name: "token" });
+	const email = useWatch({ control, name: "email" });
 
 	return (
 		<>
 			<div className="relative">
-				{isEditMode ? (
-					<SecretInput
-						type="password"
-						{...register("base_url")}
-						aria-label={t("confluence.placeholders.baseUrl")}
-						handleInputChange={(newValue) => setValue("base_url", newValue)}
-						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, base_url: newLockState }))
-						}
-						isError={!!errors.base_url}
-						isLocked={lockState.base_url}
-						isRequired
-						label={t("confluence.placeholders.baseUrl")}
-						placeholder={t("confluence.placeholders.exampleUrl")}
-					/>
-				) : (
-					<Input
-						{...register("base_url")}
-						aria-label={t("confluence.placeholders.baseUrl")}
-						isError={!!errors.base_url}
-						isRequired
-						label={t("confluence.placeholders.baseUrl")}
-						placeholder={t("confluence.placeholders.exampleUrl")}
-					/>
-				)}
-
+				<Input
+					{...register("base_url")}
+					aria-label={t("confluence.placeholders.baseUrl")}
+					isError={!!errors.base_url}
+					isRequired
+					label={t("confluence.placeholders.baseUrl")}
+					onChange={(newValue) => setValue("base_url", newValue)}
+					placeholder={t("confluence.placeholders.exampleUrl")}
+					value={baseUrl}
+				/>
 				<ErrorMessage>{errors.base_url?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
-				{isEditMode ? (
-					<SecretInput
-						type="password"
-						{...register("token")}
-						aria-label={t("confluence.placeholders.pat")}
-						handleInputChange={(newValue) => setValue("token", newValue)}
-						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, token: newLockState }))
-						}
-						isError={!!errors.token}
-						isLocked={lockState.token}
-						isRequired
-						label={t("confluence.placeholders.pat")}
-					/>
-				) : (
-					<Input
-						{...register("token")}
-						aria-label={t("confluence.placeholders.pat")}
-						isError={!!errors.token}
-						isRequired
-						label={t("confluence.placeholders.pat")}
-					/>
-				)}
-
+				<Input
+					{...register("token")}
+					aria-label={t("confluence.placeholders.pat")}
+					isError={!!errors.token}
+					isRequired
+					label={t("confluence.placeholders.pat")}
+					onChange={(newValue) => setValue("token", newValue)}
+					value={token}
+				/>
 				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
-				{isEditMode ? (
-					<SecretInput
-						type="password"
-						{...register("email")}
-						aria-label={t("confluence.placeholders.email")}
-						handleInputChange={(newValue) => setValue("email", newValue)}
-						handleLockAction={(newLockState: boolean) =>
-							setLockState((prevState) => ({ ...prevState, email: newLockState }))
-						}
-						isError={!!errors.email}
-						isLocked={lockState.email}
-						label={t("confluence.placeholders.email")}
-						placeholder={t("confluence.placeholders.emailSample")}
-					/>
-				) : (
-					<Input
-						{...register("email")}
-						aria-label={t("confluence.placeholders.email")}
-						isError={!!errors.email}
-						label={t("confluence.placeholders.email")}
-						placeholder={t("confluence.placeholders.emailSample")}
-						type="email"
-					/>
-				)}
-
+				<Input
+					{...register("email")}
+					aria-label={t("confluence.placeholders.email")}
+					isError={!!errors.email}
+					label={t("confluence.placeholders.email")}
+					onChange={(newValue) => setValue("email", newValue)}
+					placeholder={t("confluence.placeholders.emailSample")}
+					type="email"
+					value={email}
+				/>
 				<ErrorMessage>{errors.email?.message as string}</ErrorMessage>
 			</div>
 
@@ -128,7 +81,6 @@ export const ConfluenceApiTokenForm = ({
 							to={url}
 						>
 							{text}
-
 							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
@@ -143,7 +95,6 @@ export const ConfluenceApiTokenForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
 		</>

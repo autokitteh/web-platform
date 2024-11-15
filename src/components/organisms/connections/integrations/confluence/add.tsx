@@ -24,6 +24,7 @@ export const ConfluenceIntegrationAddForm = ({
 
 	const {
 		clearErrors,
+		control,
 		createConnection,
 		errors,
 		handleOAuth,
@@ -83,7 +84,12 @@ export const ConfluenceIntegrationAddForm = ({
 			/>
 			<form className="mt-6 flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				{ConnectionTypeComponent ? (
-					<ConnectionTypeComponent errors={errors} isLoading={isLoading} register={register} />
+					<ConnectionTypeComponent
+						control={control}
+						errors={errors}
+						isLoading={isLoading}
+						register={register}
+					/>
 				) : null}
 			</form>
 		</>
