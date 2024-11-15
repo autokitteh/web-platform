@@ -24,7 +24,7 @@ export const TwilioIntegrationAddForm = ({
 
 	const [connectionType, setConnectionType] = useState<SingleValue<SelectOption>>();
 
-	const { createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
+	const { control, createConnection, errors, handleSubmit, isLoading, register, setValidationSchema, setValue } =
 		useConnectionForm(oauthSchema, "create");
 
 	useEffect(() => {
@@ -68,6 +68,7 @@ export const TwilioIntegrationAddForm = ({
 			<form className="mt-6 flex w-full flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
+						control={control}
 						errors={errors}
 						isLoading={isLoading}
 						mode="create"
