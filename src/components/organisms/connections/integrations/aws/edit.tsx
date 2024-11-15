@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
@@ -9,7 +9,7 @@ import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
 import { awsIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
 import { Select } from "@components/molecules";
 import { WarningDeploymentActivetedModal } from "@components/organisms";
 
@@ -17,11 +17,6 @@ import { FloppyDiskIcon } from "@assets/image/icons";
 
 export const AwsIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState({
-		access_key: true,
-		secret_key: true,
-		token: true,
-	});
 
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(awsIntegrationSchema, "edit");
@@ -29,14 +24,31 @@ export const AwsIntegrationEditForm = () => {
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
 
+	const accessKey = useWatch({ control, name: "access_key" });
+	const secretKey = useWatch({ control, name: "secret_key" });
+	const token = useWatch({ control, name: "token" });
+
 	useEffect(() => {
 		if (!connectionVariables) return;
+
 		const region = connectionVariables?.find((variable) => variable.name === "Region");
 		if (region) {
 			setValue("region", {
 				label: region.value,
 				value: region.value,
 			});
+		}
+		const accessKeyValue = connectionVariables?.find((variable) => variable.name === "AccessKeyID")?.value;
+		if (accessKeyValue) {
+			setValue("access_key", accessKeyValue);
+		}
+		const secretKeyValue = connectionVariables?.find((variable) => variable.name === "SecretKey")?.value;
+		if (secretKeyValue) {
+			setValue("secret_key", secretKeyValue);
+		}
+		const tokenValue = connectionVariables?.find((variable) => variable.name === "Token")?.value;
+		if (tokenValue) {
+			setValue("token", tokenValue);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
@@ -71,52 +83,40 @@ export const AwsIntegrationEditForm = () => {
 			</div>
 
 			<div className="relative">
-				<SecretInput
-					type="password"
+				<Input
 					{...register("access_key")}
 					aria-label={t("aws.placeholders.accessKey")}
-					handleInputChange={(newValue) => setValue("access_key", newValue)}
-					handleLockAction={(newLockState: boolean) =>
-						setLockState((prevState) => ({ ...prevState, access_key: newLockState }))
-					}
 					isError={!!errors.access_key}
-					isLocked={lockState.access_key}
 					isRequired
 					label={t("aws.placeholders.accessKey")}
+					onChange={(newValue) => setValue("access_key", newValue)}
+					value={accessKey}
 				/>
 				<ErrorMessage>{errors.access_key?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">
-				<SecretInput
-					type="password"
+				<Input
 					{...register("secret_key")}
 					aria-label={t("aws.placeholders.secretKey")}
-					handleInputChange={(newValue) => setValue("secret_key", newValue)}
-					handleLockAction={(newLockState: boolean) =>
-						setLockState((prevState) => ({ ...prevState, secret_key: newLockState }))
-					}
 					isError={!!errors.secret_key}
-					isLocked={lockState.secret_key}
 					isRequired
 					label={t("aws.placeholders.secretKey")}
+					onChange={(newValue) => setValue("secret_key", newValue)}
+					value={secretKey}
 				/>
 				<ErrorMessage>{errors.secret_key?.message as string}</ErrorMessage>
 			</div>
 
 			<div className="relative">
-				<SecretInput
-					type="password"
+				<Input
 					{...register("token")}
 					aria-label={t("aws.placeholders.token")}
-					handleInputChange={(newValue) => setValue("token", newValue)}
-					handleLockAction={(newLockState: boolean) =>
-						setLockState((prevState) => ({ ...prevState, token: newLockState }))
-					}
 					isError={!!errors.token}
-					isLocked={lockState.token}
 					isRequired
 					label={t("aws.placeholders.token")}
+					onChange={(newValue) => setValue("token", newValue)}
+					value={token}
 				/>
 				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>
 			</div>

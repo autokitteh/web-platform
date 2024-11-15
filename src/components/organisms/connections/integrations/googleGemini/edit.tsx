@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -8,7 +9,7 @@ import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
 import { googleGeminiIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { WarningDeploymentActivetedModal } from "@components/organisms";
 
@@ -16,14 +17,22 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const GoogleGeminiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState(true);
 
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
-	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		googleGeminiIntegrationSchema,
-		"edit"
-	);
+
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+		useConnectionForm(googleGeminiIntegrationSchema, "edit");
+
+	const key = useWatch({ control, name: "key" });
+
+	useEffect(() => {
+		const apiKeyValue = connectionVariables?.find((variable) => variable.name === "api_key")?.value;
+		if (apiKeyValue) {
+			setValue("key", apiKeyValue);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
 
 	const handleFormSubmit = () => {
 		if (hasActiveDeployments) {
@@ -37,16 +46,15 @@ export const GoogleGeminiIntegrationEditForm = () => {
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
 			<div className="relative">
-				<SecretInput
+				<Input
 					type="password"
 					{...register("key")}
 					aria-label={t("gemini.placeholders.key")}
-					handleInputChange={(newValue) => setValue("key", newValue)}
-					handleLockAction={setLockState}
 					isError={!!errors.key}
-					isLocked={lockState}
 					isRequired
 					label={t("gemini.placeholders.key")}
+					onChange={(newValue) => setValue("key", newValue)}
+					value={key}
 				/>
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -8,7 +9,7 @@ import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
 import { asanaIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { WarningDeploymentActivetedModal } from "@components/organisms";
 
@@ -16,13 +17,20 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const AsanaIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState(true);
+
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
-	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		asanaIntegrationSchema,
-		"edit"
-	);
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+		useConnectionForm(asanaIntegrationSchema, "edit");
+
+	const pat = useWatch({ control, name: "pat" });
+
+	useEffect(() => {
+		const patValue = connectionVariables?.find((variable) => variable.name === "pat")?.value || "";
+		if (patValue) {
+			setValue("pat", patValue);
+		}
+	}, [connectionVariables, setValue]);
 
 	const handleFormSubmit = () => {
 		if (hasActiveDeployments) {
@@ -36,16 +44,14 @@ export const AsanaIntegrationEditForm = () => {
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
 			<div className="relative">
-				<SecretInput
-					type="password"
+				<Input
 					{...register("pat")}
 					aria-label={t("asana.placeholders.pat")}
-					handleInputChange={(newValue) => setValue("pat", newValue)}
-					handleLockAction={setLockState}
 					isError={!!errors.pat}
-					isLocked={lockState}
 					isRequired
 					label={t("asana.placeholders.pat")}
+					onChange={(newValue) => setValue("pat", newValue)}
+					value={pat}
 				/>
 
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
