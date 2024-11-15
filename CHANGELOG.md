@@ -1,3 +1,10 @@
+# [2.59.0](https://github.com/autokitteh/web-platform/compare/v2.58.2...v2.59.0) (2024-11-15)
+
+
+### Features
+
+* clear system logs on user login ([#650](https://github.com/autokitteh/web-platform/issues/650)) ([6793e00](https://github.com/autokitteh/web-platform/commit/6793e00265a7deb724004514febe9024463e6b3f))
+
 ## [2.58.2](https://github.com/autokitteh/web-platform/compare/v2.58.1...v2.58.2) (2024-11-14)
 
 
