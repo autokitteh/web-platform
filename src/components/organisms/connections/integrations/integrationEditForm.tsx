@@ -28,6 +28,7 @@ export const IntegrationEditForm = ({
 		connectionId,
 		connectionType,
 		connectionVariables,
+		control,
 		copyToClipboard,
 		errors,
 		handleGoogleOauth,
@@ -118,6 +119,10 @@ export const IntegrationEditForm = ({
 		setFormValue("form_id", "FormID");
 		setFormValue("cal_id", "CalendarID");
 		setFormValue("json", "JSON");
+		// twillio
+		setFormValue("account_sid", "accountSID");
+		setFormValue("api_key", "apiKey");
+		setFormValue("api_secret", "apiSecret");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
@@ -140,10 +145,10 @@ export const IntegrationEditForm = ({
 			<form className="mt-6 flex flex-col items-stretch gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
+						control={control}
 						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}
-						mode="edit"
 						register={register}
 						setValue={setValue}
 					/>
