@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoOpenAiLinks } from "@constants/lists/connections";
@@ -8,7 +9,7 @@ import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
 import { openAiIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, Link, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { WarningDeploymentActivetedModal } from "@components/organisms";
 
@@ -16,14 +17,21 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const OpenAiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState(true);
-
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
-	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		openAiIntegrationSchema,
-		"edit"
-	);
+
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+		useConnectionForm(openAiIntegrationSchema, "edit");
+
+	const key = useWatch({ control, name: "key" });
+
+	useEffect(() => {
+		const apiKeyValue = connectionVariables?.find((variable) => variable.name === "apiKey")?.value;
+		if (apiKeyValue) {
+			setValue("key", apiKeyValue);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
 
 	const handleFormSubmit = () => {
 		if (hasActiveDeployments) {
@@ -37,16 +45,14 @@ export const OpenAiIntegrationEditForm = () => {
 	return (
 		<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleFormSubmit)}>
 			<div className="relative">
-				<SecretInput
-					type="password"
+				<Input
 					{...register("key")}
 					aria-label={t("openAi.placeholders.apiKey")}
-					handleInputChange={(newValue) => setValue("key", newValue)}
-					handleLockAction={setLockState}
 					isError={!!errors.key}
-					isLocked={lockState}
 					isRequired
 					label={t("openAi.placeholders.apiKey")}
+					onChange={(newValue) => setValue("key", newValue)}
+					value={key}
 				/>
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -8,7 +9,7 @@ import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
 import { discordIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { WarningDeploymentActivetedModal } from "@components/organisms";
 
@@ -16,14 +17,22 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const DiscordIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const [lockState, setLockState] = useState(true);
 
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
-	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		discordIntegrationSchema,
-		"edit"
-	);
+
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+		useConnectionForm(discordIntegrationSchema, "edit");
+
+	const botToken = useWatch({ control, name: "botToken" });
+
+	useEffect(() => {
+		const botTokenValue = connectionVariables?.find((variable) => variable.name === "BotToken")?.value || "";
+		if (botTokenValue) {
+			setValue("botToken", botTokenValue);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
 
 	const handleFormSubmit = () => {
 		if (hasActiveDeployments) {
@@ -37,18 +46,15 @@ export const DiscordIntegrationEditForm = () => {
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
 			<div className="relative">
-				<SecretInput
-					type="password"
+				<Input
 					{...register("botToken")}
 					aria-label={t("discord.placeholders.botToken")}
-					handleInputChange={(newValue) => setValue("botToken", newValue)}
-					handleLockAction={setLockState}
 					isError={!!errors.botToken}
-					isLocked={lockState}
 					isRequired
 					label={t("discord.placeholders.botToken")}
+					onChange={(newValue) => setValue("botToken", newValue)}
+					value={botToken}
 				/>
-
 				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>
 			</div>
 
@@ -59,7 +65,6 @@ export const DiscordIntegrationEditForm = () => {
 					to="https://discord.com/developers/docs/intro"
 				>
 					{t("discord.information.devPlatform")}
-
 					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 				</Link>
 			</Accordion>
