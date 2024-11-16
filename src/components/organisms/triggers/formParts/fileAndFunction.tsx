@@ -38,11 +38,16 @@ export const TriggerSpecificFields = ({
 	const { connections } = useCacheStore();
 
 	const [options, setOptions] = useState<SelectOption[]>([]);
+	const [triggerRenrender, setTriggerRenrender] = useState(0);
 
 	useEffect(() => {
 		if (!featureFlags.displayComboxInTriggersForm) {
 			return;
 		}
+
+		setValue("eventTypeSelect", null);
+		setTriggerRenrender((prev) => prev + 1);
+
 		if (!connectionId || connectionId === TriggerTypes.webhook || connectionId === TriggerTypes.schedule) {
 			setOptions([]);
 
@@ -130,6 +135,7 @@ export const TriggerSpecificFields = ({
 										dataTestid="select-trigger-event-type"
 										defaultValue={selectedEventType}
 										isError={!!errors.eventTypeSelect}
+										key={triggerRenrender}
 										label={t("placeholders.eventType")}
 										noOptionsLabel={t("placeholders.eventTypesSelect")}
 										onCreateOption={handleCreateOption}
