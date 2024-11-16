@@ -12,13 +12,16 @@ import { IconLabel } from "@components/molecules/select";
 
 interface BaseSelectProps extends SelectProps {
 	SelectComponent: typeof ReactSelect | typeof CreatableSelect;
+	defaultValue?: SingleValue<SelectOption>;
 }
 
 export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 	(
 		{
 			SelectComponent,
+			createLabel,
 			dataTestid,
+			defaultValue,
 			disabled = false,
 			isError = false,
 			label,
@@ -110,6 +113,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 				<SelectComponent
 					{...rest}
 					components={{ Option: iconOption, SingleValue: iconSingleValue }}
+					formatCreateLabel={(createLabelItem) => `${createLabel} "${createLabelItem}"`}
 					id={id}
 					isDisabled={disabled}
 					isOptionDisabled={(option: SelectOption) => !!option.disabled}
@@ -121,7 +125,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 					options={options}
 					placeholder={placeholder}
 					styles={selectStyles}
-					value={selectedOption}
+					value={selectedOption || defaultValue}
 				/>
 
 				<label className={labelClass} htmlFor={id}>

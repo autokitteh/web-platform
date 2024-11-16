@@ -13,8 +13,10 @@ export interface SelectProps {
 	options: SelectOption[];
 	placeholder?: string;
 	value?: SelectOption | null;
+	defaultValue?: SelectOption | null;
 	variant?: ColorSchemes;
 	disabled?: boolean;
+	createLabel?: string;
 }
 
 export interface SelectOption {

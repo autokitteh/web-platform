@@ -327,7 +327,7 @@ export const eventTypesPerIntegration = {
 		"workflow_job",
 		"workflow_run",
 	],
-	gmail: ["mailbox_chage"],
+	gmail: ["mailbox_change"],
 	calendar: ["event_created", "event_updated", "event_deleted"],
 	forms: ["responses", "schema"],
 };

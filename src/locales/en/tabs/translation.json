@@ -102,6 +102,7 @@
 			"modifyTrigger": "Modify trigger",
 			"noConnectionsAvailable": "No connections available",
 			"noFilesAvailable": "No files available",
+			"createFunctionNameLabel": "Use",
 			"placeholders": {
 				"webhookUrl": "Webhook URL",
 				"cron": "Cron expression",

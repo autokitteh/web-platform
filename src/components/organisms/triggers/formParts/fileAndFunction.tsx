@@ -17,9 +17,11 @@ import { SelectCreatable } from "@components/molecules/select";
 export const TriggerSpecificFields = ({
 	connectionId,
 	filesNameList,
+	selectedEventType,
 }: {
 	connectionId: string;
 	filesNameList: SelectOption[];
+	selectedEventType?: SelectOption;
 }) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const {
@@ -38,6 +40,9 @@ export const TriggerSpecificFields = ({
 	const [options, setOptions] = useState<SelectOption[]>([]);
 
 	useEffect(() => {
+		if (!featureFlags.displayComboxInTriggersForm) {
+			return;
+		}
 		if (!connectionId || connectionId === TriggerTypes.webhook || connectionId === TriggerTypes.schedule) {
 			setOptions([]);
 
@@ -74,7 +79,7 @@ export const TriggerSpecificFields = ({
 			label: inputValue,
 		};
 		setOptions((prevOptions) => [...prevOptions, newOption]);
-		setValue("eventTypeSelect", newOption.value);
+		setValue("eventTypeSelect", newOption);
 	};
 
 	return (
@@ -121,7 +126,9 @@ export const TriggerSpecificFields = ({
 									<SelectCreatable
 										{...field}
 										aria-label={t("placeholders.eventType")}
+										createLabel={t("createFunctionNameLabel")}
 										dataTestid="select-trigger-event-type"
+										defaultValue={selectedEventType}
 										isError={!!errors.eventTypeSelect}
 										label={t("placeholders.eventType")}
 										noOptionsLabel={t("placeholders.eventTypesSelect")}
