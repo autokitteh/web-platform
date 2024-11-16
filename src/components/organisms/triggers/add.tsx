@@ -144,7 +144,7 @@ export const AddTrigger = () => {
 				>
 					<NameAndConnectionFields />
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
-					<TriggerSpecificFields filesNameList={filesNameList} />
+					<TriggerSpecificFields connectionId={connectionType} filesNameList={filesNameList} />
 					{connectionType === TriggerTypes.webhook ? <WebhookFields /> : null}
 				</form>
 

@@ -201,7 +201,7 @@ export const EditTrigger = () => {
 
 					{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 
-					<TriggerSpecificFields filesNameList={filesNameList} />
+					<TriggerSpecificFields connectionId={trigger?.connectionId || ""} filesNameList={filesNameList} />
 
 					{trigger?.sourceType === TriggerTypes.webhook ? (
 						<WebhookFields highlight={webhookUrlHighlight} webhookSlug={trigger.webhookSlug || ""} />

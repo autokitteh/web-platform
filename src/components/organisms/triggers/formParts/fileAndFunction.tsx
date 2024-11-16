@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { featureFlags } from "@src/constants";
+import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
+import { useCacheStore } from "@src/store";
 import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";
 import { SelectCreatable } from "@components/molecules/select";
 
-export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[] }) => {
+export const TriggerSpecificFields = ({
+	connectionId,
+	filesNameList,
+}: {
+	connectionId: string;
+	filesNameList: SelectOption[];
+}) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const {
 		control,
@@ -25,12 +33,40 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 	const watchedEventType = useWatch({ control, name: "eventType" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
+	const { connections } = useCacheStore();
 
-	const [options, setOptions] = useState<SelectOption[]>([
-		{ value: "option1", label: "Option 1" },
-		{ value: "option2", label: "Option 2" },
-		{ value: "option3", label: "Option 3", disabled: true },
-	]);
+	const [options, setOptions] = useState<SelectOption[]>([]);
+
+	useEffect(() => {
+		if (!connectionId || connectionId === TriggerTypes.webhook || connectionId === TriggerTypes.schedule) {
+			setOptions([]);
+
+			return;
+		}
+
+		const connectionIntegration = connections
+			?.find((connection) => connection.connectionId === connectionId)
+			?.integrationName?.toLowerCase();
+
+		if (
+			!connectionIntegration ||
+			!eventTypesPerIntegration[connectionIntegration as keyof typeof eventTypesPerIntegration]
+		) {
+			setOptions([]);
+
+			return;
+		}
+
+		const eventTypes = eventTypesPerIntegration[connectionIntegration as keyof typeof eventTypesPerIntegration].map(
+			(eventType) => ({
+				value: eventType,
+				label: eventType,
+			})
+		);
+
+		setOptions(eventTypes);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
 
 	const handleCreateOption = (inputValue: string) => {
 		const newOption: SelectOption = {
@@ -88,6 +124,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 										dataTestid="select-trigger-event-type"
 										isError={!!errors.eventTypeSelect}
 										label={t("placeholders.eventType")}
+										noOptionsLabel={t("placeholders.eventTypesSelect")}
 										onCreateOption={handleCreateOption}
 										options={options}
 										placeholder={t("placeholders.eventType")}

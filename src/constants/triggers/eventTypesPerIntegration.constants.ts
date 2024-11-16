@@ -1,4 +1,4 @@
-export const eventTypes = {
+export const eventTypesPerIntegration = {
 	slack: [
 		"app_deleted",
 		"app_home_opened",

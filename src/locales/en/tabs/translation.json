@@ -117,7 +117,8 @@
 				"file": "File",
 				"selectTriggerType": "Select trigger type",
 				"triggerType": "Trigger type",
-				"value": "Value"
+				"value": "Value",
+				"eventTypesSelect": "Enter the event type"
 			},
 			"titleData": "Data",
 			"titleInfo": "Relevant only for HTTP",
