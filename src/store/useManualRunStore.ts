@@ -5,9 +5,12 @@ import { immer } from "zustand/middleware/immer";
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
-import { StoreName } from "@enums";
-import { SessionsService } from "@services";
+import { DeploymentStateVariant, StoreName } from "@enums";
+import { BuildsService, SessionsService } from "@services";
 import { ManualRunStore } from "@src/interfaces/store";
+import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
+
+import { useCacheStore, useToastStore } from "@store";
 
 const defaultManualRunState = {
 	files: [],
@@ -21,6 +24,43 @@ const defaultManualRunState = {
 
 const store: StateCreator<ManualRunStore> = (set, get) => ({
 	projectManualRun: {},
+
+	fetchManualRunConfiguration: async (projectId: string) => {
+		const deployments = useCacheStore.getState().deployments;
+
+		if (!deployments?.length || deployments[0].state !== DeploymentStateVariant.active) {
+			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: false });
+
+			return;
+		}
+
+		const lastDeployment = deployments[0];
+
+		if (lastDeployment.buildId === get().projectManualRun[projectId]?.lastDeployment?.buildId) {
+			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: true });
+
+			return;
+		}
+
+		const { data: buildDescription, error: buildDescriptionError } = await BuildsService.getBuildDescription(
+			lastDeployment.buildId
+		);
+
+		if (buildDescriptionError) {
+			useToastStore.getState().addToast({
+				message: i18n.t("history.buildInformationForSingleshotNotLoaded", { ns: "deployments" }),
+				type: "error",
+			});
+
+			return;
+		}
+		const buildInfo = JSON.parse(buildDescription!);
+		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
+
+		if (!Object.keys(files).length) return;
+
+		get().updateManualRunConfiguration(projectId!, { files, lastDeployment, isManualRunEnabled: true });
+	},
 
 	updateManualRunConfiguration: (
 		projectId,
@@ -38,13 +78,11 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 					value: file,
 				}));
 
-				const entrypointFromFirstFile = files[Object.keys(files)?.[0]]?.[0] || "";
-
 				Object.assign(projectData, {
 					files,
 					fileOptions,
 					filePath: fileOptions[0],
-					entrypointFunction: { label: entrypointFromFirstFile, value: entrypointFromFirstFile },
+					entrypointFunction: null,
 					params: [],
 				});
 			}

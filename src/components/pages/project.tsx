@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { defaultProjectTab, projectTabs } from "@constants/project.constants";
-import { useCacheStore, useProjectStore } from "@src/store";
+import { useCacheStore, useManualRunStore, useProjectStore } from "@src/store";
 import { calculatePathDepth, cn } from "@utilities";
 
 import { IconSvg, PageTitle, Tab } from "@components/atoms";
@@ -16,6 +16,7 @@ export const Project = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { currentProjectId, initCache, projectValidationState } = useCacheStore();
+	const { fetchManualRunConfiguration } = useManualRunStore();
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
@@ -24,6 +25,7 @@ export const Project = () => {
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;
 		await initCache(projectId, true);
+		fetchManualRunConfiguration(projectId!);
 		const { data: project } = await getProject(projectId!);
 		if (!project?.name) {
 			setPageTitle(t("base"));
