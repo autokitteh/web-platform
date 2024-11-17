@@ -127,18 +127,14 @@ const store = (set: any, get: any): TemplateState => ({
 					});
 
 					const latestCommit = data?.[0];
+					const latestCommitDate = latestCommit?.commit.author.date;
+					const currentCommitDate = get().lastCommitDate;
 
-					if (latestCommit) {
-						const latestCommitDate = latestCommit.commit.author.date;
-						const currentCommitDate = get().lastCommitDate;
-
-						if (currentCommitDate && new Date(latestCommitDate) <= new Date(currentCommitDate)) {
-							return;
-						}
-						shouldFetchTemplatesFromGithub = true;
-						shouldFetchTemplates = true;
-						lastCommitDate = latestCommitDate;
-					}
+					shouldFetchTemplatesFromGithub =
+						latestCommit &&
+						(!currentCommitDate || new Date(latestCommitDate) > new Date(currentCommitDate));
+					shouldFetchTemplates = shouldFetchTemplatesFromGithub;
+					lastCommitDate = latestCommitDate;
 					set({ lastCheckDate: currentTime });
 				} catch {
 					shouldFetchTemplates = true;
@@ -149,33 +145,19 @@ const store = (set: any, get: any): TemplateState => ({
 				return;
 			}
 
-			const zipUrl = shouldFetchTemplatesFromGithub ? remoteTemplatesArchiveURL : localTemplatesArchiveFallback;
+			const templatesFromPrimary = await processTemplates(remoteTemplatesArchiveURL);
+			const templatesResult = templatesFromPrimary.error
+				? await processTemplates(localTemplatesArchiveFallback)
+				: templatesFromPrimary;
 
-			let categories;
-			let error;
-			let templateMap;
-			const templatesFromGithub = await processTemplates(zipUrl);
+			const { categories, error, templateMap } = templatesResult;
 
-			if (templatesFromGithub.error) {
-				const templatesFromFallback = await processTemplates(localTemplatesArchiveFallback);
-
-				if (templatesFromFallback.error) {
-					set({ error, isLoading: false });
-
-					return;
-				}
-				categories = templatesFromFallback.categories;
-				templateMap = templatesFromFallback.templateMap;
-			} else {
-				categories = templatesFromGithub.categories;
-				templateMap = templatesFromGithub.templateMap;
-			}
-
-			if (!categories || !templateMap || !Object.keys(templateMap).length) {
+			if (error || !categories || !templateMap || !Object.keys(templateMap).length) {
 				set({ error: couldntFetchTemplates, isLoading: false });
 
 				return;
 			}
+
 			const sortedCategories = sortCategories(categories, templateCategoriesOrder);
 
 			set({
@@ -187,18 +169,10 @@ const store = (set: any, get: any): TemplateState => ({
 			});
 		} catch (error) {
 			const uiErrorMessage = i18n.t("templates.failedToFetch", { ns: "stores" });
-			let logErrorMessage = uiErrorMessage;
-			if (axios.isAxiosError(error)) {
-				logErrorMessage = i18n.t("templates.failedToFetchExtended", {
-					ns: "stores",
-					error: error?.response?.data,
-				});
-			} else {
-				logErrorMessage = i18n.t("templates.failedToFetchExtended", {
-					ns: "stores",
-					error: error?.response,
-				});
-			}
+			const logErrorMessage = i18n.t("templates.failedToFetchExtended", {
+				ns: "stores",
+				error: axios.isAxiosError(error) ? error?.response?.data : error?.response,
+			});
 
 			LoggerService.error(namespaces.stores.templatesStore, logErrorMessage, true);
 			set({ error: uiErrorMessage });
