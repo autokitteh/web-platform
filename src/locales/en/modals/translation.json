@@ -79,5 +79,17 @@
 		"content": "Changes might affect the currently running deployments",
 		"cancelButton": "Cancel",
 		"agreeButton": "Ok"
+	},
+	"newProject": {
+		"title": "Create new projecct",
+		"cancelButton": "Cancel",
+		"createButton": "Create",
+		"projectName": "Project Name",
+		"description": "Description: {{description}}",
+		"moreInformaton": "About This Template",
+		"readme": "README",
+		"nameRequired": "Name is required",
+		"nameTaken": "Name is already taken",
+		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
 	}
 }

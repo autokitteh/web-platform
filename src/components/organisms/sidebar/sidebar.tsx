@@ -4,10 +4,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
+import { NewProjectModal } from "../newProjectModal";
 import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 
-import { useLoggerStore, useUserStore } from "@store";
+import { useLoggerStore, useModalStore, useUserStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
@@ -225,6 +226,7 @@ export const Sidebar = () => {
 					) : null}
 				</AnimatePresence>
 			</div>
+			<NewProjectModal />
 		</Suspense>
 	);
 };
