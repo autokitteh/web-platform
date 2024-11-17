@@ -1,5 +1,9 @@
+import i18n from "i18next";
+
 import { convertValue } from "./value.model";
 import { SessionLogRecord as ProtoSessionLogRecord } from "@ak-proto-ts/sessions/v1/session_pb";
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { ActivityState } from "@src/enums";
 import { SessionActivity } from "@src/interfaces/models";
 import { isWrappedJsonValueWithBytes, isWrappedJsonValueWithString } from "@src/types/models/value.type";
@@ -54,28 +58,35 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 
 			const convertedValue = convertValue(callAttemptComplete.result?.value);
 
-			if (isWrappedJsonValueWithBytes(convertedValue)) {
-				try {
-					const byteArray = convertedValue.bytes;
-					if (!byteArray) {
-						throw new Error("Invalid or missing byte array");
+			try {
+				if (isWrappedJsonValueWithBytes(convertedValue)) {
+					try {
+						const byteArray = convertedValue.bytes;
+						if (!byteArray) {
+							throw new Error("Invalid or missing byte array");
+						}
+						const uint8Array = new Uint8Array(byteArray);
+						const decoder = new TextDecoder("utf-8");
+						const decodedString = decoder.decode(uint8Array);
+						currentActivity.returnBytesValue = decodedString;
+					} catch (error) {
+						console.error("Error decoding text:", error);
 					}
-					const uint8Array = new Uint8Array(byteArray);
-					const decoder = new TextDecoder("utf-8");
-					const decodedString = decoder.decode(uint8Array);
-					currentActivity.returnBytesValue = decodedString;
-				} catch (error) {
-					console.error("Error decoding text:", error);
 				}
-			}
 
-			if (isWrappedJsonValueWithString(convertedValue)) {
-				const returnValueConverted = convertedValue.string;
-				if (typeof returnValueConverted === "string") {
-					currentActivity.returnStringValue = returnValueConverted;
-				} else {
-					currentActivity.returnJSONValue = returnValueConverted;
+				if (isWrappedJsonValueWithString(convertedValue)) {
+					const returnValueConverted = convertedValue.string;
+					if (typeof returnValueConverted === "string") {
+						currentActivity.returnStringValue = JSON.parse(returnValueConverted);
+					} else {
+						currentActivity.returnJSONValue = returnValueConverted;
+					}
 				}
+			} catch (error) {
+				LoggerService.error(
+					namespaces.models.activity,
+					i18n.t("sessionLogRecordActivtyErrorConvert", { ns: "services", error: error.message })
+				);
 			}
 		}
 
