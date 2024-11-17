@@ -14,8 +14,7 @@ import {
 	IntegrationsMap,
 } from "@src/enums/components/connection.enum";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useModalStore, useProjectStore } from "@src/store";
-import { fetchFileContent } from "@src/utilities";
+import { useModalStore, useProjectStore, useTemplatesStore } from "@src/store";
 
 import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from "@components/atoms";
 import { Accordion, Modal } from "@components/molecules";
@@ -26,11 +25,12 @@ import "github-markdown-css/github-markdown-light.css";
 export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreateProjectModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectWithTemplate" });
 	const [isCreating, setIsCreating] = useState(false);
-	const [manifestData, setManifestData] = useState<string | null>(null);
+	const [readme, setReadme] = useState("");
 	const { assetDirectory, description, integrations, title } = cardTemplate;
 	const { closeModal } = useModalStore();
 	const { createProjectFromAsset } = useCreateProjectFromTemplate();
 	const { projectsList } = useProjectStore();
+	const { getTemplateFiles } = useTemplatesStore();
 
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 
@@ -56,8 +56,8 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 
 	const fetchManifestData = async () => {
 		if (!assetDirectory) return;
-		const content = await fetchFileContent(`/assets/templates/${assetDirectory}/README.md`);
-		setManifestData(content);
+		const content = await getTemplateFiles(assetDirectory);
+		setReadme(content["README.md"]);
 	};
 
 	useEffect(() => {
@@ -129,7 +129,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 						className="scrollbar markdown-body h-96 overflow-hidden overflow-y-auto"
 						remarkPlugins={[remarkGfm]}
 					>
-						{manifestData}
+						{readme}
 					</Markdown>
 				</Accordion>
 				<div className="mt-8 flex w-full justify-end gap-2">
