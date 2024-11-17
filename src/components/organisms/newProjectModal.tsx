@@ -20,6 +20,7 @@ export const NewProjectModal = () => {
 	const { createProject } = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 	const navigate = useNavigate();
+	const [responseError, setResponseError] = useState("");
 
 	const {
 		formState: { errors },
@@ -55,6 +56,8 @@ export const NewProjectModal = () => {
 				type: "error",
 			});
 
+			setResponseError(t("errorCreatingProject"));
+
 			return;
 		}
 		closeModal(ModalName.newProject);
@@ -83,6 +86,7 @@ export const NewProjectModal = () => {
 				{errors.projectName ? (
 					<ErrorMessage className="relative mt-0.5">{errors.projectName.message}</ErrorMessage>
 				) : null}
+				{responseError ? <ErrorMessage className="relative mt-0.5">{responseError}</ErrorMessage> : null}
 
 				<div className="mt-8 flex w-full justify-end gap-2">
 					<Button
