@@ -53,7 +53,13 @@ const store = (set: any, get: any): TemplateState => ({
 
 		set({ isLoading: true, error: null });
 
-		const processTemplates = async (zipUrl: string) => {
+		const processTemplates = async (
+			zipUrl: string
+		): Promise<{
+			categories?: TemplateCategory[];
+			error?: string;
+			templateMap?: Record<string, TemplateMetadataWithCategory>;
+		}> => {
 			const processTemplateCard = async (
 				cardWithFiles: TemplateCardWithFiles,
 				categoryName: string,
@@ -74,9 +80,10 @@ const store = (set: any, get: any): TemplateState => ({
 			const result = await fetchAndUnpackZip(zipUrl);
 			if (!("structure" in result) || result.error) {
 				if (zipUrl === localTemplatesArchiveFallback) {
-					throw new Error(couldntFetchTemplates);
+					return { error: couldntFetchTemplates };
 				}
-				throw new Error(couldntFetchGithubTemplates);
+
+				return { error: couldntFetchGithubTemplates };
 			}
 
 			const { templateStorage } = get();
@@ -106,19 +113,6 @@ const store = (set: any, get: any): TemplateState => ({
 			}, [] as TemplateCategory[]);
 
 			return { templateMap, categories };
-		};
-
-		const processZipFromUrlToState = async (zipUrl: string, lastCommitDate?: Date) => {
-			const { categories, templateMap } = await processTemplates(zipUrl);
-			const sortedCategories = sortCategories(categories, templateCategoriesOrder);
-
-			set({
-				templateMap,
-				sortedCategories,
-				lastCommitDate,
-				isLoading: false,
-				error: null,
-			});
 		};
 
 		try {
@@ -164,16 +158,40 @@ const store = (set: any, get: any): TemplateState => ({
 
 			const zipUrl = shouldFetchTemplatesFromGithub ? remoteTemplatesArchiveURL : localTemplatesArchiveFallback;
 
-			await processZipFromUrlToState(zipUrl, lastCommitDate);
+			let categories;
+			let error;
+			let templateMap;
+			const templatesFromGithub = await processTemplates(zipUrl);
+			categories = templatesFromGithub.categories;
+			error = templatesFromGithub.error;
+			templateMap = templatesFromGithub.templateMap;
+			if (error && error === couldntFetchGithubTemplates) {
+				const templatesFromFallback = await processTemplates(localTemplatesArchiveFallback);
+				categories = templatesFromFallback.categories;
+				error = templatesFromFallback.error;
+				templateMap = templatesFromFallback.templateMap;
+			}
 
-			return;
-		} catch (error) {
-			if (error.message === couldntFetchGithubTemplates) {
-				await processZipFromUrlToState(localTemplatesArchiveFallback);
-				set({ error: error.message });
+			if (error) {
+				set({ error });
 
 				return;
 			}
+			if (!categories || !templateMap || !Object.keys(templateMap).length) {
+				set({ error: couldntFetchTemplates });
+
+				return;
+			}
+			const sortedCategories = sortCategories(categories, templateCategoriesOrder);
+
+			set({
+				templateMap,
+				sortedCategories,
+				lastCommitDate,
+				isLoading: false,
+				error: null,
+			});
+		} catch (error) {
 			const uiErrorMessage = i18n.t("templates.failedToFetch", { ns: "stores" });
 			let logErrorMessage = uiErrorMessage;
 			if (axios.isAxiosError(error)) {
