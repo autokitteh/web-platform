@@ -54,7 +54,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			setIsLoggingIn(true);
 			try {
 				const apiBaseUrl = getApiBaseUrl();
-				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
+				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}&noredir=1`, {
 					withCredentials: true,
 				});
 
