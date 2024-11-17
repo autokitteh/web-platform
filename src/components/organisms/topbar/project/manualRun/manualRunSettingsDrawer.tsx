@@ -80,7 +80,7 @@ export const ManualRunSettingsDrawer = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params]);
 
-	const handleMunaualRun = () => {
+	const handleManualRun = () => {
 		setTimeout(() => {
 			fetchDeployments(projectId!, true);
 		}, 100);
@@ -94,7 +94,7 @@ export const ManualRunSettingsDrawer = () => {
 
 		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, params);
 		setSendingManualRun(false);
-		handleMunaualRun();
+		handleManualRun();
 		if (error) {
 			addToast({
 				message: t("executionFailed"),
@@ -196,26 +196,6 @@ export const ManualRunSettingsDrawer = () => {
 								/>
 							)}
 						/>
-						{/* <Controller
-							control={control}
-							name="entrypointFunction"
-							render={({ field }) => (
-								<Input
-									{...field}
-									aria-label={t("placeholders.selectEntrypoint")}
-									isError={!!errors.entrypointFunction}
-									isRequired
-									label={t("placeholders.entrypoint")}
-									onChange={(event) => {
-										field.onChange(event);
-										updateManualRunConfiguration(projectId!, {
-											entrypointFunction: event.target.value,
-										});
-									}}
-								/>
-							)}
-						/> */}
-
 						<ErrorMessage className="relative">{errors.entrypointFunction?.message as string}</ErrorMessage>
 					</div>
 				</form>
