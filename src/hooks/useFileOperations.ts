@@ -82,24 +82,6 @@ export function useFileOperations(projectId: string) {
 		[closeOpenedFile, projectId]
 	);
 
-	const addFile = useCallback(
-		async (name: string, fileContent: Uint8Array) => {
-			const resources = await dbService.getAll();
-			const resourcesWithAddedFile = {
-				...resources,
-				[name]: fileContent,
-			};
-
-			const { error } = await ProjectsService.setResources(projectId, resourcesWithAddedFile);
-			checkState(projectId!, { resources: resourcesWithAddedFile });
-			if (error) {
-				throw error;
-			}
-			dbService.put(name, fileContent);
-		},
-		[checkState, projectId]
-	);
-
 	return {
 		saveFile,
 		saveAllFiles,
@@ -108,7 +90,6 @@ export function useFileOperations(projectId: string) {
 		openFiles,
 		openFileAsActive,
 		closeOpenedFile,
-		addFile,
 		setFileList,
 		fileList,
 		openProjectId,
