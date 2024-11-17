@@ -1,3 +1,10 @@
+## [2.59.1](https://github.com/autokitteh/web-platform/compare/v2.59.0...v2.59.1) (2024-11-17)
+
+
+### Bug Fixes
+
+* disable redirect on login response to avoid an error ([#656](https://github.com/autokitteh/web-platform/issues/656)) ([ccb26b1](https://github.com/autokitteh/web-platform/commit/ccb26b1e64315a3a79b06af206b46476d5fb5c5a))
+
 # [2.59.0](https://github.com/autokitteh/web-platform/compare/v2.58.2...v2.59.0) (2024-11-15)
 
 
