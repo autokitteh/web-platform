@@ -1,7 +1,6 @@
 import React, { ReactNode, Suspense, lazy, useCallback, useEffect, useState } from "react";
 
 import { useDescope } from "@descope/react-sdk";
-import axios from "axios";
 import Cookies from "js-cookie";
 import psl from "psl";
 import { useTranslation } from "react-i18next";
@@ -54,9 +53,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			setIsLoggingIn(true);
 			try {
 				const apiBaseUrl = getApiBaseUrl();
-				await axios.get(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
-					withCredentials: true,
-					validateStatus: (status: number) => status === 200 || status === 302,
+				await fetch(`${apiBaseUrl}/auth/descope/login?jwt=${event.detail.sessionJwt}`, {
+					credentials: "include",
+					method: "GET",
+					redirect: "manual",
 				});
 
 				const error = await getLoggedInUser();
@@ -71,19 +71,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				}
 				clearLogs();
 			} catch (error) {
-				if (axios.isAxiosError(error)) {
-					addToast({
-						message: t("errors.loginFailed"),
-						type: "error",
-					});
-					LoggerService.error(
-						namespaces.hooks.connectionForm,
-						t("errors.loginFailedExtended", { error: error?.response?.data }),
-						true
-					);
-
-					return;
-				}
 				addToast({
 					message: t("errors.loginFailed"),
 					type: "error",
