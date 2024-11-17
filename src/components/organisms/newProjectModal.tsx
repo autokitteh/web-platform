@@ -92,7 +92,7 @@ export const NewProjectModal = () => {
 					<Button
 						ariaLabel={t("cancelButton")}
 						className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-						onClick={() => closeModal(ModalName.templateCreateProject)}
+						onClick={() => closeModal(ModalName.newProject)}
 						variant="outline"
 					>
 						{t("cancelButton")}
