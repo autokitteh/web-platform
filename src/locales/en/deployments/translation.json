@@ -146,6 +146,7 @@
 		"single": {
 			"arguments": "Arguments",
 			"argumentsKey": "Key",
+			"functionName": "Function",
 			"noArgumentsFound": "No arguments found",
 			"kwArguments": "KW Arguments",
 			"kwArgumentsKey": "Key",
@@ -153,6 +154,10 @@
 			"noKwArgumentsFound": "No KW arguments found",
 			"returnValues": "Return Values",
 			"noReturnValuesFound": "No return values found"
+
+		},
+		"row": {
+			"functionName": "Function"
 
 		}
 	},
