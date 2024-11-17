@@ -52,13 +52,16 @@ const store: StateCreator<FileStore> = (set) => ({
 			if (index === -1) return state;
 
 			const wasActive = files[index].isActive;
-			files.splice(index, 1);
+			const updatedFiles = files.filter((_, i) => i !== index);
 
-			if (wasActive && files.length) {
-				files[0].isActive = true;
+			if (wasActive && updatedFiles.length) {
+				updatedFiles[0].isActive = true;
 			}
-			if (!files.length) {
+
+			if (!updatedFiles.length) {
 				delete state.openFiles[state.openProjectId];
+			} else {
+				state.openFiles[state.openProjectId] = updatedFiles;
 			}
 
 			return state;
