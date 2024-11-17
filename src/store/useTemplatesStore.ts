@@ -202,7 +202,7 @@ const store = (set: any, get: any): TemplateState => ({
 			} else {
 				logErrorMessage = i18n.t("templates.failedToFetchExtended", {
 					ns: "stores",
-					error: error?.message,
+					error: error?.response,
 				});
 			}
 
