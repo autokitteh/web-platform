@@ -26,6 +26,28 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	const TriggerConnectionItegrationIcon =
 		IntegrationsMap[(TriggerConnectionIntegrationKey || "") as keyof typeof IntegrationsMap]?.icon;
 
+	const baseDetails = [
+		{ label: t("file"), value: trigger.path },
+		{ label: t("entrypoint"), value: trigger.entryFunction },
+	];
+
+	const connectionDetails = [
+		{
+			label: t("connection"),
+			value: triggerConnection?.name,
+			icon: TriggerConnectionItegrationIcon,
+		},
+		{
+			label: t("connectionId"),
+			value: triggerConnection?.connectionId,
+		},
+		...baseDetails,
+		{ label: t("eventType"), value: trigger.eventType },
+		{ label: t("filter"), value: trigger.filter },
+	];
+
+	const scheduleDetails = [{ label: t("cron"), value: trigger.schedule }, ...baseDetails];
+
 	switch (trigger.sourceType) {
 		case TriggerTypes.webhook:
 			return (
@@ -41,18 +63,14 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 							<CopyButton size="sm" text={webhookUrl} />
 						</div>
 					</div>
-					{trigger.path ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("file")}:</div>
-							{trigger.path}
-						</div>
-					) : null}
-					{trigger.entryFunction ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("entrypoint")}:</div>
-							{trigger.entryFunction}
-						</div>
-					) : null}
+					{baseDetails.map(({ label, value }) =>
+						value ? (
+							<div className="flex items-center gap-x-1" key={label}>
+								<div className="font-semibold">{label}:</div>
+								<div>{value}</div>
+							</div>
+						) : null
+					)}
 				</div>
 			);
 		case TriggerTypes.schedule:
@@ -66,22 +84,14 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 						<div className="w-full" />
 					</div>
 
-					<div className="flex items-center gap-x-1">
-						<div className="font-semibold">{t("cron")}:</div>
-						{trigger.schedule}
-					</div>
-					{trigger.path ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("file")}:</div>
-							{trigger.path}
-						</div>
-					) : null}
-					{trigger.entryFunction ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("entrypoint")}:</div>
-							{trigger.entryFunction}
-						</div>
-					) : null}
+					{scheduleDetails.map(({ label, value }) =>
+						value ? (
+							<div className="flex items-center gap-x-1" key={label}>
+								<div className="font-semibold">{label}:</div>
+								<div>{value}</div>
+							</div>
+						) : null
+					)}
 				</div>
 			);
 		case TriggerTypes.connection:
@@ -94,45 +104,15 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 						</div>
 						<div className="w-full" />
 					</div>
-					{triggerConnection ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("connection")}:</div>
-							{TriggerConnectionItegrationIcon ? (
-								<TriggerConnectionItegrationIcon className="size-4" />
-							) : null}
-							{triggerConnection.name}
-						</div>
-					) : null}
-					{triggerConnection?.connectionId ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("connectionId")}:</div>
-							{triggerConnection.connectionId}
-						</div>
-					) : null}
-					{trigger.path ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("file")}:</div>
-							{trigger.path}
-						</div>
-					) : null}
-					{trigger.entryFunction ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("entrypoint")}:</div>
-							{trigger.entryFunction}
-						</div>
-					) : null}
-					{trigger.eventType ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("eventType")}:</div>
-							<div>{trigger.eventType}</div>
-						</div>
-					) : null}
-					{trigger.filter ? (
-						<div className="flex items-center gap-x-1">
-							<div className="font-semibold">{t("filter")}:</div>
-							<div>{trigger.filter}</div>
-						</div>
-					) : null}
+					{connectionDetails.map(({ icon: Icon, label, value }) =>
+						value ? (
+							<div className="flex items-center gap-x-1" key={label}>
+								<div className="font-semibold">{label}:</div>
+								{Icon ? <Icon className="size-4" /> : null}
+								{value}
+							</div>
+						) : null
+					)}
 				</div>
 			);
 		default:
