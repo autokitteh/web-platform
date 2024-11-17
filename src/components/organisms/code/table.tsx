@@ -31,7 +31,6 @@ export const CodeTable = () => {
 		openFiles,
 		saveFile,
 	} = useFileOperations(projectId!);
-	const [rerenderKey, setRerenderKey] = useState(0);
 
 	const {
 		loading: { resourses: isLoading },
@@ -42,10 +41,6 @@ export const CodeTable = () => {
 
 	const allowedExtensions = Object.keys(monacoLanguages).join(", ");
 	const selectedRemoveFileName = useModalStore((state) => state.data as string);
-
-	const rerenderTable = () => {
-		setRerenderKey((prev) => prev + 1);
-	};
 
 	const styleCircle = cn("stroke-gray-750 duration-300 group-hover:stroke-green-800", {
 		"stroke-green-800": isDragOver,
@@ -167,7 +162,7 @@ export const CodeTable = () => {
 	return isLoading && isEmpty(sortedResources) ? (
 		<Loader isCenter size="xl" />
 	) : (
-		<div className="flex h-full flex-col" key={rerenderKey}>
+		<div className="flex h-full flex-col">
 			<div className="mb-2.5 flex justify-end gap-4">
 				{!isEmpty(sortedResources) ? (
 					<label className="group flex cursor-pointer gap-1 p-0 font-semibold text-gray-500 hover:text-white">
@@ -255,7 +250,7 @@ export const CodeTable = () => {
 
 			<DeleteFileModal isDeleting={isDeleting} onDelete={handleRemoveFile} />
 
-			<AddFileModal onSuccess={rerenderTable} />
+			<AddFileModal />
 		</div>
 	);
 };

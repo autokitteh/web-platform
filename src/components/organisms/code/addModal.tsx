@@ -16,7 +16,7 @@ import { useModalStore, useToastStore } from "@store";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal, Select } from "@components/molecules";
 
-export const AddFileModal = ({ onSuccess }: { onSuccess: () => void }) => {
+export const AddFileModal = () => {
 	const { projectId } = useParams();
 	const { t } = useTranslation(["errors", "buttons", "modals"]);
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
@@ -55,7 +55,6 @@ export const AddFileModal = ({ onSuccess }: { onSuccess: () => void }) => {
 		try {
 			await saveFile(newFile, tTabsEditor("initialContentForNewFile"));
 			openFileAsActive(newFile);
-			onSuccess();
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
