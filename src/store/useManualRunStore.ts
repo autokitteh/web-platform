@@ -13,7 +13,7 @@ const defaultManualRunState = {
 	files: [],
 	fileOptions: [],
 	filePath: { label: "", value: "" },
-	entrypointFunction: "",
+	entrypointFunction: { label: "", value: "" },
 	params: [],
 	isManualRunEnabled: false,
 	isJson: false,
@@ -44,7 +44,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 					files,
 					fileOptions,
 					filePath: fileOptions[0],
-					entrypointFunction: entrypointFromFirstFile,
+					entrypointFunction: { label: entrypointFromFirstFile, value: entrypointFromFirstFile },
 					params: [],
 				});
 			}
@@ -90,7 +90,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				col: 0,
 				row: 0,
 				path: project.filePath.value,
-				name: project.entrypointFunction,
+				name: project.entrypointFunction.value,
 			},
 			jsonInputs,
 		};

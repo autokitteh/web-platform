@@ -14,7 +14,9 @@ i18n.on("initialized", () => {
 		filePath: selectSchema.refine((value) => value.label, {
 			message: i18n.t("fileNameIsRequired", { ns: "validations" }),
 		}),
-		entrypointFunction: z.string().min(1, i18n.t("functionNameIsRequired", { ns: "validations" })),
+		entrypointFunction: selectSchema.refine((value) => value.label, {
+			message: i18n.t("functionNameIsRequired", { ns: "validations" }),
+		}),
 		params: z
 			.array(
 				z.object({

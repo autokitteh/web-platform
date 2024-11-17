@@ -11,7 +11,7 @@ import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
 import { manualRunSchema } from "@validations";
 
-import { Button, ErrorMessage, IconSvg, Input, Spinner, Typography } from "@components/atoms";
+import { Button, ErrorMessage, IconSvg, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
 
@@ -32,7 +32,7 @@ export const ManualRunSettingsDrawer = () => {
 		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 	}));
 
-	const { entrypointFunction, fileOptions, filePath, lastDeployment, params } = projectManualRun || {};
+	const { entrypointFunction, fileOptions, filePath, files, lastDeployment, params } = projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
@@ -44,6 +44,8 @@ export const ManualRunSettingsDrawer = () => {
 		mode: "onChange",
 	});
 
+	const [fileFunctions, setFileFunctions] = useState<{ label: string; value: string }[]>([]);
+
 	const {
 		control,
 		formState: { errors, isValid },
@@ -53,9 +55,16 @@ export const ManualRunSettingsDrawer = () => {
 	} = methods;
 
 	useEffect(() => {
-		if (filePath) {
-			setValue("filePath", filePath);
-		}
+		if (!filePath) return;
+		setValue("filePath", filePath);
+
+		if (!files && filePath.value) return;
+		const processedFileFunctions =
+			files[filePath.value]?.map((fileFunction) => ({
+				label: fileFunction,
+				value: fileFunction,
+			})) || [];
+		setFileFunctions(processedFileFunctions);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filePath]);
 
@@ -167,7 +176,7 @@ export const ManualRunSettingsDrawer = () => {
 					<div className="relative mt-3">
 						<Controller
 							control={control}
-							name="filePath"
+							name="entrypointFunction"
 							render={({ field }) => (
 								<Select
 									{...field}
@@ -179,15 +188,15 @@ export const ManualRunSettingsDrawer = () => {
 									noOptionsLabel={t("noFilesAvailable")}
 									onChange={(selected) => {
 										field.onChange(selected);
-										updateManualRunConfiguration(projectId!, { filePath: selected! });
+										updateManualRunConfiguration(projectId!, { entrypointFunction: selected! });
 									}}
-									options={fileOptions}
+									options={fileFunctions}
 									placeholder={t("placeholders.selectFile")}
 									value={field.value}
 								/>
 							)}
 						/>
-						<Controller
+						{/* <Controller
 							control={control}
 							name="entrypointFunction"
 							render={({ field }) => (
@@ -205,7 +214,7 @@ export const ManualRunSettingsDrawer = () => {
 									}}
 								/>
 							)}
-						/>
+						/> */}
 
 						<ErrorMessage className="relative">{errors.entrypointFunction?.message as string}</ErrorMessage>
 					</div>

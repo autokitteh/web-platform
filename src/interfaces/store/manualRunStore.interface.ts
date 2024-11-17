@@ -6,7 +6,7 @@ export interface ManualProjectData {
 	files: Record<string, string[]>;
 	fileOptions: { label: string; value: string }[];
 	filePath: { label: string; value: string };
-	entrypointFunction: string;
+	entrypointFunction: { label: string; value: string };
 	params: { key: string; value: string }[];
 	isJson: boolean;
 	lastDeployment?: Deployment;
