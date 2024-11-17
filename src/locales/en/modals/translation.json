@@ -70,6 +70,7 @@
 		"description": "Description: {{description}}",
 		"moreInformaton": "About This Template",
 		"readme": "README",
+		"errorCreatingProject": "Failed to create project",
 		"nameRequired": "Name is required",
 		"nameTaken": "Name is already taken",
 		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
@@ -90,6 +91,7 @@
 		"readme": "README",
 		"nameRequired": "Name is required",
 		"nameTaken": "Name is already taken",
+		"errorCreatingProject": "Failed to create project",
 		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
 	}
 }

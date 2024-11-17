@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { SidebarHrefMenu } from "@src/enums/components";
+import { ModalName } from "@src/enums/components";
 import { Project } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useProjectStore, useToastStore } from "@store";
+import { useModalStore, useProjectStore } from "@store";
 
-import { Button, IconSvg, Spinner, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 
 import { OrStartFromTemplateImage } from "@assets/image";
@@ -17,28 +17,12 @@ import { ArrowStartTemplateIcon, PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
-	const { createProject, projectsList } = useProjectStore();
+	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
-	const [creatingProject, setCreatingProject] = useState(false);
-	const addToast = useToastStore((state) => state.addToast);
 
 	const { items: sortedProjects, requestSort, sortConfig } = useSort<Project>(projectsList, "name");
 
-	const handleCreateProjectClick = async () => {
-		setCreatingProject(true);
-		const { data, error } = await createProject(true);
-		setCreatingProject(false);
-		if (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-
-			return;
-		}
-
-		navigate(`/${SidebarHrefMenu.projects}/${data?.projectId}`);
-	};
+	const { openModal } = useModalStore();
 
 	return (
 		<div className="z-10 h-2/3 select-none pt-10">
@@ -73,11 +57,10 @@ export const DashboardProjectsTable = () => {
 			<div className="mt-10 flex flex-col items-center justify-center">
 				<Button
 					className="gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 font-averta text-base font-semibold"
-					disabled={creatingProject}
-					onClick={handleCreateProjectClick}
+					onClick={() => openModal(ModalName.newProject)}
 					variant="filled"
 				>
-					<IconSvg className="fill-white" size="lg" src={!creatingProject ? PlusAccordionIcon : Spinner} />
+					<IconSvg className="fill-white" size="lg" src={PlusAccordionIcon} />
 
 					{t("buttons.startNewProject")}
 				</Button>

@@ -2,28 +2,24 @@ import React, { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-import { ModalName, SidebarHrefMenu } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
-import { defaultProjectFile } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useModalStore, useProjectStore } from "@store";
 
-import { Button, IconSvg, Loader } from "@components/atoms";
+import { Button, IconSvg } from "@components/atoms";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
 
 export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
-	const navigate = useNavigate();
 	const location = useLocation();
-	const { createProject, getProjectsList, projectsList } = useProjectStore();
-	const addToast = useToastStore((state) => state.addToast);
+	const { getProjectsList, projectsList } = useProjectStore();
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
-	const [isCreatingProject, setIsCreatingProject] = useState(false);
 	const { openModal } = useModalStore();
 
 	useEffect(() => {
@@ -34,27 +30,6 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
 		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, width: "auto" },
-	};
-
-	const handleCreateProject = async () => {
-		setIsCreatingProject(true);
-		const { data, error } = await createProject(true);
-		setIsCreatingProject(false);
-
-		if (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-
-			return;
-		}
-
-		const projectId = data!.projectId;
-
-		navigate(`/${SidebarHrefMenu.projects}/${projectId}/code`, {
-			state: { fileToOpen: defaultProjectFile },
-		});
 	};
 
 	useEffect(() => {
@@ -84,8 +59,6 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 			"bg-gray-1100 hover:bg-gray-1100": isButtonActive(href) && !isOpen,
 		});
 
-	const openNewProjectModal = () => openModal(ModalName.newProject);
-
 	return (
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
 			<ul className="ml-0 flex flex-col gap-2">
@@ -93,16 +66,11 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 					<Button
 						ariaLabel={t("newProject")}
 						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200 disabled:opacity-100"
-						disabled={isCreatingProject}
-						onClick={openNewProjectModal}
+						onClick={() => openModal(ModalName.newProject)}
 						title={t("newProject")}
 					>
 						<div className="flex size-9 items-center justify-center">
-							{isCreatingProject ? (
-								<Loader className="ml-1 before:size-3 after:size-3" isCenter />
-							) : (
-								<IconSvg alt={t("newProject")} size="xl" src={NewProject} />
-							)}
+							<IconSvg alt={t("newProject")} size="xl" src={NewProject} />
 						</div>
 
 						<AnimatePresence>

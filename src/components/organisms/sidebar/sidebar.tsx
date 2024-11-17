@@ -8,7 +8,7 @@ import { NewProjectModal } from "../newProjectModal";
 import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 
-import { useLoggerStore, useModalStore, useUserStore } from "@store";
+import { useLoggerStore, useUserStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";

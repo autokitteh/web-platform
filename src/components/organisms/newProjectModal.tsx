@@ -1,38 +1,31 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { useNavigate } from "react-router-dom";
 
-import { ModalName } from "@enums/components";
-import {
-	HiddenIntegrationsForTemplates,
-	IntegrationForTemplates,
-	Integrations,
-	IntegrationsMap,
-} from "@src/enums/components/connection.enum";
-import { useModalStore, useProjectStore } from "@src/store";
-import { fetchFileContent } from "@src/utilities";
+import { ModalName, SidebarHrefMenu } from "@enums/components";
+import { defaultProjectFile } from "@src/constants";
+import { useModalStore, useProjectStore, useToastStore } from "@src/store";
 
-import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from "@components/atoms";
-import { Accordion, Modal } from "@components/molecules";
-
-import { PipeCircleIcon, ReadmeIcon } from "@assets/image/icons";
-import "github-markdown-css/github-markdown-light.css";
+import { Button, ErrorMessage, Input, Loader } from "@components/atoms";
+import { Modal } from "@components/molecules";
 
 export const NewProjectModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "newProject" });
 	const [isCreating, setIsCreating] = useState(false);
 	const { closeModal } = useModalStore();
 	const { projectsList } = useProjectStore();
-
+	const addToast = useToastStore((state) => state.addToast);
+	const { createProject } = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
+	const navigate = useNavigate();
 
 	const {
 		formState: { errors },
 		handleSubmit,
 		register,
+		setValue,
 	} = useForm<{ projectName: string }>({
 		mode: "onChange",
 		defaultValues: {
@@ -53,8 +46,22 @@ export const NewProjectModal = () => {
 		const { projectName } = data;
 
 		setIsCreating(true);
+		const { data: newProjectResponse, error } = await createProject(projectName, true);
 		setIsCreating(false);
-		closeModal(ModalName.templateCreateProject);
+
+		if (error) {
+			addToast({
+				message: t("errorCreatingProject"),
+				type: "error",
+			});
+
+			return;
+		}
+		closeModal(ModalName.newProject);
+		setValue("projectName", "");
+		navigate(`/${SidebarHrefMenu.projects}/${newProjectResponse?.projectId}/code`, {
+			state: { fileToOpen: defaultProjectFile },
+		});
 	};
 
 	return (

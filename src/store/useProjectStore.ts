@@ -37,8 +37,8 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	createProject: async (isDefault?: boolean) => {
-		const { data: projectId, error } = await ProjectsService.create();
+	createProject: async (name: string, isDefault?: boolean) => {
+		const { data: projectId, error } = await ProjectsService.create(name);
 
 		if (error) {
 			return { data: undefined, error };
