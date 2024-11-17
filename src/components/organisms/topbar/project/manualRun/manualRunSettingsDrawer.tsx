@@ -180,18 +180,17 @@ export const ManualRunSettingsDrawer = () => {
 							render={({ field }) => (
 								<Select
 									{...field}
-									aria-label={t("placeholders.selectFile")}
-									dataTestid="select-file"
-									disabled={!fileOptions.length}
-									isError={!!errors.filePath}
-									label={t("placeholders.file")}
-									noOptionsLabel={t("noFilesAvailable")}
+									aria-label={t("placeholders.selectEntrypoint")}
+									dataTestid="select-function"
+									isError={!!errors.entrypointFunction}
+									label={t("placeholders.entrypoint")}
+									noOptionsLabel={t("noFunctionsAvailable")}
 									onChange={(selected) => {
 										field.onChange(selected);
 										updateManualRunConfiguration(projectId!, { entrypointFunction: selected! });
 									}}
 									options={fileFunctions}
-									placeholder={t("placeholders.selectFile")}
+									placeholder={t("placeholders.selectEntrypoint")}
 									value={field.value}
 								/>
 							)}
