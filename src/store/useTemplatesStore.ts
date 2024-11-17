@@ -44,9 +44,6 @@ const store = (set: any, get: any): TemplateState => ({
 	templateStorage: new TemplateStorageService(),
 
 	fetchTemplates: async () => {
-		const couldntFetchGithubTemplates = i18n.t("templates.couldntFetchGithubTemplates", {
-			ns: "stores",
-		});
 		const couldntFetchTemplates = i18n.t("templates.failedToFetch", {
 			ns: "stores",
 		});
@@ -79,11 +76,7 @@ const store = (set: any, get: any): TemplateState => ({
 
 			const result = await fetchAndUnpackZip(zipUrl);
 			if (!("structure" in result) || result.error) {
-				if (zipUrl === localTemplatesArchiveFallback) {
-					return { error: couldntFetchTemplates };
-				}
-
-				return { error: couldntFetchGithubTemplates };
+				return { error: couldntFetchTemplates };
 			}
 
 			const { templateStorage } = get();
@@ -162,23 +155,24 @@ const store = (set: any, get: any): TemplateState => ({
 			let error;
 			let templateMap;
 			const templatesFromGithub = await processTemplates(zipUrl);
-			categories = templatesFromGithub.categories;
-			error = templatesFromGithub.error;
-			templateMap = templatesFromGithub.templateMap;
-			if (error && error === couldntFetchGithubTemplates) {
+
+			if (templatesFromGithub.error) {
 				const templatesFromFallback = await processTemplates(localTemplatesArchiveFallback);
+
+				if (templatesFromFallback.error) {
+					set({ error, isLoading: false });
+
+					return;
+				}
 				categories = templatesFromFallback.categories;
-				error = templatesFromFallback.error;
 				templateMap = templatesFromFallback.templateMap;
+			} else {
+				categories = templatesFromGithub.categories;
+				templateMap = templatesFromGithub.templateMap;
 			}
 
-			if (error) {
-				set({ error });
-
-				return;
-			}
 			if (!categories || !templateMap || !Object.keys(templateMap).length) {
-				set({ error: couldntFetchTemplates });
+				set({ error: couldntFetchTemplates, isLoading: false });
 
 				return;
 			}
