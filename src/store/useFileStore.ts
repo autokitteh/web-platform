@@ -59,7 +59,7 @@ const store: StateCreator<FileStore> = (set) => ({
 			}
 
 			if (!updatedFiles.length) {
-				delete state.openFiles[state.openProjectId];
+				state.openFiles[state.openProjectId] = [];
 			} else {
 				state.openFiles[state.openProjectId] = updatedFiles;
 			}
