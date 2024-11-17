@@ -68,7 +68,7 @@ export const DeploymentsTable = () => {
 		const buildInfo = JSON.parse(buildDescription!);
 		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
 
-		if (!Object.values(files).length) return;
+		if (!Object.keys(files).length) return;
 
 		updateManualRunConfiguration(projectId!, { files, lastDeployment, isManualRunEnabled: true });
 	};

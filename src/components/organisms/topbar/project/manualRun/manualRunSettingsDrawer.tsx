@@ -167,6 +167,28 @@ export const ManualRunSettingsDrawer = () => {
 					<div className="relative mt-3">
 						<Controller
 							control={control}
+							name="filePath"
+							render={({ field }) => (
+								<Select
+									{...field}
+									aria-label={t("placeholders.selectFile")}
+									dataTestid="select-file"
+									disabled={!fileOptions.length}
+									isError={!!errors.filePath}
+									label={t("placeholders.file")}
+									noOptionsLabel={t("noFilesAvailable")}
+									onChange={(selected) => {
+										field.onChange(selected);
+										updateManualRunConfiguration(projectId!, { filePath: selected! });
+									}}
+									options={fileOptions}
+									placeholder={t("placeholders.selectFile")}
+									value={field.value}
+								/>
+							)}
+						/>
+						<Controller
+							control={control}
 							name="entrypointFunction"
 							render={({ field }) => (
 								<Input

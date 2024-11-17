@@ -11,6 +11,10 @@ export interface SessionEntrypoint {
 export interface EntrypointTrigger extends SessionEntrypoint {
 	symbol: string;
 }
+export interface BuildRuntimeExport extends SessionEntrypoint {
+	symbol: string;
+	location: SessionEntrypoint;
+}
 
 interface BaseSession {
 	createdAt: Date;

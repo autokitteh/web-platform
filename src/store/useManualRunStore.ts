@@ -33,15 +33,18 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			};
 
 			if (files) {
-				const fileOptions = files.map((file) => ({
+				const fileOptions = Object.keys(files).map((file) => ({
 					label: file,
 					value: file,
 				}));
+
+				const entrypointFromFirstFile = files[Object.keys(files)?.[0]]?.[0] || "";
+
 				Object.assign(projectData, {
 					files,
 					fileOptions,
 					filePath: fileOptions[0],
-					entrypointFunction: "",
+					entrypointFunction: entrypointFromFirstFile,
 					params: [],
 				});
 			}

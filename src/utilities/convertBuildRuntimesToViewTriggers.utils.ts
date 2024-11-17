@@ -1,22 +1,34 @@
-import { allowedManualRunExtensions, namespaces, supportedProgrammingLanguages } from "@constants";
+import { uniqBy } from "lodash";
+
+import { namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { BuildInfoRuntimes } from "@type/models";
 
-const processRuntime = (runtime: BuildInfoRuntimes): string[] => {
-	if (!runtime?.artifact?.compiled_data) {
-		return [];
-	}
+const processRuntime = (runtime: BuildInfoRuntimes): Record<string, string[]> => {
+	const result: Record<string, string[]> = {};
+	const fileNames = Object.keys(runtime.artifact.compiled_data).filter((fileName) => fileName !== "archive");
 
-	const fileNames = Object.keys(runtime.artifact.compiled_data).filter((fileName) =>
-		supportedProgrammingLanguages.some((ext) => fileName.endsWith(ext))
-	);
+	fileNames.forEach((fileName) => {
+		if (fileName.startsWith("_") || fileName === "code.tar") {
+			return;
+		}
+		const entrypointsForFile = runtime.artifact.exports
+			.filter(({ location: { path } }) => path === fileName)
+			.map(({ symbol: name }) => name);
 
-	return fileNames;
+		const uniqueEntrypoints = uniqBy(entrypointsForFile, (func) => func);
+
+		result[fileName] = uniqueEntrypoints;
+	});
+
+	return result;
 };
 
-export const convertBuildRuntimesToViewTriggers = (runtimes: BuildInfoRuntimes[]): string[] => {
+export const convertBuildRuntimesToViewTriggers = (runtimes: BuildInfoRuntimes[]): Record<string, string[]> => {
 	try {
-		const runtime = runtimes.find((runtime) => allowedManualRunExtensions.includes(runtime.info.name));
+		const supportedRuntimes = ["python", "starlark"];
+
+		const runtime = runtimes.find((runtime) => supportedRuntimes.includes(runtime.info.name));
 
 		if (runtime) {
 			return processRuntime(runtime);
@@ -24,8 +36,8 @@ export const convertBuildRuntimesToViewTriggers = (runtimes: BuildInfoRuntimes[]
 	} catch (error) {
 		LoggerService.error(namespaces.buildRuntimeEntrypoints, (error as Error).message);
 
-		return [];
+		return {};
 	}
 
-	return [];
+	return {};
 };

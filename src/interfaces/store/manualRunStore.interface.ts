@@ -3,7 +3,7 @@ import { ServiceResponse } from "@src/types";
 import { Deployment } from "@src/types/models";
 
 export interface ManualProjectData {
-	files: string[];
+	files: Record<string, string[]>;
 	fileOptions: { label: string; value: string }[];
 	filePath: { label: string; value: string };
 	entrypointFunction: string;
