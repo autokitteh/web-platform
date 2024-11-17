@@ -45,24 +45,20 @@ const store: StateCreator<FileStore> = (set) => ({
 
 	closeOpenedFile: (fileName) =>
 		set((state) => {
-			const files = state.openFiles[state.openProjectId];
-			if (!files) return state;
+			const { openProjectId } = state;
+			const files = state.openFiles[openProjectId];
+			if (!files?.length) return state;
 
-			const index = files.findIndex((file) => file.name === fileName);
-			if (index === -1) return state;
+			const fileIndex = files.findIndex((file) => file.name === fileName);
+			if (fileIndex === -1) return state;
 
-			const wasActive = files[index].isActive;
-			const updatedFiles = files.filter((_, i) => i !== index);
+			const updatedFiles = files.filter((file) => file.name !== fileName);
 
-			if (wasActive && updatedFiles.length) {
+			if (files[fileIndex].isActive && updatedFiles.length) {
 				updatedFiles[0].isActive = true;
 			}
 
-			if (!updatedFiles.length) {
-				state.openFiles[state.openProjectId] = [];
-			} else {
-				state.openFiles[state.openProjectId] = updatedFiles;
-			}
+			state.openFiles[openProjectId] = updatedFiles;
 
 			return state;
 		}),
