@@ -32,7 +32,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const [content, setContent] = useState("");
-	const [autosave, setAutosave] = useState(true);
+	const [autosaveMode, setAutosaveMode] = useState(true);
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 
@@ -101,10 +101,14 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const updateContent = async (newContent?: string, skipStateUpdate?: boolean) => {
-		if (!newContent || newContent === content || newContent !== "") {
+	const updateContent = async (newContent?: string) => {
+		if (!newContent) {
+			setContent("");
+
 			return;
 		}
+		setContent(newContent);
+		if (!autosaveMode) return;
 
 		const handleError = (key: string, options?: Record<string, unknown>) => {
 			addToast({
@@ -131,9 +135,6 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			await saveFile(activeEditorFileName, newContent);
 			setLoadingSave(false);
 			setLastSaved(moment().local().format(dateTimeFormat));
-
-			if (skipStateUpdate) return;
-			setContent(newContent);
 		} catch (error) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
@@ -147,26 +148,14 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			setLoadingSave(false);
 		}
 	};
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const onEditorContentChange = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedSaveContent = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
+	const onSaveButtonClick = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
 		projectId,
 		activeEditorFileName,
 	]);
-
-	const handleUpdateContent = (newContent?: string) => {
-		if (!newContent) {
-			setContent("");
-
-			return;
-		}
-
-		setContent(newContent);
-
-		if (!autosave) return;
-
-		debounce(updateContent, 1500)(newContent, true);
-	};
 
 	const activeCloseIcon = (fileName: string) => {
 		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
@@ -227,11 +216,11 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
 							>
 								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
-									{autosave ? null : (
+									{autosaveMode ? null : (
 										<Button
 											className="h-6 whitespace-nowrap px-4 py-1"
-											disabled={loadingSave || autosave}
-											onClick={() => debouncedSaveContent(content)}
+											disabled={loadingSave || autosaveMode}
+											onClick={() => onSaveButtonClick(content)}
 											variant="filledGray"
 										>
 											<IconSvg className="fill-white" src={!loadingSave ? SaveIcon : Spinner} />
@@ -241,9 +230,9 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 									)}
 
 									<Checkbox
-										checked={autosave}
+										checked={autosaveMode}
 										label={t("autoSave")}
-										onChange={() => setAutosave(!autosave)}
+										onChange={() => setAutosaveMode((prevAutosave) => !prevAutosave)}
 									/>
 								</div>
 								<IconButton className="hover:bg-gray-1100" onClick={onExpand}>
@@ -264,7 +253,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 							className="absolute -ml-6 mt-2 h-full pb-5"
 							language={languageEditor}
 							loading={<Loader size="lg" />}
-							onChange={handleUpdateContent}
+							onChange={onEditorContentChange}
 							onMount={handleEditorDidMount}
 							options={{
 								fontFamily: "monospace, sans-serif",
