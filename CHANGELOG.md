@@ -1,3 +1,10 @@
+## [2.59.2](https://github.com/autokitteh/web-platform/compare/v2.59.1...v2.59.2) (2024-11-18)
+
+
+### Bug Fixes
+
+* display files on creation ([#657](https://github.com/autokitteh/web-platform/issues/657)) ([fcb8b7c](https://github.com/autokitteh/web-platform/commit/fcb8b7cfa1693af32b8316f871d74bae9dbfed35))
+
 ## [2.59.1](https://github.com/autokitteh/web-platform/compare/v2.59.0...v2.59.1) (2024-11-17)
 
 
