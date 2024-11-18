@@ -22,7 +22,7 @@ export const AddFileModal = () => {
 	const { t: tTabsEditor } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { addFile, openFileAsActive } = useFileOperations(projectId!);
+	const { openFileAsActive, saveFile } = useFileOperations(projectId!);
 
 	const languageSelectOptions = Object.keys(monacoLanguages).map((key) => ({
 		label: key,
@@ -53,8 +53,7 @@ export const AddFileModal = () => {
 		const { extension, name } = getValues();
 		const newFile = name + extension.value;
 		try {
-			const newFileContent = new TextEncoder().encode(tTabsEditor("initialContentForNewFile"));
-			await addFile(newFile, newFileContent);
+			await saveFile(newFile, tTabsEditor("initialContentForNewFile"));
 			openFileAsActive(newFile);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {

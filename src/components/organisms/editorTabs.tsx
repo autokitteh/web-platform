@@ -70,7 +70,6 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		const resources = await fetchResources(projectId);
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
-		openDefaultFile();
 	};
 
 	useEffect(() => {
