@@ -101,10 +101,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		monaco.editor.setTheme("myCustomTheme");
 	};
 
-	const updateContent = async (newContent?: string) => {
-		if (!newContent) {
-			setContent("");
-
+	const updateContent = async (newContent?: string, skipStateUpdate?: boolean) => {
+		if (!newContent || newContent === content || newContent !== "") {
 			return;
 		}
 
@@ -131,8 +129,11 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		setLoadingSave(true);
 		try {
 			await saveFile(activeEditorFileName, newContent);
-			setContent(newContent);
+			setLoadingSave(false);
 			setLastSaved(moment().local().format(dateTimeFormat));
+
+			if (skipStateUpdate) return;
+			setContent(newContent);
 		} catch (error) {
 			addToast({
 				message: tErrors("codeSaveFailed"),
@@ -143,13 +144,10 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 				namespaces.ui.projectCodeEditor,
 				tErrors("codeSaveFailedExtended", { error: (error as Error).message, projectId })
 			);
-		} finally {
 			setLoadingSave(false);
 		}
 	};
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedUpdateContent = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedSaveContent = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
 		projectId,
@@ -167,7 +165,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 
 		if (!autosave) return;
 
-		debouncedUpdateContent(newContent);
+		debounce(updateContent, 1500)(newContent, true);
 	};
 
 	const activeCloseIcon = (fileName: string) => {
