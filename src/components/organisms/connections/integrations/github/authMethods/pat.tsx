@@ -10,7 +10,7 @@ import { VariablesService } from "@services";
 import { useToastStore } from "@src/store";
 import { getApiBaseUrl } from "@src/utilities";
 
-import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
@@ -20,6 +20,7 @@ export const PatForm = ({
 	copyToClipboard,
 	errors,
 	isLoading,
+	mode,
 	register,
 	setValue,
 }: {
@@ -27,9 +28,14 @@ export const PatForm = ({
 	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
+	mode: "create" | "edit";
 	register: UseFormRegister<{ [x: string]: any }>;
 	setValue: any;
 }) => {
+	const [lockState, setLockState] = useState<{ pat: boolean; secret: boolean }>({
+		pat: true,
+		secret: true,
+	});
 	const addToast = useToastStore((state) => state.addToast);
 
 	const { connectionId } = useParams();
@@ -38,6 +44,7 @@ export const PatForm = ({
 
 	const { t } = useTranslation("integrations");
 	const [webhook, setWebhook] = useState("");
+	const isEditMode = mode === "edit";
 
 	const pat = useWatch({ control, name: "pat" });
 	const secret = useWatch({ control, name: "secret" });
@@ -82,15 +89,30 @@ export const PatForm = ({
 	return (
 		<>
 			<div className="relative">
-				<Input
-					{...register("pat")}
-					aria-label={t("github.placeholders.pat")}
-					isError={!!errors.pat}
-					isRequired
-					label={t("github.placeholders.pat")}
-					onChange={(newValue) => setValue("pat", newValue)}
-					value={pat}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						type="password"
+						{...register("pat")}
+						aria-label={t("github.placeholders.pat")}
+						handleInputChange={(newPatValue) => setValue("pat", newPatValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, pat: newLockState }))
+						}
+						isError={!!errors.pat}
+						isLocked={lockState.pat}
+						isRequired
+						label={t("github.placeholders.pat")}
+						value={pat}
+					/>
+				) : (
+					<Input
+						{...register("pat")}
+						aria-label={t("github.placeholders.pat")}
+						isError={!!errors.pat}
+						isRequired
+						label={t("github.placeholders.pat")}
+					/>
+				)}
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative flex gap-2">
@@ -114,14 +136,28 @@ export const PatForm = ({
 				</Button>
 			</div>
 			<div className="relative">
-				<Input
-					{...register("secret")}
-					aria-label={t("github.placeholders.secret")}
-					isError={!!errors.secret}
-					label={t("github.placeholders.secret")}
-					onChange={(newValue) => setValue("secret", newValue)}
-					value={secret}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						type="password"
+						{...register("secret")}
+						aria-label={t("github.placeholders.secret")}
+						handleInputChange={(newSecretValue) => setValue("secret", newSecretValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, secret: newLockState }))
+						}
+						isError={!!errors.secret}
+						isLocked={lockState.secret}
+						label={t("github.placeholders.secret")}
+						value={secret}
+					/>
+				) : (
+					<Input
+						{...register("secret")}
+						aria-label={t("github.placeholders.secret")}
+						isError={!!errors.secret}
+						label={t("github.placeholders.secret")}
+					/>
+				)}
 				<ErrorMessage>{errors.secret?.message as string}</ErrorMessage>
 			</div>
 

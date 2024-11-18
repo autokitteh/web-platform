@@ -161,6 +161,7 @@ export const IntegrationEditForm = ({
 						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}
+						mode="edit"
 						register={register}
 						setValue={setValue}
 					/>
