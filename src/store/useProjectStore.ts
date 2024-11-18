@@ -19,13 +19,23 @@ const defaultState: Omit<
 	| "projectList"
 	| "deleteProject"
 	| "createProjectFromManifest"
+	| "setEditorWidth"
 > = {
 	projectsList: [],
 	isLoadingProjectsList: true,
+	initialEditorWidth: 50,
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
+
+	setEditorWidth: (width) => {
+		set((state) => {
+			state.initialEditorWidth = width;
+
+			return state;
+		});
+	},
 
 	createProject: async (isDefault?: boolean) => {
 		const { data: projectId, error } = await ProjectsService.create();
