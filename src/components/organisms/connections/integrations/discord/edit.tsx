@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,7 @@ import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
 import { discordIntegrationSchema } from "@validations";
 
-import { Button, ErrorMessage, Input, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 import { WarningDeploymentActivetedModal } from "@components/organisms";
 
@@ -17,6 +17,7 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const DiscordIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
+	const [lockState, setLockState] = useState(true);
 
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
@@ -46,13 +47,16 @@ export const DiscordIntegrationEditForm = () => {
 	return (
 		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
 			<div className="relative">
-				<Input
+				<SecretInput
+					type="password"
 					{...register("botToken")}
 					aria-label={t("discord.placeholders.botToken")}
+					handleInputChange={(newValue) => setValue("botToken", newValue)}
+					handleLockAction={setLockState}
 					isError={!!errors.botToken}
+					isLocked={lockState}
 					isRequired
 					label={t("discord.placeholders.botToken")}
-					onChange={(newValue) => setValue("botToken", newValue)}
 					value={botToken}
 				/>
 				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>

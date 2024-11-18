@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoTwilioLinks } from "@constants/lists/connections";
 
-import { Button, ErrorMessage, Input, Link, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
@@ -14,6 +14,7 @@ export const ApiKeyTwilioForm = ({
 	control,
 	errors,
 	isLoading,
+	mode,
 	register,
 	setValue,
 }: {
@@ -25,6 +26,13 @@ export const ApiKeyTwilioForm = ({
 	setValue: any;
 }) => {
 	const { t } = useTranslation("integrations");
+	const [lockState, setLockState] = useState<{ account_sid: boolean; api_key: boolean; api_secret: boolean }>({
+		account_sid: true,
+		api_key: true,
+		api_secret: true,
+	});
+
+	const isEditMode = mode === "edit";
 
 	const accountSid = useWatch({ control, name: "account_sid" });
 	const apiKey = useWatch({ control, name: "api_key" });
@@ -33,39 +41,84 @@ export const ApiKeyTwilioForm = ({
 	return (
 		<>
 			<div className="relative">
-				<Input
-					{...register("account_sid")}
-					aria-label={t("twilio.placeholders.sid")}
-					isError={!!errors.account_sid}
-					isRequired
-					label={t("twilio.placeholders.sid")}
-					onChange={(newValue) => setValue("account_sid", newValue)}
-					value={accountSid}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						type="password"
+						{...register("account_sid")}
+						aria-label={t("twilio.placeholders.sid")}
+						handleInputChange={(newSidValue) => setValue("account_sid", newSidValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, account_sid: newLockState }))
+						}
+						isError={!!errors.account_sid}
+						isLocked={lockState.account_sid}
+						isRequired
+						label={t("twilio.placeholders.sid")}
+						value={accountSid}
+					/>
+				) : (
+					<Input
+						{...register("account_sid")}
+						aria-label={t("twilio.placeholders.sid")}
+						isError={!!errors.account_sid}
+						isRequired
+						label={t("twilio.placeholders.sid")}
+					/>
+				)}
 				<ErrorMessage>{errors.account_sid?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
-				<Input
-					{...register("api_key")}
-					aria-label={t("twilio.placeholders.key")}
-					isError={!!errors.api_key}
-					isRequired
-					label={t("twilio.placeholders.key")}
-					onChange={(newValue) => setValue("api_key", newValue)}
-					value={apiKey}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						type="password"
+						{...register("api_key")}
+						aria-label={t("twilio.placeholders.key")}
+						handleInputChange={(newKeyValue) => setValue("api_key", newKeyValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, api_key: newLockState }))
+						}
+						isError={!!errors.api_key}
+						isLocked={lockState.api_key}
+						isRequired
+						label={t("twilio.placeholders.key")}
+						value={apiKey}
+					/>
+				) : (
+					<Input
+						{...register("api_key")}
+						aria-label={t("twilio.placeholders.key")}
+						isError={!!errors.api_key}
+						isRequired
+						label={t("twilio.placeholders.key")}
+					/>
+				)}
 				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
-				<Input
-					{...register("api_secret")}
-					aria-label={t("twilio.placeholders.secret")}
-					isError={!!errors.api_secret}
-					isRequired
-					label={t("twilio.placeholders.secret")}
-					onChange={(newValue) => setValue("api_secret", newValue)}
-					value={apiSecret}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						type="password"
+						{...register("api_secret")}
+						aria-label={t("twilio.placeholders.secret")}
+						handleInputChange={(newSecretValue) => setValue("api_secret", newSecretValue)}
+						handleLockAction={(newLockState: boolean) =>
+							setLockState((prevState) => ({ ...prevState, api_secret: newLockState }))
+						}
+						isError={!!errors.api_secret}
+						isLocked={lockState.api_secret}
+						isRequired
+						label={t("twilio.placeholders.secret")}
+						value={apiSecret}
+					/>
+				) : (
+					<Input
+						{...register("api_secret")}
+						aria-label={t("twilio.placeholders.secret")}
+						isError={!!errors.api_secret}
+						isRequired
+						label={t("twilio.placeholders.secret")}
+					/>
+				)}
 				<ErrorMessage>{errors.api_secret?.message as string}</ErrorMessage>
 			</div>
 
