@@ -127,7 +127,7 @@ export const IntegrationEditForm = ({
 		// slack
 		setFormValue("bot_token", "botToken");
 		setFormValue("app_token", "appToken");
-		// atlassian- jira, confluence
+		// atlassian - jira, confluence
 		setFormValue("base_url", "BaseURL");
 		setFormValue("token", "Token");
 		setFormValue("email", "Email");
