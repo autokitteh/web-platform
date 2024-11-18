@@ -150,7 +150,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedSaveContent = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
+	const debouncedSaveContent = useCallback(debounce(updateContent, 500, { leading: true, trailing: false }), [
 		projectId,
 		activeEditorFileName,
 	]);
@@ -167,8 +167,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		return () => {
 			window.removeEventListener("keydown", handler);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [content, debouncedSaveContent]);
 
 	const handleUpdateContent = (newContent?: string) => {
 		if (!newContent) {
