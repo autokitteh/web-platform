@@ -1,3 +1,10 @@
+## [2.59.3](https://github.com/autokitteh/web-platform/compare/v2.59.2...v2.59.3) (2024-11-18)
+
+
+### Bug Fixes
+
+* fix the ci-cd distribution files creation ([#664](https://github.com/autokitteh/web-platform/issues/664)) ([33d36e5](https://github.com/autokitteh/web-platform/commit/33d36e5ba11b4cb802ffe0868dbc03c3ae9ff5c4))
+
 ## [2.59.2](https://github.com/autokitteh/web-platform/compare/v2.59.1...v2.59.2) (2024-11-18)
 
 
