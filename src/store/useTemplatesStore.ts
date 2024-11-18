@@ -109,7 +109,7 @@ const store = (set: any, get: any): TemplateState => ({
 		};
 
 		try {
-			let shouldFetchTemplates = false;
+			let shouldFetchTemplates = !Object.keys(get().templateMap).length;
 			let shouldFetchTemplatesFromGithub = false;
 			let lastCommitDate = get().lastCommitDate;
 			const currentTime = new Date();
