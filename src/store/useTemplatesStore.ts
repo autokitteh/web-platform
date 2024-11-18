@@ -133,7 +133,6 @@ const store = (set: any, get: any): TemplateState => ({
 					shouldFetchTemplatesFromGithub =
 						latestCommit &&
 						(!currentCommitDate || new Date(latestCommitDate) > new Date(currentCommitDate));
-					shouldFetchTemplates = shouldFetchTemplatesFromGithub;
 					lastCommitDate = latestCommitDate;
 					set({ lastCheckDate: currentTime });
 				} catch {
@@ -145,10 +144,13 @@ const store = (set: any, get: any): TemplateState => ({
 				return;
 			}
 
-			const templatesFromPrimary = await processTemplates(remoteTemplatesArchiveURL);
-			const templatesResult = templatesFromPrimary.error
-				? await processTemplates(localTemplatesArchiveFallback)
-				: templatesFromPrimary;
+			let templates;
+			if (shouldFetchTemplatesFromGithub) {
+				templates = await processTemplates(remoteTemplatesArchiveURL);
+			}
+
+			const templatesResult =
+				!templates || templates.error ? await processTemplates(localTemplatesArchiveFallback) : templates;
 
 			const { categories, error, templateMap } = templatesResult;
 
