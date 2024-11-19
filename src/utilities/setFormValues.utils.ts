@@ -17,8 +17,9 @@ export const setFormValues = (
 
 	Object.entries(integrationValueToForm).forEach(([formFieldName, variableName]) => {
 		const variable = variables.find((v) => v.name === variableName);
-		if (variable && variable.value) {
-			setValue(formFieldName, processValue(formFieldName, variable.value));
+		if (!variable?.value) {
+			return;
 		}
+		setValue(formFieldName, processValue(formFieldName, variable.value));
 	});
 };
