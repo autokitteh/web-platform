@@ -4,9 +4,11 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { integrationVariablesMapping } from "@src/constants/connections";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 import { asanaIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -26,11 +28,10 @@ export const AsanaIntegrationEditForm = () => {
 	const pat = useWatch({ control, name: "pat" });
 
 	useEffect(() => {
-		const patValue = connectionVariables?.find((variable) => variable.name === "pat")?.value || "";
-		if (patValue) {
-			setValue("pat", patValue);
-		}
-	}, [connectionVariables, setValue]);
+		if (!connectionVariables) return;
+		setFormValues(connectionVariables, integrationVariablesMapping.asana, setValue);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
 
 	const handleFormSubmit = () => {
 		if (hasActiveDeployments) {

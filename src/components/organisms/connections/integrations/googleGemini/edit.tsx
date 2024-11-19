@@ -4,9 +4,11 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { integrationVariablesMapping } from "@src/constants/connections";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 import { googleGeminiIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -28,10 +30,8 @@ export const GoogleGeminiIntegrationEditForm = () => {
 	const key = useWatch({ control, name: "key" });
 
 	useEffect(() => {
-		const apiKeyValue = connectionVariables?.find((variable) => variable.name === "api_key")?.value;
-		if (apiKeyValue) {
-			setValue("key", apiKeyValue);
-		}
+		if (!connectionVariables) return;
+		setFormValues(connectionVariables, integrationVariablesMapping.googlegemini, setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 

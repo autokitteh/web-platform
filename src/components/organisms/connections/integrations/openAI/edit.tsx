@@ -4,9 +4,11 @@ import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoOpenAiLinks } from "@constants/lists/connections";
+import { integrationVariablesMapping } from "@src/constants/connections";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 import { openAiIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Link, SecretInput, Spinner } from "@components/atoms";
@@ -27,10 +29,8 @@ export const OpenAiIntegrationEditForm = () => {
 	const key = useWatch({ control, name: "key" });
 
 	useEffect(() => {
-		const apiKeyValue = connectionVariables?.find((variable) => variable.name === "apiKey")?.value;
-		if (apiKeyValue) {
-			setValue("key", apiKeyValue);
-		}
+		if (!connectionVariables) return;
+		setFormValues(connectionVariables, integrationVariablesMapping.chatgpt, setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
