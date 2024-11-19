@@ -3,9 +3,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
+import { integrationVariablesMapping } from "../../../../constants/connections/integrationVariablesMapping.constants";
 import { formsPerIntegrationsMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
-import { integrationVariablesMapping } from "@src/constants/connections";
 import { Integrations, ModalName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
