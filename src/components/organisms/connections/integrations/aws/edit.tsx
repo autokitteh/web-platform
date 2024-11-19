@@ -4,9 +4,11 @@ import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
+import { integrationVariablesMapping } from "@src/constants/connections";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -34,26 +36,7 @@ export const AwsIntegrationEditForm = () => {
 
 	useEffect(() => {
 		if (!connectionVariables) return;
-
-		const region = connectionVariables?.find((variable) => variable.name === "Region");
-		if (region) {
-			setValue("region", {
-				label: region.value,
-				value: region.value,
-			});
-		}
-		const accessKeyValue = connectionVariables?.find((variable) => variable.name === "AccessKeyID")?.value;
-		if (accessKeyValue) {
-			setValue("access_key", accessKeyValue);
-		}
-		const secretKeyValue = connectionVariables?.find((variable) => variable.name === "SecretKey")?.value;
-		if (secretKeyValue) {
-			setValue("secret_key", secretKeyValue);
-		}
-		const tokenValue = connectionVariables?.find((variable) => variable.name === "Token")?.value;
-		if (tokenValue) {
-			setValue("token", tokenValue);
-		}
+		setFormValues(connectionVariables, integrationVariablesMapping.aws, setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 

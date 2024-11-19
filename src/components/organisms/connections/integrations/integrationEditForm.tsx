@@ -5,10 +5,12 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
+import { integrationVariablesMapping } from "@src/constants/connections";
 import { Integrations, ModalName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 
 import { Select } from "@components/molecules";
 import { WarningDeploymentActivetedModal } from "@components/organisms";
@@ -111,30 +113,8 @@ export const IntegrationEditForm = ({
 	};
 
 	useEffect(() => {
-		const setFormValue = (fieldName: string, variableName: string) => {
-			const value = connectionVariables?.find((variable) => variable.name === variableName)?.value;
-			if (!value) return;
-			setValue(fieldName, value);
-		};
-		// google / calendar / forms
-		setFormValue("form_id", "FormID");
-		setFormValue("cal_id", "CalendarID");
-		setFormValue("json", "JSON");
-		// twillio
-		setFormValue("account_sid", "accountSID");
-		setFormValue("api_key", "apiKey");
-		setFormValue("api_secret", "apiSecret");
-		// slack
-		setFormValue("bot_token", "botToken");
-		setFormValue("app_token", "appToken");
-		// atlassian - jira, confluence
-		setFormValue("base_url", "BaseURL");
-		setFormValue("token", "Token");
-		setFormValue("email", "Email");
-		// github
-		setFormValue("pat", "pat");
-		setFormValue("secret", "Secret");
-
+		if (!connectionVariables) return;
+		setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
