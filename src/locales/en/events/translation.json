@@ -15,8 +15,10 @@
 		}
 	},
 	"viewer":{
-		"event": "Event",
-		"output": "Output",
-		"inputs": "Inputs"
+		"payload": "Payload",
+		"eventType": "Event type",
+		"created": "Created",
+		"eventId": "Event ID",
+		"destinationId": "Destination ID"
 	}
 }
