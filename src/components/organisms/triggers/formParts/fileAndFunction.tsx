@@ -36,8 +36,8 @@ export const TriggerSpecificFields = ({
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
 	const { connections } = useCacheStore();
-
 	const [options, setOptions] = useState<SelectOption[]>([]);
+	const [triggerRerender, setTriggerRerender] = useState(0);
 
 	useEffect(() => {
 		if (!featureFlags.displayComboxInTriggersForm) {
@@ -45,6 +45,7 @@ export const TriggerSpecificFields = ({
 		}
 
 		setValue("eventTypeSelect", null);
+		setTriggerRerender((prev) => prev + 1);
 
 		if (!connectionId || connectionId === TriggerTypes.webhook || connectionId === TriggerTypes.schedule) {
 			setOptions([]);
@@ -133,6 +134,7 @@ export const TriggerSpecificFields = ({
 										dataTestid="select-trigger-event-type"
 										defaultValue={selectedEventType}
 										isError={!!errors.eventTypeSelect}
+										key={triggerRerender}
 										label={t("placeholders.eventType")}
 										noOptionsLabel={t("placeholders.eventTypesSelect")}
 										onCreateOption={handleCreateOption}
