@@ -57,7 +57,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 	const fetchManifestData = async () => {
 		if (!assetDirectory) return;
 		const content = await getTemplateFiles(assetDirectory);
-		setReadme(content["README.md"]);
+		setReadme(content && "README.md" in content ? content["README.md"] : "");
 	};
 
 	useEffect(() => {
