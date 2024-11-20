@@ -1,8 +1,6 @@
 {
 	"templates":{
 		"failedToFetch": "Failed to fetch templates",
-		"failedToFetchExtended": "Something went wrong fetching the templates, error: {{error}}",
-		"couldntFetchGithubTemplates": "Failed to fetch templates from GitHub"
-
+		"failedToFetchExtended": "Something went wrong fetching the templates, error: {{error}}"
 	}
 }
