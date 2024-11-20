@@ -1,3 +1,10 @@
+# [2.60.0](https://github.com/autokitteh/web-platform/compare/v2.59.7...v2.60.0) (2024-11-20)
+
+
+### Features
+
+* event viewer style ([#669](https://github.com/autokitteh/web-platform/issues/669)) ([f84d5e8](https://github.com/autokitteh/web-platform/commit/f84d5e88a68e502c283f630004279b3e3463014b))
+
 ## [2.59.7](https://github.com/autokitteh/web-platform/compare/v2.59.6...v2.59.7) (2024-11-20)
 
 
