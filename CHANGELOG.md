@@ -1,3 +1,10 @@
+## [2.59.4](https://github.com/autokitteh/web-platform/compare/v2.59.3...v2.59.4) (2024-11-20)
+
+
+### Bug Fixes
+
+* fetch template files from github or from self ([#658](https://github.com/autokitteh/web-platform/issues/658)) ([01c7b6b](https://github.com/autokitteh/web-platform/commit/01c7b6b7fffe3906521ae21ac9a5ea90e0cba4c2))
+
 ## [2.59.3](https://github.com/autokitteh/web-platform/compare/v2.59.2...v2.59.3) (2024-11-18)
 
 
