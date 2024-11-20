@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -13,6 +13,7 @@ import { manualRunSchema } from "@validations";
 
 import { Button, ErrorMessage, IconSvg, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
+import { SelectCreatable } from "@components/molecules/select";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
 
 import { RunIcon } from "@assets/image/icons";
@@ -117,6 +118,13 @@ export const ManualRunSettingsDrawer = () => {
 		closeDrawer(DrawerName.projectManualRunSettings);
 	};
 
+	const entrypointFunctionValue = useWatch({ control, name: "entrypointFunction" });
+	const onEntrypointCreate = (value: string) => {
+		const newFunction = { label: value, value };
+		setFileFunctions((prev) => [...prev, newFunction]);
+		setValue("entrypointFunction", newFunction);
+	};
+
 	return (
 		<Drawer className="p-10" name={DrawerName.projectManualRunSettings} variant="dark">
 			<FormProvider {...methods}>
@@ -178,7 +186,7 @@ export const ManualRunSettingsDrawer = () => {
 							control={control}
 							name="entrypointFunction"
 							render={({ field }) => (
-								<Select
+								<SelectCreatable
 									{...field}
 									aria-label={t("placeholders.selectEntrypoint")}
 									dataTestid="select-function"
@@ -189,9 +197,10 @@ export const ManualRunSettingsDrawer = () => {
 										field.onChange(selected);
 										updateManualRunConfiguration(projectId!, { entrypointFunction: selected! });
 									}}
+									onCreateOption={onEntrypointCreate}
 									options={fileFunctions}
 									placeholder={t("placeholders.selectEntrypoint")}
-									value={field.value}
+									value={entrypointFunctionValue}
 								/>
 							)}
 						/>
