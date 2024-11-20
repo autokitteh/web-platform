@@ -1,3 +1,10 @@
+## [2.59.6](https://github.com/autokitteh/web-platform/compare/v2.59.5...v2.59.6) (2024-11-20)
+
+
+### Bug Fixes
+
+* display correct return value in activity viewer per session ([#659](https://github.com/autokitteh/web-platform/issues/659)) ([88e9eca](https://github.com/autokitteh/web-platform/commit/88e9eca38448068120bb78bf80419e86cedf7efc))
+
 ## [2.59.5](https://github.com/autokitteh/web-platform/compare/v2.59.4...v2.59.5) (2024-11-20)
 
 
