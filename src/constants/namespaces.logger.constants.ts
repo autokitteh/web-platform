@@ -48,4 +48,7 @@ export const namespaces = {
 	utilities: {
 		fetchAndExtract: "Fetch and Extract",
 	},
+	models: {
+		activity: "Activity Model",
+	},
 };

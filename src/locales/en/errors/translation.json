@@ -38,6 +38,7 @@
 	"sessionLogMissingOnErrorType": "Session History - No error",
 	"sessionLogRecordMultipleProps": "More than one session log record type found: {{props}}",
 	"sessionLogRecordTypeNotFound": "Session log record type not found: {{props}}",
+	"sessionLogRecordActivtyErrorConvert": "Session log record activity error convert failed, error: {{error}}",
 	"sessionsFetchError": "Couldn't fetch the sessions details",
 	"sessionsFetchErrorExtended": "Couldn't fetch the sessions details, error message: {{error}}",
 	"triggerFailedExtended": "Trigger failed, ID: {{triggerId}}, error message: {{error}}",
