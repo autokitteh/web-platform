@@ -1,3 +1,10 @@
+## [2.59.7](https://github.com/autokitteh/web-platform/compare/v2.59.6...v2.59.7) (2024-11-20)
+
+
+### Bug Fixes
+
+* prevent editor jumping when autosave triggered ([#668](https://github.com/autokitteh/web-platform/issues/668)) ([b2b2932](https://github.com/autokitteh/web-platform/commit/b2b293216064bd1d453d4102df057039e9dbd0eb))
+
 ## [2.59.6](https://github.com/autokitteh/web-platform/compare/v2.59.5...v2.59.6) (2024-11-20)
 
 
