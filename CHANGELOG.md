@@ -1,3 +1,10 @@
+## [2.59.5](https://github.com/autokitteh/web-platform/compare/v2.59.4...v2.59.5) (2024-11-20)
+
+
+### Bug Fixes
+
+* fix the readme file fetcher in create project from template modal ([#662](https://github.com/autokitteh/web-platform/issues/662)) ([9634720](https://github.com/autokitteh/web-platform/commit/96347207528928577ed881c2190f63f6556773cf))
+
 ## [2.59.4](https://github.com/autokitteh/web-platform/compare/v2.59.3...v2.59.4) (2024-11-20)
 
 
