@@ -25,7 +25,7 @@ export const Project = () => {
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;
 		await initCache(projectId, true);
-		fetchManualRunConfiguration(projectId!);
+		fetchManualRunConfiguration(projectId);
 		const { data: project } = await getProject(projectId!);
 		if (!project?.name) {
 			setPageTitle(t("base"));
