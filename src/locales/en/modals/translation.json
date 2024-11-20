@@ -86,6 +86,7 @@
 		"cancelButton": "Cancel",
 		"createButton": "Create",
 		"projectName": "Project Name",
+		"inputPlaceholder": "Enter project name",
 		"description": "Description: {{description}}",
 		"moreInformaton": "About This Template",
 		"readme": "README",

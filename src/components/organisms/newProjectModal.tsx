@@ -15,9 +15,8 @@ export const NewProjectModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "newProject" });
 	const [isCreating, setIsCreating] = useState(false);
 	const { closeModal } = useModalStore();
-	const { projectsList } = useProjectStore();
+	const { createProject, projectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { createProject } = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 	const navigate = useNavigate();
 	const [responseError, setResponseError] = useState("");
@@ -75,7 +74,7 @@ export const NewProjectModal = () => {
 				</div>
 				<Input
 					label={t("projectName")}
-					placeholder="Enter project name"
+					placeholder={t("inputPlaceholder")}
 					variant="light"
 					{...register("projectName", {
 						required: t("nameRequired"),
