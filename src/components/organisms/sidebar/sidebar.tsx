@@ -219,7 +219,7 @@ export const Sidebar = () => {
 
 				<AnimatePresence>
 					{submenuInfo.submenu && !!submenuInfo.submenu.length ? (
-						<div onMouseLeave={handleMouseLeave} ref={submenuRef}>
+						<div className="relative" onMouseLeave={handleMouseLeave} ref={submenuRef}>
 							<Submenu submenuInfo={submenuInfo} />
 						</div>
 					) : null}
