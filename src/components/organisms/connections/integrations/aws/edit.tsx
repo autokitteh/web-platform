@@ -35,7 +35,6 @@ export const AwsIntegrationEditForm = () => {
 	const token = useWatch({ control, name: "token" });
 
 	useEffect(() => {
-		if (!connectionVariables) return;
 		setFormValues(connectionVariables, integrationVariablesMapping.aws, setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
