@@ -30,7 +30,6 @@ export const GoogleGeminiIntegrationEditForm = () => {
 	const key = useWatch({ control, name: "key" });
 
 	useEffect(() => {
-		if (!connectionVariables) return;
 		setFormValues(connectionVariables, integrationVariablesMapping.googlegemini, setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);

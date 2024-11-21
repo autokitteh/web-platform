@@ -28,7 +28,6 @@ export const AsanaIntegrationEditForm = () => {
 	const pat = useWatch({ control, name: "pat" });
 
 	useEffect(() => {
-		if (!connectionVariables) return;
 		setFormValues(connectionVariables, integrationVariablesMapping.asana, setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);

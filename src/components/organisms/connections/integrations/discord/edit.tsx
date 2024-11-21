@@ -30,7 +30,6 @@ export const DiscordIntegrationEditForm = () => {
 	const botToken = useWatch({ control, name: "botToken" });
 
 	useEffect(() => {
-		if (!connectionVariables) return;
 		setFormValues(connectionVariables, integrationVariablesMapping.discord, setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);

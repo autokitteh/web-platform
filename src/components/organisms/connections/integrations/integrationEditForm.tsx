@@ -113,7 +113,6 @@ export const IntegrationEditForm = ({
 	};
 
 	useEffect(() => {
-		if (!connectionVariables) return;
 		setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
