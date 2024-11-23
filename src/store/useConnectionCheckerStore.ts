@@ -118,7 +118,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 
 		const intervalId = setInterval(checkStatus, 10 * 1000);
 		set((state) => {
-			const recheckIntervalIdsArr = [...(state.recheckIntervalIds ?? []), intervalId];
+			const recheckIntervalIdsArr = [...state.recheckIntervalIds, intervalId];
 			state.recheckIntervalIds = recheckIntervalIdsArr;
 
 			return state;
