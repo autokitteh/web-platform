@@ -46,7 +46,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 			return;
 		}
 
-		if (!recheckIntervalIds) {
+		if (!recheckIntervalIds?.length) {
 			return;
 		}
 		for (const intervalId of recheckIntervalIds) {
