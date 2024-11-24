@@ -12,6 +12,7 @@ import {
 	useHover,
 	useInteractions,
 	useRole,
+	useTransitionStyles,
 } from "@floating-ui/react";
 
 import { PopoverOptions } from "@src/interfaces/components";
@@ -36,9 +37,8 @@ export function usePopover({
 			flip({
 				crossAxis: placement.includes("-"),
 				fallbackAxisSideDirection: "end",
-				padding: 5,
 			}),
-			shift({ padding: 5 }),
+			shift(),
 		],
 	});
 
@@ -46,6 +46,11 @@ export function usePopover({
 
 	const dismiss = useDismiss(context);
 	const role = useRole(context);
+	const { isMounted, styles } = useTransitionStyles(context, {
+		duration: 700,
+		close: { opacity: 0, left: "-100px", transition: "opacity 0.6s, left 0.6s" },
+		open: { opacity: 1, left: 0, transition: "opacity 0.6s, left 0.6s" },
+	});
 
 	const interactionHooks = {
 		click: useClick(context, {
@@ -70,7 +75,9 @@ export function usePopover({
 			descriptionId,
 			setLabelId,
 			setDescriptionId,
+			isMounted,
+			styles,
 		}),
-		[open, setOpen, interactions, data, modal, labelId, descriptionId]
+		[open, interactions, data, modal, labelId, descriptionId, isMounted, styles]
 	);
 }
