@@ -52,7 +52,7 @@ export const PopoverContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
 			<FloatingFocusManager context={floatingContext} modal={context.modal}>
 				<div
 					ref={ref}
-					style={{ ...context.floatingStyles, ...style }}
+					style={{ ...context.floatingStyles, ...context.styles, ...style }}
 					{...context.getFloatingProps(props)}
 					className={props?.className}
 				>
