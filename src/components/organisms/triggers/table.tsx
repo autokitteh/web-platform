@@ -3,11 +3,9 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { InformationPopoverContent } from "./table/popoverContent";
 import { ModalName } from "@enums/components";
 import { LoggerService, TriggersService } from "@services";
 import { namespaces } from "@src/constants";
-import { TriggerTypes } from "@src/enums";
 import { TableHeader } from "@src/interfaces/components";
 import { SortableColumns } from "@src/types/components";
 import { cn } from "@src/utilities";
@@ -19,40 +17,9 @@ import { useCacheStore, useModalStore, useToastStore } from "@store";
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, Popover, PopoverContent, PopoverTrigger, SortButton } from "@components/molecules";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
+import { InformationPopoverContent } from "@components/organisms/triggers/table/popoverContent";
 
-import { ClockIcon, EditIcon, InfoIcon, LinkIcon, PlusCircle, TrashIcon, WebhookIcon } from "@assets/image/icons";
-
-const triggerTypeConfig = {
-	[TriggerTypes.connection]: {
-		Icon: LinkIcon,
-		className: "size-4 fill-white",
-	},
-	[TriggerTypes.webhook]: {
-		Icon: WebhookIcon,
-		className: "size-4 stroke-white",
-	},
-	[TriggerTypes.schedule]: {
-		Icon: ClockIcon,
-		className: "size-4 stroke-white",
-	},
-} as const;
-
-const TypeColumn = React.memo(({ sourceType }: { sourceType?: TriggerTypes }) => {
-	if (!sourceType || !triggerTypeConfig[sourceType]) {
-		return <div />;
-	}
-
-	const { Icon, className } = triggerTypeConfig[sourceType];
-
-	return (
-		<span className="flex gap-x-2 capitalize" title={sourceType}>
-			<Icon className={className} />
-			{sourceType}
-		</span>
-	);
-});
-
-TypeColumn.displayName = "TypeColumn";
+import { EditIcon, InfoIcon, PlusCircle, TrashIcon } from "@assets/image/icons";
 
 const useTableHeaders = (t: (key: string) => string): TableHeader[] => {
 	return useMemo(
@@ -199,8 +166,18 @@ export const TriggersTable = () => {
 										<div>{trigger.name}</div>
 									</div>
 								</Td>
-								<Td className="w-2/12">
-									<TypeColumn sourceType={trigger?.sourceType} />
+								<Td className="-ml-2 w-2/12 capitalize">
+									<Popover>
+										<PopoverTrigger>
+											<IconButton>
+												<IconSvg className="size-4" src={InfoIcon} />
+											</IconButton>
+										</PopoverTrigger>
+										<PopoverContent className="z-50 rounded-lg border-0.5 border-white bg-black p-4">
+											<InformationPopoverContent trigger={trigger} />
+										</PopoverContent>
+									</Popover>
+									{trigger?.sourceType}
 								</Td>
 								<Td className="w-4/12">{trigger.entrypoint}</Td>
 								<Td className="w-2/12 pr-0">
@@ -222,17 +199,6 @@ export const TriggersTable = () => {
 										>
 											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>
-
-										<Popover>
-											<PopoverTrigger>
-												<IconButton>
-													<IconSvg className="fill-white" src={InfoIcon} />
-												</IconButton>
-											</PopoverTrigger>
-											<PopoverContent className="z-50 rounded-lg border-0.5 border-white bg-black p-4">
-												<InformationPopoverContent trigger={trigger} />
-											</PopoverContent>
-										</Popover>
 									</div>
 								</Td>
 							</Tr>

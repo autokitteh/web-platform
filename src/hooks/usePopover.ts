@@ -4,10 +4,11 @@ import {
 	autoUpdate,
 	flip,
 	offset,
+	safePolygon,
 	shift,
-	useClick,
 	useDismiss,
 	useFloating,
+	useHover,
 	useInteractions,
 	useRole,
 } from "@floating-ui/react";
@@ -37,13 +38,15 @@ export function usePopover({ initialOpen = false, modal, placement = "bottom" }:
 
 	const context = data.context;
 
-	const click = useClick(context, {
-		enabled: true,
-	});
 	const dismiss = useDismiss(context);
 	const role = useRole(context);
+	const hover = useHover(context, {
+		handleClose: safePolygon({
+			buffer: -Infinity,
+		}),
+	});
 
-	const interactions = useInteractions([click, dismiss, role]);
+	const interactions = useInteractions([dismiss, role, hover]);
 
 	return useMemo(
 		() => ({

@@ -12,7 +12,7 @@ import { ManualFormParamsErrors } from "@src/types/components";
 import { Button, ErrorMessage, IconButton, Input, Loader, Toggle } from "@components/atoms";
 
 import { PlusCircle } from "@assets/image";
-import { InfoIcon, TrashIcon } from "@assets/image/icons";
+import { TrashIcon } from "@assets/image/icons";
 
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
@@ -159,12 +159,7 @@ export const ManualRunParamsForm = () => {
 	return (
 		<div className="mt-9">
 			<div className="mb-4 flex items-center justify-between">
-				<div className="flex items-center gap-1 text-base text-gray-500">
-					{t("titleParams")}
-					<div className="cursor-pointer" title={t("titleParams")}>
-						<InfoIcon className="fill-white" />
-					</div>
-				</div>
+				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
 				<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
 			</div>
 

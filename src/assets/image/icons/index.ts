@@ -35,6 +35,7 @@ export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";
 export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?react";
 export { default as GearIcon } from "@assets/image/icons/Gear.svg?react";
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
+// Taken from https://www.svgrepo.com/svg/505403/info-circle
 export { default as InfoIcon } from "@assets/image/icons/Info.svg?react";
 // Taken from https://fontawesome.com/icons/link?f=classic&s=solid
 export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
