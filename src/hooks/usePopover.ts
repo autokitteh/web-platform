@@ -18,6 +18,7 @@ import {
 import { PopoverOptions } from "@src/interfaces/components";
 
 export function usePopover({
+	animation,
 	initialOpen = false,
 	interactionType = "hover",
 	modal,
@@ -46,19 +47,30 @@ export function usePopover({
 
 	const dismiss = useDismiss(context);
 	const role = useRole(context);
-	const { isMounted, styles } = useTransitionStyles(context, {
-		duration: 700,
-		open: { opacity: 1, left: 0, transition: "opacity 0.6s left 0.6s" },
-		initial: {
-			opacity: 0,
-			left: "-212px",
-		},
-		close: {
-			opacity: 0,
-			transition: "opacity 0.6s left 0.6s",
-			left: "-212px",
-		},
-	});
+
+	let transitionConfiguration = {};
+
+	switch (animation) {
+		case "slideFromLeft":
+			transitionConfiguration = {
+				open: { opacity: 1, left: 0 },
+				initial: { opacity: 0, left: "-212px" },
+				close: { opacity: 0, left: "-212px" },
+			};
+			break;
+		case "slideFromBottom":
+			transitionConfiguration = {
+				open: { opacity: 1, top: 0 },
+				initial: { opacity: 0, top: "50px" },
+				close: { opacity: 0, top: "50px" },
+			};
+			break;
+		case "none":
+		default:
+			break;
+	}
+
+	const { isMounted, styles } = useTransitionStyles(context, transitionConfiguration);
 
 	const interactionHooks = {
 		click: useClick(context, {
