@@ -1,3 +1,10 @@
+# [2.62.0](https://github.com/autokitteh/web-platform/compare/v2.61.0...v2.62.0) (2024-11-24)
+
+
+### Features
+
+* **UI-956:** functions select in manual run ([#655](https://github.com/autokitteh/web-platform/issues/655)) ([1bdbebb](https://github.com/autokitteh/web-platform/commit/1bdbebbf7af8412c95b2156801622bd72feb9d29))
+
 # [2.61.0](https://github.com/autokitteh/web-platform/compare/v2.60.0...v2.61.0) (2024-11-24)
 
 
