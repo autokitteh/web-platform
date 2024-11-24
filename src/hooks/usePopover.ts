@@ -21,7 +21,6 @@ export function usePopover({
 	animation,
 	initialOpen = false,
 	interactionType = "hover",
-	modal,
 	placement = "bottom",
 }: PopoverOptions = {}) {
 	const [open, setOpen] = useState(initialOpen);
@@ -90,7 +89,6 @@ export function usePopover({
 			setOpen,
 			...interactions,
 			...data,
-			modal,
 			labelId,
 			descriptionId,
 			setLabelId,
@@ -98,6 +96,6 @@ export function usePopover({
 			isMounted,
 			styles,
 		}),
-		[open, interactions, data, modal, labelId, descriptionId, isMounted, styles]
+		[open, interactions, data, labelId, descriptionId, isMounted, styles]
 	);
 }

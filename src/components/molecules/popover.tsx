@@ -9,12 +9,11 @@ import { PopoverOptions, PopoverTriggerProps } from "@src/interfaces/components"
 export const Popover = ({
 	children,
 	interactionType = "hover",
-	modal = false,
 	...restOptions
 }: {
 	children: React.ReactNode;
 } & PopoverOptions) => {
-	const popover = usePopover({ modal, interactionType, ...restOptions });
+	const popover = usePopover({ interactionType, ...restOptions });
 
 	return <PopoverContext.Provider value={popover}>{children}</PopoverContext.Provider>;
 };
@@ -47,7 +46,7 @@ export const PopoverContent = React.forwardRef<
 
 	return (
 		<FloatingPortal>
-			<FloatingFocusManager context={floatingContext} initialFocus={initialFocus} modal={context.modal}>
+			<FloatingFocusManager context={floatingContext} initialFocus={initialFocus}>
 				{context.isMounted ? (
 					<div
 						ref={ref}
