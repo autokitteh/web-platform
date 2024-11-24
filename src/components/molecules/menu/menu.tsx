@@ -118,7 +118,10 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 							</div>
 						</li>
 					</PopoverTrigger>
-					<PopoverContent className="z-30 flex h-screen flex-col rounded-lg bg-white px-4 pt-[212px]">
+					<PopoverContent
+						className="z-30 flex h-screen flex-col rounded-lg bg-white px-4 pt-[212px]"
+						initialFocus={-1}
+					>
 						{projectsList?.length ? (
 							sortedProjectsList.map(({ id, name }) => (
 								<PopoverClose key={id} onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}>

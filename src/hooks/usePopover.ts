@@ -78,7 +78,7 @@ export function usePopover({
 		}),
 		hover: useHover(context, {
 			enabled: interactionType === "hover",
-			handleClose: safePolygon({ buffer: -Infinity }),
+			handleClose: safePolygon({ buffer: 100 }),
 		}),
 	};
 
