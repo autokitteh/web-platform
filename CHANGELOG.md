@@ -1,3 +1,10 @@
+# [2.61.0](https://github.com/autokitteh/web-platform/compare/v2.60.0...v2.61.0) (2024-11-24)
+
+
+### Features
+
+* **UI-945:** trigger info popover on hover ([#646](https://github.com/autokitteh/web-platform/issues/646)) ([c76c213](https://github.com/autokitteh/web-platform/commit/c76c213ae7a5200fd510d723a24d09d5f9cbdadf))
+
 # [2.60.0](https://github.com/autokitteh/web-platform/compare/v2.59.7...v2.60.0) (2024-11-20)
 
 
