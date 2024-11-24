@@ -7,6 +7,7 @@ export interface PopoverOptions {
 	open?: boolean;
 	interactionType?: "click" | "hover";
 	onOpenChange?: (open: boolean) => void;
+	animation?: "none" | "slideFromLeft" | "slideFromBottom";
 }
 
 export interface PopoverTriggerProps {

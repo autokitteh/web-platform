@@ -167,7 +167,7 @@ export const TriggersTable = () => {
 									</div>
 								</Td>
 								<Td className="-ml-2 w-2/12 capitalize">
-									<Popover>
+									<Popover animation="slideFromBottom">
 										<PopoverTrigger>
 											<IconButton>
 												<IconSvg className="size-4" src={InfoIcon} />

@@ -43,9 +43,12 @@ export const DashboardProjectsTable = () => {
 					</THead>
 
 					<TBody>
-						{sortedProjects.map(({ href, id, name }) => (
+						{sortedProjects.map(({ id, name }) => (
 							<Tr className="group cursor-pointer pl-4" key={id}>
-								<Td className="group-hover:font-bold" onClick={() => navigate(href)}>
+								<Td
+									className="group-hover:font-bold"
+									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+								>
 									{name}
 								</Td>
 							</Tr>

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useLocation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { Popover, PopoverContent, PopoverTrigger } from "../popover";
-import { ModalName } from "@enums/components";
+import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "../popover";
+import { ModalName, SidebarHrefMenu } from "@enums/components";
 import { MenuProps } from "@interfaces/components";
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
@@ -20,8 +20,8 @@ import { NewProject, ProjectsIcon } from "@assets/image";
 
 export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
-	const location = useLocation();
 	const { getProjectsList, projectsList } = useProjectStore();
+	const navigate = useNavigate();
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 	const { openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
@@ -59,24 +59,6 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const isButtonActive = (href: string) => location.pathname.startsWith(href);
-
-	const buttonMenuStyle = (href: string) =>
-		cn("relative z-10 w-full gap-1.5 p-0.5 pl-1 group-hover:bg-green-200", {
-			"bg-gray-1100": isButtonActive(href) && isOpen,
-			"text-white hover:bg-gray-1100": isButtonActive(href),
-		});
-
-	const buttonMenuIconStyle = (href: string) =>
-		cn("fill-gray-1100", {
-			"fill-white p-0.5": isButtonActive(href),
-		});
-
-	const buttonMenuIconWrapperStyle = (href: string) =>
-		cn("flex h-9 w-9 items-center justify-center rounded-full duration-500", {
-			"bg-gray-1100 hover:bg-gray-1100": isButtonActive(href) && !isOpen,
-		});
-
 	return (
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
 			<ul className="ml-0 flex flex-col gap-2">
@@ -106,20 +88,15 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						</AnimatePresence>
 					</Button>
 				</li>
-				<Popover>
+				<Popover animation="slideFromLeft">
 					<PopoverTrigger>
 						<li className="group static">
 							<div className="cursor-pointer before:absolute before:left-0 before:h-10 before:w-full" />
-
-							<Button
-								ariaLabel={t("myProjects")}
-								className={buttonMenuStyle("#")}
-								title={t("myProjects")}
-							>
-								<div className={buttonMenuIconWrapperStyle("#")}>
+							<div className="relative z-10 w-full gap-1.5 rounded-full p-0.5 pl-1 group-hover:bg-green-200">
+								<div className="flex size-9 items-center justify-center rounded-full">
 									<IconSvg
 										alt={t("myProjects")}
-										className={buttonMenuIconStyle("#")}
+										className="fill-gray-1100"
 										size="xl"
 										src={ProjectsIcon}
 									/>
@@ -138,30 +115,30 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 										</motion.span>
 									) : null}
 								</AnimatePresence>
-							</Button>
+							</div>
 						</li>
 					</PopoverTrigger>
-					<PopoverContent className="z-50 rounded-lg bg-white px-4">
-						<div className="h-screen pt-[218px]">
-							{projectsList?.length ? (
-								sortedProjectsList.map(({ href, id, name }) => (
-									<Button
+					<PopoverContent className="z-30 flex h-screen flex-col rounded-lg bg-white px-4 pt-[212px]">
+						{projectsList?.length ? (
+							sortedProjectsList.map(({ id, name }) => (
+								<PopoverClose key={id} onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}>
+									<div
 										className={cn(
+											"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
+											"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",
 											"text-fira-code whitespace-nowrap px-4 text-gray-1100 hover:bg-green-200 max-w-245 overflow-hidden",
 											{
 												"bg-gray-1100 text-white hover:bg-gray-1100": id === projectId,
 											}
 										)}
-										href={href}
-										key={id}
 									>
 										{name}
-									</Button>
-								))
-							) : (
-								<div className="pt-3 text-black">No projects found</div>
-							)}
-						</div>
+									</div>
+								</PopoverClose>
+							))
+						) : (
+							<div className="pt-3 text-black">No projects found</div>
+						)}
 					</PopoverContent>
 				</Popover>
 			</ul>
