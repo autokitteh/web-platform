@@ -1,3 +1,10 @@
+# [2.63.0](https://github.com/autokitteh/web-platform/compare/v2.62.0...v2.63.0) (2024-11-24)
+
+
+### Features
+
+* **UI-958:** remove function arguments from activity card title ([#661](https://github.com/autokitteh/web-platform/issues/661)) ([7ebc663](https://github.com/autokitteh/web-platform/commit/7ebc66381bd3142969ea9c017216d32c9733ef0b))
+
 # [2.62.0](https://github.com/autokitteh/web-platform/compare/v2.61.0...v2.62.0) (2024-11-24)
 
 
