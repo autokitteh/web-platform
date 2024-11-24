@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 import { NewProjectModal } from "../newProjectModal";
-import { isAuthEnabled } from "@constants";
+import { isAuthEnabled, version } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 
 import { useLoggerStore, useUserStore } from "@store";
@@ -47,7 +47,7 @@ export const Sidebar = () => {
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
 			<div className="relative z-40 flex h-full min-w-[65px] items-start">
-				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
+				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-4 pt-6">
 					<div>
 						<Link className="ml-1 flex items-center gap-2.5" to="/">
 							<IconLogo className="size-8" />
@@ -215,6 +215,7 @@ export const Sidebar = () => {
 								</Button>
 							</>
 						) : null}
+						<div className="flex w-full justify-center text-black">v{version}</div>
 					</div>
 				</div>
 
