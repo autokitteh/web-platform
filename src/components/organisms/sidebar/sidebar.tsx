@@ -174,7 +174,7 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 						{isAuthEnabled ? (
-							<div>
+							<>
 								<Button className="hover:bg-green-200" href="/settings" title={t("settings")}>
 									<SettingsIcon className="size-7" fill="black" />
 
@@ -213,7 +213,7 @@ export const Sidebar = () => {
 										) : null}
 									</AnimatePresence>
 								</Button>
-							</div>
+							</>
 						) : null}
 					</div>
 				</div>
