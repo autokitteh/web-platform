@@ -45,19 +45,21 @@ export const PopoverContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
 	const { context: floatingContext, ...context } = usePopoverContext();
 	const ref = useMergeRefs([context.refs.setFloating, propRef]);
 
-	if (!floatingContext.open) return null;
-
 	return (
 		<FloatingPortal>
 			<FloatingFocusManager context={floatingContext} modal={context.modal}>
-				<div
-					ref={ref}
-					style={{ ...context.floatingStyles, ...context.styles, ...style }}
-					{...context.getFloatingProps(props)}
-					className={props?.className}
-				>
-					{props.children}
-				</div>
+				{context.isMounted ? (
+					<div
+						ref={ref}
+						style={{ ...style, ...context.floatingStyles, ...context.styles }}
+						{...context.getFloatingProps(props)}
+						className={props?.className}
+					>
+						{props.children}
+					</div>
+				) : (
+					<div />
+				)}
 			</FloatingFocusManager>
 		</FloatingPortal>
 	);

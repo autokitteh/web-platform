@@ -48,8 +48,16 @@ export function usePopover({
 	const role = useRole(context);
 	const { isMounted, styles } = useTransitionStyles(context, {
 		duration: 700,
-		close: { opacity: 0, left: "-100px", transition: "opacity 0.6s, left 0.6s" },
-		open: { opacity: 1, left: 0, transition: "opacity 0.6s, left 0.6s" },
+		open: { opacity: 1, left: 0, transition: "opacity 0.6s left 0.6s" },
+		initial: {
+			opacity: 0,
+			left: "-212px",
+		},
+		close: {
+			opacity: 0,
+			transition: "opacity 0.6s left 0.6s",
+			left: "-212px",
+		},
 	});
 
 	const interactionHooks = {
