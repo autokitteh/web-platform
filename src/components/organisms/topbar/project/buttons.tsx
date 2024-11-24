@@ -7,7 +7,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import { useCacheStore, useConnectionCheckerStore, useModalStore, useProjectStore, useToastStore } from "@src/store";
+import {
+	useCacheStore,
+	useConnectionCheckerStore,
+	useManualRunStore,
+	useModalStore,
+	useProjectStore,
+	useToastStore,
+} from "@src/store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
@@ -24,6 +31,7 @@ export const ProjectTopbarButtons = () => {
 	const navigate = useNavigate();
 	const { closeModal, openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, projectValidationState } = useCacheStore();
+	const { fetchManualRunConfiguration } = useManualRunStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 	const { resetChecker } = useConnectionCheckerStore();
@@ -78,7 +86,8 @@ export const ProjectTopbarButtons = () => {
 
 				return;
 			}
-			fetchDeployments(projectId!, true);
+			await fetchDeployments(projectId!, true);
+			await fetchManualRunConfiguration(projectId!);
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",

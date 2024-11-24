@@ -3,7 +3,7 @@
     "cronExpressionsFormat": "The cron schedule expression must match the required format",
     "extensionIsRequired": "File extension is required",
     "fileNameIsRequired": "File name is required",
-    "functionNameIsRequired": "Function name is required",
+    "functionNameIsRequired": "Entrypoint is required",
     "manualRun":{
         "valueIsRequired": "Value is required",
         "keyIsRequired": "Key is required",

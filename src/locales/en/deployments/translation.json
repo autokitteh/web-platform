@@ -41,7 +41,7 @@
 			"placeholders": {
 				"selectFile": "Select file",
 				"file": "File",
-				"selectEntrypoint": "Select entrypoint function",
+				"selectEntrypoint": "Select entrypoint",
 				"entrypoint": "Entrypoint",
 				"key": "Key",
 				"value": "Value",

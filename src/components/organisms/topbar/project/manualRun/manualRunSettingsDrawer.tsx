@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -11,8 +11,9 @@ import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
 import { manualRunSchema } from "@validations";
 
-import { Button, ErrorMessage, IconSvg, Input, Spinner, Typography } from "@components/atoms";
+import { Button, ErrorMessage, IconSvg, Spinner, Typography } from "@components/atoms";
 import { Drawer, Select } from "@components/molecules";
+import { SelectCreatable } from "@components/molecules/select";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
 
 import { RunIcon } from "@assets/image/icons";
@@ -32,7 +33,7 @@ export const ManualRunSettingsDrawer = () => {
 		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 	}));
 
-	const { entrypointFunction, fileOptions, filePath, lastDeployment, params } = projectManualRun || {};
+	const { entrypointFunction, fileOptions, filePath, files, lastDeployment, params } = projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
@@ -44,6 +45,8 @@ export const ManualRunSettingsDrawer = () => {
 		mode: "onChange",
 	});
 
+	const [fileFunctions, setFileFunctions] = useState<{ label: string; value: string }[]>([]);
+
 	const {
 		control,
 		formState: { errors, isValid },
@@ -53,9 +56,16 @@ export const ManualRunSettingsDrawer = () => {
 	} = methods;
 
 	useEffect(() => {
-		if (filePath) {
-			setValue("filePath", filePath);
-		}
+		if (!filePath) return;
+		setValue("filePath", filePath);
+
+		if (!files && filePath.value) return;
+		const processedFileFunctions =
+			files[filePath.value]?.map((fileFunction) => ({
+				label: fileFunction,
+				value: fileFunction,
+			})) || [];
+		setFileFunctions(processedFileFunctions);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filePath]);
 
@@ -71,7 +81,7 @@ export const ManualRunSettingsDrawer = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params]);
 
-	const handleMunaualRun = () => {
+	const handleManualRun = () => {
 		setTimeout(() => {
 			fetchDeployments(projectId!, true);
 		}, 100);
@@ -85,7 +95,7 @@ export const ManualRunSettingsDrawer = () => {
 
 		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, params);
 		setSendingManualRun(false);
-		handleMunaualRun();
+		handleManualRun();
 		if (error) {
 			addToast({
 				message: t("executionFailed"),
@@ -106,6 +116,13 @@ export const ManualRunSettingsDrawer = () => {
 			type: "success",
 		});
 		closeDrawer(DrawerName.projectManualRunSettings);
+	};
+
+	const entrypointFunctionValue = useWatch({ control, name: "entrypointFunction" });
+	const onEntrypointCreate = (value: string) => {
+		const newFunction = { label: value, value };
+		setFileFunctions((prev) => [...prev, newFunction]);
+		setValue("entrypointFunction", newFunction);
 	};
 
 	return (
@@ -169,22 +186,24 @@ export const ManualRunSettingsDrawer = () => {
 							control={control}
 							name="entrypointFunction"
 							render={({ field }) => (
-								<Input
+								<SelectCreatable
 									{...field}
 									aria-label={t("placeholders.selectEntrypoint")}
+									dataTestid="select-function"
 									isError={!!errors.entrypointFunction}
-									isRequired
 									label={t("placeholders.entrypoint")}
-									onChange={(event) => {
-										field.onChange(event);
-										updateManualRunConfiguration(projectId!, {
-											entrypointFunction: event.target.value,
-										});
+									noOptionsLabel={t("noFunctionsAvailable")}
+									onChange={(selected) => {
+										field.onChange(selected);
+										updateManualRunConfiguration(projectId!, { entrypointFunction: selected! });
 									}}
+									onCreateOption={onEntrypointCreate}
+									options={fileFunctions}
+									placeholder={t("placeholders.selectEntrypoint")}
+									value={entrypointFunctionValue}
 								/>
 							)}
 						/>
-
 						<ErrorMessage className="relative">{errors.entrypointFunction?.message as string}</ErrorMessage>
 					</div>
 				</form>

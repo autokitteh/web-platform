@@ -3,10 +3,10 @@ import { ServiceResponse } from "@src/types";
 import { Deployment } from "@src/types/models";
 
 export interface ManualProjectData {
-	files: string[];
+	files: Record<string, string[]>;
 	fileOptions: { label: string; value: string }[];
 	filePath: { label: string; value: string };
-	entrypointFunction: string;
+	entrypointFunction: { label: string; value: string };
 	params: { key: string; value: string }[];
 	isJson: boolean;
 	lastDeployment?: Deployment;
@@ -20,4 +20,5 @@ export interface ManualRunStore {
 	};
 	updateManualRunConfiguration: (projectId: string, updates: Partial<ManualProjectData>) => void;
 	saveAndExecuteManualRun: (projectId: string, params?: { key: string; value: string }[]) => ServiceResponse<string>;
+	fetchManualRunConfiguration: (projectId: string) => void;
 }
