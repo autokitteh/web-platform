@@ -1,5 +1,6 @@
 import React, { memo, useCallback } from "react";
 
+import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
 import { ActivityState } from "@src/enums";
@@ -11,6 +12,8 @@ import { ActivityStatus } from "@components/organisms/deployments/sessions/activ
 import { PlusAccordionIcon } from "@assets/image/icons";
 
 const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowProps) => {
+	const { t } = useTranslation("deployments", { keyPrefix: "activities.row" });
+
 	if (!activity) {
 		return null;
 	}
@@ -52,7 +55,9 @@ const ActivityRow = memo(({ data: activity, setActivity, style }: ActivityRowPro
 				<div className="mt-0.5">{displayTime}</div>
 
 				<div>
-					<div className="text-left font-bold">{functionName}</div>
+					<div className="text-left font-bold">
+						{t("functionName")}: {functionName}
+					</div>
 
 					<div className="flex items-center gap-1">
 						<span>Status:</span>

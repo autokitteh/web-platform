@@ -28,7 +28,9 @@ export const SingleActivityInfo = ({
 
 				<ArrowLeft className="ml-2 size-3 hover:bg-black" />
 
-				<div className="ml-2 font-semibold">{activity.functionName}</div>
+				<div className="ml-2 font-semibold">
+					{t("functionName")}: {activity.functionName}
+				</div>
 			</Button>
 
 			<div>

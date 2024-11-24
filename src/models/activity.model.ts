@@ -24,10 +24,6 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			if (currentActivity) {
 				activities.push(currentActivity);
 			}
-			const paramNames = callSpec?.function?.function?.desc?.input.map((param) =>
-				param.optional ? `${param.name}?` : param.name
-			);
-
 			const kwargs = convertPythonStringToJSON(callSpec?.kwargs?.params?.string?.v || "{}");
 
 			const args = callSpec.args
@@ -35,7 +31,7 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 				.filter((arg): arg is string => arg !== null);
 
 			currentActivity = {
-				functionName: `${callSpec?.function?.function?.name}(${paramNames?.join(", ")})`,
+				functionName: callSpec?.function?.function?.name || "",
 				args,
 				kwargs,
 				status: "created" as keyof ActivityState,
