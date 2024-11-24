@@ -8,6 +8,7 @@ import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore } from "@src/store";
+import { stripGoogleConnectionName } from "@src/utilities";
 import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input } from "@components/atoms";
@@ -53,9 +54,11 @@ export const TriggerSpecificFields = ({
 			return;
 		}
 
-		const connectionIntegration = connections
-			?.find((connection) => connection.connectionId === connectionId)
-			?.integrationName?.toLowerCase();
+		const connectionIntegration = stripGoogleConnectionName(
+			connections
+				?.find((connection) => connection.connectionId === connectionId)
+				?.integrationName?.toLowerCase() ?? ""
+		);
 
 		if (
 			!connectionIntegration ||

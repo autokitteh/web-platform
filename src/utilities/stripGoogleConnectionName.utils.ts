@@ -11,5 +11,5 @@ export const stripGoogleConnectionName = (connectionName: string) => {
 		return connectionName;
 	}
 
-	return connectionName.substring(defaultGoogleConnectionName.length);
+	return connectionName.substring(defaultGoogleConnectionName.length).trim();
 };
