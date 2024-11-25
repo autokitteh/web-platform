@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { AuthService } from "@services";
+import { version } from "@src/constants";
 import { useToastStore } from "@src/store";
 import { getApiBaseUrl } from "@src/utilities";
 
@@ -107,6 +108,8 @@ export const ClientConfiguration = () => {
 					src="/assets/image/pages/settings/vscodeConfigurationExample.jpg"
 				/>
 			</Accordion>
+
+			<div className="mt-3 flex size-full items-end justify-start text-sm text-white">Version: v{version}</div>
 		</>
 	);
 };
