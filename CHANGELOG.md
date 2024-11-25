@@ -1,3 +1,10 @@
+## [2.67.2](https://github.com/autokitteh/web-platform/compare/v2.67.1...v2.67.2) (2024-11-25)
+
+
+### Bug Fixes
+
+* **UI-968:** stop connections checker for all connections in process ([#674](https://github.com/autokitteh/web-platform/issues/674)) ([6326b9f](https://github.com/autokitteh/web-platform/commit/6326b9fbc6dfd94e9eded3878f5024e03d3ceff1))
+
 ## [2.67.1](https://github.com/autokitteh/web-platform/compare/v2.67.0...v2.67.1) (2024-11-25)
 
 
