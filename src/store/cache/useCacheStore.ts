@@ -1,6 +1,9 @@
 import i18n from "i18next";
 import { StateCreator, create } from "zustand";
 
+import { maxResultsLimitToDisplay, namespaces } from "@constants";
+import { DeploymentStateVariant } from "@enums";
+import { CacheStore, ProjectValidationLevel } from "@interfaces/store";
 import {
 	ConnectionService,
 	DeploymentsService,
@@ -12,9 +15,6 @@ import {
 	TriggersService,
 	VariablesService,
 } from "@services";
-import { namespaces } from "@src/constants";
-import { DeploymentStateVariant } from "@src/enums";
-import { CacheStore, ProjectValidationLevel } from "@src/interfaces/store";
 
 import { useFileStore, useToastStore } from "@store";
 
@@ -279,7 +279,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: incomingEvents, error } = await EventsService.list();
+			const { data: incomingEvents, error } = await EventsService.list(maxResultsLimitToDisplay);
 
 			if (error) {
 				const errorMsg = i18n.t("errorFetchingEvents", { ns: "errors" });
