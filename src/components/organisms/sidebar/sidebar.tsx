@@ -47,7 +47,7 @@ export const Sidebar = () => {
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
 			<div className="relative z-40 flex h-full min-w-[65px] items-start">
-				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-4 pt-6">
+				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
 						<Link className="ml-1 flex items-center gap-2.5" to="/">
 							<IconLogo className="size-8" />
@@ -66,9 +66,10 @@ export const Sidebar = () => {
 								) : null}
 							</AnimatePresence>
 						</Link>
+
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
-							className="mt-6 w-full gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
+							className="mt-10 w-full gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
 							onClick={() => setIsOpen(!isOpen)}
 							title={isOpen ? t("closeSidebar") : t("openSidebar")}
 						>
