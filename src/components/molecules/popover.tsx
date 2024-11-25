@@ -46,7 +46,7 @@ export const PopoverContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
 
 	return (
 		<FloatingPortal>
-			<FloatingFocusManager context={floatingContext}>
+			<FloatingFocusManager context={floatingContext} initialFocus={0}>
 				{context.isMounted ? (
 					<div
 						ref={ref}
