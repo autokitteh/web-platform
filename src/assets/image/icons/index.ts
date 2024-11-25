@@ -37,8 +37,6 @@ export { default as GearIcon } from "@assets/image/icons/Gear.svg?react";
 export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.svg?react";
 // Taken from https://www.svgrepo.com/svg/505403/info-circle
 export { default as InfoIcon } from "@assets/image/icons/Info.svg?react";
-// Taken from https://fontawesome.com/icons/link?f=classic&s=solid
-export { default as LinkIcon } from "@assets/image/icons/Link.svg?react";
 // Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/list-details.svg
 export { default as ListDetailsIcon } from "@assets/image/icons/ListDetails.svg?react";
 export { default as UnlockedLockIcon } from "@assets/image/icons/Lock.svg?react";
