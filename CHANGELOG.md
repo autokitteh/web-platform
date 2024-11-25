@@ -1,3 +1,10 @@
+# [2.64.0](https://github.com/autokitteh/web-platform/compare/v2.63.0...v2.64.0) (2024-11-25)
+
+
+### Features
+
+* **UI-941:** change id columns to copy buttons ([#671](https://github.com/autokitteh/web-platform/issues/671)) ([a574069](https://github.com/autokitteh/web-platform/commit/a57406940a34698550537dd8af61d27d0ce0a101))
+
 # [2.63.0](https://github.com/autokitteh/web-platform/compare/v2.62.0...v2.63.0) (2024-11-24)
 
 
