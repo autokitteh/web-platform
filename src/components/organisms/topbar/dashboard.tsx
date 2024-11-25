@@ -1,43 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
-import { SidebarHrefMenu } from "@enums/components";
-import { defaultProjectFile } from "@src/constants";
+import { ModalName } from "@src/enums/components";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useModalStore } from "@store";
 
-import { Button, IconSvg, Spinner, Typography } from "@components/atoms";
+import { Button, IconSvg, Typography } from "@components/atoms";
 
 import { PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
-	const { createProject } = useProjectStore();
-	const [loadingNewProject, setLoadingNewProject] = useState(false);
-	const navigate = useNavigate();
-	const addToast = useToastStore((state) => state.addToast);
-
-	const handleCreateProject = async () => {
-		setLoadingNewProject(true);
-		const { data, error } = await createProject(true);
-		setLoadingNewProject(false);
-		if (error) {
-			addToast({
-				message: (error as Error).message,
-				type: "error",
-			});
-
-			return;
-		}
-
-		const projectId = data?.projectId;
-
-		navigate(`/${SidebarHrefMenu.projects}/${projectId}`, {
-			state: { fileToOpen: defaultProjectFile },
-		});
-	};
+	const { openModal } = useModalStore();
 
 	return (
 		<div className="z-10 flex flex-wrap">
@@ -48,11 +23,10 @@ export const DashboardTopbar = () => {
 
 				<Button
 					className="gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 font-averta text-base font-semibold"
-					disabled={loadingNewProject}
-					onClick={handleCreateProject}
+					onClick={() => openModal(ModalName.newProject)}
 					variant="filled"
 				>
-					<IconSvg className="fill-white" size="lg" src={!loadingNewProject ? PlusAccordionIcon : Spinner} />
+					<IconSvg className="fill-white" size="lg" src={PlusAccordionIcon} />
 
 					{t("buttons.newProject")}
 				</Button>

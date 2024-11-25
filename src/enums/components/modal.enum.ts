@@ -11,5 +11,6 @@ export enum ModalName {
 	deleteProject = "deleteProject",
 	welcomePage = "welcomePage",
 	templateCreateProject = "templateCreateProject",
+	newProject = "newProject",
 	warningDeploymentActive = "warningDeploymentActive",
 }

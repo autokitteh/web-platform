@@ -70,6 +70,7 @@
 		"description": "Description: {{description}}",
 		"moreInformaton": "About This Template",
 		"readme": "README",
+		"errorCreatingProject": "Failed to create project",
 		"nameRequired": "Name is required",
 		"nameTaken": "Name is already taken",
 		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
@@ -79,5 +80,19 @@
 		"content": "Changes might affect the currently running deployments",
 		"cancelButton": "Cancel",
 		"agreeButton": "Ok"
+	},
+	"newProject": {
+		"title": "Create new project",
+		"cancelButton": "Cancel",
+		"createButton": "Create",
+		"projectName": "Project Name",
+		"inputPlaceholder": "Enter project name",
+		"description": "Description: {{description}}",
+		"moreInformaton": "About This Template",
+		"readme": "README",
+		"nameRequired": "Name is required",
+		"nameTaken": "Name is already taken",
+		"errorCreatingProject": "Failed to create project",
+		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
 	}
 }

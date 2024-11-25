@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
+import { NewProjectModal } from "../newProjectModal";
 import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 
@@ -225,6 +226,7 @@ export const Sidebar = () => {
 					) : null}
 				</AnimatePresence>
 			</div>
+			<NewProjectModal />
 		</Suspense>
 	);
 };
