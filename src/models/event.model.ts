@@ -45,6 +45,7 @@ export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent):
 		destinationName,
 		sourceType,
 		createdAt: convertTimestampToDate(protoEvent.createdAt),
+		data: parseNestedJson(protoEvent.data as Value),
 	};
 };
 

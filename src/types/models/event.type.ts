@@ -4,6 +4,7 @@ export type EventDestinationTypes = "connection" | "trigger" | "unknown";
 
 export type EnrichedEvent = {
 	createdAt: Date;
+	data?: Value;
 	destinationId?: string;
 	destinationName?: string;
 	destinationType?: EventDestinationTypes;

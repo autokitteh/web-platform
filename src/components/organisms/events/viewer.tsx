@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { EventsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { useToastStore } from "@src/store";
-import { BaseEvent } from "@src/types/models";
+import { EnrichedEvent } from "@src/types/models";
 
 import { Frame, IconButton, Loader, Typography } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
@@ -18,7 +18,7 @@ import { Close } from "@assets/image/icons";
 
 export const EventViewer = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [eventInfo, setEventInfo] = useState<BaseEvent | null>(null);
+	const [eventInfo, setEventInfo] = useState<EnrichedEvent | null>(null);
 
 	const { eventId } = useParams();
 	const navigate = useNavigate();
@@ -31,7 +31,7 @@ export const EventViewer = () => {
 	const fetchEventInfo = useCallback(async () => {
 		if (!eventId) return;
 		setIsLoading(true);
-		const { data: eventInfoRes, error } = await EventsService.get(eventId);
+		const { data: eventInfoRes, error } = await EventsService.getEnriched(eventId);
 		setIsLoading(false);
 
 		if (error) {
@@ -69,7 +69,11 @@ export const EventViewer = () => {
 					<div className="flex flex-col gap-0.5 leading-6">
 						<div className="flex items-center gap-4">
 							<div className="w-32 text-gray-1550">{t("eventType")}</div>
-							{eventInfo.eventType}
+							{eventInfo.destinationType}
+						</div>
+						<div className="flex items-center gap-4">
+							<div className="w-32 text-gray-1550">{t("destinationName")}</div>
+							{eventInfo.destinationName}
 						</div>
 						<div className="flex items-center gap-4">
 							<div className="w-32 text-gray-1550" title="Start Time">
