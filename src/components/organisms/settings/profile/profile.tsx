@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ModalName } from "@src/enums/components";
-import { useModalStore, useToastStore, useUserStore } from "@src/store";
+import { version } from "@constants";
+import { ModalName } from "@enums/components";
+
+import { useModalStore, useToastStore, useUserStore } from "@store";
 
 import { Button, Typography } from "@components/atoms";
 import { DeleteAccountModal } from "@components/organisms/settings/profile";
@@ -43,7 +45,7 @@ export const Profile = () => {
 	};
 
 	return (
-		<div className="font-averta">
+		<div className="flex h-full flex-col font-averta">
 			<Typography className="mb-9 font-bold" element="h1" size="2xl">
 				{t("title")}
 			</Typography>
@@ -69,6 +71,8 @@ export const Profile = () => {
 					{t("deleteAccount")}
 				</Button>
 			</div>
+			<div className="h-full" />
+			<div className="mb-1 flex items-end text-xs text-white">Version: v{version}</div>
 			<DeleteAccountModal onDelete={onDeleteAccount} />
 		</div>
 	);
