@@ -1,18 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { featureFlags } from "@src/constants";
+import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
+import { useCacheStore } from "@src/store";
+import { stripGoogleConnectionName } from "@src/utilities";
 import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input } from "@components/atoms";
 import { Select } from "@components/molecules";
 import { SelectCreatable } from "@components/molecules/select";
 
-export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: SelectOption[] }) => {
+export const TriggerSpecificFields = ({
+	connectionId,
+	filesNameList,
+	selectedEventType,
+}: {
+	connectionId: string;
+	filesNameList: SelectOption[];
+	selectedEventType?: SelectOption;
+}) => {
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.form" });
 	const {
 		control,
@@ -25,12 +36,49 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 	const watchedEventType = useWatch({ control, name: "eventType" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
+	const { connections } = useCacheStore();
+	const [options, setOptions] = useState<SelectOption[]>([]);
+	const [triggerRerender, setTriggerRerender] = useState(0);
 
-	const [options, setOptions] = useState<SelectOption[]>([
-		{ value: "option1", label: "Option 1" },
-		{ value: "option2", label: "Option 2" },
-		{ value: "option3", label: "Option 3", disabled: true },
-	]);
+	useEffect(() => {
+		if (!featureFlags.displayComboxInTriggersForm) {
+			return;
+		}
+
+		setValue("eventTypeSelect", null);
+		setTriggerRerender((prev) => prev + 1);
+
+		if (!connectionId || connectionId === TriggerTypes.webhook || connectionId === TriggerTypes.schedule) {
+			setOptions([]);
+
+			return;
+		}
+
+		const connectionIntegration = stripGoogleConnectionName(
+			connections
+				?.find((connection) => connection.connectionId === connectionId)
+				?.integrationName?.toLowerCase() ?? ""
+		);
+
+		if (
+			!connectionIntegration ||
+			!eventTypesPerIntegration[connectionIntegration as keyof typeof eventTypesPerIntegration]
+		) {
+			setOptions([]);
+
+			return;
+		}
+
+		const eventTypes = eventTypesPerIntegration[connectionIntegration as keyof typeof eventTypesPerIntegration].map(
+			(eventType) => ({
+				value: eventType,
+				label: eventType,
+			})
+		);
+
+		setOptions(eventTypes);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionId]);
 
 	const handleCreateOption = (inputValue: string) => {
 		const newOption: SelectOption = {
@@ -38,7 +86,7 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 			label: inputValue,
 		};
 		setOptions((prevOptions) => [...prevOptions, newOption]);
-		setValue("eventTypeSelect", newOption.value);
+		setValue("eventTypeSelect", newOption);
 	};
 
 	return (
@@ -85,13 +133,17 @@ export const TriggerSpecificFields = ({ filesNameList }: { filesNameList: Select
 									<SelectCreatable
 										{...field}
 										aria-label={t("placeholders.eventType")}
+										createLabel={t("createFunctionNameLabel")}
 										dataTestid="select-trigger-event-type"
+										defaultValue={selectedEventType}
 										isError={!!errors.eventTypeSelect}
+										key={triggerRerender}
 										label={t("placeholders.eventType")}
+										noOptionsLabel={t("placeholders.eventTypesSelect")}
 										onCreateOption={handleCreateOption}
 										options={options}
 										placeholder={t("placeholders.eventType")}
-										value={options.find(({ value }) => value === watchedEventTypeSelect)}
+										value={watchedEventTypeSelect}
 									/>
 								)}
 							/>

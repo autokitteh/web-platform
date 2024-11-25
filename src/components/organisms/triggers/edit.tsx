@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 import { z } from "zod";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
-import { extraTriggerTypes } from "@src/constants";
+import { extraTriggerTypes, featureFlags } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { ModalName, TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
@@ -63,12 +63,13 @@ export const EditTrigger = () => {
 			entryFunction: "",
 			cron: "",
 			eventType: "",
+			eventTypeSelect: { label: "", value: "" },
 			filter: "",
 		},
 		resolver: zodResolver(triggerSchema),
 	});
 
-	const { handleSubmit, reset } = methods;
+	const { control, handleSubmit, reset } = methods;
 
 	useEffect(() => {
 		const loadFiles = async () => {
@@ -118,6 +119,7 @@ export const EditTrigger = () => {
 			entryFunction: trigger?.entryFunction,
 			cron: trigger?.schedule,
 			eventType: trigger?.eventType,
+			eventTypeSelect: { label: trigger?.eventType, value: trigger?.eventType },
 			filter: trigger?.filter,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,10 +128,11 @@ export const EditTrigger = () => {
 	const onSubmit = async (data: TriggerFormData) => {
 		closeModal(ModalName.warningDeploymentActive);
 		setIsSaving(true);
-		const { connection, cron, entryFunction, eventType, filePath, filter, name } = data;
+		const { connection, cron, entryFunction, eventType, eventTypeSelect, filePath, filter, name } = data;
 		try {
 			const sourceType = connection.value in TriggerTypes ? connection.value : TriggerTypes.connection;
 			const connectionId = connection.value in TriggerTypes ? undefined : connection.value;
+			const eventTypeValue = featureFlags.displayComboxInTriggersForm ? eventTypeSelect.value : eventType;
 
 			const { error } = await TriggersService.update(projectId!, {
 				sourceType,
@@ -138,7 +141,7 @@ export const EditTrigger = () => {
 				path: filePath.value,
 				entryFunction,
 				schedule: cron,
-				eventType,
+				eventType: eventTypeValue,
 				filter,
 				triggerId: triggerId!,
 			});
@@ -177,6 +180,8 @@ export const EditTrigger = () => {
 		onSubmit(data);
 	};
 
+	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
+
 	if (isLoadingConnections || isLoadingTrigger) {
 		return <Loader isCenter size="xl" />;
 	}
@@ -201,7 +206,11 @@ export const EditTrigger = () => {
 
 					{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 
-					<TriggerSpecificFields filesNameList={filesNameList} />
+					<TriggerSpecificFields
+						connectionId={trigger?.connectionId || ""}
+						filesNameList={filesNameList}
+						selectedEventType={watchedEventTypeSelect}
+					/>
 
 					{trigger?.sourceType === TriggerTypes.webhook ? (
 						<WebhookFields highlight={webhookUrlHighlight} webhookSlug={trigger.webhookSlug || ""} />
