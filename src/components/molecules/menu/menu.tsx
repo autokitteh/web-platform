@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from "../popover";
+import { PopoverList, PopoverListContent, PopoverListTrigger } from "../popoverList";
 import { ModalName, SidebarHrefMenu } from "@enums/components";
 import { MenuProps } from "@interfaces/components";
 import { LoggerService } from "@services/logger.service";
@@ -25,7 +25,6 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 	const { openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { projectId } = useParams();
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -88,8 +87,8 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						</AnimatePresence>
 					</Button>
 				</li>
-				<Popover animation="slideFromLeft">
-					<PopoverTrigger>
+				<PopoverList animation="slideFromLeft">
+					<PopoverListTrigger>
 						<li className="group static">
 							<div className="cursor-pointer before:absolute before:left-0 before:h-10 before:w-full" />
 							<div className="relative z-10 w-full gap-1.5 rounded-full p-0.5 pl-1 group-hover:bg-green-200">
@@ -117,33 +116,18 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 								</AnimatePresence>
 							</div>
 						</li>
-					</PopoverTrigger>
-					<PopoverContent
-						className="z-30 flex h-screen flex-col rounded-lg bg-white px-4 pt-[212px]"
-						initialFocus={-1}
-					>
-						{projectsList?.length ? (
-							sortedProjectsList.map(({ id, name }) => (
-								<PopoverClose key={id} onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}>
-									<div
-										className={cn(
-											"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
-											"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",
-											"text-fira-code whitespace-nowrap px-4 text-gray-1100 hover:bg-green-200 max-w-245 overflow-hidden",
-											{
-												"bg-gray-1100 text-white hover:bg-gray-1100": id === projectId,
-											}
-										)}
-									>
-										{name}
-									</div>
-								</PopoverClose>
-							))
-						) : (
-							<div className="pt-3 text-black">No projects found</div>
+					</PopoverListTrigger>
+					<PopoverListContent
+						className="z-30 flex h-screen flex-col rounded-lg bg-white px-4 pt-[212px] text-black"
+						itemClassName={cn(
+							"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
+							"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",
+							"text-fira-code whitespace-nowrap px-4 text-gray-1100 hover:bg-green-200 max-w-245 overflow-hidden"
 						)}
-					</PopoverContent>
-				</Popover>
+						items={sortedProjectsList.map(({ id, name }) => ({ id, label: name, value: id }))}
+						onItemSelect={({ id: projectId }) => navigate(`/${SidebarHrefMenu.projects}/${projectId}/code`)}
+					/>
+				</PopoverList>
 			</ul>
 		</nav>
 	);

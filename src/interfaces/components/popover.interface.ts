@@ -14,3 +14,14 @@ export interface PopoverTriggerProps {
 	children: React.ReactNode;
 	asChild?: boolean;
 }
+
+export interface PopoverListItem {
+	id: string;
+	label: string;
+	value: any;
+}
+
+export interface PopoverListOptions extends PopoverOptions {
+	items: PopoverListItem[];
+	onItemSelect?: (item: PopoverListItem) => void;
+}

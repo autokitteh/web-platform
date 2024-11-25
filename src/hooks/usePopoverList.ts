@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import {
 	autoUpdate,
@@ -7,23 +7,19 @@ import {
 	safePolygon,
 	shift,
 	useClick,
-	useDismiss,
 	useFloating,
 	useHover,
 	useInteractions,
-	useRole,
+	useListNavigation,
 	useTransitionStyles,
 } from "@floating-ui/react";
 
 import { PopoverOptions } from "@src/interfaces/components";
 
-export function usePopover({
-	animation,
-	initialOpen = false,
-	interactionType = "hover",
-	placement = "bottom",
-}: PopoverOptions = {}) {
+export const usePopoverList = ({ animation, initialOpen = false, placement = "bottom" }: PopoverOptions = {}) => {
 	const [open, setOpen] = useState(initialOpen);
+	const [activeIndex, setActiveIndex] = useState<number | null>(null);
+	const listRef = useRef<(HTMLElement | null)[]>([]);
 
 	const data = useFloating({
 		placement,
@@ -42,8 +38,18 @@ export function usePopover({
 
 	const context = data.context;
 
-	const dismiss = useDismiss(context);
-	const role = useRole(context);
+	const listNavigation = useListNavigation(context, {
+		listRef,
+		activeIndex,
+		onNavigate: setActiveIndex,
+	});
+
+	const hover = useHover(context, {
+		handleClose: safePolygon({
+			buffer: 100,
+		}),
+	});
+	const click = useClick(context);
 
 	let transitionConfiguration = {};
 
@@ -69,17 +75,7 @@ export function usePopover({
 
 	const { isMounted, styles } = useTransitionStyles(context, transitionConfiguration);
 
-	const interactionHooks = {
-		click: useClick(context, {
-			enabled: interactionType === "click",
-		}),
-		hover: useHover(context, {
-			enabled: interactionType === "hover",
-			handleClose: safePolygon({ buffer: 100 }),
-		}),
-	};
-
-	const interactions = useInteractions([interactionHooks[interactionType], dismiss, role]);
+	const interactions = useInteractions([hover, click, listNavigation]);
 
 	return useMemo(
 		() => ({
@@ -89,7 +85,10 @@ export function usePopover({
 			...data,
 			isMounted,
 			styles,
+			activeIndex,
+			setActiveIndex,
+			listRef,
 		}),
-		[open, interactions, data, isMounted, styles]
+		[open, interactions, data, isMounted, styles, activeIndex, setActiveIndex, listRef]
 	);
-}
+};
