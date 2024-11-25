@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -61,7 +61,34 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [trigger]);
 
-	return trigger.sourceType === TriggerTypes.webhook ? (
+	const renderTriggerContent = (
+		icon: ComponentType<React.SVGProps<SVGSVGElement>>,
+		details: TriggerPopoverInformation[],
+		showIcon = false
+	) => (
+		<div className="text-white">
+			<div className="mb-2 flex w-full">
+				<div className="flex w-64 font-semibold">
+					<IconSvg className="mr-2" src={icon} />
+					{t("info")}
+				</div>
+				<div className="w-full" />
+			</div>
+			{details.map(({ icon: Icon, label, value }) =>
+				value ? (
+					<div className="flex items-center gap-x-1" key={label}>
+						<div className="font-semibold">{label}:</div>
+						{showIcon && Icon ? (
+							<Icon className="mx-1 size-4 shrink-0 rounded-full bg-white p-0.5" />
+						) : null}
+						{value}
+					</div>
+				) : null
+			)}
+		</div>
+	);
+
+	const webhookContent = trigger.sourceType === TriggerTypes.webhook && (
 		<div className="text-white">
 			<div className="mb-2 flex w-64 font-semibold">
 				<IconSvg className="mr-2" src={WebhookIcon} />
@@ -78,48 +105,18 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 				value ? (
 					<div className="flex items-center gap-x-1" key={label}>
 						<div className="font-semibold">{label}:</div>
-						<div>{value}</div>
-					</div>
-				) : null
-			)}
-		</div>
-	) : trigger.sourceType === TriggerTypes.schedule ? (
-		<div className="text-white">
-			<div className="mb-2 flex w-full">
-				<div className="flex w-64 font-semibold">
-					<IconSvg className="mr-2" src={ClockIcon} />
-					{t("info")}
-				</div>
-				<div className="w-full" />
-			</div>
-
-			{scheduleDetails.map(({ label, value }) =>
-				value ? (
-					<div className="flex items-center gap-x-1" key={label}>
-						<div className="font-semibold">{label}:</div>
-						<div>{value}</div>
-					</div>
-				) : null
-			)}
-		</div>
-	) : trigger.sourceType === TriggerTypes.connection ? (
-		<div className="text-white">
-			<div className="mb-2 flex w-full">
-				<div className="flex w-64 font-semibold">
-					<IconSvg className="mr-2 fill-white" src={LinkIcon} />
-					{t("info")}
-				</div>
-				<div className="w-full" />
-			</div>
-			{connectionDetails?.map(({ icon: Icon, label, value }) =>
-				value ? (
-					<div className="flex items-center gap-x-1" key={label}>
-						<div className="font-semibold">{label}:</div>
-						{Icon ? <Icon className="mx-1 size-4 shrink-0 rounded-full bg-white p-0.5" /> : null}
 						{value}
 					</div>
 				) : null
 			)}
 		</div>
-	) : null;
+	);
+
+	return trigger.sourceType === TriggerTypes.webhook
+		? webhookContent
+		: trigger.sourceType === TriggerTypes.schedule
+			? renderTriggerContent(ClockIcon, scheduleDetails)
+			: trigger.sourceType === TriggerTypes.connection
+				? renderTriggerContent(LinkIcon, connectionDetails || [], true)
+				: null;
 };
