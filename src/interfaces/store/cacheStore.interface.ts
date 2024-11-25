@@ -1,4 +1,4 @@
-import { BaseEvent, Connection, Deployment, Trigger, Variable } from "@src/types/models";
+import { BaseEvent, Connection, Deployment, Integration, Trigger, Variable } from "@src/types/models";
 
 export type ProjectValidationLevel = "error" | "warning";
 
@@ -16,6 +16,7 @@ export interface CacheStore {
 	hasActiveDeployments?: boolean;
 	triggers: Trigger[];
 	events?: BaseEvent[];
+	integrations?: Integration[];
 	variables: Variable[];
 	connections?: Connection[];
 	resourses?: Record<string, Uint8Array>;

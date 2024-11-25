@@ -1,10 +1,12 @@
-import React from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { IntegrationsService } from "@services/integrations.service";
 import { TriggerTypes } from "@src/enums";
 import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useCacheStore } from "@src/store";
+import { TriggerPopoverInformation } from "@src/types/components/tables";
 import { Trigger } from "@src/types/models";
 import { getApiBaseUrl } from "@src/utilities";
 
@@ -18,104 +20,103 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
 	const { connections } = useCacheStore();
-	const triggerConnection = connections?.find((connection) => connection.connectionId === trigger.connectionId);
-	const TriggerConnectionIntegrationKey = Object.keys(IntegrationsMap).find(
-		(integration) => integration === (triggerConnection?.integrationName?.toLowerCase() || "")
-	);
-
-	const TriggerConnectionItegrationIcon =
-		IntegrationsMap[(TriggerConnectionIntegrationKey || "") as keyof typeof IntegrationsMap]?.icon;
+	const [connectionDetails, setConnectionDetails] = useState<TriggerPopoverInformation[]>();
+	const [scheduleDetails, setScheduleDetails] = useState<TriggerPopoverInformation[]>([]);
 
 	const baseDetails = [
 		{ label: t("file"), value: trigger.path },
 		{ label: t("entrypoint"), value: trigger.entryFunction },
 	];
 
-	const connectionDetails = [
-		{
-			label: t("connection"),
-			value: triggerConnection?.name,
-			icon: TriggerConnectionItegrationIcon,
-		},
-		{
-			label: t("connectionId"),
-			value: triggerConnection?.connectionId,
-		},
-		...baseDetails,
-		{ label: t("eventType"), value: trigger.eventType },
-		{ label: t("filter"), value: trigger.filter },
-	];
+	const configureTriggerDisplay = async (trigger: Trigger) => {
+		const triggerConnection = connections?.find((connection) => connection.connectionId === trigger.connectionId);
+		const { data: integrations } = await IntegrationsService.list();
+		const TriggerConnectionIntegrationKey = integrations?.find(
+			(integration) => integration.integrationId === triggerConnection?.integrationId
+		)?.uniqueName;
 
-	const scheduleDetails = [{ label: t("cron"), value: trigger.schedule }, ...baseDetails];
+		const TriggerConnectionItegrationIcon =
+			IntegrationsMap[(TriggerConnectionIntegrationKey || "") as keyof typeof IntegrationsMap]?.icon;
 
-	switch (trigger.sourceType) {
-		case TriggerTypes.webhook:
-			return (
-				<div className="text-white">
-					<div className="mb-2 flex w-64 font-semibold">
-						<IconSvg className="mr-2" src={WebhookIcon} />
-						{t("info")}
-					</div>
-					<div className="flex items-center gap-x-1">
-						<div className="font-semibold">{t("webhookUrl")}:</div>
-						{webhookUrl}
-						<div className="w-8">
-							<CopyButton size="sm" text={webhookUrl} />
-						</div>
-					</div>
-					{baseDetails.map(({ label, value }) =>
-						value ? (
-							<div className="flex items-center gap-x-1" key={label}>
-								<div className="font-semibold">{label}:</div>
-								<div>{value}</div>
-							</div>
-						) : null
-					)}
-				</div>
-			);
-		case TriggerTypes.schedule:
-			return (
-				<div className="text-white">
-					<div className="mb-2 flex w-full">
-						<div className="flex w-64 font-semibold">
-							<IconSvg className="mr-2" src={ClockIcon} />
-							{t("info")}
-						</div>
-						<div className="w-full" />
-					</div>
+		setConnectionDetails([
+			{
+				label: t("connection"),
+				value: triggerConnection?.name,
+				icon: TriggerConnectionItegrationIcon,
+			},
+			{
+				label: t("connectionId"),
+				value: triggerConnection?.connectionId,
+			},
+			...baseDetails,
+			{ label: t("eventType"), value: trigger.eventType },
+			{ label: t("filter"), value: trigger.filter },
+		]);
 
-					{scheduleDetails.map(({ label, value }) =>
-						value ? (
-							<div className="flex items-center gap-x-1" key={label}>
-								<div className="font-semibold">{label}:</div>
-								<div>{value}</div>
-							</div>
-						) : null
-					)}
+		setScheduleDetails([{ label: t("cron"), value: trigger.schedule }, ...baseDetails]);
+	};
+
+	useEffect(() => {
+		configureTriggerDisplay(trigger);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [trigger]);
+
+	const renderTriggerContent = (
+		icon: ComponentType<React.SVGProps<SVGSVGElement>>,
+		details: TriggerPopoverInformation[],
+		showIcon = false
+	) => (
+		<div className="text-white">
+			<div className="mb-2 flex w-full">
+				<div className="flex w-64 font-semibold">
+					<IconSvg className="mr-2 fill-white" src={icon} />
+					{t("info")}
 				</div>
-			);
-		case TriggerTypes.connection:
-			return (
-				<div className="text-white">
-					<div className="mb-2 flex w-full">
-						<div className="flex w-64 font-semibold">
-							<IconSvg className="mr-2 fill-white" src={LinkIcon} />
-							{t("info")}
-						</div>
-						<div className="w-full" />
+				<div className="w-full" />
+			</div>
+			{details.map(({ icon: Icon, label, value }) =>
+				value ? (
+					<div className="flex items-center gap-x-1" key={label}>
+						<div className="font-semibold">{label}:</div>
+						{showIcon && Icon ? (
+							<Icon className="mx-1 size-4 shrink-0 rounded-full bg-white p-0.5" />
+						) : null}
+						{value}
 					</div>
-					{connectionDetails.map(({ icon: Icon, label, value }) =>
-						value ? (
-							<div className="flex items-center gap-x-1" key={label}>
-								<div className="font-semibold">{label}:</div>
-								{Icon ? <Icon className="size-4" /> : null}
-								{value}
-							</div>
-						) : null
-					)}
+				) : null
+			)}
+		</div>
+	);
+
+	const webhookContent = trigger.sourceType === TriggerTypes.webhook && (
+		<div className="text-white">
+			<div className="mb-2 flex w-64 font-semibold">
+				<IconSvg className="mr-2 fill-white" src={WebhookIcon} />
+				{t("info")}
+			</div>
+			<div className="flex items-center gap-x-1">
+				<div className="font-semibold">{t("webhookUrl")}:</div>
+				{webhookUrl}
+				<div className="w-8">
+					<CopyButton size="sm" text={webhookUrl} />
 				</div>
-			);
-		default:
-			return null;
-	}
+			</div>
+			{baseDetails.map(({ label, value }) =>
+				value ? (
+					<div className="flex items-center gap-x-1" key={label}>
+						<div className="font-semibold">{label}:</div>
+						{value}
+					</div>
+				) : null
+			)}
+		</div>
+	);
+
+	return trigger.sourceType === TriggerTypes.webhook
+		? webhookContent
+		: trigger.sourceType === TriggerTypes.schedule
+			? renderTriggerContent(ClockIcon, scheduleDetails)
+			: trigger.sourceType === TriggerTypes.connection
+				? renderTriggerContent(LinkIcon, connectionDetails || [], true)
+				: null;
 };
