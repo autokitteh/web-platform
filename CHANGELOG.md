@@ -1,3 +1,10 @@
+# [2.67.0](https://github.com/autokitteh/web-platform/compare/v2.66.0...v2.67.0) (2024-11-25)
+
+
+### Features
+
+* **UI-952:** create new project - open creation modal like in templates ([#660](https://github.com/autokitteh/web-platform/issues/660)) ([6610f82](https://github.com/autokitteh/web-platform/commit/6610f820d99f3d4cbba89bc29ea86ae5296d19fe))
+
 # [2.66.0](https://github.com/autokitteh/web-platform/compare/v2.65.0...v2.66.0) (2024-11-25)
 
 
