@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ModalName } from "@src/enums/components";
-import { useModalStore, useToastStore, useUserStore } from "@src/store";
+import { ModalName } from "@enums/components";
+
+import { useModalStore, useToastStore, useUserStore } from "@store";
 
 import { Button, Typography } from "@components/atoms";
 import { DeleteAccountModal } from "@components/organisms/settings/profile";

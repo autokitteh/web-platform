@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 import { NewProjectModal } from "../newProjectModal";
-import { isAuthEnabled, version } from "@constants";
+import { isAuthEnabled } from "@constants";
 import { SubmenuInfo } from "@interfaces/components";
 
 import { useLoggerStore, useUserStore } from "@store";
@@ -66,8 +66,6 @@ export const Sidebar = () => {
 								) : null}
 							</AnimatePresence>
 						</Link>
-						<div className="mt-3 flex w-full justify-center text-black">v{version}</div>
-
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
 							className="mt-6 w-full gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
