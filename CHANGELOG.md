@@ -1,3 +1,10 @@
+# [2.65.0](https://github.com/autokitteh/web-platform/compare/v2.64.0...v2.65.0) (2024-11-25)
+
+
+### Features
+
+* **UI-900:** autocomplete event types in triggers form ([#654](https://github.com/autokitteh/web-platform/issues/654)) ([b1adca6](https://github.com/autokitteh/web-platform/commit/b1adca6d150d9b79fa2474e28b18d13e12d38644))
+
 # [2.64.0](https://github.com/autokitteh/web-platform/compare/v2.63.0...v2.64.0) (2024-11-25)
 
 
