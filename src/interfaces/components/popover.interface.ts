@@ -5,7 +5,7 @@ export interface PopoverOptions {
 	placement?: Placement;
 	modal?: boolean;
 	open?: boolean;
-	interactionType?: "click" | "hover";
+	interactionType: "click" | "hover";
 	onOpenChange?: (open: boolean) => void;
 	animation?: "none" | "slideFromLeft" | "slideFromBottom";
 }

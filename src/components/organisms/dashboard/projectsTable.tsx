@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { ModalName } from "@src/enums/components";
+import { ModalName, SidebarHrefMenu } from "@src/enums/components";
 import { Project } from "@type/models";
 
 import { useSort } from "@hooks";

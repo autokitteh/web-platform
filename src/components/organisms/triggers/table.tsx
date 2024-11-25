@@ -15,7 +15,8 @@ import { useSort } from "@hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { EmptyTableAddButton, Popover, PopoverContent, PopoverTrigger, SortButton } from "@components/molecules";
+import { EmptyTableAddButton, Popover, PopoverTrigger, SortButton } from "@components/molecules";
+import { PopoverContent } from "@components/molecules/popover/popoverContent";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 import { InformationPopoverContent } from "@components/organisms/triggers/table/popoverContent";
 
@@ -167,7 +168,7 @@ export const TriggersTable = () => {
 									</div>
 								</Td>
 								<Td className="-ml-2 w-2/12 capitalize">
-									<Popover animation="slideFromBottom">
+									<Popover animation="slideFromBottom" interactionType="click">
 										<PopoverTrigger>
 											<IconButton>
 												<IconSvg className="size-4" src={InfoIcon} />

@@ -1,6 +1,6 @@
 export type { TableHeaderProps, SortableHeaderProps } from "@src/types/components/eventsTable.type";
 export type { FormMode, ManualFormParamsErrors } from "@src/types/components/form.type";
-export type { PopopverContextType, PopopverListContextType } from "@src/types/components/popover.type";
+export type { PopoverContextType, PopoverListContextType } from "@src/types/components/popover.type";
 export type { Integration } from "@src/types/components/projectTemplates.type";
 export type { ButtonType } from "@type/components/button.type";
 export type { IntegrationType } from "@type/components/connection.type";

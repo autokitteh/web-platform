@@ -44,35 +44,34 @@ export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTML
 	}
 );
 
-export const PopoverContent = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(function PopoverContent(
-	{ style, ...props },
-	propRef
-) {
-	const { context: floatingContext, ...context } = usePopoverContext();
-	const ref = useMergeRefs([context.refs.setFloating, propRef]);
+export const PopoverContentBase = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(
+	function PopoverContent({ style, ...props }, propRef) {
+		const { context: floatingContext, ...context } = usePopoverContext();
+		const ref = useMergeRefs([context.refs.setFloating, propRef]);
 
-	return (
-		<FloatingPortal>
-			<FloatingFocusManager context={floatingContext} initialFocus={0}>
-				{context.isMounted ? (
-					<div
-						ref={ref}
-						style={{ ...style, ...context.floatingStyles, ...context.styles }}
-						{...context.getFloatingProps(props)}
-						className={props?.className}
-						{...context.getReferenceProps()}
-					>
-						{props.children}
-					</div>
-				) : (
-					<div />
-				)}
-			</FloatingFocusManager>
-		</FloatingPortal>
-	);
-});
+		return (
+			<FloatingPortal>
+				<FloatingFocusManager context={floatingContext} initialFocus={0}>
+					{context.isMounted ? (
+						<div
+							ref={ref}
+							style={{ ...style, ...context.floatingStyles, ...context.styles }}
+							{...context.getFloatingProps(props)}
+							className={props?.className}
+							{...context.getReferenceProps()}
+						>
+							{props.children}
+						</div>
+					) : (
+						<div />
+					)}
+				</FloatingFocusManager>
+			</FloatingPortal>
+		);
+	}
+);
 
-export const PopoverClose = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
+export const PopoverCloseButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
 	function PopoverClose(props, ref) {
 		const { setOpen } = usePopoverContext();
 

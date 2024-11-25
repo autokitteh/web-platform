@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { PopoverList, PopoverListContent, PopoverListTrigger } from "../popoverList";
 import { ModalName, SidebarHrefMenu } from "@enums/components";
 import { MenuProps } from "@interfaces/components";
 import { LoggerService } from "@services/logger.service";
@@ -15,6 +14,7 @@ import { cn } from "@utilities";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg } from "@components/atoms";
+import { PopoverList, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
 
@@ -87,7 +87,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						</AnimatePresence>
 					</Button>
 				</li>
-				<PopoverList animation="slideFromLeft">
+				<PopoverList animation="slideFromLeft" interactionType="hover">
 					<PopoverListTrigger>
 						<li className="group static">
 							<div className="cursor-pointer before:absolute before:left-0 before:h-10 before:w-full" />
@@ -125,7 +125,9 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 							"text-fira-code whitespace-nowrap px-4 text-gray-1100 hover:bg-green-200 max-w-245 overflow-hidden"
 						)}
 						items={sortedProjectsList.map(({ id, name }) => ({ id, label: name, value: id }))}
-						onItemSelect={({ id: projectId }) => navigate(`/${SidebarHrefMenu.projects}/${projectId}/code`)}
+						onItemSelect={({ id: projectId }: { id: string }) =>
+							navigate(`/${SidebarHrefMenu.projects}/${projectId}/code`)
+						}
 					/>
 				</PopoverList>
 			</ul>
