@@ -8,7 +8,7 @@ import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useCacheStore } from "@src/store";
 import { TriggerPopoverInformation } from "@src/types/components/tables";
 import { Trigger } from "@src/types/models";
-import { getApiBaseUrl } from "@src/utilities";
+import { cn, getApiBaseUrl } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
@@ -75,9 +75,9 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 				<div className="flex w-64 font-semibold">
 					{icon ? (
 						<IconSvg
-							className={
-								isConnectionTrigger ? "mr-2 size-4 shrink-0 rounded-full bg-white p-0.5" : "mr-2"
-							}
+							className={cn("mr-2", {
+								"size-4 shrink-0 rounded-full bg-white p-0.5": isConnectionTrigger,
+							})}
 							src={icon}
 						/>
 					) : null}
