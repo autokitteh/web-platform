@@ -1,3 +1,10 @@
+## [2.67.1](https://github.com/autokitteh/web-platform/compare/v2.67.0...v2.67.1) (2024-11-25)
+
+
+### Bug Fixes
+
+* **UI-972:** fix bottom sidebar icons spacing ([#676](https://github.com/autokitteh/web-platform/issues/676)) ([fae19f7](https://github.com/autokitteh/web-platform/commit/fae19f764778a5c2ab0031a999abcf391ceb4666))
+
 # [2.67.0](https://github.com/autokitteh/web-platform/compare/v2.66.0...v2.67.0) (2024-11-25)
 
 
