@@ -1,3 +1,10 @@
+# [2.68.0](https://github.com/autokitteh/web-platform/compare/v2.67.3...v2.68.0) (2024-11-25)
+
+
+### Features
+
+* **UI-969:** display app version in settings ([#675](https://github.com/autokitteh/web-platform/issues/675)) ([b1df8c2](https://github.com/autokitteh/web-platform/commit/b1df8c23fb139d619105d8eb8f5a6c6cea8a6b2e))
+
 ## [2.67.3](https://github.com/autokitteh/web-platform/compare/v2.67.2...v2.67.3) (2024-11-25)
 
 
