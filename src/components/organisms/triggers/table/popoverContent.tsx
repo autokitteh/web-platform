@@ -76,7 +76,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 					{icon ? (
 						<IconSvg
 							className={
-								isConnectionTrigger ? "mx-1 size-4 shrink-0 rounded-full bg-white p-0.5" : "mr-2"
+								isConnectionTrigger ? "mr-2 size-4 shrink-0 rounded-full bg-white p-0.5" : "mr-2"
 							}
 							src={icon}
 						/>
