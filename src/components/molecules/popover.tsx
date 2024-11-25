@@ -37,16 +37,16 @@ export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTML
 	}
 );
 
-export const PopoverContent = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLProps<HTMLDivElement> & { initialFocus?: number | React.MutableRefObject<HTMLElement | null> }
->(function PopoverContent({ initialFocus, style, ...props }, propRef) {
+export const PopoverContent = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(function PopoverContent(
+	{ style, ...props },
+	propRef
+) {
 	const { context: floatingContext, ...context } = usePopoverContext();
 	const ref = useMergeRefs([context.refs.setFloating, propRef]);
 
 	return (
 		<FloatingPortal>
-			<FloatingFocusManager context={floatingContext} initialFocus={initialFocus}>
+			<FloatingFocusManager context={floatingContext}>
 				{context.isMounted ? (
 					<div
 						ref={ref}

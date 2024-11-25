@@ -173,10 +173,7 @@ export const TriggersTable = () => {
 												<IconSvg className="size-4" src={InfoIcon} />
 											</IconButton>
 										</PopoverTrigger>
-										<PopoverContent
-											className="z-40 rounded-lg border-0.5 border-white bg-black p-4"
-											initialFocus={0}
-										>
+										<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
 											<InformationPopoverContent trigger={trigger} />
 										</PopoverContent>
 									</Popover>
