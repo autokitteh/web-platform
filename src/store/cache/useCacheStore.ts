@@ -6,6 +6,7 @@ import {
 	DeploymentsService,
 	EventsService,
 	IndexedDBService,
+	IntegrationsService,
 	LoggerService,
 	ProjectsService,
 	TriggersService,
@@ -59,6 +60,7 @@ const initialState: Omit<
 	hasActiveDeployments: false,
 	variables: [],
 	triggers: [],
+	integrations: undefined,
 	connections: undefined,
 	resourses: undefined,
 	events: undefined,
@@ -77,6 +79,41 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			get().fetchVariables(projectId, force),
 			get().fetchConnections(projectId, force),
 		]);
+	},
+
+	fetchIntegrations: async (force?: boolean) => {
+		const { integrations } = get();
+		if (integrations && !force) {
+			return integrations;
+		}
+
+		try {
+			const { data, error } = await IntegrationsService.list();
+
+			if (error) {
+				useToastStore.getState().addToast({
+					message: i18n.t("errorFetchingIntegrations", { ns: "errors" }),
+					type: "error",
+				});
+
+				return;
+			}
+
+			set((state) => ({
+				...state,
+				integrations: data,
+			}));
+
+			return data;
+		} catch (error) {
+			LoggerService.error(
+				namespaces.stores.cache,
+				i18n.t("errorFetchingIntegrationsExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				})
+			);
+		}
 	},
 
 	fetchResources: async (projectId, force) => {
