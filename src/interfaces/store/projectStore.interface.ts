@@ -10,4 +10,6 @@ export interface ProjectStore {
 	projectsList: Project[];
 	renameProject: (projectId: string, projectName: string) => void;
 	isLoadingProjectsList: boolean;
+	initialEditorWidth: number;
+	setEditorWidth: (width: number) => void;
 }

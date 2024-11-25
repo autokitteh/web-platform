@@ -1,7 +1,8 @@
-import React, { useId, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 
 import { SplitFrameProps } from "@interfaces/components";
 import { defaultSplitFrameSize } from "@src/constants";
+import { useProjectStore } from "@src/store";
 import { cn } from "@utilities";
 
 import { useResize } from "@hooks";
@@ -11,8 +12,10 @@ import { EditorTabs } from "@components/organisms";
 
 export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const resizeHorizontalId = useId();
+	const { initialEditorWidth, setEditorWidth } = useProjectStore();
 	const [leftSideWidth] = useResize({
 		direction: "horizontal",
+		initial: initialEditorWidth,
 		...defaultSplitFrameSize,
 		id: resizeHorizontalId,
 	});
@@ -21,6 +24,11 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none pb-0`, {
 		"rounded-2xl": !children || isExpanded,
 	});
+
+	useEffect(() => {
+		setEditorWidth(leftSideWidth);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [leftSideWidth]);
 
 	const leftFrameClass = cn(`h-full flex-auto rounded-r-none border-r border-gray-1050 bg-gray-1100`);
 
