@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import {
 	autoUpdate,
@@ -11,18 +11,18 @@ import {
 	useFloating,
 	useHover,
 	useInteractions,
+	useListNavigation,
 	useRole,
 	useTransitionStyles,
 } from "@floating-ui/react";
 
 import { PopoverOptions } from "@src/interfaces/components";
 
-export function usePopover({
-	animation,
-	initialOpen = false,
-	interactionType = "hover",
-	placement = "bottom",
-}: PopoverOptions = {}) {
+const useBasePopover = (
+	{ animation, initialOpen = false, placement = "bottom" }: PopoverOptions = {
+		interactionType: "hover",
+	}
+) => {
 	const [open, setOpen] = useState(initialOpen);
 
 	const data = useFloating({
@@ -41,9 +41,6 @@ export function usePopover({
 	});
 
 	const context = data.context;
-
-	const dismiss = useDismiss(context);
-	const role = useRole(context);
 
 	let transitionConfiguration = {};
 
@@ -69,17 +66,29 @@ export function usePopover({
 
 	const { isMounted, styles } = useTransitionStyles(context, transitionConfiguration);
 
-	const interactionHooks = {
-		click: useClick(context, {
-			enabled: interactionType === "click",
-		}),
-		hover: useHover(context, {
-			enabled: interactionType === "hover",
-			handleClose: safePolygon({ buffer: 100 }),
-		}),
+	return {
+		open,
+		setOpen,
+		data,
+		context,
+		isMounted,
+		styles,
 	};
+};
 
-	const interactions = useInteractions([interactionHooks[interactionType], dismiss, role]);
+export const usePopover = (options: PopoverOptions = { interactionType: "hover" }) => {
+	const { context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
+
+	const dismiss = useDismiss(context);
+	const role = useRole(context);
+	const hover = useHover(context, {
+		handleClose: safePolygon({
+			buffer: 100,
+		}),
+	});
+	const click = useClick(context);
+
+	const interactions = useInteractions([dismiss, role, hover, click]);
 
 	return useMemo(
 		() => ({
@@ -90,6 +99,50 @@ export function usePopover({
 			isMounted,
 			styles,
 		}),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[open, interactions, data, isMounted, styles]
 	);
-}
+};
+
+export const usePopoverList = (options: PopoverOptions = { interactionType: "hover" }) => {
+	const { context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
+	const [activeIndex, setActiveIndex] = useState<number | null>(null);
+	const listRef = useRef<(HTMLElement | null)[]>([]);
+
+	const listNavigation = useListNavigation(context, {
+		listRef,
+		activeIndex,
+		onNavigate: setActiveIndex,
+	});
+
+	const dismiss = useDismiss(context);
+	const role = useRole(context);
+
+	const interactionHooks = {
+		click: useClick(context, {
+			enabled: options.interactionType === "click",
+		}),
+		hover: useHover(context, {
+			enabled: options.interactionType === "hover",
+			handleClose: safePolygon({ buffer: 100 }),
+		}),
+	};
+
+	const interactions = useInteractions([interactionHooks[options.interactionType], dismiss, role, listNavigation]);
+
+	return useMemo(
+		() => ({
+			open,
+			setOpen,
+			...interactions,
+			...data,
+			isMounted,
+			styles,
+			activeIndex,
+			setActiveIndex,
+			listRef,
+		}),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[open, interactions, data, isMounted, styles, activeIndex, setActiveIndex, listRef]
+	);
+};
