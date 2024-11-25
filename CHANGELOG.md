@@ -1,3 +1,10 @@
+## [2.67.3](https://github.com/autokitteh/web-platform/compare/v2.67.2...v2.67.3) (2024-11-25)
+
+
+### Bug Fixes
+
+* **UI-975:** bring back missing icon of a connection in the trigger popover ([#678](https://github.com/autokitteh/web-platform/issues/678)) ([85e6739](https://github.com/autokitteh/web-platform/commit/85e673980c805176d9a5aa958fdf6e11d549c63d))
+
 ## [2.67.2](https://github.com/autokitteh/web-platform/compare/v2.67.1...v2.67.2) (2024-11-25)
 
 
