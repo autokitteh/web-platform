@@ -13,7 +13,7 @@ import { useToastStore } from "@store";
 
 const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 	retries: 0,
-	recheckIntervalId: null,
+	recheckIntervalIds: [],
 	avoidNextRerenderCleanup: true,
 	fetchConnectionsCallback: () => {},
 
@@ -34,7 +34,7 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 	},
 
 	resetChecker: () => {
-		const { avoidNextRerenderCleanup, recheckIntervalId } = get();
+		const { avoidNextRerenderCleanup, recheckIntervalIds } = get();
 
 		if (avoidNextRerenderCleanup) {
 			set((state) => {
@@ -46,14 +46,16 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 			return;
 		}
 
-		if (!recheckIntervalId) {
+		if (!recheckIntervalIds.length) {
 			return;
 		}
-		clearInterval(recheckIntervalId);
+		for (const intervalId of recheckIntervalIds) {
+			clearInterval(intervalId);
+		}
 
 		set((state) => {
 			state.retries = 0;
-			state.recheckIntervalId = null;
+			state.recheckIntervalIds = [];
 
 			return state;
 		});
@@ -116,7 +118,8 @@ const store: StateCreator<ConnectionCheckerStore> = (set, get) => ({
 
 		const intervalId = setInterval(checkStatus, 10 * 1000);
 		set((state) => {
-			state.recheckIntervalId = intervalId;
+			const recheckIntervalIdsArr = [...state.recheckIntervalIds, intervalId];
+			state.recheckIntervalIds = recheckIntervalIdsArr;
 
 			return state;
 		});
