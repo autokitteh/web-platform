@@ -7,7 +7,7 @@ import { useToastStore } from "@src/store";
 import { SystemSizes } from "@src/types";
 import { cn, copyToClipboard } from "@src/utilities";
 
-import { IconButton } from "@components/atoms";
+import { Button } from "@components/atoms";
 
 import { CopyIcon } from "@assets/image/icons";
 
@@ -52,14 +52,15 @@ export const CopyButton = ({
 	});
 
 	return (
-		<IconButton
+		<Button
 			ariaLabel={t("copyButtonText", { text: title })}
 			className={copyButtonStyle}
 			onClick={() => copyTextToClipboard(text)}
+			onKeyPress={() => copyTextToClipboard(text)}
 			title={title}
 			type="button"
 		>
 			<CopyIcon className={copyButtonIconStyle} />
-		</IconButton>
+		</Button>
 	);
 };
