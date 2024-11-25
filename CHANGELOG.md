@@ -1,3 +1,10 @@
+# [2.66.0](https://github.com/autokitteh/web-platform/compare/v2.65.0...v2.66.0) (2024-11-25)
+
+
+### Features
+
+* **UI-961:** keep the editor size on store ([#667](https://github.com/autokitteh/web-platform/issues/667)) ([e54bf4a](https://github.com/autokitteh/web-platform/commit/e54bf4afb03a88ab11194e9132245c24885d1df5))
+
 # [2.65.0](https://github.com/autokitteh/web-platform/compare/v2.64.0...v2.65.0) (2024-11-25)
 
 
