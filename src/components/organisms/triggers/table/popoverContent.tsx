@@ -69,7 +69,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 		<div className="text-white">
 			<div className="mb-2 flex w-full">
 				<div className="flex w-64 font-semibold">
-					<IconSvg className="mr-2" src={icon} />
+					<IconSvg className="mr-2 fill-white" src={icon} />
 					{t("info")}
 				</div>
 				<div className="w-full" />
@@ -91,7 +91,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	const webhookContent = trigger.sourceType === TriggerTypes.webhook && (
 		<div className="text-white">
 			<div className="mb-2 flex w-64 font-semibold">
-				<IconSvg className="mr-2" src={WebhookIcon} />
+				<IconSvg className="mr-2 fill-white" src={WebhookIcon} />
 				{t("info")}
 			</div>
 			<div className="flex items-center gap-x-1">
