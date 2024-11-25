@@ -13,6 +13,7 @@ export interface PopoverOptions {
 export interface PopoverTriggerProps {
 	children: React.ReactNode;
 	asChild?: boolean;
+	onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 export interface PopoverListItem {
