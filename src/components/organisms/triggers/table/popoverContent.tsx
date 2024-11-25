@@ -6,6 +6,7 @@ import { IntegrationsService } from "@services/integrations.service";
 import { TriggerTypes } from "@src/enums";
 import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useCacheStore } from "@src/store";
+import { TriggerPopoverInformation } from "@src/types/components/tables";
 import { Trigger } from "@src/types/models";
 import { getApiBaseUrl } from "@src/utilities";
 
@@ -14,19 +15,13 @@ import { CopyButton } from "@components/molecules";
 
 import { ClockIcon, LinkIcon, WebhookIcon } from "@assets/image/icons";
 
-type TriggerInformation = {
-	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	label: string;
-	value?: string;
-};
-
 export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => {
 	const apiBaseUrl = getApiBaseUrl();
 	const webhookUrl = trigger?.webhookSlug ? `${apiBaseUrl}/webhooks/${trigger.webhookSlug}` : "";
 	const { t } = useTranslation("tabs", { keyPrefix: "triggers.infoPopover" });
 	const { connections } = useCacheStore();
-	const [connectionDetails, setConnectionDetails] = useState<TriggerInformation[]>();
-	const [scheduleDetails, setScheduleDetails] = useState<TriggerInformation[]>([]);
+	const [connectionDetails, setConnectionDetails] = useState<TriggerPopoverInformation[]>();
+	const [scheduleDetails, setScheduleDetails] = useState<TriggerPopoverInformation[]>([]);
 
 	const baseDetails = [
 		{ label: t("file"), value: trigger.path },
