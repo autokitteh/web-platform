@@ -108,12 +108,14 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 			);
 		};
 
+		const defaultCreateLabel = t("creatableSelectDefaultCreateLabel");
+
 		return (
 			<div className="relative" data-testid={dataTestid} ref={ref}>
 				<SelectComponent
 					{...rest}
 					components={{ Option: iconOption, SingleValue: iconSingleValue }}
-					formatCreateLabel={(createLabelItem) => `${createLabel} "${createLabelItem}"`}
+					formatCreateLabel={(createLabelItem) => `${createLabel || defaultCreateLabel} "${createLabelItem}"`}
 					id={id}
 					isDisabled={disabled}
 					isOptionDisabled={(option: SelectOption) => !!option.disabled}
