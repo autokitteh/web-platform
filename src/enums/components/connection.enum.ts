@@ -56,6 +56,7 @@ export type GoogleIntegrationType = Extract<
 >;
 
 export const defaultGoogleConnectionName = "google";
+export const defaultAtlassianConnectionName = "atlassian";
 
 export function isGoogleIntegration(integration: Integrations): integration is GoogleIntegrationType {
 	return [
