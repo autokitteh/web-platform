@@ -57,8 +57,6 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const buildInfo = JSON.parse(buildDescription!);
 		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
 
-		if (!Object.keys(files).length) return;
-
 		get().updateManualRunConfiguration(projectId!, { files, lastDeployment, isManualRunEnabled: true });
 	},
 
