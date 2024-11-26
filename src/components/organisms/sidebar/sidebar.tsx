@@ -1,6 +1,7 @@
 import React, { Suspense, useEffect, useRef, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
@@ -12,16 +13,17 @@ import { useLoggerStore, useUserStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
+import { Popover, PopoverContent, PopoverTrigger } from "@components/molecules";
 import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { FileIcon, HelpIcon, ListDetailsIcon } from "@assets/image/icons";
-import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
+import { SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
-	const { logoutFunction } = useUserStore();
+	const { logoutFunction, user } = useUserStore();
 	const { isLoggerEnabled, isNewLogs, toggleLogger } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
@@ -101,7 +103,7 @@ export const Sidebar = () => {
 						/>
 					</div>
 
-					<div className="flex flex-col justify-end gap-5">
+					<div className="flex flex-col gap-5">
 						<Button
 							ariaLabel={t("events")}
 							className="hover:bg-green-200"
@@ -173,6 +175,7 @@ export const Sidebar = () => {
 								) : null}
 							</AnimatePresence>
 						</Button>
+
 						{isAuthEnabled ? (
 							<>
 								<Button className="hover:bg-green-200" href="/settings" title={t("settings")}>
@@ -193,26 +196,41 @@ export const Sidebar = () => {
 									</AnimatePresence>
 								</Button>
 
-								<Button
-									className="hover:bg-green-200"
-									onClick={() => logoutFunction()}
-									title={t("logout")}
-								>
-									<LogoutIcon className="size-7" fill="black" />
-
-									<AnimatePresence>
-										{isOpen ? (
-											<motion.span
-												animate="visible"
-												exit="hidden"
-												initial="hidden"
-												variants={animateVariant}
+								<Popover>
+									<PopoverTrigger className="ml-1 flex items-center">
+										<Avatar color="black" name={user?.name} round={true} size="36" />
+										<AnimatePresence>
+											{isOpen ? (
+												<motion.span
+													animate="visible"
+													className="ml-2.5 overflow-hidden whitespace-nowrap text-black"
+													exit="hidden"
+													initial="hidden"
+													variants={animateVariant}
+												>
+													{user?.name}
+												</motion.span>
+											) : null}
+										</AnimatePresence>
+									</PopoverTrigger>
+									<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
+										<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2">
+											<Avatar color="black" name={`${user?.name}`} round={true} size="32" />
+											<span className="font-medium text-black">{user?.name}</span>
+										</div>
+										<div className="mt-1">
+											<Button className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250">
+												{t("userPreferences")}
+											</Button>
+											<Button
+												className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
+												onClick={() => logoutFunction()}
 											>
 												{t("logout")}
-											</motion.span>
-										) : null}
-									</AnimatePresence>
-								</Button>
+											</Button>
+										</div>
+									</PopoverContent>
+								</Popover>
 							</>
 						) : null}
 					</div>
