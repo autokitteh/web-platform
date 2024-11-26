@@ -27,7 +27,7 @@ export {
 	meowWorldProjectName,
 	templateCategoriesOrder,
 } from "@constants/dashboard.constants";
-export { defaultEventsTableRowHeight } from "@constants/events.constants";
+export { defaultEventsTableRowHeight, maxResultsLimitToDisplay } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export { menuItems } from "@constants/menuItems.constants";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
