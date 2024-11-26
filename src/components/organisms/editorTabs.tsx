@@ -149,14 +149,26 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			}, 1000);
 		}
 	};
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const onEditorContentChange = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const onSaveButtonClick = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
+	const debouncedSaveContent = useCallback(debounce(updateContent, 1500, { leading: true, trailing: false }), [
 		projectId,
 		activeEditorFileName,
 	]);
+
+	useEffect(() => {
+		const handler = (event: KeyboardEvent) => {
+			if ((event.ctrlKey && event.key === "s") || (event.metaKey && event.key === "s")) {
+				debouncedSaveContent(content);
+				event.preventDefault();
+			}
+		};
+		window.addEventListener("keydown", handler);
+
+		return () => {
+			window.removeEventListener("keydown", handler);
+		};
+	}, [content, debouncedSaveContent]);
 
 	const activeCloseIcon = (fileName: string) => {
 		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
@@ -221,7 +233,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 										<Button
 											className="h-6 whitespace-nowrap px-4 py-1"
 											disabled={loadingSave}
-											onClick={() => onSaveButtonClick(content)}
+											onClick={() => debouncedSaveContent(content)}
 											variant="filledGray"
 										>
 											<IconSvg className="fill-white" src={loadingSave ? Spinner : SaveIcon} />
@@ -254,7 +266,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 							className="absolute -ml-6 mt-2 h-full pb-5"
 							language={languageEditor}
 							loading={<Loader size="lg" />}
-							onChange={autosaveMode ? onEditorContentChange : () => {}}
+							onChange={autosaveMode ? debouncedSaveContent : () => {}}
 							onMount={handleEditorDidMount}
 							options={{
 								fontFamily: "monospace, sans-serif",
