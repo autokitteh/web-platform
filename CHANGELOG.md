@@ -1,3 +1,10 @@
+## [2.69.2](https://github.com/autokitteh/web-platform/compare/v2.69.1...v2.69.2) (2024-11-26)
+
+
+### Bug Fixes
+
+* **UI-988:** fix missing creatable label ([#688](https://github.com/autokitteh/web-platform/issues/688)) ([043bfa6](https://github.com/autokitteh/web-platform/commit/043bfa6998868bfb5c405b4a9862dc3f9c0dea9d))
+
 ## [2.69.1](https://github.com/autokitteh/web-platform/compare/v2.69.0...v2.69.1) (2024-11-26)
 
 
