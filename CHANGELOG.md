@@ -1,3 +1,11 @@
+## [2.69.4](https://github.com/autokitteh/web-platform/compare/v2.69.3...v2.69.4) (2024-11-26)
+
+
+### Bug Fixes
+
+* **(UI-991:** events autocomplete in triggers form ([#690](https://github.com/autokitteh/web-platform/issues/690)) ([c9c8ea4](https://github.com/autokitteh/web-platform/commit/c9c8ea4c3ca981b5b90b5f0da58cf999b43d496d))
+* **UI-1001:** fix convert runtimes to files and function when the object is invalid ([#692](https://github.com/autokitteh/web-platform/issues/692)) ([6292c0a](https://github.com/autokitteh/web-platform/commit/6292c0a4144d23e330b5fb8352b5e150a12223b4))
+
 ## [2.69.3](https://github.com/autokitteh/web-platform/compare/v2.69.2...v2.69.3) (2024-11-26)
 
 
