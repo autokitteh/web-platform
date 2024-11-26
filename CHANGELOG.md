@@ -1,3 +1,10 @@
+## [2.69.3](https://github.com/autokitteh/web-platform/compare/v2.69.2...v2.69.3) (2024-11-26)
+
+
+### Bug Fixes
+
+* **UI-996:** display icon in google connection triggers ([#689](https://github.com/autokitteh/web-platform/issues/689)) ([e33950f](https://github.com/autokitteh/web-platform/commit/e33950fa9409622945b443e1dd7af16b79e0d684))
+
 ## [2.69.2](https://github.com/autokitteh/web-platform/compare/v2.69.1...v2.69.2) (2024-11-26)
 
 
