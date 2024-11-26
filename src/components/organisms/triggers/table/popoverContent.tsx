@@ -8,7 +8,7 @@ import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useCacheStore } from "@src/store";
 import { TriggerPopoverInformation } from "@src/types/components/tables";
 import { Trigger } from "@src/types/models";
-import { cn, getApiBaseUrl } from "@src/utilities";
+import { cn, getApiBaseUrl, stripGoogleConnectionName } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
@@ -37,9 +37,10 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 
 		const triggerConnection = connections?.find((connection) => connection.connectionId === trigger.connectionId);
 		const { data: integrations } = await IntegrationsService.list();
-		const TriggerConnectionIntegrationKey = integrations?.find(
-			(integration) => integration.integrationId === triggerConnection?.integrationId
-		)?.uniqueName;
+		const TriggerConnectionIntegrationKey = stripGoogleConnectionName(
+			integrations?.find((integration) => integration.integrationId === triggerConnection?.integrationId)
+				?.uniqueName || ""
+		);
 
 		setConnectionIcon(
 			IntegrationsMap[(TriggerConnectionIntegrationKey || "") as keyof typeof IntegrationsMap]?.icon
