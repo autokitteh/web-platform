@@ -12,7 +12,7 @@ const processRuntime = (runtime: BuildInfoRuntimes): Record<string, string[]> =>
 		if (fileName.startsWith("_") || fileName === "code.tar") {
 			return;
 		}
-		const entrypointsForFile = runtime.artifact.exports
+		const entrypointsForFile = (runtime?.artifact?.exports || [])
 			.filter(({ location: { path } }) => path === fileName)
 			.map(({ symbol: name }) => name);
 
