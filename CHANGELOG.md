@@ -1,3 +1,10 @@
+## [2.69.1](https://github.com/autokitteh/web-platform/compare/v2.69.0...v2.69.1) (2024-11-26)
+
+
+### Bug Fixes
+
+* **UI-976:** fix webhook icon and improve connections icon in triggers popover ([#679](https://github.com/autokitteh/web-platform/issues/679)) ([a682671](https://github.com/autokitteh/web-platform/commit/a68267170ae25780dfd6b23d338c78046845aac0))
+
 # [2.69.0](https://github.com/autokitteh/web-platform/compare/v2.68.0...v2.69.0) (2024-11-26)
 
 
