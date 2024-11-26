@@ -8,12 +8,12 @@ import { IntegrationsMap } from "@src/enums/components/connection.enum";
 import { useCacheStore } from "@src/store";
 import { TriggerPopoverInformation } from "@src/types/components/tables";
 import { Trigger } from "@src/types/models";
-import { getApiBaseUrl } from "@src/utilities";
+import { cn, getApiBaseUrl } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
 
-import { ClockIcon, LinkIcon, WebhookIcon } from "@assets/image/icons";
+import { ClockIcon, WebhookIcon } from "@assets/image/icons";
 
 export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => {
 	const apiBaseUrl = getApiBaseUrl();
@@ -22,27 +22,33 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	const { connections } = useCacheStore();
 	const [connectionDetails, setConnectionDetails] = useState<TriggerPopoverInformation[]>();
 	const [scheduleDetails, setScheduleDetails] = useState<TriggerPopoverInformation[]>([]);
-
+	const [connectionIcon, setConnectionIcon] = useState<ComponentType<React.SVGProps<SVGSVGElement>> | null>(null);
 	const baseDetails = [
 		{ label: t("file"), value: trigger.path },
 		{ label: t("entrypoint"), value: trigger.entryFunction },
 	];
 
 	const configureTriggerDisplay = async (trigger: Trigger) => {
+		if (trigger.sourceType === TriggerTypes.schedule) {
+			setScheduleDetails([{ label: t("cron"), value: trigger.schedule }, ...baseDetails]);
+
+			return;
+		}
+
 		const triggerConnection = connections?.find((connection) => connection.connectionId === trigger.connectionId);
 		const { data: integrations } = await IntegrationsService.list();
 		const TriggerConnectionIntegrationKey = integrations?.find(
 			(integration) => integration.integrationId === triggerConnection?.integrationId
 		)?.uniqueName;
 
-		const TriggerConnectionItegrationIcon =
-			IntegrationsMap[(TriggerConnectionIntegrationKey || "") as keyof typeof IntegrationsMap]?.icon;
+		setConnectionIcon(
+			IntegrationsMap[(TriggerConnectionIntegrationKey || "") as keyof typeof IntegrationsMap]?.icon
+		);
 
 		setConnectionDetails([
 			{
 				label: t("connection"),
 				value: triggerConnection?.name,
-				icon: TriggerConnectionItegrationIcon,
 			},
 			{
 				label: t("connectionId"),
@@ -52,8 +58,6 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 			{ label: t("eventType"), value: trigger.eventType },
 			{ label: t("filter"), value: trigger.filter },
 		]);
-
-		setScheduleDetails([{ label: t("cron"), value: trigger.schedule }, ...baseDetails]);
 	};
 
 	useEffect(() => {
@@ -62,28 +66,33 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	}, [trigger]);
 
 	const renderTriggerContent = (
-		icon: ComponentType<React.SVGProps<SVGSVGElement>>,
+		icon: ComponentType<React.SVGProps<SVGSVGElement>> | null,
 		details: TriggerPopoverInformation[],
-		showIcon = false
+		isConnectionTrigger = false
 	) => (
 		<div className="text-white">
 			<div className="mb-2 flex w-full">
 				<div className="flex w-64 font-semibold">
-					<IconSvg className="mr-2 fill-white" src={icon} />
+					{icon ? (
+						<IconSvg
+							className={cn("mr-2", {
+								"size-4 shrink-0 rounded-full bg-white p-0.5": isConnectionTrigger,
+							})}
+							src={icon}
+						/>
+					) : null}
 					{t("info")}
 				</div>
 				<div className="w-full" />
 			</div>
-			{details.map(({ icon: Icon, label, value }) =>
-				value ? (
-					<div className="flex items-center gap-x-1" key={label}>
-						<div className="font-semibold">{label}:</div>
-						{showIcon && Icon ? (
-							<Icon className="mx-1 size-4 shrink-0 rounded-full bg-white p-0.5" />
-						) : null}
-						{value}
-					</div>
-				) : null
+			{details.map(
+				({ label, value }) =>
+					value && (
+						<div className="flex items-center gap-x-1" key={label}>
+							<div className="font-semibold">{label}:</div>
+							{value}
+						</div>
+					)
 			)}
 		</div>
 	);
@@ -91,7 +100,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	const webhookContent = trigger.sourceType === TriggerTypes.webhook && (
 		<div className="text-white">
 			<div className="mb-2 flex w-64 font-semibold">
-				<IconSvg className="mr-2 fill-white" src={WebhookIcon} />
+				<IconSvg className="mr-2" src={WebhookIcon} />
 				{t("info")}
 			</div>
 			<div className="flex items-center gap-x-1">
@@ -117,6 +126,6 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 		: trigger.sourceType === TriggerTypes.schedule
 			? renderTriggerContent(ClockIcon, scheduleDetails)
 			: trigger.sourceType === TriggerTypes.connection
-				? renderTriggerContent(LinkIcon, connectionDetails || [], true)
+				? renderTriggerContent(connectionIcon, connectionDetails || [], true)
 				: null;
 };
