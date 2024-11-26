@@ -1,3 +1,10 @@
+## [2.69.5](https://github.com/autokitteh/web-platform/compare/v2.69.4...v2.69.5) (2024-11-26)
+
+
+### Bug Fixes
+
+* **UI-1002:** fix files swap between projects on build ([#693](https://github.com/autokitteh/web-platform/issues/693)) ([c49751a](https://github.com/autokitteh/web-platform/commit/c49751ab434092125ab227aa4bbd7b103e58db61))
+
 ## [2.69.4](https://github.com/autokitteh/web-platform/compare/v2.69.3...v2.69.4) (2024-11-26)
 
 
