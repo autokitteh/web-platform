@@ -1,0 +1,10 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+
+	cache-control = '''
+	no-cache,
+	no-store,
+	must-revalidate
+  private'''
