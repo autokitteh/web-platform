@@ -1,4 +1,5 @@
 export { parseNestedJson } from "@src/utilities/convertWrappedJson.utils";
+export { stripGoogleConnectionName, stripAtlassianConnectionName } from "@src/utilities/stripConnectionName.utils";
 export { calculatePathDepth } from "@utilities/calculatePathDepth.utils";
 export { cn } from "@utilities/cn.utils";
 export { isConnectionType } from "@utilities/connectionType.utils";
@@ -16,7 +17,6 @@ export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils"
 export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
 export { sortArray } from "@utilities/sortArray.utils";
 export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
-export { stripGoogleConnectionName } from "@utilities/stripGoogleConnectionName.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";
 export { transformAndStringifyValues } from "@utilities/transformAndStringifyValues.utils";
 export { ValidateURL } from "@utilities/validateUrl.utils";
