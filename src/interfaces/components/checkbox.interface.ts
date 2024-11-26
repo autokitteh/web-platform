@@ -4,4 +4,5 @@ export interface CheckboxProps {
 	onChange: (checked: boolean) => void;
 	title?: string;
 	className?: string;
+	isLoading: boolean;
 }
