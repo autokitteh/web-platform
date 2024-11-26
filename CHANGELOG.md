@@ -1,3 +1,10 @@
+# [2.69.0](https://github.com/autokitteh/web-platform/compare/v2.68.0...v2.69.0) (2024-11-26)
+
+
+### Features
+
+* **UI-978:** limit events list display ([#680](https://github.com/autokitteh/web-platform/issues/680)) ([2f9596a](https://github.com/autokitteh/web-platform/commit/2f9596a88871f2d925d9727ad4592fcd264be0ed))
+
 # [2.68.0](https://github.com/autokitteh/web-platform/compare/v2.67.3...v2.68.0) (2024-11-25)
 
 
