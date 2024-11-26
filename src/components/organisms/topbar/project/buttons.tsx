@@ -69,7 +69,7 @@ export const ProjectTopbarButtons = () => {
 			setLoadingButton((prev) => ({ ...prev, [TopbarButton.build]: false }));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [projectId]);
 
 	const deploy = useCallback(async () => {
 		const resources = await fetchResources(projectId!);
