@@ -1,5 +1,7 @@
 import React from "react";
 
+import JsonView from "@uiw/react-json-view";
+import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import { useTranslation } from "react-i18next";
 
 import { SessionActivity } from "@src/interfaces/models";
@@ -86,6 +88,19 @@ export const SingleActivityInfo = ({
 					)}
 
 					<div className="mb-4 mt-8 font-bold">{t("returnValues")}</div>
+
+					{Object.keys(activity.returnJSONValue || {}).length ? (
+						<Accordion
+							className="mb-4"
+							title={<div className="font-bold underline">{t("returnValues")}</div>}
+						>
+							<JsonView
+								className="scrollbar mt-2 max-h-72 overflow-auto"
+								style={githubDarkTheme}
+								value={activity.returnJSONValue}
+							/>
+						</Accordion>
+					) : null}
 
 					{activity.returnStringValue ? (
 						<Accordion
