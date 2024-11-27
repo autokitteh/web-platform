@@ -210,6 +210,11 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			);
 			navigate(`/projects/${projectId}/connections`);
 		} catch (error) {
+			addToast({
+				message: tErrors("errorEditingConnection"),
+				type: "error",
+			});
+
 			if (axios.isAxiosError(error)) {
 				LoggerService.error(
 					namespaces.hooks.connectionForm,
@@ -219,10 +224,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 				return;
 			}
-			addToast({
-				message: tErrors("errorEditingConnection"),
-				type: "error",
-			});
 			LoggerService.error(namespaces.hooks.connectionForm, tErrors("errorEditingConnectionExtended", { error }));
 		} finally {
 			setIsLoading(false);
