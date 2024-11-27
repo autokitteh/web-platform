@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
+import { integrationVariablesMapping } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -22,22 +24,18 @@ export const AwsIntegrationEditForm = () => {
 		secret_key: true,
 		token: true,
 	});
-
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(awsIntegrationSchema, "edit");
 
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
 
+	const accessKey = useWatch({ control, name: "access_key" });
+	const secretKey = useWatch({ control, name: "secret_key" });
+	const token = useWatch({ control, name: "token" });
+
 	useEffect(() => {
-		if (!connectionVariables) return;
-		const region = connectionVariables?.find((variable) => variable.name === "Region");
-		if (region) {
-			setValue("region", {
-				label: region.value,
-				value: region.value,
-			});
-		}
+		setFormValues(connectionVariables, integrationVariablesMapping.aws, setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
@@ -83,6 +81,7 @@ export const AwsIntegrationEditForm = () => {
 					isLocked={lockState.access_key}
 					isRequired
 					label={t("aws.placeholders.accessKey")}
+					value={accessKey}
 				/>
 				<ErrorMessage>{errors.access_key?.message as string}</ErrorMessage>
 			</div>
@@ -100,7 +99,9 @@ export const AwsIntegrationEditForm = () => {
 					isLocked={lockState.secret_key}
 					isRequired
 					label={t("aws.placeholders.secretKey")}
+					value={secretKey}
 				/>
+
 				<ErrorMessage>{errors.secret_key?.message as string}</ErrorMessage>
 			</div>
 
@@ -117,7 +118,9 @@ export const AwsIntegrationEditForm = () => {
 					isLocked={lockState.token}
 					isRequired
 					label={t("aws.placeholders.token")}
+					value={token}
 				/>
+
 				<ErrorMessage>{errors.token?.message as string}</ErrorMessage>
 			</div>
 

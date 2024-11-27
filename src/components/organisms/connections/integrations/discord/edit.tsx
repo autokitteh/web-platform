@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { integrationVariablesMapping } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 import { discordIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -20,10 +23,16 @@ export const DiscordIntegrationEditForm = () => {
 
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
-	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		discordIntegrationSchema,
-		"edit"
-	);
+
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+		useConnectionForm(discordIntegrationSchema, "edit");
+
+	const botToken = useWatch({ control, name: "botToken" });
+
+	useEffect(() => {
+		setFormValues(connectionVariables, integrationVariablesMapping.discord, setValue);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
 
 	const handleFormSubmit = () => {
 		if (hasActiveDeployments) {
@@ -47,8 +56,8 @@ export const DiscordIntegrationEditForm = () => {
 					isLocked={lockState}
 					isRequired
 					label={t("discord.placeholders.botToken")}
+					value={botToken}
 				/>
-
 				<ErrorMessage>{errors.botToken?.message as string}</ErrorMessage>
 			</div>
 
@@ -59,7 +68,6 @@ export const DiscordIntegrationEditForm = () => {
 					to="https://discord.com/developers/docs/intro"
 				>
 					{t("discord.information.devPlatform")}
-
 					<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 				</Link>
 			</Accordion>

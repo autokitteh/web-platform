@@ -23,6 +23,7 @@ export const GithubIntegrationAddForm = ({
 	const { t } = useTranslation("integrations");
 
 	const {
+		control,
 		copyToClipboard,
 		createConnection,
 		errors,
@@ -85,6 +86,7 @@ export const GithubIntegrationAddForm = ({
 			<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(triggerParentFormSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
+						control={control}
 						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}

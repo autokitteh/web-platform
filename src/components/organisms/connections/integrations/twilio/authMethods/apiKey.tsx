@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoTwilioLinks } from "@constants/lists/connections";
@@ -11,12 +11,14 @@ import { Accordion } from "@components/molecules";
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const ApiKeyTwilioForm = ({
+	control,
 	errors,
 	isLoading,
 	mode,
 	register,
 	setValue,
 }: {
+	control: any;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	mode: "create" | "edit";
@@ -31,6 +33,10 @@ export const ApiKeyTwilioForm = ({
 	});
 
 	const isEditMode = mode === "edit";
+
+	const accountSid = useWatch({ control, name: "account_sid" });
+	const apiKey = useWatch({ control, name: "api_key" });
+	const apiSecret = useWatch({ control, name: "api_secret" });
 
 	return (
 		<>
@@ -48,6 +54,7 @@ export const ApiKeyTwilioForm = ({
 						isLocked={lockState.account_sid}
 						isRequired
 						label={t("twilio.placeholders.sid")}
+						value={accountSid}
 					/>
 				) : (
 					<Input
@@ -58,7 +65,6 @@ export const ApiKeyTwilioForm = ({
 						label={t("twilio.placeholders.sid")}
 					/>
 				)}
-
 				<ErrorMessage>{errors.account_sid?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
@@ -75,6 +81,7 @@ export const ApiKeyTwilioForm = ({
 						isLocked={lockState.api_key}
 						isRequired
 						label={t("twilio.placeholders.key")}
+						value={apiKey}
 					/>
 				) : (
 					<Input
@@ -85,7 +92,6 @@ export const ApiKeyTwilioForm = ({
 						label={t("twilio.placeholders.key")}
 					/>
 				)}
-
 				<ErrorMessage>{errors.api_key?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
@@ -102,6 +108,7 @@ export const ApiKeyTwilioForm = ({
 						isLocked={lockState.api_secret}
 						isRequired
 						label={t("twilio.placeholders.secret")}
+						value={apiSecret}
 					/>
 				) : (
 					<Input
@@ -112,7 +119,6 @@ export const ApiKeyTwilioForm = ({
 						label={t("twilio.placeholders.secret")}
 					/>
 				)}
-
 				<ErrorMessage>{errors.api_secret?.message as string}</ErrorMessage>
 			</div>
 
@@ -126,7 +132,6 @@ export const ApiKeyTwilioForm = ({
 							to={url}
 						>
 							{text}
-
 							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
@@ -141,7 +146,6 @@ export const ApiKeyTwilioForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
 		</>

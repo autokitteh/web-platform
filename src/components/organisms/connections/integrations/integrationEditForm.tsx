@@ -3,12 +3,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
+import { integrationVariablesMapping } from "../../../../constants/connections/integrationVariablesMapping.constants";
 import { formsPerIntegrationsMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
 import { Integrations, ModalName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 
 import { Select } from "@components/molecules";
 import { WarningDeploymentActivetedModal } from "@components/organisms";
@@ -28,6 +30,7 @@ export const IntegrationEditForm = ({
 		connectionId,
 		connectionType,
 		connectionVariables,
+		control,
 		copyToClipboard,
 		errors,
 		handleGoogleOauth,
@@ -42,7 +45,7 @@ export const IntegrationEditForm = ({
 	} = useConnectionForm(schemas[ConnectionAuthType.NoAuth], "edit");
 
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
-	const [isFirstConnectionType, setIsFirstConnectionType] = useState<boolean>(true);
+	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
 
 	const { hasActiveDeployments } = useCacheStore();
 	const { closeModal, openModal } = useModalStore();
@@ -110,14 +113,7 @@ export const IntegrationEditForm = ({
 	};
 
 	useEffect(() => {
-		const setFormValue = (fieldName: string, variableName: string) => {
-			const value = connectionVariables?.find((variable) => variable.name === variableName)?.value;
-			if (!value) return;
-			setValue(fieldName, value);
-		};
-		setFormValue("form_id", "FormID");
-		setFormValue("cal_id", "CalendarID");
-		setFormValue("json", "JSON");
+		setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
@@ -140,6 +136,7 @@ export const IntegrationEditForm = ({
 			<form className="mt-6 flex flex-col items-stretch gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
+						control={control}
 						copyToClipboard={copyToClipboard}
 						errors={errors}
 						isLoading={isLoading}

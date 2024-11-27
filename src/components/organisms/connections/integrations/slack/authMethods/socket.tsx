@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoSlackModeLinks } from "@src/constants/lists/connections";
@@ -11,12 +11,14 @@ import { Accordion } from "@components/molecules";
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const SocketForm = ({
+	control,
 	errors,
 	isLoading,
 	mode,
 	register,
 	setValue,
 }: {
+	control: any;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	mode: "create" | "edit";
@@ -29,6 +31,9 @@ export const SocketForm = ({
 		app_token: true,
 	});
 	const isEditMode = mode === "edit";
+
+	const botToken = useWatch({ control, name: "bot_token" });
+	const appToken = useWatch({ control, name: "app_token" });
 
 	return (
 		<>
@@ -46,6 +51,7 @@ export const SocketForm = ({
 						isLocked={lockState.bot_token}
 						isRequired
 						label={t("slack.placeholders.botToken")}
+						value={botToken}
 					/>
 				) : (
 					<Input
@@ -56,7 +62,6 @@ export const SocketForm = ({
 						label={t("slack.placeholders.botToken")}
 					/>
 				)}
-
 				<ErrorMessage>{errors.bot_token?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
@@ -73,6 +78,7 @@ export const SocketForm = ({
 						isLocked={lockState.app_token}
 						isRequired
 						label={t("slack.placeholders.appToken")}
+						value={appToken}
 					/>
 				) : (
 					<Input
@@ -83,7 +89,6 @@ export const SocketForm = ({
 						label={t("slack.placeholders.appToken")}
 					/>
 				)}
-
 				<ErrorMessage>{errors.app_token?.message as string}</ErrorMessage>
 			</div>
 
@@ -97,7 +102,6 @@ export const SocketForm = ({
 							to={url}
 						>
 							{text}
-
 							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
@@ -112,7 +116,6 @@ export const SocketForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="h-4 w-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
 		</>

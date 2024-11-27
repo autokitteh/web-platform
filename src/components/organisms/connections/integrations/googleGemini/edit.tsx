@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { integrationVariablesMapping } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 import { googleGeminiIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -20,10 +23,16 @@ export const GoogleGeminiIntegrationEditForm = () => {
 
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
-	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		googleGeminiIntegrationSchema,
-		"edit"
-	);
+
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+		useConnectionForm(googleGeminiIntegrationSchema, "edit");
+
+	const key = useWatch({ control, name: "key" });
+
+	useEffect(() => {
+		setFormValues(connectionVariables, integrationVariablesMapping.googlegemini, setValue);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
 
 	const handleFormSubmit = () => {
 		if (hasActiveDeployments) {
@@ -47,6 +56,7 @@ export const GoogleGeminiIntegrationEditForm = () => {
 					isLocked={lockState}
 					isRequired
 					label={t("gemini.placeholders.key")}
+					value={key}
 				/>
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>

@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoOpenAiLinks } from "@constants/lists/connections";
+import { integrationVariablesMapping } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 import { openAiIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Link, SecretInput, Spinner } from "@components/atoms";
@@ -17,13 +20,18 @@ import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 export const OpenAiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
-
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
-	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		openAiIntegrationSchema,
-		"edit"
-	);
+
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+		useConnectionForm(openAiIntegrationSchema, "edit");
+
+	const key = useWatch({ control, name: "key" });
+
+	useEffect(() => {
+		setFormValues(connectionVariables, integrationVariablesMapping.chatgpt, setValue);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
 
 	const handleFormSubmit = () => {
 		if (hasActiveDeployments) {
@@ -47,6 +55,7 @@ export const OpenAiIntegrationEditForm = () => {
 					isLocked={lockState}
 					isRequired
 					label={t("openAi.placeholders.apiKey")}
+					value={key}
 				/>
 				<ErrorMessage>{errors.key?.message as string}</ErrorMessage>
 			</div>

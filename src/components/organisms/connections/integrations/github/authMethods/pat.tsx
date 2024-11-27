@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import randomatic from "randomatic";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -16,6 +16,7 @@ import { Accordion } from "@components/molecules";
 import { CopyIcon, ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const PatForm = ({
+	control,
 	copyToClipboard,
 	errors,
 	isLoading,
@@ -23,6 +24,7 @@ export const PatForm = ({
 	register,
 	setValue,
 }: {
+	control: any;
 	copyToClipboard: (webhookUrlPath: string) => void;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
@@ -43,6 +45,9 @@ export const PatForm = ({
 	const { t } = useTranslation("integrations");
 	const [webhook, setWebhook] = useState("");
 	const isEditMode = mode === "edit";
+
+	const pat = useWatch({ control, name: "pat" });
+	const secret = useWatch({ control, name: "secret" });
 
 	const getWebhookOnInit = async () => {
 		if (!connectionId) {
@@ -97,6 +102,7 @@ export const PatForm = ({
 						isLocked={lockState.pat}
 						isRequired
 						label={t("github.placeholders.pat")}
+						value={pat}
 					/>
 				) : (
 					<Input
@@ -107,7 +113,6 @@ export const PatForm = ({
 						label={t("github.placeholders.pat")}
 					/>
 				)}
-
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative flex gap-2">
@@ -127,7 +132,6 @@ export const PatForm = ({
 					variant="outline"
 				>
 					<CopyIcon className="size-3.5 fill-black" />
-
 					{t("buttons.copy")}
 				</Button>
 			</div>
@@ -144,6 +148,7 @@ export const PatForm = ({
 						isError={!!errors.secret}
 						isLocked={lockState.secret}
 						label={t("github.placeholders.secret")}
+						value={secret}
 					/>
 				) : (
 					<Input
@@ -153,7 +158,6 @@ export const PatForm = ({
 						label={t("github.placeholders.secret")}
 					/>
 				)}
-
 				<ErrorMessage>{errors.secret?.message as string}</ErrorMessage>
 			</div>
 
@@ -167,7 +171,6 @@ export const PatForm = ({
 							to={url}
 						>
 							{text}
-
 							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
@@ -182,7 +185,6 @@ export const PatForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
 		</>

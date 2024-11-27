@@ -15,6 +15,7 @@ export { getCookieDomain } from "@utilities/getCookieDomain.utils";
 export { openPopup } from "@utilities/openPopup.utils";
 export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils";
 export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
+export { setFormValues } from "@utilities/setFormValues.utils";
 export { sortArray } from "@utilities/sortArray.utils";
 export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";

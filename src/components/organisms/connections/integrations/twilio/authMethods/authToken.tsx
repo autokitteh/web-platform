@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { infoTwilioLinks } from "@constants/lists/connections";
@@ -11,6 +11,7 @@ import { Accordion } from "@components/molecules";
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const AuthTokenTwilioForm = ({
+	control,
 	errors,
 	isLoading,
 	mode,
@@ -18,6 +19,7 @@ export const AuthTokenTwilioForm = ({
 	register,
 	setValue,
 }: {
+	control: any;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
 	mode: "create" | "edit";
@@ -31,6 +33,9 @@ export const AuthTokenTwilioForm = ({
 		auth_token: true,
 	});
 	const isEditMode = mode === "edit";
+
+	const accountSid = useWatch({ control, name: "account_sid" });
+	const authToken = useWatch({ control, name: "auth_token" });
 
 	useEffect(() => {
 		if (patWebhookKey) {
@@ -54,6 +59,7 @@ export const AuthTokenTwilioForm = ({
 						isLocked={lockState.account_sid}
 						isRequired
 						label={t("twilio.placeholders.sid")}
+						value={accountSid}
 					/>
 				) : (
 					<Input
@@ -64,7 +70,6 @@ export const AuthTokenTwilioForm = ({
 						label={t("twilio.placeholders.sid")}
 					/>
 				)}
-
 				<ErrorMessage>{errors.account_sid?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
@@ -81,6 +86,7 @@ export const AuthTokenTwilioForm = ({
 						isLocked={lockState.auth_token}
 						isRequired
 						label={t("twilio.placeholders.token")}
+						value={authToken}
 					/>
 				) : (
 					<Input
@@ -91,7 +97,6 @@ export const AuthTokenTwilioForm = ({
 						label={t("twilio.placeholders.token")}
 					/>
 				)}
-
 				<ErrorMessage>{errors.auth_token?.message as string}</ErrorMessage>
 			</div>
 
@@ -105,7 +110,6 @@ export const AuthTokenTwilioForm = ({
 							to={url}
 						>
 							{text}
-
 							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 						</Link>
 					))}
@@ -120,7 +124,6 @@ export const AuthTokenTwilioForm = ({
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
-
 				{t("buttons.saveConnection")}
 			</Button>
 		</>

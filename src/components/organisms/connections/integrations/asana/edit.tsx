@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { integrationVariablesMapping } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { useCacheStore, useModalStore } from "@src/store";
+import { setFormValues } from "@src/utilities";
 import { asanaIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
@@ -19,10 +22,15 @@ export const AsanaIntegrationEditForm = () => {
 	const [lockState, setLockState] = useState(true);
 	const { hasActiveDeployments } = useCacheStore();
 	const { openModal } = useModalStore();
-	const { errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } = useConnectionForm(
-		asanaIntegrationSchema,
-		"edit"
-	);
+	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
+		useConnectionForm(asanaIntegrationSchema, "edit");
+
+	const pat = useWatch({ control, name: "pat" });
+
+	useEffect(() => {
+		setFormValues(connectionVariables, integrationVariablesMapping.asana, setValue);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connectionVariables]);
 
 	const handleFormSubmit = () => {
 		if (hasActiveDeployments) {
@@ -46,6 +54,7 @@ export const AsanaIntegrationEditForm = () => {
 					isLocked={lockState}
 					isRequired
 					label={t("asana.placeholders.pat")}
+					value={pat}
 				/>
 
 				<ErrorMessage>{errors.pat?.message as string}</ErrorMessage>
