@@ -1,3 +1,10 @@
+## [2.70.3](https://github.com/autokitteh/web-platform/compare/v2.70.2...v2.70.3) (2024-11-27)
+
+
+### Bug Fixes
+
+* **UI-1010:** fix missing values in edit connections ([#697](https://github.com/autokitteh/web-platform/issues/697)) ([e911093](https://github.com/autokitteh/web-platform/commit/e91109313a791733a9972443baa17f37c261746f))
+
 ## [2.70.2](https://github.com/autokitteh/web-platform/compare/v2.70.1...v2.70.2) (2024-11-27)
 
 
