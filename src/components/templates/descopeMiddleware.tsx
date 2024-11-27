@@ -85,6 +85,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		[getLoggedInUser]
 	);
 
+	if (location.pathname === "/404") {
+		return children;
+	}
+
 	const isLoggedIn = Cookies.get(isLoggedInCookie);
 
 	if (authBearer || isLoggedIn) {
