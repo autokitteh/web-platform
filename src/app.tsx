@@ -15,7 +15,6 @@ import {
 import { isProduction } from "@constants";
 
 import { PageTitle } from "@components/atoms";
-import { Toast } from "@components/molecules";
 import { DeploymentsTable, EventViewer, EventsTable, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
@@ -170,7 +169,6 @@ export const App = () => {
 			</Route>
 
 			<Route element={<Navigate replace to="/404" />} path="*" />
-			<Toast />
 		</AKRoutes>
 	);
 };

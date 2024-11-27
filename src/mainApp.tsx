@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { App } from "./app";
 import { descopeProjectId, isAuthEnabled } from "@constants";
 
+import { Toast } from "@components/molecules";
 import { DescopeWrapper } from "@components/templates";
 
 export const MainApp = () => {
@@ -19,6 +20,7 @@ export const MainApp = () => {
 			) : (
 				<App />
 			)}
+			<Toast />
 		</BrowserRouter>
 	);
 };
