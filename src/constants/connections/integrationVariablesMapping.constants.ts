@@ -3,16 +3,16 @@ import { Integrations } from "@src/enums/components";
 export const integrationVariablesMapping = {
 	[Integrations.github]: {
 		pat: "pat",
-		secret: "Secret",
+		secret: "pat_secret",
 	},
 	[Integrations.slack]: {
 		bot_token: "botToken",
 		app_token: "appToken",
 	},
 	[Integrations.twilio]: {
-		account_sid: "AccountSID",
+		account_sid: "acc_sid",
 		api_key: "apiKey",
-		api_secret: "apiSecret",
+		api_secret: "api_secret",
 	},
 	[Integrations.gmail]: {
 		json: "JSON",
@@ -35,14 +35,14 @@ export const integrationVariablesMapping = {
 		json: "JSON",
 	},
 	[Integrations.jira]: {
-		base_url: "BaseURL",
-		token: "Token",
-		email: "Email",
+		base_url: "base_url",
+		token: "token",
+		email: "email",
 	},
 	[Integrations.confluence]: {
-		base_url: "BaseURL",
-		token: "Token",
-		email: "Email",
+		base_url: "base_url",
+		token: "token",
+		email: "email",
 	},
 	[Integrations.asana]: {
 		pat: "pat",
