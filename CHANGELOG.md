@@ -1,3 +1,10 @@
+## [2.70.4](https://github.com/autokitteh/web-platform/compare/v2.70.3...v2.70.4) (2024-11-27)
+
+
+### Bug Fixes
+
+* **1008:** improve error handling in connection editing and remove redundant toast notification ([#698](https://github.com/autokitteh/web-platform/issues/698)) ([6c28a6f](https://github.com/autokitteh/web-platform/commit/6c28a6f48d2d6fa650c62723cfa89dce8955f753))
+
 ## [2.70.3](https://github.com/autokitteh/web-platform/compare/v2.70.2...v2.70.3) (2024-11-27)
 
 
