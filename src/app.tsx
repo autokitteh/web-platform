@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import * as Sentry from "@sentry/react";
 import { useTranslation } from "react-i18next";
 import {
-	BrowserRouter,
 	Navigate,
 	Route,
 	Routes,
@@ -26,7 +25,7 @@ import { ActivityList, SessionOutputs } from "@components/organisms/deployments/
 import { ClientConfiguration, Profile } from "@components/organisms/settings";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
-import { Connections, Dashboard, Intro, NotFound404, Project, Sessions, Triggers, Variables } from "@components/pages";
+import { Connections, Dashboard, Internal404, Intro, Project, Sessions, Triggers, Variables } from "@components/pages";
 import { AppLayout, EventsLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
@@ -62,75 +61,72 @@ export const App = () => {
 	}
 
 	return (
-		<BrowserRouter>
-			<AKRoutes>
-				<Route element={<AppLayout hideTopbar />} path="/">
-					<Route
-						element={
-							<>
-								<PageTitle title={t("template", { page: t("home") })} />
-								<Dashboard />
-							</>
-						}
-						index
-					/>
+		<AKRoutes>
+			<Route element={<AppLayout hideTopbar />} path="/">
+				<Route
+					element={
+						<>
+							<PageTitle title={t("template", { page: t("home") })} />
+							<Dashboard />
+						</>
+					}
+					index
+				/>
 
-					<Route
-						element={
-							<>
-								<PageTitle title={t("template", { page: t("intro") })} />
-								<Intro />
-							</>
-						}
-						path="intro"
-					/>
+				<Route
+					element={
+						<>
+							<PageTitle title={t("template", { page: t("intro") })} />
+							<Intro />
+						</>
+					}
+					path="intro"
+				/>
 
-					<Route
-						element={
-							<>
-								<PageTitle title={t("template", { page: t("404") })} />
-								<NotFound404 />
-							</>
-						}
-						path="404"
-					/>
-				</Route>
+				<Route
+					element={
+						<>
+							<PageTitle title={t("template", { page: t("404") })} />
+							<Internal404 />
+						</>
+					}
+					path="404"
+				/>
+				<Route element={<Navigate replace to="/404" />} path="*" />
+			</Route>
 
-				<Route element={<AppLayout />} path="projects">
-					<Route element={<Project />} path=":projectId">
-						<Route element={<Navigate replace to="code" />} index />
+			<Route element={<AppLayout />} path="projects">
+				<Route element={<Project />} path=":projectId">
+					<Route element={<Navigate replace to="code" />} index />
 
-						<Route element={<Connections />} path="connections">
-							<Route element={<ConnectionsTable />} index />
+					<Route element={<Connections />} path="connections">
+						<Route element={<ConnectionsTable />} index />
 
-							<Route element={<AddConnection />} path="add" />
+						<Route element={<AddConnection />} path="add" />
 
-							<Route element={<EditConnection />} path=":connectionId/edit" />
+						<Route element={<EditConnection />} path=":connectionId/edit" />
 
-							<Route element={<Navigate replace to="/404" />} path="*" />
-						</Route>
+						<Route element={<Navigate replace to="/404" />} path="*" />
+					</Route>
 
-						<Route element={<CodeTable />} path="code" />
+					<Route element={<CodeTable />} path="code" />
 
-						<Route element={<Triggers />} path="triggers">
-							<Route element={<TriggersTable />} index />
+					<Route element={<Triggers />} path="triggers">
+						<Route element={<TriggersTable />} index />
 
-							<Route element={<AddTrigger />} path="add" />
+						<Route element={<AddTrigger />} path="add" />
 
-							<Route element={<EditTrigger />} path=":triggerId/edit" />
+						<Route element={<EditTrigger />} path=":triggerId/edit" />
 
-							<Route element={<Navigate replace to="/404" />} path="*" />
-						</Route>
+						<Route element={<Navigate replace to="/404" />} path="*" />
+					</Route>
 
-						<Route element={<Variables />} path="variables">
-							<Route element={<VariablesTable />} index />
+					<Route element={<Variables />} path="variables">
+						<Route element={<VariablesTable />} index />
 
-							<Route element={<AddVariable />} path="add" />
+						<Route element={<AddVariable />} path="add" />
 
-							<Route element={<EditVariable />} path="edit/:variableName" />
-
-							<Route element={<Navigate replace to="/404" />} path="*" />
-						</Route>
+						<Route element={<EditVariable />} path="edit/:variableName" />
 
 						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
@@ -138,42 +134,43 @@ export const App = () => {
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
-				<Route element={<AppLayout />} path="projects/:projectId/deployments">
-					<Route element={<DeploymentsTable />} index />
-					<Route element={<Navigate replace to="/404" />} path="*" />
-				</Route>
+				<Route element={<Navigate replace to="/404" />} path="*" />
+			</Route>
 
-				<Route element={<AppLayout />} path="projects/:projectId/deployments">
-					<Route element={<Sessions />} path=":deploymentId">
-						<Route element={<SessionsTable />} path="sessions">
-							<Route element={<SessionViewer />} path=":sessionId">
-								<Route element={<SessionOutputs />} index />
-								<Route element={<ActivityList />} path="executionflow" />
-							</Route>
+			<Route element={<AppLayout />} path="projects/:projectId/deployments">
+				<Route element={<DeploymentsTable />} index />
+				<Route element={<Navigate replace to="/404" />} path="*" />
+			</Route>
+
+			<Route element={<AppLayout />} path="projects/:projectId/deployments">
+				<Route element={<Sessions />} path=":deploymentId">
+					<Route element={<SessionsTable />} path="sessions">
+						<Route element={<SessionViewer />} path=":sessionId">
+							<Route element={<SessionOutputs />} index />
+							<Route element={<ActivityList />} path="executionflow" />
 						</Route>
 					</Route>
-					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
+				<Route element={<Navigate replace to="/404" />} path="*" />
+			</Route>
 
-				<Route element={<SettingsLayout />} path="settings">
-					<Route element={<Profile />} index />
-					<Route element={<ClientConfiguration />} path="client-configuration" />
+			<Route element={<SettingsLayout />} path="settings">
+				<Route element={<Profile />} index />
+				<Route element={<ClientConfiguration />} path="client-configuration" />
 
-					<Route element={<Navigate replace to="/404" />} path="*" />
-				</Route>
+				<Route element={<Navigate replace to="/404" />} path="*" />
+			</Route>
 
-				<Route element={<EventsLayout />}>
-					<Route element={<EventsTable />} path="events">
-						<Route element={<EventViewer />} path=":eventId" />
-					</Route>
-
-					<Route element={<Navigate replace to="/404" />} path="*" />
+			<Route element={<EventsLayout />}>
+				<Route element={<EventsTable />} path="events">
+					<Route element={<EventViewer />} path=":eventId" />
 				</Route>
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
-			</AKRoutes>
+			</Route>
 
+			<Route element={<Navigate replace to="/404" />} path="*" />
 			<Toast />
-		</BrowserRouter>
+		</AKRoutes>
 	);
 };
