@@ -1,3 +1,10 @@
+## [2.70.2](https://github.com/autokitteh/web-platform/compare/v2.70.1...v2.70.2) (2024-11-27)
+
+
+### Bug Fixes
+
+* **ENG-1874:** update sentry-react package to avoid security vulnerability ([#696](https://github.com/autokitteh/web-platform/issues/696)) ([5c57261](https://github.com/autokitteh/web-platform/commit/5c572614bbd618c7772f91a382a501760fec25c5))
+
 ## [2.70.1](https://github.com/autokitteh/web-platform/compare/v2.70.0...v2.70.1) (2024-11-27)
 
 
