@@ -78,7 +78,7 @@ export const ApiTokenJiraForm = ({
 					aria-label={t("jira.placeholders.email")}
 					isError={!!errors.email}
 					label={t("jira.placeholders.email")}
-					placeholder="name@exemple.com"
+					placeholder={t("jira.placeholders.emailSample")}
 					type="email"
 					value={email}
 				/>
