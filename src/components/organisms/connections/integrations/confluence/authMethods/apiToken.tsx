@@ -42,7 +42,6 @@ export const ConfluenceApiTokenForm = ({
 					isError={!!errors.base_url}
 					isRequired
 					label={t("confluence.placeholders.baseUrl")}
-					onChange={(newValue) => setValue("base_url", newValue)}
 					placeholder={t("confluence.placeholders.exampleUrl")}
 					value={baseUrl}
 				/>
@@ -80,7 +79,6 @@ export const ConfluenceApiTokenForm = ({
 					aria-label={t("confluence.placeholders.email")}
 					isError={!!errors.email}
 					label={t("confluence.placeholders.email")}
-					onChange={(newValue) => setValue("email", newValue)}
 					placeholder={t("confluence.placeholders.emailSample")}
 					type="email"
 					value={email}

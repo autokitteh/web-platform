@@ -10,9 +10,10 @@ export const integrationVariablesMapping = {
 		app_token: "appToken",
 	},
 	[Integrations.twilio]: {
-		account_sid: "acc_sid",
-		api_key: "apiKey",
-		api_secret: "api_secret",
+		account_sid: "AccountSID",
+		api_key: "Username",
+		api_secret: "Password",
+		auth_token: "Password",
 	},
 	[Integrations.gmail]: {
 		json: "JSON",
@@ -35,14 +36,14 @@ export const integrationVariablesMapping = {
 		json: "JSON",
 	},
 	[Integrations.jira]: {
-		base_url: "base_url",
-		token: "token",
-		email: "email",
+		base_url: "BaseURL",
+		token: "Token",
+		email: "Email",
 	},
 	[Integrations.confluence]: {
-		base_url: "base_url",
-		token: "token",
-		email: "email",
+		base_url: "BaseURL",
+		token: "Token",
+		email: "Email",
 	},
 	[Integrations.asana]: {
 		pat: "pat",
