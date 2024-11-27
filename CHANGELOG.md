@@ -1,3 +1,10 @@
+## [2.70.1](https://github.com/autokitteh/web-platform/compare/v2.70.0...v2.70.1) (2024-11-27)
+
+
+### Bug Fixes
+
+* **ENG-1718:** return 404 status on 404 page ([#695](https://github.com/autokitteh/web-platform/issues/695)) ([b36539c](https://github.com/autokitteh/web-platform/commit/b36539c54412bcb3345c30b616c83ee9f6e959b6))
+
 # [2.70.0](https://github.com/autokitteh/web-platform/compare/v2.69.5...v2.70.0) (2024-11-27)
 
 
