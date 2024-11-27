@@ -51,15 +51,9 @@ export default {
 				slackWebhook: process.env.SLACK_WEBHOOK_URL,
 				onSuccessTemplate: {
 					text:
-						":announcement: *Meow-velous News, Team!* :announcement: \n" +
-						"Version *$npm_package_version* has just landed on our digital doorstep, " +
-						"and it's purr-fectly packed with features!\n\n \n\n" +
-						":yasss_cat: What's New:\n" +
-						"$release_notes	\n\n" +
-						"Let's make some paw-some progress!\n\n" +
-						"*Happy Coding, Furr-iends!* " +
-						":cat-roomba-exceptionally-fast: " +
-						"*Stay Pawsome!*\n :catjam: _Your Dev Team_ :catjam:",
+						":announcement: Version *$npm_package_version* has just landed." +
+						"What's New:\n" +
+						"$release_notes",
 				},
 				onFailTemplate: {
 					text:
