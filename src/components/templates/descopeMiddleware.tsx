@@ -102,7 +102,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		return children;
 	}
 
-	if (location.pathname === "/404") {
+	if (location.pathname === "/404error") {
 		return <External404 />;
 	}
 
