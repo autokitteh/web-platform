@@ -35,6 +35,7 @@
 		"@floating-ui/react": "^0.26.27",
 		"@hookform/resolvers": "^3.9.0",
 		"@monaco-editor/react": "^4.6.0",
+		"@netlify/edge-functions": "^2.11.1",
 		"@sentry/react": "^8.33.1",
 		"@types/lodash": "^4.17.10",
 		"@types/pako": "^2.0.3",
