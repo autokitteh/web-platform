@@ -109,7 +109,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const matches = matchRoutes(routes, location);
 
 	if (!matches) {
-		window.location.href = "/404error";
+		window.location.href = "/404";
 
 		return;
 	}
