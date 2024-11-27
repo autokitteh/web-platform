@@ -145,7 +145,6 @@ export const EditTrigger = () => {
 				filter,
 				triggerId: triggerId!,
 			});
-
 			if (error) {
 				addToast({
 					message: tErrors("triggerNotEdited"),
