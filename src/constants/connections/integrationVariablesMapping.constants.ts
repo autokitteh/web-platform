@@ -3,7 +3,7 @@ import { Integrations } from "@src/enums/components";
 export const integrationVariablesMapping = {
 	[Integrations.github]: {
 		pat: "pat",
-		secret: "Secret",
+		secret: "pat_secret",
 	},
 	[Integrations.slack]: {
 		bot_token: "botToken",
@@ -11,8 +11,9 @@ export const integrationVariablesMapping = {
 	},
 	[Integrations.twilio]: {
 		account_sid: "AccountSID",
-		api_key: "apiKey",
-		api_secret: "apiSecret",
+		api_key: "Username",
+		api_secret: "Password",
+		auth_token: "Password",
 	},
 	[Integrations.gmail]: {
 		json: "JSON",
