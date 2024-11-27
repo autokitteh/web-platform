@@ -1,3 +1,15 @@
+# [2.70.0](https://github.com/autokitteh/web-platform/compare/v2.69.5...v2.70.0) (2024-11-27)
+
+
+### Bug Fixes
+
+* **ENG-1872)(ENG-1873:** add anti-clickjacking header and anti-mime-sniff ([#691](https://github.com/autokitteh/web-platform/issues/691)) ([14094c5](https://github.com/autokitteh/web-platform/commit/14094c5c76732f114242ed00c3da7994cfe7c406))
+
+
+### Features
+
+* **UI-918:** replace SecretInput with Input and show value ([#653](https://github.com/autokitteh/web-platform/issues/653)) ([d3afccb](https://github.com/autokitteh/web-platform/commit/d3afccbdf13484abe916a769ffebfa0803d651e4))
+
 ## [2.69.5](https://github.com/autokitteh/web-platform/compare/v2.69.4...v2.69.5) (2024-11-26)
 
 
