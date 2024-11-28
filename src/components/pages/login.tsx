@@ -41,15 +41,15 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 						<IconSvg className="top-8 size-10" src={AKRoundLogo} />
 						<div className="ml-3 font-averta text-2xl font-bold">{t("leftSide.logoText")}</div>
 					</AHref>
-					<h2 className="mt-16 font-averta text-4xl font-bold">{t("rightSide.titleFirstLine")}</h2>
+					<h2 className="mt-8 font-averta text-3xl font-bold md:text-4xl">{t("rightSide.titleFirstLine")}</h2>
 					<div className="flex">
 						<IconSvg className="ml-4 mr-2 h-10 w-24" size="3xl" src={InJustTitle} />
-						<h2 className="font-averta text-4xl font-bold">{t("rightSide.titleSecondLine")}</h2>
+						<h2 className="font-averta text-2xl font-bold md:text-4xl">{t("rightSide.titleSecondLine")}</h2>
 					</div>
-					<h3 className="mt-12 max-w-485 font-averta text-2xl font-bold">
+					<h3 className="mt-12 max-w-485 font-averta text-2xl md:font-bold">
 						{t("rightSide.descriptionFirstLine")}
 					</h3>
-					<ul className="ml-4 mt-10 font-averta text-xl font-semibold">
+					<ul className="ml-4 mt-10 font-averta text-xl md:font-semibold">
 						{benefitsList?.length
 							? Object.values(benefitsList).map((benefit) => (
 									<li className="mt-2 before:size-1 before:bg-black" key={benefit}>
@@ -61,26 +61,26 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 				</div>
 				<LazyLoginLogos />
 			</div>
-			<div className="z-10 flex h-screen w-full shrink-0 flex-col items-center justify-center bg-gray-1250 p-8 font-averta text-white sm:w-7/12 sm:rounded-l-2xl">
+			<div className="z-10 flex w-full shrink-0 flex-col items-center justify-center bg-gray-1250 p-8 py-12 font-averta text-white sm:w-7/12 sm:rounded-l-2xl">
 				<h1 className="text-center font-averta text-4xl font-semibold">
 					{t("leftSide.welcomeTitle")}
 					<br />
 					{t("leftSide.autokittehGreenTitle")}
 				</h1>
+				<h2 className="mt-6 text-xl md:invisible">Sign In/Up</h2>
 				{isLoggingIn ? (
 					<Loader className="my-8 h-36" size="md" />
 				) : (
 					<Descope flowId="sign-up-or-in" key={descopeRenderKey} onSuccess={handleSuccess} />
 				)}
 				<div>
-					{t("leftSide.signupText")}{" "}
 					<AHref
 						className="font-averta text-green-800 hover:text-gray-500"
 						href="https://autokitteh.com/get-a-demo/"
 						relationship="noreferrer"
 						target="_blank"
 					>
-						{t("leftSide.signupLink")}
+						Visit our website
 					</AHref>
 				</div>
 			</div>
