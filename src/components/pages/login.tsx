@@ -67,7 +67,7 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 					<br />
 					{t("leftSide.autokittehGreenTitle")}
 				</h1>
-				<h2 className="mt-6 text-xl md:invisible">Sign In/Up</h2>
+				<h2 className="mt-6 text-xl md:invisible">Log in or Sign up</h2>
 				{isLoggingIn ? (
 					<Loader className="my-8 h-36" size="md" />
 				) : (
@@ -75,12 +75,12 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 				)}
 				<div>
 					<AHref
-						className="font-averta text-green-800 hover:text-gray-500"
+						className="font-averta text-green-800 underline hover:text-gray-500"
 						href="https://autokitteh.com/get-a-demo/"
 						relationship="noreferrer"
 						target="_blank"
 					>
-						Visit our website
+						Website
 					</AHref>
 				</div>
 			</div>
