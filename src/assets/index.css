@@ -143,7 +143,6 @@ ul li::before {
 
 @media screen and (max-width: 1024px) {
     html, body {
-        z-index: 0 !important;
-        overflow: scroll !important;
+        overflow: scroll;
     }
 }
