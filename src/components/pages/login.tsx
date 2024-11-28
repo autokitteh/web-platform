@@ -27,12 +27,12 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 	const benefitsList = Object.values(t("rightSide.benefitsList", { returnObjects: true }));
 
 	return (
-		<div className="flex h-screen">
-			<div className="relative flex w-2/3 items-center justify-center rounded-3xl pb-32 pl-16 text-black">
-				<div className="z-10 p-5">
+		<div className="flex flex-col-reverse sm:h-screen sm:flex-row">
+			<div className="relative flex w-full items-center justify-center p-4 pb-32 text-black sm:w-2/3 sm:rounded-3xl sm:pl-16">
+				<div className="z-10 flex flex-col p-2 sm:p-5">
 					<AHref
 						ariaLabel={t("leftSide.logoText")}
-						className="absolute left-4 top-4 flex h-auto items-center"
+						className="relative flex h-auto items-center sm:absolute sm:left-4 sm:top-4"
 						href="https://autokitteh.com/"
 						relationship="noreferrer"
 						target="_blank"
@@ -61,7 +61,7 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 				</div>
 				<LazyLoginLogos />
 			</div>
-			<div className="z-10 flex w-7/12 shrink-0 flex-col items-center justify-center rounded-l-2xl bg-gray-1250 p-8 font-averta text-white">
+			<div className="z-10 flex h-screen w-full shrink-0 flex-col items-center justify-center bg-gray-1250 p-8 font-averta text-white sm:w-7/12 sm:rounded-l-2xl">
 				<h1 className="text-center font-averta text-4xl font-semibold">
 					{t("leftSide.welcomeTitle")}
 					<br />

@@ -231,7 +231,7 @@ export const SessionViewer = () => {
 			) : null}
 
 			<div className="flex items-center justify-between">
-				<div className="scrollbar xl:gap-4 my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase 2xl:gap-6">
+				<div className="scrollbar my-5 flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap uppercase xl:gap-4 2xl:gap-6">
 					{sessionTabs.map((singleTab) => (
 						<Tab
 							activeTab={activeTab}
