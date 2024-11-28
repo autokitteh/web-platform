@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
+import * as Sentry from "@sentry/react";
+import { feedbackIntegration } from "@sentry/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -24,8 +26,39 @@ export const DashboardProjectsTable = () => {
 
 	const { openModal } = useModalStore();
 
+	// const [feedback, setFeedback] = useState();
+	// Read `getFeedback` on the client only, to avoid hydration errors during server rendering
+
+	const [widget, setWidget] = useState();
+
+	const feedback = feedbackIntegration({
+		// Disable the injection of the default widget
+		autoInject: false,
+	});
+
+	useEffect(() => {
+		const feedbackNow = async () => {
+			const form = await feedback.createForm();
+			form.appendToDom();
+			setWidget(feedback.createWidget());
+		};
+		feedbackNow();
+	}, []);
+
 	return (
 		<div className="z-10 h-2/3 select-none pt-10">
+			<button
+				onClick={async () => {
+					if (widget) {
+						widget.removeFromDom();
+						setWidget(null);
+					} else {
+					}
+				}}
+				type="button"
+			>
+				{widget ? "Remove Widget" : "Create Widget"}
+			</button>
 			{sortedProjects.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
 					<THead>
