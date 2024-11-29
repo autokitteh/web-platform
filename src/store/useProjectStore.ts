@@ -20,10 +20,10 @@ const defaultState: Omit<
 	| "deleteProject"
 	| "createProjectFromManifest"
 	| "setEditorWidth"
-	| "setActiveTab"
+	| "setLatestOpenedTab"
 > = {
 	projectsList: [],
-	activeTab: "",
+	latestOpenedTab: "",
 	isLoadingProjectsList: true,
 	initialEditorWidth: 50,
 };
@@ -39,9 +39,9 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	setActiveTab: (tab) => {
+	setLatestOpenedTab: (tab) => {
 		set((state) => {
-			state.activeTab = tab;
+			state.latestOpenedTab = tab;
 
 			return state;
 		});

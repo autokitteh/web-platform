@@ -20,7 +20,7 @@ export const Project = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { projectId } = useParams();
-	const { getProject, setActiveTab } = useProjectStore();
+	const { getProject, setLatestOpenedTab } = useProjectStore();
 
 	const loadProject = async (projectId: string) => {
 		if (currentProjectId === projectId) return;
@@ -54,7 +54,7 @@ export const Project = () => {
 	const displayTabs = useMemo(() => calculatePathDepth(location.pathname) < 4, [location.pathname]);
 
 	const goTo = (path: string) => {
-		setActiveTab(path);
+		setLatestOpenedTab(path);
 		navigate(path.toLowerCase());
 	};
 

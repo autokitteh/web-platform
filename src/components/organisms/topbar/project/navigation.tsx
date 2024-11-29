@@ -12,7 +12,7 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const { pathname } = useLocation();
-	const { activeTab: storeActiveTab } = useProjectStore();
+	const { latestOpenedTab } = useProjectStore();
 	const { deployments } = useCacheStore();
 	const navigate = useNavigate();
 
@@ -40,9 +40,21 @@ export const ProjectTopbarNavigation = () => {
 				const iconClassName = cn("group-hover:text-green-200  group-active:text-green-800", {
 					"text-green-200": isSelected,
 				});
-				const computedPath = item.key === "assets" && storeActiveTab ? `/${storeActiveTab}` : item.path;
 
-				const href = `/projects/${projectId}${computedPath.replace("{deploymentId}", deploymentId || "")}`;
+				const getPath = () => {
+					switch (item.key) {
+						case "assets":
+							return latestOpenedTab ? `/${latestOpenedTab}` : "/assets";
+						case "sessions":
+							return deploymentId ? `/deployments/${deploymentId}/sessions` : "";
+						case "deployments":
+							return "/deployments";
+						default:
+							return item.path;
+					}
+				};
+
+				const href = `/projects/${projectId}${getPath()}`;
 
 				return {
 					...item,
@@ -53,7 +65,7 @@ export const ProjectTopbarNavigation = () => {
 					href,
 				};
 			}),
-		[deployments, selectedSection, storeActiveTab, projectId, deploymentId]
+		[deployments, selectedSection, latestOpenedTab, projectId, deploymentId]
 	);
 
 	return (
