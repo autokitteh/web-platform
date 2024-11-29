@@ -18,7 +18,6 @@ import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { FileIcon, HelpIcon, ListDetailsIcon } from "@assets/image/icons";
-import { SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -176,62 +175,46 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						{isAuthEnabled ? (
-							<>
-								<Button className="hover:bg-green-200" href="/settings" title={t("settings")}>
-									<SettingsIcon className="size-7" fill="black" />
-
+						{!isAuthEnabled ? (
+							<Popover interactionType="click">
+								<PopoverTrigger className="ml-1 flex items-center">
+									<Avatar color="black" name={user?.name} round={true} size="36" />
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span
 												animate="visible"
-												className="overflow-hidden whitespace-nowrap"
+												className="ml-2.5 overflow-hidden whitespace-nowrap text-black"
 												exit="hidden"
 												initial="hidden"
 												variants={animateVariant}
 											>
-												{t("settings")}
+												{user?.name}
 											</motion.span>
 										) : null}
 									</AnimatePresence>
-								</Button>
-
-								<Popover>
-									<PopoverTrigger className="ml-1 flex items-center">
-										<Avatar color="black" name={user?.name} round={true} size="36" />
-										<AnimatePresence>
-											{isOpen ? (
-												<motion.span
-													animate="visible"
-													className="ml-2.5 overflow-hidden whitespace-nowrap text-black"
-													exit="hidden"
-													initial="hidden"
-													variants={animateVariant}
-												>
-													{user?.name}
-												</motion.span>
-											) : null}
-										</AnimatePresence>
-									</PopoverTrigger>
-									<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
-										<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2">
-											<Avatar color="black" name={`${user?.name}`} round={true} size="32" />
-											<span className="font-medium text-black">{user?.name}</span>
-										</div>
-										<div className="mt-1">
-											<Button className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250">
-												{t("userPreferences")}
-											</Button>
-											<Button
-												className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
-												onClick={() => logoutFunction()}
-											>
-												{t("logout")}
-											</Button>
-										</div>
-									</PopoverContent>
-								</Popover>
-							</>
+								</PopoverTrigger>
+								<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
+									<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2">
+										<Avatar color="black" name={`${user?.name}`} round={true} size="32" />
+										<span className="font-medium text-black">{user?.name}</span>
+									</div>
+									<div className="mt-1">
+										<Button
+											className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
+											href="/settings"
+											title={t("settings")}
+										>
+											{t("settings")}
+										</Button>
+										<Button
+											className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
+											onClick={() => logoutFunction()}
+										>
+											{t("logout")}
+										</Button>
+									</div>
+								</PopoverContent>
+							</Popover>
 						) : null}
 					</div>
 				</div>

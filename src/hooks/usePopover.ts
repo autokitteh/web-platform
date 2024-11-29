@@ -6,6 +6,7 @@ import {
 	offset,
 	safePolygon,
 	shift,
+	useClick,
 	useDismiss,
 	useFloating,
 	useHover,
@@ -15,7 +16,12 @@ import {
 
 import { PopoverOptions } from "@src/interfaces/components";
 
-export function usePopover({ initialOpen = false, modal, placement = "bottom" }: PopoverOptions = {}) {
+export function usePopover({
+	initialOpen = false,
+	interactionType = "hover",
+	modal,
+	placement = "bottom",
+}: PopoverOptions = {}) {
 	const [open, setOpen] = useState(initialOpen);
 	const [labelId, setLabelId] = useState<string>();
 	const [descriptionId, setDescriptionId] = useState<string>();
@@ -40,13 +46,18 @@ export function usePopover({ initialOpen = false, modal, placement = "bottom" }:
 
 	const dismiss = useDismiss(context);
 	const role = useRole(context);
-	const hover = useHover(context, {
-		handleClose: safePolygon({
-			buffer: -Infinity,
-		}),
-	});
 
-	const interactions = useInteractions([dismiss, role, hover]);
+	const interactionHooks = {
+		click: useClick(context, {
+			enabled: interactionType === "click",
+		}),
+		hover: useHover(context, {
+			enabled: interactionType === "hover",
+			handleClose: safePolygon({ buffer: -Infinity }),
+		}),
+	};
+
+	const interactions = useInteractions([interactionHooks[interactionType], dismiss, role]);
 
 	return useMemo(
 		() => ({

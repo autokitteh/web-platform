@@ -8,12 +8,13 @@ import { PopoverOptions, PopoverTriggerProps } from "@src/interfaces/components"
 
 export const Popover = ({
 	children,
+	interactionType = "hover",
 	modal = false,
 	...restOptions
 }: {
 	children: React.ReactNode;
 } & PopoverOptions) => {
-	const popover = usePopover({ modal, ...restOptions });
+	const popover = usePopover({ modal, interactionType, ...restOptions });
 
 	return <PopoverContext.Provider value={popover}>{children}</PopoverContext.Provider>;
 };

@@ -2,7 +2,6 @@
 	"menu": {
 		"logout": "Log out",
 		"settings": "Settings",
-		"userPreferences": "User Preferences",
 		"closeSidebar": "Close Sidebar",
 		"openSidebar": "Open Sidebar",
 		"intro": "Introduction",
