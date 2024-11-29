@@ -8,7 +8,9 @@ export interface ProjectStore {
 	getProjectsList: () => ServiceResponse<Project[]>;
 	createProjectFromManifest: (manifest: string) => ServiceResponse<string>;
 	projectsList: Project[];
+	activeTab: string;
 	renameProject: (projectId: string, projectName: string) => void;
+	setActiveTab: (tab: string) => void;
 	isLoadingProjectsList: boolean;
 	initialEditorWidth: number;
 	setEditorWidth: (width: number) => void;
