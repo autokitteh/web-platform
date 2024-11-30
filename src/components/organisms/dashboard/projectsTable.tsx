@@ -4,6 +4,7 @@ import * as Sentry from "@sentry/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { isProduction } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { Project } from "@type/models";
 
@@ -36,7 +37,7 @@ export const DashboardProjectsTable = () => {
 	};
 
 	useEffect(() => {
-		initializeWidgetWithForm();
+		if (isProduction) initializeWidgetWithForm();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
