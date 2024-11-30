@@ -6,10 +6,12 @@ import { useLocation } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { MenuProps, SubmenuInfo } from "@interfaces/components";
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
-import { useModalStore, useProjectStore } from "@store";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg } from "@components/atoms";
 
@@ -21,6 +23,7 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 	const { getProjectsList, projectsList } = useProjectStore();
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 	const { openModal } = useModalStore();
+	const addToast = useToastStore((state) => state.addToast);
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -32,8 +35,25 @@ export const Menu = ({ className, isOpen = false, onMouseLeave, onSubmenu }: Men
 		visible: { opacity: 1, transition: { duration: 0.35, ease: "easeOut" }, width: "auto" },
 	};
 
+	const fetchProjects = async () => {
+		const { error } = await getProjectsList();
+		if (error) {
+			addToast({
+				message: t("projectsListFetchFailed"),
+				type: "error",
+			});
+
+			LoggerService.error(
+				namespaces.ui.menu,
+				t("projectsListFetchFailedExtended", {
+					error,
+				})
+			);
+		}
+	};
+
 	useEffect(() => {
-		getProjectsList();
+		fetchProjects();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

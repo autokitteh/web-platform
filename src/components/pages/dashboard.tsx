@@ -14,7 +14,7 @@ export const Dashboard = () => {
 	const { isLoadingProjectsList, projectsList } = useProjectStore();
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 78, min: 30, id: resizeId });
 
-	const hasProjects = !!projectsList.length;
+	const hasProjects = projectsList.length;
 
 	const dashboardContent = useMemo(() => {
 		if (isLoadingProjectsList) {

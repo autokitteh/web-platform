@@ -33,6 +33,7 @@ export const namespaces = {
 		variables: "Variables UI",
 		sessions: "Sessions UI",
 		manualRun: "Manual Run UI",
+		menu: "Menu UI",
 	},
 	hooks: {
 		connectionForm: "Connection Form",
