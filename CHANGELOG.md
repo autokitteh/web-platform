@@ -1,3 +1,10 @@
+# [2.71.0](https://github.com/autokitteh/web-platform/compare/v2.70.4...v2.71.0) (2024-11-30)
+
+
+### Features
+
+* **UI-1013:** adjust login page to mobile devices ([#704](https://github.com/autokitteh/web-platform/issues/704)) ([b6690e1](https://github.com/autokitteh/web-platform/commit/b6690e1b416de986524b1af9433648b6b0d50889))
+
 ## [2.70.4](https://github.com/autokitteh/web-platform/compare/v2.70.3...v2.70.4) (2024-11-27)
 
 
