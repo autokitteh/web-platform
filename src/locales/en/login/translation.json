@@ -3,8 +3,9 @@
         "logoText": "autokitteh",
         "autokittehGreenTitle": "AutoKitteh",
         "welcomeTitle": "Welcome to",
-        "signupLink": "Sign Up",
-        "signupText": "Don't have an account yet?"
+        "signUpOrSignIn": "Log in or Sign up",
+        "linkText": "Website",
+        "linkUrl": "https://autokitteh.com"
     },
     "rightSide": {
         "titleFirstLine": "Reliable Automation",
