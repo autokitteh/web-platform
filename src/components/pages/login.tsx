@@ -16,7 +16,7 @@ const LazyLoginLogos = () => (
 	<Suspense fallback={<div />}>
 		<IconSvg
 			alt="autokitteh logo with integrations"
-			className="absolute bottom-0 right-8 h-36 w-9/12 object-contain object-bottom"
+			className="absolute bottom-0 right-0 h-36 w-9/12 object-contain object-bottom md:right-8"
 			src={LoginLogos}
 		/>
 	</Suspense>
@@ -27,12 +27,12 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 	const benefitsList = Object.values(t("rightSide.benefitsList", { returnObjects: true }));
 
 	return (
-		<div className="flex flex-col-reverse sm:h-screen sm:flex-row">
-			<div className="relative flex w-full items-center justify-center p-4 pb-32 text-black sm:w-2/3 sm:rounded-3xl sm:pl-16">
-				<div className="z-10 flex flex-col p-2 sm:p-5">
+		<div className="flex flex-col-reverse md:h-screen md:flex-row">
+			<div className="relative flex w-full items-center justify-center p-4 pb-32 text-black md:w-2/3 md:rounded-3xl md:pl-16">
+				<div className="z-10 flex flex-col p-2 md:p-5">
 					<AHref
 						ariaLabel={t("leftSide.logoText")}
-						className="relative flex h-auto items-center sm:absolute sm:left-4 sm:top-4"
+						className="relative flex h-auto items-center md:absolute md:left-4 md:top-4"
 						href="https://autokitteh.com/"
 						relationship="noreferrer"
 						target="_blank"
@@ -61,11 +61,11 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 				</div>
 				<LazyLoginLogos />
 			</div>
-			<div className="z-10 flex w-full shrink-0 flex-col items-center justify-center bg-gray-1250 p-8 py-12 font-averta text-white sm:w-7/12 sm:rounded-l-2xl">
+			<div className="z-10 flex w-full shrink-0 flex-col items-center justify-center bg-gray-1250 p-8 py-12 font-averta text-white md:w-7/12 md:rounded-l-2xl">
 				<h1 className="text-center font-averta text-4xl font-semibold">
 					{t("leftSide.welcomeTitle")} {t("leftSide.autokittehGreenTitle")}
 				</h1>
-				<h2 className="mt-6 text-xl">Log in or Sign up</h2>
+				<h2 className="mt-6 text-xl">{t("leftSide.signUpOrSignIn")}</h2>
 				{isLoggingIn ? (
 					<Loader className="my-8 h-36" size="md" />
 				) : (
@@ -74,11 +74,11 @@ const Login = ({ descopeRenderKey, handleSuccess, isLoggingIn }: LoginPageProps)
 				<div>
 					<AHref
 						className="font-averta text-green-800 underline hover:text-gray-500"
-						href="https://autokitteh.com/get-a-demo/"
+						href={t("leftSide.linkUrl")}
 						relationship="noreferrer"
 						target="_blank"
 					>
-						Website
+						{t("leftSide.linkText")}
 					</AHref>
 				</div>
 			</div>
