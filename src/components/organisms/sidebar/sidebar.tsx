@@ -18,6 +18,7 @@ import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { FileIcon, HelpIcon, ListDetailsIcon } from "@assets/image/icons";
+import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -194,9 +195,9 @@ export const Sidebar = () => {
 									</AnimatePresence>
 								</PopoverTrigger>
 								<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
-									<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2">
+									<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2 pl-2">
 										<Avatar color="black" name={`${user?.name}`} round={true} size="32" />
-										<span className="font-medium text-black">{user?.name}</span>
+										<span className="font-medium text-black">{user?.email}</span>
 									</div>
 									<div className="mt-1">
 										<Button
@@ -204,12 +205,14 @@ export const Sidebar = () => {
 											href="/settings"
 											title={t("settings")}
 										>
+											<SettingsIcon className="size-5" fill="black" />
 											{t("settings")}
 										</Button>
 										<Button
 											className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
 											onClick={() => logoutFunction()}
 										>
+											<LogoutIcon className="size-5" fill="black" />
 											{t("logout")}
 										</Button>
 									</div>
