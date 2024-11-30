@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import * as Sentry from "@sentry/react";
-import { feedbackIntegration } from "@sentry/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -26,23 +25,19 @@ export const DashboardProjectsTable = () => {
 
 	const { openModal } = useModalStore();
 
-	// const [feedback, setFeedback] = useState();
-	// Read `getFeedback` on the client only, to avoid hydration errors during server rendering
+	const [widget, setWidget] = useState<ReturnType<typeof feedback.createWidget> | null>(null);
 
-	const [widget, setWidget] = useState();
+	const feedback = Sentry.feedbackIntegration();
 
-	const feedback = feedbackIntegration({
-		// Disable the injection of the default widget
-		autoInject: false,
-	});
+	const initializeWidgetWithForm = async () => {
+		const form = await feedback.createForm();
+		form.appendToDom();
+		setWidget(feedback.createWidget());
+	};
 
 	useEffect(() => {
-		const feedbackNow = async () => {
-			const form = await feedback.createForm();
-			form.appendToDom();
-			setWidget(feedback.createWidget());
-		};
-		feedbackNow();
+		initializeWidgetWithForm();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -52,7 +47,6 @@ export const DashboardProjectsTable = () => {
 					if (widget) {
 						widget.removeFromDom();
 						setWidget(null);
-					} else {
 					}
 				}}
 				type="button"
