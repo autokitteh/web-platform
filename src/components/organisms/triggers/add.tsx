@@ -6,7 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { SelectOption } from "@interfaces/components";
-import { TriggersService } from "@services";
+import { LoggerService, TriggersService } from "@services";
+import { namespaces } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
@@ -79,15 +80,17 @@ export const AddTrigger = () => {
 			const sourceType = data.connection.value in TriggerTypes ? data.connection.value : TriggerTypes.connection;
 			const connectionId = data.connection.value in TriggerTypes ? undefined : data.connection.value;
 
+			const { cron, entryFunction, eventTypeSelect, filePath, filter, name } = data;
+
 			const { data: triggerId, error } = await TriggersService.create(projectId!, {
 				sourceType,
 				connectionId,
-				name: data.name,
-				path: data.filePath.value,
-				entryFunction: data.entryFunction,
-				schedule: data.cron,
-				eventType: data.eventTypeSelect.value,
-				filter: data.filter,
+				name,
+				path: filePath?.value,
+				entryFunction,
+				schedule: cron,
+				eventType: eventTypeSelect?.value,
+				filter,
 				triggerId: undefined,
 			});
 
@@ -109,12 +112,16 @@ export const AddTrigger = () => {
 			navigate(`/projects/${projectId}/triggers/${triggerId}/edit`, {
 				state: { highlightWebhookUrl: true },
 			});
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			addToast({
 				message: tErrors("triggerNotCreated"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.triggerService,
+				t("triggerNotCreatedExtended", { error: (error as Error).message, projectId })
+			);
 		} finally {
 			setIsSaving(false);
 		}

@@ -84,6 +84,7 @@
 		},
 		"form": {
 			"createdSuccessfully": "Trigger created successfully",
+			"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
 			"webhookWillBeGenerated": "The webhook URL will be generated after saving the trigger",
 			"cronSchedulerConnectionTitle": "Scheduler",
 			"addNewTrigger": "Add trigger",
@@ -106,7 +107,7 @@
 			"placeholders": {
 				"webhookUrl": "Webhook URL",
 				"cron": "Cron expression",
-				"eventType": "Event type",
+				"eventTypeLabel": "Event type",
 				"filter": "Filter",
 				"functionName": "Function name",
 				"key": "Key",

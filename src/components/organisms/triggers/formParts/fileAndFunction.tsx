@@ -38,8 +38,10 @@ export const TriggerSpecificFields = ({
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
 
+	useEffect(() => {}, []);
+
 	useEffect(() => {
-		setValue("eventTypeSelect", null);
+		setValue("eventTypeSelect", undefined);
 		setTriggerRerender((prev) => prev + 1);
 
 		if (!connectionId || connectionId === TriggerTypes.webhook || connectionId === TriggerTypes.schedule) {
@@ -127,17 +129,17 @@ export const TriggerSpecificFields = ({
 							render={({ field }) => (
 								<SelectCreatable
 									{...field}
-									aria-label={t("placeholders.eventType")}
+									aria-label={t("placeholders.eventTypeLabel")}
 									createLabel={t("createFunctionNameLabel")}
 									dataTestid="select-trigger-event-type"
 									defaultValue={selectedEventType}
 									isError={!!errors.eventTypeSelect}
 									key={triggerRerender}
-									label={t("placeholders.eventType")}
+									label={t("placeholders.eventTypeLabel")}
 									noOptionsLabel={t("placeholders.eventTypesSelect")}
 									onCreateOption={handleCreateOption}
 									options={options}
-									placeholder={t("placeholders.eventType")}
+									placeholder={t("placeholders.eventTypesSelect")}
 									value={watchedEventTypeSelect}
 								/>
 							)}
