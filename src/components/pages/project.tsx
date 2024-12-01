@@ -51,7 +51,10 @@ export const Project = () => {
 		return pathParts[2] || defaultProjectTab;
 	}, [location.pathname]);
 
-	const displayTabs = useMemo(() => calculatePathDepth(location.pathname) < 4, [location.pathname]);
+	const displayTabs = useMemo(
+		() => calculatePathDepth(location.pathname) < 4 || location.pathname.endsWith("events"),
+		[location.pathname]
+	);
 
 	const goTo = (path: string) => {
 		setLatestOpened("tab", path, projectId!);

@@ -22,7 +22,7 @@ import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 import { InformationPopoverContent } from "@components/organisms/triggers/table/popoverContent";
 
-import { EditIcon, InfoIcon, PlusCircle, TrashIcon } from "@assets/image/icons";
+import { EditIcon, EventsFlag, InfoIcon, PlusCircle, TrashIcon } from "@assets/image/icons";
 
 const useTableHeaders = (t: (key: string) => string): TableHeader[] => {
 	return useMemo(
@@ -219,6 +219,16 @@ export const TriggersTable = () => {
 											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
 										>
 											<TrashIcon className="size-4 stroke-white" />
+										</IconButton>
+										<IconButton
+											ariaLabel={t("table.buttons.ariaDeleteTrigger", {
+												name: trigger.name,
+											})}
+											onClick={() =>
+												navigate(`/projects/${projectId}/triggers/${trigger.triggerId!}/events`)
+											}
+										>
+											<EventsFlag className="size-4 stroke-white" />
 										</IconButton>
 									</div>
 								</Td>
