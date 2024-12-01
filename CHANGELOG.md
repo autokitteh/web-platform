@@ -1,3 +1,10 @@
+# [2.72.0](https://github.com/autokitteh/web-platform/compare/v2.71.1...v2.72.0) (2024-12-01)
+
+
+### Features
+
+* **ENG-1871:** redirect user from specific paths of files to 404 ([#709](https://github.com/autokitteh/web-platform/issues/709)) ([49130f7](https://github.com/autokitteh/web-platform/commit/49130f7bae8b0ffed0fd6166cc2dcf484f42e594))
+
 ## [2.71.1](https://github.com/autokitteh/web-platform/compare/v2.71.0...v2.71.1) (2024-12-01)
 
 
