@@ -15,7 +15,7 @@ import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu, Submenu } from "@components/molecules/menu";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { FileIcon, HelpIcon, ListDetailsIcon } from "@assets/image/icons";
+import { EventsFlag, FileIcon, HelpIcon } from "@assets/image/icons";
 import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
@@ -108,7 +108,7 @@ export const Sidebar = () => {
 							href="/events"
 							title={t("events")}
 						>
-							<IconSvg className="size-7 transition" src={ListDetailsIcon} />
+							<IconSvg className="size-7 transition" src={EventsFlag} />
 
 							<AnimatePresence>
 								{isOpen ? (
