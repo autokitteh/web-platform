@@ -7,4 +7,6 @@ export interface DrawerProps {
 	name: string;
 	variant?: ColorSchemes;
 	className?: string;
+	forcedOpen?: boolean;
+	wrapperClassName?: string;
 }

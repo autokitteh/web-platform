@@ -140,6 +140,9 @@ export const App = () => {
 						<Route element={<AddTrigger />} path="add" />
 
 						<Route element={<EditTrigger />} path=":triggerId/edit" />
+						<Route element={<TriggersTable />} path=":triggerId/events" />
+
+						<Route element={<EditTrigger />} path=":triggerId/edit" />
 
 						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
