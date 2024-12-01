@@ -26,7 +26,7 @@ export const parseNestedJson = (object: Value): Record<string, any> => {
 					ns: "errors",
 					key,
 				});
-				LoggerService.error(namespaces.sessionsService, errorMessage);
+				LoggerService.error(namespaces.sessionsService, errorMessage, true);
 				result[key] = errorMessage;
 			}
 		} else {
