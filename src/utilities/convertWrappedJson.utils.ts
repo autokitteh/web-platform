@@ -19,11 +19,11 @@ export const parseNestedJson = (object: Value): Record<string, any> => {
 
 		if (isWrappedJsonValueWithString(value)) {
 			try {
-				result[key] = JSON.parse(value.string);
+				result[key] = typeof value.string === "string" ? value.string : JSON.parse(value.string);
 			} catch (error) {
 				const errorMessage = i18n.t("convertWrappedJsonError", {
 					error: (error as Error).message,
-					ns: "errors",
+					ns: "services",
 					key,
 				});
 				LoggerService.error(namespaces.sessionsService, errorMessage, true);
