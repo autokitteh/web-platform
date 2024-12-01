@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
-import { extraTriggerTypes, featureFlags } from "@src/constants";
+import { extraTriggerTypes } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { ModalName, TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
@@ -62,7 +62,6 @@ export const EditTrigger = () => {
 			filePath: { label: "", value: "" },
 			entryFunction: "",
 			cron: "",
-			eventType: "",
 			eventTypeSelect: { label: "", value: "" },
 			filter: "",
 		},
@@ -118,7 +117,6 @@ export const EditTrigger = () => {
 			filePath: { label: trigger?.path, value: trigger?.path },
 			entryFunction: trigger?.entryFunction,
 			cron: trigger?.schedule,
-			eventType: trigger?.eventType,
 			eventTypeSelect: { label: trigger?.eventType, value: trigger?.eventType },
 			filter: trigger?.filter,
 		});
@@ -128,11 +126,10 @@ export const EditTrigger = () => {
 	const onSubmit = async (data: TriggerFormData) => {
 		closeModal(ModalName.warningDeploymentActive);
 		setIsSaving(true);
-		const { connection, cron, entryFunction, eventType, eventTypeSelect, filePath, filter, name } = data;
+		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name } = data;
 		try {
 			const sourceType = connection.value in TriggerTypes ? connection.value : TriggerTypes.connection;
 			const connectionId = connection.value in TriggerTypes ? undefined : connection.value;
-			const eventTypeValue = featureFlags.displayComboxInTriggersForm ? eventTypeSelect.value : eventType;
 
 			const { error } = await TriggersService.update(projectId!, {
 				sourceType,
@@ -141,7 +138,7 @@ export const EditTrigger = () => {
 				path: filePath.value,
 				entryFunction,
 				schedule: cron,
-				eventType: eventTypeValue,
+				eventType: eventTypeSelect.value,
 				filter,
 				triggerId: triggerId!,
 			});

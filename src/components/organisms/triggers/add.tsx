@@ -7,7 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { SelectOption } from "@interfaces/components";
 import { TriggersService } from "@services";
-import { featureFlags } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
@@ -46,7 +45,6 @@ export const AddTrigger = () => {
 			filePath: { label: "", value: "" },
 			entryFunction: "",
 			cron: "",
-			eventType: "",
 			eventTypeSelect: { label: "", value: "" },
 			filter: "",
 		},
@@ -81,8 +79,6 @@ export const AddTrigger = () => {
 			const sourceType = data.connection.value in TriggerTypes ? data.connection.value : TriggerTypes.connection;
 			const connectionId = data.connection.value in TriggerTypes ? undefined : data.connection.value;
 
-			const eventType = featureFlags.displayComboxInTriggersForm ? data.eventTypeSelect.value : data.eventType;
-
 			const { data: triggerId, error } = await TriggersService.create(projectId!, {
 				sourceType,
 				connectionId,
@@ -90,7 +86,7 @@ export const AddTrigger = () => {
 				path: data.filePath.value,
 				entryFunction: data.entryFunction,
 				schedule: data.cron,
-				eventType,
+				eventType: data.eventTypeSelect.value,
 				filter: data.filter,
 				triggerId: undefined,
 			});

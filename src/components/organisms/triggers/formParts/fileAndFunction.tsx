@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { featureFlags } from "@src/constants";
 import { eventTypesPerIntegration } from "@src/constants/triggers";
 import { TriggerTypes } from "@src/enums";
 import { SelectOption } from "@src/interfaces/components";
@@ -33,7 +32,6 @@ export const TriggerSpecificFields = ({
 	} = useFormContext<TriggerFormData>();
 	const connectionType = useWatch({ name: "connection.value" });
 	const watchedFunctionName = useWatch({ control, name: "entryFunction" });
-	const watchedEventType = useWatch({ control, name: "eventType" });
 	const watchedFilter = useWatch({ control, name: "filter" });
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
 	const { connections } = useCacheStore();
@@ -41,10 +39,6 @@ export const TriggerSpecificFields = ({
 	const [triggerRerender, setTriggerRerender] = useState(0);
 
 	useEffect(() => {
-		if (!featureFlags.displayComboxInTriggersForm) {
-			return;
-		}
-
 		setValue("eventTypeSelect", null);
 		setTriggerRerender((prev) => prev + 1);
 
@@ -126,43 +120,31 @@ export const TriggerSpecificFields = ({
 
 			{connectionType !== TriggerTypes.webhook && connectionType !== TriggerTypes.schedule ? (
 				<>
-					{featureFlags.displayComboxInTriggersForm ? (
-						<div className="relative">
-							<Controller
-								control={control}
-								name="eventTypeSelect"
-								render={({ field }) => (
-									<SelectCreatable
-										{...field}
-										aria-label={t("placeholders.eventType")}
-										createLabel={t("createFunctionNameLabel")}
-										dataTestid="select-trigger-event-type"
-										defaultValue={selectedEventType}
-										isError={!!errors.eventTypeSelect}
-										key={triggerRerender}
-										label={t("placeholders.eventType")}
-										noOptionsLabel={t("placeholders.eventTypesSelect")}
-										onCreateOption={handleCreateOption}
-										options={options}
-										placeholder={t("placeholders.eventType")}
-										value={watchedEventTypeSelect}
-									/>
-								)}
-							/>
-							<ErrorMessage>{errors.eventTypeSelect?.message as string}</ErrorMessage>
-						</div>
-					) : (
-						<div className="relative">
-							<Input
-								aria-label={t("placeholders.eventType")}
-								{...register("eventType")}
-								isError={!!errors.eventType}
-								label={t("placeholders.eventType")}
-								value={watchedEventType}
-							/>
-							<ErrorMessage>{errors.eventType?.message as string}</ErrorMessage>
-						</div>
-					)}
+					<div className="relative">
+						<Controller
+							control={control}
+							name="eventTypeSelect"
+							render={({ field }) => (
+								<SelectCreatable
+									{...field}
+									aria-label={t("placeholders.eventType")}
+									createLabel={t("createFunctionNameLabel")}
+									dataTestid="select-trigger-event-type"
+									defaultValue={selectedEventType}
+									isError={!!errors.eventTypeSelect}
+									key={triggerRerender}
+									label={t("placeholders.eventType")}
+									noOptionsLabel={t("placeholders.eventTypesSelect")}
+									onCreateOption={handleCreateOption}
+									options={options}
+									placeholder={t("placeholders.eventType")}
+									value={watchedEventTypeSelect}
+								/>
+							)}
+						/>
+						<ErrorMessage>{errors.eventTypeSelect?.message as string}</ErrorMessage>
+					</div>
+
 					<div className="relative">
 						<Input
 							aria-label={t("placeholders.filter")}
