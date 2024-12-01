@@ -1,3 +1,10 @@
+## [2.71.1](https://github.com/autokitteh/web-platform/compare/v2.71.0...v2.71.1) (2024-12-01)
+
+
+### Bug Fixes
+
+* **UI-1018:** fix google gemini addition in connections ([#710](https://github.com/autokitteh/web-platform/issues/710)) ([adc5a97](https://github.com/autokitteh/web-platform/commit/adc5a97a18a4a1a28585bc81db0676d274e0a5ce))
+
 # [2.71.0](https://github.com/autokitteh/web-platform/compare/v2.70.4...v2.71.0) (2024-11-30)
 
 
