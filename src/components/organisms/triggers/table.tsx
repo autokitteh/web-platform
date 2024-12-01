@@ -221,7 +221,7 @@ export const TriggersTable = () => {
 											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>
 										<IconButton
-											ariaLabel={t("table.buttons.ariaDeleteTrigger", {
+											ariaLabel={t("table.buttons.ariaShowTriggerEvents", {
 												name: trigger.name,
 											})}
 											onClick={() =>

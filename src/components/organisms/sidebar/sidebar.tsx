@@ -19,9 +19,8 @@ import { NewProjectModal } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { EventsFlag, FileIcon, HelpIcon } from "@assets/image/icons";
+import { EventsFlag } from "@assets/image/icons";
 import { CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon } from "@assets/image/icons/sidebar";
-import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
