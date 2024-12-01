@@ -25,6 +25,11 @@
   status = 404
 
 [[redirects]]
+  from = "/.git"
+  to = "/404"
+  status = 404
+
+[[redirects]]
   from = "/BitKeeper"
   to = "/404"
   status = 404
