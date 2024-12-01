@@ -34,7 +34,7 @@ export const Modal = ({ children, className, hideCloseButton, name }: ModalProps
 	return createPortal(
 		<AnimatePresence>
 			{isOpen ? (
-				<div className={wrapperClass}>
+				<div className={wrapperClass} data-html2canvas-ignore>
 					<motion.div
 						animate="visible"
 						className={bgClass}

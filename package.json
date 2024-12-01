@@ -45,6 +45,7 @@
 		"framer-motion": "^11.11.7",
 		"front-matter": "^4.0.2",
 		"github-markdown-css": "^5.7.0",
+		"html2canvas-pro": "^1.5.8",
 		"idb": "^8.0.0",
 		"immer": "^10.1.1",
 		"javascript-time-ago": "^2.5.10",
@@ -146,10 +147,10 @@
 		]
 	},
 	"optionalDependencies": {
+		"@esbuild/linux-x64": "0.24.0",
 		"@rollup/rollup-linux-x64-gnu": "^4.24.4",
 		"@rollup/rollup-linux-x64-musl": "^4.27.2",
-		"@rollup/rollup-win32-x64-msvc": "4.24.0",
-		"@esbuild/linux-x64":"0.24.0"
+		"@rollup/rollup-win32-x64-msvc": "4.24.0"
 	},
 	"overrides": {
 		"vite": {
