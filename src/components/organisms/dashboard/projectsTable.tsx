@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import * as Sentry from "@sentry/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { isProduction } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { Project } from "@type/models";
 
@@ -26,34 +24,8 @@ export const DashboardProjectsTable = () => {
 
 	const { openModal } = useModalStore();
 
-	const [widget, setWidget] = useState<ReturnType<typeof feedback.createWidget> | null>(null);
-
-	const feedback = Sentry.feedbackIntegration();
-
-	const initializeWidgetWithForm = async () => {
-		const form = await feedback.createForm();
-		form.appendToDom();
-		setWidget(feedback.createWidget());
-	};
-
-	useEffect(() => {
-		if (isProduction) initializeWidgetWithForm();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	return (
 		<div className="z-10 h-2/3 select-none pt-10">
-			<button
-				onClick={async () => {
-					if (widget) {
-						widget.removeFromDom();
-						setWidget(null);
-					}
-				}}
-				type="button"
-			>
-				{widget ? "Remove Widget" : "Create Widget"}
-			</button>
 			{sortedProjects.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
 					<THead>

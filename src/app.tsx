@@ -13,7 +13,7 @@ import {
 	useNavigationType,
 } from "react-router-dom";
 
-import { isProduction } from "@constants";
+// import { isProduction } from "@constants";
 
 import { PageTitle } from "@components/atoms";
 import { Toast } from "@components/molecules";
@@ -34,35 +34,31 @@ export const App = () => {
 	let AKRoutes = Routes;
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 
-	if (isProduction) {
-		Sentry.init({
-			dsn: import.meta.env.SENTRY_DSN,
-			integrations: [
-				// See docs for support of different versions of variation of react router
-				// https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
-				Sentry.reactRouterV6BrowserTracingIntegration({
-					useEffect,
-					useLocation,
-					useNavigationType,
-					createRoutesFromChildren,
-					matchRoutes,
-				}),
-				Sentry.feedbackIntegration({
-					colorScheme: "system",
-				}),
-			],
-			// Set tracesSampleRate to 1.0 to capture 100%
-			// of transactions for tracing.
-			tracesSampleRate: 1.0,
-			// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
-			tracePropagationTargets: [
-				"localhost",
-				/^https:\/\/[\w.-]+\.autokitteh\.cloud/,
-				/^https:\/\/autokitteh\.cloud/,
-			],
-		});
-		AKRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
-	}
+	// if (isProduction) {
+	Sentry.init({
+		dsn: import.meta.env.SENTRY_DSN,
+		integrations: [
+			// See docs for support of different versions of variation of react router
+			// https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
+			Sentry.reactRouterV6BrowserTracingIntegration({
+				useEffect,
+				useLocation,
+				useNavigationType,
+				createRoutesFromChildren,
+				matchRoutes,
+			}),
+			Sentry.feedbackIntegration({
+				colorScheme: "system",
+			}),
+		],
+		// Set tracesSampleRate to 1.0 to capture 100%
+		// of transactions for tracing.
+		tracesSampleRate: 1.0,
+		// Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
+		tracePropagationTargets: ["localhost", /^https:\/\/[\w.-]+\.autokitteh\.cloud/, /^https:\/\/autokitteh\.cloud/],
+	});
+	AKRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
+	// }
 
 	return (
 		<BrowserRouter>
