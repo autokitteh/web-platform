@@ -34,8 +34,8 @@ export const IntroMainBlock = () => {
 	};
 
 	return (
-		<div className="z-10 mt-7 select-none gap-8">
-			<div className="grid grid-cols-auto-fit-350 items-stretch gap-4 border-b border-gray-950 pb-7.5 font-averta text-white">
+		<div className="z-10 mt-7 select-none">
+			<div className="grid grid-cols-auto-fit-350 items-stretch gap-x-14 gap-y-4 border-b border-gray-950 pb-7.5 font-averta text-white">
 				<div className="flex min-h-52 flex-col">
 					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/main.jpg')] bg-cover bg-center bg-no-repeat">
 						<IconButton
@@ -52,7 +52,7 @@ export const IntroMainBlock = () => {
 				</div>
 
 				<div className="flex w-full flex-col justify-center">
-					<div className="mx-auto w-4/5">
+					<div>
 						<Typography className="text-3xl font-bold" element="h2">
 							{t("cards.main.reliableAutomation")}
 						</Typography>
@@ -99,7 +99,7 @@ export const IntroMainBlock = () => {
 					</div>
 				</div>
 			</div>
-			<div className="mt-8 grid grid-cols-auto-fit-350 border-b border-gray-950 pb-7.5 font-averta">
+			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-4 border-b border-gray-950 pb-7.5 font-averta">
 				<div className="border-r border-gray-950">
 					<Typography className="pr-4 text-3xl font-bold text-green-800" element="h2">
 						Get started with Autokitteh
@@ -117,7 +117,7 @@ export const IntroMainBlock = () => {
 							))}
 					</div>
 				</div>
-				<div className="mx-auto">
+				<div>
 					<Typography className="text-3xl font-bold" element="h2">
 						What is AutoKitteh?
 					</Typography>
@@ -130,7 +130,7 @@ export const IntroMainBlock = () => {
 					</ol>
 				</div>
 			</div>
-			<div className="mt-8 grid grid-cols-auto-fit-350 font-averta">
+			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-4 font-averta">
 				<div className="border-r border-gray-950">
 					<Typography className="pr-4 text-lg font-bold" element="h3">
 						JOIN THE COMMUNITY
@@ -153,17 +153,19 @@ export const IntroMainBlock = () => {
 						</Link>
 					</div>
 				</div>
-				<div className="mx-auto">
-					<Typography className="text-3xl font-bold" element="h2">
-						What is AutoKitteh?
+				<div>
+					<Typography className="pr-4 text-lg font-bold uppercase" element="h3">
+						News
 					</Typography>
-					<ol className="mt-6 grid gap-1">
-						<li className="text-base">Durable workflow automation platform</li>
-						<li className="text-base">Simple to use APIs to applications</li>
-						<li className="text-base">Simple authentication</li>
-						<li className="text-base">Run Python code</li>
-						<li className="text-base">Workflow management</li>
-					</ol>
+					<div>
+						<Typography className="text-base" element="p">
+							Build anything with simple code. Use APIs and build your business logic: Serverless, no
+							queues, secured, managed
+						</Typography>
+						<Typography className="mt-5 text-xs font-semibold uppercase text-gray-750" element="p">
+							1 week ago
+						</Typography>
+					</div>
 				</div>
 			</div>
 
