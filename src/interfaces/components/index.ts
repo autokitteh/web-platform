@@ -29,7 +29,7 @@ export type {
 	ModalDeleteVariableProps,
 	ModalModifyVariableProps,
 	ModalProps,
-	WarningDeploymentActivetedModalProps,
+	ActiveDeploymentWarningModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
 export type { PopoverOptions, PopoverTriggerProps } from "@interfaces/components/popover.interface";

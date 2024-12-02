@@ -3,15 +3,22 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { WarningDeploymentActivetedModalProps } from "@interfaces/components";
+import { ActiveDeploymentWarningModalProps } from "@interfaces/components";
 import { useModalStore } from "@src/store";
 
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const WarningDeploymentActivetedModal = ({ onClick }: WarningDeploymentActivetedModalProps) => {
+export const ActiveDeploymentWarningModal = ({
+	action,
+	modifiedId,
+	onDelete,
+	onEdit,
+}: ActiveDeploymentWarningModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
 	const { closeModal } = useModalStore();
+
+	const onOkClick = () => (action === "edit" ? onEdit(modifiedId) : onDelete(modifiedId));
 
 	return (
 		<Modal hideCloseButton name={ModalName.warningDeploymentActive}>
@@ -34,7 +41,7 @@ export const WarningDeploymentActivetedModal = ({ onClick }: WarningDeploymentAc
 				<Button
 					ariaLabel={t("agreeButton")}
 					className="bg-gray-1100 px-4 py-3 font-semibold"
-					onClick={onClick}
+					onClick={onOkClick}
 					variant="filled"
 				>
 					{t("agreeButton")}
