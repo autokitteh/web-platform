@@ -7,7 +7,7 @@ const getWindowDimensions = () => {
 	const isDesktopSmall = width <= 1440;
 	const isLaptop = width <= 1199;
 	const isLaptopSmall = width <= 1024;
-	const isTable = width <= 768;
+	const isTablet = width <= 768;
 	const isMobile = width <= 640;
 
 	return {
@@ -18,7 +18,7 @@ const getWindowDimensions = () => {
 		isDesktopSmall,
 		isLaptop,
 		isLaptopSmall,
-		isTable,
+		isTablet,
 		isMobile,
 	};
 };

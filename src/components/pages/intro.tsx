@@ -9,18 +9,18 @@ import { ProjectTemplatesSection } from "@components/organisms/dashboard/templat
 export const Intro = () => {
 	const resizeId = useId();
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
-	const { isTable } = useWindowDimensions();
+	const { isTablet } = useWindowDimensions();
 
 	return (
 		<div className="my-0 flex w-full overflow-hidden rounded-none md:my-1.5 md:rounded-2xl">
-			<div className="relative flex w-2/3 flex-col" style={{ width: `${!isTable ? leftSideWidth : 100}%` }}>
+			<div className="relative flex w-2/3 flex-col" style={{ width: `${!isTablet ? leftSideWidth : 100}%` }}>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none">
 					<DashboardTopbar />
 
 					<IntroMainBlock />
 				</Frame>
 			</div>
-			{!isTable ? (
+			{!isTablet ? (
 				<>
 					<ResizeButton
 						className="right-0.5 bg-white hover:bg-gray-700"
