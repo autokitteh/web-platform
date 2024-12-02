@@ -75,6 +75,9 @@ export default defineConfig({
 		trace: "on",
 		video: "on",
 		screenshot: "on",
+		extraHTTPHeaders: {
+			Authorization: `Bearer ${process.env.TESTS_JWT_AUTH_TOKEN}`,
+		},
 	},
 
 	webServer: {
