@@ -153,7 +153,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		const { data: projects, error } = await ProjectsService.list();
 
 		if (error) {
-			set((state) => ({ ...state, isLoadingProjectsList: false }));
+			set((state) => ({ ...state, isLoadingProjectsList: false, projectsList: [] }));
 
 			return { data: undefined, error };
 		}
