@@ -1,3 +1,10 @@
+# [2.75.0](https://github.com/autokitteh/web-platform/compare/v2.74.1...v2.75.0) (2024-12-02)
+
+
+### Features
+
+* **UI-867:** user profile info in sidebar ([#694](https://github.com/autokitteh/web-platform/issues/694)) ([0f6b731](https://github.com/autokitteh/web-platform/commit/0f6b731bb8b10cdb7c21e79da33e1059f1a7bc62))
+
 ## [2.74.1](https://github.com/autokitteh/web-platform/compare/v2.74.0...v2.74.1) (2024-12-02)
 
 
