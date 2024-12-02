@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
 const getWindowDimensions = () => {
-	const { innerHeight: height, innerWidth: width } = window;
+	const width = window.screen.width;
+	const height = window.screen.height;
 
 	const isLargeDesktop = width >= 1680;
 	const isMaxWidth1440 = width <= 1440;
