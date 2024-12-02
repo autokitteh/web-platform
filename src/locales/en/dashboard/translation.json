@@ -38,6 +38,11 @@
 		}
 	},
 	"welcome": {
+		"getStarted": "Get started with Autokitteh",
+		"whatIsAutoKitteh": "What is AutoKitteh?",
+		"joinTheCommunity": "Join the community",
+		"seeOurCommunity": "See how our community is creating projects",
+		"news": "News",
 		  "cards": {
 			"main": {
 			  "buildAnything": "Build anything with simple code. Use APIs and build your business logic: Serverless, no queues, secured, managed",

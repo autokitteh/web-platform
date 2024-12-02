@@ -120,7 +120,7 @@ export const IntroMainBlock = () => {
 			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-4 border-b border-gray-950 pb-7.5 font-averta">
 				<div className="border-r border-gray-950">
 					<Typography className="pr-4 text-3xl font-bold text-green-800" element="h2">
-						Get started with Autokitteh
+						{t("getStarted")}
 					</Typography>
 					<div className="scrollbar mt-9 flex max-h-280 flex-col gap-7 overflow-auto">
 						{Array(6)
@@ -137,7 +137,7 @@ export const IntroMainBlock = () => {
 				</div>
 				<div>
 					<Typography className="text-3xl font-bold" element="h2">
-						What is AutoKitteh?
+						{t("whatIsAutoKitteh")}
 					</Typography>
 					<ol className="mt-6 grid gap-1">
 						{whatIsAutoKitteh.map((item, index) => (
@@ -150,11 +150,11 @@ export const IntroMainBlock = () => {
 			</div>
 			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-6 font-averta">
 				<div className="border-r border-gray-950">
-					<Typography className="pr-4 text-lg font-bold" element="h3">
-						JOIN THE COMMUNITY
+					<Typography className="pr-4 text-lg font-bold uppercase" element="h3">
+						{t("joinTheCommunity")}
 					</Typography>
 					<Typography className="mt-2 text-base" element="p">
-						See how our community is creating projects
+						{t("seeOurCommunity")}
 					</Typography>
 					<div className="mt-4 flex gap-2.5">
 						<Link target="_blank" to="https://www.reddit.com/r/autokitteh">
@@ -173,7 +173,7 @@ export const IntroMainBlock = () => {
 				</div>
 				<div className="relative">
 					<Typography className="mb-3 pr-4 text-lg font-bold uppercase" element="h3">
-						News
+						{t("news")}
 					</Typography>
 					<Swiper
 						className="mr-10"
