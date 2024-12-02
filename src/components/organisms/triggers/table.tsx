@@ -114,11 +114,9 @@ export const TriggersTable = () => {
 	const handleOpenModalDeleteTrigger = useCallback(
 		(id: string) => {
 			setTriggerId(id);
-			closeModal(ModalName.warningDeploymentActive);
-
 			openModal(ModalName.deleteTrigger);
 		},
-		[openModal, closeModal]
+		[openModal]
 	);
 
 	const tableHeaderClass = (sortable: boolean, className: string) =>
@@ -128,10 +126,7 @@ export const TriggersTable = () => {
 		return <Loader isCenter size="xl" />;
 	}
 
-	const navigateToEditForm = (triggerId: string) => {
-		closeModal(ModalName.warningDeploymentActive);
-		navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
-	};
+	const navigateToEditForm = (triggerId: string) => navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
 
 	const handleAction = (action: "edit" | "delete", triggerId: string) => {
 		setTriggerId(triggerId);
@@ -141,6 +136,8 @@ export const TriggersTable = () => {
 
 			return;
 		}
+		closeModal(ModalName.warningDeploymentActive);
+
 		if (action === "edit") {
 			navigateToEditForm(triggerId);
 
