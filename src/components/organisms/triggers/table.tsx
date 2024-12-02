@@ -72,7 +72,6 @@ export const TriggersTable = () => {
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
-	const [warningModalAction, setWarningModalAction] = useState<"edit" | "delete">("edit");
 
 	const tableHeaders = useTableHeaders(t);
 
@@ -126,24 +125,19 @@ export const TriggersTable = () => {
 		return <Loader isCenter size="xl" />;
 	}
 
-	const navigateToEditForm = (triggerId: string) => navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
+	const navigateToEditForm = (triggerId: string) => {
+		closeModal(ModalName.warningDeploymentActive);
+		navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
+	};
 
-	const handleAction = (action: "edit" | "delete", triggerId: string) => {
+	const handleEditAction = (triggerId: string) => {
 		setTriggerId(triggerId);
-		setWarningModalAction(action);
 		if (hasActiveDeployments) {
 			openModal(ModalName.warningDeploymentActive);
 
 			return;
 		}
-		closeModal(ModalName.warningDeploymentActive);
-
-		if (action === "edit") {
-			navigateToEditForm(triggerId);
-
-			return;
-		}
-		handleOpenModalDeleteTrigger(triggerId);
+		navigateToEditForm(triggerId);
 	};
 
 	return (
@@ -214,7 +208,7 @@ export const TriggersTable = () => {
 												name: trigger.name,
 											})}
 											className="size-8"
-											onClick={() => handleAction("edit", trigger.triggerId!)}
+											onClick={() => handleEditAction(trigger.triggerId!)}
 										>
 											<EditIcon className="size-3 fill-white" />
 										</IconButton>
@@ -222,7 +216,7 @@ export const TriggersTable = () => {
 											ariaLabel={t("table.buttons.ariaDeleteTrigger", {
 												name: trigger.name,
 											})}
-											onClick={() => handleAction("delete", trigger.triggerId!)}
+											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
 										>
 											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>
@@ -238,12 +232,7 @@ export const TriggersTable = () => {
 
 			<DeleteTriggerModal id={triggerId} isDeleting={isDeleting} onDelete={handleDeleteTrigger} />
 
-			<ActiveDeploymentWarningModal
-				action={warningModalAction}
-				modifiedId={triggerId || ""}
-				onDelete={handleOpenModalDeleteTrigger}
-				onEdit={navigateToEditForm}
-			/>
+			<ActiveDeploymentWarningModal modifiedId={triggerId || ""} onOk={navigateToEditForm} />
 		</>
 	);
 };
