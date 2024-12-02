@@ -13,6 +13,7 @@ import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, SortButton } from "@components/molecules";
+import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteVariableModal } from "@components/organisms/variables";
 
 import { PlusCircle } from "@assets/image";
@@ -22,11 +23,13 @@ export const VariablesTable = () => {
 	const { t } = useTranslation("tabs", { keyPrefix: "variables" });
 	const [deleteVariable, setDeleteVariable] = useState<Variable>();
 	const [isDeleting, setIsDeleting] = useState(false);
+	const [warningModalAction, setWarningModalAction] = useState<"edit" | "delete">("edit");
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { closeModal, openModal } = useModalStore();
 	const {
 		fetchVariables,
+		hasActiveDeployments,
 		loading: { variables: loadingVariables },
 		variables,
 	} = useCacheStore();
@@ -68,6 +71,28 @@ export const VariablesTable = () => {
 	const showDeleteModal = (variableName: string, variableValue: string, scopeId: string) => {
 		openModal(ModalName.deleteVariable);
 		setDeleteVariable({ isSecret: false, name: variableName, scopeId, value: variableValue });
+	};
+
+	const navigateToEditForm = (variableName: string) => {
+		closeModal(ModalName.warningDeploymentActive);
+		navigate(`edit/${variableName}`);
+	};
+
+	const handleAction = (action: "edit" | "delete", variable: Variable) => {
+		setDeleteVariable(variable);
+		setWarningModalAction(action);
+		if (hasActiveDeployments) {
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+		closeModal(ModalName.warningDeploymentActive);
+		if (action === "edit") {
+			navigateToEditForm(variable.name);
+
+			return;
+		}
+		showDeleteModal(variable.name, variable.value, variable.scopeId!);
 	};
 
 	return loadingVariables ? (
@@ -121,13 +146,13 @@ export const VariablesTable = () => {
 					</THead>
 
 					<TBody>
-						{sortedVariables.map(({ isSecret, name, scopeId, value }, index) => (
+						{sortedVariables.map((variable, index) => (
 							<Tr className="group" key={index}>
-								<Td className="w-2/6 pl-4 font-semibold">{name}</Td>
+								<Td className="w-2/6 pl-4 font-semibold">{variable.name}</Td>
 
 								<Td className="w-3/6">
-									{!isSecret ? (
-										value
+									{!variable.isSecret ? (
+										variable.value
 									) : (
 										<div className="flex items-center gap-2 leading-none">
 											<LockSolid className="size-3 fill-white" />
@@ -140,15 +165,15 @@ export const VariablesTable = () => {
 								<Td className="w-1/6 max-w-20 pr-0">
 									<div className="flex size-8 space-x-1">
 										<IconButton
-											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
-											onClick={() => navigate(`edit/${name}`)}
+											ariaLabel={t("table.buttons.ariaModifyVariable", { name: variable.name })}
+											onClick={() => handleAction("edit", variable)}
 										>
 											<EditIcon className="size-3 fill-white" />
 										</IconButton>
 
 										<IconButton
-											ariaLabel={t("table.buttons.ariaDeleteVariable", { name })}
-											onClick={() => showDeleteModal(name, value, scopeId!)}
+											ariaLabel={t("table.buttons.ariaDeleteVariable", { name: variable.name })}
+											onClick={() => handleAction("delete", variable)}
 										>
 											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>
@@ -163,6 +188,13 @@ export const VariablesTable = () => {
 			)}
 
 			<DeleteVariableModal id={deleteVariable?.name} isDeleting={isDeleting} onDelete={handleDeleteVariable} />
+
+			<ActiveDeploymentWarningModal
+				action={warningModalAction}
+				modifiedId={deleteVariable?.name || ""}
+				onDelete={() => showDeleteModal(deleteVariable!.name, deleteVariable!.value, deleteVariable!.scopeId!)}
+				onEdit={() => navigateToEditForm(deleteVariable!.name)}
+			/>
 		</>
 	);
 };
