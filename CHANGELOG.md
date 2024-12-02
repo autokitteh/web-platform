@@ -1,3 +1,10 @@
+# [2.74.0](https://github.com/autokitteh/web-platform/compare/v2.73.0...v2.74.0) (2024-12-02)
+
+
+### Features
+
+* **UI-997:** cmd/ctrl+s in editor should save the code in it ([#686](https://github.com/autokitteh/web-platform/issues/686)) ([147ace4](https://github.com/autokitteh/web-platform/commit/147ace49ab5c9c0e5f23417a9ea4649bf37bf564))
+
 # [2.73.0](https://github.com/autokitteh/web-platform/compare/v2.72.0...v2.73.0) (2024-12-02)
 
 
