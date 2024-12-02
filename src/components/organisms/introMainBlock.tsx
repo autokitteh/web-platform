@@ -53,7 +53,7 @@ export const IntroMainBlock = () => {
 
 	return (
 		<div className="z-10 mt-7 select-none">
-			<div className="grid grid-cols-auto-fit-350 items-stretch gap-x-14 gap-y-4 border-b border-gray-950 pb-7.5 font-averta text-white">
+			<div className="grid grid-cols-auto-fit-248 items-stretch gap-x-14 gap-y-4 border-b border-gray-950 pb-7.5 font-averta text-white md:grid-cols-auto-fit-350">
 				<div className="flex min-h-52 flex-col">
 					<div className="flex min-h-64 w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/main.jpg')] bg-cover bg-top bg-no-repeat">
 						<IconButton
@@ -103,7 +103,7 @@ export const IntroMainBlock = () => {
 					</div>
 				</div>
 			</div>
-			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-5 border-b border-gray-950 pb-7.5 font-averta">
+			<div className="mt-8 grid grid-cols-auto-fit-248 gap-x-14 gap-y-5 border-b border-gray-950 pb-7.5 font-averta md:grid-cols-auto-fit-350">
 				<div className="border-gray-950 md:border-r">
 					<Typography className="pr-4 text-3xl font-bold text-green-800" element="h2">
 						{t("getStarted")}
@@ -134,7 +134,7 @@ export const IntroMainBlock = () => {
 					</ol>
 				</div>
 			</div>
-			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-6 font-averta">
+			<div className="mt-8 grid grid-cols-auto-fit-248 gap-x-14 gap-y-6 font-averta md:grid-cols-auto-fit-350">
 				<div className="border-gray-950 md:border-r">
 					<Typography className="pr-4 text-lg font-bold uppercase" element="h3">
 						{t("joinTheCommunity")}
