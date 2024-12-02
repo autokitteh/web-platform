@@ -24,10 +24,10 @@ import {
 	ArrowRightCarouselIcon,
 	ArrowStartTemplateIcon,
 	CirclePlayIcon,
+	DiscordNoColorIcon,
 	GithubIntroIcon,
 	LinkedInIntroIcon,
 	RedditIntroIcon,
-	TelegramIntroIcon,
 } from "@assets/image/icons";
 
 import "swiper/css";
@@ -163,7 +163,7 @@ export const IntroMainBlock = () => {
 							<LinkedInIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
 						</Link>
 						<Link target="_blank" to="https://discord.gg/UhnJuBarZQ">
-							<TelegramIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
+							<DiscordNoColorIcon className="size-8 fill-gray-500 transition hover:fill-green-800" />
 						</Link>
 						<Link target="_blank" to="https://github.com/autokitteh/autokitteh">
 							<GithubIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
@@ -189,11 +189,7 @@ export const IntroMainBlock = () => {
 						spaceBetween={35}
 					>
 						{newsAutoKitteh.map((item, index) => (
-							<SwiperSlide key={index}>
-								<Link className="text-base" target="_blank" to="#">
-									{item}
-								</Link>
-							</SwiperSlide>
+							<SwiperSlide key={index}>{item}</SwiperSlide>
 						))}
 					</Swiper>
 					<div className={cn(swiperButtonClass, "md:-left-12 -left-6 swiper-prev")}>

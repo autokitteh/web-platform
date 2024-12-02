@@ -23,6 +23,8 @@ export { default as Close } from "@assets/image/icons/Close.svg?react";
 export { default as CompressIcon } from "@assets/image/icons/Compress.svg?react";
 export { default as CopyIcon } from "@assets/image/icons/Copy.svg?react";
 export { default as DeploymentsIcon } from "@assets/image/icons/Deployments.svg?react";
+// Taken from: https://www.svgrepo.com/svg/450093/discord
+export { default as DiscordNoColorIcon } from "@assets/image/icons/DiscordNoColor.svg?react";
 export { default as DownloadIcon } from "@assets/image/icons/Download.svg?react";
 export { default as DownloadDownArrowIcon } from "@assets/image/icons/DownloadDownArrow.svg?react";
 export { default as EditIcon } from "@assets/image/icons/Edit.svg?react";
