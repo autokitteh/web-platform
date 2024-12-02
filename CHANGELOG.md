@@ -1,3 +1,10 @@
+# [2.73.0](https://github.com/autokitteh/web-platform/compare/v2.72.0...v2.73.0) (2024-12-02)
+
+
+### Features
+
+* **UI-917:** add active tab management to project navigation and store ([#673](https://github.com/autokitteh/web-platform/issues/673)) ([58acd1f](https://github.com/autokitteh/web-platform/commit/58acd1fba22896765264ce58aa49333edacfc97d))
+
 # [2.72.0](https://github.com/autokitteh/web-platform/compare/v2.71.1...v2.72.0) (2024-12-01)
 
 
