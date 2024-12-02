@@ -4,7 +4,13 @@ import { useTranslation } from "react-i18next";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { getStartedWithAutoKitteh, meowWorldProjectName, whatIsAutoKitteh } from "@src/constants";
+import {
+	getStartedWithAutoKitteh,
+	howToBuildAutomation,
+	meowWorldProjectName,
+	newsAutoKitteh,
+	whatIsAutoKitteh,
+} from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useProjectStore } from "@src/store";
@@ -115,13 +121,30 @@ export const IntroMainBlock = () => {
 					<Typography className="text-3xl font-bold" element="h2">
 						{t("whatIsAutoKitteh")}
 					</Typography>
-					<ol className="mt-6 grid gap-1">
+					<ol className="mt-4 grid gap-1">
 						{whatIsAutoKitteh.map((item, index) => (
 							<li className="text-base" key={index}>
 								{item}
 							</li>
 						))}
 					</ol>
+					<Typography className="mt-5 text-3xl font-bold" element="h2">
+						{t("howToBuildAnAutomation")}
+					</Typography>
+					<ol className="mt-4 grid gap-1">
+						{howToBuildAutomation.map((item, index) => (
+							<li className="text-base" key={index}>
+								{item}
+							</li>
+						))}
+					</ol>
+					<Button
+						className="p-0 text-base text-green-800 hover:bg-transparent"
+						onClick={() => handleOpenModal("https://www.youtube.com/embed/BkUvIJc_kms")}
+						variant="light"
+					>
+						{t("tutorialVideo")}
+					</Button>
 				</div>
 			</div>
 			<div className="mt-8 grid grid-cols-auto-fit-248 gap-x-14 gap-y-6 font-averta md:grid-cols-auto-fit-350">
@@ -165,22 +188,13 @@ export const IntroMainBlock = () => {
 						}}
 						spaceBetween={35}
 					>
-						{Array(3)
-							.fill(null)
-							.map((_, index) => (
-								<SwiperSlide key={index}>
-									<Link className="text-base" target="_blank" to="#">
-										Build anything with simple code. Use APIs and build your business logic:
-										Serverless, no queues, secured, managed
-									</Link>
-									<Typography
-										className="mt-5 text-xs font-semibold uppercase text-gray-750"
-										element="p"
-									>
-										1 week ago
-									</Typography>
-								</SwiperSlide>
-							))}
+						{newsAutoKitteh.map((item, index) => (
+							<SwiperSlide key={index}>
+								<Link className="text-base" target="_blank" to="#">
+									{item}
+								</Link>
+							</SwiperSlide>
+						))}
 					</Swiper>
 					<div className={cn(swiperButtonClass, "md:-left-12 -left-6 swiper-prev")}>
 						<ArrowRightCarouselIcon className="rotate-180" />

@@ -10,6 +10,19 @@ export const whatIsAutoKitteh = [
 	"Workflow management",
 ];
 
+export const howToBuildAutomation = [
+	"Create Project",
+	"Configure: Triggers, Connections to applications, Variables",
+	"Code",
+	"Deploy",
+	"Monitor",
+];
+
+export const newsAutoKitteh = [
+	"AutoKitteh is open for public Beta",
+	"New feature: Manual - run a workflow by triggering entry point with predefined input.",
+];
+
 export const getStartedWithAutoKitteh = [
 	{
 		title: "Quick guide - Building projects",
