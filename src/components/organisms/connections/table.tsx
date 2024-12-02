@@ -13,6 +13,7 @@ import { useCacheStore, useConnectionCheckerStore, useModalStore, useToastStore 
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ConnectionTableStatus, EmptyTableAddButton, SortButton } from "@components/molecules";
+import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 
 import { PlusCircle } from "@assets/image";
@@ -30,10 +31,12 @@ export const ConnectionsTable = () => {
 	const {
 		connections,
 		fetchConnections,
+		hasActiveDeployments,
 		loading: { connections: isLoading },
 	} = useCacheStore();
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
+	const [warningModalAction, setWarningModalAction] = useState<"edit" | "delete">("edit");
 
 	useEffect(() => {
 		setFetchConnectionsCallback(() => fetchConnections(projectId!, true));
@@ -89,13 +92,16 @@ export const ConnectionsTable = () => {
 		fetchConnections(projectId!, true);
 	};
 
-	const handleConnectionEditClick = useCallback(
-		(connectionId: string) => {
-			navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[projectId]
-	);
+	const navigateToEditForm = (connectionId: string) =>
+		navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+
+	const handleAction = (action: "edit" | "delete", connectionId: string) => {
+		setConnectionId(connectionId);
+		setWarningModalAction(action);
+		if (hasActiveDeployments) {
+			openModal(ModalName.warningDeploymentActive);
+		}
+	};
 
 	return isLoading ? (
 		<Loader isCenter size="xl" />
@@ -192,7 +198,7 @@ export const ConnectionsTable = () => {
 											<IconButton
 												ariaLabel={t("table.buttons.titleEditConnection")}
 												className="size-8 p-1.5"
-												onClick={() => handleConnectionEditClick(connectionId)}
+												onClick={() => handleAction("edit", connectionId)}
 												title={t("table.buttons.titleEditConnection")}
 											>
 												<EditIcon className="size-3 fill-white" />
@@ -200,7 +206,7 @@ export const ConnectionsTable = () => {
 
 											<IconButton
 												ariaLabel={t("table.buttons.titleRemoveConnection", { name })}
-												onClick={() => handleOpenModalDeleteConnection(connectionId)}
+												onClick={() => handleAction("delete", connectionId)}
 												title={t("table.buttons.titleRemoveConnection")}
 											>
 												<TrashIcon className="size-4 stroke-white" />
@@ -218,6 +224,12 @@ export const ConnectionsTable = () => {
 			{connectionId ? (
 				<DeleteConnectionModal id={connectionId} isDeleting={isDeleting} onDelete={handleDeleteConnection} />
 			) : null}
+			<ActiveDeploymentWarningModal
+				action={warningModalAction}
+				modifiedId={connectionId || ""}
+				onDelete={handleOpenModalDeleteConnection}
+				onEdit={navigateToEditForm}
+			/>
 		</>
 	);
 };
