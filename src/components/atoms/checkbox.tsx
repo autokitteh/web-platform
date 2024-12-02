@@ -4,9 +4,11 @@ import { IconSvg } from "./icons";
 import { CheckboxProps } from "@src/interfaces/components";
 import { cn } from "@src/utilities";
 
+import { Loader } from "@components/atoms/loader";
+
 import { Check, Square } from "@assets/image/icons";
 
-export const Checkbox = ({ checked, className, label, onChange, title }: CheckboxProps) => {
+export const Checkbox = ({ checked, className, isLoading, label, onChange, title }: CheckboxProps) => {
 	const id = useId();
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -35,7 +37,11 @@ export const Checkbox = ({ checked, className, label, onChange, title }: Checkbo
 						className="flex cursor-pointer items-center justify-center gap-2 text-sm text-gray-250"
 						htmlFor={id}
 					>
-						<IconSvg className="size-3.5 fill-gray-250" src={checked ? Check : Square} />
+						{isLoading ? (
+							<Loader size="sm" />
+						) : (
+							<IconSvg className="size-3.5 fill-gray-250" src={checked ? Check : Square} />
+						)}
 						{label}
 					</label>
 				) : null}
