@@ -49,7 +49,7 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 
 	return (
 		<div className={appLayoutClasses}>
-			{!isMaxWidth768 ? <Sidebar /> : null}
+			<Sidebar />
 
 			<div className="flex flex-1 flex-col md:mb-2">
 				{hideTopbar ? null : <ProjectConfigTopbar />}
