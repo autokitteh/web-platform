@@ -33,6 +33,8 @@ export interface CreateProjectModalProps {
 }
 
 export interface ActiveDeploymentWarningModalProps {
-	onOk: (modifiedId: string) => void;
+	goToEdit: (modifiedId: string) => void;
+	goToAdd: () => void;
 	modifiedId: string;
+	action?: "add" | "edit";
 }

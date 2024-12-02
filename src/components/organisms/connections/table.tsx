@@ -37,6 +37,34 @@ export const ConnectionsTable = () => {
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
 
+	// Add state for warning modal action
+	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
+
+	// Modify the navigateToEditForm function
+	const navigateToEditForm = (connectionId: string) => {
+		closeModal(ModalName.warningDeploymentActive);
+		navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+	};
+
+	// Replace handleAction with this version
+	const handleAction = (action: "edit" | "add", connectionId: string) => {
+		if (hasActiveDeployments) {
+			setConnectionId(connectionId);
+			setWarningModalAction(action);
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+
+		if (action === "edit") {
+			navigateToEditForm(connectionId);
+
+			return;
+		}
+
+		navigate("add");
+	};
+
 	useEffect(() => {
 		setFetchConnectionsCallback(() => fetchConnections(projectId!, true));
 
@@ -91,27 +119,6 @@ export const ConnectionsTable = () => {
 		fetchConnections(projectId!, true);
 	};
 
-	const navigateToEditForm = (connectionId: string) =>
-		navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
-
-	const handleAction = (action: "edit" | "delete", connectionId: string) => {
-		setConnectionId(connectionId);
-		if (hasActiveDeployments) {
-			openModal(ModalName.warningDeploymentActive);
-
-			return;
-		}
-		closeModal(ModalName.warningDeploymentActive);
-
-		if (action === "edit") {
-			navigateToEditForm(connectionId);
-
-			return;
-		}
-
-		handleOpenModalDeleteConnection(connectionId);
-	};
-
 	return isLoading ? (
 		<Loader isCenter size="xl" />
 	) : (
@@ -122,7 +129,7 @@ export const ConnectionsTable = () => {
 				<Button
 					ariaLabel={t("buttons.addNew")}
 					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-500 hover:text-white"
-					onClick={() => navigate("add")}
+					onClick={() => handleAction("add", "")}
 				>
 					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 
@@ -215,7 +222,7 @@ export const ConnectionsTable = () => {
 
 											<IconButton
 												ariaLabel={t("table.buttons.titleRemoveConnection", { name })}
-												onClick={() => handleAction("delete", connectionId)}
+												onClick={() => handleOpenModalDeleteConnection(connectionId)}
 												title={t("table.buttons.titleRemoveConnection")}
 											>
 												<TrashIcon className="size-4 stroke-white" />
@@ -233,7 +240,12 @@ export const ConnectionsTable = () => {
 			{connectionId ? (
 				<DeleteConnectionModal id={connectionId} isDeleting={isDeleting} onDelete={handleDeleteConnection} />
 			) : null}
-			<ActiveDeploymentWarningModal modifiedId={connectionId || ""} onOk={navigateToEditForm} />
+			<ActiveDeploymentWarningModal
+				action={warningModalAction}
+				goToAdd={() => navigate("add")}
+				goToEdit={navigateToEditForm}
+				modifiedId={connectionId || ""}
+			/>
 		</>
 	);
 };
