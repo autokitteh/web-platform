@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { meowWorldProjectName } from "@src/constants";
+import { getStartedWithAutoKitteh, meowWorldProjectName, whatIsAutoKitteh } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useProjectStore } from "@src/store";
@@ -39,14 +39,6 @@ export const IntroMainBlock = () => {
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });
 	};
-
-	const whatIsAutoKitteh = [
-		"Durable workflow automation platform",
-		"Simple to use APIs to applications",
-		"Simple authentication",
-		"Run Python code",
-		"Workflow management",
-	];
 
 	const swiperButtonClass =
 		"absolute z-10 flex size-9 top-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black transition hover:bg-gray-1000 active:scale-90";
@@ -109,16 +101,14 @@ export const IntroMainBlock = () => {
 						{t("getStarted")}
 					</Typography>
 					<div className="scrollbar mt-5 flex max-h-280 flex-col gap-7 overflow-auto md:mt-9">
-						{Array(6)
-							.fill(null)
-							.map((_, index) => (
-								<WelcomeVideoCard
-									description="Develop Python code"
-									key={index}
-									onPlay={() => handleOpenModal("https://www.youtube.com/embed/zNtJ8OBPUmY")}
-									title="Hello World lorem ipsum title"
-								/>
-							))}
+						{getStartedWithAutoKitteh.map(({ description, title, youtubeLink }, index) => (
+							<WelcomeVideoCard
+								description={description}
+								key={index}
+								onPlay={() => handleOpenModal(youtubeLink)}
+								title={title}
+							/>
+						))}
 					</div>
 				</div>
 				<div>

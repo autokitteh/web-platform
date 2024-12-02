@@ -26,6 +26,8 @@ export {
 	defaultTemplateProjectCategory,
 	meowWorldProjectName,
 	templateCategoriesOrder,
+	whatIsAutoKitteh,
+	getStartedWithAutoKitteh,
 } from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight, maxResultsLimitToDisplay } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
