@@ -1,4 +1,4 @@
-export { DashboardProjectsTable, DashboardWelcomeMainBlock } from "@components/organisms/dashboard";
+export { DashboardProjectsTable } from "@components/organisms/dashboard";
 export { SessionsTable } from "@components/organisms/deployments";
 export { DeploymentsTable } from "@components/organisms/deployments/table";
 export { EditorTabs } from "@components/organisms/editorTabs";

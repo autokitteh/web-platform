@@ -4,10 +4,8 @@ import { useResize } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
-import { DashboardProjectsTable, DashboardTopbar, DashboardWelcomeMainBlock } from "@components/organisms";
+import { DashboardProjectsTable, DashboardTopbar, IntroMainBlock } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
-
-import { CatDashboardImage } from "@assets/image";
 
 export const Dashboard = () => {
 	const resizeId = useId();
@@ -20,7 +18,7 @@ export const Dashboard = () => {
 		if (isLoadingProjectsList) {
 			return <Loader isCenter size="lg" />;
 		} else if (!hasProjects) {
-			return <DashboardWelcomeMainBlock />;
+			return <IntroMainBlock />;
 		} else {
 			return <DashboardProjectsTable />;
 		}
@@ -34,10 +32,6 @@ export const Dashboard = () => {
 
 					{dashboardContent}
 				</Frame>
-
-				{!hasProjects && !isLoadingProjectsList ? (
-					<CatDashboardImage className="absolute -bottom-6 -right-5 hidden minHeightLg:block" />
-				) : null}
 			</div>
 			<ResizeButton className="right-0.5 bg-white hover:bg-gray-700" direction="horizontal" resizeId={resizeId} />
 
