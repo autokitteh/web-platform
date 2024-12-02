@@ -103,12 +103,12 @@ export const IntroMainBlock = () => {
 					</div>
 				</div>
 			</div>
-			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-4 border-b border-gray-950 pb-7.5 font-averta">
+			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-5 border-b border-gray-950 pb-7.5 font-averta">
 				<div className="border-gray-950 md:border-r">
 					<Typography className="pr-4 text-3xl font-bold text-green-800" element="h2">
 						{t("getStarted")}
 					</Typography>
-					<div className="scrollbar mt-9 flex max-h-280 flex-col gap-7 overflow-auto">
+					<div className="scrollbar mt-5 flex max-h-280 flex-col gap-7 overflow-auto md:mt-9">
 						{Array(6)
 							.fill(null)
 							.map((_, index) => (
@@ -157,18 +157,22 @@ export const IntroMainBlock = () => {
 						</Link>
 					</div>
 				</div>
-				<div className="relative">
+				<div className="relative pb-5 md:pb-0">
 					<Typography className="mb-3 pr-4 text-lg font-bold uppercase" element="h3">
 						{t("news")}
 					</Typography>
 					<Swiper
-						className="mr-10"
+						breakpoints={{
+							768: {
+								slidesPerView: 2,
+							},
+						}}
+						className="ml-5 mr-10 md:ml-0"
 						modules={[Navigation]}
 						navigation={{
 							nextEl: ".swiper-next",
 							prevEl: ".swiper-prev",
 						}}
-						slidesPerView={2}
 						spaceBetween={35}
 					>
 						{Array(3)
@@ -188,7 +192,7 @@ export const IntroMainBlock = () => {
 								</SwiperSlide>
 							))}
 					</Swiper>
-					<div className={cn(swiperButtonClass, "-left-12 swiper-prev")}>
+					<div className={cn(swiperButtonClass, "md:-left-12 -left-6 swiper-prev")}>
 						<ArrowRightCarouselIcon className="rotate-180" />
 					</div>
 					<div className={cn(swiperButtonClass, "-right-1 swiper-next")}>
