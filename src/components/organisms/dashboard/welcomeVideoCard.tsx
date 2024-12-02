@@ -1,21 +1,23 @@
 import React from "react";
 
 import { WelcomeVideoCardProps } from "@src/interfaces/components";
-import { cn } from "@src/utilities";
 
 import { IconButton } from "@components/atoms";
 
 import { PlayIcon } from "@assets/image/icons";
 
 export const WelcomeVideoCard = ({ description, image, onPlay, title }: WelcomeVideoCardProps) => {
-	const buttonClass = cn(
-		"h-11 w-16 rounded-lg border border-gray-750 hover:bg-transparent focus:scale-90",
-		` bg-[url('image/pages/intro/${image}')] bg-cover bg-top bg-no-repeat`
-	);
+	const backgroundImageStyle = {
+		backgroundImage: `url('/assets/image/pages/intro/${image}')`,
+	};
 
 	return (
 		<div className="flex gap-4">
-			<IconButton className={buttonClass} onClick={onPlay}>
+			<IconButton
+				className="h-11 w-16 rounded-lg border border-gray-750 bg-cover bg-top bg-no-repeat hover:bg-transparent focus:scale-90"
+				onClick={onPlay}
+				style={backgroundImageStyle}
+			>
 				<PlayIcon className="size-6 fill-white" />
 			</IconButton>
 			<div className="font-averta">

@@ -16,6 +16,7 @@ export const IconButton = ({
 	onKeyDown,
 	onMouseEnter,
 	onMouseLeave,
+	style,
 	title,
 	type = "button",
 	variant,
@@ -46,6 +47,7 @@ export const IconButton = ({
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 			role="button"
+			style={style}
 			tabIndex={0}
 			title={title}
 			type={type}
