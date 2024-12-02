@@ -72,6 +72,7 @@ export const TriggersTable = () => {
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
+	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
 
 	const tableHeaders = useTableHeaders(t);
 
@@ -130,14 +131,21 @@ export const TriggersTable = () => {
 		navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
 	};
 
-	const handleEditAction = (triggerId: string) => {
-		setTriggerId(triggerId);
+	const handleAction = (action: "add" | "edit", triggerId: string) => {
 		if (hasActiveDeployments) {
+			setTriggerId(triggerId);
+			setWarningModalAction(action);
 			openModal(ModalName.warningDeploymentActive);
 
 			return;
 		}
-		navigateToEditForm(triggerId);
+
+		if (action === "edit") {
+			navigateToEditForm(triggerId);
+
+			return;
+		}
+		navigate("add");
 	};
 
 	return (
@@ -147,7 +155,7 @@ export const TriggersTable = () => {
 				<Button
 					ariaLabel={t("buttons.addNew")}
 					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-500 hover:text-white"
-					href="add"
+					onClick={() => handleAction("add", "")}
 				>
 					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 					{t("buttons.addNew")}
@@ -208,7 +216,7 @@ export const TriggersTable = () => {
 												name: trigger.name,
 											})}
 											className="size-8"
-											onClick={() => handleEditAction(trigger.triggerId!)}
+											onClick={() => handleAction("edit", trigger.triggerId!)}
 										>
 											<EditIcon className="size-3 fill-white" />
 										</IconButton>
@@ -232,7 +240,12 @@ export const TriggersTable = () => {
 
 			<DeleteTriggerModal id={triggerId} isDeleting={isDeleting} onDelete={handleDeleteTrigger} />
 
-			<ActiveDeploymentWarningModal modifiedId={triggerId || ""} onOk={navigateToEditForm} />
+			<ActiveDeploymentWarningModal
+				action={warningModalAction}
+				goToAdd={() => navigate("add")}
+				goToEdit={navigateToEditForm}
+				modifiedId={triggerId || ""}
+			/>
 		</>
 	);
 };

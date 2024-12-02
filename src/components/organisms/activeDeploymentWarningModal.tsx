@@ -9,11 +9,18 @@ import { useModalStore } from "@src/store";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const ActiveDeploymentWarningModal = ({ modifiedId, onOk }: ActiveDeploymentWarningModalProps) => {
+export const ActiveDeploymentWarningModal = ({
+	action,
+	goToAdd,
+	goToEdit,
+	modifiedId,
+}: ActiveDeploymentWarningModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "warningActiveDeployment" });
 	const { closeModal } = useModalStore();
 
-	const onOkClick = () => onOk(modifiedId);
+	if (!action) return null;
+
+	const onOkClick = () => (action === "edit" ? goToEdit(modifiedId) : goToAdd());
 
 	return (
 		<Modal hideCloseButton name={ModalName.warningDeploymentActive}>
