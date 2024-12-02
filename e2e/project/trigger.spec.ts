@@ -67,6 +67,14 @@ async function modifyTrigger(
 ) {
 	await page.getByRole("button", { name: `Modify ${name} trigger` }).click();
 
+	if (withActiveDeployment) {
+		const deployButton = page.getByRole("button", { name: "Deploy project" });
+		await deployButton.click();
+		const toast = await waitForToast(page, "Project deployment completed successfully");
+		await expect(toast).toBeVisible();
+		await page.getByRole("button", { name: "Ok" }).click();
+	}
+
 	const cronInput = page.getByRole("textbox", { name: "Cron expression" });
 	await cronInput.click();
 	await cronInput.fill(newCronExpression);
@@ -74,17 +82,6 @@ async function modifyTrigger(
 	const functionNameInput = page.getByRole("textbox", { name: "Function name" });
 	await functionNameInput.click();
 	await functionNameInput.fill(newFunctionName);
-
-	if (withActiveDeployment) {
-		const deployButton = page.getByRole("button", { name: "Deploy project" });
-		await deployButton.click();
-		const toast = await waitForToast(page, "Project deployment completed successfully");
-		await expect(toast).toBeVisible();
-		await page.getByRole("button", { name: "Save", exact: true }).click();
-		await page.getByRole("button", { name: "Ok" }).click();
-
-		return;
-	}
 
 	await page.getByRole("button", { name: "Save", exact: true }).click();
 }

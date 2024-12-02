@@ -47,10 +47,10 @@ test.describe("Project Variables Suite", () => {
 		await expect(toast).toBeVisible();
 
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
+		await page.getByRole("button", { name: "Ok" }).click();
 		await page.getByLabel("Value").click();
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
-		await page.getByRole("button", { name: "Ok" }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
 		await expect(newVariableInTable).toBeVisible();
 	});
