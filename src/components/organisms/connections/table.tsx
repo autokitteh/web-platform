@@ -36,7 +36,6 @@ export const ConnectionsTable = () => {
 	} = useCacheStore();
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
-	const [warningModalAction, setWarningModalAction] = useState<"edit" | "delete">("edit");
 
 	useEffect(() => {
 		setFetchConnectionsCallback(() => fetchConnections(projectId!, true));
@@ -97,7 +96,6 @@ export const ConnectionsTable = () => {
 
 	const handleAction = (action: "edit" | "delete", connectionId: string) => {
 		setConnectionId(connectionId);
-		setWarningModalAction(action);
 		if (hasActiveDeployments) {
 			openModal(ModalName.warningDeploymentActive);
 
@@ -235,12 +233,7 @@ export const ConnectionsTable = () => {
 			{connectionId ? (
 				<DeleteConnectionModal id={connectionId} isDeleting={isDeleting} onDelete={handleDeleteConnection} />
 			) : null}
-			<ActiveDeploymentWarningModal
-				action={warningModalAction}
-				modifiedId={connectionId || ""}
-				onDelete={handleOpenModalDeleteConnection}
-				onEdit={navigateToEditForm}
-			/>
+			<ActiveDeploymentWarningModal modifiedId={connectionId || ""} onOk={navigateToEditForm} />
 		</>
 	);
 };
