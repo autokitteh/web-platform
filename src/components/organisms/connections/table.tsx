@@ -53,8 +53,9 @@ export const ConnectionsTable = () => {
 		(connectionId: string) => {
 			setConnectionId(connectionId);
 			openModal(ModalName.deleteConnection);
+			closeModal(ModalName.warningDeploymentActive);
 		},
-		[openModal]
+		[openModal, closeModal]
 	);
 
 	const handleDeleteConnection = async () => {
@@ -92,15 +93,26 @@ export const ConnectionsTable = () => {
 		fetchConnections(projectId!, true);
 	};
 
-	const navigateToEditForm = (connectionId: string) =>
+	const navigateToEditForm = (connectionId: string) => {
+		closeModal(ModalName.warningDeploymentActive);
+
 		navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
+	};
 
 	const handleAction = (action: "edit" | "delete", connectionId: string) => {
 		setConnectionId(connectionId);
 		setWarningModalAction(action);
 		if (hasActiveDeployments) {
 			openModal(ModalName.warningDeploymentActive);
+
+			return;
 		}
+		if (action === "edit") {
+			navigateToEditForm(connectionId);
+
+			return;
+		}
+		handleOpenModalDeleteConnection(connectionId);
 	};
 
 	return isLoading ? (
