@@ -14,7 +14,7 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 	const appLayoutClasses = cn("h-screen w-screen md:pr-5 flex", className);
 	const { isLoggerEnabled, toggleLogger } = useLoggerStore();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
-	const { isMaxWidth768 } = useWindowDimensions();
+	const { isIOS, isMobile } = useWindowDimensions();
 
 	const resizeId = useId();
 	const [systemLogHeight, setSystemLogHeight] = useResize({
@@ -56,9 +56,9 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 				<div className="flex overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
 					<Outlet />
 				</div>
-				{!isMaxWidth768 ? (
+				{isIOS || isMobile ? null : (
 					<ResizeButton className={buttonResizeClasses} direction="vertical" resizeId={resizeId} />
-				) : null}
+				)}
 				<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
 					<SystemLog />
 				</div>
