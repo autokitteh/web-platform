@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { mainNavigationItems } from "@src/constants";
-import { useCacheStore } from "@src/store";
+import { useCacheStore, useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
@@ -12,6 +12,7 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const { pathname } = useLocation();
+	const { latestOpenedTab } = useProjectStore();
 	const { deployments } = useCacheStore();
 	const navigate = useNavigate();
 
@@ -39,7 +40,21 @@ export const ProjectTopbarNavigation = () => {
 				const iconClassName = cn("group-hover:text-green-200  group-active:text-green-800", {
 					"text-green-200": isSelected,
 				});
-				const href = `/projects/${projectId}${item.path.replace("{deploymentId}", deploymentId || "")}`;
+
+				const getPath = () => {
+					switch (item.key) {
+						case "assets":
+							return latestOpenedTab ? `/${latestOpenedTab}` : "/assets";
+						case "sessions":
+							return deploymentId ? `/deployments/${deploymentId}/sessions` : "";
+						case "deployments":
+							return "/deployments";
+						default:
+							return item.path;
+					}
+				};
+
+				const href = `/projects/${projectId}${getPath()}`;
 
 				return {
 					...item,
@@ -50,7 +65,7 @@ export const ProjectTopbarNavigation = () => {
 					href,
 				};
 			}),
-		[deployments, selectedSection, projectId, deploymentId]
+		[deployments, selectedSection, latestOpenedTab, projectId, deploymentId]
 	);
 
 	return (
