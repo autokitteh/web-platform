@@ -26,7 +26,6 @@ export const ConnectionsTable = () => {
 	const navigate = useNavigate();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [connectionId, setConnectionId] = useState<string>();
-
 	const addToast = useToastStore((state) => state.addToast);
 	const {
 		connections,
