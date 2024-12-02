@@ -16,13 +16,16 @@ export const DashboardTopbar = () => {
 
 	return (
 		<div className="z-10 flex flex-wrap">
-			<div className="flex w-full items-end justify-between">
-				<Typography className="w-full font-averta text-4xl font-semibold" element="h1">
+			<div className="flex w-full items-center justify-between">
+				<Typography
+					className="w-full text-center font-averta text-2xl font-semibold md:text-left md:text-2xl"
+					element="h1"
+				>
 					{t("welcome")}
 				</Typography>
 
 				<Button
-					className="gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 font-averta text-base font-semibold"
+					className="hidden gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 font-averta text-base font-semibold md:flex"
 					onClick={() => openModal(ModalName.newProject)}
 					variant="filled"
 				>

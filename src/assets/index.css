@@ -121,6 +121,11 @@ ul {
 	@apply ml-6;
 }
 
+ol {
+	list-style: decimal;
+	@apply ml-4;
+}
+
 ul li {
 	position: relative;
 }
@@ -146,4 +151,10 @@ ul li::before {
 	body {
 		overflow: scroll;
 	}
+}
+
+.swiper-button-disabled {
+	opacity: 0;
+	pointer-events: none;
+	user-select: none;
 }

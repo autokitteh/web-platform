@@ -68,6 +68,7 @@
 		"react-virtualized": "^9.22.5",
 		"remark-gfm": "^4.0.0",
 		"tailwind-merge": "^2.5.5",
+		"swiper": "^11.1.15",
 		"zod": "^3.23.8",
 		"zustand": "^5.0.0"
 	},
@@ -147,10 +148,10 @@
 		]
 	},
 	"optionalDependencies": {
+		"@esbuild/linux-x64": "0.24.0",
 		"@rollup/rollup-linux-x64-gnu": "^4.24.4",
 		"@rollup/rollup-linux-x64-musl": "^4.27.2",
-		"@rollup/rollup-win32-x64-msvc": "4.24.0",
-		"@esbuild/linux-x64":"0.24.0"
+		"@rollup/rollup-win32-x64-msvc": "4.24.0"
 	},
 	"overrides": {
 		"vite": {
