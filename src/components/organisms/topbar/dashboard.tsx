@@ -18,7 +18,7 @@ export const DashboardTopbar = () => {
 		<div className="z-10 flex flex-wrap">
 			<div className="flex w-full items-center justify-between">
 				<Typography
-					className="w-full text-center font-averta text-3xl font-semibold md:text-left md:text-4xl"
+					className="w-full text-center font-averta text-2xl font-semibold md:text-left md:text-2xl"
 					element="h1"
 				>
 					{t("welcome")}

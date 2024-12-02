@@ -53,11 +53,11 @@ export const IntroMainBlock = () => {
 
 	return (
 		<div className="z-10 mt-7 select-none">
-			<div className="grid grid-cols-auto-fit-248 items-stretch gap-x-14 gap-y-4 border-b border-gray-950 pb-7.5 font-averta text-white md:grid-cols-auto-fit-350">
-				<div className="flex min-h-52 flex-col">
-					<div className="flex min-h-64 w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/main.jpg')] bg-cover bg-top bg-no-repeat">
+			<div className="flex items-stretch border-b border-gray-950 pb-6 font-averta text-white md:gap-x-14">
+				<div className="flex h-40 w-full flex-col md:w-96">
+					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/main.jpg')] bg-cover bg-top bg-no-repeat">
 						<IconButton
-							className="group size-20 overflow-hidden rounded-full bg-black/75 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
+							className="group size-16 overflow-hidden rounded-full bg-black/75 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
 							onClick={() => handleOpenModal("https://www.youtube.com/embed/BkUvIJc_kms")}
 						>
 							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-100" />
@@ -66,19 +66,19 @@ export const IntroMainBlock = () => {
 				</div>
 
 				<div className="flex w-full flex-col justify-center font-averta">
-					<Typography className="text-center text-3xl font-bold md:text-left" element="h2">
+					<Typography className="text-center text-2xl font-bold md:text-left" element="h2">
 						{t("cards.main.reliableAutomation")}
 					</Typography>
 
-					<Typography className="text-center text-3xl font-bold text-green-800 md:text-left" element="h2">
+					<Typography className="text-center text-2xl font-bold text-green-800 md:text-left" element="h2">
 						<InJustA className="ml-5 inline-block" /> {t("cards.main.inAFewLinesOfCode")}
 					</Typography>
-					<div className="mt-10 hidden md:block">
+					<div className="mt-4 hidden md:block">
 						<div className="flex flex-wrap items-center justify-center gap-1">
 							{meowWorldExist ? null : (
 								<Button
 									ariaLabel={t("cards.main.meowWorld")}
-									className="min-w-52 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
+									className="mr-16 min-w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
 									onClick={() => createProjectFromAsset(meowWorldProjectName)}
 								>
 									<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
