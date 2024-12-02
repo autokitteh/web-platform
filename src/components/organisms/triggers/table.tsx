@@ -3,6 +3,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { ActiveDeploymentWarningModal } from "../activeDeploymentWarningModal";
 import { ModalName } from "@enums/components";
 import { LoggerService, TriggersService } from "@services";
 import { namespaces } from "@src/constants";
@@ -63,6 +64,7 @@ export const TriggersTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const {
 		fetchTriggers,
+		hasActiveDeployments,
 		loading: { triggers: loadingTriggers },
 		triggers,
 	} = useCacheStore();
@@ -70,6 +72,7 @@ export const TriggersTable = () => {
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
+	const [warningModalAction, setWarningModalAction] = useState<"edit" | "delete">("edit");
 
 	const tableHeaders = useTableHeaders(t);
 
@@ -111,9 +114,11 @@ export const TriggersTable = () => {
 	const handleOpenModalDeleteTrigger = useCallback(
 		(id: string) => {
 			setTriggerId(id);
+			closeModal(ModalName.warningDeploymentActive);
+
 			openModal(ModalName.deleteTrigger);
 		},
-		[openModal]
+		[openModal, closeModal]
 	);
 
 	const tableHeaderClass = (sortable: boolean, className: string) =>
@@ -122,6 +127,27 @@ export const TriggersTable = () => {
 	if (loadingTriggers) {
 		return <Loader isCenter size="xl" />;
 	}
+
+	const navigateToEditForm = (triggerId: string) => {
+		closeModal(ModalName.warningDeploymentActive);
+		navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
+	};
+
+	const handleAction = (action: "edit" | "delete", triggerId: string) => {
+		setTriggerId(triggerId);
+		setWarningModalAction(action);
+		if (hasActiveDeployments) {
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+		if (action === "edit") {
+			navigateToEditForm(triggerId);
+
+			return;
+		}
+		handleOpenModalDeleteTrigger(triggerId);
+	};
 
 	return (
 		<>
@@ -191,7 +217,7 @@ export const TriggersTable = () => {
 												name: trigger.name,
 											})}
 											className="size-8"
-											onClick={() => navigate(`${trigger.triggerId}/edit`)}
+											onClick={() => handleAction("edit", trigger.triggerId!)}
 										>
 											<EditIcon className="size-3 fill-white" />
 										</IconButton>
@@ -199,7 +225,7 @@ export const TriggersTable = () => {
 											ariaLabel={t("table.buttons.ariaDeleteTrigger", {
 												name: trigger.name,
 											})}
-											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
+											onClick={() => handleAction("delete", trigger.triggerId!)}
 										>
 											<TrashIcon className="size-4 stroke-white" />
 										</IconButton>
@@ -214,6 +240,13 @@ export const TriggersTable = () => {
 			)}
 
 			<DeleteTriggerModal id={triggerId} isDeleting={isDeleting} onDelete={handleDeleteTrigger} />
+
+			<ActiveDeploymentWarningModal
+				action={warningModalAction}
+				modifiedId={triggerId || ""}
+				onDelete={handleOpenModalDeleteTrigger}
+				onEdit={navigateToEditForm}
+			/>
 		</>
 	);
 };
