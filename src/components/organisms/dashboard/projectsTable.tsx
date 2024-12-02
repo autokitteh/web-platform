@@ -68,7 +68,7 @@ export const DashboardProjectsTable = () => {
 				<div className="relative ml-5 mt-4">
 					<OrStartFromTemplateImage />
 
-					<ArrowStartTemplateIcon className="absolute -top-4 left-52" />
+					<ArrowStartTemplateIcon className="absolute -right-10 bottom-4" />
 				</div>
 			</div>
 		</div>
