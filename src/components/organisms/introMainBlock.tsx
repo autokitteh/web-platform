@@ -13,7 +13,7 @@ import { cn } from "@src/utilities";
 import { Button, IconButton, IconSvg, Link, Spinner, Typography } from "@components/atoms";
 import { WelcomeVideoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
 
-import { OrStartFromTemplateImage, ProjectsIcon, StartFromTemplateImage } from "@assets/image";
+import { InJustA, OrStartFromTemplateImage, ProjectsIcon, StartFromTemplateImage } from "@assets/image";
 import {
 	ArrowRightCarouselIcon,
 	ArrowStartTemplateIcon,
@@ -55,7 +55,7 @@ export const IntroMainBlock = () => {
 		<div className="z-10 mt-7 select-none">
 			<div className="grid grid-cols-auto-fit-350 items-stretch gap-x-14 gap-y-4 border-b border-gray-950 pb-7.5 font-averta text-white">
 				<div className="flex min-h-52 flex-col">
-					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/main.jpg')] bg-cover bg-center bg-no-repeat">
+					<div className="flex min-h-64 w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/main.jpg')] bg-cover bg-top bg-no-repeat">
 						<IconButton
 							className="group size-20 overflow-hidden rounded-full bg-black/75 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
 							onClick={() => handleOpenModal("https://www.youtube.com/embed/BkUvIJc_kms")}
@@ -69,50 +69,40 @@ export const IntroMainBlock = () => {
 					</Typography>
 				</div>
 
-				<div className="flex w-full flex-col justify-center">
-					<div>
-						<Typography className="text-3xl font-bold" element="h2">
-							{t("cards.main.reliableAutomation")}
-						</Typography>
+				<div className="flex w-full flex-col justify-center font-averta">
+					<Typography className="text-3xl font-bold" element="h2">
+						{t("cards.main.reliableAutomation")}
+					</Typography>
 
-						<Typography className="text-3xl font-bold" element="h2">
-							{t("cards.main.inAFewLinesOfCode")}
-						</Typography>
-
-						<Typography className="mt-6 hidden font-bold 2xl:block" element="p">
-							{t("cards.main.buildAnything")}
-						</Typography>
-					</div>
+					<Typography className="text-3xl font-bold text-green-800" element="h2">
+						<InJustA className="ml-5 inline-block" /> {t("cards.main.inAFewLinesOfCode")}
+					</Typography>
 					<div className="mt-10">
-						<div className="flex flex-col items-center justify-center gap-1">
-							{meowWorldExist ? null : (
-								<Typography className="font-semibold text-gray-500" element="p">
-									{t("cards.main.startWithDemoProject")}
-								</Typography>
-							)}
-
+						<div className="flex flex-wrap items-center justify-center gap-1">
 							{meowWorldExist ? null : (
 								<Button
 									ariaLabel={t("cards.main.meowWorld")}
-									className="min-w-64 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
+									className="min-w-52 justify-center gap-3 rounded-full bg-green-800 py-3 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
 									onClick={() => createProjectFromAsset(meowWorldProjectName)}
 								>
 									<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
 									{t("cards.main.meowWorld")}
 								</Button>
 							)}
-						</div>
+							<div className="relative">
+								{meowWorldExist ? (
+									<>
+										<StartFromTemplateImage />
+										<ArrowStartTemplateIcon className="absolute -right-28 bottom-3" />
+									</>
+								) : (
+									<>
+										<OrStartFromTemplateImage className="m-auto" />
 
-						<div className="relative left-1/2 mt-2 inline-block w-full -translate-x-1/2 2xl:w-auto">
-							{meowWorldExist ? (
-								<StartFromTemplateImage className="ml-auto w-11/12" />
-							) : (
-								<div>
-									<OrStartFromTemplateImage className="m-auto" />
-
-									<ArrowStartTemplateIcon className="absolute -bottom-8 left-auto right-0 top-auto 2xl:-top-4 2xl:left-52" />
-								</div>
-							)}
+										<ArrowStartTemplateIcon className="absolute -right-10 bottom-3" />
+									</>
+								)}
+							</div>
 						</div>
 					</div>
 				</div>
