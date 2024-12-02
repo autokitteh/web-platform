@@ -22,7 +22,6 @@ export interface CacheStore {
 	resourses?: Record<string, Uint8Array>;
 	loading: LoadingState;
 	currentProjectId?: string;
-	envId?: string;
 	projectValidationState: {
 		code: {
 			level?: ProjectValidationLevel;
