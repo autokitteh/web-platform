@@ -34,7 +34,6 @@ export interface IconButtonProps extends React.AriaAttributes, React.DOMAttribut
 	disabled?: boolean;
 	form?: string;
 	href?: string;
-	style?: React.CSSProperties;
 	onClick?: MouseEventHandler<HTMLButtonElement | HTMLDivElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLButtonElement | HTMLDivElement>;
 	onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>) => void;
