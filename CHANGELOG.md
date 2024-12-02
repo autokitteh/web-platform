@@ -1,3 +1,10 @@
+## [2.74.1](https://github.com/autokitteh/web-platform/compare/v2.74.0...v2.74.1) (2024-12-02)
+
+
+### Bug Fixes
+
+* **UI-1015:** display error when projects cant load in menu ([#707](https://github.com/autokitteh/web-platform/issues/707)) ([4c5f746](https://github.com/autokitteh/web-platform/commit/4c5f746ad02da5217ca3516a2c8351f685adcfd9))
+
 # [2.74.0](https://github.com/autokitteh/web-platform/compare/v2.73.0...v2.74.0) (2024-12-02)
 
 
