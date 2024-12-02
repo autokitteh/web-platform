@@ -5,7 +5,7 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 	await dashboardPage.createProjectFromMenu();
 
 	await page.getByRole("tab", { name: "variables" }).click();
-	await page.getByRole("link", { name: "Add new" }).click();
+	await page.getByRole("button", { name: "Add new" }).click();
 
 	await page.getByLabel("Name").click();
 	await page.getByLabel("Name").fill("nameVariable");
@@ -21,7 +21,7 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 test.describe("Project Variables Suite", () => {
 	test("Create variable with empty fields", async ({ page }) => {
-		await page.getByRole("link", { name: "Add new" }).click();
+		await page.getByRole("button", { name: "Add new" }).click();
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
 		const nameErrorMessage = page.getByRole("alert", { name: "Name is required" });

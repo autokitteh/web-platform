@@ -32,7 +32,7 @@ async function createTriggerScheduler(
 	fileName: string,
 	functionName: string
 ) {
-	await page.getByRole("link", { name: "Add new" }).click();
+	await page.getByRole("button", { name: "Add new" }).click();
 
 	const nameInput = page.getByRole("textbox", { name: "Name", exact: true });
 	await nameInput.click();
@@ -65,13 +65,17 @@ async function modifyTrigger(
 	newFunctionName: string,
 	withActiveDeployment: boolean
 ) {
-	await page.getByRole("button", { name: `Modify ${name} trigger` }).click();
-
 	if (withActiveDeployment) {
 		const deployButton = page.getByRole("button", { name: "Deploy project" });
 		await deployButton.click();
 		const toast = await waitForToast(page, "Project deployment completed successfully");
 		await expect(toast).toBeVisible();
+	}
+
+	await page.getByRole("button", { name: `Modify ${name} trigger` }).click();
+
+	if (withActiveDeployment) {
+		await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
 		await page.getByRole("button", { name: "Ok" }).click();
 	}
 
@@ -156,7 +160,7 @@ test.describe("Project Triggers Suite", () => {
 	});
 
 	test("Create trigger without a values", async ({ page }) => {
-		await page.getByRole("link", { name: "Add new" }).click();
+		await page.getByRole("button", { name: "Add new" }).click();
 		await page.getByTestId("select-trigger-type").click();
 		await page.getByRole("option", { name: "Scheduler" }).click();
 		await page.getByTestId("select-file").click();
