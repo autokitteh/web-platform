@@ -1,3 +1,10 @@
+# [2.76.0](https://github.com/autokitteh/web-platform/compare/v2.75.0...v2.76.0) (2024-12-02)
+
+
+### Features
+
+* **UI-1003:** redesign intro page and adjust to mobile devices ([#702](https://github.com/autokitteh/web-platform/issues/702)) ([1141de1](https://github.com/autokitteh/web-platform/commit/1141de1ef6d76f11722e005470e2fcb71536ee44))
+
 # [2.75.0](https://github.com/autokitteh/web-platform/compare/v2.74.1...v2.75.0) (2024-12-02)
 
 
