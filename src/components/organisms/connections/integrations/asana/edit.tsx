@@ -5,23 +5,18 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { integrationVariablesMapping } from "@src/constants";
-import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { useCacheStore, useModalStore } from "@src/store";
 import { setFormValues } from "@src/utilities";
 import { asanaIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
-import { WarningDeploymentActivetedModal } from "@components/organisms";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const AsanaIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
-	const { hasActiveDeployments } = useCacheStore();
-	const { openModal } = useModalStore();
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(asanaIntegrationSchema, "edit");
 
@@ -32,17 +27,8 @@ export const AsanaIntegrationEditForm = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
-	const handleFormSubmit = () => {
-		if (hasActiveDeployments) {
-			openModal(ModalName.warningDeploymentActive);
-
-			return;
-		}
-		onSubmitEdit();
-	};
-
 	return (
-		<form className="flex flex-col gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
+		<form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
 					type="password"
@@ -83,8 +69,6 @@ export const AsanaIntegrationEditForm = () => {
 
 				{t("buttons.saveConnection")}
 			</Button>
-
-			<WarningDeploymentActivetedModal onClick={onSubmitEdit} />
 		</form>
 	);
 };

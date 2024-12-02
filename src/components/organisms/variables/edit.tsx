@@ -6,14 +6,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
-import { ModalName } from "@src/enums/components";
-import { useCacheStore, useModalStore } from "@src/store";
+import { useCacheStore } from "@src/store";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
 import { TabFormHeader } from "@components/molecules";
-import { WarningDeploymentActivetedModal } from "@components/organisms";
 
 export const EditVariable = () => {
 	const { t: tForm } = useTranslation("tabs", {
@@ -21,9 +19,8 @@ export const EditVariable = () => {
 	});
 	const { t } = useTranslation("errors");
 
-	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { fetchVariables, hasActiveDeployments } = useCacheStore();
+	const { fetchVariables } = useCacheStore();
 
 	const { projectId, variableName } = useParams();
 	const navigate = useNavigate();
@@ -78,7 +75,6 @@ export const EditVariable = () => {
 	}, []);
 
 	const onSubmit = async () => {
-		closeModal(ModalName.warningDeploymentActive);
 		const { isSecret, name, value } = getValues();
 		setIsLoading(true);
 		const { error } = await VariablesService.setByProjectId(projectId!, {
@@ -100,15 +96,6 @@ export const EditVariable = () => {
 		navigate(-1);
 	};
 
-	const handleFormSubmit = () => {
-		if (hasActiveDeployments) {
-			openModal(ModalName.warningDeploymentActive);
-
-			return;
-		}
-		onSubmit();
-	};
-
 	return isLoadingData ? (
 		<Loader isCenter size="xl" />
 	) : (
@@ -120,7 +107,7 @@ export const EditVariable = () => {
 				title={tForm("modifyVariable")}
 			/>
 
-			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(handleFormSubmit)}>
+			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
 						value={name}
@@ -150,8 +137,6 @@ export const EditVariable = () => {
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
 			</form>
-
-			<WarningDeploymentActivetedModal onClick={onSubmit} />
 		</div>
 	);
 };
