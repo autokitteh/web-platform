@@ -38,8 +38,6 @@ export const TriggerSpecificFields = ({
 	const [options, setOptions] = useState<SelectOption[]>([]);
 	const [triggerRerender, setTriggerRerender] = useState(0);
 
-	useEffect(() => {}, []);
-
 	useEffect(() => {
 		setValue("eventTypeSelect", undefined);
 		setTriggerRerender((prev) => prev + 1);
