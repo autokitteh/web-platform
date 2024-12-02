@@ -14,7 +14,7 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 	const appLayoutClasses = cn("h-screen w-screen md:pr-5 flex", className);
 	const { isLoggerEnabled, toggleLogger } = useLoggerStore();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
-	const { isTablet } = useWindowDimensions();
+	const { isMaxWidth768 } = useWindowDimensions();
 
 	const resizeId = useId();
 	const [systemLogHeight, setSystemLogHeight] = useResize({
@@ -49,14 +49,14 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 
 	return (
 		<div className={appLayoutClasses}>
-			{!isTablet ? <Sidebar /> : null}
+			{!isMaxWidth768 ? <Sidebar /> : null}
 
 			<div className="flex flex-1 flex-col md:mb-2">
 				{hideTopbar ? null : <ProjectConfigTopbar />}
 				<div className="flex overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
 					<Outlet />
 				</div>
-				{!isTablet ? (
+				{!isMaxWidth768 ? (
 					<ResizeButton className={buttonResizeClasses} direction="vertical" resizeId={resizeId} />
 				) : null}
 				<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
