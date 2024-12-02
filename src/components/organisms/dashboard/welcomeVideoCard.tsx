@@ -11,11 +11,17 @@ export const WelcomeVideoCard = ({ description, image, onPlay, title }: WelcomeV
 		backgroundImage: `url('/assets/image/pages/intro/${image}')`,
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === "Enter" || event.key === " ") {
+			event.preventDefault();
+			onPlay?.();
+		}
+	};
+
 	return (
-		<div className="flex gap-4">
+		<div className="flex gap-4" onClick={onPlay} onKeyDown={handleKeyDown} role="button" tabIndex={0}>
 			<IconButton
 				className="h-11 w-16 rounded-lg border border-gray-750 bg-cover bg-top bg-no-repeat hover:bg-transparent focus:scale-90"
-				onClick={onPlay}
 				style={backgroundImageStyle}
 			>
 				<PlayIcon className="size-6 fill-white" />
