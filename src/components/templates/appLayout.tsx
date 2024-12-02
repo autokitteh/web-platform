@@ -3,7 +3,7 @@ import React, { useEffect, useId, useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
-import { useResize } from "@src/hooks";
+import { useResize, useWindowDimensions } from "@src/hooks";
 import { useLoggerStore } from "@src/store";
 import { cn } from "@utilities";
 
@@ -11,9 +11,10 @@ import { ResizeButton } from "@components/atoms";
 import { ProjectConfigTopbar, Sidebar, SystemLog } from "@components/organisms";
 
 export const AppLayout = ({ className, hideTopbar }: { className?: string; hideTopbar?: boolean }) => {
-	const appLayoutClasses = cn("h-screen w-screen pr-5 flex", className);
+	const appLayoutClasses = cn("h-screen w-screen md:pr-5 flex", className);
 	const { isLoggerEnabled, toggleLogger } = useLoggerStore();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
+	const { isTable } = useWindowDimensions();
 
 	const resizeId = useId();
 	const [systemLogHeight, setSystemLogHeight] = useResize({
@@ -48,16 +49,16 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 
 	return (
 		<div className={appLayoutClasses}>
-			<Sidebar />
+			{!isTable ? <Sidebar /> : null}
 
-			<div className="mb-2 flex flex-1 flex-col">
+			<div className="flex flex-1 flex-col md:mb-2">
 				{hideTopbar ? null : <ProjectConfigTopbar />}
 				<div className="flex overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
 					<Outlet />
 				</div>
-
-				<ResizeButton className={buttonResizeClasses} direction="vertical" resizeId={resizeId} />
-
+				{!isTable ? (
+					<ResizeButton className={buttonResizeClasses} direction="vertical" resizeId={resizeId} />
+				) : null}
 				<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
 					<SystemLog />
 				</div>

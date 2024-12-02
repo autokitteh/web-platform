@@ -63,21 +63,17 @@ export const IntroMainBlock = () => {
 							<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-100" />
 						</IconButton>
 					</div>
-
-					<Typography className="mt-4 font-bold 2xl:hidden" element="p">
-						{t("cards.main.buildAnything")}
-					</Typography>
 				</div>
 
 				<div className="flex w-full flex-col justify-center font-averta">
-					<Typography className="text-3xl font-bold" element="h2">
+					<Typography className="text-center text-3xl font-bold md:text-left" element="h2">
 						{t("cards.main.reliableAutomation")}
 					</Typography>
 
-					<Typography className="text-3xl font-bold text-green-800" element="h2">
+					<Typography className="text-center text-3xl font-bold text-green-800 md:text-left" element="h2">
 						<InJustA className="ml-5 inline-block" /> {t("cards.main.inAFewLinesOfCode")}
 					</Typography>
-					<div className="mt-10">
+					<div className="mt-10 hidden md:block">
 						<div className="flex flex-wrap items-center justify-center gap-1">
 							{meowWorldExist ? null : (
 								<Button
@@ -108,7 +104,7 @@ export const IntroMainBlock = () => {
 				</div>
 			</div>
 			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-4 border-b border-gray-950 pb-7.5 font-averta">
-				<div className="border-r border-gray-950">
+				<div className="border-gray-950 md:border-r">
 					<Typography className="pr-4 text-3xl font-bold text-green-800" element="h2">
 						{t("getStarted")}
 					</Typography>
@@ -139,7 +135,7 @@ export const IntroMainBlock = () => {
 				</div>
 			</div>
 			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-6 font-averta">
-				<div className="border-r border-gray-950">
+				<div className="border-gray-950 md:border-r">
 					<Typography className="pr-4 text-lg font-bold uppercase" element="h3">
 						{t("joinTheCommunity")}
 					</Typography>
