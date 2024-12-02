@@ -3,13 +3,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { meowWorldProjectName } from "@src/constants";
-import { infoCardPythonCode, infoCardVSCode } from "@src/constants/lists";
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore } from "@src/store";
 
 import { Button, IconButton, IconSvg, Link, Spinner, Typography } from "@components/atoms";
-import { WelcomeInfoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
+import { WelcomeVideoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
 
 import { OrStartFromTemplateImage, ProjectsIcon } from "@assets/image";
 import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
@@ -82,52 +81,11 @@ export const DashboardWelcomeMainBlock = () => {
 			</div>
 
 			<div className="grid grid-cols-auto-fit-350 gap-5">
-				<WelcomeInfoCard
-					onPlay={() => handleOpenModal("https://www.youtube.com/embed/60DQ9Py4LqU")}
-					title={
-						<Typography className="text-xl font-bold" element="h3">
-							{t("cards.startingProject.startingAProject")}
-						</Typography>
-					}
-					videoStyle={{
-						backgroundColor: "#1d2226",
-						backgroundImage: "url(assets/image/pages/intro/startingProject.jpg)",
-					}}
-				>
-					<ul className="font-averta font-semibold leading-normal">
-						{infoCardPythonCode.map(({ href, text }, index) => (
-							<li aria-label={text} key={index}>
-								<Link
-									className="font-semibold text-green-800 underline hover:text-green-200"
-									target="_blank"
-									to={href}
-								>
-									{text}
-								</Link>
-							</li>
-						))}
-					</ul>
-				</WelcomeInfoCard>
-
-				<WelcomeInfoCard
+				<WelcomeVideoCard
+					description="Develop Python code"
 					onPlay={() => handleOpenModal("https://www.youtube.com/embed/zNtJ8OBPUmY")}
-					title={
-						<Typography className="text-xl font-bold" element="h3">
-							{t("cards.developInVSCode.developInVSCode")}{" "}
-							<span className="text-green-800">{t("cards.developInVSCode.usingVSCodeExtension")}</span>
-						</Typography>
-					}
-					videoStyle={{
-						backgroundColor: "#1d2226",
-						backgroundImage: "url(assets/image/pages/intro/usingVSCode.jpg)",
-					}}
-				>
-					<ul className="font-averta font-semibold leading-normal">
-						{infoCardVSCode.map(({ text }, index) => (
-							<li key={index}>{text}</li>
-						))}
-					</ul>
-				</WelcomeInfoCard>
+					title="Hello World lorem ipsum title"
+				/>
 			</div>
 
 			<div className="rounded-xl border border-gray-950 bg-gray-1250 py-2 pl-6 pr-4 font-averta">

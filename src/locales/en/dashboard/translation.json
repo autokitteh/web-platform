@@ -60,10 +60,6 @@
                 "quickActions": "Quick actions",
                 "synchronizationWithServer": "Synchronization with the server",
                 "usingVSCodeExtension": "using VS-Code Extension"
-            },
-            "footer": {
-                "haveAQuestion": "Have a Question?",
-                "joinDiscord": "Join our Discord"
             }
 		}
 	}

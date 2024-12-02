@@ -6,8 +6,6 @@ import { Frame, ResizeButton } from "@components/atoms";
 import { DashboardTopbar, IntroMainBlock } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
 
-import { CatDashboardImage } from "@assets/image";
-
 export const Intro = () => {
 	const resizeId = useId();
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
@@ -20,8 +18,6 @@ export const Intro = () => {
 
 					<IntroMainBlock />
 				</Frame>
-
-				<CatDashboardImage className="absolute -bottom-6 -right-5 hidden minHeightLg:block" />
 			</div>
 
 			<ResizeButton className="right-0.5 bg-white hover:bg-gray-700" direction="horizontal" resizeId={resizeId} />

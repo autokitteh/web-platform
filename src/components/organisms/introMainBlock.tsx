@@ -3,17 +3,22 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { meowWorldProjectName } from "@src/constants";
-import { infoCardPythonCode, infoCardVSCode } from "@src/constants/lists";
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useProjectStore } from "@src/store";
 
 import { Button, IconButton, IconSvg, Link, Spinner, Typography } from "@components/atoms";
-import { WelcomeInfoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
+import { WelcomeVideoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
 
 import { OrStartFromTemplateImage, ProjectsIcon, StartFromTemplateImage } from "@assets/image";
-import { ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
-import { DiscordIcon } from "@assets/image/icons/connections";
+import {
+	ArrowStartTemplateIcon,
+	CirclePlayIcon,
+	GithubIntroIcon,
+	LinkedInIntroIcon,
+	RedditIntroIcon,
+	TelegramIntroIcon,
+} from "@assets/image/icons";
 
 export const IntroMainBlock = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
@@ -29,10 +34,10 @@ export const IntroMainBlock = () => {
 	};
 
 	return (
-		<div className="z-10 mt-7 grid h-2/3 select-none gap-5">
-			<div className="col-span-1 grid grid-cols-auto-fit-350 items-stretch gap-4 overflow-visible rounded-2xl border border-gray-950 bg-black p-8 pl-6 pr-4 font-averta text-white">
+		<div className="z-10 mt-7 select-none gap-8">
+			<div className="grid grid-cols-auto-fit-350 items-stretch gap-4 border-b border-gray-950 pb-7.5 font-averta text-white">
 				<div className="flex min-h-52 flex-col">
-					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border-2 border-gray-750 bg-[#1d2226] bg-[url('image/pages/intro/main.jpg')] bg-contain bg-center bg-no-repeat">
+					<div className="flex w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/main.jpg')] bg-cover bg-center bg-no-repeat">
 						<IconButton
 							className="group size-20 overflow-hidden rounded-full bg-black/75 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
 							onClick={() => handleOpenModal("https://www.youtube.com/embed/BkUvIJc_kms")}
@@ -94,69 +99,74 @@ export const IntroMainBlock = () => {
 					</div>
 				</div>
 			</div>
-
-			<div className="grid grid-cols-auto-fit-350 gap-5">
-				<WelcomeInfoCard
-					onPlay={() => handleOpenModal("https://www.youtube.com/embed/60DQ9Py4LqU")}
-					title={
-						<Typography className="text-xl font-bold" element="h3">
-							{t("cards.startingProject.startingAProject")}
-						</Typography>
-					}
-					videoStyle={{
-						backgroundColor: "#1d2226",
-						backgroundImage: "url(assets/image/pages/intro/startingProject.jpg)",
-					}}
-				>
-					<ul className="font-averta font-semibold leading-normal">
-						{infoCardPythonCode.map(({ href, text }, index) => (
-							<li aria-label={text} key={index}>
-								<Link
-									className="font-semibold text-green-800 underline hover:text-green-200"
-									target="_blank"
-									to={href}
-								>
-									{text}
-								</Link>
-							</li>
-						))}
-					</ul>
-				</WelcomeInfoCard>
-
-				<WelcomeInfoCard
-					onPlay={() => handleOpenModal("https://www.youtube.com/embed/zNtJ8OBPUmY")}
-					title={
-						<Typography className="text-xl font-bold" element="h3">
-							{t("cards.developInVSCode.developInVSCode")}{" "}
-							<span className="text-green-800">{t("cards.developInVSCode.usingVSCodeExtension")}</span>
-						</Typography>
-					}
-					videoStyle={{
-						backgroundColor: "#1d2226",
-						backgroundImage: "url(assets/image/pages/intro/usingVSCode.jpg)",
-					}}
-				>
-					<ul className="font-averta font-semibold leading-normal">
-						{infoCardVSCode.map(({ text }, index) => (
-							<li key={index}>{text}</li>
-						))}
-					</ul>
-				</WelcomeInfoCard>
+			<div className="mt-8 grid grid-cols-auto-fit-350 border-b border-gray-950 pb-7.5 font-averta">
+				<div className="border-r border-gray-950">
+					<Typography className="pr-4 text-3xl font-bold text-green-800" element="h2">
+						Get started with Autokitteh
+					</Typography>
+					<div className="scrollbar mt-9 flex max-h-280 flex-col gap-7 overflow-auto">
+						{Array(6)
+							.fill(null)
+							.map((_, index) => (
+								<WelcomeVideoCard
+									description="Develop Python code"
+									key={index}
+									onPlay={() => handleOpenModal("https://www.youtube.com/embed/zNtJ8OBPUmY")}
+									title="Hello World lorem ipsum title"
+								/>
+							))}
+					</div>
+				</div>
+				<div className="mx-auto">
+					<Typography className="text-3xl font-bold" element="h2">
+						What is AutoKitteh?
+					</Typography>
+					<ol className="mt-6 grid gap-1">
+						<li className="text-base">Durable workflow automation platform</li>
+						<li className="text-base">Simple to use APIs to applications</li>
+						<li className="text-base">Simple authentication</li>
+						<li className="text-base">Run Python code</li>
+						<li className="text-base">Workflow management</li>
+					</ol>
+				</div>
+			</div>
+			<div className="mt-8 grid grid-cols-auto-fit-350 font-averta">
+				<div className="border-r border-gray-950">
+					<Typography className="pr-4 text-lg font-bold" element="h3">
+						JOIN THE COMMUNITY
+					</Typography>
+					<Typography className="mt-2 text-base" element="p">
+						See how our community is creating projects
+					</Typography>
+					<div className="mt-4 flex gap-2.5">
+						<Link target="_blank" to="https://www.reddit.com/r/autokitteh">
+							<RedditIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
+						</Link>
+						<Link target="_blank" to="https://www.linkedin.com/company/autokitteh">
+							<LinkedInIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
+						</Link>
+						<Link target="_blank" to="https://discord.gg/UhnJuBarZQ">
+							<TelegramIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
+						</Link>
+						<Link target="_blank" to="https://github.com/autokitteh/autokitteh">
+							<GithubIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
+						</Link>
+					</div>
+				</div>
+				<div className="mx-auto">
+					<Typography className="text-3xl font-bold" element="h2">
+						What is AutoKitteh?
+					</Typography>
+					<ol className="mt-6 grid gap-1">
+						<li className="text-base">Durable workflow automation platform</li>
+						<li className="text-base">Simple to use APIs to applications</li>
+						<li className="text-base">Simple authentication</li>
+						<li className="text-base">Run Python code</li>
+						<li className="text-base">Workflow management</li>
+					</ol>
+				</div>
 			</div>
 
-			<div className="rounded-xl border border-gray-950 bg-gray-1250 py-2 pl-6 pr-4 font-averta">
-				<Typography className="flex h-full flex-row items-center justify-center text-lg">
-					{t("cards.footer.haveAQuestion")}
-					<Link
-						className="flex flex-row items-center gap-0.5 hover:text-green-200"
-						target="_blank"
-						to="https://discord.gg/UhnJuBarZQ"
-					>
-						<IconSvg className="ml-2 mr-1" size="lg" src={DiscordIcon} />{" "}
-						<div className="underline">{t("cards.footer.joinDiscord")}</div>
-					</Link>
-				</Typography>
-			</div>
 			<WelcomeVideoModal />
 		</div>
 	);

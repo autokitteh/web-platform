@@ -1,6 +1,5 @@
-export interface WelcomeInfoCardProps {
-	children?: React.ReactNode;
+export interface WelcomeVideoCardProps {
+	description?: string;
 	title: React.ReactNode;
 	onPlay?: () => void;
-	videoStyle?: React.CSSProperties;
 }

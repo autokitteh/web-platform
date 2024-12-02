@@ -120,6 +120,10 @@ ul {
 	font-size: 15px;
 	@apply ml-6;
 }
+ol {
+	list-style: decimal;
+	@apply ml-4;
+}
 
 ul li {
 	position: relative;
