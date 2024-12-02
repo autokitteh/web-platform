@@ -3,6 +3,7 @@ export { default as ActionStoppedIcon } from "@assets/image/icons/ActionStopped.
 export { default as ArrowDown } from "@assets/image/icons/ArrowDown.svg?react";
 export { default as ArrowLeft } from "@assets/image/icons/ArrowLeft.svg?react";
 export { default as ArrowRightIcon } from "@assets/image/icons/ArrowRight.svg?react";
+export { default as ArrowRightCarouselIcon } from "@assets/image/icons/ArrowRightCarousel.svg?react";
 export { default as ArrowRightCircleIcon } from "@assets/image/icons/ArrowRightCircle.svg?react";
 export { default as ArrowStartTemplateIcon } from "@assets/image/icons/ArrowStartTemplate.svg?react";
 export { default as ArrowUpIcon } from "@assets/image/icons/ArrowUp.svg?react";

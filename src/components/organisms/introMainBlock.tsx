@@ -1,17 +1,21 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
+import { Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 import { meowWorldProjectName } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useProjectStore } from "@src/store";
+import { cn } from "@src/utilities";
 
 import { Button, IconButton, IconSvg, Link, Spinner, Typography } from "@components/atoms";
 import { WelcomeVideoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
 
 import { OrStartFromTemplateImage, ProjectsIcon, StartFromTemplateImage } from "@assets/image";
 import {
+	ArrowRightCarouselIcon,
 	ArrowStartTemplateIcon,
 	CirclePlayIcon,
 	GithubIntroIcon,
@@ -19,6 +23,9 @@ import {
 	RedditIntroIcon,
 	TelegramIntroIcon,
 } from "@assets/image/icons";
+
+import "swiper/css";
+import "swiper/css/navigation";
 
 export const IntroMainBlock = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
@@ -32,6 +39,17 @@ export const IntroMainBlock = () => {
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });
 	};
+
+	const whatIsAutoKitteh = [
+		"Durable workflow automation platform",
+		"Simple to use APIs to applications",
+		"Simple authentication",
+		"Run Python code",
+		"Workflow management",
+	];
+
+	const swiperButtonClass =
+		"absolute z-10 flex size-9 top-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black transition hover:bg-gray-1000 active:scale-90";
 
 	return (
 		<div className="z-10 mt-7 select-none">
@@ -122,15 +140,15 @@ export const IntroMainBlock = () => {
 						What is AutoKitteh?
 					</Typography>
 					<ol className="mt-6 grid gap-1">
-						<li className="text-base">Durable workflow automation platform</li>
-						<li className="text-base">Simple to use APIs to applications</li>
-						<li className="text-base">Simple authentication</li>
-						<li className="text-base">Run Python code</li>
-						<li className="text-base">Workflow management</li>
+						{whatIsAutoKitteh.map((item, index) => (
+							<li className="text-base" key={index}>
+								{item}
+							</li>
+						))}
 					</ol>
 				</div>
 			</div>
-			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-4 font-averta">
+			<div className="mt-8 grid grid-cols-auto-fit-350 gap-x-14 gap-y-6 font-averta">
 				<div className="border-r border-gray-950">
 					<Typography className="pr-4 text-lg font-bold" element="h3">
 						JOIN THE COMMUNITY
@@ -153,18 +171,42 @@ export const IntroMainBlock = () => {
 						</Link>
 					</div>
 				</div>
-				<div>
-					<Typography className="pr-4 text-lg font-bold uppercase" element="h3">
+				<div className="relative">
+					<Typography className="mb-3 pr-4 text-lg font-bold uppercase" element="h3">
 						News
 					</Typography>
-					<div>
-						<Typography className="text-base" element="p">
-							Build anything with simple code. Use APIs and build your business logic: Serverless, no
-							queues, secured, managed
-						</Typography>
-						<Typography className="mt-5 text-xs font-semibold uppercase text-gray-750" element="p">
-							1 week ago
-						</Typography>
+					<Swiper
+						className="mr-10"
+						modules={[Navigation]}
+						navigation={{
+							nextEl: ".swiper-next",
+							prevEl: ".swiper-prev",
+						}}
+						slidesPerView={2}
+						spaceBetween={35}
+					>
+						{Array(3)
+							.fill(null)
+							.map((_, index) => (
+								<SwiperSlide key={index}>
+									<Link className="text-base" target="_blank" to="#">
+										Build anything with simple code. Use APIs and build your business logic:
+										Serverless, no queues, secured, managed
+									</Link>
+									<Typography
+										className="mt-5 text-xs font-semibold uppercase text-gray-750"
+										element="p"
+									>
+										1 week ago
+									</Typography>
+								</SwiperSlide>
+							))}
+					</Swiper>
+					<div className={cn(swiperButtonClass, "-left-12 swiper-prev")}>
+						<ArrowRightCarouselIcon className="rotate-180" />
+					</div>
+					<div className={cn(swiperButtonClass, "-right-1 swiper-next")}>
+						<ArrowRightCarouselIcon />
 					</div>
 				</div>
 			</div>
