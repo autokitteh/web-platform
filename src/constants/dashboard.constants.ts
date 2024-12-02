@@ -28,20 +28,24 @@ export const getStartedWithAutoKitteh = [
 		title: "Quick guide - Building projects",
 		description: "Build your first project",
 		youtubeLink: "https://www.youtube.com/embed/60DQ9Py4LqU?si=tat7TeACzguZKDSv",
+		image: "startingProject.jpg",
 	},
 	{
 		title: "Using VS-code extension",
 		description: "Setup guide",
 		youtubeLink: "https://www.youtube.com/embed/zNtJ8OBPUmY?si=lki2_wdImAhR2IhX",
+		image: "usingVSCode.jpg",
 	},
 	{
 		title: "Durable Python - example",
 		description: "Recovery from failure demo",
 		youtubeLink: "https://www.youtube.com/embed/xOcmMnput2Y?si=vyqnUVtuTgdOqBFx",
+		image: "durablePython.jpg",
 	},
 	{
 		title: "Introduction to AutoKitteh",
 		description: "Why to use AutoKitteh",
 		youtubeLink: "https://www.youtube.com/embed/QWSa0etwTDE?si=gStDV2t4cAVTPtFe",
+		image: "introductionToAutoKitteh.jpg",
 	},
 ];

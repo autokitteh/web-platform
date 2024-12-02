@@ -107,9 +107,10 @@ export const IntroMainBlock = () => {
 						{t("getStarted")}
 					</Typography>
 					<div className="scrollbar mt-5 flex max-h-280 flex-col gap-7 overflow-auto md:mt-9">
-						{getStartedWithAutoKitteh.map(({ description, title, youtubeLink }, index) => (
+						{getStartedWithAutoKitteh.map(({ description, image, title, youtubeLink }, index) => (
 							<WelcomeVideoCard
 								description={description}
+								image={image}
 								key={index}
 								onPlay={() => handleOpenModal(youtubeLink)}
 								title={title}
