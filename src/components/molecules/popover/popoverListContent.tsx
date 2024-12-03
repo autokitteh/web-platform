@@ -76,6 +76,13 @@ export const PopoverListTrigger = React.forwardRef<HTMLElement, React.HTMLProps<
 		const context = usePopoverListContext();
 		const childrenRef = React.isValidElement(children) ? (children as any).ref : null;
 		const ref = useMergeRefsCustom(context.refs.setReference, propRef, childrenRef);
+		const onKeyDown = (event: React.KeyboardEvent) => {
+			if (event.key === "Enter" || event.key === " ") {
+				context.setOpen(!context.open);
+				event.stopPropagation();
+				event.preventDefault();
+			}
+		};
 
 		return (
 			<button
@@ -83,6 +90,7 @@ export const PopoverListTrigger = React.forwardRef<HTMLElement, React.HTMLProps<
 				ref={ref}
 				type="button"
 				{...context.getReferenceProps(props)}
+				onKeyDown={onKeyDown}
 			>
 				{children}
 			</button>
