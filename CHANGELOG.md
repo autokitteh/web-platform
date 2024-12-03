@@ -1,3 +1,10 @@
+# [2.78.0](https://github.com/autokitteh/web-platform/compare/v2.77.0...v2.78.0) (2024-12-03)
+
+
+### Features
+
+* **UI-973:** re-write sidebar to use popover ([#677](https://github.com/autokitteh/web-platform/issues/677)) ([20b921d](https://github.com/autokitteh/web-platform/commit/20b921dcb7d77c6654dcd0697a081cb319ac6583))
+
 # [2.77.0](https://github.com/autokitteh/web-platform/compare/v2.76.5...v2.77.0) (2024-12-03)
 
 
