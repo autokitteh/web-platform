@@ -4,7 +4,7 @@ import { useDescope } from "@descope/react-sdk";
 import Cookies from "js-cookie";
 import psl from "psl";
 import { useTranslation } from "react-i18next";
-import { matchRoutes, useLocation } from "react-router-dom";
+import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 
 import { authBearer, isLoggedInCookie, namespaces } from "@constants";
 import { LoggerService } from "@services/index";
@@ -35,6 +35,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const clearLogs = useLoggerStore((state) => state.clearLogs);
 	const [isLoggingIn, setIsLoggingIn] = useState(false);
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	const handleLogout = useCallback(async () => {
 		await logout();
@@ -109,7 +110,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const matches = matchRoutes(routes, location);
 
 	if (!matches) {
-		window.location.href = "/404";
+		navigate("/404");
 
 		return;
 	}
