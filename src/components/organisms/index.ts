@@ -5,6 +5,7 @@ export { EditorTabs } from "@components/organisms/editorTabs";
 export { EventsTable, EventViewer } from "@components/organisms/events";
 export { IntroMainBlock } from "@components/organisms/introMainBlock";
 export { NewProjectModal } from "@components/organisms/newProjectModal";
+export { EventsDrawer } from "@components/organisms/shared/eventsDrawer";
 export { Sidebar } from "@components/organisms/sidebar/sidebar";
 export { SplitFrame } from "@components/organisms/splitFrame";
 export { SystemLog } from "@components/organisms/systemLog";
