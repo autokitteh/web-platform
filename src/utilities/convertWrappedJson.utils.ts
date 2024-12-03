@@ -23,15 +23,16 @@ export const parseNestedJson = (object: Value): Record<string, any> => {
 			} catch (error) {
 				if (typeof value.string === "string") {
 					result[key] = value.string;
-				} else {
-					const errorMessage = i18n.t("convertWrappedJsonError", {
-						error: (error as Error).message,
-						ns: "services",
-						key,
-					});
-					LoggerService.error(namespaces.sessionsService, errorMessage, true);
-					result[key] = errorMessage;
+
+					continue;
 				}
+				const errorMessage = i18n.t("convertWrappedJsonError", {
+					error: (error as Error).message,
+					ns: "services",
+					key,
+				});
+				LoggerService.error(namespaces.sessionsService, errorMessage, true);
+				result[key] = errorMessage;
 			}
 		} else {
 			result[key] = value;
