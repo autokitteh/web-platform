@@ -10,4 +10,5 @@ export { SplitFrame } from "@components/organisms/splitFrame";
 export { SystemLog } from "@components/organisms/systemLog";
 export { ProjectConfigTopbar, DashboardTopbar, DeleteProjectModal } from "@components/organisms/topbar";
 export { TitleTopbar } from "@components/organisms/topbar";
+export { UserFeedbackModal } from "@components/organisms/userFeedbackModal";
 export { WarningDeploymentActivetedModal } from "@components/organisms/warningDeploymentActivetedModal";

@@ -1,3 +1,5 @@
+// eslint-disable-next-line @liferay/sort-exports
+export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
 export { parseNestedJson } from "@src/utilities/convertWrappedJson.utils";
 export { stripGoogleConnectionName, stripAtlassianConnectionName } from "@src/utilities/stripConnectionName.utils";
 export { calculatePathDepth } from "@utilities/calculatePathDepth.utils";
@@ -17,7 +19,6 @@ export { updateOpenedFilesState } from "@utilities/openedEditorFilesState.utils"
 export { convertPythonStringToJSON } from "@utilities/pythonStringToJson.utils";
 export { setFormValues } from "@utilities/setFormValues.utils";
 export { sortArray } from "@utilities/sortArray.utils";
-export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";
 export { transformAndStringifyValues } from "@utilities/transformAndStringifyValues.utils";
 export { ValidateURL } from "@utilities/validateUrl.utils";

@@ -1,5 +1,7 @@
 export { default as ActionActiveIcon } from "@assets/image/icons/ActionActive.svg?react";
 export { default as ActionStoppedIcon } from "@assets/image/icons/ActionStopped.svg?react";
+// Taken from: https://fontawesome.com/v6/icons/bullhorn?f=classic&s=solid
+export { default as Announcement } from "@assets/image/icons/Announcement.svg?react";
 export { default as ArrowDown } from "@assets/image/icons/ArrowDown.svg?react";
 export { default as ArrowLeft } from "@assets/image/icons/ArrowLeft.svg?react";
 export { default as ArrowRightIcon } from "@assets/image/icons/ArrowRight.svg?react";
