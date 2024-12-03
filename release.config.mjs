@@ -13,13 +13,8 @@ export default {
 				releaseRules: [
 					{ type: "feat", release: "minor" },
 					{ type: "fix", release: "patch" },
-					{ type: "docs", release: "patch" },
-					{ type: "style", release: "patch" },
 					{ type: "refactor", release: "patch" },
 					{ type: "perf", release: "patch" },
-					{ type: "test", release: "patch" },
-					{ type: "ci", release: "patch" },
-					{ type: "chore", release: "patch" },
 					{ type: "revert", release: "patch" },
 					{ message: "feat(*)!:*", release: "major" },
 					{ message: "feat!:*", release: "major" },
