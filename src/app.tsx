@@ -35,9 +35,11 @@ export const App = () => {
 	const location = useLocation();
 
 	useEffect(() => {
-		ga4.initialize(googleAnalyticsId, {
-			testMode: !isProduction,
-		});
+		if (isProduction && googleAnalyticsId) {
+			ga4.initialize(googleAnalyticsId, {
+				testMode: !isProduction,
+			});
+		}
 	}, []);
 
 	React.useEffect(() => {
