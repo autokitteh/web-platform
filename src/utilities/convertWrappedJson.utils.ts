@@ -21,9 +21,14 @@ export const parseNestedJson = (object: Value): Record<string, any> => {
 			try {
 				result[key] = JSON.parse(value.string);
 			} catch (error) {
+				if (typeof value.string === "string") {
+					result[key] = value.string;
+
+					continue;
+				}
 				const errorMessage = i18n.t("convertWrappedJsonError", {
 					error: (error as Error).message,
-					ns: "errors",
+					ns: "services",
 					key,
 				});
 				LoggerService.error(namespaces.sessionsService, errorMessage, true);
