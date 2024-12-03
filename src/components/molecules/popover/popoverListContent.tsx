@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { PopoverCloseButton } from "./popoverCloseButton";
+import { PopoverContentBase } from "./popoverContentBase";
 import { usePopoverListContext } from "@contexts/usePopover";
 import { PopoverListItem, PopoverTriggerProps } from "@src/interfaces/components/popover.interface";
 import { cn } from "@src/utilities";
 
-import { PopoverCloseButton, PopoverContentBase } from "@components/molecules/popover";
-import { useMergeRefsCustom } from "@components/molecules/popover/utilities/mergeRefs";
+import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 
 export const PopoverListContent = React.forwardRef<
 	HTMLDivElement,
@@ -37,20 +38,22 @@ export const PopoverListContent = React.forwardRef<
 	const onKeyDown = (event: React.KeyboardEvent, item: PopoverListItem, index: number) => {
 		if (event.key === "Enter" || event.key === " ") {
 			handleItemClick(item, index, item.id);
-		} else if (event.key === "ArrowDown") {
+		}
+		if (event.key === "ArrowDown" || event.key === "Tab") {
 			context.setActiveIndex(Math.min(index + 1, items.length - 1));
-		} else if (event.key === "ArrowUp") {
+		}
+		if (event.key === "ArrowUp" || (event.shiftKey && event.key === "Tab")) {
 			context.setActiveIndex(Math.max(index - 1, 0));
 		}
 	};
 
 	return (
-		<PopoverContentBase style={style} {...props} ref={ref}>
+		<PopoverContentBase style={style} {...props} context={context} floatingContext={floatingContext} ref={ref}>
 			{items.map((item, index) => (
 				<div
 					aria-selected={context.activeIndex === index}
 					className={cn(itemClassName, {
-						"bg-gray-1100 text-white hover:bg-gray-1100": item.id === activeId,
+						"bg-gray-1100 text-white hover:bg-gray-1100 cursor-pointer": item.id === activeId,
 					})}
 					key={item.id}
 					onClick={() => handleItemClick(item, index, item.id)}
@@ -59,9 +62,6 @@ export const PopoverListContent = React.forwardRef<
 						if (node) listRef.current[index] = node;
 					}}
 					role="option"
-					style={{
-						cursor: "pointer",
-					}}
 					tabIndex={context.activeIndex === index ? 0 : -1}
 				>
 					{item.label}

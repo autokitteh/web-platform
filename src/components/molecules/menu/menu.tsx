@@ -89,7 +89,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 				</li>
 				<PopoverList animation="slideFromLeft" interactionType="hover">
 					<PopoverListTrigger>
-						<li className="group static">
+						<li className="group">
 							<div className="cursor-pointer before:absolute before:left-0 before:h-10 before:w-full" />
 							<div className="relative z-10 w-full gap-1.5 rounded-full p-0.5 pl-1 group-hover:bg-green-200">
 								<div className="flex size-9 items-center justify-center rounded-full">
@@ -118,11 +118,11 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						</li>
 					</PopoverListTrigger>
 					<PopoverListContent
-						className="z-30 flex h-screen flex-col rounded-lg bg-white px-4 pt-[212px] text-black"
+						className="z-30 flex h-screen flex-col overflow-scroll rounded-lg bg-white px-4 pb-16 pt-[212px] text-black"
 						itemClassName={cn(
 							"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
 							"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",
-							"text-fira-code whitespace-nowrap px-4 text-gray-1100 hover:bg-green-200 max-w-245 overflow-hidden"
+							"text-fira-code whitespace-nowrap text-gray-1100 hover:bg-green-200 max-w-245 overflow-hidden p-4"
 						)}
 						items={sortedProjectsList.map(({ id, name }) => ({ id, label: name, value: id }))}
 						onItemSelect={({ id: projectId }: { id: string }) =>

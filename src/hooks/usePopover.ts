@@ -20,6 +20,7 @@ import { PopoverOptions } from "@src/interfaces/components";
 
 const useBasePopover = (
 	{ animation, initialOpen = false, placement = "bottom" }: PopoverOptions = {
+		animation: "slideFromBottom",
 		interactionType: "hover",
 	}
 ) => {
@@ -42,27 +43,19 @@ const useBasePopover = (
 
 	const context = data.context;
 
-	let transitionConfiguration = {};
-
-	switch (animation) {
-		case "slideFromLeft":
-			transitionConfiguration = {
-				open: { opacity: 1, left: 0 },
-				initial: { opacity: 0, left: "-212px" },
-				close: { opacity: 0, left: "-212px" },
-			};
-			break;
-		case "slideFromBottom":
-			transitionConfiguration = {
-				open: { opacity: 1, top: 0 },
-				initial: { opacity: 0, top: "50px" },
-				close: { opacity: 0, top: "50px" },
-			};
-			break;
-		case "none":
-		default:
-			break;
-	}
+	const animationConfigurations = {
+		slideFromLeft: {
+			open: { opacity: 1, left: 0 },
+			initial: { opacity: 0, left: "-212px" },
+			close: { opacity: 0, left: "-212px" },
+		},
+		slideFromBottom: {
+			open: { opacity: 1, top: 0 },
+			initial: { opacity: 0, top: "50px" },
+			close: { opacity: 0, top: "50px" },
+		},
+	};
+	const transitionConfiguration = animationConfigurations[animation] || {};
 
 	const { isMounted, styles } = useTransitionStyles(context, transitionConfiguration);
 
@@ -76,7 +69,7 @@ const useBasePopover = (
 	};
 };
 
-export const usePopover = (options: PopoverOptions = { interactionType: "hover" }) => {
+export const usePopover = (options: PopoverOptions = { interactionType: "hover", animation: "slideFromBottom" }) => {
 	const { context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
 
 	const dismiss = useDismiss(context);
@@ -104,7 +97,9 @@ export const usePopover = (options: PopoverOptions = { interactionType: "hover" 
 	);
 };
 
-export const usePopoverList = (options: PopoverOptions = { interactionType: "hover" }) => {
+export const usePopoverList = (
+	options: PopoverOptions = { interactionType: "hover", animation: "slideFromBottom" }
+) => {
 	const { context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const listRef = useRef<(HTMLElement | null)[]>([]);

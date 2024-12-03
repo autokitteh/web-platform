@@ -1,10 +1,11 @@
 import * as React from "react";
 
+import { PopoverCloseButton } from "./popoverCloseButton";
+import { PopoverContentBase } from "./popoverContentBase";
 import { usePopoverContext } from "@contexts/usePopover";
 import { PopoverTriggerProps } from "@src/interfaces/components";
 
-import { PopoverCloseButton, PopoverContentBase } from "@components/molecules/popover";
-import { useMergeRefsCustom } from "@components/molecules/popover/utilities/mergeRefs";
+import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 
 export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTMLElement> & PopoverTriggerProps>(
 	function PopoverTrigger({ children, ...props }, propRef) {
@@ -36,7 +37,17 @@ export const PopoverContent = React.forwardRef<HTMLDivElement, React.HTMLProps<H
 	{ style, ...props },
 	propRef
 ) {
-	return <PopoverContentBase style={style} {...props} ref={propRef} />;
+	const { context: floatingContext, ...context } = usePopoverContext();
+
+	return (
+		<PopoverContentBase
+			context={context}
+			floatingContext={floatingContext}
+			style={style}
+			{...props}
+			ref={propRef}
+		/>
+	);
 });
 
 export const PopoverClose = PopoverCloseButton;
