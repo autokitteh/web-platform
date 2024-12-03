@@ -1,3 +1,10 @@
+## [2.78.1](https://github.com/autokitteh/web-platform/compare/v2.78.0...v2.78.1) (2024-12-03)
+
+
+### Bug Fixes
+
+* **ENG-1871:** 404 path in the url should return 404 status ([#701](https://github.com/autokitteh/web-platform/issues/701)) ([6e7f724](https://github.com/autokitteh/web-platform/commit/6e7f7248149921c9c322671873d61241670b1c3e))
+
 # [2.78.0](https://github.com/autokitteh/web-platform/compare/v2.77.0...v2.78.0) (2024-12-03)
 
 
