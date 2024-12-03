@@ -118,6 +118,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 					</PopoverListTrigger>
 					<PopoverListContent
 						className="scrollbar z-30 flex h-screen flex-col overflow-scroll rounded-lg bg-white px-4 pb-16 pt-[212px] text-black"
+						emptyListMessage={t("noProjectsFound")}
 						itemClassName={cn(
 							"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
 							"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",

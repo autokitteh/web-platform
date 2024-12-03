@@ -12,11 +12,12 @@ export const PopoverListContent = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLProps<HTMLDivElement> & {
 		className?: string;
+		emptyListMessage?: string;
 		itemClassName?: string;
 		items: PopoverListItem[];
 		onItemSelect?: (item: PopoverListItem) => void;
 	}
->(function PopoverListContent({ itemClassName, items, onItemSelect, style, ...props }, propRef) {
+>(function PopoverListContent({ emptyListMessage, itemClassName, items, onItemSelect, style, ...props }, propRef) {
 	const { context: floatingContext, ...context } = usePopoverListContext();
 	const listRef = useRef<(HTMLElement | null)[]>([]);
 	const ref = useMergeRefsCustom(context.refs.setFloating, propRef);
@@ -49,24 +50,30 @@ export const PopoverListContent = React.forwardRef<
 
 	return (
 		<PopoverContentBase style={style} {...props} context={context} floatingContext={floatingContext} ref={ref}>
-			{items.map((item, index) => (
-				<div
-					aria-selected={context.activeIndex === index}
-					className={cn(itemClassName, {
-						"bg-gray-1100 text-white hover:bg-gray-1100 cursor-pointer": item.id === activeId,
-					})}
-					key={item.id}
-					onClick={() => handleItemClick(item, index, item.id)}
-					onKeyDown={(event) => onKeyDown(event, item, index)}
-					ref={(node) => {
-						if (node) listRef.current[index] = node;
-					}}
-					role="option"
-					tabIndex={context.activeIndex === index ? 0 : -1}
-				>
-					{item.label}
+			{items.length ? (
+				items.map((item, index) => (
+					<div
+						aria-selected={context.activeIndex === index}
+						className={cn(itemClassName, {
+							"bg-gray-1100 text-white hover:bg-gray-1100 cursor-pointer": item.id === activeId,
+						})}
+						key={item.id}
+						onClick={() => handleItemClick(item, index, item.id)}
+						onKeyDown={(event) => onKeyDown(event, item, index)}
+						ref={(node) => {
+							if (node) listRef.current[index] = node;
+						}}
+						role="option"
+						tabIndex={context.activeIndex === index ? 0 : -1}
+					>
+						{item.label}
+					</div>
+				))
+			) : (
+				<div aria-label={emptyListMessage} className={itemClassName}>
+					{emptyListMessage}
 				</div>
-			))}
+			)}
 		</PopoverContentBase>
 	);
 });
