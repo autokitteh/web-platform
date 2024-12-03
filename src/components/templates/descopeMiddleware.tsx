@@ -4,6 +4,7 @@ import { useDescope } from "@descope/react-sdk";
 import Cookies from "js-cookie";
 import psl from "psl";
 import { useTranslation } from "react-i18next";
+import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 
 import { authBearer, isLoggedInCookie, namespaces } from "@constants";
 import { LoggerService } from "@services/index";
@@ -13,8 +14,18 @@ import { useUserStore } from "@store/useUserStore";
 import { useLoggerStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
+import { External404 } from "@components/pages";
 
 const LoginPage = lazy(() => import("../pages/login"));
+
+const routes = [
+	{ path: "/" },
+	{ path: "/404" },
+	{ path: "/intro" },
+	{ path: "/projects/*" },
+	{ path: "/settings/*" },
+	{ path: "/events/*" },
+];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
@@ -23,6 +34,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const addToast = useToastStore((state) => state.addToast);
 	const clearLogs = useLoggerStore((state) => state.clearLogs);
 	const [isLoggingIn, setIsLoggingIn] = useState(false);
+	const location = useLocation();
+	const navigate = useNavigate();
 
 	const handleLogout = useCallback(async () => {
 		await logout();
@@ -84,11 +97,22 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getLoggedInUser]
 	);
-
 	const isLoggedIn = Cookies.get(isLoggedInCookie);
 
 	if (authBearer || isLoggedIn) {
 		return children;
+	}
+
+	if (location.pathname === "/404") {
+		return <External404 />;
+	}
+
+	const matches = matchRoutes(routes, location);
+
+	if (!matches) {
+		navigate("/404");
+
+		return;
 	}
 
 	return (

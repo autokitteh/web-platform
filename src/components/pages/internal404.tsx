@@ -7,7 +7,7 @@ import { homepageURL } from "@constants/global.constants";
 
 import { Error404 } from "@assets/image";
 
-export const NotFound404 = () => {
+export const Internal404 = () => {
 	const { t } = useTranslation(["notFound404"]);
 
 	return (
