@@ -44,7 +44,7 @@ export const ProjectTopbarNavigation = () => {
 				const getPath = () => {
 					switch (item.key) {
 						case "assets":
-							return latestOpenedTab ? `/${latestOpenedTab}` : "/assets";
+							return latestOpenedTab ? `/${latestOpenedTab}` : "/code";
 						case "sessions":
 							return deploymentId ? `/deployments/${deploymentId}/sessions` : "";
 						case "deployments":
