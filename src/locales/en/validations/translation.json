@@ -1,7 +1,10 @@
 {
     "connectionIsRequired": "Connection is required",
     "cronExpressionsFormat": "The cron schedule expression must match the required format",
-    "extensionIsRequired": "File extension is required",
+    "code":{
+        "extensionIsRequired": "File extension is required",
+        "nameIsRequired": "Name is required"
+    },
     "fileNameIsRequired": "File name is required",
     "functionNameIsRequired": "Entrypoint is required",
     "manualRun":{

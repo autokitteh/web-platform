@@ -1,6 +1,6 @@
 import React, { useId, useMemo } from "react";
 
-import { useResize } from "@src/hooks";
+import { useResize, useWindowDimensions } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
 import { Frame, Loader, ResizeButton } from "@components/atoms";
@@ -9,8 +9,9 @@ import { ProjectTemplatesSection } from "@components/organisms/dashboard/templat
 
 export const Dashboard = () => {
 	const resizeId = useId();
+	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
+	const { isIOS, isMobile } = useWindowDimensions();
 	const { isLoadingProjectsList, projectsList } = useProjectStore();
-	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 78, min: 30, id: resizeId });
 
 	const hasProjects = projectsList.length;
 
@@ -25,19 +26,30 @@ export const Dashboard = () => {
 	}, [isLoadingProjectsList, hasProjects]);
 
 	return (
-		<div className="my-1.5 flex w-full overflow-hidden rounded-2xl">
-			<div className="relative flex w-2/3 flex-col" style={{ width: `${leftSideWidth}%` }}>
-				<Frame className="h-full flex-1 rounded-r-none bg-gray-1100">
+		<div className="my-0 flex w-full overflow-hidden rounded-none md:my-1.5 md:rounded-2xl">
+			<div
+				className="relative flex w-2/3 flex-col"
+				style={{ width: `${!(isIOS || isMobile) ? leftSideWidth : 100}%` }}
+			>
+				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none">
 					<DashboardTopbar />
 
 					{dashboardContent}
 				</Frame>
 			</div>
-			<ResizeButton className="right-0.5 bg-white hover:bg-gray-700" direction="horizontal" resizeId={resizeId} />
+			{isIOS || isMobile ? null : (
+				<>
+					<ResizeButton
+						className="right-0.5 bg-white hover:bg-gray-700"
+						direction="horizontal"
+						resizeId={resizeId}
+					/>
 
-			<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
-				<ProjectTemplatesSection />
-			</div>
+					<div style={{ width: `${100 - (leftSideWidth as number)}%` }}>
+						<ProjectTemplatesSection />
+					</div>
+				</>
+			)}
 		</div>
 	);
 };
