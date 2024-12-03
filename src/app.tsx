@@ -13,7 +13,7 @@ import {
 	useNavigationType,
 } from "react-router-dom";
 
-import { googleAnalytics4Id, isProduction } from "@constants";
+import { googleAnalyticsId, isProduction } from "@constants";
 
 import { PageTitle } from "@components/atoms";
 import { DeploymentsTable, EventViewer, EventsTable, SessionsTable } from "@components/organisms";
@@ -35,7 +35,7 @@ export const App = () => {
 	const location = useLocation();
 
 	useEffect(() => {
-		ga4.initialize(googleAnalytics4Id, {
+		ga4.initialize(googleAnalyticsId, {
 			testMode: !isProduction,
 		});
 	}, []);
