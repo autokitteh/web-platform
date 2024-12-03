@@ -26,7 +26,6 @@ export const VariablesTable = () => {
 	const { projectId } = useParams();
 	const { closeModal, openModal } = useModalStore();
 	const {
-		envId,
 		fetchVariables,
 		loading: { variables: loadingVariables },
 		variables,
@@ -142,7 +141,7 @@ export const VariablesTable = () => {
 									<div className="flex size-8 space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
-											onClick={() => navigate(`edit/${envId}/${name}`)}
+											onClick={() => navigate(`edit/${name}`)}
 										>
 											<EditIcon className="size-3 fill-white" />
 										</IconButton>

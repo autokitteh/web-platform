@@ -127,7 +127,7 @@ export const App = () => {
 
 							<Route element={<AddVariable />} path="add" />
 
-							<Route element={<EditVariable />} path="edit/:environmentId/:variableName" />
+							<Route element={<EditVariable />} path="edit/:variableName" />
 
 							<Route element={<Navigate replace to="/404" />} path="*" />
 						</Route>
