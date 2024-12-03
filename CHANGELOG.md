@@ -1,3 +1,10 @@
+# [2.77.0](https://github.com/autokitteh/web-platform/compare/v2.76.5...v2.77.0) (2024-12-03)
+
+
+### Features
+
+* **UI-1025:** make semantic release on each merge to main  ([#716](https://github.com/autokitteh/web-platform/issues/716)) ([3437679](https://github.com/autokitteh/web-platform/commit/343767949a433a3bf9d5f39f9531630214c8b425))
+
 ## [2.76.5](https://github.com/autokitteh/web-platform/compare/v2.76.4...v2.76.5) (2024-12-03)
 
 
