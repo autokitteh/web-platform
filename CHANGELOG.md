@@ -1,3 +1,11 @@
+## [2.76.3](https://github.com/autokitteh/web-platform/compare/v2.76.2...v2.76.3) (2024-12-03)
+
+
+### Bug Fixes
+
+* **UI-1026)(UI-1027)(UI-1028:** make the whole video strip as a button ([#717](https://github.com/autokitteh/web-platform/issues/717)) ([3309d0c](https://github.com/autokitteh/web-platform/commit/3309d0c3ad629a3022a3facadb139dab25ce4a6a))
+* **UI-1030:** update default path for assets tab to '/code' ([#720](https://github.com/autokitteh/web-platform/issues/720)) ([6de995e](https://github.com/autokitteh/web-platform/commit/6de995ebef55f76080d8e20b4431079d948596e6))
+
 ## [2.76.2](https://github.com/autokitteh/web-platform/compare/v2.76.1...v2.76.2) (2024-12-03)
 
 
