@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 import { defaultSystemLogSize } from "@src/constants";
 import { useResize, useWindowDimensions } from "@src/hooks";
-import { useLoggerStore } from "@src/store";
+import { useLoggerStore, useProjectStore } from "@src/store";
 import { cn } from "@utilities";
 
 import { ResizeButton } from "@components/atoms";
@@ -15,6 +15,8 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 	const { isLoggerEnabled, toggleLogger } = useLoggerStore();
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 	const { isIOS, isMobile } = useWindowDimensions();
+
+	const { projectsList } = useProjectStore();
 
 	const resizeId = useId();
 	const [systemLogHeight, setSystemLogHeight] = useResize({
@@ -47,9 +49,11 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 		{ "top-0 -mt-1 -mb-1.5": systemLogHeight === 0 }
 	);
 
+	const hideSidebar = !projectsList.length && (isMobile || isIOS) && location.pathname === "/";
+
 	return (
 		<div className={appLayoutClasses}>
-			<Sidebar />
+			{hideSidebar ? null : <Sidebar />}
 
 			<div className="flex flex-1 flex-col md:mb-2">
 				{hideTopbar ? null : <ProjectConfigTopbar />}
