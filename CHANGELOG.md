@@ -1,3 +1,10 @@
+## [2.76.1](https://github.com/autokitteh/web-platform/compare/v2.76.0...v2.76.1) (2024-12-03)
+
+
+### Bug Fixes
+
+* **UI-1023:** remove redundant environments mentions ([#715](https://github.com/autokitteh/web-platform/issues/715)) ([50cf737](https://github.com/autokitteh/web-platform/commit/50cf7371b39bb83e859b97e4787b1eb18bdd783f))
+
 # [2.76.0](https://github.com/autokitteh/web-platform/compare/v2.75.0...v2.76.0) (2024-12-02)
 
 
