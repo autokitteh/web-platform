@@ -1,3 +1,10 @@
+## [2.76.4](https://github.com/autokitteh/web-platform/compare/v2.76.3...v2.76.4) (2024-12-03)
+
+
+### Bug Fixes
+
+* **UI-1000:** fix nested json converter when string ([#712](https://github.com/autokitteh/web-platform/issues/712)) ([d7d99cc](https://github.com/autokitteh/web-platform/commit/d7d99cc247a2c5424ebf129615d03f6b557f9fed))
+
 ## [2.76.3](https://github.com/autokitteh/web-platform/compare/v2.76.2...v2.76.3) (2024-12-03)
 
 
