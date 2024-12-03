@@ -12,9 +12,9 @@ import { useLoggerStore, useUserStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
-import { Popover, PopoverTrigger } from "@components/molecules";
+import { PopoverTrigger } from "@components/molecules";
 import { Menu } from "@components/molecules/menu";
-import { PopoverContent } from "@components/molecules/popover/index";
+import { Popover, PopoverContent } from "@components/molecules/popover/index";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { FileIcon, HelpIcon, ListDetailsIcon } from "@assets/image/icons";
@@ -162,7 +162,7 @@ export const Sidebar = () => {
 						</Button>
 
 						{isAuthEnabled ? (
-							<Popover interactionType="click">
+							<Popover animation="slideFromBottom" interactionType="click">
 								<PopoverTrigger className="ml-1 flex items-center">
 									<Avatar color="black" name={user?.name} round={true} size="36" />
 									<AnimatePresence>

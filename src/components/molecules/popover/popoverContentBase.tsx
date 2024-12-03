@@ -2,7 +2,7 @@ import React from "react";
 
 import { FloatingFocusManager, FloatingPortal } from "@floating-ui/react";
 
-import { useMergeRefsCustom } from "@components/molecules/popover/utilities/mergeRefs";
+import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 
 export const PopoverContentBase = React.forwardRef<HTMLDivElement, any>(function PopoverContentBase(
 	{ context, floatingContext, style, ...props },

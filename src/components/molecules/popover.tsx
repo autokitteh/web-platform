@@ -1,22 +1,9 @@
 import * as React from "react";
 
-import { FloatingFocusManager, FloatingPortal, useMergeRefs } from "@floating-ui/react";
+import { useMergeRefs } from "@floating-ui/react";
 
-import { PopoverContext, usePopoverContext } from "@contexts";
-import { usePopover } from "@src/hooks";
-import { PopoverOptions, PopoverTriggerProps } from "@src/interfaces/components";
-
-export const Popover = ({
-	children,
-	interactionType = "hover",
-	...restOptions
-}: {
-	children: React.ReactNode;
-} & PopoverOptions) => {
-	const popover = usePopover({ interactionType, ...restOptions });
-
-	return <PopoverContext.Provider value={popover}>{children}</PopoverContext.Provider>;
-};
+import { usePopoverContext } from "@contexts";
+import { PopoverTriggerProps } from "@src/interfaces/components";
 
 export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTMLElement> & PopoverTriggerProps>(
 	function PopoverTrigger({ children, ...props }, propRef) {
@@ -43,34 +30,6 @@ export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTML
 		);
 	}
 );
-
-export const PopoverContentBase = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>>(
-	function PopoverContent({ style, ...props }, propRef) {
-		const { context: floatingContext, ...context } = usePopoverContext();
-		const ref = useMergeRefs([context.refs.setFloating, propRef]);
-
-		return (
-			<FloatingPortal>
-				<FloatingFocusManager context={floatingContext} initialFocus={0}>
-					{context.isMounted ? (
-						<div
-							ref={ref}
-							style={{ ...style, ...context.floatingStyles, ...context.styles }}
-							{...context.getFloatingProps(props)}
-							className={props?.className}
-							{...context.getReferenceProps()}
-						>
-							{props.children}
-						</div>
-					) : (
-						<div />
-					)}
-				</FloatingFocusManager>
-			</FloatingPortal>
-		);
-	}
-);
-
 export const PopoverCloseButton = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
 	function PopoverClose(props, ref) {
 		const { setOpen } = usePopoverContext();

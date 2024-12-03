@@ -15,7 +15,8 @@ import { useSort } from "@hooks";
 import { useCacheStore, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { EmptyTableAddButton, Popover, PopoverTrigger, SortButton } from "@components/molecules";
+import { EmptyTableAddButton, PopoverTrigger, SortButton } from "@components/molecules";
+import { Popover } from "@components/molecules/popover/index";
 import { PopoverContent } from "@components/molecules/popover/popoverContent";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 import { InformationPopoverContent } from "@components/organisms/triggers/table/popoverContent";
