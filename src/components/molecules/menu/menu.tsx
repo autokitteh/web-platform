@@ -91,7 +91,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 					<PopoverListTrigger>
 						<li className="group">
 							<div className="cursor-pointer before:absolute before:left-0 before:h-10 before:w-full" />
-							<div className="relative z-10 w-full gap-1.5 rounded-full p-0.5 pl-1 group-hover:bg-green-200">
+							<div className="z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 pl-1 text-gray-1100 group-hover:bg-green-200">
 								<div className="flex size-9 items-center justify-center rounded-full">
 									<IconSvg
 										alt={t("myProjects")}
