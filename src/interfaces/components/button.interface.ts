@@ -11,7 +11,7 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLAnchorElement | HT
 	form?: string;
 	href: string;
 	onClick: MouseEventHandler<HTMLButtonElement>;
-	onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
+	onKeyPressed?: KeyboardEventHandler<HTMLButtonElement>;
 	onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	onMouseLeave?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	type?: "button" | "reset" | "submit";

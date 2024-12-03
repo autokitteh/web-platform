@@ -56,7 +56,8 @@ export const CopyButton = ({
 			ariaLabel={t("copyButtonText", { text: title })}
 			className={copyButtonStyle}
 			onClick={() => copyTextToClipboard(text)}
-			onKeyPress={() => copyTextToClipboard(text)}
+			onKeyPressed={() => copyTextToClipboard(text)}
+			tabIndex={0}
 			title={title}
 			type="button"
 		>

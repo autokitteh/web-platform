@@ -14,7 +14,7 @@ export const Button = ({
 	form,
 	href,
 	onClick,
-	onKeyPress,
+	onKeyPressed,
 	style,
 	title,
 	type = "button",
@@ -36,7 +36,7 @@ export const Button = ({
 	);
 	const onKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
 		if (event.key === "Enter" || event.key === " ") {
-			onKeyPress && onKeyPress(event);
+			onKeyPressed && onKeyPressed(event);
 		}
 	};
 
