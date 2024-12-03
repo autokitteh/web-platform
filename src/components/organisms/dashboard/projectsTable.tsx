@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { ModalName } from "@src/enums/components";
+import { ModalName, SidebarHrefMenu } from "@src/enums/components";
 import { Project } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -43,9 +43,12 @@ export const DashboardProjectsTable = () => {
 					</THead>
 
 					<TBody>
-						{sortedProjects.map(({ href, id, name }) => (
+						{sortedProjects.map(({ id, name }) => (
 							<Tr className="group cursor-pointer pl-4" key={id}>
-								<Td className="group-hover:font-bold" onClick={() => navigate(href)}>
+								<Td
+									className="group-hover:font-bold"
+									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+								>
 									{name}
 								</Td>
 							</Tr>

@@ -1,8 +1,4 @@
-import { usePopover } from "@src/hooks";
+import { usePopover, usePopoverList } from "@src/hooks";
 
-export type PopopverContextType =
-	| (ReturnType<typeof usePopover> & {
-			setDescriptionId: React.Dispatch<React.SetStateAction<string | undefined>>;
-			setLabelId: React.Dispatch<React.SetStateAction<string | undefined>>;
-	  })
-	| null;
+export type PopoverContextType = ReturnType<typeof usePopover> | null;
+export type PopoverListContextType = ReturnType<typeof usePopoverList> | null;

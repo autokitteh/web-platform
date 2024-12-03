@@ -6,5 +6,6 @@
     "settings": "Settings",
     "stats": "Stats",
     "projectsListFetchFailed": "Couldn't fetch projects list",
-    "projectsListFetchFailedExtended": "Couldn't fetch projects list, error: {{error}}"
+    "projectsListFetchFailedExtended": "Couldn't fetch projects list, error: {{error}}",
+    "noProjectsFound": "No projects found"
 }

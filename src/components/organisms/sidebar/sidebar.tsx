@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import Avatar from "react-avatar";
@@ -7,14 +7,14 @@ import { Link, useLocation } from "react-router-dom";
 
 import { NewProjectModal } from "../newProjectModal";
 import { isAuthEnabled } from "@constants";
-import { SubmenuInfo } from "@interfaces/components";
 
 import { useLoggerStore, useUserStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
-import { Popover, PopoverContent, PopoverTrigger } from "@components/molecules";
-import { Menu, Submenu } from "@components/molecules/menu";
+import { PopoverTrigger } from "@components/molecules";
+import { Menu } from "@components/molecules/menu";
+import { Popover, PopoverContent } from "@components/molecules/popover/index";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { FileIcon, HelpIcon, ListDetailsIcon } from "@assets/image/icons";
@@ -22,24 +22,14 @@ import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [submenuInfo, setSubmenuInfo] = useState<SubmenuInfo>({ submenu: undefined, top: 0 });
 	const { logoutFunction, user } = useUserStore();
 	const { isLoggerEnabled, isNewLogs, toggleLogger } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
-	const submenuRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		setIsOpen(false);
 	}, [location.pathname]);
-
-	const handleMouseLeave = (event: React.MouseEvent) => {
-		const relatedTarget = event.relatedTarget as Node | null;
-		if (submenuRef.current && relatedTarget && submenuRef.current.contains(relatedTarget)) {
-			return;
-		}
-		setSubmenuInfo({ submenu: undefined, top: 0 });
-	};
 
 	const animateVariant = {
 		hidden: { opacity: 0, width: 0 },
@@ -95,12 +85,7 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						<Menu
-							className="mt-8"
-							isOpen={isOpen}
-							onMouseLeave={handleMouseLeave}
-							onSubmenu={setSubmenuInfo}
-						/>
+						<Menu className="mt-8" isOpen={isOpen} />
 					</div>
 
 					<div className="flex flex-col gap-5">
@@ -177,7 +162,7 @@ export const Sidebar = () => {
 						</Button>
 
 						{isAuthEnabled ? (
-							<Popover interactionType="click">
+							<Popover animation="slideFromBottom" interactionType="click">
 								<PopoverTrigger className="ml-1 flex items-center">
 									<Avatar color="black" name={user?.name} round={true} size="36" />
 									<AnimatePresence>
@@ -221,14 +206,6 @@ export const Sidebar = () => {
 						) : null}
 					</div>
 				</div>
-
-				<AnimatePresence>
-					{submenuInfo.submenu && !!submenuInfo.submenu.length ? (
-						<div onMouseLeave={handleMouseLeave} ref={submenuRef}>
-							<Submenu submenuInfo={submenuInfo} />
-						</div>
-					) : null}
-				</AnimatePresence>
 			</div>
 			<NewProjectModal />
 		</Suspense>
