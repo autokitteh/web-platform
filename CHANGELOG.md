@@ -1,3 +1,10 @@
+## [2.76.2](https://github.com/autokitteh/web-platform/compare/v2.76.1...v2.76.2) (2024-12-03)
+
+
+### Bug Fixes
+
+* **UI-1000:** prevent of json converter to write in system log ([#713](https://github.com/autokitteh/web-platform/issues/713)) ([780afa7](https://github.com/autokitteh/web-platform/commit/780afa71a7559ab20f480a77202657dedd5ed5b7))
+
 ## [2.76.1](https://github.com/autokitteh/web-platform/compare/v2.76.0...v2.76.1) (2024-12-03)
 
 
