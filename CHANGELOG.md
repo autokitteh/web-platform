@@ -1,3 +1,10 @@
+## [2.76.5](https://github.com/autokitteh/web-platform/compare/v2.76.4...v2.76.5) (2024-12-03)
+
+
+### Bug Fixes
+
+* **UI-1029:** display an error message when copy button fails ([#718](https://github.com/autokitteh/web-platform/issues/718)) ([e720293](https://github.com/autokitteh/web-platform/commit/e720293bbd7f8485655e2599362b3e0122213531))
+
 ## [2.76.4](https://github.com/autokitteh/web-platform/compare/v2.76.3...v2.76.4) (2024-12-03)
 
 
