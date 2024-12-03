@@ -10,6 +10,15 @@ export default {
 			"@semantic-release/commit-analyzer",
 			{
 				preset: "conventionalcommits",
+				releaseRules: [
+					{ type: "feat", release: "minor" },
+					{ type: "fix", release: "patch" },
+					{ type: "refactor", release: "patch" },
+					{ type: "perf", release: "patch" },
+					{ type: "revert", release: "patch" },
+					{ message: "feat(*)!:*", release: "major" },
+					{ message: "feat!:*", release: "major" },
+				],
 			},
 		],
 		"@semantic-release/release-notes-generator",
