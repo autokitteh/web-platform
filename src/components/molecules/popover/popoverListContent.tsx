@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { PopoverCloseButton } from "./popoverCloseButton";
 import { PopoverContentBase } from "./popoverContentBase";
@@ -11,17 +11,20 @@ import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 export const PopoverListContent = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLProps<HTMLDivElement> & {
+		activeId?: string;
 		className?: string;
 		emptyListMessage?: string;
 		itemClassName?: string;
 		items: PopoverListItem[];
 		onItemSelect?: (item: PopoverListItem) => void;
 	}
->(function PopoverListContent({ emptyListMessage, itemClassName, items, onItemSelect, style, ...props }, propRef) {
+>(function PopoverListContent(
+	{ activeId, emptyListMessage, itemClassName, items, onItemSelect, style, ...props },
+	propRef
+) {
 	const { context: floatingContext, ...context } = usePopoverListContext();
 	const listRef = useRef<(HTMLElement | null)[]>([]);
 	const ref = useMergeRefsCustom(context.refs.setFloating, propRef);
-	const [activeId, setActiveId] = useState("");
 
 	useEffect(() => {
 		if (listRef.current) {
@@ -29,16 +32,15 @@ export const PopoverListContent = React.forwardRef<
 		}
 	}, [context.listRef]);
 
-	const handleItemClick = (item: PopoverListItem, index: number, id: string) => {
+	const handleItemClick = (item: PopoverListItem, index: number) => {
 		onItemSelect?.(item);
-		setActiveId(id);
 		context.setActiveIndex(index);
 		context.setOpen(false);
 	};
 
 	const onKeyDown = (event: React.KeyboardEvent, item: PopoverListItem, index: number) => {
 		if (event.key === "Enter" || event.key === " ") {
-			handleItemClick(item, index, item.id);
+			handleItemClick(item, index);
 		}
 		if (event.key === "ArrowDown" || event.key === "Tab") {
 			context.setActiveIndex(Math.min(index + 1, items.length - 1));
@@ -58,7 +60,7 @@ export const PopoverListContent = React.forwardRef<
 							"bg-gray-1100 text-white hover:bg-gray-1100 cursor-pointer": item.id === activeId,
 						})}
 						key={item.id}
-						onClick={() => handleItemClick(item, index, item.id)}
+						onClick={() => handleItemClick(item, index)}
 						onKeyDown={(event) => onKeyDown(event, item, index)}
 						ref={(node) => {
 							if (node) listRef.current[index] = node;

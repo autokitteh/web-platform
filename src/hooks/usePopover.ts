@@ -55,7 +55,7 @@ const useBasePopover = (
 			close: { opacity: 0, top: "50px" },
 		},
 	};
-	const transitionConfiguration = animationConfigurations[animation] || {};
+	const transitionConfiguration = animation ? animationConfigurations[animation] : {};
 
 	const { isMounted, styles } = useTransitionStyles(context, transitionConfiguration);
 
@@ -71,17 +71,21 @@ const useBasePopover = (
 
 export const usePopover = (options: PopoverOptions = { interactionType: "hover", animation: "slideFromBottom" }) => {
 	const { context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
+	const { interactionType } = options;
 
 	const dismiss = useDismiss(context);
-	const role = useRole(context);
-	const hover = useHover(context, {
-		handleClose: safePolygon({
-			buffer: 100,
-		}),
-	});
-	const click = useClick(context);
 
-	const interactions = useInteractions([dismiss, role, hover, click]);
+	const interactionHooks = {
+		click: useClick(context, {
+			enabled: interactionType === "click",
+		}),
+		hover: useHover(context, {
+			enabled: interactionType === "hover",
+			handleClose: safePolygon({ buffer: 100 }),
+		}),
+	};
+
+	const interactions = useInteractions([interactionHooks[interactionType], dismiss]);
 
 	return useMemo(
 		() => ({
