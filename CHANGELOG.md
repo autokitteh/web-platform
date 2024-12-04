@@ -1,3 +1,10 @@
+## [2.79.1](https://github.com/autokitteh/web-platform/compare/v2.79.0...v2.79.1) (2024-12-04)
+
+
+### Bug Fixes
+
+* **UI-1033:** fix file creation after one file created ([#723](https://github.com/autokitteh/web-platform/issues/723)) ([13592ab](https://github.com/autokitteh/web-platform/commit/13592ab3d1b0ad098afa112dc801fd74abf01abd))
+
 # [2.79.0](https://github.com/autokitteh/web-platform/compare/v2.78.1...v2.79.0) (2024-12-04)
 
 
