@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { DeploymentsService } from "@services/deployments.service";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
 import { Project } from "@type/models";
 
@@ -19,10 +20,23 @@ export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [projectsStats, setProjectsStats] = useState<Record<string, any>>({});
 
 	const { items: sortedProjects, requestSort, sortConfig } = useSort<Project>(projectsList, "name");
 
 	const { openModal } = useModalStore();
+
+	const loadProjectsData = async (projectsList: Project[]) => {
+		for (const project of projectsList) {
+			const { data: deployments } = await DeploymentsService.list(project.id);
+			setProjectsStats((prev) => ({ ...prev, [project.id]: { deployments } }));
+		}
+	};
+
+	useEffect(() => {
+		loadProjectsData(projectsList);
+	}, [projectsList]);
 
 	return (
 		<div className="z-10 h-2/3 select-none pt-10">
