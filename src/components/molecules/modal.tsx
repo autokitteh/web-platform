@@ -43,6 +43,7 @@ export const Modal = ({ children, className, hideCloseButton, name }: ModalProps
 		}
 
 		const handleKeyDown = (event: KeyboardEvent) => {
+			event.stopPropagation();
 			if (event.key === "Escape" && isOpen) {
 				onClose(name);
 			}
@@ -77,14 +78,14 @@ export const Modal = ({ children, className, hideCloseButton, name }: ModalProps
 						ref={modalRef}
 						variants={modalVariants}
 					>
-						{!hideCloseButton ? (
+						{hideCloseButton ? null : (
 							<IconButton
 								className="group ml-auto h-default-icon w-default-icon bg-gray-250 p-0"
 								onClick={() => onClose(name)}
 							>
 								<Close className="size-3 fill-black transition group-hover:fill-white" />
 							</IconButton>
-						) : null}
+						)}
 
 						{children}
 					</motion.div>
