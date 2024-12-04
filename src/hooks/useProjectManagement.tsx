@@ -74,69 +74,84 @@ export const useProjectManagement = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		if (!file) return;
-		setLoadingImportFile(true);
-
+	const parseManifest = async (file: File): Promise<{ manifest: any; structure: FileStructure } | null> => {
 		try {
 			const { structure } = await unpackFileZip(file);
-			if (!structure) return;
+			if (!structure) return null;
 
 			const manifestFileNode = structure["autokitteh.yaml"];
 			const manifestContent = manifestFileNode && "content" in manifestFileNode ? manifestFileNode.content : null;
-			if (!manifestContent) {
-				addToast({
-					message: t("projectContentError"),
-					type: "error",
-				});
 
+			if (!manifestContent) {
+				addToast({ message: t("projectContentError"), type: "error" });
 				LoggerService.error(
 					namespaces.manifestService,
 					`${t("projectContentErrorExtended", { error: t("projectContentNotFound") })}`
 				);
 
-				return;
-			}
-
-			const manifest = yaml.load(manifestContent) as any;
-			if (projectNamesSet.has(manifest.project.name)) {
-				setPendingFile(file);
-				// setPendingImportManifest(manifest);
-				openModal(ModalName.newProject);
-
-				return;
-			}
-			const updatedManifestContent = yaml.dump(manifest);
-
-			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestContent);
-			if (error || !newProjectId) {
-				addToast({
-					message: t("projectCreationFailed"),
-					type: "error",
-				});
-				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
-
-				return;
+				return null;
 			}
 
 			delete structure["autokitteh.yaml"];
 			delete structure["autokitteh.yaml.user"];
 
-			setProjectId(newProjectId);
-			setTemplateFiles(structure);
-		} catch (error) {
-			addToast({
-				message: t("projectCreationFailed"),
-				type: "error",
-			});
+			const manifest = yaml.load(manifestContent) as any;
 
+			return { structure, manifest };
+		} catch (error) {
+			addToast({ message: t("projectCreationFailed"), type: "error" });
 			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+
+			return null;
+		}
+	};
+
+	const createProjectWithManifest = async (manifest: any, structure: FileStructure): Promise<string | null> => {
+		try {
+			const updatedManifestContent = yaml.dump(manifest);
+			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestContent);
+
+			if (error || !newProjectId) {
+				addToast({ message: t("projectCreationFailed"), type: "error" });
+				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+
+				return null;
+			}
+
+			setTemplateFiles(structure);
+
+			return newProjectId;
+		} catch (error) {
+			addToast({ message: t("projectCreationFailed"), type: "error" });
+			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+
+			return null;
+		}
+	};
+
+	const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (!file) return;
+
+		setLoadingImportFile(true);
+		try {
+			const parsedData = await parseManifest(file);
+			if (!parsedData) return;
+
+			const { manifest, structure } = parsedData;
+
+			if (projectNamesSet.has(manifest.project.name)) {
+				setPendingFile(file);
+				openModal(ModalName.newProject);
+
+				return;
+			}
+
+			const newProjectId = await createProjectWithManifest(manifest, structure);
+			if (newProjectId) setProjectId(newProjectId);
 		} finally {
 			setLoadingImportFile(false);
-			if (fileInputRef.current) {
-				fileInputRef.current.value = "";
-			}
+			if (fileInputRef.current) fileInputRef.current.value = "";
 		}
 	};
 
@@ -145,35 +160,18 @@ export const useProjectManagement = () => {
 
 		setLoadingImportFile(true);
 		try {
-			const { structure } = await unpackFileZip(pendingFile);
-			if (!structure) return;
+			const parsedData = await parseManifest(pendingFile);
+			if (!parsedData) return;
 
-			const manifestFileNode = structure["autokitteh.yaml"];
-			const manifestContent = manifestFileNode && "content" in manifestFileNode ? manifestFileNode.content : null;
-			if (!manifestContent) return;
-
-			const manifest = yaml.load(manifestContent) as any;
+			const { manifest, structure } = parsedData;
 			manifest.project.name = newName;
 
-			const updatedManifestContent = yaml.dump(manifest);
-			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestContent);
-
-			if (error || !newProjectId) {
-				addToast({ message: t("projectCreationFailed"), type: "error" });
-				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
-
-				return;
-			}
-
-			delete structure["autokitteh.yaml"];
-			delete structure["autokitteh.yaml.user"];
-
-			setProjectId(newProjectId);
-			setTemplateFiles(structure);
+			const newProjectId = await createProjectWithManifest(manifest, structure);
+			if (newProjectId) setProjectId(newProjectId);
 		} finally {
 			setLoadingImportFile(false);
-			setPendingFile(undefined);
 			closeModal(ModalName.newProject);
+			setPendingFile(undefined);
 		}
 	};
 

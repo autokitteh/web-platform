@@ -69,8 +69,15 @@ export const NewProjectModal = () => {
 	return (
 		<Modal className="w-1/2 min-w-550 p-5" hideCloseButton name={ModalName.newProject}>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<h3 className="text-xl font-bold">Project name is already exist</h3>
-				<p className="mb-5 mt-1 text-base font-medium">Please enter another name</p>
+				{!pendingFile ? (
+					<h3 className="mb-5 mr-auto text-xl font-bold">{t("title")}</h3>
+				) : (
+					<>
+						<h3 className="text-xl font-bold">{t("projectAlreadyExist")}</h3>
+						<p className="mb-5 mt-1 text-base font-medium">{t("projectAnotherName")}</p>
+					</>
+				)}
+
 				<Input
 					label={t("projectName")}
 					placeholder={t("inputPlaceholder")}
@@ -103,7 +110,7 @@ export const NewProjectModal = () => {
 						variant="filled"
 					>
 						{isCreatingNewProject ? <Loader className="mr-2" size="sm" /> : null}
-						{t("createButton")}
+						{!pendingFile ? t("createButton") : t("importButton")}
 					</Button>
 				</div>
 			</form>
