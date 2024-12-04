@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 
 import * as Sentry from "@sentry/react";
+import ga4 from "react-ga4";
 import { useTranslation } from "react-i18next";
 import {
 	Navigate,
@@ -12,7 +13,7 @@ import {
 	useNavigationType,
 } from "react-router-dom";
 
-import { isProduction } from "@constants";
+import { googleAnalyticsId, isProduction } from "@constants";
 
 import { PageTitle } from "@components/atoms";
 import { DeploymentsTable, EventViewer, EventsTable, SessionsTable } from "@components/organisms";
@@ -31,6 +32,23 @@ import { SettingsLayout } from "@components/templates/settingsLayout";
 export const App = () => {
 	let AKRoutes = Routes;
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
+	const location = useLocation();
+
+	useEffect(() => {
+		if (isProduction && googleAnalyticsId) {
+			ga4.initialize(googleAnalyticsId, {
+				testMode: !isProduction,
+			});
+		}
+	}, []);
+
+	React.useEffect(() => {
+		const path = location.pathname + location.search;
+		ga4.send({
+			hitType: "pageview",
+			page: path,
+		});
+	}, [location]);
 
 	if (isProduction) {
 		Sentry.init({
