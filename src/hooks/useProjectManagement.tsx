@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
@@ -6,17 +6,21 @@ import { useNavigate } from "react-router-dom";
 
 import { LoggerService } from "@services";
 import { defaultProjectFile, namespaces } from "@src/constants";
+import { ModalName } from "@src/enums/components";
 import { useFileOperations } from "@src/hooks";
 import { FileStructure } from "@src/interfaces/utilities";
 import { unpackFileZip } from "@src/utilities";
 
-import { useProjectStore, useToastStore } from "@store";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 export const useProjectManagement = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
-	const { createProject, createProjectFromManifest, getProjectsList } = useProjectStore();
+	const { createProject, createProjectFromManifest, getProjectsList, pendingFile, projectsList, setPendingFile } =
+		useProjectStore();
+	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
+	const { closeModal, openModal } = useModalStore();
 
 	const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
 	const [loadingImportFile, setLoadingImportFile] = useState(false);
@@ -95,7 +99,14 @@ export const useProjectManagement = () => {
 				return;
 			}
 
-			const manifest = yaml.load(manifestContent);
+			const manifest = yaml.load(manifestContent) as any;
+			if (projectNamesSet.has(manifest.project.name)) {
+				setPendingFile(file);
+				// setPendingImportManifest(manifest);
+				openModal(ModalName.newProject);
+
+				return;
+			}
 			const updatedManifestContent = yaml.dump(manifest);
 
 			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestContent);
@@ -129,6 +140,43 @@ export const useProjectManagement = () => {
 		}
 	};
 
+	const completeImportWithNewName = async (newName: string) => {
+		if (!pendingFile) return;
+
+		setLoadingImportFile(true);
+		try {
+			const { structure } = await unpackFileZip(pendingFile);
+			if (!structure) return;
+
+			const manifestFileNode = structure["autokitteh.yaml"];
+			const manifestContent = manifestFileNode && "content" in manifestFileNode ? manifestFileNode.content : null;
+			if (!manifestContent) return;
+
+			const manifest = yaml.load(manifestContent) as any;
+			manifest.project.name = newName;
+
+			const updatedManifestContent = yaml.dump(manifest);
+			const { data: newProjectId, error } = await createProjectFromManifest(updatedManifestContent);
+
+			if (error || !newProjectId) {
+				addToast({ message: t("projectCreationFailed"), type: "error" });
+				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+
+				return;
+			}
+
+			delete structure["autokitteh.yaml"];
+			delete structure["autokitteh.yaml.user"];
+
+			setProjectId(newProjectId);
+			setTemplateFiles(structure);
+		} finally {
+			setLoadingImportFile(false);
+			setPendingFile(undefined);
+			closeModal(ModalName.newProject);
+		}
+	};
+
 	return {
 		isCreatingNewProject,
 		loadingImportFile,
@@ -137,5 +185,6 @@ export const useProjectManagement = () => {
 		fileInputRef,
 		handleCreateProject,
 		handleImportFile,
+		completeImportWithNewName,
 	};
 };

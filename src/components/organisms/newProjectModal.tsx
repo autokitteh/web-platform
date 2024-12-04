@@ -13,11 +13,11 @@ import { Modal } from "@components/molecules";
 export const NewProjectModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "newProject" });
 	const { closeModal } = useModalStore();
-	const { projectsList } = useProjectStore();
+	const { pendingFile, projectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 	const [responseError, setResponseError] = useState("");
-	const { handleCreateProject, isCreatingNewProject } = useProjectManagement();
+	const { completeImportWithNewName, handleCreateProject, isCreatingNewProject } = useProjectManagement();
 
 	const {
 		formState: { errors },
@@ -43,6 +43,13 @@ export const NewProjectModal = () => {
 	const onSubmit = async (data: { projectName: string }) => {
 		const { projectName } = data;
 
+		if (pendingFile) {
+			await completeImportWithNewName(projectName);
+			setValue("projectName", "");
+
+			return;
+		}
+
 		const { error } = await handleCreateProject(projectName);
 
 		if (error) {
@@ -62,9 +69,8 @@ export const NewProjectModal = () => {
 	return (
 		<Modal className="w-1/2 min-w-550 p-5" hideCloseButton name={ModalName.newProject}>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className="mb-3 flex items-center justify-end gap-5">
-					<h3 className="mb-5 mr-auto text-xl font-bold">{t("title")}</h3>
-				</div>
+				<h3 className="text-xl font-bold">Project name is already exist</h3>
+				<p className="mb-5 mt-1 text-base font-medium">Please enter another name</p>
 				<Input
 					label={t("projectName")}
 					placeholder={t("inputPlaceholder")}

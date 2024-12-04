@@ -13,5 +13,7 @@ export interface ProjectStore {
 	setLatestOpenedTab: (tab: string) => void;
 	isLoadingProjectsList: boolean;
 	initialEditorWidth: number;
+	pendingFile?: File;
+	setPendingFile: (file?: File) => void;
 	setEditorWidth: (width: number) => void;
 }
