@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { LoggerService } from "@services";
-import { namespaces } from "@src/constants";
+import { defaultProjectFile, namespaces } from "@src/constants";
 import { useFileOperations } from "@src/hooks";
 import { FileStructure } from "@src/interfaces/utilities";
 import { unpackFileZip } from "@src/utilities";
@@ -41,7 +41,7 @@ export const useProjectManagement = () => {
 
 		const projectId = data?.projectId;
 		navigate(`/projects/${projectId}`, {
-			state: { fileToOpen: "README.md" },
+			state: { fileToOpen: defaultProjectFile },
 		});
 	};
 
