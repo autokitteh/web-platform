@@ -150,7 +150,7 @@ export const useProjectCreation = () => {
 
 			const { manifest, structure } = parsedData;
 
-			if (projectNamesSet.has(manifest.project.name)) {
+			if (manifest.project && projectNamesSet.has(manifest.project.name)) {
 				setPendingFile(file);
 				openModal(ModalName.importProject);
 
@@ -174,7 +174,9 @@ export const useProjectCreation = () => {
 			if (!parsedData) return;
 
 			const { manifest, structure } = parsedData;
-			manifest.project.name = newName;
+			if (manifest.project) {
+				manifest.project.name = newName;
+			}
 
 			const newProjectId = await createProjectWithManifest(manifest, structure);
 			if (newProjectId) setProjectId(newProjectId);
