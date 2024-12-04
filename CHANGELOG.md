@@ -1,3 +1,10 @@
+# [2.79.0](https://github.com/autokitteh/web-platform/compare/v2.78.1...v2.79.0) (2024-12-04)
+
+
+### Features
+
+* **UI-1031:** add google analytics ([#721](https://github.com/autokitteh/web-platform/issues/721)) ([aad4eaa](https://github.com/autokitteh/web-platform/commit/aad4eaaf8536e3e47f2155f76f883a806d676648))
+
 ## [2.78.1](https://github.com/autokitteh/web-platform/compare/v2.78.0...v2.78.1) (2024-12-03)
 
 
