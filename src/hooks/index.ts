@@ -3,7 +3,7 @@ export { useConnectionForm } from "@hooks/useConnectionForm";
 export { useCreateProjectFromTemplate } from "@hooks/useCreateProjectFromTemplate";
 export { useFileOperations } from "@hooks/useFileOperations";
 export { useInterval } from "@hooks/useInterval";
-export { useProjectManagement } from "@hooks/useProjectManagement";
+export { useProjectCreation } from "@hooks/useProjectCreation";
 export { useResize } from "@hooks/useResize";
 export { useSort } from "@hooks/useSort";
 export { useToastAndLog } from "@hooks/useToastAndLog";

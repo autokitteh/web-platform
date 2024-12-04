@@ -14,8 +14,9 @@ import { unpackFileZip } from "@src/utilities";
 
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
-export const useProjectManagement = () => {
+export const useProjectCreation = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
+	const { t: tUtil } = useTranslation("utilities", { keyPrefix: "fetchAndExtract" });
 	const { createProject, createProjectFromManifest, getProjectsList, pendingFile, projectsList, setPendingFile } =
 		useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
@@ -75,19 +76,25 @@ export const useProjectManagement = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const parseManifest = async (file: File): Promise<{ manifest: Manifest; structure: FileStructure } | null> => {
+	const extractManifestFromFiles = async (
+		zipFile: File
+	): Promise<{ manifest: Manifest; structure: FileStructure } | null> => {
 		try {
-			const { structure } = await unpackFileZip(file);
-			if (!structure) return null;
+			const { error, structure } = await unpackFileZip(zipFile);
+			if (error) {
+				addToast({ message: tUtil("uknownErrorUnpackingZip"), type: "error" });
 
+				return null;
+			}
+			if (!structure) return null;
 			const manifestFileNode = structure["autokitteh.yaml"];
 			const manifestContent = manifestFileNode && "content" in manifestFileNode ? manifestFileNode.content : null;
 
 			if (!manifestContent) {
-				addToast({ message: t("projectContentError"), type: "error" });
+				addToast({ message: t("projectManifestNotFoundInArchive"), type: "error" });
 				LoggerService.error(
 					namespaces.manifestService,
-					`${t("projectContentErrorExtended", { error: t("projectContentNotFound") })}`
+					`${t("projectManifestNotFoundInArchiveExtended", { error: t("projectContentNotFound") })}`
 				);
 
 				return null;
@@ -101,7 +108,10 @@ export const useProjectManagement = () => {
 			return { structure, manifest };
 		} catch (error) {
 			addToast({ message: t("projectCreationFailed"), type: "error" });
-			LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
+			LoggerService.error(
+				namespaces.manifestService,
+				`${t("projectManifestExtractionFailedExtended", { error })}`
+			);
 
 			return null;
 		}
@@ -131,12 +141,11 @@ export const useProjectManagement = () => {
 	};
 
 	const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		if (!file) return;
+		const file = event.target.files![0];
 
 		setLoadingImportFile(true);
 		try {
-			const parsedData = await parseManifest(file);
+			const parsedData = await extractManifestFromFiles(file);
 			if (!parsedData) return;
 
 			const { manifest, structure } = parsedData;
@@ -161,7 +170,7 @@ export const useProjectManagement = () => {
 
 		setLoadingImportFile(true);
 		try {
-			const parsedData = await parseManifest(pendingFile);
+			const parsedData = await extractManifestFromFiles(pendingFile);
 			if (!parsedData) return;
 
 			const { manifest, structure } = parsedData;

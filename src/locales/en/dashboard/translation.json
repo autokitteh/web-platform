@@ -22,7 +22,10 @@
 		"projectTemplateManifestNotFound": "Project template manifest not found",
 		"projectContentNotFound": "Project content not found",
 		"templateNotFoundInTheResources": "Template not found in the resources",
-		"templateNotFoundInTheResourcesExtended": "Template not found in the resources directory: {{templateAssetDirectory}}"
+		"templateNotFoundInTheResourcesExtended": "Template not found in the resources directory: {{templateAssetDirectory}}",
+		"projectManifestNotFoundInArchive": "Project manifest not found in the archive",
+		"projectManifestNotFoundInArchiveExtended": "Project manifest not found in the archive: {{archivePath}}",
+		"projectManifestExtractionFailedExtended": "Project manifest extraction failed, error: {{error}}"
 
 	},
 	"projects": {

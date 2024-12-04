@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
-import { useProjectManagement } from "@src/hooks";
+import { useProjectCreation } from "@src/hooks";
 import { useModalStore } from "@src/store";
 
 import { Button, IconSvg, Typography } from "@components/atoms";
@@ -12,7 +12,7 @@ import { PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
-	const { fileInputRef, handleImportFile, loadingImportFile } = useProjectManagement();
+	const { fileInputRef, handleImportFile, loadingImportFile } = useProjectCreation();
 	const { openModal } = useModalStore();
 
 	const triggerFileInput = () => {

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { useProjectManagement } from "@src/hooks";
+import { useProjectCreation } from "@src/hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@src/store";
 
 import { Button, ErrorMessage, Input, Loader } from "@components/atoms";
@@ -17,7 +17,7 @@ export const NewProjectModal = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 	const [responseError, setResponseError] = useState("");
-	const { completeImportWithNewName, handleCreateProject, isCreatingNewProject } = useProjectManagement();
+	const { completeImportWithNewName, handleCreateProject, isCreatingNewProject } = useProjectCreation();
 
 	const {
 		formState: { errors },
