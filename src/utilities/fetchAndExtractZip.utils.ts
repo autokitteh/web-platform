@@ -90,6 +90,7 @@ export const unpackFileZip = async (file: File | ArrayBuffer): Promise<Processed
 			i18n.t("fetchAndExtract.fetchAndExtractError", {
 				ns: "utilities",
 				error: errorMessage,
+				name: file instanceof File ? file.name : "ArrayBuffer",
 			}),
 			true
 		);
@@ -122,12 +123,16 @@ export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Prom
 		const errorMessage =
 			error instanceof Error
 				? `${error.name}: ${error.message}`
-				: i18n.t("fetchAndExtract.uknownErrorUnpackingZip", { ns: "utilities" });
+				: i18n.t("fetchAndExtract.uknownErrorUnpackingZip", {
+						ns: "utilities",
+						zipName: remoteTemplatesArchiveUrl,
+					});
 		LoggerService.error(
 			namespaces.utilities.fetchAndExtract,
 			i18n.t("fetchAndExtract.fetchAndExtractError", {
 				ns: "utilities",
 				error: errorMessage,
+				name: remoteTemplatesArchiveUrl,
 			}),
 			true
 		);
