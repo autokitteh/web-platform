@@ -81,16 +81,20 @@ export const unpackFileZip = async (file: File | ArrayBuffer): Promise<Processed
 
 		return { structure };
 	} catch (error) {
+		const fileName = file instanceof File ? file.name : "ArrayBuffer";
 		const errorMessage =
 			error instanceof Error
 				? error.message
-				: i18n.t("fetchAndExtract.uknownErrorUnpackingZip", { ns: "utilities" });
+				: i18n.t("fetchAndExtract.uknownErrorUnpackingZip", {
+						ns: "utilities",
+						zipName: fileName,
+					});
 		LoggerService.error(
 			namespaces.utilities.fetchAndExtract,
 			i18n.t("fetchAndExtract.fetchAndExtractError", {
 				ns: "utilities",
 				error: errorMessage,
-				name: file instanceof File ? file.name : "ArrayBuffer",
+				name: fileName,
 			}),
 			true
 		);
