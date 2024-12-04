@@ -5,6 +5,7 @@
 		"logout": "Logout",
 		"buttons":{
 			"newProject": "New Project",
+			"import": "Import",
 			"logout": "Logout"
 		}
 	},
