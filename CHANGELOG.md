@@ -1,3 +1,10 @@
+## [2.79.2](https://github.com/autokitteh/web-platform/compare/v2.79.1...v2.79.2) (2024-12-04)
+
+
+### Bug Fixes
+
+* **UI-1032:** adjust padding for improved layout consistency ([#722](https://github.com/autokitteh/web-platform/issues/722)) ([c8b8e03](https://github.com/autokitteh/web-platform/commit/c8b8e03c7ca9f270c108a9a4ba3f11441a7e1264))
+
 ## [2.79.1](https://github.com/autokitteh/web-platform/compare/v2.79.0...v2.79.1) (2024-12-04)
 
 
