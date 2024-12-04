@@ -152,7 +152,7 @@ export const useProjectCreation = () => {
 
 			if (projectNamesSet.has(manifest.project.name)) {
 				setPendingFile(file);
-				openModal(ModalName.newProject);
+				openModal(ModalName.importProject);
 
 				return;
 			}
@@ -180,7 +180,7 @@ export const useProjectCreation = () => {
 			if (newProjectId) setProjectId(newProjectId);
 		} finally {
 			setLoadingImportFile(false);
-			closeModal(ModalName.newProject);
+			closeModal(ModalName.importProject);
 			setPendingFile(undefined);
 		}
 	};

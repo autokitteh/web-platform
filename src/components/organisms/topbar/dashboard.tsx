@@ -7,6 +7,7 @@ import { useProjectCreation } from "@src/hooks";
 import { useModalStore } from "@src/store";
 
 import { Button, IconSvg, Typography } from "@components/atoms";
+import { ImportProjectModal } from "@components/organisms";
 
 import { PlusAccordionIcon } from "@assets/image/icons";
 
@@ -55,6 +56,7 @@ export const DashboardTopbar = () => {
 					/>
 				</div>
 			</div>
+			<ImportProjectModal />
 		</div>
 	);
 };

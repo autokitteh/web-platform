@@ -5,7 +5,6 @@ import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
-import { NewProjectModal } from "../newProjectModal";
 import { isAuthEnabled } from "@constants";
 
 import { useLoggerStore, useUserStore } from "@store";
@@ -15,6 +14,7 @@ import { MenuToggle } from "@components/atoms/menuToggle";
 import { PopoverTrigger } from "@components/molecules";
 import { Menu } from "@components/molecules/menu";
 import { Popover, PopoverContent } from "@components/molecules/popover/index";
+import { NewProjectModal } from "@components/organisms";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { FileIcon, HelpIcon, ListDetailsIcon } from "@assets/image/icons";

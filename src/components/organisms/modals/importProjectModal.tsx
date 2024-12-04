@@ -1,23 +1,21 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { useProjectCreation } from "@src/hooks";
-import { useModalStore, useProjectStore, useToastStore } from "@src/store";
+import { useModalStore, useProjectStore } from "@src/store";
 
 import { Button, ErrorMessage, Input, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const NewProjectModal = () => {
+export const ImportProjectModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "newProject" });
 	const { closeModal } = useModalStore();
-	const { pendingFile, projectsList } = useProjectStore();
-	const addToast = useToastStore((state) => state.addToast);
+	const { projectsList } = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
-	const [responseError, setResponseError] = useState("");
-	const { completeImportWithNewName, handleCreateProject, isCreatingNewProject } = useProjectCreation();
+	const { completeImportWithNewName, isCreatingNewProject } = useProjectCreation();
 
 	const {
 		formState: { errors },
@@ -43,40 +41,15 @@ export const NewProjectModal = () => {
 	const onSubmit = async (data: { projectName: string }) => {
 		const { projectName } = data;
 
-		if (pendingFile) {
-			await completeImportWithNewName(projectName);
-			setValue("projectName", "");
-
-			return;
-		}
-
-		const { error } = await handleCreateProject(projectName);
-
-		if (error) {
-			addToast({
-				message: t("errorCreatingProject"),
-				type: "error",
-			});
-
-			setResponseError(t("errorCreatingProject"));
-
-			return;
-		}
-		closeModal(ModalName.newProject);
+		await completeImportWithNewName(projectName);
 		setValue("projectName", "");
 	};
 
 	return (
-		<Modal className="w-1/2 min-w-550 p-5" hideCloseButton name={ModalName.newProject}>
+		<Modal className="w-1/2 min-w-550 p-5" hideCloseButton name={ModalName.importProject}>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				{!pendingFile ? (
-					<h3 className="mb-5 mr-auto text-xl font-bold">{t("title")}</h3>
-				) : (
-					<>
-						<h3 className="text-xl font-bold">{t("projectAlreadyExist")}</h3>
-						<p className="mb-5 mt-1 text-base font-medium">{t("projectAnotherName")}</p>
-					</>
-				)}
+				<h3 className="text-xl font-bold">{t("projectAlreadyExist")}</h3>
+				<p className="mb-5 mt-1 text-base font-medium">{t("projectAnotherName")}</p>
 
 				<Input
 					label={t("projectName")}
@@ -91,13 +64,12 @@ export const NewProjectModal = () => {
 				{errors.projectName ? (
 					<ErrorMessage className="relative mt-0.5">{errors.projectName.message}</ErrorMessage>
 				) : null}
-				{responseError ? <ErrorMessage className="relative mt-0.5">{responseError}</ErrorMessage> : null}
 
 				<div className="mt-8 flex w-full justify-end gap-2">
 					<Button
 						ariaLabel={t("cancelButton")}
 						className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-						onClick={() => closeModal(ModalName.newProject)}
+						onClick={() => closeModal(ModalName.importProject)}
 						variant="outline"
 					>
 						{t("cancelButton")}
@@ -110,7 +82,7 @@ export const NewProjectModal = () => {
 						variant="filled"
 					>
 						{isCreatingNewProject ? <Loader className="mr-2" size="sm" /> : null}
-						{!pendingFile ? t("createButton") : t("importButton")}
+						{t("createButton")}
 					</Button>
 				</div>
 			</form>
