@@ -82,7 +82,7 @@ export const useProjectCreation = () => {
 		try {
 			const { error, structure } = await unpackFileZip(zipFile);
 			if (error) {
-				addToast({ message: tUtil("uknownErrorUnpackingZip"), type: "error" });
+				addToast({ message: tUtil("uknownErrorUnpackingZip", { zipName: zipFile.name }), type: "error" });
 
 				return null;
 			}
@@ -94,7 +94,7 @@ export const useProjectCreation = () => {
 				addToast({ message: t("projectManifestNotFoundInArchive"), type: "error" });
 				LoggerService.error(
 					namespaces.manifestService,
-					`${t("projectManifestNotFoundInArchiveExtended", { error: t("projectContentNotFound") })}`
+					`${t("projectManifestNotFoundInArchiveExtended", { error: t("projectContentNotFound"), archiveName: zipFile.name })}`
 				);
 
 				return null;
