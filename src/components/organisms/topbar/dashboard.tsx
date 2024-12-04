@@ -2,7 +2,9 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useModalStore } from "@store";
+import { ModalName } from "@src/enums/components";
+import { useProjectManagement } from "@src/hooks";
+import { useModalStore } from "@src/store";
 
 import { Button, IconSvg, Typography } from "@components/atoms";
 
@@ -10,6 +12,7 @@ import { PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
+	const { fileInputRef, handleImportFile, loadingImportFile } = useProjectManagement();
 	const { openModal } = useModalStore();
 
 	const triggerFileInput = () => {
@@ -29,15 +32,10 @@ export const DashboardTopbar = () => {
 				<div className="flex rounded-full border border-gray-750 font-averta text-base font-semibold">
 					<Button
 						className="gap-2.5 whitespace-nowrap rounded-none rounded-l-full border-r border-gray-750 px-3 py-2.5"
-						disabled={loadingNewProject}
-						onClick={handleCreateProject}
+						onClick={() => openModal(ModalName.newProject)}
 						variant="filled"
 					>
-						<IconSvg
-							className="fill-white"
-							size="lg"
-							src={!loadingNewProject ? PlusAccordionIcon : Spinner}
-						/>
+						<IconSvg className="fill-white" size="lg" src={PlusAccordionIcon} />
 						{t("buttons.newProject")}
 					</Button>
 					<Button
