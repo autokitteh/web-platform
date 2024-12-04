@@ -3,7 +3,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ActiveDeploymentWarningModal } from "../activeDeploymentWarningModal";
 import { ModalName } from "@enums/components";
 import { LoggerService, TriggersService } from "@services";
 import { namespaces } from "@src/constants";
@@ -19,6 +18,7 @@ import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } 
 import { EmptyTableAddButton, PopoverTrigger, SortButton } from "@components/molecules";
 import { Popover } from "@components/molecules/popover/index";
 import { PopoverContent } from "@components/molecules/popover/popoverContent";
+import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 import { InformationPopoverContent } from "@components/organisms/triggers/table/popoverContent";
 

@@ -37,16 +37,13 @@ export const ConnectionsTable = () => {
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
 
-	// Add state for warning modal action
 	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
 
-	// Modify the navigateToEditForm function
 	const navigateToEditForm = (connectionId: string) => {
 		closeModal(ModalName.warningDeploymentActive);
 		navigate(`/projects/${projectId}/connections/${connectionId}/edit`);
 	};
 
-	// Replace handleAction with this version
 	const handleAction = (action: "edit" | "add", connectionId: string) => {
 		if (hasActiveDeployments) {
 			setConnectionId(connectionId);
