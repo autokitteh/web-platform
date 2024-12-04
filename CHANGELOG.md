@@ -1,3 +1,10 @@
+# [2.80.0](https://github.com/autokitteh/web-platform/compare/v2.79.2...v2.80.0) (2024-12-04)
+
+
+### Features
+
+* **UI-1021:** add feat close modal on Esc ([#725](https://github.com/autokitteh/web-platform/issues/725)) ([0fe4160](https://github.com/autokitteh/web-platform/commit/0fe416046717fbaeced85d79a88180a51d1c1232))
+
 ## [2.79.2](https://github.com/autokitteh/web-platform/compare/v2.79.1...v2.79.2) (2024-12-04)
 
 
