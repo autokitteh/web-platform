@@ -74,7 +74,6 @@ export { default as TestIcon } from "@assets/image/icons/Test.svg?react";
 export { default as ThreeDots } from "@assets/image/icons/ThreeDots.svg?react";
 export { default as TrashIcon } from "@assets/image/icons/Trash.svg?react";
 export { default as LockIcon } from "@assets/image/icons/UnlockedLock.svg?react";
-export { default as UploadIcon } from "@assets/image/icons/Upload.svg?react";
 export { default as UserIcon } from "@assets/image/icons/User.svg?react";
 export { default as WarningTriangleIcon } from "@assets/image/icons/WarningTriangle.svg?react";
 // Taken from: https://tabler.io/icons/icon/webhook

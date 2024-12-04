@@ -6,7 +6,7 @@ import { useModalStore } from "@store";
 
 import { Button, IconSvg, Typography } from "@components/atoms";
 
-import { PlusAccordionIcon, UploadIcon } from "@assets/image/icons";
+import { PlusAccordionIcon } from "@assets/image/icons";
 
 export const DashboardTopbar = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "topbar" });
@@ -46,11 +46,6 @@ export const DashboardTopbar = () => {
 						onClick={triggerFileInput}
 						variant="filled"
 					>
-						{loadingImportFile ? (
-							<Loader size="sm" />
-						) : (
-							<IconSvg className="fill-white" size="md" src={UploadIcon} />
-						)}
 						{t("buttons.import")}
 					</Button>
 					<input

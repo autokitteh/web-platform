@@ -22,7 +22,7 @@ const isDirectoryNode = memoize((node: FileNode | DirectoryNode): node is Direct
 
 const directoryCache = new Map<string, FileStructure>();
 
-export const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
+const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 	const fileStructure: FileStructure = {};
 
 	const batchSize = 50;
@@ -92,6 +92,28 @@ export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Prom
 
 		const zip = new JSZip();
 		const content = await zip.loadAsync(zipData);
+		const structure = await processZipContent(content);
+
+		return { structure };
+	} catch (error) {
+		const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : "Unknown error occurred";
+		LoggerService.error(
+			namespaces.utilities.fetchAndExtract,
+			i18n.t("fetchAndExtract.fetchAndExtractError", {
+				ns: "utilities",
+				error: errorMessage,
+			}),
+			true
+		);
+
+		return { error: errorMessage, structure: undefined };
+	}
+};
+
+export const unpackFileZip = async (file: File): Promise<ProcessedZipResult> => {
+	try {
+		const zip = new JSZip();
+		const content = await zip.loadAsync(file);
 		const structure = await processZipContent(content);
 
 		return { structure };

@@ -7,7 +7,7 @@ export { convertBuildRuntimesToViewTriggers } from "@utilities/convertBuildRunti
 export { convertTimestampToDate } from "@utilities/convertTimestampToDate.utils";
 export { convertTimestampToEpoch } from "@utilities/convertTimestampToDate.utils";
 export { copyToClipboard } from "@utilities/copyToClipboard.utils";
-export { fetchAndUnpackZip, processReadmeFiles, processZipContent } from "@utilities/fetchAndExtractZip.utils";
+export { fetchAndUnpackZip, processReadmeFiles, unpackFileZip } from "@utilities/fetchAndExtractZip.utils";
 export { readFileAsUint8Array } from "@utilities/fileSystem.utils";
 export { flattenFormData } from "@utilities/flattenFormDataWithZodValidation.utils";
 export { getApiBaseUrl } from "@utilities/getApiBaseUrl.utils";

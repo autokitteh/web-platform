@@ -15,8 +15,11 @@
 		"projectCreatedSuccessfullyExtended": "Project created successfully, project template name: {{templateName}}, project ID: {{projectId}}",
 		"projectCreationFailed": "Project creation failed",
 		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
+		"projectContentError": "Project content error",
+		"projectContentErrorExtended": "Project content error, error: {{error}}",
 		"projectNameExist": "Project name already exists",
 		"projectTemplateManifestNotFound": "Project template manifest not found",
+		"projectContentNotFound": "Project content not found",
 		"templateNotFoundInTheResources": "Template not found in the resources",
 		"templateNotFoundInTheResourcesExtended": "Template not found in the resources directory: {{templateAssetDirectory}}"
 
