@@ -20,7 +20,6 @@ import { PopoverOptions } from "@src/interfaces/components";
 
 const useBasePopover = (
 	{ animation, initialOpen = false, placement = "bottom" }: PopoverOptions = {
-		animation: "slideFromBottom",
 		interactionType: "hover",
 	}
 ) => {
