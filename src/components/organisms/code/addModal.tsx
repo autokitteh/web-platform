@@ -30,13 +30,13 @@ export const AddFileModal = () => {
 	}));
 
 	const {
+		clearErrors,
 		control,
 		formState: { errors },
 		getValues,
 		handleSubmit,
 		register,
 		reset,
-		setValue,
 	} = useForm({
 		defaultValues: {
 			extension: { label: defalutFileExtension, value: defalutFileExtension },
@@ -46,8 +46,10 @@ export const AddFileModal = () => {
 	});
 
 	useEffect(() => {
-		setValue("name", "");
-	});
+		reset({ extension: { label: defalutFileExtension, value: defalutFileExtension }, name: "" });
+		clearErrors();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const onSubmit = async () => {
 		const { extension, name } = getValues();
@@ -64,8 +66,9 @@ export const AddFileModal = () => {
 
 			LoggerService.error(namespaces.projectUICode, t("fileAddFailedExtended", { fileName: name, projectId }));
 		}
+		clearErrors();
 		closeModal(ModalName.addCodeAssets);
-		reset({ extension, name: "" });
+		reset({ extension: { label: defalutFileExtension, value: defalutFileExtension }, name: "" });
 	};
 
 	return (
