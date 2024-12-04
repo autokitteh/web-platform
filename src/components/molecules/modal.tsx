@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
@@ -27,9 +27,35 @@ export const Modal = ({ children, className, hideCloseButton, name }: ModalProps
 		isOpen: state.modals[name],
 		onClose: state.closeModal,
 	}));
+
+	const modalRef = useRef<HTMLDivElement | null>(null);
+
 	const wrapperClass = cn("fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center");
 	const modalClasses = cn("w-500 rounded-2xl border border-gray-950 bg-white p-3.5 text-gray-1250", className);
 	const bgClass = cn("absolute left-0 top-0 -z-10 h-full w-full bg-black/70");
+
+	useEffect(() => {
+		if (isOpen && modalRef.current) {
+			const firstInput = modalRef.current.querySelector("input, textarea, select");
+			if (!firstInput) return;
+
+			(firstInput as HTMLElement).focus();
+		}
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			event.stopPropagation();
+			if (event.key === "Escape" && isOpen) {
+				onClose(name);
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isOpen]);
 
 	return createPortal(
 		<AnimatePresence>
@@ -49,6 +75,7 @@ export const Modal = ({ children, className, hideCloseButton, name }: ModalProps
 						className={modalClasses}
 						exit="hidden"
 						initial="hidden"
+						ref={modalRef}
 						variants={modalVariants}
 					>
 						{hideCloseButton ? null : (
