@@ -54,7 +54,6 @@ export const useCreateProjectFromTemplate = () => {
 		try {
 			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
 			const manifestData = files["autokitteh.yaml"];
-
 			if (!manifestData) {
 				addToast({
 					message: t("projectCreationFailed"),

@@ -22,7 +22,7 @@ const isDirectoryNode = memoize((node: FileNode | DirectoryNode): node is Direct
 
 const directoryCache = new Map<string, FileStructure>();
 
-const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
+export const processZipContent = async (zip: JSZip): Promise<FileStructure> => {
 	const fileStructure: FileStructure = {};
 
 	const batchSize = 50;
