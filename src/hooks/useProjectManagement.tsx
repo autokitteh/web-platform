@@ -8,6 +8,7 @@ import { LoggerService } from "@services";
 import { defaultProjectFile, namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useFileOperations } from "@src/hooks";
+import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
 import { unpackFileZip } from "@src/utilities";
 
@@ -74,7 +75,7 @@ export const useProjectManagement = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
-	const parseManifest = async (file: File): Promise<{ manifest: any; structure: FileStructure } | null> => {
+	const parseManifest = async (file: File): Promise<{ manifest: Manifest; structure: FileStructure } | null> => {
 		try {
 			const { structure } = await unpackFileZip(file);
 			if (!structure) return null;
@@ -95,7 +96,7 @@ export const useProjectManagement = () => {
 			delete structure["autokitteh.yaml"];
 			delete structure["autokitteh.yaml.user"];
 
-			const manifest = yaml.load(manifestContent) as any;
+			const manifest = yaml.load(manifestContent) as Manifest;
 
 			return { structure, manifest };
 		} catch (error) {

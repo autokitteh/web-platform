@@ -1,3 +1,4 @@
+export type { Manifest } from "@src/interfaces/models/manifest.interface";
 export type {
 	Callstack,
 	EntrypointTrigger,
