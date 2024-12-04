@@ -18,31 +18,32 @@ export const useProjectManagement = () => {
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 
-	const [loadingNewProject, setLoadingNewProject] = useState(false);
+	const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
 	const [loadingImportFile, setLoadingImportFile] = useState(false);
 	const [projectId, setProjectId] = useState<string>();
 	const { saveAllFiles } = useFileOperations(projectId || "");
 	const [templateFiles, setTemplateFiles] = useState<FileStructure>();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	const handleCreateProject = async () => {
-		setLoadingNewProject(true);
-		const { data, error } = await createProject(true);
-		setLoadingNewProject(false);
+	const handleCreateProject = async (name: string) => {
+		setIsCreatingNewProject(true);
+		const { data, error } = await createProject(name, true);
+		setIsCreatingNewProject(false);
 
 		if (error) {
 			addToast({
-				message: (error as Error).message,
+				message: t("errorCreatingProject"),
 				type: "error",
 			});
 
-			return;
+			return { error: true };
 		}
-
 		const projectId = data?.projectId;
 		navigate(`/projects/${projectId}`, {
 			state: { fileToOpen: defaultProjectFile },
 		});
+
+		return { error: false };
 	};
 
 	useEffect(() => {
@@ -129,7 +130,7 @@ export const useProjectManagement = () => {
 	};
 
 	return {
-		loadingNewProject,
+		isCreatingNewProject,
 		loadingImportFile,
 		projectId,
 		templateFiles,

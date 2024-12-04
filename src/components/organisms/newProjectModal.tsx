@@ -2,10 +2,9 @@ import React, { useMemo, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
-import { ModalName, SidebarHrefMenu } from "@enums/components";
-import { defaultProjectFile } from "@src/constants";
+import { ModalName } from "@enums/components";
+import { useProjectManagement } from "@src/hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@src/store";
 
 import { Button, ErrorMessage, Input, Loader } from "@components/atoms";
@@ -13,13 +12,12 @@ import { Modal } from "@components/molecules";
 
 export const NewProjectModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "newProject" });
-	const [isCreating, setIsCreating] = useState(false);
 	const { closeModal } = useModalStore();
-	const { createProject, projectsList } = useProjectStore();
+	const { projectsList } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
-	const navigate = useNavigate();
 	const [responseError, setResponseError] = useState("");
+	const { handleCreateProject, isCreatingNewProject } = useProjectManagement();
 
 	const {
 		formState: { errors },
@@ -45,9 +43,7 @@ export const NewProjectModal = () => {
 	const onSubmit = async (data: { projectName: string }) => {
 		const { projectName } = data;
 
-		setIsCreating(true);
-		const { data: newProjectResponse, error } = await createProject(projectName, true);
-		setIsCreating(false);
+		const { error } = await handleCreateProject(projectName);
 
 		if (error) {
 			addToast({
@@ -61,9 +57,6 @@ export const NewProjectModal = () => {
 		}
 		closeModal(ModalName.newProject);
 		setValue("projectName", "");
-		navigate(`/${SidebarHrefMenu.projects}/${newProjectResponse?.projectId}/code`, {
-			state: { fileToOpen: defaultProjectFile },
-		});
 	};
 
 	return (
@@ -99,11 +92,11 @@ export const NewProjectModal = () => {
 					<Button
 						ariaLabel={t("createButton")}
 						className="bg-gray-1100 px-4 py-3 font-semibold"
-						disabled={isCreating || !!errors.projectName}
+						disabled={isCreatingNewProject || !!errors.projectName}
 						type="submit"
 						variant="filled"
 					>
-						{isCreating ? <Loader className="mr-2" size="sm" /> : null}
+						{isCreatingNewProject ? <Loader className="mr-2" size="sm" /> : null}
 						{t("createButton")}
 					</Button>
 				</div>
