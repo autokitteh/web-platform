@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { DeploymentSessionStats } from "../deployments";
 import { DeploymentsService } from "@services/deployments.service";
 import { SessionStateType } from "@src/enums";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
@@ -97,7 +96,7 @@ export const DashboardProjectsTable = () => {
 					<THead>
 						<Tr className="border-none pl-4">
 							<Th
-								className="group h-11 w-1/6 cursor-pointer font-normal"
+								className="group h-11 w-1/5 cursor-pointer font-normal"
 								onClick={() => requestSort("name")}
 							>
 								{t("table.columns.projectName")}
@@ -179,7 +178,7 @@ export const DashboardProjectsTable = () => {
 							({ completed, error, id, name, running, stopped, totalDeployments }) => (
 								<Tr className="group cursor-pointer pl-4" key={id}>
 									<Td
-										className="w-1/6 group-hover:font-bold"
+										className="w-1/5 group-hover:font-bold"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										{name}
