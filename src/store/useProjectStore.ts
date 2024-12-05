@@ -106,6 +106,16 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { data: { name: project.name, projectId }, error: undefined };
 	},
 
+	exportProject: async (projectId: string) => {
+		const { data: akProjectArchiveZip, error } = await ProjectsService.export(projectId!);
+
+		if (error) {
+			return { error, data: undefined };
+		}
+
+		return { data: akProjectArchiveZip, error: undefined };
+	},
+
 	createProjectFromManifest: async (projectManifest: string) => {
 		const { data: newProjectId, error } = await ProjectsService.createFromManifest(projectManifest);
 
@@ -185,51 +195,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 			return state;
 		});
-	},
-
-	exportProject: async (projectId: string) => {
-		set((state) => ({ ...state, isExporting: true }));
-
-		const { data: akProjectArchiveZip, error } = await ProjectsService.export(projectId!);
-
-		if (error) {
-			addToast({
-				message: t("topbar.exportProjectFailed"),
-				type: "error",
-			});
-
-			return;
-		}
-
-		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
-		const url = URL.createObjectURL(blob);
-
-		const { data: project } = await get().getProject(projectId!);
-
-		const now = new Date();
-		const dateTime = now
-			.toLocaleString("en-GB", {
-				day: "2-digit",
-				month: "2-digit",
-				year: "numeric",
-				hour: "2-digit",
-				minute: "2-digit",
-				hour12: false,
-			})
-			.replace(/[/:]/g, "")
-			.replace(", ", "-");
-
-		const fileName = `ak-${project?.name}-${dateTime}-archive.zip`;
-		const link = Object.assign(document.createElement("a"), {
-			href: url,
-			download: fileName,
-		});
-
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-		URL.revokeObjectURL(url);
-		set((state) => ({ ...state, isExporting: false }));
 	},
 });
 

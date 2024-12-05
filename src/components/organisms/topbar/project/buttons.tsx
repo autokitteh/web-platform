@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
+import { useProjectCreationAndExport } from "@src/hooks";
 import {
 	useCacheStore,
 	useConnectionCheckerStore,
@@ -37,9 +38,10 @@ export const ProjectTopbarButtons = () => {
 	const { resetChecker } = useConnectionCheckerStore();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { projectsList } = useProjectStore();
-	const [isExporting, setIsExporting] = useState(false);
 
-	const { deleteProject, getProject } = useProjectStore();
+	const { downloadProjectExport, isExporting } = useProjectCreationAndExport();
+
+	const { deleteProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 
@@ -146,51 +148,6 @@ export const ProjectTopbarButtons = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const exportProject = useCallback(async () => {
-		setIsExporting(true);
-		const { data: akProjectArchiveZip, error } = await ProjectsService.export(projectId!);
-		setIsExporting(false);
-
-		if (error) {
-			addToast({
-				message: t("topbar.exportProjectFailed"),
-				type: "error",
-			});
-
-			return;
-		}
-
-		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
-		const url = URL.createObjectURL(blob);
-
-		const { data: project } = await getProject(projectId!);
-
-		const now = new Date();
-		const dateTime = now
-			.toLocaleString("en-GB", {
-				day: "2-digit",
-				month: "2-digit",
-				year: "numeric",
-				hour: "2-digit",
-				minute: "2-digit",
-				hour12: false,
-			})
-			.replace(/[/:]/g, "")
-			.replace(", ", "-");
-
-		const fileName = `ak-${project?.name}-${dateTime}-archive.zip`;
-		const link = Object.assign(document.createElement("a"), {
-			href: url,
-			download: fileName,
-		});
-
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-		URL.revokeObjectURL(url);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
-
 	const isDeployAndBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
 
 	return (
@@ -247,7 +204,7 @@ export const ProjectTopbarButtons = () => {
 						<Button
 							ariaLabel={t("topbar.buttons.export")}
 							className="group h-8 px-4 text-white"
-							onClick={exportProject}
+							onClick={() => downloadProjectExport(projectId!)}
 							variant="outline"
 						>
 							{isExporting ? (
