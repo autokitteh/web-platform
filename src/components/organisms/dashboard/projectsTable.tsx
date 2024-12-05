@@ -9,10 +9,10 @@ import { ModalName, SidebarHrefMenu } from "@src/enums/components";
 import { cn } from "@src/utilities";
 import { DashboardProjectWithStats, Project } from "@type/models";
 
-import { useSort } from "@hooks";
+import { useProjectCreationAndExport, useSort } from "@hooks";
 import { useModalStore, useProjectStore } from "@store";
 
-import { Button, IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, IconButton, IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 
 import { OrStartFromTemplateImage } from "@assets/image";
@@ -32,6 +32,7 @@ export const DashboardProjectsTable = () => {
 	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
 
 	const { openModal } = useModalStore();
+	const { downloadProjectExport } = useProjectCreationAndExport();
 
 	const loadProjectsData = async (projectsList: Project[]) => {
 		const projectsStats = {} as Record<string, DashboardProjectWithStats>;
@@ -71,10 +72,6 @@ export const DashboardProjectsTable = () => {
 
 		setProjectsStats(Object.values(projectsStats));
 	};
-
-	useEffect(() => {
-		console.log("projectsStats", sortedProjectsStats);
-	}, [sortedProjectsStats]);
 
 	useEffect(() => {
 		loadProjectsData(projectsList);
@@ -223,16 +220,20 @@ export const DashboardProjectsTable = () => {
 										innerDivClassName="justify-center"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
-										<IconSvg
-											className="ml-2 fill-white transition hover:fill-green-200 active:fill-green-800"
-											size="md"
-											src={DownloadIcon}
-										/>
-										<IconSvg
-											className="ml-4 stroke-white transition hover:stroke-green-200 active:stroke-green-800"
-											size="md"
-											src={TrashIcon}
-										/>
+										<IconButton onClick={() => downloadProjectExport(id)}>
+											<IconSvg
+												className="fill-white transition hover:fill-green-200 active:fill-green-800"
+												size="md"
+												src={DownloadIcon}
+											/>
+										</IconButton>
+										<IconButton onClick={() => downloadProjectExport(id)}>
+											<IconSvg
+												className="ml-4 stroke-white transition hover:stroke-green-200 active:stroke-green-800"
+												size="md"
+												src={TrashIcon}
+											/>
+										</IconButton>
 									</Td>
 								</Tr>
 							)

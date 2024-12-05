@@ -14,11 +14,20 @@ import { unpackFileZip } from "@src/utilities";
 
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
-export const useProjectCreation = () => {
+export const useProjectCreationAndExport = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
+	const { t: tExport } = useTranslation("dashboard", { keyPrefix: "export" });
 	const { t: tUtil } = useTranslation("utilities", { keyPrefix: "fetchAndExtract" });
-	const { createProject, createProjectFromManifest, getProjectsList, pendingFile, projectsList, setPendingFile } =
-		useProjectStore();
+	const {
+		createProject,
+		createProjectFromManifest,
+		exportProject,
+		getProject,
+		getProjectsList,
+		pendingFile,
+		projectsList,
+		setPendingFile,
+	} = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
@@ -26,6 +35,7 @@ export const useProjectCreation = () => {
 
 	const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
 	const [loadingImportFile, setLoadingImportFile] = useState(false);
+	const [isExporting, setIsExporting] = useState(false);
 	const [projectId, setProjectId] = useState<string>();
 	const { saveAllFiles } = useFileOperations(projectId || "");
 	const [templateFiles, setTemplateFiles] = useState<FileStructure>();
@@ -187,12 +197,64 @@ export const useProjectCreation = () => {
 		}
 	};
 
+	const downloadProjectExport = async (projectId: string) => {
+		setIsExporting(true);
+
+		const { data: akProjectArchiveZip, error: exportError } = await exportProject(projectId);
+
+		if (exportError) {
+			addToast({
+				message: tExport("errorExportingProject"),
+				type: "error",
+			});
+			setIsExporting(false);
+
+			return null;
+		}
+
+		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
+		const url = URL.createObjectURL(blob);
+
+		const { data: project, error: getProjectError } = await getProject(projectId!);
+
+		if (getProjectError) {
+			return { error: getProjectError };
+		}
+
+		const now = new Date();
+		const dateTime = now
+			.toLocaleString("en-GB", {
+				day: "2-digit",
+				month: "2-digit",
+				year: "numeric",
+				hour: "2-digit",
+				minute: "2-digit",
+				hour12: false,
+			})
+			.replace(/[/:]/g, "")
+			.replace(", ", "-");
+
+		const fileName = `ak-${project?.name}-${dateTime}-archive.zip`;
+		const link = Object.assign(document.createElement("a"), {
+			href: url,
+			download: fileName,
+		});
+
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
+		setIsExporting(false);
+	};
+
 	return {
 		isCreatingNewProject,
 		loadingImportFile,
 		projectId,
 		templateFiles,
 		fileInputRef,
+		isExporting,
+		downloadProjectExport,
 		handleCreateProject,
 		handleImportFile,
 		completeImportWithNewName,
