@@ -16,7 +16,7 @@ import { Button, IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/at
 import { SortButton } from "@components/molecules";
 
 import { OrStartFromTemplateImage } from "@assets/image";
-import { ArrowStartTemplateIcon, PlusAccordionIcon } from "@assets/image/icons";
+import { ArrowStartTemplateIcon, DownloadIcon, PlusAccordionIcon, TrashIcon } from "@assets/image/icons";
 
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
@@ -111,19 +111,31 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 cursor-pointer font-normal"
+								className="group h-11 w-1/6 cursor-pointer font-normal"
+								onClick={() => requestSort("totalDeployments")}
+							>
+								{t("table.columns.totalDeployments")}
+
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"totalDeployments" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
+							</Th>
+							<Th
+								className="group h-11 w-1/6 cursor-pointer font-normal"
 								onClick={() => requestSort("running")}
 							>
 								{t("table.columns.running")}
 
 								<SortButton
-									className="opacity-0 group-hover:opacity-100"
+									className="w-1/6 opacity-0 group-hover:opacity-100"
 									isActive={"running" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
 							<Th
-								className="group h-11 cursor-pointer font-normal"
+								className="group h-11 w-1/6 cursor-pointer font-normal"
 								onClick={() => requestSort("stopped")}
 							>
 								{t("table.columns.stopped")}
@@ -135,7 +147,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 cursor-pointer font-normal"
+								className="group h-11 w-1/6 cursor-pointer font-normal"
 								onClick={() => requestSort("completed")}
 							>
 								{t("table.columns.completed")}
@@ -146,7 +158,10 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("error")}>
+							<Th
+								className="group h-11 w-1/6 cursor-pointer font-normal"
+								onClick={() => requestSort("error")}
+							>
 								{t("table.columns.errored")}
 
 								<SortButton
@@ -155,11 +170,14 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
+							<Th className="group h-11 w-1/6 cursor-pointer font-normal">
+								{t("table.columns.actions")}
+							</Th>
 						</Tr>
 					</THead>
 
 					<TBody>
-						{sortedProjectsStats.map(({ id, name, sessionsStats }) => (
+						{sortedProjectsStats.map(({ id, name, sessionsStats, totalDeployments }) => (
 							<Tr className="group cursor-pointer pl-4" key={id}>
 								<Td
 									className="w-1/6 group-hover:font-bold"
@@ -168,10 +186,44 @@ export const DashboardProjectsTable = () => {
 									{name}
 								</Td>
 								<Td
-									className="w-1/2 group-hover:font-bold"
+									className="w-1/6 group-hover:font-bold"
+									innerDivClassName="justify-center pl-8"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
-									<DeploymentSessionStats className="w-1/6 pr-10" sessionStats={sessionsStats} />
+									{totalDeployments}
+								</Td>
+								<Td
+									className="w-full group-hover:font-bold"
+									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+								>
+									<DeploymentSessionStats className="ml-8 w-1/6" sessionStats={sessionsStats} />
+								</Td>
+								<Td
+									className="w-1/6 group-hover:font-bold"
+									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+								>
+									<Button
+										ariaLabel={t("topbar.buttons.export")}
+										className="group h-8 px-4 text-white"
+										variant="outline"
+									>
+										<IconSvg
+											className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
+											size="md"
+											src={DownloadIcon}
+										/>
+									</Button>
+									<Button
+										ariaLabel={t("topbar.buttons.delete")}
+										className="group mt-2 h-8 px-4 text-white"
+										variant="outline"
+									>
+										<IconSvg
+											className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+											size="md"
+											src={TrashIcon}
+										/>
+									</Button>
 								</Td>
 							</Tr>
 						))}
