@@ -23,7 +23,6 @@ export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [projectsStats, setProjectsStats] = useState<DashboardProjectWithStats[]>([]);
 
 	const {
@@ -77,7 +76,6 @@ export const DashboardProjectsTable = () => {
 
 	useEffect(() => {
 		loadProjectsData(projectsList);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectsList]);
 
 	const countStyle = (state?: SessionStateType) =>
@@ -226,11 +224,7 @@ export const DashboardProjectsTable = () => {
 									>
 										<span className={countStyle(SessionStateType.error)}>{error}</span>
 									</Td>
-									<Td
-										className="w-1/6 group-hover:font-bold"
-										innerDivClassName="justify-center"
-										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-									>
+									<Td className="w-1/6 group-hover:font-bold" innerDivClassName="justify-center">
 										<IconButton onClick={() => downloadProjectExport(id)}>
 											<IconSvg
 												className="fill-white transition hover:fill-green-200 active:fill-green-800"
