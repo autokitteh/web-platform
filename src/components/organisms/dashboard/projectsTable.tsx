@@ -175,67 +175,69 @@ export const DashboardProjectsTable = () => {
 					</THead>
 
 					<TBody>
-						{sortedProjectsStats.map(({ completed, error, id, name, running, totalDeployments }) => (
-							<Tr className="group cursor-pointer pl-4" key={id}>
-								<Td
-									className="w-1/6 group-hover:font-bold"
-									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-								>
-									{name}
-								</Td>
-								<Td
-									className="w-1/6 group-hover:font-bold"
-									innerDivClassName="justify-center pr-8"
-									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-								>
-									{totalDeployments}
-								</Td>
-								<Td
-									className="w-1/6 group-hover:font-bold"
-									innerDivClassName="justify-center pr-8"
-									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-								>
-									<span className={countStyle(SessionStateType.running)}>{running}</span>
-								</Td>
-								<Td
-									className="w-1/6 group-hover:font-bold"
-									innerDivClassName="justify-center pr-8"
-									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-								>
-									1
-								</Td>
-								<Td
-									className="w-1/6 group-hover:font-bold"
-									innerDivClassName="justify-center pr-8"
-									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-								>
-									<span className={countStyle(SessionStateType.completed)}>{completed}</span>
-								</Td>
-								<Td
-									className="w-1/6 group-hover:font-bold"
-									innerDivClassName="justify-center pr-8"
-									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-								>
-									<span className={countStyle(SessionStateType.error)}>{error}</span>
-								</Td>
-								<Td
-									className="w-1/6 group-hover:font-bold"
-									innerDivClassName="justify-center"
-									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-								>
-									<IconSvg
-										className="ml-2 fill-white transition hover:fill-green-200 active:fill-green-800"
-										size="md"
-										src={DownloadIcon}
-									/>
-									<IconSvg
-										className="ml-4 stroke-white transition hover:stroke-green-200 active:stroke-green-800"
-										size="md"
-										src={TrashIcon}
-									/>
-								</Td>
-							</Tr>
-						))}
+						{sortedProjectsStats.map(
+							({ completed, error, id, name, running, stopped, totalDeployments }) => (
+								<Tr className="group cursor-pointer pl-4" key={id}>
+									<Td
+										className="w-1/6 group-hover:font-bold"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+									>
+										{name}
+									</Td>
+									<Td
+										className="w-1/6 group-hover:font-bold"
+										innerDivClassName="justify-center pr-8"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+									>
+										{totalDeployments}
+									</Td>
+									<Td
+										className="w-1/6 group-hover:font-bold"
+										innerDivClassName="justify-center pr-8"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+									>
+										<span className={countStyle(SessionStateType.running)}>{running}</span>
+									</Td>
+									<Td
+										className="w-1/6 group-hover:font-bold"
+										innerDivClassName="justify-center pr-8"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+									>
+										<span className={countStyle(SessionStateType.stopped)}>{stopped}</span>
+									</Td>
+									<Td
+										className="w-1/6 group-hover:font-bold"
+										innerDivClassName="justify-center pr-8"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+									>
+										<span className={countStyle(SessionStateType.completed)}>{completed}</span>
+									</Td>
+									<Td
+										className="w-1/6 group-hover:font-bold"
+										innerDivClassName="justify-center pr-8"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+									>
+										<span className={countStyle(SessionStateType.error)}>{error}</span>
+									</Td>
+									<Td
+										className="w-1/6 group-hover:font-bold"
+										innerDivClassName="justify-center"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+									>
+										<IconSvg
+											className="ml-2 fill-white transition hover:fill-green-200 active:fill-green-800"
+											size="md"
+											src={DownloadIcon}
+										/>
+										<IconSvg
+											className="ml-4 stroke-white transition hover:stroke-green-200 active:stroke-green-800"
+											size="md"
+											src={TrashIcon}
+										/>
+									</Td>
+								</Tr>
+							)
+						)}
 					</TBody>
 				</Table>
 			) : null}
