@@ -175,8 +175,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const activeCloseIcon = (fileName: string) => {
 		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
 
-		return cn("h-4 w-4 p-0.5 opacity-0 hover:bg-gray-1100 group-hover:opacity-100", {
-			"opacity-100": isActiveFile,
+		return cn("h-4 w-4 p-0.5 hover:bg-gray-1100 hidden", {
+			flex: isActiveFile,
 		});
 	};
 
@@ -192,27 +192,28 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	};
 
 	return (
-		<div className="relative flex h-full flex-col pt-11">
+		<div className="relative flex h-full flex-col">
 			{projectId ? (
 				<>
-					<div className="absolute left-0 top-0 flex w-full justify-between">
+					<div className="relative flex w-full justify-between pb-3">
+						<div className="absolute -left-1/4 bottom-0 h-px w-[150%] bg-gray-1050" />
 						<div
 							className={
-								`flex h-8 select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
-								`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap`
+								`flex select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
+								`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap w-full`
 							}
 						>
 							{projectId
 								? openFiles[projectId]?.map(({ name }) => (
 										<Tab
 											activeTab={activeEditorFileName}
-											className="group flex items-center gap-1 normal-case"
+											className="group relative flex items-center gap-1 normal-case"
 											key={name}
 											onClick={() => openFileAsActive(name)}
 											value={name}
 										>
 											{name}
-
+											<div className="absolute -right-0.5 top-0 h-3/4 w-px bg-gray-950 xl:-right-1 2xl:-right-2 3xl:-right-2.5" />
 											<IconButton
 												ariaLabel={t("buttons.ariaCloseFile")}
 												className={activeCloseIcon(name)}
@@ -227,7 +228,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 
 						{openFiles[projectId]?.length ? (
 							<div
-								className="relative -right-4 -top-2 z-10 flex items-center gap-1 whitespace-nowrap"
+								className="relative -top-1 z-10 flex items-center gap-1 whitespace-nowrap"
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
 							>
 								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
@@ -250,7 +251,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 										onChange={() => setAutosaveMode((prevAutosave) => !prevAutosave)}
 									/>
 								</div>
-								<IconButton className="hover:bg-gray-1100" onClick={onExpand}>
+								<IconButton className="bg-gray-1100" onClick={onExpand}>
 									{isExpanded ? (
 										<CompressIcon className="size-4 fill-white" />
 									) : (
