@@ -31,7 +31,12 @@
 	"projects": {
 		"table": {
 			"columns": {
-				"projectName": "Project Name"
+				"projectName": "Project Name",
+				"deployments": "Deployments",
+				"running": "Running",
+				"stopped": "Stopped",
+				"completed": "Completed",
+				"errored": "Error"
 			}
 		},
 		"buttons":{

@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { DeploymentSessionStats } from "../deployments";
 import { DeploymentsService } from "@services/deployments.service";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
-import { Project } from "@type/models";
+import { DashboardProjectWithStats, Project } from "@type/models";
 
 import { useSort } from "@hooks";
 import { useModalStore, useProjectStore } from "@store";
@@ -21,26 +22,68 @@ export const DashboardProjectsTable = () => {
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [projectsStats, setProjectsStats] = useState<Record<string, any>>({});
+	const [projectsStats, setProjectsStats] = useState<DashboardProjectWithStats[]>([]);
 
-	const { items: sortedProjects, requestSort, sortConfig } = useSort<Project>(projectsList, "name");
+	const {
+		items: sortedProjectsStats,
+		requestSort,
+		sortConfig,
+	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
 
 	const { openModal } = useModalStore();
 
 	const loadProjectsData = async (projectsList: Project[]) => {
 		for (const project of projectsList) {
 			const { data: deployments } = await DeploymentsService.list(project.id);
-			setProjectsStats((prev) => ({ ...prev, [project.id]: { deployments } }));
+
+			const stats = deployments?.reduce(
+				(acc: { sessionCounts: Record<string, number>; totalDeployments: number }, deployment) => {
+					acc.totalDeployments = (acc.totalDeployments || 0) + 1;
+
+					if (deployment.sessionStats) {
+						deployment.sessionStats.forEach((session) => {
+							if (session.state) {
+								acc.sessionCounts = {
+									...acc.sessionCounts,
+									[session.state]: (acc.sessionCounts?.[session.state] || 0) + session.count,
+								};
+							}
+						});
+					}
+
+					return acc;
+				},
+				{ totalDeployments: 0, sessionCounts: {} }
+			);
+
+			setProjectsStats((prev) => ({
+				...prev,
+				[project.id]: {
+					id: project.id,
+					name: project.name,
+					totalDeployments: stats?.totalDeployments,
+					sessionsStats: Object.keys(stats?.sessionCounts || []).map((state) => ({
+						count: stats?.sessionCounts?.[state],
+						state,
+					})),
+					...stats?.sessionCounts,
+				},
+			}));
 		}
 	};
 
 	useEffect(() => {
+		console.log("projectsStats", sortedProjectsStats);
+	}, [sortedProjectsStats]);
+
+	useEffect(() => {
 		loadProjectsData(projectsList);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectsList]);
 
 	return (
 		<div className="z-10 h-2/3 select-none pt-10">
-			{sortedProjects.length ? (
+			{sortedProjectsStats.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
 					<THead>
 						<Tr className="border-none pl-4">
@@ -53,17 +96,68 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
+							<Th
+								className="group h-11 cursor-pointer font-normal"
+								onClick={() => requestSort("running")}
+							>
+								{t("table.columns.running")}
+
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"running" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
+							</Th>
+							<Th
+								className="group h-11 cursor-pointer font-normal"
+								onClick={() => requestSort("stopped")}
+							>
+								{t("table.columns.stopped")}
+
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"stopped" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
+							</Th>
+							<Th
+								className="group h-11 cursor-pointer font-normal"
+								onClick={() => requestSort("completed")}
+							>
+								{t("table.columns.completed")}
+
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"completed" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
+							</Th>
+							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("error")}>
+								{t("table.columns.errored")}
+
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"error" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
+							</Th>
 						</Tr>
 					</THead>
 
 					<TBody>
-						{sortedProjects.map(({ id, name }) => (
+						{sortedProjectsStats.map(({ id, name, sessionsStats }) => (
 							<Tr className="group cursor-pointer pl-4" key={id}>
 								<Td
 									className="group-hover:font-bold"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
 									{name}
+								</Td>
+								<Td
+									className="group-hover:font-bold"
+									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+								>
+									<DeploymentSessionStats className="w-1/12" sessionStats={sessionsStats} />
 								</Td>
 							</Tr>
 						))}
