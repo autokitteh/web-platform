@@ -5,6 +5,7 @@ export interface ProjectStore {
 	createProject: (name: string, isDefault?: boolean) => ServiceResponse<{ name: string; projectId: string }>;
 	deleteProject: (projectId: string) => ServiceResponse<undefined>;
 	getProject: (projectId: string) => ServiceResponse<Project>;
+	exportProject: (projectId: string) => ServiceResponse<Uint8Array>;
 	getProjectsList: () => ServiceResponse<Project[]>;
 	createProjectFromManifest: (manifest: string) => ServiceResponse<string>;
 	projectsList: Project[];
