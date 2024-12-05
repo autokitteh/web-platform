@@ -149,11 +149,18 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group ml-8 h-11 w-3/6 font-normal" onClick={() => requestSort("running")}>
-								{t("table.columns.sessions")}
-							</Th>
-							<Th className="group h-11 w-1/6 justify-center font-normal">
+							<Th className="group ml-6 h-11 w-3/6 font-normal">{t("table.columns.sessions")}</Th>
+							<Th
+								className="group h-11 w-2/6 cursor-pointer justify-center font-normal"
+								onClick={() => requestSort("lastDeployed")}
+							>
 								{t("table.columns.lastDeployed")}
+
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"lastDeployed" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
 							</Th>
 							<Th className="group h-11 w-1/6 justify-center font-normal">
 								{t("table.columns.actions")}
@@ -207,8 +214,8 @@ export const DashboardProjectsTable = () => {
 									</Td>
 
 									<Td
-										className="w-1/6"
-										innerDivClassName="justify-center"
+										className="w-2/6"
+										innerDivClassName="justify-center pr-8"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										{lastDeployed
