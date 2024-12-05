@@ -16,4 +16,5 @@ export interface ProjectStore {
 	pendingFile?: File;
 	setPendingFile: (file?: File) => void;
 	setEditorWidth: (width: number) => void;
+	isExporting: boolean;
 }
