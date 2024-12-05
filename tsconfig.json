@@ -66,5 +66,5 @@
 	"include": [
 	  "src",
 	  "e2e"
-	]
+, "src/interfaces/components/deploymentStatusBadge.interface/.ts"	]
 }

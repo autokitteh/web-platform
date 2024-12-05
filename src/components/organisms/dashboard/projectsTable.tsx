@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { DeploymentsService } from "@services/deployments.service";
-import { SessionStateType } from "@src/enums";
+import { DeploymentStateVariant, SessionStateType } from "@src/enums";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
 import { cn } from "@src/utilities";
 import { DashboardProjectWithStats, Project } from "@type/models";
@@ -12,7 +12,7 @@ import { DashboardProjectWithStats, Project } from "@type/models";
 import { useProjectActions, useSort } from "@hooks";
 import { useModalStore, useProjectStore } from "@store";
 
-import { Button, IconButton, IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, DeploymentStatusBadge, IconButton, IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms/modals";
 
@@ -39,9 +39,16 @@ export const DashboardProjectsTable = () => {
 		const projectsStats = {} as Record<string, DashboardProjectWithStats>;
 		for (const project of projectsList) {
 			const { data: deployments } = await DeploymentsService.list(project.id);
-
+			let projectStatus = DeploymentStateVariant.inactive;
 			const stats = deployments?.reduce(
 				(acc: { sessionCounts: Record<string, number>; totalDeployments: number }, deployment) => {
+					if (
+						deployment.state === DeploymentStateVariant.draining ||
+						deployment.state === DeploymentStateVariant.active
+					) {
+						projectStatus = deployment.state;
+					}
+
 					acc.totalDeployments = (acc.totalDeployments || 0) + 1;
 
 					if (deployment.sessionStats) {
@@ -68,6 +75,7 @@ export const DashboardProjectsTable = () => {
 				stopped: stats?.sessionCounts?.["stopeed"] || 0,
 				completed: stats?.sessionCounts?.["completed"] || 0,
 				error: stats?.sessionCounts?.["error"] || 0,
+				status: projectStatus,
 			};
 		}
 
@@ -110,6 +118,18 @@ export const DashboardProjectsTable = () => {
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
 									isActive={"name" === sortConfig.key}
+									sortDirection={sortConfig.direction}
+								/>
+							</Th>
+							<Th
+								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
+								onClick={() => requestSort("totalDeployments")}
+							>
+								{t("table.columns.status")}
+
+								<SortButton
+									className="opacity-0 group-hover:opacity-100"
+									isActive={"totalDeployments" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
@@ -181,7 +201,7 @@ export const DashboardProjectsTable = () => {
 
 					<TBody>
 						{sortedProjectsStats.map(
-							({ completed, error, id, name, running, stopped, totalDeployments }) => (
+							({ completed, error, id, name, running, status, stopped, totalDeployments }) => (
 								<Tr className="group cursor-pointer pl-4" key={id}>
 									<Td
 										className="w-1/5 group-hover:font-bold"
@@ -190,41 +210,48 @@ export const DashboardProjectsTable = () => {
 										{name}
 									</Td>
 									<Td
-										className="w-1/6 group-hover:font-bold"
+										className="w-1/6"
+										innerDivClassName="justify-center pr-7"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+									>
+										<DeploymentStatusBadge deploymentStatus={status} />
+									</Td>
+									<Td
+										className="w-1/6"
 										innerDivClassName="justify-center pr-8"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										{totalDeployments}
 									</Td>
 									<Td
-										className="w-1/6 group-hover:font-bold"
+										className="w-1/6"
 										innerDivClassName="justify-center pr-8"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<span className={countStyle(SessionStateType.running)}>{running}</span>
 									</Td>
 									<Td
-										className="w-1/6 group-hover:font-bold"
+										className="w-1/6"
 										innerDivClassName="justify-center pr-8"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<span className={countStyle(SessionStateType.stopped)}>{stopped}</span>
 									</Td>
 									<Td
-										className="w-1/6 group-hover:font-bold"
+										className="w-1/6"
 										innerDivClassName="justify-center pr-8"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<span className={countStyle(SessionStateType.completed)}>{completed}</span>
 									</Td>
 									<Td
-										className="w-1/6 group-hover:font-bold"
+										className="w-1/6"
 										innerDivClassName="justify-center pr-8"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<span className={countStyle(SessionStateType.error)}>{error}</span>
 									</Td>
-									<Td className="w-1/6 group-hover:font-bold" innerDivClassName="justify-center">
+									<Td className="w-1/6" innerDivClassName="justify-center">
 										<IconButton onClick={() => downloadProjectExport(id)}>
 											<IconSvg
 												className="fill-white transition hover:fill-green-200 active:fill-green-800"
