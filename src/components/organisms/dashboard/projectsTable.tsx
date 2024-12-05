@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { DeploymentSessionStats } from "../deployments";
 import { DeploymentsService } from "@services/deployments.service";
+import { SessionStateType } from "@src/enums";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
 import { DashboardProjectWithStats, Project } from "@type/models";
 
@@ -33,6 +34,7 @@ export const DashboardProjectsTable = () => {
 	const { openModal } = useModalStore();
 
 	const loadProjectsData = async (projectsList: Project[]) => {
+		const projectsStats = {} as Record<string, DashboardProjectWithStats>;
 		for (const project of projectsList) {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 
@@ -56,20 +58,29 @@ export const DashboardProjectsTable = () => {
 				{ totalDeployments: 0, sessionCounts: {} }
 			);
 
-			setProjectsStats((prev) => ({
-				...prev,
-				[project.id]: {
-					id: project.id,
-					name: project.name,
-					totalDeployments: stats?.totalDeployments,
-					sessionsStats: Object.keys(stats?.sessionCounts || []).map((state) => ({
-						count: stats?.sessionCounts?.[state],
-						state,
-					})),
-					...stats?.sessionCounts,
-				},
+			const allStates = Object.values(SessionStateType);
+			const completeSessionStats = allStates.map((state) => ({
+				count: stats?.sessionCounts?.[state] || 0,
+				state,
 			}));
+			const sessionsStatsByState: Record<string, number> = {} as Record<SessionStateType, number>;
+			allStates.forEach((state) => {
+				sessionsStatsByState[SessionStateType[state]] = stats?.sessionCounts?.[state] || 0;
+			});
+
+			projectsStats[project.id] = {
+				id: project.id,
+				name: project.name,
+				totalDeployments: stats?.totalDeployments || 0,
+				sessionsStats: completeSessionStats,
+				running: sessionsStatsByState.running || 0,
+				stopped: sessionsStatsByState.stopped || 0,
+				completed: sessionsStatsByState.completed || 0,
+				error: sessionsStatsByState.error || 0,
+			};
 		}
+
+		setProjectsStats(Object.values(projectsStats));
 	};
 
 	useEffect(() => {
@@ -87,7 +98,10 @@ export const DashboardProjectsTable = () => {
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
 					<THead>
 						<Tr className="border-none pl-4">
-							<Th className="group h-11 cursor-pointer font-normal" onClick={() => requestSort("name")}>
+							<Th
+								className="group h-11 w-1/6 cursor-pointer font-normal"
+								onClick={() => requestSort("name")}
+							>
 								{t("table.columns.projectName")}
 
 								<SortButton
@@ -148,16 +162,16 @@ export const DashboardProjectsTable = () => {
 						{sortedProjectsStats.map(({ id, name, sessionsStats }) => (
 							<Tr className="group cursor-pointer pl-4" key={id}>
 								<Td
-									className="group-hover:font-bold"
+									className="w-1/6 group-hover:font-bold"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
 									{name}
 								</Td>
 								<Td
-									className="group-hover:font-bold"
+									className="w-1/2 group-hover:font-bold"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
-									<DeploymentSessionStats className="w-1/12" sessionStats={sessionsStats} />
+									<DeploymentSessionStats className="w-1/6 pr-10" sessionStats={sessionsStats} />
 								</Td>
 							</Tr>
 						))}
