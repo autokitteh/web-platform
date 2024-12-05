@@ -10,6 +10,7 @@ export type {
 	RefreshButtonProps,
 } from "@interfaces/components/button.interface";
 export type { CheckboxProps } from "@interfaces/components/checkbox.interface";
+export type { DeploymentStatusBadgeProps } from "@interfaces/components/deploymentStatusBadge.interface";
 export type { DrawerProps } from "@interfaces/components/drawer.interface";
 export type { ErrorMessageProps } from "@interfaces/components/error.interface";
 export type { InputProps, SelectOption, SelectProps, TextArea, SelectIconLabel } from "@interfaces/components/forms";

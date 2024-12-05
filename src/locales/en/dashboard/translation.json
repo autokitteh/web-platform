@@ -40,7 +40,8 @@
 				"stopped": "Stopped",
 				"completed": "Completed",
 				"errored": "Error",
-				"actions": "Actions"
+				"actions": "Actions",
+				"status": "Status"
 			}
 		},
 		"buttons":{
