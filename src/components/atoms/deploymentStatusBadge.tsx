@@ -21,5 +21,9 @@ export const DeploymentStatusBadge = ({ className, deploymentStatus }: Deploymen
 
 	const badgeText = DeploymentStateVariant[deploymentStatus];
 
-	return <div className={badgeClass}>{badgeText}</div>;
+	return (
+		<div aria-label={badgeText} className={badgeClass} title={badgeText}>
+			{badgeText}
+		</div>
+	);
 };
