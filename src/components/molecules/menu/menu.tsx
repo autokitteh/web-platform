@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName, SidebarHrefMenu } from "@enums/components";
 import { MenuProps } from "@interfaces/components";
@@ -25,6 +25,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
 	const { openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
+	const { projectId } = useParams();
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -117,12 +118,16 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						</li>
 					</PopoverListTrigger>
 					<PopoverListContent
-						className="scrollbar z-30 flex h-screen flex-col overflow-scroll rounded-lg bg-white px-4 pb-16 pt-[212px] text-black"
+						activeId={projectId}
+						className={cn(
+							"scrollbar z-30 flex h-screen flex-col overflow-scroll rounded-lg pb-16 pt-[212px] text-black",
+							"mr-2.5 w-auto border-x border-gray-500 bg-gray-250 px-2"
+						)}
 						emptyListMessage={t("noProjectsFound")}
 						itemClassName={cn(
-							"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition",
-							"hover:text-current text-center text-gray-1100 duration-300 hover:bg-gray-1250",
-							"text-fira-code whitespace-nowrap text-gray-1100 hover:bg-green-200 max-w-245 overflow-hidden p-4"
+							"flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:text-current",
+							"text-center duration-300 whitespace-nowrap px-4 text-gray-1100 hover:bg-green-200",
+							"max-w-245 overflow-hidden"
 						)}
 						items={sortedProjectsList.map(({ id, name }) => ({ id, label: name, value: id }))}
 						onItemSelect={({ id: projectId }: { id: string }) =>

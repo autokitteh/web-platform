@@ -162,7 +162,7 @@ export const Sidebar = () => {
 						</Button>
 
 						{isAuthEnabled ? (
-							<Popover animation="slideFromBottom" interactionType="click">
+							<Popover interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-1 flex items-center">
 									<Avatar color="black" name={user?.name} round={true} size="36" />
 									<AnimatePresence>
