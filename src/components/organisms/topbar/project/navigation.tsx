@@ -37,6 +37,7 @@ export const ProjectTopbarNavigation = () => {
 						"bg-black font-semibold active text-white": isSelected,
 					}
 				);
+
 				const iconClassName = cn("group-hover:text-green-200  group-active:text-green-800", {
 					"text-green-200": isSelected,
 				});
@@ -65,7 +66,8 @@ export const ProjectTopbarNavigation = () => {
 					href,
 				};
 			}),
-		[deployments, selectedSection, latestOpenedTab, projectId, deploymentId]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[deployments, selectedSection, projectId, deploymentId]
 	);
 
 	return (
