@@ -32,11 +32,12 @@
 		"table": {
 			"columns": {
 				"projectName": "Project Name",
-				"deployments": "Deployments",
+				"totalDeployments": "Deployments",
 				"running": "Running",
 				"stopped": "Stopped",
 				"completed": "Completed",
-				"errored": "Error"
+				"errored": "Error",
+				"actions": "Actions"
 			}
 		},
 		"buttons":{
