@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { useProjectCreationAndExport } from "@src/hooks";
+import { useProjectActions } from "@src/hooks";
 import { useModalStore, useProjectStore } from "@src/store";
 
 import { Button, ErrorMessage, Input, Loader } from "@components/atoms";
@@ -15,7 +15,7 @@ export const ImportProjectModal = () => {
 	const { closeModal } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
-	const { completeImportWithNewName, isCreatingNewProject } = useProjectCreationAndExport();
+	const { completeImportWithNewName, isCreatingNewProject } = useProjectActions();
 
 	const {
 		formState: { errors },

@@ -12,15 +12,15 @@ import { Manifest } from "@src/interfaces/models";
 import { FileStructure } from "@src/interfaces/utilities";
 import { unpackFileZip } from "@src/utilities";
 
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useConnectionCheckerStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
-export const useProjectCreationAndExport = () => {
-	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
-	const { t: tExport } = useTranslation("dashboard", { keyPrefix: "export" });
+export const useProjectActions = () => {
+	const { t } = useTranslation("dashboard", { keyPrefix: "actions" });
 	const { t: tUtil } = useTranslation("utilities", { keyPrefix: "fetchAndExtract" });
 	const {
 		createProject,
 		createProjectFromManifest,
+		deleteProject: removeProject,
 		exportProject,
 		getProject,
 		getProjectsList,
@@ -36,10 +36,12 @@ export const useProjectCreationAndExport = () => {
 	const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
 	const [loadingImportFile, setLoadingImportFile] = useState(false);
 	const [isExporting, setIsExporting] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
 	const [projectId, setProjectId] = useState<string>();
 	const { saveAllFiles } = useFileOperations(projectId || "");
 	const [templateFiles, setTemplateFiles] = useState<FileStructure>();
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const { resetChecker } = useConnectionCheckerStore();
 
 	const handleCreateProject = async (name: string) => {
 		setIsCreatingNewProject(true);
@@ -204,7 +206,7 @@ export const useProjectCreationAndExport = () => {
 
 		if (exportError) {
 			addToast({
-				message: tExport("errorExportingProject"),
+				message: t("errorExportingProject"),
 				type: "error",
 			});
 			setIsExporting(false);
@@ -247,6 +249,37 @@ export const useProjectCreationAndExport = () => {
 		setIsExporting(false);
 	};
 
+	const deleteProject = async (projectId: string) => {
+		if (!projectId) {
+			return;
+		}
+
+		setIsDeleting(true);
+		const { error } = await removeProject(projectId);
+		setIsDeleting(false);
+
+		closeModal(ModalName.deleteProject);
+		if (error) {
+			addToast({
+				message: t("errorDeletingProject"),
+				type: "error",
+			});
+
+			return;
+		}
+
+		resetChecker();
+
+		addToast({
+			message: t("deleteProjectSuccess"),
+			type: "success",
+		});
+
+		const projectName = projectsList.find(({ id }) => id === projectId)?.name;
+		LoggerService.info(namespaces.projectUI, t("deleteProjectSuccessExtended", { projectId, projectName }));
+		getProjectsList();
+	};
+
 	return {
 		isCreatingNewProject,
 		loadingImportFile,
@@ -254,6 +287,8 @@ export const useProjectCreationAndExport = () => {
 		templateFiles,
 		fileInputRef,
 		isExporting,
+		deleteProject,
+		isDeleting,
 		downloadProjectExport,
 		handleCreateProject,
 		handleImportFile,
