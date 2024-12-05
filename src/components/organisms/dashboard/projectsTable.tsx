@@ -9,11 +9,12 @@ import { ModalName, SidebarHrefMenu } from "@src/enums/components";
 import { cn } from "@src/utilities";
 import { DashboardProjectWithStats, Project } from "@type/models";
 
-import { useProjectCreationAndExport, useSort } from "@hooks";
+import { useProjectActions, useSort } from "@hooks";
 import { useModalStore, useProjectStore } from "@store";
 
 import { Button, IconButton, IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
+import { DeleteProjectModal } from "@components/organisms/modals";
 
 import { OrStartFromTemplateImage } from "@assets/image";
 import { ArrowStartTemplateIcon, DownloadIcon, PlusAccordionIcon, TrashIcon } from "@assets/image/icons";
@@ -32,7 +33,8 @@ export const DashboardProjectsTable = () => {
 	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
 
 	const { openModal } = useModalStore();
-	const { downloadProjectExport } = useProjectCreationAndExport();
+	const { deleteProject, downloadProjectExport, isDeleting } = useProjectActions();
+	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<string>();
 
 	const loadProjectsData = async (projectsList: Project[]) => {
 		const projectsStats = {} as Record<string, DashboardProjectWithStats>;
@@ -85,6 +87,15 @@ export const DashboardProjectsTable = () => {
 			"text-green-800": state === SessionStateType.completed,
 			"text-red": state === SessionStateType.error,
 		});
+
+	const handleProjectDelete = async () => {
+		deleteProject(selectedProjectForDeletion!);
+	};
+
+	const displayDeleteModal = (id: string) => {
+		setSelectedProjectForDeletion(id);
+		openModal(ModalName.deleteProject);
+	};
 
 	return (
 		<div className="z-10 h-2/3 select-none pt-10">
@@ -227,7 +238,7 @@ export const DashboardProjectsTable = () => {
 												src={DownloadIcon}
 											/>
 										</IconButton>
-										<IconButton onClick={() => downloadProjectExport(id)}>
+										<IconButton onClick={() => displayDeleteModal(id)}>
 											<IconSvg
 												className="ml-4 stroke-white transition hover:stroke-green-200 active:stroke-green-800"
 												size="md"
@@ -259,6 +270,7 @@ export const DashboardProjectsTable = () => {
 					<ArrowStartTemplateIcon className="absolute -right-10 bottom-4" />
 				</div>
 			</div>
+			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 		</div>
 	);
 };
