@@ -206,7 +206,11 @@ export const DashboardProjectsTable = () => {
 										<div className={countStyle(SessionStateType.error)}>{error}</div>
 									</Td>
 
-									<Td className="w-1/6" innerDivClassName="justify-center">
+									<Td
+										className="w-1/6"
+										innerDivClassName="justify-center"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+									>
 										{lastDeployed
 											? moment(lastDeployed).local().format(dateTimeFormat)
 											: t("never")}
