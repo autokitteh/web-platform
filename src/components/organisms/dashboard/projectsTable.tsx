@@ -7,6 +7,7 @@ import { DeploymentSessionStats } from "../deployments";
 import { DeploymentsService } from "@services/deployments.service";
 import { SessionStateType } from "@src/enums";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
+import { cn } from "@src/utilities";
 import { DashboardProjectWithStats, Project } from "@type/models";
 
 import { useSort } from "@hooks";
@@ -92,6 +93,14 @@ export const DashboardProjectsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectsList]);
 
+	const countStyle = (state?: SessionStateType) =>
+		cn("2xl:w-22 inline-block w-1/4 text-center border-0 p-0 text-sm font-medium", {
+			"text-blue-500": state === SessionStateType.running,
+			"text-yellow-500": state === SessionStateType.stopped,
+			"text-green-800": state === SessionStateType.completed,
+			"text-red": state === SessionStateType.error,
+		});
+
 	return (
 		<div className="z-10 h-2/3 select-none pt-10">
 			{sortedProjectsStats.length ? (
@@ -111,7 +120,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 w-1/6 cursor-pointer font-normal"
+								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
 								onClick={() => requestSort("totalDeployments")}
 							>
 								{t("table.columns.totalDeployments")}
@@ -123,7 +132,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 w-1/6 cursor-pointer font-normal"
+								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
 								onClick={() => requestSort("running")}
 							>
 								{t("table.columns.running")}
@@ -135,7 +144,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 w-1/6 cursor-pointer font-normal"
+								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
 								onClick={() => requestSort("stopped")}
 							>
 								{t("table.columns.stopped")}
@@ -147,7 +156,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 w-1/6 cursor-pointer font-normal"
+								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
 								onClick={() => requestSort("completed")}
 							>
 								{t("table.columns.completed")}
@@ -159,7 +168,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 w-1/6 cursor-pointer font-normal"
+								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
 								onClick={() => requestSort("error")}
 							>
 								{t("table.columns.errored")}
@@ -170,7 +179,7 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group h-11 w-1/6 cursor-pointer font-normal">
+							<Th className="group h-11 w-1/6 cursor-pointer justify-center font-normal">
 								{t("table.columns.actions")}
 							</Th>
 						</Tr>
@@ -187,43 +196,54 @@ export const DashboardProjectsTable = () => {
 								</Td>
 								<Td
 									className="w-1/6 group-hover:font-bold"
-									innerDivClassName="justify-center pl-8"
+									innerDivClassName="justify-center pr-8"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
 									{totalDeployments}
 								</Td>
 								<Td
-									className="w-full group-hover:font-bold"
+									className="w-1/6 group-hover:font-bold"
+									innerDivClassName="justify-center pr-8"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
-									<DeploymentSessionStats className="ml-8 w-1/6" sessionStats={sessionsStats} />
+									1
 								</Td>
 								<Td
 									className="w-1/6 group-hover:font-bold"
+									innerDivClassName="justify-center pr-8"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
-									<Button
-										ariaLabel={t("topbar.buttons.export")}
-										className="group h-8 px-4 text-white"
-										variant="outline"
-									>
-										<IconSvg
-											className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
-											size="md"
-											src={DownloadIcon}
-										/>
-									</Button>
-									<Button
-										ariaLabel={t("topbar.buttons.delete")}
-										className="group mt-2 h-8 px-4 text-white"
-										variant="outline"
-									>
-										<IconSvg
-											className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
-											size="md"
-											src={TrashIcon}
-										/>
-									</Button>
+									1
+								</Td>
+								<Td
+									className="w-1/6 group-hover:font-bold"
+									innerDivClassName="justify-center pr-8"
+									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+								>
+									1
+								</Td>
+								<Td
+									className="w-1/6 group-hover:font-bold"
+									innerDivClassName="justify-center pr-8"
+									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+								>
+									1
+								</Td>
+								<Td
+									className="w-1/6 group-hover:font-bold"
+									innerDivClassName="justify-center"
+									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+								>
+									<IconSvg
+										className="ml-2 fill-white transition hover:fill-green-200 active:fill-green-800"
+										size="md"
+										src={DownloadIcon}
+									/>
+									<IconSvg
+										className="ml-4 stroke-white transition hover:stroke-green-200 active:stroke-green-800"
+										size="md"
+										src={TrashIcon}
+									/>
 								</Td>
 							</Tr>
 						))}
