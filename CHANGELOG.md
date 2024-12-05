@@ -1,3 +1,10 @@
+## [2.81.1](https://github.com/autokitteh/web-platform/compare/v2.81.0...v2.81.1) (2024-12-05)
+
+
+### Bug Fixes
+
+* **UI-1035:** popover bugs on sidebar ([#724](https://github.com/autokitteh/web-platform/issues/724)) ([0b0bfdd](https://github.com/autokitteh/web-platform/commit/0b0bfdd036dff595a3c76788ad020beea0046e7e))
+
 # [2.81.0](https://github.com/autokitteh/web-platform/compare/v2.80.0...v2.81.0) (2024-12-05)
 
 
