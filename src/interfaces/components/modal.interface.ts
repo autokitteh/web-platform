@@ -9,6 +9,7 @@ export interface ModalProps {
 }
 export interface DeleteModalProps {
 	onDelete: () => void;
+	id?: string;
 	isDeleting: boolean;
 }
 

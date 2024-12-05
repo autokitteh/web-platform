@@ -18,6 +18,7 @@ const defaultState: Omit<
 	| "renameProject"
 	| "projectList"
 	| "deleteProject"
+	| "exportProject"
 	| "createProjectFromManifest"
 	| "setEditorWidth"
 	| "setLatestOpenedTab"
