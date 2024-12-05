@@ -1,3 +1,10 @@
+## [2.81.2](https://github.com/autokitteh/web-platform/compare/v2.81.1...v2.81.2) (2024-12-05)
+
+
+### Bug Fixes
+
+* **UI-1036:** update behavior of the bottom line in the menu ([#728](https://github.com/autokitteh/web-platform/issues/728)) ([78ce5b4](https://github.com/autokitteh/web-platform/commit/78ce5b4ef39c0b2c5a93a1d0755e942f926fd7e6))
+
 ## [2.81.1](https://github.com/autokitteh/web-platform/compare/v2.81.0...v2.81.1) (2024-12-05)
 
 
