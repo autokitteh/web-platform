@@ -234,7 +234,7 @@ export const DashboardProjectsTable = () => {
 										</IconButton>
 										<IconButton onClick={() => displayDeleteModal(id)}>
 											<IconSvg
-												className="ml-4 stroke-white transition hover:stroke-green-200 active:stroke-green-800"
+												className="stroke-white transition hover:stroke-green-200 active:stroke-green-800"
 												size="md"
 												src={TrashIcon}
 											/>
