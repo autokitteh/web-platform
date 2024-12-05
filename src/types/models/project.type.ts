@@ -1,5 +1,3 @@
-import { DeploymentSession } from "./deployment.type";
-
 export type Project = {
 	id: string;
 	name: string;
@@ -10,7 +8,6 @@ export type DashboardProjectWithStats = {
 	id: string;
 	name: string;
 	running: number;
-	sessionsStats: DeploymentSession[];
 	stopped: number;
 	totalDeployments: number;
 };

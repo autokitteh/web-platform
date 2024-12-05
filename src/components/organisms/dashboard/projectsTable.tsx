@@ -59,25 +59,14 @@ export const DashboardProjectsTable = () => {
 				{ totalDeployments: 0, sessionCounts: {} }
 			);
 
-			const allStates = Object.values(SessionStateType);
-			const completeSessionStats = allStates.map((state) => ({
-				count: stats?.sessionCounts?.[state] || 0,
-				state,
-			}));
-			const sessionsStatsByState: Record<string, number> = {} as Record<SessionStateType, number>;
-			allStates.forEach((state) => {
-				sessionsStatsByState[SessionStateType[state]] = stats?.sessionCounts?.[state] || 0;
-			});
-
 			projectsStats[project.id] = {
 				id: project.id,
 				name: project.name,
 				totalDeployments: stats?.totalDeployments || 0,
-				sessionsStats: completeSessionStats,
-				running: sessionsStatsByState.running || 0,
-				stopped: sessionsStatsByState.stopped || 0,
-				completed: sessionsStatsByState.completed || 0,
-				error: sessionsStatsByState.error || 0,
+				running: stats?.sessionCounts?.["running"] || 0,
+				stopped: stats?.sessionCounts?.["stopeed"] || 0,
+				completed: stats?.sessionCounts?.["completed"] || 0,
+				error: stats?.sessionCounts?.["error"] || 0,
 			};
 		}
 
@@ -186,7 +175,7 @@ export const DashboardProjectsTable = () => {
 					</THead>
 
 					<TBody>
-						{sortedProjectsStats.map(({ id, name, sessionsStats, totalDeployments }) => (
+						{sortedProjectsStats.map(({ completed, error, id, name, running, totalDeployments }) => (
 							<Tr className="group cursor-pointer pl-4" key={id}>
 								<Td
 									className="w-1/6 group-hover:font-bold"
@@ -206,7 +195,7 @@ export const DashboardProjectsTable = () => {
 									innerDivClassName="justify-center pr-8"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
-									1
+									<span className={countStyle(SessionStateType.running)}>{running}</span>
 								</Td>
 								<Td
 									className="w-1/6 group-hover:font-bold"
@@ -220,14 +209,14 @@ export const DashboardProjectsTable = () => {
 									innerDivClassName="justify-center pr-8"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
-									1
+									<span className={countStyle(SessionStateType.completed)}>{completed}</span>
 								</Td>
 								<Td
 									className="w-1/6 group-hover:font-bold"
 									innerDivClassName="justify-center pr-8"
 									onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 								>
-									1
+									<span className={countStyle(SessionStateType.error)}>{error}</span>
 								</Td>
 								<Td
 									className="w-1/6 group-hover:font-bold"
