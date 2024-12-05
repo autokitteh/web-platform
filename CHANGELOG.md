@@ -1,3 +1,10 @@
+# [2.81.0](https://github.com/autokitteh/web-platform/compare/v2.80.0...v2.81.0) (2024-12-05)
+
+
+### Features
+
+* **UI-732:** add import project feature ([#670](https://github.com/autokitteh/web-platform/issues/670)) ([a17cf69](https://github.com/autokitteh/web-platform/commit/a17cf6945d8703d9caace630fb7cd41d6611f345))
+
 # [2.80.0](https://github.com/autokitteh/web-platform/compare/v2.79.2...v2.80.0) (2024-12-04)
 
 
