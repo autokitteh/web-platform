@@ -9,20 +9,20 @@ import { useLocation, useParams } from "react-router-dom";
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { useCacheStore, useToastStore } from "@src/store";
-import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
-import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
+import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner } from "@components/atoms";
+import { ScrollableTabs } from "@components/organisms";
 
 import { AKRoundLogo } from "@assets/image";
-import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
+import { CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
 
 export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onExpand: () => void }) => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
-	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
+	const { openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const { currentProjectId, fetchResources } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -172,59 +172,15 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		};
 	}, [content, debouncedManualSave]);
 
-	const activeCloseIcon = (fileName: string) => {
-		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
-
-		return cn("h-4 w-4 p-0.5 hover:bg-gray-1100 hidden", {
-			flex: isActiveFile,
-		});
-	};
-
-	const handleCloseButtonClick = (
-		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>,
-		name: string
-	): void => {
-		event.stopPropagation();
-		closeOpenedFile(name);
-		if (isExpanded && openFiles[projectId!]?.length === 1) {
-			onExpand();
-		}
-	};
-
 	return (
 		<div className="relative flex h-full flex-col">
 			{projectId ? (
 				<>
 					<div className="relative flex w-full justify-between pb-3">
-						<div className="absolute -left-1/4 bottom-0 h-px w-[150%] bg-gray-1050" />
-						<div
-							className={
-								`flex select-none items-center gap-1 uppercase xl:gap-2 2xl:gap-4 3xl:gap-5 ` +
-								`scrollbar overflow-x-auto overflow-y-hidden whitespace-nowrap w-full`
-							}
-						>
-							{projectId
-								? openFiles[projectId]?.map(({ name }) => (
-										<Tab
-											activeTab={activeEditorFileName}
-											className="group relative flex items-center gap-1 normal-case"
-											key={name}
-											onClick={() => openFileAsActive(name)}
-											value={name}
-										>
-											{name}
-											<div className="absolute -right-0.5 top-0 h-3/4 w-px bg-gray-950 xl:-right-1 2xl:-right-2 3xl:-right-2.5" />
-											<IconButton
-												ariaLabel={t("buttons.ariaCloseFile")}
-												className={activeCloseIcon(name)}
-												onClick={(event) => handleCloseButtonClick(event, name)}
-											>
-												<Close className="size-2 fill-gray-750 transition group-hover:fill-white" />
-											</IconButton>
-										</Tab>
-									))
-								: null}
-						</div>
+						{openFiles[projectId]?.length ? (
+							<div className="absolute -left-1/4 bottom-0 h-px w-[150%] bg-gray-1050" />
+						) : null}
+						<ScrollableTabs isExpanded={isExpanded} onExpand={onExpand} />
 
 						{openFiles[projectId]?.length ? (
 							<div
