@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { DeploymentsService } from "@services/deployments.service";
+import { dateTimeFormat } from "@src/constants";
 import { DeploymentStateVariant, SessionStateType } from "@src/enums";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
 import { cn } from "@src/utilities";
@@ -40,6 +42,7 @@ export const DashboardProjectsTable = () => {
 		for (const project of projectsList) {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let projectStatus = DeploymentStateVariant.inactive;
+			const lastDeployed = deployments?.[deployments?.length - 1]?.createdAt;
 			const stats = deployments?.reduce(
 				(acc: { sessionCounts: Record<string, number>; totalDeployments: number }, deployment) => {
 					if (
@@ -76,6 +79,7 @@ export const DashboardProjectsTable = () => {
 				completed: stats?.sessionCounts?.["completed"] || 0,
 				error: stats?.sessionCounts?.["error"] || 0,
 				status: projectStatus,
+				lastDeployed,
 			};
 		}
 
@@ -87,7 +91,7 @@ export const DashboardProjectsTable = () => {
 	}, [projectsList]);
 
 	const countStyle = (state?: SessionStateType) =>
-		cn("2xl:w-22 inline-block w-1/4 text-center border-0 p-0 text-sm font-medium", {
+		cn("inline-block border-0 p-0 text-sm font-medium", {
 			"text-blue-500": state === SessionStateType.running,
 			"text-yellow-500": state === SessionStateType.stopped,
 			"text-green-800": state === SessionStateType.completed,
@@ -145,55 +149,13 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th
-								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
-								onClick={() => requestSort("running")}
-							>
-								{t("table.columns.running")}
-
-								<SortButton
-									className="w-1/6 opacity-0 group-hover:opacity-100"
-									isActive={"running" === sortConfig.key}
-									sortDirection={sortConfig.direction}
-								/>
+							<Th className="group ml-8 h-11 w-3/6 font-normal" onClick={() => requestSort("running")}>
+								{t("table.columns.sessions")}
 							</Th>
-							<Th
-								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
-								onClick={() => requestSort("stopped")}
-							>
-								{t("table.columns.stopped")}
-
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"stopped" === sortConfig.key}
-									sortDirection={sortConfig.direction}
-								/>
+							<Th className="group h-11 w-1/6 justify-center font-normal">
+								{t("table.columns.lastDeployed")}
 							</Th>
-							<Th
-								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
-								onClick={() => requestSort("completed")}
-							>
-								{t("table.columns.completed")}
-
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"completed" === sortConfig.key}
-									sortDirection={sortConfig.direction}
-								/>
-							</Th>
-							<Th
-								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
-								onClick={() => requestSort("error")}
-							>
-								{t("table.columns.errored")}
-
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"error" === sortConfig.key}
-									sortDirection={sortConfig.direction}
-								/>
-							</Th>
-							<Th className="group h-11 w-1/6 cursor-pointer justify-center font-normal">
+							<Th className="group h-11 w-1/6 justify-center font-normal">
 								{t("table.columns.actions")}
 							</Th>
 						</Tr>
@@ -201,7 +163,17 @@ export const DashboardProjectsTable = () => {
 
 					<TBody>
 						{sortedProjectsStats.map(
-							({ completed, error, id, name, running, status, stopped, totalDeployments }) => (
+							({
+								completed,
+								error,
+								id,
+								lastDeployed,
+								name,
+								running,
+								status,
+								stopped,
+								totalDeployments,
+							}) => (
 								<Tr className="group cursor-pointer pl-4" key={id}>
 									<Td
 										className="w-1/5 group-hover:font-bold"
@@ -224,33 +196,22 @@ export const DashboardProjectsTable = () => {
 										{totalDeployments}
 									</Td>
 									<Td
-										className="w-1/6"
-										innerDivClassName="justify-center pr-8"
+										className="ml-8 flex w-3/6"
+										innerDivClassName="gap-16"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
-										<span className={countStyle(SessionStateType.running)}>{running}</span>
+										<div className={countStyle(SessionStateType.running)}>{running}</div>
+										<div className={countStyle(SessionStateType.stopped)}>{stopped}</div>
+										<div className={countStyle(SessionStateType.completed)}>{completed}</div>
+										<div className={countStyle(SessionStateType.error)}>{error}</div>
 									</Td>
-									<Td
-										className="w-1/6"
-										innerDivClassName="justify-center pr-8"
-										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-									>
-										<span className={countStyle(SessionStateType.stopped)}>{stopped}</span>
+
+									<Td className="w-1/6" innerDivClassName="justify-center">
+										{lastDeployed
+											? moment(lastDeployed).local().format(dateTimeFormat)
+											: t("never")}
 									</Td>
-									<Td
-										className="w-1/6"
-										innerDivClassName="justify-center pr-8"
-										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-									>
-										<span className={countStyle(SessionStateType.completed)}>{completed}</span>
-									</Td>
-									<Td
-										className="w-1/6"
-										innerDivClassName="justify-center pr-8"
-										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-									>
-										<span className={countStyle(SessionStateType.error)}>{error}</span>
-									</Td>
+
 									<Td className="w-1/6" innerDivClassName="justify-center">
 										<IconButton onClick={() => downloadProjectExport(id)}>
 											<IconSvg

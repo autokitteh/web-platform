@@ -41,7 +41,9 @@
 				"completed": "Completed",
 				"errored": "Error",
 				"actions": "Actions",
-				"status": "Status"
+				"status": "Status",
+				"sessions": "Sessions",
+				"lastDeployed": "Last Deployed"
 			}
 		},
 		"buttons":{
@@ -53,7 +55,8 @@
 				"title": "JOIN THE COMMUNITY",
 				"desc": "See how our community is creating projects"
 			}
-		}
+		},
+		"never": "Never"
 	},
 	"welcome": {
 		"getStarted": "Get started with Autokitteh",
