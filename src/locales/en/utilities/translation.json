@@ -1,13 +1,14 @@
 {
 	"fetchAndExtract":{
 		"noFileStructure": "No file structure provided to processReadmeFiles",
-		"fetchAndExtractError": "Error in fetchAndExtract, name: {{name}}, error: {{error}}, stack: {{stack}}",
+		"fetchAndExtractError": "Error in extracting archive process, name of the file: {{name}}, error: {{error}}",
 		"invalidStructurePath": "Invalid structure path provided to processDirectory, path: {{path}}",
 		"nullOrUndefinedFound": "Null or undefined node found for {{name}} at {{currentPath}}",
 		"couldNotFindDirectory": "Could not find directory structure for {{path}}",
 		"errorProcessingFile": "Error processing file {{path}}, error: {{error}}",
 		"errorProcessingFileStructure": "Error processing file structure, error: {{error}}",
 		"fetchedFromGithub": "Fetched from Github",
-		"templatesArchiveFetchFailedExtended": "Templates archive fetch failed, error: {{error}}"
+		"templatesArchiveFetchFailedExtended": "Templates archive fetch failed, error: {{error}}",
+		"uknownErrorUnpackingZip": "Unknown error occurred unpacking the zip archive: {{zipName}}"
 	}
 }

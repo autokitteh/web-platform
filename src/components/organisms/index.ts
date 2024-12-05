@@ -4,7 +4,7 @@ export { DeploymentsTable } from "@components/organisms/deployments/table";
 export { EditorTabs } from "@components/organisms/editorTabs";
 export { EventsTable, EventViewer } from "@components/organisms/events";
 export { IntroMainBlock } from "@components/organisms/introMainBlock";
-export { NewProjectModal } from "@components/organisms/newProjectModal";
+export { NewProjectModal, ImportProjectModal } from "@components/organisms/modals";
 export { Sidebar } from "@components/organisms/sidebar/sidebar";
 export { SplitFrame } from "@components/organisms/splitFrame";
 export { SystemLog } from "@components/organisms/systemLog";

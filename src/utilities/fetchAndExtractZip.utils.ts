@@ -73,6 +73,36 @@ const fetchZipFromUrl = async (url: string): Promise<ArrayBuffer> => {
 	return zipData;
 };
 
+export const unpackFileZip = async (file: File | ArrayBuffer): Promise<ProcessedZipResult> => {
+	try {
+		const zip = new JSZip();
+		const content = await zip.loadAsync(file);
+		const structure = await processZipContent(content);
+
+		return { structure };
+	} catch (error) {
+		const fileName = file instanceof File ? file.name : "ArrayBuffer";
+		const errorMessage =
+			error instanceof Error
+				? error.message
+				: i18n.t("fetchAndExtract.uknownErrorUnpackingZip", {
+						ns: "utilities",
+						zipName: fileName,
+					});
+		LoggerService.error(
+			namespaces.utilities.fetchAndExtract,
+			i18n.t("fetchAndExtract.fetchAndExtractError", {
+				ns: "utilities",
+				error: errorMessage,
+				name: fileName,
+			}),
+			true
+		);
+
+		return { error: errorMessage, structure: undefined };
+	}
+};
+
 export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Promise<ProcessedZipResult> => {
 	try {
 		let zipData: ArrayBuffer = new ArrayBuffer(0);
@@ -90,18 +120,23 @@ export const fetchAndUnpackZip = async (remoteTemplatesArchiveUrl: string): Prom
 			return { error: errorMessage, structure: undefined };
 		}
 
-		const zip = new JSZip();
-		const content = await zip.loadAsync(zipData);
-		const structure = await processZipContent(content);
+		const { structure } = await unpackFileZip(zipData);
 
 		return { structure };
 	} catch (error) {
-		const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : "Unknown error occurred";
+		const errorMessage =
+			error instanceof Error
+				? `${error.name}: ${error.message}`
+				: i18n.t("fetchAndExtract.uknownErrorUnpackingZip", {
+						ns: "utilities",
+						zipName: remoteTemplatesArchiveUrl,
+					});
 		LoggerService.error(
 			namespaces.utilities.fetchAndExtract,
 			i18n.t("fetchAndExtract.fetchAndExtractError", {
 				ns: "utilities",
 				error: errorMessage,
+				name: remoteTemplatesArchiveUrl,
 			}),
 			true
 		);

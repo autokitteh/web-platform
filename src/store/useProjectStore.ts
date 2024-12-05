@@ -21,11 +21,13 @@ const defaultState: Omit<
 	| "createProjectFromManifest"
 	| "setEditorWidth"
 	| "setLatestOpenedTab"
+	| "setPendingFile"
 > = {
 	projectsList: [],
 	latestOpenedTab: "",
 	isLoadingProjectsList: true,
 	initialEditorWidth: 50,
+	pendingFile: undefined,
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
@@ -42,6 +44,14 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	setLatestOpenedTab: (tab) => {
 		set((state) => {
 			state.latestOpenedTab = tab;
+
+			return state;
+		});
+	},
+
+	setPendingFile: (file) => {
+		set((state) => {
+			state.pendingFile = file;
 
 			return state;
 		});
@@ -97,6 +107,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 	createProjectFromManifest: async (projectManifest: string) => {
 		const { data: newProjectId, error } = await ProjectsService.createFromManifest(projectManifest);
+
 		if (error) {
 			return { data: undefined, error };
 		}
