@@ -8,6 +8,7 @@ export type DashboardProjectWithStats = {
 	completed: number;
 	error: number;
 	id: string;
+	lastDeployed?: Date | string;
 	name: string;
 	running: number;
 	status: DeploymentStateVariant;
