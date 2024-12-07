@@ -207,10 +207,34 @@ export const DashboardProjectsTable = () => {
 										innerDivClassName="gap-16"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
-										<div className={countStyle(SessionStateType.running)}>{running}</div>
-										<div className={countStyle(SessionStateType.stopped)}>{stopped}</div>
-										<div className={countStyle(SessionStateType.completed)}>{completed}</div>
-										<div className={countStyle(SessionStateType.error)}>{error}</div>
+										<div
+											aria-label={t("table.sessionTypes.running")}
+											className={countStyle(SessionStateType.running)}
+											title={t("table.sessionTypes.running")}
+										>
+											{running}
+										</div>
+										<div
+											aria-label={t("table.sessionTypes.stopped")}
+											className={countStyle(SessionStateType.stopped)}
+											title={t("table.sessionTypes.stopped")}
+										>
+											{stopped}
+										</div>
+										<div
+											aria-label={t("table.sessionTypes.completed")}
+											className={countStyle(SessionStateType.completed)}
+											title={t("table.sessionTypes.completed")}
+										>
+											{completed}
+										</div>
+										<div
+											aria-label={t("table.sessionTypes.error")}
+											className={countStyle(SessionStateType.error)}
+											title={t("table.sessionTypes.error")}
+										>
+											{error}
+										</div>
 									</Td>
 
 									<Td
