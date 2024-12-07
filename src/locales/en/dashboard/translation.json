@@ -36,14 +36,16 @@
 			"columns": {
 				"projectName": "Project Name",
 				"totalDeployments": "Deployments",
-				"running": "Running",
-				"stopped": "Stopped",
-				"completed": "Completed",
-				"errored": "Error",
 				"actions": "Actions",
 				"status": "Status",
 				"sessions": "Sessions",
 				"lastDeployed": "Last Deployed"
+			},
+			"sessionTypes":{ 
+				"running": "Running",
+				"stopped": "Stopped",
+				"completed": "Completed",
+				"error": "Error"
 			}
 		},
 		"buttons":{
