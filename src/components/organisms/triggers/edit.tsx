@@ -10,16 +10,15 @@ import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
 import { extraTriggerTypes } from "@src/constants";
 import { TriggerTypes } from "@src/enums";
-import { ModalName, TriggerFormIds } from "@src/enums/components";
+import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
 import { triggerSchema } from "@validations";
 
 import { useFetchTrigger } from "@hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@store";
+import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
-import { WarningDeploymentActivetedModal } from "@components/organisms";
+import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
@@ -42,14 +41,12 @@ export const EditTrigger = () => {
 		connections,
 		fetchResources,
 		fetchTriggers,
-		hasActiveDeployments,
 		loading: { connections: isLoadingConnections },
 	} = useCacheStore();
-	const { closeModal, openModal } = useModalStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isSaving, setIsSaving] = useState(false);
-	const [formData, setFormData] = useState<TriggerFormData>();
 
 	useEffect(() => {
 		setWebhookUrlHighlight(navigationData?.highlightWebhookUrl || false);
@@ -124,7 +121,6 @@ export const EditTrigger = () => {
 	}, [trigger, connections]);
 
 	const onSubmit = async (data: TriggerFormData) => {
-		closeModal(ModalName.warningDeploymentActive);
 		setIsSaving(true);
 		const { connection, cron, entryFunction, eventTypeSelect, filePath, filter, name } = data;
 		try {
@@ -166,16 +162,6 @@ export const EditTrigger = () => {
 		}
 	};
 
-	const handleFormSubmit = (data: TriggerFormData) => {
-		if (hasActiveDeployments) {
-			setFormData(data);
-			openModal(ModalName.warningDeploymentActive);
-
-			return;
-		}
-		onSubmit(data);
-	};
-
 	const watchedEventTypeSelect = useWatch({ control, name: "eventTypeSelect" });
 
 	if (isLoadingConnections || isLoadingTrigger) {
@@ -192,11 +178,12 @@ export const EditTrigger = () => {
 					isLoading={isSaving}
 					title={t("modifyTrigger")}
 				/>
+				{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 				<form
 					className="flex flex-col gap-6"
 					id={TriggerFormIds.modifyTriggerForm}
-					onSubmit={handleSubmit(handleFormSubmit)}
+					onSubmit={handleSubmit(onSubmit)}
 				>
 					<NameAndConnectionFields isEdit />
 
@@ -214,8 +201,6 @@ export const EditTrigger = () => {
 				</form>
 
 				{trigger?.sourceType === TriggerTypes.schedule ? <SchedulerInfo /> : null}
-
-				{formData ? <WarningDeploymentActivetedModal onClick={() => onSubmit(formData)} /> : null}
 			</div>
 		</FormProvider>
 	);

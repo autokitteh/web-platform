@@ -68,6 +68,9 @@ async function setupProjectAndTriggerSession({ dashboardPage, page, request }: S
 	await page.getByRole("tab", { name: "Triggers" }).click();
 	await page.getByRole("button", { name: "Modify receive_http_get_or_head trigger" }).click();
 
+	await expect(page.getByText("Changes might affect the currently running deployments.")).toBeVisible();
+	await page.getByRole("button", { name: "Ok" }).click();
+
 	await page.waitForSelector('[data-testid="webhook-url"]');
 
 	const webhookUrl = await page.evaluate(() => {

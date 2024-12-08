@@ -6,13 +6,14 @@ import { integrationTypes } from "@constants/lists";
 import { SelectOption } from "@interfaces/components";
 import { integrationAddFormComponents } from "@src/constants/connections";
 import { Integrations } from "@src/enums/components";
+import { useHasActiveDeployments } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { useConnectionForm } from "@hooks";
 
 import { ErrorMessage, Input } from "@components/atoms";
-import { Select, TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
 export const AddConnection = () => {
 	const { t } = useTranslation("integrations");
@@ -20,6 +21,7 @@ export const AddConnection = () => {
 		connectionSchema,
 		"create"
 	);
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const selectedIntegration: SelectOption = watch("integration");
 
@@ -35,6 +37,7 @@ export const AddConnection = () => {
 	return (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" isHiddenButtons title={t("addNewConnection")} />
+			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 			<form className="mb-6 flex w-5/6 flex-col" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative mb-6">

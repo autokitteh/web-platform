@@ -7,11 +7,12 @@ import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { integrationToEditComponent } from "@src/constants";
 import { Integrations } from "@src/enums/components";
+import { useHasActiveDeployments } from "@src/store";
 import { stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { Input } from "@components/atoms";
-import { Select, TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
 export const EditConnection = () => {
 	const { t } = useTranslation("integrations");
@@ -23,6 +24,8 @@ export const EditConnection = () => {
 		integration: selectedIntegration,
 		register,
 	} = useConnectionForm(connectionSchema, "edit");
+
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	useEffect(() => {
 		if (connectionId) {
@@ -50,7 +53,7 @@ export const EditConnection = () => {
 	return (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" isHiddenButtons={true} title={t("editConnection")} />
-
+			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 			<div className="mb-6 flex w-5/6 flex-col">
 				<div className="relative mb-6">
 					<Input

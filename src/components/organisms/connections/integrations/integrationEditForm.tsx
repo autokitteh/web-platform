@@ -6,14 +6,12 @@ import { SingleValue } from "react-select";
 import { integrationVariablesMapping } from "../../../../constants/connections/integrationVariablesMapping.constants";
 import { formsPerIntegrationsMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
-import { Integrations, ModalName, isGoogleIntegration } from "@src/enums/components";
+import { Integrations, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
-import { useCacheStore, useModalStore } from "@src/store";
 import { setFormValues } from "@src/utilities";
 
 import { Select } from "@components/molecules";
-import { WarningDeploymentActivetedModal } from "@components/organisms";
 
 export const IntegrationEditForm = ({
 	integrationType,
@@ -46,9 +44,6 @@ export const IntegrationEditForm = ({
 
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
-
-	const { hasActiveDeployments } = useCacheStore();
-	const { closeModal, openModal } = useModalStore();
 
 	useEffect(() => {
 		if (!isGoogleIntegration(integrationType)) {
@@ -90,7 +85,6 @@ export const IntegrationEditForm = ({
 
 	const onSubmit = () => {
 		if (connectionId && connectionType === ConnectionAuthType.Oauth) {
-			closeModal(ModalName.warningDeploymentActive);
 			if (isGoogleIntegration(integrationType)) {
 				handleGoogleOauth(connectionId);
 
@@ -101,15 +95,6 @@ export const IntegrationEditForm = ({
 			return;
 		}
 		onSubmitEdit();
-	};
-
-	const handleFormSubmit = () => {
-		if (hasActiveDeployments) {
-			openModal(ModalName.warningDeploymentActive);
-
-			return;
-		}
-		onSubmit();
 	};
 
 	useEffect(() => {
@@ -133,7 +118,7 @@ export const IntegrationEditForm = ({
 				placeholder={t("placeholders.selectConnectionType")}
 				value={selectConnectionTypeValue}
 			/>
-			<form className="mt-6 flex flex-col items-stretch gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
+			<form className="mt-6 flex flex-col items-stretch gap-6" onSubmit={handleSubmit(onSubmit)}>
 				{ConnectionTypeComponent ? (
 					<ConnectionTypeComponent
 						control={control}
@@ -146,8 +131,6 @@ export const IntegrationEditForm = ({
 					/>
 				) : null}
 			</form>
-
-			<WarningDeploymentActivetedModal onClick={onSubmit} />
 		</>
 	);
 };

@@ -6,14 +6,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
-import { ModalName } from "@src/enums/components";
-import { useCacheStore, useModalStore } from "@src/store";
+import { useCacheStore, useHasActiveDeployments } from "@src/store";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
-import { WarningDeploymentActivetedModal } from "@components/organisms";
+import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
 export const EditVariable = () => {
 	const { t: tForm } = useTranslation("tabs", {
@@ -21,14 +19,14 @@ export const EditVariable = () => {
 	});
 	const { t } = useTranslation("errors");
 
-	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { fetchVariables, hasActiveDeployments } = useCacheStore();
+	const { fetchVariables } = useCacheStore();
 
 	const { projectId, variableName } = useParams();
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const {
 		control,
@@ -78,7 +76,6 @@ export const EditVariable = () => {
 	}, []);
 
 	const onSubmit = async () => {
-		closeModal(ModalName.warningDeploymentActive);
 		const { isSecret, name, value } = getValues();
 		setIsLoading(true);
 		const { error } = await VariablesService.setByProjectId(projectId!, {
@@ -100,15 +97,6 @@ export const EditVariable = () => {
 		navigate(-1);
 	};
 
-	const handleFormSubmit = () => {
-		if (hasActiveDeployments) {
-			openModal(ModalName.warningDeploymentActive);
-
-			return;
-		}
-		onSubmit();
-	};
-
 	return isLoadingData ? (
 		<Loader isCenter size="xl" />
 	) : (
@@ -119,8 +107,9 @@ export const EditVariable = () => {
 				isLoading={isLoading}
 				title={tForm("modifyVariable")}
 			/>
+			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
-			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(handleFormSubmit)}>
+			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input
 						value={name}
@@ -150,8 +139,6 @@ export const EditVariable = () => {
 					<ErrorMessage ariaLabel={tForm("ariaValueRequired")}>{errors.value?.message}</ErrorMessage>
 				</div>
 			</form>
-
-			<WarningDeploymentActivetedModal onClick={onSubmit} />
 		</div>
 	);
 };
