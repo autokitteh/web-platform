@@ -12,9 +12,11 @@ export interface ProjectStore {
 	currentProjectId?: string;
 	latestOpenedTab: string;
 	latestOpenedDeploymentId?: string;
+	latestOpenedSessionId?: string;
 	renameProject: (projectId: string, projectName: string) => void;
 	setLatestOpenedTab: (tab: string) => void;
 	setLatestOpenedDeploymentId: (deploymentId: string, projectId: string) => void;
+	setLatestOpenedSessionId: (session: string, projectId: string) => void;
 	isLoadingProjectsList: boolean;
 	initialEditorWidth: number;
 	pendingFile?: File;

@@ -23,11 +23,13 @@ const defaultState: Omit<
 	| "setEditorWidth"
 	| "setLatestOpenedTab"
 	| "setLatestOpenedDeploymentId"
+	| "setLatestOpenedSessionId"
 	| "setPendingFile"
 > = {
 	projectsList: [],
 	latestOpenedTab: "",
 	latestOpenedDeploymentId: "",
+	latestOpenedSessionId: "",
 	isLoadingProjectsList: true,
 	initialEditorWidth: 50,
 	currentProjectId: undefined,
@@ -64,6 +66,22 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			if (projectId !== state.currentProjectId) {
 				state.currentProjectId = projectId;
 				state.latestOpenedDeploymentId = "";
+			}
+
+			return state;
+		});
+	},
+
+	setLatestOpenedSessionId: (sessionId, projectId) => {
+		set((state) => {
+			if (state.latestOpenedSessionId === sessionId) {
+				return state;
+			}
+			state.latestOpenedSessionId = sessionId;
+
+			if (projectId !== state.currentProjectId) {
+				state.currentProjectId = projectId;
+				state.latestOpenedSessionId = "";
 			}
 
 			return state;
