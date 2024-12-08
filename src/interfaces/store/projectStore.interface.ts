@@ -9,9 +9,12 @@ export interface ProjectStore {
 	getProjectsList: () => ServiceResponse<Project[]>;
 	createProjectFromManifest: (manifest: string) => ServiceResponse<string>;
 	projectsList: Project[];
+	currentProjectId?: string;
 	latestOpenedTab: string;
+	latestOpenedDeploymentId?: string;
 	renameProject: (projectId: string, projectName: string) => void;
 	setLatestOpenedTab: (tab: string) => void;
+	setLatestOpenedDeploymentId: (deploymentId: string, projectId: string) => void;
 	isLoadingProjectsList: boolean;
 	initialEditorWidth: number;
 	pendingFile?: File;
