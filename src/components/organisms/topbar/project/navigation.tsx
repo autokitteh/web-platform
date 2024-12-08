@@ -10,15 +10,25 @@ import { cn } from "@src/utilities";
 import { Button, IconSvg } from "@components/atoms";
 
 export const ProjectTopbarNavigation = () => {
-	const { deploymentId: paramDeploymentId, projectId } = useParams();
+	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
 	const { pathname } = useLocation();
-	const { currentProjectId, latestOpenedDeploymentId, latestOpenedTab, setLatestOpenedDeploymentId } =
-		useProjectStore();
+	const {
+		currentProjectId,
+		latestOpenedDeploymentId,
+		latestOpenedSessionId,
+		latestOpenedTab,
+		setLatestOpenedDeploymentId,
+		setLatestOpenedSessionId,
+	} = useProjectStore();
 	const { deployments } = useCacheStore();
 	const navigate = useNavigate();
 
 	if (paramDeploymentId) {
 		setLatestOpenedDeploymentId(paramDeploymentId, projectId!);
+	}
+
+	if (sessionId) {
+		setLatestOpenedSessionId(sessionId, projectId!);
 	}
 
 	const deploymentId =
@@ -56,7 +66,12 @@ export const ProjectTopbarNavigation = () => {
 						case "assets":
 							return latestOpenedTab ? `/${latestOpenedTab}` : "/code";
 						case "sessions":
-							return deploymentId ? `/deployments/${deploymentId}/sessions` : "";
+							return latestOpenedSessionId
+								? deploymentId
+									? `/deployments/${deploymentId}/sessions/${latestOpenedSessionId}`
+									: ""
+								: `/deployments/${deploymentId}/sessions/`;
+
 						case "deployments":
 							return "/deployments";
 						default:
