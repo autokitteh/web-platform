@@ -21,68 +21,51 @@ const defaultState: Omit<
 	| "exportProject"
 	| "createProjectFromManifest"
 	| "setEditorWidth"
-	| "setLatestOpenedTab"
-	| "setLatestOpenedDeploymentId"
-	| "setLatestOpenedSessionId"
 	| "setPendingFile"
+	| "setLatestOpened"
 > = {
 	projectsList: [],
-	latestOpenedTab: "",
-	latestOpenedDeploymentId: "",
-	latestOpenedSessionId: "",
 	isLoadingProjectsList: true,
 	initialEditorWidth: 50,
 	currentProjectId: undefined,
 	pendingFile: undefined,
 	isExporting: false,
+	latestOpened: {
+		tab: "",
+		deploymentId: "",
+		sessionId: "",
+		projectId: undefined,
+	},
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 
+	setLatestOpened: (type, value, projectId) => {
+		set((state) => {
+			if (projectId && projectId !== state.latestOpened.projectId) {
+				state.latestOpened = {
+					tab: type === "tab" ? value : "",
+					deploymentId: type === "deploymentId" ? value : "",
+					sessionId: type === "sessionId" ? value : "",
+					projectId,
+				};
+
+				return state;
+			}
+
+			state.latestOpened[type] = value;
+			if (projectId) {
+				state.latestOpened.projectId = projectId;
+			}
+
+			return state;
+		});
+	},
+
 	setEditorWidth: (width) => {
 		set((state) => {
 			state.initialEditorWidth = width;
-
-			return state;
-		});
-	},
-
-	setLatestOpenedTab: (tab) => {
-		set((state) => {
-			state.latestOpenedTab = tab;
-
-			return state;
-		});
-	},
-
-	setLatestOpenedDeploymentId: (deploymentId, projectId) => {
-		set((state) => {
-			if (state.latestOpenedDeploymentId === deploymentId) {
-				return state;
-			}
-			state.latestOpenedDeploymentId = deploymentId;
-
-			if (projectId !== state.currentProjectId) {
-				state.currentProjectId = projectId;
-				state.latestOpenedDeploymentId = "";
-			}
-
-			return state;
-		});
-	},
-
-	setLatestOpenedSessionId: (sessionId, projectId) => {
-		set((state) => {
-			if (state.latestOpenedSessionId === sessionId) {
-				return state;
-			}
-			state.latestOpenedSessionId = sessionId;
-
-			if (projectId !== state.currentProjectId) {
-				state.currentProjectId = projectId;
-				state.latestOpenedSessionId = "";
-			}
 
 			return state;
 		});

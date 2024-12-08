@@ -46,10 +46,10 @@ export const SessionViewer = () => {
 
 	const { loading: loadingOutputs, reload: reloadOutputs } = useOutputsCacheStore();
 	const { loading: loadingActivities, reload: reloadActivities } = useActivitiesCacheStore();
-	const { setLatestOpenedSessionId } = useProjectStore();
+	const { setLatestOpened } = useProjectStore();
 
 	const closeEditor = useCallback(() => {
-		setLatestOpenedSessionId("", projectId!);
+		setLatestOpened("sessionId", "", projectId!);
 
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 		// eslint-disable-next-line react-hooks/exhaustive-deps

@@ -12,28 +12,21 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
 	const { pathname } = useLocation();
-	const {
-		currentProjectId,
-		latestOpenedDeploymentId,
-		latestOpenedSessionId,
-		latestOpenedTab,
-		setLatestOpenedDeploymentId,
-		setLatestOpenedSessionId,
-	} = useProjectStore();
+	const { currentProjectId, latestOpened, setLatestOpened } = useProjectStore();
 	const { deployments } = useCacheStore();
 	const navigate = useNavigate();
 
 	if (paramDeploymentId) {
-		setLatestOpenedDeploymentId(paramDeploymentId, projectId!);
+		setLatestOpened("deploymentId", paramDeploymentId, projectId!);
 	}
 
 	if (sessionId) {
-		setLatestOpenedSessionId(sessionId, projectId!);
+		setLatestOpened("sessionId", sessionId, projectId!);
 	}
 
 	const deploymentId =
-		latestOpenedDeploymentId && currentProjectId === projectId
-			? latestOpenedDeploymentId
+		latestOpened.deploymentId && currentProjectId === projectId
+			? latestOpened.deploymentId
 			: paramDeploymentId || deployments?.[0]?.deploymentId;
 
 	const selectedSection = useMemo(() => {
@@ -64,11 +57,11 @@ export const ProjectTopbarNavigation = () => {
 				const getPath = () => {
 					switch (item.key) {
 						case "assets":
-							return latestOpenedTab ? `/${latestOpenedTab}` : "/code";
+							return latestOpened.tab ? `/${latestOpened.tab}` : "/code";
 						case "sessions":
-							return latestOpenedSessionId
+							return latestOpened.sessionId
 								? deploymentId
-									? `/deployments/${deploymentId}/sessions/${latestOpenedSessionId}`
+									? `/deployments/${deploymentId}/sessions/${latestOpened.sessionId}`
 									: ""
 								: `/deployments/${deploymentId}/sessions/`;
 
