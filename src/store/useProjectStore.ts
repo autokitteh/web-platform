@@ -54,15 +54,12 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 	},
 
-	setLatestOpenedDeploymentId: (deploymentId, projectId) => {
+	setLatestOpenedDeploymentId: (deploymentId) => {
 		set((state) => {
 			if (state.latestOpenedDeploymentId === deploymentId) {
 				return state;
 			}
-			if (projectId !== state.currentProjectId && state.latestOpenedDeploymentId !== deploymentId) {
-				state.latestOpenedDeploymentId = deploymentId;
-				state.currentProjectId = projectId;
-			}
+			state.latestOpenedDeploymentId = deploymentId;
 
 			return state;
 		});

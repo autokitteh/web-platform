@@ -12,10 +12,14 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId } = useParams();
 	const { pathname } = useLocation();
-	const { currentProjectId, latestOpenedDeploymentId, latestOpenedTab } = useProjectStore();
+	const { currentProjectId, latestOpenedDeploymentId, latestOpenedTab, setLatestOpenedDeploymentId } =
+		useProjectStore();
 	const { deployments } = useCacheStore();
 	const navigate = useNavigate();
-	const { setLatestOpenedDeploymentId } = useProjectStore();
+
+	if (paramDeploymentId) {
+		setLatestOpenedDeploymentId(paramDeploymentId);
+	}
 
 	const deploymentId =
 		latestOpenedDeploymentId && currentProjectId === projectId
@@ -28,7 +32,6 @@ export const ProjectTopbarNavigation = () => {
 		if (pathname.includes("deployments")) return "deployments";
 
 		return "assets";
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [paramDeploymentId, pathname]);
 
 	const navigationItems = useMemo(
