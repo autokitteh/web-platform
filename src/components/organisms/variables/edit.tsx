@@ -6,12 +6,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
-import { useCacheStore } from "@src/store";
+import { useCacheStore, useHasActiveDeployments } from "@src/store";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
 import { ErrorMessage, Input, Loader, SecretInput } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
 export const EditVariable = () => {
 	const { t: tForm } = useTranslation("tabs", {
@@ -26,6 +26,7 @@ export const EditVariable = () => {
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const {
 		control,
@@ -106,6 +107,7 @@ export const EditVariable = () => {
 				isLoading={isLoading}
 				title={tForm("modifyVariable")}
 			/>
+			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 			<form className="flex flex-col gap-6" id="modifyVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
