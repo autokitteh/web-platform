@@ -18,7 +18,7 @@ export const ProjectTopbarNavigation = () => {
 	const navigate = useNavigate();
 
 	if (paramDeploymentId) {
-		setLatestOpenedDeploymentId(paramDeploymentId);
+		setLatestOpenedDeploymentId(paramDeploymentId, projectId!);
 	}
 
 	const deploymentId =
