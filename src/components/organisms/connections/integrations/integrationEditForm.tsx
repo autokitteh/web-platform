@@ -98,7 +98,9 @@ export const IntegrationEditForm = ({
 	};
 
 	useEffect(() => {
-		dispacthConnectionInfoLoaded(true);
+		setTimeout(() => {
+			dispacthConnectionInfoLoaded(true);
+		}, 1500);
 		setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);

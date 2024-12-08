@@ -56,7 +56,7 @@ export const EditConnection = () => {
 		: null;
 
 	const connectionInfoClass = cn("invisible", { visible: connectionInfoLoaded });
-	const loaderClass = cn("visible", { invisible: connectionInfoLoaded });
+	const loaderClass = cn("visible", { invisible: !connectionInfoLoaded });
 
 	return (
 		<div className="min-w-80">
