@@ -12,7 +12,7 @@ import { cn } from "@src/utilities";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@store";
+import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, PopoverTrigger, SortButton } from "@components/molecules";
@@ -64,10 +64,10 @@ export const TriggersTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const {
 		fetchTriggers,
-		hasActiveDeployments,
 		loading: { triggers: loadingTriggers },
 		triggers,
 	} = useCacheStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);

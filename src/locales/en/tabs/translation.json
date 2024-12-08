@@ -5,6 +5,9 @@
 		"noTriggers": "No triggers available",
 		"emptyVariable": "Variable name and value cannot be empty"
 	},
+	"shared": {
+		"warningActiveDeployment": "Changes might affect the currently running deployments."
+	},
 	"code&assets": {
 		"successRemoveFile": "{{fileName}} succesfully removed",
 		"buttons": {

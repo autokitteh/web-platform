@@ -7,7 +7,7 @@ import { DeleteModalProps } from "@interfaces/components";
 import { ConnectionService } from "@services";
 import { Connection } from "@type/models";
 
-import { useCacheStore, useModalStore, useToastStore } from "@store";
+import { useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
@@ -18,7 +18,7 @@ export const DeleteConnectionModal = ({ id, isDeleting, onDelete }: DeleteModalP
 	const [connection, setConnection] = useState<Connection>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal } = useModalStore();
-	const { hasActiveDeployments } = useCacheStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const fetchConnection = async () => {
 		if (!id) {

@@ -1,5 +1,5 @@
 export { useActivitiesCacheStore } from "@src/store/cache/useActivitiesCacheStore";
-export { useCacheStore } from "@src/store/cache/useCacheStore";
+export { useCacheStore, useHasActiveDeployments } from "@src/store/cache/useCacheStore";
 export { useOutputsCacheStore } from "@src/store/cache/useOutputsCacheStore";
 export { useTemplatesStore } from "@src/store/useTemplatesStore";
 export { useConnectionCheckerStore } from "@store/useConnectionCheckerStore";

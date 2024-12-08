@@ -9,7 +9,7 @@ import { namespaces } from "@src/constants";
 import { Variable } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@store";
+import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, SortButton } from "@components/molecules";
@@ -30,10 +30,10 @@ export const VariablesTable = () => {
 
 	const {
 		fetchVariables,
-		hasActiveDeployments,
 		loading: { variables: loadingVariables },
 		variables,
 	} = useCacheStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedVariables, requestSort, sortConfig } = useSort<Variable>(variables, "name");
 
