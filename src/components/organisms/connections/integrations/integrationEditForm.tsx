@@ -3,11 +3,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { integrationVariablesMapping } from "../../../../constants/connections/integrationVariablesMapping.constants";
-import { formsPerIntegrationsMapping } from "@constants";
+import { formsPerIntegrationsMapping, integrationVariablesMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
 import { Integrations, ModalName, isGoogleIntegration } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
+import { useConnectionForm, useEvent } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { useCacheStore, useModalStore } from "@src/store";
 import { setFormValues } from "@src/utilities";
@@ -46,6 +45,7 @@ export const IntegrationEditForm = ({
 
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
+	const { dispatch: dispacthConnectionInfoLoaded } = useEvent("onConnectionLoaded");
 
 	const { hasActiveDeployments } = useCacheStore();
 	const { closeModal, openModal } = useModalStore();
@@ -113,6 +113,9 @@ export const IntegrationEditForm = ({
 	};
 
 	useEffect(() => {
+		setTimeout(() => {
+			dispacthConnectionInfoLoaded(true);
+		}, 500);
 		setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
