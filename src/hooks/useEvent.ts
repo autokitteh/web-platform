@@ -12,26 +12,27 @@ export const useEvent = <PayloadType = unknown>(
 	eventName: keyof CustomWindowEventMap,
 	callback?: Dispatch<PayloadType> | VoidFunction
 ) => {
+	const listener = useCallback(
+		((event: AppEvent<PayloadType>) => {
+			callback?.(event.detail);
+		}) as EventListener,
+		[callback]
+	);
+
 	useEffect(() => {
 		if (!callback) {
 			return;
 		}
 
-		const listener = ((event: AppEvent<PayloadType>) => {
-			callback(event.detail);
-		}) as EventListener;
-
 		window.addEventListener(eventName, listener);
 
-		return () => {
-			window.removeEventListener(eventName, listener);
-		};
-	}, [callback, eventName]);
+		return () => window.removeEventListener(eventName, listener);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [eventName, listener]);
 
 	const dispatch = useCallback(
 		(detail: PayloadType) => {
-			const event = new CustomEvent(eventName, { detail });
-			window.dispatchEvent(event);
+			window.dispatchEvent(new CustomEvent(eventName, { detail }));
 		},
 		[eventName]
 	);
