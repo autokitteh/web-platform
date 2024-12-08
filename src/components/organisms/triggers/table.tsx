@@ -181,7 +181,7 @@ export const TriggersTable = () => {
 									</Popover>
 									{trigger?.sourceType}
 								</Td>
-								<Td className="w-4/12">{trigger.entrypoint}</Td>
+								<Td className="w-4/12 pl-2">{trigger.entrypoint}</Td>
 								<Td className="w-2/12 pr-0">
 									<div className="flex">
 										<IconButton
