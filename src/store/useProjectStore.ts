@@ -21,12 +21,15 @@ const defaultState: Omit<
 	| "createProjectFromManifest"
 	| "setEditorWidth"
 	| "setLatestOpenedTab"
+	| "setLatestOpenedDeploymentId"
 	| "setPendingFile"
 > = {
 	projectsList: [],
 	latestOpenedTab: "",
+	latestOpenedDeploymentId: "",
 	isLoadingProjectsList: true,
 	initialEditorWidth: 50,
+	currentProjectId: undefined,
 	pendingFile: undefined,
 };
 
@@ -44,6 +47,20 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	setLatestOpenedTab: (tab) => {
 		set((state) => {
 			state.latestOpenedTab = tab;
+
+			return state;
+		});
+	},
+
+	setLatestOpenedDeploymentId: (deploymentId, projectId) => {
+		set((state) => {
+			if (state.latestOpenedDeploymentId === deploymentId) {
+				return state;
+			}
+			if (projectId !== state.currentProjectId && state.latestOpenedDeploymentId !== deploymentId) {
+				state.latestOpenedDeploymentId = deploymentId;
+				state.currentProjectId = projectId;
+			}
 
 			return state;
 		});
