@@ -13,7 +13,7 @@ export interface ProjectStore {
 	latestOpenedDeploymentId?: string;
 	renameProject: (projectId: string, projectName: string) => void;
 	setLatestOpenedTab: (tab: string) => void;
-	setLatestOpenedDeploymentId: (deploymentId: string) => void;
+	setLatestOpenedDeploymentId: (deploymentId: string, projectId: string) => void;
 	isLoadingProjectsList: boolean;
 	initialEditorWidth: number;
 	pendingFile?: File;
