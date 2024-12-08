@@ -15,10 +15,10 @@ import { SelectOption } from "@src/interfaces/components";
 import { triggerSchema } from "@validations";
 
 import { useFetchTrigger } from "@hooks";
-import { useCacheStore, useToastStore } from "@store";
+import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
@@ -43,6 +43,7 @@ export const EditTrigger = () => {
 		fetchTriggers,
 		loading: { connections: isLoadingConnections },
 	} = useCacheStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isSaving, setIsSaving] = useState(false);
@@ -177,6 +178,7 @@ export const EditTrigger = () => {
 					isLoading={isSaving}
 					title={t("modifyTrigger")}
 				/>
+				{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 				<form
 					className="flex flex-col gap-6"

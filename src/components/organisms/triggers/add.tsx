@@ -12,10 +12,10 @@ import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
 
-import { useCacheStore, useToastStore } from "@store";
+import { useCacheStore, useHasActiveDeployments, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 import {
 	NameAndConnectionFields,
 	SchedulerFields,
@@ -35,6 +35,8 @@ export const AddTrigger = () => {
 		fetchTriggers,
 		loading: { connections: isLoadingConnections },
 	} = useCacheStore();
+
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const [filesNameList, setFilesNameList] = useState<SelectOption[]>([]);
 	const [isLoadingFiles, setIsLoadingFiles] = useState(false);
@@ -142,6 +144,7 @@ export const AddTrigger = () => {
 					isLoading={isSaving}
 					title={t("addNewTrigger")}
 				/>
+				{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 
 				<form
 					className="flex flex-col gap-6"
