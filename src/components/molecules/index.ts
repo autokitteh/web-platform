@@ -1,4 +1,5 @@
 export { Accordion } from "@components/molecules/accordion";
+export { ActiveDeploymentWarning } from "@components/molecules/activeDeploymentWarning";
 export { ConnectionTableStatus } from "@components/molecules/connectionTableStatus";
 export { CopyButton } from "@components/molecules/copyButton";
 export { Drawer } from "@components/molecules/drawer";

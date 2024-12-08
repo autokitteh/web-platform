@@ -9,7 +9,13 @@ import { namespaces } from "@src/constants";
 import { Connection } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useCacheStore, useConnectionCheckerStore, useModalStore, useToastStore } from "@store";
+import {
+	useCacheStore,
+	useConnectionCheckerStore,
+	useHasActiveDeployments,
+	useModalStore,
+	useToastStore,
+} from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { ConnectionTableStatus, EmptyTableAddButton, SortButton } from "@components/molecules";
@@ -31,9 +37,11 @@ export const ConnectionsTable = () => {
 	const {
 		connections,
 		fetchConnections,
-		hasActiveDeployments,
 		loading: { connections: isLoading },
 	} = useCacheStore();
+
+	const hasActiveDeployments = useHasActiveDeployments();
+
 	const { items: sortedConnections, requestSort, sortConfig } = useSort<Connection>(connections || [], "name");
 	const { resetChecker, setFetchConnectionsCallback } = useConnectionCheckerStore();
 
