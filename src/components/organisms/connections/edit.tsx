@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -7,11 +7,12 @@ import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { integrationToEditComponent } from "@src/constants";
 import { Integrations } from "@src/enums/components";
+import { useEvent } from "@src/hooks";
 import { useHasActiveDeployments } from "@src/store";
-import { stripGoogleConnectionName } from "@src/utilities";
+import { cn, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
-import { Input } from "@components/atoms";
+import { Input, Loader } from "@components/atoms";
 import { ActiveDeploymentWarning, Select, TabFormHeader } from "@components/molecules";
 
 export const EditConnection = () => {
@@ -37,6 +38,10 @@ export const EditConnection = () => {
 	let integrationType = selectedIntegration?.value;
 	let googleIntegrationApplication;
 
+	const [connectionInfoLoaded, setConnectionInfoLoaded] = useState(false);
+
+	useEvent("onConnectionLoaded", setConnectionInfoLoaded);
+
 	if (integrationType) {
 		googleIntegrationApplication = stripGoogleConnectionName(integrationType);
 
@@ -50,38 +55,44 @@ export const EditConnection = () => {
 		? integrationToEditComponent[integrationType as keyof typeof Integrations]
 		: null;
 
+	const connectionInfoClass = cn("invisible", { visible: connectionInfoLoaded });
+	const loaderClass = cn("visible", { invisible: connectionInfoLoaded });
+
 	return (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" isHiddenButtons={true} title={t("editConnection")} />
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
-			<div className="mb-6 flex w-5/6 flex-col">
-				<div className="relative mb-6">
-					<Input
-						aria-label={t("github.placeholders.name")}
-						{...register("connectionName")}
+			<div className={connectionInfoClass}>
+				<div className="mb-6 flex w-5/6 flex-col">
+					<div className="relative mb-6">
+						<Input
+							aria-label={t("github.placeholders.name")}
+							{...register("connectionName")}
+							disabled
+							isError={!!errors.connectionName}
+							isRequired
+							label={t("github.placeholders.name")}
+							value={connectionName}
+						/>
+					</div>
+
+					<Select
+						aria-label={t("placeholders.selectIntegration")}
 						disabled
-						isError={!!errors.connectionName}
-						isRequired
-						label={t("github.placeholders.name")}
-						value={connectionName}
+						label={t("placeholders.integration")}
+						options={integrationTypes}
+						placeholder={t("placeholders.selectIntegration")}
+						value={selectedIntegration}
 					/>
 				</div>
 
-				<Select
-					aria-label={t("placeholders.selectIntegration")}
-					disabled
-					label={t("placeholders.integration")}
-					options={integrationTypes}
-					placeholder={t("placeholders.selectIntegration")}
-					value={selectedIntegration}
-				/>
+				<div className="w-5/6">
+					{SelectedIntegrationComponent ? (
+						<SelectedIntegrationComponent googleIntegrationApplication={googleIntegrationApplication} />
+					) : null}
+				</div>
 			</div>
-
-			<div className="w-5/6">
-				{SelectedIntegrationComponent ? (
-					<SelectedIntegrationComponent googleIntegrationApplication={googleIntegrationApplication} />
-				) : null}
-			</div>
+			<Loader className={loaderClass} isCenter />
 		</div>
 	);
 };
