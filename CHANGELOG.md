@@ -1,3 +1,10 @@
+# [2.83.0](https://github.com/autokitteh/web-platform/compare/v2.82.2...v2.83.0) (2024-12-09)
+
+
+### Features
+
+* **UI-914:** remove 'warning active deployment' modal from edit forms ([#714](https://github.com/autokitteh/web-platform/issues/714)) ([3cac88c](https://github.com/autokitteh/web-platform/commit/3cac88c677b5f4e82f9910214093668448309635))
+
 ## [2.82.2](https://github.com/autokitteh/web-platform/compare/v2.82.1...v2.82.2) (2024-12-09)
 
 
