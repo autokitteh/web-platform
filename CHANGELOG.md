@@ -1,3 +1,10 @@
+## [2.81.3](https://github.com/autokitteh/web-platform/compare/v2.81.2...v2.81.3) (2024-12-09)
+
+
+### Bug Fixes
+
+* **UI-1037:** events table - make the columns equal width ([#731](https://github.com/autokitteh/web-platform/issues/731)) ([823c037](https://github.com/autokitteh/web-platform/commit/823c037ba96c77e21ef495799be95d2de909c35e))
+
 ## [2.81.2](https://github.com/autokitteh/web-platform/compare/v2.81.1...v2.81.2) (2024-12-05)
 
 
