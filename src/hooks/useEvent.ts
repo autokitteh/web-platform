@@ -5,7 +5,7 @@ interface AppEvent<PayloadType = unknown> extends Event {
 }
 
 export interface CustomWindowEventMap extends WindowEventMap {
-	onConnectionLoaded: AppEvent<boolean | string>;
+	onConnectionLoaded: AppEvent<boolean>;
 }
 
 export const useEvent = <PayloadType = unknown>(
