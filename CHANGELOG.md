@@ -1,3 +1,10 @@
+## [2.82.1](https://github.com/autokitteh/web-platform/compare/v2.82.0...v2.82.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* **UI-1039:** display trigger info popover on hover instead of on click ([#730](https://github.com/autokitteh/web-platform/issues/730)) ([e916152](https://github.com/autokitteh/web-platform/commit/e91615215ef1ffeaa70d0c5513ca2cc621e706d5))
+
 # [2.82.0](https://github.com/autokitteh/web-platform/compare/v2.81.3...v2.82.0) (2024-12-09)
 
 
