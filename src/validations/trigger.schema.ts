@@ -46,14 +46,15 @@ i18n.on("initialized", () => {
 				}
 			}
 
-			if (data.filePath?.value) {
-				if (!data.entryFunction || data.entryFunction.trim() === "") {
-					ctx.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" }),
-						path: ["entryFunction"],
-					});
-				}
+			if (!data.filePath?.value) {
+				return;
+			}
+			if (!data.entryFunction || data.entryFunction.trim() === "") {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" }),
+					path: ["entryFunction"],
+				});
 			}
 		});
 });
