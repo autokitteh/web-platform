@@ -39,7 +39,6 @@ export const EditConnection = () => {
 	let googleIntegrationApplication;
 
 	const [connectionInfoLoaded, setConnectionInfoLoaded] = useState(false);
-
 	useEvent("onConnectionLoaded", setConnectionInfoLoaded);
 
 	if (integrationType) {
