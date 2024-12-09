@@ -19,7 +19,7 @@ import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
 import { ViewerSession } from "@src/interfaces/models/session.interface";
-import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
+import { useActivitiesCacheStore, useOutputsCacheStore, useProjectStore, useToastStore } from "@src/store";
 
 import { Frame, IconButton, IconSvg, Loader, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion, CopyButton, RefreshButton } from "@components/molecules";
@@ -46,11 +46,14 @@ export const SessionViewer = () => {
 
 	const { loading: loadingOutputs, reload: reloadOutputs } = useOutputsCacheStore();
 	const { loading: loadingActivities, reload: reloadActivities } = useActivitiesCacheStore();
+	const { setLatestOpened } = useProjectStore();
 
-	const closeEditor = useCallback(
-		() => navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`),
-		[navigate, projectId, deploymentId]
-	);
+	const closeEditor = useCallback(() => {
+		setLatestOpened("sessionId", "", projectId!);
+
+		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [navigate, projectId, deploymentId]);
 
 	const fetchSessionInfo = useCallback(async () => {
 		if (!sessionId) return;
