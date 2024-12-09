@@ -1,3 +1,10 @@
+# [2.84.0](https://github.com/autokitteh/web-platform/compare/v2.83.0...v2.84.0) (2024-12-09)
+
+
+### Features
+
+* **UI-1009:** display loader while connection information loaded ([#733](https://github.com/autokitteh/web-platform/issues/733)) ([f1225e3](https://github.com/autokitteh/web-platform/commit/f1225e3265113f0ea2aac96580e1bc0e25be5c3a))
+
 # [2.83.0](https://github.com/autokitteh/web-platform/compare/v2.82.2...v2.83.0) (2024-12-09)
 
 
