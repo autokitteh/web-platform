@@ -36,14 +36,12 @@ i18n.on("initialized", () => {
 			cron: z.string().optional(),
 		})
 		.superRefine((data, ctx) => {
-			if (data.entryFunction && data.entryFunction.trim() !== "") {
-				if (!data.filePath?.value) {
-					ctx.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: i18n.t("triggers.form.validations.fileRequired", { ns: "tabs" }),
-						path: ["filePath"],
-					});
-				}
+			if (data.entryFunction?.trim() && !data.filePath?.value) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: i18n.t("triggers.form.validations.fileRequired", { ns: "tabs" }),
+					path: ["filePath"],
+				});
 			}
 
 			if (!data.filePath?.value) {
