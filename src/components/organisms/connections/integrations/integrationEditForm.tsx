@@ -78,6 +78,13 @@ export const IntegrationEditForm = ({
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
 
+	useEffect(() => {
+		if (ConnectionTypeComponent) {
+			dispacthConnectionInfoLoaded(true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ConnectionTypeComponent]);
+
 	const selectConnectionTypeValue = useMemo(
 		() => selectOptions.find((method) => method.value === connectionType),
 		[connectionType, selectOptions]
@@ -98,8 +105,9 @@ export const IntegrationEditForm = ({
 	};
 
 	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
-		dispacthConnectionInfoLoaded(true);
+		if (connectionVariables) {
+			setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
