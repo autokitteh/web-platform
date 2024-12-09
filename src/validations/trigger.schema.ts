@@ -36,7 +36,6 @@ i18n.on("initialized", () => {
 			cron: z.string().optional(),
 		})
 		.superRefine((data, ctx) => {
-			// If entryFunction is defined and not empty, filePath must be defined
 			if (data.entryFunction && data.entryFunction.trim() !== "") {
 				if (!data.filePath?.value) {
 					ctx.addIssue({
@@ -47,7 +46,6 @@ i18n.on("initialized", () => {
 				}
 			}
 
-			// If filePath is defined, entryFunction must be defined
 			if (data.filePath?.value) {
 				if (!data.entryFunction || data.entryFunction.trim() === "") {
 					ctx.addIssue({
