@@ -6,10 +6,12 @@ import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
-import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
+import { dateTimeFormat, namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { useCacheStore, useToastStore } from "@src/store";
 import { cn } from "@utilities";
+
+import "@hooks/useMonacoWorker";
 
 import { useFileOperations } from "@hooks";
 
@@ -17,6 +19,8 @@ import { Button, Checkbox, IconButton, IconSvg, Spinner, Tab } from "@components
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
+
+// Load the Python language configuration
 
 export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onExpand: () => void }) => {
 	const { projectId } = useParams();
@@ -28,8 +32,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
-	const fileExtension = "." + last(activeEditorFileName.split("."));
-	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
+	const fileExtension = last(activeEditorFileName.split(".")) || "py";
 
 	const [content, setContent] = useState("");
 	const [autosaveMode, setAutosaveMode] = useState(true);
@@ -111,7 +114,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			// Create editor instance
 			const ed = monaco.editor.create(monacoElementRef.current, {
 				value: content,
-				language: languageEditor,
+				language: "python",
 				theme: "AKTheme",
 				fontFamily: "monospace, sans-serif",
 				fontSize: 14,
@@ -301,16 +304,10 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 						) : null}
 					</div>
 
-					<div
-						aria-label={activeEditorFileName}
-						className="absolute -ml-6 mt-2 h-full pb-5"
-						ref={monacoElementRef}
-					/>
-
 					{openFiles[projectId]?.length ? (
 						<div
 							aria-label={activeEditorFileName}
-							className="absolute -ml-6 mt-2 h-full pb-5"
+							className="absolute -ml-6 mt-2 size-full pb-5"
 							ref={monacoElementRef}
 						/>
 					) : (

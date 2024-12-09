@@ -1,14 +1,13 @@
-import editorWorker from "monaco-editor/esm/vs/editor/editor.worker.js";
+import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
-// eslint-disable-next-line @liferay/import-extensions
-import pythonWorker from "../monaco-workers/pyright.worker.js";
+import PythonWorker from "@src/monaco-workers/pyright.worker.js";
 
 self.MonacoEnvironment = {
 	getWorker(_: any, label: string) {
 		if (label === "python") {
-			return new pythonWorker();
+			return new (PythonWorker as any)();
 		}
 
-		return new editorWorker();
+		return new (EditorWorker as any)();
 	},
 };
