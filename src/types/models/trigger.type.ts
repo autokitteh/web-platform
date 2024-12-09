@@ -3,12 +3,12 @@ import { TriggerTypes } from "@src/enums";
 export type Trigger = {
 	connectionId?: string;
 	connectionName?: string;
-	entryFunction: string;
+	entryFunction?: string;
 	entrypoint?: string;
 	eventType: string;
 	filter?: string;
-	name: string;
-	path: string;
+	name?: string;
+	path?: string;
 	schedule?: string;
 	sourceType?: TriggerTypes;
 	triggerId?: string;

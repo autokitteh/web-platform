@@ -132,8 +132,6 @@
 			"validations":{
 				"nameRequired": "Name is required",
 				"connectionRequired": "Connection is required",
-				"fileRequired": "File is required",
-				"functionRequired": "Function is required",
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers"
 			}
 		},
