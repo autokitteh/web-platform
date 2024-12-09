@@ -32,6 +32,9 @@ export interface CreateProjectModalProps {
 	cardTemplate: TemplateMetadata;
 }
 
-export interface WarningDeploymentActivetedModalProps {
-	onClick?: () => void;
+export interface ActiveDeploymentWarningModalProps {
+	goToEdit: (modifiedId: string) => void;
+	goToAdd: () => void;
+	modifiedId: string;
+	action?: "add" | "edit";
 }

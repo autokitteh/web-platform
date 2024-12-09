@@ -9,10 +9,11 @@ import { namespaces } from "@src/constants";
 import { Variable } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@store";
+import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, SortButton } from "@components/molecules";
+import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteVariableModal } from "@components/organisms/variables";
 
 import { PlusCircle } from "@assets/image";
@@ -25,11 +26,14 @@ export const VariablesTable = () => {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const { closeModal, openModal } = useModalStore();
+	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
+
 	const {
 		fetchVariables,
 		loading: { variables: loadingVariables },
 		variables,
 	} = useCacheStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedVariables, requestSort, sortConfig } = useSort<Variable>(variables, "name");
 
@@ -70,20 +74,40 @@ export const VariablesTable = () => {
 		setDeleteVariable({ isSecret: false, name: variableName, scopeId, value: variableValue });
 	};
 
+	const navigateToEditForm = (variableName: string) => {
+		closeModal(ModalName.warningDeploymentActive);
+		navigate(`edit/${variableName}`);
+	};
+
+	const handleAction = (action: "add" | "edit", variableName: string) => {
+		if (hasActiveDeployments) {
+			setDeleteVariable({ name: variableName } as Variable);
+			setWarningModalAction(action);
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+
+		if (action === "edit") {
+			navigateToEditForm(variableName);
+
+			return;
+		}
+		navigate("add");
+	};
+
 	return loadingVariables ? (
 		<Loader isCenter size="xl" />
 	) : (
 		<>
 			<div className="flex items-center justify-between">
 				<div className="text-base text-gray-500">{t("titleAvailable")}</div>
-
 				<Button
 					ariaLabel={t("buttons.addNew")}
 					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-500 hover:text-white"
-					href="add"
+					onClick={() => handleAction("add", "")}
 				>
 					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
-
 					{t("buttons.addNew")}
 				</Button>
 			</div>
@@ -141,7 +165,7 @@ export const VariablesTable = () => {
 									<div className="flex size-8 space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}
-											onClick={() => navigate(`edit/${name}`)}
+											onClick={() => handleAction("edit", name)}
 										>
 											<EditIcon className="size-3 fill-white" />
 										</IconButton>
@@ -161,8 +185,13 @@ export const VariablesTable = () => {
 			) : (
 				<EmptyTableAddButton buttonText={t("titleEmptyVariablesButton")} onClick={() => navigate("add")} />
 			)}
-
 			<DeleteVariableModal id={deleteVariable?.name} isDeleting={isDeleting} onDelete={handleDeleteVariable} />
+			<ActiveDeploymentWarningModal
+				action={warningModalAction}
+				goToAdd={() => navigate("add")}
+				goToEdit={navigateToEditForm}
+				modifiedId={deleteVariable?.name || ""}
+			/>
 		</>
 	);
 };

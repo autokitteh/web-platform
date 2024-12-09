@@ -1,4 +1,5 @@
 import i18n from "i18next";
+import { createSelector } from "reselect";
 import { StateCreator, create } from "zustand";
 
 import { maxResultsLimitToDisplay, namespaces } from "@constants";
@@ -57,7 +58,6 @@ const initialState: Omit<
 		resourses: false,
 	},
 	deployments: undefined,
-	hasActiveDeployments: false,
 	variables: [],
 	triggers: [],
 	integrations: undefined,
@@ -199,7 +199,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			set((state) => ({
 				...state,
 				deployments: incomingDeployments,
-				hasActiveDeployments: incomingDeployments?.some((dep) => dep.state === DeploymentStateVariant.active),
 				loading: { ...state.loading, deployments: false },
 			}));
 
@@ -465,4 +464,10 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 	},
 });
 
+const selectHasActiveDeployments = createSelector(
+	(state: CacheStore) => state.deployments,
+	(deployments) => deployments?.some(({ state }) => state === DeploymentStateVariant.active) || false
+);
+
 export const useCacheStore = create<CacheStore>(store);
+export const useHasActiveDeployments = () => useCacheStore(selectHasActiveDeployments);

@@ -6,12 +6,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { VariablesService } from "@services";
-import { useCacheStore } from "@src/store";
+import { useCacheStore, useHasActiveDeployments } from "@src/store";
 import { useToastStore } from "@store/useToastStore";
 import { newVariableShema } from "@validations";
 
 import { ErrorMessage, Input, SecretInput } from "@components/atoms";
-import { TabFormHeader } from "@components/molecules";
+import { ActiveDeploymentWarning, TabFormHeader } from "@components/molecules";
 
 export const AddVariable = () => {
 	const { t } = useTranslation("errors");
@@ -21,6 +21,7 @@ export const AddVariable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
 	const { fetchVariables } = useCacheStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 
 	const {
 		control,
@@ -70,8 +71,8 @@ export const AddVariable = () => {
 				form="createNewVariableForm"
 				isLoading={isLoading}
 				title={tForm("addNewVariable")}
-			/>
-
+			/>{" "}
+			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 			<form className="flex flex-col gap-6" id="createNewVariableForm" onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative">
 					<Input

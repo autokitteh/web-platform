@@ -12,12 +12,13 @@ import { cn } from "@src/utilities";
 import { Trigger } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useCacheStore, useModalStore, useToastStore } from "@store";
+import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, PopoverTrigger, SortButton } from "@components/molecules";
 import { Popover } from "@components/molecules/popover/index";
 import { PopoverContent } from "@components/molecules/popover/popoverContent";
+import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
 import { InformationPopoverContent } from "@components/organisms/triggers/table/popoverContent";
 
@@ -66,10 +67,12 @@ export const TriggersTable = () => {
 		loading: { triggers: loadingTriggers },
 		triggers,
 	} = useCacheStore();
+	const hasActiveDeployments = useHasActiveDeployments();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [triggerId, setTriggerId] = useState<string>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { items: sortedTriggers, requestSort, sortConfig } = useSort<Trigger>(triggers, "name");
+	const [warningModalAction, setWarningModalAction] = useState<"edit" | "add">();
 
 	const tableHeaders = useTableHeaders(t);
 
@@ -123,6 +126,28 @@ export const TriggersTable = () => {
 		return <Loader isCenter size="xl" />;
 	}
 
+	const navigateToEditForm = (triggerId: string) => {
+		closeModal(ModalName.warningDeploymentActive);
+		navigate(`/projects/${projectId}/triggers/${triggerId}/edit`);
+	};
+
+	const handleAction = (action: "add" | "edit", triggerId: string) => {
+		if (hasActiveDeployments) {
+			setTriggerId(triggerId);
+			setWarningModalAction(action);
+			openModal(ModalName.warningDeploymentActive);
+
+			return;
+		}
+
+		if (action === "edit") {
+			navigateToEditForm(triggerId);
+
+			return;
+		}
+		navigate("add");
+	};
+
 	return (
 		<>
 			<div className="flex items-center justify-between">
@@ -130,7 +155,7 @@ export const TriggersTable = () => {
 				<Button
 					ariaLabel={t("buttons.addNew")}
 					className="group w-auto gap-1 p-0 font-semibold capitalize text-gray-500 hover:text-white"
-					href="add"
+					onClick={() => handleAction("add", "")}
 				>
 					<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
 					{t("buttons.addNew")}
@@ -191,7 +216,7 @@ export const TriggersTable = () => {
 												name: trigger.name,
 											})}
 											className="size-8"
-											onClick={() => navigate(`${trigger.triggerId}/edit`)}
+											onClick={() => handleAction("edit", trigger.triggerId!)}
 										>
 											<EditIcon className="size-3 fill-white" />
 										</IconButton>
@@ -214,6 +239,13 @@ export const TriggersTable = () => {
 			)}
 
 			<DeleteTriggerModal id={triggerId} isDeleting={isDeleting} onDelete={handleDeleteTrigger} />
+
+			<ActiveDeploymentWarningModal
+				action={warningModalAction}
+				goToAdd={() => navigate("add")}
+				goToEdit={navigateToEditForm}
+				modifiedId={triggerId || ""}
+			/>
 		</>
 	);
 };

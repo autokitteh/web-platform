@@ -5,23 +5,18 @@ import { useTranslation } from "react-i18next";
 
 import { infoOpenAiLinks } from "@constants/lists/connections";
 import { integrationVariablesMapping } from "@src/constants";
-import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { useCacheStore, useModalStore } from "@src/store";
 import { setFormValues } from "@src/utilities";
 import { openAiIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Link, SecretInput, Spinner } from "@components/atoms";
 import { Accordion } from "@components/molecules";
-import { WarningDeploymentActivetedModal } from "@components/organisms";
 
 import { ExternalLinkIcon, FloppyDiskIcon } from "@assets/image/icons";
 
 export const OpenAiIntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
 	const [lockState, setLockState] = useState(true);
-	const { hasActiveDeployments } = useCacheStore();
-	const { openModal } = useModalStore();
 
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(openAiIntegrationSchema, "edit");
@@ -33,17 +28,8 @@ export const OpenAiIntegrationEditForm = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
-	const handleFormSubmit = () => {
-		if (hasActiveDeployments) {
-			openModal(ModalName.warningDeploymentActive);
-
-			return;
-		}
-		onSubmitEdit();
-	};
-
 	return (
-		<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleFormSubmit)}>
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<SecretInput
 					type="password"
@@ -86,8 +72,6 @@ export const OpenAiIntegrationEditForm = () => {
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 				{t("buttons.saveConnection")}
 			</Button>
-
-			<WarningDeploymentActivetedModal onClick={onSubmitEdit} />
 		</form>
 	);
 };

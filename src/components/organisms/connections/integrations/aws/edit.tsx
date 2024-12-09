@@ -5,15 +5,12 @@ import { useTranslation } from "react-i18next";
 
 import { selectIntegrationAws } from "@constants/lists/connections";
 import { integrationVariablesMapping } from "@src/constants";
-import { ModalName } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { useCacheStore, useModalStore } from "@src/store";
 import { setFormValues } from "@src/utilities";
 import { awsIntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, SecretInput, Spinner } from "@components/atoms";
 import { Select } from "@components/molecules";
-import { WarningDeploymentActivetedModal } from "@components/organisms";
 
 import { FloppyDiskIcon } from "@assets/image/icons";
 
@@ -27,9 +24,6 @@ export const AwsIntegrationEditForm = () => {
 	const { connectionVariables, control, errors, handleSubmit, isLoading, onSubmitEdit, register, setValue } =
 		useConnectionForm(awsIntegrationSchema, "edit");
 
-	const { hasActiveDeployments } = useCacheStore();
-	const { openModal } = useModalStore();
-
 	const accessKey = useWatch({ control, name: "access_key" });
 	const secretKey = useWatch({ control, name: "secret_key" });
 	const token = useWatch({ control, name: "token" });
@@ -39,17 +33,8 @@ export const AwsIntegrationEditForm = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
-	const handleFormSubmit = () => {
-		if (hasActiveDeployments) {
-			openModal(ModalName.warningDeploymentActive);
-
-			return;
-		}
-		onSubmitEdit();
-	};
-
 	return (
-		<form className="flex flex-col gap-4" onSubmit={handleSubmit(handleFormSubmit)}>
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
 			<div className="relative">
 				<Controller
 					control={control}
@@ -134,8 +119,6 @@ export const AwsIntegrationEditForm = () => {
 				{isLoading ? <Spinner /> : <FloppyDiskIcon className="size-5 fill-white transition" />}
 				{t("buttons.saveConnection")}
 			</Button>
-
-			<WarningDeploymentActivetedModal onClick={onSubmitEdit} />
 		</form>
 	);
 };
