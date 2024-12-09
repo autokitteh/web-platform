@@ -1,3 +1,10 @@
+## [2.82.2](https://github.com/autokitteh/web-platform/compare/v2.82.1...v2.82.2) (2024-12-09)
+
+
+### Bug Fixes
+
+* **UI-1014:** fix trigger table alignment ([#729](https://github.com/autokitteh/web-platform/issues/729)) ([89c53af](https://github.com/autokitteh/web-platform/commit/89c53afa6748d6cac9d074a1d4c63b387b6e8780))
+
 ## [2.82.1](https://github.com/autokitteh/web-platform/compare/v2.82.0...v2.82.1) (2024-12-09)
 
 
