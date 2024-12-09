@@ -8,6 +8,7 @@ export interface TableProps {
 	onClick?: (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
 	style?: React.CSSProperties;
 	title?: string;
+	innerDivClassName?: string;
 }
 
 export interface TableVariantContextType {
