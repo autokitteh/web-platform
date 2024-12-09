@@ -466,7 +466,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 const selectHasActiveDeployments = createSelector(
 	(state: CacheStore) => state.deployments,
-	(deployments) => deployments?.some((dep) => dep.state === DeploymentStateVariant.active) ?? false
+	(deployments) => deployments?.some(({ state }) => state === DeploymentStateVariant.active) || false
 );
 
 export const useCacheStore = create<CacheStore>(store);
