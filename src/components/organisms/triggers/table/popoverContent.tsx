@@ -24,8 +24,8 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 	const [scheduleDetails, setScheduleDetails] = useState<TriggerPopoverInformation[]>([]);
 	const [connectionIcon, setConnectionIcon] = useState<ComponentType<React.SVGProps<SVGSVGElement>> | null>(null);
 	const baseDetails = [
-		{ label: t("file"), value: trigger.path },
-		{ label: t("entrypoint"), value: trigger.entryFunction },
+		{ label: t("file"), value: trigger?.path },
+		{ label: t("entrypoint"), value: trigger?.entryFunction },
 	];
 
 	const configureTriggerDisplay = async (trigger: Trigger) => {

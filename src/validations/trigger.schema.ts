@@ -1,6 +1,6 @@
 import i18n from "i18next";
 import { Resolver } from "react-hook-form";
-import { ZodObject, ZodTypeAny, z } from "zod";
+import { z } from "zod";
 
 import { TriggerTypes } from "@src/enums";
 
@@ -9,7 +9,7 @@ const selectItemSchema = z.object({
 	value: z.string(),
 });
 
-export let triggerSchema: ZodObject<Record<string, ZodTypeAny>>;
+export let triggerSchema: z.ZodSchema;
 
 const cronFormat =
 	"^(@(?:yearly|annually|monthly|weekly|daily|midnight|hourly)" +
@@ -20,20 +20,41 @@ const cronFormat =
 	")$";
 
 i18n.on("initialized", () => {
-	triggerSchema = z.object({
-		name: z.string().min(1, i18n.t("triggers.form.validations.nameRequired", { ns: "tabs" })),
-		connection: selectItemSchema.refine((value) => value.label, {
-			message: i18n.t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
-		}),
-		filePath: selectItemSchema.refine((value) => value.label, {
-			message: i18n.t("triggers.form.validations.fileRequired", { ns: "tabs" }),
-		}),
-		entryFunction: z.string().min(1, i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" })),
-		eventType: z.string().optional(),
-		eventTypeSelect: selectItemSchema.optional(),
-		filter: z.string().optional(),
-		cron: z.string().optional(),
-	});
+	triggerSchema = z
+		.object({
+			name: z.string().min(1, i18n.t("triggers.form.validations.nameRequired", { ns: "tabs" })),
+			connection: selectItemSchema.refine((value) => value.label, {
+				message: i18n.t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
+			}),
+			filePath: z
+				.union([selectItemSchema, z.object({ label: z.string().optional(), value: z.string().optional() })])
+				.optional(),
+			entryFunction: z.string().optional(),
+			eventType: z.string().optional(),
+			eventTypeSelect: selectItemSchema.optional(),
+			filter: z.string().optional(),
+			cron: z.string().optional(),
+		})
+		.superRefine((data, ctx) => {
+			if (data.entryFunction?.trim() && !data.filePath?.value) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: i18n.t("triggers.form.validations.fileRequired", { ns: "tabs" }),
+					path: ["filePath"],
+				});
+			}
+
+			if (!data.filePath?.value) {
+				return;
+			}
+			if (!data.entryFunction || data.entryFunction.trim() === "") {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" }),
+					path: ["entryFunction"],
+				});
+			}
+		});
 });
 
 export type TriggerFormData = z.infer<typeof triggerSchema>;
