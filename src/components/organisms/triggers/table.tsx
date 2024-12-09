@@ -164,8 +164,10 @@ export const TriggersTable = () => {
 						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
 								<Td className="w-4/12 pl-4 font-semibold">
-									<div className="flex gap-3">
-										<div>{trigger.name}</div>
+									<div className="w-full overflow-hidden pr-2">
+										<div className="truncate" title={trigger.name}>
+											{trigger.name}
+										</div>
 									</div>
 								</Td>
 								<Td className="-ml-2 w-2/12 capitalize">
