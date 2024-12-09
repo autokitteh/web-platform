@@ -1,3 +1,10 @@
+# [2.82.0](https://github.com/autokitteh/web-platform/compare/v2.81.3...v2.82.0) (2024-12-09)
+
+
+### Features
+
+* **UI-1041:** make file name and function name not mandatory in triggers ([#734](https://github.com/autokitteh/web-platform/issues/734)) ([3a858d3](https://github.com/autokitteh/web-platform/commit/3a858d3d9ecf87291cc61596686b5cae38bb5817))
+
 ## [2.81.3](https://github.com/autokitteh/web-platform/compare/v2.81.2...v2.81.3) (2024-12-09)
 
 
