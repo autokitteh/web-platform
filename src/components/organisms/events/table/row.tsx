@@ -19,14 +19,14 @@ export const EventRow = memo(
 		style: CSSProperties;
 	}) => (
 		<Tr className="cursor-pointer pl-3 hover:bg-gray-750" onClick={onClick} style={style}>
-			<Td>{moment(createdAt).local().format(dateTimeFormat)}</Td>
-			<Td>
+			<Td className="w-1/4">{moment(createdAt).local().format(dateTimeFormat)}</Td>
+			<Td className="w-1/4">
 				<IdCopyButton id={eventId} />
 			</Td>
-			<Td>
+			<Td className="w-1/4">
 				<IdCopyButton id={destinationId || ""} />
 			</Td>
-			<Td className="w-56">{eventType}</Td>
+			<Td className="w-1/4">{eventType}</Td>
 		</Tr>
 	)
 );
