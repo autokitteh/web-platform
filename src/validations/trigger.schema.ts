@@ -25,7 +25,9 @@ i18n.on("initialized", () => {
 		connection: selectItemSchema.refine((value) => value.label, {
 			message: i18n.t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
 		}),
-		filePath: selectItemSchema.optional(),
+		filePath: z
+			.union([selectItemSchema, z.object({ label: z.string().optional(), value: z.string().optional() })])
+			.optional(),
 		entryFunction: z.string().optional(),
 		eventType: z.string().optional(),
 		eventTypeSelect: selectItemSchema.optional(),
