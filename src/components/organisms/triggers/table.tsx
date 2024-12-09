@@ -164,8 +164,10 @@ export const TriggersTable = () => {
 						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
 								<Td className="w-4/12 pl-4 font-semibold">
-									<div className="flex gap-3">
-										<div>{trigger.name}</div>
+									<div className="w-full overflow-hidden pr-2">
+										<div className="truncate" title={trigger.name}>
+											{trigger.name}
+										</div>
 									</div>
 								</Td>
 								<Td className="-ml-2 w-2/12 capitalize">
@@ -181,7 +183,7 @@ export const TriggersTable = () => {
 									</Popover>
 									{trigger?.sourceType}
 								</Td>
-								<Td className="w-4/12">{trigger.entrypoint}</Td>
+								<Td className="w-4/12 pl-2">{trigger.entrypoint}</Td>
 								<Td className="w-2/12 pr-0">
 									<div className="flex">
 										<IconButton
