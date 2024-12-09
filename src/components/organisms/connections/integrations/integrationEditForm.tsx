@@ -3,11 +3,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SingleValue } from "react-select";
 
-import { integrationVariablesMapping } from "../../../../constants/connections/integrationVariablesMapping.constants";
-import { formsPerIntegrationsMapping } from "@constants";
+import { formsPerIntegrationsMapping, integrationVariablesMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
 import { Integrations, isGoogleIntegration } from "@src/enums/components";
-import { useConnectionForm } from "@src/hooks";
+import { useConnectionForm, useEvent } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { setFormValues } from "@src/utilities";
 
@@ -44,6 +43,7 @@ export const IntegrationEditForm = ({
 
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
+	const { dispatch: dispacthConnectionInfoLoaded } = useEvent("onConnectionLoaded");
 
 	useEffect(() => {
 		if (!isGoogleIntegration(integrationType)) {
@@ -78,6 +78,13 @@ export const IntegrationEditForm = ({
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
 
+	useEffect(() => {
+		if (ConnectionTypeComponent) {
+			dispacthConnectionInfoLoaded(true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ConnectionTypeComponent]);
+
 	const selectConnectionTypeValue = useMemo(
 		() => selectOptions.find((method) => method.value === connectionType),
 		[connectionType, selectOptions]
@@ -98,7 +105,9 @@ export const IntegrationEditForm = ({
 	};
 
 	useEffect(() => {
-		setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
+		if (connectionVariables) {
+			setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
 
