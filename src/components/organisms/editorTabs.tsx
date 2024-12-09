@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import Editor, { Monaco } from "@monaco-editor/react";
 import { debounce, last } from "lodash";
 import moment from "moment";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
@@ -13,7 +13,7 @@ import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
-import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
+import { Button, Checkbox, IconButton, IconSvg, Spinner, Tab } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
@@ -36,70 +36,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 
-	const updateContentFromResource = (resource?: Uint8Array) => {
-		if (!resource) {
-			setContent("");
-
-			return;
-		}
-		const byteArray = Array.from(resource);
-		setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
-	};
-
-	const location = useLocation();
-	const fileToOpen = location.state?.fileToOpen;
-
-	const openDefaultFile = () => {
-		if (fileToOpen) {
-			openFileAsActive(fileToOpen);
-		}
-	};
-
-	const loadContent = async () => {
-		if (!projectId) return;
-
-		const resources = await fetchResources(projectId, true);
-		const resource = resources?.[activeEditorFileName];
-		updateContentFromResource(resource);
-		openDefaultFile();
-	};
-
-	const loadFileResource = async () => {
-		if (!projectId) return;
-
-		const resources = await fetchResources(projectId);
-		const resource = resources?.[activeEditorFileName];
-		updateContentFromResource(resource);
-	};
-
-	useEffect(() => {
-		if (currentProjectId !== projectId) {
-			loadContent();
-
-			return;
-		}
-		loadFileResource();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeEditorFileName, projectId]);
-
-	useEffect(() => {
-		setLastSaved(undefined);
-	}, [projectId]);
-
-	const handleEditorWillMount = (monaco: Monaco) => {
-		monaco.editor.defineTheme("myCustomTheme", {
-			base: "vs-dark",
-			colors: {
-				"editor.background": "#000000",
-			},
-			inherit: true,
-			rules: [],
-		});
-	};
-
-	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
-		monaco.editor.setTheme("myCustomTheme");
-	};
+	const [editor, setEditor] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
+	const monacoElementRef = useRef<HTMLDivElement>(null);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
@@ -157,6 +95,108 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	]);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedAutosave = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
+
+	useEffect(() => {
+		if (monacoElementRef.current) {
+			// Configure editor theme
+			monaco.editor.defineTheme("AKTheme", {
+				base: "vs-dark",
+				colors: {
+					"editor.background": "#000000",
+				},
+				inherit: true,
+				rules: [],
+			});
+
+			// Create editor instance
+			const ed = monaco.editor.create(monacoElementRef.current, {
+				value: content,
+				language: languageEditor,
+				theme: "AKTheme",
+				fontFamily: "monospace, sans-serif",
+				fontSize: 14,
+				minimap: {
+					enabled: false,
+				},
+				renderLineHighlight: "none",
+				scrollBeyondLastLine: false,
+				wordWrap: "on",
+			});
+
+			// Set up change handler
+			ed.onDidChangeModelContent(() => {
+				if (autosaveMode) {
+					const newContent = ed.getValue();
+					debouncedAutosave(newContent);
+				}
+			});
+
+			setEditor(ed);
+
+			return () => {
+				ed.dispose();
+			};
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [monacoElementRef.current]); // Only run once when ref is available
+
+	// Update editor content when it changes externally
+	useEffect(() => {
+		if (editor) {
+			editor.setValue(content);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [content]);
+
+	const updateContentFromResource = (resource?: Uint8Array) => {
+		if (!resource) {
+			setContent("");
+
+			return;
+		}
+		const byteArray = Array.from(resource);
+		setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
+	};
+
+	const location = useLocation();
+	const fileToOpen = location.state?.fileToOpen;
+
+	const openDefaultFile = () => {
+		if (fileToOpen) {
+			openFileAsActive(fileToOpen);
+		}
+	};
+
+	const loadContent = async () => {
+		if (!projectId) return;
+
+		const resources = await fetchResources(projectId, true);
+		const resource = resources?.[activeEditorFileName];
+		updateContentFromResource(resource);
+		openDefaultFile();
+	};
+
+	const loadFileResource = async () => {
+		if (!projectId) return;
+
+		const resources = await fetchResources(projectId);
+		const resource = resources?.[activeEditorFileName];
+		updateContentFromResource(resource);
+	};
+
+	useEffect(() => {
+		if (currentProjectId !== projectId) {
+			loadContent();
+
+			return;
+		}
+		loadFileResource();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activeEditorFileName, projectId]);
+
+	useEffect(() => {
+		setLastSaved(undefined);
+	}, [projectId]);
 
 	useEffect(() => {
 		const handler = (event: KeyboardEvent) => {
@@ -261,27 +301,17 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 						) : null}
 					</div>
 
+					<div
+						aria-label={activeEditorFileName}
+						className="absolute -ml-6 mt-2 h-full pb-5"
+						ref={monacoElementRef}
+					/>
+
 					{openFiles[projectId]?.length ? (
-						<Editor
+						<div
 							aria-label={activeEditorFileName}
-							beforeMount={handleEditorWillMount}
 							className="absolute -ml-6 mt-2 h-full pb-5"
-							language={languageEditor}
-							loading={<Loader size="lg" />}
-							onChange={autosaveMode ? debouncedAutosave : () => {}}
-							onMount={handleEditorDidMount}
-							options={{
-								fontFamily: "monospace, sans-serif",
-								fontSize: 14,
-								minimap: {
-									enabled: false,
-								},
-								renderLineHighlight: "none",
-								scrollBeyondLastLine: false,
-								wordWrap: "on",
-							}}
-							theme="vs-dark"
-							value={content}
+							ref={monacoElementRef}
 						/>
 					) : (
 						<div className="flex h-full flex-col items-center justify-center pb-24">
