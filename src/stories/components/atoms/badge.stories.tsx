@@ -6,12 +6,12 @@ import { BadgeProps } from "@src/interfaces/components";
 
 import { Badge, IconSvg } from "@components/atoms";
 
-import { NoteIcon } from "@assets/image/sidebar";
+import { FileIcon } from "@assets/image/sidebar";
 
 const BadgeWrapper = (props: Partial<BadgeProps>) => {
 	return (
 		<Badge {...props}>
-			<IconSvg className="size-7 stroke-gray-1300 transition" src={NoteIcon} />
+			<IconSvg className="size-7 stroke-gray-1300 transition" src={FileIcon} />
 		</Badge>
 	);
 };

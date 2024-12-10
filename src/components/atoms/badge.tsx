@@ -25,7 +25,7 @@ export const Badge = ({
 	const badgeClass = cn(
 		"flex items-center justify-center rounded-full text-white",
 		"bg-white size-3 p-0.5 before:size-full before:rounded-full before:bg-error",
-		variant === "dot" ? "h-3 w-3" : "px-2 py-0.5 text-xs",
+		variant === "dot" ? "h-2.5 w-2.5" : "px-2 py-0.5 text-xs",
 		className
 	);
 
