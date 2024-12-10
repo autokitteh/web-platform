@@ -45,19 +45,27 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		set((state) => {
 			if (projectId && projectId !== state.latestOpened.projectId) {
 				state.latestOpened = {
+					tab: "",
+					deploymentId: "",
+					sessionId: "",
+					projectId,
+				};
+				state.latestOpened = {
 					tab: type === "tab" ? value : "",
 					deploymentId: type === "deploymentId" ? value : "",
 					sessionId: type === "sessionId" ? value : "",
 					projectId,
 				};
 
+				if (type === "deploymentId") {
+					state.latestOpened.sessionId = "";
+				}
+
 				return state;
 			}
 
 			state.latestOpened[type] = value;
-			if (projectId) {
-				state.latestOpened.projectId = projectId;
-			}
+			state.latestOpened.projectId = projectId;
 
 			return state;
 		});
