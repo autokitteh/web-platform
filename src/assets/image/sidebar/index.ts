@@ -1,5 +1,8 @@
+export { default as CircleQuestionIcon } from "@assets/image/sidebar/CircleQuestion.svg?react";
 export { default as ConnectionsIcon } from "@assets/image/sidebar/Connections.svg?react";
 export { default as DashboardIcon } from "@assets/image/sidebar/Dashboard.svg?react";
+export { default as FileIcon } from "@assets/image/sidebar/File.svg?react";
+export { default as FlagIcon } from "@assets/image/sidebar/Flag.svg?react";
 export { default as LogoutIcon } from "@assets/image/sidebar/Logout.svg?react";
 export { default as NewProject } from "@assets/image/sidebar/NewProject.svg?react";
 export { default as NotificationIcon } from "@assets/image/sidebar/Notification.svg?react";
