@@ -10,16 +10,33 @@ import { cn } from "@src/utilities";
 import { Button, IconSvg } from "@components/atoms";
 
 export const ProjectTopbarNavigation = () => {
-	const { deploymentId: paramDeploymentId, projectId } = useParams();
+	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
 	const { pathname } = useLocation();
-	const { latestOpenedTab } = useProjectStore();
+	const { latestOpened, setLatestOpened } = useProjectStore();
 	const { deployments } = useCacheStore();
 	const navigate = useNavigate();
 
-	const deploymentId = paramDeploymentId || deployments?.[0]?.deploymentId;
+	if (!paramDeploymentId && !sessionId && projectId !== latestOpened.projectId) {
+		setLatestOpened("deploymentId", "", projectId!);
+		setLatestOpened("sessionId", "", projectId!);
+	}
+
+	if (paramDeploymentId) {
+		setLatestOpened("deploymentId", paramDeploymentId, projectId!);
+	}
+
+	const deploymentId =
+		latestOpened.deploymentId && latestOpened.projectId === projectId
+			? latestOpened.deploymentId
+			: paramDeploymentId || deployments?.[0]?.deploymentId;
+
+	if (sessionId) {
+		setLatestOpened("sessionId", sessionId, projectId!);
+	}
 
 	const selectedSection = useMemo(() => {
 		if (paramDeploymentId) return "sessions";
+
 		if (pathname.includes("deployments")) return "deployments";
 
 		return "assets";
@@ -45,9 +62,14 @@ export const ProjectTopbarNavigation = () => {
 				const getPath = () => {
 					switch (item.key) {
 						case "assets":
-							return latestOpenedTab ? `/${latestOpenedTab}` : "/code";
+							return latestOpened.tab ? `/${latestOpened.tab}` : "/code";
 						case "sessions":
-							return deploymentId ? `/deployments/${deploymentId}/sessions` : "";
+							return latestOpened.sessionId
+								? deploymentId
+									? `/deployments/${deploymentId}/sessions/${latestOpened.sessionId}`
+									: ""
+								: `/deployments/${deploymentId}/sessions/`;
+
 						case "deployments":
 							return "/deployments";
 						default:

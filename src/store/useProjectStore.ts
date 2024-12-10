@@ -20,30 +20,58 @@ const defaultState: Omit<
 	| "deleteProject"
 	| "createProjectFromManifest"
 	| "setEditorWidth"
-	| "setLatestOpenedTab"
 	| "setPendingFile"
+	| "setLatestOpened"
 > = {
 	projectsList: [],
-	latestOpenedTab: "",
 	isLoadingProjectsList: true,
 	initialEditorWidth: 50,
+	currentProjectId: undefined,
 	pendingFile: undefined,
+	latestOpened: {
+		tab: "",
+		deploymentId: "",
+		sessionId: "",
+		projectId: undefined,
+	},
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
 	...defaultState,
 
-	setEditorWidth: (width) => {
+	setLatestOpened: (type, value, projectId) => {
 		set((state) => {
-			state.initialEditorWidth = width;
+			if (projectId && projectId !== state.latestOpened.projectId) {
+				state.latestOpened = {
+					tab: "",
+					deploymentId: "",
+					sessionId: "",
+					projectId,
+				};
+				state.latestOpened = {
+					tab: type === "tab" ? value : "",
+					deploymentId: type === "deploymentId" ? value : "",
+					sessionId: type === "sessionId" ? value : "",
+					projectId,
+				};
+
+				if (type === "deploymentId") {
+					state.latestOpened.sessionId = "";
+				}
+
+				return state;
+			}
+
+			state.latestOpened[type] = value;
+			state.latestOpened.projectId = projectId;
 
 			return state;
 		});
 	},
 
-	setLatestOpenedTab: (tab) => {
+	setEditorWidth: (width) => {
 		set((state) => {
-			state.latestOpenedTab = tab;
+			state.initialEditorWidth = width;
 
 			return state;
 		});
