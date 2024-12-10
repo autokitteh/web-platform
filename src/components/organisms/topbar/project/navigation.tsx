@@ -4,35 +4,20 @@ import { motion } from "motion/react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { mainNavigationItems } from "@src/constants";
-import { useCacheStore, useProjectStore } from "@src/store";
+import { useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
+
+import { useLastVisitedEntity } from "@hooks";
 
 import { Button, IconSvg } from "@components/atoms";
 
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
 	const { pathname } = useLocation();
-	const { latestOpened, setLatestOpened } = useProjectStore();
-	const { deployments } = useCacheStore();
+	const { latestOpened } = useProjectStore();
 	const navigate = useNavigate();
 
-	if (!paramDeploymentId && !sessionId && projectId !== latestOpened.projectId) {
-		setLatestOpened("deploymentId", "", projectId!);
-		setLatestOpened("sessionId", "", projectId!);
-	}
-
-	if (paramDeploymentId) {
-		setLatestOpened("deploymentId", paramDeploymentId, projectId!);
-	}
-
-	const deploymentId =
-		latestOpened.deploymentId && latestOpened.projectId === projectId
-			? latestOpened.deploymentId
-			: paramDeploymentId || deployments?.[0]?.deploymentId;
-
-	if (sessionId) {
-		setLatestOpened("sessionId", sessionId, projectId!);
-	}
+	const { deploymentId, deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
 
 	const selectedSection = useMemo(() => {
 		if (paramDeploymentId) return "sessions";
