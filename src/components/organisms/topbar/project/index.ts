@@ -1,5 +1,4 @@
 export { ProjectTopbarButtons } from "@components/organisms/topbar/project/buttons";
-export { DeleteProjectModal } from "@components/organisms/topbar/project/deleteProjectModal";
 export {
 	ManualRunButtons,
 	ManualRunSuccessToastMessage,
