@@ -12,22 +12,27 @@ import { Button, IconSvg } from "@components/atoms";
 export const ProjectTopbarNavigation = () => {
 	const { deploymentId: paramDeploymentId, projectId, sessionId } = useParams();
 	const { pathname } = useLocation();
-	const { currentProjectId, latestOpened, setLatestOpened } = useProjectStore();
+	const { latestOpened, setLatestOpened } = useProjectStore();
 	const { deployments } = useCacheStore();
 	const navigate = useNavigate();
+
+	if (!paramDeploymentId && !sessionId && projectId !== latestOpened.projectId) {
+		setLatestOpened("deploymentId", "", projectId!);
+		setLatestOpened("sessionId", "", projectId!);
+	}
 
 	if (paramDeploymentId) {
 		setLatestOpened("deploymentId", paramDeploymentId, projectId!);
 	}
 
+	const deploymentId =
+		latestOpened.deploymentId && latestOpened.projectId === projectId
+			? latestOpened.deploymentId
+			: paramDeploymentId || deployments?.[0]?.deploymentId;
+
 	if (sessionId) {
 		setLatestOpened("sessionId", sessionId, projectId!);
 	}
-
-	const deploymentId =
-		latestOpened.deploymentId && currentProjectId === projectId
-			? latestOpened.deploymentId
-			: paramDeploymentId || deployments?.[0]?.deploymentId;
 
 	const selectedSection = useMemo(() => {
 		if (paramDeploymentId) return "sessions";
