@@ -10,7 +10,6 @@
 		}
 	},
 	"actions":{ 
-		"title": "Start From Template",
 		"projectCreatedSuccessfully": "Project created successfully",
 		"projectCreatedSuccessfullyExtended": "Project created successfully, project template name: {{templateName}}, project ID: {{projectId}}",
 		"projectCreationFailed": "Project creation failed",
@@ -30,6 +29,9 @@
 		"errorDeletingProject": "Failed to delete project",
         "deleteProjectSuccess": "Project deletion completed successfully",
         "deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}"
+	},
+	"templates":{
+		"title": "Start From Template"
 	},
 	"projects": {
 		"table": {

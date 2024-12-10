@@ -90,13 +90,17 @@ export const DashboardProjectsTable = () => {
 		loadProjectsData(projectsList);
 	}, [projectsList]);
 
-	const countStyle = (state?: SessionStateType) =>
-		cn("inline-block border-0 p-0 text-sm font-medium", {
-			"text-blue-500": state === SessionStateType.running,
-			"text-yellow-500": state === SessionStateType.stopped,
-			"text-green-800": state === SessionStateType.completed,
-			"text-red": state === SessionStateType.error,
-		});
+	const countStyle = (state?: SessionStateType, className?: string) =>
+		cn(
+			"inline-block border-0 px-1 text-sm font-medium w-20 truncate py-2 text-center",
+			{
+				"text-blue-500": state === SessionStateType.running,
+				"text-yellow-500": state === SessionStateType.stopped,
+				"text-green-800": state === SessionStateType.completed,
+				"text-red": state === SessionStateType.error,
+			},
+			className
+		);
 
 	const handleProjectDelete = async () => {
 		deleteProject(selectedProjectForDeletion!);
@@ -133,7 +137,7 @@ export const DashboardProjectsTable = () => {
 
 								<SortButton
 									className="opacity-0 group-hover:opacity-100"
-									isActive={"totalDeployments" === sortConfig.key}
+									isActive={"status" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
@@ -144,12 +148,12 @@ export const DashboardProjectsTable = () => {
 								{t("table.columns.totalDeployments")}
 
 								<SortButton
-									className="opacity-0 group-hover:opacity-100"
+									className="ml-0 opacity-0 group-hover:opacity-100"
 									isActive={"totalDeployments" === sortConfig.key}
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group ml-6 h-11 w-3/6 font-normal">{t("table.columns.sessions")}</Th>
+							<Th className="group h-11 w-2/6 font-normal">{t("table.columns.sessions")}</Th>
 							<Th
 								className="group h-11 w-2/6 cursor-pointer justify-center font-normal"
 								onClick={() => requestSort("lastDeployed")}
@@ -203,35 +207,35 @@ export const DashboardProjectsTable = () => {
 										{totalDeployments}
 									</Td>
 									<Td
-										className="ml-8 flex w-3/6"
-										innerDivClassName="gap-16"
+										className="flex w-2/6"
+										innerDivClassName="gap-0"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div
 											aria-label={t("table.sessionTypes.running")}
 											className={countStyle(SessionStateType.running)}
-											title={t("table.sessionTypes.running")}
+											title={`${running} ${t("table.sessionTypes.running")}`}
 										>
 											{running}
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.stopped")}
-											className={countStyle(SessionStateType.stopped)}
-											title={t("table.sessionTypes.stopped")}
+											className={countStyle(SessionStateType.stopped, "justify-center")}
+											title={`${stopped} ${t("table.sessionTypes.stopped")}`}
 										>
 											{stopped}
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.completed")}
 											className={countStyle(SessionStateType.completed)}
-											title={t("table.sessionTypes.completed")}
+											title={`${completed} ${t("table.sessionTypes.completed")}`}
 										>
 											{completed}
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.error")}
 											className={countStyle(SessionStateType.error)}
-											title={t("table.sessionTypes.error")}
+											title={`${error} ${t("table.sessionTypes.error")}`}
 										>
 											{error}
 										</div>
