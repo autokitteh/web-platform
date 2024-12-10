@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import React, { Suspense, useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
@@ -17,7 +18,7 @@ import { Popover, PopoverContent } from "@components/molecules/popover/index";
 import { NewProjectModal } from "@components/organisms";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { CircleQuestionIcon, FlagIcon, LogoutIcon, NoteIcon, SettingsIcon } from "@assets/image/sidebar";
+import { CircleQuestionIcon, FileIcon, FlagIcon, LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -94,7 +95,7 @@ export const Sidebar = () => {
 							href="/events"
 							title={t("events")}
 						>
-							<IconSvg className="size-7 transition" src={FlagIcon} />
+							<IconSvg className="ml-1 size-5 transition" src={FlagIcon} />
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -124,7 +125,7 @@ export const Sidebar = () => {
 								isVisible={isNewLogs}
 								variant="dot"
 							>
-								<IconSvg className="size-7 transition" src={NoteIcon} />
+								<IconSvg className="ml-1 size-5 stroke-gray-1100 transition" src={FileIcon} />
 							</Badge>
 
 							<AnimatePresence>
@@ -143,7 +144,7 @@ export const Sidebar = () => {
 						</Button>
 
 						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
-							<IconSvg className="size-7 transition" src={CircleQuestionIcon} />
+							<IconSvg className="size-5.5 ml-0.5 transition" src={CircleQuestionIcon} />
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -163,7 +164,7 @@ export const Sidebar = () => {
 						{isAuthEnabled ? (
 							<Popover interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-1.5 flex items-center">
-									<Avatar color="black" name={user?.name} round={true} size="32" />
+									<Avatar color="black" name={user?.name} round={true} size="28" />
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span
@@ -180,7 +181,7 @@ export const Sidebar = () => {
 								</PopoverTrigger>
 								<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
 									<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2 pl-2">
-										<Avatar color="black" name={`${user?.name}`} round={true} size="32" />
+										<Avatar color="black" name={`${user?.name}`} round={true} size="28" />
 										<span className="font-medium text-black">{user?.email}</span>
 									</div>
 									<div className="mt-1">
