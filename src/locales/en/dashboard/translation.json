@@ -60,7 +60,7 @@
 				"desc": "See how our community is creating projects"
 			}
 		},
-		"never": "Never"
+		"never": "-"
 	},
 	"welcome": {
 		"getStarted": "Get started with Autokitteh",
