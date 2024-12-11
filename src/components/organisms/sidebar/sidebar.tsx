@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 import { AccordionProps } from "@src/interfaces/components";
 import { cn } from "@src/utilities";

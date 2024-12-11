@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { SVGMotionProps, motion } from "framer-motion";
+import { SVGMotionProps, motion } from "motion/react";
 
 const Path = (props: SVGMotionProps<SVGPathElement>) => (
 	<motion.path fill="transparent" stroke="hsl(0, 0%, 18%)" strokeLinecap="round" strokeWidth="3" {...props} />

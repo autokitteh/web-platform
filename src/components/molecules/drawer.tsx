@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 import { DrawerProps } from "@src/interfaces/components";
 import { useDrawerStore } from "@src/store";

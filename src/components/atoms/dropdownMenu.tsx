@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { createPortal } from "react-dom";
 
 import { DropdownMenuProps } from "@interfaces/components/dropdown";

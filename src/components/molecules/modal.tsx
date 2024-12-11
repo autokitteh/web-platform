@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { createPortal } from "react-dom";
 
 import { ModalProps } from "@interfaces/components";
