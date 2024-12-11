@@ -57,10 +57,6 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 					projectId,
 				};
 
-				if (type === "deploymentId") {
-					state.latestOpened.sessionId = "";
-				}
-
 				return state;
 			}
 
