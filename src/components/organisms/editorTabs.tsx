@@ -7,12 +7,12 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
+import "@hooks/useMonacoWorker";
 import { LoggerService } from "@services";
 import { useCacheStore, useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
 import "monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution";
-import "monaco-editor/esm/vs/basic-languages/python/python.contribution";
 import "monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution";
 
 import { useFileOperations } from "@hooks";
@@ -198,8 +198,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			// Create editor
 			editorRef.current = monaco.editor.create(monacoElRef.current, {
 				value: content,
-				language: languageEditor,
-				theme: "myCustomTheme",
+				language: "python",
+				theme: "vs-dark",
 				fontFamily: "monospace, sans-serif",
 				fontSize: 14,
 				minimap: {
