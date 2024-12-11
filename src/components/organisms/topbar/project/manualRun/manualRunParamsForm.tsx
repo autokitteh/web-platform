@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import Editor from "@monaco-editor/react";
 import { Controller, FieldErrors, FieldValues, useFieldArray, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -169,7 +168,7 @@ export const ManualRunParamsForm = () => {
 					name="jsonParams"
 					render={({ field }) => (
 						<div>
-							<Editor
+							{/* <Editor
 								className="min-h-96"
 								defaultLanguage="json"
 								loading={<Loader isCenter size="lg" />}
@@ -186,7 +185,7 @@ export const ManualRunParamsForm = () => {
 								}}
 								theme="vs-dark"
 								value={field.value}
-							/>
+							/> */}
 							{errors.jsonParams ? <ErrorMessage>{errors.jsonParams.message}</ErrorMessage> : null}
 						</div>
 					)}
