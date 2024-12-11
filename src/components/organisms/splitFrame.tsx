@@ -21,7 +21,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	});
 	const [isExpanded, setIsExpanded] = useState(false);
 
-	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none pb-0 md:pt-5`, {
+	const rightFrameClass = cn(`h-full overflow-hidden rounded-l-none py-0 md:py-0`, {
 		"rounded-2xl": !children || isExpanded,
 	});
 
