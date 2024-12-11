@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import Editor, { Monaco } from "@monaco-editor/react";
 import { debounce, last } from "lodash";
 import moment from "moment";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
@@ -11,9 +11,13 @@ import { LoggerService } from "@services";
 import { useCacheStore, useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
+import "monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution";
+import "monaco-editor/esm/vs/basic-languages/python/python.contribution";
+import "monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution";
+
 import { useFileOperations } from "@hooks";
 
-import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
+import { Button, Checkbox, IconButton, IconSvg, Spinner, Tab } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
@@ -35,6 +39,9 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const [autosaveMode, setAutosaveMode] = useState(true);
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
+
+	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+	const monacoElRef = useRef<HTMLDivElement>(null);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
@@ -85,21 +92,6 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	useEffect(() => {
 		setLastSaved(undefined);
 	}, [projectId]);
-
-	const handleEditorWillMount = (monaco: Monaco) => {
-		monaco.editor.defineTheme("myCustomTheme", {
-			base: "vs-dark",
-			colors: {
-				"editor.background": "#000000",
-			},
-			inherit: true,
-			rules: [],
-		});
-	};
-
-	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
-		monaco.editor.setTheme("myCustomTheme");
-	};
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
@@ -191,6 +183,59 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		}
 	};
 
+	useEffect(() => {
+		if (monacoElRef.current) {
+			// Define theme
+			monaco.editor.defineTheme("myCustomTheme", {
+				base: "vs-dark",
+				colors: {
+					"editor.background": "#000000",
+				},
+				inherit: true,
+				rules: [],
+			});
+
+			// Create editor
+			editorRef.current = monaco.editor.create(monacoElRef.current, {
+				value: content,
+				language: languageEditor,
+				theme: "myCustomTheme",
+				fontFamily: "monospace, sans-serif",
+				fontSize: 14,
+				minimap: {
+					enabled: false,
+				},
+				renderLineHighlight: "none",
+				scrollBeyondLastLine: false,
+				wordWrap: "on",
+			});
+
+			// Set up change listener
+			if (autosaveMode) {
+				editorRef.current.onDidChangeModelContent(() => {
+					const newContent = editorRef.current?.getValue();
+					if (newContent !== undefined) {
+						debouncedAutosave(newContent);
+					}
+				});
+			}
+		}
+
+		return () => {
+			editorRef.current?.dispose();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [monacoElRef.current]); // Add other dependencies as needed
+
+	// Update editor content when content state changes
+	useEffect(() => {
+		if (editorRef.current) {
+			if (editorRef.current.getValue() !== content) {
+				editorRef.current.setValue(content);
+			}
+		}
+	}, [content]);
+
 	return (
 		<div className="relative flex h-full flex-col pt-11">
 			{projectId ? (
@@ -262,26 +307,10 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 					</div>
 
 					{openFiles[projectId]?.length ? (
-						<Editor
+						<div
 							aria-label={activeEditorFileName}
-							beforeMount={handleEditorWillMount}
-							className="absolute -ml-6 mt-2 h-full pb-5"
-							language={languageEditor}
-							loading={<Loader size="lg" />}
-							onChange={autosaveMode ? debouncedAutosave : () => {}}
-							onMount={handleEditorDidMount}
-							options={{
-								fontFamily: "monospace, sans-serif",
-								fontSize: 14,
-								minimap: {
-									enabled: false,
-								},
-								renderLineHighlight: "none",
-								scrollBeyondLastLine: false,
-								wordWrap: "on",
-							}}
-							theme="vs-dark"
-							value={content}
+							className="absolute -ml-6 mt-2 size-full h-full pb-5"
+							ref={monacoElRef}
 						/>
 					) : (
 						<div className="flex h-full flex-col items-center justify-center pb-24">
