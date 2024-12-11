@@ -22,7 +22,6 @@ export const useSort = <T,>(items: T[], initialSortKey?: keyof T) => {
 				(item) => {
 					const value = sortConfig.key ? item[sortConfig.key] : undefined;
 
-					// Handle undefined or null values
 					if (value === undefined || value === null) {
 						return sortConfig.direction === SortDirectionVariant.ASC ? Number.MAX_VALUE : Number.MIN_VALUE;
 					}

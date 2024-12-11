@@ -105,8 +105,6 @@ export const ProjectTopbarButtons = () => {
 
 	const isDeployAndBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
 
-	const handleProjectDelete = () => deleteProject(projectId!);
-
 	return (
 		<div className="flex items-center gap-3">
 			<div title={isValid ? t("topbar.buttons.build") : projectErrors}>
@@ -208,7 +206,7 @@ export const ProjectTopbarButtons = () => {
 				</Button>
 			</DropdownButton>
 
-			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
+			<DeleteProjectModal isDeleting={isDeleting} onDelete={() => deleteProject(projectId!)} />
 		</div>
 	);
 };

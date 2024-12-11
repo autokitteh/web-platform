@@ -14,7 +14,19 @@ import { DashboardProjectWithStats, Project } from "@type/models";
 import { useProjectActions, useSort } from "@hooks";
 import { useModalStore, useProjectStore } from "@store";
 
-import { Button, DeploymentStatusBadge, IconButton, IconSvg, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import {
+	Button,
+	DeploymentStatusBadge,
+	IconButton,
+	IconSvg,
+	Loader,
+	TBody,
+	THead,
+	Table,
+	Td,
+	Th,
+	Tr,
+} from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms/modals";
 
@@ -26,6 +38,7 @@ export const DashboardProjectsTable = () => {
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const [projectsStats, setProjectsStats] = useState<DashboardProjectWithStats[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const {
 		items: sortedProjectsStats,
@@ -39,6 +52,7 @@ export const DashboardProjectsTable = () => {
 
 	const loadProjectsData = async (projectsList: Project[]) => {
 		const projectsStats = {} as Record<string, DashboardProjectWithStats>;
+		setIsLoading(true);
 		for (const project of projectsList) {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let projectStatus = DeploymentStateVariant.inactive;
@@ -56,12 +70,11 @@ export const DashboardProjectsTable = () => {
 
 					if (deployment.sessionStats) {
 						deployment.sessionStats.forEach((session) => {
-							if (session.state) {
-								acc.sessionCounts = {
-									...acc.sessionCounts,
-									[session.state]: (acc.sessionCounts?.[session.state] || 0) + session.count,
-								};
-							}
+							if (!session.state) return;
+							acc.sessionCounts = {
+								...acc.sessionCounts,
+								[session.state]: (acc.sessionCounts?.[session.state] || 0) + session.count,
+							};
 						});
 					}
 
@@ -82,8 +95,8 @@ export const DashboardProjectsTable = () => {
 				lastDeployed,
 			};
 		}
-
 		setProjectsStats(Object.values(projectsStats));
+		setIsLoading(false);
 	};
 
 	useEffect(() => {
@@ -92,7 +105,7 @@ export const DashboardProjectsTable = () => {
 
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
-			"inline-block border-0 px-1 text-sm font-medium w-20 truncate py-2 text-center",
+			"inline-block border-0 px-1 text-sm font-medium w-20 truncate py-2",
 			{
 				"text-blue-500": state === SessionStateType.running,
 				"text-yellow-500": state === SessionStateType.stopped,
@@ -111,7 +124,9 @@ export const DashboardProjectsTable = () => {
 		openModal(ModalName.deleteProject);
 	};
 
-	return (
+	return isLoading ? (
+		<Loader isCenter />
+	) : (
 		<div className="z-10 h-2/3 select-none pt-10">
 			{sortedProjectsStats.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
@@ -130,7 +145,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
+								className="group h-11 w-1/6 cursor-pointer font-normal"
 								onClick={() => requestSort("totalDeployments")}
 							>
 								{t("table.columns.status")}
@@ -142,7 +157,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 w-1/6 cursor-pointer justify-center font-normal"
+								className="group h-11 w-1/6 cursor-pointer font-normal"
 								onClick={() => requestSort("totalDeployments")}
 							>
 								{t("table.columns.totalDeployments")}
@@ -155,7 +170,7 @@ export const DashboardProjectsTable = () => {
 							</Th>
 							<Th className="group h-11 w-2/6 font-normal">{t("table.columns.sessions")}</Th>
 							<Th
-								className="group h-11 w-2/6 cursor-pointer justify-center font-normal"
+								className="group h-11 w-2/6 cursor-pointer font-normal"
 								onClick={() => requestSort("lastDeployed")}
 							>
 								{t("table.columns.lastDeployed")}
@@ -166,9 +181,7 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group h-11 w-1/6 justify-center font-normal">
-								{t("table.columns.actions")}
-							</Th>
+							<Th className="group h-11 w-1/6 font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
@@ -194,21 +207,19 @@ export const DashboardProjectsTable = () => {
 									</Td>
 									<Td
 										className="w-1/6"
-										innerDivClassName="justify-center pr-7"
+										innerDivClassName="pr-7"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<DeploymentStatusBadge deploymentStatus={status} />
 									</Td>
 									<Td
 										className="w-1/6"
-										innerDivClassName="justify-center pr-8"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										{totalDeployments}
 									</Td>
 									<Td
-										className="flex w-2/6"
-										innerDivClassName="gap-0"
+										className="-ml-1 flex w-2/6"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div
@@ -243,7 +254,6 @@ export const DashboardProjectsTable = () => {
 
 									<Td
 										className="w-2/6"
-										innerDivClassName="justify-center pr-8"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										{lastDeployed
@@ -251,7 +261,7 @@ export const DashboardProjectsTable = () => {
 											: t("never")}
 									</Td>
 
-									<Td className="w-1/6" innerDivClassName="justify-center">
+									<Td className="w-1/6">
 										<IconButton onClick={() => downloadProjectExport(id)}>
 											<IconSvg
 												className="fill-white transition hover:fill-green-200 active:fill-green-800"
@@ -272,7 +282,9 @@ export const DashboardProjectsTable = () => {
 						)}
 					</TBody>
 				</Table>
-			) : null}
+			) : (
+				<div>{t("table.noProjectsFound")}</div>
+			)}
 
 			<div className="mt-10 flex flex-col items-center justify-center">
 				<Button

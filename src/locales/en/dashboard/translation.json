@@ -48,7 +48,8 @@
 				"stopped": "Stopped",
 				"completed": "Completed",
 				"error": "Error"
-			}
+			},
+    		"noProjectsFound": "No projects found"
 		},
 		"buttons":{
 			"startNewProject": "Start New Project",
