@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { mainNavigationItems } from "@src/constants";

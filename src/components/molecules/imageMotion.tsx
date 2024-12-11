@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 
-import { motion, useDomEvent } from "framer-motion";
+import { motion, useDomEvent } from "motion/react";
 
 import { cn } from "@src/utilities";
 

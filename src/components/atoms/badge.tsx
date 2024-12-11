@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 import { BadgeProps } from "@src/interfaces/components";
 import { cn } from "@src/utilities";
