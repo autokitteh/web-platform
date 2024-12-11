@@ -2,6 +2,7 @@ import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
 import { defineConfig } from "vite";
+import monacoEditorPlugin from "vite-plugin-monaco-editor";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 
@@ -52,6 +53,15 @@ export default defineConfig({
 	},
 	plugins: [
 		react(),
+		monacoEditorPlugin.default({
+			languageWorkers: ["editorWorkerService", "typescript"],
+			customWorkers: [
+				{
+					label: "python",
+					entry: "src/monaco-workers/pyright.worker.js",
+				},
+			],
+		}),
 		svgr({
 			svgrOptions: {
 				ref: true,
