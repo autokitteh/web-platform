@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useCacheStore, useProjectStore } from "@src/store";
 
-export const useLastVisitedEntity = (projectId: string | undefined, paramDeploymentId?: string, sessionId?: string) => {
+export const useLastVisitedEntity = (projectId?: string, paramDeploymentId?: string, sessionId?: string) => {
 	const { latestOpened, setLatestOpened } = useProjectStore();
 	const { deployments } = useCacheStore();
 
