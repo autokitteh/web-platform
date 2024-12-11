@@ -1,3 +1,10 @@
+# [2.85.0](https://github.com/autokitteh/web-platform/compare/v2.84.0...v2.85.0) (2024-12-11)
+
+
+### Features
+
+* **UI-1034:** upgrade framer-motion to motion ([#743](https://github.com/autokitteh/web-platform/issues/743)) ([32c1f5d](https://github.com/autokitteh/web-platform/commit/32c1f5dd2ea06b31b03868c001015ff038dd8389))
+
 # [2.84.0](https://github.com/autokitteh/web-platform/compare/v2.83.0...v2.84.0) (2024-12-09)
 
 
