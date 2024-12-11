@@ -17,6 +17,7 @@ export const useLastVisitedEntity = (projectId: string | undefined, paramDeploym
 	useEffect(() => {
 		if (paramDeploymentId) {
 			setLatestOpened("deploymentId", paramDeploymentId, projectId!);
+			setLatestOpened("sessionId", "", projectId!);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [paramDeploymentId, projectId]);
