@@ -20,6 +20,7 @@ module.exports = {
         5: "5 5 0%",
       },
       spacing: {
+        5.5: "1.375rem",
         7.5: "1.875rem",
         9.5: "2.375rem",
         '3px': '3px',

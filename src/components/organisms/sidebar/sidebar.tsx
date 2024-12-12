@@ -1,4 +1,3 @@
-/* eslint-disable tailwindcss/no-custom-classname */
 import React, { Suspense, useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
@@ -18,7 +17,7 @@ import { Popover, PopoverContent } from "@components/molecules/popover/index";
 import { NewProjectModal } from "@components/organisms";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { CircleQuestionIcon, FileIcon, FlagIcon, LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
+import { CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon, SettingsIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -61,7 +60,7 @@ export const Sidebar = () => {
 
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
-							className="mt-10 w-full gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
+							className="mt-7 w-full justify-center gap-2.5 p-0.5 pr-2 hover:bg-green-200"
 							onClick={() => setIsOpen(!isOpen)}
 							title={isOpen ? t("closeSidebar") : t("openSidebar")}
 						>
@@ -88,14 +87,14 @@ export const Sidebar = () => {
 						<Menu className="mt-5" isOpen={isOpen} />
 					</div>
 
-					<div className="flex flex-col gap-5">
+					<div className="flex flex-col gap-2">
 						<Button
 							ariaLabel={t("events")}
-							className="hover:bg-green-200"
+							className="min-h-10 min-w-10 hover:bg-green-200"
 							href="/events"
 							title={t("events")}
 						>
-							<IconSvg className="ml-1 size-5 transition" src={FlagIcon} />
+							<IconSvg className="ml-1 size-5 transition" src={EventListIcon} />
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -114,7 +113,7 @@ export const Sidebar = () => {
 
 						<Button
 							ariaLabel={t("systemLog")}
-							className="hover:bg-green-200"
+							className="min-h-10 min-w-10 hover:bg-green-200"
 							onClick={() => toggleLogger(!isLoggerEnabled)}
 							title={t("systemLog")}
 						>
@@ -143,8 +142,8 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
-							<IconSvg className="size-5.5 ml-0.5 transition" src={CircleQuestionIcon} />
+						<Button className="min-h-10 min-w-10 hover:bg-green-200" href="/intro" title={t("intro")}>
+							<IconSvg className="ml-0.5 size-5.5 transition" src={CircleQuestionIcon} />
 
 							<AnimatePresence>
 								{isOpen ? (
