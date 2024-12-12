@@ -1,3 +1,4 @@
+import importMetaUrlPlugin from "@codingame/esbuild-import-meta-url-plugin";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
@@ -49,6 +50,9 @@ export default defineConfig({
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
+		esbuildOptions: {
+			plugins: [importMetaUrlPlugin],
+		},
 	},
 	plugins: [
 		react(),

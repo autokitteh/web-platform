@@ -1,4 +1,6 @@
 import "@codingame/monaco-vscode-python-default-extension";
+import "@codingame/monaco-vscode-theme-defaults-default-extension";
+
 import {
 	RegisteredFileSystemProvider,
 	RegisteredMemoryFile,
