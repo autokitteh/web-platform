@@ -9,3 +9,4 @@ export { useToastAndLog } from "@hooks/useToastAndLog";
 export { useVirtualizedList } from "@hooks/useVirtualizedList";
 export { useWindowDimensions } from "@hooks/useWindowDimensions";
 export { usePopover, usePopoverList } from "@src/hooks/usePopover";
+export { useSticky } from "@src/hooks/useSticky";

@@ -178,7 +178,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 				<>
 					<div className="relative flex w-full justify-between">
 						{openFiles[projectId]?.length ? (
-							<div className="absolute -left-1/4 bottom-0 h-px w-[150%] bg-gray-1050" />
+							<div className="absolute -left-1/4 bottom-0 z-30 h-px w-[150%] bg-gray-1050" />
 						) : null}
 
 						<ScrollableTabs isExpanded={isExpanded} onExpand={onExpand} />

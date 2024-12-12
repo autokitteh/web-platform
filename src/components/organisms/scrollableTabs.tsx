@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { useFileOperations } from "@src/hooks";
+import { useFileOperations, useSticky } from "@src/hooks";
 import { cn } from "@utilities";
 
 import { IconButton, Tab } from "@components/atoms";
@@ -15,6 +15,7 @@ export const ScrollableTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; 
 	const { projectId } = useParams();
 	const { closeOpenedFile, openFileAsActive, openFiles } = useFileOperations(projectId!);
 
+	const { ref: activeTabRef } = useSticky();
 	const activeEditorFileName = (projectId && openFiles[projectId]?.find(({ isActive }) => isActive)?.name) || "";
 
 	const activeCloseIcon = (fileName: string) => {
@@ -50,6 +51,7 @@ export const ScrollableTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; 
 										isActive,
 								})}
 								key={name}
+								ref={isActive ? activeTabRef : null}
 							>
 								<Tab
 									activeTab={activeEditorFileName}
