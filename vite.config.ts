@@ -106,6 +106,10 @@ export default defineConfig({
 					src: "src/assets/image/pages/**/*",
 					dest: "assets/image/pages",
 				},
+				{
+					src: "node_modules/@typefox/pyright-browser/dist/pyright.worker.js",
+					dest: "./",
+				},
 			],
 		}),
 		reactVirtualized(),
@@ -135,6 +139,7 @@ export default defineConfig({
 			"@validations": path.resolve(__dirname, "./src/validations"),
 			"tailwind-config": path.resolve(__dirname, "./tailwind.config.cjs"),
 		},
+		dedupe: ["vscode"],
 	},
 	server: {
 		host: true,

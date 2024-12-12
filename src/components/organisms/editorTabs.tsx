@@ -17,6 +17,8 @@ import "monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution";
 
 import { useFileOperations } from "@hooks";
 
+import "./pythonCodeEditor";
+
 import { Button, Checkbox, IconButton, IconSvg, Spinner, Tab } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
@@ -307,11 +309,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 					</div>
 
 					{openFiles[projectId]?.length ? (
-						<div
-							aria-label={activeEditorFileName}
-							className="absolute -ml-6 mt-2 size-full h-full pb-5"
-							ref={monacoElRef}
-						/>
+						<div className="h-full" id="test" />
 					) : (
 						<div className="flex h-full flex-col items-center justify-center pb-24">
 							<IconSvg className="mb-12 fill-gray-800" size="36" src={AKRoundLogo} />
