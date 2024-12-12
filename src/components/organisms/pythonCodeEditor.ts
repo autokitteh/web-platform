@@ -64,16 +64,6 @@ print("Hello Moon!")`,
 				},
 			},
 		},
-		vscodeApiConfig: {
-			userConfiguration: {
-				json: JSON.stringify({
-					"workbench.colorTheme": "Default Dark Modern",
-					"editor.guides.bracketPairsHorizontal": "active",
-					"editor.wordBasedSuggestions": "off",
-					"editor.experimental.asyncTokenization": true,
-				}),
-			},
-		},
 	};
 
 	const typeshedFiles = await getTypeDefinitionFiles();
