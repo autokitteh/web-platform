@@ -40,7 +40,7 @@ export const Sidebar = () => {
 			<div className="relative z-40 flex h-full min-w-[65px] items-start">
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
-						<Link className="ml-1 flex items-center gap-2.5" to="/">
+						<Link className="flex items-center gap-2.5" to="/">
 							<IconLogo className="size-8" />
 
 							<AnimatePresence>
@@ -90,11 +90,13 @@ export const Sidebar = () => {
 					<div className="flex flex-col gap-2">
 						<Button
 							ariaLabel={t("events")}
-							className="min-h-10 min-w-10 hover:bg-green-200"
+							className="p-0 hover:bg-green-200"
 							href="/events"
 							title={t("events")}
 						>
-							<IconSvg className="ml-1 size-5 transition" src={EventListIcon} />
+							<div className="flex size-10 items-center justify-center">
+								<IconSvg className="size-5 transition" src={EventListIcon} />
+							</div>
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -113,19 +115,21 @@ export const Sidebar = () => {
 
 						<Button
 							ariaLabel={t("systemLog")}
-							className="min-h-10 min-w-10 hover:bg-green-200"
+							className="p-0 hover:bg-green-200"
 							onClick={() => toggleLogger(!isLoggerEnabled)}
 							title={t("systemLog")}
 						>
-							<Badge
-								anchorOrigin={{ vertical: "top", horizontal: "left" }}
-								ariaLabel={t("logToReview")}
-								className="absolute"
-								isVisible={isNewLogs}
-								variant="dot"
-							>
-								<IconSvg className="ml-1 size-5 stroke-gray-1100 transition" src={FileIcon} />
-							</Badge>
+							<div className="flex size-10 items-center justify-center">
+								<Badge
+									anchorOrigin={{ vertical: "top", horizontal: "left" }}
+									ariaLabel={t("logToReview")}
+									className="absolute"
+									isVisible={isNewLogs}
+									variant="dot"
+								>
+									<IconSvg className="size-5.5 stroke-gray-1100 transition" src={FileIcon} />
+								</Badge>
+							</div>
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -142,8 +146,10 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						<Button className="min-h-10 min-w-10 hover:bg-green-200" href="/intro" title={t("intro")}>
-							<IconSvg className="ml-0.5 size-5.5 transition" src={CircleQuestionIcon} />
+						<Button className="p-0 hover:bg-green-200" href="/intro" title={t("intro")}>
+							<div className="flex size-10 items-center justify-center">
+								<IconSvg className="size-5.5 transition" src={CircleQuestionIcon} />
+							</div>
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -160,10 +166,10 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						{isAuthEnabled ? (
+						{!isAuthEnabled ? (
 							<Popover interactionType="click" placement="right-start">
-								<PopoverTrigger className="ml-1.5 flex items-center">
-									<Avatar color="black" name={user?.name} round={true} size="28" />
+								<PopoverTrigger className="ml-2 mt-2 flex items-center">
+									<Avatar color="black" name={user?.name} round={true} size="24" />
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span
