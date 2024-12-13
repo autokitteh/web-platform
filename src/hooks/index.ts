@@ -4,7 +4,6 @@ export { useCreateProjectFromTemplate } from "@hooks/useCreateProjectFromTemplat
 export { useFileOperations } from "@hooks/useFileOperations";
 export { useInterval } from "@hooks/useInterval";
 export { useLastVisitedEntity } from "@hooks/useLastVisitedEntity";
-export { useProjectCreation } from "@hooks/useProjectCreation";
 export { useResize } from "@hooks/useResize";
 export { useSort } from "@hooks/useSort";
 export { useToastAndLog } from "@hooks/useToastAndLog";
