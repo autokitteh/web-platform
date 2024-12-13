@@ -1,3 +1,10 @@
+# [2.86.0](https://github.com/autokitteh/web-platform/compare/v2.85.0...v2.86.0) (2024-12-13)
+
+
+### Features
+
+* **UI-637:** project stats on main page table ([#726](https://github.com/autokitteh/web-platform/issues/726)) ([7654ab7](https://github.com/autokitteh/web-platform/commit/7654ab762f8cc3841b00afe90534dfa21a34336d))
+
 # [2.85.0](https://github.com/autokitteh/web-platform/compare/v2.84.0...v2.85.0) (2024-12-11)
 
 
