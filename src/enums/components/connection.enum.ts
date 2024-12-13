@@ -48,6 +48,7 @@ export enum Integrations {
 	discord = "discord",
 	chatgpt = "chatgpt",
 	confluence = "confluence",
+	hubspot = "hubspot",
 }
 
 export type GoogleIntegrationType = Extract<
@@ -152,6 +153,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: TwilioIcon,
 		label: "Twilio",
 		value: Integrations.twilio,
+	},
+	hubspot: {
+		icon: TwilioIcon,
+		label: "HubSpot",
+		value: Integrations.hubspot,
 	},
 };
 

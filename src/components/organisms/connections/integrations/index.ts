@@ -19,6 +19,10 @@ export {
 	GoogleFormsIntegrationAddForm,
 	GoogleFormsIntegrationEditForm,
 } from "@components/organisms/connections/integrations/googleforms";
+export {
+	HubspotIntegrationAddForm,
+	HubspotIntegrationEditForm,
+} from "@components/organisms/connections/integrations/hubspot";
 export { IntegrationEditForm } from "@components/organisms/connections/integrations/integrationEditForm";
 export { JiraIntegrationAddForm } from "@components/organisms/connections/integrations/jira";
 export { OpenAiIntegrationAddForm } from "@components/organisms/connections/integrations/openAI";

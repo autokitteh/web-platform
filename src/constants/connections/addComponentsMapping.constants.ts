@@ -10,6 +10,7 @@ import {
 	GoogleFormsIntegrationAddForm,
 	GoogleGeminiIntegrationAddForm,
 	GoogleIntegrationAddForm,
+	HubspotIntegrationAddForm,
 	JiraIntegrationAddForm,
 	OpenAiIntegrationAddForm,
 	SlackIntegrationAddForm,
@@ -32,4 +33,5 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	jira: JiraIntegrationAddForm,
 	confluence: ConfluenceIntegrationAddForm,
 	discord: DiscordIntegrationAddForm,
+	hubspot: HubspotIntegrationAddForm,
 };

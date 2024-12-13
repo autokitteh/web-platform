@@ -105,7 +105,11 @@ export const IntegrationEditForm = ({
 
 	useEffect(() => {
 		if (connectionVariables) {
-			setFormValues(connectionVariables, integrationVariablesMapping[integrationType], setValue);
+			setFormValues(
+				connectionVariables,
+				integrationVariablesMapping[integrationType as keyof typeof integrationVariablesMapping],
+				setValue
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionVariables]);
