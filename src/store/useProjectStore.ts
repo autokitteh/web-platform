@@ -18,6 +18,7 @@ const defaultState: Omit<
 	| "renameProject"
 	| "projectList"
 	| "deleteProject"
+	| "exportProject"
 	| "createProjectFromManifest"
 	| "setEditorWidth"
 	| "setLatestOpenedTab"
@@ -28,6 +29,7 @@ const defaultState: Omit<
 	isLoadingProjectsList: true,
 	initialEditorWidth: 50,
 	pendingFile: undefined,
+	isExporting: false,
 };
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
@@ -103,6 +105,16 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		});
 
 		return { data: { name: project.name, projectId }, error: undefined };
+	},
+
+	exportProject: async (projectId: string) => {
+		const { data: akProjectArchiveZip, error } = await ProjectsService.export(projectId!);
+
+		if (error) {
+			return { error, data: undefined };
+		}
+
+		return { data: akProjectArchiveZip, error: undefined };
 	},
 
 	createProjectFromManifest: async (projectManifest: string) => {

@@ -2,23 +2,17 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
-import {
-	useCacheStore,
-	useConnectionCheckerStore,
-	useManualRunStore,
-	useModalStore,
-	useProjectStore,
-	useToastStore,
-} from "@src/store";
+import { useProjectActions } from "@src/hooks";
+import { useCacheStore, useManualRunStore, useModalStore, useToastStore } from "@src/store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
-import { DeleteProjectModal } from "@components/organisms";
+import { DeleteProjectModal } from "@components/organisms/modals";
 import { ManualRunButtons } from "@components/organisms/topbar/project";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
@@ -26,20 +20,14 @@ import { DownloadIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
-	const { t: tError } = useTranslation("errors");
 	const { projectId } = useParams();
-	const navigate = useNavigate();
-	const { closeModal, openModal } = useModalStore();
+	const { openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
-	const { resetChecker } = useConnectionCheckerStore();
-	const [isDeleting, setIsDeleting] = useState(false);
-	const { projectsList } = useProjectStore();
-	const [isExporting, setIsExporting] = useState(false);
+	const { deleteProject, downloadProjectExport, isDeleting, isExporting } = useProjectActions();
 
-	const { deleteProject, getProject } = useProjectStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 
@@ -110,86 +98,10 @@ export const ProjectTopbarButtons = () => {
 		};
 	}, [debouncedBuild, debouncedDeploy]);
 
-	const handleDeleteProject = async () => {
-		if (!projectId) {
-			return;
-		}
-
-		setIsDeleting(true);
-		const { error } = await deleteProject(projectId);
-		setIsDeleting(false);
-
-		closeModal(ModalName.deleteProject);
-		if (error) {
-			addToast({
-				message: tError("projectRemoveFailed"),
-				type: "error",
-			});
-
-			return;
-		}
-
-		resetChecker();
-
-		addToast({
-			message: t("topbar.deleteProjectSuccess"),
-			type: "success",
-		});
-		const projectName = projectsList.find(({ id }) => id === projectId)?.name;
-		LoggerService.info(namespaces.projectUI, t("topbar.deleteProjectSuccessExtended", { projectId, projectName }));
-
-		navigate("/");
-	};
-
 	const openModalDeleteProject = useCallback(() => {
 		openModal(ModalName.deleteProject);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const exportProject = useCallback(async () => {
-		setIsExporting(true);
-		const { data: akProjectArchiveZip, error } = await ProjectsService.export(projectId!);
-		setIsExporting(false);
-
-		if (error) {
-			addToast({
-				message: t("topbar.exportProjectFailed"),
-				type: "error",
-			});
-
-			return;
-		}
-
-		const blob = new Blob([akProjectArchiveZip!], { type: "application/zip" });
-		const url = URL.createObjectURL(blob);
-
-		const { data: project } = await getProject(projectId!);
-
-		const now = new Date();
-		const dateTime = now
-			.toLocaleString("en-GB", {
-				day: "2-digit",
-				month: "2-digit",
-				year: "numeric",
-				hour: "2-digit",
-				minute: "2-digit",
-				hour12: false,
-			})
-			.replace(/[/:]/g, "")
-			.replace(", ", "-");
-
-		const fileName = `ak-${project?.name}-${dateTime}-archive.zip`;
-		const link = Object.assign(document.createElement("a"), {
-			href: url,
-			download: fileName,
-		});
-
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-		URL.revokeObjectURL(url);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
 
 	const isDeployAndBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
 
@@ -247,7 +159,7 @@ export const ProjectTopbarButtons = () => {
 						<Button
 							ariaLabel={t("topbar.buttons.export")}
 							className="group h-8 px-4 text-white"
-							onClick={exportProject}
+							onClick={() => downloadProjectExport(projectId!)}
 							variant="outline"
 						>
 							{isExporting ? (
@@ -294,7 +206,7 @@ export const ProjectTopbarButtons = () => {
 				</Button>
 			</DropdownButton>
 
-			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleDeleteProject} />
+			<DeleteProjectModal isDeleting={isDeleting} onDelete={() => deleteProject(projectId!)} />
 		</div>
 	);
 };

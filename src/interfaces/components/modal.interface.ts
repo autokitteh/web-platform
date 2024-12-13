@@ -8,7 +8,7 @@ export interface ModalProps {
 	hideCloseButton?: boolean;
 }
 export interface DeleteModalProps {
-	onDelete?: () => void;
+	onDelete: () => void;
 	id?: string;
 	isDeleting: boolean;
 }
