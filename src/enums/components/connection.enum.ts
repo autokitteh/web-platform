@@ -17,6 +17,7 @@ import {
 	GoogleSheetsIcon,
 	GrpcIcon,
 	HttpIcon,
+	HubspotIcon,
 	JiraIcon,
 	OpenAiIcon,
 	SchedulerIcon,
@@ -155,7 +156,7 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		value: Integrations.twilio,
 	},
 	hubspot: {
-		icon: TwilioIcon,
+		icon: HubspotIcon,
 		label: "HubSpot",
 		value: Integrations.hubspot,
 	},
