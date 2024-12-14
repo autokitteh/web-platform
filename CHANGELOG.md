@@ -1,3 +1,10 @@
+# [2.87.0](https://github.com/autokitteh/web-platform/compare/v2.86.0...v2.87.0) (2024-12-14)
+
+
+### Features
+
+* **UI-1004:** redesign sidebar navigation ([#741](https://github.com/autokitteh/web-platform/issues/741)) ([616fcb1](https://github.com/autokitteh/web-platform/commit/616fcb1a8a3914d5ea1d489f32353f6a4e3c8b93))
+
 # [2.86.0](https://github.com/autokitteh/web-platform/compare/v2.85.0...v2.86.0) (2024-12-13)
 
 
