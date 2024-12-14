@@ -165,5 +165,8 @@
 			"aiStudio": "Google AI Studio",
 			"apiKeys": "API keys"
 		}
+	},
+	"hubspot": {
+		"hubspotPlatfrom": "HubSpot developer platform"
 	}
 }

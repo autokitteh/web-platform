@@ -91,5 +91,6 @@
 	"errorFetchingEvent": "Couldn't fetch event",
 	"eventNotFound": "Event details not found",
 	"eventNotFoundExtended": "Event details not found, {{eventId}} - error: {{error}}",
-	"fetchSessionFailed": "Failed to fetch session logs"
+	"fetchSessionFailed": "Failed to fetch session logs",
+	"errorFetchingIntegrations": "Error fetching integrations"
 }
