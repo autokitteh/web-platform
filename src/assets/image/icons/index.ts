@@ -33,7 +33,6 @@ export { default as ExpandIcon } from "@assets/image/icons/Expand.svg?react";
 export { default as ExternalLinkIcon } from "@assets/image/icons/ExternalLink.svg?react";
 export { default as EyeIcon } from "@assets/image/icons/Eye.svg?react";
 export { default as EyeCloseIcon } from "@assets/image/icons/EyeClose.svg?react";
-export { default as FileIcon } from "@assets/image/icons/File.svg?react";
 // Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/filter.svg
 export { default as FilterIcon } from "@assets/image/icons/Filter.svg?react";
 export { default as FloppyDiskIcon } from "@assets/image/icons/FloppyDisk.svg?react";
@@ -44,7 +43,6 @@ export { default as GithubShadowIcon } from "@assets/image/icons/GithubShadow.sv
 export { default as InfoIcon } from "@assets/image/icons/Info.svg?react";
 export { default as LinkedInIntroIcon } from "@assets/image/icons/LinkedIn.svg?react";
 // Taken from: https://github.com/tabler/tabler-icons/blob/main/icons/outline/list-details.svg
-export { default as ListDetailsIcon } from "@assets/image/icons/ListDetails.svg?react";
 export { default as UnlockedLockIcon } from "@assets/image/icons/Lock.svg?react";
 export { default as LockSolid } from "@assets/image/icons/LockSolid.svg?react";
 export { default as MenuCircleIcon } from "@assets/image/icons/MenuCircle.svg?react";
@@ -56,7 +54,6 @@ export { default as PlayIcon } from "@assets/image/icons/Play.svg?react";
 export { default as PlusIcon } from "@assets/image/icons/Plus.svg?react";
 export { default as PlusAccordionIcon } from "@assets/image/icons/PlusAccordion.svg?react";
 export { default as PlusCircle } from "@assets/image/icons/PlusCircle.svg?react";
-export { default as HelpIcon } from "@assets/image/icons/Question.svg?react";
 export { default as ReadmeIcon } from "@assets/image/icons/Readme.svg?react";
 export { default as ReceiptIcon } from "@assets/image/icons/Receipt.svg?react";
 export { default as RedditIntroIcon } from "@assets/image/icons/Reddit.svg?react";

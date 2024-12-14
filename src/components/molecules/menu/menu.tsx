@@ -65,7 +65,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 				<li>
 					<Button
 						ariaLabel={t("newProject")}
-						className="w-full gap-1.5 p-0.5 pl-1 hover:bg-green-200 disabled:opacity-100"
+						className="w-full gap-1.5 p-0.5 hover:bg-green-200 disabled:opacity-100"
 						onClick={() => openModal(ModalName.newProject)}
 						title={t("newProject")}
 					>
@@ -91,8 +91,8 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 				<PopoverList animation="slideFromLeft" interactionType="hover">
 					<PopoverListTrigger>
 						<li className="group">
-							<div className="z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 pl-1 text-gray-1100 group-hover:bg-green-200">
-								<div className="flex size-9 items-center justify-center rounded-full">
+							<div className="z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 text-gray-1100 group-hover:bg-green-200">
+								<div className="flex size-9 items-center justify-center">
 									<IconSvg
 										alt={t("myProjects")}
 										className="fill-gray-1100"

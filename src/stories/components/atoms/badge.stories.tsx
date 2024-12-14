@@ -6,7 +6,7 @@ import { BadgeProps } from "@src/interfaces/components";
 
 import { Badge, IconSvg } from "@components/atoms";
 
-import { FileIcon } from "@assets/image/icons";
+import { FileIcon } from "@assets/image/icons/sidebar";
 
 const BadgeWrapper = (props: Partial<BadgeProps>) => {
 	return (

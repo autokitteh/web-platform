@@ -10,7 +10,6 @@ export { default as LogoTextAndIconDark } from "@assets/image/LogoTextAndIconDar
 export { default as Map } from "@assets/image/Map.svg?react";
 export { default as StartFromTemplateImage } from "@assets/image/StartFromTemplate.svg?react";
 export { ArrowDown, ArrowUp, InfoIcon, Minimize, PlusCircle, SmallArrowDown, ThreeDots } from "@assets/image/icons";
-export { default as OrStartFromTemplateImage } from "@assets/image/orStartFromTemplate.svg?react";
 export {
 	ConnectionsIcon as Connections,
 	DashboardIcon as Dashboard,
@@ -18,5 +17,6 @@ export {
 	NotificationIcon as IconNotification,
 	ProjectsIcon,
 	StatsBlackIcon as StatsBlack,
-} from "@assets/image/sidebar";
+} from "@assets/image/icons/sidebar";
+export { default as OrStartFromTemplateImage } from "@assets/image/orStartFromTemplate.svg?react";
 export { BuildIcon, FullScreenIcon, MoreIcon, StatsIcon } from "@assets/image/topbar";

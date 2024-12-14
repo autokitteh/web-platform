@@ -17,8 +17,7 @@ import { Popover, PopoverContent } from "@components/molecules/popover/index";
 import { NewProjectModal } from "@components/organisms";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { FileIcon, HelpIcon, ListDetailsIcon } from "@assets/image/icons";
-import { LogoutIcon, SettingsIcon } from "@assets/image/sidebar";
+import { CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon, SettingsIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +40,7 @@ export const Sidebar = () => {
 			<div className="relative z-40 flex h-full min-w-[65px] items-start">
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
-						<Link className="ml-1 flex items-center gap-2.5" to="/">
+						<Link className="flex items-center gap-2.5" to="/">
 							<IconLogo className="size-8" />
 
 							<AnimatePresence>
@@ -61,7 +60,7 @@ export const Sidebar = () => {
 
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
-							className="mt-10 w-full gap-2.5 p-0.5 pl-1 pr-2 hover:bg-green-200"
+							className="mt-7 w-full justify-center gap-2.5 p-0.5 pr-2 hover:bg-green-200"
 							onClick={() => setIsOpen(!isOpen)}
 							title={isOpen ? t("closeSidebar") : t("openSidebar")}
 						>
@@ -85,17 +84,19 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						<Menu className="mt-8" isOpen={isOpen} />
+						<Menu className="mt-5" isOpen={isOpen} />
 					</div>
 
-					<div className="flex flex-col gap-5">
+					<div className="flex flex-col gap-2">
 						<Button
 							ariaLabel={t("events")}
-							className="hover:bg-green-200"
+							className="p-0 hover:bg-green-200"
 							href="/events"
 							title={t("events")}
 						>
-							<IconSvg className="size-7 transition" src={ListDetailsIcon} />
+							<div className="flex size-10 items-center justify-center">
+								<IconSvg className="size-5 transition" src={EventListIcon} />
+							</div>
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -114,19 +115,21 @@ export const Sidebar = () => {
 
 						<Button
 							ariaLabel={t("systemLog")}
-							className="hover:bg-green-200"
+							className="p-0 hover:bg-green-200"
 							onClick={() => toggleLogger(!isLoggerEnabled)}
 							title={t("systemLog")}
 						>
-							<Badge
-								anchorOrigin={{ vertical: "top", horizontal: "left" }}
-								ariaLabel={t("logToReview")}
-								className="absolute"
-								isVisible={isNewLogs}
-								variant="dot"
-							>
-								<IconSvg className="size-7 stroke-gray-1300 transition" src={FileIcon} />
-							</Badge>
+							<div className="flex size-10 items-center justify-center">
+								<Badge
+									anchorOrigin={{ vertical: "top", horizontal: "left" }}
+									ariaLabel={t("logToReview")}
+									className="absolute"
+									isVisible={isNewLogs}
+									variant="dot"
+								>
+									<IconSvg className="size-5.5 stroke-gray-1100 transition" src={FileIcon} />
+								</Badge>
+							</div>
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -143,8 +146,10 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						<Button className="hover:bg-green-200" href="/intro" title={t("intro")}>
-							<IconSvg className="size-7 transition" src={HelpIcon} />
+						<Button className="p-0 hover:bg-green-200" href="/intro" title={t("intro")}>
+							<div className="flex size-10 items-center justify-center">
+								<IconSvg className="size-5.5 transition" src={CircleQuestionIcon} />
+							</div>
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -163,8 +168,8 @@ export const Sidebar = () => {
 
 						{isAuthEnabled ? (
 							<Popover interactionType="click" placement="right-start">
-								<PopoverTrigger className="ml-1 flex items-center">
-									<Avatar color="black" name={user?.name} round={true} size="36" />
+								<PopoverTrigger className="ml-2 mt-2 flex items-center">
+									<Avatar color="black" name={user?.name} round={true} size="24" />
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span
@@ -181,7 +186,7 @@ export const Sidebar = () => {
 								</PopoverTrigger>
 								<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
 									<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2 pl-2">
-										<Avatar color="black" name={`${user?.name}`} round={true} size="32" />
+										<Avatar color="black" name={`${user?.name}`} round={true} size="28" />
 										<span className="font-medium text-black">{user?.email}</span>
 									</div>
 									<div className="mt-1">
