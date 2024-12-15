@@ -141,5 +141,13 @@ export default defineConfig({
 		origin: process.env.VITE_DOMAIN_URL,
 		port: 8000,
 		strictPort: true,
+		proxy: {
+			"/api": {
+				target: process.env.VITE_HOST_URL || "http://localhost:9980",
+				changeOrigin: true,
+				secure: false,
+				rewrite: (path) => path.replace(/^\/api/, ""),
+			},
+		},
 	},
 });

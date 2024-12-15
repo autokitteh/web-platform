@@ -38,17 +38,30 @@ Ensure you have the following installed on your system:
 
     `npm install`
 
+### API Proxy Configuration 🔄
+
+The application includes a proxy configuration for API requests. When running in development mode, all requests to `/api` are automatically proxied to the backend server.
+
+#### Configuration Options:
+
+`VITE_HOST_URL`
+
+-   Default: http://localhost:9980
+-   Description: Specifies the target URL where API requests should be proxied to. This is particularly useful when running the frontend and backend on different ports or hosts during development.
+-   Example: VITE_HOST_URL=http://localhost:3000
+
+The proxy configuration:
+
+-   Forwards all `/api/*` requests to the backend server
+-   Handles CORS issues automatically
+-   Removes the `/api` prefix before forwarding requests
+-   Supports both HTTP and HTTPS backends
+
 ### Environment Setup 🌐
 
 Create a `.env` file in the root of the project directory and add the necessary environment variables. Refer to the `validateEnv` script for required variables:
 
 `sh cp .env.example .env # Edit .env with your environment-specific settings`
-
-`VITE_HOST_URL`
-
-- Default: A predefined default host URL mentioned in [getApiBaseUrlFile](https://github.com/autokitteh/web-platform/blob/main/src/utilities/getApiBaseUrl.utils.ts)
-- Description: Defines the backend URL that the application will use as its host. If not set, the application will use a default host URL.
-- Example: VITE_HOST_URL=http://localhost:1234
 
 `VITE_AUTH_ENABLED`
 
