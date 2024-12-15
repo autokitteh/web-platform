@@ -27,6 +27,10 @@
 		"saveConnection": "Save Connection",
 		"startOAuthFlow": "Start OAuth Flow"
 	},
+	"auth0": {
+		"configurationGuide": "AutoKitteh guide: configuring the Auth0 integration",
+		"backgroundConfiguration": "Background about Auth0 OAuth authentication"
+	},
 	"github": {
 		"aboutGitHubApps": "About using GitHub Apps",
 		"akConfigure": "AutoKitteh guide: configuring the GitHub integration",

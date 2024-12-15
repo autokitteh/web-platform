@@ -4,6 +4,7 @@ import { IntegrationSelectOption } from "@src/interfaces/components/forms";
 import { AKRoundLogo } from "@assets/image";
 import {
 	AsanaIcon,
+	Auth0Icon,
 	AwsIcon,
 	ConfluenceIcon,
 	DiscordIcon,
@@ -35,6 +36,7 @@ export enum ConnectionStatus {
 
 export enum Integrations {
 	asana = "asana",
+	auth0 = "auth0",
 	github = "github",
 	slack = "slack",
 	gmail = "gmail",
@@ -80,6 +82,11 @@ export enum IntegrationForTemplates {
 }
 
 export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
+	auth0: {
+		icon: Auth0Icon,
+		label: "Auth0",
+		value: Integrations.auth0,
+	},
 	asana: {
 		icon: AsanaIcon,
 		label: "Asana",
