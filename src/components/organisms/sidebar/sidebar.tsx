@@ -5,7 +5,7 @@ import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
-import { isAuthEnabled } from "@constants";
+import { featureFlags, isAuthEnabled } from "@constants";
 
 import { useLoggerStore, useUserStore } from "@store";
 
@@ -15,6 +15,7 @@ import { PopoverTrigger } from "@components/molecules";
 import { Menu } from "@components/molecules/menu";
 import { Popover, PopoverContent } from "@components/molecules/popover/index";
 import { NewProjectModal } from "@components/organisms";
+import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
 import { CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon, SettingsIcon } from "@assets/image/icons/sidebar";
@@ -185,27 +186,33 @@ export const Sidebar = () => {
 									</AnimatePresence>
 								</PopoverTrigger>
 								<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
-									<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2 pl-2">
-										<Avatar color="black" name={`${user?.name}`} round={true} size="28" />
-										<span className="font-medium text-black">{user?.email}</span>
-									</div>
-									<div className="mt-1">
-										<Button
-											className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
-											href="/settings"
-											title={t("settings")}
-										>
-											<SettingsIcon className="size-5" fill="black" />
-											{t("settings")}
-										</Button>
-										<Button
-											className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
-											onClick={() => logoutFunction()}
-										>
-											<LogoutIcon className="size-5" fill="black" />
-											{t("logout")}
-										</Button>
-									</div>
+									{featureFlags.displayNewOrgsUsersMenu ? (
+										<UserMenu />
+									) : (
+										<>
+											<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2 pl-2">
+												<Avatar color="black" name={`${user?.name}`} round={true} size="28" />
+												<span className="font-medium text-black">{user?.email}</span>
+											</div>
+											<div className="mt-1">
+												<Button
+													className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
+													href="/settings"
+													title={t("userSettings.settings")}
+												>
+													<SettingsIcon className="size-5" fill="black" />
+													{t("userSettings.settings")}
+												</Button>
+												<Button
+													className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
+													onClick={() => logoutFunction()}
+												>
+													<LogoutIcon className="size-5" fill="black" />
+													{t("userSettings.logout")}
+												</Button>
+											</div>
+										</>
+									)}
 								</PopoverContent>
 							</Popover>
 						) : null}

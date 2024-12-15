@@ -1,12 +1,25 @@
 {
 	"menu": {
-		"logout": "Log out",
-		"settings": "Settings",
-		"closeSidebar": "Close Sidebar",
-		"openSidebar": "Open Sidebar",
-		"intro": "Introduction",
-		"systemLog": "System Log",
-		"logToReview": "Unread system logs",
-		"events": "Events"
-	}
+		"userSettings": {
+			"title": "User Settings",
+			"logout": "Log out",
+			"settings": "Settings"	
+		},
+		"organizationSettings": {
+			"title": "Organization Settings",
+			"settings": "Settings",
+			"users": "Users",
+			"billing": "Billing"
+		},
+		"organizationsList": {
+			"title": "Organizations",
+			"newOrganization": "New Organization"
+		}
+
+	},
+	"closeSidebar": "Close Sidebar",
+	"openSidebar": "Open Sidebar",
+	"intro": "Introduction",
+	"events": "Events",
+	"logToReview": "Unread system logs"
 }
