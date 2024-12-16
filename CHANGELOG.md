@@ -1,3 +1,10 @@
+# [2.89.0](https://github.com/autokitteh/web-platform/compare/v2.88.2...v2.89.0) (2024-12-16)
+
+
+### Features
+
+* **UI-1067:** add full text tooltip in events table cells on hover ([#753](https://github.com/autokitteh/web-platform/issues/753)) ([037ed0c](https://github.com/autokitteh/web-platform/commit/037ed0cd96c14e8d6fda8b08b89bdbd4f1cf4a8f))
+
 ## [2.88.2](https://github.com/autokitteh/web-platform/compare/v2.88.1...v2.88.2) (2024-12-16)
 
 
