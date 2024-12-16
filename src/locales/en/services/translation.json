@@ -90,6 +90,7 @@
 	"tokenCreationError": "Error occurred during the token creation",
 	"deploymentCreatedSuccessfully": "Deployment created with id: {{deploymentId}}",
 	"failedFetchingLogRecordsBySessionId": "Failed to fetch log records by session ID: {{sessionId}}, error: {{error}}, page token: {{pageToken}}, page size: {{pageSize}}, log type: {{logType}}",
-	"connection": "Connection"
+	"connection": "Connection",
+	"errorFetchingIntegrationsForConnectionsExtended": "Error fetching integrations for connections, connection ID: {{connectionId}}, error: {{error}}"
 
 }

@@ -4,6 +4,7 @@ import {
 	ConfluenceIntegrationEditForm,
 	GoogleCalendarIntegrationEditForm,
 	GoogleFormsIntegrationEditForm,
+	HubspotIntegrationEditForm,
 } from "@components/organisms/connections/integrations";
 import { AsanaIntegrationEditForm } from "@components/organisms/connections/integrations/asana";
 import { AwsIntegrationEditForm } from "@components/organisms/connections/integrations/aws";
@@ -32,4 +33,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.gmail]: GoogleIntegrationEditForm,
 	[Integrations.drive]: GoogleIntegrationEditForm,
 	[Integrations.forms]: GoogleFormsIntegrationEditForm,
+	[Integrations.hubspot]: HubspotIntegrationEditForm,
 };

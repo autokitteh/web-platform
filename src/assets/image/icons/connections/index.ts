@@ -13,6 +13,8 @@ export { default as GoogleGmailIcon } from "@assets/image/icons/connections/Goog
 export { default as GoogleSheetsIcon } from "@assets/image/icons/connections/GoogleSheets.svg?react";
 export { default as GrpcIcon } from "@assets/image/icons/connections/Grpc.svg?react";
 export { default as HttpIcon } from "@assets/image/icons/connections/Http.svg?react";
+// Taken from: https://www.svgrepo.com/svg/443148/brand-hubspot
+export { default as HubspotIcon } from "@assets/image/icons/connections/Hubspot.svg?react";
 export { default as JiraIcon } from "@assets/image/icons/connections/Jira.svg?react";
 export { default as OpenAiIcon } from "@assets/image/icons/connections/OpenAi.svg?react";
 export { default as RedisIcon } from "@assets/image/icons/connections/Redis.svg?react";

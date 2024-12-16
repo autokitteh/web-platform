@@ -17,6 +17,7 @@ import {
 	GoogleSheetsIcon,
 	GrpcIcon,
 	HttpIcon,
+	HubspotIcon,
 	JiraIcon,
 	OpenAiIcon,
 	SchedulerIcon,
@@ -48,6 +49,7 @@ export enum Integrations {
 	discord = "discord",
 	chatgpt = "chatgpt",
 	confluence = "confluence",
+	hubspot = "hubspot",
 }
 
 export type GoogleIntegrationType = Extract<
@@ -152,6 +154,11 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: TwilioIcon,
 		label: "Twilio",
 		value: Integrations.twilio,
+	},
+	hubspot: {
+		icon: HubspotIcon,
+		label: "HubSpot",
+		value: Integrations.hubspot,
 	},
 };
 
