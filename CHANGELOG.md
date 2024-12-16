@@ -1,3 +1,10 @@
+## [2.89.2](https://github.com/autokitteh/web-platform/compare/v2.89.1...v2.89.2) (2024-12-16)
+
+
+### Bug Fixes
+
+* **UI-1078:** fix maximum call stack size exceeded - deps upgrade ([#767](https://github.com/autokitteh/web-platform/issues/767)) ([5bcc86a](https://github.com/autokitteh/web-platform/commit/5bcc86acf669bf8530f86aad1d6d2b45afed977c))
+
 ## [2.89.1](https://github.com/autokitteh/web-platform/compare/v2.89.0...v2.89.1) (2024-12-16)
 
 
