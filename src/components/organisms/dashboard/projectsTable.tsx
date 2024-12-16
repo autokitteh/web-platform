@@ -93,7 +93,7 @@ export const DashboardProjectsTable = () => {
 
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
-			"inline-block border-0 px-1 text-sm font-medium w-20 py-2",
+			"inline-block border-0 px-1 text-sm font-medium min-w-10 max-w-12 py-2 truncate sm:max-w-12 2xl:max-w-18 3xl:max-w-24",
 			{
 				"text-blue-500": state === SessionStateType.running,
 				"text-yellow-500": state === SessionStateType.stopped,
@@ -214,7 +214,7 @@ export const DashboardProjectsTable = () => {
 										<div className="w-full pr-4 text-center">{totalDeployments}</div>
 									</Td>
 									<Td
-										className="-ml-1 flex w-2/6"
+										className="-ml-1 flex w-2/6 pr-2"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div
@@ -222,28 +222,28 @@ export const DashboardProjectsTable = () => {
 											className={countStyle(SessionStateType.running)}
 											title={`${running} ${t("table.sessionTypes.running")}`}
 										>
-											{running}
+											1111111111
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.stopped")}
 											className={countStyle(SessionStateType.stopped, "justify-center")}
 											title={`${stopped} ${t("table.sessionTypes.stopped")}`}
 										>
-											{stopped}
+											4499
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.completed")}
 											className={countStyle(SessionStateType.completed)}
 											title={`${completed} ${t("table.sessionTypes.completed")}`}
 										>
-											{completed}
+											6661233as2d1
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.error")}
 											className={countStyle(SessionStateType.error)}
 											title={`${error} ${t("table.sessionTypes.error")}`}
 										>
-											{error}
+											1122
 										</div>
 									</Td>
 
