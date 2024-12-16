@@ -41,7 +41,7 @@ export const EditConnection = () => {
 	const [connectionInfoLoaded, setConnectionInfoLoaded] = useState(false);
 	useEvent("onConnectionLoaded", setConnectionInfoLoaded);
 
-	if (integrationType) {
+	if (integrationType && selectedIntegration?.value) {
 		googleIntegrationApplication = stripGoogleConnectionName(integrationType);
 
 		if (googleIntegrationApplication) {
@@ -75,14 +75,22 @@ export const EditConnection = () => {
 						/>
 					</div>
 
-					<Select
-						aria-label={t("placeholders.selectIntegration")}
-						disabled
-						label={t("placeholders.integration")}
-						options={integrationTypes}
-						placeholder={t("placeholders.selectIntegration")}
-						value={selectedIntegration}
-					/>
+					{selectedIntegration ? (
+						<Select
+							aria-label={t("placeholders.selectIntegration")}
+							disabled
+							label={t("placeholders.integration")}
+							options={integrationTypes}
+							placeholder={t("placeholders.selectIntegration")}
+							value={selectedIntegration}
+						/>
+					) : (
+						<div className="text-error">
+							{t("integrationNotFound")}
+							<br />
+							{t("integrationNotFoundMessage")}
+						</div>
+					)}
 				</div>
 
 				<div className="w-5/6">

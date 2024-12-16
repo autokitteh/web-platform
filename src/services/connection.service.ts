@@ -151,16 +151,11 @@ export class ConnectionService {
 					integrationId: connection.integrationId,
 				});
 				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return {
-					data: undefined,
-					error: errorMessage,
-				};
 			}
 
-			convertedConnection.integrationName = integration.displayName;
-			convertedConnection.integrationUniqueName = integration.uniqueName;
-			const strippedIntegrationName = stripGoogleConnectionName(integration.uniqueName);
+			convertedConnection.integrationName = integration?.displayName;
+			convertedConnection.integrationUniqueName = integration?.uniqueName;
+			const strippedIntegrationName = stripGoogleConnectionName(integration?.uniqueName || "");
 			convertedConnection.logo = integrationIcons[strippedIntegrationName];
 
 			return { data: convertedConnection, error: undefined };

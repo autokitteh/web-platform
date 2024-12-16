@@ -10,6 +10,8 @@
 	"copyFailure": "Could not copy",
 	"copyFailureExtended": "Could not copy, error: {{error}}",
 	"copySuccess": "Copied to clipboard successfully",
+	"integrationNotFound": "Unable to find integration details",
+	"integrationNotFoundMessage": "This connection appears to be invalid or no longer exists. Please delete this connection and create a new one.",
 	"placeholders": {
 		"noConnectionTypesAvailable": "No connection types available",
 		"noIntegrationsAvailable": "No integrations available",

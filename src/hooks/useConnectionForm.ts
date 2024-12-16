@@ -243,10 +243,14 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
 			setConnectionName(connectionResponse!.name);
-			setIntegration({
-				label: connectionResponse!.integrationName!,
-				value: connectionResponse!.integrationUniqueName!,
-			});
+			if (connectionResponse?.integrationName && connectionResponse?.integrationUniqueName) {
+				setIntegration({
+					label: connectionResponse.integrationName!,
+					value: connectionResponse.integrationUniqueName!,
+				});
+			} else {
+				setIntegration(undefined);
+			}
 
 			await getConnectionAuthType(connectionId);
 			await getConnectionVariables(connectionId);
