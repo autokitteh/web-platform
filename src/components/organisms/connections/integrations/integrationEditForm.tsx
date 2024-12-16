@@ -79,9 +79,8 @@ export const IntegrationEditForm = ({
 		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
 
 	useEffect(() => {
-		if (ConnectionTypeComponent) {
-			dispacthConnectionInfoLoaded(true);
-		}
+		dispacthConnectionInfoLoaded(true);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ConnectionTypeComponent]);
 
