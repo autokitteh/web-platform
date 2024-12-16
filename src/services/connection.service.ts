@@ -148,6 +148,7 @@ export class ConnectionService {
 					connectionId,
 					connectionName: connection.name,
 					ns: "services",
+					integrationId: connection.integrationId,
 				});
 				LoggerService.error(namespaces.connectionService, errorMessage);
 
@@ -284,6 +285,7 @@ export class ConnectionService {
 						projectId,
 						connectionName: connection.name,
 						connectionId: connection.connectionId,
+						integrationId: connection.integrationId,
 						ns: "services",
 					});
 					LoggerService.error(namespaces.connectionService, errorMessage);

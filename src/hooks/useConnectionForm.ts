@@ -239,8 +239,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					message: tErrors("errorFetchingConnection", { connectionId }),
 					type: "error",
 				});
-
-				return;
 			}
 
 			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
