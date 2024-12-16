@@ -1,3 +1,10 @@
+## [2.88.2](https://github.com/autokitteh/web-platform/compare/v2.88.1...v2.88.2) (2024-12-16)
+
+
+### Bug Fixes
+
+* **UI-1075:** navigate to main page on project delete ([#762](https://github.com/autokitteh/web-platform/issues/762)) ([f2c59fd](https://github.com/autokitteh/web-platform/commit/f2c59fdde3c91fb50100a6dbd98f6af82d1a28f6))
+
 ## [2.88.1](https://github.com/autokitteh/web-platform/compare/v2.88.0...v2.88.1) (2024-12-16)
 
 
