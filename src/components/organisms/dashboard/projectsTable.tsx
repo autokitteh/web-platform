@@ -202,7 +202,7 @@ export const DashboardProjectsTable = () => {
 										className="w-1/6"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
-										<div className="m-auto pr-8">
+										<div className="m-auto max-w-16 pr-4 md:max-w-28">
 											<StatusBadge deploymentStatus={status} />
 										</div>
 									</Td>
@@ -211,7 +211,7 @@ export const DashboardProjectsTable = () => {
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 										title={`${totalDeployments} ${t("table.columns.deployments")}`}
 									>
-										<div className="w-full pr-4 text-center">{totalDeployments}</div>
+										<div className="w-full pr-6 text-center">{totalDeployments}</div>
 									</Td>
 									<Td
 										className="-ml-1 flex w-2/6 pr-2"
@@ -222,28 +222,28 @@ export const DashboardProjectsTable = () => {
 											className={countStyle(SessionStateType.running)}
 											title={`${running} ${t("table.sessionTypes.running")}`}
 										>
-											1111111111
+											{running}
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.stopped")}
 											className={countStyle(SessionStateType.stopped, "justify-center")}
 											title={`${stopped} ${t("table.sessionTypes.stopped")}`}
 										>
-											4499
+											{stopped}
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.completed")}
 											className={countStyle(SessionStateType.completed)}
 											title={`${completed} ${t("table.sessionTypes.completed")}`}
 										>
-											6661233as2d1
+											{completed}
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.error")}
 											className={countStyle(SessionStateType.error)}
 											title={`${error} ${t("table.sessionTypes.error")}`}
 										>
-											1122
+											{error}
 										</div>
 									</Td>
 
@@ -257,20 +257,22 @@ export const DashboardProjectsTable = () => {
 									</Td>
 
 									<Td className="w-1/6">
-										<IconButton onClick={() => downloadProjectExport(id)}>
-											<IconSvg
-												className="fill-white transition hover:fill-green-200 active:fill-green-800"
-												size="md"
-												src={DownloadIcon}
-											/>
-										</IconButton>
-										<IconButton onClick={() => displayDeleteModal(id)}>
-											<IconSvg
-												className="stroke-white transition hover:stroke-green-200 active:stroke-green-800"
-												size="md"
-												src={TrashIcon}
-											/>
-										</IconButton>
+										<div className="flex">
+											<IconButton onClick={() => downloadProjectExport(id)}>
+												<IconSvg
+													className="fill-white transition hover:fill-green-200 active:fill-green-800"
+													size="md"
+													src={DownloadIcon}
+												/>
+											</IconButton>
+											<IconButton onClick={() => displayDeleteModal(id)}>
+												<IconSvg
+													className="stroke-white transition hover:stroke-green-200 active:stroke-green-800"
+													size="md"
+													src={TrashIcon}
+												/>
+											</IconButton>
+										</div>
 									</Td>
 								</Tr>
 							)
