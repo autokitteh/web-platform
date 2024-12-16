@@ -137,7 +137,7 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 	},
 	jira: {
 		icon: JiraIcon,
-		label: "Jira",
+		label: "Atlassian Jira",
 		value: Integrations.jira,
 	},
 	sheets: {
