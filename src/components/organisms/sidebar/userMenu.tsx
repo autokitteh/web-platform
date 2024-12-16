@@ -3,11 +3,12 @@ import React from "react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 
+import { userMenuOrganizationItems } from "@src/constants";
 import { useUserStore } from "@src/store";
 
 import { Button } from "@components/atoms";
 
-import { GearIcon, PlusIcon, ReceiptIcon, UserIcon } from "@assets/image/icons";
+import { GearIcon, PlusIcon } from "@assets/image/icons";
 import { LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const UserMenu = () => {
@@ -53,18 +54,12 @@ export const UserMenu = () => {
 
 			<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
 				<h3 className="mb-3 font-semibold text-black">{t("organizationSettings.title")}</h3>
-				<Button className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250" href="/organization/settings">
-					<GearIcon className="size-4" fill="black" />
-					{t("organizationSettings.settings")}
-				</Button>
-				<Button className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250" href="/organization/users">
-					<UserIcon className="size-4" fill="black" />
-					{t("organizationSettings.users")}
-				</Button>
-				<Button className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250" href="/organization/billing">
-					<ReceiptIcon className="size-4" fill="black" />
-					{t("organizationSettings.billing")}
-				</Button>
+				{userMenuOrganizationItems.map(({ href, icon: Icon, label }) => (
+					<Button className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250" href={href} key={href}>
+						<Icon className="size-4" fill="black" />
+						{label}
+					</Button>
+				))}
 			</div>
 
 			<div className="flex w-48 flex-col">
@@ -79,7 +74,7 @@ export const UserMenu = () => {
 					{t("organizationsList.newOrganization")}
 				</Button>
 
-				<div className="max-h-40 overflow-y-auto">
+				<div className="scrollbar max-h-40 overflow-y-auto">
 					{organizations.map((org) => (
 						<Button
 							className="mb-1 w-full rounded-md px-2.5 text-sm hover:bg-gray-250"

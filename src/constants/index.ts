@@ -37,7 +37,7 @@ export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
 export { menuItems } from "@constants/menuItems.constants";
 export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
-export { mainNavigationItems } from "@constants/navigation.constnants";
+export { mainNavigationItems, userMenuOrganizationItems } from "@constants/navigation.constants";
 export {
 	defaultProjectTab,
 	projectTabs,
