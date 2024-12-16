@@ -123,8 +123,6 @@ export class ConnectionService {
 					error: integrationsError,
 				});
 				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return { data: undefined, error: errorMessage };
 			}
 
 			if (!integrations || !integrations.length) {
@@ -133,11 +131,6 @@ export class ConnectionService {
 					connectionId,
 				});
 				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return {
-					data: undefined,
-					error: errorMessage,
-				};
 			}
 			const convertedConnection = convertConnectionProtoToModel(connection);
 			const integration = integrations!.find(
