@@ -14,19 +14,7 @@ import { DashboardProjectWithStats, Project } from "@type/models";
 import { useProjectActions, useSort } from "@hooks";
 import { useModalStore, useProjectStore } from "@store";
 
-import {
-	Button,
-	DeploymentStatusBadge,
-	IconButton,
-	IconSvg,
-	Loader,
-	TBody,
-	THead,
-	Table,
-	Td,
-	Th,
-	Tr,
-} from "@components/atoms";
+import { Button, IconButton, IconSvg, Loader, StatusBadge, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms/modals";
 
@@ -146,27 +134,31 @@ export const DashboardProjectsTable = () => {
 							</Th>
 							<Th
 								className="group h-11 w-1/6 cursor-pointer font-normal"
-								onClick={() => requestSort("totalDeployments")}
+								onClick={() => requestSort("status")}
 							>
-								{t("table.columns.status")}
+								<div className="w-full text-center">
+									{t("table.columns.status")}
 
-								<SortButton
-									className="opacity-0 group-hover:opacity-100"
-									isActive={"status" === sortConfig.key}
-									sortDirection={sortConfig.direction}
-								/>
+									<SortButton
+										className="opacity-0 group-hover:opacity-100"
+										isActive={"status" === sortConfig.key}
+										sortDirection={sortConfig.direction}
+									/>
+								</div>
 							</Th>
 							<Th
 								className="group h-11 w-1/6 cursor-pointer font-normal"
 								onClick={() => requestSort("totalDeployments")}
 							>
-								{t("table.columns.totalDeployments")}
+								<div className="w-full text-center">
+									{t("table.columns.totalDeployments")}
 
-								<SortButton
-									className="ml-0 opacity-0 group-hover:opacity-100"
-									isActive={"totalDeployments" === sortConfig.key}
-									sortDirection={sortConfig.direction}
-								/>
+									<SortButton
+										className="ml-0 opacity-0 group-hover:opacity-100"
+										isActive={"totalDeployments" === sortConfig.key}
+										sortDirection={sortConfig.direction}
+									/>
+								</div>
 							</Th>
 							<Th className="group h-11 w-2/6 font-normal">{t("table.columns.sessions")}</Th>
 							<Th
@@ -200,23 +192,26 @@ export const DashboardProjectsTable = () => {
 							}) => (
 								<Tr className="group cursor-pointer pl-4" key={id}>
 									<Td
-										className="w-1/5 group-hover:font-bold"
+										className="w-1/5 pr-4 group-hover:font-bold"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+										title={name}
 									>
-										{name}
-									</Td>
-									<Td
-										className="w-1/6"
-										innerDivClassName="pr-7"
-										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-									>
-										<DeploymentStatusBadge deploymentStatus={status} />
+										<div className="truncate">{name}</div>
 									</Td>
 									<Td
 										className="w-1/6"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
-										{totalDeployments}
+										<div className="m-auto pr-8">
+											<StatusBadge deploymentStatus={status} />
+										</div>
+									</Td>
+									<Td
+										className="w-1/6"
+										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+										title={`${totalDeployments} ${t("table.columns.deployments")}`}
+									>
+										<div className="w-full pr-4 text-center">{totalDeployments}</div>
 									</Td>
 									<Td
 										className="-ml-1 flex w-2/6"
