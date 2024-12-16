@@ -93,7 +93,7 @@ export const DashboardProjectsTable = () => {
 
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
-			"inline-block border-0 px-1 text-sm font-medium w-20 truncate py-2",
+			"inline-block border-0 px-1 text-sm font-medium w-20 py-2",
 			{
 				"text-blue-500": state === SessionStateType.running,
 				"text-yellow-500": state === SessionStateType.stopped,
