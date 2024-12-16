@@ -215,12 +215,11 @@ export const SessionsTable = () => {
 						) : sessions.length ? (
 							<Table className="flex h-full overflow-y-visible">
 								<THead className="rounded-t-14">
-									<Tr>
-										<Th className="w-1/3 pl-4">{t("table.columns.startTime")}</Th>
-										<Th className="w-1/6">{t("table.columns.status")}</Th>
-										<Th className="w-1/6">{t("table.columns.triggerName")}</Th>
-										<Th className="w-1/6">{t("table.columns.connectionName")}</Th>
-										<Th className="w-1/6">{t("table.columns.actions")}</Th>
+									<Tr className="flex">
+										<Th className="w-36 pl-4">{t("table.columns.startTime")}</Th>
+										<Th className="w-20">{t("table.columns.status")}</Th>
+										<Th className="w-full flex-1 pl-2">{t("table.columns.source")}</Th>
+										<Th className="w-20">{t("table.columns.actions")}</Th>
 									</Tr>
 								</THead>
 

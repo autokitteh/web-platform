@@ -44,7 +44,7 @@ export const SessionsTableRow = memo(
 		}
 
 		const sessionRowClass = (id: string) =>
-			cn("group flex cursor-pointer items-center justify-between hover:bg-gray-1300", {
+			cn("group flex cursor-pointer items-center hover:bg-gray-1300", {
 				"bg-black": id === selectedSessionId,
 			});
 
@@ -89,29 +89,32 @@ export const SessionsTableRow = memo(
 				onClick={() => openSessionLog(session.sessionId)}
 				style={{ ...style }}
 			>
-				<Td className="w-1/3 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
+				<Td className="w-36 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
 
-				<Td className="w-1/6">
+				<Td className="w-20 text-center">
 					<SessionsTableState sessionState={session.state} />
 				</Td>
 
-				<Td className="w-1/6">{session.triggerName}</Td>
+				<Td className="w-full flex-1 pl-2">{session.triggerName || session.connectionName}</Td>
 
-				<Td className="w-1/6">{session.connectionName}</Td>
+				<Td className="flex w-20 pl-2">
+					<div className="flex w-full justify-start">
+						<IconButton
+							disabled={session.state !== SessionState.running}
+							onClick={handleStopSession}
+							title={t("table.stopSession")}
+						>
+							{isStopping ? (
+								<Loader size="sm" />
+							) : (
+								<ActionStoppedIcon className={actionStoppedIconClass} />
+							)}
+						</IconButton>
 
-				<Td className="w-1/6">
-					<IconButton
-						className="inline p-0"
-						disabled={session.state !== SessionState.running}
-						onClick={handleStopSession}
-						title={t("table.stopSession")}
-					>
-						{isStopping ? <Loader size="sm" /> : <ActionStoppedIcon className={actionStoppedIconClass} />}
-					</IconButton>
-
-					<IconButton className="ml-1 inline p-1.5" onClick={handleDeleteClick}>
-						<TrashIcon className="size-4 stroke-white" />
-					</IconButton>
+						<IconButton className="ml-1" onClick={handleDeleteClick}>
+							<TrashIcon className="size-4 stroke-white" />
+						</IconButton>
+					</div>
 				</Td>
 			</Tr>
 		);
