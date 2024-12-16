@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { debounce } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
@@ -27,9 +27,16 @@ export const ProjectTopbarButtons = () => {
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 	const { deleteProject, downloadProjectExport, isDeleting, isExporting } = useProjectActions();
+	const navigate = useNavigate();
 
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
+
+	const onProjectDelete = useCallback(async () => {
+		await deleteProject(projectId!);
+		navigate("/");
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId]);
 
 	const build = useCallback(async () => {
 		const resources = await fetchResources(projectId!);
@@ -206,7 +213,7 @@ export const ProjectTopbarButtons = () => {
 				</Button>
 			</DropdownButton>
 
-			<DeleteProjectModal isDeleting={isDeleting} onDelete={() => deleteProject(projectId!)} />
+			<DeleteProjectModal isDeleting={isDeleting} onDelete={() => onProjectDelete()} />
 		</div>
 	);
 };
