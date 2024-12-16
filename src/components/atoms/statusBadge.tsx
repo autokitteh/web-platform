@@ -4,7 +4,7 @@ import { DeploymentStatusBadgeProps } from "@interfaces/components";
 import { DeploymentStateVariant } from "@src/enums";
 import { cn } from "@utilities";
 
-export const DeploymentStatusBadge = ({ className, deploymentStatus }: DeploymentStatusBadgeProps) => {
+export const StatusBadge = ({ className, deploymentStatus }: DeploymentStatusBadgeProps) => {
 	const baseClass =
 		"min-w-20 flex align-center justify-center font-fira-code rounded-md p-1 px-1.5 font-semibold tracking-widest capitalize text-gray-500 text-10";
 

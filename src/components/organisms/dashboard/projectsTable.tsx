@@ -14,19 +14,7 @@ import { DashboardProjectWithStats, Project } from "@type/models";
 import { useProjectActions, useSort } from "@hooks";
 import { useModalStore, useProjectStore } from "@store";
 
-import {
-	Button,
-	DeploymentStatusBadge,
-	IconButton,
-	IconSvg,
-	Loader,
-	TBody,
-	THead,
-	Table,
-	Td,
-	Th,
-	Tr,
-} from "@components/atoms";
+import { Button, IconButton, IconSvg, Loader, StatusBadge, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms/modals";
 
@@ -200,21 +188,23 @@ export const DashboardProjectsTable = () => {
 							}) => (
 								<Tr className="group cursor-pointer pl-4" key={id}>
 									<Td
-										className="w-1/5 group-hover:font-bold"
+										className="w-1/5 pr-4 group-hover:font-bold"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+										title={name}
 									>
-										{name}
+										<div className="truncate">{name}</div>
 									</Td>
 									<Td
 										className="w-1/6"
 										innerDivClassName="pr-7"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
-										<DeploymentStatusBadge deploymentStatus={status} />
+										<StatusBadge deploymentStatus={status} />
 									</Td>
 									<Td
 										className="w-1/6"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+										title={`${totalDeployments} ${t("table.columns.deployments")}`}
 									>
 										{totalDeployments}
 									</Td>
