@@ -93,7 +93,7 @@ export const useCreateProjectFromTemplate = () => {
 
 			LoggerService.info(
 				namespaces.hooks.createProjectFromTemplate,
-				t("projectCreatedSuccessfullyExtended", {
+				tActions("projectCreatedSuccessfullyExtended", {
 					templateName: template.title,
 					projectId: newProjectId,
 				})
