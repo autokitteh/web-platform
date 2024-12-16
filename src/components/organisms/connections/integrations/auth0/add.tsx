@@ -47,7 +47,7 @@ export const Auth0IntegrationAddForm = ({
 						target="_blank"
 						to="https://auth0.com/docs/authenticate/identity-providers/enterprise-identity-providers/oauth2"
 					>
-						{t("auth0.configurationGuide")}
+						{t("auth0.backgroundConfiguration")}
 						<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
 					</Link>
 				</div>
