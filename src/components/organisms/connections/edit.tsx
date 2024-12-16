@@ -9,7 +9,7 @@ import { integrationToEditComponent } from "@src/constants";
 import { Integrations } from "@src/enums/components";
 import { useEvent } from "@src/hooks";
 import { useHasActiveDeployments } from "@src/store";
-import { stripGoogleConnectionName } from "@src/utilities";
+import { cn, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
 
 import { Input, Loader } from "@components/atoms";
@@ -54,56 +54,56 @@ export const EditConnection = () => {
 		? integrationToEditComponent[integrationType as keyof typeof Integrations]
 		: null;
 
+	const connectionInfoClass = cn("invisible w-5/6", { visible: connectionInfoLoaded });
+	const loaderClass = cn("visible", { invisible: connectionInfoLoaded });
+
 	return (
 		<div className="min-w-80">
 			<TabFormHeader className="mb-11" isHiddenButtons={true} title={t("editConnection")} />
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
-			{connectionInfoLoaded ? (
-				<div className="w-5/6">
-					<div className="flex flex-col">
-						<div className="relative mb-6">
-							<Input
-								aria-label={t("github.placeholders.name")}
-								{...register("connectionName")}
-								disabled
-								isError={!!errors.connectionName}
-								isRequired
-								label={t("github.placeholders.name")}
-								value={connectionName}
-							/>
+			<div className={connectionInfoClass}>
+				<div className="flex flex-col">
+					<div className="relative mb-6">
+						<Input
+							aria-label={t("github.placeholders.name")}
+							{...register("connectionName")}
+							disabled
+							isError={!!errors.connectionName}
+							isRequired
+							label={t("github.placeholders.name")}
+							value={connectionName}
+						/>
+					</div>
+				</div>
+
+				{selectedIntegration ? (
+					<div>
+						<Select
+							aria-label={t("placeholders.selectIntegration")}
+							disabled
+							label={t("placeholders.integration")}
+							options={integrationTypes}
+							placeholder={t("placeholders.selectIntegration")}
+							value={selectedIntegration}
+						/>
+
+						<div className="mt-6">
+							{SelectedIntegrationComponent ? (
+								<SelectedIntegrationComponent
+									googleIntegrationApplication={googleIntegrationApplication}
+								/>
+							) : null}
 						</div>
 					</div>
+				) : (
+					<div className="pl-1 text-error">
+						{t("integrationNotFound")}
 
-					{selectedIntegration ? (
-						<div>
-							<Select
-								aria-label={t("placeholders.selectIntegration")}
-								disabled
-								label={t("placeholders.integration")}
-								options={integrationTypes}
-								placeholder={t("placeholders.selectIntegration")}
-								value={selectedIntegration}
-							/>
-
-							<div className="mt-6">
-								{SelectedIntegrationComponent ? (
-									<SelectedIntegrationComponent
-										googleIntegrationApplication={googleIntegrationApplication}
-									/>
-								) : null}
-							</div>
-						</div>
-					) : (
-						<div className="text-error">
-							{t("integrationNotFound")}
-
-							<div className="mt-2">{t("integrationNotFoundMessage")}</div>
-						</div>
-					)}
-				</div>
-			) : (
-				<Loader isCenter />
-			)}
+						<div className="mt-2">{t("integrationNotFoundMessage")}</div>
+					</div>
+				)}
+			</div>
+			<Loader className={loaderClass} isCenter />
 		</div>
 	);
 };
