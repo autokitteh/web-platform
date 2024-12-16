@@ -1,3 +1,10 @@
+## [2.87.1](https://github.com/autokitteh/web-platform/compare/v2.87.0...v2.87.1) (2024-12-16)
+
+
+### Bug Fixes
+
+* **UI-1056:** change datetime format to 'YYYY-MM-DD HH:mm:ss' ([#754](https://github.com/autokitteh/web-platform/issues/754)) ([cf31256](https://github.com/autokitteh/web-platform/commit/cf3125606541c50480d107c32d7e9b4324915103))
+
 # [2.87.0](https://github.com/autokitteh/web-platform/compare/v2.86.0...v2.87.0) (2024-12-14)
 
 
