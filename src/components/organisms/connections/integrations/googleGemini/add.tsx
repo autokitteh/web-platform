@@ -29,7 +29,7 @@ export const GoogleGeminiIntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			createConnection(connectionId, ConnectionAuthType.ApiToken, Integrations.googlegemini);
+			createConnection(connectionId, ConnectionAuthType.ApiKey, Integrations.googlegemini);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
