@@ -1,3 +1,10 @@
+## [2.88.1](https://github.com/autokitteh/web-platform/compare/v2.88.0...v2.88.1) (2024-12-16)
+
+
+### Bug Fixes
+
+* **UI-1077:** fix message translation on successfull project creation ([#764](https://github.com/autokitteh/web-platform/issues/764)) ([ce2f4af](https://github.com/autokitteh/web-platform/commit/ce2f4afc744d2b3d728698df14bee332f5672ecd))
+
 # [2.88.0](https://github.com/autokitteh/web-platform/compare/v2.87.3...v2.88.0) (2024-12-16)
 
 
