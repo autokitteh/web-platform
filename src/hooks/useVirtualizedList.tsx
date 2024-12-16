@@ -19,7 +19,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 ): VirtualizedListHookResult<T> {
 	const { sessionId } = useParams<{ sessionId: string }>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessionAndActivities" });
-	const frameRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+	const frameRef = useRef<HTMLDivElement>(null);
 
 	const outputsCacheStore = useOutputsCacheStore();
 	const activitiesCacheStore = useActivitiesCacheStore();
