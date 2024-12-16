@@ -1,3 +1,10 @@
+## [2.87.2](https://github.com/autokitteh/web-platform/compare/v2.87.1...v2.87.2) (2024-12-16)
+
+
+### Bug Fixes
+
+* **UI-1072:** fix loader display on connection edit ([#760](https://github.com/autokitteh/web-platform/issues/760)) ([c5a099a](https://github.com/autokitteh/web-platform/commit/c5a099a87d78696ff1020c9ae81ea343d14a3aa9))
+
 ## [2.87.1](https://github.com/autokitteh/web-platform/compare/v2.87.0...v2.87.1) (2024-12-16)
 
 
