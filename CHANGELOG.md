@@ -1,3 +1,10 @@
+# [2.88.0](https://github.com/autokitteh/web-platform/compare/v2.87.3...v2.88.0) (2024-12-16)
+
+
+### Features
+
+* **UI-1047:** add hubspot connection ([#747](https://github.com/autokitteh/web-platform/issues/747)) ([96122a3](https://github.com/autokitteh/web-platform/commit/96122a35ff18d894a6715884222e7dda63c7652a))
+
 ## [2.87.3](https://github.com/autokitteh/web-platform/compare/v2.87.2...v2.87.3) (2024-12-16)
 
 
