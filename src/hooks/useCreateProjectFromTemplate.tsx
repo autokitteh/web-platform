@@ -13,6 +13,7 @@ import { useProjectStore, useTemplatesStore, useToastStore } from "@store";
 
 export const useCreateProjectFromTemplate = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
+	const { t: tActions } = useTranslation("dashboard", { keyPrefix: "actions" });
 	const addToast = useToastStore((state) => state.addToast);
 	const { createProjectFromManifest, getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
@@ -38,7 +39,7 @@ export const useCreateProjectFromTemplate = () => {
 			);
 
 			addToast({
-				message: t("projectCreatedSuccessfully"),
+				message: tActions("projectCreatedSuccessfully"),
 				type: "success",
 			});
 
@@ -92,7 +93,7 @@ export const useCreateProjectFromTemplate = () => {
 
 			LoggerService.info(
 				namespaces.hooks.createProjectFromTemplate,
-				t("projectCreatedSuccessfullyExtended", {
+				tActions("projectCreatedSuccessfullyExtended", {
 					templateName: template.title,
 					projectId: newProjectId,
 				})
