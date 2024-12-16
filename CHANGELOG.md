@@ -1,3 +1,10 @@
+## [2.89.3](https://github.com/autokitteh/web-platform/compare/v2.89.2...v2.89.3) (2024-12-16)
+
+
+### Reverts
+
+* revert to the state before the upgrade (UI-1078) (UI-1071) ([#770](https://github.com/autokitteh/web-platform/issues/770)) ([7cc4a99](https://github.com/autokitteh/web-platform/commit/7cc4a9911682a56b8caf36d4a2b189ddb41f46eb))
+
 ## [2.89.2](https://github.com/autokitteh/web-platform/compare/v2.89.1...v2.89.2) (2024-12-16)
 
 
