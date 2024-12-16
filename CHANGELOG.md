@@ -1,3 +1,10 @@
+## [2.87.3](https://github.com/autokitteh/web-platform/compare/v2.87.2...v2.87.3) (2024-12-16)
+
+
+### Bug Fixes
+
+* projects table view fine tuning - center columns and truncate name column (UI-1070) (UI-1073) ([#757](https://github.com/autokitteh/web-platform/issues/757)) ([3d17bec](https://github.com/autokitteh/web-platform/commit/3d17bec1da3156f41bd75da8aca7e95ebc5730f7))
+
 ## [2.87.2](https://github.com/autokitteh/web-platform/compare/v2.87.1...v2.87.2) (2024-12-16)
 
 
