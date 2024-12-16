@@ -98,8 +98,8 @@
 				"emptyKeyExist": "Cannot have empty key"
 			},
 			"info": {
-				"aboutCron": "About cronjob expressions",
-				"schedules": "Predefined schedules or intervals"
+				"firstLink": "About cronjob expressions",
+				"secondLink": "Additional information"
 			},
 			"information": "More Information",
 			"loading": "Loading",
