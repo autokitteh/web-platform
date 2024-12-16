@@ -54,8 +54,8 @@ export const EditConnection = () => {
 		? integrationToEditComponent[integrationType as keyof typeof Integrations]
 		: null;
 
-	const connectionInfoClass = cn("invisible", { visible: connectionInfoLoaded });
-	const loaderClass = cn("visible", { invisible: connectionInfoLoaded });
+	const connectionInfoClass = cn(connectionInfoLoaded ? "visible" : "invisible");
+	const loaderClass = cn(connectionInfoLoaded ? "invisible" : "visible");
 
 	return (
 		<div className="min-w-80">
