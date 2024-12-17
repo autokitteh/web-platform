@@ -1,3 +1,10 @@
+# [2.90.0](https://github.com/autokitteh/web-platform/compare/v2.89.6...v2.90.0) (2024-12-17)
+
+
+### Features
+
+* **UI-852:** replace the word filter in sessions table with state and counter ([#779](https://github.com/autokitteh/web-platform/issues/779)) ([808d325](https://github.com/autokitteh/web-platform/commit/808d3257350de90a5e1b7b96514f593c121ee6d5))
+
 ## [2.89.6](https://github.com/autokitteh/web-platform/compare/v2.89.5...v2.89.6) (2024-12-17)
 
 
