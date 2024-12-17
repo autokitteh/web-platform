@@ -1,3 +1,10 @@
+## [2.94.3](https://github.com/autokitteh/web-platform/compare/v2.94.2...v2.94.3) (2024-12-17)
+
+
+### Bug Fixes
+
+* **UI-1087:** fix menu translations ([#783](https://github.com/autokitteh/web-platform/issues/783)) ([d1d5b6a](https://github.com/autokitteh/web-platform/commit/d1d5b6aa9b465d21097997842c00addb4958648e))
+
 ## [2.94.2](https://github.com/autokitteh/web-platform/compare/v2.94.1...v2.94.2) (2024-12-17)
 
 
