@@ -239,16 +239,18 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 					message: tErrors("errorFetchingConnection", { connectionId }),
 					type: "error",
 				});
-
-				return;
 			}
 
 			setConnectionIntegrationName(connectionResponse!.integrationUniqueName as string);
 			setConnectionName(connectionResponse!.name);
-			setIntegration({
-				label: connectionResponse!.integrationName!,
-				value: connectionResponse!.integrationUniqueName!,
-			});
+			if (connectionResponse?.integrationName && connectionResponse?.integrationUniqueName) {
+				setIntegration({
+					label: connectionResponse.integrationName!,
+					value: connectionResponse.integrationUniqueName!,
+				});
+			} else {
+				setIntegration(undefined);
+			}
 
 			await getConnectionAuthType(connectionId);
 			await getConnectionVariables(connectionId);

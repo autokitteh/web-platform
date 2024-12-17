@@ -123,8 +123,6 @@ export class ConnectionService {
 					error: integrationsError,
 				});
 				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return { data: undefined, error: errorMessage };
 			}
 
 			if (!integrations || !integrations.length) {
@@ -133,11 +131,6 @@ export class ConnectionService {
 					connectionId,
 				});
 				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return {
-					data: undefined,
-					error: errorMessage,
-				};
 			}
 			const convertedConnection = convertConnectionProtoToModel(connection);
 			const integration = integrations!.find(
@@ -148,18 +141,14 @@ export class ConnectionService {
 					connectionId,
 					connectionName: connection.name,
 					ns: "services",
+					integrationId: connection.integrationId,
 				});
 				LoggerService.error(namespaces.connectionService, errorMessage);
-
-				return {
-					data: undefined,
-					error: errorMessage,
-				};
 			}
 
-			convertedConnection.integrationName = integration.displayName;
-			convertedConnection.integrationUniqueName = integration.uniqueName;
-			const strippedIntegrationName = stripGoogleConnectionName(integration.uniqueName);
+			convertedConnection.integrationName = integration?.displayName;
+			convertedConnection.integrationUniqueName = integration?.uniqueName;
+			const strippedIntegrationName = stripGoogleConnectionName(integration?.uniqueName || "");
 			convertedConnection.logo = integrationIcons[strippedIntegrationName];
 
 			return { data: convertedConnection, error: undefined };
@@ -284,6 +273,7 @@ export class ConnectionService {
 						projectId,
 						connectionName: connection.name,
 						connectionId: connection.connectionId,
+						integrationId: connection.integrationId,
 						ns: "services",
 					});
 					LoggerService.error(namespaces.connectionService, errorMessage);

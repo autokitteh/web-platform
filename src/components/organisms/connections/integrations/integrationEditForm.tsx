@@ -80,9 +80,8 @@ export const IntegrationEditForm = ({
 
 	useEffect(() => {
 		dispacthConnectionInfoLoaded(true);
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [ConnectionTypeComponent]);
+	}, []);
 
 	const selectConnectionTypeValue = useMemo(
 		() => selectOptions.find((method) => method.value === connectionType),

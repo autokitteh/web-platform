@@ -10,6 +10,8 @@
 	"copyFailure": "Could not copy",
 	"copyFailureExtended": "Could not copy, error: {{error}}",
 	"copySuccess": "Copied to clipboard successfully",
+	"integrationNotFound": "The connection is deprecated and no longer available",
+	"integrationNotFoundMessage": "Please delete this connection.",
 	"placeholders": {
 		"noConnectionTypesAvailable": "No connection types available",
 		"noIntegrationsAvailable": "No integrations available",

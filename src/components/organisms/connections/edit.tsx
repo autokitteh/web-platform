@@ -41,7 +41,7 @@ export const EditConnection = () => {
 	const [connectionInfoLoaded, setConnectionInfoLoaded] = useState(false);
 	useEvent("onConnectionLoaded", setConnectionInfoLoaded);
 
-	if (integrationType) {
+	if (integrationType && selectedIntegration?.value) {
 		googleIntegrationApplication = stripGoogleConnectionName(integrationType);
 
 		if (googleIntegrationApplication) {
@@ -54,7 +54,7 @@ export const EditConnection = () => {
 		? integrationToEditComponent[integrationType as keyof typeof Integrations]
 		: null;
 
-	const connectionInfoClass = cn("invisible", { visible: connectionInfoLoaded });
+	const connectionInfoClass = cn("invisible w-5/6", { visible: connectionInfoLoaded });
 	const loaderClass = cn("visible", { invisible: connectionInfoLoaded });
 
 	return (
@@ -62,7 +62,7 @@ export const EditConnection = () => {
 			<TabFormHeader className="mb-11" isHiddenButtons={true} title={t("editConnection")} />
 			{hasActiveDeployments ? <ActiveDeploymentWarning /> : null}
 			<div className={connectionInfoClass}>
-				<div className="mb-6 flex w-5/6 flex-col">
+				<div className="flex flex-col">
 					<div className="relative mb-6">
 						<Input
 							aria-label={t("github.placeholders.name")}
@@ -74,22 +74,34 @@ export const EditConnection = () => {
 							value={connectionName}
 						/>
 					</div>
-
-					<Select
-						aria-label={t("placeholders.selectIntegration")}
-						disabled
-						label={t("placeholders.integration")}
-						options={integrationTypes}
-						placeholder={t("placeholders.selectIntegration")}
-						value={selectedIntegration}
-					/>
 				</div>
 
-				<div className="w-5/6">
-					{SelectedIntegrationComponent ? (
-						<SelectedIntegrationComponent googleIntegrationApplication={googleIntegrationApplication} />
-					) : null}
-				</div>
+				{selectedIntegration ? (
+					<div>
+						<Select
+							aria-label={t("placeholders.selectIntegration")}
+							disabled
+							label={t("placeholders.integration")}
+							options={integrationTypes}
+							placeholder={t("placeholders.selectIntegration")}
+							value={selectedIntegration}
+						/>
+
+						<div className="mt-6">
+							{SelectedIntegrationComponent ? (
+								<SelectedIntegrationComponent
+									googleIntegrationApplication={googleIntegrationApplication}
+								/>
+							) : null}
+						</div>
+					</div>
+				) : (
+					<div className="pl-1 text-error">
+						{t("integrationNotFound")}
+
+						<div className="mt-2">{t("integrationNotFoundMessage")}</div>
+					</div>
+				)}
 			</div>
 			<Loader className={loaderClass} isCenter />
 		</div>
