@@ -14,7 +14,6 @@ import { FilterIcon } from "@assets/image/icons";
 export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilterProps) => {
 	const [activeState, setActiveState] = useState<SessionStateType>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
-	const { t: tTable } = useTranslation("deployments", { keyPrefix: "sessions.table" });
 
 	const buttonClassText = {
 		[SessionStateType.completed]: "text-green-800",
@@ -47,11 +46,6 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 			state && buttonClassText[state]
 		);
 
-	const handleButtonClick = (state?: SessionStateType) => {
-		setActiveState(state);
-		onChange(state);
-	};
-
 	const initialSessionCounts = {
 		[SessionStateType.completed]: 0,
 		[SessionStateType.created]: 0,
@@ -74,6 +68,12 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[sessionStats]
 	);
+
+	const handleButtonClick = (state?: SessionStateType) => {
+		setActiveState(state);
+
+		onChange(state);
+	};
 
 	return (
 		<div className="flex items-center">
@@ -116,7 +116,9 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 			>
 				<Button className={filterClass(activeState)} variant="outline">
 					<IconSvg className="mb-1 text-white" size="md" src={FilterIcon} />
-					{activeState ? t(activeState) : tTable("filter")}
+					{activeState
+						? `${t(activeState)} (${sessionCounts[activeState]})`
+						: `${t("all")} (${sessionCounts.total})`}
 				</Button>
 			</DropdownButton>
 		</div>

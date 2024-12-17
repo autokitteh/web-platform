@@ -105,7 +105,6 @@
 				"stopped": "Stopped",
 				"unspecified": "Unspecified"
 			},
-			"filter": "Filter",
 			"stopSession": "Stop session"
 		},
 		"totalSessions": "Total {{total}}",
