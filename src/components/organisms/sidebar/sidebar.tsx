@@ -25,7 +25,7 @@ export const Sidebar = () => {
 	const { logoutFunction, user } = useUserStore();
 	const { isLoggerEnabled, isNewLogs, toggleLogger } = useLoggerStore();
 	const location = useLocation();
-	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
+	const { t } = useTranslation("sidebar");
 
 	useEffect(() => {
 		setIsOpen(false);

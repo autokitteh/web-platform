@@ -21,5 +21,6 @@
 	"openSidebar": "Open Sidebar",
 	"intro": "Introduction",
 	"events": "Events",
-	"logToReview": "Unread system logs"
+	"logToReview": "Unread system logs",
+	"systemLog": "System Log"
 }
