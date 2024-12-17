@@ -15,7 +15,7 @@ export const UserMenu = () => {
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
 	const { logoutFunction, user } = useUserStore();
 
-	// TODO: Fetch actual data
+	// TODO: Fetch actual organizations data
 	const organizations = [
 		{ id: 1, name: "Organization 1" },
 		{ id: 2, name: "Organization 2" },
