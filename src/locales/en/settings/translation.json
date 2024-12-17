@@ -29,7 +29,9 @@
 		"name": "Name",
 		"email": "Email",
 		"deleteAccount": "Delete My Account",
-		"accountFetchError": "Error occurred during the account fetch, try again later"
+		"accountFetchError": "Error occurred during the account fetch, try again later",
+		"retentionPolicyTitle": "Retention Policy",
+		"retentionPolicyDescription": "We will keep your data for 7 days after your account is deleted. You can download your data before it is deleted."
 	},
 	"topbar": {
 		"title": "Settings"
