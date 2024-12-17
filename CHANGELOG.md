@@ -1,3 +1,10 @@
+# [2.91.0](https://github.com/autokitteh/web-platform/compare/v2.90.0...v2.91.0) (2024-12-17)
+
+
+### Features
+
+* **UI-1081:** mark selected event in events table ([#776](https://github.com/autokitteh/web-platform/issues/776)) ([5c84cc5](https://github.com/autokitteh/web-platform/commit/5c84cc5af73779c3caf9e8638c146e423be66bbf))
+
 # [2.90.0](https://github.com/autokitteh/web-platform/compare/v2.89.6...v2.90.0) (2024-12-17)
 
 
