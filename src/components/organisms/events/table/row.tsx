@@ -21,23 +21,23 @@ export const EventRow = memo(
 		style: CSSProperties;
 	}) => {
 		const { eventId: paramEventId } = useParams();
-		const rowClass = cn("cursor-pointer pl-3 hover:bg-gray-750", {
+		const rowClass = cn("cursor-pointer hover:bg-gray-750", {
 			"bg-black": paramEventId === eventId,
 		});
 
 		return (
 			<Tr className={rowClass} onClick={onClick} style={style}>
-				<Td className="w-1/4" title={moment(createdAt).local().format(dateTimeFormat)}>
+				<Td className="mr-2 w-36 pl-4" title={moment(createdAt).local().format(dateTimeFormat)}>
 					{moment(createdAt).local().format(dateTimeFormat)}
 				</Td>
-				<Td className="w-1/4" title={eventId}>
+				<Td className="mr-2 w-24" title={eventId}>
 					<IdCopyButton id={eventId} />
 				</Td>
-				<Td className="w-1/4" title={destinationId || ""}>
+				<Td className="mr-2 w-24" title={destinationId || ""}>
 					<IdCopyButton id={destinationId || ""} />
 				</Td>
 				<Td className="w-1/4" title={eventType}>
-					{eventType}
+					<div className="truncate">{eventType}</div>
 				</Td>
 			</Tr>
 		);

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { SortableHeaderProps, TableHeaderProps } from "@src/types/components";
 
-import { THead, Td, Th } from "@components/atoms";
+import { THead, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 
 export const SortableHeader = memo(({ columnKey, columnLabel, onSort, sortConfig }: SortableHeaderProps) => (
@@ -30,41 +30,41 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 	const { t } = useTranslation("events", { keyPrefix: "table.columns" });
 
 	return (
-		<THead className="pl-3">
-			<Th>
-				<Td className="w-1/4">
+		<THead>
+			<Tr>
+				<Th className="mr-2 w-36 pl-4">
 					<SortableHeader
 						columnKey="createdAt"
 						columnLabel={t("createdAt")}
 						onSort={onSort}
 						sortConfig={sortConfig}
 					/>
-				</Td>
-				<Td className="-ml-2 w-1/4">
+				</Th>
+				<Th className="mr-2 w-24">
 					<SortableHeader
 						columnKey="eventId"
 						columnLabel={t("eventId")}
 						onSort={onSort}
 						sortConfig={sortConfig}
 					/>
-				</Td>
-				<Td className="-ml-2 w-1/4">
+				</Th>
+				<Th className="mr-2 w-24">
 					<SortableHeader
 						columnKey="destinationId"
 						columnLabel={t("destinationId")}
 						onSort={onSort}
 						sortConfig={sortConfig}
 					/>
-				</Td>
-				<Td className="-ml-2 mr-2 w-1/4">
+				</Th>
+				<Th className="mr-2 w-1/4">
 					<SortableHeader
 						columnKey="eventType"
 						columnLabel={t("type")}
 						onSort={onSort}
 						sortConfig={sortConfig}
 					/>
-				</Td>
-			</Th>
+				</Th>
+			</Tr>
 		</THead>
 	);
 });
