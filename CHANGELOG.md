@@ -1,3 +1,10 @@
+# [2.95.0](https://github.com/autokitteh/web-platform/compare/v2.94.3...v2.95.0) (2024-12-17)
+
+
+### Features
+
+* **UI-1065:** add auth0 connection ([#749](https://github.com/autokitteh/web-platform/issues/749)) ([ec2bb60](https://github.com/autokitteh/web-platform/commit/ec2bb60e510efd4819e5ba476dd115a3815a8602))
+
 ## [2.94.3](https://github.com/autokitteh/web-platform/compare/v2.94.2...v2.94.3) (2024-12-17)
 
 
