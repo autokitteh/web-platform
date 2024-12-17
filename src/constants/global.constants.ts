@@ -15,7 +15,7 @@ export const fetchSessionsInterval = 10000;
 export const defaultSessionsVisiblePageSize = 10;
 export const maxLogs = 20;
 export const fileSizeUploadLimit = 50 * 1024; // 50KB
-export const apiRequestTimeout = isDevelopment ? 1000 * 60 : 5000;
+export const apiRequestTimeout = isDevelopment ? 1000 * 60 : 1000 * 10; // 1 minute in development, 10 seconds in production
 
 export const templatesUpdateCheckInterval = 24 * 60 * 60 * 1000; // 24 hours
 
