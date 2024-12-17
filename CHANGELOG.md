@@ -1,3 +1,10 @@
+## [2.91.1](https://github.com/autokitteh/web-platform/compare/v2.91.0...v2.91.1) (2024-12-17)
+
+
+### Bug Fixes
+
+* **UI-1074:** truncate and display sessions table columns with ellipsis ([#761](https://github.com/autokitteh/web-platform/issues/761)) ([96c6121](https://github.com/autokitteh/web-platform/commit/96c6121a7f8439020743da97e81d0f13bc9c989f))
+
 # [2.91.0](https://github.com/autokitteh/web-platform/compare/v2.90.0...v2.91.0) (2024-12-17)
 
 
