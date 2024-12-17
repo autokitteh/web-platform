@@ -1,3 +1,10 @@
+## [2.94.2](https://github.com/autokitteh/web-platform/compare/v2.94.1...v2.94.2) (2024-12-17)
+
+
+### Bug Fixes
+
+* **UI-1076:** improve logs and display connection when integration not found ([#763](https://github.com/autokitteh/web-platform/issues/763)) ([52b6688](https://github.com/autokitteh/web-platform/commit/52b6688f7e5a636f889ba44f5f74d98675cb97ea))
+
 ## [2.94.1](https://github.com/autokitteh/web-platform/compare/v2.94.0...v2.94.1) (2024-12-17)
 
 # [2.94.0](https://github.com/autokitteh/web-platform/compare/v2.93.0...v2.94.0) (2024-12-17)
