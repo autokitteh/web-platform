@@ -98,8 +98,14 @@
 				"emptyKeyExist": "Cannot have empty key"
 			},
 			"info": {
-				"aboutCron": "About cronjob expressions",
-				"schedules": "Predefined schedules or intervals"
+				"firstLink": "crontab.guru",
+				"firstLinkText": "",
+				"secondLink": "Cron expression format",
+				"secondLinkText": "('* * * * *')",
+				"thirdLink": "Cron extended expression format",
+				"thirdLinkText": "(includes seconds and minutes)",
+				"fourthLink": "Predefined schedules and intervals",
+				"fourthLinkText": "('@' format)"
 			},
 			"information": "More Information",
 			"loading": "Loading",
