@@ -1,5 +1,7 @@
 // Asana icon taken from here: https://github.com/detain/svg-logos/blob/master/svg/a/asana-logo.svg under MIT license
 export { default as AsanaIcon } from "@assets/image/icons/connections/Asana.svg?react";
+// Taken from: https://www.svgrepo.com/svg/442923/brand-auth0
+export { default as Auth0Icon } from "@assets/image/icons/connections/Auth0.svg?react";
 export { default as AwsIcon } from "@assets/image/icons/connections/Aws.svg?react";
 export { default as ConfluenceIcon } from "@assets/image/icons/connections/Confluence.svg?react";
 export { default as DiscordIcon } from "@assets/image/icons/connections/Discord.svg?react";
@@ -21,4 +23,5 @@ export { default as RedisIcon } from "@assets/image/icons/connections/Redis.svg?
 export { default as SchedulerIcon } from "@assets/image/icons/connections/Scheduler.svg?react";
 export { default as SlackIcon } from "@assets/image/icons/connections/Slack.svg?react";
 export { default as SqliteIcon } from "@assets/image/icons/connections/Sqlite.svg?react";
+
 export { default as TwilioIcon } from "@assets/image/icons/connections/Twilio.svg?react";

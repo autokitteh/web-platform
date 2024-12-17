@@ -2,15 +2,22 @@ export {
 	AsanaIntegrationAddForm,
 	AsanaIntegrationEditForm,
 } from "@components/organisms/connections/integrations/asana";
+export { Auth0IntegrationAddForm } from "@components/organisms/connections/integrations/auth0";
+export { Auth0IntegrationEditForm } from "@components/organisms/connections/integrations/auth0";
 export { AwsIntegrationAddForm } from "@components/organisms/connections/integrations/aws";
+export { AwsIntegrationEditForm } from "@components/organisms/connections/integrations/aws";
 export {
 	ConfluenceIntegrationAddForm,
 	ConfluenceIntegrationEditForm,
 } from "@components/organisms/connections/integrations/confluence";
 export { DiscordIntegrationAddForm } from "@components/organisms/connections/integrations/discord";
+export { DiscordIntegrationEditForm } from "@components/organisms/connections/integrations/discord";
 export { GithubIntegrationAddForm } from "@components/organisms/connections/integrations/github";
+export { GithubIntegrationEditForm } from "@components/organisms/connections/integrations/github";
 export { GoogleIntegrationAddForm } from "@components/organisms/connections/integrations/google";
+export { GoogleIntegrationEditForm } from "@components/organisms/connections/integrations/google";
 export { GoogleGeminiIntegrationAddForm } from "@components/organisms/connections/integrations/googleGemini";
+export { GoogleGeminiIntegrationEditForm } from "@components/organisms/connections/integrations/googleGemini";
 export {
 	GoogleCalendarIntegrationAddForm,
 	GoogleCalendarIntegrationEditForm,
@@ -25,6 +32,10 @@ export {
 } from "@components/organisms/connections/integrations/hubspot";
 export { IntegrationEditForm } from "@components/organisms/connections/integrations/integrationEditForm";
 export { JiraIntegrationAddForm } from "@components/organisms/connections/integrations/jira";
+export { JiraIntegrationEditForm } from "@components/organisms/connections/integrations/jira";
 export { OpenAiIntegrationAddForm } from "@components/organisms/connections/integrations/openAI";
+export { OpenAiIntegrationEditForm } from "@components/organisms/connections/integrations/openAI";
 export { SlackIntegrationAddForm } from "@components/organisms/connections/integrations/slack";
+export { SlackIntegrationEditForm } from "@components/organisms/connections/integrations/slack";
 export { TwilioIntegrationAddForm } from "@components/organisms/connections/integrations/twilio";
+export { TwilioIntegrationEditForm } from "@components/organisms/connections/integrations/twilio";
