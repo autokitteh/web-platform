@@ -15,6 +15,8 @@ const getWindowDimensions = () => {
 	const is2KDesktop = width > 1920 && width <= 2560;
 	const is4KDesktop = width > 2560;
 
+	const isMobileDevice = isIOS || isMobile;
+
 	return {
 		width,
 		height,
@@ -25,6 +27,7 @@ const getWindowDimensions = () => {
 		isDesktop,
 		is2KDesktop,
 		is4KDesktop,
+		isMobileDevice,
 	};
 };
 

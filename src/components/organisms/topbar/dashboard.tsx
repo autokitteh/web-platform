@@ -22,9 +22,9 @@ export const DashboardTopbar = () => {
 
 	return (
 		<div className="z-10 flex flex-wrap">
-			<div className="flex w-full items-center justify-between">
+			<div className="flex w-full flex-col items-center justify-between md:flex-row">
 				<Typography
-					className="w-full text-center font-averta text-2xl font-semibold md:text-left md:text-2xl"
+					className="mb-8 w-full text-center font-averta text-2xl font-semibold md:mb-0 md:text-left md:text-2xl"
 					element="h1"
 				>
 					{t("welcome")}
