@@ -186,7 +186,7 @@ export const Sidebar = () => {
 									</AnimatePresence>
 								</PopoverTrigger>
 								<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
-									{featureFlags.displayNewOrgsUsersMenu ? (
+									{featureFlags.enableNewOrgsAndUsersDesign ? (
 										<UserMenu />
 									) : (
 										<>

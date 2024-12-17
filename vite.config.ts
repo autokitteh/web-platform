@@ -46,8 +46,8 @@ export default defineConfig({
 		"import.meta.env.DISPLAY_SLACK_SOCKET_INTEGRATION": process.env.DISPLAY_SLACK_SOCKET_INTEGRATION,
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
-		"import.meta.env.ENABLE_MENU_AND_SETTINGS_REDESIGN_FOR_ORGANIZATIONS": JSON.stringify(
-			process.env.ENABLE_MENU_AND_SETTINGS_REDESIGN_FOR_ORGANIZATIONS
+		"import.meta.env.ENABLE_NEW_ORGS_AND_USERS_DESIGN": JSON.stringify(
+			process.env.ENABLE_NEW_ORGS_AND_USERS_DESIGN
 		),
 	},
 	optimizeDeps: {
