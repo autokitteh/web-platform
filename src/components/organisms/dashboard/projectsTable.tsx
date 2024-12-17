@@ -37,7 +37,6 @@ export const DashboardProjectsTable = () => {
 	const { openModal } = useModalStore();
 	const { deleteProject, downloadProjectExport, isDeleting } = useProjectActions();
 	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<string>();
-
 	const { isMobileDevice } = useWindowDimensions();
 
 	const loadProjectsData = async (projectsList: Project[]) => {
