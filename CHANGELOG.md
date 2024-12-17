@@ -1,3 +1,10 @@
+## [2.95.1](https://github.com/autokitteh/web-platform/compare/v2.95.0...v2.95.1) (2024-12-17)
+
+
+### Bug Fixes
+
+* **UI-1088:** fix login on mobile devices ([#784](https://github.com/autokitteh/web-platform/issues/784)) ([90f0563](https://github.com/autokitteh/web-platform/commit/90f05633e3df4061e70d2bddeb8b15df9a86daf7))
+
 # [2.95.0](https://github.com/autokitteh/web-platform/compare/v2.94.3...v2.95.0) (2024-12-17)
 
 
