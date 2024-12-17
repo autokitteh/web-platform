@@ -9,13 +9,11 @@ const getWindowDimensions = () => {
 		(/Mac/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
 	const isMac = /Mac/i.test(navigator.userAgent) && !isIOS;
 
-	const isMobile = width <= 640;
+	const isMobile = width <= 640 || isIOS;
 	const isTablet = width > 640 && width <= 1024;
 	const isDesktop = width > 1024 && width <= 1920;
 	const is2KDesktop = width > 1920 && width <= 2560;
 	const is4KDesktop = width > 2560;
-
-	const isMobileDevice = isIOS || isMobile;
 
 	return {
 		width,
@@ -27,7 +25,6 @@ const getWindowDimensions = () => {
 		isDesktop,
 		is2KDesktop,
 		is4KDesktop,
-		isMobileDevice,
 	};
 };
 

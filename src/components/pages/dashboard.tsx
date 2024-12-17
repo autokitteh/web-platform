@@ -10,11 +10,11 @@ import { ProjectTemplatesSection } from "@components/organisms/dashboard/templat
 export const Dashboard = () => {
 	const resizeId = useId();
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
-	const { isMobileDevice } = useWindowDimensions();
+	const { isMobile } = useWindowDimensions();
 	const { getProjectsList, isLoadingProjectsList, projectsList } = useProjectStore();
 
 	useEffect(() => {
-		if (!projectsList.length && isMobileDevice) {
+		if (!projectsList.length && isMobile) {
 			getProjectsList();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,17 +32,14 @@ export const Dashboard = () => {
 
 	return (
 		<div className="my-0 flex w-full overflow-hidden rounded-none md:my-1.5 md:rounded-2xl">
-			<div
-				className="relative flex w-2/3 flex-col"
-				style={{ width: `${!isMobileDevice ? leftSideWidth : 100}%` }}
-			>
+			<div className="relative flex w-2/3 flex-col" style={{ width: `${!isMobile ? leftSideWidth : 100}%` }}>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none">
 					<DashboardTopbar />
 
 					{dashboardContent}
 				</Frame>
 			</div>
-			{isMobileDevice ? null : (
+			{isMobile ? null : (
 				<>
 					<ResizeButton
 						className="right-0.5 bg-white hover:bg-gray-700"
