@@ -1,3 +1,10 @@
+# [2.93.0](https://github.com/autokitteh/web-platform/compare/v2.92.0...v2.93.0) (2024-12-17)
+
+
+### Features
+
+* **UI-1058:** orgs & users - menu design ([#748](https://github.com/autokitteh/web-platform/issues/748)) ([86c83ea](https://github.com/autokitteh/web-platform/commit/86c83ea103e46cfbbeb8360155a0e2b49d70c7b6))
+
 # [2.92.0](https://github.com/autokitteh/web-platform/compare/v2.91.2...v2.92.0) (2024-12-17)
 
 
