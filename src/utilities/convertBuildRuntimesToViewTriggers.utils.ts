@@ -13,7 +13,7 @@ const processRuntime = (runtime: BuildInfoRuntimes): Record<string, string[]> =>
 			return;
 		}
 		const entrypointsForFile = (runtime?.artifact?.exports || [])
-			.filter(({ location: { path } }) => path === fileName)
+			.filter(({ location: { path }, symbol: name }) => path === fileName && !name.startsWith("_"))
 			.map(({ symbol: name }) => name);
 
 		const uniqueEntrypoints = uniqBy(entrypointsForFile, (func) => func);
