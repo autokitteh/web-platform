@@ -25,7 +25,8 @@ export const Sidebar = () => {
 	const { logoutFunction, user } = useUserStore();
 	const { isLoggerEnabled, isNewLogs, toggleLogger } = useLoggerStore();
 	const location = useLocation();
-	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
+	const { t: tMenu } = useTranslation("sidebar", { keyPrefix: "menu" });
+	const { t } = useTranslation("sidebar");
 
 	useEffect(() => {
 		setIsOpen(false);
@@ -198,17 +199,17 @@ export const Sidebar = () => {
 												<Button
 													className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
 													href="/settings"
-													title={t("userSettings.settings")}
+													title={tMenu("userSettings.settings")}
 												>
 													<SettingsIcon className="size-5" fill="black" />
-													{t("userSettings.settings")}
+													{tMenu("userSettings.settings")}
 												</Button>
 												<Button
 													className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
 													onClick={() => logoutFunction()}
 												>
 													<LogoutIcon className="size-5" fill="black" />
-													{t("userSettings.logout")}
+													{tMenu("userSettings.logout")}
 												</Button>
 											</div>
 										</>
