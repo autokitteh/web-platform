@@ -15,7 +15,7 @@ export const UserMenu = () => {
 	const { t } = useTranslation("sidebar", { keyPrefix: "menu" });
 	const { logoutFunction, user } = useUserStore();
 
-	// Mock data for organizations - replace with actual data
+	// TODO: Fetch actual data
 	const organizations = [
 		{ id: 1, name: "Organization 1" },
 		{ id: 2, name: "Organization 2" },
@@ -67,7 +67,7 @@ export const UserMenu = () => {
 				<Button
 					className="mb-2 flex w-full items-center gap-2 rounded-md bg-green-800 px-2.5 py-1.5 text-sm text-black hover:bg-green-200"
 					onClick={() => {
-						/* Handle create organization */
+						/* TODO: Handle create organization */
 					}}
 				>
 					<PlusIcon className="size-4" fill="white" />
@@ -80,7 +80,7 @@ export const UserMenu = () => {
 							className="mb-1 w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
 							key={org.id}
 							onClick={() => {
-								/* Handle organization selection */
+								/* TODO: Handle organization selection */
 							}}
 						>
 							{org.name}
