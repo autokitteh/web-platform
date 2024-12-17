@@ -1,3 +1,10 @@
+# [2.94.0](https://github.com/autokitteh/web-platform/compare/v2.93.0...v2.94.0) (2024-12-17)
+
+
+### Features
+
+* **UI-1083:** increase api timeout ([#781](https://github.com/autokitteh/web-platform/issues/781)) ([980819d](https://github.com/autokitteh/web-platform/commit/980819dbc5229dbddb0c7cac3bb3158b2a33aa4a))
+
 # [2.93.0](https://github.com/autokitteh/web-platform/compare/v2.92.0...v2.93.0) (2024-12-17)
 
 
