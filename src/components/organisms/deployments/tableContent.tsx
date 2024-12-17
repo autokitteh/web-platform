@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { DeploymentStateVariant } from "@enums";
 import { ModalName } from "@enums/components";
@@ -11,7 +11,7 @@ import { dateTimeFormat, namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useModalStore, useToastStore } from "@store";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { IdCopyButton, SortButton } from "@components/molecules";
@@ -28,12 +28,14 @@ export const DeploymentsTableContent = ({
 }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const navigate = useNavigate();
+	const { projectId } = useParams();
 	const { items: sortedDeployments, requestSort, sortConfig } = useSort<Deployment>(deployments);
 	const addToast = useToastStore((state) => state.addToast);
 	const { closeModal, openModal } = useModalStore();
 	const [deploymentId, setDeploymentId] = useState<string>();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { t: tSessionsStats } = useTranslation("deployments", { keyPrefix: "sessionStats" });
+	const { setLatestOpened } = useProjectStore();
 
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
@@ -105,6 +107,11 @@ export const DeploymentsTableContent = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
 	);
+
+	const goToDeploymentSessions = (id: string) => {
+		setLatestOpened("sessionId", "", projectId);
+		navigate(`${id}/sessions`);
+	};
 
 	return (
 		<>
@@ -194,13 +201,13 @@ export const DeploymentsTableContent = ({
 						<Tr className="hover:bg-gray-1300" key={deploymentId}>
 							<Td
 								className="w-1/8 cursor-pointer pl-4"
-								onClick={() => navigate(`${deploymentId}/sessions`)}
+								onClick={() => goToDeploymentSessions(deploymentId)}
 							>
 								{moment(createdAt).local().format(dateTimeFormat)}
 							</Td>
 							<Td className="w-1/12" />
 
-							<Td className="w-1/3 cursor-pointer" onClick={() => navigate(`${deploymentId}/sessions`)}>
+							<Td className="w-1/3 cursor-pointer" onClick={() => goToDeploymentSessions(deploymentId)}>
 								<DeploymentSessionStats sessionStats={sessionStats} />
 							</Td>
 							<Td className="w-1/12" />
@@ -211,7 +218,7 @@ export const DeploymentsTableContent = ({
 
 							<Td
 								className="w-1/8 cursor-pointer border-r-0"
-								onClick={() => navigate(`${deploymentId}/sessions`)}
+								onClick={() => goToDeploymentSessions(deploymentId)}
 							>
 								<DeploymentState deploymentState={state} />
 							</Td>
