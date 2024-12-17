@@ -188,12 +188,8 @@ export const TriggersTable = () => {
 					<TBody>
 						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
-								<Td className="w-4/12 pl-4 font-semibold">
-									<div className="w-full overflow-hidden pr-2">
-										<div className="truncate" title={trigger.name}>
-											{trigger.name}
-										</div>
-									</div>
+								<Td className="w-4/12 pl-4 font-semibold" title={trigger.name}>
+									<div className="w-full overflow-hidden pr-2">{trigger.name}</div>
 								</Td>
 								<Td className="-ml-2 w-2/12 capitalize">
 									<Popover animation="slideFromBottom" interactionType="hover">

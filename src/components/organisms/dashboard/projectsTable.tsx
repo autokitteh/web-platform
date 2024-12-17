@@ -93,7 +93,7 @@ export const DashboardProjectsTable = () => {
 
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
-			"inline-block border-0 px-1 text-sm font-medium w-20 truncate py-2",
+			"inline-block border-0 px-1 text-sm font-medium min-w-10 max-w-12 py-2 truncate sm:max-w-12 2xl:max-w-18 3xl:max-w-24",
 			{
 				"text-blue-500": state === SessionStateType.running,
 				"text-yellow-500": state === SessionStateType.stopped,
@@ -202,7 +202,7 @@ export const DashboardProjectsTable = () => {
 										className="w-1/6"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
-										<div className="m-auto pr-8">
+										<div className="m-auto max-w-16 pr-4 md:max-w-28">
 											<StatusBadge deploymentStatus={status} />
 										</div>
 									</Td>
@@ -211,10 +211,10 @@ export const DashboardProjectsTable = () => {
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 										title={`${totalDeployments} ${t("table.columns.deployments")}`}
 									>
-										<div className="w-full pr-4 text-center">{totalDeployments}</div>
+										<div className="w-full pr-6 text-center">{totalDeployments}</div>
 									</Td>
 									<Td
-										className="-ml-1 flex w-2/6"
+										className="-ml-1 flex w-2/6 pr-2"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div
@@ -257,20 +257,22 @@ export const DashboardProjectsTable = () => {
 									</Td>
 
 									<Td className="w-1/6">
-										<IconButton onClick={() => downloadProjectExport(id)}>
-											<IconSvg
-												className="fill-white transition hover:fill-green-200 active:fill-green-800"
-												size="md"
-												src={DownloadIcon}
-											/>
-										</IconButton>
-										<IconButton onClick={() => displayDeleteModal(id)}>
-											<IconSvg
-												className="stroke-white transition hover:stroke-green-200 active:stroke-green-800"
-												size="md"
-												src={TrashIcon}
-											/>
-										</IconButton>
+										<div className="flex">
+											<IconButton onClick={() => downloadProjectExport(id)}>
+												<IconSvg
+													className="fill-white transition hover:fill-green-200 active:fill-green-800"
+													size="md"
+													src={DownloadIcon}
+												/>
+											</IconButton>
+											<IconButton onClick={() => displayDeleteModal(id)}>
+												<IconSvg
+													className="stroke-white transition hover:stroke-green-200 active:stroke-green-800"
+													size="md"
+													src={TrashIcon}
+												/>
+											</IconButton>
+										</div>
 									</Td>
 								</Tr>
 							)

@@ -93,8 +93,7 @@
 				"actions": "Actions",
 				"startTime": "Start time",
 				"status": "Status",
-				"triggerName": "Trigger",
-				"connectionName": "Connection"
+				"source": "Source"
 			},
 			"statuses": {
 				"all": "All",
