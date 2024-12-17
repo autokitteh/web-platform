@@ -91,7 +91,7 @@ export const SessionsTableRow = memo(
 			>
 				<Td className="w-36 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
 
-				<Td className="w-20 text-center">
+				<Td className="w-20">
 					<SessionsTableState sessionState={session.state} />
 				</Td>
 
