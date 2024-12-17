@@ -1,3 +1,10 @@
+## [2.95.2](https://github.com/autokitteh/web-platform/compare/v2.95.1...v2.95.2) (2024-12-17)
+
+
+### Bug Fixes
+
+* **UI-1086:** fix copy button on not secured urls ([#782](https://github.com/autokitteh/web-platform/issues/782)) ([6deee59](https://github.com/autokitteh/web-platform/commit/6deee59b5267e79a08ae9ebfff507bcd55fc1fd9))
+
 ## [2.95.1](https://github.com/autokitteh/web-platform/compare/v2.95.0...v2.95.1) (2024-12-17)
 
 
