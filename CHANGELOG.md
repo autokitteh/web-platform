@@ -1,3 +1,10 @@
+# [2.92.0](https://github.com/autokitteh/web-platform/compare/v2.91.2...v2.92.0) (2024-12-17)
+
+
+### Features
+
+* **UI-999:** filter out functions beginning with lodash in manual run ([#777](https://github.com/autokitteh/web-platform/issues/777)) ([b60bae4](https://github.com/autokitteh/web-platform/commit/b60bae4f4e5cf46d50424e6aad7b235a83924f4c))
+
 ## [2.91.2](https://github.com/autokitteh/web-platform/compare/v2.91.1...v2.91.2) (2024-12-17)
 
 
