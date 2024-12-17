@@ -118,10 +118,10 @@ export const DashboardProjectsTable = () => {
 		<div className="z-10 h-2/3 select-none pt-10">
 			{sortedProjectsStats.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20 shadow-2xl">
-					<THead>
+					<THead className="mr-0">
 						<Tr className="border-none pl-4">
 							<Th
-								className="group h-11 w-1/5 cursor-pointer font-normal"
+								className="group h-11 w-2/3 cursor-pointer font-normal sm:w-1/5"
 								onClick={() => requestSort("name")}
 							>
 								{t("table.columns.projectName")}
@@ -133,7 +133,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group h-11 w-1/6 cursor-pointer font-normal"
+								className="group hidden h-11 w-1/6 cursor-pointer font-normal sm:flex"
 								onClick={() => requestSort("status")}
 							>
 								<div className="w-full text-center">
@@ -147,7 +147,7 @@ export const DashboardProjectsTable = () => {
 								</div>
 							</Th>
 							<Th
-								className="group h-11 w-1/6 cursor-pointer font-normal"
+								className="group hidden h-11 w-1/6 cursor-pointer font-normal sm:flex"
 								onClick={() => requestSort("totalDeployments")}
 							>
 								<div className="w-full text-center">
@@ -160,9 +160,11 @@ export const DashboardProjectsTable = () => {
 									/>
 								</div>
 							</Th>
-							<Th className="group h-11 w-2/6 font-normal">{t("table.columns.sessions")}</Th>
+							<Th className="group hidden h-11 w-2/6 font-normal sm:flex">
+								{t("table.columns.sessions")}
+							</Th>
 							<Th
-								className="group h-11 w-2/6 cursor-pointer font-normal"
+								className="group hidden h-11 w-2/6 cursor-pointer font-normal sm:flex"
 								onClick={() => requestSort("lastDeployed")}
 							>
 								{t("table.columns.lastDeployed")}
@@ -173,11 +175,11 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group h-11 w-1/6 font-normal">{t("table.columns.actions")}</Th>
+							<Th className="group h-11 w-1/3 font-normal sm:w-1/6">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
-					<TBody>
+					<TBody className="mr-0">
 						{sortedProjectsStats.map(
 							({
 								completed,
@@ -192,14 +194,14 @@ export const DashboardProjectsTable = () => {
 							}) => (
 								<Tr className="group cursor-pointer pl-4" key={id}>
 									<Td
-										className="w-1/5 pr-4 group-hover:font-bold"
+										className="w-2/3 pr-4 group-hover:font-bold sm:w-1/5"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 										title={name}
 									>
 										<div className="truncate">{name}</div>
 									</Td>
 									<Td
-										className="w-1/6"
+										className="hidden w-1/6 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div className="m-auto max-w-16 pr-4 md:max-w-28">
@@ -207,14 +209,14 @@ export const DashboardProjectsTable = () => {
 										</div>
 									</Td>
 									<Td
-										className="w-1/6"
+										className="hidden w-1/6 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 										title={`${totalDeployments} ${t("table.columns.deployments")}`}
 									>
 										<div className="w-full pr-6 text-center">{totalDeployments}</div>
 									</Td>
 									<Td
-										className="-ml-1 flex w-2/6 pr-2"
+										className="-ml-1 hidden w-2/6 pr-2 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div
@@ -248,7 +250,7 @@ export const DashboardProjectsTable = () => {
 									</Td>
 
 									<Td
-										className="w-2/6"
+										className="hidden w-2/6 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										{lastDeployed
@@ -256,7 +258,7 @@ export const DashboardProjectsTable = () => {
 											: t("never")}
 									</Td>
 
-									<Td className="w-1/6">
+									<Td className="w-1/3 sm:w-1/6">
 										<div className="flex">
 											<IconButton onClick={() => downloadProjectExport(id)}>
 												<IconSvg
@@ -283,7 +285,7 @@ export const DashboardProjectsTable = () => {
 				<div>{t("table.noProjectsFound")}</div>
 			)}
 
-			<div className="mt-10 flex flex-col items-center justify-center">
+			<div className="mt-10 hidden flex-col items-center justify-center sm:flex">
 				<Button
 					className="gap-2.5 whitespace-nowrap rounded-full border border-gray-750 py-2.5 pl-3 pr-4 font-averta text-base font-semibold"
 					onClick={() => openModal(ModalName.newProject)}
