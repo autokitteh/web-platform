@@ -15,17 +15,14 @@ export const SchedulerInfo = () => {
 	return (
 		<Accordion className="mt-4" title={t("information")}>
 			<div className="flex flex-col items-start gap-2">
-				{infoCronExpressionsLinks.map(({ text, url }, index) => (
-					<Link
-						className="inline-flex items-center gap-2.5 text-green-800"
-						key={index}
-						target="_blank"
-						to={url}
-					>
-						{text}
-
-						<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
-					</Link>
+				{infoCronExpressionsLinks.map(({ additionalText, text, url }, index) => (
+					<div key={index}>
+						<Link className="inline-flex items-center gap-2.5 text-green-800" target="_blank" to={url}>
+							{text}
+							<ExternalLinkIcon className="size-3.5 fill-green-800 duration-200" />
+						</Link>
+						<div className="ml-2 inline">{additionalText}</div>
+					</div>
 				))}
 			</div>
 		</Accordion>
