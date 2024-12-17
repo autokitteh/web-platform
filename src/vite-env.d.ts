@@ -12,6 +12,7 @@ interface ImportMetaEnv {
 	readonly VITE_HOST_URL: string;
 	readonly DISPLAY_DISCORD_INTEGRATION: boolean;
 	readonly DISPLAY_SLACK_SOCKET_INTEGRATION: boolean;
+	readonly ENABLE_NEW_ORGS_AND_USERS_DESIGN: boolean;
 }
 
 interface ImportMeta {
