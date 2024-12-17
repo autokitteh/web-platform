@@ -1,3 +1,10 @@
+## [2.89.6](https://github.com/autokitteh/web-platform/compare/v2.89.5...v2.89.6) (2024-12-17)
+
+
+### Bug Fixes
+
+* **UI-1016:** remember last visited deployment and session ([#732](https://github.com/autokitteh/web-platform/issues/732)) ([5715891](https://github.com/autokitteh/web-platform/commit/57158916459de6e33b8a88aefdb4a96643ef9d1a))
+
 ## [2.89.5](https://github.com/autokitteh/web-platform/compare/v2.89.4...v2.89.5) (2024-12-16)
 
 ## [2.89.4](https://github.com/autokitteh/web-platform/compare/v2.89.3...v2.89.4) (2024-12-16)
