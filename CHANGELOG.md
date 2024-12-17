@@ -1,3 +1,10 @@
+## [2.91.2](https://github.com/autokitteh/web-platform/compare/v2.91.1...v2.91.2) (2024-12-17)
+
+
+### Bug Fixes
+
+* **UI-1049:** event table columns width and truncate ([#778](https://github.com/autokitteh/web-platform/issues/778)) ([9633d17](https://github.com/autokitteh/web-platform/commit/9633d1731687f3f010584d0d84ba794585fae0fe))
+
 ## [2.91.1](https://github.com/autokitteh/web-platform/compare/v2.91.0...v2.91.1) (2024-12-17)
 
 
