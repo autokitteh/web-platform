@@ -1,3 +1,10 @@
+## [2.96.1](https://github.com/autokitteh/web-platform/compare/v2.96.0...v2.96.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* **UI-1094:** fix semantic-release to write the version into package.json ([#789](https://github.com/autokitteh/web-platform/issues/789)) ([40ce195](https://github.com/autokitteh/web-platform/commit/40ce1954012129aa5882c619ec8868778f146a81))
+
 # [2.96.0](https://github.com/autokitteh/web-platform/compare/v2.95.2...v2.96.0) (2024-12-18)
 
 
