@@ -1,3 +1,4 @@
+import importMetaUrlPlugin from "@codingame/esbuild-import-meta-url-plugin";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
@@ -50,6 +51,9 @@ export default defineConfig({
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
+		esbuildOptions: {
+			plugins: [importMetaUrlPlugin],
+		},
 	},
 	plugins: [
 		react(),
@@ -107,6 +111,10 @@ export default defineConfig({
 					src: "src/assets/image/pages/**/*",
 					dest: "assets/image/pages",
 				},
+				{
+					src: "node_modules/@typefox/pyright-browser/dist/pyright.worker.js",
+					dest: "./",
+				},
 			],
 		}),
 		reactVirtualized(),
@@ -136,6 +144,7 @@ export default defineConfig({
 			"@validations": path.resolve(__dirname, "./src/validations"),
 			"tailwind-config": path.resolve(__dirname, "./tailwind.config.cjs"),
 		},
+		dedupe: ["vscode"],
 	},
 	server: {
 		host: true,
