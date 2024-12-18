@@ -1,3 +1,10 @@
+## [2.96.2](https://github.com/autokitteh/web-platform/compare/v2.96.1...v2.96.2) (2024-12-18)
+
+
+### Bug Fixes
+
+* **UI-1091:** page reload on navigate ([#786](https://github.com/autokitteh/web-platform/issues/786)) ([89887b4](https://github.com/autokitteh/web-platform/commit/89887b4c37395b6a9b8cea131c2f1945878cffb0))
+
 ## [2.96.1](https://github.com/autokitteh/web-platform/compare/v2.96.0...v2.96.1) (2024-12-18)
 
 
