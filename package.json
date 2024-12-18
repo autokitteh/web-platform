@@ -74,7 +74,7 @@
 		"zustand": "^5.0.0"
 	},
 	"devDependencies": {
-		"@commitlint/config-conventional": "^19.2.2",
+		"@commitlint/config-conventional": "^19.6.0",
 		"@connectrpc/connect": "^1.4.0",
 		"@connectrpc/connect-web": "^1.4.0",
 		"@liferay/eslint-plugin": "^1.6.0",
