@@ -1,3 +1,10 @@
+## [2.96.3](https://github.com/autokitteh/web-platform/compare/v2.96.2...v2.96.3) (2024-12-18)
+
+
+### Bug Fixes
+
+* **UI-1092:** infinite connection loading bug ([#790](https://github.com/autokitteh/web-platform/issues/790)) ([7f3fb42](https://github.com/autokitteh/web-platform/commit/7f3fb42eeab4308af38691182f28841f4dfed593))
+
 ## [2.96.2](https://github.com/autokitteh/web-platform/compare/v2.96.1...v2.96.2) (2024-12-18)
 
 
