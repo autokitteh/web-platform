@@ -9,6 +9,5 @@ export { useSort } from "@hooks/useSort";
 export { useToastAndLog } from "@hooks/useToastAndLog";
 export { useVirtualizedList } from "@hooks/useVirtualizedList";
 export { useWindowDimensions } from "@hooks/useWindowDimensions";
-export { useEvent } from "@src/hooks/useEvent";
 export { usePopover, usePopoverList } from "@src/hooks/usePopover";
 export { useProjectActions } from "@src/hooks/useProjectActions";
