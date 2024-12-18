@@ -6,14 +6,13 @@ import { useTranslation } from "react-i18next";
 import {
 	Navigate,
 	Route,
-	Routes,
 	createRoutesFromChildren,
 	matchRoutes,
 	useLocation,
 	useNavigationType,
 } from "react-router-dom";
 
-import { googleAnalyticsId, isProduction } from "@constants";
+import { AKRoutes, googleAnalyticsId, isProduction } from "@constants";
 
 import { PageTitle } from "@components/atoms";
 import { DeploymentsTable, EventViewer, EventsTable, SessionsTable } from "@components/organisms";
@@ -30,7 +29,6 @@ import { AppLayout, EventsLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
 export const App = () => {
-	let AKRoutes = Routes;
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const location = useLocation();
 
@@ -74,7 +72,6 @@ export const App = () => {
 				/^https:\/\/autokitteh\.cloud/,
 			],
 		});
-		AKRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 	}
 
 	return (
