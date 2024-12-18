@@ -61,6 +61,12 @@ export const Profile = () => {
 			<Typography element="p" size="1.5xl">
 				{user?.email}
 			</Typography>
+			<Typography className="mt-9" element="p">
+				{t("retentionPolicyTitle")}
+			</Typography>
+			<Typography className="mt-1.5" element="p" size="1.5xl">
+				{t("retentionPolicyDescription")}
+			</Typography>
 			<div className="mt-9">
 				<Button
 					className="gap-3 px-4 text-base font-semibold text-white"
