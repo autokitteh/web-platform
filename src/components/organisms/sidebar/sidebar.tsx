@@ -42,24 +42,26 @@ export const Sidebar = () => {
 			<div className="relative z-40 flex h-full min-w-[65px] items-start">
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
-						<Link className="flex justify-center gap-2.5" to="/">
-							<IconLogo className="size-8" />
-
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="overflow-hidden whitespace-nowrap"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
-									>
-										<IconLogoName className="h-3 w-20" />
-									</motion.span>
-								) : null}
-							</AnimatePresence>
-						</Link>
-
+						<div className="flex">
+							<Link className="ml-1 flex w-full justify-start gap-2.5" to="/">
+								<IconLogo className="size-8" />
+							</Link>
+							<Link className="flex items-center gap-2.5" to="/">
+								<AnimatePresence>
+									{isOpen ? (
+										<motion.span
+											animate="visible"
+											className="overflow-hidden whitespace-nowrap"
+											exit="hidden"
+											initial="hidden"
+											variants={animateVariant}
+										>
+											<IconLogoName className="h-3 w-20" />
+										</motion.span>
+									) : null}
+								</AnimatePresence>
+							</Link>
+						</div>
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
 							className="mt-7 w-full justify-center gap-2.5 p-0.5 pr-2 hover:bg-green-200"
