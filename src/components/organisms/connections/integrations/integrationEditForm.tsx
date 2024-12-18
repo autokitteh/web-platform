@@ -6,7 +6,7 @@ import { SingleValue } from "react-select";
 import { formsPerIntegrationsMapping, integrationVariablesMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
 import { Integrations, isGoogleIntegration } from "@src/enums/components";
-import { useConnectionForm, useEvent } from "@src/hooks";
+import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { setFormValues } from "@src/utilities";
 
@@ -43,7 +43,6 @@ export const IntegrationEditForm = ({
 
 	const [initialConnectionType, setInitialConnectionType] = useState<boolean>();
 	const [isFirstConnectionType, setIsFirstConnectionType] = useState(true);
-	const { dispatch: dispacthConnectionInfoLoaded } = useEvent("onConnectionLoaded");
 
 	useEffect(() => {
 		if (!isGoogleIntegration(integrationType)) {
@@ -77,11 +76,6 @@ export const IntegrationEditForm = ({
 
 	const ConnectionTypeComponent =
 		formsPerIntegrationsMapping[integrationType]?.[connectionType as ConnectionAuthType];
-
-	useEffect(() => {
-		dispacthConnectionInfoLoaded(true);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const selectConnectionTypeValue = useMemo(
 		() => selectOptions.find((method) => method.value === connectionType),

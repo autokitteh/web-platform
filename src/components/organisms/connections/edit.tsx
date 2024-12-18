@@ -7,7 +7,6 @@ import { integrationTypes } from "@constants/lists";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { integrationToEditComponent } from "@src/constants";
 import { Integrations } from "@src/enums/components";
-import { useEvent } from "@src/hooks";
 import { useHasActiveDeployments } from "@src/store";
 import { cn, stripGoogleConnectionName } from "@src/utilities";
 import { connectionSchema } from "@validations";
@@ -38,8 +37,13 @@ export const EditConnection = () => {
 	let integrationType = selectedIntegration?.value;
 	let googleIntegrationApplication;
 
-	const [connectionInfoLoaded, setConnectionInfoLoaded] = useState(false);
-	useEvent("onConnectionLoaded", setConnectionInfoLoaded);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		if (connectionName) {
+			setLoading(false);
+		}
+	}, [connectionName]);
 
 	if (integrationType && selectedIntegration?.value) {
 		googleIntegrationApplication = stripGoogleConnectionName(integrationType);
@@ -54,8 +58,8 @@ export const EditConnection = () => {
 		? integrationToEditComponent[integrationType as keyof typeof Integrations]
 		: null;
 
-	const connectionInfoClass = cn("invisible w-5/6", { visible: connectionInfoLoaded });
-	const loaderClass = cn("visible", { invisible: connectionInfoLoaded });
+	const connectionInfoClass = cn("visible w-5/6", { invisible: loading });
+	const loaderClass = cn("invisible", { visible: loading });
 
 	return (
 		<div className="min-w-80">
