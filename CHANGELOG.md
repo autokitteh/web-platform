@@ -1,3 +1,10 @@
+# [2.96.0](https://github.com/autokitteh/web-platform/compare/v2.95.2...v2.96.0) (2024-12-18)
+
+
+### Features
+
+* **UI-964:** add retention policy in user settings ([#785](https://github.com/autokitteh/web-platform/issues/785)) ([b8c1f50](https://github.com/autokitteh/web-platform/commit/b8c1f50202e4945e67d7f4f8dab67cc662da3b59))
+
 ## [2.95.2](https://github.com/autokitteh/web-platform/compare/v2.95.1...v2.95.2) (2024-12-17)
 
 
