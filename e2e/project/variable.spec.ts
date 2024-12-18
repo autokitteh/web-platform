@@ -9,7 +9,7 @@ test.beforeEach(async ({ dashboardPage, page }) => {
 
 	await page.getByLabel("Name").click();
 	await page.getByLabel("Name").fill("nameVariable");
-	await page.getByLabel("Value").click();
+	await page.getByLabel("Value", { exact: true }).click();
 	await page.getByLabel("Value").fill("valueVariable");
 	await page.getByRole("button", { name: "Save", exact: true }).click();
 
@@ -32,7 +32,7 @@ test.describe("Project Variables Suite", () => {
 
 	test("Modify variable", async ({ page }) => {
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
-		await page.getByLabel("Value").click();
+		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 
@@ -48,7 +48,7 @@ test.describe("Project Variables Suite", () => {
 
 		await page.getByRole("button", { name: "Modify nameVariable variable" }).click();
 		await page.getByRole("button", { name: "Ok" }).click();
-		await page.getByLabel("Value").click();
+		await page.getByLabel("Value", { exact: true }).click();
 		await page.getByLabel("Value").fill("newValueVariable");
 		await page.getByRole("button", { name: "Save", exact: true }).click();
 		const newVariableInTable = page.getByRole("cell", { exact: true, name: "newValueVariable" });
