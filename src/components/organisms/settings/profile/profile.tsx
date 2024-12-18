@@ -64,7 +64,7 @@ export const Profile = () => {
 			<Typography className="mt-9" element="p">
 				{t("retentionPolicyTitle")}
 			</Typography>
-			<Typography className="mt-1.5" element="p">
+			<Typography className="mt-1.5" element="p" size="1.5xl">
 				{t("retentionPolicyDescription")}
 			</Typography>
 			<div className="mt-9">
