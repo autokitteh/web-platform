@@ -1,3 +1,6 @@
+import * as Sentry from "@sentry/react";
+import { Routes } from "react-router-dom";
+
 import packageJson from "../../package.json";
 
 export const isDevelopment = import.meta.env.VITE_NODE_ENV === "development";
@@ -24,3 +27,4 @@ export const timeFormat = "HH:mm:ss";
 
 export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
+export const AKRoutes = isProduction ? Sentry.withSentryReactRouterV7Routing(Routes) : Routes;
