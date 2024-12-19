@@ -8,10 +8,12 @@ import { Button } from "@components/atoms/buttons/button";
 import { CopyButton } from "@components/molecules/copyButton";
 
 export const IdCopyButton = ({
+	buttonClassName,
 	id,
 	onIdClick,
 	variant,
 }: {
+	buttonClassName?: string;
 	id: string;
 	onIdClick?: (id?: string) => void;
 	variant?: ButtonType;
@@ -22,7 +24,7 @@ export const IdCopyButton = ({
 
 	return (
 		<div className="flex flex-row items-center">
-			<Button onClick={() => onIdClick?.(id)} variant={variant}>
+			<Button className={buttonClassName} onClick={() => onIdClick?.(id)} variant={variant}>
 				{" "}
 				{id.substring(0, 8)}...
 			</Button>
