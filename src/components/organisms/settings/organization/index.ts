@@ -1,2 +1,2 @@
-export { CreatedOrganizationModal } from "@components/organisms/settings/organization/createdOrganizationModal";
+export { CreateNewOrganizationModal } from "@components/organisms/settings/organization/createNewOrganizationModal";
 export { NewOrganization } from "@components/organisms/settings/organization/newOrganization";
