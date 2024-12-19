@@ -22,8 +22,8 @@ export const UserMenu = () => {
 		{ id: 2, name: "Organization 2" },
 		{ id: 3, name: "Organization 3" },
 		{ id: 4, name: "Organization 4" },
-		{ id: 3, name: "Organization 5" },
-		{ id: 4, name: "Organization 6" },
+		{ id: 5, name: "Organization 5" },
+		{ id: 6, name: "Organization 6" },
 	];
 
 	return (
