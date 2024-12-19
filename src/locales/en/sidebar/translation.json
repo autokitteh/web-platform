@@ -1,5 +1,7 @@
 {
 	"menu": {
+		"myProfile": "My Profile",
+		"clientConfiguration": "Client Setup",
 		"userSettings": {
 			"title": "User Settings",
 			"logout": "Log out",

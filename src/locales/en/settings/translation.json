@@ -34,6 +34,7 @@
 		"retentionPolicyDescription": "We will keep your data for 3 days"
 	},
 	"topbar": {
-		"title": "Settings"
+		"title": "Settings",
+		"personalSettings": "Personal Settings"
 	}
 }
