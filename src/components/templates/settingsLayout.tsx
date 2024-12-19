@@ -21,9 +21,15 @@ export const SettingsLayout = () => {
 		"/settings/client-configuration": tSettings("configuration"),
 	};
 
-	const getSubPageTitle = (path: string) => subPageTitles[path];
+	const getSubPageTitle = (path: string) => {
+		if (subPageTitles[path]) {
+			return `: ${subPageTitles[path]}`;
+		}
 
-	const subPageTitle = getSubPageTitle(location.pathname) || "";
+		return "";
+	};
+
+	const topbarTitle = `${tSettings("userSettings")}${getSubPageTitle(location.pathname)}`;
 
 	useEffect(() => {
 		setPageTitle(t("template", { page: t("settings") }));
@@ -41,7 +47,7 @@ export const SettingsLayout = () => {
 					<Sidebar />
 
 					<div className="flex flex-1 flex-col">
-						<TitleTopbar title={`${tSettings("userSettings")}: ${subPageTitle}`} />
+						<TitleTopbar title={topbarTitle} />
 
 						<div className="relative flex size-full overflow-hidden py-2">
 							{featureFlags.enableNewOrgsAndUsersDesign ? null : <SettingsMenu />}
