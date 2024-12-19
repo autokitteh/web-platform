@@ -191,7 +191,10 @@ export class ProjectsService {
 
 			return { data: projectIds[0], error: undefined };
 		} catch (error: unknown) {
-			LoggerService.error(namespaces.projectService, `${i18n.t("projectCreationFailedExtended", { error })}`);
+			LoggerService.error(
+				namespaces.projectService,
+				`${i18n.t("projectCreationFailedExtended", { error, ns: "services" })}`
+			);
 
 			return { data: undefined, error };
 		}
