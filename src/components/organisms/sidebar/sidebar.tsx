@@ -168,7 +168,7 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						{!isAuthEnabled ? (
+						{isAuthEnabled ? (
 							<Popover interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-2 mt-2 flex items-center">
 									<Avatar color="black" name={user?.name} round={true} size="24" />
@@ -187,7 +187,7 @@ export const Sidebar = () => {
 									</AnimatePresence>
 								</PopoverTrigger>
 								<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
-									{!featureFlags.enableNewOrgsAndUsersDesign ? (
+									{featureFlags.enableNewOrgsAndUsersDesign ? (
 										<UserMenu />
 									) : (
 										<>
@@ -204,10 +204,11 @@ export const Sidebar = () => {
 														title={t("userSettings.settings")}
 													>
 														<IconSvg
-															className={cn("w-5", {
+															className={cn({
 																"fill-black": !stroke,
 																"stroke-black": stroke,
 															})}
+															size="lg"
 															src={icon}
 														/>
 														{t(label)}
