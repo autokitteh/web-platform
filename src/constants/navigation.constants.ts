@@ -22,18 +22,18 @@ export const userMenuItems = [
 export const userMenuOrganizationItems = [
 	{
 		icon: GearIcon,
-		href: "/organization/settings",
+		href: "/organization-settings",
 		label: "Settings",
 		stroke: false,
 	},
 	{
 		icon: UserIcon,
-		href: "/organization/users",
+		href: "/organization-settings/users",
 		label: "Users",
 	},
 	{
 		icon: ReceiptIcon,
-		href: "/organization/billing",
+		href: "/organization-settings/billing",
 		label: "Billing",
 	},
 ];

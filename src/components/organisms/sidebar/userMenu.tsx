@@ -78,9 +78,7 @@ export const UserMenu = () => {
 				<h3 className="mb-3 font-semibold text-black">{t("menu.organizationsList.title")}</h3>
 				<Button
 					className="mb-2 flex w-full items-center gap-2 rounded-md bg-green-800 px-2.5 py-1.5 text-sm text-black hover:bg-green-200"
-					onClick={() => {
-						/* TODO: Handle create organization */
-					}}
+					href="/organization-settings/new"
 				>
 					<PlusIcon className="size-4" fill="white" />
 					{t("menu.organizationsList.newOrganization")}

@@ -34,20 +34,24 @@
 		"retentionPolicyDescription": "We will keep your data for 3 days"
 	},
 	"topbar": {
-		"title": "Settings",
-		"personalSettings": "Personal Settings"
+		"personalSettings": "Personal Settings",
+		"organization": "Organization"
 	},
 	"organization": {
-		"createNewOrganization": "Create New Organization",
+		"createNewOrganization": "Create new organization",
 		"form": {
 			"organizationName": "Organization Name",
 			"displayedName": "Displayed Name",
-			"create": "Create"
+			"buttons": {
+				"create": "Create"
+			}
 		},
 		"modal": {
 			"organizationCreated": "Organization {{name}} created",
-			"stayOn": "Stay on",
-			"open": "Open"
+			"buttons": {
+				"stayOn": "Stay on",
+				"open": "Open"
+			}
 		}
 	}
 }
