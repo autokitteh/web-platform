@@ -1,3 +1,5 @@
+import { NavigationSettingsItem } from "@src/interfaces/components";
+
 import {
 	AssetsIcon,
 	DeploymentsIcon,
@@ -14,12 +16,12 @@ export const mainNavigationItems = [
 	{ key: "sessions", label: "Sessions", icon: SessionsIcon, path: "/deployments/{deploymentId}/sessions" },
 ];
 
-export const userMenuItems = [
+export const userMenuItems: NavigationSettingsItem[] = [
 	{ icon: UserIcon, label: "menu.myProfile", href: "/settings" },
 	{ icon: SecurityIcon, label: "menu.clientConfiguration", href: "/settings/client-configuration", stroke: true },
 ];
 
-export const userMenuOrganizationItems = [
+export const userMenuOrganizationItems: NavigationSettingsItem[] = [
 	{
 		icon: GearIcon,
 		href: "/organization-settings",
