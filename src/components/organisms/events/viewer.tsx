@@ -72,7 +72,7 @@ export const EventViewer = () => {
 							{eventInfo.type}
 						</div>
 						<div className="flex items-center gap-4">
-							<div className="w-32 text-gray-1550">{t("destinationName")}</div>
+							<div className="w-32 text-gray-1550">{t("sourceName")}</div>
 							{eventInfo.destinationName} ({eventInfo.destinationType})
 						</div>
 						<div className="flex items-center gap-4">
@@ -91,7 +91,7 @@ export const EventViewer = () => {
 							<CopyButton className="p-0" size="xs" text={eventInfo.type} />
 						</div>
 						<div className="flex items-center justify-end gap-4">
-							<div className="leading-6">{t("destinationId")}</div>
+							<div className="leading-6">{t("sourceId")}</div>
 							<CopyButton className="p-0" size="xs" text={eventInfo.destinationId || ""} />
 						</div>
 					</div>

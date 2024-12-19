@@ -10,8 +10,8 @@
 		"columns": {
 			"eventId": "Event ID",
 			"createdAt": "Creation time",
-			"destinationName": "Destination",
-			"destinationId": "Destination ID",
+			"sourceName": "Source",
+			"sourceId": "Source ID",
 			"type": "Type"
 		}
 	},
@@ -20,7 +20,7 @@
 		"eventType": "Event type",
 		"created": "Created",
 		"eventId": "Event ID",
-		"destinationId": "Destination ID",
-		"destinationName": "Destination"
+		"sourceId": "Source ID",
+		"sourceName": "Source"
 	}
 }
