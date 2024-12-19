@@ -176,7 +176,7 @@ export const App = () => {
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 
-			<Route element={<SettingsLayout variant="organization" />} path="organization">
+			<Route element={<SettingsLayout variant="organization" />} path="organization-settings">
 				<Route element={<NewOrganization />} path="new" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />

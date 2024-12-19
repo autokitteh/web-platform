@@ -3,13 +3,16 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { z } from "zod";
 
 import { ModalName } from "@src/enums/components";
 import { useModalStore } from "@src/store";
 import { newOrganizationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
-import { CreatedOrganizationModal } from "@components/organisms/settings/organization/createdOrganizationModal";
+import { CreatedOrganizationModal } from "@components/organisms/settings/organization";
+
+type FormValues = z.infer<typeof newOrganizationSchema>;
 
 export const NewOrganization = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
@@ -17,14 +20,14 @@ export const NewOrganization = () => {
 		formState: { errors },
 		handleSubmit,
 		register,
-	} = useForm({
+	} = useForm<FormValues>({
 		resolver: zodResolver(newOrganizationSchema),
 		mode: "onSubmit",
 	});
 	const { openModal } = useModalStore();
 
-	const onSubmit = async () => {
-		openModal(ModalName.createdNewOrganization);
+	const onSubmit = async (values: FormValues) => {
+		openModal(ModalName.createdNewOrganization, { orgName: values.orgName });
 	};
 
 	return (
@@ -57,7 +60,7 @@ export const NewOrganization = () => {
 					type="submit"
 					variant="outline"
 				>
-					{t("form.create")}
+					{t("form.buttons.create")}
 				</Button>
 			</form>
 			<CreatedOrganizationModal />
