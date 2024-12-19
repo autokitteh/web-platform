@@ -13,12 +13,7 @@ export const SettingsLayout = () => {
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { pathname } = useLocation();
 
-	const subPageTitles: Record<string, string> = {
-		"/settings": tSettings("personalSettings"),
-		"/settings/client-configuration": tSettings("personalSettings"),
-	};
-
-	const topbarTitle = subPageTitles[pathname] ? subPageTitles[pathname] : "";
+	const topbarTitle = pathname.startsWith("/settings") ? tSettings("personalSettings") : tSettings("title");
 
 	useEffect(() => {
 		setPageTitle(t("template", { page: t("settings") }));
