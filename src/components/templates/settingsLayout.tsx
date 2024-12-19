@@ -18,11 +18,12 @@ export const SettingsLayout = () => {
 
 	const subPageTitles: Record<string, string> = {
 		"/settings": tSettings("profile"),
+		"/settings/client-configuration": tSettings("configuration"),
 	};
 
 	const getSubPageTitle = (path: string) => subPageTitles[path];
 
-	const subPageTitle = getSubPageTitle(location.pathname);
+	const subPageTitle = getSubPageTitle(location.pathname) || "";
 
 	useEffect(() => {
 		setPageTitle(t("template", { page: t("settings") }));
