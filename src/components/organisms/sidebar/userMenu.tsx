@@ -3,7 +3,7 @@ import React from "react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 
-import { menuUserItems, userMenuOrganizationItems } from "@src/constants";
+import { userMenuItems, userMenuOrganizationItems } from "@src/constants";
 import { useUserStore } from "@src/store";
 import { cn } from "@src/utilities";
 
@@ -35,10 +35,10 @@ export const UserMenu = () => {
 					<span className="font-medium text-black">{user?.email}</span>
 				</div>
 				<div className="mt-2 flex flex-col gap-1">
-					{menuUserItems.map(({ icon, label, path, stroke }, index) => (
+					{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 						<Button
 							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
-							href={path}
+							href={href}
 							key={index}
 							title={t("menu.userSettings.settings")}
 						>

@@ -7,7 +7,7 @@ import { LogoCatLarge, PageTitle } from "@components/atoms";
 import { Sidebar, TitleTopbar } from "@components/organisms";
 import { SettingsMenu } from "@components/organisms/settings";
 
-export const SettingsLayout = () => {
+export const SettingsLayout = ({ variant }: { variant: "userSettings" | "organization" }) => {
 	const { t: tSettings } = useTranslation("settings", { keyPrefix: "topbar" });
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
@@ -34,8 +34,9 @@ export const SettingsLayout = () => {
 						<TitleTopbar title={topbarTitle} />
 
 						<div className="relative flex size-full overflow-hidden py-2">
-							<SettingsMenu />
-							<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl border-l bg-gray-1100 pl-6 pt-6">
+							<SettingsMenu variant={variant} />
+
+							<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl border-l bg-gray-1100 pl-9 pt-6">
 								<Outlet />
 
 								<div className="absolute !-bottom-5 !-right-5">

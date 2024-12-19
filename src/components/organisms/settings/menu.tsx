@@ -3,19 +3,21 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { matchPath, useLocation } from "react-router-dom";
 
-import { menuUserItems } from "@constants";
+import { userMenuItems, userMenuOrganizationItems } from "@constants";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
-export const SettingsMenu = () => {
+export const SettingsMenu = ({ variant }: { variant: "userSettings" | "organization" }) => {
 	const { t } = useTranslation("settings");
 	const location = useLocation();
 
+	const currentMenuItems = variant === "organization" ? userMenuOrganizationItems : userMenuItems;
+
 	return (
 		<div className="flex h-full max-w-72 flex-1 flex-col rounded-l-2xl bg-black pl-7 pt-6 text-lg">
-			{menuUserItems.map(({ icon, label, path, stroke }, index) => {
-				const isCurrentPage = matchPath({ path, end: true }, location.pathname);
+			{currentMenuItems.map(({ href, icon, label, stroke }, index) => {
+				const isCurrentPage = matchPath({ path: href, end: true }, location.pathname);
 
 				const settingsMenuButtonClass = cn(
 					"group mb-5 flex items-center text-white active:text-green-800 p-0 hover:bg-transparent gap-2 font-averta",
@@ -37,7 +39,7 @@ export const SettingsMenu = () => {
 				});
 
 				return (
-					<Button className={settingsMenuButtonClass} href={path} key={index}>
+					<Button className={settingsMenuButtonClass} href={href} key={index}>
 						<div className={parentIconClass}>
 							<IconSvg className={iconClass} src={icon} />
 						</div>
