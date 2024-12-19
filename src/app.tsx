@@ -169,14 +169,14 @@ export const App = () => {
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 
-			<Route element={<SettingsLayout variant="userSettings" />} path="settings">
+			<Route element={<SettingsLayout />} path="settings">
 				<Route element={<Profile />} index />
 				<Route element={<ClientConfiguration />} path="client-configuration" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 
-			<Route element={<SettingsLayout variant="organization" />} path="organization-settings">
+			<Route element={<SettingsLayout />} path="organization-settings">
 				<Route element={<NewOrganization />} path="new" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />

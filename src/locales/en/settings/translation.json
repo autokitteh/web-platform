@@ -35,7 +35,7 @@
 	},
 	"topbar": {
 		"personalSettings": "Personal Settings",
-		"organization": "Organization"
+		"organizationSettings": "Organization: {{name}}"
 	},
 	"organization": {
 		"createNewOrganization": "Create new organization",
