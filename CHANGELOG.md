@@ -1,3 +1,10 @@
+## [2.96.4](https://github.com/autokitteh/web-platform/compare/v2.96.3...v2.96.4) (2024-12-19)
+
+
+### Bug Fixes
+
+* **UI-1097:** switch projects list request ([#792](https://github.com/autokitteh/web-platform/issues/792)) ([153cf2e](https://github.com/autokitteh/web-platform/commit/153cf2ee26a878bf89e3374b6e0fa35f1c395a0c))
+
 ## [2.96.3](https://github.com/autokitteh/web-platform/compare/v2.96.2...v2.96.3) (2024-12-18)
 
 
