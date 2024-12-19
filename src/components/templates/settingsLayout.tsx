@@ -9,6 +9,7 @@ import { LogoCatLarge, PageTitle } from "@components/atoms";
 import { Sidebar, TitleTopbar } from "@components/organisms";
 
 export const SettingsLayout = () => {
+	const { t: tSettings } = useTranslation("settings", { keyPrefix: "topbar" });
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { user } = useUserStore();
@@ -29,7 +30,7 @@ export const SettingsLayout = () => {
 					<Sidebar />
 
 					<div className="flex flex-1 flex-col">
-						<TitleTopbar title={user?.name || ""} />
+						<TitleTopbar title={`${tSettings("user")}: ${user?.name || ""}`} />
 
 						<div className="relative flex size-full overflow-hidden py-2">
 							<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-2xl border-l bg-gray-1100 pl-6 pt-6">
