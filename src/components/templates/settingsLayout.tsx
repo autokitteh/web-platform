@@ -35,18 +35,18 @@ export const SettingsLayout = () => {
 					<div className="flex flex-1 flex-col">
 						<TitleTopbar
 							title={
-								featureFlags.displayNewOrgsUsersMenu
+								featureFlags.enableNewOrgsAndUsersDesign
 									? `${tSettings("user")}: ${user?.name || ""}`
 									: tSettings("title")
 							}
 						/>
 
 						<div className="relative flex size-full overflow-hidden py-2">
-							{featureFlags.displayNewOrgsUsersMenu ? null : <SettingsMenu />}
+							{featureFlags.enableNewOrgsAndUsersDesign ? null : <SettingsMenu />}
 							<div
 								className={cn(
 									"scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl border-l bg-gray-1100 pl-6 pt-6",
-									{ "rounded-2xl": featureFlags.displayNewOrgsUsersMenu }
+									{ "rounded-2xl": featureFlags.enableNewOrgsAndUsersDesign }
 								)}
 							>
 								<Outlet />
