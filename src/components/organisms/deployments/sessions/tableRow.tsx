@@ -89,15 +89,15 @@ export const SessionsTableRow = memo(
 				onClick={() => openSessionLog(session.sessionId)}
 				style={{ ...style }}
 			>
-				<Td className="w-1/5 min-w-36 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
+				<Td className="w-36 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>
 
-				<Td className="w-1/5 min-w-20">
+				<Td className="w-20">
 					<SessionsTableState sessionState={session.state} />
 				</Td>
 
-				<Td className="w-2/5 min-w-40 pl-2">{session.triggerName || session.connectionName}</Td>
+				<Td className="w-full flex-1 pl-2">{session.triggerName || session.connectionName}</Td>
 
-				<Td className="w-1/5 min-w-20">
+				<Td className="flex w-20 pl-2">
 					<div className="flex w-full justify-start">
 						<IconButton
 							disabled={session.state !== SessionState.running}
