@@ -1,3 +1,10 @@
+# [2.97.0](https://github.com/autokitteh/web-platform/compare/v2.96.4...v2.97.0) (2024-12-19)
+
+
+### Features
+
+* **UI-1059:** user profile page ([#765](https://github.com/autokitteh/web-platform/issues/765)) ([10907ab](https://github.com/autokitteh/web-platform/commit/10907ab2ca014e4b8bcaf1dc3b1623f17de5ea5a))
+
 ## [2.96.4](https://github.com/autokitteh/web-platform/compare/v2.96.3...v2.96.4) (2024-12-19)
 
 
