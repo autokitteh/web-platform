@@ -1,3 +1,10 @@
+## [2.97.2](https://github.com/autokitteh/web-platform/compare/v2.97.1...v2.97.2) (2024-12-19)
+
+
+### Bug Fixes
+
+* **UI-1098:** update organization IDs in user menu ([#793](https://github.com/autokitteh/web-platform/issues/793)) ([361352a](https://github.com/autokitteh/web-platform/commit/361352aaa55170e0f9ea20809967217485d27932))
+
 ## [2.97.1](https://github.com/autokitteh/web-platform/compare/v2.97.0...v2.97.1) (2024-12-19)
 
 
