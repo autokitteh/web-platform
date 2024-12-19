@@ -24,7 +24,7 @@
 		},
 		"vscodeConfigExample": "VSCode Configuration Example"
 	},
-	"profile":{
+	"profile": {
 		"title": "My Profile",
 		"name": "Name",
 		"email": "Email",
@@ -36,5 +36,18 @@
 	"topbar": {
 		"title": "Settings",
 		"personalSettings": "Personal Settings"
+	},
+	"organization": {
+		"createNewOrganization": "Create New Organization",
+		"form": {
+			"organizationName": "Organization Name",
+			"displayedName": "Displayed Name",
+			"create": "Create"
+		},
+		"modal": {
+			"organizationCreated": "Organization {{name}} created",
+			"stayOn": "Stay on",
+			"open": "Open"
+		}
 	}
 }
