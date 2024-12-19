@@ -216,10 +216,10 @@ export const SessionsTable = () => {
 							<Table className="flex h-full overflow-y-visible">
 								<THead className="rounded-t-14">
 									<Tr className="flex">
-										<Th className="w-36 pl-4">{t("table.columns.startTime")}</Th>
-										<Th className="w-20">{t("table.columns.status")}</Th>
-										<Th className="w-full flex-1 pl-2">{t("table.columns.source")}</Th>
-										<Th className="w-20">{t("table.columns.actions")}</Th>
+										<Th className="w-1/5 min-w-36 pl-4">{t("table.columns.startTime")}</Th>
+										<Th className="w-1/5 min-w-20">{t("table.columns.status")}</Th>
+										<Th className="w-2/5 min-w-40 pl-2">{t("table.columns.source")}</Th>
+										<Th className="w-1/5 min-w-20">{t("table.columns.actions")}</Th>
 									</Tr>
 								</THead>
 
