@@ -1,3 +1,10 @@
+## [2.97.1](https://github.com/autokitteh/web-platform/compare/v2.97.0...v2.97.1) (2024-12-19)
+
+
+### Bug Fixes
+
+* improve the events table (UI-1095)(UI-1052)(UI-1096) ([#791](https://github.com/autokitteh/web-platform/issues/791)) ([d62dacc](https://github.com/autokitteh/web-platform/commit/d62dacc89cdaf2df10098baf3df1682988e9d80b))
+
 # [2.97.0](https://github.com/autokitteh/web-platform/compare/v2.96.4...v2.97.0) (2024-12-19)
 
 
