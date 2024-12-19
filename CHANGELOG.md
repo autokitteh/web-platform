@@ -1,3 +1,10 @@
+## [2.97.3](https://github.com/autokitteh/web-platform/compare/v2.97.2...v2.97.3) (2024-12-19)
+
+
+### Bug Fixes
+
+* **UI-1093:** centralize the logo ([#788](https://github.com/autokitteh/web-platform/issues/788)) ([ea63d63](https://github.com/autokitteh/web-platform/commit/ea63d63ecff89c313f3ee65420d8b70b23ef0133))
+
 ## [2.97.2](https://github.com/autokitteh/web-platform/compare/v2.97.1...v2.97.2) (2024-12-19)
 
 
