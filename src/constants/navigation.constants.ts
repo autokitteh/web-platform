@@ -1,4 +1,14 @@
-import { AssetsIcon, DeploymentsIcon, GearIcon, ReceiptIcon, SessionsIcon, UserIcon } from "@assets/image/icons";
+import { NavigationSettingsItem } from "@src/interfaces/components";
+
+import {
+	AssetsIcon,
+	DeploymentsIcon,
+	GearIcon,
+	ReceiptIcon,
+	SecurityIcon,
+	SessionsIcon,
+	UserIcon,
+} from "@assets/image/icons";
 
 export const mainNavigationItems = [
 	{ key: "assets", label: "Assets", icon: AssetsIcon, path: "/code" },
@@ -6,20 +16,26 @@ export const mainNavigationItems = [
 	{ key: "sessions", label: "Sessions", icon: SessionsIcon, path: "/deployments/{deploymentId}/sessions" },
 ];
 
-export const userMenuOrganizationItems = [
+export const userMenuItems: NavigationSettingsItem[] = [
+	{ icon: UserIcon, label: "menu.myProfile", href: "/settings" },
+	{ icon: SecurityIcon, label: "menu.clientConfiguration", href: "/settings/client-configuration", stroke: true },
+];
+
+export const userMenuOrganizationItems: NavigationSettingsItem[] = [
 	{
 		icon: GearIcon,
-		href: "/organization/settings",
+		href: "/organization-settings",
 		label: "Settings",
+		stroke: false,
 	},
 	{
 		icon: UserIcon,
-		href: "/organization/users",
+		href: "/organization-settings/users",
 		label: "Users",
 	},
 	{
 		icon: ReceiptIcon,
-		href: "/organization/billing",
+		href: "/organization-settings/billing",
 		label: "Billing",
 	},
 ];

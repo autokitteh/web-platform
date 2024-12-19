@@ -22,7 +22,7 @@ export type { LinkProps } from "@interfaces/components/link.interface";
 export type { LoaderProps } from "@interfaces/components/loader.interface";
 export type { LoginPageProps } from "@interfaces/components/loginPage.interface";
 export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
-export type { MenuProps } from "@interfaces/components/menu.interface";
+export type { MenuProps, NavigationSettingsItem } from "@interfaces/components/menu.interface";
 export type {
 	CreateProjectModalProps,
 	DeleteAccount,
