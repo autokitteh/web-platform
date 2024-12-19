@@ -3,10 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 
+import { featureFlags } from "@src/constants";
 import { useUserStore } from "@src/store";
+import { cn } from "@src/utilities";
 
 import { LogoCatLarge, PageTitle } from "@components/atoms";
 import { Sidebar, TitleTopbar } from "@components/organisms";
+import { SettingsMenu } from "@components/organisms/settings";
 
 export const SettingsLayout = () => {
 	const { t: tSettings } = useTranslation("settings", { keyPrefix: "topbar" });
@@ -30,10 +33,22 @@ export const SettingsLayout = () => {
 					<Sidebar />
 
 					<div className="flex flex-1 flex-col">
-						<TitleTopbar title={`${tSettings("user")}: ${user?.name || ""}`} />
+						<TitleTopbar
+							title={
+								featureFlags.displayNewOrgsUsersMenu
+									? `${tSettings("user")}: ${user?.name || ""}`
+									: tSettings("title")
+							}
+						/>
 
 						<div className="relative flex size-full overflow-hidden py-2">
-							<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-2xl border-l bg-gray-1100 pl-6 pt-6">
+							{featureFlags.displayNewOrgsUsersMenu ? null : <SettingsMenu />}
+							<div
+								className={cn(
+									"scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl border-l bg-gray-1100 pl-6 pt-6",
+									{ "rounded-2xl": featureFlags.displayNewOrgsUsersMenu }
+								)}
+							>
 								<Outlet />
 
 								<div className="absolute !-bottom-5 !-right-5">
