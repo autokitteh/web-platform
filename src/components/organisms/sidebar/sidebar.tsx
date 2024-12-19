@@ -42,8 +42,8 @@ export const Sidebar = () => {
 			<div className="relative z-40 flex h-full min-w-[65px] items-start">
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
-						<div className="flex">
-							<Link className="ml-1 flex w-full justify-start gap-2.5" to="/">
+						<div className="flex gap-1.5">
+							<Link className="ml-1 flex justify-start gap-2.5" to="/">
 								<IconLogo className="size-8" />
 							</Link>
 							<Link className="flex items-center gap-2.5" to="/">
