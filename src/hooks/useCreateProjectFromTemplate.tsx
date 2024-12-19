@@ -57,7 +57,7 @@ export const useCreateProjectFromTemplate = () => {
 			const manifestData = files["autokitteh.yaml"];
 			if (!manifestData) {
 				addToast({
-					message: t("projectCreationFailed"),
+					message: tActions("projectCreationFailed"),
 					type: "error",
 				});
 
@@ -83,7 +83,7 @@ export const useCreateProjectFromTemplate = () => {
 
 			if (error || !newProjectId) {
 				addToast({
-					message: t("projectCreationFailed"),
+					message: tActions("projectCreationFailed"),
 					type: "error",
 				});
 				LoggerService.error(namespaces.manifestService, `${t("projectCreationFailedExtended", { error })}`);
@@ -103,7 +103,7 @@ export const useCreateProjectFromTemplate = () => {
 			setTemplateFiles(files);
 		} catch (error) {
 			addToast({
-				message: t("projectCreationFailed"),
+				message: tActions("projectCreationFailed"),
 				type: "error",
 			});
 
@@ -130,7 +130,7 @@ export const useCreateProjectFromTemplate = () => {
 			await createProjectFromTemplate(template, projectName);
 		} catch (error) {
 			addToast({
-				message: t("projectCreationFailed"),
+				message: tActions("projectCreationFailed"),
 				type: "error",
 			});
 
