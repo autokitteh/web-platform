@@ -41,7 +41,8 @@ export const convertAndEnrichEventProtoToModel = async (protoEvent: ProtoEvent):
 	return {
 		destinationId: protoEvent.destinationId,
 		destinationType,
-		eventId: protoEvent.eventId,
+		id: protoEvent.eventId,
+		type: protoEvent.eventType,
 		destinationName,
 		sourceType,
 		createdAt: convertTimestampToDate(protoEvent.createdAt),

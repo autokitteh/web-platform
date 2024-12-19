@@ -51,7 +51,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 				<Th className="mr-2 w-24">
 					<SortableHeader
 						columnKey="destinationId"
-						columnLabel={t("destinationId")}
+						columnLabel={t("sourceId")}
 						onSort={onSort}
 						sortConfig={sortConfig}
 					/>
