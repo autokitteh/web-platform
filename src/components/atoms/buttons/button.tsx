@@ -28,6 +28,7 @@ export const Button = ({
 			"bg-gray-1200 text-white hover:bg-gray-1050": variant === ButtonVariant.filledGray,
 			"bg-transparent text-white hover:bg-gray-500": variant === ButtonVariant.light,
 			"border border-gray-750 hover:bg-black hover:border-white": variant === ButtonVariant.outline,
+			"text-white hover:bg-transparent hover:border-0": variant === ButtonVariant.flatText,
 		},
 		{
 			"pointer-events-none opacity-30": disabled,

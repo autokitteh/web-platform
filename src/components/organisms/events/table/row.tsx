@@ -4,6 +4,7 @@ import moment from "moment";
 import { useParams } from "react-router-dom";
 
 import { dateTimeFormat } from "@src/constants";
+import { ButtonVariant } from "@src/enums/components";
 import { BaseEvent } from "@src/types/models";
 import { cn } from "@src/utilities";
 
@@ -35,10 +36,10 @@ export const EventRow = memo(
 					{moment(createdAt).local().format(dateTimeFormat)}
 				</Td>
 				<Td className="mr-2 w-24" title={eventId}>
-					<IdCopyButton id={eventId} />
+					<IdCopyButton id={eventId} onIdClick={onClick} variant={ButtonVariant.flatText} />
 				</Td>
 				<Td className="mr-2 w-24" title={destinationId || ""}>
-					<IdCopyButton id={destinationId || ""} />
+					<IdCopyButton id={destinationId || ""} onIdClick={onClick} variant={ButtonVariant.flatText} />
 				</Td>
 				<Td className="w-1/4" onClick={onClick} title={eventType}>
 					<div className="truncate">{eventType}</div>

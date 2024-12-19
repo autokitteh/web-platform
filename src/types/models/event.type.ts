@@ -8,8 +8,9 @@ export type EnrichedEvent = {
 	destinationId?: string;
 	destinationName?: string;
 	destinationType?: EventDestinationTypes;
-	eventId: string;
+	id: string;
 	sourceType?: string;
+	type: string;
 };
 export type BaseEvent = {
 	createdAt: Date;
