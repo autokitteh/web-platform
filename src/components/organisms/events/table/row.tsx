@@ -29,19 +29,29 @@ export const EventRow = memo(
 		return (
 			<Tr className={rowClass} style={style}>
 				<Td
-					className="mr-2 w-36 pl-4"
+					className="mr-2 w-1/5 min-w-36 pl-4"
 					onClick={onClick}
 					title={moment(createdAt).local().format(dateTimeFormat)}
 				>
 					{moment(createdAt).local().format(dateTimeFormat)}
 				</Td>
-				<Td className="mr-2 w-24" title={eventId}>
-					<IdCopyButton id={eventId} onIdClick={onClick} variant={ButtonVariant.flatText} />
+				<Td className="mr-2 w-1/5 min-w-32" title={eventId}>
+					<IdCopyButton
+						buttonClassName="pl-0"
+						id={eventId}
+						onIdClick={onClick}
+						variant={ButtonVariant.flatText}
+					/>
 				</Td>
-				<Td className="mr-2 w-24" title={destinationId || ""}>
-					<IdCopyButton id={destinationId || ""} onIdClick={onClick} variant={ButtonVariant.flatText} />
+				<Td className="mr-2 w-1/5 min-w-32" title={destinationId || ""}>
+					<IdCopyButton
+						buttonClassName="pl-0"
+						id={destinationId || ""}
+						onIdClick={onClick}
+						variant={ButtonVariant.flatText}
+					/>
 				</Td>
-				<Td className="w-1/4" onClick={onClick} title={eventType}>
+				<Td className="mr-2 w-2/5 min-w-40" onClick={onClick} title={eventType}>
 					<div className="truncate">{eventType}</div>
 				</Td>
 			</Tr>

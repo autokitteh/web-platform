@@ -32,7 +32,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 	return (
 		<THead>
 			<Tr>
-				<Th className="mr-2 w-36 pl-4">
+				<Th className="mr-2 w-1/5 min-w-36 pl-4">
 					<SortableHeader
 						columnKey="createdAt"
 						columnLabel={t("createdAt")}
@@ -40,7 +40,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 						sortConfig={sortConfig}
 					/>
 				</Th>
-				<Th className="mr-2 w-24">
+				<Th className="mr-2 w-1/5 min-w-32">
 					<SortableHeader
 						columnKey="eventId"
 						columnLabel={t("eventId")}
@@ -48,7 +48,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 						sortConfig={sortConfig}
 					/>
 				</Th>
-				<Th className="mr-2 w-24">
+				<Th className="mr-2 w-1/5 min-w-32">
 					<SortableHeader
 						columnKey="destinationId"
 						columnLabel={t("sourceId")}
@@ -56,7 +56,7 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 						sortConfig={sortConfig}
 					/>
 				</Th>
-				<Th className="mr-2 w-1/4">
+				<Th className="mr-2 w-2/5 min-w-40">
 					<SortableHeader
 						columnKey="eventType"
 						columnLabel={t("type")}
