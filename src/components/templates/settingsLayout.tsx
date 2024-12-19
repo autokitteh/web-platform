@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 import { featureFlags } from "@src/constants";
-import { useUserStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { LogoCatLarge, PageTitle } from "@components/atoms";
@@ -15,7 +14,15 @@ export const SettingsLayout = () => {
 	const { t: tSettings } = useTranslation("settings", { keyPrefix: "topbar" });
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
-	const { user } = useUserStore();
+	const location = useLocation();
+
+	const subPageTitles: Record<string, string> = {
+		"/settings": tSettings("profile"),
+	};
+
+	const getSubPageTitle = (path: string) => subPageTitles[path];
+
+	const subPageTitle = getSubPageTitle(location.pathname);
 
 	useEffect(() => {
 		setPageTitle(t("template", { page: t("settings") }));
@@ -33,13 +40,7 @@ export const SettingsLayout = () => {
 					<Sidebar />
 
 					<div className="flex flex-1 flex-col">
-						<TitleTopbar
-							title={
-								featureFlags.enableNewOrgsAndUsersDesign
-									? `${tSettings("user")}: ${user?.name || ""}`
-									: tSettings("title")
-							}
-						/>
+						<TitleTopbar title={`${tSettings("userSettings")}: ${subPageTitle}`} />
 
 						<div className="relative flex size-full overflow-hidden py-2">
 							{featureFlags.enableNewOrgsAndUsersDesign ? null : <SettingsMenu />}
