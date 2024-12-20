@@ -41,6 +41,13 @@
 		"line2": "Warning: you will not be able to recover it.",
 		"title": "Delete the account?"
 	},
+	"deleteOrgUser": {
+		"cancelButton": "Cancel",
+		"deleteButton": "Delete",
+		"line1": "The action is irreversible.",
+		"line2": "Warning: you will not be able to recover it.",
+		"title": "Delete the user?"
+	},
 	"deleteTrigger": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Ok",
