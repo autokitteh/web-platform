@@ -10,7 +10,7 @@ import { useModalStore } from "@src/store";
 import { newOrganizationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
-import { CreateNewOrganizationModal } from "@components/organisms/settings/organization";
+import { OrganizationCreatedModal } from "@components/organisms/settings/organization";
 
 type FormValues = z.infer<typeof newOrganizationSchema>;
 
@@ -27,7 +27,7 @@ export const NewOrganization = () => {
 	const { openModal } = useModalStore();
 
 	const onSubmit = async (values: FormValues) => {
-		openModal(ModalName.createNewOrganization, { orgName: values.orgName });
+		openModal(ModalName.organizationCreated, { orgName: values.orgName });
 	};
 
 	return (
@@ -64,7 +64,7 @@ export const NewOrganization = () => {
 					{t("form.buttons.create")}
 				</Button>
 			</form>
-			<CreateNewOrganizationModal />
+			<OrganizationCreatedModal />
 		</div>
 	);
 };

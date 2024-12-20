@@ -19,7 +19,7 @@ export const SettingsLayout = () => {
 		? tSettings("personalSettings")
 		: tSettings("organizationSettings", { name: "Organization Name" });
 
-	const currentMenuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;
+	const menuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;
 
 	useEffect(() => {
 		setPageTitle(t("template", { page: t("settings") }));
@@ -40,7 +40,7 @@ export const SettingsLayout = () => {
 						<TitleTopbar title={topbarTitle} />
 
 						<div className="relative flex size-full overflow-hidden py-2">
-							<SettingsMenu menu={currentMenuItems} />
+							<SettingsMenu menu={menuItems} />
 
 							<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl border-l bg-gray-1100 pl-9 pt-6">
 								<Outlet />

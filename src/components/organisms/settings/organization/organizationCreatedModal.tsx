@@ -8,7 +8,7 @@ import { useModalStore } from "@src/store";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const CreateNewOrganizationModal = () => {
+export const OrganizationCreatedModal = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
 	const { closeModal } = useModalStore();
 	const data = useModalStore((state) => state.data) as { orgName: string };
@@ -16,7 +16,7 @@ export const CreateNewOrganizationModal = () => {
 	if (!data) return null;
 
 	return (
-		<Modal hideCloseButton name={ModalName.createNewOrganization}>
+		<Modal hideCloseButton name={ModalName.organizationCreated}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("modal.organizationCreated", { name: data.orgName })}</h3>
 			</div>
@@ -25,7 +25,7 @@ export const CreateNewOrganizationModal = () => {
 				<Button
 					ariaLabel={t("modal.stayOn")}
 					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-					onClick={() => closeModal(ModalName.createNewOrganization)}
+					onClick={() => closeModal(ModalName.organizationCreated)}
 					variant="outline"
 				>
 					{t("modal.buttons.stayOn")}: Current Org
