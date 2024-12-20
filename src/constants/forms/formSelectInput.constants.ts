@@ -146,7 +146,7 @@ const getSelectStyles = (
 		}),
 		placeholder: (provided, state) => ({
 			...provided,
-			color: state.isFocused ? "transparent" : formThemes["gray-600"],
+			color: state.isFocused ? "transparent" : colorScheme ? formThemes["dark"] : formThemes["gray-600"],
 		}),
 		singleValue: (provided) => ({
 			...provided,
