@@ -50,9 +50,36 @@
 		},
 		"modal": {
 			"organizationCreated": "Organization {{name}} created",
+			"addUser": "Add new user to organization",
+			"form": {
+				"name":"Name",
+				"email":"Email",
+				"role":"Role"
+			},
 			"buttons": {
 				"stayOn": "Stay on",
-				"open": "Open"
+				"open": "Open",
+				"create": "Create",
+				"cancel": "Cancel"
+			}
+		},
+		"users": {
+			"title": "Users",
+			"buttons": {
+				"addUser": "Add User"
+			},
+			"table": {
+				"headers": {
+					"name": "Name",
+					"email": "Email",
+					"role": "Role",
+					"status": "Status",
+					"actions": "Actions"
+				},
+				"actions": {
+					"resendInvite": "Resend invintation",
+					"delete": "Delete"
+				}
 			}
 		}
 	}

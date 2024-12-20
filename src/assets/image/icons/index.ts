@@ -59,6 +59,7 @@ export { default as ReceiptIcon } from "@assets/image/icons/Receipt.svg?react";
 export { default as RedditIntroIcon } from "@assets/image/icons/Reddit.svg?react";
 export { default as RocketIcon } from "@assets/image/icons/Rocket.svg?react";
 export { default as RotateIcon } from "@assets/image/icons/Rotate.svg?react";
+export { default as RotateRightIcon } from "@assets/image/icons/RotateRight.svg?react";
 export { default as RunIcon } from "@assets/image/icons/Run.svg?react";
 export { default as SaveIcon } from "@assets/image/icons/Save.svg?react";
 export { default as SearchIcon } from "@assets/image/icons/Search.svg?react";

@@ -5,6 +5,7 @@ export enum ModalName {
 	deleteDeploymentSession = "deleteDeploymentSession",
 	deleteFile = "deleteFile",
 	deleteAccount = "deleteAccount",
+	deleteUserFromOrg = "deleteUserFromOrg",
 	deleteTrigger = "deleteTrigger",
 	deleteVariable = "deleteVariable",
 	getToken = "getToken",
@@ -15,4 +16,5 @@ export enum ModalName {
 	importProject = "importProject",
 	warningDeploymentActive = "warningDeploymentActive",
 	organizationCreated = "organizationCreated",
+	organizationUserCreate = "organizationUserCreate",
 }
