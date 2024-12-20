@@ -1,3 +1,10 @@
+## [2.97.4](https://github.com/autokitteh/web-platform/compare/v2.97.3...v2.97.4) (2024-12-20)
+
+
+### Bug Fixes
+
+* **UI-1099:** events table - change column width back relative to resolution ([#794](https://github.com/autokitteh/web-platform/issues/794)) ([b6703c1](https://github.com/autokitteh/web-platform/commit/b6703c15c6f9dd35b47cca0346e1ce97458272d7))
+
 ## [2.97.3](https://github.com/autokitteh/web-platform/compare/v2.97.2...v2.97.3) (2024-12-19)
 
 
