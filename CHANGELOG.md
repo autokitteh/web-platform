@@ -1,3 +1,10 @@
+## [2.97.6](https://github.com/autokitteh/web-platform/compare/v2.97.5...v2.97.6) (2024-12-20)
+
+
+### Bug Fixes
+
+* **UI-1101:** fix project creation failed message in the toast ([#796](https://github.com/autokitteh/web-platform/issues/796)) ([54e5eb4](https://github.com/autokitteh/web-platform/commit/54e5eb4d179dbfd1b6df375772e505e504101751))
+
 ## [2.97.5](https://github.com/autokitteh/web-platform/compare/v2.97.4...v2.97.5) (2024-12-20)
 
 
