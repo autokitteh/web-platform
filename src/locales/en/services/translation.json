@@ -75,6 +75,7 @@
 	"variableNotCreatedByConnectionIdExtended": "There was an issue creating the variable, Name: {{name}}, Value: {{value}}, Connection ID: {{connectionId}}, error: {{error}}",
 	"variableRemoveFailedExtended": "Variable remove failed, Name: {{name}}",
 	"projectNameExist": "Project name already exists",
+	"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
 	"connectionDeleteFailedExtended": "Connection deletion failed - connection ID: {{connectionId}}, error: {{error}}",
 	"errorGettingConnectionByEventIdExtended": "Error getting connection by event ID: {{eventId}}, error: {{error}}",
 	"errorGettingConnectionByIdExtended": "Error getting connection by ID: {{connectionId}}, error: {{error}}",
