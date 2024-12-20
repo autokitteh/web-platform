@@ -1,3 +1,10 @@
+# [2.98.0](https://github.com/autokitteh/web-platform/compare/v2.97.6...v2.98.0) (2024-12-20)
+
+
+### Features
+
+* **UI-1061:** add new organization page ([#787](https://github.com/autokitteh/web-platform/issues/787)) ([cccee79](https://github.com/autokitteh/web-platform/commit/cccee792633b89f466e3bd69eb6ccedac890730c))
+
 ## [2.97.6](https://github.com/autokitteh/web-platform/compare/v2.97.5...v2.97.6) (2024-12-20)
 
 
