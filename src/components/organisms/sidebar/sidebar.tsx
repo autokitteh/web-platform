@@ -5,7 +5,7 @@ import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
-import { featureFlags, isAuthEnabled, menuUserItems } from "@constants";
+import { featureFlags, isAuthEnabled, userMenuItems } from "@constants";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useUserStore } from "@store";
@@ -198,10 +198,10 @@ export const Sidebar = () => {
 												<span className="font-medium text-black">{user?.email}</span>
 											</div>
 											<div className="mt-1">
-												{menuUserItems.map(({ icon, label, path, stroke }, index) => (
+												{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 													<Button
 														className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
-														href={path}
+														href={href}
 														key={index}
 														title={t("userSettings.settings")}
 													>

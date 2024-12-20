@@ -24,7 +24,7 @@
 		},
 		"vscodeConfigExample": "VSCode Configuration Example"
 	},
-	"profile":{
+	"profile": {
 		"title": "My Profile",
 		"name": "Name",
 		"email": "Email",
@@ -34,7 +34,24 @@
 		"retentionPolicyDescription": "We will keep your data for 3 days"
 	},
 	"topbar": {
-		"title": "Settings",
-		"personalSettings": "Personal Settings"
+		"personalSettings": "Personal Settings",
+		"organizationSettings": "Organization: {{name}}"
+	},
+	"organization": {
+		"createNewOrganization": "Create new organization",
+		"form": {
+			"organizationName": "Organization Name",
+			"displayName": "Display Name",
+			"buttons": {
+				"create": "Create"
+			}
+		},
+		"modal": {
+			"organizationCreated": "Organization {{name}} created",
+			"buttons": {
+				"stayOn": "Stay on",
+				"open": "Open"
+			}
+		}
 	}
 }

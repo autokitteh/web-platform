@@ -14,4 +14,5 @@ export enum ModalName {
 	newProject = "newProject",
 	importProject = "importProject",
 	warningDeploymentActive = "warningDeploymentActive",
+	organizationCreated = "organizationCreated",
 }

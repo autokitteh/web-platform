@@ -22,6 +22,7 @@ import { AddConnection } from "@components/organisms/connections/add";
 import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
 import { ClientConfiguration, Profile } from "@components/organisms/settings";
+import { NewOrganization } from "@components/organisms/settings/organization";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import { Connections, Dashboard, Internal404, Intro, Project, Sessions, Triggers, Variables } from "@components/pages";
@@ -171,6 +172,12 @@ export const App = () => {
 			<Route element={<SettingsLayout />} path="settings">
 				<Route element={<Profile />} index />
 				<Route element={<ClientConfiguration />} path="client-configuration" />
+
+				<Route element={<Navigate replace to="/404" />} path="*" />
+			</Route>
+
+			<Route element={<SettingsLayout />} path="organization-settings">
+				<Route element={<NewOrganization />} path="new" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
