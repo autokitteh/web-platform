@@ -1,3 +1,10 @@
+## [2.97.5](https://github.com/autokitteh/web-platform/compare/v2.97.4...v2.97.5) (2024-12-20)
+
+
+### Bug Fixes
+
+* **UI-1100:** sessions table - change column width back relative to resolution ([#795](https://github.com/autokitteh/web-platform/issues/795)) ([a23e2ca](https://github.com/autokitteh/web-platform/commit/a23e2ca49d867b913332ec3fa046e95abfffc5ea))
+
 ## [2.97.4](https://github.com/autokitteh/web-platform/compare/v2.97.3...v2.97.4) (2024-12-20)
 
 
