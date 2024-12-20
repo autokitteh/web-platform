@@ -41,7 +41,7 @@
 		"createNewOrganization": "Create new organization",
 		"form": {
 			"organizationName": "Organization Name",
-			"displayedName": "Displayed Name",
+			"displayName": "Display Name",
 			"buttons": {
 				"create": "Create"
 			}

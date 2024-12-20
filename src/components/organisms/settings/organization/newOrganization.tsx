@@ -49,7 +49,7 @@ export const NewOrganization = () => {
 				<div className="relative mb-3">
 					<Input
 						isError={!!errors.displayName}
-						label={t("form.displayedName")}
+						label={t("form.displayName")}
 						{...register("displayName")}
 						isRequired
 					/>
