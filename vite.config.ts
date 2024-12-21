@@ -1,6 +1,7 @@
+import importMetaUrlPlugin from "@codingame/esbuild-import-meta-url-plugin";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
-import path from "path";
+import * as path from "path";
 import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
@@ -14,6 +15,7 @@ export default defineConfig({
 		port: 8000,
 	},
 	build: {
+		target: "esnext",
 		sourcemap: true,
 		rollupOptions: {
 			output: {
@@ -22,6 +24,9 @@ export default defineConfig({
 						return id.toString().split("node_modules/")[1].split("/")[0].toString();
 					}
 				},
+			},
+			input: {
+				index: path.resolve(__dirname, "index.html"),
 			},
 		},
 		minify: "terser",
@@ -37,6 +42,7 @@ export default defineConfig({
 		},
 	},
 	define: {
+		"rootDirectory": JSON.stringify(__dirname),
 		"import.meta.env.VITE_NODE_ENV": JSON.stringify(process.env.VITE_NODE_ENV),
 		"import.meta.env.VITE_AUTH_ENABLED": JSON.stringify(process.env.VITE_AUTH_ENABLED),
 		"import.meta.env.VITE_DESCOPE_PROJECT_ID": JSON.stringify(process.env.VITE_DESCOPE_PROJECT_ID),
@@ -50,6 +56,9 @@ export default defineConfig({
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
+		esbuildOptions: {
+			plugins: [importMetaUrlPlugin],
+		},
 	},
 	plugins: [
 		react(),
@@ -107,6 +116,14 @@ export default defineConfig({
 					src: "src/assets/image/pages/**/*",
 					dest: "assets/image/pages",
 				},
+				{
+					src: "node_modules/@typefox",
+					dest: "./",
+				},
+				{
+					src: "node_modules/monaco-editor-workers",
+					dest: "./",
+				},
 			],
 		}),
 		reactVirtualized(),
@@ -142,5 +159,8 @@ export default defineConfig({
 		origin: process.env.VITE_DOMAIN_URL,
 		port: 8000,
 		strictPort: true,
+		fs: {
+			allow: ["../"], // allow to load codicon.ttf from monaco-editor in the parent folder
+		},
 	},
 });
