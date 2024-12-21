@@ -1,8 +1,7 @@
+import importMetaUrlPlugin from "@codingame/esbuild-import-meta-url-plugin";
 import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
-import * as fs from "fs";
 import * as path from "path";
-import url from "url";
 import { defineConfig } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
@@ -58,44 +57,7 @@ export default defineConfig({
 	optimizeDeps: {
 		include: ["tailwind-config"],
 		esbuildOptions: {
-			plugins: [
-				// copied from "https://github.com/CodinGame/monaco-vscode-api/blob/main/demo/vite.config.ts"
-				{
-					name: "import.meta.url",
-					setup({ onLoad }) {
-						// Help vite that bundles/move files in dev mode without touching `import.meta.url` which breaks asset urls
-						onLoad({ filter: /.*\.js/, namespace: "file" }, async (args) => {
-							// eslint-disable-next-line security/detect-non-literal-fs-filename
-							const code = fs.readFileSync(args.path, "utf8");
-							if (!args.path.includes("@codingame")) {
-								return { contents: code };
-							}
-
-							const assetImportMetaUrlRE =
-								// eslint-disable-next-line security/detect-unsafe-regex
-								/\bnew\s+URL\s*\(\s*('[^']+'|"[^"]+"|`[^`]+`)\s*,\s*import\.meta\.url\s*(?:,\s*)?\)/g;
-							let i = 0;
-							let newCode = "";
-							for (
-								let match = assetImportMetaUrlRE.exec(code);
-								// eslint-disable-next-line eqeqeq
-								match != null;
-								match = assetImportMetaUrlRE.exec(code)
-							) {
-								newCode += code.slice(i, match.index);
-								const path = match[1].slice(1, -1);
-
-								const resolved = await import.meta.resolve!(path, url.pathToFileURL(args.path));
-								newCode += `new URL(${JSON.stringify(url.fileURLToPath(resolved))}, import.meta.url)`;
-								i = assetImportMetaUrlRE.lastIndex;
-							}
-							newCode += code.slice(i);
-
-							return { contents: newCode };
-						});
-					},
-				},
-			],
+			plugins: [importMetaUrlPlugin],
 		},
 	},
 	plugins: [
@@ -197,5 +159,8 @@ export default defineConfig({
 		origin: process.env.VITE_DOMAIN_URL,
 		port: 8000,
 		strictPort: true,
+		fs: {
+			allow: ["../"], // allow to load codicon.ttf from monaco-editor in the parent folder
+		},
 	},
 });
