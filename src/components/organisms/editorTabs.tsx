@@ -48,11 +48,14 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
 			setContent("");
+			getEditor()?.setValue("");
 
 			return;
 		}
 		const byteArray = Array.from(resource);
-		setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
+		const decodedContent = new TextDecoder().decode(new Uint8Array(byteArray));
+		setContent(decodedContent);
+		getEditor()?.setValue(decodedContent);
 	};
 
 	const location = useLocation();
