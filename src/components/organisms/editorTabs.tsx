@@ -5,22 +5,22 @@ import {
 	RegisteredMemoryFile,
 	registerFileSystemOverlay,
 } from "@codingame/monaco-vscode-files-service-override";
-import Editor, { Monaco } from "@monaco-editor/react";
 import { debounce, last } from "lodash";
 import moment from "moment";
+import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 import * as vscode from "vscode";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
-import { getEditor, startPythonClient } from "@src/setupPythonWorker";
+import { getEditor, startPythonClient, updateEditorLanguage } from "@src/setupPythonWorker";
 import { useCacheStore, useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
-import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
+import { Button, Checkbox, IconButton, IconSvg, Spinner, Tab } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
@@ -88,6 +88,10 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		const resources = await fetchResources(projectId);
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
+
+		if (languageEditor) {
+			updateEditorLanguage(languageEditor, activeEditorFileName);
+		}
 	};
 
 	useEffect(() => {
@@ -196,6 +200,12 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			onExpand();
 		}
 	};
+
+	useEffect(() => {
+		if (languageEditor) {
+			updateEditorLanguage(languageEditor, activeEditorFileName);
+		}
+	}, [activeEditorFileName, languageEditor]);
 
 	return (
 		<div className="relative flex h-full flex-col pt-11">

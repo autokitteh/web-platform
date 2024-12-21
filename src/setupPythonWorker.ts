@@ -25,7 +25,19 @@ import getTextmateServiceOverride from "@codingame/monaco-vscode-textmate-servic
 import { CloseAction, ErrorAction, MessageTransports } from "vscode-languageclient";
 import { BrowserMessageReader, BrowserMessageWriter } from "vscode-languageserver-protocol/browser.js";
 import * as JSZip from "jszip";
-// TODO: fix the workers path, maybe need to configure the bundler to copy the workers files
+import "monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution";
+import "monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution";
+import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution";
+import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution";
+import "monaco-editor/esm/vs/basic-languages/css/css.contribution";
+import "monaco-editor/esm/vs/basic-languages/html/html.contribution";
+import "monaco-editor/esm/vs/basic-languages/shell/shell.contribution";
+import "monaco-editor/esm/vs/basic-languages/xml/xml.contribution";
+import "monaco-editor/esm/vs/language/typescript/monaco.contribution";
+import "monaco-editor/esm/vs/language/json/monaco.contribution";
+import "monaco-editor/esm/vs/language/css/monaco.contribution";
+import "monaco-editor/esm/vs/language/html/monaco.contribution";
+// Add other language contributions as needed
 buildWorkerDefinition("./monaco-editor-workers/dist/workers", new URL("", window.location.href).href, false);
 
 const languageId = "python";
@@ -34,6 +46,9 @@ let languageClient: MonacoLanguageClient;
 let files: { [id: string]: string } = {};
 
 let editor: monaco.editor.IStandaloneCodeEditor;
+
+// Add a variable to track if Python client is active
+let isPythonClientActive = true;
 
 /**
  * read file contents from zip file using jszip
@@ -194,7 +209,11 @@ export const startPythonClient = async () => {
 	const writer = new BrowserMessageWriter(worker);
 	languageClient = createLanguageClient({ reader, writer });
 	languageClient.start();
-	reader.onClose(() => languageClient.stop());
+	isPythonClientActive = true;
+	reader.onClose(() => {
+		languageClient.stop();
+		isPythonClientActive = false;
+	});
 
 	const registerCommand = async (cmdName: string, handler: (...args: unknown[]) => void) => {
 		// commands sould not be there, but it demonstrates how to retrieve list of all external commands
@@ -215,10 +234,19 @@ export const startPythonClient = async () => {
 	const modelRef = await createModelReference(monaco.Uri.file("/workspace/hello.py"));
 	modelRef.object.setLanguageId(languageId);
 
-	// create monaco editor
+	// create monaco editor with more explicit configuration
 	editor = createConfiguredEditor(document.getElementById("app")!, {
 		model: modelRef.object.textEditorModel,
 		automaticLayout: true,
+
+		language: "python",
+		// Add these additional editor options
+		minimap: {
+			enabled: true,
+		},
+		scrollBeyondLastLine: false,
+		renderWhitespace: "none",
+		wordWrap: "on",
 	});
 
 	// Add change event listener
@@ -231,3 +259,35 @@ export const startPythonClient = async () => {
 
 // Export the editor instance getter
 export const getEditor = () => editor;
+
+// Add a new function to update editor language
+export const updateEditorLanguage = async (languageId: string, fileName?: string) => {
+	if (!editor) return;
+
+	try {
+		// Stop Python language client if switching to non-Python file
+		if (languageId !== "python" && isPythonClientActive) {
+			languageClient?.stop();
+			isPythonClientActive = false;
+		} else if (languageId === "python" && !isPythonClientActive) {
+			// Restart Python language client if switching back to Python
+			languageClient?.start();
+			isPythonClientActive = true;
+		}
+
+		// Get current content
+		const currentContent = editor.getValue();
+
+		// Create a new model reference with the correct file path
+		const modelRef = await createModelReference(monaco.Uri.file(`/workspace/${fileName || "untitled"}`));
+
+		// Set the content and language
+		modelRef.object.textEditorModel.setValue(currentContent);
+		modelRef.object.setLanguageId(languageId);
+
+		// Set the new model to the editor
+		editor.setModel(modelRef.object.textEditorModel);
+	} catch (error) {
+		console.warn(`Failed to set language to ${languageId}:`, error);
+	}
+};

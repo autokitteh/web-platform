@@ -35,7 +35,7 @@ export {
 } from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight, maxResultsLimitToDisplay } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
-export { defalutFileExtension, monacoLanguages } from "@constants/monacoLanguages.constants.ts";
+export { defalutFileExtension } from "@constants/monacoLanguages.constants.ts";
 export { namespaces } from "@constants/namespaces.logger.constants";
 export { mainNavigationItems, userMenuOrganizationItems, userMenuItems } from "@constants/navigation.constants";
 export {
@@ -63,3 +63,22 @@ export {
 	remoteTemplatesArchiveURL,
 } from "@constants/templates.constants";
 export { integrationVariablesMapping } from "@src/constants/connections/integrationVariablesMapping.constants";
+
+export const monacoLanguages = {
+	".py": "python",
+	".pyi": "python",
+	".yaml": "yaml",
+	".yml": "yaml",
+	".md": "markdown",
+	".json": "json",
+	".js": "javascript",
+	".ts": "typescript",
+	".tsx": "typescript",
+	".html": "html",
+	".css": "css",
+	".scss": "scss",
+	".less": "less",
+	".xml": "xml",
+	".sh": "shell",
+	".bash": "shell",
+} as const;
