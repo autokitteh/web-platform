@@ -1,9 +1,12 @@
 {
-	"name": "autokitteh",
-	"private": true,
-	"type": "module",
-	"version": "2.98.0",
-	"scripts": {
+		"name": "autokitteh",
+		"private": true,
+		"version": "2.98.0",
+		"type": "module",
+		"scripts": {
+				"dev-new": "node --experimental-import-meta-resolve ./node_modules/vite/bin/vite.js --base=./",
+				"build-new": "tsc && node --experimental-import-meta-resolve ./node_modules/vite/bin/vite.js build --base=./",
+				"preview-new": "node --experimental-import-meta-resolve ./node_modules/vite/bin/vite.js preview --base=./",
 		"build": "vite build",
 		"build-storybook": "storybook build",
 		"build:prod": "node scripts/fetchTemplates && NODE_ENV=production npm run build",
@@ -29,8 +32,14 @@
 		"type-check": "tsc --pretty --noEmit",
 		"validate-env": "node ./validateEnv"
 	},
-	"dependencies": {
+  "dependencies": {
 		"@bufbuild/protobuf": "^1.10.0",
+		"@codingame/monaco-vscode-configuration-service-override": "^1.83.16",
+		"@codingame/monaco-vscode-keybindings-service-override": "^1.83.16",
+		"@codingame/monaco-vscode-python-default-extension": "^1.83.16",
+		"@codingame/monaco-vscode-textmate-service-override": "^1.83.16",
+		"@codingame/monaco-vscode-theme-defaults-default-extension": "^1.83.16",
+		"@codingame/monaco-vscode-theme-service-override": "^1.83.16",
 		"@descope/react-sdk": "^2.0.60",
 		"@estruyf/github-actions-reporter": "^1.8.0",
 		"@floating-ui/react": "^0.27.2",
@@ -38,6 +47,7 @@
 		"@monaco-editor/react": "^4.6.0",
 		"@netlify/edge-functions": "^2.11.1",
 		"@sentry/react": "^8.46.0",
+		"@typefox/pyright-browser": "^1.1.299",
 		"@types/lodash": "^4.17.10",
 		"@types/pako": "^2.0.3",
 		"@uiw/react-json-view": "^2.0.0-alpha.26",
@@ -52,6 +62,9 @@
 		"js-yaml": "^4.1.0",
 		"jszip": "^3.10.1",
 		"lodash": "^4.17.21",
+		"monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.16 <1.84.0",
+		"monaco-editor-workers": "^0.44.0",
+		"monaco-languageclient": "^7.2.0",
 		"motion": "^11.13.5",
 		"pako": "^2.1.0",
 		"psl": "^1.9.0",
@@ -70,10 +83,14 @@
 		"remark-gfm": "^4.0.0",
 		"swiper": "^11.1.15",
 		"tailwind-merge": "^2.5.5",
+		"use-sync-external-store": "^1.4.0",
+		"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.16 <1.84.0",
+		"vscode-languageclient": "^9.0.1",
+		"vscode-languageserver": "^9.0.1",
 		"zod": "^3.23.8",
 		"zustand": "^5.0.0"
-	},
-	"devDependencies": {
+  },
+  "devDependencies": {
 		"@commitlint/config-conventional": "^19.6.0",
 		"@connectrpc/connect": "^1.4.0",
 		"@connectrpc/connect-web": "^1.4.0",
@@ -94,12 +111,14 @@
 		"@types/eslint-plugin-security": "^3.0.0",
 		"@types/js-cookie": "^3.0.6",
 		"@types/js-yaml": "^4.0.9",
+		"@types/node": "*",
 		"@types/psl": "^1.1.3",
 		"@types/randomatic": "^3.1.5",
 		"@types/react": "^18.3.3",
 		"@types/react-dom": "^18.3.0",
 		"@types/react-virtualized": "^9.21.30",
 		"@types/react-window": "^1.8.8",
+		"@types/vscode": "^1.83.0",
 		"@typescript-eslint/eslint-plugin": "^8.14.0",
 		"@typescript-eslint/parser": "^8.16.0",
 		"@vitejs/plugin-react": "^4.3.1",
@@ -136,12 +155,18 @@
 		"tailwind-config-viewer": "^2.0.4",
 		"tailwindcss": "^3.4.16",
 		"terser": "^5.36.0",
+		"ts-node": "~10.9.1",
 		"typescript": "^5.7.2",
 		"vite": "^5.4.10",
-		"vite-plugin-static-copy": "^2.0.0",
-		"vite-plugin-svgr": "^4.2.0"
-	},
-	"engines": {
+		"vite-plugin-static-copy": "^2.0.1",
+		"vite-plugin-svgr": "^4.2.0",
+		"vscode-languageserver-types": "~3.17.5"
+  },
+  "resolutions": {
+		"monaco-editor": "npm:@codingame/monaco-editor-treemended@>=1.83.16 <1.84.0",
+		"vscode": "npm:@codingame/monaco-vscode-api@>=1.83.16 <1.84.0"
+  },
+  "engines": {
 		"node": ">=21.7.1",
 		"npm": ">=10.6.0"
 	},
@@ -157,6 +182,8 @@
 		"@rollup/rollup-win32-x64-msvc": "4.24.0"
 	},
 	"overrides": {
+    "monaco-editor": "$monaco-editor",
+    "vscode": "$vscode",
 		"vite": {
 			"rollup": "npm:@rollup/wasm-node"
 		},
