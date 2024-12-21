@@ -1,16 +1,13 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Monaco Playground</title>
-  </head>
-  <body style="margin: 0; overflow: hidden;">
-    <div id="app" style="width:100vw; height:100vh;"></div>
-    <script type="module">
-      import { startPythonClient } from "/src/setupPythonWorker.ts";
-      startPythonClient();
-  </script>
-  </body>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>AutoKitteh</title>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="module" src="/src/main.tsx"></script>
+	</body>
 </html>

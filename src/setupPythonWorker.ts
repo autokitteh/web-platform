@@ -24,19 +24,16 @@ import getThemeServiceOverride from "@codingame/monaco-vscode-theme-service-over
 import getTextmateServiceOverride from "@codingame/monaco-vscode-textmate-service-override";
 import { CloseAction, ErrorAction, MessageTransports } from "vscode-languageclient";
 import { BrowserMessageReader, BrowserMessageWriter } from "vscode-languageserver-protocol/browser.js";
-import {
-	RegisteredFileSystemProvider,
-	RegisteredMemoryFile,
-	registerFileSystemOverlay,
-} from "@codingame/monaco-vscode-files-service-override";
 import * as JSZip from "jszip";
 // TODO: fix the workers path, maybe need to configure the bundler to copy the workers files
-buildWorkerDefinition("monaco-editor-workers/dist/workers", new URL("", window.location.href).href, false);
+buildWorkerDefinition("./monaco-editor-workers/dist/workers", new URL("", window.location.href).href, false);
 
 const languageId = "python";
 let languageClient: MonacoLanguageClient;
 
 let files: { [id: string]: string } = {};
+
+let editor: monaco.editor.IStandaloneCodeEditor;
 
 /**
  * read file contents from zip file using jszip
@@ -111,7 +108,7 @@ export const startPythonClient = async () => {
 	// read typeshed stdlib.zip file
 	// files = await readZipFile(new URL('./stdlib.zip', window.location.href).href);
 	console.log("readZipFile stdlib-source-with-typeshed-pyi.zip");
-	files = await readZipFile(new URL("./stdlib-source-with-typeshed-pyi.zip", window.location.href).href);
+	files = await readZipFile(new URL("/stdlib-source-with-typeshed-pyi.zip", window.location.href).href);
 	console.log("starting initServices ...");
 	// init vscode-api
 	await initServices({
@@ -186,13 +183,7 @@ export const startPythonClient = async () => {
         "workbench.colorTheme": "Default Dark Modern"
     }`);
 
-	const fileSystemProvider = new RegisteredFileSystemProvider(false);
-	fileSystemProvider.registerFile(
-		new RegisteredMemoryFile(vscode.Uri.file("/workspace/hello.py"), 'print("Hello, World testtt!")')
-	);
-	registerFileSystemOverlay(1, fileSystemProvider);
-
-	const pythonWorkerUrl = new URL("./@typefox/pyright-browser/dist/pyright.worker.js", window.location.href).href;
+	const pythonWorkerUrl = new URL("/@typefox/pyright-browser/dist/pyright.worker.js", window.location.href).href;
 	console.info(`main.ts, pythonWorkerUrl: ${pythonWorkerUrl}`);
 	const worker = new Worker(pythonWorkerUrl);
 	worker.postMessage({
@@ -225,8 +216,18 @@ export const startPythonClient = async () => {
 	modelRef.object.setLanguageId(languageId);
 
 	// create monaco editor
-	createConfiguredEditor(document.getElementById("app")!, {
+	editor = createConfiguredEditor(document.getElementById("app")!, {
 		model: modelRef.object.textEditorModel,
 		automaticLayout: true,
 	});
+
+	// Add change event listener
+	editor.onDidChangeModelContent(() => {
+		const value = editor.getValue();
+		// You can emit this change to a callback or handle it directly
+		window.dispatchEvent(new CustomEvent("monacoEditorChange", { detail: value }));
+	});
 };
+
+// Export the editor instance getter
+export const getEditor = () => editor;
