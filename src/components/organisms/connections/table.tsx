@@ -192,9 +192,9 @@ export const ConnectionsTable = () => {
 						{sortedConnections.map(
 							({ connectionId, integrationName, logo, name, status, statusInfoMessage }) => (
 								<Tr className="group" key={connectionId}>
-									<Td className="w-1/4 pl-4 font-semibold">{name}</Td>
+									<Td className="w-1/4 pl-4 pr-2 font-semibold">{name}</Td>
 
-									<Td className="w-1/4">
+									<Td className="w-1/4 pr-2">
 										<div className="flex items-center gap-2" title={integrationName}>
 											{logo ? (
 												<IconSvg
@@ -204,7 +204,7 @@ export const ConnectionsTable = () => {
 												/>
 											) : null}
 
-											{integrationName}
+											<div className="truncate">{integrationName}</div>
 										</div>
 									</Td>
 

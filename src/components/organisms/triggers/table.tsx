@@ -36,13 +36,13 @@ const useTableHeaders = (t: (key: string) => string): TableHeader[] => {
 			{
 				key: "sourceType",
 				label: t("table.columns.type"),
-				className: "w-2/12",
+				className: "w-3/12",
 				sortable: true,
 			},
 			{
 				key: "entrypoint",
 				label: t("table.columns.call"),
-				className: "w-4/12",
+				className: "w-3/12",
 				sortable: true,
 			},
 			{
@@ -191,20 +191,22 @@ export const TriggersTable = () => {
 								<Td className="w-4/12 pl-4 font-semibold" title={trigger.name}>
 									<div className="w-full overflow-hidden pr-2">{trigger.name}</div>
 								</Td>
-								<Td className="-ml-2 w-2/12 capitalize">
-									<Popover animation="slideFromBottom" interactionType="hover">
-										<PopoverTrigger>
-											<IconButton>
-												<IconSvg className="size-4" src={InfoIcon} />
-											</IconButton>
-										</PopoverTrigger>
-										<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
-											<InformationPopoverContent trigger={trigger} />
-										</PopoverContent>
-									</Popover>
-									{trigger?.sourceType}
+								<Td className="-ml-2 w-3/12 pr-2 capitalize">
+									<div className="flex items-center">
+										<Popover animation="slideFromBottom" interactionType="hover">
+											<PopoverTrigger>
+												<IconButton>
+													<IconSvg className="size-4" src={InfoIcon} />
+												</IconButton>
+											</PopoverTrigger>
+											<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
+												<InformationPopoverContent trigger={trigger} />
+											</PopoverContent>
+										</Popover>
+										<div className="truncate">{trigger?.sourceType}</div>
+									</div>
 								</Td>
-								<Td className="w-4/12 pl-2">{trigger.entrypoint}</Td>
+								<Td className="w-3/12 pl-2">{trigger.entrypoint}</Td>
 								<Td className="w-2/12 pr-0">
 									<div className="flex">
 										<IconButton
