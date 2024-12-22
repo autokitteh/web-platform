@@ -1,3 +1,10 @@
+## [2.98.1](https://github.com/autokitteh/web-platform/compare/v2.98.0...v2.98.1) (2024-12-22)
+
+
+### Bug Fixes
+
+* **UI-1113:** fix id-copy-button to be visible on deployments table ([#800](https://github.com/autokitteh/web-platform/issues/800)) ([2d58281](https://github.com/autokitteh/web-platform/commit/2d58281cfe5b29c22e7353f18aa533c3a3711f22))
+
 # [2.98.0](https://github.com/autokitteh/web-platform/compare/v2.97.6...v2.98.0) (2024-12-20)
 
 
