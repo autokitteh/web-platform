@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "ES2020",
 		"useDefineForClassFields": true,
-		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"lib": ["ES2020", "DOM", "DOM.Iterable", "WebWorker"],
 		"module": "ESNext",
 		"skipLibCheck": true,
 		"useUnknownInCatchVariables": false,
@@ -11,7 +11,7 @@
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
 		"resolveJsonModule": true,
-		"isolatedModules": true,
+		"isolatedModules": false,
 		"noEmit": true,
 		"jsx": "react",
 

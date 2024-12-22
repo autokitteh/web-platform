@@ -1,22 +1,31 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import Editor, { Monaco } from "@monaco-editor/react";
+import {
+	RegisteredFileSystemProvider,
+	RegisteredMemoryFile,
+	registerFileSystemOverlay,
+} from "@codingame/monaco-vscode-files-service-override";
 import { debounce, last } from "lodash";
 import moment from "moment";
+import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
+import * as vscode from "vscode";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
+import { getEditor, startPythonClient, updateEditorLanguage } from "@src/setupPythonWorker";
 import { useCacheStore, useToastStore } from "@src/store";
 import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
-import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
+import { Button, Checkbox, IconButton, IconSvg, Spinner, Tab } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
+
+startPythonClient();
 
 export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onExpand: () => void }) => {
 	const { projectId } = useParams();
@@ -39,11 +48,14 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
 			setContent("");
+			getEditor()?.setValue("");
 
 			return;
 		}
 		const byteArray = Array.from(resource);
-		setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
+		const decodedContent = new TextDecoder().decode(new Uint8Array(byteArray));
+		setContent(decodedContent);
+		getEditor()?.setValue(decodedContent);
 	};
 
 	const location = useLocation();
@@ -54,6 +66,12 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			openFileAsActive(fileToOpen);
 		}
 	};
+
+	const fileSystemProvider = new RegisteredFileSystemProvider(false);
+	fileSystemProvider.registerFile(
+		new RegisteredMemoryFile(vscode.Uri.file("/workspace/test.yaml"), 'print("Hello, World testtt!")')
+	);
+	registerFileSystemOverlay(1, fileSystemProvider);
 
 	const loadContent = async () => {
 		if (!projectId) return;
@@ -70,6 +88,10 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		const resources = await fetchResources(projectId);
 		const resource = resources?.[activeEditorFileName];
 		updateContentFromResource(resource);
+
+		if (languageEditor) {
+			updateEditorLanguage(languageEditor, activeEditorFileName);
+		}
 	};
 
 	useEffect(() => {
@@ -85,21 +107,6 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	useEffect(() => {
 		setLastSaved(undefined);
 	}, [projectId]);
-
-	const handleEditorWillMount = (monaco: Monaco) => {
-		monaco.editor.defineTheme("myCustomTheme", {
-			base: "vs-dark",
-			colors: {
-				"editor.background": "#000000",
-			},
-			inherit: true,
-			rules: [],
-		});
-	};
-
-	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
-		monaco.editor.setTheme("myCustomTheme");
-	};
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
@@ -159,18 +166,21 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const debouncedAutosave = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 
 	useEffect(() => {
-		const handler = (event: KeyboardEvent) => {
-			if ((event.ctrlKey && event.key === "s") || (event.metaKey && event.key === "s")) {
-				debouncedManualSave(content);
-				event.preventDefault();
+		const handleEditorChange = (event: CustomEvent<string>) => {
+			const newContent = event.detail;
+
+			if (autosaveMode) {
+				debouncedAutosave(newContent);
 			}
+			setContent(newContent);
 		};
-		window.addEventListener("keydown", handler);
+
+		window.addEventListener("monacoEditorChange", handleEditorChange as EventListener);
 
 		return () => {
-			window.removeEventListener("keydown", handler);
+			window.removeEventListener("monacoEditorChange", handleEditorChange as EventListener);
 		};
-	}, [content, debouncedManualSave]);
+	}, [autosaveMode, debouncedAutosave]);
 
 	const activeCloseIcon = (fileName: string) => {
 		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
@@ -190,6 +200,12 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			onExpand();
 		}
 	};
+
+	useEffect(() => {
+		if (languageEditor) {
+			updateEditorLanguage(languageEditor, activeEditorFileName);
+		}
+	}, [activeEditorFileName, languageEditor]);
 
 	return (
 		<div className="relative flex h-full flex-col pt-11">
@@ -262,27 +278,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 					</div>
 
 					{openFiles[projectId]?.length ? (
-						<Editor
-							aria-label={activeEditorFileName}
-							beforeMount={handleEditorWillMount}
-							className="absolute -ml-6 mt-2 h-full pb-5"
-							language={languageEditor}
-							loading={<Loader size="lg" />}
-							onChange={autosaveMode ? debouncedAutosave : () => {}}
-							onMount={handleEditorDidMount}
-							options={{
-								fontFamily: "monospace, sans-serif",
-								fontSize: 14,
-								minimap: {
-									enabled: false,
-								},
-								renderLineHighlight: "none",
-								scrollBeyondLastLine: false,
-								wordWrap: "on",
-							}}
-							theme="vs-dark"
-							value={content}
-						/>
+						<div className="size-full" id="app" />
 					) : (
 						<div className="flex h-full flex-col items-center justify-center pb-24">
 							<IconSvg className="mb-12 fill-gray-800" size="36" src={AKRoundLogo} />
