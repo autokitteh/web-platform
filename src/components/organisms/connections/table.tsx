@@ -209,7 +209,7 @@ export const ConnectionsTable = () => {
 									</Td>
 
 									<Td className="w-4/12">
-										<div className="inline">
+										<div className="inline truncate">
 											<ConnectionTableStatus status={status} />: {statusInfoMessage}
 										</div>
 									</Td>
