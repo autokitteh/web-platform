@@ -37,8 +37,10 @@ import "monaco-editor/esm/vs/language/typescript/monaco.contribution";
 import "monaco-editor/esm/vs/language/json/monaco.contribution";
 import "monaco-editor/esm/vs/language/css/monaco.contribution";
 import "monaco-editor/esm/vs/language/html/monaco.contribution";
+import "@codingame/monaco-vscode-yaml-default-extension";
+
 // Add other language contributions as needed
-buildWorkerDefinition("./monaco-editor-workers/dist/workers", new URL("", window.location.href).href, false);
+buildWorkerDefinition("./monaco-editor-workers/dist/workers", new URL("", window.location.href).href, true);
 
 const languageId = "python";
 let languageClient: MonacoLanguageClient;
@@ -231,8 +233,8 @@ export const startPythonClient = async () => {
 	});
 
 	// use the file create before
-	const modelRef = await createModelReference(monaco.Uri.file("/workspace/hello.py"));
-	modelRef.object.setLanguageId(languageId);
+	const modelRef = await createModelReference(monaco.Uri.file("/workspace/test.yaml"));
+	modelRef.object.setLanguageId("yaml");
 
 	// create monaco editor with more explicit configuration
 	editor = createConfiguredEditor(document.getElementById("app")!, {
@@ -261,15 +263,15 @@ export const startPythonClient = async () => {
 export const getEditor = () => editor;
 
 // Add a new function to update editor language
-export const updateEditorLanguage = async (languageId: string, fileName?: string) => {
+export const updateEditorLanguage = async (newLanguageId: string, fileName?: string) => {
 	if (!editor) return;
 
 	try {
 		// Stop Python language client if switching to non-Python file
-		if (languageId !== "python" && isPythonClientActive) {
+		if (newLanguageId !== "python" && isPythonClientActive) {
 			languageClient?.stop();
 			isPythonClientActive = false;
-		} else if (languageId === "python" && !isPythonClientActive) {
+		} else if (newLanguageId === "python" && !isPythonClientActive) {
 			// Restart Python language client if switching back to Python
 			languageClient?.start();
 			isPythonClientActive = true;
@@ -283,11 +285,32 @@ export const updateEditorLanguage = async (languageId: string, fileName?: string
 
 		// Set the content and language
 		modelRef.object.textEditorModel.setValue(currentContent);
-		modelRef.object.setLanguageId(languageId);
+		monaco.editor.setModelLanguage(modelRef.object.textEditorModel, newLanguageId);
 
 		// Set the new model to the editor
 		editor.setModel(modelRef.object.textEditorModel);
 	} catch (error) {
-		console.warn(`Failed to set language to ${languageId}:`, error);
+		console.warn(`Failed to set language to ${newLanguageId}:`, error);
 	}
 };
+
+// Register the YAML extension
+const yamlExtension = {
+	name: "yaml-client",
+	publisher: "monaco-languageclient-project",
+	version: "1.0.0",
+	engines: {
+		vscode: "^1.78.0",
+	},
+	contributes: {
+		languages: [
+			{
+				id: "yaml",
+				aliases: ["YAML"],
+				extensions: [".yaml", ".yml"],
+			},
+		],
+	},
+};
+
+registerExtension(yamlExtension, ExtensionHostKind.LocalProcess);

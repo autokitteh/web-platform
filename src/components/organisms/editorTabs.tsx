@@ -69,7 +69,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 
 	const fileSystemProvider = new RegisteredFileSystemProvider(false);
 	fileSystemProvider.registerFile(
-		new RegisteredMemoryFile(vscode.Uri.file("/workspace/hello.py"), 'print("Hello, World testtt!")')
+		new RegisteredMemoryFile(vscode.Uri.file("/workspace/test.yaml"), 'print("Hello, World testtt!")')
 	);
 	registerFileSystemOverlay(1, fileSystemProvider);
 

@@ -41,6 +41,7 @@
 				"@codingame/monaco-vscode-textmate-service-override": "^1.83.16",
 				"@codingame/monaco-vscode-theme-defaults-default-extension": "^1.83.16",
 				"@codingame/monaco-vscode-theme-service-override": "^1.83.16",
+				"@codingame/monaco-vscode-yaml-default-extension": "^11.1.2",
 				"@descope/react-sdk": "^2.0.60",
 				"@estruyf/github-actions-reporter": "^1.8.0",
 				"@floating-ui/react": "^0.27.2",
