@@ -165,7 +165,6 @@ export class ProjectsService {
 		try {
 			const project = await projectsClient.update({
 				project: { name, projectId },
-				fieldMask: { paths: ["name"] },
 			});
 
 			if (!project) {
