@@ -101,6 +101,14 @@
 			"errors": {
 				"emptyKeyExist": "Cannot have empty key"
 			},
+			"webhookInfo": {
+				"firstLink": "https://docs.autokitteh.com/integrations/http/events/#event-types",
+				"firstLinkText": "HTTP Event Types",
+				"secondLink": "https://docs.autokitteh.com/integrations/http/events#option-1-single-event-type",
+				"secondLinkText": "Option 1 - Single event type",
+				"thirdLink": "https://docs.autokitteh.com/integrations/http/events#option-2-cel-filter-expression",
+				"thirdLinkText": "Option 2 - CEL Filter Expression"
+			},
 			"info": {
 				"firstLink": "crontab.guru",
 				"firstLinkText": "",
@@ -122,6 +130,7 @@
 				"cron": "Cron expression",
 				"eventTypeLabel": "Event type",
 				"filter": "Filter",
+				"httpMethod": "HTTP Method",
 				"functionName": "Function name",
 				"key": "Key",
 				"name": "Name",
@@ -133,7 +142,8 @@
 				"selectTriggerType": "Select trigger type",
 				"triggerType": "Trigger type",
 				"value": "Value",
-				"eventTypesSelect": "Enter the event type"
+				"eventTypesSelect": "Enter the event type",
+				"httpMethodSelect": "Select HTTP method"
 			},
 			"titleData": "Data",
 			"titleInfo": "Relevant only for HTTP",

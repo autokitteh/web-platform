@@ -65,7 +65,6 @@
 	"tokenFetchFailed": "Token authentication failed",
 	"triggerNotCreatedExtended": "Failed to create trigger for the project {{projectId}}. Error: {{error}}",
 	"triggerNotFoundExtended": "Couldn't fetch the trigger, ID: {{triggerId}}",
-	"triggerNotUpdated": "Failed to update trigger for the project",
 	"triggerNotUpdatedExtended": "Failed to update trigger for the project, trigger ID: {{triggerId}}. Error: {{error}}",
 	"triggerRemoveFailedExtended": "Trigger remove failed, ID: {{triggerId}}",
 	"triggersNotFound": "Couldn't fetch the triggers details",

@@ -130,7 +130,6 @@ export const AddTrigger = () => {
 	};
 
 	const connectionType = useWatch({ control, name: "connection.value" });
-
 	if (isLoadingConnections || isLoadingFiles) {
 		return <Loader isCenter size="xl" />;
 	}
@@ -154,7 +153,7 @@ export const AddTrigger = () => {
 					<NameAndConnectionFields />
 					{connectionType === TriggerTypes.schedule ? <SchedulerFields /> : null}
 					<TriggerSpecificFields connectionId={connectionType} filesNameList={filesNameList} />
-					{connectionType === TriggerTypes.webhook ? <WebhookFields /> : null}
+					{connectionType === TriggerTypes.webhook ? <WebhookFields connectionId={connectionType} /> : null}
 				</form>
 
 				{connectionType === TriggerTypes.schedule ? <SchedulerInfo /> : null}

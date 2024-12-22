@@ -196,7 +196,11 @@ export const EditTrigger = () => {
 					/>
 
 					{trigger?.sourceType === TriggerTypes.webhook ? (
-						<WebhookFields highlight={webhookUrlHighlight} webhookSlug={trigger.webhookSlug || ""} />
+						<WebhookFields
+							connectionId={trigger?.connectionId || ""}
+							highlight={webhookUrlHighlight}
+							webhookSlug={trigger.webhookSlug || ""}
+						/>
 					) : null}
 				</form>
 
