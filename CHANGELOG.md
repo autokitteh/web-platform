@@ -1,3 +1,10 @@
+# [2.102.0](https://github.com/autokitteh/web-platform/compare/v2.101.0...v2.102.0) (2024-12-23)
+
+
+### Features
+
+* **UI-998:** remove readme.md metadata in create project from template ([#809](https://github.com/autokitteh/web-platform/issues/809)) ([4714495](https://github.com/autokitteh/web-platform/commit/47144955e2fbcc07a786a19a7c39fa1da1775046))
+
 # [2.101.0](https://github.com/autokitteh/web-platform/compare/v2.100.4...v2.101.0) (2024-12-23)
 
 
