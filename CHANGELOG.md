@@ -1,3 +1,10 @@
+## [2.104.2](https://github.com/autokitteh/web-platform/compare/v2.104.1...v2.104.2) (2024-12-23)
+
+
+### Bug Fixes
+
+* **UI-1121:** change label for autosave setting ([#817](https://github.com/autokitteh/web-platform/issues/817)) ([9f6c5cf](https://github.com/autokitteh/web-platform/commit/9f6c5cf3f11580b65288e4664edd33298f792155))
+
 ## [2.104.1](https://github.com/autokitteh/web-platform/compare/v2.104.0...v2.104.1) (2024-12-23)
 
 
