@@ -9,10 +9,12 @@ import { CopyButton } from "@components/molecules/copyButton";
 
 export const IdCopyButton = ({
 	buttonClassName,
+	displayFullLength,
 	id,
 	variant,
 }: {
 	buttonClassName?: string;
+	displayFullLength?: boolean;
 	id: string;
 	variant?: ButtonType;
 }) => {
@@ -26,10 +28,10 @@ export const IdCopyButton = ({
 
 	return (
 		<div className="flex flex-row items-center">
-			<Button className={buttonClassName} variant={variant}>
-				{idStr}
+			<Button className={buttonClassName} tabIndex={-1} variant={variant}>
+				{displayFullLength ? id : idStr}
 			</Button>
-			<CopyButton className="mb-0.5" size="sm" successMessage={successMessage} text={id} />
+			<CopyButton className="mb-0.5" size="sm" successMessage={successMessage} tabIndex={0} text={id} />
 		</div>
 	);
 };

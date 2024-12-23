@@ -18,12 +18,19 @@ import {
 } from "@store";
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { ConnectionTableStatus, EmptyTableAddButton, SortButton } from "@components/molecules";
+import {
+	ConnectionTableStatus,
+	EmptyTableAddButton,
+	IdCopyButton,
+	PopoverTrigger,
+	SortButton,
+} from "@components/molecules";
+import { Popover, PopoverContent } from "@components/molecules/popover/index";
 import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 
 import { PlusCircle } from "@assets/image";
-import { EditIcon, TrashIcon } from "@assets/image/icons";
+import { EditIcon, InfoIcon, TrashIcon } from "@assets/image/icons";
 
 export const ConnectionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -216,6 +223,28 @@ export const ConnectionsTable = () => {
 
 									<Td className="w-2/12">
 										<div className="flex space-x-1">
+											<Popover animation="slideFromBottom" interactionType="hover">
+												<PopoverTrigger>
+													<IconButton>
+														<IconSvg className="size-4" src={InfoIcon} />
+													</IconButton>
+												</PopoverTrigger>
+												<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
+													<div className="flex flex-col">
+														<div className="mb-2 font-semibold">
+															{t("table.popover.titleInfo")}
+														</div>
+														<div className="flex items-center">
+															{t("table.popover.connectionId")}:
+															<IdCopyButton
+																displayFullLength
+																id={connectionId}
+																variant="flatText"
+															/>
+														</div>
+													</div>
+												</PopoverContent>
+											</Popover>
 											<IconButton
 												ariaLabel={t("table.buttons.titleEditConnection")}
 												className="size-8 p-1.5"
