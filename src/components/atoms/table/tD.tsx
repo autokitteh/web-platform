@@ -20,7 +20,7 @@ export const Td = ({ children, className, onClick, title }: TableProps) => {
 	return (
 		<div aria-label={cellTitle} className={tdStyle} role="cell" title={cellTitle}>
 			<div className="flex w-full items-center" onClick={onClick} onKeyDown={handleKeyDown}>
-				<div className="w-full truncate">{children}</div>
+				<div className="w-full truncate pr-2">{children}</div>
 			</div>
 		</div>
 	);
