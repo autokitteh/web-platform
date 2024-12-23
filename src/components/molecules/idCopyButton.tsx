@@ -19,11 +19,15 @@ export const IdCopyButton = ({
 	const { t } = useTranslation("components", { keyPrefix: "buttons" });
 
 	const successMessage = t("copied");
+	const idPrefix = id.split("_")[0];
+	const idSuffix = id.split("_")[1];
+	const idSuffixEnd = idSuffix.substring(idSuffix.length - 3, idSuffix.length);
+	const idStr = `${idPrefix}...${idSuffixEnd}`;
 
 	return (
 		<div className="flex flex-row items-center">
 			<Button className={buttonClassName} variant={variant}>
-				{id.substring(0, 8)}...
+				{idStr}
 			</Button>
 			<CopyButton className="mb-0.5" size="sm" successMessage={successMessage} text={id} />
 		</div>
