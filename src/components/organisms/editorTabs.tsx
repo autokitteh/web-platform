@@ -25,8 +25,6 @@ import { Button, Checkbox, IconButton, IconSvg, Spinner, Tab } from "@components
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
 
-startPythonClient();
-
 export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onExpand: () => void }) => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
@@ -67,11 +65,15 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		}
 	};
 
-	const fileSystemProvider = new RegisteredFileSystemProvider(false);
-	fileSystemProvider.registerFile(
-		new RegisteredMemoryFile(vscode.Uri.file("/workspace/test.yaml"), 'print("Hello, World testtt!")')
-	);
-	registerFileSystemOverlay(1, fileSystemProvider);
+	useEffect(() => {
+		if (content) {
+			const fileSystemProvider = new RegisteredFileSystemProvider(false);
+			fileSystemProvider.registerFile(new RegisteredMemoryFile(vscode.Uri.file("/workspace/test.py"), content));
+			registerFileSystemOverlay(1, fileSystemProvider);
+
+			startPythonClient("test.py");
+		}
+	}, [content]);
 
 	const loadContent = async () => {
 		if (!projectId) return;
