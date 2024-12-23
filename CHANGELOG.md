@@ -1,3 +1,10 @@
+## [2.104.4](https://github.com/autokitteh/web-platform/compare/v2.104.3...v2.104.4) (2024-12-23)
+
+
+### Bug Fixes
+
+* **UI-1123:** fix quickstart creation on intro page ([#819](https://github.com/autokitteh/web-platform/issues/819)) ([1d4612b](https://github.com/autokitteh/web-platform/commit/1d4612b1340c2ee1e25f37733697c8ca970d030b))
+
 ## [2.104.3](https://github.com/autokitteh/web-platform/compare/v2.104.2...v2.104.3) (2024-12-23)
 
 
