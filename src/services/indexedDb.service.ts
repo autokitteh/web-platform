@@ -14,7 +14,7 @@ export class IndexedDBService {
 
 	async InitDB(projectId: string) {
 		const storeName = this.storeName;
-		this.db = await openDB(this.dbName, 16, {
+		this.db = await openDB(this.dbName, 5, {
 			upgrade: async (db) => {
 				if (db.objectStoreNames.contains(storeName)) {
 					db.deleteObjectStore(storeName);
@@ -64,7 +64,13 @@ export class IndexedDBService {
 		await this.EnsureDBInitialized(projectId);
 		const existingProject = await this.db.get(this.storeName, projectId);
 		if (existingProject) {
-			const updatedFiles = [...existingProject.files, ...files];
+			const updatedFiles = existingProject.files
+				.filter(
+					(existingFile: { content: Uint8Array; name: string }) =>
+						!files.some((newFile) => newFile.name === existingFile.name)
+				)
+				.concat(files);
+
 			await this.db.put(this.storeName, { projectId, files: updatedFiles });
 
 			return;

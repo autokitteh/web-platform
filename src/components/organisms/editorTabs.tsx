@@ -72,6 +72,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	};
 
 	useEffect(() => {
+		if (!activeEditorFileName) return;
 		if (currentProjectId !== projectId) {
 			loadContent();
 
