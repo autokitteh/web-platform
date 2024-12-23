@@ -1,3 +1,10 @@
+## [2.104.1](https://github.com/autokitteh/web-platform/compare/v2.104.0...v2.104.1) (2024-12-23)
+
+
+### Bug Fixes
+
+* **UI-1118:** enable working on multiple projects in different windows ([#814](https://github.com/autokitteh/web-platform/issues/814)) ([f27828d](https://github.com/autokitteh/web-platform/commit/f27828d8e1d77d7cc399c3e422ee98e22c92b372))
+
 # [2.104.0](https://github.com/autokitteh/web-platform/compare/v2.103.0...v2.104.0) (2024-12-23)
 
 
