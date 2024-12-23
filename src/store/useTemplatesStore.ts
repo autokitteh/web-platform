@@ -53,12 +53,13 @@ const store = (set: any, get: any): TemplateState => ({
 
 	getTemplateStorage: () => {
 		const { templateStorage } = get();
-		if (!templateStorage) {
-			const storage = new TemplateStorageService();
-			set({ templateStorage: storage });
+		if (templateStorage) {
+			return templateStorage;
 		}
+		const storage = new TemplateStorageService();
+		set({ templateStorage: storage });
 
-		return templateStorage;
+		return storage;
 	},
 
 	fetchTemplates: async () => {
