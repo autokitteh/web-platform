@@ -17,7 +17,7 @@ export const useCreateProjectFromTemplate = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { createProjectFromManifest, getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
-	const { findTemplateByAssetDirectory, templateStorage } = useTemplatesStore();
+	const { findTemplateByAssetDirectory, getTemplateStorage } = useTemplatesStore();
 	const [isCreating, setIsCreating] = useState(false);
 
 	const [projectId, setProjectId] = useState<string | null>(null);
@@ -53,7 +53,8 @@ export const useCreateProjectFromTemplate = () => {
 
 	const createProjectFromTemplate = async (template: TemplateMetadata, projectName?: string) => {
 		try {
-			const files = await templateStorage?.getTemplateFiles(template.assetDirectory);
+			const templateStorage = getTemplateStorage();
+			const files = await templateStorage.getTemplateFiles(template.assetDirectory);
 			const manifestData = files?.["autokitteh.yaml"];
 			if (!manifestData) {
 				addToast({
