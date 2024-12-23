@@ -58,13 +58,15 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 		if (!assetDirectory) return;
 		const content = await getTemplateFiles(assetDirectory);
 
-		if (content["README.md"]) {
-			const readmeContent = content["README.md"];
-			const cleanedReadme = readmeContent.replace(/---[\s\S]*?---\n/, "");
-			setReadme(cleanedReadme);
-		} else {
+		if (!content["README.md"]) {
 			setReadme("");
+
+			return;
 		}
+
+		const readmeContent = content["README.md"];
+		const cleanedReadme = readmeContent.replace(/---[\s\S]*?---\n/, "");
+		setReadme(cleanedReadme);
 	};
 
 	useEffect(() => {
