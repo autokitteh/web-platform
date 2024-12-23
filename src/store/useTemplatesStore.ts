@@ -195,11 +195,11 @@ const store = (set: any, get: any): TemplateState => ({
 		}
 	},
 
-	findTemplateByAssetDirectory: (assetDirectory: string) => {
+	findTemplateByAssetDirectory: (assetDirectory) => {
 		return get().templateMap[assetDirectory];
 	},
 
-	getFilesForTemplate: async (assetDirectory: string) => {
+	getFilesForTemplate: async (assetDirectory) => {
 		const { getTemplateStorage } = get();
 		const templateStorage = getTemplateStorage();
 

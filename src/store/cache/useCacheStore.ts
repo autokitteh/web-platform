@@ -174,7 +174,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	reset: async (type: "resources" | "connections" | "deployments" | "triggers" | "variables") => {
+	reset: async (type) => {
 		set((state) => ({
 			...state,
 			loading: { ...state.loading, [type]: false },

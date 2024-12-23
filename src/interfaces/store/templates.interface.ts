@@ -65,7 +65,7 @@ export interface TemplateState {
 	error: string | null;
 	lastCommitDate?: string;
 	lastCheckDate?: Date;
-	templateStorage: TemplateStorageService | undefined;
+	templateStorage?: TemplateStorageService;
 	fetchTemplates: () => Promise<void>;
 	findTemplateByAssetDirectory: (assetDirectory: string) => TemplateMetadata | undefined;
 	getFilesForTemplate: (assetDirectory: string) => Promise<Record<string, string>>;
