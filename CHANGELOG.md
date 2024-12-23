@@ -1,3 +1,10 @@
+# [2.99.0](https://github.com/autokitteh/web-platform/compare/v2.98.1...v2.99.0) (2024-12-23)
+
+
+### Features
+
+* **UI-1112:** add google tag manager ([#803](https://github.com/autokitteh/web-platform/issues/803)) ([4a60d57](https://github.com/autokitteh/web-platform/commit/4a60d57411e0e3df8dd22dc07aa88ed062f4f1e2))
+
 ## [2.98.1](https://github.com/autokitteh/web-platform/compare/v2.98.0...v2.98.1) (2024-12-22)
 
 
