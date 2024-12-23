@@ -69,7 +69,7 @@ export const ManualRunButtons = () => {
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [projectId]);
 
 	const isRunDisabled = !isManualRunEnabled || !entrypointFunction || savingManualRun;
 
