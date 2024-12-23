@@ -1,3 +1,10 @@
+# [2.100.0](https://github.com/autokitteh/web-platform/compare/v2.99.0...v2.100.0) (2024-12-23)
+
+
+### Features
+
+* **UI-1050:** id copy button breakdown to suffix and prefix ([#808](https://github.com/autokitteh/web-platform/issues/808)) ([decf570](https://github.com/autokitteh/web-platform/commit/decf570929a027e2aff3177398b3a892113e845b))
+
 # [2.99.0](https://github.com/autokitteh/web-platform/compare/v2.98.1...v2.99.0) (2024-12-23)
 
 
