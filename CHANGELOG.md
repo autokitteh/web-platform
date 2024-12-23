@@ -1,3 +1,10 @@
+## [2.100.3](https://github.com/autokitteh/web-platform/compare/v2.100.2...v2.100.3) (2024-12-23)
+
+
+### Bug Fixes
+
+* **UI-1116:** events-viewer should display the payload as readable json ([#812](https://github.com/autokitteh/web-platform/issues/812)) ([bd185c7](https://github.com/autokitteh/web-platform/commit/bd185c7fbb399edd148e2784934fd921437e2376))
+
 ## [2.100.2](https://github.com/autokitteh/web-platform/compare/v2.100.1...v2.100.2) (2024-12-23)
 
 ## [2.100.1](https://github.com/autokitteh/web-platform/compare/v2.100.0...v2.100.1) (2024-12-23)
