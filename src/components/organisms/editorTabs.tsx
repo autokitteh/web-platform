@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { debounce, last } from "lodash";
 import moment from "moment";
+import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
@@ -35,6 +36,17 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const autoSaveMode = getAutoSavePreference();
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
+	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+	const initialContentRef = useRef<string>("");
+	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
+
+	useEffect(() => {
+		if (content && isFirstContentLoad) {
+			initialContentRef.current = content;
+			setIsFirstContentLoad(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [content]);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
@@ -97,8 +109,21 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		});
 	};
 
-	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
+	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("myCustomTheme");
+		editorRef.current = _editor;
+		const model = _editor.getModel();
+		if (model) {
+			model.pushEditOperations([], [], () => null);
+
+			_editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => {
+				const currentContent = model.getValue();
+
+				if (currentContent !== initialContentRef.current) {
+					_editor.trigger("keyboard", "undo", null);
+				}
+			});
+		}
 	};
 
 	const updateContent = async (newContent?: string) => {
