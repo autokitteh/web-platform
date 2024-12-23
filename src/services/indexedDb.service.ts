@@ -12,9 +12,9 @@ export class IndexedDBService {
 		this.storeName = storeName;
 	}
 
-	async InitDB(projectId: string) {
+	async InitDB() {
 		const storeName = this.storeName;
-		this.db = await openDB(this.dbName, 5, {
+		this.db = await openDB(this.dbName, 20, {
 			upgrade: async (db) => {
 				if (db.objectStoreNames.contains(storeName)) {
 					db.deleteObjectStore(storeName);
@@ -32,22 +32,18 @@ export class IndexedDBService {
 					const { fetchTemplates } = useTemplatesStore.getState();
 					await fetchTemplates();
 				}
-				if (storeName === "resources") {
-					const { fetchResources } = useCacheStore.getState();
-					await fetchResources(projectId);
-				}
 			},
 		});
 	}
 
-	async EnsureDBInitialized(projectId: string) {
+	async EnsureDBInitialized() {
 		if (!this.db) {
-			await this.InitDB(projectId);
+			await this.InitDB();
 		}
 	}
 
 	async getAll(projectId: string) {
-		await this.EnsureDBInitialized(projectId);
+		await this.EnsureDBInitialized();
 		if (!projectId) return;
 
 		const items = await this.db.get(this.storeName, projectId);
@@ -61,7 +57,7 @@ export class IndexedDBService {
 	}
 
 	async put(projectId: string, files: { content: Uint8Array; name: string }[]) {
-		await this.EnsureDBInitialized(projectId);
+		await this.EnsureDBInitialized();
 		const existingProject = await this.db.get(this.storeName, projectId);
 		if (existingProject) {
 			const updatedFiles = existingProject.files
@@ -79,21 +75,21 @@ export class IndexedDBService {
 	}
 
 	async delete(projectId: string, name: string) {
-		await this.EnsureDBInitialized(projectId);
+		await this.EnsureDBInitialized();
 		const items = await this.db.get(this.storeName, projectId);
 		const updatedFiles = items.filter((item: { name: string }) => item.name !== name);
 		await this.db.put(this.storeName, { projectId, files: updatedFiles });
 	}
 
 	async clearStore() {
-		await this.EnsureDBInitialized("");
+		await this.EnsureDBInitialized();
 		const tx = this.db.transaction(this.storeName, "readwrite");
 		await tx.objectStore(this.storeName).clear();
 		await tx.done;
 	}
 
 	async getFilesByProjectId(projectId: string): Promise<{ content: Uint8Array; name: string }[]> {
-		await this.EnsureDBInitialized(projectId);
+		await this.EnsureDBInitialized();
 		const allEntries = await this.db.getAll(this.storeName);
 		const projectFiles = allEntries.find((entry: { projectId: string }) => entry.projectId === projectId);
 
