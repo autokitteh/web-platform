@@ -10,6 +10,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { useCacheStore, useToastStore } from "@src/store";
+import { useSharedBetweenProjectsStore } from "@src/store/useSharedBetweenProjectsStore";
 import { cn, getAutoSavePreference } from "@utilities";
 
 import { useFileOperations } from "@hooks";
@@ -26,11 +27,14 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const { currentProjectId, fetchResources } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
-
+	const { cursorPositionPerProject, setCursorPosition } = useSharedBetweenProjectsStore();
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
+
+	const [codeLoadedFirstTime, setCodeLoadedFirstTime] = useState(true);
+	const [codeLoadedFirstTimeForCursor, setCodeLoadedFirstTimeForCursor] = useState(true);
 
 	const [content, setContent] = useState("");
 	const autoSaveMode = getAutoSavePreference();
@@ -124,8 +128,30 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 					_editor.trigger("keyboard", "undo", null);
 				}
 			});
+
+			_editor.onDidChangeCursorPosition((event: monaco.editor.ICursorPositionChangedEvent) => {
+				if (!codeLoadedFirstTimeForCursor) {
+					setCursorPosition(projectId!, event.position);
+					setCodeLoadedFirstTimeForCursor(false);
+				}
+			});
 		}
 	};
+
+	useEffect(() => {
+		const cursorPosition = cursorPositionPerProject[projectId!];
+
+		if (content && codeLoadedFirstTime && cursorPosition) {
+			const codeEditor = editorRef.current;
+
+			if (codeEditor) {
+				codeEditor.setPosition(cursorPosition);
+				// codeEditor.revealLineInCenter(cursorPosition.lineNumber);
+			}
+			setCodeLoadedFirstTime(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [content]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
