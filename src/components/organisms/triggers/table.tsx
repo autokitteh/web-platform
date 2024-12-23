@@ -36,13 +36,13 @@ const useTableHeaders = (t: (key: string) => string): TableHeader[] => {
 			{
 				key: "sourceType",
 				label: t("table.columns.type"),
-				className: "w-3/12",
+				className: "w-2/12",
 				sortable: true,
 			},
 			{
 				key: "entrypoint",
 				label: t("table.columns.call"),
-				className: "w-3/12",
+				className: "w-4/12",
 				sortable: true,
 			},
 			{
@@ -188,45 +188,37 @@ export const TriggersTable = () => {
 					<TBody>
 						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
-								<Td className="w-4/12 pl-4 font-semibold" title={trigger.name}>
-									<div className="w-full overflow-hidden truncate pr-2">{trigger.name}</div>
-								</Td>
-								<Td className="-ml-2 w-3/12 pr-2 capitalize">
-									<div className="flex items-center">
-										<Popover animation="slideFromBottom" interactionType="hover">
-											<PopoverTrigger>
-												<IconButton>
-													<IconSvg className="size-4" src={InfoIcon} />
-												</IconButton>
-											</PopoverTrigger>
-											<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
-												<InformationPopoverContent trigger={trigger} />
-											</PopoverContent>
-										</Popover>
-										<div className="truncate">{trigger?.sourceType}</div>
-									</div>
-								</Td>
-								<Td className="w-3/12 pl-2">{trigger.entrypoint}</Td>
-								<Td className="w-2/12 pr-0">
-									<div className="flex">
-										<IconButton
-											ariaLabel={t("table.buttons.ariaModifyTrigger", {
-												name: trigger.name,
-											})}
-											className="size-8"
-											onClick={() => handleAction("edit", trigger.triggerId!)}
-										>
-											<EditIcon className="size-3 fill-white" />
-										</IconButton>
-										<IconButton
-											ariaLabel={t("table.buttons.ariaDeleteTrigger", {
-												name: trigger.name,
-											})}
-											onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
-										>
-											<TrashIcon className="size-4 stroke-white" />
-										</IconButton>
-									</div>
+								<Td className="w-4/12 pl-4 font-semibold">{trigger.name}</Td>
+								<Td className="w-2/12 capitalize">{trigger?.sourceType}</Td>
+								<Td className="w-4/12">{trigger.entrypoint}</Td>
+								<Td className="w-2/12">
+									<Popover animation="slideFromBottom" interactionType="hover">
+										<PopoverTrigger>
+											<IconButton>
+												<IconSvg className="size-4" src={InfoIcon} />
+											</IconButton>
+										</PopoverTrigger>
+										<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
+											<InformationPopoverContent trigger={trigger} />
+										</PopoverContent>
+									</Popover>
+									<IconButton
+										ariaLabel={t("table.buttons.ariaModifyTrigger", {
+											name: trigger.name,
+										})}
+										className="size-8"
+										onClick={() => handleAction("edit", trigger.triggerId!)}
+									>
+										<EditIcon className="size-3 fill-white" />
+									</IconButton>
+									<IconButton
+										ariaLabel={t("table.buttons.ariaDeleteTrigger", {
+											name: trigger.name,
+										})}
+										onClick={() => handleOpenModalDeleteTrigger(trigger.triggerId!)}
+									>
+										<TrashIcon className="size-4 stroke-white" />
+									</IconButton>
 								</Td>
 							</Tr>
 						))}
