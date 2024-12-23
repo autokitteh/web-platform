@@ -191,8 +191,10 @@ export const TriggersTable = () => {
 								<Td className="w-4/12 pl-4 font-semibold" title={trigger.name}>
 									<div className="w-full overflow-hidden truncate pr-2">{trigger.name}</div>
 								</Td>
-								<Td className="-ml-2 w-3/12 pr-2 capitalize">
-									<div className="flex items-center">
+								<Td className="-ml-2 w-3/12 pr-2 capitalize">{trigger?.sourceType}</Td>
+								<Td className="w-4/12 pl-2">{trigger.entrypoint}</Td>
+								<Td className="w-2/12 pr-0">
+									<div className="flex">
 										<Popover animation="slideFromBottom" interactionType="hover">
 											<PopoverTrigger>
 												<IconButton>
@@ -203,12 +205,6 @@ export const TriggersTable = () => {
 												<InformationPopoverContent trigger={trigger} />
 											</PopoverContent>
 										</Popover>
-										<div className="truncate">{trigger?.sourceType}</div>
-									</div>
-								</Td>
-								<Td className="w-3/12 pl-2">{trigger.entrypoint}</Td>
-								<Td className="w-2/12 pr-0">
-									<div className="flex">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", {
 												name: trigger.name,
