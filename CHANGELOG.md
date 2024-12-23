@@ -1,3 +1,10 @@
+# [2.103.0](https://github.com/autokitteh/web-platform/compare/v2.102.0...v2.103.0) (2024-12-23)
+
+
+### Features
+
+* **UI-1068:** add connection id in popover in connections table ([#811](https://github.com/autokitteh/web-platform/issues/811)) ([2a0183c](https://github.com/autokitteh/web-platform/commit/2a0183c601e37c31857d35fe0cfae5762f6fa5a2))
+
 # [2.102.0](https://github.com/autokitteh/web-platform/compare/v2.101.0...v2.102.0) (2024-12-23)
 
 
