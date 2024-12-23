@@ -14,7 +14,7 @@ export class IndexedDBService {
 
 	async InitDB(projectId: string) {
 		const storeName = this.storeName;
-		this.db = await openDB(this.dbName, 4, {
+		this.db = await openDB(this.dbName, 5, {
 			upgrade: async (db) => {
 				if (db.objectStoreNames.contains(storeName)) {
 					db.deleteObjectStore(storeName);
