@@ -48,6 +48,7 @@ const initialState: Omit<
 	| "fetchResources"
 	| "initCache"
 	| "checkState"
+	| "reset"
 > = {
 	loading: {
 		deployments: false,
@@ -171,6 +172,14 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				loading: { ...state.loading, resourses: false },
 			}));
 		}
+	},
+
+	reset: async (type: "resources" | "connections" | "deployments" | "triggers" | "variables") => {
+		set((state) => ({
+			...state,
+			loading: { ...state.loading, [type]: false },
+			[type]: undefined,
+		}));
 	},
 
 	fetchDeployments: async (projectId, force) => {
