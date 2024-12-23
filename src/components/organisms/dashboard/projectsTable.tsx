@@ -120,7 +120,7 @@ export const DashboardProjectsTable = () => {
 	return isLoading ? (
 		<Loader isCenter />
 	) : (
-		<div className="z-10 h-1/2 select-none pt-10 sm:h-3/4 3xl:h-4/5">
+		<div className="z-10 h-1/2 select-none pt-10 sm:h-2/3 xl:h-3/4 3xl:h-4/5">
 			{sortedProjectsStats.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20">
 					<THead className="mr-0">
@@ -290,7 +290,7 @@ export const DashboardProjectsTable = () => {
 				<div>{t("table.noProjectsFound")}</div>
 			)}
 
-			<div className="mb-2 flex h-1/3 min-h-[150px] items-end sm:h-1/4 3xl:h-1/5">
+			<div className="mb-2 flex h-1/2 items-end sm:h-1/3 xl:h-1/4 3xl:h-1/5">
 				<Socials />
 			</div>
 
