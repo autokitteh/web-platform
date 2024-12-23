@@ -50,6 +50,10 @@
 				"ok": "OK",
 				"unspecified": "Unspecified",
 				"warning": "Warning"
+			},
+			"popover": {
+				"titleInfo": "Connection Information",
+				"connectionId": "Connection ID"
 			}
 		},
 		"titleAvailable": "Connections",

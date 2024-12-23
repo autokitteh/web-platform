@@ -230,7 +230,19 @@ export const ConnectionsTable = () => {
 													</IconButton>
 												</PopoverTrigger>
 												<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
-													<IdCopyButton id={connectionId} variant="flatText" />
+													<div className="flex flex-col">
+														<div className="mb-2 font-semibold">
+															{t("table.popover.titleInfo")}
+														</div>
+														<div className="flex items-center">
+															{t("table.popover.connectionId")}:
+															<IdCopyButton
+																displayFullLength
+																id={connectionId}
+																variant="flatText"
+															/>
+														</div>
+													</div>
 												</PopoverContent>
 											</Popover>
 											<IconButton
