@@ -1,3 +1,10 @@
+# [2.101.0](https://github.com/autokitteh/web-platform/compare/v2.100.4...v2.101.0) (2024-12-23)
+
+
+### Features
+
+* **UI-840:** setup is autosave in user settings ([#807](https://github.com/autokitteh/web-platform/issues/807)) ([5792f7b](https://github.com/autokitteh/web-platform/commit/5792f7bb3e82f2d3e20b52f318efe1ae0a8f4445))
+
 ## [2.100.4](https://github.com/autokitteh/web-platform/compare/v2.100.3...v2.100.4) (2024-12-23)
 
 
