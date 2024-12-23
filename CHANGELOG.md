@@ -1,3 +1,10 @@
+## [2.100.4](https://github.com/autokitteh/web-platform/compare/v2.100.3...v2.100.4) (2024-12-23)
+
+
+### Bug Fixes
+
+* **UI-1119:** manual run activate previous project ([#815](https://github.com/autokitteh/web-platform/issues/815)) ([bcc0bfe](https://github.com/autokitteh/web-platform/commit/bcc0bfe2ef4b98f49916ce707091d94fcc849211))
+
 ## [2.100.3](https://github.com/autokitteh/web-platform/compare/v2.100.2...v2.100.3) (2024-12-23)
 
 
