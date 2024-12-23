@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
-import Cookies from "js-cookie";
 import { debounce, last } from "lodash";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -33,7 +32,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const [content, setContent] = useState("");
-	const autosaveMode = Cookies.get("codeManualSave") === "false";
+	const autosaveMode = localStorage.getItem("codeManualSave") === "false";
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 
 import { version } from "@constants";
@@ -18,7 +17,7 @@ export const Profile = () => {
 	const { getLoggedInUser, user } = useUserStore();
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const codeManualSave = Cookies.get("codeManualSave") === "true";
+	const codeManualSave = localStorage.getItem("codeManualSave") === "true";
 	const [codeManualSaveChecked, setcodeManualSaveChecked] = useState(!!codeManualSave);
 
 	const loadUser = async () => {
@@ -48,7 +47,7 @@ export const Profile = () => {
 	};
 
 	const handleCodeManualSaveChange = (checked: boolean) => {
-		Cookies.set("codeManualSave", checked.toString());
+		localStorage.setItem("codeManualSave", checked.toString());
 		setcodeManualSaveChecked(checked);
 	};
 
