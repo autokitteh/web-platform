@@ -66,6 +66,7 @@
 	"connectionCronNotFound": "Couldn't fetch the scheduler connection",
 	"assetsNotFound": "No assets found",
 	"couldntSaveDefaultFileForProject": "Couldn't save the default file for the project",
+	"triggerNotUpdated": "Failed to update trigger for the project",
 	"projectCreationFailed": "Project creation failed",
 	"projectLoadingFailed": "Failed to load the project",
 	"noProjectFound": "No project found",
