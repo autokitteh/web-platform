@@ -16,6 +16,7 @@ export const Button = ({
 	onClick,
 	onKeyPressed,
 	style,
+	tabIndex,
 	title,
 	type = "button",
 	variant,
@@ -50,6 +51,7 @@ export const Button = ({
 			onClick={onClick}
 			onKeyDown={onKeyDown}
 			style={style}
+			tabIndex={tabIndex}
 			title={title}
 			type={type}
 		>

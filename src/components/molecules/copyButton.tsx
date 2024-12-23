@@ -15,12 +15,14 @@ export const CopyButton = ({
 	className,
 	size = "md",
 	successMessage,
+	tabIndex = 0,
 	text,
 	title,
 }: {
 	className?: string;
 	size?: Extract<SystemSizes, "xs" | "sm" | "md">;
 	successMessage?: string;
+	tabIndex?: number;
 	text: string;
 	title?: string;
 }) => {
@@ -60,7 +62,7 @@ export const CopyButton = ({
 				copyTextToClipboard(text);
 			}}
 			onKeyPressed={() => copyTextToClipboard(text)}
-			tabIndex={0}
+			tabIndex={tabIndex}
 			title={title}
 			type="button"
 		>

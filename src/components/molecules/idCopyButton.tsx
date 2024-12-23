@@ -26,10 +26,10 @@ export const IdCopyButton = ({
 
 	return (
 		<div className="flex flex-row items-center">
-			<Button className={buttonClassName} variant={variant}>
+			<Button className={buttonClassName} tabIndex={-1} variant={variant}>
 				{idStr}
 			</Button>
-			<CopyButton className="mb-0.5" size="sm" successMessage={successMessage} text={id} />
+			<CopyButton className="mb-0.5" size="sm" successMessage={successMessage} tabIndex={0} text={id} />
 		</div>
 	);
 };
