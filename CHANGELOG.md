@@ -1,3 +1,10 @@
+# [2.104.0](https://github.com/autokitteh/web-platform/compare/v2.103.0...v2.104.0) (2024-12-23)
+
+
+### Features
+
+* **UI-1042:** add missing ui fields in webhook trigger form ([#804](https://github.com/autokitteh/web-platform/issues/804)) ([30801aa](https://github.com/autokitteh/web-platform/commit/30801aa616d474d5961cd0039e51a36e251536aa))
+
 # [2.103.0](https://github.com/autokitteh/web-platform/compare/v2.102.0...v2.103.0) (2024-12-23)
 
 
