@@ -36,13 +36,13 @@ const useTableHeaders = (t: (key: string) => string): TableHeader[] => {
 			{
 				key: "sourceType",
 				label: t("table.columns.type"),
-				className: "w-3/12",
+				className: "w-2/12",
 				sortable: true,
 			},
 			{
 				key: "entrypoint",
 				label: t("table.columns.call"),
-				className: "w-3/12",
+				className: "w-4/12",
 				sortable: true,
 			},
 			{
@@ -188,11 +188,9 @@ export const TriggersTable = () => {
 					<TBody>
 						{sortedTriggers.map((trigger) => (
 							<Tr className="group" key={trigger.triggerId}>
-								<Td className="w-4/12 pl-4 font-semibold" title={trigger.name}>
-									<div className="w-full overflow-hidden truncate pr-2">{trigger.name}</div>
-								</Td>
-								<Td className="-ml-2 w-3/12 pr-2 capitalize">{trigger?.sourceType}</Td>
-								<Td className="w-4/12 pl-2">{trigger.entrypoint}</Td>
+								<Td className="w-4/12 pl-4 font-semibold">{trigger.name}</Td>
+								<Td className="w-2/12 pr-2 capitalize">{trigger?.sourceType}</Td>
+								<Td className="w-4/12">{trigger.entrypoint}</Td>
 								<Td className="w-2/12 pr-0">
 									<div className="flex">
 										<Popover animation="slideFromBottom" interactionType="hover">
