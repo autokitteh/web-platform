@@ -13,7 +13,7 @@ import { cn } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
-import { Button, Checkbox, IconButton, IconSvg, Loader, Spinner, Tab } from "@components/atoms";
+import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@components/atoms";
 
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
@@ -32,7 +32,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const [content, setContent] = useState("");
-	const [autosaveMode, setAutosaveMode] = useState(true);
+	const autosaveMode = localStorage.getItem("codeManualSave") === "false";
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 
@@ -231,7 +231,17 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
 							>
 								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
-									{autosaveMode ? null : (
+									{autosaveMode ? (
+										<Button
+											className="py-1"
+											disabled={loadingSave}
+											onClick={() => debouncedManualSave(content)}
+											variant="flatText"
+										>
+											{loadingSave ? <Loader className="mr-1" size="sm" /> : null}
+											<Typography size="small">{t("autoSave")}</Typography>
+										</Button>
+									) : (
 										<Button
 											className="h-6 whitespace-nowrap px-4 py-1"
 											disabled={loadingSave}
@@ -243,12 +253,6 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 											<div className="mt-0.5">{t("buttons.save")}</div>
 										</Button>
 									)}
-									<Checkbox
-										checked={autosaveMode}
-										isLoading={autosaveMode ? loadingSave : false}
-										label={t("autoSave")}
-										onChange={() => setAutosaveMode((prevAutosave) => !prevAutosave)}
-									/>
 								</div>
 								<IconButton className="hover:bg-gray-1100" onClick={onExpand}>
 									{isExpanded ? (

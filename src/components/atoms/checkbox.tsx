@@ -8,7 +8,7 @@ import { Loader } from "@components/atoms/loader";
 
 import { Check, Square } from "@assets/image/icons";
 
-export const Checkbox = ({ checked, className, isLoading, label, onChange, title }: CheckboxProps) => {
+export const Checkbox = ({ checked, className, isLoading, label, labelClassName, onChange, title }: CheckboxProps) => {
 	const id = useId();
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -19,6 +19,10 @@ export const Checkbox = ({ checked, className, isLoading, label, onChange, title
 	};
 
 	const checkboxClass = cn("inline-flex cursor-pointer items-center h-6 justify-center px-2", className);
+	const labelClass = cn(
+		"flex cursor-pointer items-center justify-center gap-2 text-sm text-gray-250",
+		labelClassName
+	);
 
 	return (
 		<div className={checkboxClass} title={title}>
@@ -32,11 +36,7 @@ export const Checkbox = ({ checked, className, isLoading, label, onChange, title
 
 			<div className="relative flex select-none items-center" onKeyDown={handleKeyDown} role="presentation">
 				{label ? (
-					<label
-						aria-checked={checked}
-						className="flex cursor-pointer items-center justify-center gap-2 text-sm text-gray-250"
-						htmlFor={id}
-					>
+					<label aria-checked={checked} className={labelClass} htmlFor={id}>
 						{isLoading ? (
 							<Loader size="sm" />
 						) : (
