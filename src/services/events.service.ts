@@ -10,7 +10,7 @@ import { ServiceResponse } from "@type";
 export class EventsService {
 	static async getEnriched(eventId: string): Promise<ServiceResponse<EnrichedEvent | undefined>> {
 		try {
-			const { event } = await eventsClient.get({ eventId });
+			const { event } = await eventsClient.get({ eventId, jsonValues: true });
 			if (!event) {
 				return { data: undefined, error: undefined };
 			}
