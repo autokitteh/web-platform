@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
 import { debounce, last } from "lodash";
@@ -158,19 +158,31 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedAutosave = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 
+	const keydownListenerRef = useRef<((event: KeyboardEvent) => void) | null>(null);
+
 	useEffect(() => {
-		const handler = (event: KeyboardEvent) => {
-			if ((event.ctrlKey && event.key === "s") || (event.metaKey && event.key === "s")) {
-				debouncedManualSave(content);
+		if (keydownListenerRef.current) {
+			document.removeEventListener("keydown", keydownListenerRef.current);
+		}
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "s" && (navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) {
 				event.preventDefault();
+				debouncedManualSave(content);
 			}
 		};
-		window.addEventListener("keydown", handler);
+
+		keydownListenerRef.current = handleKeyDown;
+
+		document.addEventListener("keydown", handleKeyDown, false);
 
 		return () => {
-			window.removeEventListener("keydown", handler);
+			if (keydownListenerRef.current) {
+				document.removeEventListener("keydown", keydownListenerRef.current);
+			}
 		};
-	}, [content, debouncedManualSave]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [content]);
 
 	const activeCloseIcon = (fileName: string) => {
 		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
