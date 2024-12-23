@@ -13,7 +13,7 @@ import {
 
 import { RotateRightIcon, TrashIcon } from "@assets/image/icons";
 
-export const OrganizationUsers = () => {
+export const OrganizationUsersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.users" });
 	const { openModal } = useModalStore();
 
@@ -32,20 +32,20 @@ export const OrganizationUsers = () => {
 			<Table className="mt-6">
 				<THead>
 					<Tr>
-						<Th className="w-1/4 pl-4 font-normal">{t("table.headers.name")}</Th>
-						<Th className="w-1/4 pl-4 font-normal">{t("table.headers.email")}</Th>
-						<Th className="w-1/4 pl-4 font-normal">{t("table.headers.status")}</Th>
-						<Th className="w-1/4 pl-4 font-normal">{t("table.headers.role")}</Th>
-						<Th className="w-1/4 justify-end pr-4 font-normal">{t("table.headers.actions")}</Th>
+						<Th className="w-1/4 pl-4">{t("table.headers.name")}</Th>
+						<Th className="w-1/4">{t("table.headers.email")}</Th>
+						<Th className="w-1/4">{t("table.headers.status")}</Th>
+						<Th className="w-1/4">{t("table.headers.role")}</Th>
+						<Th className="w-1/4 justify-end pr-4">{t("table.headers.actions")}</Th>
 					</Tr>
 				</THead>
 
 				<TBody>
 					<Tr className="hover:bg-gray-1300">
 						<Td className="w-1/4 cursor-pointer pl-4">xxxx</Td>
-						<Td className="w-1/4 cursor-pointer pl-4">@mail</Td>
-						<Td className="w-1/4 cursor-pointer pl-4">Invite sent / active</Td>
-						<Td className="w-1/4 cursor-pointer pl-4">Admin</Td>
+						<Td className="w-1/4 cursor-pointer">@mail</Td>
+						<Td className="w-1/4 cursor-pointer">Invite sent / active</Td>
+						<Td className="w-1/4 cursor-pointer">Admin</Td>
 						<Td className="w-1/4 cursor-pointer gap-1">
 							<div className="flex">
 								<IconButton className="ml-auto mr-1" title={t("table.actions.resendInvite")}>

@@ -1,28 +1,21 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { SelectOption } from "@src/interfaces/components";
 import { useModalStore } from "@src/store";
 import { newOrganizationUserSchema } from "@validations";
 
 import { Button, ErrorMessage, Input } from "@components/atoms";
-import { Modal, Select } from "@components/molecules";
+import { Modal } from "@components/molecules";
 
 export const OrganizationUserCreateModal = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.modal" });
 	const { closeModal } = useModalStore();
 
-	const options: SelectOption[] = [
-		{ value: "admin", label: "Admin" },
-		{ value: "user", label: "User" },
-	];
-
 	const {
-		control,
 		formState: { errors },
 		handleSubmit,
 		register,
@@ -33,13 +26,9 @@ export const OrganizationUserCreateModal = () => {
 
 	const onSubmit = async () => {};
 
-	const watchedRole = useWatch({ control, name: "role" });
-
 	return (
 		<Modal hideCloseButton name={ModalName.organizationUserCreate}>
-			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("addUser")}</h3>
-			</div>
+			<h3 className="mb-5 text-xl font-bold">{t("addUser")}</h3>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative mb-5">
 					<Input
@@ -62,26 +51,6 @@ export const OrganizationUserCreateModal = () => {
 						label={t("form.email")}
 					/>
 					<ErrorMessage>{errors.email?.message as string}</ErrorMessage>
-				</div>
-				<div className="relative">
-					<Controller
-						control={control}
-						name="role"
-						render={({ field }) => (
-							<Select
-								variant="light"
-								{...field}
-								aria-label={t("form.role")}
-								isError={!!errors.frequency}
-								label={t("form.role")}
-								options={options}
-								placeholder={t("form.role")}
-								value={watchedRole}
-							/>
-						)}
-					/>
-
-					<ErrorMessage>{errors.role?.message as string}</ErrorMessage>
 				</div>
 				<div className="mt-8 flex w-full justify-end gap-2">
 					<Button

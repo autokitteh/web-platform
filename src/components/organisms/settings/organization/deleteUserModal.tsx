@@ -17,9 +17,9 @@ export const DeleteUserFromOrganizationModal = ({ onDelete }: DeleteAccount) => 
 	return (
 		<Modal name={ModalName.deleteUserFromOrg}>
 			<div className="mx-6">
-				<h3 className="mb-5 font-averta text-xl font-bold">{t("title")}</h3>
+				<h3 className="mb-5 font-averta text-xl font-bold">{t("deleteUser")}</h3>
 
-				<p className="font-light">{t("line1")}</p>
+				<p className="font-light">{t("line1", { userName: "xxxx" })}</p>
 				<p className="mt-1 font-light">{t("line2")}</p>
 			</div>
 

@@ -2,4 +2,4 @@ export { DeleteUserFromOrganizationModal } from "@components/organisms/settings/
 export { NewOrganization } from "@components/organisms/settings/organization/newOrganization";
 export { OrganizationCreatedModal } from "@components/organisms/settings/organization/organizationCreatedModal";
 export { OrganizationUserCreateModal } from "@components/organisms/settings/organization/organizationUserCreateModal";
-export { OrganizationUsers } from "@components/organisms/settings/organization/users";
+export { OrganizationUsersTable } from "@components/organisms/settings/organization/users";

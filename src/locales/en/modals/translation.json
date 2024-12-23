@@ -44,9 +44,9 @@
 	"deleteOrgUser": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Delete",
-		"line1": "The action is irreversible.",
-		"line2": "Warning: you will not be able to recover it.",
-		"title": "Delete the user?"
+		"deleteUser": "Delete User",
+		"line1": "Are you sure you want to delete - {{userName}}",
+		"line2": "This action cannot be undone, and all related data will be permanently removed."
 	},
 	"deleteTrigger": {
 		"cancelButton": "Cancel",
