@@ -16,19 +16,12 @@ import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useProjectStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { Button, IconButton, IconSvg, Link, Spinner, Typography } from "@components/atoms";
+import { Button, IconButton, IconSvg, Spinner, Typography } from "@components/atoms";
 import { WelcomeVideoCard, WelcomeVideoModal } from "@components/organisms/dashboard";
+import { Socials } from "@components/organisms/shared/socials";
 
 import { InJustA, OrStartFromTemplateImage, ProjectsIcon, StartFromTemplateImage } from "@assets/image";
-import {
-	ArrowRightCarouselIcon,
-	ArrowStartTemplateIcon,
-	CirclePlayIcon,
-	DiscordNoColorIcon,
-	GithubIntroIcon,
-	LinkedInIntroIcon,
-	RedditIntroIcon,
-} from "@assets/image/icons";
+import { ArrowRightCarouselIcon, ArrowStartTemplateIcon, CirclePlayIcon } from "@assets/image/icons";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -150,26 +143,7 @@ export const IntroMainBlock = () => {
 			</div>
 			<div className="mt-8 grid grid-cols-auto-fit-248 gap-x-14 gap-y-6 font-averta md:grid-cols-auto-fit-350">
 				<div className="border-gray-950 md:border-r">
-					<Typography className="pr-4 text-lg font-bold uppercase" element="h3">
-						{t("joinTheCommunity")}
-					</Typography>
-					<Typography className="mt-2 text-base" element="p">
-						{t("seeOurCommunity")}
-					</Typography>
-					<div className="mt-4 flex gap-2.5">
-						<Link target="_blank" to="https://www.reddit.com/r/autokitteh">
-							<RedditIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
-						</Link>
-						<Link target="_blank" to="https://www.linkedin.com/company/autokitteh">
-							<LinkedInIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
-						</Link>
-						<Link target="_blank" to="https://discord.gg/UhnJuBarZQ">
-							<DiscordNoColorIcon className="size-8 fill-gray-500 transition hover:fill-green-800" />
-						</Link>
-						<Link target="_blank" to="https://github.com/autokitteh/autokitteh">
-							<GithubIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
-						</Link>
-					</div>
+					<Socials />
 				</div>
 				<div className="relative pb-5 md:pb-0">
 					<Typography className="mb-3 pr-4 text-lg font-bold uppercase" element="h3">
