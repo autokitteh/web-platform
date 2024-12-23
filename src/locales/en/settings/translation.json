@@ -33,7 +33,7 @@
 		"retentionPolicyTitle": "Retention Policy",
 		"retentionPolicyDescription": "We will keep your data for 3 days",
 		"codeManualSaveTitle": "Disable Auto Save",
-		"codeManualSaveDescription": "Save code manually in the editor"
+		"codeManualSaveDescription": "Save code manually"
 	},
 	"topbar": {
 		"personalSettings": "Personal Settings",
