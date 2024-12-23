@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 
 import { version } from "@constants";
@@ -7,7 +8,7 @@ import { ModalName } from "@enums/components";
 
 import { useModalStore, useToastStore, useUserStore } from "@store";
 
-import { Button, Typography } from "@components/atoms";
+import { Button, Checkbox, Typography } from "@components/atoms";
 import { DeleteAccountModal } from "@components/organisms/settings/profile";
 
 import { TrashIcon } from "@assets/image/icons";
@@ -17,6 +18,8 @@ export const Profile = () => {
 	const { getLoggedInUser, user } = useUserStore();
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
+	const codeManualSave = Cookies.get("codeManualSave") === "true";
+	const [codeManualSaveChecked, setcodeManualSaveChecked] = useState(!!codeManualSave);
 
 	const loadUser = async () => {
 		const error = await getLoggedInUser();
@@ -44,6 +47,11 @@ export const Profile = () => {
 		openModal(ModalName.deleteAccount, {});
 	};
 
+	const handleCodeManualSaveChange = (checked: boolean) => {
+		Cookies.set("codeManualSave", checked.toString());
+		setcodeManualSaveChecked(checked);
+	};
+
 	return (
 		<div className="flex h-full flex-col font-averta">
 			<Typography className="mb-9 font-bold" element="h1" size="2xl">
@@ -66,6 +74,19 @@ export const Profile = () => {
 			</Typography>
 			<Typography className="mt-1.5" element="p" size="1.5xl">
 				{t("retentionPolicyDescription")}
+			</Typography>
+			<Typography className="mt-9" element="p">
+				{t("codeManualSaveTitle")}
+			</Typography>
+			<Typography className="mt-1.5" element="p" size="1.5xl">
+				<Checkbox
+					checked={!!codeManualSaveChecked}
+					className="-ml-2"
+					isLoading={false}
+					label={t("codeManualSaveDescription")}
+					labelClassName="text-1.5xl"
+					onChange={handleCodeManualSaveChange}
+				/>
 			</Typography>
 			<div className="mt-9">
 				<Button

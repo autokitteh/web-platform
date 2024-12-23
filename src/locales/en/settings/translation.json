@@ -31,7 +31,9 @@
 		"deleteAccount": "Delete My Account",
 		"accountFetchError": "Error occurred during the account fetch, try again later",
 		"retentionPolicyTitle": "Retention Policy",
-		"retentionPolicyDescription": "We will keep your data for 3 days"
+		"retentionPolicyDescription": "We will keep your data for 3 days",
+		"codeManualSaveTitle": "Code Manual Save",
+		"codeManualSaveDescription": "Save your code manually instead of autosave"
 	},
 	"topbar": {
 		"personalSettings": "Personal Settings",

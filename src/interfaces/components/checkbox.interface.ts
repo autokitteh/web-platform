@@ -5,4 +5,5 @@ export interface CheckboxProps {
 	title?: string;
 	className?: string;
 	isLoading: boolean;
+	labelClassName?: string;
 }
