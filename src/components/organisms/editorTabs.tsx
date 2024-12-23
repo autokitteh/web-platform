@@ -32,7 +32,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const [content, setContent] = useState("");
-	const autosaveMode = localStorage.getItem("codeManualSave") === "false";
+	const manualSaveMode = localStorage.getItem("codeManualSave") === "true";
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 
@@ -231,17 +231,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
 							>
 								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
-									{autosaveMode ? (
-										<Button
-											className="py-1"
-											disabled={loadingSave}
-											onClick={() => debouncedManualSave(content)}
-											variant="flatText"
-										>
-											{loadingSave ? <Loader className="mr-1" size="sm" /> : null}
-											<Typography size="small">{t("autoSave")}</Typography>
-										</Button>
-									) : (
+									{manualSaveMode ? (
 										<Button
 											className="h-6 whitespace-nowrap px-4 py-1"
 											disabled={loadingSave}
@@ -251,6 +241,16 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 											<IconSvg className="fill-white" src={loadingSave ? Spinner : SaveIcon} />
 
 											<div className="mt-0.5">{t("buttons.save")}</div>
+										</Button>
+									) : (
+										<Button
+											className="py-1"
+											disabled={loadingSave}
+											onClick={() => debouncedManualSave(content)}
+											variant="flatText"
+										>
+											{loadingSave ? <Loader className="mr-1" size="sm" /> : null}
+											<Typography size="small">{t("autoSave")}</Typography>
 										</Button>
 									)}
 								</div>
@@ -272,7 +272,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 							className="absolute -ml-6 mt-2 h-full pb-5"
 							language={languageEditor}
 							loading={<Loader size="lg" />}
-							onChange={autosaveMode ? debouncedAutosave : () => {}}
+							onChange={manualSaveMode ? () => {} : debouncedAutosave}
 							onMount={handleEditorDidMount}
 							options={{
 								fontFamily: "monospace, sans-serif",
