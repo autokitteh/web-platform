@@ -46,9 +46,10 @@ export class IndexedDBService {
 		if (existingProject) {
 			const updatedFiles = [...existingProject.files, ...files];
 			await this.db.put(this.storeName, { projectId, files: updatedFiles });
-		} else {
-			await this.db.put(this.storeName, { projectId, files });
+
+			return;
 		}
+		await this.db.put(this.storeName, { projectId, files });
 	}
 
 	async delete(projectId: string, name: string) {
