@@ -1,3 +1,10 @@
+## [2.104.3](https://github.com/autokitteh/web-platform/compare/v2.104.2...v2.104.3) (2024-12-23)
+
+
+### Bug Fixes
+
+* **UI-1122:** fix action icons in triggers table ([#818](https://github.com/autokitteh/web-platform/issues/818)) ([4a4d3a4](https://github.com/autokitteh/web-platform/commit/4a4d3a4d0ee19ce2c9b4e63cbb876eb14fbb7aa4))
+
 ## [2.104.2](https://github.com/autokitteh/web-platform/compare/v2.104.1...v2.104.2) (2024-12-23)
 
 
