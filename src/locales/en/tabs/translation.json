@@ -142,7 +142,7 @@
 				"selectTriggerType": "Select trigger type",
 				"triggerType": "Trigger type",
 				"value": "Value",
-				"eventTypesSelect": "Enter the event type",
+				"eventTypeSelect": "Enter the event type",
 				"httpMethodSelect": "Select HTTP method"
 			},
 			"titleData": "Data",

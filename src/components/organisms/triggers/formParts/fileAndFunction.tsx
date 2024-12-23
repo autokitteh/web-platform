@@ -134,10 +134,10 @@ export const TriggerSpecificFields = ({
 									isError={!!errors.eventTypeSelect}
 									key={triggerRerender}
 									label={t("placeholders.eventTypeLabel")}
-									noOptionsLabel={t("placeholders.eventTypesSelect")}
+									noOptionsLabel={t("placeholders.eventTypeSelect")}
 									onCreateOption={handleCreateOption}
 									options={options}
-									placeholder={t("placeholders.eventTypesSelect")}
+									placeholder={t("placeholders.eventTypeSelect")}
 									value={watchedEventTypeSelect}
 								/>
 							)}

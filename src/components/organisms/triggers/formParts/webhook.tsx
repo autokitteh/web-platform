@@ -4,7 +4,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { cn, getApiBaseUrl } from "@src/utilities";
-import { TriggerFormData } from "@validations/trigger.schema";
+import { TriggerFormData } from "@validations";
 
 import { ErrorMessage, Input, Link } from "@components/atoms";
 import { CopyButton, Select } from "@components/molecules";
