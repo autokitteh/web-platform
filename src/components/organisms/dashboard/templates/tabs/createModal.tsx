@@ -30,7 +30,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 	const { closeModal } = useModalStore();
 	const { createProjectFromAsset } = useCreateProjectFromTemplate();
 	const { projectsList } = useProjectStore();
-	const { getTemplateFiles } = useTemplatesStore();
+	const { getFilesForTemplate } = useTemplatesStore();
 
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 
@@ -56,7 +56,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 
 	const fetchManifestData = async () => {
 		if (!assetDirectory) return;
-		const content = await getTemplateFiles(assetDirectory);
+		const content = await getFilesForTemplate(assetDirectory);
 
 		if (!content["README.md"]) {
 			setReadme("");

@@ -31,7 +31,11 @@
         "deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}"
 	},
 	"templates":{
-		"title": "Start From Template"
+		"title": "Start From Template",
+		"projectCreationFailedExtended": "Project creation failed, error: {{error}}",
+		"projectTemplateManifestNotFound": "Project template manifest not found"
+
+
 	},
 	"projects": {
 		"table": {

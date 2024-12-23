@@ -34,14 +34,33 @@ const sortCategories = (categories: TemplateCategory[], order: string[]) => {
 	});
 };
 
-const store = (set: any, get: any): TemplateState => ({
+const defaultState = {
 	templateMap: {},
 	isLoading: false,
 	error: null,
 	lastCommitDate: undefined,
 	lastCheckDate: undefined,
 	sortedCategories: undefined,
-	templateStorage: new TemplateStorageService(),
+	templateStorage: undefined,
+};
+
+const store = (set: any, get: any): TemplateState => ({
+	...defaultState,
+
+	reset: () => {
+		set(defaultState);
+	},
+
+	getTemplateStorage: () => {
+		const { templateStorage } = get();
+		if (templateStorage) {
+			return templateStorage;
+		}
+		const storage = new TemplateStorageService();
+		set({ templateStorage: storage });
+
+		return storage;
+	},
 
 	fetchTemplates: async () => {
 		const couldntFetchTemplates = i18n.t("templates.failedToFetch", {
@@ -57,12 +76,10 @@ const store = (set: any, get: any): TemplateState => ({
 			error?: string;
 			templateMap?: Record<string, TemplateMetadataWithCategory>;
 		}> => {
-			const processTemplateCard = async (
-				cardWithFiles: TemplateCardWithFiles,
-				categoryName: string,
-				templateStorage: TemplateStorageService
-			) => {
-				await templateStorage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
+			const processTemplateCard = async (cardWithFiles: TemplateCardWithFiles, categoryName: string) => {
+				const { getTemplateStorage } = get();
+				const tmpStorage = getTemplateStorage();
+				await tmpStorage.storeTemplateFiles(cardWithFiles.assetDirectory, cardWithFiles.files);
 
 				return {
 					assetDirectory: cardWithFiles.assetDirectory,
@@ -79,15 +96,12 @@ const store = (set: any, get: any): TemplateState => ({
 				return { error: couldntFetchTemplates };
 			}
 
-			const { templateStorage } = get();
 			const processedCategories = processReadmeFiles(result.structure);
 			const templateMap: Record<string, TemplateMetadataWithCategory> = {};
 
 			await Promise.all(
 				processedCategories.map(async ({ cards, name }) => {
-					const processedCards = await Promise.all(
-						cards.map((card) => processTemplateCard(card, name, templateStorage))
-					);
+					const processedCards = await Promise.all(cards.map((card) => processTemplateCard(card, name)));
 					processedCards.forEach((cardData) => {
 						templateMap[cardData.assetDirectory] = cardData;
 					});
@@ -171,7 +185,7 @@ const store = (set: any, get: any): TemplateState => ({
 			const uiErrorMessage = i18n.t("templates.failedToFetch", { ns: "stores" });
 			const logErrorMessage = i18n.t("templates.failedToFetchExtended", {
 				ns: "stores",
-				error: axios.isAxiosError(error) ? error?.response?.data : error?.response,
+				error: axios.isAxiosError(error) ? error?.response?.data : error?.response || error?.message,
 			});
 
 			LoggerService.error(namespaces.stores.templatesStore, logErrorMessage, true);
@@ -181,12 +195,13 @@ const store = (set: any, get: any): TemplateState => ({
 		}
 	},
 
-	findTemplateByAssetDirectory: (assetDirectory: string) => {
+	findTemplateByAssetDirectory: (assetDirectory) => {
 		return get().templateMap[assetDirectory];
 	},
 
-	getTemplateFiles: async (assetDirectory: string) => {
-		const { templateStorage } = get();
+	getFilesForTemplate: async (assetDirectory) => {
+		const { getTemplateStorage } = get();
+		const templateStorage = getTemplateStorage();
 
 		return await templateStorage.getTemplateFiles(assetDirectory);
 	},

@@ -23,8 +23,9 @@ export function useFileOperations(projectId: string) {
 		async (name: string, content: string) => {
 			try {
 				const contentUint8Array = new TextEncoder().encode(content);
-				await dbService.put(name, contentUint8Array);
-				const resources = await dbService.getAll();
+				await dbService.put(projectId, [{ name, content: contentUint8Array }]);
+				const resources = await dbService.getAll(projectId);
+				if (!resources) return;
 				const { error } = await ProjectsService.setResources(projectId, resources);
 				checkState(projectId!, { resources });
 				if (error) {
@@ -47,11 +48,14 @@ export function useFileOperations(projectId: string) {
 	);
 
 	const saveAllFiles = useCallback(
-		async (filesUint8ArrayContent: Record<string, Uint8Array>) => {
-			for (const [name, content] of Object.entries(filesUint8ArrayContent)) {
-				await dbService.put(name, content);
-			}
-			await ProjectsService.setResources(projectId, filesUint8ArrayContent);
+		async (files: Record<string, Uint8Array>) => {
+			const filesArray = Object.entries(files).map(([name, content]) => ({
+				name,
+				content: new TextEncoder().encode(content.toString()),
+			}));
+
+			await dbService.put(projectId, filesArray);
+			await ProjectsService.setResources(projectId, files);
 		},
 		[projectId]
 	);
@@ -60,9 +64,12 @@ export function useFileOperations(projectId: string) {
 		async (name: string) => {
 			try {
 				setFileList({ isLoading: true });
-				await dbService.delete(name);
+				const projectFiles = await dbService.getFilesByProjectId(projectId);
+				const updatedFiles = projectFiles.filter((file) => file.name !== name);
+				await dbService.put(projectId, updatedFiles);
 				closeOpenedFile(name);
-				const resources = await dbService.getAll();
+				const resources = await dbService.getAll(projectId);
+				if (!resources) return;
 				const { error } = await ProjectsService.setResources(projectId, resources);
 				setFileList({ isLoading: false, list: Object.keys(resources) });
 				checkState(projectId!, { resources });

@@ -42,8 +42,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 
 			return;
 		}
-		const byteArray = Array.from(resource);
-		setContent(new TextDecoder().decode(new Uint8Array(byteArray)));
+		setContent(new TextDecoder().decode(resource));
 	};
 
 	const location = useLocation();
@@ -73,6 +72,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	};
 
 	useEffect(() => {
+		if (!activeEditorFileName) return;
 		if (currentProjectId !== projectId) {
 			loadContent();
 

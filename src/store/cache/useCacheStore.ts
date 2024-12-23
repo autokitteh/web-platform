@@ -48,6 +48,7 @@ const initialState: Omit<
 	| "fetchResources"
 	| "initCache"
 	| "checkState"
+	| "reset"
 > = {
 	loading: {
 		deployments: false,
@@ -119,7 +120,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 	fetchResources: async (projectId, force) => {
 		const dbService = new IndexedDBService("ProjectDB", "resources");
 
-		const resourcesDB = await dbService.getAll();
+		const resourcesDB = await dbService.getAll(projectId);
 		const { currentProjectId } = get();
 
 		if (currentProjectId === projectId && !force) {
@@ -142,10 +143,11 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 				return;
 			}
-			await dbService.clearStore();
+			const files = [];
 			for (const [name, content] of Object.entries(resources || {})) {
-				await dbService.put(name, new Uint8Array(content));
+				files.push({ name, content: new Uint8Array(content) });
 			}
+			await dbService.put(projectId, files);
 
 			if (resources) {
 				get().checkState(projectId, { resources });
@@ -170,6 +172,14 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				loading: { ...state.loading, resourses: false },
 			}));
 		}
+	},
+
+	reset: async (type) => {
+		set((state) => ({
+			...state,
+			loading: { ...state.loading, [type]: false },
+			[type]: undefined,
+		}));
 	},
 
 	fetchDeployments: async (projectId, force) => {
