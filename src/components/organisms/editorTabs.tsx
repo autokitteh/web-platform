@@ -9,8 +9,7 @@ import { useLocation, useParams } from "react-router-dom";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
-import { useCacheStore, useToastStore } from "@src/store";
-import { useSharedBetweenProjectsStore } from "@src/store/useSharedBetweenProjectsStore";
+import { useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { cn, getAutoSavePreference } from "@utilities";
 
 import { useFileOperations } from "@hooks";
