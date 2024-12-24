@@ -129,16 +129,32 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			});
 
 			_editor.onDidChangeCursorPosition((event: monaco.editor.ICursorPositionChangedEvent) => {
-				if (!codeLoadedFirstTimeForCursor) {
-					setCursorPosition(projectId!, event.position);
+				if (codeLoadedFirstTimeForCursor) {
+					console.log("event", event.position);
 					setCodeLoadedFirstTimeForCursor(false);
+
+					return;
 				}
+				console.log("event2", event.position);
+
+				setCursorPosition(projectId!, event.position);
 			});
 		}
 	};
 
 	useEffect(() => {
+		setCodeLoadedFirstTime(true);
+	}, [location.pathname]);
+
+	useEffect(() => {
+		console.log("cursorPositionPerProject", cursorPositionPerProject);
+		console.log("projectId", projectId);
+
 		const cursorPosition = cursorPositionPerProject[projectId!];
+
+		console.log("cursorPosition", cursorPosition);
+		console.log("content", content);
+		console.log("codeLoadedFirstTime", codeLoadedFirstTime);
 
 		if (content && codeLoadedFirstTime && cursorPosition) {
 			const codeEditor = editorRef.current;

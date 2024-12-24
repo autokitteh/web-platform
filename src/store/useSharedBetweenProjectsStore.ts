@@ -13,8 +13,10 @@ const store: StateCreator<SharedBetweenProjectsStore> = (set) => ({
 	...defaultState,
 
 	setCursorPosition: (projectId, cursorPosition) => {
-		set((state) => {
+		return set((state) => {
 			state.cursorPositionPerProject[projectId] = cursorPosition;
+
+			console.log("cursorPositionPerProject", state.cursorPositionPerProject);
 
 			return state;
 		});
