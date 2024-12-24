@@ -32,8 +32,8 @@
 		"accountFetchError": "Error occurred during the account fetch, try again later",
 		"retentionPolicyTitle": "Retention Policy",
 		"retentionPolicyDescription": "We will keep your data for 3 days",
-		"codeManualSaveTitle": "File Editor",
-		"codeManualSaveDescription": "Enable manual save"
+		"codeAutoSaveTitle": "File Editor",
+		"codeAutoSaveLabel": "Code editing auto-save"
 	},
 	"topbar": {
 		"personalSettings": "Personal Settings",

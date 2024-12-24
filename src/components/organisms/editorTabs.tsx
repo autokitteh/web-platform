@@ -9,7 +9,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { useCacheStore, useToastStore } from "@src/store";
-import { cn } from "@utilities";
+import { cn, getAutoSavePreference } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
@@ -32,7 +32,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const [content, setContent] = useState("");
-	const manualSaveMode = localStorage.getItem("codeManualSave") === "true";
+	const autoSaveMode = getAutoSavePreference();
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 
@@ -231,7 +231,17 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 								title={lastSaved ? `${t("lastSaved")}:${lastSaved}` : ""}
 							>
 								<div className="inline-flex items-center gap-2 rounded-3xl border border-gray-1000 p-1">
-									{manualSaveMode ? (
+									{autoSaveMode ? (
+										<Button
+											className="py-1"
+											disabled={loadingSave}
+											onClick={() => debouncedManualSave(content)}
+											variant="flatText"
+										>
+											{loadingSave ? <Loader className="mr-1" size="sm" /> : null}
+											<Typography size="small">{t("autoSave")}</Typography>
+										</Button>
+									) : (
 										<Button
 											className="h-6 whitespace-nowrap px-4 py-1"
 											disabled={loadingSave}
@@ -241,16 +251,6 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 											<IconSvg className="fill-white" src={loadingSave ? Spinner : SaveIcon} />
 
 											<div className="mt-0.5">{t("buttons.save")}</div>
-										</Button>
-									) : (
-										<Button
-											className="py-1"
-											disabled={loadingSave}
-											onClick={() => debouncedManualSave(content)}
-											variant="flatText"
-										>
-											{loadingSave ? <Loader className="mr-1" size="sm" /> : null}
-											<Typography size="small">{t("autoSave")}</Typography>
 										</Button>
 									)}
 								</div>
@@ -272,7 +272,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 							className="absolute -ml-6 mt-2 h-full pb-5"
 							language={languageEditor}
 							loading={<Loader size="lg" />}
-							onChange={manualSaveMode ? () => {} : debouncedAutosave}
+							onChange={autoSaveMode ? debouncedAutosave : () => {}}
 							onMount={handleEditorDidMount}
 							options={{
 								fontFamily: "monospace, sans-serif",
