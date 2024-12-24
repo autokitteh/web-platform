@@ -1,3 +1,10 @@
+## [2.105.2](https://github.com/autokitteh/web-platform/compare/v2.105.1...v2.105.2) (2024-12-24)
+
+
+### Bug Fixes
+
+* **UI-1135:** user cant delete files ([#831](https://github.com/autokitteh/web-platform/issues/831)) ([af9d2ee](https://github.com/autokitteh/web-platform/commit/af9d2ee87eec6a8728e621117092136c0d4e47d2))
+
 ## [2.105.1](https://github.com/autokitteh/web-platform/compare/v2.105.0...v2.105.1) (2024-12-24)
 
 
