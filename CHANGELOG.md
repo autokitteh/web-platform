@@ -1,3 +1,10 @@
+## [2.105.3](https://github.com/autokitteh/web-platform/compare/v2.105.2...v2.105.3) (2024-12-24)
+
+
+### Bug Fixes
+
+* **UI-1133:** manual run config on deployments change ([#829](https://github.com/autokitteh/web-platform/issues/829)) ([5a589eb](https://github.com/autokitteh/web-platform/commit/5a589ebd6086a1e0ee5edb8669fed6a94f03748c))
+
 ## [2.105.2](https://github.com/autokitteh/web-platform/compare/v2.105.1...v2.105.2) (2024-12-24)
 
 
