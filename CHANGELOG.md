@@ -1,3 +1,10 @@
+# [2.105.0](https://github.com/autokitteh/web-platform/compare/v2.104.6...v2.105.0) (2024-12-24)
+
+
+### Features
+
+* improve keyboard shortcuts handle (UI-997)(UI-1120) ([#816](https://github.com/autokitteh/web-platform/issues/816)) ([2444581](https://github.com/autokitteh/web-platform/commit/244458133b46c03de59c3d4fc380871db1807ae6))
+
 ## [2.104.6](https://github.com/autokitteh/web-platform/compare/v2.104.5...v2.104.6) (2024-12-24)
 
 
