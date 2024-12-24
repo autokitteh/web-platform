@@ -64,9 +64,7 @@ export function useFileOperations(projectId: string) {
 		async (name: string) => {
 			try {
 				setFileList({ isLoading: true });
-				const projectFiles = await dbService.getFilesByProjectId(projectId);
-				const updatedFiles = projectFiles.filter((file) => file.name !== name);
-				await dbService.put(projectId, updatedFiles);
+				await dbService.delete(projectId, name);
 				closeOpenedFile(name);
 				const resources = await dbService.getAll(projectId);
 				if (!resources) return;

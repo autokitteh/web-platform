@@ -77,7 +77,7 @@ export class IndexedDBService {
 	async delete(projectId: string, name: string) {
 		await this.EnsureDBInitialized();
 		const items = await this.db.get(this.storeName, projectId);
-		const updatedFiles = items.filter((item: { name: string }) => item.name !== name);
+		const updatedFiles = items?.files?.filter((item: { name: string }) => item.name !== name);
 		await this.db.put(this.storeName, { projectId, files: updatedFiles });
 	}
 
