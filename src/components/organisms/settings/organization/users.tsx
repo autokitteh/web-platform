@@ -32,21 +32,21 @@ export const OrganizationUsersTable = () => {
 			<Table className="mt-6">
 				<THead>
 					<Tr>
-						<Th className="w-1/4 pl-4">{t("table.headers.name")}</Th>
-						<Th className="w-1/4">{t("table.headers.email")}</Th>
-						<Th className="w-1/4">{t("table.headers.status")}</Th>
-						<Th className="w-1/4">{t("table.headers.role")}</Th>
-						<Th className="w-1/4 justify-end pr-4">{t("table.headers.actions")}</Th>
+						<Th className="w-1/5 pl-4">{t("table.headers.name")}</Th>
+						<Th className="w-2/6">{t("table.headers.email")}</Th>
+						<Th className="w-1/5">{t("table.headers.status")}</Th>
+						<Th className="w-1/6">{t("table.headers.role")}</Th>
+						<Th className="w-1/8 justify-end pr-4">{t("table.headers.actions")}</Th>
 					</Tr>
 				</THead>
 
 				<TBody>
 					<Tr className="hover:bg-gray-1300">
-						<Td className="w-1/4 cursor-pointer pl-4">xxxx</Td>
-						<Td className="w-1/4 cursor-pointer">@mail</Td>
-						<Td className="w-1/4 cursor-pointer">Invite sent / active</Td>
-						<Td className="w-1/4 cursor-pointer">Admin</Td>
-						<Td className="w-1/4 cursor-pointer gap-1">
+						<Td className="w-1/5 cursor-pointer pl-4">xxxx</Td>
+						<Td className="w-2/6 cursor-pointer">@mail</Td>
+						<Td className="w-1/5 cursor-pointer">Invite sent / active</Td>
+						<Td className="w-1/6 cursor-pointer">Admin</Td>
+						<Td className="w-1/8 cursor-pointer gap-1">
 							<div className="flex">
 								<IconButton className="ml-auto mr-1" title={t("table.actions.resendInvite")}>
 									<RotateRightIcon className="size-4 fill-white" />
