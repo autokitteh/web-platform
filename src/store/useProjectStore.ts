@@ -1,4 +1,5 @@
 import i18n from "i18next";
+import isEqual from "lodash/isEqual";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -203,6 +204,10 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 			set((state) => ({ ...state, isLoadingProjectsList: false, projectsList: [] }));
 
 			return { data: undefined, error };
+		}
+
+		if (isEqual(projects, projectsList)) {
+			return { data: projectsList, error: undefined };
 		}
 
 		set((state) => ({ ...state, projectsList: projects, isLoadingProjectsList: false }));
