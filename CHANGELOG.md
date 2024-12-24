@@ -1,3 +1,5 @@
+## [2.104.5](https://github.com/autokitteh/web-platform/compare/v2.104.4...v2.104.5) (2024-12-24)
+
 ## [2.104.4](https://github.com/autokitteh/web-platform/compare/v2.104.3...v2.104.4) (2024-12-23)
 
 
