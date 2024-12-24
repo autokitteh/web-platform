@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { version } from "@constants";
 import { ModalName } from "@enums/components";
+import { getAutoSavePreference } from "@src/utilities";
 
 import { useModalStore, useToastStore, useUserStore } from "@store";
 
@@ -17,8 +18,8 @@ export const Profile = () => {
 	const { getLoggedInUser, user } = useUserStore();
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const codeManualSave = localStorage.getItem("codeManualSave") === "true";
-	const [codeManualSaveChecked, setcodeManualSaveChecked] = useState(!!codeManualSave);
+	const codeAutoSave = getAutoSavePreference();
+	const [codeAutoSaveChecked, setCodeAutoSaveChecked] = useState(!!codeAutoSave);
 
 	const loadUser = async () => {
 		const error = await getLoggedInUser();
@@ -46,9 +47,9 @@ export const Profile = () => {
 		openModal(ModalName.deleteAccount, {});
 	};
 
-	const handleCodeManualSaveChange = (checked: boolean) => {
-		localStorage.setItem("codeManualSave", checked.toString());
-		setcodeManualSaveChecked(checked);
+	const handleCodeAutoSaveChange = (checked: boolean) => {
+		localStorage.setItem("codeAutoSave", checked.toString());
+		setCodeAutoSaveChecked(checked);
 	};
 
 	return (
@@ -75,16 +76,16 @@ export const Profile = () => {
 				{t("retentionPolicyDescription")}
 			</Typography>
 			<Typography className="mt-9" element="p">
-				{t("codeManualSaveTitle")}
+				{t("codeAutoSaveTitle")}
 			</Typography>
 			<Typography className="mt-1.5" element="p" size="1.5xl">
 				<Checkbox
-					checked={!!codeManualSaveChecked}
+					checked={!!codeAutoSaveChecked}
 					className="-ml-2"
 					isLoading={false}
-					label={t("codeManualSaveDescription")}
+					label={t("codeAutoSaveLabel")}
 					labelClassName="text-1.5xl"
-					onChange={handleCodeManualSaveChange}
+					onChange={handleCodeAutoSaveChange}
 				/>
 			</Typography>
 			<div className="mt-9">
