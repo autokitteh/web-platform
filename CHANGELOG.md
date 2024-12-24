@@ -1,3 +1,10 @@
+## [2.105.1](https://github.com/autokitteh/web-platform/compare/v2.105.0...v2.105.1) (2024-12-24)
+
+
+### Bug Fixes
+
+* **UI-1134:** loader stuck when no projects for user ([#830](https://github.com/autokitteh/web-platform/issues/830)) ([a41fa91](https://github.com/autokitteh/web-platform/commit/a41fa911999fc627b768ce0634df24048e58660b))
+
 # [2.105.0](https://github.com/autokitteh/web-platform/compare/v2.104.6...v2.105.0) (2024-12-24)
 
 
