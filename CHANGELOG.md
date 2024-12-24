@@ -1,3 +1,10 @@
+## [2.104.6](https://github.com/autokitteh/web-platform/compare/v2.104.5...v2.104.6) (2024-12-24)
+
+
+### Performance Improvements
+
+* **UI-1132:** load deployments in projects table once instead of twice ([#828](https://github.com/autokitteh/web-platform/issues/828)) ([7a2549e](https://github.com/autokitteh/web-platform/commit/7a2549e6a80e27760766706e96ee660a2f758427))
+
 ## [2.104.5](https://github.com/autokitteh/web-platform/compare/v2.104.4...v2.104.5) (2024-12-24)
 
 ## [2.104.4](https://github.com/autokitteh/web-platform/compare/v2.104.3...v2.104.4) (2024-12-23)
