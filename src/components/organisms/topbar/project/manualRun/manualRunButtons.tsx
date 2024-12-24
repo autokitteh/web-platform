@@ -21,9 +21,9 @@ export const ManualRunButtons = () => {
 	const { fetchDeployments } = useCacheStore();
 	const [savingManualRun, setSavingManualRun] = useState(false);
 
-	const { entrypointFunction, isManualRunEnabled, lastDeploymentStore, saveProjectManualRun } = useManualRunStore(
+	const { activeDeploymentStore, entrypointFunction, isManualRunEnabled, saveProjectManualRun } = useManualRunStore(
 		(state) => ({
-			lastDeploymentStore: state.projectManualRun[projectId!]?.lastDeployment,
+			activeDeploymentStore: state.projectManualRun[projectId!]?.activeDeployment,
 			entrypointFunction: state.projectManualRun[projectId!]?.entrypointFunction,
 			isManualRunEnabled: state.projectManualRun[projectId!]?.isManualRunEnabled,
 			saveProjectManualRun: state.saveAndExecuteManualRun,
@@ -54,7 +54,7 @@ export const ManualRunButtons = () => {
 			addToast({
 				message: (
 					<ManualRunSuccessToastMessage
-						deploymentId={lastDeploymentStore?.deploymentId}
+						deploymentId={activeDeploymentStore?.deploymentId}
 						projectId={projectId}
 						sessionId={sessionId}
 					/>

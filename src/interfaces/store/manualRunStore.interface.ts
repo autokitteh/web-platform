@@ -9,7 +9,7 @@ export interface ManualProjectData {
 	entrypointFunction: { label: string; value: string };
 	params: { key: string; value: string }[];
 	isJson: boolean;
-	lastDeployment?: Deployment;
+	activeDeployment?: Deployment;
 	selectedEntrypoint?: SessionEntrypoint;
 	isManualRunEnabled?: boolean;
 }

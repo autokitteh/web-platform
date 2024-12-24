@@ -33,7 +33,7 @@ export const ManualRunSettingsDrawer = () => {
 		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
 	}));
 
-	const { entrypointFunction, fileOptions, filePath, files, lastDeployment, params } = projectManualRun || {};
+	const { activeDeployment, entrypointFunction, fileOptions, filePath, files, params } = projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
@@ -108,7 +108,7 @@ export const ManualRunSettingsDrawer = () => {
 		addToast({
 			message: (
 				<ManualRunSuccessToastMessage
-					deploymentId={lastDeployment?.deploymentId}
+					deploymentId={activeDeployment?.deploymentId}
 					projectId={projectId}
 					sessionId={sessionId}
 				/>

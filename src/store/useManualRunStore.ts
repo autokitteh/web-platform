@@ -34,7 +34,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 			return;
 		}
-		if (activeDeployment.buildId === get().projectManualRun[projectId]?.lastDeployment?.buildId) {
+		if (activeDeployment.buildId === get().projectManualRun[projectId]?.activeDeployment?.buildId) {
 			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: true });
 
 			return;
@@ -57,14 +57,14 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 		get().updateManualRunConfiguration(projectId!, {
 			files,
-			lastDeployment: activeDeployment,
+			activeDeployment,
 			isManualRunEnabled: true,
 		});
 	},
 
 	updateManualRunConfiguration: (
 		projectId,
-		{ entrypointFunction, filePath, files, isJson, isManualRunEnabled, lastDeployment, params }
+		{ activeDeployment, entrypointFunction, filePath, files, isJson, isManualRunEnabled, params }
 	) => {
 		set((state) => {
 			const projectData = {
@@ -92,7 +92,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				...(filePath && { filePath }),
 				...(entrypointFunction !== undefined && { entrypointFunction }),
 				...(params && { params: [...params] }),
-				...(lastDeployment && { lastDeployment }),
+				...(activeDeployment && { activeDeployment }),
 				...(isJson !== undefined && { isJson }),
 			});
 
@@ -105,10 +105,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	saveAndExecuteManualRun: async (projectId, params) => {
 		const project = get().projectManualRun[projectId];
 
-		if (!project?.lastDeployment) {
+		if (!project?.activeDeployment) {
 			return {
 				data: undefined,
-				error: i18n.t("history.manualRun.missingLastDeployment", { ns: "deployments" }),
+				error: i18n.t("history.manualRun.missingactiveDeployment", { ns: "deployments" }),
 			};
 		}
 
@@ -122,8 +122,8 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		);
 
 		const sessionArgs = {
-			buildId: project.lastDeployment.buildId,
-			deploymentId: project.lastDeployment.deploymentId,
+			buildId: project.activeDeployment.buildId,
+			deploymentId: project.activeDeployment.deploymentId,
 			entrypoint: {
 				col: 0,
 				row: 0,
