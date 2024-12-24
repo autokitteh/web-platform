@@ -89,7 +89,7 @@ export const ManualRunButtons = () => {
 				/>
 			</Button>
 
-			<div className="w-0.5 bg-gray-750 transition" />
+			<div className="w-px bg-gray-750 transition" />
 
 			<Button
 				ariaLabel={t("manual")}

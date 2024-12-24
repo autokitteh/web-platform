@@ -30,20 +30,30 @@ export const DashboardTopbar = () => {
 					{t("welcome")}
 				</Typography>
 
-				<div className="flex rounded-full border border-gray-750 font-averta text-base font-semibold">
+				<div className="relative flex h-8 gap-1.5 self-center rounded-3xl border border-gray-750 p-1 transition hover:border-white">
 					<Button
-						className="gap-2.5 whitespace-nowrap rounded-none rounded-l-full border-r border-gray-750 px-3 py-2.5"
+						ariaLabel={t("buttons.newProject")}
+						className="group h-full gap-2 whitespace-nowrap p-1 hover:bg-gray-1050 active:bg-black"
 						onClick={() => openModal(ModalName.newProject)}
-						variant="filled"
+						title={t("buttons.newProject")}
+						variant="light"
 					>
-						<IconSvg className="fill-white" size="lg" src={PlusAccordionIcon} />
+						<IconSvg
+							className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
+							src={PlusAccordionIcon}
+						/>
 						{t("buttons.newProject")}
 					</Button>
+
+					<div className="w-px bg-gray-750 transition" />
+
 					<Button
-						className="gap-2.5 whitespace-nowrap rounded-none rounded-r-full px-3 py-2.5"
+						ariaLabel={t("buttons.import")}
+						className="group h-full gap-2 whitespace-nowrap hover:bg-gray-1050 active:bg-black"
 						disabled={loadingImportFile}
 						onClick={triggerFileInput}
-						variant="filled"
+						title={t("buttons.import")}
+						variant="light"
 					>
 						{t("buttons.import")}
 					</Button>
