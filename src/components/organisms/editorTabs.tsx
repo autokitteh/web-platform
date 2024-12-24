@@ -55,6 +55,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			return;
 		}
 		setContent(new TextDecoder().decode(resource));
+		initialContentRef.current = new TextDecoder().decode(resource);
 	};
 
 	const location = useLocation();
