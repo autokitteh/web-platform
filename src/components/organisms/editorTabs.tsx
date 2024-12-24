@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
 import { debounce, last } from "lodash";
 import moment from "moment";
+import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
 import { useLocation, useParams } from "react-router-dom";
 
@@ -35,6 +36,17 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const autoSaveMode = getAutoSavePreference();
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
+	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+	const initialContentRef = useRef("");
+	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
+
+	useEffect(() => {
+		if (content && isFirstContentLoad) {
+			initialContentRef.current = content;
+			setIsFirstContentLoad(false);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [content]);
 
 	const updateContentFromResource = (resource?: Uint8Array) => {
 		if (!resource) {
@@ -43,6 +55,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			return;
 		}
 		setContent(new TextDecoder().decode(resource));
+		initialContentRef.current = new TextDecoder().decode(resource);
 	};
 
 	const location = useLocation();
@@ -97,8 +110,21 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		});
 	};
 
-	const handleEditorDidMount = (_editor: unknown, monaco: Monaco) => {
+	const handleEditorDidMount = (_editor: monaco.editor.IStandaloneCodeEditor, monaco: Monaco) => {
 		monaco.editor.setTheme("myCustomTheme");
+		editorRef.current = _editor;
+		const model = _editor.getModel();
+		if (model) {
+			model.pushEditOperations([], [], () => null);
+
+			_editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => {
+				const currentContent = model.getValue();
+
+				if (currentContent !== initialContentRef.current) {
+					_editor.trigger("keyboard", "undo", null);
+				}
+			});
+		}
 	};
 
 	const updateContent = async (newContent?: string) => {
@@ -158,19 +184,31 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debouncedAutosave = useCallback(debounce(updateContent, 1500), [projectId, activeEditorFileName]);
 
+	const keydownListenerRef = useRef<((event: KeyboardEvent) => void) | null>(null);
+
 	useEffect(() => {
-		const handler = (event: KeyboardEvent) => {
-			if ((event.ctrlKey && event.key === "s") || (event.metaKey && event.key === "s")) {
-				debouncedManualSave(content);
+		if (keydownListenerRef.current) {
+			document.removeEventListener("keydown", keydownListenerRef.current);
+		}
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "s" && (navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) {
 				event.preventDefault();
+				debouncedManualSave(content);
 			}
 		};
-		window.addEventListener("keydown", handler);
+
+		keydownListenerRef.current = handleKeyDown;
+
+		document.addEventListener("keydown", handleKeyDown, false);
 
 		return () => {
-			window.removeEventListener("keydown", handler);
+			if (keydownListenerRef.current) {
+				document.removeEventListener("keydown", keydownListenerRef.current);
+			}
 		};
-	}, [content, debouncedManualSave]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [content]);
 
 	const activeCloseIcon = (fileName: string) => {
 		const isActiveFile = openFiles[projectId!].find(({ isActive, name }) => name === fileName && isActive);
