@@ -11,7 +11,7 @@ import { dateTimeFormat, namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useManualRunStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { IdCopyButton, SortButton } from "@components/molecules";
@@ -36,6 +36,7 @@ export const DeploymentsTableContent = ({
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { t: tSessionsStats } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 	const { setLatestOpened } = useProjectStore();
+	const { fetchManualRunConfiguration } = useManualRunStore();
 
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
 		event.stopPropagation();
@@ -70,6 +71,8 @@ export const DeploymentsTableContent = ({
 
 				return;
 			}
+
+			fetchManualRunConfiguration(projectId!);
 
 			if (action === "activate") {
 				addToast({

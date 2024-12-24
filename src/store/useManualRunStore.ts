@@ -34,16 +34,22 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			return;
 		}
 
-		const lastDeployment = deployments[0];
+		const activeDeployment = deployments.find((deployment) => deployment.state === DeploymentStateVariant.active);
 
-		if (lastDeployment.buildId === get().projectManualRun[projectId]?.lastDeployment?.buildId) {
+		if (!activeDeployment) {
+			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: false });
+
+			return;
+		}
+
+		if (activeDeployment.buildId === get().projectManualRun[projectId]?.lastDeployment?.buildId) {
 			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: true });
 
 			return;
 		}
 
 		const { data: buildDescription, error: buildDescriptionError } = await BuildsService.getBuildDescription(
-			lastDeployment.buildId
+			activeDeployment.buildId
 		);
 
 		if (buildDescriptionError) {
@@ -57,7 +63,11 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const buildInfo = JSON.parse(buildDescription!);
 		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
 
-		get().updateManualRunConfiguration(projectId!, { files, lastDeployment, isManualRunEnabled: true });
+		get().updateManualRunConfiguration(projectId!, {
+			files,
+			lastDeployment: activeDeployment,
+			isManualRunEnabled: true,
+		});
 	},
 
 	updateManualRunConfiguration: (
