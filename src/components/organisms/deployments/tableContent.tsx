@@ -24,7 +24,7 @@ export const DeploymentsTableContent = ({
 	updateDeployments,
 }: {
 	deployments: Deployment[];
-	updateDeployments: () => void;
+	updateDeployments: () => Promise<void | Deployment[]>;
 }) => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history" });
 	const navigate = useNavigate();
@@ -72,8 +72,6 @@ export const DeploymentsTableContent = ({
 				return;
 			}
 
-			fetchManualRunConfiguration(projectId!);
-
 			if (action === "activate") {
 				addToast({
 					message: t("actions.deploymentActivatedSuccessfully"),
@@ -105,7 +103,8 @@ export const DeploymentsTableContent = ({
 				);
 			}
 
-			updateDeployments();
+			await updateDeployments();
+			fetchManualRunConfiguration(projectId!);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]

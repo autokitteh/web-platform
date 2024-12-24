@@ -27,21 +27,13 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 	fetchManualRunConfiguration: async (projectId: string) => {
 		const deployments = useCacheStore.getState().deployments;
+		const activeDeployment = deployments?.find((deployment) => deployment.state === DeploymentStateVariant.active);
 
-		if (!deployments?.length || deployments[0].state !== DeploymentStateVariant.active) {
+		if (!deployments?.length || !activeDeployment) {
 			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: false });
 
 			return;
 		}
-
-		const activeDeployment = deployments.find((deployment) => deployment.state === DeploymentStateVariant.active);
-
-		if (!activeDeployment) {
-			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: false });
-
-			return;
-		}
-
 		if (activeDeployment.buildId === get().projectManualRun[projectId]?.lastDeployment?.buildId) {
 			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: true });
 
