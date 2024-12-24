@@ -82,7 +82,7 @@ export const ProjectTopbarButtons = () => {
 				return;
 			}
 			await fetchDeployments(projectId!, true);
-			await fetchManualRunConfiguration(projectId!);
+			fetchManualRunConfiguration(projectId!);
 			addToast({
 				message: t("topbar.deployedProjectSuccess"),
 				type: "success",
