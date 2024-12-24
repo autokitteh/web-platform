@@ -37,7 +37,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-	const initialContentRef = useRef<string>("");
+	const initialContentRef = useRef("");
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 
 	useEffect(() => {
