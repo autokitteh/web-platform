@@ -99,7 +99,7 @@ export const EventsTable = () => {
 	const handleRefresh = useCallback(() => fetchEvents(true) as Promise<void | Deployment[]>, []);
 
 	return (
-		<div className="my-2 flex size-full">
+		<div className="flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex justify-end">

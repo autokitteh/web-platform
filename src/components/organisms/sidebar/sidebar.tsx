@@ -24,7 +24,7 @@ import { CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon } from "@assets
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { logoutFunction, user } = useUserStore();
-	const { isLoggerEnabled, isNewLogs, toggleLogger } = useLoggerStore();
+	const { isNewLogs, setSystemLogHeight, systemLogHeight } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar");
 
@@ -120,7 +120,7 @@ export const Sidebar = () => {
 						<Button
 							ariaLabel={t("systemLog")}
 							className="p-0 hover:bg-green-200"
-							onClick={() => toggleLogger(!isLoggerEnabled)}
+							onClick={() => setSystemLogHeight(systemLogHeight < 1 ? 20 : 0)}
 							title={t("systemLog")}
 						>
 							<div className="flex size-10 items-center justify-center">

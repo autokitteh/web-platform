@@ -15,7 +15,7 @@ import { Close, ExternalLinkIcon } from "@assets/image/icons";
 
 export const Toast = () => {
 	const { removeToast, toasts } = useToastStore();
-	const { toggleLogger } = useLoggerStore();
+	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();
 	const { t } = useTranslation("toasts");
 	const toastRefs = useRef<(HTMLDivElement | null)[]>([]);
 	const timerRefs = useRef<{ [id: string]: NodeJS.Timeout }>({});
@@ -120,7 +120,7 @@ export const Toast = () => {
 								{type === "error" ? (
 									<Button
 										className="cursor-pointer gap-1.5 p-0 font-medium text-error underline"
-										onClick={() => toggleLogger(true)}
+										onClick={() => setSystemLogHeight(systemLogHeight > 0 ? systemLogHeight : 20)}
 									>
 										{t("showMore")}
 										<ExternalLinkIcon className="size-3.5 fill-error duration-200" />
