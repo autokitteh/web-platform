@@ -11,7 +11,7 @@ import { Frame, IconButton, Typography } from "@components/atoms";
 import { Close, TrashIcon } from "@assets/image/icons";
 
 export const SystemLog = () => {
-	const { clearLogs, logs, toggleLogger } = useLoggerStore();
+	const { clearLogs, logs, setSystemLogHeight } = useLoggerStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
 	const ouputTextStyle = {
@@ -38,7 +38,7 @@ export const SystemLog = () => {
 					</IconButton>
 					<IconButton
 						className="size-7 bg-gray-1100 p-0.5 hover:bg-gray-1050"
-						onClick={() => toggleLogger(false)}
+						onClick={() => setSystemLogHeight(0)}
 					>
 						<Close className="size-3 fill-white" />
 					</IconButton>

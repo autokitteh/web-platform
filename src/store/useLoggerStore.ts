@@ -8,11 +8,12 @@ import { LoggerStore } from "@interfaces/store";
 
 const store: StateCreator<LoggerStore> = (set) => ({
 	logs: [],
-	isLoggerEnabled: false,
 	isNewLogs: false,
-	addLog: (log) =>
+	systemLogHeight: 0,
+
+	addLog: (log) => {
+		const newLog = { ...log, id: randomatic("Aa0", 5) };
 		set((state) => {
-			const newLog = { ...log, id: randomatic("Aa0", 5) };
 			const updatedLogs = [newLog, ...state.logs];
 			if (updatedLogs.length > maxLogs) {
 				updatedLogs.splice(maxLogs);
@@ -20,15 +21,21 @@ const store: StateCreator<LoggerStore> = (set) => ({
 
 			const shouldDisplayNotification = log.status === "ERROR" || log.status === "WARNING";
 
-			return { logs: updatedLogs, isNewLogs: !state.isLoggerEnabled && shouldDisplayNotification };
-		}),
+			return {
+				logs: updatedLogs,
+				isNewLogs: state.systemLogHeight < 1 && shouldDisplayNotification,
+			};
+		});
+	},
+
 	clearLogs: () =>
 		set(() => ({
 			logs: [],
 		})),
-	toggleLogger: (enabled) =>
+
+	setSystemLogHeight: (height) =>
 		set(() => ({
-			isLoggerEnabled: enabled,
+			systemLogHeight: height,
 			isNewLogs: false,
 		})),
 });

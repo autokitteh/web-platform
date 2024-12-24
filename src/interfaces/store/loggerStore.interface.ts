@@ -10,8 +10,8 @@ interface Log {
 export interface LoggerStore {
 	addLog: (log: Omit<Log, "id">) => void;
 	clearLogs: () => void;
-	toggleLogger: (enabled: boolean) => void;
+	setSystemLogHeight: (height: number) => void;
+	systemLogHeight: number;
 	logs: Log[];
-	isLoggerEnabled: boolean;
 	isNewLogs: boolean;
 }
