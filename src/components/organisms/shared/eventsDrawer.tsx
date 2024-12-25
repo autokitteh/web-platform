@@ -1,36 +1,47 @@
 import React, { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
+import { EventsTable } from "../events";
 import { DrawerName } from "@src/enums/components";
 
+import { IconButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
+
+import { Close } from "@assets/image/icons";
 
 export const EventsDrawer = () => {
 	const navigate = useNavigate();
-
 	const [isOpen, setIsOpen] = useState(false);
+	const { projectId } = useParams();
+
 	useEffect(() => {
-		setIsOpen(location.pathname.endsWith("/events"));
+		setIsOpen(location.pathname.includes("/events"));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location.pathname]);
-
-	const backURL = window.location.pathname.split("/").slice(0, -2).join("/");
 
 	const closeAndNavigate = () => {
 		setIsOpen(false);
 		setTimeout(() => {
-			navigate(backURL);
-		}, 300);
+			navigate(`/projects/${projectId}/triggers`);
+		}, 500);
 	};
 
 	return (
-		<Drawer className="p-10" forcedOpen={isOpen} name={DrawerName.events} variant="dark" wrapperClassName="w-2/3">
-			<button onClick={closeAndNavigate}>Close</button>
-			<div className="flex size-full">
-				<div className="h-full w-1/2 bg-blue-500" />
-				<div className="h-full w-1/2 bg-green-200" />
+		<Drawer
+			className="relative p-0"
+			forcedOpen={isOpen}
+			name={DrawerName.events}
+			variant="dark"
+			wrapperClassName="w-2/3"
+		>
+			<div className="absolute left-5 top-2 z-10">
+				<IconButton className="group h-default-icon w-default-icon bg-gray-700 p-0" onClick={closeAndNavigate}>
+					<Close className="size-3 fill-white" />
+				</IconButton>
 			</div>
+
+			<EventsTable />
 		</Drawer>
 	);
 };

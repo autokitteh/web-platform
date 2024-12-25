@@ -124,6 +124,8 @@ export const App = () => {
 						<Route element={<AddConnection />} path="add" />
 
 						<Route element={<EditConnection />} path=":connectionId/edit" />
+						<Route element={<TriggersTable />} path=":connectionId/events" />
+						<Route element={<EventViewer />} path=":connectionId/events/:eventId" />
 
 						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
@@ -137,6 +139,7 @@ export const App = () => {
 
 						<Route element={<EditTrigger />} path=":triggerId/edit" />
 						<Route element={<TriggersTable />} path=":triggerId/events" />
+						<Route element={<EventViewer />} path=":triggerId/events/:eventId" />
 
 						<Route element={<EditTrigger />} path=":triggerId/edit" />
 
