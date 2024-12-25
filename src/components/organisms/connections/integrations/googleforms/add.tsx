@@ -27,7 +27,7 @@ export const GoogleFormsIntegrationAddForm = ({
 	const {
 		createConnection,
 		errors,
-		handleGoogleOauth,
+		handleCustomOauth,
 		handleSubmit,
 		isLoading,
 		register,
@@ -44,7 +44,7 @@ export const GoogleFormsIntegrationAddForm = ({
 				await createConnection(connectionId, ConnectionAuthType.JsonKey, defaultGoogleConnectionName);
 				break;
 			case ConnectionAuthType.Oauth:
-				await handleGoogleOauth(connectionId);
+				await handleCustomOauth(connectionId, defaultGoogleConnectionName);
 				break;
 			default:
 				break;

@@ -91,4 +91,10 @@ export const asanaIntegrationSchema = z.object({
 	pat: z.string().min(1, "PAT is required"),
 });
 
+export const auth0IntegrationSchema = z.object({
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client Secret is required"),
+	auth0_domain: z.string().min(1, "Domain is required").url({ message: "Invalid url" }),
+});
+
 export const oauthSchema = z.object({});

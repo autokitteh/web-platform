@@ -10,6 +10,7 @@ import { ZodObject, ZodRawShape } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
+import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations, ModalName, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
@@ -361,7 +362,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		}
 	};
 
-	const handleGoogleOauth = async (oauthConnectionId: string) => {
+	const handleCustomOauth = async (oauthConnectionId: string, integrationName: string) => {
 		setIsLoading(true);
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
@@ -372,12 +373,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			});
 
 			const { connectionData } = getFormattedConnectionData(getValues, formSchema);
-			const specificKeys = ["auth_scopes", "cal_id", "form_id"];
-
-			const urlParams = getSpecificParams(connectionData, specificKeys);
+			const urlParams = getSpecificParams(
+				connectionData,
+				integrationDataKeys[integrationName.toString() as keyof typeof integrationDataKeys]
+			);
 
 			openPopup(
-				`${apiBaseUrl}/${defaultGoogleConnectionName}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
+				`${apiBaseUrl}/${integrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);
@@ -387,6 +389,53 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				message: tErrors("errorCreatingNewConnection"),
 				type: "error",
 			});
+
+			LoggerService.error(
+				namespaces.hooks.connectionForm,
+				tErrors("errorCreatingNewConnectionExtended", { error })
+			);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleAuth0Oauth = async (oauthConnectionId: string) => {
+		setIsLoading(true);
+		try {
+			await VariablesService.setByConnectiontId(oauthConnectionId, {
+				name: "auth_type",
+				value: ConnectionAuthType.Oauth,
+				isSecret: false,
+				scopeId: oauthConnectionId,
+			});
+
+			const { connectionData } = getFormattedConnectionData(getValues, formSchema);
+
+			const specificKeys = ["cid", "client_id", "client_secret", "auth0_domain"];
+
+			const urlParams = getSpecificParams(connectionData, specificKeys);
+
+			openPopup(
+				`${apiBaseUrl}/auth0/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
+				"Authorize"
+			);
+			startCheckingStatus(oauthConnectionId);
+			navigate(`/projects/${projectId}/connections`);
+		} catch (error) {
+			addToast({
+				message: tErrors("errorCreatingNewConnection"),
+				type: "error",
+			});
+
+			if (axios.isAxiosError(error)) {
+				LoggerService.error(
+					namespaces.hooks.connectionForm,
+					tErrors("errorCreatingNewConnectionExtended", { error: error?.response?.data })
+				);
+				setIsLoading(false);
+
+				return;
+			}
 
 			LoggerService.error(
 				namespaces.hooks.connectionForm,
@@ -449,7 +498,8 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		connectionName,
 		setValidationSchema,
 		clearErrors,
-		handleGoogleOauth,
+		handleCustomOauth,
 		setConnectionType,
+		handleAuth0Oauth,
 	};
 };
