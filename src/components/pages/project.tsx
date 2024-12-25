@@ -52,7 +52,7 @@ export const Project = () => {
 	}, [location.pathname]);
 
 	const displayTabs = useMemo(
-		() => calculatePathDepth(location.pathname) < 4 || location.pathname.endsWith("events"),
+		() => calculatePathDepth(location.pathname) < 4 || location.pathname.includes("events"),
 		[location.pathname]
 	);
 

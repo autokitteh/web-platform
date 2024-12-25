@@ -4,10 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
-import { TableHeader } from "./table/header";
-import { NoEventsSelected } from "./table/notSelected";
-import { EventRow } from "./table/row";
-import { VirtualizedList } from "./table/virtualizer";
 import { useResize, useSort } from "@src/hooks";
 import { useCacheStore } from "@src/store";
 import { BaseEvent, Deployment } from "@src/types/models";
@@ -15,6 +11,10 @@ import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
+import { TableHeader } from "@components/organisms/events/table/header";
+import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
+import { EventRow } from "@components/organisms/events/table/row";
+import { VirtualizedList } from "@components/organisms/events/table/virtualizer";
 
 export const EventsTable = () => {
 	const { t } = useTranslation("events");
@@ -27,13 +27,20 @@ export const EventsTable = () => {
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
-	const { eventId } = useParams();
+	const { connectionId, eventId, projectId, triggerId } = useParams();
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
 	const navigate = useNavigate();
+
+	const projectEventId = triggerId || connectionId;
 
 	useEffect(() => {
 		if (isInitialLoad) {
 			setIsInitialLoad(false);
+		}
+		if (projectEventId) {
+			fetchEvents(true, projectEventId);
+
+			return;
 		}
 		fetchEvents();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -56,10 +63,22 @@ export const EventsTable = () => {
 			const event = sortedEvents[index];
 
 			return (
-				<EventRow event={event} key={key} onClick={() => navigate(`/events/${event.eventId}`)} style={style} />
+				<EventRow
+					event={event}
+					key={key}
+					onClick={() =>
+						navigate(
+							projectEventId
+								? `/projects/${projectId}/triggers/${triggerId}/events/${event.eventId}`
+								: `/events/${event.eventId}`
+						)
+					}
+					style={style}
+				/>
 			);
 		},
-		[sortedEvents, navigate]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[projectEventId, sortedEvents, navigate]
 	);
 
 	const tableContent = useMemo(() => {
@@ -96,7 +115,7 @@ export const EventsTable = () => {
 	}, [isInitialLoad, sortedEvents]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const handleRefresh = useCallback(() => fetchEvents(true) as Promise<void | Deployment[]>, []);
+	const handleRefresh = useCallback(() => fetchEvents(true, triggerId) as Promise<void | Deployment[]>, []);
 
 	return (
 		<div className="flex size-full">

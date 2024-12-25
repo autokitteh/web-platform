@@ -276,7 +276,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	fetchEvents: async (force?: boolean) => {
+	fetchEvents: async (force, destinationId) => {
 		const { events } = get();
 		if (events && !force) {
 			return events;
@@ -288,7 +288,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: incomingEvents, error } = await EventsService.list(maxResultsLimitToDisplay);
+			const { data: incomingEvents, error } = await EventsService.list(maxResultsLimitToDisplay, destinationId);
 
 			if (error) {
 				const errorMsg = i18n.t("errorFetchingEvents", { ns: "errors" });

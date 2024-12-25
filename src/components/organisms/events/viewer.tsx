@@ -20,10 +20,23 @@ export const EventViewer = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [eventInfo, setEventInfo] = useState<EnrichedEvent | null>(null);
 
-	const { eventId } = useParams();
+	const { connectionId, eventId, triggerId } = useParams();
 	const navigate = useNavigate();
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const closeViewer = useCallback(() => navigate(`/events`), []);
+	const projectEventId = triggerId || connectionId;
+
+	const closeViewer = useCallback(() => {
+		if (!projectEventId) {
+			navigate("/events");
+
+			return;
+		}
+
+		const parts = location.pathname.split("/");
+		parts.pop();
+		const newPath = parts.join("/");
+		navigate(newPath);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.pathname]);
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("events", { keyPrefix: "viewer" });
 	const { t: tErrors } = useTranslation("errors");
