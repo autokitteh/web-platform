@@ -399,53 +399,6 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		}
 	};
 
-	const handleAuth0Oauth = async (oauthConnectionId: string) => {
-		setIsLoading(true);
-		try {
-			await VariablesService.setByConnectiontId(oauthConnectionId, {
-				name: "auth_type",
-				value: ConnectionAuthType.Oauth,
-				isSecret: false,
-				scopeId: oauthConnectionId,
-			});
-
-			const { connectionData } = getFormattedConnectionData(getValues, formSchema);
-
-			const specificKeys = ["cid", "client_id", "client_secret", "auth0_domain"];
-
-			const urlParams = getSpecificParams(connectionData, specificKeys);
-
-			openPopup(
-				`${apiBaseUrl}/auth0/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
-				"Authorize"
-			);
-			startCheckingStatus(oauthConnectionId);
-			navigate(`/projects/${projectId}/connections`);
-		} catch (error) {
-			addToast({
-				message: tErrors("errorCreatingNewConnection"),
-				type: "error",
-			});
-
-			if (axios.isAxiosError(error)) {
-				LoggerService.error(
-					namespaces.hooks.connectionForm,
-					tErrors("errorCreatingNewConnectionExtended", { error: error?.response?.data })
-				);
-				setIsLoading(false);
-
-				return;
-			}
-
-			LoggerService.error(
-				namespaces.hooks.connectionForm,
-				tErrors("errorCreatingNewConnectionExtended", { error })
-			);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
 	const copyToClipboard = async (text: string) => {
 		try {
 			await navigator.clipboard.writeText(text);
@@ -500,6 +453,5 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		clearErrors,
 		handleCustomOauth,
 		setConnectionType,
-		handleAuth0Oauth,
 	};
 };

@@ -19,14 +19,14 @@ export const Auth0IntegrationAddForm = ({
 }) => {
 	const { t } = useTranslation("integrations");
 
-	const { errors, handleAuth0Oauth, handleSubmit, isLoading, register } = useConnectionForm(
+	const { errors, handleCustomOauth, handleSubmit, isLoading, register } = useConnectionForm(
 		auth0IntegrationSchema,
 		"create"
 	);
 
 	useEffect(() => {
 		if (connectionId) {
-			handleAuth0Oauth(connectionId);
+			handleCustomOauth(connectionId, "auth0");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);
