@@ -1,3 +1,10 @@
+# [2.106.0](https://github.com/autokitteh/web-platform/compare/v2.105.4...v2.106.0) (2024-12-26)
+
+
+### Features
+
+* **UI-1064:** add organization users table ([#799](https://github.com/autokitteh/web-platform/issues/799)) ([57690a2](https://github.com/autokitteh/web-platform/commit/57690a2b7939252d61f31d1ce2f43c0d99adfb46))
+
 ## [2.105.4](https://github.com/autokitteh/web-platform/compare/v2.105.3...v2.105.4) (2024-12-26)
 
 
