@@ -69,7 +69,7 @@
 		"react-virtualized": "^9.22.5",
 		"remark-gfm": "^4.0.0",
 		"swiper": "^11.1.15",
-		"tailwind-merge": "^2.5.5",
+		"tailwind-merge": "^2.6.0",
 		"zod": "^3.23.8",
 		"zustand": "^5.0.0"
 	},
