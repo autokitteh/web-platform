@@ -1,3 +1,10 @@
+# [2.108.0](https://github.com/autokitteh/web-platform/compare/v2.107.0...v2.108.0) (2024-12-26)
+
+
+### Features
+
+* **UI-1063:** add organization settings page ([#798](https://github.com/autokitteh/web-platform/issues/798)) ([adff27c](https://github.com/autokitteh/web-platform/commit/adff27c91d4262367c45b808bf0ba4cd05b503d7))
+
 # [2.107.0](https://github.com/autokitteh/web-platform/compare/v2.106.0...v2.107.0) (2024-12-26)
 
 
