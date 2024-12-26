@@ -1,3 +1,11 @@
+## [2.105.4](https://github.com/autokitteh/web-platform/compare/v2.105.3...v2.105.4) (2024-12-26)
+
+
+### Bug Fixes
+
+* **UI-1139:** display sessions in created status in deployments table ([#834](https://github.com/autokitteh/web-platform/issues/834)) ([01f62a2](https://github.com/autokitteh/web-platform/commit/01f62a284d7b6f7ecc86c100d79061c6e9682ddd))
+* **UI-1143:** remove field mask from project update request ([#836](https://github.com/autokitteh/web-platform/issues/836)) ([dec1274](https://github.com/autokitteh/web-platform/commit/dec1274b8b8965598eccdcd896eaa2579d92e185))
+
 ## [2.105.3](https://github.com/autokitteh/web-platform/compare/v2.105.2...v2.105.3) (2024-12-24)
 
 
