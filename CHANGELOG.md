@@ -1,3 +1,10 @@
+## [2.108.2](https://github.com/autokitteh/web-platform/compare/v2.108.1...v2.108.2) (2024-12-26)
+
+
+### Bug Fixes
+
+* **ENG-1930:** fix url validation in auth0 connection ([#837](https://github.com/autokitteh/web-platform/issues/837)) ([c5c66a1](https://github.com/autokitteh/web-platform/commit/c5c66a1a7e303ea877c2702896053de1baf4213e))
+
 ## [2.108.1](https://github.com/autokitteh/web-platform/compare/v2.108.0...v2.108.1) (2024-12-26)
 
 
