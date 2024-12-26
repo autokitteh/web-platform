@@ -68,6 +68,7 @@ const initialState: Omit<
 	currentProjectId: undefined,
 	projectValidationState: defaultProjectValidationState,
 	isValid: true,
+	isProjectEvents: false,
 };
 
 const store: StateCreator<CacheStore> = (set, get) => ({
@@ -277,8 +278,8 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 	},
 
 	fetchEvents: async (force, destinationId) => {
-		const { events } = get();
-		if (events && !force) {
+		const { events, isProjectEvents } = get();
+		if (events && !force && !isProjectEvents) {
 			return events;
 		}
 
@@ -302,6 +303,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			set((state) => ({
 				...state,
 				events: incomingEvents,
+				isProjectEvents: !!destinationId,
 				loading: { ...state.loading, events: false },
 			}));
 

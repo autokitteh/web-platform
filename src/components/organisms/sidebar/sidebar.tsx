@@ -19,7 +19,6 @@ import { NewProjectModal, UserFeedbackForm } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { EventsFlag } from "@assets/image/icons";
 import { AnnouncementIcon, CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
@@ -103,7 +102,6 @@ export const Sidebar = () => {
 							<div className="flex size-10 items-center justify-center">
 								<IconSvg className="size-5 transition" src={EventListIcon} />
 							</div>
-							<IconSvg className="size-7 transition" src={EventsFlag} />
 
 							<AnimatePresence>
 								{isOpen ? (

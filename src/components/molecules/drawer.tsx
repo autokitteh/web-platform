@@ -6,7 +6,15 @@ import { DrawerProps } from "@src/interfaces/components";
 import { useDrawerStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-export const Drawer = ({ children, className, forcedOpen, name, variant, wrapperClassName }: DrawerProps) => {
+export const Drawer = ({
+	children,
+	className,
+	forcedClose,
+	forcedOpen,
+	name,
+	variant,
+	wrapperClassName,
+}: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
 		isOpen: state.drawers[name] || forcedOpen,
 		onClose: state.closeDrawer,
@@ -52,7 +60,10 @@ export const Drawer = ({ children, className, forcedOpen, name, variant, wrapper
 							opacity: 0,
 						}}
 						initial={{ opacity: 0 }}
-						onClick={() => onClose(name)}
+						onClick={() => {
+							onClose(name);
+							forcedClose?.();
+						}}
 					/>
 				</>
 			) : null}

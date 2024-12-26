@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
 import { useResize, useSort } from "@src/hooks";
@@ -11,6 +11,7 @@ import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
+import { EventViewer } from "@components/organisms/events";
 import { TableHeader } from "@components/organisms/events/table/header";
 import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
 import { EventRow } from "@components/organisms/events/table/row";
@@ -27,8 +28,8 @@ export const EventsTable = () => {
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
-	const { connectionId, eventId, projectId, triggerId } = useParams();
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
+	const { connectionId, eventId, projectId, triggerId } = useParams();
 	const navigate = useNavigate();
 
 	const projectEventId = triggerId || connectionId;
@@ -131,7 +132,7 @@ export const EventsTable = () => {
 			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeId} />
 
 			<div className="flex rounded-2xl bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
-				{eventId ? <Outlet /> : <NoEventsSelected />}
+				{eventId ? <EventViewer /> : <NoEventsSelected />}
 			</div>
 		</div>
 	);
