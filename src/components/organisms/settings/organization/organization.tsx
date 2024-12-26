@@ -13,7 +13,7 @@ import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
 import { Select } from "@components/molecules";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
-export const Organization = () => {
+export const OrganizationSettings = () => {
 	const options: SelectOption[] = [
 		{ value: "disabled", label: "Disabled" },
 		{ value: "daily", label: "Daily" },
@@ -35,7 +35,7 @@ export const Organization = () => {
 
 	const onSubmit = async () => {};
 
-	const watchedFrequency = useWatch({ control, name: "connection" });
+	const watchedFrequency = useWatch({ control, name: "frequency" });
 
 	return (
 		<div>

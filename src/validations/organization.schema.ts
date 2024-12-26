@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-const selectSchema = z.object({
-	label: z.string(),
-	value: z.string(),
-});
+import { selectSchema } from "@validations";
 
 export const newOrganizationSchema = z.object({
 	orgName: z.string().min(1, "Organization name is required"),
