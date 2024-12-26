@@ -44,10 +44,10 @@
 		"limits": "Limits",
 		"seats": "Seats",
 		"monthlySpending": "Monthly Spending",
+		"organizationSettings": "Organization Settings",
 		"form": {
 			"organizationName": "Organization Name",
 			"displayName": "Display Name",
-			"settings": "Settings",
 			"errorNotification": "Error notification",
 			"buttons": {
 				"create": "Create",

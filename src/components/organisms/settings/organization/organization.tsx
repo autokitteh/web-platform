@@ -40,7 +40,7 @@ export const OrganizationSettings = () => {
 	return (
 		<div>
 			<Typography className="mb-9 font-bold" element="h2" size="xl">
-				Organization {t("form.settings")}
+				{t("organizationSettings")}
 			</Typography>
 			<div className="flex flex-wrap gap-10">
 				<div className="w-1/2">
