@@ -46,7 +46,7 @@ export const NewOrganization = () => {
 
 					<ErrorMessage>{errors?.orgName?.message as string}</ErrorMessage>
 				</div>
-				<div className="relative mb-3">
+				<div className="relative mb-6">
 					<Input
 						isError={!!errors.displayName}
 						label={t("form.displayName")}
