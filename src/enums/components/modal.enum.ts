@@ -17,4 +17,5 @@ export enum ModalName {
 	warningDeploymentActive = "warningDeploymentActive",
 	organizationCreated = "organizationCreated",
 	organizationUserCreate = "organizationUserCreate",
+	deleteOrganization = "deleteOrganization",
 }

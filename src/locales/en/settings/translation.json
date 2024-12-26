@@ -41,16 +41,30 @@
 	},
 	"organization": {
 		"createNewOrganization": "Create new organization",
+		"limits": "Limits",
+		"seats": "Seats",
+		"monthlySpending": "Monthly Spending",
 		"form": {
 			"organizationName": "Organization Name",
 			"displayName": "Display Name",
+			"settings": "Settings",
+			"errorNotification": "Error notification",
 			"buttons": {
-				"create": "Create"
+				"create": "Create",
+				"save": "Save",
+				"deleteOrganization": "Delete Organization"
+			},
+			"placeholder": {
+				"notificationEmail": "Notification email",
+				"frequency": "Frequency"
 			}
 		},
 		"modal": {
 			"organizationCreated": "Organization {{name}} created",
 			"addUser": "Add new user to organization",
+			"line1": "The action is irreversible.",
+			"line2": "Warning: you will not be able to recover it.",
+			"deleteOrganization": "Delete {{name}}",
 			"form": {
 				"name":"Name",
 				"email":"Email",
@@ -60,7 +74,8 @@
 				"stayOn": "Stay on",
 				"open": "Open",
 				"create": "Create",
-				"cancel": "Cancel"
+				"cancel": "Cancel",
+				"delete": "Delete"
 			}
 		},
 		"users": {
