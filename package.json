@@ -101,7 +101,7 @@
 		"@types/react-virtualized": "^9.21.30",
 		"@types/react-window": "^1.8.8",
 		"@typescript-eslint/eslint-plugin": "^8.14.0",
-		"@typescript-eslint/parser": "^8.16.0",
+		"@typescript-eslint/parser": "^8.18.2",
 		"@vitejs/plugin-react": "^4.3.4",
 		"autoprefixer": "^10.4.19",
 		"commitlint": "^19.3.0",
