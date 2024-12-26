@@ -32,7 +32,7 @@ export const NewOrganization = () => {
 
 	return (
 		<div>
-			<Typography className="mb-4 font-bold" element="h2" size="xl">
+			<Typography className="mb-9 font-bold" element="h2" size="xl">
 				{t("createNewOrganization")}
 			</Typography>
 			<form className="w-1/2" onSubmit={handleSubmit(onSubmit)}>
@@ -46,7 +46,7 @@ export const NewOrganization = () => {
 
 					<ErrorMessage>{errors?.orgName?.message as string}</ErrorMessage>
 				</div>
-				<div className="relative mb-3">
+				<div className="relative mb-6">
 					<Input
 						isError={!!errors.displayName}
 						label={t("form.displayName")}
