@@ -26,14 +26,18 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const { currentProjectId, fetchResources } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { cursorPositionPerProject, setCursorPosition } = useSharedBetweenProjectsStore();
+	const {
+		currentProjectId: cursorProjectId,
+		cursorPositionPerProject,
+		setCurrentProjectId,
+		setCursorPosition,
+	} = useSharedBetweenProjectsStore();
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
 
 	const [codeLoadedFirstTime, setCodeLoadedFirstTime] = useState(true);
-	const [codeLoadedFirstTimeForCursor, setCodeLoadedFirstTimeForCursor] = useState(true);
 
 	const [content, setContent] = useState("");
 	const autoSaveMode = getAutoSavePreference();
@@ -127,16 +131,6 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 					_editor.trigger("keyboard", "undo", null);
 				}
 			});
-
-			_editor.onDidChangeCursorPosition((event: monaco.editor.ICursorPositionChangedEvent) => {
-				if (codeLoadedFirstTimeForCursor) {
-					setCodeLoadedFirstTimeForCursor(false);
-
-					return;
-				}
-
-				setCursorPosition(projectId!, event.position);
-			});
 		}
 	};
 
@@ -151,12 +145,23 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 
 			if (codeEditor) {
 				codeEditor.setPosition(cursorPosition);
-				codeEditor.revealLineInCenter(cursorPosition.lineNumber + 100);
+
+				const model = codeEditor.getModel();
+				if (model) {
+					const totalLines = model.getLineCount();
+					const lineToReveal = cursorPosition.lineNumber;
+
+					if (lineToReveal <= totalLines) {
+						codeEditor.revealLineInCenter(lineToReveal);
+					} else {
+						codeEditor.revealLineInCenter(totalLines);
+					}
+				}
 			}
 			setCodeLoadedFirstTime(false);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [content]);
+	}, [projectId]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
@@ -259,6 +264,27 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			onExpand();
 		}
 	};
+
+	useEffect(() => {
+		const codeEditor = editorRef.current;
+		if (codeEditor) {
+			const model = codeEditor.getModel();
+			if (model) {
+				codeEditor.onDidChangeCursorPosition((event: monaco.editor.ICursorPositionChangedEvent) => {
+					console.log(projectId);
+					console.log(cursorProjectId);
+					console.log(currentProjectId);
+					if (projectId === cursorProjectId) {
+						setCursorPosition(projectId!, event.position);
+
+						return;
+					}
+					setCurrentProjectId(projectId!);
+				});
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, editorRef]);
 
 	return (
 		<div className="relative flex h-full flex-col pt-11">
