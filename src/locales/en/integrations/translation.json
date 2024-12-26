@@ -29,7 +29,15 @@
 	},
 	"auth0": {
 		"configurationGuide": "AutoKitteh guide: configuring the Auth0 integration",
-		"backgroundConfiguration": "Background about Auth0 OAuth authentication"
+		"backgroundConfiguration": "Background about Auth0 OAuth authentication",
+		"placeholders": {
+			"client_id": "Client ID",
+			"client_secret": "Client Secret",
+			"auth0_domain": "Auth0 Domain"
+		},
+		"information": {
+			"akGuide": "AutoKitteh guide: configuring the Auth0 connections"
+		}
 	},
 	"github": {
 		"aboutGitHubApps": "About using GitHub Apps",

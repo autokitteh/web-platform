@@ -5,7 +5,7 @@ import { SingleValue } from "react-select";
 
 import { formsPerIntegrationsMapping, integrationVariablesMapping } from "@constants";
 import { ConnectionAuthType } from "@enums";
-import { Integrations, isGoogleIntegration } from "@src/enums/components";
+import { Integrations, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
 import { SelectOption } from "@src/interfaces/components";
 import { setFormValues } from "@src/utilities";
@@ -30,7 +30,7 @@ export const IntegrationEditForm = ({
 		control,
 		copyToClipboard,
 		errors,
-		handleGoogleOauth,
+		handleCustomOauth,
 		handleOAuth,
 		handleSubmit,
 		isLoading,
@@ -85,7 +85,7 @@ export const IntegrationEditForm = ({
 	const onSubmit = () => {
 		if (connectionId && connectionType === ConnectionAuthType.Oauth) {
 			if (isGoogleIntegration(integrationType)) {
-				handleGoogleOauth(connectionId);
+				handleCustomOauth(connectionId, defaultGoogleConnectionName);
 
 				return;
 			}
