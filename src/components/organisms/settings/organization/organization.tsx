@@ -49,18 +49,18 @@ export const OrganizationSettings = () => {
 					</Typography>
 					<div className="flex gap-3">
 						<div className="w-1/2 rounded bg-gray-950 p-3 text-base shadow-xl">
-							<Typography className="mb-1" element="h5">
+							<Typography className="mb-1" element="h3">
 								{t("seats")}
 							</Typography>
-							<Typography className="font-medium" element="h4" size="xl">
+							<Typography className="font-medium" element="p" size="xl">
 								22
 							</Typography>
 						</div>
 						<div className="w-1/2 rounded bg-gray-950 p-3 text-base shadow-xl">
-							<Typography className="mb-1" element="h5">
+							<Typography className="mb-1" element="h3">
 								{t("monthlySpending")}
 							</Typography>
-							<Typography className="font-medium" element="h4" size="xl">
+							<Typography className="font-medium" element="p" size="xl">
 								$333
 							</Typography>
 						</div>
@@ -98,7 +98,7 @@ export const OrganizationSettings = () => {
 
 						<ErrorMessage>{errors?.noteEmail?.message as string}</ErrorMessage>
 					</div>
-					<div className="relative mb-3">
+					<div className="relative mb-6">
 						<Controller
 							control={control}
 							name="frequency"
