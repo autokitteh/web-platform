@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useWatch } from "react-hook-form";
+import { FieldValues, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
@@ -17,7 +17,7 @@ import { ExternalLinkIcon } from "@assets/image/icons";
 
 export const Auth0IntegrationEditForm = () => {
 	const { t } = useTranslation("integrations");
-	const { connectionVariables, control, errors, handleCustomOauth, isLoading, register, setValue } =
+	const { connectionVariables, control, errors, handleCustomOauth, handleSubmit, isLoading, register, setValue } =
 		useConnectionForm(auth0IntegrationSchema, "edit");
 	const [lockState, setLockState] = useState(true);
 	const { connectionId } = useParams();
@@ -31,14 +31,12 @@ export const Auth0IntegrationEditForm = () => {
 	const clientId = useWatch({ control, name: "client_id" });
 	const auth0Domain = useWatch({ control, name: "auth0_domain" });
 
-	const openOauthPopUp = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-
+	const openOauthPopUp = (_data: FieldValues) => {
 		handleCustomOauth(connectionId!, Integrations.auth0);
 	};
 
 	return (
-		<form className="mt-6 flex flex-col gap-6" onSubmit={openOauthPopUp}>
+		<form className="mt-6 flex flex-col gap-6" onSubmit={handleSubmit(openOauthPopUp)}>
 			<div className="relative">
 				<Input
 					{...register("client_id")}
