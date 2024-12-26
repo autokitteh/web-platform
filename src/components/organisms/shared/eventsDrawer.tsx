@@ -13,7 +13,7 @@ import { Close } from "@assets/image/icons";
 export const EventsDrawer = () => {
 	const navigate = useNavigate();
 	const [isOpen, setIsOpen] = useState(false);
-	const { projectId } = useParams();
+	const { projectId, triggerId } = useParams();
 
 	useEffect(() => {
 		setIsOpen(location.pathname.includes("/events"));
@@ -23,13 +23,14 @@ export const EventsDrawer = () => {
 	const closeAndNavigate = () => {
 		setIsOpen(false);
 		setTimeout(() => {
-			navigate(`/projects/${projectId}/triggers`);
+			navigate(`/projects/${projectId}/${triggerId ? "triggers" : "connections"}`);
 		}, 500);
 	};
 
 	return (
 		<Drawer
 			className="relative p-0"
+			forcedClose={closeAndNavigate}
 			forcedOpen={isOpen}
 			name={DrawerName.events}
 			variant="dark"

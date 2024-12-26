@@ -14,10 +14,10 @@ export const EventsLayout = () => {
 			<div className="flex size-full">
 				<Sidebar />
 
-				<div className="mb-2 flex w-full flex-col">
+				<div className="flex flex-1 flex-col">
 					<TitleTopbar title={t("title")} />
 
-					<div className="relative flex size-full overflow-hidden rounded-2xl">
+					<div className="relative my-2 flex size-full overflow-hidden rounded-2xl">
 						<Outlet />
 
 						<div className="absolute -bottom-5 -right-5">

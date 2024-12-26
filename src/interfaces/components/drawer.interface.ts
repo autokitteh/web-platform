@@ -9,4 +9,5 @@ export interface DrawerProps {
 	className?: string;
 	forcedOpen?: boolean;
 	wrapperClassName?: string;
+	forcedClose?: () => void;
 }
