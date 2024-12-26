@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { ValidateDomain } from "@src/utilities";
+
 export const githubIntegrationSchema = z.object({
 	pat: z.string().min(1, "Personal Access Token is required"),
 	webhook: z.string(),
@@ -94,7 +96,13 @@ export const asanaIntegrationSchema = z.object({
 export const auth0IntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client Secret is required"),
-	auth0_domain: z.string().min(1, "Domain is required").url({ message: "Invalid url" }),
+	auth0_domain: z
+		.string()
+		.min(1, "Domain is required")
+		.optional()
+		.refine((value) => !value || ValidateDomain(value), {
+			message: "Please provide a valid URL, it should be like example.com",
+		}),
 });
 
 export const oauthSchema = z.object({});
