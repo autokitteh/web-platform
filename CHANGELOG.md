@@ -1,3 +1,10 @@
+# [2.107.0](https://github.com/autokitteh/web-platform/compare/v2.106.0...v2.107.0) (2024-12-26)
+
+
+### Features
+
+* **UI-1138:** update auth0 connection setup ([#835](https://github.com/autokitteh/web-platform/issues/835)) ([04a1f80](https://github.com/autokitteh/web-platform/commit/04a1f8048e8a2730bddcbe48cded579f1e20291b))
+
 # [2.106.0](https://github.com/autokitteh/web-platform/compare/v2.105.4...v2.106.0) (2024-12-26)
 
 
