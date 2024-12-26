@@ -40,9 +40,32 @@ export const Organization = () => {
 	return (
 		<div>
 			<Typography className="mb-9 font-bold" element="h2" size="xl">
-				{t("form.settings")}
+				Organization {t("form.settings")}
 			</Typography>
 			<div className="flex flex-wrap gap-10">
+				<div className="w-1/2">
+					<Typography className="mb-2 font-bold" element="h2" size="medium">
+						{t("limits")}
+					</Typography>
+					<div className="flex gap-3">
+						<div className="w-1/2 rounded bg-gray-950 p-3 text-base shadow-xl">
+							<Typography className="mb-1" element="h5">
+								{t("seats")}
+							</Typography>
+							<Typography className="font-medium" element="h4" size="xl">
+								22
+							</Typography>
+						</div>
+						<div className="w-1/2 rounded bg-gray-950 p-3 text-base shadow-xl">
+							<Typography className="mb-1" element="h5">
+								{t("monthlySpending")}
+							</Typography>
+							<Typography className="font-medium" element="h4" size="xl">
+								$333
+							</Typography>
+						</div>
+					</div>
+				</div>
 				<form className="w-1/2" onSubmit={handleSubmit(onSubmit)}>
 					<div className="relative mb-6">
 						<Input
@@ -54,7 +77,7 @@ export const Organization = () => {
 
 						<ErrorMessage>{errors?.orgName?.message as string}</ErrorMessage>
 					</div>
-					<div className="relative mb-3">
+					<div className="relative mb-8">
 						<Input
 							isError={!!errors.displayName}
 							label={t("form.displayName")}
@@ -63,7 +86,7 @@ export const Organization = () => {
 
 						<ErrorMessage>{errors?.displayName?.message as string}</ErrorMessage>
 					</div>
-					<Typography className="mb-2 font-bold" element="h2" size="medium">
+					<Typography className="mb-4 font-bold" element="h2" size="medium">
 						{t("form.errorNotification")}
 					</Typography>
 					<div className="relative mb-6">
@@ -94,7 +117,7 @@ export const Organization = () => {
 
 						<ErrorMessage>{errors.frequency?.message as string}</ErrorMessage>
 					</div>
-					<div className="flex justify-end gap-2">
+					<div className="flex justify-between gap-2">
 						<Button
 							className="w-fit border-black bg-black px-5 text-base font-medium text-white hover:bg-gray-950"
 							onClick={() => openModal(ModalName.deleteOrganization)}
@@ -112,29 +135,6 @@ export const Organization = () => {
 						</Button>
 					</div>
 				</form>
-				<div>
-					<Typography className="mb-2 font-bold" element="h2" size="medium">
-						{t("limits")}
-					</Typography>
-					<div className="flex gap-3">
-						<div className="rounded bg-gray-950 p-3 text-base shadow-xl">
-							<Typography className="mb-1" element="h5">
-								{t("seats")}
-							</Typography>
-							<Typography className="font-medium" element="h4" size="xl">
-								22
-							</Typography>
-						</div>
-						<div className="rounded bg-gray-950 p-3 text-base shadow-xl">
-							<Typography className="mb-1" element="h5">
-								{t("monthlySpending")}
-							</Typography>
-							<Typography className="font-medium" element="h4" size="xl">
-								$333
-							</Typography>
-						</div>
-					</div>
-				</div>
 				<DeleteOrganizationModal />
 			</div>
 		</div>
