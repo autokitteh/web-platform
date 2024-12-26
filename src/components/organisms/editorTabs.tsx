@@ -26,12 +26,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const { currentProjectId, fetchResources } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const {
-		currentProjectId: cursorProjectId,
-		cursorPositionPerProject,
-		setCurrentProjectId,
-		setCursorPosition,
-	} = useSharedBetweenProjectsStore();
+	const { cursorPositionPerProject, setCursorPosition } = useSharedBetweenProjectsStore();
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
@@ -48,10 +43,10 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 
 	useEffect(() => {
-		if (content && isFirstContentLoad) {
-			initialContentRef.current = content;
-			setIsFirstContentLoad(false);
-		}
+		if (!content || !isFirstContentLoad) return;
+
+		initialContentRef.current = content;
+		setIsFirstContentLoad(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [content]);
 
@@ -69,9 +64,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const fileToOpen = location.state?.fileToOpen;
 
 	const openDefaultFile = () => {
-		if (fileToOpen) {
-			openFileAsActive(fileToOpen);
-		}
+		if (!fileToOpen) return;
+		openFileAsActive(fileToOpen);
 	};
 
 	const loadContent = async () => {
@@ -121,47 +115,43 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		monaco.editor.setTheme("myCustomTheme");
 		editorRef.current = _editor;
 		const model = _editor.getModel();
-		if (model) {
-			model.pushEditOperations([], [], () => null);
+		if (!model) return;
+		model.pushEditOperations([], [], () => null);
 
-			_editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => {
-				const currentContent = model.getValue();
+		_editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => {
+			const currentContent = model.getValue();
 
-				if (currentContent !== initialContentRef.current) {
-					_editor.trigger("keyboard", "undo", null);
-				}
-			});
-		}
+			if (currentContent === initialContentRef.current) {
+				return;
+			}
+			_editor.trigger("keyboard", "undo", null);
+		});
 	};
 
 	useEffect(() => {
 		setCodeLoadedFirstTime(true);
-	}, [location.pathname]);
+	}, [projectId]);
 
 	useEffect(() => {
 		const cursorPosition = cursorPositionPerProject[projectId!];
-		if (content && codeLoadedFirstTime && cursorPosition) {
-			const codeEditor = editorRef.current;
+		if (!content || !codeLoadedFirstTime || !cursorPosition) return;
+		const codeEditor = editorRef.current;
 
-			if (codeEditor) {
-				codeEditor.setPosition(cursorPosition);
+		if (!codeEditor) return;
+		codeEditor.setPosition(cursorPosition);
 
-				const model = codeEditor.getModel();
-				if (model) {
-					const totalLines = model.getLineCount();
-					const lineToReveal = cursorPosition.lineNumber;
+		const model = codeEditor.getModel();
+		if (!model) return;
+		const totalLines = model.getLineCount();
+		const lineToReveal = cursorPosition.lineNumber;
 
-					if (lineToReveal <= totalLines) {
-						codeEditor.revealLineInCenter(lineToReveal);
-					} else {
-						codeEditor.revealLineInCenter(totalLines);
-					}
-				}
-			}
-			setCodeLoadedFirstTime(false);
+		if (lineToReveal > totalLines) {
+			return;
 		}
+		codeEditor.revealLineInCenter(lineToReveal);
+		setCodeLoadedFirstTime(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	}, [projectId, content]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
@@ -228,10 +218,9 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		}
 
 		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "s" && (navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) {
-				event.preventDefault();
-				debouncedManualSave(content);
-			}
+			if (event.key !== "s" && !(navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) return;
+			event.preventDefault();
+			debouncedManualSave(content);
 		};
 
 		keydownListenerRef.current = handleKeyDown;
@@ -239,9 +228,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		document.addEventListener("keydown", handleKeyDown, false);
 
 		return () => {
-			if (keydownListenerRef.current) {
-				document.removeEventListener("keydown", keydownListenerRef.current);
-			}
+			if (!keydownListenerRef.current) return;
+			document.removeEventListener("keydown", keydownListenerRef.current);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [content]);
@@ -260,31 +248,30 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	): void => {
 		event.stopPropagation();
 		closeOpenedFile(name);
-		if (isExpanded && openFiles[projectId!]?.length === 1) {
-			onExpand();
-		}
+		if (!isExpanded && openFiles[projectId!]?.length !== 1) return;
+		onExpand();
 	};
 
 	useEffect(() => {
 		const codeEditor = editorRef.current;
-		if (codeEditor) {
-			const model = codeEditor.getModel();
-			if (model) {
-				codeEditor.onDidChangeCursorPosition((event: monaco.editor.ICursorPositionChangedEvent) => {
-					console.log(projectId);
-					console.log(cursorProjectId);
-					console.log(currentProjectId);
-					if (projectId === cursorProjectId) {
-						setCursorPosition(projectId!, event.position);
+		let cursorPositionChangeListener: monaco.IDisposable | null = null;
 
-						return;
-					}
-					setCurrentProjectId(projectId!);
-				});
+		if (!codeEditor) return;
+		const model = codeEditor.getModel();
+		if (!model) return;
+		cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(
+			(event: monaco.editor.ICursorPositionChangedEvent) => {
+				if (event.reason !== 3 || currentProjectId !== projectId) return;
+				setCursorPosition(currentProjectId!, event.position);
 			}
-		}
+		);
+
+		return () => {
+			if (!cursorPositionChangeListener) return;
+			cursorPositionChangeListener.dispose();
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, editorRef]);
+	}, [editorRef.current, projectId, currentProjectId]);
 
 	return (
 		<div className="relative flex h-full flex-col pt-11">
