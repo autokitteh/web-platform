@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { Integrations } from "@src/enums/components";
 import { useConnectionForm } from "@src/hooks";
-import { auth0IntegrationSchema } from "@validations/connection.schema";
+import { auth0IntegrationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Link, Loader } from "@components/atoms";
 import { Accordion } from "@components/molecules";
@@ -26,7 +27,7 @@ export const Auth0IntegrationAddForm = ({
 
 	useEffect(() => {
 		if (connectionId) {
-			handleCustomOauth(connectionId, "auth0");
+			handleCustomOauth(connectionId, Integrations.auth0);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connectionId]);

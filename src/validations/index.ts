@@ -17,6 +17,7 @@ export {
 	googleCalendarIntegrationSchema,
 	googleFormsIntegrationSchema,
 	asanaIntegrationSchema,
+	auth0IntegrationSchema,
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { manualRunSchema } from "@validations/manualRun.schema";
