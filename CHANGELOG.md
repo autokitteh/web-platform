@@ -1,3 +1,10 @@
+## [2.108.1](https://github.com/autokitteh/web-platform/compare/v2.108.0...v2.108.1) (2024-12-26)
+
+
+### Bug Fixes
+
+* **UI-1136:** in webhook trigger user cant change http method back to any ([#832](https://github.com/autokitteh/web-platform/issues/832)) ([9af5d3d](https://github.com/autokitteh/web-platform/commit/9af5d3d2687212560cf80ca91a9e598f8d9545be))
+
 # [2.108.0](https://github.com/autokitteh/web-platform/compare/v2.107.0...v2.108.0) (2024-12-26)
 
 
