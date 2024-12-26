@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { ValidateURL } from "@src/utilities";
+
 export const githubIntegrationSchema = z.object({
 	pat: z.string().min(1, "Personal Access Token is required"),
 	webhook: z.string(),
@@ -91,14 +93,6 @@ export const asanaIntegrationSchema = z.object({
 	pat: z.string().min(1, "PAT is required"),
 });
 
-const urlRegex = new RegExp(
-	"^(https?:\\/\\/)?" +
-		"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" +
-		"((\\d{1,3}\\.){3}\\d{1,3}))" +
-		"(\\#[-a-z\\d_]*)?$",
-	"i"
-);
-
 export const auth0IntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client Secret is required"),
@@ -106,7 +100,7 @@ export const auth0IntegrationSchema = z.object({
 		.string()
 		.min(1, "Domain is required")
 		.optional()
-		.refine((value) => !value || urlRegex.test(`https://${value}`), {
+		.refine((value) => !value || !ValidateURL(`https://${value}`), {
 			message: "Please provide a valid URL, it should be like example.com",
 		}),
 });
