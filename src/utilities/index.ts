@@ -21,5 +21,5 @@ export { setFormValues } from "@utilities/setFormValues.utils";
 export { sortArray } from "@utilities/sortArray.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";
 export { transformAndStringifyValues } from "@utilities/transformAndStringifyValues.utils";
-export { ValidateURL } from "@utilities/validateUrl.utils";
+export { ValidateURL, ValidateDomain } from "@utilities/validateUrl.utils";
 export { getAutoSavePreference } from "@utilities/localStorage.utils";

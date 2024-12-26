@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ValidateURL } from "@src/utilities";
+import { ValidateDomain } from "@src/utilities";
 
 export const githubIntegrationSchema = z.object({
 	pat: z.string().min(1, "Personal Access Token is required"),
@@ -100,7 +100,7 @@ export const auth0IntegrationSchema = z.object({
 		.string()
 		.min(1, "Domain is required")
 		.optional()
-		.refine((value) => !value || !ValidateURL(`https://${value}`), {
+		.refine((value) => !value || ValidateDomain(value), {
 			message: "Please provide a valid URL, it should be like example.com",
 		}),
 });
