@@ -19,7 +19,13 @@ import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
 
-export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onExpand: () => void }) => {
+export const EditorTabs = ({
+	isExpanded,
+	setExpanded,
+}: {
+	isExpanded: boolean;
+	setExpanded: (expandedState: boolean) => void;
+}) => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
@@ -248,8 +254,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	): void => {
 		event.stopPropagation();
 		closeOpenedFile(name);
-		if (!isExpanded && openFiles[projectId!]?.length !== 1) return;
-		onExpand();
+		if (!isExpanded || openFiles[projectId!]?.length !== 1) return;
+		setExpanded(false);
 	};
 
 	useEffect(() => {
@@ -270,6 +276,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 			if (!cursorPositionChangeListener) return;
 			cursorPositionChangeListener.dispose();
 		};
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [editorRef.current, projectId, currentProjectId]);
 
@@ -336,7 +343,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 										</Button>
 									)}
 								</div>
-								<IconButton className="hover:bg-gray-1100" onClick={onExpand}>
+								<IconButton className="hover:bg-gray-1100" onClick={() => setExpanded(!isExpanded)}>
 									{isExpanded ? (
 										<CompressIcon className="size-4 fill-white" />
 									) : (
