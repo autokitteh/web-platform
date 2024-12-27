@@ -139,17 +139,17 @@ export const EditorTabs = ({
 	}, [projectId]);
 
 	useEffect(() => {
-		const cursorPosition = cursorPositionPerProject[projectId!];
-		if (!content || !codeLoadedFirstTime || !cursorPosition) return;
+		const cursorLine = cursorPositionPerProject[projectId!];
+		if (!content || !codeLoadedFirstTime || !cursorLine) return;
 		const codeEditor = editorRef.current;
 
 		if (!codeEditor) return;
-		codeEditor.setPosition(cursorPosition);
+		codeEditor.setPosition({ lineNumber: cursorLine, column: 0 });
 
 		const model = codeEditor.getModel();
 		if (!model) return;
 		const totalLines = model.getLineCount();
-		const lineToReveal = cursorPosition.lineNumber;
+		const lineToReveal = cursorLine;
 
 		if (lineToReveal > totalLines) {
 			return;
@@ -268,7 +268,7 @@ export const EditorTabs = ({
 		cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(
 			(event: monaco.editor.ICursorPositionChangedEvent) => {
 				if (event.reason !== 3 || currentProjectId !== projectId) return;
-				setCursorPosition(currentProjectId!, event.position);
+				setCursorPosition(currentProjectId!, event.position.lineNumber);
 			}
 		);
 
