@@ -10,7 +10,7 @@ import { cn } from "@src/utilities";
 import { Button, IconSvg } from "@components/atoms";
 
 import { PlusIcon } from "@assets/image/icons";
-import { LogoutIcon } from "@assets/image/icons/sidebar";
+import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const UserMenu = () => {
 	const { t } = useTranslation("sidebar");
@@ -35,6 +35,10 @@ export const UserMenu = () => {
 					<span className="font-medium text-black">{user?.email}</span>
 				</div>
 				<div className="mt-2 flex flex-col gap-1">
+					<Button className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250">
+						<AnnouncementIcon className="size-4" fill="black" />
+						{t("menu.userSettings.feedback")}
+					</Button>
 					{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 						<Button
 							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"

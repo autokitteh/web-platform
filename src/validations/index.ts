@@ -27,3 +27,4 @@ export { newOrganizationSchema, organizationSchema, newOrganizationUserSchema } 
 export type { TriggerFormData } from "@validations/trigger.schema";
 export { triggerSchema, triggerResolver } from "@validations/trigger.schema";
 export { newVariableShema } from "@validations/variable.schema";
+export { userFeedbackSchema } from "@validations/userFeedback.schema";

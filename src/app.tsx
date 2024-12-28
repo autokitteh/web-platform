@@ -45,7 +45,7 @@ export const App = () => {
 		}
 	}, []);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		const path = location.pathname + location.search;
 		ga4.send({
 			hitType: "pageview",
@@ -65,6 +65,9 @@ export const App = () => {
 					useNavigationType,
 					createRoutesFromChildren,
 					matchRoutes,
+				}),
+				Sentry.feedbackIntegration({
+					colorScheme: "system",
 				}),
 			],
 			// Set tracesSampleRate to 1.0 to capture 100%

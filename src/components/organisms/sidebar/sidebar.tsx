@@ -5,6 +5,7 @@ import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
+import { UserFeedbackForm } from "../userFeedbackForm";
 import { featureFlags, isAuthEnabled, userMenuItems } from "@constants";
 import { cn } from "@src/utilities";
 
@@ -19,7 +20,7 @@ import { NewProjectModal } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon } from "@assets/image/icons/sidebar";
+import { AnnouncementIcon, CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -198,6 +199,10 @@ export const Sidebar = () => {
 												<span className="font-medium text-black">{user?.email}</span>
 											</div>
 											<div className="mt-1">
+												<Button className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250">
+													<AnnouncementIcon className="size-6" fill="black" />
+													{t("menu.userSettings.feedback")}
+												</Button>
 												{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 													<Button
 														className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
@@ -229,6 +234,9 @@ export const Sidebar = () => {
 								</PopoverContent>
 							</Popover>
 						) : null}
+					</div>
+					<div className="absolute bottom-0 left-20">
+						<UserFeedbackForm />
 					</div>
 				</div>
 			</div>
