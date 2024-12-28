@@ -1,3 +1,10 @@
+# [2.109.0](https://github.com/autokitteh/web-platform/compare/v2.108.2...v2.109.0) (2024-12-28)
+
+
+### Features
+
+* **UI-1046:** return cursor to the same point in the code moving between projects ([#806](https://github.com/autokitteh/web-platform/issues/806)) ([ff69ea6](https://github.com/autokitteh/web-platform/commit/ff69ea61fa1674a836e0bed5f20c9b1e8548ad61))
+
 ## [2.108.2](https://github.com/autokitteh/web-platform/compare/v2.108.1...v2.108.2) (2024-12-26)
 
 
