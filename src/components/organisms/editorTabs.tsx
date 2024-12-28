@@ -142,22 +142,13 @@ export const EditorTabs = ({
 		const cursorLine = cursorPositionPerProject[projectId!];
 		if (!content || !codeLoadedFirstTime || !cursorLine) return;
 		const codeEditor = editorRef.current;
-
 		if (!codeEditor) return;
+		codeEditor.revealLineInCenter(cursorLine);
 		codeEditor.setPosition({ lineNumber: cursorLine, column: 0 });
 
-		const model = codeEditor.getModel();
-		if (!model) return;
-		const totalLines = model.getLineCount();
-		const lineToReveal = cursorLine;
-
-		if (lineToReveal > totalLines) {
-			return;
-		}
-		codeEditor.revealLineInCenter(lineToReveal);
 		setCodeLoadedFirstTime(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, content]);
+	}, [content]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
