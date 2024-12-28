@@ -24,6 +24,7 @@ import { AnnouncementIcon, CircleQuestionIcon, EventListIcon, FileIcon, LogoutIc
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 	const { logoutFunction, user } = useUserStore();
 	const { isLoggerEnabled, isNewLogs, toggleLogger } = useLoggerStore();
 	const location = useLocation();
@@ -40,7 +41,7 @@ export const Sidebar = () => {
 
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
-			<div className="relative z-40 flex h-full min-w-[65px] items-start">
+			<div className={cn("relative z-30 flex h-full min-w-[65px] items-start", { "z-50": isFeedbackOpen })}>
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
 						<div className="flex gap-1.5">
@@ -189,9 +190,9 @@ export const Sidebar = () => {
 										) : null}
 									</AnimatePresence>
 								</PopoverTrigger>
-								<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
+								<PopoverContent className="z-40 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
 									{featureFlags.enableNewOrgsAndUsersDesign ? (
-										<UserMenu />
+										<UserMenu openFeedbackForm={() => setIsFeedbackOpen(true)} />
 									) : (
 										<>
 											<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2 pl-2">
@@ -199,7 +200,10 @@ export const Sidebar = () => {
 												<span className="font-medium text-black">{user?.email}</span>
 											</div>
 											<div className="mt-1">
-												<Button className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250">
+												<Button
+													className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
+													onClick={() => setIsFeedbackOpen(true)}
+												>
 													<AnnouncementIcon className="size-6" fill="black" />
 													{t("menu.userSettings.feedback")}
 												</Button>
@@ -235,9 +239,11 @@ export const Sidebar = () => {
 							</Popover>
 						) : null}
 					</div>
-					<div className="absolute bottom-0 left-20">
-						<UserFeedbackForm />
-					</div>
+					<UserFeedbackForm
+						className="absolute bottom-0 left-20"
+						isOpen={isFeedbackOpen}
+						onClose={() => setIsFeedbackOpen(false)}
+					/>
 				</div>
 			</div>
 			<NewProjectModal />

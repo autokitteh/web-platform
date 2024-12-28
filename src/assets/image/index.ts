@@ -1,6 +1,7 @@
 export { default as Error404 } from "@assets/image/404.svg?react";
 export { default as AKRoundLogo } from "@assets/image/AKRoundLogo.svg?react";
 export { default as CatImage } from "@assets/image/Cat.svg?react";
+export { default as CatLookAtFishImage } from "@assets/image/CatLookAtFish.svg?react";
 export { default as InJustA } from "@assets/image/InJustA.svg?react";
 export { default as IconLogo } from "@assets/image/Logo.svg?react";
 export { default as IconLogoAuth } from "@assets/image/LogoAuth.svg?react";
