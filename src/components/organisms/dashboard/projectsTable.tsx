@@ -141,7 +141,7 @@ export const DashboardProjectsTable = () => {
 								className="group hidden h-11 w-1/6 cursor-pointer font-normal sm:flex"
 								onClick={() => requestSort("status")}
 							>
-								<div className="w-full text-center">
+								<div className="w-full">
 									{t("table.columns.status")}
 
 									<SortButton
@@ -209,7 +209,7 @@ export const DashboardProjectsTable = () => {
 										className="hidden w-1/6 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
-										<div className="m-auto max-w-16 pr-4 md:max-w-28">
+										<div className="max-w-16 pr-4 md:max-w-28">
 											<StatusBadge deploymentStatus={status} />
 										</div>
 									</Td>
