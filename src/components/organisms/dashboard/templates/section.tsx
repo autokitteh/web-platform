@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Frame, IconSvg, Typography } from "@components/atoms";
 import { ProjectTemplatesTabs } from "@components/organisms/dashboard/templates";
 
-import { ArrowRightCircleIcon } from "@assets/image/icons";
+import { StartTemplateIcon } from "@assets/image/icons";
 
 export const ProjectTemplatesSection = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "templates" });
@@ -16,7 +16,7 @@ export const ProjectTemplatesSection = () => {
 				className="mb-7 flex w-full select-none items-center gap-3 font-averta text-3xl font-semibold"
 				element="h2"
 			>
-				<IconSvg className="stroke-white" size="2xl" src={ArrowRightCircleIcon} />
+				<IconSvg className="size-7.5 stroke-white" src={StartTemplateIcon} />
 
 				{t("title")}
 			</Typography>

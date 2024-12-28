@@ -4,7 +4,6 @@ export { default as ArrowDown } from "@assets/image/icons/ArrowDown.svg?react";
 export { default as ArrowLeft } from "@assets/image/icons/ArrowLeft.svg?react";
 export { default as ArrowRightIcon } from "@assets/image/icons/ArrowRight.svg?react";
 export { default as ArrowRightCarouselIcon } from "@assets/image/icons/ArrowRightCarousel.svg?react";
-export { default as ArrowRightCircleIcon } from "@assets/image/icons/ArrowRightCircle.svg?react";
 export { default as ArrowStartTemplateIcon } from "@assets/image/icons/ArrowStartTemplate.svg?react";
 export { default as ArrowUpIcon } from "@assets/image/icons/ArrowUp.svg?react";
 export { default as ArrowUp } from "@assets/image/icons/ArrowUp.svg?react";
@@ -69,6 +68,8 @@ export { default as SessionsIcon } from "@assets/image/icons/Sessions.svg?react"
 export { default as SlidersIcon } from "@assets/image/icons/Sliders.svg?react";
 export { default as SmallArrowDown } from "@assets/image/icons/SmallArrowDown.svg?react";
 export { default as Square } from "@assets/image/icons/Square.svg?react";
+// Taken from https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=3928-136545&t=xmjjg1dDBLbsZeo1-4
+export { default as StartTemplateIcon } from "@assets/image/icons/StartTemplate.svg?react";
 export { default as TelegramIntroIcon } from "@assets/image/icons/Telegram.svg?react";
 export { default as TestIcon } from "@assets/image/icons/Test.svg?react";
 export { default as ThreeDots } from "@assets/image/icons/ThreeDots.svg?react";
