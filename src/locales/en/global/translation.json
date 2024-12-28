@@ -13,6 +13,8 @@
 	},
 	"userFeedback": {
 		"title": "Give your feedback",
+		"titleThanks": "Thank’s for taking the time to provide your feeback",
+		"ourCats": "our cats are looking into it",
 		"form": {
 			"email": "Email",
 			"name": "Name",
@@ -25,7 +27,8 @@
 			"buttons": {
 				"send": "Send",
 				"close": "Ok, close"
-			}
+			},
+			"error": "Something went wrong, please try again later"
 		}
 	}	
 }
