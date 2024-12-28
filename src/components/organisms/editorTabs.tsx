@@ -254,8 +254,6 @@ export const EditorTabs = ({
 		let cursorPositionChangeListener: monaco.IDisposable | null = null;
 
 		if (!codeEditor) return;
-		const model = codeEditor.getModel();
-		if (!model) return;
 		cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(
 			(event: monaco.editor.ICursorPositionChangedEvent) => {
 				if (event.reason !== 3 || currentProjectId !== projectId) return;
