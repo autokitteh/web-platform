@@ -10,6 +10,22 @@
 		"settings": "Settings",
 		"404": "404 Not Found",
 		"intro": "Introduction"
-	}
-		
+	},
+	"userFeedback": {
+		"title": "Give your feedback",
+		"form": {
+			"email": "Email",
+			"name": "Name",
+			"comment": "Comment",
+			"placeholder": {
+				"email": "email@example.com",
+				"name": "Enter your name",
+				"comment": "Enter your comment"
+			},
+			"buttons": {
+				"send": "Send",
+				"close": "Ok, close"
+			}
+		}
+	}	
 }
