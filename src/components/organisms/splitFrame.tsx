@@ -48,7 +48,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 
 			<div className="relative flex items-center overflow-hidden" style={{ width: `${rightSideWidth}%` }}>
 				<Frame className={rightFrameClass}>
-					<EditorTabs isExpanded={isExpanded} onExpand={() => setIsExpanded(!isExpanded)} />
+					<EditorTabs isExpanded={isExpanded} setExpanded={(expandedState) => setIsExpanded(expandedState)} />
 				</Frame>
 			</div>
 		</div>

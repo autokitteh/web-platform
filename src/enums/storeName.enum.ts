@@ -7,4 +7,5 @@ export enum StoreName {
 	manualRun = "ManualRunStore",
 	cache = "CacheStore",
 	templates = "TemplatesStore",
+	sharedBetweenProjects = "SharedBetweenProjectsStore",
 }
