@@ -16,7 +16,7 @@ import { DeleteProjectModal } from "@components/organisms/modals";
 import { ManualRunButtons } from "@components/organisms/topbar/project";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
-import { DownloadIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
+import { ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
@@ -177,9 +177,9 @@ export const ProjectTopbarButtons = () => {
 							) : (
 								<>
 									<IconSvg
-										className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
+										className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 										size="md"
-										src={DownloadIcon}
+										src={ExportIcon}
 									/>
 									<div className="mt-0.5">{t("topbar.buttons.export")}</div>
 								</>
