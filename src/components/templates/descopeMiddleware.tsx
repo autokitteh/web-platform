@@ -6,7 +6,7 @@ import psl from "psl";
 import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 
-import { isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
+import { isLoggedInCookie, jwtAuthBearerToken, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services/index";
 import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
@@ -99,7 +99,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	);
 	const isLoggedIn = Cookies.get(isLoggedInCookie);
 
-	if (playwrightTestsAuthBearer || isLoggedIn) {
+	if (playwrightTestsAuthBearer || jwtAuthBearerToken || isLoggedIn) {
 		return children;
 	}
 
