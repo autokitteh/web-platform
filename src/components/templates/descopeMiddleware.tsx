@@ -6,10 +6,11 @@ import psl from "psl";
 import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-import { isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
+import { googleTagManagerEvents, isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services/index";
 import { LocalStorageKeys } from "@src/enums";
 import { getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
+import { gTagEvent } from "@src/utilities/gTag.utils";
 import { useUserStore } from "@store/useUserStore";
 
 import { useLoggerStore, useToastStore } from "@store";
@@ -88,7 +89,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					redirect: "manual",
 				});
 
-				const error = await getLoggedInUser();
+				const { data: user, error } = await getLoggedInUser();
 				if (error) {
 					addToast({
 						message: t("errors.loginFailed"),
@@ -99,6 +100,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					return;
 				}
 				clearLogs();
+				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailed"),
