@@ -9,12 +9,13 @@ const apiBaseUrl = getApiBaseUrl();
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
 	const isWithCredentials = !jwtAuthBearerToken || withCredentials;
+	const jwtAuthToken = jwtAuthBearerToken ? `Bearer ${jwtAuthBearerToken}` : undefined;
 
 	return axios.create({
 		baseURL: baseAddress,
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
-			"Authorization": `Bearer ${jwtAuthBearerToken}`,
+			"Authorization": jwtAuthToken,
 		},
 		withCredentials: isWithCredentials,
 		timeout: apiRequestTimeout,
