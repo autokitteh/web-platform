@@ -1,3 +1,10 @@
+# [2.111.0](https://github.com/autokitteh/web-platform/compare/v2.110.1...v2.111.0) (2024-12-30)
+
+
+### Features
+
+* **UI-1131:** change export icon ([#843](https://github.com/autokitteh/web-platform/issues/843)) ([aa7e7c2](https://github.com/autokitteh/web-platform/commit/aa7e7c25ed7fddd4e98b8bbba9fb244b4401094d))
+
 ## [2.110.1](https://github.com/autokitteh/web-platform/compare/v2.110.0...v2.110.1) (2024-12-30)
 
 # [2.110.0](https://github.com/autokitteh/web-platform/compare/v2.109.0...v2.110.0) (2024-12-30)
