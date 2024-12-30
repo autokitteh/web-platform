@@ -1,3 +1,10 @@
+# [2.112.0](https://github.com/autokitteh/web-platform/compare/v2.111.0...v2.112.0) (2024-12-30)
+
+
+### Features
+
+* **UI-1126:** change icon for start template ([#841](https://github.com/autokitteh/web-platform/issues/841)) ([af0bd12](https://github.com/autokitteh/web-platform/commit/af0bd12508ed3a7e818a7e75e9d88f204363e4c2))
+
 # [2.111.0](https://github.com/autokitteh/web-platform/compare/v2.110.1...v2.111.0) (2024-12-30)
 
 
