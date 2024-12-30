@@ -12,7 +12,7 @@ This repository contains the web UI for the AutoKitteh backend. The application 
 
 Use the following command to run the application with Docker
 
-- `docker compose -f development.compose.yml up`
+-   `docker compose -f development.compose.yml up`
 
 ## How to Install and Run ⚙️
 
@@ -20,9 +20,9 @@ Use the following command to run the application with Docker
 
 Ensure you have the following installed on your system:
 
-- **Node.js** (version 16.x or later)
-- **npm** (version 7.x or later)
-- **Git** (for version control and repository management)
+-   **Node.js** (version 16.x or later)
+-   **npm** (version 7.x or later)
+-   **Git** (for version control and repository management)
 
 ### Installation Steps 🚀
 
@@ -46,27 +46,27 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 `VITE_HOST_URL`
 
-- Default: A predefined default host URL mentioned in [getApiBaseUrlFile](https://github.com/autokitteh/web-platform/blob/main/src/utilities/getApiBaseUrl.utils.ts)
-- Description: Defines the backend URL that the application will use as its host. If not set, the application will use a default host URL.
-- Example: VITE_HOST_URL=http://localhost:1234
+-   Default: A predefined default host URL mentioned in [getApiBaseUrlFile](https://github.com/autokitteh/web-platform/blob/main/src/utilities/getApiBaseUrl.utils.ts)
+-   Description: Defines the backend URL that the application will use as its host. If not set, the application will use a default host URL.
+-   Example: VITE_HOST_URL=http://localhost:1234
 
 `VITE_AUTH_ENABLED`
 
-- Default: false
-- Description: Determines whether the application should restrict access to logged-in users or users with a valid JWT token. Set to true to enable authentication protection.
-- Example: VITE_AUTH_ENABLED=false
+-   Default: false
+-   Description: Determines whether the application should restrict access to logged-in users or users with a valid JWT token. Set to true to enable authentication protection.
+-   Example: VITE_AUTH_ENABLED=false
 
 `VITE_DESCOPE_PROJECT_ID`
 
-- Default: None
-- Description: Required for OAuth authentication using Descope. If you want to allow users to connect to the app using OAuth, you need to provide your Descope project ID here.
-- Example: VITE_DESCOPE_PROJECT_ID=your_descope_project_id
+-   Default: None
+-   Description: Required for OAuth authentication using Descope. If you want to allow users to connect to the app using OAuth, you need to provide your Descope project ID here.
+-   Example: VITE_DESCOPE_PROJECT_ID=your_descope_project_id
 
 `TESTS_JWT_AUTH_TOKEN`
 
-- Default: None
-- Description: Used for running E2E tests when authentication is enabled on the backend. This JWT token allows the test runner to authenticate and access the application during testing.
-- Example: TESTS_JWT_AUTH_TOKEN=your_jwt_auth_token_for_e2e_tests
+-   Default: None
+-   Description: Used for running E2E tests when authentication is enabled on the backend. This JWT token allows the test runner to authenticate and access the application during testing.
+-   Example: TESTS_JWT_AUTH_TOKEN=your_jwt_auth_token_for_e2e_tests
 
 **Note:** These environment variables are optional. The application will use default values or fall back to certain behaviors if these variables are not set. However, setting them allows for greater customization and functionality, especially in different deployment environments or when running tests.
 
@@ -112,7 +112,7 @@ Create a `.env` file in the root of the project directory and add the necessary 
 
 In this project we used:
 
-- [FontAwesome](https://fontawesome.com) and [tabler-icons](https://github.com/tabler/tabler-icons) for our icons.
+-   [FontAwesome](https://fontawesome.com) and [tabler-icons](https://github.com/tabler/tabler-icons) for our icons.
 
 ## Contact 📬
 
