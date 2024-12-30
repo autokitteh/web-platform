@@ -121,7 +121,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				);
 
 				if (!response.ok) {
-					throw new Error("Failed to submit form data");
+					LoggerService.error(namespaces.ui.loginPage, t("errors.hubspotFormFailed"), true);
 				}
 			} catch (error) {
 				addToast({
