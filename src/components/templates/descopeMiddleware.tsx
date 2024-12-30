@@ -83,6 +83,46 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					return;
 				}
 				clearLogs();
+
+				const hsPortalId = import.meta.env.HUBSPOT_PORTAL_ID;
+				const hsFormId = import.meta.env.HUBSPOT_FORM_ID;
+				const hsutk = Cookies.get("hubspotutk") || "";
+
+				if (!hsPortalId || !hsFormId) return;
+				const response = await fetch(
+					`https://api.hsforms.com/submissions/v3/integration/submit/${hsPortalId}/${hsFormId}`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							formId: hsFormId,
+
+							fields: [
+								{
+									objectTypeId: "0-1",
+									name: "email",
+									value: "example@example.com",
+								},
+								{
+									objectTypeId: "0-1",
+									name: "firstname",
+									value: "Jeff",
+								},
+							],
+							context: {
+								hutk: hsutk,
+								pageUri: window.location.href,
+								pageName: "WebUI Login",
+							},
+						}),
+					}
+				);
+
+				if (!response.ok) {
+					throw new Error("Failed to submit form data");
+				}
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailed"),

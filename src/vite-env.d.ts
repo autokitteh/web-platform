@@ -14,6 +14,8 @@ interface ImportMetaEnv {
 	readonly DISPLAY_DISCORD_INTEGRATION: boolean;
 	readonly DISPLAY_SLACK_SOCKET_INTEGRATION: boolean;
 	readonly ENABLE_NEW_ORGS_AND_USERS_DESIGN: boolean;
+	readonly HUBSPOT_FORM_ID: string;
+	readonly HUBSPOT_PORTAL_ID: string;
 }
 
 interface ImportMeta {
