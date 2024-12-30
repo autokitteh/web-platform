@@ -9,8 +9,7 @@ import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-ro
 import { googleTagManagerEvents, isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services/index";
 import { LocalStorageKeys } from "@src/enums";
-import { getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
-import { gTagEvent } from "@src/utilities/gTag.utils";
+import { gTagEvent, getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
 import { useLoggerStore, useToastStore } from "@store";
