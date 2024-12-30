@@ -236,7 +236,11 @@ export const ConnectionsTable = () => {
 														</div>
 														<div className="flex items-center">
 															{t("table.popover.connectionId")}:
-															<IdCopyButton id={connectionId} variant="flatText" />
+															<IdCopyButton
+																displayFullLength
+																id={connectionId}
+																variant="flatText"
+															/>
 														</div>
 													</div>
 												</PopoverContent>
