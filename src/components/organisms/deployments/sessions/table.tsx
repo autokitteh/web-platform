@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
 import { namespaces, sessionRowHeight } from "@constants";
@@ -29,6 +29,9 @@ export const SessionsTable = () => {
 	const { closeModal } = useModalStore();
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
+	const { state } = useLocation();
+	const sessionState = state?.sessionState;
+
 	const addToast = useToastStore((state) => state.addToast);
 	const [isDeleting, setIsDeleting] = useState(false);
 
@@ -153,6 +156,13 @@ export const SessionsTable = () => {
 		[closeSessionLog]
 	);
 
+	useEffect(() => {
+		if (sessionState) {
+			handleFilterSessions(sessionState);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionState]);
+
 	const handleItemsRendered = useCallback(
 		({ visibleStopIndex }: ListOnItemsRenderedProps) => {
 			if (visibleStopIndex >= sessions.length - 1 && sessionsNextPageToken) {
@@ -202,7 +212,11 @@ export const SessionsTable = () => {
 							{t("tableTitle")}
 						</Typography>
 						<div className="ml-auto flex items-center">
-							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
+							<SessionsTableFilter
+								defaultValue={sessionState}
+								onChange={handleFilterSessions}
+								sessionStats={sessionStats}
+							/>
 							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
 						</div>
 					</div>

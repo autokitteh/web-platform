@@ -6,6 +6,7 @@ import { DeploymentSession } from "@type/models";
 export interface SessionTableFilterProps {
 	onChange: (sessionState?: SessionStateKeyType) => void;
 	sessionStats: DeploymentSession[];
+	defaultValue?: SessionStateKeyType;
 }
 
 export interface SessionsTableRowProps {
