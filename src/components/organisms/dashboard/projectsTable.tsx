@@ -98,6 +98,7 @@ export const DashboardProjectsTable = () => {
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
 			"inline-block border-0 px-1 text-sm font-medium min-w-10 max-w-12 py-2 truncate sm:max-w-12 2xl:max-w-18 3xl:max-w-24",
+			"hover:bg-gray-1100 rounded-3xl inline-flex justify-center items-center min-w-12 h-7",
 			{
 				"text-blue-500": state === SessionStateType.running,
 				"text-yellow-500": state === SessionStateType.stopped,
@@ -196,7 +197,7 @@ export const DashboardProjectsTable = () => {
 								stopped,
 								totalDeployments,
 							}) => (
-								<Tr className="cursor-pointer pl-4" key={id}>
+								<Tr className="cursor-pointer pl-4 hover:bg-black" key={id}>
 									<Td
 										className="w-2/3 pr-4 hover:font-bold sm:w-1/5"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
@@ -215,17 +216,27 @@ export const DashboardProjectsTable = () => {
 									<Td
 										className="hidden w-1/6 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-										title={`${totalDeployments} ${t("table.columns.deployments")}`}
+										title={`${totalDeployments} ${t("table.columns.totalDeployments")}`}
 									>
 										<div className="w-full pr-6 text-center">{totalDeployments}</div>
 									</Td>
 									<Td
-										className="-ml-1 hidden w-2/6 pr-2 sm:flex"
+										className="-ml-1 w-2/6 pr-2 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div
 											aria-label={t("table.sessionTypes.running")}
 											className={countStyle(SessionStateType.running)}
+											onClick={(event) => {
+												event.stopPropagation();
+												navigate(
+													`/${SidebarHrefMenu.projects}/${id}/deployments/dep_01jg9h2r97e7187j4f8j8fraea/sessions`,
+													{ state: { sessionState: SessionStateType.running } }
+												);
+											}}
+											onKeyDown={() => {}}
+											role="button"
+											tabIndex={0}
 											title={`${running} ${t("table.sessionTypes.running")}`}
 										>
 											{running}
@@ -233,6 +244,16 @@ export const DashboardProjectsTable = () => {
 										<div
 											aria-label={t("table.sessionTypes.stopped")}
 											className={countStyle(SessionStateType.stopped, "justify-center")}
+											onClick={(event) => {
+												event.stopPropagation();
+												navigate(
+													`/${SidebarHrefMenu.projects}/${id}/deployments/dep_01jg9h2r97e7187j4f8j8fraea/sessions`,
+													{ state: { sessionState: SessionStateType.stopped } }
+												);
+											}}
+											onKeyDown={() => {}}
+											role="button"
+											tabIndex={0}
 											title={`${stopped} ${t("table.sessionTypes.stopped")}`}
 										>
 											{stopped}
@@ -240,6 +261,16 @@ export const DashboardProjectsTable = () => {
 										<div
 											aria-label={t("table.sessionTypes.completed")}
 											className={countStyle(SessionStateType.completed)}
+											onClick={(event) => {
+												event.stopPropagation();
+												navigate(
+													`/${SidebarHrefMenu.projects}/${id}/deployments/dep_01jg9h2r97e7187j4f8j8fraea/sessions`,
+													{ state: { sessionState: SessionStateType.completed } }
+												);
+											}}
+											onKeyDown={() => {}}
+											role="button"
+											tabIndex={0}
 											title={`${completed} ${t("table.sessionTypes.completed")}`}
 										>
 											{completed}
@@ -247,6 +278,16 @@ export const DashboardProjectsTable = () => {
 										<div
 											aria-label={t("table.sessionTypes.error")}
 											className={countStyle(SessionStateType.error)}
+											onClick={(event) => {
+												event.stopPropagation();
+												navigate(
+													`/${SidebarHrefMenu.projects}/${id}/deployments/dep_01jg9h2r97e7187j4f8j8fraea/sessions`,
+													{ state: { sessionState: SessionStateType.error } }
+												);
+											}}
+											onKeyDown={() => {}}
+											role="button"
+											tabIndex={0}
 											title={`${error} ${t("table.sessionTypes.error")}`}
 										>
 											{error}
