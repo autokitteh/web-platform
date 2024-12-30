@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/react";
+import Cookies from "js-cookie";
 import { Routes } from "react-router-dom";
 
 import packageJson from "../../package.json";
@@ -7,7 +8,6 @@ export const isDevelopment = import.meta.env.VITE_NODE_ENV === "development";
 export const isProduction = import.meta.env.VITE_NODE_ENV === "production";
 export const isAuthEnabled: boolean = import.meta.env.VITE_AUTH_ENABLED === "true";
 export const descopeProjectId: string = import.meta.env.VITE_DESCOPE_PROJECT_ID;
-export const googleAnalyticsId: string = import.meta.env.GOOGLE_ANALYTICS_ID;
 export const playwrightTestsAuthBearer: string = import.meta.env.TESTS_JWT_AUTH_TOKEN;
 export const jwtAuthBearerToken: string = import.meta.env.JWT_AUTH_TOKEN;
 export const homepageURL = "/";
@@ -29,3 +29,9 @@ export const timeFormat = "HH:mm:ss";
 export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
 export const AKRoutes = isProduction ? Sentry.withSentryReactRouterV7Routing(Routes) : Routes;
+
+// Tracking
+export const googleAnalyticsId: string = import.meta.env.GOOGLE_ANALYTICS_ID;
+export const hsPortalId = import.meta.env.HUBSPOT_PORTAL_ID;
+export const hsFormId = import.meta.env.HUBSPOT_FORM_ID;
+export const hsutk = Cookies.get("hubspotutk") || "";

@@ -6,7 +6,15 @@ import psl from "psl";
 import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 
-import { isLoggedInCookie, jwtAuthBearerToken, namespaces, playwrightTestsAuthBearer } from "@constants";
+import {
+	hsFormId,
+	hsPortalId,
+	hsutk,
+	isLoggedInCookie,
+	jwtAuthBearerToken,
+	namespaces,
+	playwrightTestsAuthBearer,
+} from "@constants";
 import { LoggerService } from "@services/index";
 import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
@@ -83,10 +91,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					return;
 				}
 				clearLogs();
-
-				const hsPortalId = import.meta.env.HUBSPOT_PORTAL_ID;
-				const hsFormId = import.meta.env.HUBSPOT_FORM_ID;
-				const hsutk = Cookies.get("hubspotutk") || "";
 
 				if (!hsPortalId || !hsFormId) return;
 				const response = await fetch(
