@@ -54,7 +54,6 @@ export const SessionsTable = () => {
 		const deployments = await reloadDeploymentsCache(projectId, true);
 
 		const deployment = deployments?.find((deployment) => deployment.deploymentId === deploymentId);
-
 		if (!deployment?.sessionStats) {
 			return;
 		}
@@ -73,9 +72,19 @@ export const SessionsTable = () => {
 			if (!forceRefresh) {
 				setIsLoading(true);
 			}
+			const fetchMethod = deploymentId
+				? SessionsService.listByDeploymentId.bind(null, deploymentId!)
+				: projectId
+					? SessionsService.listByProjectId.bind(null, projectId!)
+					: null;
 
-			const { data, error } = await SessionsService.listByDeploymentId(
-				deploymentId!,
+			if (!fetchMethod) {
+				setIsLoading(false);
+
+				return;
+			}
+
+			const { data, error } = await fetchMethod(
 				{
 					stateType: sessionStateType,
 				},
@@ -145,16 +154,17 @@ export const SessionsTable = () => {
 
 	const closeSessionLog = useCallback(() => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
-	}, [navigate, projectId, deploymentId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, deploymentId]);
 
-	const handleFilterSessions = useCallback(
-		(stateType?: SessionStateKeyType) => {
-			const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
-			setSessionStateType(selectedSessionStateFilter);
+	const handleFilterSessions = useCallback((stateType?: SessionStateKeyType) => {
+		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
+		setSessionStateType(selectedSessionStateFilter);
+		if (deploymentId) {
 			closeSessionLog();
-		},
-		[closeSessionLog]
-	);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (sessionState) {
