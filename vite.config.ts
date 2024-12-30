@@ -47,7 +47,7 @@ export default defineConfig({
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
 		"import.meta.env.JWT_AUTH_TOKEN": JSON.stringify(process.env.JWT_AUTH_TOKEN),
-		"import.meta.env.HUBSPOT_PORTALID": JSON.stringify(process.env.HUBSPOT_PORTALID),
+		"import.meta.env.HUBSPOT_PORTAL_ID": JSON.stringify(process.env.HUBSPOT_PORTAL_ID),
 		"import.meta.env.HUBSPOT_FORM_ID": JSON.stringify(process.env.HUBSPOT_FORM_ID),
 		"import.meta.env.ENABLE_NEW_ORGS_AND_USERS_DESIGN": process.env.ENABLE_NEW_ORGS_AND_USERS_DESIGN,
 	},
