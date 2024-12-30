@@ -13,6 +13,7 @@ export type { LoggerStore } from "@interfaces/store/loggerStore.interface";
 export type { ManualRunStore, ManualProjectData } from "@interfaces/store/manualRunStore.interface";
 export type { ModalStore } from "@interfaces/store/modalStore.interface";
 export type { ProjectStore } from "@interfaces/store/projectStore.interface";
+export type { SharedBetweenProjectsStore } from "@interfaces/store/sharedBetweenProjectsStore.interface";
 export type {
 	RemoteTemplateCardWithFiles,
 	GitHubCommit,

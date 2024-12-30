@@ -8,6 +8,7 @@ interface ImportMetaEnv {
 	readonly VITE_DESCOPE_PROJECT_ID: string;
 	readonly GOOGLE_ANALYTICS_ID: string;
 	readonly TESTS_JWT_AUTH_TOKEN: string;
+	readonly JWT_AUTH_TOKEN: string;
 	readonly SENTRY_DSN: string;
 	readonly VITE_HOST_URL: string;
 	readonly DISPLAY_DISCORD_INTEGRATION: boolean;

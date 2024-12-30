@@ -1,3 +1,67 @@
+# [2.110.0](https://github.com/autokitteh/web-platform/compare/v2.109.0...v2.110.0) (2024-12-30)
+
+
+### Features
+
+* **UI-1066:** add ability to grpc to connect with jwt token ([#844](https://github.com/autokitteh/web-platform/issues/844)) ([b8dacb6](https://github.com/autokitteh/web-platform/commit/b8dacb6976ba2d1d68e6e8a5e1f8547430b0f156))
+
+# [2.109.0](https://github.com/autokitteh/web-platform/compare/v2.108.2...v2.109.0) (2024-12-28)
+
+
+### Features
+
+* **UI-1046:** return cursor to the same point in the code moving between projects ([#806](https://github.com/autokitteh/web-platform/issues/806)) ([ff69ea6](https://github.com/autokitteh/web-platform/commit/ff69ea61fa1674a836e0bed5f20c9b1e8548ad61))
+
+## [2.108.2](https://github.com/autokitteh/web-platform/compare/v2.108.1...v2.108.2) (2024-12-26)
+
+
+### Bug Fixes
+
+* **ENG-1930:** fix url validation in auth0 connection ([#837](https://github.com/autokitteh/web-platform/issues/837)) ([c5c66a1](https://github.com/autokitteh/web-platform/commit/c5c66a1a7e303ea877c2702896053de1baf4213e))
+
+## [2.108.1](https://github.com/autokitteh/web-platform/compare/v2.108.0...v2.108.1) (2024-12-26)
+
+
+### Bug Fixes
+
+* **UI-1136:** in webhook trigger user cant change http method back to any ([#832](https://github.com/autokitteh/web-platform/issues/832)) ([9af5d3d](https://github.com/autokitteh/web-platform/commit/9af5d3d2687212560cf80ca91a9e598f8d9545be))
+
+# [2.108.0](https://github.com/autokitteh/web-platform/compare/v2.107.0...v2.108.0) (2024-12-26)
+
+
+### Features
+
+* **UI-1063:** add organization settings page ([#798](https://github.com/autokitteh/web-platform/issues/798)) ([adff27c](https://github.com/autokitteh/web-platform/commit/adff27c91d4262367c45b808bf0ba4cd05b503d7))
+
+# [2.107.0](https://github.com/autokitteh/web-platform/compare/v2.106.0...v2.107.0) (2024-12-26)
+
+
+### Features
+
+* **UI-1138:** update auth0 connection setup ([#835](https://github.com/autokitteh/web-platform/issues/835)) ([04a1f80](https://github.com/autokitteh/web-platform/commit/04a1f8048e8a2730bddcbe48cded579f1e20291b))
+
+# [2.106.0](https://github.com/autokitteh/web-platform/compare/v2.105.4...v2.106.0) (2024-12-26)
+
+
+### Features
+
+* **UI-1064:** add organization users table ([#799](https://github.com/autokitteh/web-platform/issues/799)) ([57690a2](https://github.com/autokitteh/web-platform/commit/57690a2b7939252d61f31d1ce2f43c0d99adfb46))
+
+## [2.105.4](https://github.com/autokitteh/web-platform/compare/v2.105.3...v2.105.4) (2024-12-26)
+
+
+### Bug Fixes
+
+* **UI-1139:** display sessions in created status in deployments table ([#834](https://github.com/autokitteh/web-platform/issues/834)) ([01f62a2](https://github.com/autokitteh/web-platform/commit/01f62a284d7b6f7ecc86c100d79061c6e9682ddd))
+* **UI-1143:** remove field mask from project update request ([#836](https://github.com/autokitteh/web-platform/issues/836)) ([dec1274](https://github.com/autokitteh/web-platform/commit/dec1274b8b8965598eccdcd896eaa2579d92e185))
+
+## [2.105.3](https://github.com/autokitteh/web-platform/compare/v2.105.2...v2.105.3) (2024-12-24)
+
+
+### Bug Fixes
+
+* **UI-1133:** manual run config on deployments change ([#829](https://github.com/autokitteh/web-platform/issues/829)) ([5a589eb](https://github.com/autokitteh/web-platform/commit/5a589ebd6086a1e0ee5edb8669fed6a94f03748c))
+
 ## [2.105.2](https://github.com/autokitteh/web-platform/compare/v2.105.1...v2.105.2) (2024-12-24)
 
 

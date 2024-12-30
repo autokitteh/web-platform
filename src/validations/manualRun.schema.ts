@@ -1,10 +1,7 @@
 import i18n from "i18next";
 import { ZodObject, ZodTypeAny, z } from "zod";
 
-const selectSchema = z.object({
-	label: z.string(),
-	value: z.string(),
-});
+import { selectSchema } from "@validations";
 
 let manualRunSchema: ZodObject<Record<string, ZodTypeAny>>;
 

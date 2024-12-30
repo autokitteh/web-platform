@@ -27,8 +27,10 @@ export const DeploymentSessionStats = ({
 		);
 
 	const sessionStatsOrdered = [
-		sessionStats?.find(({ state }) => state === SessionStateType.running) || {
-			count: 0,
+		{
+			count:
+				(sessionStats?.find(({ state }) => state === SessionStateType.running)?.count || 0) +
+				(sessionStats?.find(({ state }) => state === SessionStateType.created)?.count || 0),
 			state: SessionStateType.running,
 		},
 		sessionStats?.find(({ state }) => state === SessionStateType.stopped) || {

@@ -9,7 +9,7 @@ import { useLocation, useParams } from "react-router-dom";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
-import { useCacheStore, useToastStore } from "@src/store";
+import { useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
 import { cn, getAutoSavePreference } from "@utilities";
 
 import { useFileOperations } from "@hooks";
@@ -19,18 +19,26 @@ import { Button, IconButton, IconSvg, Loader, Spinner, Tab, Typography } from "@
 import { AKRoundLogo } from "@assets/image";
 import { Close, CompressIcon, ExpandIcon, SaveIcon } from "@assets/image/icons";
 
-export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onExpand: () => void }) => {
+export const EditorTabs = ({
+	isExpanded,
+	setExpanded,
+}: {
+	isExpanded: boolean;
+	setExpanded: (expandedState: boolean) => void;
+}) => {
 	const { projectId } = useParams();
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("tabs", { keyPrefix: "editor" });
 	const { closeOpenedFile, openFileAsActive, openFiles, saveFile } = useFileOperations(projectId!);
 	const { currentProjectId, fetchResources } = useCacheStore();
 	const addToast = useToastStore((state) => state.addToast);
-
+	const { cursorPositionPerProject, setCursorPosition } = useSharedBetweenProjectsStore();
 	const activeEditorFileName =
 		(projectId && openFiles[projectId]?.find(({ isActive }: { isActive: boolean }) => isActive)?.name) || "";
 	const fileExtension = "." + last(activeEditorFileName.split("."));
 	const languageEditor = monacoLanguages[fileExtension as keyof typeof monacoLanguages];
+
+	const [codeLoadedFirstTime, setCodeLoadedFirstTime] = useState(true);
 
 	const [content, setContent] = useState("");
 	const autoSaveMode = getAutoSavePreference();
@@ -41,10 +49,10 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const [isFirstContentLoad, setIsFirstContentLoad] = useState(true);
 
 	useEffect(() => {
-		if (content && isFirstContentLoad) {
-			initialContentRef.current = content;
-			setIsFirstContentLoad(false);
-		}
+		if (!content || !isFirstContentLoad) return;
+
+		initialContentRef.current = content;
+		setIsFirstContentLoad(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [content]);
 
@@ -62,9 +70,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	const fileToOpen = location.state?.fileToOpen;
 
 	const openDefaultFile = () => {
-		if (fileToOpen) {
-			openFileAsActive(fileToOpen);
-		}
+		if (!fileToOpen) return;
+		openFileAsActive(fileToOpen);
 	};
 
 	const loadContent = async () => {
@@ -114,18 +121,34 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		monaco.editor.setTheme("myCustomTheme");
 		editorRef.current = _editor;
 		const model = _editor.getModel();
-		if (model) {
-			model.pushEditOperations([], [], () => null);
+		if (!model) return;
+		model.pushEditOperations([], [], () => null);
 
-			_editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => {
-				const currentContent = model.getValue();
+		_editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyZ, () => {
+			const currentContent = model.getValue();
 
-				if (currentContent !== initialContentRef.current) {
-					_editor.trigger("keyboard", "undo", null);
-				}
-			});
-		}
+			if (currentContent === initialContentRef.current) {
+				return;
+			}
+			_editor.trigger("keyboard", "undo", null);
+		});
 	};
+
+	useEffect(() => {
+		setCodeLoadedFirstTime(true);
+	}, [projectId]);
+
+	useEffect(() => {
+		const cursorLine = cursorPositionPerProject[projectId!];
+		if (!content || !codeLoadedFirstTime || !cursorLine) return;
+		const codeEditor = editorRef.current;
+		if (!codeEditor) return;
+		codeEditor.revealLineInCenter(cursorLine);
+		codeEditor.setPosition({ lineNumber: cursorLine, column: 0 });
+
+		setCodeLoadedFirstTime(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [content]);
 
 	const updateContent = async (newContent?: string) => {
 		if (!newContent) {
@@ -192,10 +215,9 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		}
 
 		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "s" && (navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) {
-				event.preventDefault();
-				debouncedManualSave(content);
-			}
+			if (event.key !== "s" && !(navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) return;
+			event.preventDefault();
+			debouncedManualSave(content);
 		};
 
 		keydownListenerRef.current = handleKeyDown;
@@ -203,9 +225,8 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 		document.addEventListener("keydown", handleKeyDown, false);
 
 		return () => {
-			if (keydownListenerRef.current) {
-				document.removeEventListener("keydown", keydownListenerRef.current);
-			}
+			if (!keydownListenerRef.current) return;
+			document.removeEventListener("keydown", keydownListenerRef.current);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [content]);
@@ -224,10 +245,29 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 	): void => {
 		event.stopPropagation();
 		closeOpenedFile(name);
-		if (isExpanded && openFiles[projectId!]?.length === 1) {
-			onExpand();
-		}
+		if (!isExpanded || openFiles[projectId!]?.length !== 1) return;
+		setExpanded(false);
 	};
+
+	useEffect(() => {
+		const codeEditor = editorRef.current;
+		let cursorPositionChangeListener: monaco.IDisposable | null = null;
+
+		if (!codeEditor) return;
+		cursorPositionChangeListener = codeEditor.onDidChangeCursorPosition(
+			(event: monaco.editor.ICursorPositionChangedEvent) => {
+				if (event.reason !== 3 || currentProjectId !== projectId) return;
+				setCursorPosition(currentProjectId!, event.position.lineNumber);
+			}
+		);
+
+		return () => {
+			if (!cursorPositionChangeListener) return;
+			cursorPositionChangeListener.dispose();
+		};
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [editorRef.current, projectId, currentProjectId]);
 
 	return (
 		<div className="relative flex h-full flex-col pt-11">
@@ -292,7 +332,7 @@ export const EditorTabs = ({ isExpanded, onExpand }: { isExpanded: boolean; onEx
 										</Button>
 									)}
 								</div>
-								<IconButton className="hover:bg-gray-1100" onClick={onExpand}>
+								<IconButton className="hover:bg-gray-1100" onClick={() => setExpanded(!isExpanded)}>
 									{isExpanded ? (
 										<CompressIcon className="size-4 fill-white" />
 									) : (

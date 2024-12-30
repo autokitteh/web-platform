@@ -5,6 +5,11 @@ export const integrationVariablesMapping = {
 		pat: "pat",
 		secret: "pat_secret",
 	},
+	[Integrations.auth0]: {
+		client_id: "client_id",
+		client_secret: "client_secret",
+		auth0_domain: "auth0_domain",
+	},
 	[Integrations.slack]: {
 		bot_token: "botToken",
 		app_token: "appToken",

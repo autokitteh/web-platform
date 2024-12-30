@@ -3,11 +3,7 @@ import { Resolver } from "react-hook-form";
 import { z } from "zod";
 
 import { TriggerTypes } from "@src/enums";
-
-const selectItemSchema = z.object({
-	label: z.string(),
-	value: z.string(),
-});
+import { selectSchema } from "@validations";
 
 export let triggerSchema: z.ZodSchema;
 
@@ -23,15 +19,15 @@ i18n.on("initialized", () => {
 	triggerSchema = z
 		.object({
 			name: z.string().min(1, i18n.t("triggers.form.validations.nameRequired", { ns: "tabs" })),
-			connection: selectItemSchema.refine((value) => value.label, {
+			connection: selectSchema.refine((value) => value.label, {
 				message: i18n.t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
 			}),
 			filePath: z
-				.union([selectItemSchema, z.object({ label: z.string().optional(), value: z.string().optional() })])
+				.union([selectSchema, z.object({ label: z.string().optional(), value: z.string().optional() })])
 				.optional(),
 			entryFunction: z.string().optional(),
 			eventType: z.string().optional(),
-			eventTypeSelect: selectItemSchema.optional(),
+			eventTypeSelect: selectSchema.optional(),
 			filter: z.string().optional(),
 			cron: z.string().optional(),
 		})

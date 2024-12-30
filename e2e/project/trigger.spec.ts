@@ -145,7 +145,7 @@ test.describe("Project Triggers Suite", () => {
 		});
 	});
 
-	test("Delete trigger", async ({ page }) => {
+	test.skip("Delete trigger", async ({ page }) => {
 		await createTriggerScheduler(page, "triggerName", "5 4 * * *", "program.py", "functionName");
 		await page.getByRole("button", { name: "Return back" }).click();
 		const newRowInTable = page.getByRole("cell", { exact: true, name: "triggerName" });

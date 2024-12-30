@@ -27,23 +27,21 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 	fetchManualRunConfiguration: async (projectId: string) => {
 		const deployments = useCacheStore.getState().deployments;
+		const activeDeployment = deployments?.find((deployment) => deployment.state === DeploymentStateVariant.active);
 
-		if (!deployments?.length || deployments[0].state !== DeploymentStateVariant.active) {
+		if (!deployments?.length || !activeDeployment) {
 			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: false });
 
 			return;
 		}
-
-		const lastDeployment = deployments[0];
-
-		if (lastDeployment.buildId === get().projectManualRun[projectId]?.lastDeployment?.buildId) {
+		if (activeDeployment.buildId === get().projectManualRun[projectId]?.activeDeployment?.buildId) {
 			get().updateManualRunConfiguration(projectId!, { isManualRunEnabled: true });
 
 			return;
 		}
 
 		const { data: buildDescription, error: buildDescriptionError } = await BuildsService.getBuildDescription(
-			lastDeployment.buildId
+			activeDeployment.buildId
 		);
 
 		if (buildDescriptionError) {
@@ -57,12 +55,16 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const buildInfo = JSON.parse(buildDescription!);
 		const files = convertBuildRuntimesToViewTriggers(buildInfo.runtimes);
 
-		get().updateManualRunConfiguration(projectId!, { files, lastDeployment, isManualRunEnabled: true });
+		get().updateManualRunConfiguration(projectId!, {
+			files,
+			activeDeployment,
+			isManualRunEnabled: true,
+		});
 	},
 
 	updateManualRunConfiguration: (
 		projectId,
-		{ entrypointFunction, filePath, files, isJson, isManualRunEnabled, lastDeployment, params }
+		{ activeDeployment, entrypointFunction, filePath, files, isJson, isManualRunEnabled, params }
 	) => {
 		set((state) => {
 			const projectData = {
@@ -90,7 +92,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				...(filePath && { filePath }),
 				...(entrypointFunction !== undefined && { entrypointFunction }),
 				...(params && { params: [...params] }),
-				...(lastDeployment && { lastDeployment }),
+				...(activeDeployment && { activeDeployment }),
 				...(isJson !== undefined && { isJson }),
 			});
 
@@ -103,10 +105,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 	saveAndExecuteManualRun: async (projectId, params) => {
 		const project = get().projectManualRun[projectId];
 
-		if (!project?.lastDeployment) {
+		if (!project?.activeDeployment) {
 			return {
 				data: undefined,
-				error: i18n.t("history.manualRun.missingLastDeployment", { ns: "deployments" }),
+				error: i18n.t("history.manualRun.missingactiveDeployment", { ns: "deployments" }),
 			};
 		}
 
@@ -120,8 +122,8 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		);
 
 		const sessionArgs = {
-			buildId: project.lastDeployment.buildId,
-			deploymentId: project.lastDeployment.deploymentId,
+			buildId: project.activeDeployment.buildId,
+			deploymentId: project.activeDeployment.deploymentId,
 			entrypoint: {
 				col: 0,
 				row: 0,
