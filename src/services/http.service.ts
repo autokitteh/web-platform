@@ -2,20 +2,25 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import psl from "psl";
 
-import { apiRequestTimeout, isLoggedInCookie } from "@constants";
+import { apiRequestTimeout, isLoggedInCookie, jwtAuthBearerToken } from "@constants";
 import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
 
 const apiBaseUrl = getApiBaseUrl();
 
-const createAxiosInstance = (baseAddress: string, withCredentials = false) =>
-	axios.create({
+const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
+	const isWithCredentials = !jwtAuthBearerToken || withCredentials;
+	const jwtAuthToken = jwtAuthBearerToken ? `Bearer ${jwtAuthBearerToken}` : undefined;
+
+	return axios.create({
 		baseURL: baseAddress,
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
+			"Authorization": jwtAuthToken,
 		},
-		withCredentials,
+		withCredentials: isWithCredentials,
 		timeout: apiRequestTimeout,
 	});
+};
 
 // Axios instance for API requests
 const httpClient = createAxiosInstance(apiBaseUrl, import.meta.env.VITE_AUTH_ENABLED === "true");
