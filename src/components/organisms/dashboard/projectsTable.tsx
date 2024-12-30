@@ -47,11 +47,13 @@ export const DashboardProjectsTable = () => {
 			const lastDeployed = deployments?.[deployments?.length - 1]?.createdAt;
 			const stats = deployments?.reduce(
 				(acc: { sessionCounts: Record<string, number>; totalDeployments: number }, deployment) => {
-					if (
-						deployment.state === DeploymentStateVariant.draining ||
-						deployment.state === DeploymentStateVariant.active
+					if (deployment.state === DeploymentStateVariant.active) {
+						projectStatus = DeploymentStateVariant.active;
+					} else if (
+						deployment.state === DeploymentStateVariant.draining &&
+						projectStatus !== DeploymentStateVariant.active
 					) {
-						projectStatus = deployment.state;
+						projectStatus = DeploymentStateVariant.draining;
 					}
 
 					acc.totalDeployments = (acc.totalDeployments || 0) + 1;
@@ -61,7 +63,10 @@ export const DashboardProjectsTable = () => {
 							if (!session.state) return;
 							acc.sessionCounts = {
 								...acc.sessionCounts,
-								[session.state]: (acc.sessionCounts?.[session.state] || 0) + session.count,
+								[session.state]:
+									session.state === SessionStateType.created
+										? (acc.sessionCounts?.[SessionStateType.running] || 0) + session.count
+										: (acc.sessionCounts?.[session.state] || 0) + session.count,
 							};
 						});
 					}
@@ -75,10 +80,10 @@ export const DashboardProjectsTable = () => {
 				id: project.id,
 				name: project.name,
 				totalDeployments: stats?.totalDeployments || 0,
-				running: stats?.sessionCounts?.["running"] || 0,
-				stopped: stats?.sessionCounts?.["stopeed"] || 0,
-				completed: stats?.sessionCounts?.["completed"] || 0,
-				error: stats?.sessionCounts?.["error"] || 0,
+				running: stats?.sessionCounts?.[SessionStateType.running] || 0,
+				stopped: stats?.sessionCounts?.[SessionStateType.stopped] || 0,
+				completed: stats?.sessionCounts?.[SessionStateType.completed] || 0,
+				error: stats?.sessionCounts?.[SessionStateType.error] || 0,
 				status: projectStatus,
 				lastDeployed,
 			};
