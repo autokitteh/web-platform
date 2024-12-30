@@ -1,3 +1,10 @@
+# [2.110.0](https://github.com/autokitteh/web-platform/compare/v2.109.0...v2.110.0) (2024-12-30)
+
+
+### Features
+
+* **UI-1066:** add ability to grpc to connect with jwt token ([#844](https://github.com/autokitteh/web-platform/issues/844)) ([b8dacb6](https://github.com/autokitteh/web-platform/commit/b8dacb6976ba2d1d68e6e8a5e1f8547430b0f156))
+
 # [2.109.0](https://github.com/autokitteh/web-platform/compare/v2.108.2...v2.109.0) (2024-12-28)
 
 
