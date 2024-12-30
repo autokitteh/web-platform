@@ -215,7 +215,8 @@ export const EditorTabs = ({
 		}
 
 		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key !== "s" && !(navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) return;
+			if (event.key !== "s" || !(navigator.userAgent.includes("Mac") ? event.metaKey : event.ctrlKey)) return;
+
 			event.preventDefault();
 			debouncedManualSave(content);
 		};
