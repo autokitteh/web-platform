@@ -37,6 +37,15 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		const hsPortalId = import.meta.env.HUBSPOT_PORTAL_ID;
+		const hsFormId = import.meta.env.HUBSPOT_FORM_ID;
+		const hsutk = Cookies.get("hubspotutk") || "";
+		console.log("hsPortalId", hsPortalId);
+		console.log("hsFormId", hsFormId);
+		console.log("hsutk", hsutk);
+	}, []);
+
 	const handleLogout = useCallback(async () => {
 		await logout();
 		const rootDomain = psl.parse(window.location.hostname);
