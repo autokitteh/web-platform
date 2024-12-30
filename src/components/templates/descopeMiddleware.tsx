@@ -37,15 +37,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		const hsPortalId = import.meta.env.HUBSPOT_PORTAL_ID;
-		const hsFormId = import.meta.env.HUBSPOT_FORM_ID;
-		const hsutk = Cookies.get("hubspotutk") || "";
-		console.log("hsPortalId", hsPortalId);
-		console.log("hsFormId", hsFormId);
-		console.log("hsutk", hsutk);
-	}, []);
-
 	const handleLogout = useCallback(async () => {
 		await logout();
 		const rootDomain = psl.parse(window.location.hostname);
@@ -81,7 +72,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					redirect: "manual",
 				});
 
-				const error = await getLoggedInUser();
+				const { data: user, error } = await getLoggedInUser();
 				if (error) {
 					addToast({
 						message: t("errors.loginFailed"),
@@ -96,9 +87,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				const hsPortalId = import.meta.env.HUBSPOT_PORTAL_ID;
 				const hsFormId = import.meta.env.HUBSPOT_FORM_ID;
 				const hsutk = Cookies.get("hubspotutk") || "";
-				console.log("hsPortalId", hsPortalId);
-				console.log("hsFormId", hsFormId);
-				console.log("hsutk", hsutk);
 
 				if (!hsPortalId || !hsFormId) return;
 				const response = await fetch(
@@ -115,12 +103,12 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 								{
 									objectTypeId: "0-1",
 									name: "email",
-									value: "boristwist1@gmail.com",
+									value: user?.email,
 								},
 								{
 									objectTypeId: "0-1",
 									name: "firstname",
-									value: "Ronen Test",
+									value: user?.name,
 								},
 							],
 							context: {
