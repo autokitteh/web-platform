@@ -25,11 +25,11 @@ export { default as CopyIcon } from "@assets/image/icons/Copy.svg?react";
 export { default as DeploymentsIcon } from "@assets/image/icons/Deployments.svg?react";
 // Taken from: https://www.svgrepo.com/svg/450093/discord
 export { default as DiscordNoColorIcon } from "@assets/image/icons/DiscordNoColor.svg?react";
-// Taken from: https://www.svgrepo.com/svg/372402/export
-export { default as DownloadIcon } from "@assets/image/icons/Download.svg?react";
 export { default as DownloadDownArrowIcon } from "@assets/image/icons/DownloadDownArrow.svg?react";
 export { default as EditIcon } from "@assets/image/icons/Edit.svg?react";
 export { default as ExpandIcon } from "@assets/image/icons/Expand.svg?react";
+// Taken from: https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=3928-137010&t=IIn7esDDrdAYHuQm-4
+export { default as ExportIcon } from "@assets/image/icons/Export.svg?react";
 export { default as ExternalLinkIcon } from "@assets/image/icons/ExternalLink.svg?react";
 export { default as EyeIcon } from "@assets/image/icons/Eye.svg?react";
 export { default as EyeCloseIcon } from "@assets/image/icons/EyeClose.svg?react";

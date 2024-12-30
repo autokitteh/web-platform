@@ -19,7 +19,7 @@ import { SortButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms/modals";
 
 import { OrStartFromTemplateImage } from "@assets/image";
-import { ArrowStartTemplateIcon, DownloadIcon, PlusAccordionIcon, TrashIcon } from "@assets/image/icons";
+import { ArrowStartTemplateIcon, ExportIcon, PlusAccordionIcon, TrashIcon } from "@assets/image/icons";
 
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
@@ -192,9 +192,9 @@ export const DashboardProjectsTable = () => {
 								stopped,
 								totalDeployments,
 							}) => (
-								<Tr className="group cursor-pointer pl-4" key={id}>
+								<Tr className="cursor-pointer pl-4" key={id}>
 									<Td
-										className="w-2/3 pr-4 group-hover:font-bold sm:w-1/5"
+										className="w-2/3 pr-4 hover:font-bold sm:w-1/5"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 										title={name}
 									>
@@ -260,16 +260,16 @@ export const DashboardProjectsTable = () => {
 
 									<Td className="w-1/3 sm:w-1/6">
 										<div className="flex">
-											<IconButton onClick={() => downloadProjectExport(id)}>
+											<IconButton className="group" onClick={() => downloadProjectExport(id)}>
 												<IconSvg
-													className="fill-white transition hover:fill-green-200 active:fill-green-800"
+													className="stroke-gray-750 transition group-hover:stroke-green-200 group-active:stroke-green-800"
 													size="md"
-													src={DownloadIcon}
+													src={ExportIcon}
 												/>
 											</IconButton>
-											<IconButton onClick={() => displayDeleteModal(id)}>
+											<IconButton className="group" onClick={() => displayDeleteModal(id)}>
 												<IconSvg
-													className="stroke-white transition hover:stroke-green-200 active:stroke-green-800"
+													className="stroke-gray-750 transition group-hover:stroke-green-200 group-active:stroke-green-800"
 													size="md"
 													src={TrashIcon}
 												/>
