@@ -143,7 +143,12 @@ export const IntroMainBlock = () => {
 			</div>
 			<div className="mt-8 grid grid-cols-auto-fit-248 gap-x-14 gap-y-6 font-averta md:grid-cols-auto-fit-350">
 				<div className="border-gray-950 md:border-r">
-					<Socials />
+					<Socials
+						fillBlockClass="h-0"
+						iconsClass="size-7"
+						titleClass="text-lg mb-3"
+						wrapperClass="flex-col items-start"
+					/>
 				</div>
 				<div className="relative pb-5 md:pb-0">
 					<Typography className="mb-3 pr-4 text-lg font-bold uppercase" element="h3">

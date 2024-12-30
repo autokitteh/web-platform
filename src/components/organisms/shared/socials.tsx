@@ -3,34 +3,49 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { socialLinks } from "@src/constants";
+import { cn } from "@src/utilities";
+
+import { IconSvg } from "@components/atoms";
 import { Typography } from "@components/atoms/typography";
 
-import { DiscordNoColorIcon, GithubIntroIcon, LinkedInIntroIcon, RedditIntroIcon } from "@assets/image/icons";
-
-export const Socials = () => {
+export const Socials = ({
+	fillBlockClass,
+	iconsClass,
+	isBordered,
+	titleClass,
+	wrapperClass,
+}: {
+	fillBlockClass?: string;
+	iconsClass?: string;
+	isBordered?: boolean;
+	titleClass?: string;
+	wrapperClass?: string;
+}) => {
 	const { t } = useTranslation("shared", { keyPrefix: "socials" });
+	const iconsClassName = cn("fill-gray-500 transition hover:fill-green-800", iconsClass);
+	const titleClassName = cn("pr-4 font-averta text-sm font-semibold uppercase", titleClass);
+	const wrapperClassName = cn(
+		"flex w-full items-center",
+		{ "border-t-0.5 border-gray-1050 pt-4": isBordered },
+		wrapperClass
+	);
+	const fillBlockClassName = cn("h-full", fillBlockClass);
 
 	return (
-		<div className="flex flex-col">
-			<Typography className="pr-4 text-lg font-bold uppercase" element="h3">
-				{t("joinTheCommunity")}
-			</Typography>
-			<Typography className="mt-2 text-base" element="p">
-				{t("seeOurCommunity")}
-			</Typography>
-			<div className="mt-4 flex gap-2.5">
-				<Link target="_blank" to="https://www.reddit.com/r/autokitteh">
-					<RedditIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
-				</Link>
-				<Link target="_blank" to="https://www.linkedin.com/company/autokitteh">
-					<LinkedInIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
-				</Link>
-				<Link target="_blank" to="https://discord.gg/UhnJuBarZQ">
-					<DiscordNoColorIcon className="size-8 fill-gray-500 transition hover:fill-green-800" />
-				</Link>
-				<Link target="_blank" to="https://github.com/autokitteh/autokitteh">
-					<GithubIntroIcon className="fill-gray-500 transition hover:fill-green-800" />
-				</Link>
+		<div className="mb-4 flex size-full flex-col items-end">
+			<div className={fillBlockClassName} />
+			<div className={wrapperClassName}>
+				<Typography className={titleClassName} element="h3">
+					{t("joinTheCommunity")}
+				</Typography>{" "}
+				<div className="flex gap-2.5">
+					{socialLinks.map(({ icon, link, name }) => (
+						<Link key={name} target="_blank" title={name} to={link}>
+							<IconSvg className={iconsClassName} src={icon} />
+						</Link>
+					))}
+				</div>
 			</div>
 		</div>
 	);

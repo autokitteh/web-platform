@@ -17,7 +17,6 @@ import { useModalStore, useProjectStore } from "@store";
 import { IconButton, IconSvg, Loader, StatusBadge, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms/modals";
-import { Socials } from "@components/organisms/shared";
 
 import { ExportIcon, TrashIcon } from "@assets/image/icons";
 
@@ -289,10 +288,6 @@ export const DashboardProjectsTable = () => {
 			) : (
 				<div>{t("table.noProjectsFound")}</div>
 			)}
-
-			<div className="mb-2 flex h-1/2 items-end sm:h-1/3 xl:h-1/4 3xl:h-1/5">
-				<Socials />
-			</div>
 
 			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 		</div>
