@@ -7,7 +7,7 @@ export interface DrawerProps {
 	name: string;
 	variant?: ColorSchemes;
 	className?: string;
-	forcedOpen?: boolean;
+	isForcedOpen?: boolean;
 	wrapperClassName?: string;
-	forcedClose?: () => void;
+	onCloseCallback?: () => void;
 }

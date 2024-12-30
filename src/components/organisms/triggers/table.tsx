@@ -48,7 +48,7 @@ const useTableHeaders = (t: (key: string) => string): TableHeader[] => {
 			{
 				key: "actions",
 				label: t("table.columns.actions"),
-				className: "w-2/12 text-right",
+				className: "w-3/12 text-right",
 				sortable: false,
 			},
 		],
@@ -191,8 +191,8 @@ export const TriggersTable = () => {
 								<Td className="w-4/12 pl-4 font-semibold">{trigger.name}</Td>
 								<Td className="w-2/12 capitalize">{trigger?.sourceType}</Td>
 								<Td className="w-4/12">{trigger.entrypoint}</Td>
-								<Td className="w-2/12">
-									<div className="flex">
+								<Td className="w-3/12">
+									<div className="scrollbar flex overflow-auto">
 										<Popover animation="slideFromBottom" interactionType="hover">
 											<PopoverTrigger>
 												<IconButton>

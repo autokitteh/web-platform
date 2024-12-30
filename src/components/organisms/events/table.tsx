@@ -26,24 +26,34 @@ export const EventsTable = () => {
 	} = useCacheStore();
 	const resizeId = useId();
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
+	const [isSourceLoad, setIsSourceLoad] = useState(false);
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
 	const { connectionId, eventId, projectId, triggerId } = useParams();
 	const navigate = useNavigate();
 
-	const projectEventId = triggerId || connectionId;
+	const sourceId = triggerId || connectionId;
+
+	const fetchData = useCallback(async () => {
+		if (sourceId) {
+			setIsSourceLoad(true);
+			await fetchEvents(true, sourceId);
+			setIsSourceLoad(false);
+
+			return;
+		}
+
+		await fetchEvents();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sourceId]);
 
 	useEffect(() => {
 		if (isInitialLoad) {
 			setIsInitialLoad(false);
 		}
-		if (projectEventId) {
-			fetchEvents(true, projectEventId);
 
-			return;
-		}
-		fetchEvents();
+		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -62,28 +72,18 @@ export const EventsTable = () => {
 	const rowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => {
 			const event = sortedEvents[index];
+			const sourceIdAddress = `/projects/${projectId}/triggers/${triggerId}/events/${event.eventId}`;
+			const eventsAddress = `/events/${event.eventId}`;
+			const onRowClick = () => navigate(sourceId ? sourceIdAddress : eventsAddress);
 
-			return (
-				<EventRow
-					event={event}
-					key={key}
-					onClick={() =>
-						navigate(
-							projectEventId
-								? `/projects/${projectId}/triggers/${triggerId}/events/${event.eventId}`
-								: `/events/${event.eventId}`
-						)
-					}
-					style={style}
-				/>
-			);
+			return <EventRow event={event} key={key} onClick={onRowClick} style={style} />;
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[projectEventId, sortedEvents, navigate]
+		[sourceId, sortedEvents, navigate]
 	);
 
 	const tableContent = useMemo(() => {
-		if (loadingEvents && isInitialLoad) {
+		if ((loadingEvents && isInitialLoad) || isSourceLoad) {
 			return <Loader isCenter size="xl" />;
 		}
 
@@ -113,7 +113,7 @@ export const EventsTable = () => {
 			</div>
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isInitialLoad, sortedEvents]);
+	}, [isInitialLoad, sortedEvents, isSourceLoad]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const handleRefresh = useCallback(() => fetchEvents(true, triggerId) as Promise<void | Deployment[]>, []);

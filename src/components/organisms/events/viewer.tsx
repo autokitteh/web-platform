@@ -22,10 +22,10 @@ export const EventViewer = () => {
 
 	const { connectionId, eventId, triggerId } = useParams();
 	const navigate = useNavigate();
-	const projectEventId = triggerId || connectionId;
+	const sourceId = triggerId || connectionId;
 
 	const closeViewer = useCallback(() => {
-		if (!projectEventId) {
+		if (!sourceId) {
 			navigate("/events");
 
 			return;

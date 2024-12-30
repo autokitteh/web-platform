@@ -9,14 +9,14 @@ import { cn } from "@src/utilities";
 export const Drawer = ({
 	children,
 	className,
-	forcedClose,
-	forcedOpen,
+	isForcedOpen,
 	name,
+	onCloseCallback,
 	variant,
 	wrapperClassName,
 }: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
-		isOpen: state.drawers[name] || forcedOpen,
+		isOpen: state.drawers[name] || isForcedOpen,
 		onClose: state.closeDrawer,
 	}));
 
@@ -62,7 +62,7 @@ export const Drawer = ({
 						initial={{ opacity: 0 }}
 						onClick={() => {
 							onClose(name);
-							forcedClose?.();
+							onCloseCallback?.();
 						}}
 					/>
 				</>
