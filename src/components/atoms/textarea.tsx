@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useId, useState } from "react";
+import React, { ChangeEvent, FocusEvent, forwardRef, useCallback, useEffect, useId, useState } from "react";
 
 import { TextArea } from "@interfaces/components";
 import { cn } from "@utilities";
@@ -34,7 +34,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextArea>((props, ref) =
 	}, []);
 
 	const handleBlur = useCallback(
-		(event: React.FocusEvent<HTMLTextAreaElement>) => {
+		(event: FocusEvent<HTMLTextAreaElement>) => {
 			setIsFocused(false);
 			setHasValue(!!textareaValue);
 			onBlur?.(event);
@@ -43,7 +43,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextArea>((props, ref) =
 	);
 
 	const handleChange = useCallback(
-		(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		(event: ChangeEvent<HTMLTextAreaElement>) => {
 			const newValue = event.target.value;
 			setTextareaValue(newValue);
 			setHasValue(!!newValue);

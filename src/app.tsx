@@ -66,9 +66,6 @@ export const App = () => {
 					createRoutesFromChildren,
 					matchRoutes,
 				}),
-				Sentry.feedbackIntegration({
-					colorScheme: "system",
-				}),
 			],
 			// Set tracesSampleRate to 1.0 to capture 100%
 			// of transactions for tracing.

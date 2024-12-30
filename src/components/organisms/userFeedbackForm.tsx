@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Sentry from "@sentry/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -35,12 +36,12 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		defaultValues: {
 			name: "",
 			email: "",
-			comment: "",
+			message: "",
 		},
 		resolver: zodResolver(userFeedbackSchema),
 	});
 
-	const onSubmit = async (data: { comment: string; email: string; name: string }) => {
+	const onSubmit = async (data: { email: string; message: string; name: string }) => {
 		if (isFeedbackSubmitted) {
 			onClose();
 
@@ -48,9 +49,9 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		}
 		try {
 			setIsSendingFeedback(true);
-			const { comment, email, name } = data;
+			const { email, message, name } = data;
 			const sentryId = Sentry.captureMessage("Message that needs user feedback");
-			const userFeedback = { event_id: sentryId, name, email, message: comment };
+			const userFeedback = { event_id: sentryId, name, email, message };
 
 			Sentry.captureFeedback(userFeedback);
 
@@ -89,73 +90,87 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		}
 	}, [isOpen, reset]);
 
-	if (!isOpen) return null;
-
 	return (
-		<div className={cn("h-500 w-96 rounded-t-3xl border border-gray-750 bg-gray-1100 p-6 z-[500]", className)}>
-			<div className="flex items-center justify-between gap-1">
-				<Typography className="font-averta font-bold" size="2xl">
-					{t("title")}
-				</Typography>
-				<IconButton className="group ml-auto h-default-icon w-default-icon bg-gray-1250 p-0" onClick={onClose}>
-					<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
-				</IconButton>
-			</div>
-			<form className="mt-5 flex h-350 flex-col justify-between" onSubmit={handleSubmit(onSubmit)}>
-				{!isFeedbackSubmitted ? (
-					<div>
-						<Input
-							label={t("form.name")}
-							placeholder={t("form.placeholder.name")}
-							{...register("name")}
-							isError={!!errors.name}
-							isRequired
-						/>
-						{errors.name ? <ErrorMessage>{errors.name.message}</ErrorMessage> : null}
-						<Input
-							className="mt-6"
-							isRequired
-							label={t("form.email")}
-							placeholder={t("form.placeholder.email")}
-							{...register("email")}
-							isError={!!errors.email}
-						/>
-						{errors.email ? <ErrorMessage>{errors.email.message}</ErrorMessage> : null}
-						<Textarea
-							rows={5}
-							{...register("comment")}
-							className="mt-6"
-							isError={!!errors.comment}
-							isRequired
-							label={t("form.comment")}
-							placeholder={t("form.placeholder.comment")}
-						/>
-						{errors.comment ? <ErrorMessage>{errors.comment.message}</ErrorMessage> : null}
-					</div>
-				) : (
-					<div className="my-auto text-center">
-						<Typography className="font-averta font-bold leading-7" size="1.5xl">
-							{t("titleThanks")}
-						</Typography>
-						<Typography className="mt-1 font-averta font-light" size="xl">
-							{t("ourCats")}
-						</Typography>
-						<CatLookAtFishImage className="m-auto mt-4" />
-					</div>
-				)}
-				<Button
-					className={cn("mt-6 w-full justify-center p-1.5 px-7 text-lg font-bold text-white", {
-						"justify-between": isFeedbackSubmitted,
-					})}
-					disabled={isSendingFeedback}
-					type="submit"
-					variant="outline"
+		<AnimatePresence>
+			{isOpen ? (
+				<motion.div
+					animate={{ x: 0 }}
+					className={cn(
+						"h-500 w-96 rounded-t-3xl border border-gray-750 bg-gray-1100 p-6 z-[500]",
+						className
+					)}
+					exit={{ x: -500 }}
+					initial={{ x: -500 }}
+					transition={{ type: "spring", stiffness: 100, damping: 15 }}
 				>
-					{isSendingFeedback ? <Loader className="m-0" /> : null}
-					{isFeedbackSubmitted ? t("form.buttons.close") : t("form.buttons.send")}
-					{isFeedbackSubmitted ? <span className="ml-2 text-green-800">{timerCount}</span> : null}
-				</Button>
-			</form>
-		</div>
+					<div className="flex items-center justify-between gap-1">
+						<Typography className="font-averta font-bold" size="2xl">
+							{t("title")}
+						</Typography>
+						<IconButton
+							className="group ml-auto h-default-icon w-default-icon bg-gray-1250 p-0"
+							onClick={onClose}
+						>
+							<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
+						</IconButton>
+					</div>
+					<form className="mt-5 flex h-350 flex-col justify-between" onSubmit={handleSubmit(onSubmit)}>
+						{!isFeedbackSubmitted ? (
+							<div>
+								<Input
+									label={t("form.name")}
+									placeholder={t("form.placeholder.name")}
+									{...register("name")}
+									isError={!!errors.name}
+									isRequired
+								/>
+								{errors.name ? <ErrorMessage>{errors.name.message}</ErrorMessage> : null}
+								<Input
+									className="mt-6"
+									isRequired
+									label={t("form.email")}
+									placeholder={t("form.placeholder.email")}
+									{...register("email")}
+									isError={!!errors.email}
+								/>
+								{errors.email ? <ErrorMessage>{errors.email.message}</ErrorMessage> : null}
+								<Textarea
+									rows={5}
+									{...register("message")}
+									className="mt-6"
+									isError={!!errors.message}
+									isRequired
+									label={t("form.message")}
+									placeholder={t("form.placeholder.message")}
+								/>
+								{errors.message ? <ErrorMessage>{errors.message.message}</ErrorMessage> : null}
+							</div>
+						) : (
+							<div className="my-auto text-center">
+								<Typography className="font-averta font-bold leading-7" size="1.5xl">
+									{t("titleThanks")}
+								</Typography>
+								<Typography className="mt-1 font-averta font-light" size="xl">
+									{t("ourCats")}
+								</Typography>
+								<CatLookAtFishImage className="m-auto mt-4" />
+							</div>
+						)}
+						<Button
+							className={cn("mt-6 w-full justify-center p-1.5 px-7 text-lg font-bold text-white", {
+								"justify-between": isFeedbackSubmitted,
+							})}
+							disabled={isSendingFeedback}
+							type="submit"
+							variant="outline"
+						>
+							{isSendingFeedback ? <Loader className="m-0" /> : null}
+							{isFeedbackSubmitted ? t("form.buttons.close") : t("form.buttons.send")}
+							{isFeedbackSubmitted ? <span className="ml-2 text-green-800">{timerCount}</span> : null}
+						</Button>
+					</form>
+				</motion.div>
+			) : null}
+		</AnimatePresence>
 	);
 };
