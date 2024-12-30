@@ -103,12 +103,12 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 								{
 									objectTypeId: "0-1",
 									name: "email",
-									value: "example@example.com",
+									value: "boristwist1@gmail.com",
 								},
 								{
 									objectTypeId: "0-1",
 									name: "firstname",
-									value: "Jeff",
+									value: "Ronen Test",
 								},
 							],
 							context: {
