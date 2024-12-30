@@ -21,7 +21,7 @@ const OutputRow = memo(({ log, measure }: { log: SessionOutput; measure: () => v
 		<div className="mb-1" ref={rowRef}>
 			<div className="flex font-fira-code">
 				<div className="mr-5 whitespace-nowrap text-gray-1550">[{log.time}]: </div>
-				<div className="w-full whitespace-pre-wrap">{log.print}</div>
+				<div className="scrollbar-visible w-full overflow-x-auto whitespace-pre-wrap">{log.print}</div>
 			</div>
 		</div>
 	);

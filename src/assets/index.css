@@ -85,6 +85,17 @@ body {
 	@apply rounded-xl;
 }
 
+.scrollbar-visible::-webkit-scrollbar {
+	@apply h-1.5 w-1.5;
+	@apply bg-gray-500;
+	@apply rounded-xl;
+}
+
+.scrollbar-visible::-webkit-scrollbar-thumb {
+	@apply bg-gray-950;
+	@apply rounded-xl;
+}
+
 textarea {
 	resize: none;
 }
