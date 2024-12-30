@@ -1,3 +1,10 @@
+## [2.113.2](https://github.com/autokitteh/web-platform/compare/v2.113.1...v2.113.2) (2024-12-30)
+
+
+### Bug Fixes
+
+* **UI-1149:** fix keyboard shortcuts ([#852](https://github.com/autokitteh/web-platform/issues/852)) ([1b05054](https://github.com/autokitteh/web-platform/commit/1b050546e5cf4a414a768b7027d1bffc21137c6d))
+
 ## [2.113.1](https://github.com/autokitteh/web-platform/compare/v2.113.0...v2.113.1) (2024-12-30)
 
 # [2.113.0](https://github.com/autokitteh/web-platform/compare/v2.112.2...v2.113.0) (2024-12-30)
