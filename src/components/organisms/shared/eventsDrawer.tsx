@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -12,27 +12,18 @@ import { Close } from "@assets/image/icons";
 
 export const EventsDrawer = () => {
 	const navigate = useNavigate();
-	const [isOpen, setIsOpen] = useState(false);
 	const { projectId, triggerId } = useParams();
 
-	useEffect(() => {
-		setIsOpen(location.pathname.includes("/events"));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.pathname]);
+	const closeAndNavigate = () => navigate(`/projects/${projectId}/${triggerId ? "triggers" : "connections"}`);
 
-	const closeAndNavigate = () => {
-		setIsOpen(false);
-		setTimeout(() => {
-			navigate(`/projects/${projectId}/${triggerId ? "triggers" : "connections"}`);
-		}, 500);
-	};
+	if (!location.pathname.includes("/events")) return null;
 
 	return (
 		<Drawer
 			className="relative p-0"
-			forcedClose={closeAndNavigate}
-			forcedOpen={isOpen}
+			isForcedOpen={true}
 			name={DrawerName.events}
+			onCloseCallback={closeAndNavigate}
 			variant="dark"
 			wrapperClassName="w-2/3"
 		>
