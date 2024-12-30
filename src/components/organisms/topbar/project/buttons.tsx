@@ -186,9 +186,10 @@ export const ProjectTopbarButtons = () => {
 							)}
 						</Button>
 						<Button
-							ariaLabel={t("topbar.buttons.delete")}
+							ariaLabel={t("topbar.buttons.deleteProject")}
 							className="group mt-2 h-8 px-4 text-white"
 							onClick={openModalDeleteProject}
+							title={t("topbar.buttons.deleteProject")}
 							variant="outline"
 						>
 							<IconSvg

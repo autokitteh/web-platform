@@ -1,21 +1,38 @@
-import type { Locator, Page } from "@playwright/test";
-import randomatic from "randomatic";
+import { type Page, expect } from "@playwright/test";
+
+import { waitForToast } from "e2e/utils";
 
 export class ProjectPage {
-	private readonly createButton: Locator;
+	constructor(public readonly page: Page) {}
 
-	constructor(public readonly page: Page) {
-		this.createButton = this.page.locator('button[aria-label="Project additional actions"]');
+	async deleteProject(projectName: string) {
+		await this.page.locator('button[aria-label="Project additional actions"]').hover();
+		await this.page.locator('button[aria-label="Delete project"]').click();
+		await this.page.locator('button[aria-label="Ok"]').click();
+		const toast = await waitForToast(this.page, "Project deletion completed successfully");
+		await expect(toast).toBeVisible();
+
+		await this.page.waitForLoadState("domcontentloaded");
+
+		const loaders = this.page.locator(".loader-cycle-disks").all();
+		const loadersArray = await loaders;
+		await Promise.all(loadersArray.map((loader) => loader.waitFor({ state: "hidden" })));
+
+		const homepageTitle = this.page.getByText("Welcome to AutoKitteh");
+		await expect(homepageTitle).toBeVisible();
+
+		const deletedProjectName = this.page.getByText(projectName);
+		await expect(deletedProjectName).not.toBeVisible();
 	}
 
-	async deleteProject() {
-		await this.createButton.hover();
-		await this.createButton.click();
-		await this.page.getByPlaceholder("Enter project name").fill(randomatic("Aa", 8));
-		await this.page.getByRole("button", { name: "Create", exact: true }).click();
-		await this.page.getByRole("cell", { name: "program.py" }).isVisible();
-		await this.page.getByRole("tab", { name: "PROGRAM.PY" }).isVisible();
-		await this.page.getByText('print("Hello World!")').isVisible();
-		await this.page.waitForLoadState("domcontentloaded");
+	async stopDeployment() {
+		await this.page.locator('button[aria-label="Deployments"]').click();
+		await this.page.locator('button[aria-label="Deactivate deployment"]').click();
+
+		const toast = await waitForToast(this.page, "Deployment deactivated successfully");
+		await expect(toast).toBeVisible();
+
+		const deploymentTableRow = this.page.getByRole("cell", { name: "inactive" });
+		await expect(deploymentTableRow).toHaveCount(1);
 	}
 }
