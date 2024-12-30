@@ -22,7 +22,9 @@ export const ProjectTopbarNavigation = () => {
 	const selectedSection = useMemo(() => {
 		if (paramDeploymentId) return "sessions";
 
-		if (pathname.includes("deployments")) return "deployments";
+		if (pathname.includes("sessions")) return "sessions";
+
+		if (pathname.endsWith("deployments")) return "deployments";
 
 		return "assets";
 	}, [paramDeploymentId, pathname]);

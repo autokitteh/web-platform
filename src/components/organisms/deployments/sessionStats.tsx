@@ -19,9 +19,9 @@ export const DeploymentSessionStats = ({
 			"2xl:w-22 inline-block w-1/4 text-center border-0 p-0 text-sm font-medium",
 			{
 				"text-blue-500": state === SessionStateType.running,
-				"text-yellow-500": state === SessionStateType.stopped,
+				"text-white": state === SessionStateType.stopped,
 				"text-green-800": state === SessionStateType.completed,
-				"text-red": state === SessionStateType.error,
+				"text-error": state === SessionStateType.error,
 			},
 			className
 		);

@@ -128,6 +128,30 @@ export class SessionsService {
 		}
 	}
 
+	static async listByProjectId(
+		projectId: string,
+		filter?: SessionFilter,
+		pageToken?: string,
+		pageSize?: number
+	): Promise<ServiceResponse<{ nextPageToken: string; sessions: Session[] }>> {
+		try {
+			const { nextPageToken, sessions: sessionsResponse } = await sessionsClient.list({
+				projectId,
+				pageSize: pageSize || defaultSessionsVisiblePageSize,
+				pageToken,
+				stateType: filter?.stateType,
+			});
+
+			const sessions = sessionsResponse.map((session: ProtoSession) => convertSessionProtoToModel(session));
+
+			return { data: { nextPageToken, sessions }, error: undefined };
+		} catch (error) {
+			LoggerService.error(namespaces.sessionsService, (error as Error).message);
+
+			return { data: undefined, error };
+		}
+	}
+
 	static async startSession(
 		startSessionArgs: StartSessionArgsType,
 		projectId: string

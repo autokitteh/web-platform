@@ -101,9 +101,9 @@ export const DashboardProjectsTable = () => {
 			"hover:bg-gray-1100 rounded-3xl inline-flex justify-center items-center min-w-12 h-7",
 			{
 				"text-blue-500": state === SessionStateType.running,
-				"text-yellow-500": state === SessionStateType.stopped,
+				"text-white": state === SessionStateType.stopped,
 				"text-green-800": state === SessionStateType.completed,
-				"text-red": state === SessionStateType.error,
+				"text-error": state === SessionStateType.error,
 			},
 			className
 		);
@@ -115,6 +115,17 @@ export const DashboardProjectsTable = () => {
 	const displayDeleteModal = (id: string) => {
 		setSelectedProjectForDeletion(id);
 		openModal(ModalName.deleteProject);
+	};
+
+	const handleOpenProjectFilteredSessions = (
+		event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+		id: string,
+		sessionState: keyof typeof SessionStateType
+	) => {
+		event.stopPropagation();
+		navigate(`/${SidebarHrefMenu.projects}/${id}/sessions`, {
+			state: { sessionState },
+		});
 	};
 
 	return isLoading ? (
@@ -221,20 +232,18 @@ export const DashboardProjectsTable = () => {
 										<div className="w-full pr-6 text-center">{totalDeployments}</div>
 									</Td>
 									<Td
-										className="-ml-1 w-2/6 pr-2 sm:flex"
+										className="-ml-1 hidden w-2/6 pr-2 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div
 											aria-label={t("table.sessionTypes.running")}
 											className={countStyle(SessionStateType.running)}
-											onClick={(event) => {
-												event.stopPropagation();
-												navigate(
-													`/${SidebarHrefMenu.projects}/${id}/deployments/dep_01jg9h2r97e7187j4f8j8fraea/sessions`,
-													{ state: { sessionState: SessionStateType.running } }
-												);
+											onClick={(event) =>
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.running)
+											}
+											onKeyDown={(event) => {
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.running);
 											}}
-											onKeyDown={() => {}}
 											role="button"
 											tabIndex={0}
 											title={`${running} ${t("table.sessionTypes.running")}`}
@@ -244,14 +253,12 @@ export const DashboardProjectsTable = () => {
 										<div
 											aria-label={t("table.sessionTypes.stopped")}
 											className={countStyle(SessionStateType.stopped, "justify-center")}
-											onClick={(event) => {
-												event.stopPropagation();
-												navigate(
-													`/${SidebarHrefMenu.projects}/${id}/deployments/dep_01jg9h2r97e7187j4f8j8fraea/sessions`,
-													{ state: { sessionState: SessionStateType.stopped } }
-												);
-											}}
-											onKeyDown={() => {}}
+											onClick={(event) =>
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.stopped)
+											}
+											onKeyDown={(event) =>
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.stopped)
+											}
 											role="button"
 											tabIndex={0}
 											title={`${stopped} ${t("table.sessionTypes.stopped")}`}
@@ -262,13 +269,19 @@ export const DashboardProjectsTable = () => {
 											aria-label={t("table.sessionTypes.completed")}
 											className={countStyle(SessionStateType.completed)}
 											onClick={(event) => {
-												event.stopPropagation();
-												navigate(
-													`/${SidebarHrefMenu.projects}/${id}/deployments/dep_01jg9h2r97e7187j4f8j8fraea/sessions`,
-													{ state: { sessionState: SessionStateType.completed } }
+												handleOpenProjectFilteredSessions(
+													event,
+													id,
+													SessionStateType.completed
 												);
 											}}
-											onKeyDown={() => {}}
+											onKeyDown={(event) => {
+												handleOpenProjectFilteredSessions(
+													event,
+													id,
+													SessionStateType.completed
+												);
+											}}
 											role="button"
 											tabIndex={0}
 											title={`${completed} ${t("table.sessionTypes.completed")}`}
@@ -279,13 +292,11 @@ export const DashboardProjectsTable = () => {
 											aria-label={t("table.sessionTypes.error")}
 											className={countStyle(SessionStateType.error)}
 											onClick={(event) => {
-												event.stopPropagation();
-												navigate(
-													`/${SidebarHrefMenu.projects}/${id}/deployments/dep_01jg9h2r97e7187j4f8j8fraea/sessions`,
-													{ state: { sessionState: SessionStateType.error } }
-												);
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.error);
 											}}
-											onKeyDown={() => {}}
+											onKeyDown={(event) => {
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.error);
+											}}
 											role="button"
 											tabIndex={0}
 											title={`${error} ${t("table.sessionTypes.error")}`}
