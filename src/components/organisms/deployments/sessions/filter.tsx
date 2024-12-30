@@ -71,7 +71,6 @@ export const SessionsTableFilter = ({ defaultValue, onChange, sessionStats }: Se
 
 	const handleButtonClick = (state?: SessionStateType) => {
 		setActiveState(state);
-
 		onChange(state);
 	};
 
