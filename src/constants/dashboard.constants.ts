@@ -1,3 +1,5 @@
+import { DiscordNoColorIcon, GithubIntroIcon, LinkedInIntroIcon, RedditIntroIcon } from "@assets/image/icons";
+
 export const defaultTemplateProjectCategory = "DevOps";
 export const meowWorldProjectName = "quickstart";
 export const templateCategoriesOrder = ["DevOps", "Samples", "Durable workflows", "Office Automation"];
@@ -47,5 +49,28 @@ export const getStartedWithAutoKitteh = [
 		description: "Why to use AutoKitteh",
 		youtubeLink: "https://www.youtube.com/embed/QWSa0etwTDE?si=gStDV2t4cAVTPtFe",
 		image: "introductionToAutoKitteh.jpg",
+	},
+];
+
+export const socialLinks = [
+	{
+		icon: RedditIntroIcon,
+		link: "https://www.reddit.com/r/autokitteh",
+		name: "Reddit",
+	},
+	{
+		icon: LinkedInIntroIcon,
+		link: "https://www.linkedin.com/company/autokitteh",
+		name: "LinkedIn",
+	},
+	{
+		icon: DiscordNoColorIcon,
+		link: "https://discord.gg/UhnJuBarZQ",
+		name: "Discord",
+	},
+	{
+		icon: GithubIntroIcon,
+		link: "https://github.com/autokitteh/autokitteh",
+		name: "GitHub",
 	},
 ];

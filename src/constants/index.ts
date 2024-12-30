@@ -33,6 +33,7 @@ export {
 	getStartedWithAutoKitteh,
 	howToBuildAutomation,
 	newsAutoKitteh,
+	socialLinks,
 } from "@constants/dashboard.constants";
 export { defaultEventsTableRowHeight, maxResultsLimitToDisplay } from "@constants/events.constants";
 export { getSelectDarkStyles, getSelectLightStyles } from "@constants/forms";
