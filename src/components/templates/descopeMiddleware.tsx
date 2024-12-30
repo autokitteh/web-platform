@@ -4,7 +4,7 @@ import { useDescope } from "@descope/react-sdk";
 import Cookies from "js-cookie";
 import psl from "psl";
 import { useTranslation } from "react-i18next";
-import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
+import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services/index";
@@ -37,7 +37,20 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [isLoggingIn, setIsLoggingIn] = useState(false);
 	const location = useLocation();
 	const navigate = useNavigate();
-	const [apiToken, setApiToken] = useState("");
+	const [apiToken, setApiToken] = useState<string>();
+	const [_searchParams, setSearchParams] = useSearchParams();
+
+	useEffect(() => {
+		const queryParams = new URLSearchParams(window.location.search);
+		const apiTokenFromURL = queryParams.get("apiToken");
+
+		if (!apiTokenFromURL) return;
+
+		setLocalStorageValue(LocalStorageKeys.apiToken, apiTokenFromURL);
+		setApiToken(apiTokenFromURL);
+		setSearchParams({});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleLogout = useCallback(async () => {
 		await logout();
@@ -59,17 +72,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, [logout]);
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
-
-	useEffect(() => {
-		const queryParams = new URLSearchParams(window.location.search);
-		const apiTokenFromURL = queryParams.get("apiToken");
-
-		if (apiTokenFromURL) {
-			setLocalStorageValue(LocalStorageKeys.apiToken, apiToken);
-			setApiToken(apiTokenFromURL);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	useEffect(() => {
 		setLogoutFunction(handleLogout);
