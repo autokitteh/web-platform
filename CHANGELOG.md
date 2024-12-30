@@ -1,3 +1,10 @@
+## [2.112.2](https://github.com/autokitteh/web-platform/compare/v2.112.1...v2.112.2) (2024-12-30)
+
+
+### Bug Fixes
+
+* **UI-1146:** fix information in main projects table ([#838](https://github.com/autokitteh/web-platform/issues/838)) ([6fd06e9](https://github.com/autokitteh/web-platform/commit/6fd06e9ad59e6d2d5d49adfe6b420e8e70025cbd))
+
 ## [2.112.1](https://github.com/autokitteh/web-platform/compare/v2.112.0...v2.112.1) (2024-12-30)
 
 # [2.112.0](https://github.com/autokitteh/web-platform/compare/v2.111.0...v2.112.0) (2024-12-30)
