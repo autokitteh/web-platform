@@ -1,3 +1,10 @@
+# [2.113.0](https://github.com/autokitteh/web-platform/compare/v2.112.2...v2.113.0) (2024-12-30)
+
+
+### Features
+
+* **UI-1129:** add new status badge ([#842](https://github.com/autokitteh/web-platform/issues/842)) ([a9a3f6b](https://github.com/autokitteh/web-platform/commit/a9a3f6b98868ecb81d7f7515aea3423544c11e11))
+
 ## [2.112.2](https://github.com/autokitteh/web-platform/compare/v2.112.1...v2.112.2) (2024-12-30)
 
 
