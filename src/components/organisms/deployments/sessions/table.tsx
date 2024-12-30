@@ -47,22 +47,42 @@ export const SessionsTable = () => {
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 
 	const fetchDeployments = useCallback(async () => {
-		if (!projectId) {
-			return;
-		}
+		if (!projectId) return;
 
 		const deployments = await reloadDeploymentsCache(projectId, true);
 
-		const deployment = deployments?.find((deployment) => deployment.deploymentId === deploymentId);
-		if (!deployment?.sessionStats) {
-			return;
+		if (deploymentId) {
+			const deployment = deployments?.find((deployment) => deployment.deploymentId === deploymentId);
+
+			if (!deployment?.sessionStats) return;
+
+			if (isEqual(deployment.sessionStats, sessionStats)) return;
+
+			setSessionStats(deployment.sessionStats);
+
+			return deployments;
 		}
 
-		if (isEqual(deployment.sessionStats, sessionStats)) {
-			return;
-		}
+		const allSessionStats = deployments?.flatMap((deployment) => deployment.sessionStats || []);
 
-		setSessionStats(deployment.sessionStats);
+		const aggregatedStats = Object.values(
+			(allSessionStats || []).reduce(
+				(acc, { count, state }) => {
+					if (!state) return acc;
+					if (!acc[state]) {
+						acc[state] = { state, count: 0 };
+					}
+					acc[state].count += count;
+
+					return acc;
+				},
+				{} as Record<string, { count: number; state: SessionStateKeyType }>
+			)
+		);
+
+		if (!aggregatedStats.length || isEqual(aggregatedStats, sessionStats)) return;
+
+		setSessionStats(aggregatedStats as DeploymentSession[]);
 
 		return deployments;
 	}, [projectId, deploymentId, reloadDeploymentsCache, sessionStats]);
