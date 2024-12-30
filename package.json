@@ -61,7 +61,6 @@
 		"react-dom": "^18.3.1",
 		"react-ga4": "^2.1.0",
 		"react-hook-form": "^7.54.2",
-		"react-hubspot-tracking-code-hook": "^1.2.2",
 		"react-i18next": "^15.2.0",
 		"react-markdown": "^9.0.1",
 		"react-router-dom": "^7.1.1",
