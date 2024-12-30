@@ -13,9 +13,9 @@ import { Deployment } from "@type/models";
 import { useSort } from "@hooks";
 import { useManualRunStore, useModalStore, useProjectStore, useToastStore } from "@store";
 
-import { IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { IconButton, StatusBadge, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { IdCopyButton, SortButton } from "@components/molecules";
-import { DeleteDeploymentModal, DeploymentSessionStats, DeploymentState } from "@components/organisms/deployments";
+import { DeleteDeploymentModal, DeploymentSessionStats } from "@components/organisms/deployments";
 
 import { ActionActiveIcon, ActionStoppedIcon, TrashIcon } from "@assets/image/icons";
 
@@ -222,7 +222,7 @@ export const DeploymentsTableContent = ({
 								className="w-1/8 cursor-pointer border-r-0"
 								onClick={() => goToDeploymentSessions(deploymentId)}
 							>
-								<DeploymentState deploymentState={state} />
+								<StatusBadge deploymentStatus={state} />
 							</Td>
 
 							<Td className="w-1/8 pr-0">
