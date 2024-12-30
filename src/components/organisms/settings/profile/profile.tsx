@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { version } from "@constants";
 import { ModalName } from "@enums/components";
-import { getAutoSavePreference } from "@src/utilities";
+import { LocalStorageKeys } from "@src/enums";
+import { getPreference, setPreference } from "@src/utilities";
 
 import { useModalStore, useToastStore, useUserStore } from "@store";
 
@@ -18,7 +19,7 @@ export const Profile = () => {
 	const { getLoggedInUser, user } = useUserStore();
 	const { closeModal, openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const codeAutoSave = getAutoSavePreference();
+	const codeAutoSave = getPreference(LocalStorageKeys.autoSave);
 	const [codeAutoSaveChecked, setCodeAutoSaveChecked] = useState(!!codeAutoSave);
 
 	const loadUser = async () => {
@@ -48,7 +49,7 @@ export const Profile = () => {
 	};
 
 	const handleCodeAutoSaveChange = (checked: boolean) => {
-		localStorage.setItem("codeAutoSave", checked.toString());
+		setPreference(LocalStorageKeys.autoSave, checked);
 		setCodeAutoSaveChecked(checked);
 	};
 

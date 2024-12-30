@@ -6,9 +6,10 @@ import psl from "psl";
 import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate } from "react-router-dom";
 
-import { isLoggedInCookie, jwtAuthBearerToken, namespaces, playwrightTestsAuthBearer } from "@constants";
+import { isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services/index";
-import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
+import { LocalStorageKeys } from "@src/enums";
+import { getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
 import { useLoggerStore, useToastStore } from "@store";
@@ -36,6 +37,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [isLoggingIn, setIsLoggingIn] = useState(false);
 	const location = useLocation();
 	const navigate = useNavigate();
+	const [apiToken, setApiToken] = useState("");
 
 	const handleLogout = useCallback(async () => {
 		await logout();
@@ -52,10 +54,22 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		Cookies.remove(isLoggedInCookie, { domain: getCookieDomain(rootDomain) });
 		window.localStorage.clear();
 		window.location.reload();
+		setLocalStorageValue(LocalStorageKeys.apiToken, "");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [logout]);
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
+
+	useEffect(() => {
+		const queryParams = new URLSearchParams(window.location.search);
+		const apiTokenFromURL = queryParams.get("apiToken");
+
+		if (apiTokenFromURL) {
+			setLocalStorageValue(LocalStorageKeys.apiToken, apiToken);
+			setApiToken(apiTokenFromURL);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		setLogoutFunction(handleLogout);
@@ -99,7 +113,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	);
 	const isLoggedIn = Cookies.get(isLoggedInCookie);
 
-	if (playwrightTestsAuthBearer || jwtAuthBearerToken || isLoggedIn) {
+	if (playwrightTestsAuthBearer || apiToken || isLoggedIn) {
 		return children;
 	}
 

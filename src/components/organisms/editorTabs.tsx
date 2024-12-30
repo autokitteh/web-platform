@@ -9,8 +9,9 @@ import { useLocation, useParams } from "react-router-dom";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
 import { LoggerService } from "@services";
+import { LocalStorageKeys } from "@src/enums";
 import { useCacheStore, useSharedBetweenProjectsStore, useToastStore } from "@src/store";
-import { cn, getAutoSavePreference } from "@utilities";
+import { cn, getPreference } from "@utilities";
 
 import { useFileOperations } from "@hooks";
 
@@ -41,7 +42,7 @@ export const EditorTabs = ({
 	const [codeLoadedFirstTime, setCodeLoadedFirstTime] = useState(true);
 
 	const [content, setContent] = useState("");
-	const autoSaveMode = getAutoSavePreference();
+	const autoSaveMode = getPreference(LocalStorageKeys.autoSave);
 	const [loadingSave, setLoadingSave] = useState(false);
 	const [lastSaved, setLastSaved] = useState<string>();
 	const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
