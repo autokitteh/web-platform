@@ -18,11 +18,12 @@
 		"form": {
 			"email": "Email",
 			"name": "Name",
-			"comment": "Comment",
+			"message": "Message",  
+
 			"placeholder": {
 				"email": "email@example.com",
 				"name": "Enter your name",
-				"comment": "Enter your comment"
+				"message": "Enter your message"  
 			},
 			"buttons": {
 				"send": "Send",
