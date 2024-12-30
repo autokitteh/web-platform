@@ -119,7 +119,7 @@ export const DashboardProjectsTable = () => {
 	return isLoading ? (
 		<Loader isCenter />
 	) : (
-		<div className="z-10 h-1/2 select-none pt-10 sm:h-2/3 xl:h-3/4 3xl:h-4/5">
+		<div className="z-10 h-1/2 select-none pt-10 md:h-2/3 xl:h-3/4 3xl:h-4/5">
 			{sortedProjectsStats.length ? (
 				<Table className="mt-2.5 h-auto max-h-full rounded-t-20">
 					<THead className="mr-0">
