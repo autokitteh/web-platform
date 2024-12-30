@@ -11,7 +11,7 @@ import { Trigger } from "@src/types/models";
 import { cn, getApiBaseUrl, stripGoogleConnectionName } from "@src/utilities";
 
 import { IconSvg } from "@components/atoms";
-import { CopyButton } from "@components/molecules";
+import { CopyButton, IdCopyButton } from "@components/molecules";
 
 import { ClockIcon, WebhookIcon } from "@assets/image/icons";
 
@@ -53,7 +53,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 			},
 			{
 				label: t("connectionId"),
-				value: triggerConnection?.connectionId,
+				value: <IdCopyButton displayFullLength id={triggerConnection!.connectionId} variant="flatText" />,
 			},
 			...baseDetails,
 			{ label: t("eventType"), value: trigger.eventType },
