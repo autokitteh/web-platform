@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 import { UserFeedbackForm } from "../userFeedbackForm";
-import { featureFlags, isAuthEnabled, userMenuItems } from "@constants";
+import { featureFlags, isAuthEnabled, sentryDsn, userMenuItems } from "@constants";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useUserStore } from "@store";
@@ -172,7 +172,7 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						{!isAuthEnabled ? (
+						{isAuthEnabled ? (
 							<Popover interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-2 mt-2 flex items-center">
 									<Avatar color="black" name={user?.name} round={true} size="24" />
@@ -200,13 +200,15 @@ export const Sidebar = () => {
 												<span className="font-medium text-black">{user?.email}</span>
 											</div>
 											<div className="mt-1">
-												<Button
-													className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
-													onClick={() => setIsFeedbackOpen(true)}
-												>
-													<AnnouncementIcon className="size-6" fill="black" />
-													{t("menu.userSettings.feedback")}
-												</Button>
+												{sentryDsn ? (
+													<Button
+														className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
+														onClick={() => setIsFeedbackOpen(true)}
+													>
+														<AnnouncementIcon className="size-6" fill="black" />
+														{t("menu.userSettings.feedback")}
+													</Button>
+												) : null}
 												{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 													<Button
 														className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
