@@ -12,7 +12,7 @@ import {
 	useNavigationType,
 } from "react-router-dom";
 
-import { AKRoutes, googleAnalyticsId, isProduction } from "@constants";
+import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
 
 import { PageTitle } from "@components/atoms";
 import { DeploymentsTable, EventViewer, EventsTable, SessionsTable } from "@components/organisms";
@@ -55,7 +55,7 @@ export const App = () => {
 
 	if (isProduction) {
 		Sentry.init({
-			dsn: import.meta.env.SENTRY_DSN,
+			dsn: sentryDsn,
 			integrations: [
 				// See docs for support of different versions of variation of react router
 				// https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
@@ -65,6 +65,9 @@ export const App = () => {
 					useNavigationType,
 					createRoutesFromChildren,
 					matchRoutes,
+				}),
+				Sentry.feedbackIntegration({
+					colorScheme: "system",
 				}),
 			],
 			// Set tracesSampleRate to 1.0 to capture 100%
