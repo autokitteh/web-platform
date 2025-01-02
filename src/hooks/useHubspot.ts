@@ -2,14 +2,6 @@
 
 import { PropsUseSetTrackEvent, UseTrackingCode } from "@src/types/hooks";
 
-export type PushParams = [string, (string | object)?];
-
-declare global {
-	interface Window {
-		_hsq: PushParams[];
-	}
-}
-
 export const useHubspot = (): UseTrackingCode => {
 	const _hsq = typeof window !== "undefined" && window._hsq ? window._hsq : [];
 

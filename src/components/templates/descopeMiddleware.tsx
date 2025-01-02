@@ -57,7 +57,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		setPathPageView(location.pathname);
-	}, [location, setPathPageView]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location]);
 
 	const handleLogout = useCallback(async () => {
 		await logout();

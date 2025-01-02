@@ -4,5 +4,6 @@ export type {
 	PropsUseTrackingCode,
 	PropsUseSetTrackEvent,
 	UseTrackingCode,
+	PushParams,
 } from "@type/hooks/useHubspot.type";
 export type { ResizeDirection } from "@type/hooks/useRisize.type";

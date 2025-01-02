@@ -27,3 +27,5 @@ export type UseTrackingCode = {
 	setTrackEvent: ({ eventId, value }: PropsUseSetTrackEvent) => void;
 	setTrackPageView: () => void;
 };
+
+export type PushParams = [string, (string | object)?];
