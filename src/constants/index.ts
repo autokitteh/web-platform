@@ -63,3 +63,4 @@ export {
 	remoteTemplatesArchiveURL,
 } from "@constants/templates.constants";
 export { integrationVariablesMapping } from "@src/constants/connections/integrationVariablesMapping.constants";
+export { googleTagManagerEvents } from "@src/constants/googleTagManager.constats";

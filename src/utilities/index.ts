@@ -28,3 +28,4 @@ export { sortArray } from "@utilities/sortArray.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";
 export { transformAndStringifyValues } from "@utilities/transformAndStringifyValues.utils";
 export { ValidateURL, ValidateDomain } from "@utilities/validateUrl.utils";
+export { gTagEvent } from "@utilities/gTag.utils";

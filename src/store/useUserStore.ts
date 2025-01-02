@@ -6,6 +6,8 @@ import { immer } from "zustand/middleware/immer";
 import { StoreName } from "@enums";
 import { UserStore } from "@interfaces/store";
 import { AuthService } from "@services";
+import { ServiceResponse } from "@src/types";
+import { User } from "@src/types/models";
 
 const defaultState = {
 	user: undefined,
@@ -13,17 +15,17 @@ const defaultState = {
 
 const store: StateCreator<UserStore> = (set) => ({
 	...defaultState,
-	getLoggedInUser: async (): Promise<string> => {
+	getLoggedInUser: async (): ServiceResponse<User> => {
 		const { data: user, error } = await AuthService.whoAmI();
 
 		if (error) {
-			return error as string;
+			return { error, data: undefined };
 		}
 
 		if (!user) {
 			const errorMsg = i18n.t("userNotFound", { ns: "services" });
 
-			return errorMsg;
+			return { error: errorMsg, data: undefined };
 		}
 
 		set((state) => ({
@@ -31,7 +33,7 @@ const store: StateCreator<UserStore> = (set) => ({
 			user,
 		}));
 
-		return "";
+		return { data: user, error: undefined };
 	},
 	logoutFunction: () => {},
 	setLogoutFunction: (logoutFn) => {
