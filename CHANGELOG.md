@@ -1,3 +1,10 @@
+# [2.116.0](https://github.com/autokitteh/web-platform/compare/v2.115.0...v2.116.0) (2025-01-02)
+
+
+### Features
+
+* **UI-1142:** add hubspot integration ([#859](https://github.com/autokitteh/web-platform/issues/859)) ([41e43c4](https://github.com/autokitteh/web-platform/commit/41e43c41817497e756f3d896bd2e9bfa7d429ef0))
+
 # [2.115.0](https://github.com/autokitteh/web-platform/compare/v2.114.0...v2.115.0) (2025-01-02)
 
 
