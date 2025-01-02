@@ -1,3 +1,10 @@
+# [2.115.0](https://github.com/autokitteh/web-platform/compare/v2.114.0...v2.115.0) (2025-01-02)
+
+
+### Features
+
+* **UI-1141:** gtag - add login event ([#845](https://github.com/autokitteh/web-platform/issues/845)) ([5462b32](https://github.com/autokitteh/web-platform/commit/5462b32c6b375c263a23e44e294aa9a3661064ce))
+
 # [2.114.0](https://github.com/autokitteh/web-platform/compare/v2.113.2...v2.114.0) (2025-01-02)
 
 
