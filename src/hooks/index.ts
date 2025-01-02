@@ -2,6 +2,7 @@ export { useFetchTrigger } from "@hooks/triggers/useFetchTrigger";
 export { useConnectionForm } from "@hooks/useConnectionForm";
 export { useCreateProjectFromTemplate } from "@hooks/useCreateProjectFromTemplate";
 export { useFileOperations } from "@hooks/useFileOperations";
+export { useHubspot } from "@hooks/useHubspot";
 export { useInterval } from "@hooks/useInterval";
 export { useLastVisitedEntity } from "@hooks/useLastVisitedEntity";
 export { useResize } from "@hooks/useResize";
