@@ -9,6 +9,7 @@ import { namespaces, sessionRowHeight } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
+import { SessionStateType } from "@src/enums";
 import { useResize } from "@src/hooks";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
@@ -69,14 +70,22 @@ export const SessionsTable = () => {
 			(allSessionStats || []).reduce(
 				(acc, { count, state }) => {
 					if (!state) return acc;
-					if (!acc[state]) {
-						acc[state] = { state, count: 0 };
+
+					acc[state] = {
+						state,
+						count: (acc[state]?.count || 0) + count,
+					};
+
+					if (state === SessionStateType.created) {
+						acc[SessionStateType.running] = {
+							state: SessionStateType.running,
+							count: (acc[SessionStateType.running]?.count || 0) + count,
+						};
 					}
-					acc[state].count += count;
 
 					return acc;
 				},
-				{} as Record<string, { count: number; state: SessionStateKeyType }>
+				{} as Record<string, { count: number; state: SessionStateType }>
 			)
 		);
 
