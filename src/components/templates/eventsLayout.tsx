@@ -13,7 +13,7 @@ export const EventsLayout = () => {
 
 	return (
 		<SystemLogLayout sidebar={<Sidebar />} topbar={<TitleTopbar title={t("title")} />}>
-			<div className="relative size-full py-1.5">
+			<div className="relative size-full overflow-hidden pt-1.5">
 				<Outlet />
 
 				<div className="absolute -bottom-5 -right-5">

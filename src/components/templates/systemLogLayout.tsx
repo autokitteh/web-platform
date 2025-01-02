@@ -37,19 +37,14 @@ export const SystemLogLayout = ({
 		},
 	});
 
-	const buttonResizeClasses = cn(
-		"-mt-1 mb-0.5",
-		{ "top-0 mt-0 mb-0": systemLogHeight === 100 },
-		{ "top-0 -mt-1 -mb-1.5": systemLogHeight === 0 }
-	);
+	const buttonResizeClasses = cn("my-0.5", { "my-0": systemLogHeight === 100 });
 
 	return (
 		<div className={layoutClasses}>
 			{sidebar}
-			<div className="flex flex-1 flex-col md:mb-2">
-				{topbar}
-
-				<div className="flex overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
+			<div className="flex-1 md:mb-2">
+				<div className="flex flex-col overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
+					{topbar}
 					{children}
 				</div>
 
