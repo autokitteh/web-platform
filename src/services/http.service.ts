@@ -2,14 +2,16 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import psl from "psl";
 
-import { apiRequestTimeout, isLoggedInCookie, jwtAuthBearerToken } from "@constants";
-import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
+import { apiRequestTimeout, isLoggedInCookie } from "@constants";
+import { LocalStorageKeys } from "@src/enums";
+import { getApiBaseUrl, getCookieDomain, getLocalStorageValue } from "@src/utilities";
 
 const apiBaseUrl = getApiBaseUrl();
 
 const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
-	const isWithCredentials = !jwtAuthBearerToken || withCredentials;
-	const jwtAuthToken = jwtAuthBearerToken ? `Bearer ${jwtAuthBearerToken}` : undefined;
+	const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
+	const isWithCredentials = !apiToken && withCredentials;
+	const jwtAuthToken = apiToken ? `Bearer ${apiToken}` : undefined;
 
 	return axios.create({
 		baseURL: baseAddress,

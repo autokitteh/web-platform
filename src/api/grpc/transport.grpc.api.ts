@@ -11,8 +11,9 @@ import { createConnectTransport } from "@connectrpc/connect-web";
 import Cookies from "js-cookie";
 import psl from "psl";
 
-import { apiRequestTimeout, isAuthEnabled, isLoggedInCookie, jwtAuthBearerToken } from "@constants";
-import { getApiBaseUrl, getCookieDomain } from "@src/utilities";
+import { apiRequestTimeout, isAuthEnabled, isLoggedInCookie } from "@constants";
+import { LocalStorageKeys } from "@src/enums";
+import { getApiBaseUrl, getCookieDomain, getLocalStorageValue } from "@src/utilities";
 
 type RequestType = UnaryRequest<any, any> | StreamRequest<any, any>;
 type ResponseType = UnaryResponse<any, any> | StreamResponse<any, any>;
@@ -21,8 +22,9 @@ const authInterceptor: Interceptor =
 	(next) =>
 	async (req: RequestType): Promise<ResponseType> => {
 		try {
-			if (jwtAuthBearerToken) {
-				req.header.set("Authorization", `Bearer ${jwtAuthBearerToken}`);
+			const apiToken = getLocalStorageValue(LocalStorageKeys.apiToken);
+			if (apiToken) {
+				req.header.set("Authorization", `Bearer ${apiToken}`);
 			}
 
 			return await next(req);

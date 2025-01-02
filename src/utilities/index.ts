@@ -1,5 +1,11 @@
 // eslint-disable-next-line @liferay/sort-exports
 export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
+export {
+	getPreference,
+	getLocalStorageValue,
+	setPreference,
+	setLocalStorageValue,
+} from "@utilities/localStorage.utils";
 export { parseNestedJson } from "@src/utilities/convertWrappedJson.utils";
 export { stripGoogleConnectionName, stripAtlassianConnectionName } from "@src/utilities/stripConnectionName.utils";
 export { calculatePathDepth } from "@utilities/calculatePathDepth.utils";
@@ -22,4 +28,3 @@ export { sortArray } from "@utilities/sortArray.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";
 export { transformAndStringifyValues } from "@utilities/transformAndStringifyValues.utils";
 export { ValidateURL, ValidateDomain } from "@utilities/validateUrl.utils";
-export { getAutoSavePreference } from "@utilities/localStorage.utils";

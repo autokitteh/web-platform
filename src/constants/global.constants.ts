@@ -9,7 +9,6 @@ export const isAuthEnabled: boolean = import.meta.env.VITE_AUTH_ENABLED === "tru
 export const descopeProjectId: string = import.meta.env.VITE_DESCOPE_PROJECT_ID;
 export const googleAnalyticsId: string = import.meta.env.GOOGLE_ANALYTICS_ID;
 export const playwrightTestsAuthBearer: string = import.meta.env.TESTS_JWT_AUTH_TOKEN;
-export const jwtAuthBearerToken: string = import.meta.env.JWT_AUTH_TOKEN;
 export const homepageURL = "/";
 export const isLoggedInCookie = "ak_logged_in";
 export const version = packageJson.version;
