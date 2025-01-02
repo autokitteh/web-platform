@@ -16,13 +16,21 @@ export class ProjectPage {
 
 		const loaders = this.page.locator(".loader-cycle-disks").all();
 		const loadersArray = await loaders;
-		await Promise.all(loadersArray.map((loader) => loader.waitFor({ state: "hidden" })));
+		await Promise.all(loadersArray.map((loader) => loader.waitFor({ state: "detached" })));
 
 		const homepageTitle = this.page.getByText("Welcome to AutoKitteh");
 		await expect(homepageTitle).toBeVisible();
 
-		const deletedProjectName = this.page.getByText(projectName);
-		await expect(deletedProjectName).not.toBeVisible();
+		const deletedProjectNameCell = this.page.getByRole("cell", { name: projectName });
+
+		await expect(deletedProjectNameCell).toHaveCount(0);
+
+		await this.page.getByRole("button", { name: "System Log", exact: true }).click();
+
+		const deletedProjectLog = this.page.getByText(
+			`Project deletion completed successfully, project name: ${projectName}`
+		);
+		await expect(deletedProjectLog).toBeVisible();
 	}
 
 	async stopDeployment() {
