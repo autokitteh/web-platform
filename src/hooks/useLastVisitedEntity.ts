@@ -9,7 +9,6 @@ export const useLastVisitedEntity = (projectId?: string, paramDeploymentId?: str
 	useEffect(() => {
 		if (!paramDeploymentId && !sessionId && projectId !== latestOpened.projectId) {
 			setLatestOpened("deploymentId", "", projectId!);
-			setLatestOpened("sessionId", "", projectId!);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [paramDeploymentId, sessionId, projectId, latestOpened.projectId]);
@@ -17,17 +16,9 @@ export const useLastVisitedEntity = (projectId?: string, paramDeploymentId?: str
 	useEffect(() => {
 		if (paramDeploymentId) {
 			setLatestOpened("deploymentId", paramDeploymentId, projectId!);
-			setLatestOpened("sessionId", "", projectId!);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [paramDeploymentId, projectId]);
-
-	useEffect(() => {
-		if (sessionId) {
-			setLatestOpened("sessionId", sessionId, projectId!);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionId, projectId]);
 
 	return {
 		deploymentId:

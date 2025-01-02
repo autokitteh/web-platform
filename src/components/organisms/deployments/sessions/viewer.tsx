@@ -46,10 +46,8 @@ export const SessionViewer = () => {
 
 	const { loading: loadingOutputs, reload: reloadOutputs } = useOutputsCacheStore();
 	const { loading: loadingActivities, reload: reloadActivities } = useActivitiesCacheStore();
-	const { setLatestOpened } = useProjectStore();
 
 	const closeEditor = useCallback(() => {
-		setLatestOpened("sessionId", "", projectId!);
 		if (deploymentId) {
 			navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 
