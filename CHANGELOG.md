@@ -1,3 +1,10 @@
+# [2.114.0](https://github.com/autokitteh/web-platform/compare/v2.113.2...v2.114.0) (2025-01-02)
+
+
+### Features
+
+* **UI-1150:** enable login with jwt token ([#853](https://github.com/autokitteh/web-platform/issues/853)) ([7e78dd3](https://github.com/autokitteh/web-platform/commit/7e78dd35e04eeb513e4b2ff8dc41ae434f0cd137))
+
 ## [2.113.2](https://github.com/autokitteh/web-platform/compare/v2.113.1...v2.113.2) (2024-12-30)
 
 
