@@ -30,7 +30,7 @@ export const Dashboard = () => {
 			return (
 				<>
 					<DashboardProjectsTable />
-					<Socials iconsClass="size-6" isBordered />
+					<Socials iconsClass="size-6" wrapperClass="border-t-0.5 border-gray-1050 pt-4" />
 				</>
 			);
 		}

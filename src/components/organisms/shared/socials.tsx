@@ -12,24 +12,18 @@ import { Typography } from "@components/atoms/typography";
 export const Socials = ({
 	fillBlockClass,
 	iconsClass,
-	isBordered,
 	titleClass,
 	wrapperClass,
 }: {
 	fillBlockClass?: string;
 	iconsClass?: string;
-	isBordered?: boolean;
 	titleClass?: string;
 	wrapperClass?: string;
 }) => {
 	const { t } = useTranslation("shared", { keyPrefix: "socials" });
 	const iconsClassName = cn("fill-gray-500 transition hover:fill-green-800", iconsClass);
 	const titleClassName = cn("pr-4 font-averta text-sm font-semibold uppercase", titleClass);
-	const wrapperClassName = cn(
-		"flex w-full items-center",
-		{ "border-t-0.5 border-gray-1050 pt-4": isBordered },
-		wrapperClass
-	);
+	const wrapperClassName = cn("flex w-full items-center", wrapperClass);
 	const fillBlockClassName = cn("h-full", fillBlockClass);
 
 	return (
@@ -38,8 +32,8 @@ export const Socials = ({
 			<div className={wrapperClassName}>
 				<Typography className={titleClassName} element="h3">
 					{t("joinTheCommunity")}
-				</Typography>{" "}
-				<div className="flex gap-2.5">
+				</Typography>
+				<div className="flex flex-wrap gap-2.5">
 					{socialLinks.map(({ icon, link, name }) => (
 						<Link key={name} target="_blank" title={name} to={link}>
 							<IconSvg className={iconsClassName} src={icon} />
