@@ -35,7 +35,6 @@ const defaultState: Omit<
 	latestOpened: {
 		tab: "",
 		deploymentId: "",
-		sessionId: "",
 		projectId: undefined,
 	},
 };
@@ -49,13 +48,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 				state.latestOpened = {
 					tab: "",
 					deploymentId: "",
-					sessionId: "",
 					projectId,
 				};
 				state.latestOpened = {
 					tab: type === "tab" ? value : "",
 					deploymentId: type === "deploymentId" ? value : "",
-					sessionId: type === "sessionId" ? value : "",
 					projectId,
 				};
 

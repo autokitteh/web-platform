@@ -4,7 +4,6 @@ import { ServiceResponse } from "@type/services.types";
 type LatestOpened = {
 	deploymentId: string;
 	projectId?: string;
-	sessionId: string;
 	tab: string;
 };
 
