@@ -9,10 +9,8 @@ export class ProjectPage {
 		await this.page.locator('button[aria-label="Project additional actions"]').hover();
 		await this.page.locator('button[aria-label="Delete project"]').click();
 		await this.page.locator('button[aria-label="Ok"]').click();
-		const toast = await waitForToast(this.page, "Project deletion completed successfully");
-		await expect(toast).toBeVisible();
-
-		await this.page.waitForLoadState("domcontentloaded");
+		const successToast = await waitForToast(this.page, "Project deletion completed successfully");
+		await expect(successToast).toBeVisible();
 
 		const loaders = this.page.locator(".loader-cycle-disks").all();
 		const loadersArray = await loaders;
@@ -20,6 +18,8 @@ export class ProjectPage {
 
 		const homepageTitle = this.page.getByText("Welcome to AutoKitteh");
 		await expect(homepageTitle).toBeVisible();
+
+		await expect(successToast).not.toBeVisible();
 
 		const deletedProjectNameCell = this.page.getByRole("cell", { name: projectName });
 
