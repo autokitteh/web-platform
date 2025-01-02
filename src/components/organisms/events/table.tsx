@@ -111,7 +111,7 @@ export const EventsTable = () => {
 
 			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeId} />
 
-			<div className="flex bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
+			<div className="flex rounded-2xl bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
 				{eventId ? <Outlet /> : <NoEventsSelected />}
 			</div>
 		</div>
