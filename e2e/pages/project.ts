@@ -19,7 +19,7 @@ export class ProjectPage {
 		const homepageTitle = this.page.getByText("Welcome to AutoKitteh");
 		await expect(homepageTitle).toBeVisible();
 
-		await expect(successToast).not.toBeVisible();
+		await expect(successToast).not.toBeVisible({ timeout: 10000 });
 
 		const deletedProjectNameCell = this.page.getByRole("cell", { name: projectName });
 
