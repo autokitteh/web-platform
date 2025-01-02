@@ -9,6 +9,7 @@ import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-ro
 import { googleTagManagerEvents, isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
 import { LoggerService } from "@services/index";
 import { LocalStorageKeys } from "@src/enums";
+import { useHubspot } from "@src/hooks";
 import { gTagEvent, getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
@@ -30,6 +31,7 @@ const routes = [
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
+
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
 	const addToast = useToastStore((state) => state.addToast);
@@ -51,6 +53,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		setSearchParams({});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+	const { revokeCookieConsent, setIdentity, setPathPageView } = useHubspot();
+
+	useEffect(() => {
+		setPathPageView(location.pathname);
+	}, [location, setPathPageView]);
 
 	const handleLogout = useCallback(async () => {
 		await logout();
@@ -64,6 +71,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 			return;
 		}
+		revokeCookieConsent();
 		Cookies.remove(isLoggedInCookie, { domain: getCookieDomain(rootDomain) });
 		window.localStorage.clear();
 		window.location.reload();
@@ -99,7 +107,9 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					return;
 				}
 				clearLogs();
+				if (!user?.email) return;
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
+				setIdentity(user?.email);
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailed"),
