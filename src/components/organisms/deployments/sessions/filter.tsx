@@ -11,8 +11,8 @@ import { DropdownButton } from "@components/molecules";
 
 import { FilterIcon } from "@assets/image/icons";
 
-export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilterProps) => {
-	const [activeState, setActiveState] = useState<SessionStateType>();
+export const SessionsTableFilter = ({ defaultValue, onChange, sessionStats }: SessionTableFilterProps) => {
+	const [activeState, setActiveState] = useState<SessionStateType | undefined>(defaultValue as SessionStateType);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
 
 	const buttonClassText = {
@@ -71,7 +71,6 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 
 	const handleButtonClick = (state?: SessionStateType) => {
 		setActiveState(state);
-
 		onChange(state);
 	};
 

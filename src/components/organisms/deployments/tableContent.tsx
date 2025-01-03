@@ -35,7 +35,6 @@ export const DeploymentsTableContent = ({
 	const [deploymentId, setDeploymentId] = useState<string>();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { t: tSessionsStats } = useTranslation("deployments", { keyPrefix: "sessionStats" });
-	const { setLatestOpened } = useProjectStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
@@ -111,7 +110,6 @@ export const DeploymentsTableContent = ({
 	);
 
 	const goToDeploymentSessions = (id: string) => {
-		setLatestOpened("sessionId", "", projectId);
 		navigate(`${id}/sessions`);
 	};
 

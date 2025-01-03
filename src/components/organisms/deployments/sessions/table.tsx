@@ -2,13 +2,14 @@ import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
 import { namespaces, sessionRowHeight } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
+import { SessionStateType } from "@src/enums";
 import { useResize } from "@src/hooks";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
@@ -29,6 +30,9 @@ export const SessionsTable = () => {
 	const { closeModal } = useModalStore();
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
+	const { state } = useLocation();
+	const sessionState = state?.sessionState;
+
 	const addToast = useToastStore((state) => state.addToast);
 	const [isDeleting, setIsDeleting] = useState(false);
 
@@ -44,23 +48,50 @@ export const SessionsTable = () => {
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 
 	const fetchDeployments = useCallback(async () => {
-		if (!projectId) {
-			return;
-		}
+		if (!projectId) return;
 
 		const deployments = await reloadDeploymentsCache(projectId, true);
 
-		const deployment = deployments?.find((deployment) => deployment.deploymentId === deploymentId);
+		if (deploymentId) {
+			const deployment = deployments?.find((deployment) => deployment.deploymentId === deploymentId);
 
-		if (!deployment?.sessionStats) {
-			return;
+			if (!deployment?.sessionStats) return;
+
+			if (isEqual(deployment.sessionStats, sessionStats)) return;
+
+			setSessionStats(deployment.sessionStats);
+
+			return deployments;
 		}
 
-		if (isEqual(deployment.sessionStats, sessionStats)) {
-			return;
-		}
+		const allSessionStats = deployments?.flatMap((deployment) => deployment.sessionStats || []);
 
-		setSessionStats(deployment.sessionStats);
+		const aggregatedStats = Object.values(
+			(allSessionStats || []).reduce(
+				(acc, { count, state }) => {
+					if (!state) return acc;
+
+					acc[state] = {
+						state,
+						count: (acc[state]?.count || 0) + count,
+					};
+
+					if (state === SessionStateType.created) {
+						acc[SessionStateType.running] = {
+							state: SessionStateType.running,
+							count: (acc[SessionStateType.running]?.count || 0) + count,
+						};
+					}
+
+					return acc;
+				},
+				{} as Record<string, { count: number; state: SessionStateType }>
+			)
+		);
+
+		if (!aggregatedStats.length || isEqual(aggregatedStats, sessionStats)) return;
+
+		setSessionStats(aggregatedStats as DeploymentSession[]);
 
 		return deployments;
 	}, [projectId, deploymentId, reloadDeploymentsCache, sessionStats]);
@@ -70,9 +101,19 @@ export const SessionsTable = () => {
 			if (!forceRefresh) {
 				setIsLoading(true);
 			}
+			const fetchMethod = deploymentId
+				? SessionsService.listByDeploymentId.bind(null, deploymentId!)
+				: projectId
+					? SessionsService.listByProjectId.bind(null, projectId!)
+					: null;
 
-			const { data, error } = await SessionsService.listByDeploymentId(
-				deploymentId!,
+			if (!fetchMethod) {
+				setIsLoading(false);
+
+				return;
+			}
+
+			const { data, error } = await fetchMethod(
 				{
 					stateType: sessionStateType,
 				},
@@ -142,16 +183,24 @@ export const SessionsTable = () => {
 
 	const closeSessionLog = useCallback(() => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
-	}, [navigate, projectId, deploymentId]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, deploymentId]);
 
-	const handleFilterSessions = useCallback(
-		(stateType?: SessionStateKeyType) => {
-			const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
-			setSessionStateType(selectedSessionStateFilter);
+	const handleFilterSessions = useCallback((stateType?: SessionStateKeyType) => {
+		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
+		setSessionStateType(selectedSessionStateFilter);
+		if (deploymentId) {
 			closeSessionLog();
-		},
-		[closeSessionLog]
-	);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		if (sessionState) {
+			handleFilterSessions(sessionState);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sessionState]);
 
 	const handleItemsRendered = useCallback(
 		({ visibleStopIndex }: ListOnItemsRenderedProps) => {
@@ -202,7 +251,11 @@ export const SessionsTable = () => {
 							{t("tableTitle")}
 						</Typography>
 						<div className="ml-auto flex items-center">
-							<SessionsTableFilter onChange={handleFilterSessions} sessionStats={sessionStats} />
+							<SessionsTableFilter
+								defaultValue={sessionState}
+								onChange={handleFilterSessions}
+								sessionStats={sessionStats}
+							/>
 							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
 						</div>
 					</div>
