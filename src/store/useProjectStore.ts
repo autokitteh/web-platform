@@ -1,4 +1,5 @@
 import i18n from "i18next";
+import yaml from "js-yaml";
 import isEqual from "lodash/isEqual";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -148,6 +149,41 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (error) {
 			return { data: undefined, error };
 		}
+
+		if (!newProjectId) {
+			return { data: undefined, error: i18n.t("projectCreationFailed", { ns: "errors" }) };
+		}
+
+		const manifestObject = yaml.load(projectManifest) as {
+			project?: { name: string };
+		};
+
+		let projectName = manifestObject?.project?.name;
+
+		if (!projectName) {
+			const { data: project, error: getProjectError } = await ProjectsService.get(newProjectId);
+
+			if (!getProjectError) {
+				return { data: undefined, error: getProjectError };
+			}
+			if (!project) {
+				return { data: undefined, error: i18n.t("projectLoadingFailed", { ns: "errors" }) };
+			}
+
+			projectName = project.name;
+		}
+
+		const menuItem = {
+			href: `/${SidebarHrefMenu.projects}/${newProjectId}`,
+			id: newProjectId,
+			name: projectName,
+		};
+
+		set((state) => {
+			state.projectsList.push(menuItem);
+
+			return state;
+		});
 
 		return { data: newProjectId, error: undefined };
 	},

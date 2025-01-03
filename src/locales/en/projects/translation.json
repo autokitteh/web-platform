@@ -15,8 +15,10 @@
             "goToProject": "Go to project",
             "deployments": "Deployments",
             "delete": "Delete",
+            "deleteProject": "Delete project",
             "export": "Export",
-            "ariaSettingsRun": "Settings manual run"
+            "ariaSettingsRun": "Settings manual run",
+            "projectActionsMenu": "Project additional actions"
         },
         "deployedProjectSuccess": "Project deployment completed successfully",
         "deployedProjectSuccessExtended": "Project deployment completed successfully, deployment ID: {{deploymentId}}",

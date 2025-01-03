@@ -1,14 +1,17 @@
 import { APIRequestContext, Page } from "@playwright/test";
+import randomatic from "randomatic";
 
 import { expect, test } from "../fixtures";
 import { waitForToast } from "../utils";
-import { DashboardPage } from "e2e/pages";
+import { DashboardPage, ProjectPage } from "e2e/pages";
 
 interface SetupParams {
 	dashboardPage: DashboardPage;
 	page: Page;
 	request: APIRequestContext;
 }
+
+const projectName = `test_${randomatic("Aa", 4)}`;
 
 async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 	await expect(async () => {
@@ -20,12 +23,12 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 			await page.waitForTimeout(500);
 		}
 
-		const hasErrorStatus = await page
+		const completedSession = await page
 			.getByRole("status", { name: "completed" })
 			.filter({ hasText: "1" })
 			.isVisible();
 
-		expect(hasErrorStatus).toBe(true);
+		expect(completedSession).toBe(true);
 
 		return true;
 	}).toPass({
@@ -39,9 +42,13 @@ test.describe("Session triggered with webhook", () => {
 		await setupProjectAndTriggerSession({ dashboardPage, page, request });
 	});
 
-	test("should successfully deploy project and execute session via webhook", async ({ page }: { page: Page }) => {
-		const deploymentTableRow = page.getByRole("cell", { name: /bld_*/ });
-		await expect(deploymentTableRow).toHaveCount(1);
+	test("should successfully deploy project and execute session via webhook", async ({
+		page,
+		projectPage,
+	}: {
+		page: Page;
+		projectPage: ProjectPage;
+	}) => {
 		const completedSessionDeploymentColumn = page
 			.getByRole("status", { name: "completed" })
 			.filter({ hasText: "1" });
@@ -52,11 +59,17 @@ test.describe("Session triggered with webhook", () => {
 				has: page.getByRole("cell", { name: "receive_http_get_or_head" }),
 			})
 			.click();
+
+		const sessionCompletedLog = page.getByText("The session has finished with completed state");
+		await expect(sessionCompletedLog).toBeVisible();
+
+		await projectPage.stopDeployment();
+		await projectPage.deleteProject(projectName);
 	});
 });
 
 async function setupProjectAndTriggerSession({ dashboardPage, page, request }: SetupParams) {
-	await dashboardPage.createProjectFromTemplate();
+	await dashboardPage.createProjectFromTemplate(projectName);
 
 	await expect(page.getByText("webhooks.py")).toBeVisible();
 

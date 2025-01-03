@@ -186,9 +186,10 @@ export const ProjectTopbarButtons = () => {
 							)}
 						</Button>
 						<Button
-							ariaLabel={t("topbar.buttons.delete")}
+							ariaLabel={t("topbar.buttons.deleteProject")}
 							className="group mt-2 h-8 px-4 text-white"
 							onClick={openModalDeleteProject}
+							title={t("topbar.buttons.deleteProject")}
 							variant="outline"
 						>
 							<IconSvg
@@ -202,7 +203,12 @@ export const ProjectTopbarButtons = () => {
 					</>
 				}
 			>
-				<Button className="group h-8 whitespace-nowrap px-4 text-white" variant="outline">
+				<Button
+					ariaLabel={t("topbar.buttons.projectActionsMenu")}
+					className="group h-8 whitespace-nowrap px-4 text-white"
+					title={t("topbar.buttons.projectActionsMenu")}
+					variant="outline"
+				>
 					<IconSvg
 						className="fill-white transition group-hover:fill-green-200 group-active:fill-green-800"
 						size="md"
