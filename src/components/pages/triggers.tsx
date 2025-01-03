@@ -2,4 +2,13 @@ import React from "react";
 
 import { Outlet } from "react-router-dom";
 
-export const Triggers = () => <Outlet />;
+import { EventsDrawer } from "@components/organisms";
+
+export const Triggers = () => {
+	return (
+		<>
+			<Outlet />
+			<EventsDrawer />
+		</>
+	);
+};

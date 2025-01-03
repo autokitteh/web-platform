@@ -1,13 +1,9 @@
 import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
-import { TableHeader } from "./table/header";
-import { NoEventsSelected } from "./table/notSelected";
-import { EventRow } from "./table/row";
-import { VirtualizedList } from "./table/virtualizer";
 import { useResize, useSort } from "@src/hooks";
 import { useCacheStore } from "@src/store";
 import { BaseEvent, Deployment } from "@src/types/models";
@@ -15,6 +11,11 @@ import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
+import { EventViewer } from "@components/organisms/events";
+import { TableHeader } from "@components/organisms/events/table/header";
+import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
+import { EventRow } from "@components/organisms/events/table/row";
+import { VirtualizedList } from "@components/organisms/events/table/virtualizer";
 
 export const EventsTable = () => {
 	const { t } = useTranslation("events");
@@ -25,17 +26,34 @@ export const EventsTable = () => {
 	} = useCacheStore();
 	const resizeId = useId();
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
+	const [isSourceLoad, setIsSourceLoad] = useState(false);
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
-	const { eventId } = useParams();
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
+	const { connectionId, eventId, projectId, triggerId } = useParams();
 	const navigate = useNavigate();
+
+	const sourceId = triggerId || connectionId;
+
+	const fetchData = useCallback(async () => {
+		if (sourceId) {
+			setIsSourceLoad(true);
+			await fetchEvents(true, sourceId);
+			setIsSourceLoad(false);
+
+			return;
+		}
+
+		await fetchEvents();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [sourceId]);
 
 	useEffect(() => {
 		if (isInitialLoad) {
 			setIsInitialLoad(false);
 		}
-		fetchEvents();
+
+		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -54,16 +72,18 @@ export const EventsTable = () => {
 	const rowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => {
 			const event = sortedEvents[index];
+			const sourceIdAddress = `/projects/${projectId}/triggers/${triggerId}/events/${event.eventId}`;
+			const eventsAddress = `/events/${event.eventId}`;
+			const onRowClick = () => navigate(sourceId ? sourceIdAddress : eventsAddress);
 
-			return (
-				<EventRow event={event} key={key} onClick={() => navigate(`/events/${event.eventId}`)} style={style} />
-			);
+			return <EventRow event={event} key={key} onClick={onRowClick} style={style} />;
 		},
-		[sortedEvents, navigate]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[sourceId, sortedEvents, navigate]
 	);
 
 	const tableContent = useMemo(() => {
-		if (loadingEvents && isInitialLoad) {
+		if ((loadingEvents && isInitialLoad) || isSourceLoad) {
 			return <Loader isCenter size="xl" />;
 		}
 
@@ -93,13 +113,13 @@ export const EventsTable = () => {
 			</div>
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isInitialLoad, sortedEvents]);
+	}, [isInitialLoad, sortedEvents, isSourceLoad]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const handleRefresh = useCallback(() => fetchEvents(true) as Promise<void | Deployment[]>, []);
+	const handleRefresh = useCallback(() => fetchEvents(true, triggerId) as Promise<void | Deployment[]>, []);
 
 	return (
-		<div className="my-2 flex size-full">
+		<div className="mb-2 flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex justify-end">
@@ -112,7 +132,7 @@ export const EventsTable = () => {
 			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeId} />
 
 			<div className="flex bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
-				{eventId ? <Outlet /> : <NoEventsSelected />}
+				{eventId ? <EventViewer /> : <NoEventsSelected />}
 			</div>
 		</div>
 	);
