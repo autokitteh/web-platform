@@ -6,6 +6,7 @@ import { useProjectStore } from "@src/store";
 import { Frame, Loader, ResizeButton } from "@components/atoms";
 import { DashboardProjectsTable, DashboardTopbar, IntroMainBlock } from "@components/organisms";
 import { ProjectTemplatesSection } from "@components/organisms/dashboard/templates";
+import { Socials } from "@components/organisms/shared";
 
 export const Dashboard = () => {
 	const resizeId = useId();
@@ -26,14 +27,19 @@ export const Dashboard = () => {
 		} else if (!projectsList.length) {
 			return <IntroMainBlock />;
 		} else {
-			return <DashboardProjectsTable />;
+			return (
+				<>
+					<DashboardProjectsTable />
+					<Socials iconsClass="size-6" wrapperClass="border-t-0.5 border-gray-1050 pt-4" />
+				</>
+			);
 		}
 	}, [isLoadingProjectsList, projectsList]);
 
 	return (
 		<div className="my-0 flex w-full overflow-hidden rounded-none md:my-1.5 md:rounded-2xl">
 			<div className="relative flex w-2/3 flex-col" style={{ width: `${!isMobile ? leftSideWidth : 100}%` }}>
-				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none">
+				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
 					<DashboardTopbar />
 
 					{dashboardContent}
