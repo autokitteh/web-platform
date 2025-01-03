@@ -28,3 +28,4 @@ export const timeFormat = "HH:mm:ss";
 export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
 export const AKRoutes = isProduction ? Sentry.withSentryReactRouterV7Routing(Routes) : Routes;
+export const sentryDsn = import.meta.env.SENTRY_DSN;

@@ -9,7 +9,15 @@ import { Textarea } from "@components/atoms";
 const TextareaWrapper = (props: Partial<TextArea>) => {
 	const [value, setValue] = useState("");
 
-	return <Textarea {...props} onChange={(event) => setValue(event.target.value)} value={value} />;
+	return (
+		<Textarea
+			{...props}
+			isError={props?.isError || false}
+			onChange={(event) => setValue(event.target.value)}
+			placeholder={props?.placeholder || ""}
+			value={value}
+		/>
+	);
 };
 
 const meta: Meta<typeof TextareaWrapper> = {

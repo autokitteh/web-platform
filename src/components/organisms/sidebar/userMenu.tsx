@@ -3,16 +3,16 @@ import React from "react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 
-import { userMenuItems, userMenuOrganizationItems } from "@src/constants";
+import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
 import { useUserStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
 import { PlusIcon } from "@assets/image/icons";
-import { LogoutIcon } from "@assets/image/icons/sidebar";
+import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
-export const UserMenu = () => {
+export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void }) => {
 	const { t } = useTranslation("sidebar");
 	const { logoutFunction, user } = useUserStore();
 
@@ -35,6 +35,15 @@ export const UserMenu = () => {
 					<span className="font-medium text-black">{user?.email}</span>
 				</div>
 				<div className="mt-2 flex flex-col gap-1">
+					{sentryDsn ? (
+						<Button
+							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
+							onClick={openFeedbackForm}
+						>
+							<AnnouncementIcon className="size-4" fill="black" />
+							{t("menu.userSettings.feedback")}
+						</Button>
+					) : null}
 					{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 						<Button
 							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
