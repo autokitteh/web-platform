@@ -1,3 +1,5 @@
+[[headers]]
+  for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
@@ -8,31 +10,37 @@
     private'''
 
 [[redirects]]
-from = "/._darcs"
-to = "/404"
-status = 404
+  from = "/._darcs"
+  to = "/404"
+  status = 404
 
-[[redirects]]	
-from = "/.bzr"	
-to = "/404"	
-status = 404	
 
-[[redirects]]	
-from = "/.hg"	
-to = "/404"	
-status = 404	
+[[redirects]]
+  from = "/.bzr"
+  to = "/404"
+  status = 404
+  
 
-[[redirects]]	
-from = "/.git"	
-to = "/404"	
-status = 404	
+[[redirects]]
+  from = "/.hg"
+  to = "/404"
+  status = 404
 
-[[redirects]]	
-from = "/BitKeeper"	
-to = "/404"	
-status = 404	
 
-[[redirects]]	
-from = "/*"	
-to = "/index.html"	
-status = 200	
+[[redirects]]
+  from = "/.git"
+  to = "/404"
+  status = 404
+  
+
+[[redirects]]
+  from = "/.BitKeeper"
+  to = "/404"
+  status = 404
+
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  
