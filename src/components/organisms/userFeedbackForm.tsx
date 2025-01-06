@@ -15,7 +15,6 @@ import { userFeedbackSchema } from "@validations";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Textarea, Typography } from "@components/atoms";
 
-import { CatLookAtFishImage } from "@assets/image";
 import { Close } from "@assets/image/icons";
 
 export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFormProps) => {
@@ -24,7 +23,6 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	const addToast = useToastStore((state) => state.addToast);
 	const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 	const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
-	const [timerCount, setTimerCount] = useState(10);
 
 	const {
 		formState: { errors },
@@ -42,23 +40,21 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	});
 
 	const onSubmit = async (data: { email: string; message: string; name: string }) => {
-		if (isFeedbackSubmitted) {
-			onClose();
-
-			return;
-		}
+		const { email, message, name } = data;
 		try {
 			setIsSendingFeedback(true);
-			const { email, message, name } = data;
-			const sentryId = Sentry.captureMessage("Message that needs user feedback");
+			const sentryId = Sentry.captureMessage("User Feedback");
 			const userFeedback = { event_id: sentryId, name, email, message };
 
 			Sentry.captureFeedback(userFeedback);
 
 			setIsFeedbackSubmitted(true);
-			setTimerCount(10);
+
+			setTimeout(() => {
+				onClose();
+			}, 4000);
 		} catch (error) {
-			Sentry.captureException(error);
+			Sentry.captureException({ error, email, name, message });
 			addToast({
 				message: tErrors("errorSendingFeedback"),
 				type: "error",
@@ -70,22 +66,8 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	};
 
 	useEffect(() => {
-		if (!isFeedbackSubmitted) return;
-		const interval = setInterval(() => {
-			setTimerCount((count) => count - 1);
-		}, 1000);
-
-		return () => clearInterval(interval);
-	}, [isFeedbackSubmitted]);
-
-	useEffect(() => {
-		if (timerCount === 0) onClose();
-	}, [timerCount, onClose]);
-
-	useEffect(() => {
 		if (!isOpen) {
 			setIsFeedbackSubmitted(false);
-			setTimerCount(10);
 			reset();
 		}
 	}, [isOpen, reset]);
@@ -115,59 +97,60 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 						</IconButton>
 					</div>
 					<form className="mt-5 flex h-350 flex-col justify-between" onSubmit={handleSubmit(onSubmit)}>
-						{!isFeedbackSubmitted ? (
-							<div>
-								<Input
-									label={t("form.name")}
-									placeholder={t("form.placeholder.name")}
-									{...register("name")}
-									isError={!!errors.name}
-									isRequired
-								/>
-								{errors.name ? <ErrorMessage>{errors.name.message}</ErrorMessage> : null}
-								<Input
-									className="mt-6"
-									isRequired
-									label={t("form.email")}
-									placeholder={t("form.placeholder.email")}
-									{...register("email")}
-									isError={!!errors.email}
-								/>
-								{errors.email ? <ErrorMessage>{errors.email.message}</ErrorMessage> : null}
-								<Textarea
-									rows={5}
-									{...register("message")}
-									className="mt-6"
-									isError={!!errors.message}
-									isRequired
-									label={t("form.message")}
-									placeholder={t("form.placeholder.message")}
-								/>
-								{errors.message ? <ErrorMessage>{errors.message.message}</ErrorMessage> : null}
-							</div>
+						<div>
+							<Input
+								label={t("form.name")}
+								placeholder={t("form.placeholder.name")}
+								{...register("name")}
+								disabled={isFeedbackSubmitted || isSendingFeedback}
+								isError={!!errors.name}
+								isRequired
+							/>
+							{errors.name ? <ErrorMessage>{errors.name.message}</ErrorMessage> : null}
+						</div>
+						<div>
+							<Input
+								className="mt-6"
+								disabled={isFeedbackSubmitted || isSendingFeedback}
+								isRequired
+								label={t("form.email")}
+								placeholder={t("form.placeholder.email")}
+								{...register("email")}
+								isError={!!errors.email}
+							/>
+							{errors.email ? <ErrorMessage>{errors.email.message}</ErrorMessage> : null}
+						</div>
+						<div>
+							<Textarea
+								rows={5}
+								{...register("message")}
+								className="mt-6"
+								disabled={isFeedbackSubmitted || isSendingFeedback}
+								isError={!!errors.message}
+								isRequired
+								label={t("form.message")}
+								placeholder={t("form.placeholder.message")}
+							/>
+							{errors.message ? <ErrorMessage>{errors.message.message}</ErrorMessage> : null}
+						</div>
+
+						{isFeedbackSubmitted ? (
+							<Typography className="mt-6 text-center font-averta font-bold" size="xl">
+								{t("thankYou")}
+							</Typography>
 						) : (
-							<div className="my-auto text-center">
-								<Typography className="font-averta font-bold leading-7" size="1.5xl">
-									{t("titleThanks")}
-								</Typography>
-								<Typography className="mt-1 font-averta font-light" size="xl">
-									{t("ourCats")}
-								</Typography>
-								<CatLookAtFishImage className="m-auto mt-4" />
-							</div>
+							<Button
+								className={cn("mt-6 w-full justify-center p-1.5 px-7 text-lg font-bold text-white", {
+									"justify-between": isFeedbackSubmitted,
+								})}
+								disabled={isSendingFeedback}
+								type="submit"
+								variant="outline"
+							>
+								{isSendingFeedback ? <Loader className="m-0" /> : null}
+								{t("form.buttons.send")}
+							</Button>
 						)}
-						<Button
-							className={cn("mt-6 w-full justify-center p-1.5 px-7 text-lg font-bold text-white", {
-								"justify-between": isFeedbackSubmitted,
-							})}
-							disabled={isSendingFeedback}
-							type="submit"
-							variant="outline"
-						>
-							{isSendingFeedback ? <Loader className="m-0" /> : null}
-							{isFeedbackSubmitted ? t("form.buttons.close") : t("form.buttons.send")}
-							{isFeedbackSubmitted ? <span className="ml-2 text-green-800">{timerCount}</span> : null}
-						</Button>
 					</form>
 				</motion.div>
 			) : null}

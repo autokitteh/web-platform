@@ -172,7 +172,7 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						{isAuthEnabled ? (
+						{!isAuthEnabled ? (
 							<Popover interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-2 mt-2 flex items-center">
 									<Avatar color="black" name={user?.name} round={true} size="24" />
@@ -241,6 +241,7 @@ export const Sidebar = () => {
 							</Popover>
 						) : null}
 					</div>
+					{/* TODO: remove UserFeedbackForm from component after change to new menu enableNewOrgsAndUsersDesign: */}
 					<UserFeedbackForm
 						className="absolute bottom-0 left-20"
 						isOpen={isFeedbackOpen}

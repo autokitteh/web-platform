@@ -12,9 +12,8 @@
 		"intro": "Introduction"
 	},
 	"userFeedback": {
-		"title": "Give your feedback",
-		"titleThanks": "Thank’s for taking the time to provide your feeback",
-		"ourCats": "our cats are looking into it",
+		"title": "Feedback",
+		"thankYou": "Thank you!",
 		"form": {
 			"email": "Email",
 			"name": "Name",
@@ -26,8 +25,7 @@
 				"message": "Enter your message"  
 			},
 			"buttons": {
-				"send": "Send",
-				"close": "Ok, close"
+				"send": "Send"
 			},
 			"error": "Something went wrong, please try again later"
 		}
