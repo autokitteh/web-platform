@@ -40,6 +40,8 @@ const useBasePopover = (
 		],
 	});
 
+	const close = () => setOpen(false);
+
 	const context = data.context;
 
 	const animationConfigurations = {
@@ -65,11 +67,12 @@ const useBasePopover = (
 		context,
 		isMounted,
 		styles,
+		close,
 	};
 };
 
 export const usePopover = (options: PopoverOptions = { interactionType: "hover", animation: "slideFromBottom" }) => {
-	const { context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
+	const { close, context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
 	const { interactionType } = options;
 
 	const dismiss = useDismiss(context);
@@ -94,6 +97,7 @@ export const usePopover = (options: PopoverOptions = { interactionType: "hover",
 			...data,
 			isMounted,
 			styles,
+			close,
 		}),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[open, interactions, data, isMounted, styles]
@@ -103,7 +107,7 @@ export const usePopover = (options: PopoverOptions = { interactionType: "hover",
 export const usePopoverList = (
 	options: PopoverOptions = { interactionType: "hover", animation: "slideFromBottom" }
 ) => {
-	const { context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
+	const { close, context, data, isMounted, open, setOpen, styles } = useBasePopover(options);
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const listRef = useRef<(HTMLElement | null)[]>([]);
 
@@ -136,6 +140,7 @@ export const usePopoverList = (
 			...data,
 			isMounted,
 			styles,
+			close,
 			activeIndex,
 			setActiveIndex,
 			listRef,
