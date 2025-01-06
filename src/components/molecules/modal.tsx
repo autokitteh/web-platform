@@ -47,21 +47,23 @@ export const Modal = ({ children, className, hideCloseButton, name }: ModalProps
 			const lastElement = focusableElements[focusableElements.length - 1];
 
 			const handleKeyDown = (event: KeyboardEvent) => {
-				event.preventDefault();
 				if (event.key === "Tab") {
 					if (event.shiftKey && document.activeElement === firstElement) {
 						(lastElement as HTMLElement).focus();
+						event.preventDefault();
 
 						return;
 					}
 					if (!event.shiftKey && document.activeElement === lastElement) {
 						(firstElement as HTMLElement).focus();
+						event.preventDefault();
 
 						return;
 					}
 				}
 
 				if (event.key === "Escape" && isOpen) {
+					event.preventDefault();
 					onClose(name);
 				}
 			};
