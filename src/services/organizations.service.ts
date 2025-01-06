@@ -8,15 +8,19 @@ import { ServiceResponse } from "@type";
 import { Organization } from "@type/models";
 
 export class OrganizationsService {
-	static async create(name: string): Promise<ServiceResponse<string>> {
+	static async create(displayName: string): Promise<ServiceResponse<string>> {
 		try {
-			const { orgId } = await organizationsClient.create({ org: { displayName: "test" } });
+			const { orgId } = await organizationsClient.create({ org: { displayName } });
 
 			return { data: orgId, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.triggerService,
-				i18n.t("triggerNotCreatedExtended", { error: (error as Error).message, ns: "services", name })
+				i18n.t("triggerNotCreatedExtended", {
+					error: (error as Error).message,
+					ns: "services",
+					name: displayName,
+				})
 			);
 
 			return { data: undefined, error };

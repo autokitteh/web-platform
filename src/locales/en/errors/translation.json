@@ -95,5 +95,6 @@
 	"fetchSessionFailed": "Failed to fetch session logs",
 	"errorFetchingIntegrations": "Error fetching integrations",
 	"errorSendingFeedback": "Error sending feedback",
-	"errorSendingFeedbackExtended": "Error sending feedback, error: {{error}}"
+	"errorSendingFeedbackExtended": "Error sending feedback, error: {{error}}",
+	"errorCreateNewOrganization": "Error creating a new organization"
 }
