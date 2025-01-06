@@ -4,6 +4,7 @@ import { PropsUseSetTrackEvent, UseTrackingCode } from "@src/types/hooks";
 
 export const useHubspot = (): UseTrackingCode => {
 	const _hsq = typeof window !== "undefined" && window._hsq ? window._hsq : [];
+	console.log("useHubspot -> _hsq", _hsq);
 
 	const setContentType = (contentType: string): void => {
 		_hsq.push(["setContentType", contentType]);
