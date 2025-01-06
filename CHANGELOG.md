@@ -1,3 +1,10 @@
+## [2.117.1](https://github.com/autokitteh/web-platform/compare/v2.117.0...v2.117.1) (2025-01-06)
+
+
+### Bug Fixes
+
+* **UI-1161:** dont include gtm scripts in case no env variable ([#865](https://github.com/autokitteh/web-platform/issues/865)) ([daa72f3](https://github.com/autokitteh/web-platform/commit/daa72f38c4e7528b9ccd7b43244ac134e052a990))
+
 # [2.117.0](https://github.com/autokitteh/web-platform/compare/v2.116.1...v2.117.0) (2025-01-06)
 
 
