@@ -1,3 +1,10 @@
+# [2.119.0](https://github.com/autokitteh/web-platform/compare/v2.118.0...v2.119.0) (2025-01-06)
+
+
+### Features
+
+* **UI-977:** add user feedback form ([#840](https://github.com/autokitteh/web-platform/issues/840)) ([738e2b7](https://github.com/autokitteh/web-platform/commit/738e2b72d472eafd5e6abfa4986f59be3a193666))
+
 # [2.118.0](https://github.com/autokitteh/web-platform/compare/v2.117.1...v2.118.0) (2025-01-06)
 
 
