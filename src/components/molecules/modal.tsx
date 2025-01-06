@@ -36,24 +36,44 @@ export const Modal = ({ children, className, hideCloseButton, name }: ModalProps
 
 	useEffect(() => {
 		if (isOpen && modalRef.current) {
-			const firstInput = modalRef.current.querySelector("input, textarea, select");
-			if (!firstInput) return;
+			const buttons = modalRef.current.querySelectorAll("button");
+			if (!buttons.length) return;
+			(buttons[buttons.length - 1] as HTMLElement).focus();
 
-			(firstInput as HTMLElement).focus();
+			const focusableElements = modalRef.current.querySelectorAll(
+				'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+			);
+			const firstElement = focusableElements[0];
+			const lastElement = focusableElements[focusableElements.length - 1];
+
+			const handleKeyDown = (event: KeyboardEvent) => {
+				if (event.key === "Tab") {
+					if (event.shiftKey && document.activeElement === firstElement) {
+						(lastElement as HTMLElement).focus();
+						event.preventDefault();
+
+						return;
+					}
+					if (!event.shiftKey && document.activeElement === lastElement) {
+						(firstElement as HTMLElement).focus();
+						event.preventDefault();
+
+						return;
+					}
+				}
+
+				if (event.key === "Escape" && isOpen) {
+					event.preventDefault();
+					onClose(name);
+				}
+			};
+
+			document.addEventListener("keydown", handleKeyDown);
+
+			return () => {
+				document.removeEventListener("keydown", handleKeyDown);
+			};
 		}
-
-		const handleKeyDown = (event: KeyboardEvent) => {
-			event.stopPropagation();
-			if (event.key === "Escape" && isOpen) {
-				onClose(name);
-			}
-		};
-
-		document.addEventListener("keydown", handleKeyDown);
-
-		return () => {
-			document.removeEventListener("keydown", handleKeyDown);
-		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isOpen]);
 
