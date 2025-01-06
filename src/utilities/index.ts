@@ -29,3 +29,4 @@ export { fetchFileContent } from "@utilities/templateFilesFetch";
 export { transformAndStringifyValues } from "@utilities/transformAndStringifyValues.utils";
 export { ValidateURL, ValidateDomain } from "@utilities/validateUrl.utils";
 export { gTagEvent } from "@utilities/gTag.utils";
+export { deploymentsSessionStats } from "@utilities/deploymentsSessionStats.utils";

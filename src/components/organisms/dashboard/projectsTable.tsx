@@ -8,7 +8,7 @@ import { DeploymentsService } from "@services/deployments.service";
 import { dateTimeFormat } from "@src/constants";
 import { DeploymentStateVariant, SessionStateType } from "@src/enums";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
-import { cn } from "@src/utilities";
+import { cn, deploymentsSessionStats } from "@src/utilities";
 import { DashboardProjectWithStats, Project } from "@type/models";
 
 import { useProjectActions, useSort } from "@hooks";
@@ -44,37 +44,28 @@ export const DashboardProjectsTable = () => {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let projectStatus = DeploymentStateVariant.inactive;
 			const lastDeployed = deployments?.[deployments?.length - 1]?.createdAt;
-			const stats = deployments?.reduce(
-				(acc: { sessionCounts: Record<string, number>; totalDeployments: number }, deployment) => {
-					if (deployment.state === DeploymentStateVariant.active) {
-						projectStatus = DeploymentStateVariant.active;
-					} else if (
-						deployment.state === DeploymentStateVariant.draining &&
-						projectStatus !== DeploymentStateVariant.active
-					) {
-						projectStatus = DeploymentStateVariant.draining;
-					}
+			const { sessionStats, totalDeployments } = deploymentsSessionStats(deployments || []);
 
-					acc.totalDeployments = (acc.totalDeployments || 0) + 1;
+			deployments?.forEach((deployment) => {
+				if (deployment.state === DeploymentStateVariant.active) {
+					projectStatus = DeploymentStateVariant.active;
+				} else if (
+					deployment.state === DeploymentStateVariant.draining &&
+					projectStatus !== DeploymentStateVariant.active
+				) {
+					projectStatus = DeploymentStateVariant.draining;
+				}
+			});
 
-					if (deployment.sessionStats) {
-						deployment.sessionStats.forEach((session) => {
-							if (!session.state) return;
-							acc.sessionCounts = {
-								...acc.sessionCounts,
-								[session.state]:
-									session.state === SessionStateType.created
-										? (acc.sessionCounts?.[SessionStateType.running] || 0) + session.count
-										: (acc.sessionCounts?.[session.state] || 0) + session.count,
-							};
-						});
-					}
-
-					return acc;
+			const stats = {
+				totalDeployments,
+				sessionCounts: {
+					running: sessionStats[SessionStateType.running]?.count || 0,
+					stopped: sessionStats[SessionStateType.stopped]?.count || 0,
+					completed: sessionStats[SessionStateType.completed]?.count || 0,
+					error: sessionStats[SessionStateType.error]?.count || 0,
 				},
-				{ totalDeployments: 0, sessionCounts: {} }
-			);
-
+			};
 			projectsStats[project.id] = {
 				id: project.id,
 				name: project.name,

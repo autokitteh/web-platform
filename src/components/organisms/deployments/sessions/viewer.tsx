@@ -19,7 +19,7 @@ import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { SessionState } from "@src/enums";
 import { ViewerSession } from "@src/interfaces/models/session.interface";
-import { useActivitiesCacheStore, useOutputsCacheStore, useProjectStore, useToastStore } from "@src/store";
+import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 
 import { Frame, IconButton, IconSvg, Loader, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion, CopyButton, RefreshButton } from "@components/molecules";
@@ -54,7 +54,6 @@ export const SessionViewer = () => {
 			return;
 		}
 		navigate(`/projects/${projectId}/sessions`);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [navigate, projectId, deploymentId]);
 
 	const fetchSessionInfo = useCallback(async () => {

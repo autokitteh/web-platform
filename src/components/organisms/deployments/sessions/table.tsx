@@ -9,10 +9,10 @@ import { namespaces, sessionRowHeight } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
-import { SessionStateType } from "@src/enums";
 import { useResize } from "@src/hooks";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
+import { deploymentsSessionStats } from "@src/utilities";
 import { DeploymentSession } from "@type/models";
 
 import { Frame, Loader, ResizeButton, THead, Table, Th, Tr, Typography } from "@components/atoms";
@@ -64,30 +64,9 @@ export const SessionsTable = () => {
 			return deployments;
 		}
 
-		const allSessionStats = deployments?.flatMap((deployment) => deployment.sessionStats || []);
+		const { sessionStats: allSessionStats } = deploymentsSessionStats(deployments || []);
 
-		const aggregatedStats = Object.values(
-			(allSessionStats || []).reduce(
-				(acc, { count, state }) => {
-					if (!state) return acc;
-
-					acc[state] = {
-						state,
-						count: (acc[state]?.count || 0) + count,
-					};
-
-					if (state === SessionStateType.created) {
-						acc[SessionStateType.running] = {
-							state: SessionStateType.running,
-							count: (acc[SessionStateType.running]?.count || 0) + count,
-						};
-					}
-
-					return acc;
-				},
-				{} as Record<string, { count: number; state: SessionStateType }>
-			)
-		);
+		const aggregatedStats = Object.values(allSessionStats);
 
 		if (!aggregatedStats.length || isEqual(aggregatedStats, sessionStats)) return;
 

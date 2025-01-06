@@ -11,7 +11,7 @@ import { dateTimeFormat, namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useManualRunStore, useModalStore, useProjectStore, useToastStore } from "@store";
+import { useManualRunStore, useModalStore, useToastStore } from "@store";
 
 import { IconButton, StatusBadge, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { IdCopyButton, SortButton } from "@components/molecules";
