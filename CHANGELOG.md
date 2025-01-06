@@ -1,3 +1,10 @@
+## [2.120.1](https://github.com/autokitteh/web-platform/compare/v2.120.0...v2.120.1) (2025-01-06)
+
+
+### Bug Fixes
+
+* **UI-1163:** hide native sentry feedback button ([#867](https://github.com/autokitteh/web-platform/issues/867)) ([1946080](https://github.com/autokitteh/web-platform/commit/1946080670c252819a14ce89c4add687a3164630))
+
 # [2.120.0](https://github.com/autokitteh/web-platform/compare/v2.119.0...v2.120.0) (2025-01-06)
 
 
