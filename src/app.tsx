@@ -68,6 +68,7 @@ export const App = () => {
 				}),
 				Sentry.feedbackIntegration({
 					colorScheme: "system",
+					autoInject: false,
 				}),
 			],
 			// Set tracesSampleRate to 1.0 to capture 100%
