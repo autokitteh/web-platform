@@ -15,6 +15,7 @@ import notFound404 from "@locales/en/notFound404/translation.json";
 import projects from "@locales/en/projects/translation.json";
 import services from "@locales/en/services/translation.json";
 import settings from "@locales/en/settings/translation.json";
+import shared from "@locales/en/shared/translation.json";
 import sidebar from "@locales/en/sidebar/translation.json";
 import stores from "@locales/en/stores/translation.json";
 import tabs from "@locales/en/tabs/translation.json";
@@ -50,4 +51,5 @@ export default {
 	validations,
 	dashboard,
 	templates,
+	shared,
 };
