@@ -58,7 +58,6 @@ export const SessionViewer = () => {
 
 	const fetchSessionInfo = useCallback(async () => {
 		if (!sessionId) return;
-
 		const { data: sessionInfoResponse, error } = await SessionsService.getSessionInfo(sessionId);
 
 		if (error) {

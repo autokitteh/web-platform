@@ -176,7 +176,7 @@ export const App = () => {
 			</Route>
 
 			<Route element={<AppLayout />} path="projects/:projectId">
-				<Route element={<SessionsTable />} path=":sessions">
+				<Route element={<SessionsTable />} path="sessions">
 					<Route element={<SessionViewer />} path=":sessionId">
 						<Route element={<SessionOutputs />} index />
 						<Route element={<ActivityList />} path="executionflow" />
