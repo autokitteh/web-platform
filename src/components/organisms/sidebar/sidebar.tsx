@@ -7,6 +7,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import { UserFeedbackForm } from "../userFeedbackForm";
 import { featureFlags, isAuthEnabled, sentryDsn, userMenuItems } from "@constants";
+import { OrganizationsService } from "@services/organizations.service";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useUserStore } from "@store";
@@ -30,6 +31,21 @@ export const Sidebar = () => {
 	const location = useLocation();
 	const { t } = useTranslation("sidebar");
 
+	const createOrg = async () => {
+		const { data: orgId } = await OrganizationsService.create("test");
+		console.log(orgId);
+	};
+
+	const listOrgs = async () => {
+		const { data: orgs } = await OrganizationsService.list(user!.userId);
+		console.log(orgs);
+	};
+
+	useEffect(() => {
+		createOrg();
+		listOrgs();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	useEffect(() => {
 		setIsOpen(false);
 	}, [location.pathname]);
