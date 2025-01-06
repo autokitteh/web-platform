@@ -38,7 +38,6 @@ export const DashboardProjectsTable = () => {
 
 			if (activeDeployment) {
 				await DeploymentsService.deactivate(activeDeployment.deploymentId);
-				await ProjectsService.delete(projectsList[i].id);
 			}
 
 			// After every 10 projects, wait 30 seconds
@@ -51,8 +50,13 @@ export const DashboardProjectsTable = () => {
 		}
 	};
 
+	const deactivateAndDelete = async (projectsList: Project[]) => {
+		await deactivateProjects(projectsList);
+		await eraseProjects(projectsList);
+	};
+
 	useEffect(() => {
-		deactivateProjects(projectsList);
+		deactivateAndDelete(projectsList);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectsList]);
 
