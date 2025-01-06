@@ -1,3 +1,10 @@
+# [2.117.0](https://github.com/autokitteh/web-platform/compare/v2.116.1...v2.117.0) (2025-01-06)
+
+
+### Features
+
+* **UI-1117:** projects table remove 'new project' add 'socials' ([#813](https://github.com/autokitteh/web-platform/issues/813)) ([b3abf3b](https://github.com/autokitteh/web-platform/commit/b3abf3bac5da2cc943dfd0b2d3d885a0359687e0))
+
 ## [2.116.1](https://github.com/autokitteh/web-platform/compare/v2.116.0...v2.116.1) (2025-01-06)
 
 
