@@ -38,14 +38,16 @@
 		<% } %>
 		<div id="root"></div>
 		<script type="module" src="/src/main.tsx"></script>
+		<% if (env.VITE_HUBSPOT_ID) { %>
 		<!-- Start of HubSpot Embed Code -->
 		<script
 			type="text/javascript"
 			id="hs-script-loader"
 			async
 			defer
-			src="//js.hs-scripts.com/%VITE_HUBSPOT_ID%.js"
+			src="//js.hs-scripts.com/<%= env.VITE_HUBSPOT_ID %>.js"
 		></script>
 		<!-- End of HubSpot Embed Code -->
+		<% } %>
 	</body>
 </html>
