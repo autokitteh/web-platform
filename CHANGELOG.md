@@ -1,3 +1,10 @@
+## [2.116.1](https://github.com/autokitteh/web-platform/compare/v2.116.0...v2.116.1) (2025-01-06)
+
+
+### Bug Fixes
+
+* **UI-1154:** fix build run on netlify ([#864](https://github.com/autokitteh/web-platform/issues/864)) ([78de89e](https://github.com/autokitteh/web-platform/commit/78de89e3c8115f390d138920ff84948de27a7417))
+
 # [2.116.0](https://github.com/autokitteh/web-platform/compare/v2.115.0...v2.116.0) (2025-01-02)
 
 
