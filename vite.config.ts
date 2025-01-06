@@ -2,6 +2,7 @@ import react from "@vitejs/plugin-react";
 import dotenv from "dotenv";
 import path from "path";
 import { defineConfig } from "vite";
+import { ViteEjsPlugin } from "vite-plugin-ejs";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import svgr from "vite-plugin-svgr";
 
@@ -47,12 +48,16 @@ export default defineConfig({
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
 		"import.meta.env.TESTS_JWT_AUTH_TOKEN": JSON.stringify(process.env.TESTS_JWT_AUTH_TOKEN),
 		"import.meta.env.ENABLE_NEW_ORGS_AND_USERS_DESIGN": process.env.ENABLE_NEW_ORGS_AND_USERS_DESIGN,
+		"import.meta.env.VITE_GTM_ID": JSON.stringify(process.env.VITE_GTM_ID),
 	},
 	optimizeDeps: {
 		include: ["tailwind-config"],
 	},
 	plugins: [
 		react(),
+		ViteEjsPlugin((viteConfig) => ({
+			env: viteConfig.env,
+		})),
 		svgr({
 			svgrOptions: {
 				ref: true,
