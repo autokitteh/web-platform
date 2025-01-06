@@ -1,3 +1,10 @@
+# [2.118.0](https://github.com/autokitteh/web-platform/compare/v2.117.1...v2.118.0) (2025-01-06)
+
+
+### Features
+
+* **UI-11423:** optimize hubspot integration - add missing script ([#862](https://github.com/autokitteh/web-platform/issues/862)) ([e6de3e1](https://github.com/autokitteh/web-platform/commit/e6de3e17a17ff3007d3ec4876be3c42a62204315))
+
 ## [2.117.1](https://github.com/autokitteh/web-platform/compare/v2.117.0...v2.117.1) (2025-01-06)
 
 
