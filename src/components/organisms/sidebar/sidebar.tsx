@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
 import { featureFlags, isAuthEnabled, sentryDsn, userMenuItems } from "@constants";
-import { OrganizationsService } from "@services/organizations.service";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useUserStore } from "@store";
@@ -30,19 +29,6 @@ export const Sidebar = () => {
 	const location = useLocation();
 	const { t } = useTranslation("sidebar");
 
-	const createOrg = async () => {
-		await OrganizationsService.create("test");
-	};
-
-	const listOrgs = async () => {
-		await OrganizationsService.list(user!.userId);
-	};
-
-	useEffect(() => {
-		createOrg();
-		listOrgs();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 	useEffect(() => {
 		setIsOpen(false);
 	}, [location.pathname]);
