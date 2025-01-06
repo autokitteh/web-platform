@@ -1,23 +1,117 @@
-import React, { forwardRef } from "react";
+import React, { ChangeEvent, FocusEvent, forwardRef, useCallback, useEffect, useId, useState } from "react";
 
 import { TextArea } from "@interfaces/components";
 import { cn } from "@utilities";
 
-export const Textarea = forwardRef<HTMLTextAreaElement, Partial<TextArea>>((props, ref) => {
-	const { className, disabled, isError, placeholder = "Enter text", ...rest } = props;
+export const Textarea = forwardRef<HTMLTextAreaElement, TextArea>((props, ref) => {
+	const {
+		className,
+		defaultValue = "",
+		disabled = false,
+		isError = false,
+		isRequired = false,
+		label,
+		onBlur,
+		onChange,
+		placeholder,
+		value,
+		...rest
+	} = props;
 
-	const baseStyle = cn(
-		"border border-gray-950 bg-black text-base text-white",
-		"w-full pb-2 pl-4 pr-1.5 pt-3.5",
-		"placeholder:font-light placeholder:text-white hover:placeholder:font-medium",
-		"scrollbar rounded-lg transition hover:border-white focus:border-white",
-		{ "border-error": isError },
-		{ "pointer-events-none select-none": disabled },
-		{ "placeholder:text-gray-500": disabled },
+	const [state, setState] = useState({
+		isFocused: false,
+		textareaValue: value || defaultValue,
+		hasValue: !!(value || defaultValue),
+	});
+
+	useEffect(() => {
+		if (value !== undefined) {
+			setState((prev) => ({
+				...prev,
+				textareaValue: value,
+				hasValue: !!value,
+			}));
+		}
+	}, [value]);
+
+	const handleFocus = useCallback(() => {
+		setState((prev) => ({ ...prev, isFocused: true }));
+	}, []);
+
+	const handleBlur = useCallback(
+		(event: FocusEvent<HTMLTextAreaElement>) => {
+			setState((prev) => ({
+				...prev,
+				isFocused: false,
+				hasValue: !!prev.textareaValue,
+			}));
+			onBlur?.(event);
+		},
+		[onBlur]
+	);
+
+	const handleChange = useCallback(
+		(event: ChangeEvent<HTMLTextAreaElement>) => {
+			const newValue = event.target.value;
+			setState((prev) => ({
+				...prev,
+				textareaValue: newValue,
+				hasValue: !!newValue,
+			}));
+			onChange?.(event);
+		},
+		[onChange]
+	);
+
+	const id = useId();
+
+	const wrapperClass = cn(
+		"relative flex w-full border border-gray-950 bg-black text-base text-white rounded-lg transition",
+		"hover:border-white focus-within:border-white",
+		{
+			"border-error": isError,
+			"pointer-events-none select-none border-gray-950": disabled,
+		},
 		className
 	);
 
-	return <textarea className={baseStyle} disabled={disabled} placeholder={placeholder} ref={ref} {...rest} />;
+	const textareaClass = cn(
+		"w-full bg-transparent px-4 py-3.5 placeholder-gray-600 outline-none rounded-lg scrollbar",
+		{
+			"text-gray-750": disabled,
+		}
+	);
+
+	const labelClass = cn("pointer-events-none absolute left-4 opacity-0 transition-all", {
+		"top-1/2 -translate-y-1/2 text-gray-600 opacity-100": !state.isFocused && !state.hasValue && !placeholder,
+		"-top-2 left-3 px-1 text-xs text-white opacity-100 before:bg-gray-950":
+			state.isFocused || state.hasValue || placeholder,
+	});
+
+	return (
+		<div className={wrapperClass}>
+			<textarea
+				{...rest}
+				autoComplete="off"
+				className={textareaClass}
+				disabled={disabled}
+				id={id}
+				onBlur={handleBlur}
+				onChange={handleChange}
+				onFocus={handleFocus}
+				placeholder={placeholder}
+				ref={ref}
+				value={state.textareaValue}
+			/>
+
+			{label ? (
+				<label className={labelClass} htmlFor={id}>
+					<span className="relative z-10">{isRequired ? `${label} *` : label}</span>
+					<span className="absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black" />
+				</label>
+			) : null}
+		</div>
+	);
 });
 
 Textarea.displayName = "Textarea";

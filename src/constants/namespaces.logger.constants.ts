@@ -52,4 +52,5 @@ export const namespaces = {
 	models: {
 		activity: "Activity Model",
 	},
+	feedbackForm: "User Feedback Form",
 };

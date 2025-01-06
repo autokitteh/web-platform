@@ -10,6 +10,24 @@
 		"settings": "Settings",
 		"404": "404 Not Found",
 		"intro": "Introduction"
-	}
-		
+	},
+	"userFeedback": {
+		"title": "Feedback",
+		"thankYou": "Thank you!",
+		"form": {
+			"email": "Email",
+			"name": "Name",
+			"message": "Message",  
+
+			"placeholder": {
+				"email": "email@example.com",
+				"name": "Enter your name",
+				"message": "Enter your message"  
+			},
+			"buttons": {
+				"send": "Send"
+			},
+			"error": "Something went wrong, please try again later"
+		}
+	}	
 }

@@ -3,18 +3,20 @@ import React from "react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 
-import { userMenuItems, userMenuOrganizationItems } from "@src/constants";
+import { usePopoverContext } from "@contexts";
+import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
 import { useUserStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 
 import { PlusIcon } from "@assets/image/icons";
-import { LogoutIcon } from "@assets/image/icons/sidebar";
+import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
-export const UserMenu = () => {
+export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void }) => {
 	const { t } = useTranslation("sidebar");
 	const { logoutFunction, user } = useUserStore();
+	const { close } = usePopoverContext();
 
 	// TODO: Fetch actual organizations data
 	const organizations = [
@@ -25,6 +27,10 @@ export const UserMenu = () => {
 		{ id: 5, name: "Organization 5" },
 		{ id: 6, name: "Organization 6" },
 	];
+	const openFeedbackFormClick = () => {
+		openFeedbackForm();
+		close();
+	};
 
 	return (
 		<div className="flex gap-4">
@@ -35,6 +41,15 @@ export const UserMenu = () => {
 					<span className="font-medium text-black">{user?.email}</span>
 				</div>
 				<div className="mt-2 flex flex-col gap-1">
+					{sentryDsn ? (
+						<Button
+							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
+							onClick={() => openFeedbackFormClick()}
+						>
+							<AnnouncementIcon className="size-4" fill="black" />
+							{t("menu.userSettings.feedback")}
+						</Button>
+					) : null}
 					{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 						<Button
 							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"

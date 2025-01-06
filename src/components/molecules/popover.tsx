@@ -14,6 +14,9 @@ export const PopoverTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTML
 		return (
 			<button
 				data-state={context.open ? "open" : "closed"}
+				onClick={() => {
+					context.setOpen(!context.open);
+				}}
 				ref={ref}
 				type="button"
 				{...context.getReferenceProps(props)}

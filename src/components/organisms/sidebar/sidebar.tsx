@@ -5,7 +5,8 @@ import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
-import { featureFlags, isAuthEnabled, userMenuItems } from "@constants";
+import { UserFeedbackForm } from "../userFeedbackForm";
+import { featureFlags, isAuthEnabled, sentryDsn, userMenuItems } from "@constants";
 import { cn } from "@src/utilities";
 
 import { useLoggerStore, useUserStore } from "@store";
@@ -19,10 +20,11 @@ import { NewProjectModal } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon } from "@assets/image/icons/sidebar";
+import { AnnouncementIcon, CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 	const { logoutFunction, user } = useUserStore();
 	const { isLoggerEnabled, isNewLogs, toggleLogger } = useLoggerStore();
 	const location = useLocation();
@@ -39,7 +41,7 @@ export const Sidebar = () => {
 
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
-			<div className="relative z-40 flex h-full min-w-[65px] items-start">
+			<div className={cn("relative z-30 flex h-full min-w-[65px] items-start", { "z-50": isFeedbackOpen })}>
 				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
 					<div>
 						<div className="flex gap-1.5">
@@ -188,9 +190,9 @@ export const Sidebar = () => {
 										) : null}
 									</AnimatePresence>
 								</PopoverTrigger>
-								<PopoverContent className="z-50 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
+								<PopoverContent className="z-40 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
 									{featureFlags.enableNewOrgsAndUsersDesign ? (
-										<UserMenu />
+										<UserMenu openFeedbackForm={() => setIsFeedbackOpen(true)} />
 									) : (
 										<>
 											<div className="flex items-center gap-2 border-b border-b-gray-950 pb-2 pl-2">
@@ -198,6 +200,15 @@ export const Sidebar = () => {
 												<span className="font-medium text-black">{user?.email}</span>
 											</div>
 											<div className="mt-1">
+												{sentryDsn ? (
+													<Button
+														className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
+														onClick={() => setIsFeedbackOpen(true)}
+													>
+														<AnnouncementIcon className="size-6" fill="black" />
+														{t("menu.userSettings.feedback")}
+													</Button>
+												) : null}
 												{userMenuItems.map(({ href, icon, label, stroke }, index) => (
 													<Button
 														className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
@@ -230,6 +241,12 @@ export const Sidebar = () => {
 							</Popover>
 						) : null}
 					</div>
+					{/* TODO: remove UserFeedbackForm from component after change to new menu enableNewOrgsAndUsersDesign: */}
+					<UserFeedbackForm
+						className="absolute bottom-0 left-20"
+						isOpen={isFeedbackOpen}
+						onClose={() => setIsFeedbackOpen(false)}
+					/>
 				</div>
 			</div>
 			<NewProjectModal />
