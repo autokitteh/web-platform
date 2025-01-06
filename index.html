@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 	<head>
+		<% if (env.VITE_GTM_ID) { %>
 		<!-- Google Tag Manager -->
 		<script>
 			(function (w, d, s, l, i) {
@@ -12,15 +13,18 @@
 				j.async = true;
 				j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
 				f.parentNode.insertBefore(j, f);
-			})(window, document, "script", "dataLayer", "%VITE_GTM_ID%");
+			})(window, document, "script", "dataLayer", "<%= env.VITE_GTM_ID %>");
 		</script>
 		<!-- End Google Tag Manager -->
+		<% } %>
+
 		<meta charset="UTF-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>AutoKitteh</title>
 	</head>
 	<body>
+		<% if (env.VITE_GTM_ID) { %>
 		<!-- Google Tag Manager (noscript) -->
 		<noscript
 			><iframe
@@ -31,6 +35,7 @@
 			></iframe
 		></noscript>
 		<!-- End Google Tag Manager (noscript) -->
+		<% } %>
 		<div id="root"></div>
 		<script type="module" src="/src/main.tsx"></script>
 	</body>
