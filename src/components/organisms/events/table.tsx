@@ -33,12 +33,21 @@ export const EventsTable = () => {
 	const { connectionId, eventId, projectId, triggerId } = useParams();
 	const navigate = useNavigate();
 
-	const sourceId = triggerId || connectionId;
+	let filterType: "connections" | "triggers" | undefined = undefined;
+	let filterSourceId: string = "";
+
+	if (triggerId) {
+		filterType = "triggers";
+		filterSourceId = triggerId;
+	} else if (connectionId) {
+		filterType = "connections";
+		filterSourceId = connectionId;
+	}
 
 	const fetchData = useCallback(async () => {
-		if (sourceId) {
+		if (filterSourceId) {
 			setIsSourceLoad(true);
-			await fetchEvents(true, sourceId);
+			await fetchEvents(true, filterSourceId);
 			setIsSourceLoad(false);
 
 			return;
@@ -46,7 +55,7 @@ export const EventsTable = () => {
 
 		await fetchEvents();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sourceId]);
+	}, [filterSourceId]);
 
 	useEffect(() => {
 		if (isInitialLoad) {
@@ -72,14 +81,18 @@ export const EventsTable = () => {
 	const rowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => {
 			const event = sortedEvents[index];
-			const sourceIdAddress = `/projects/${projectId}/triggers/${triggerId}/events/${event.eventId}`;
 			const eventsAddress = `/events/${event.eventId}`;
-			const onRowClick = () => navigate(sourceId ? sourceIdAddress : eventsAddress);
+			let onRowClick = () => navigate(eventsAddress);
+
+			if (filterType) {
+				const sourceIdAddress = `/projects/${projectId}/${filterType}/${filterSourceId}/events/${event.eventId}`;
+				onRowClick = () => navigate(sourceIdAddress);
+			}
 
 			return <EventRow event={event} key={key} onClick={onRowClick} style={style} />;
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[sourceId, sortedEvents, navigate]
+		[filterSourceId, sortedEvents, navigate]
 	);
 
 	const tableContent = useMemo(() => {
