@@ -10,7 +10,7 @@ import { Organization } from "@type/models";
 export class OrganizationsService {
 	static async create(name: string): Promise<ServiceResponse<string>> {
 		try {
-			const { orgId } = await organizationsClient.create({ org: { name: "test", displayName: "test" } });
+			const { orgId } = await organizationsClient.create({ org: { displayName: "test" } });
 
 			return { data: orgId, error: undefined };
 		} catch (error) {
@@ -25,17 +25,16 @@ export class OrganizationsService {
 
 	static async list(userId: string): Promise<ServiceResponse<Organization[]>> {
 		try {
-			const { orgIds } = await organizationsClient.getOrgsForUser({ userId });
+			const { orgs } = await organizationsClient.getOrgsForUser({ userId });
 
 			const organizations = await Promise.allSettled(
-				orgIds.map(async (orgId) => {
+				orgs.map(async ({ orgId }) => {
 					const { org } = await organizationsClient.get({ orgId });
 
 					return org ? convertOrganizationProtoToModel(org) : undefined;
 				})
 			);
 
-			// Check if any promise was rejected
 			const hasErrors = organizations.some((result) => result.status === "rejected");
 			if (hasErrors) {
 				throw new Error(`Some organization retrievals failed for userId: ${userId}`);

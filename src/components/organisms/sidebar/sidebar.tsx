@@ -5,7 +5,6 @@ import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 
-import { UserFeedbackForm } from "../userFeedbackForm";
 import { featureFlags, isAuthEnabled, sentryDsn, userMenuItems } from "@constants";
 import { OrganizationsService } from "@services/organizations.service";
 import { cn } from "@src/utilities";
@@ -17,7 +16,7 @@ import { MenuToggle } from "@components/atoms/menuToggle";
 import { PopoverTrigger } from "@components/molecules";
 import { Menu } from "@components/molecules/menu";
 import { Popover, PopoverContent } from "@components/molecules/popover/index";
-import { NewProjectModal } from "@components/organisms";
+import { NewProjectModal, UserFeedbackForm } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
@@ -32,13 +31,11 @@ export const Sidebar = () => {
 	const { t } = useTranslation("sidebar");
 
 	const createOrg = async () => {
-		const { data: orgId } = await OrganizationsService.create("test");
-		console.log(orgId);
+		await OrganizationsService.create("test");
 	};
 
 	const listOrgs = async () => {
-		const { data: orgs } = await OrganizationsService.list(user!.userId);
-		console.log(orgs);
+		await OrganizationsService.list(user!.userId);
 	};
 
 	useEffect(() => {
