@@ -1,3 +1,10 @@
+# [2.120.0](https://github.com/autokitteh/web-platform/compare/v2.119.0...v2.120.0) (2025-01-06)
+
+
+### Features
+
+* **UI-1147:** focus trap in modals ([#850](https://github.com/autokitteh/web-platform/issues/850)) ([35bb1f4](https://github.com/autokitteh/web-platform/commit/35bb1f468e6af3e56c4961a0e4e61584e5b87529))
+
 # [2.119.0](https://github.com/autokitteh/web-platform/compare/v2.118.0...v2.119.0) (2025-01-06)
 
 
