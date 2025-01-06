@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import { DeploymentsService } from "@services/deployments.service";
 import { dateTimeFormat } from "@src/constants";
 import { DeploymentStateVariant, SessionStateType } from "@src/enums";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
-import { cn, deploymentsSessionStats } from "@src/utilities";
+import { calculateDeploymentSessionsStats, cn, getSessionStateColor } from "@src/utilities";
 import { DashboardProjectWithStats, Project } from "@type/models";
 
 import { useProjectActions, useSort } from "@hooks";
@@ -44,7 +44,7 @@ export const DashboardProjectsTable = () => {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let projectStatus = DeploymentStateVariant.inactive;
 			const lastDeployed = deployments?.[deployments?.length - 1]?.createdAt;
-			const { sessionStats, totalDeployments } = deploymentsSessionStats(deployments || []);
+			const { sessionStats, totalDeployments } = calculateDeploymentSessionsStats(deployments || []);
 
 			deployments?.forEach((deployment) => {
 				if (deployment.state === DeploymentStateVariant.active) {
@@ -69,11 +69,8 @@ export const DashboardProjectsTable = () => {
 			projectsStats[project.id] = {
 				id: project.id,
 				name: project.name,
-				totalDeployments: stats?.totalDeployments || 0,
-				running: stats?.sessionCounts?.[SessionStateType.running] || 0,
-				stopped: stats?.sessionCounts?.[SessionStateType.stopped] || 0,
-				completed: stats?.sessionCounts?.[SessionStateType.completed] || 0,
-				error: stats?.sessionCounts?.[SessionStateType.error] || 0,
+				totalDeployments: stats.totalDeployments,
+				...stats.sessionCounts,
 				status: projectStatus,
 				lastDeployed,
 			};
@@ -90,12 +87,7 @@ export const DashboardProjectsTable = () => {
 		cn(
 			"inline-block border-0 px-1 text-sm font-medium min-w-10 max-w-12 py-2 truncate sm:max-w-12 2xl:max-w-18 3xl:max-w-24",
 			"hover:bg-gray-1100 rounded-3xl inline-flex justify-center items-center min-w-12 h-7",
-			{
-				"text-blue-500": state === SessionStateType.running,
-				"text-white": state === SessionStateType.stopped,
-				"text-green-800": state === SessionStateType.completed,
-				"text-error": state === SessionStateType.error,
-			},
+			getSessionStateColor(state),
 			className
 		);
 
@@ -109,7 +101,7 @@ export const DashboardProjectsTable = () => {
 	};
 
 	const handleOpenProjectFilteredSessions = (
-		event: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+		event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
 		id: string,
 		sessionState: keyof typeof SessionStateType
 	) => {

@@ -1,7 +1,7 @@
 import { SessionStateType } from "@src/enums";
 import { Deployment } from "@src/types/models";
 
-export const deploymentsSessionStats = (deployments: Deployment[]) => {
+export const calculateDeploymentSessionsStats = (deployments: Deployment[]) => {
 	const allSessionStats = deployments.flatMap((deployment) => deployment.sessionStats || []);
 
 	const sessionStats = allSessionStats.reduce<Record<string, { count: number; state: string }>>(

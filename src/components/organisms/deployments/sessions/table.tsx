@@ -12,7 +12,7 @@ import { LoggerService, SessionsService } from "@services";
 import { useResize } from "@src/hooks";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
-import { deploymentsSessionStats } from "@src/utilities";
+import { calculateDeploymentSessionsStats } from "@src/utilities";
 import { DeploymentSession } from "@type/models";
 
 import { Frame, Loader, ResizeButton, THead, Table, Th, Tr, Typography } from "@components/atoms";
@@ -64,7 +64,7 @@ export const SessionsTable = () => {
 			return deployments;
 		}
 
-		const { sessionStats: allSessionStats } = deploymentsSessionStats(deployments || []);
+		const { sessionStats: allSessionStats } = calculateDeploymentSessionsStats(deployments || []);
 
 		const aggregatedStats = Object.values(allSessionStats);
 

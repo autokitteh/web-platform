@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { SessionStateType } from "@enums";
 import { DeploymentSession } from "@type/models";
-import { cn } from "@utilities";
+import { cn, getSessionStateColor } from "@utilities";
 
 export const DeploymentSessionStats = ({
 	className,
@@ -17,12 +17,7 @@ export const DeploymentSessionStats = ({
 	const countStyle = (state?: SessionStateType) =>
 		cn(
 			"2xl:w-22 inline-block w-1/4 text-center border-0 p-0 text-sm font-medium",
-			{
-				"text-blue-500": state === SessionStateType.running,
-				"text-white": state === SessionStateType.stopped,
-				"text-green-800": state === SessionStateType.completed,
-				"text-error": state === SessionStateType.error,
-			},
+			getSessionStateColor(state),
 			className
 		);
 

@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { mainNavigationItems } from "@src/constants";
 import { useProjectStore } from "@src/store";
-import { cn, deploymentsSessionStats } from "@src/utilities";
+import { calculateDeploymentSessionsStats, cn } from "@src/utilities";
 
 import { useLastVisitedEntity } from "@hooks";
 
@@ -30,7 +30,7 @@ export const ProjectTopbarNavigation = () => {
 	const navigationItems = useMemo(
 		() =>
 			mainNavigationItems.map((item) => {
-				const { sessionStats } = deploymentsSessionStats(deployments || []);
+				const { sessionStats } = calculateDeploymentSessionsStats(deployments || []);
 				const allSessionsCountsZero = Object.values(sessionStats).every((stat) => stat.count === 0);
 				const noDeploymentsSessionButtonDisabled = item.key === "sessions" && allSessionsCountsZero;
 
