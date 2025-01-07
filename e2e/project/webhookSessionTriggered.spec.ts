@@ -23,10 +23,7 @@ async function waitForFirstCompletedSession(page: Page, timeoutMs = 60000) {
 			await page.waitForTimeout(500);
 		}
 
-		const completedSession = await page
-			.getByRole("status", { name: "completed" })
-			.filter({ hasText: "1" })
-			.isVisible();
+		const completedSession = await page.getByRole("button", { name: "1 completed" }).isVisible();
 
 		expect(completedSession).toBe(true);
 
@@ -49,10 +46,8 @@ test.describe("Session triggered with webhook", () => {
 		page: Page;
 		projectPage: ProjectPage;
 	}) => {
-		const completedSessionDeploymentColumn = page
-			.getByRole("status", { name: "completed" })
-			.filter({ hasText: "1" });
-		completedSessionDeploymentColumn.click();
+		const completedSessionDeploymentColumn = page.getByRole("button", { name: "1 completed" });
+		await completedSessionDeploymentColumn.click();
 
 		await page
 			.locator("role=row", {

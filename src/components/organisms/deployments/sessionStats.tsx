@@ -61,7 +61,7 @@ export const DeploymentSessionStats = ({
 
 	return sessionStatsOrdered.map(({ count, state }) => (
 		<div
-			aria-label={state}
+			aria-label={`${count} ${t(state?.toString() || "")}`}
 			className={countStyle(state)}
 			key={state}
 			onClick={(event) => {
@@ -72,7 +72,7 @@ export const DeploymentSessionStats = ({
 			}}
 			role="button"
 			tabIndex={0}
-			title={t(state?.toString() || "")}
+			title={`${count} ${t(state?.toString() || "")}`}
 		>
 			{count}
 		</div>
