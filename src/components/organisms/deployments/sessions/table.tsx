@@ -37,7 +37,6 @@ export const SessionsTable = () => {
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	const [sessions, setSessions] = useState<Session[]>([]);
-	const [sessionStateType, setSessionStateType] = useState<number>();
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
 	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
@@ -46,6 +45,20 @@ export const SessionsTable = () => {
 	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
 
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
+
+	const sessionStateType = useMemo(() => {
+		return sessionState ? reverseSessionStateConverter(sessionState) : undefined;
+	}, [sessionState]);
+
+	const handleFilterSessions = useCallback(
+		(stateType?: SessionStateKeyType) => {
+			navigate(".", {
+				state: { sessionState: stateType },
+				replace: true,
+			});
+		},
+		[navigate]
+	);
 
 	const fetchDeployments = useCallback(async () => {
 		if (!projectId) return;
@@ -164,15 +177,6 @@ export const SessionsTable = () => {
 		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, deploymentId]);
-
-	const handleFilterSessions = useCallback((stateType?: SessionStateKeyType) => {
-		const selectedSessionStateFilter = reverseSessionStateConverter(stateType);
-		setSessionStateType(selectedSessionStateFilter);
-		if (deploymentId) {
-			closeSessionLog();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	useEffect(() => {
 		if (sessionState) {
