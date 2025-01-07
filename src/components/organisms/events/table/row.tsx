@@ -3,6 +3,7 @@ import React, { CSSProperties, memo } from "react";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 
+import { useEventsDrawer } from "@contexts/eventsDrawer";
 import { dateTimeFormat } from "@src/constants";
 import { ButtonVariant } from "@src/enums/components";
 import { BaseEvent } from "@src/types/models";
@@ -14,15 +15,14 @@ import { IdCopyButton } from "@components/molecules";
 export const EventRow = memo(
 	({
 		event: { createdAt, destinationId, eventId, eventType },
-		isDrawer,
 		onClick,
 		style,
 	}: {
 		event: BaseEvent;
-		isDrawer?: boolean;
 		onClick: () => void;
 		style: CSSProperties;
 	}) => {
+		const { isDrawer } = useEventsDrawer();
 		const { eventId: paramEventId } = useParams();
 		const rowClass = cn("cursor-pointer hover:bg-gray-750", {
 			"bg-black": paramEventId === eventId,

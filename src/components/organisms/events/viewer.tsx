@@ -6,6 +6,7 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { useEventsDrawer } from "@contexts/eventsDrawer";
 import { EventsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { useToastStore } from "@src/store";
@@ -19,13 +20,13 @@ import { Close } from "@assets/image/icons";
 export const EventViewer = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [eventInfo, setEventInfo] = useState<EnrichedEvent | null>(null);
+	const { isDrawer } = useEventsDrawer();
 
-	const { connectionId, eventId, triggerId } = useParams();
+	const { eventId } = useParams();
 	const navigate = useNavigate();
-	const sourceId = triggerId || connectionId;
 
 	const closeViewer = useCallback(() => {
-		if (!sourceId) {
+		if (!isDrawer) {
 			navigate("/events");
 
 			return;

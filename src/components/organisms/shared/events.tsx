@@ -3,36 +3,65 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { EventsTable } from "../events";
+import { EventsDrawerProvider } from "@contexts/eventsDrawer";
 import { DrawerName } from "@src/enums/components";
+import { useProjectStore } from "@src/store";
 
 import { IconButton } from "@components/atoms";
 import { Drawer } from "@components/molecules";
 
 import { Close } from "@assets/image/icons";
 
-export const EventsList = ({ isDrawer }: { isDrawer?: boolean }) => {
+export const EventsList = ({
+	isDrawer,
+	type,
+}: {
+	isDrawer?: boolean;
+	type?: "connections" | "triggers" | "project";
+}) => {
 	const navigate = useNavigate();
-	const { projectId, triggerId } = useParams();
+	const { connectionId, projectId, triggerId } = useParams();
+	const {
+		latestOpened: { tab },
+	} = useProjectStore();
 
-	const closeAndNavigate = () => navigate(`/projects/${projectId}/${triggerId ? "triggers" : "connections"}`);
+	let backRoute = `/projects/${projectId}`;
+
+	if (type !== "project") {
+		backRoute = `/projects/${projectId}/${type}`;
+	} else if (tab) {
+		backRoute = `/projects/${projectId}/${tab}`;
+	}
 
 	return isDrawer ? (
-		<Drawer
-			className="relative p-0"
-			isForcedOpen={true}
-			name={DrawerName.events}
-			onCloseCallback={closeAndNavigate}
-			variant="dark"
-			wrapperClassName="w-2/3"
+		<EventsDrawerProvider
+			filterType={type}
+			isDrawer={isDrawer}
+			projectId={projectId}
+			sourceId={triggerId || connectionId}
 		>
-			<div className="absolute left-5 top-2 z-10">
-				<IconButton className="group h-default-icon w-default-icon bg-gray-700 p-0" onClick={closeAndNavigate}>
-					<Close className="size-3 fill-white" />
-				</IconButton>
-			</div>
-			<EventsTable isDrawer />
-		</Drawer>
+			<Drawer
+				className="relative p-0"
+				isForcedOpen={true}
+				name={DrawerName.events}
+				onCloseCallback={() => navigate(backRoute)}
+				variant="dark"
+				wrapperClassName="w-2/3"
+			>
+				<div className="absolute left-5 top-2 z-10">
+					<IconButton
+						className="group h-default-icon w-default-icon bg-gray-700 p-0"
+						onClick={() => navigate(backRoute)}
+					>
+						<Close className="size-3 fill-white" />
+					</IconButton>
+				</div>
+				<EventsTable />
+			</Drawer>
+		</EventsDrawerProvider>
 	) : (
-		<EventsTable />
+		<EventsDrawerProvider isDrawer={false}>
+			<EventsTable />
+		</EventsDrawerProvider>
 	);
 };

@@ -121,6 +121,17 @@ export const App = () => {
 
 			<Route element={<AppLayout />} path="projects">
 				<Route element={<Project />} path=":projectId">
+					<Route element={<EventsList isDrawer type="project" />} path="events">
+						<Route
+							element={
+								<>
+									<ConnectionsTable />
+									<EventsList isDrawer type="project" />
+								</>
+							}
+							path=":eventId"
+						/>
+					</Route>
 					<Route element={<Navigate replace to="code" />} index />
 
 					<Route element={<Connections />} path="connections">
@@ -133,7 +144,7 @@ export const App = () => {
 							element={
 								<>
 									<ConnectionsTable />
-									<EventsList isDrawer />
+									<EventsList isDrawer type="connections" />
 								</>
 							}
 							path=":connectionId/events"
@@ -142,7 +153,7 @@ export const App = () => {
 								element={
 									<>
 										<ConnectionsTable />
-										<EventsList isDrawer />
+										<EventsList isDrawer type="connections" />
 									</>
 								}
 								path=":eventId"
@@ -164,7 +175,7 @@ export const App = () => {
 							element={
 								<>
 									<TriggersTable />
-									<EventsList isDrawer />
+									<EventsList isDrawer type="triggers" />
 								</>
 							}
 							path=":triggerId/events"
@@ -173,7 +184,7 @@ export const App = () => {
 								element={
 									<>
 										<TriggersTable />
-										<EventsList isDrawer />
+										<EventsList isDrawer type="triggers" />
 									</>
 								}
 								path=":eventId"
@@ -194,7 +205,6 @@ export const App = () => {
 
 						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
-
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
@@ -242,7 +252,7 @@ export const App = () => {
 			</Route>
 
 			<Route element={<EventsLayout />}>
-				<Route element={<EventsList />} path="events">
+				<Route element={<EventsList isDrawer={false} />} path="events">
 					<Route element={<EventViewer />} path=":eventId" />
 				</Route>
 

@@ -2,6 +2,7 @@ import React, { memo } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { useEventsDrawer } from "@contexts/eventsDrawer";
 import { SortableHeaderProps, TableHeaderProps } from "@src/types/components";
 import { cn } from "@src/utilities";
 
@@ -27,7 +28,8 @@ export const SortableHeader = memo(({ columnKey, columnLabel, onSort, sortConfig
 
 SortableHeader.displayName = "SortableHeader";
 
-export const TableHeader = memo(({ isDrawer, onSort, sortConfig }: TableHeaderProps) => {
+export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
+	const { isDrawer } = useEventsDrawer();
 	const { t } = useTranslation("events", { keyPrefix: "table.columns" });
 	const firstColumnClass = cn("mr-2 w-1/5 min-w-36 pl-4", { "w-1/2": isDrawer });
 	const lastColumnClass = cn("mr-2 w-2/5 min-w-40", { "w-1/2": isDrawer });

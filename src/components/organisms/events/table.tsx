@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
+import { useEventsDrawer } from "@contexts/eventsDrawer";
 import { useResize, useSort } from "@src/hooks";
 import { useCacheStore } from "@src/store";
 import { BaseEvent, Deployment } from "@src/types/models";
@@ -17,7 +18,7 @@ import { NoEventsSelected } from "@components/organisms/events/table/notSelected
 import { EventRow } from "@components/organisms/events/table/row";
 import { VirtualizedList } from "@components/organisms/events/table/virtualizer";
 
-export const EventsTable = ({ isDrawer }: { isDrawer?: boolean }) => {
+export const EventsTable = () => {
 	const { t } = useTranslation("events");
 	const {
 		events,
@@ -30,28 +31,16 @@ export const EventsTable = ({ isDrawer }: { isDrawer?: boolean }) => {
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
-	const { connectionId, eventId, projectId, triggerId } = useParams();
+	const { eventId } = useParams();
 	const navigate = useNavigate();
-
-	const { filterSourceId, filterType } = useMemo(() => {
-		if (triggerId) {
-			return { filterType: "triggers", filterSourceId: triggerId };
-		} else if (connectionId) {
-			return { filterType: "connections", filterSourceId: connectionId };
-		}
-
-		return { filterType: undefined, filterSourceId: "" };
-	}, [triggerId, connectionId]);
+	const { filterType, isDrawer, projectId, sourceId } = useEventsDrawer();
 
 	const fetchData = useCallback(async () => {
-		try {
-			setIsSourceLoad(true);
-			await fetchEvents(!!filterSourceId, filterSourceId);
-		} finally {
-			setIsSourceLoad(false);
-		}
+		setIsSourceLoad(true);
+		await fetchEvents(true, sourceId, projectId);
+		setIsSourceLoad(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [filterSourceId]);
+	}, [isDrawer, sourceId, projectId]);
 
 	useEffect(() => {
 		if (isInitialLoad) {
@@ -74,21 +63,29 @@ export const EventsTable = ({ isDrawer }: { isDrawer?: boolean }) => {
 		[requestSort]
 	);
 
+	const calculateEventAddress = useCallback(
+		(eventId: string) => {
+			if (!isDrawer) {
+				return `/events/${eventId}`;
+			}
+			if (sourceId) {
+				return `/projects/${projectId}/${filterType}/${sourceId}/events/${eventId}`;
+			}
+
+			return `/projects/${projectId}/events/${eventId}`;
+		},
+		[isDrawer, sourceId, projectId, filterType]
+	);
+
 	const rowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => {
 			const event = sortedEvents[index];
-			const baseAddress = `/events/${event.eventId}`;
+			const eventAddress = calculateEventAddress(event.eventId);
 
-			const eventsAddress = filterType
-				? `/projects/${projectId}/${filterType}/${filterSourceId}${baseAddress}`
-				: baseAddress;
-
-			const onRowClick = () => navigate(eventsAddress);
-
-			return <EventRow event={event} isDrawer={isDrawer} key={key} onClick={onRowClick} style={style} />;
+			return <EventRow event={event} key={key} onClick={() => navigate(eventAddress)} style={style} />;
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[filterSourceId, sortedEvents, navigate]
+		[isDrawer, sourceId, projectId, sortedEvents, navigate]
 	);
 
 	const tableContent = useMemo(() => {
@@ -103,7 +100,7 @@ export const EventsTable = ({ isDrawer }: { isDrawer?: boolean }) => {
 		return (
 			<div className="mt-2 h-full">
 				<Table className="relative w-full overflow-visible">
-					<TableHeader isDrawer={isDrawer} onSort={handleSort} sortConfig={sortConfig} />
+					<TableHeader onSort={handleSort} sortConfig={sortConfig} />
 					<TBody>
 						<div className="h-[calc(100vh-200px)]">
 							<AutoSizer>
@@ -125,7 +122,7 @@ export const EventsTable = ({ isDrawer }: { isDrawer?: boolean }) => {
 	}, [isInitialLoad, sortedEvents, isSourceLoad]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const handleRefresh = useCallback(() => fetchEvents(true, triggerId) as Promise<void | Deployment[]>, []);
+	const handleRefresh = useCallback(() => fetchEvents(true, sourceId, projectId) as Promise<void | Deployment[]>, []);
 
 	return (
 		<div className="flex size-full">
