@@ -5,7 +5,6 @@ export {
 	descopeProjectId,
 	fetchProjectsMenuItemsInterval,
 	fetchSessionsInterval,
-	isAuthEnabled,
 	isDevelopment,
 	maxLogs,
 	isProduction,

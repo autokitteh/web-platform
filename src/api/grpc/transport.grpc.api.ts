@@ -11,7 +11,7 @@ import { createConnectTransport } from "@connectrpc/connect-web";
 import Cookies from "js-cookie";
 import psl from "psl";
 
-import { apiRequestTimeout, isAuthEnabled, isLoggedInCookie } from "@constants";
+import { apiRequestTimeout, descopeProjectId, isLoggedInCookie } from "@constants";
 import { LocalStorageKeys } from "@src/enums";
 import { getApiBaseUrl, getCookieDomain, getLocalStorageValue } from "@src/utilities";
 
@@ -45,7 +45,7 @@ const authInterceptor: Interceptor =
 		}
 	};
 
-const credentials = isAuthEnabled ? "include" : undefined;
+const credentials = descopeProjectId ? "include" : undefined;
 export const grpcTransport = createConnectTransport({
 	baseUrl: getApiBaseUrl(),
 	credentials,
