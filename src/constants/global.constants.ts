@@ -23,7 +23,6 @@ export const templatesUpdateCheckInterval = 24 * 60 * 60 * 1000; // 24 hours
 
 export const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 export const timeFormat = "HH:mm:ss";
-
 export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
 export const AKRoutes = isProduction ? Sentry.withSentryReactRouterV7Routing(Routes) : Routes;
