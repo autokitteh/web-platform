@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
+import React, { KeyboardEvent, MouseEvent, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -33,27 +33,23 @@ export const EventsTable = () => {
 	const { connectionId, eventId, projectId, triggerId } = useParams();
 	const navigate = useNavigate();
 
-	let filterType: "connections" | "triggers" | undefined = undefined;
-	let filterSourceId: string = "";
-
-	if (triggerId) {
-		filterType = "triggers";
-		filterSourceId = triggerId;
-	} else if (connectionId) {
-		filterType = "connections";
-		filterSourceId = connectionId;
-	}
-
-	const fetchData = useCallback(async () => {
-		if (filterSourceId) {
-			setIsSourceLoad(true);
-			await fetchEvents(true, filterSourceId);
-			setIsSourceLoad(false);
-
-			return;
+	const { filterSourceId, filterType } = useMemo(() => {
+		if (triggerId) {
+			return { filterType: "triggers", filterSourceId: triggerId };
+		} else if (connectionId) {
+			return { filterType: "connections", filterSourceId: connectionId };
 		}
 
-		await fetchEvents();
+		return { filterType: undefined, filterSourceId: "" };
+	}, [triggerId, connectionId]);
+
+	const fetchData = useCallback(async () => {
+		try {
+			setIsSourceLoad(true);
+			await fetchEvents(!!filterSourceId, filterSourceId);
+		} finally {
+			setIsSourceLoad(false);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filterSourceId]);
 
@@ -70,8 +66,8 @@ export const EventsTable = () => {
 	const frameClass = useMemo(() => cn("size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none"), [eventId]);
 
 	const handleSort = useCallback(
-		(key: keyof BaseEvent) => (event: React.MouseEvent | React.KeyboardEvent) => {
-			if (event.type === "click" || (event as React.KeyboardEvent).key === "Enter") {
+		(key: keyof BaseEvent) => (event: MouseEvent | KeyboardEvent) => {
+			if (event.type === "click" || (event as KeyboardEvent).key === "Enter") {
 				requestSort(key);
 			}
 		},
@@ -81,13 +77,13 @@ export const EventsTable = () => {
 	const rowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => {
 			const event = sortedEvents[index];
-			const eventsAddress = `/events/${event.eventId}`;
-			let onRowClick = () => navigate(eventsAddress);
+			const baseAddress = `/events/${event.eventId}`;
 
-			if (filterType) {
-				const sourceIdAddress = `/projects/${projectId}/${filterType}/${filterSourceId}/events/${event.eventId}`;
-				onRowClick = () => navigate(sourceIdAddress);
-			}
+			const eventsAddress = filterType
+				? `/projects/${projectId}/${filterType}/${filterSourceId}${baseAddress}`
+				: baseAddress;
+
+			const onRowClick = () => navigate(eventsAddress);
 
 			return <EventRow event={event} key={key} onClick={onRowClick} style={style} />;
 		},
