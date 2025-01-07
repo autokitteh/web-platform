@@ -31,32 +31,7 @@ export class OrganizationsService {
 		try {
 			const { orgs } = await organizationsClient.getOrgsForUser({ userId });
 
-			const organizations = await Promise.allSettled(
-				orgs.map(async ({ orgId }) => {
-					const { org } = await organizationsClient.get({ orgId });
-
-					return org ? convertOrganizationProtoToModel(org) : undefined;
-				})
-			);
-
-			const hasErrors = organizations.some((result) => result.status === "rejected");
-			if (hasErrors) {
-				throw new Error(
-					i18n.t("someOrganizationRetrievalFailed", {
-						ns: "services",
-					})
-				);
-			}
-
-			const filteredOrganizations = organizations
-				.filter(
-					(result): result is PromiseFulfilledResult<Organization | undefined> =>
-						result.status === "fulfilled"
-				)
-				.map((result) => result.value)
-				.filter((org): org is Organization => org !== undefined);
-
-			return { data: filteredOrganizations, error: undefined };
+			return { data: orgs.map(convertOrganizationProtoToModel), error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
