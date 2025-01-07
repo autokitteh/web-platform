@@ -17,7 +17,7 @@ import { NoEventsSelected } from "@components/organisms/events/table/notSelected
 import { EventRow } from "@components/organisms/events/table/row";
 import { VirtualizedList } from "@components/organisms/events/table/virtualizer";
 
-export const EventsTable = () => {
+export const EventsTable = ({ isDrawer }: { isDrawer?: boolean }) => {
 	const { t } = useTranslation("events");
 	const {
 		events,
@@ -85,7 +85,7 @@ export const EventsTable = () => {
 
 			const onRowClick = () => navigate(eventsAddress);
 
-			return <EventRow event={event} key={key} onClick={onRowClick} style={style} />;
+			return <EventRow event={event} isDrawer={isDrawer} key={key} onClick={onRowClick} style={style} />;
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[filterSourceId, sortedEvents, navigate]
@@ -103,7 +103,7 @@ export const EventsTable = () => {
 		return (
 			<div className="mt-2 h-full">
 				<Table className="relative w-full overflow-visible">
-					<TableHeader onSort={handleSort} sortConfig={sortConfig} />
+					<TableHeader isDrawer={isDrawer} onSort={handleSort} sortConfig={sortConfig} />
 					<TBody>
 						<div className="h-[calc(100vh-200px)]">
 							<AutoSizer>
