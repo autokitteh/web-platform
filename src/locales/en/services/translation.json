@@ -91,6 +91,8 @@
 	"deploymentCreatedSuccessfully": "Deployment created with id: {{deploymentId}}",
 	"failedFetchingLogRecordsBySessionId": "Failed to fetch log records by session ID: {{sessionId}}, error: {{error}}, page token: {{pageToken}}, page size: {{pageSize}}, log type: {{logType}}",
 	"connection": "Connection",
-	"errorFetchingIntegrationsForConnectionsExtended": "Error fetching integrations for connections, connection ID: {{connectionId}}, error: {{error}}"
-
+	"errorFetchingIntegrationsForConnectionsExtended": "Error fetching integrations for connections, connection ID: {{connectionId}}, error: {{error}}",
+	"organizationNotCreatedExtended": "Failed to create organization {{name}}. Error: {{error}}",
+	"someOrganizationRetrievalFailed": "Some organization retrievals failed for user",
+	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}"
 }

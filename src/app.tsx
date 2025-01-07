@@ -186,7 +186,7 @@ export const App = () => {
 
 			<Route element={<SettingsLayout />} path="organization-settings">
 				<Route element={<OrganizationSettings />} index />
-				<Route element={<NewOrganization />} path="new" />
+				<Route element={<NewOrganization />} path="add" />
 				<Route element={<OrganizationUsersTable />} path="users" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
