@@ -40,9 +40,9 @@ Ensure you have the following installed on your system:
 
 ### Environment Setup 🌐
 
-Create a `.env` file in the root of the project directory and add the necessary environment variables. Refer to the `validateEnv` script for required variables:
+Create a `.env` file in the root of the project directory and add the necessary environment variables.
 
-`sh cp .env.example .env # Edit .env with your environment-specific settings`
+`sh cp .env.example .env` Then edit .env with your environment-specific settings
 
 `VITE_HOST_URL`
 
