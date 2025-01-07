@@ -4,7 +4,6 @@ import { selectSchema } from "@validations";
 
 export const newOrganizationSchema = z.object({
 	orgName: z.string().min(1, "Organization name is required"),
-	displayName: z.string().min(1, "Display name is required"),
 });
 
 export const newOrganizationUserSchema = z.object({
@@ -14,7 +13,6 @@ export const newOrganizationUserSchema = z.object({
 
 export const organizationSchema = z.object({
 	orgName: z.string().min(1, "Organization name is required"),
-	displayName: z.string(),
 	noteEmail: z.string().email("Invalid email").or(z.literal("")),
 	frequency: selectSchema.optional(),
 });

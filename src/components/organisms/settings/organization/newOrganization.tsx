@@ -34,7 +34,7 @@ export const NewOrganization = () => {
 	const onSubmit = async (values: FormValues) => {
 		try {
 			setCreatingOrganization(true);
-			const { error } = await OrganizationsService.create(values.displayName);
+			const { error } = await OrganizationsService.create(values.orgName);
 			if (error) {
 				throw error;
 			}
@@ -64,16 +64,6 @@ export const NewOrganization = () => {
 					/>
 
 					<ErrorMessage>{errors?.orgName?.message as string}</ErrorMessage>
-				</div>
-				<div className="relative mb-6">
-					<Input
-						isError={!!errors.displayName}
-						label={t("form.displayName")}
-						{...register("displayName")}
-						isRequired
-					/>
-
-					<ErrorMessage>{errors?.displayName?.message as string}</ErrorMessage>
 				</div>
 				<Button
 					className="ml-auto w-fit border-black bg-white px-5 text-base font-medium hover:bg-gray-950 hover:text-white"

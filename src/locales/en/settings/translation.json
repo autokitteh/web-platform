@@ -47,7 +47,6 @@
 		"organizationSettings": "Organization Settings",
 		"form": {
 			"organizationName": "Organization Name",
-			"displayName": "Display Name",
 			"errorNotification": "Error notification",
 			"buttons": {
 				"create": "Create",

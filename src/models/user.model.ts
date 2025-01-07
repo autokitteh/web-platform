@@ -5,6 +5,6 @@ export function convertUserProtoToModel(protoUser: ProtoUser): User {
 	return {
 		email: protoUser.email,
 		name: protoUser.displayName,
-		userId: protoUser.userId,
+		id: protoUser.userId,
 	};
 }

@@ -15,8 +15,8 @@ export class OrganizationsService {
 			return { data: orgId, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.triggerService,
-				i18n.t("triggerNotCreatedExtended", {
+				namespaces.organizationsService,
+				i18n.t("organizationNotCreatedExtended", {
 					error: (error as Error).message,
 					ns: "services",
 					name: displayName,
@@ -41,7 +41,11 @@ export class OrganizationsService {
 
 			const hasErrors = organizations.some((result) => result.status === "rejected");
 			if (hasErrors) {
-				throw new Error(`Some organization retrievals failed for userId: ${userId}`);
+				throw new Error(
+					i18n.t("someOrganizationRetrievalFailed", {
+						ns: "services",
+					})
+				);
 			}
 
 			const filteredOrganizations = organizations
@@ -55,8 +59,8 @@ export class OrganizationsService {
 			return { data: filteredOrganizations, error: undefined };
 		} catch (error) {
 			LoggerService.error(
-				namespaces.variableService,
-				i18n.t("errorFetchingVariables", { userId, error, ns: "errors" })
+				namespaces.organizationsService,
+				i18n.t("errorFetchingOrganizationExtended", { userId, error: (error as Error).message, ns: "services" })
 			);
 
 			return { data: undefined, error };

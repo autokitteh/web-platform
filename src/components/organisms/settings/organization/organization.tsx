@@ -77,15 +77,6 @@ export const OrganizationSettings = () => {
 
 						<ErrorMessage>{errors?.orgName?.message as string}</ErrorMessage>
 					</div>
-					<div className="relative mb-8">
-						<Input
-							isError={!!errors.displayName}
-							label={t("form.displayName")}
-							{...register("displayName")}
-						/>
-
-						<ErrorMessage>{errors?.displayName?.message as string}</ErrorMessage>
-					</div>
 					<Typography className="mb-4 font-bold" element="h2" size="medium">
 						{t("form.errorNotification")}
 					</Typography>
