@@ -194,7 +194,7 @@ export const SessionsTable = () => {
 	};
 
 	return (
-		<div className="my-1.5 flex w-full flex-1">
+		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center">

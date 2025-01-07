@@ -6,4 +6,6 @@ export interface ResizeHook {
 	id: string;
 	max: number;
 	min: number;
+	value?: number;
+	onChange?: (val: number) => void;
 }

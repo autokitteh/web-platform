@@ -99,7 +99,7 @@ export const EventsTable = () => {
 	const handleRefresh = useCallback(() => fetchEvents(true) as Promise<void | Deployment[]>, []);
 
 	return (
-		<div className="my-2 flex size-full">
+		<div className="flex size-full">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex justify-end">
@@ -111,7 +111,7 @@ export const EventsTable = () => {
 
 			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeId} />
 
-			<div className="flex bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
+			<div className="flex rounded-2xl bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
 				{eventId ? <Outlet /> : <NoEventsSelected />}
 			</div>
 		</div>

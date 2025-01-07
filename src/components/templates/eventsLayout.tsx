@@ -3,6 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 
+import { SystemLogLayout } from "./systemLogLayout";
+
 import { LogoCatLarge } from "@components/atoms";
 import { Sidebar, TitleTopbar } from "@components/organisms";
 
@@ -10,22 +12,14 @@ export const EventsLayout = () => {
 	const { t } = useTranslation("events", { keyPrefix: "topbar" });
 
 	return (
-		<div className="h-screen w-screen pr-5">
-			<div className="flex size-full">
-				<Sidebar />
+		<SystemLogLayout sidebar={<Sidebar />} topbar={<TitleTopbar title={t("title")} />}>
+			<div className="relative size-full overflow-hidden pt-1.5">
+				<Outlet />
 
-				<div className="mb-2 flex w-full flex-col">
-					<TitleTopbar title={t("title")} />
-
-					<div className="relative flex size-full overflow-hidden rounded-2xl">
-						<Outlet />
-
-						<div className="absolute -bottom-5 -right-5">
-							<LogoCatLarge />
-						</div>
-					</div>
+				<div className="absolute -bottom-5 -right-5">
+					<LogoCatLarge />
 				</div>
 			</div>
-		</div>
+		</SystemLogLayout>
 	);
 };

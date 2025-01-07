@@ -37,7 +37,7 @@ export const Dashboard = () => {
 	}, [isLoadingProjectsList, projectsList]);
 
 	return (
-		<div className="my-0 flex w-full overflow-hidden rounded-none md:my-1.5 md:rounded-2xl">
+		<div className="flex w-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
 			<div className="relative flex w-2/3 flex-col" style={{ width: `${!isMobile ? leftSideWidth : 100}%` }}>
 				<Frame className="flex-1 rounded-none bg-gray-1100 md:rounded-r-none md:pb-0">
 					<DashboardTopbar />
