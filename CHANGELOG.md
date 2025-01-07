@@ -1,3 +1,10 @@
+# [2.121.0](https://github.com/autokitteh/web-platform/compare/v2.120.1...v2.121.0) (2025-01-07)
+
+
+### Features
+
+* **UI-1102:** change system log component ([#827](https://github.com/autokitteh/web-platform/issues/827)) ([51427dd](https://github.com/autokitteh/web-platform/commit/51427dd6be32f50ebb6bfbce52846719f3fd0151))
+
 ## [2.120.1](https://github.com/autokitteh/web-platform/compare/v2.120.0...v2.120.1) (2025-01-06)
 
 
