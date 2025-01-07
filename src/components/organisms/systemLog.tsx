@@ -44,7 +44,6 @@ export const SystemLog = () => {
 					</IconButton>
 				</div>
 			</div>
-
 			<div className="scrollbar h-48 flex-auto overflow-auto pt-5">
 				{logs.map(({ id, message, status, timestamp }) => (
 					<div className="mb-3 font-mono" key={id}>
