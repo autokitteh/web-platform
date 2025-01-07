@@ -35,7 +35,7 @@ export const SplitFrame = ({ children }: SplitFrameProps) => {
 	const rightSideWidth = isExpanded ? 100 : 100 - leftSideWidth;
 
 	return (
-		<div className="mt-1.5 flex size-full justify-end">
+		<div className="mt-1.5 flex size-full justify-end overflow-y-auto">
 			{!isExpanded ? (
 				<>
 					<div style={{ width: `${leftSideWidth}%` }}>

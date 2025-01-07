@@ -44,7 +44,7 @@ export const SystemLogLayout = ({
 		<div className={layoutClasses}>
 			{sidebar}
 			<div className={innerLayoutClasses}>
-				<div className="flex flex-col overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
+				<div className="flex flex-1 flex-col overflow-hidden" style={{ height: `${100 - systemLogHeight}%` }}>
 					{topbar}
 					{children}
 				</div>
@@ -53,7 +53,7 @@ export const SystemLogLayout = ({
 					<ResizeButton className={buttonResizeClasses} direction="vertical" resizeId={resizeId} />
 				)}
 
-				<div className="z-20 flex-1 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
+				<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
 					<SystemLog />
 				</div>
 			</div>
