@@ -17,7 +17,7 @@ export const SessionsTableFilter = ({ defaultValue, onChange, sessionStats }: Se
 
 	const buttonClass = (state?: SessionStateType) =>
 		cn(
-			"w-auto rounded-lg border border-gray-950 px-2.5 py-1.5 text-yellow-500 hover:bg-gray-1150",
+			"w-auto rounded-lg border border-gray-950 px-2.5 py-1.5 text-white hover:bg-gray-1150",
 			state && getSessionStateColor(state),
 			{
 				"border-white bg-gray-1250": activeState === state,
@@ -25,10 +25,7 @@ export const SessionsTableFilter = ({ defaultValue, onChange, sessionStats }: Se
 		);
 
 	const filterClass = (state?: SessionStateType) =>
-		cn(
-			"h-8 whitespace-nowrap border-0 pr-4 text-white hover:bg-transparent text-yellow-500",
-			state && getSessionStateColor(state)
-		);
+		cn("h-8 whitespace-nowrap border-0 pr-4 text-white hover:bg-transparent", state && getSessionStateColor(state));
 
 	const initialSessionCounts = {
 		[SessionStateType.completed]: 0,
