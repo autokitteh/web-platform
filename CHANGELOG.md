@@ -1,3 +1,10 @@
+# [2.122.0](https://github.com/autokitteh/web-platform/compare/v2.121.0...v2.122.0) (2025-01-07)
+
+
+### Features
+
+* organizations service (UI-1105)(UI-1106)(UI-1157) ([#802](https://github.com/autokitteh/web-platform/issues/802)) ([8d39edd](https://github.com/autokitteh/web-platform/commit/8d39edd4cab61762d42d54615e5d05d5f5a4c486))
+
 # [2.121.0](https://github.com/autokitteh/web-platform/compare/v2.120.1...v2.121.0) (2025-01-07)
 
 
