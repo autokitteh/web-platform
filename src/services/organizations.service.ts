@@ -31,7 +31,9 @@ export class OrganizationsService {
 		try {
 			const { orgs } = await organizationsClient.getOrgsForUser({ userId });
 
-			return { data: orgs.map(convertOrganizationProtoToModel), error: undefined };
+			const processedOrganizations = Object.values(orgs).map(convertOrganizationProtoToModel);
+
+			return { data: processedOrganizations, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
