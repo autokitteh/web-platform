@@ -50,16 +50,10 @@ Create a `.env` file in the root of the project directory and add the necessary 
 - Description: Defines the backend URL that the application will use as its host. If not set, the application will use a default host URL.
 - Example: VITE_HOST_URL=http://localhost:1234
 
-`VITE_AUTH_ENABLED`
-
-- Default: false
-- Description: Determines whether the application should restrict access to logged-in users or users with a valid JWT token. Set to true to enable authentication protection.
-- Example: VITE_AUTH_ENABLED=false
-
 `VITE_DESCOPE_PROJECT_ID`
 
 - Default: None
-- Description: Required for OAuth authentication using Descope. If you want to allow users to connect to the app using OAuth, you need to provide your Descope project ID here.
+- Description: Determines whether the application should restrict access to logged-in users or users with a valid JWT token. Required for authentication using Descope. You need to provide your Descope project ID here to enable authentication protection.
 - Example: VITE_DESCOPE_PROJECT_ID=your_descope_project_id
 
 `TESTS_JWT_AUTH_TOKEN`
