@@ -1,7 +1,6 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore } from "@src/store";
@@ -18,12 +17,11 @@ export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { openModal } = useModalStore();
 	const [isCreating, setIsCreating] = React.useState(false);
-	const { organizationId } = useParams();
-	const { inviteMember } = useOrganizationStore();
+	const { currentOrganizationId, inviteMember } = useOrganizationStore();
 
-	const createMember = async (name: string, email: string) => {
+	const createMember = async (email: string) => {
 		setIsCreating(true);
-		await inviteMember(organizationId!, name, email);
+		await inviteMember(currentOrganizationId!, email);
 		setIsCreating(false);
 	};
 

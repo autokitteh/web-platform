@@ -20,31 +20,20 @@ export const OrganizationMemberCreateModal = ({ createMember, isCreating }: Crea
 		formState: { errors },
 		handleSubmit,
 		register,
-	} = useForm<{ email: string; name: string }>({
+	} = useForm<{ email: string }>({
 		resolver: zodResolver(addOrganizationMemberSchema),
 		mode: "onSubmit",
 	});
 
-	const onSubmit = async (data: { email: string; name: string }) => {
-		const { email, name } = data;
-		createMember(name, email);
+	const onSubmit = async (data: { email: string }) => {
+		const { email } = data;
+		createMember(email);
 	};
 
 	return (
 		<Modal hideCloseButton name={ModalName.organizationMemberCreate}>
 			<h3 className="mb-5 text-xl font-bold">{t("addMember")}</h3>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className="relative mb-5">
-					<Input
-						variant="light"
-						{...register("name")}
-						aria-label={t("form.name")}
-						isError={!!errors.name}
-						isRequired
-						label={t("form.name")}
-					/>
-					<ErrorMessage>{errors.name?.message as string}</ErrorMessage>
-				</div>
 				<div className="relative mb-5">
 					<Input
 						variant="light"

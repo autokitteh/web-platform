@@ -33,10 +33,10 @@ export class UsersService {
 			return { data: undefined, error };
 		}
 	}
-	static async create(email: string, name: string, status: UserStatusType): Promise<ServiceResponse<string>> {
+	static async create(email: string, status: UserStatusType): Promise<ServiceResponse<string>> {
 		try {
 			const { userId } = await usersClient.create({
-				user: { email, displayName: name, status: reverseUserStatusConverter(status) },
+				user: { email, status: reverseUserStatusConverter(status) },
 			});
 			if (!userId) {
 				throw new Error(

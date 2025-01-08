@@ -40,6 +40,6 @@ export interface ActiveDeploymentWarningModalProps {
 }
 
 export interface CreateMemberModalProps {
-	createMember: (name: string, email: string) => void;
+	createMember: (email: string) => void;
 	isCreating: boolean;
 }

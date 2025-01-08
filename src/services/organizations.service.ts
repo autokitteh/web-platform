@@ -92,9 +92,9 @@ export class OrganizationsService {
 		}
 	}
 
-	static async inviteMember(organizationId: string, email: string, name: string): Promise<ServiceResponse<void>> {
+	static async inviteMember(organizationId: string, email: string): Promise<ServiceResponse<void>> {
 		try {
-			const { data: userId, error } = await UsersService.create(email, name, UserStatusType.invited);
+			const { data: userId, error } = await UsersService.create(email, UserStatusType.invited);
 			if (error) {
 				return { data: undefined, error };
 			}

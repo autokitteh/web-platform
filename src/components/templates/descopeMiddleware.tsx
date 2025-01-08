@@ -13,7 +13,7 @@ import { useHubspot } from "@src/hooks";
 import { gTagEvent, getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
-import { useLoggerStore, useToastStore } from "@store";
+import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { External404 } from "@components/pages";
@@ -41,6 +41,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const navigate = useNavigate();
 	const [apiToken, setApiToken] = useState<string>();
 	const [_searchParams, setSearchParams] = useSearchParams();
+	const { setCurrentOrganizationId } = useOrganizationStore();
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
@@ -98,7 +99,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				});
 
 				const { data: user, error } = await getLoggedInUser();
-				if (error) {
+				if (error || !user) {
 					addToast({
 						message: t("errors.loginFailed"),
 						type: "error",
@@ -107,9 +108,10 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					return;
 				}
 				clearLogs();
-				if (!user?.email) return;
+				setCurrentOrganizationId(user.defaultOrganizationId);
+
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
-				setIdentity(user?.email);
+				setIdentity(user.email);
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailed"),
