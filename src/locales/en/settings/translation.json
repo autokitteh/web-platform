@@ -64,7 +64,7 @@
 		},
 		"modal": {
 			"organizationCreated": "Organization {{name}} created",
-			"addMember": "Add new member to organization",
+			"addUser": "Add new user to organization",
 			"line1": "The action is irreversible.",
 			"line2": "Warning: you will not be able to recover it.",
 			"deleteOrganization": "Delete {{name}}",
@@ -81,10 +81,10 @@
 				"delete": "Delete"
 			}
 		},
-		"members": {
-			"title": "Members",
+		"users": {
+			"title": "Users",
 			"buttons": {
-				"addMember": "Add Member"
+				"addUser": "Add User"
 			},
 			"table": {
 				"headers": {
@@ -103,7 +103,8 @@
 		"store": {
 			"errors": {
 				"createFailed": "Store creation failed -  error: {{error}}",
-				"userNotFound": "User not found"
+				"userNotFound": "User not found",
+				"organizationIdNotFound": "Organization not found, can't fetch members"
 			}
 		}
 

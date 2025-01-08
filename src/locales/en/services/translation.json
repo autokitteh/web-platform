@@ -94,5 +94,8 @@
 	"errorFetchingIntegrationsForConnectionsExtended": "Error fetching integrations for connections, connection ID: {{connectionId}}, error: {{error}}",
 	"organizationNotCreatedExtended": "Failed to create organization {{name}}. Error: {{error}}",
 	"someOrganizationRetrievalFailed": "Some organization retrievals failed for user",
-	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}"
+	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}",
+	"errorConvertingMember": "Error converting member",
+	"errorConvertingMemberExtended": "Error converting member, member ID: {{memberId}}, error: {{error}}",
+	"errorConvertingMembers": "Error converting members"
 }

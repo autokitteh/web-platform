@@ -1,4 +1,5 @@
 export type { Manifest } from "@src/interfaces/models/manifest.interface";
+export type { MemberStatusKeyType } from "@src/interfaces/models/organization.interface";
 export type {
 	Callstack,
 	EntrypointTrigger,
