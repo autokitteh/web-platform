@@ -23,12 +23,12 @@ export const OrganizationCreatedModal = () => {
 
 			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button
-					ariaLabel={t("buttons.stayOn")}
+					ariaLabel={t("buttons.stay")}
 					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
 					onClick={() => closeModal(ModalName.organizationCreated)}
 					variant="outline"
 				>
-					{t("buttons.stayOn")}: Current Org
+					{t("buttons.stay")}
 				</Button>
 
 				<Button ariaLabel={t("buttons.open")} className="bg-gray-1100 px-4 py-3 font-semibold" variant="filled">
