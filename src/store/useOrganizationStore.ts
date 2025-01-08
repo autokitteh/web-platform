@@ -4,10 +4,10 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { useUserStore } from "./useUserStore";
 import { StoreName } from "@enums";
 import { OrganizationStore } from "@interfaces/store";
 import { OrganizationsService } from "@services";
+import { useUserStore } from "@store/useUserStore";
 
 const defaultState: Omit<OrganizationStore, "createOrganization" | "organizationList"> = {
 	organizationsList: undefined,
