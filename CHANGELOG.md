@@ -1,3 +1,10 @@
+## [2.124.3](https://github.com/autokitteh/web-platform/compare/v2.124.2...v2.124.3) (2025-01-08)
+
+
+### Bug Fixes
+
+* **UI-1172:** display system log in settings ([#873](https://github.com/autokitteh/web-platform/issues/873)) ([5acb8ea](https://github.com/autokitteh/web-platform/commit/5acb8eaa9e11e7926c4464c7424f95a6f35bf480))
+
 ## [2.124.2](https://github.com/autokitteh/web-platform/compare/v2.124.1...v2.124.2) (2025-01-08)
 
 ## [2.124.1](https://github.com/autokitteh/web-platform/compare/v2.124.0...v2.124.1) (2025-01-08)
