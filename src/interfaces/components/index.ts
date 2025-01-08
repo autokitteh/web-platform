@@ -32,6 +32,7 @@ export type {
 	ModalModifyVariableProps,
 	ModalProps,
 	ActiveDeploymentWarningModalProps,
+	CreateMemberModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
 export type { PopoverOptions, PopoverTriggerProps } from "@interfaces/components/popover.interface";

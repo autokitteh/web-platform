@@ -38,3 +38,8 @@ export interface ActiveDeploymentWarningModalProps {
 	modifiedId: string;
 	action?: "add" | "edit";
 }
+
+export interface CreateMemberModalProps {
+	createMember: (name: string, email: string) => void;
+	isCreating: boolean;
+}
