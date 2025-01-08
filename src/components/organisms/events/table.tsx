@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
-import { useEventsDrawer } from "@contexts/eventsDrawer";
+import { useEventsDrawer } from "@contexts";
 import { useResize, useSort } from "@src/hooks";
 import { useCacheStore } from "@src/store";
 import { BaseEvent, Deployment } from "@src/types/models";

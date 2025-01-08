@@ -3,7 +3,7 @@ import React, { CSSProperties, memo } from "react";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 
-import { useEventsDrawer } from "@contexts/eventsDrawer";
+import { useEventsDrawer } from "@contexts";
 import { dateTimeFormat } from "@src/constants";
 import { ButtonVariant } from "@src/enums/components";
 import { BaseEvent } from "@src/types/models";

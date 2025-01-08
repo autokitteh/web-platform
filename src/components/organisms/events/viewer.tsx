@@ -6,7 +6,7 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useEventsDrawer } from "@contexts/eventsDrawer";
+import { useEventsDrawer } from "@contexts";
 import { EventsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { useToastStore } from "@src/store";

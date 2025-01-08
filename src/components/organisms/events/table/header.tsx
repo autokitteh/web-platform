@@ -2,7 +2,7 @@ import React, { memo } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useEventsDrawer } from "@contexts/eventsDrawer";
+import { useEventsDrawer } from "@contexts";
 import { SortableHeaderProps, TableHeaderProps } from "@src/types/components";
 import { cn } from "@src/utilities";
 

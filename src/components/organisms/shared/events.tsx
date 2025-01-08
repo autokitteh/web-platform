@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { EventsTable } from "../events";
-import { EventsDrawerProvider } from "@contexts/eventsDrawer";
+import { EventsDrawerProvider } from "@contexts";
 import { DrawerName } from "@src/enums/components";
 import { useProjectStore } from "@src/store";
 
@@ -60,8 +60,6 @@ export const EventsList = ({
 			</Drawer>
 		</EventsDrawerProvider>
 	) : (
-		<EventsDrawerProvider isDrawer={false}>
-			<EventsTable />
-		</EventsDrawerProvider>
+		<EventsTable />
 	);
 };
