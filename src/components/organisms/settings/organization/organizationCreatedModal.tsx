@@ -11,14 +11,14 @@ import { Modal } from "@components/molecules";
 export const OrganizationCreatedModal = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.modal" });
 	const { closeModal } = useModalStore();
-	const data = useModalStore((state) => state.data) as { orgName: string };
+	const data = useModalStore((state) => state.data) as { name: string };
 
 	if (!data) return null;
 
 	return (
 		<Modal hideCloseButton name={ModalName.organizationCreated}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("organizationCreated", { name: data.orgName })}</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("organizationCreated", { name: data.name })}</h3>
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">
@@ -32,7 +32,7 @@ export const OrganizationCreatedModal = () => {
 				</Button>
 
 				<Button ariaLabel={t("buttons.open")} className="bg-gray-1100 px-4 py-3 font-semibold" variant="filled">
-					{t("buttons.open")}: {data.orgName}
+					{t("buttons.open", { name: data.name })}
 				</Button>
 			</div>
 		</Modal>

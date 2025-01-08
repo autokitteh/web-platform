@@ -13,4 +13,5 @@ export enum SidebarHrefMenu {
 	projects = "projects",
 	settings = "settings",
 	stats = "stats",
+	organizations = "organizations",
 }
