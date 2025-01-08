@@ -14,7 +14,7 @@ import {
 import { RotateRightIcon, TrashIcon } from "@assets/image/icons";
 
 export const OrganizationMembersTable = () => {
-	const { t } = useTranslation("settings", { keyPrefix: "organization.Members" });
+	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { openModal } = useModalStore();
 
 	return (
