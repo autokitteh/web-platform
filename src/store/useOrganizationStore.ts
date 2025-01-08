@@ -9,7 +9,11 @@ import { OrganizationStore } from "@interfaces/store";
 import { OrganizationsService } from "@services";
 import { useUserStore } from "@store/useUserStore";
 
+<<<<<<< HEAD
 const defaultState: Omit<OrganizationStore, "createOrganization" | "getOrganizationsList"> = {
+=======
+const defaultState: Omit<OrganizationStore, "createOrganization" | "organizationList"> = {
+>>>>>>> 5fce57d1 (feat(UI-1158): orgs missing functionality)
 	organizationsList: undefined,
 	currentOrganizationId: undefined,
 	isLoadingOrganizations: false,
