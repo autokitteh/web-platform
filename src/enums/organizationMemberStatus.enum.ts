@@ -4,3 +4,9 @@ export enum MemberStatus {
 	invited = 2,
 	unspecified = 0,
 }
+export enum MemberStatusType {
+	active = "active",
+	declined = "declined",
+	invited = "invited",
+	unspecified = "unspecified",
+}

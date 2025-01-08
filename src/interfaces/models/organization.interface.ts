@@ -1,3 +1,3 @@
-import { MemberStatus } from "@enums";
+import { MemberStatusType } from "@enums";
 
-export type MemberStatusKeyType = keyof typeof MemberStatus;
+export type MemberStatusKeyType = keyof typeof MemberStatusType;
