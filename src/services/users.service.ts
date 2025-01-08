@@ -4,6 +4,8 @@ import { usersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertUserProtoToModel } from "@models";
 import { LoggerService } from "@services";
+import { UserStatusType } from "@src/enums";
+import { reverseUserStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { User } from "@type/models";
 
@@ -31,9 +33,11 @@ export class UsersService {
 			return { data: undefined, error };
 		}
 	}
-	static async create(email: string, name: string): Promise<ServiceResponse<string>> {
+	static async create(email: string, name: string, status: UserStatusType): Promise<ServiceResponse<string>> {
 		try {
-			const { userId } = await usersClient.create({ user: { email, displayName: name } });
+			const { userId } = await usersClient.create({
+				user: { email, displayName: name, status: reverseUserStatusConverter(status) },
+			});
 			if (!userId) {
 				throw new Error(
 					i18n.t("userNotFound", {

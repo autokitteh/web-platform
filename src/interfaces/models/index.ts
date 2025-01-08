@@ -12,3 +12,4 @@ export type {
 	ViewerSession,
 	BuildRuntimeExport,
 } from "@src/interfaces/models/session.interface";
+export type { UserStatusKeyType } from "@src/interfaces/models/userStatus.interface";

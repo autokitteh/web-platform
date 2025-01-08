@@ -4,7 +4,7 @@ import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertMemberProtoToModel, convertOrganizationProtoToModel } from "@models";
 import { LoggerService, UsersService } from "@services";
-import { MemberStatusType } from "@src/enums";
+import { MemberStatusType, UserStatusType } from "@src/enums";
 import { reverseMemberStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { Organization, OrganizationMember } from "@type/models";
@@ -94,7 +94,7 @@ export class OrganizationsService {
 
 	static async inviteMember(organizationId: string, email: string, name: string): Promise<ServiceResponse<void>> {
 		try {
-			const { data: userId, error } = await UsersService.create(email, name);
+			const { data: userId, error } = await UsersService.create(email, name, UserStatusType.invited);
 			if (error) {
 				return { data: undefined, error };
 			}

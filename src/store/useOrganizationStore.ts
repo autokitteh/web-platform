@@ -95,7 +95,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		return members;
 	},
 
-	inviteMember: async (organizationId, email, name) => {
+	inviteMember: async (organizationId, name, email) => {
 		const { error } = await OrganizationsService.inviteMember(organizationId, email, name);
 
 		if (error) {
