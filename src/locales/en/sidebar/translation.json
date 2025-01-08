@@ -11,7 +11,7 @@
 		"organizationSettings": {
 			"title": "Organization Settings",
 			"settings": "Settings",
-			"users": "Users",
+			"members": "Members",
 			"billing": "Billing"
 		},
 		"organizationsList": {

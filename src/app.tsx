@@ -24,8 +24,8 @@ import { ActivityList, SessionOutputs } from "@components/organisms/deployments/
 import { ClientConfiguration, Profile } from "@components/organisms/settings";
 import {
 	NewOrganization,
+	OrganizationMembersTable,
 	OrganizationSettings,
-	OrganizationUsersTable,
 } from "@components/organisms/settings/organization";
 import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
@@ -246,7 +246,7 @@ export const App = () => {
 			<Route element={<SettingsLayout />} path="organization-settings">
 				<Route element={<OrganizationSettings />} index />
 				<Route element={<NewOrganization />} path="add" />
-				<Route element={<OrganizationUsersTable />} path="users" />
+				<Route element={<OrganizationMembersTable />} path="members" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>

@@ -6,12 +6,12 @@ import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { useModalStore } from "@src/store";
-import { newOrganizationUserSchema } from "@validations";
+import { addOrganizationMemberSchema } from "@validations";
 
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const OrganizationUserCreateModal = () => {
+export const OrganizationMemberCreateModal = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.modal" });
 	const { closeModal } = useModalStore();
 
@@ -20,15 +20,15 @@ export const OrganizationUserCreateModal = () => {
 		handleSubmit,
 		register,
 	} = useForm({
-		resolver: zodResolver(newOrganizationUserSchema),
+		resolver: zodResolver(addOrganizationMemberSchema),
 		mode: "onSubmit",
 	});
 
 	const onSubmit = async () => {};
 
 	return (
-		<Modal hideCloseButton name={ModalName.organizationUserCreate}>
-			<h3 className="mb-5 text-xl font-bold">{t("addUser")}</h3>
+		<Modal hideCloseButton name={ModalName.organizationMemberCreate}>
+			<h3 className="mb-5 text-xl font-bold">{t("addMember")}</h3>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="relative mb-5">
 					<Input
@@ -56,7 +56,7 @@ export const OrganizationUserCreateModal = () => {
 					<Button
 						ariaLabel={t("buttons.cancel")}
 						className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-						onClick={() => closeModal(ModalName.organizationUserCreate)}
+						onClick={() => closeModal(ModalName.organizationMemberCreate)}
 						variant="outline"
 					>
 						{t("buttons.cancel")}

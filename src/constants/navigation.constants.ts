@@ -30,7 +30,7 @@ export const userMenuOrganizationItems: NavigationSettingsItem[] = [
 	},
 	{
 		icon: UserIcon,
-		href: "/organization-settings/users",
+		href: "/organization-settings/members",
 		label: "Users",
 	},
 	{
