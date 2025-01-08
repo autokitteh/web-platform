@@ -50,15 +50,13 @@ export const SessionsTable = () => {
 		return sessionState ? reverseSessionStateConverter(sessionState) : undefined;
 	}, [sessionState]);
 
-	const handleFilterSessions = useCallback(
-		(stateType?: SessionStateKeyType) => {
-			navigate(".", {
-				state: { sessionState: stateType },
-				replace: true,
-			});
-		},
-		[navigate]
-	);
+	const handleFilterSessions = useCallback((stateType?: SessionStateKeyType) => {
+		navigate(".", {
+			state: { sessionState: stateType },
+			replace: true,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const fetchDeployments = useCallback(async () => {
 		if (!projectId) return;
