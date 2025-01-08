@@ -3,7 +3,7 @@ import i18n from "i18next";
 import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertMemberProtoToModel, convertOrganizationProtoToModel } from "@models";
-import { LoggerService } from "@services";
+import { LoggerService, UsersService } from "@services";
 import { ServiceResponse } from "@type";
 import { Organization, OrganizationMember } from "@type/models";
 
@@ -89,18 +89,24 @@ export class OrganizationsService {
 			return { data: undefined, error };
 		}
 	}
-	
+
 	static async inviteMember(organizationId: string, email: string, name: string): Promise<ServiceResponse<void>> {
 		try {
-			const { orgs } = await organizationsClient.addMember({ user });
+			const { data: userId, error } = await UsersService.create(email, name);
+			if (error) {
+				return { data: undefined, error };
+			}
+			await organizationsClient.addMember({ member: { orgId: organizationId, userId } });
 
-			const processedOrganizations = Object.values(orgs).map(convertOrganizationProtoToModel);
-
-			return { data: processedOrganizations, error: undefined };
+			return { data: undefined, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
-				i18n.t("errorFetchingOrganizationExtended", { userId, error: (error as Error).message, ns: "services" })
+				i18n.t("errorInvitingUserToOrganizationExtended", {
+					organizationId,
+					error: (error as Error).message,
+					ns: "services",
+				})
 			);
 
 			return { data: undefined, error };

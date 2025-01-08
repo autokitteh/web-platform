@@ -98,5 +98,7 @@
 	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}",
 	"errorConvertingMember": "Error converting member",
 	"errorConvertingMemberExtended": "Error converting member, member ID: {{memberId}}, error: {{error}}",
-	"errorConvertingMembers": "Error converting members"
+	"errorConvertingMembers": "Error converting members",
+	"errorInvitingUserToOrganizationExtended": "Error inviting user to organization, organization ID: {{organizationId}}, error: {{error}}"
+
 }
