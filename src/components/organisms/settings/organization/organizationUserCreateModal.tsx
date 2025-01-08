@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
 import { useModalStore } from "@src/store";
-import { newOrganizationUserSchema } from "@validations";
+import { addOrganizationUserSchema } from "@validations";
 
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
@@ -20,7 +20,7 @@ export const OrganizationUserCreateModal = () => {
 		handleSubmit,
 		register,
 	} = useForm({
-		resolver: zodResolver(newOrganizationUserSchema),
+		resolver: zodResolver(addOrganizationUserSchema),
 		mode: "onSubmit",
 	});
 

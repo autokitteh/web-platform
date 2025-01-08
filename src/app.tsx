@@ -23,7 +23,7 @@ import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
 import { ClientConfiguration, Profile } from "@components/organisms/settings";
 import {
-	NewOrganization,
+	AddOrganization,
 	OrganizationSettings,
 	OrganizationUsersTable,
 } from "@components/organisms/settings/organization";
@@ -186,7 +186,7 @@ export const App = () => {
 
 			<Route element={<SettingsLayout />} path="organization-settings">
 				<Route element={<OrganizationSettings />} index />
-				<Route element={<NewOrganization />} path="add" />
+				<Route element={<AddOrganization />} path="add" />
 				<Route element={<OrganizationUsersTable />} path="users" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />

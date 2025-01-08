@@ -69,13 +69,13 @@ export const OrganizationSettings = () => {
 				<form className="w-1/2" onSubmit={handleSubmit(onSubmit)}>
 					<div className="relative mb-6">
 						<Input
-							isError={!!errors.orgName}
+							isError={!!errors.name}
 							isRequired
 							label={t("form.organizationName")}
-							{...register("orgName")}
+							{...register("name")}
 						/>
 
-						<ErrorMessage>{errors?.orgName?.message as string}</ErrorMessage>
+						<ErrorMessage>{errors?.name?.message as string}</ErrorMessage>
 					</div>
 					<Typography className="mb-4 font-bold" element="h2" size="medium">
 						{t("form.errorNotification")}

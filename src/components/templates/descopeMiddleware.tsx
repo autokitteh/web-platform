@@ -103,7 +103,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 						message: t("errors.loginFailed"),
 						type: "error",
 					});
-					LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
 
 					return;
 				}
