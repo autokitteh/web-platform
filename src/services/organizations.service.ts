@@ -4,6 +4,8 @@ import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertMemberProtoToModel, convertOrganizationProtoToModel } from "@models";
 import { LoggerService, UsersService } from "@services";
+import { MemberStatusType } from "@src/enums";
+import { reverseMemberStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { Organization, OrganizationMember } from "@type/models";
 
@@ -96,7 +98,13 @@ export class OrganizationsService {
 			if (error) {
 				return { data: undefined, error };
 			}
-			await organizationsClient.addMember({ member: { orgId: organizationId, userId } });
+			await organizationsClient.addMember({
+				member: {
+					orgId: organizationId,
+					userId,
+					status: reverseMemberStatusConverter(MemberStatusType.invited),
+				},
+			});
 
 			return { data: undefined, error: undefined };
 		} catch (error) {

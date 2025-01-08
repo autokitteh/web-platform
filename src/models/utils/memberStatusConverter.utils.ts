@@ -7,3 +7,15 @@ export const memberStatusConverter = (protoMemberStatus: ProtoOrgMemberStatus): 
 
 	return MemberStatus[memberStatus as MemberStatusKeyType];
 };
+
+export const reverseMemberStatusConverter = (memberStatus?: MemberStatusKeyType): number | undefined => {
+	if (!memberStatus) {
+		return;
+	}
+	if (!(memberStatus in MemberStatus)) {
+		return;
+	}
+	const protoMemberStatus = ProtoOrgMemberStatus[memberStatus.toUpperCase() as keyof typeof ProtoOrgMemberStatus];
+
+	return protoMemberStatus;
+};
