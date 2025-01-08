@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
-import { useModalStore, useOrganizationStore } from "@src/store";
+import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 
 import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
 import {
@@ -15,14 +15,32 @@ import { RotateRightIcon, TrashIcon } from "@assets/image/icons";
 
 export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
-	const { openModal } = useModalStore();
+	const { closeModal, openModal } = useModalStore();
 	const [isCreating, setIsCreating] = React.useState(false);
 	const { currentOrganizationId, inviteMember } = useOrganizationStore();
+	const addToast = useToastStore((state) => state.addToast);
 
 	const createMember = async (email: string) => {
 		setIsCreating(true);
-		await inviteMember(currentOrganizationId!, email);
+		const error = await inviteMember(currentOrganizationId!, email);
 		setIsCreating(false);
+		closeModal(ModalName.organizationMemberCreate);
+
+		if (error) {
+			if (error) {
+				addToast({
+					message: t("errors.inviteFailed"),
+					type: "error",
+				});
+
+				return;
+			}
+		}
+
+		addToast({
+			message: t("form.memberInvited", { email }),
+			type: "success",
+		});
 	};
 
 	return (

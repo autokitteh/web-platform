@@ -98,13 +98,20 @@
 					"resendInvite": "Resend invintation",
 					"delete": "Delete"
 				}
+			},
+			"errors":{
+				"inviteFailed": "Member creation failed",
+				"inviteFailedExtended": "Member creation failed -  error: {{error}}"
+			},
+			"form":{
+				"memberInvited": "Member {{email}} invited"
 			}
 		},
 		"store": {
 			"errors": {
-				"createFailed": "Store creation failed -  error: {{error}}",
-				"userNotFound": "User not found",
-				"organizationIdNotFound": "Organization not found, can't fetch members"
+				"organizationIdNotFound": "Organization not found, can't fetch members",
+				"createFailed": "Organization creation failed -  error: {{error}}",
+				"userNotFound": "User not found"
 			}
 		}
 
