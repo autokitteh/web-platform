@@ -1,3 +1,10 @@
+# [2.123.0](https://github.com/autokitteh/web-platform/compare/v2.122.0...v2.123.0) (2025-01-08)
+
+
+### Features
+
+* **UI-1130:** add sessions filter from home projects table ([#848](https://github.com/autokitteh/web-platform/issues/848)) ([3be3e59](https://github.com/autokitteh/web-platform/commit/3be3e5942aab383eb186317b5ff7423d0e64196d))
+
 # [2.122.0](https://github.com/autokitteh/web-platform/compare/v2.121.0...v2.122.0) (2025-01-07)
 
 
