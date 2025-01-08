@@ -74,11 +74,7 @@
 				"role":"Role"
 			},
 			"buttons": {
-<<<<<<< HEAD
 				"stay": "Stay in the current organization",
-=======
-				"stayOn": "Stay on",
->>>>>>> aa675c56 (feat(UI-1167): organizations fetching and management)
 				"open": "Open {{name}}",
 				"create": "Create",
 				"cancel": "Cancel",
