@@ -1,8 +1,8 @@
 import i18n from "i18next";
 
-import { memberStatusConverter } from "./utils";
 import { Org as ProtoOrganization, OrgMember as ProtoOrganizationMember } from "@ak-proto-ts/orgs/v1/org_pb";
-import { UsersService } from "@services/users.service";
+import { memberStatusConverter } from "@models/utils";
+import { UsersService } from "@services";
 import { Organization, OrganizationMember } from "@type/models";
 
 export const convertOrganizationProtoToModel = (protoOrganization: ProtoOrganization): Organization => {
