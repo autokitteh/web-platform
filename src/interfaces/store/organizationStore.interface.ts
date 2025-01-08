@@ -6,4 +6,5 @@ export interface OrganizationStore {
 	organizationsList?: Organization[];
 	currentOrganizationId?: string;
 	isLoadingOrganizations: boolean;
+	getOrganizationsList: () => ServiceResponseError;
 }
