@@ -14,13 +14,10 @@ test.describe("Project Topbar Suite", () => {
 		const toast = await waitForToast(page, "Project deployment completed successfully");
 		await expect(toast).toBeVisible();
 
-		await expect(page.getByRole("button", { name: "Sessions" })).not.toBeDisabled();
-
 		await page.getByRole("button", { name: "Deployments" }).click();
 
 		await expect(page.getByRole("button", { name: "Assets" })).not.toHaveClass(/active/);
 		await expect(page.getByRole("button", { name: "Deployments" })).toHaveClass(/active/);
-		await expect(page.getByRole("button", { name: "Sessions" })).not.toBeDisabled();
 
 		await page.getByRole("status", { name: "Active" }).click();
 

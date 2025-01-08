@@ -11,7 +11,7 @@ import { dateTimeFormat, namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
 
 import { useSort } from "@hooks";
-import { useManualRunStore, useModalStore, useProjectStore, useToastStore } from "@store";
+import { useManualRunStore, useModalStore, useToastStore } from "@store";
 
 import { IconButton, StatusBadge, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { IdCopyButton, SortButton } from "@components/molecules";
@@ -35,7 +35,6 @@ export const DeploymentsTableContent = ({
 	const [deploymentId, setDeploymentId] = useState<string>();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const { t: tSessionsStats } = useTranslation("deployments", { keyPrefix: "sessionStats" });
-	const { setLatestOpened } = useProjectStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 
 	const showDeleteModal = (event: React.MouseEvent, id: string) => {
@@ -111,7 +110,6 @@ export const DeploymentsTableContent = ({
 	);
 
 	const goToDeploymentSessions = (id: string) => {
-		setLatestOpened("sessionId", "", projectId);
 		navigate(`${id}/sessions`);
 	};
 
@@ -210,7 +208,7 @@ export const DeploymentsTableContent = ({
 							<Td className="w-1/12" />
 
 							<Td className="w-1/3 cursor-pointer" onClick={() => goToDeploymentSessions(deploymentId)}>
-								<DeploymentSessionStats sessionStats={sessionStats} />
+								<DeploymentSessionStats deploymentId={deploymentId} sessionStats={sessionStats} />
 							</Td>
 							<Td className="w-1/12" />
 

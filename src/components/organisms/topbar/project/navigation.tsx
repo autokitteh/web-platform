@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { mainNavigationItems } from "@src/constants";
 import { useProjectStore } from "@src/store";
-import { cn } from "@src/utilities";
+import { calculateDeploymentSessionsStats, cn } from "@src/utilities";
 
 import { useLastVisitedEntity } from "@hooks";
 
@@ -20,18 +20,20 @@ export const ProjectTopbarNavigation = () => {
 	const { deploymentId, deployments } = useLastVisitedEntity(projectId, paramDeploymentId, sessionId);
 
 	const selectedSection = useMemo(() => {
-		if (paramDeploymentId) return "sessions";
+		if (pathname.includes("sessions")) return "sessions";
 
-		if (pathname.includes("deployments")) return "deployments";
+		if (pathname.endsWith("deployments")) return "deployments";
 
 		return "assets";
-	}, [paramDeploymentId, pathname]);
+	}, [pathname]);
 
 	const navigationItems = useMemo(
 		() =>
 			mainNavigationItems.map((item) => {
-				const noDeploymentsSessionButtonDisabled =
-					item.key === "sessions" && (!deployments || !deployments.length);
+				const { sessionStats } = calculateDeploymentSessionsStats(deployments || []);
+				const allSessionsCountsZero = Object.values(sessionStats).every((stat) => stat.count === 0);
+				const noDeploymentsSessionButtonDisabled = item.key === "sessions" && allSessionsCountsZero;
+
 				const isSelected = selectedSection === item.key;
 				const buttonClassName = cn(
 					"relative group size-full whitespace-nowrap rounded-none bg-transparent p-3.5 hover:bg-gray-1050 text-gray-1500 gap-2",
@@ -49,11 +51,7 @@ export const ProjectTopbarNavigation = () => {
 						case "assets":
 							return latestOpened.tab ? `/${latestOpened.tab}` : "/code";
 						case "sessions":
-							return latestOpened.sessionId
-								? deploymentId
-									? `/deployments/${deploymentId}/sessions/${latestOpened.sessionId}`
-									: ""
-								: `/deployments/${deploymentId}/sessions/`;
+							return "/sessions";
 
 						case "deployments":
 							return "/deployments";
