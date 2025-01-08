@@ -89,4 +89,21 @@ export class OrganizationsService {
 			return { data: undefined, error };
 		}
 	}
+	
+	static async inviteMember(organizationId: string, email: string, name: string): Promise<ServiceResponse<void>> {
+		try {
+			const { orgs } = await organizationsClient.addMember({ user });
+
+			const processedOrganizations = Object.values(orgs).map(convertOrganizationProtoToModel);
+
+			return { data: processedOrganizations, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.organizationsService,
+				i18n.t("errorFetchingOrganizationExtended", { userId, error: (error as Error).message, ns: "services" })
+			);
+
+			return { data: undefined, error };
+		}
+	}
 }

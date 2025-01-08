@@ -7,4 +7,5 @@ export interface OrganizationStore {
 	currentOrganizationId?: string;
 	isLoadingOrganizations: boolean;
 	getOrganizationsList: () => ServiceResponseError;
+	inviteMember: (organizationId: string, email: string, name: string) => ServiceResponseError;
 }

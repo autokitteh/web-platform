@@ -9,7 +9,7 @@ import { OrganizationStore } from "@interfaces/store";
 import { OrganizationsService } from "@services";
 import { useUserStore } from "@store/useUserStore";
 
-const defaultState: Omit<OrganizationStore, "createOrganization" | "getOrganizationsList"> = {
+const defaultState: Omit<OrganizationStore, "createOrganization" | "getOrganizationsList" | "inviteMember"> = {
 	organizationsList: undefined,
 	currentOrganizationId: undefined,
 	isLoadingOrganizations: false,
@@ -92,11 +92,17 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 		const { data: members, error } = await OrganizationsService.listMembers(organizationId);
 
+		return members;
+	},
+
+	inviteMember: async (organizationId, email, name) => {
+		const { error } = await OrganizationsService.inviteMember(organizationId, email, name);
+
 		if (error) {
 			return error;
 		}
 
-		return members;
+		return undefined;
 	},
 });
 

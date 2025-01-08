@@ -31,4 +31,26 @@ export class UsersService {
 			return { data: undefined, error };
 		}
 	}
+	static async create(email: string, name: string): Promise<ServiceResponse<string>> {
+		try {
+			const { userId } = await usersClient.create({ user: { email, displayName: name } });
+			if (!userId) {
+				throw new Error(
+					i18n.t("userNotFound", {
+						ns: "services",
+					})
+				);
+			}
+
+			return { data: userId, error: undefined };
+		} catch (error) {
+			const errorMessage = i18n.t("accountFetchErrorExtended", {
+				ns: "services",
+				error: new Error(error).message,
+			});
+			LoggerService.error(namespaces.authService, errorMessage);
+
+			return { data: undefined, error };
+		}
+	}
 }
