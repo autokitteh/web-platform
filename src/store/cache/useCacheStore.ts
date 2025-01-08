@@ -68,6 +68,7 @@ const initialState: Omit<
 	currentProjectId: undefined,
 	projectValidationState: defaultProjectValidationState,
 	isValid: true,
+	isProjectEvents: false,
 };
 
 const store: StateCreator<CacheStore> = (set, get) => ({
@@ -276,9 +277,9 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 	},
 
-	fetchEvents: async (force?: boolean) => {
-		const { events } = get();
-		if (events && !force) {
+	fetchEvents: async (force, sourceId, projectId) => {
+		const { events, isProjectEvents } = get();
+		if (events && !force && !isProjectEvents) {
 			return events;
 		}
 
@@ -288,7 +289,11 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}));
 
 		try {
-			const { data: incomingEvents, error } = await EventsService.list(maxResultsLimitToDisplay);
+			const { data: incomingEvents, error } = await EventsService.list(
+				maxResultsLimitToDisplay,
+				sourceId,
+				projectId
+			);
 
 			if (error) {
 				const errorMsg = i18n.t("errorFetchingEvents", { ns: "errors" });
@@ -302,6 +307,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			set((state) => ({
 				...state,
 				events: incomingEvents,
+				isProjectEvents: !!sourceId,
 				loading: { ...state.loading, events: false },
 			}));
 

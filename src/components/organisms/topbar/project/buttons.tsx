@@ -16,7 +16,7 @@ import { DeleteProjectModal } from "@components/organisms/modals";
 import { ManualRunButtons } from "@components/organisms/topbar/project";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
-import { ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
+import { EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/icons";
 
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
@@ -163,6 +163,21 @@ export const ProjectTopbarButtons = () => {
 			<DropdownButton
 				contentMenu={
 					<>
+						<Button
+							ariaLabel={t("topbar.buttons.ariaEvents")}
+							className="group mb-2 h-8 px-4 text-white"
+							onClick={() => navigate(`/projects/${projectId}/events`)}
+							title={t("topbar.buttons.ariaEvents")}
+							variant="outline"
+						>
+							<IconSvg
+								className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
+								size="md"
+								src={EventsFlag}
+							/>
+
+							<div className="mt-0.5">{t("topbar.buttons.events")}</div>
+						</Button>
 						<Button
 							ariaLabel={t("topbar.buttons.export")}
 							className="group h-8 px-4 text-white"

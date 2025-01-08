@@ -30,7 +30,7 @@ import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 
 import { PlusCircle } from "@assets/image";
-import { EditIcon, InfoIcon, TrashIcon } from "@assets/image/icons";
+import { EditIcon, EventsFlag, InfoIcon, TrashIcon } from "@assets/image/icons";
 
 export const ConnectionsTable = () => {
 	const { t: tErrors } = useTranslation("errors");
@@ -191,7 +191,7 @@ export const ConnectionsTable = () => {
 								/>
 							</Th>
 
-							<Th className="w-2/12 text-right font-normal">{t("table.columns.actions")}</Th>
+							<Th className="w-3/12 font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
@@ -221,7 +221,7 @@ export const ConnectionsTable = () => {
 										</div>
 									</Td>
 
-									<Td className="w-2/12">
+									<Td className="w-3/12">
 										<div className="flex space-x-1">
 											<Popover animation="slideFromBottom" interactionType="hover">
 												<PopoverTrigger>
@@ -260,6 +260,16 @@ export const ConnectionsTable = () => {
 												title={t("table.buttons.titleRemoveConnection")}
 											>
 												<TrashIcon className="size-4 stroke-white" />
+											</IconButton>
+											<IconButton
+												ariaLabel={t("table.buttons.ariaShowTriggerEvents")}
+												onClick={() =>
+													navigate(
+														`/projects/${projectId}/connections/${connectionId}/events`
+													)
+												}
+											>
+												<EventsFlag className="size-4 stroke-white" />
 											</IconButton>
 										</div>
 									</Td>

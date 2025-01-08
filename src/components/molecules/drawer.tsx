@@ -6,9 +6,17 @@ import { DrawerProps } from "@src/interfaces/components";
 import { useDrawerStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-export const Drawer = ({ children, className, name, variant }: DrawerProps) => {
+export const Drawer = ({
+	children,
+	className,
+	isForcedOpen,
+	name,
+	onCloseCallback,
+	variant,
+	wrapperClassName,
+}: DrawerProps) => {
 	const { isOpen, onClose } = useDrawerStore((state) => ({
-		isOpen: state.drawers[name],
+		isOpen: state.drawers[name] || isForcedOpen,
 		onClose: state.closeDrawer,
 	}));
 
@@ -20,11 +28,13 @@ export const Drawer = ({ children, className, name, variant }: DrawerProps) => {
 		className
 	);
 
+	const wrapperClass = cn("fixed right-0 top-0 z-50 h-screen w-550", wrapperClassName);
+
 	return (
 		<AnimatePresence>
 			{isOpen ? (
 				<>
-					<div className="fixed right-0 top-0 z-50 h-screen w-550">
+					<div className={wrapperClass}>
 						<motion.aside
 							animate={{
 								x: 0,
@@ -50,7 +60,10 @@ export const Drawer = ({ children, className, name, variant }: DrawerProps) => {
 							opacity: 0,
 						}}
 						initial={{ opacity: 0 }}
-						onClick={() => onClose(name)}
+						onClick={() => {
+							onClose(name);
+							onCloseCallback?.();
+						}}
 					/>
 				</>
 			) : null}

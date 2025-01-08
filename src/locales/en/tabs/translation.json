@@ -163,6 +163,7 @@
 		"table": {
 			"buttons": {
 				"ariaDeleteTrigger": "Delete {{name}} trigger",
+				"ariaShowTriggerEvents": "Display events from {{name}} trigger",
 				"ariaModifyTrigger": "Modify {{name}} trigger",
 				"delete": "Delete",
 				"modify": "Modify"

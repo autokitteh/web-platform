@@ -15,7 +15,7 @@ import {
 import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
 
 import { PageTitle } from "@components/atoms";
-import { DeploymentsTable, EventViewer, EventsTable, SessionsTable } from "@components/organisms";
+import { DeploymentsTable, EventViewer, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
@@ -27,6 +27,7 @@ import {
 	OrganizationSettings,
 	OrganizationUsersTable,
 } from "@components/organisms/settings/organization";
+import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
 import { Connections, Dashboard, Internal404, Intro, Project, Triggers, Variables } from "@components/pages";
@@ -120,6 +121,17 @@ export const App = () => {
 
 			<Route element={<AppLayout />} path="projects">
 				<Route element={<Project />} path=":projectId">
+					<Route element={<EventsList isDrawer type="project" />} path="events">
+						<Route
+							element={
+								<>
+									<ConnectionsTable />
+									<EventsList isDrawer type="project" />
+								</>
+							}
+							path=":eventId"
+						/>
+					</Route>
 					<Route element={<Navigate replace to="code" />} index />
 
 					<Route element={<Connections />} path="connections">
@@ -128,6 +140,25 @@ export const App = () => {
 						<Route element={<AddConnection />} path="add" />
 
 						<Route element={<EditConnection />} path=":connectionId/edit" />
+						<Route
+							element={
+								<>
+									<ConnectionsTable />
+									<EventsList isDrawer type="connections" />
+								</>
+							}
+							path=":connectionId/events"
+						>
+							<Route
+								element={
+									<>
+										<ConnectionsTable />
+										<EventsList isDrawer type="connections" />
+									</>
+								}
+								path=":eventId"
+							/>
+						</Route>
 
 						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
@@ -138,6 +169,27 @@ export const App = () => {
 						<Route element={<TriggersTable />} index />
 
 						<Route element={<AddTrigger />} path="add" />
+
+						<Route element={<EditTrigger />} path=":triggerId/edit" />
+						<Route
+							element={
+								<>
+									<TriggersTable />
+									<EventsList isDrawer type="triggers" />
+								</>
+							}
+							path=":triggerId/events"
+						>
+							<Route
+								element={
+									<>
+										<TriggersTable />
+										<EventsList isDrawer type="triggers" />
+									</>
+								}
+								path=":eventId"
+							/>
+						</Route>
 
 						<Route element={<EditTrigger />} path=":triggerId/edit" />
 
@@ -153,7 +205,6 @@ export const App = () => {
 
 						<Route element={<Navigate replace to="/404" />} path="*" />
 					</Route>
-
 					<Route element={<Navigate replace to="/404" />} path="*" />
 				</Route>
 
@@ -201,7 +252,7 @@ export const App = () => {
 			</Route>
 
 			<Route element={<EventsLayout />}>
-				<Route element={<EventsTable />} path="events">
+				<Route element={<EventsList isDrawer={false} />} path="events">
 					<Route element={<EventViewer />} path=":eventId" />
 				</Route>
 

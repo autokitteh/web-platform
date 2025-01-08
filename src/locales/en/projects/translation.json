@@ -9,6 +9,8 @@
         "buttons": {
             "ariaBuildProject": "Build project",
             "ariaDeployProject": "Deploy project",
+            "events": "Events",
+            "ariaEvents": "Display project events",
             "ariaDeployments": "View project deployments",
             "build": "Build",
             "deploy": "Deploy",
