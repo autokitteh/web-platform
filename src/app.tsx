@@ -29,7 +29,7 @@ import {
 } from "@components/organisms/settings/organization";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
-import { Connections, Dashboard, Internal404, Intro, Project, Sessions, Triggers, Variables } from "@components/pages";
+import { Connections, Dashboard, Internal404, Intro, Project, Triggers, Variables } from "@components/pages";
 import { AppLayout, EventsLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
@@ -166,12 +166,20 @@ export const App = () => {
 			</Route>
 
 			<Route element={<AppLayout />} path="projects/:projectId/deployments">
-				<Route element={<Sessions />} path=":deploymentId">
-					<Route element={<SessionsTable />} path="sessions">
-						<Route element={<SessionViewer />} path=":sessionId">
-							<Route element={<SessionOutputs />} index />
-							<Route element={<ActivityList />} path="executionflow" />
-						</Route>
+				<Route element={<SessionsTable />} path=":deploymentId/sessions">
+					<Route element={<SessionViewer />} path=":sessionId">
+						<Route element={<SessionOutputs />} index />
+						<Route element={<ActivityList />} path="executionflow" />
+					</Route>
+				</Route>
+				<Route element={<Navigate replace to="/404" />} path="*" />
+			</Route>
+
+			<Route element={<AppLayout />} path="projects/:projectId">
+				<Route element={<SessionsTable />} path="sessions">
+					<Route element={<SessionViewer />} path=":sessionId">
+						<Route element={<SessionOutputs />} index />
+						<Route element={<ActivityList />} path="executionflow" />
 					</Route>
 				</Route>
 				<Route element={<Navigate replace to="/404" />} path="*" />

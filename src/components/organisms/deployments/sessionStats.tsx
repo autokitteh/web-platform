@@ -1,28 +1,30 @@
-import React from "react";
+import React, { KeyboardEvent, MouseEvent } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { SessionStateType } from "@enums";
+import { SidebarHrefMenu } from "@src/enums/components";
 import { DeploymentSession } from "@type/models";
-import { cn } from "@utilities";
+import { cn, getSessionStateColor } from "@utilities";
 
 export const DeploymentSessionStats = ({
 	className,
+	deploymentId,
 	sessionStats,
 }: {
 	className?: string;
+	deploymentId: string;
 	sessionStats?: DeploymentSession[];
 }) => {
+	const navigate = useNavigate();
+	const { projectId } = useParams();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 	const countStyle = (state?: SessionStateType) =>
 		cn(
 			"2xl:w-22 inline-block w-1/4 text-center border-0 p-0 text-sm font-medium",
-			{
-				"text-blue-500": state === SessionStateType.running,
-				"text-yellow-500": state === SessionStateType.stopped,
-				"text-green-800": state === SessionStateType.completed,
-				"text-red": state === SessionStateType.error,
-			},
+			"hover:bg-gray-1100 rounded-3xl inline-flex justify-center items-center min-w-12 h-7",
+			getSessionStateColor(state),
 			className
 		);
 
@@ -47,15 +49,32 @@ export const DeploymentSessionStats = ({
 		},
 	];
 
+	const handleOpenProjectFilteredSessions = (
+		event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
+		sessionState?: keyof typeof SessionStateType
+	) => {
+		event.stopPropagation();
+		navigate(`/${SidebarHrefMenu.projects}/${projectId}/deployments/${deploymentId}/sessions`, {
+			state: { sessionState },
+		});
+	};
+
 	return sessionStatsOrdered.map(({ count, state }) => (
-		<span
-			aria-label={state}
+		<div
+			aria-label={`${count} ${t(state?.toString() || "")}`}
 			className={countStyle(state)}
 			key={state}
-			role="status"
-			title={t(state?.toString() || "")}
+			onClick={(event) => {
+				handleOpenProjectFilteredSessions(event, state);
+			}}
+			onKeyDown={(event) => {
+				handleOpenProjectFilteredSessions(event, state);
+			}}
+			role="button"
+			tabIndex={0}
+			title={`${count} ${t(state?.toString() || "")}`}
 		>
 			{count}
-		</span>
+		</div>
 	));
 };

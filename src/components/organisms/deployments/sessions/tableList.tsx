@@ -24,7 +24,12 @@ export const SessionsTableList = ({
 
 	const openSessionLog = useCallback(
 		(sessionId: string) => {
-			navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`);
+			if (deploymentId) {
+				navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`);
+
+				return;
+			}
+			navigate(`/projects/${projectId}/sessions/${sessionId}`);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[deploymentId]

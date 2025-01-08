@@ -4,47 +4,28 @@ import { useTranslation } from "react-i18next";
 
 import { SessionStateType } from "@enums";
 import { SessionTableFilterProps } from "@interfaces/components";
-import { cn } from "@utilities";
+import { cn, getSessionStateColor } from "@utilities";
 
 import { Button, IconSvg } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
 
 import { FilterIcon } from "@assets/image/icons";
 
-export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilterProps) => {
-	const [activeState, setActiveState] = useState<SessionStateType>();
+export const SessionsTableFilter = ({ defaultValue, onChange, sessionStats }: SessionTableFilterProps) => {
+	const [activeState, setActiveState] = useState<SessionStateType | undefined>(defaultValue as SessionStateType);
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.table.statuses" });
 
-	const buttonClassText = {
-		[SessionStateType.completed]: "text-green-800",
-		[SessionStateType.created]: "text-blue-500",
-		[SessionStateType.error]: "text-red",
-		[SessionStateType.running]: "text-blue-500",
-		[SessionStateType.stopped]: "text-yellow-500",
-	} as const;
-
-	const buttonClass = (state?: keyof typeof buttonClassText) =>
+	const buttonClass = (state?: SessionStateType) =>
 		cn(
 			"w-auto rounded-lg border border-gray-950 px-2.5 py-1.5 text-white hover:bg-gray-1150",
-			state && buttonClassText[state],
+			state && getSessionStateColor(state),
 			{
 				"border-white bg-gray-1250": activeState === state,
 			}
 		);
 
-	const filterClass = (
-		state?:
-			| SessionStateType.completed
-			| SessionStateType.created
-			| SessionStateType.error
-			| SessionStateType.running
-			| SessionStateType.stopped
-			| undefined
-	) =>
-		cn(
-			"h-8 whitespace-nowrap border-0 pr-4 text-white hover:bg-transparent text-white",
-			state && buttonClassText[state]
-		);
+	const filterClass = (state?: SessionStateType) =>
+		cn("h-8 whitespace-nowrap border-0 pr-4 text-white hover:bg-transparent", state && getSessionStateColor(state));
 
 	const initialSessionCounts = {
 		[SessionStateType.completed]: 0,
@@ -71,7 +52,6 @@ export const SessionsTableFilter = ({ onChange, sessionStats }: SessionTableFilt
 
 	const handleButtonClick = (state?: SessionStateType) => {
 		setActiveState(state);
-
 		onChange(state);
 	};
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import { DeploymentsService } from "@services/deployments.service";
 import { dateTimeFormat } from "@src/constants";
 import { DeploymentStateVariant, SessionStateType } from "@src/enums";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
-import { cn } from "@src/utilities";
+import { calculateDeploymentSessionsStats, cn, getSessionStateColor } from "@src/utilities";
 import { DashboardProjectWithStats, Project } from "@type/models";
 
 import { useProjectActions, useSort } from "@hooks";
@@ -44,45 +44,33 @@ export const DashboardProjectsTable = () => {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let projectStatus = DeploymentStateVariant.inactive;
 			const lastDeployed = deployments?.[deployments?.length - 1]?.createdAt;
-			const stats = deployments?.reduce(
-				(acc: { sessionCounts: Record<string, number>; totalDeployments: number }, deployment) => {
-					if (deployment.state === DeploymentStateVariant.active) {
-						projectStatus = DeploymentStateVariant.active;
-					} else if (
-						deployment.state === DeploymentStateVariant.draining &&
-						projectStatus !== DeploymentStateVariant.active
-					) {
-						projectStatus = DeploymentStateVariant.draining;
-					}
+			const { sessionStats, totalDeployments } = calculateDeploymentSessionsStats(deployments || []);
 
-					acc.totalDeployments = (acc.totalDeployments || 0) + 1;
+			deployments?.forEach((deployment) => {
+				if (deployment.state === DeploymentStateVariant.active) {
+					projectStatus = DeploymentStateVariant.active;
+				} else if (
+					deployment.state === DeploymentStateVariant.draining &&
+					projectStatus !== DeploymentStateVariant.active
+				) {
+					projectStatus = DeploymentStateVariant.draining;
+				}
+			});
 
-					if (deployment.sessionStats) {
-						deployment.sessionStats.forEach((session) => {
-							if (!session.state) return;
-							acc.sessionCounts = {
-								...acc.sessionCounts,
-								[session.state]:
-									session.state === SessionStateType.created
-										? (acc.sessionCounts?.[SessionStateType.running] || 0) + session.count
-										: (acc.sessionCounts?.[session.state] || 0) + session.count,
-							};
-						});
-					}
-
-					return acc;
+			const stats = {
+				totalDeployments,
+				sessionCounts: {
+					running: sessionStats[SessionStateType.running]?.count || 0,
+					stopped: sessionStats[SessionStateType.stopped]?.count || 0,
+					completed: sessionStats[SessionStateType.completed]?.count || 0,
+					error: sessionStats[SessionStateType.error]?.count || 0,
 				},
-				{ totalDeployments: 0, sessionCounts: {} }
-			);
-
+			};
 			projectsStats[project.id] = {
 				id: project.id,
 				name: project.name,
-				totalDeployments: stats?.totalDeployments || 0,
-				running: stats?.sessionCounts?.[SessionStateType.running] || 0,
-				stopped: stats?.sessionCounts?.[SessionStateType.stopped] || 0,
-				completed: stats?.sessionCounts?.[SessionStateType.completed] || 0,
-				error: stats?.sessionCounts?.[SessionStateType.error] || 0,
+				totalDeployments: stats.totalDeployments,
+				...stats.sessionCounts,
 				status: projectStatus,
 				lastDeployed,
 			};
@@ -98,12 +86,8 @@ export const DashboardProjectsTable = () => {
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
 			"inline-block border-0 px-1 text-sm font-medium min-w-10 max-w-12 py-2 truncate sm:max-w-12 2xl:max-w-18 3xl:max-w-24",
-			{
-				"text-blue-500": state === SessionStateType.running,
-				"text-yellow-500": state === SessionStateType.stopped,
-				"text-green-800": state === SessionStateType.completed,
-				"text-red": state === SessionStateType.error,
-			},
+			"hover:bg-gray-1100 rounded-3xl inline-flex justify-center items-center min-w-12 h-7",
+			getSessionStateColor(state),
 			className
 		);
 
@@ -114,6 +98,17 @@ export const DashboardProjectsTable = () => {
 	const displayDeleteModal = (id: string) => {
 		setSelectedProjectForDeletion(id);
 		openModal(ModalName.deleteProject);
+	};
+
+	const handleOpenProjectFilteredSessions = (
+		event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
+		id: string,
+		sessionState: keyof typeof SessionStateType
+	) => {
+		event.stopPropagation();
+		navigate(`/${SidebarHrefMenu.projects}/${id}/sessions`, {
+			state: { sessionState },
+		});
 	};
 
 	return isLoading ? (
@@ -196,7 +191,7 @@ export const DashboardProjectsTable = () => {
 								stopped,
 								totalDeployments,
 							}) => (
-								<Tr className="cursor-pointer pl-4" key={id}>
+								<Tr className="cursor-pointer pl-4 hover:bg-black" key={id}>
 									<Td
 										className="w-2/3 pr-4 hover:font-bold sm:w-1/5"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
@@ -215,7 +210,7 @@ export const DashboardProjectsTable = () => {
 									<Td
 										className="hidden w-1/6 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-										title={`${totalDeployments} ${t("table.columns.deployments")}`}
+										title={`${totalDeployments} ${t("table.columns.totalDeployments")}`}
 									>
 										<div className="w-full pr-6 text-center">{totalDeployments}</div>
 									</Td>
@@ -226,6 +221,14 @@ export const DashboardProjectsTable = () => {
 										<div
 											aria-label={t("table.sessionTypes.running")}
 											className={countStyle(SessionStateType.running)}
+											onClick={(event) =>
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.running)
+											}
+											onKeyDown={(event) => {
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.running);
+											}}
+											role="button"
+											tabIndex={0}
 											title={`${running} ${t("table.sessionTypes.running")}`}
 										>
 											{running}
@@ -233,6 +236,14 @@ export const DashboardProjectsTable = () => {
 										<div
 											aria-label={t("table.sessionTypes.stopped")}
 											className={countStyle(SessionStateType.stopped, "justify-center")}
+											onClick={(event) =>
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.stopped)
+											}
+											onKeyDown={(event) =>
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.stopped)
+											}
+											role="button"
+											tabIndex={0}
 											title={`${stopped} ${t("table.sessionTypes.stopped")}`}
 										>
 											{stopped}
@@ -240,6 +251,22 @@ export const DashboardProjectsTable = () => {
 										<div
 											aria-label={t("table.sessionTypes.completed")}
 											className={countStyle(SessionStateType.completed)}
+											onClick={(event) => {
+												handleOpenProjectFilteredSessions(
+													event,
+													id,
+													SessionStateType.completed
+												);
+											}}
+											onKeyDown={(event) => {
+												handleOpenProjectFilteredSessions(
+													event,
+													id,
+													SessionStateType.completed
+												);
+											}}
+											role="button"
+											tabIndex={0}
 											title={`${completed} ${t("table.sessionTypes.completed")}`}
 										>
 											{completed}
@@ -247,6 +274,14 @@ export const DashboardProjectsTable = () => {
 										<div
 											aria-label={t("table.sessionTypes.error")}
 											className={countStyle(SessionStateType.error)}
+											onClick={(event) => {
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.error);
+											}}
+											onKeyDown={(event) => {
+												handleOpenProjectFilteredSessions(event, id, SessionStateType.error);
+											}}
+											role="button"
+											tabIndex={0}
 											title={`${error} ${t("table.sessionTypes.error")}`}
 										>
 											{error}
