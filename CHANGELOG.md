@@ -1,3 +1,10 @@
+# [2.124.0](https://github.com/autokitteh/web-platform/compare/v2.123.0...v2.124.0) (2025-01-08)
+
+
+### Features
+
+* **UI-1019:** events drawer in project, connections, triggers ([#711](https://github.com/autokitteh/web-platform/issues/711)) ([83605e5](https://github.com/autokitteh/web-platform/commit/83605e53cd55bac87cde3be44bdae1ffa2d673ac))
+
 # [2.123.0](https://github.com/autokitteh/web-platform/compare/v2.122.0...v2.123.0) (2025-01-08)
 
 
