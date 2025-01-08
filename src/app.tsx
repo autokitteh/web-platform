@@ -245,8 +245,8 @@ export const App = () => {
 
 			<Route element={<SettingsLayout />} path="organization-settings">
 				<Route element={<OrganizationSettings />} index />
-				<Route element={<OrganizationMembersTable />} path="members" />
 				<Route element={<AddOrganization />} path="add" />
+				<Route element={<OrganizationMembersTable />} path="members" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
