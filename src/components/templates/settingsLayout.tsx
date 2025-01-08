@@ -41,7 +41,7 @@ export const SettingsLayout = () => {
 						<div className="flex flex-1 flex-col">
 							<TitleTopbar title={topbarTitle} />
 
-							<div className="relative flex size-full overflow-hidden py-2">
+							<div className="relative flex size-full overflow-hidden pt-2">
 								<SettingsMenu menu={menuItems} />
 
 								<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl border-l bg-gray-1100 pl-9 pt-6">
