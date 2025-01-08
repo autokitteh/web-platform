@@ -47,13 +47,20 @@ export const AddOrganization = () => {
 
 	const onSubmit = async (values: FormValues) => {
 		setCreatingOrganization(true);
+<<<<<<< HEAD
 		const error = await createOrganization(values.name);
+=======
+		const error = await OrganizationsService.create(values.name);
+>>>>>>> bedaaf92 (feat(UI-1167): organizations fetching and management)
 		if (error) {
 			addToast({
 				message: tErrors("errorCreateNewOrganization"),
 				type: "error",
 			});
+<<<<<<< HEAD
 			setCreatingOrganization(false);
+=======
+>>>>>>> bedaaf92 (feat(UI-1167): organizations fetching and management)
 
 			return;
 		}
@@ -72,10 +79,14 @@ export const AddOrganization = () => {
 						isError={!!errors.name}
 						isRequired
 						label={t("form.organizationName")}
+<<<<<<< HEAD
 						{...register("name", {
 							required: t("nameRequired"),
 							validate: validateOrganizationName,
 						})}
+=======
+						{...register("name")}
+>>>>>>> bedaaf92 (feat(UI-1167): organizations fetching and management)
 					/>
 
 					<ErrorMessage>{errors?.name?.message as string}</ErrorMessage>
