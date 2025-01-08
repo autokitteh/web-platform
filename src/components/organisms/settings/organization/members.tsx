@@ -7,14 +7,14 @@ import { useModalStore } from "@src/store";
 
 import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
 import {
-	DeleteUserFromOrganizationModal,
-	OrganizationUserCreateModal,
+	DeleteMemberFromOrganizationModal,
+	OrganizationMemberCreateModal,
 } from "@components/organisms/settings/organization";
 
 import { RotateRightIcon, TrashIcon } from "@assets/image/icons";
 
-export const OrganizationUsersTable = () => {
-	const { t } = useTranslation("settings", { keyPrefix: "organization.users" });
+export const OrganizationMembersTable = () => {
+	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { openModal } = useModalStore();
 
 	return (
@@ -24,10 +24,10 @@ export const OrganizationUsersTable = () => {
 			</Typography>
 			<Button
 				className="ml-auto border-black bg-white px-5 text-base font-medium hover:bg-gray-950 hover:text-white"
-				onClick={() => openModal(ModalName.organizationUserCreate)}
+				onClick={() => openModal(ModalName.organizationMemberCreate)}
 				variant="outline"
 			>
-				{t("buttons.addUser")}
+				{t("buttons.addMember")}
 			</Button>
 			<Table className="mt-6">
 				<THead>
@@ -53,7 +53,7 @@ export const OrganizationUsersTable = () => {
 								</IconButton>
 								<IconButton
 									className="mr-1"
-									onClick={() => openModal(ModalName.deleteUserFromOrg)}
+									onClick={() => openModal(ModalName.deleteMemberFromOrg)}
 									title={t("table.actions.delete")}
 								>
 									<TrashIcon className="size-4 stroke-white" />
@@ -63,8 +63,8 @@ export const OrganizationUsersTable = () => {
 					</Tr>
 				</TBody>
 			</Table>
-			<OrganizationUserCreateModal />
-			<DeleteUserFromOrganizationModal />
+			<OrganizationMemberCreateModal />
+			<DeleteMemberFromOrganizationModal />
 		</div>
 	);
 };

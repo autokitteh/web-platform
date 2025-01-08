@@ -64,7 +64,7 @@
 		},
 		"modal": {
 			"organizationCreated": "Organization {{name}} created",
-			"addUser": "Add new user to organization",
+			"addMember": "Add new member to organization",
 			"line1": "The action is irreversible.",
 			"line2": "Warning: you will not be able to recover it.",
 			"deleteOrganization": "Delete {{name}}",
@@ -81,10 +81,10 @@
 				"delete": "Delete"
 			}
 		},
-		"users": {
-			"title": "Users",
+		"members": {
+			"title": "Members",
 			"buttons": {
-				"addUser": "Add User"
+				"addMember": "Add Member"
 			},
 			"table": {
 				"headers": {

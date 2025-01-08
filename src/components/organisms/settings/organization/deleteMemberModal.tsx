@@ -10,16 +10,16 @@ import { useModalStore } from "@store";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteUserFromOrganizationModal = ({ onDelete }: DeleteAccount) => {
-	const { t } = useTranslation("modals", { keyPrefix: "deleteOrgUser" });
+export const DeleteMemberFromOrganizationModal = ({ onDelete }: DeleteAccount) => {
+	const { t } = useTranslation("modals", { keyPrefix: "deleteOrgMember" });
 	const { closeModal } = useModalStore();
 
 	return (
-		<Modal name={ModalName.deleteUserFromOrg}>
+		<Modal name={ModalName.deleteMemberFromOrg}>
 			<div className="mx-6">
-				<h3 className="mb-5 font-averta text-xl font-bold">{t("deleteUser")}</h3>
+				<h3 className="mb-5 font-averta text-xl font-bold">{t("deleteMember")}</h3>
 
-				<p className="font-light">{t("line1", { userName: "xxxx" })}</p>
+				<p className="font-light">{t("line1", { MemberName: "xxxx" })}</p>
 				<p className="mt-1 font-light">{t("line2")}</p>
 			</div>
 
@@ -27,7 +27,7 @@ export const DeleteUserFromOrganizationModal = ({ onDelete }: DeleteAccount) => 
 				<Button
 					ariaLabel={t("cancelButton")}
 					className="w-auto px-4 py-3 font-semibold hover:text-white"
-					onClick={() => closeModal(ModalName.deleteUserFromOrg)}
+					onClick={() => closeModal(ModalName.deleteMemberFromOrg)}
 				>
 					{t("cancelButton")}
 				</Button>
