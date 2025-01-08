@@ -1,8 +1,10 @@
+/* eslint-disable react/jsx-max-depth */
 import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation } from "react-router-dom";
 
+import { SystemLogLayout } from "./systemLogLayout";
 import { userMenuItems, userMenuOrganizationItems } from "@constants";
 
 import { LogoCatLarge, PageTitle } from "@components/atoms";
@@ -35,22 +37,23 @@ export const SettingsLayout = () => {
 			<div className="h-screen w-screen pr-5">
 				<div className="flex size-full">
 					<Sidebar />
+					<SystemLogLayout>
+						<div className="flex flex-1 flex-col">
+							<TitleTopbar title={topbarTitle} />
 
-					<div className="flex flex-1 flex-col">
-						<TitleTopbar title={topbarTitle} />
+							<div className="relative flex size-full overflow-hidden pt-2">
+								<SettingsMenu menu={menuItems} />
 
-						<div className="relative flex size-full overflow-hidden py-2">
-							<SettingsMenu menu={menuItems} />
+								<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl border-l bg-gray-1100 pl-9 pt-6">
+									<Outlet />
 
-							<div className="scrollbar flex h-full flex-5 flex-col overflow-y-auto rounded-r-2xl border-l bg-gray-1100 pl-9 pt-6">
-								<Outlet />
-
-								<div className="absolute !-bottom-5 !-right-5">
-									<LogoCatLarge />
+									<div className="absolute !-bottom-5 !-right-5">
+										<LogoCatLarge />
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</SystemLogLayout>
 				</div>
 			</div>
 		</>
