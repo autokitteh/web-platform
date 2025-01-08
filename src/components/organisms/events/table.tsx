@@ -1,13 +1,10 @@
-import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
+import React, { KeyboardEvent, MouseEvent, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AutoSizer, ListRowProps } from "react-virtualized";
 
-import { TableHeader } from "./table/header";
-import { NoEventsSelected } from "./table/notSelected";
-import { EventRow } from "./table/row";
-import { VirtualizedList } from "./table/virtualizer";
+import { useEventsDrawer } from "@contexts";
 import { useResize, useSort } from "@src/hooks";
 import { useCacheStore } from "@src/store";
 import { BaseEvent, Deployment } from "@src/types/models";
@@ -15,6 +12,11 @@ import { cn } from "@src/utilities";
 
 import { Frame, Loader, ResizeButton, TBody, Table } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
+import { EventViewer } from "@components/organisms/events";
+import { TableHeader } from "@components/organisms/events/table/header";
+import { NoEventsSelected } from "@components/organisms/events/table/notSelected";
+import { EventRow } from "@components/organisms/events/table/row";
+import { VirtualizedList } from "@components/organisms/events/table/virtualizer";
 
 export const EventsTable = () => {
 	const { t } = useTranslation("events");
@@ -25,17 +27,27 @@ export const EventsTable = () => {
 	} = useCacheStore();
 	const resizeId = useId();
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
+	const [isSourceLoad, setIsSourceLoad] = useState(false);
 
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 50, max: 90, min: 10, id: resizeId });
-	const { eventId } = useParams();
 	const { items: sortedEvents, requestSort, sortConfig } = useSort<BaseEvent>(events || []);
+	const { eventId } = useParams();
 	const navigate = useNavigate();
+	const { filterType, isDrawer, projectId, sourceId } = useEventsDrawer();
+
+	const fetchData = useCallback(async () => {
+		setIsSourceLoad(true);
+		await fetchEvents(true, sourceId, projectId);
+		setIsSourceLoad(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isDrawer, sourceId, projectId]);
 
 	useEffect(() => {
 		if (isInitialLoad) {
 			setIsInitialLoad(false);
 		}
-		fetchEvents();
+
+		fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -43,27 +55,41 @@ export const EventsTable = () => {
 	const frameClass = useMemo(() => cn("size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none"), [eventId]);
 
 	const handleSort = useCallback(
-		(key: keyof BaseEvent) => (event: React.MouseEvent | React.KeyboardEvent) => {
-			if (event.type === "click" || (event as React.KeyboardEvent).key === "Enter") {
+		(key: keyof BaseEvent) => (event: MouseEvent | KeyboardEvent) => {
+			if (event.type === "click" || (event as KeyboardEvent).key === "Enter") {
 				requestSort(key);
 			}
 		},
 		[requestSort]
 	);
 
+	const calculateEventAddress = useCallback(
+		(eventId: string) => {
+			if (!isDrawer) {
+				return `/events/${eventId}`;
+			}
+			if (sourceId) {
+				return `/projects/${projectId}/${filterType}/${sourceId}/events/${eventId}`;
+			}
+
+			return `/projects/${projectId}/events/${eventId}`;
+		},
+		[isDrawer, sourceId, projectId, filterType]
+	);
+
 	const rowRenderer = useCallback(
 		({ index, key, style }: ListRowProps) => {
 			const event = sortedEvents[index];
+			const eventAddress = calculateEventAddress(event.eventId);
 
-			return (
-				<EventRow event={event} key={key} onClick={() => navigate(`/events/${event.eventId}`)} style={style} />
-			);
+			return <EventRow event={event} key={key} onClick={() => navigate(eventAddress)} style={style} />;
 		},
-		[sortedEvents, navigate]
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[isDrawer, sourceId, projectId, sortedEvents, navigate]
 	);
 
 	const tableContent = useMemo(() => {
-		if (loadingEvents && isInitialLoad) {
+		if ((loadingEvents && isInitialLoad) || isSourceLoad) {
 			return <Loader isCenter size="xl" />;
 		}
 
@@ -93,10 +119,10 @@ export const EventsTable = () => {
 			</div>
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isInitialLoad, sortedEvents]);
+	}, [isInitialLoad, sortedEvents, isSourceLoad]);
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const handleRefresh = useCallback(() => fetchEvents(true) as Promise<void | Deployment[]>, []);
+	const handleRefresh = useCallback(() => fetchEvents(true, sourceId, projectId) as Promise<void | Deployment[]>, []);
 
 	return (
 		<div className="flex size-full">
@@ -112,7 +138,7 @@ export const EventsTable = () => {
 			<ResizeButton className="hover:bg-white" direction="horizontal" resizeId={resizeId} />
 
 			<div className="flex rounded-2xl bg-black" style={{ width: `${100 - leftSideWidth}%` }}>
-				{eventId ? <Outlet /> : <NoEventsSelected />}
+				{eventId ? <EventViewer /> : <NoEventsSelected />}
 			</div>
 		</div>
 	);

@@ -19,7 +19,8 @@ import { NewProjectModal, UserFeedbackForm } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
 import { IconLogo, IconLogoName } from "@assets/image";
-import { AnnouncementIcon, CircleQuestionIcon, EventListIcon, FileIcon, LogoutIcon } from "@assets/image/icons/sidebar";
+import { EventsFlag } from "@assets/image/icons";
+import { AnnouncementIcon, CircleQuestionIcon, FileIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -100,7 +101,7 @@ export const Sidebar = () => {
 							title={t("events")}
 						>
 							<div className="flex size-10 items-center justify-center">
-								<IconSvg className="size-5 transition" src={EventListIcon} />
+								<IconSvg className="size-5 transition" src={EventsFlag} />
 							</div>
 
 							<AnimatePresence>

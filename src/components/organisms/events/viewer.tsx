@@ -6,6 +6,7 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { useEventsDrawer } from "@contexts";
 import { EventsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { useToastStore } from "@src/store";
@@ -19,11 +20,24 @@ import { Close } from "@assets/image/icons";
 export const EventViewer = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [eventInfo, setEventInfo] = useState<EnrichedEvent | null>(null);
+	const { isDrawer } = useEventsDrawer();
 
 	const { eventId } = useParams();
 	const navigate = useNavigate();
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const closeViewer = useCallback(() => navigate(`/events`), []);
+
+	const closeViewer = useCallback(() => {
+		if (!isDrawer) {
+			navigate("/events");
+
+			return;
+		}
+
+		const parts = location.pathname.split("/");
+		parts.pop();
+		const newPath = parts.join("/");
+		navigate(newPath);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.pathname]);
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("events", { keyPrefix: "viewer" });
 	const { t: tErrors } = useTranslation("errors");

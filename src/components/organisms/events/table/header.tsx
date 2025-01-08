@@ -2,7 +2,9 @@ import React, { memo } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { useEventsDrawer } from "@contexts";
 import { SortableHeaderProps, TableHeaderProps } from "@src/types/components";
+import { cn } from "@src/utilities";
 
 import { THead, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
@@ -27,12 +29,15 @@ export const SortableHeader = memo(({ columnKey, columnLabel, onSort, sortConfig
 SortableHeader.displayName = "SortableHeader";
 
 export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
+	const { isDrawer } = useEventsDrawer();
 	const { t } = useTranslation("events", { keyPrefix: "table.columns" });
+	const firstColumnClass = cn("mr-2 w-1/5 min-w-36 pl-4", { "w-1/2": isDrawer });
+	const lastColumnClass = cn("mr-2 w-2/5 min-w-40", { "w-1/2": isDrawer });
 
 	return (
 		<THead>
 			<Tr>
-				<Th className="mr-2 w-1/5 min-w-36 pl-4">
+				<Th className={firstColumnClass}>
 					<SortableHeader
 						columnKey="createdAt"
 						columnLabel={t("createdAt")}
@@ -40,23 +45,27 @@ export const TableHeader = memo(({ onSort, sortConfig }: TableHeaderProps) => {
 						sortConfig={sortConfig}
 					/>
 				</Th>
-				<Th className="mr-2 w-1/5 min-w-32">
-					<SortableHeader
-						columnKey="eventId"
-						columnLabel={t("eventId")}
-						onSort={onSort}
-						sortConfig={sortConfig}
-					/>
-				</Th>
-				<Th className="mr-2 w-1/5 min-w-32">
-					<SortableHeader
-						columnKey="destinationId"
-						columnLabel={t("sourceId")}
-						onSort={onSort}
-						sortConfig={sortConfig}
-					/>
-				</Th>
-				<Th className="mr-2 w-2/5 min-w-40">
+				{isDrawer ? null : (
+					<>
+						<Th className="mr-2 w-1/5 min-w-32">
+							<SortableHeader
+								columnKey="eventId"
+								columnLabel={t("eventId")}
+								onSort={onSort}
+								sortConfig={sortConfig}
+							/>
+						</Th>
+						<Th className="mr-2 w-1/5 min-w-32">
+							<SortableHeader
+								columnKey="destinationId"
+								columnLabel={t("sourceId")}
+								onSort={onSort}
+								sortConfig={sortConfig}
+							/>
+						</Th>
+					</>
+				)}
+				<Th className={lastColumnClass}>
 					<SortableHeader
 						columnKey="eventType"
 						columnLabel={t("type")}
