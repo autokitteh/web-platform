@@ -86,6 +86,7 @@
 	},
 	"convertWrappedJsonError": "Error parsing JSON for key '{{key}}': {{error}} in parseNestedJson function",
 	"accountFetchErrorExtended": "Error occurred during the account fetch, error: {{error}}",
+	"usersFetchErrorExtended": "Error occurred during the user fetch, error: {{error}}",
 	"tokenCreationErrorExtended": "Error occurred during the token creation, error: {{error}}",
 	"tokenCreationError": "Error occurred during the token creation",
 	"deploymentCreatedSuccessfully": "Deployment created with id: {{deploymentId}}",

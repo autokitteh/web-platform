@@ -22,7 +22,7 @@ export class UsersService {
 
 			return { data: convertedUser, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("accountFetchErrorExtended", {
+			const errorMessage = i18n.t("usersFetchErrorExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});
