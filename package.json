@@ -11,7 +11,7 @@
 		"fetch-templates": "node scripts/fetchTemplates",
 		"generate-interfaces-manifest": "node scripts/generateInterfacesManifest",
 		"prettier:ci": "prettier . --check",
-		"dev": "npm run validate-env && vite",
+		"dev": "vite",
 		"fix-format:staged": "prettier . --write",
 		"generate-project-files-index": "node generateProjectFilesIndex.js && eslint --fix src/assets/templates/index.ts",
 		"lint": "eslint . --ext ts,tsx,json --report-unused-disable-directives --max-warnings=0",
@@ -26,8 +26,7 @@
 		"test:e2e:report": "npx playwright show-report",
 		"test:e2e:ui": "npx playwright test --ui",
 		"tsc": "tsc",
-		"type-check": "tsc --pretty --noEmit",
-		"validate-env": "node ./validateEnv"
+		"type-check": "tsc --pretty --noEmit"
 	},
 	"dependencies": {
 		"@bufbuild/protobuf": "^1.10.0",

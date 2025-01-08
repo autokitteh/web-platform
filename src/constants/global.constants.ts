@@ -5,7 +5,6 @@ import packageJson from "../../package.json";
 
 export const isDevelopment = import.meta.env.VITE_NODE_ENV === "development";
 export const isProduction = import.meta.env.VITE_NODE_ENV === "production";
-export const isAuthEnabled: boolean = import.meta.env.VITE_AUTH_ENABLED === "true";
 export const descopeProjectId: string = import.meta.env.VITE_DESCOPE_PROJECT_ID;
 export const googleAnalyticsId: string = import.meta.env.GOOGLE_ANALYTICS_ID;
 export const playwrightTestsAuthBearer: string = import.meta.env.TESTS_JWT_AUTH_TOKEN;
@@ -24,7 +23,6 @@ export const templatesUpdateCheckInterval = 24 * 60 * 60 * 1000; // 24 hours
 
 export const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
 export const timeFormat = "HH:mm:ss";
-
 export const supportedProgrammingLanguages = [".py", ".star"];
 export const allowedManualRunExtensions = ["python", "starlark"];
 export const AKRoutes = isProduction ? Sentry.withSentryReactRouterV7Routing(Routes) : Routes;

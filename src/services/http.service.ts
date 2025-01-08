@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import psl from "psl";
 
-import { apiRequestTimeout, isLoggedInCookie } from "@constants";
+import { apiRequestTimeout, descopeProjectId, isLoggedInCookie } from "@constants";
 import { LocalStorageKeys } from "@src/enums";
 import { getApiBaseUrl, getCookieDomain, getLocalStorageValue } from "@src/utilities";
 
@@ -25,7 +25,7 @@ const createAxiosInstance = (baseAddress: string, withCredentials = false) => {
 };
 
 // Axios instance for API requests
-const httpClient = createAxiosInstance(apiBaseUrl, import.meta.env.VITE_AUTH_ENABLED === "true");
+const httpClient = createAxiosInstance(apiBaseUrl, !!descopeProjectId);
 
 httpClient.interceptors.response.use(
 	function (response: AxiosResponse) {
