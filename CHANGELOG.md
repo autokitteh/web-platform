@@ -1,3 +1,10 @@
+# [2.126.0](https://github.com/autokitteh/web-platform/compare/v2.125.0...v2.126.0) (2025-01-09)
+
+
+### Features
+
+* **UI-1158:** list members for organization ([#872](https://github.com/autokitteh/web-platform/issues/872)) ([0225135](https://github.com/autokitteh/web-platform/commit/0225135c65e5bb232b07f2ee1dd4976897451306))
+
 # [2.125.0](https://github.com/autokitteh/web-platform/compare/v2.124.3...v2.125.0) (2025-01-09)
 
 
