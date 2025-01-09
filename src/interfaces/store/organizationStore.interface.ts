@@ -6,8 +6,5 @@ export interface OrganizationStore {
 	organizationsList?: Organization[];
 	currentOrganizationId?: string;
 	isLoadingOrganizations: boolean;
-<<<<<<< HEAD
 	getOrganizationsList: () => ServiceResponseError;
-=======
->>>>>>> 5fce57d1 (feat(UI-1158): orgs missing functionality)
 }
