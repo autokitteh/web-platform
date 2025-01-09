@@ -1,3 +1,10 @@
+# [2.125.0](https://github.com/autokitteh/web-platform/compare/v2.124.3...v2.125.0) (2025-01-09)
+
+
+### Features
+
+* **UI-1167:** organizations fetching and management ([#870](https://github.com/autokitteh/web-platform/issues/870)) ([42808fa](https://github.com/autokitteh/web-platform/commit/42808fae664a248d07a7891b4377ab71c62b0779))
+
 ## [2.124.3](https://github.com/autokitteh/web-platform/compare/v2.124.2...v2.124.3) (2025-01-08)
 
 
