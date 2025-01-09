@@ -34,6 +34,9 @@ import { Connections, Dashboard, Internal404, Intro, Project, Triggers, Variable
 import { AppLayout, EventsLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
+// eslint-disable-next-line import/order
+import { ProtectedRoute } from "./components/organisms/protectedRoute";
+
 export const App = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const location = useLocation();
@@ -236,16 +239,31 @@ export const App = () => {
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 
-			<Route element={<SettingsLayout />} path="settings">
+			<Route
+				element={
+					<ProtectedRoute>
+						<SettingsLayout />
+					</ProtectedRoute>
+				}
+				path="settings"
+			>
 				<Route element={<Profile />} index />
 				<Route element={<ClientConfiguration />} path="client-configuration" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 
-			<Route element={<SettingsLayout />} path="organization-settings">
+			<Route
+				element={
+					<ProtectedRoute>
+						<SettingsLayout />
+					</ProtectedRoute>
+				}
+				path="organization-settings"
+			>
 				<Route element={<OrganizationSettings />} index />
 				<Route element={<NewOrganization />} path="add" />
+
 				<Route element={<OrganizationMembersTable />} path="members" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
