@@ -12,7 +12,7 @@ import { addOrganizationMemberSchema } from "@validations";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const OrganizationMemberCreateModal = ({ createMember, isCreating }: CreateMemberModalProps) => {
+export const CreateMemberModal = ({ createMember, isCreating }: CreateMemberModalProps) => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.modal" });
 	const { closeModal } = useModalStore();
 

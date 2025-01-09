@@ -6,10 +6,7 @@ import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 
 import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
-import {
-	DeleteMemberFromOrganizationModal,
-	OrganizationMemberCreateModal,
-} from "@components/organisms/settings/organization";
+import { CreateMemberModal, DeleteMemberModal } from "@components/organisms/settings/organization";
 
 import { RotateRightIcon, TrashIcon } from "@assets/image/icons";
 
@@ -87,8 +84,8 @@ export const OrganizationMembersTable = () => {
 					</Tr>
 				</TBody>
 			</Table>
-			<OrganizationMemberCreateModal createMember={createMember} isCreating={isCreating} />
-			<DeleteMemberFromOrganizationModal />
+			<CreateMemberModal createMember={createMember} isCreating={isCreating} />
+			<DeleteMemberModal />
 		</div>
 	);
 };

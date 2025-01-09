@@ -1,7 +1,7 @@
-export { AddOrganization } from "@components/organisms/settings/organization/addOrganization";
-export { DeleteMemberFromOrganizationModal } from "@components/organisms/settings/organization/deleteMemberModal";
-export { DeleteOrganizationModal } from "@components/organisms/settings/organization/deleteOrganizationModal";
-export { OrganizationMembersTable } from "@components/organisms/settings/organization/members";
-export { OrganizationSettings } from "@components/organisms/settings/organization/organization";
-export { OrganizationCreatedModal } from "@components/organisms/settings/organization/organizationCreatedModal";
-export { OrganizationMemberCreateModal } from "@components/organisms/settings/organization/organizationMemberCreateModal";
+export { AddOrganization } from "@components/organisms/settings/organization/add";
+export { DeleteOrganizationModal } from "@components/organisms/settings/organization/deleteModal";
+export { CreateMemberModal } from "@components/organisms/settings/organization/members/createMemberModal";
+export { DeleteMemberModal } from "@components/organisms/settings/organization/members/deleteMemberModal";
+export { OrganizationMembersTable } from "@components/organisms/settings/organization/members/table";
+export { OrganizationPostCreationModal } from "@components/organisms/settings/organization/postCreationModal";
+export { OrganizationSettings } from "@components/organisms/settings/organization/settings";

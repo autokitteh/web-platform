@@ -10,7 +10,7 @@ import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { addOrganizationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Loader, Typography } from "@components/atoms";
-import { OrganizationCreatedModal } from "@components/organisms/settings/organization";
+import { OrganizationPostCreationModal } from "@components/organisms/settings/organization";
 
 type FormValues = z.infer<typeof addOrganizationSchema>;
 
@@ -90,7 +90,7 @@ export const AddOrganization = () => {
 					{t("form.buttons.create")}
 				</Button>
 			</form>
-			<OrganizationCreatedModal />
+			<OrganizationPostCreationModal />
 		</div>
 	);
 };

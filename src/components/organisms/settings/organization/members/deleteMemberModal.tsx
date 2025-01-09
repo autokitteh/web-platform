@@ -10,7 +10,7 @@ import { useModalStore } from "@store";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteMemberFromOrganizationModal = ({ onDelete }: DeleteAccount) => {
+export const DeleteMemberModal = ({ onDelete }: DeleteAccount) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteOrgMember" });
 	const { closeModal } = useModalStore();
 
