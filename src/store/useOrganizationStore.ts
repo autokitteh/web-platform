@@ -48,9 +48,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	getOrganizationsList: async () => {
 		const organizationsList = get().organizationsList;
-		if (!organizationsList?.length) {
-			set((state) => ({ ...state, isLoadingOrganizations: true }));
-		}
+		set((state) => ({ ...state, isLoadingOrganizations: true }));
 
 		const userId = useUserStore.getState().user?.id;
 
