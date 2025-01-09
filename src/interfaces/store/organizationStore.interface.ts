@@ -1,4 +1,4 @@
-import { Organization } from "@type/models";
+import { Organization, OrganizationMember } from "@type/models";
 import { ServiceResponseError } from "@type/services.types";
 
 export interface OrganizationStore {
@@ -6,7 +6,10 @@ export interface OrganizationStore {
 	organizationsList?: Organization[];
 	currentOrganizationId?: string;
 	isLoadingOrganizations: boolean;
+	isLoadingMembers: boolean;
 	getOrganizationsList: () => ServiceResponseError;
 	inviteMember: (organizationId: string, email: string) => ServiceResponseError;
 	setCurrentOrganizationId: (organizationId: string) => void;
+	listMembers: () => ServiceResponseError;
+	membersList?: OrganizationMember[];
 }

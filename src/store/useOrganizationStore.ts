@@ -11,11 +11,13 @@ import { useUserStore } from "@store/useUserStore";
 
 const defaultState: Omit<
 	OrganizationStore,
-	"createOrganization" | "getOrganizationsList" | "inviteMember" | "setCurrentOrganizationId"
+	"createOrganization" | "getOrganizationsList" | "inviteMember" | "setCurrentOrganizationId" | "listMembers"
 > = {
 	organizationsList: undefined,
+	membersList: undefined,
 	currentOrganizationId: undefined,
 	isLoadingOrganizations: false,
+	isLoadingMembers: false,
 };
 
 const store: StateCreator<OrganizationStore> = (set, get) => ({
@@ -93,8 +95,12 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	listMembers: async () => {
+		set((state) => ({ ...state, isLoadingMembers: true }));
+
 		const organizationId = get().currentOrganizationId;
 		if (!organizationId) {
+			set((state) => ({ ...state, isLoadingMembers: true }));
+
 			return new Error(
 				i18n.t("organizationIdNotFound", {
 					ns: "settings.organization.store.errors",
@@ -104,10 +110,11 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const { data: members, error } = await OrganizationsService.listMembers(organizationId);
 
 		if (error) {
+			set((state) => ({ ...state, isLoadingMembers: true }));
+
 			return error;
 		}
-
-		return members;
+		set((state) => ({ ...state, membersList: members, isLoadingMembers: true }));
 	},
 
 	inviteMember: async (organizationId, email) => {
