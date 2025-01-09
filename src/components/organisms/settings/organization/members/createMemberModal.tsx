@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import { addOrganizationMemberSchema } from "@validations";
 import { Button, ErrorMessage, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const CreateMemberModal = ({ createMember, isCreating }: CreateMemberModalProps) => {
+export const CreateMemberModal = ({ createMember, isCreating, membersEmails }: CreateMemberModalProps) => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.modal" });
 	const { closeModal } = useModalStore();
 
@@ -20,10 +20,22 @@ export const CreateMemberModal = ({ createMember, isCreating }: CreateMemberModa
 		formState: { errors },
 		handleSubmit,
 		register,
+		reset,
 	} = useForm<{ email: string }>({
 		resolver: zodResolver(addOrganizationMemberSchema),
 		mode: "onSubmit",
 	});
+
+	const validateMemberEmail = (value: string) => {
+		if (membersEmails.has(value)) {
+			return t("form.errors.memberWithThisEmailExists");
+		}
+	};
+
+	useEffect(() => {
+		reset();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const onSubmit = async (data: { email: string }) => {
 		const { email } = data;
@@ -37,7 +49,7 @@ export const CreateMemberModal = ({ createMember, isCreating }: CreateMemberModa
 				<div className="relative mb-5">
 					<Input
 						variant="light"
-						{...register("email")}
+						{...register("email", { validate: validateMemberEmail })}
 						aria-label={t("form.email")}
 						isError={!!errors.email}
 						isRequired

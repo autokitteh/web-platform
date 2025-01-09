@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -14,8 +14,14 @@ export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { closeModal, openModal } = useModalStore();
 	const [isCreating, setIsCreating] = useState(false);
-	const { currentOrganizationId, inviteMember } = useOrganizationStore();
+	const { currentOrganizationId, inviteMember, listMembers, membersList } = useOrganizationStore();
+	const membersEmails = new Set((membersList || []).map((member) => member.user.email));
 	const addToast = useToastStore((state) => state.addToast);
+
+	useEffect(() => {
+		listMembers();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const createMember = async (email: string) => {
 		setIsCreating(true);
@@ -84,7 +90,7 @@ export const OrganizationMembersTable = () => {
 					</Tr>
 				</TBody>
 			</Table>
-			<CreateMemberModal createMember={createMember} isCreating={isCreating} />
+			<CreateMemberModal createMember={createMember} isCreating={isCreating} membersEmails={membersEmails} />
 			<DeleteMemberModal />
 		</div>
 	);

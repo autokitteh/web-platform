@@ -76,7 +76,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		revokeCookieConsent();
 		Cookies.remove(isLoggedInCookie, { domain: getCookieDomain(rootDomain) });
 		window.localStorage.clear();
-		window.location.reload();
+		window.location.href = "/";
 		setLocalStorageValue(LocalStorageKeys.apiToken, "");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [logout]);

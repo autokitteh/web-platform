@@ -42,4 +42,5 @@ export interface ActiveDeploymentWarningModalProps {
 export interface CreateMemberModalProps {
 	createMember: (email: string) => void;
 	isCreating: boolean;
+	membersEmails: Set<string>;
 }

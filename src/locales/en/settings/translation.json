@@ -69,9 +69,10 @@
 			"line2": "Warning: you will not be able to recover it.",
 			"deleteOrganization": "Delete {{name}}",
 			"form": {
-				"name":"Name",
 				"email":"Email",
-				"role":"Role"
+				"errors":{
+					"memberWithThisEmailExists": "Member with this email already exists"
+				}
 			},
 			"buttons": {
 				"stay": "Stay in the current organization",
@@ -100,8 +101,7 @@
 				}
 			},
 			"errors":{
-				"inviteFailed": "Member creation failed",
-				"inviteFailedExtended": "Member creation failed -  error: {{error}}"
+				"inviteFailed": "Member creation failed"
 			},
 			"form":{
 				"memberInvited": "Member {{email}} invited"

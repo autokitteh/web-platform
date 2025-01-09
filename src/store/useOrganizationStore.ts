@@ -124,7 +124,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return error;
 		}
 
-		return undefined;
+		await get().listMembers();
 	},
 });
 
