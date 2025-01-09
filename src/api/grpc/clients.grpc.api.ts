@@ -11,6 +11,7 @@ import { OrgsService } from "@ak-proto-ts/orgs/v1/svc_connect";
 import { ProjectsService } from "@ak-proto-ts/projects/v1/svc_connect";
 import { SessionsService } from "@ak-proto-ts/sessions/v1/svc_connect";
 import { TriggersService } from "@ak-proto-ts/triggers/v1/svc_connect";
+import { UsersService } from "@ak-proto-ts/users/v1/svc_connect";
 import { VarsService } from "@ak-proto-ts/vars/v1/svc_connect";
 import { grpcTransport } from "@api/grpc/transport.grpc.api";
 
@@ -26,3 +27,4 @@ export const connectionsClient = createPromiseClient(ConnectionsService, grpcTra
 export const integrationsClient = createPromiseClient(IntegrationsService, grpcTransport);
 export const buildsClient = createPromiseClient(BuildsService, grpcTransport);
 export const eventsClient = createPromiseClient(EventsService, grpcTransport);
+export const usersClient = createPromiseClient(UsersService, grpcTransport);

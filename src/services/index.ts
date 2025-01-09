@@ -14,3 +14,4 @@ export { SessionsService } from "@services/sessions.service";
 export { TriggersService } from "@services/triggers.service";
 export { VariablesService } from "@services/variables.service";
 export { OrganizationsService } from "@services/organizations.service";
+export { UsersService } from "@services/users.service";

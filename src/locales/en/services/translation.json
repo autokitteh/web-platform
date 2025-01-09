@@ -86,6 +86,7 @@
 	},
 	"convertWrappedJsonError": "Error parsing JSON for key '{{key}}': {{error}} in parseNestedJson function",
 	"accountFetchErrorExtended": "Error occurred during the account fetch, error: {{error}}",
+	"usersFetchErrorExtended": "Error occurred during the user fetch, error: {{error}}",
 	"tokenCreationErrorExtended": "Error occurred during the token creation, error: {{error}}",
 	"tokenCreationError": "Error occurred during the token creation",
 	"deploymentCreatedSuccessfully": "Deployment created with id: {{deploymentId}}",
@@ -94,5 +95,8 @@
 	"errorFetchingIntegrationsForConnectionsExtended": "Error fetching integrations for connections, connection ID: {{connectionId}}, error: {{error}}",
 	"organizationNotCreatedExtended": "Failed to create organization {{name}}. Error: {{error}}",
 	"someOrganizationRetrievalFailed": "Some organization retrievals failed for user",
-	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}"
+	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}",
+	"errorConvertingMember": "Error converting member",
+	"errorConvertingMemberExtended": "Error converting member, member ID: {{memberId}}, error: {{error}}",
+	"errorConvertingMembers": "Error converting members"
 }
