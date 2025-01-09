@@ -56,6 +56,10 @@
 			"placeholder": {
 				"notificationEmail": "Notification email",
 				"frequency": "Frequency"
+			},
+			"errors":{
+				"nameTaken": "Organization name is already exist",
+				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore"
 			}
 		},
 		"modal": {
@@ -70,8 +74,8 @@
 				"role":"Role"
 			},
 			"buttons": {
-				"stayOn": "Stay on",
-				"open": "Open",
+				"stay": "Stay in the current organization",
+				"open": "Open {{name}}",
 				"create": "Create",
 				"cancel": "Cancel",
 				"delete": "Delete"
@@ -95,6 +99,13 @@
 					"delete": "Delete"
 				}
 			}
+		},
+		"store": {
+			"errors": {
+				"createFailed": "Store creation failed -  error: {{error}}",
+				"userNotFound": "User not found"
+			}
 		}
+
 	}
 }
