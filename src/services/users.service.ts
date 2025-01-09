@@ -28,7 +28,7 @@ export class UsersService {
 				ns: "services",
 				error: new Error(error).message,
 			});
-			LoggerService.error(namespaces.authService, errorMessage);
+			LoggerService.error(namespaces.usersService, errorMessage);
 
 			return { data: undefined, error };
 		}
@@ -52,7 +52,7 @@ export class UsersService {
 				ns: "services",
 				error: new Error(error).message,
 			});
-			LoggerService.error(namespaces.authService, errorMessage);
+			LoggerService.error(namespaces.usersService, errorMessage);
 
 			return { data: undefined, error };
 		}

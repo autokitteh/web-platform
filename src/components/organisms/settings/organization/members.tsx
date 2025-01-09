@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -16,7 +16,7 @@ import { RotateRightIcon, TrashIcon } from "@assets/image/icons";
 export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { closeModal, openModal } = useModalStore();
-	const [isCreating, setIsCreating] = React.useState(false);
+	const [isCreating, setIsCreating] = useState(false);
 	const { currentOrganizationId, inviteMember } = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -27,14 +27,12 @@ export const OrganizationMembersTable = () => {
 		closeModal(ModalName.organizationMemberCreate);
 
 		if (error) {
-			if (error) {
-				addToast({
-					message: t("errors.inviteFailed"),
-					type: "error",
-				});
+			addToast({
+				message: t("errors.inviteFailed"),
+				type: "error",
+			});
 
-				return;
-			}
+			return;
 		}
 
 		addToast({
