@@ -3,6 +3,7 @@ import { DeploymentStateVariant } from "@src/enums";
 export type Project = {
 	id: string;
 	name: string;
+	organizationId?: string;
 };
 export type DashboardProjectWithStats = {
 	completed: number;

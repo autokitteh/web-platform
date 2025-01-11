@@ -36,9 +36,11 @@ export class ProjectsService {
 		}
 	}
 
-	static async create(name?: string): Promise<ServiceResponse<string>> {
+	static async create(project: Project): Promise<ServiceResponse<string>> {
 		try {
-			const { projectId } = await projectsClient.create({ project: { name } });
+			const { projectId } = await projectsClient.create({
+				project: { name: project.name, orgId: project.organizationId },
+			});
 			if (!projectId) {
 				LoggerService.error(namespaces.projectService, i18n.t("projectNotCreated", { ns: "services" }));
 
@@ -106,9 +108,11 @@ export class ProjectsService {
 		}
 	}
 
-	static async list(): Promise<ServiceResponse<Project[]>> {
+	static async list(organizationId?: string): Promise<ServiceResponse<Project[]>> {
 		try {
-			const projects = (await projectsClient.list({})).projects.map(convertProjectProtoToModel);
+			const projects = (await projectsClient.list({ orgId: organizationId })).projects.map(
+				convertProjectProtoToModel
+			);
 
 			return { data: projects, error: undefined };
 		} catch (error) {
@@ -181,9 +185,13 @@ export class ProjectsService {
 		}
 	}
 
-	static async createFromManifest(manifestYaml: string): Promise<ServiceResponse<string>> {
+	static async createFromManifest(manifestYaml: string, organizationId?: string): Promise<ServiceResponse<string>> {
 		try {
-			const { projectIds } = await manifestApplyClient.apply({ manifest: manifestYaml, path: "path" });
+			const { projectIds } = await manifestApplyClient.apply({
+				manifest: manifestYaml,
+				path: "path",
+				orgId: organizationId,
+			});
 			if (!projectIds || !projectIds.length) {
 				return { data: undefined, error: new Error(i18n.t("projectNameExist", { ns: "services" })) };
 			}

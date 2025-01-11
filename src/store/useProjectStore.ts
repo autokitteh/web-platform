@@ -11,6 +11,7 @@ import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
 import { defaultProjectDirectory, defaultProjectFile } from "@src/constants";
 import { fetchFileContent } from "@src/utilities";
+import { useOrganizationStore } from "@store/useOrganizationStore";
 
 const defaultState: Omit<
 	ProjectStore,
@@ -83,7 +84,9 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	createProject: async (name: string, isDefault?: boolean) => {
-		const { data: projectId, error } = await ProjectsService.create(name);
+		const organizationId = useOrganizationStore.getState().currentOrganizationId;
+
+		const { data: projectId, error } = await ProjectsService.create({ id: "", name, organizationId });
 
 		if (error) {
 			return { data: undefined, error };
@@ -147,7 +150,9 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	createProjectFromManifest: async (projectManifest: string) => {
-		const { data: newProjectId, error } = await ProjectsService.createFromManifest(projectManifest);
+		const organizationId = useOrganizationStore.getState().currentOrganizationId;
+
+		const { data: newProjectId, error } = await ProjectsService.createFromManifest(projectManifest, organizationId);
 
 		if (error) {
 			return { data: undefined, error };
@@ -236,8 +241,9 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (!projectsList.length) {
 			set((state) => ({ ...state, isLoadingProjectsList: true }));
 		}
+		const organizationId = useOrganizationStore.getState().currentOrganizationId;
 
-		const { data: projects, error } = await ProjectsService.list();
+		const { data: projects, error } = await ProjectsService.list(organizationId);
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingProjectsList: false, projectsList: [] }));
