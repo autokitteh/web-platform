@@ -60,7 +60,7 @@ export const DashboardTopbar = () => {
 					<input
 						accept=".zip"
 						className="hidden"
-						onChange={handleImportFile}
+						onChange={(event) => handleImportFile(event.target.files![0], "")}
 						ref={fileInputRef}
 						type="file"
 					/>

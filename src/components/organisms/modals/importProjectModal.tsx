@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { useProjectActions } from "@src/hooks";
@@ -15,7 +16,9 @@ export const ImportProjectModal = () => {
 	const { closeModal } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
-	const { completeImportWithNewName, isCreatingNewProject } = useProjectActions();
+	const { handleImportFile, isCreatingNewProject, pendingFile } = useProjectActions();
+	const navigate = useNavigate();
+	if (!pendingFile) navigate("/");
 
 	const {
 		formState: { errors },
@@ -41,7 +44,7 @@ export const ImportProjectModal = () => {
 	const onSubmit = async (data: { projectName: string }) => {
 		const { projectName } = data;
 
-		await completeImportWithNewName(projectName);
+		await handleImportFile(pendingFile!, projectName);
 		setValue("projectName", "");
 	};
 
