@@ -13,12 +13,12 @@ import { Modal } from "@components/molecules";
 
 export const ImportProjectModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "newProject" });
-	const { closeModal } = useModalStore();
+	const { closeModal, modals: modalState } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 	const { handleImportFile, isCreatingNewProject, pendingFile } = useProjectActions();
 	const navigate = useNavigate();
-	if (!pendingFile) navigate("/");
+	if (!pendingFile && modalState[ModalName.importProject]) navigate("/");
 
 	const {
 		formState: { errors },

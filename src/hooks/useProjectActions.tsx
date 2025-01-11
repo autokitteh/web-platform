@@ -163,7 +163,7 @@ export const useProjectActions = () => {
 				manifest.project.name = projectName;
 			}
 
-			if (manifest.project && projectNamesSet.has(manifest.project.name)) {
+			if (projectNamesSet.has(manifest?.project?.name || "")) {
 				setPendingFile(file);
 
 				if (!modalsState[ModalName.importProject]) openModal(ModalName.importProject);
