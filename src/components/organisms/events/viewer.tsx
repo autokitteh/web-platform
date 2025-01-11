@@ -4,40 +4,22 @@ import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { useEventsDrawer } from "@contexts";
 import { EventsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { useToastStore } from "@src/store";
 import { EnrichedEvent } from "@src/types/models";
 
-import { Frame, IconButton, Loader, Typography } from "@components/atoms";
+import { Frame, Loader, Typography } from "@components/atoms";
 import { CopyButton } from "@components/molecules";
-
-import { Close } from "@assets/image/icons";
 
 export const EventViewer = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [eventInfo, setEventInfo] = useState<EnrichedEvent | null>(null);
-	const { isDrawer } = useEventsDrawer();
 
 	const { eventId } = useParams();
-	const navigate = useNavigate();
 
-	const closeViewer = useCallback(() => {
-		if (!isDrawer) {
-			navigate("/events");
-
-			return;
-		}
-
-		const parts = location.pathname.split("/");
-		parts.pop();
-		const newPath = parts.join("/");
-		navigate(newPath);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [location.pathname]);
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("events", { keyPrefix: "viewer" });
 	const { t: tErrors } = useTranslation("errors");
@@ -73,11 +55,6 @@ export const EventViewer = () => {
 		<Loader size="xl" />
 	) : (
 		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
-			<div className="flex items-center justify-between border-b border-gray-950 pb-3.5">
-				<IconButton className="ml-auto size-7 bg-gray-1100 p-0.5" onClick={closeViewer}>
-					<Close className="size-3 fill-white" />
-				</IconButton>
-			</div>
 			{eventInfo ? (
 				<div className="mt-3 flex justify-between border-b border-gray-950 pb-3.5">
 					<div className="flex flex-col gap-0.5 leading-6">

@@ -21,16 +21,14 @@ import { SessionState } from "@src/enums";
 import { ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 
-import { Frame, IconButton, IconSvg, Loader, LogoCatLarge, Tab } from "@components/atoms";
+import { Frame, IconSvg, Loader, LogoCatLarge, Tab } from "@components/atoms";
 import { Accordion, CopyButton, RefreshButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
-import { ArrowRightIcon, CircleMinusIcon, CirclePlusIcon, Close } from "@assets/image/icons";
+import { ArrowRightIcon, CircleMinusIcon, CirclePlusIcon } from "@assets/image/icons";
 
 export const SessionViewer = () => {
-	const { deploymentId, projectId, sessionId } = useParams<{
-		deploymentId: string;
-		projectId: string;
+	const { sessionId } = useParams<{
 		sessionId: string;
 	}>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
@@ -46,15 +44,6 @@ export const SessionViewer = () => {
 
 	const { loading: loadingOutputs, reload: reloadOutputs } = useOutputsCacheStore();
 	const { loading: loadingActivities, reload: reloadActivities } = useActivitiesCacheStore();
-
-	const closeEditor = useCallback(() => {
-		if (deploymentId) {
-			navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
-
-			return;
-		}
-		navigate(`/projects/${projectId}/sessions`);
-	}, [navigate, projectId, deploymentId]);
 
 	const fetchSessionInfo = useCallback(async () => {
 		if (!sessionId) return;
@@ -135,20 +124,7 @@ export const SessionViewer = () => {
 	) : (
 		<Frame className="overflow-y-auto overflow-x-hidden rounded-l-none pb-3 font-fira-code">
 			<div className="flex items-center justify-end border-b border-gray-950 pb-3.5">
-				<div className="flex items-center gap-3">
-					<RefreshButton
-						disabled={!isRefreshButtonDisabled}
-						isLoading={isLoading}
-						onRefresh={fetchSessions}
-					/>
-					<IconButton
-						ariaLabel={t("buttons.ariaCloseEditor")}
-						className="size-7 bg-gray-1100 p-0.5"
-						onClick={closeEditor}
-					>
-						<Close className="size-3 fill-white" />
-					</IconButton>
-				</div>
+				<RefreshButton disabled={!isRefreshButtonDisabled} isLoading={isLoading} onRefresh={fetchSessions} />
 			</div>
 
 			<div className="mt-2.5 flex justify-between">
