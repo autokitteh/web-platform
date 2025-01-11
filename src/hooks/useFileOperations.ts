@@ -48,14 +48,15 @@ export function useFileOperations(projectId: string) {
 	);
 
 	const saveAllFiles = useCallback(
-		async (files: Record<string, Uint8Array>) => {
+		async (files: Record<string, Uint8Array>, newProjectId?: string) => {
+			const affectedProjectId = newProjectId || projectId;
 			const filesArray = Object.entries(files).map(([name, content]) => ({
 				name,
 				content: new TextEncoder().encode(content.toString()),
 			}));
 
-			await dbService.put(projectId, filesArray);
-			await ProjectsService.setResources(projectId, files);
+			await dbService.put(affectedProjectId, filesArray);
+			await ProjectsService.setResources(affectedProjectId, files);
 		},
 		[projectId]
 	);
