@@ -38,12 +38,20 @@ export const EventRow = memo(
 				{isDrawer ? null : (
 					<>
 						<Td className="mr-2 w-1/5 min-w-32" title={eventId}>
-							<IdCopyButton buttonClassName="pl-0" id={eventId} variant={ButtonVariant.flatText} />
+							<IdCopyButton
+								buttonClassName="pl-0"
+								iconClassName="p-0"
+								id={eventId}
+								size="xs"
+								variant={ButtonVariant.flatText}
+							/>
 						</Td>
 						<Td className="mr-2 w-1/5 min-w-32" title={destinationId || ""}>
 							<IdCopyButton
 								buttonClassName="pl-0"
+								iconClassName="p-0"
 								id={destinationId || ""}
+								size="xs"
 								variant={ButtonVariant.flatText}
 							/>
 						</Td>
