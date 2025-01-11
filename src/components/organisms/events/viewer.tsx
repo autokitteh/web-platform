@@ -32,6 +32,7 @@ export const EventViewer = () => {
 
 		if (error) {
 			addToast({ message: tErrors("errorFetchingEvent"), type: "error" });
+			closeViewer();
 
 			return;
 		}

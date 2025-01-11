@@ -51,6 +51,7 @@ export const SessionViewer = () => {
 
 		if (error) {
 			addToast({ message: tErrors("fetchSessionFailed"), type: "error" });
+			closeEditor();
 
 			return;
 		}
