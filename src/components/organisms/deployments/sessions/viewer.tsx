@@ -28,7 +28,9 @@ import { SessionsTableState } from "@components/organisms/deployments";
 import { ArrowRightIcon, CircleMinusIcon, CirclePlusIcon } from "@assets/image/icons";
 
 export const SessionViewer = () => {
-	const { sessionId } = useParams<{
+	const { deploymentId, projectId, sessionId } = useParams<{
+		deploymentId: string;
+		projectId: string;
 		sessionId: string;
 	}>();
 	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
@@ -44,6 +46,15 @@ export const SessionViewer = () => {
 
 	const { loading: loadingOutputs, reload: reloadOutputs } = useOutputsCacheStore();
 	const { loading: loadingActivities, reload: reloadActivities } = useActivitiesCacheStore();
+
+	const closeEditor = useCallback(() => {
+		if (deploymentId) {
+			navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
+
+			return;
+		}
+		navigate(`/projects/${projectId}/sessions`);
+	}, [navigate, projectId, deploymentId]);
 
 	const fetchSessionInfo = useCallback(async () => {
 		if (!sessionId) return;

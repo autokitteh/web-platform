@@ -4,8 +4,9 @@ import JsonView from "@uiw/react-json-view";
 import { githubDarkTheme } from "@uiw/react-json-view/githubDark";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
+import { useEventsDrawer } from "@contexts";
 import { EventsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { useToastStore } from "@src/store";
@@ -23,6 +24,22 @@ export const EventViewer = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const { t } = useTranslation("events", { keyPrefix: "viewer" });
 	const { t: tErrors } = useTranslation("errors");
+	const navigate = useNavigate();
+	const { isDrawer } = useEventsDrawer();
+
+	const closeViewer = useCallback(() => {
+		if (!isDrawer) {
+			navigate("/events");
+
+			return;
+		}
+
+		const parts = location.pathname.split("/");
+		parts.pop();
+		const newPath = parts.join("/");
+		navigate(newPath);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.pathname]);
 
 	const fetchEventInfo = useCallback(async () => {
 		if (!eventId) return;
