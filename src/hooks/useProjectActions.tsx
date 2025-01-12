@@ -31,14 +31,14 @@ export const useProjectActions = () => {
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
-	const { closeModal, openModal } = useModalStore();
+	const { closeModal, modals: modalsState, openModal } = useModalStore();
 
 	const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
 	const [loadingImportFile, setLoadingImportFile] = useState(false);
 	const [isExporting, setIsExporting] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [projectId, setProjectId] = useState<string>();
-	const { saveAllFiles } = useFileOperations(projectId || "");
+	const { saveAllFiles } = useFileOperations("");
 	const [templateFiles, setTemplateFiles] = useState<FileStructure>();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const { resetChecker } = useConnectionCheckerStore();
@@ -74,7 +74,7 @@ export const useProjectActions = () => {
 				return [path, new Uint8Array(new TextEncoder().encode(content))];
 			});
 
-			await saveAllFiles(Object.fromEntries(fileEntries));
+			await saveAllFiles(Object.fromEntries(fileEntries), projectId);
 			addToast({
 				message: t("projectCreatedSuccessfully"),
 				type: "success",
@@ -152,19 +152,21 @@ export const useProjectActions = () => {
 		}
 	};
 
-	const handleImportFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files![0];
-
+	const handleImportFile = async (file: File, projectName: string) => {
 		setLoadingImportFile(true);
 		try {
 			const parsedData = await extractManifestFromFiles(file);
 			if (!parsedData) return;
 
 			const { manifest, structure } = parsedData;
+			if (manifest.project && projectName) {
+				manifest.project.name = projectName;
+			}
 
-			if (manifest.project && projectNamesSet.has(manifest.project.name)) {
+			if (projectNamesSet.has(manifest?.project?.name || "")) {
 				setPendingFile(file);
-				openModal(ModalName.importProject);
+
+				if (!modalsState[ModalName.importProject]) openModal(ModalName.importProject);
 
 				return;
 			}
@@ -173,29 +175,11 @@ export const useProjectActions = () => {
 			if (newProjectId) setProjectId(newProjectId);
 		} finally {
 			setLoadingImportFile(false);
-			if (fileInputRef.current) fileInputRef.current.value = "";
-		}
-	};
-
-	const completeImportWithNewName = async (newName: string) => {
-		if (!pendingFile) return;
-
-		setLoadingImportFile(true);
-		try {
-			const parsedData = await extractManifestFromFiles(pendingFile);
-			if (!parsedData) return;
-
-			const { manifest, structure } = parsedData;
-			if (manifest.project) {
-				manifest.project.name = newName;
+			if (modalsState[ModalName.importProject]) {
+				closeModal(ModalName.importProject);
+				setPendingFile(undefined);
 			}
-
-			const newProjectId = await createProjectWithManifest(manifest, structure);
-			if (newProjectId) setProjectId(newProjectId);
-		} finally {
-			setLoadingImportFile(false);
-			closeModal(ModalName.importProject);
-			setPendingFile(undefined);
+			if (fileInputRef.current) fileInputRef.current.value = "";
 		}
 	};
 
@@ -292,6 +276,6 @@ export const useProjectActions = () => {
 		downloadProjectExport,
 		handleCreateProject,
 		handleImportFile,
-		completeImportWithNewName,
+		pendingFile,
 	};
 };

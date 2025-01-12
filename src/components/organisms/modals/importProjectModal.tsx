@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { useProjectActions } from "@src/hooks";
@@ -12,10 +13,12 @@ import { Modal } from "@components/molecules";
 
 export const ImportProjectModal = () => {
 	const { t } = useTranslation("modals", { keyPrefix: "newProject" });
-	const { closeModal } = useModalStore();
+	const { closeModal, modals: modalState } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
-	const { completeImportWithNewName, isCreatingNewProject } = useProjectActions();
+	const { handleImportFile, isCreatingNewProject, pendingFile } = useProjectActions();
+	const navigate = useNavigate();
+	if (!pendingFile && modalState[ModalName.importProject]) navigate("/");
 
 	const {
 		formState: { errors },
@@ -41,7 +44,7 @@ export const ImportProjectModal = () => {
 	const onSubmit = async (data: { projectName: string }) => {
 		const { projectName } = data;
 
-		await completeImportWithNewName(projectName);
+		await handleImportFile(pendingFile!, projectName);
 		setValue("projectName", "");
 	};
 
