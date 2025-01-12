@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import dotenv from "dotenv";
 import { readFileSync, writeFileSync } from "fs";
 import OpenAI from "openai";

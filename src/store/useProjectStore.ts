@@ -102,7 +102,13 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		}
 
 		if (isDefault) {
-			const defaultResource = await fetchFileContent(`/assets/${defaultProjectDirectory}/${defaultProjectFile}`);
+			const { data: defaultResource, error: fileError } = await fetchFileContent(
+				`/assets/${defaultProjectDirectory}/${defaultProjectFile}`
+			);
+
+			if (fileError) {
+				return { data: undefined, error: fileError.message };
+			}
 
 			const defaultResources = {
 				[defaultProjectFile.toString()]: new TextEncoder().encode(defaultResource || ""),

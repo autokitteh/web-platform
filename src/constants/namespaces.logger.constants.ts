@@ -19,6 +19,7 @@ export const namespaces = {
 	buildRuntimeEntrypoints: "Convert runtime to entrypoints",
 	eventsService: "Events Service",
 	organizationsService: "Organizations Service",
+	templatesUtility: "Templates Utility",
 	ui: {
 		loginPage: "Login Page",
 		connectionsTable: "Connections Table",
@@ -50,6 +51,12 @@ export const namespaces = {
 	},
 	utilities: {
 		fetchAndExtract: "Fetch and Extract",
+		getCookieDomain: "Get Cookie Domain",
+	},
+	authorizationFlow: {
+		grpcTransport: "GRPC Transport",
+		axios: "Axios",
+		logout: "Logout",
 	},
 	models: {
 		activity: "Activity Model",

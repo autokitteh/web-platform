@@ -9,9 +9,8 @@ import {
 } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import Cookies from "js-cookie";
-import psl from "psl";
 
-import { apiRequestTimeout, descopeProjectId, isLoggedInCookie } from "@constants";
+import { apiRequestTimeout, descopeProjectId, isLoggedInCookie, namespaces } from "@constants";
 import { LocalStorageKeys } from "@src/enums";
 import { getApiBaseUrl, getCookieDomain, getLocalStorageValue } from "@src/utilities";
 
@@ -30,13 +29,15 @@ const authInterceptor: Interceptor =
 			return await next(req);
 		} catch (error) {
 			if (error instanceof ConnectError && error.code === Code.Unauthenticated) {
-				const rootDomain = psl.parse(window.location.hostname);
-				if (rootDomain.error) {
-					console.error(rootDomain.error.message);
-
-					throw rootDomain.error.message;
+				const { cookieDomain, error } = getCookieDomain(
+					window.location.hostname,
+					namespaces.authorizationFlow.grpcTransport
+				);
+				if (error) {
+					throw error;
 				}
-				Cookies.remove(isLoggedInCookie, { domain: getCookieDomain(rootDomain) });
+
+				Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
 
 				window.localStorage.clear();
 				window.location.reload();

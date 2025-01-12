@@ -6,7 +6,7 @@ export type WrappedJsonValue = Partial<{
 	float: number;
 	function: {
 		data: Uint8Array;
-		// eslint-disable-next-line @liferay/no-abbreviations
+
 		desc?: any;
 		executorId: string;
 		flags: string[];

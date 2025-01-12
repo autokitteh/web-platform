@@ -2,5 +2,9 @@
     "createProject": "Create New Project From Template",
     "projectAlreadyExist": "Project with this template already exist",
     "start": "Start",
-    "createProjectFromTemplate": "Create Project From Template: {{template}}"
+    "createProjectFromTemplate": "Create Project From Template: {{template}}",
+    "errors":{
+        "errorFetchingFileExtended": "Error fetching file {{fileUrl}}: {{error}}",
+        "errorFetchingFile": "Error fetching file {{fileUrl}}"
+    }
 }

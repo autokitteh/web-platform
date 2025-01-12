@@ -31,6 +31,7 @@ export const Auth0IntegrationEditForm = () => {
 	const clientId = useWatch({ control, name: "client_id" });
 	const auth0Domain = useWatch({ control, name: "auth0_domain" });
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const openOauthPopUp = (_data: FieldValues) => {
 		handleCustomOauth(connectionId!, Integrations.auth0);
 	};

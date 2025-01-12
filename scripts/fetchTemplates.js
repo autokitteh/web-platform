@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { execSync } from "child_process";
 import { copyFileSync, existsSync, rmSync, unlinkSync } from "fs";
 import { join } from "path";
@@ -18,10 +19,9 @@ async function updateKittehubZip() {
 
 		if (existsSync(distZipPath)) {
 			copyFileSync(distZipPath, targetPath);
-			// eslint-disable-next-line no-console
+
 			console.log("Successfully updated kittehub.zip");
 		} else {
-			// eslint-disable-next-line no-console
 			console.log("dist.zip not found in kittehub release branch, keeping current version");
 			if (existsSync(backupPath)) {
 				copyFileSync(backupPath, targetPath);

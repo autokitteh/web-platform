@@ -60,7 +60,7 @@ export interface SessionActivity {
 	endTime?: Date;
 	functionName: string;
 	key: string;
-	kwargs?: Array<{ key: string; value: any }>;
+	kwargs?: { key: string; value: any };
 	returnBytesValue?: string;
 	returnJSONValue?: object;
 	returnStringValue?: string;
