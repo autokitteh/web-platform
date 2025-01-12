@@ -1,3 +1,10 @@
+## [2.126.3](https://github.com/autokitteh/web-platform/compare/v2.126.2...v2.126.3) (2025-01-12)
+
+
+### Bug Fixes
+
+* **UI-1175:** adjust icon size in ProjectTemplatesSection ([#882](https://github.com/autokitteh/web-platform/issues/882)) ([591edba](https://github.com/autokitteh/web-platform/commit/591edbac718ca9d2664107515f7f88585c3b5dd7))
+
 ## [2.126.2](https://github.com/autokitteh/web-platform/compare/v2.126.1...v2.126.2) (2025-01-12)
 
 ## [2.126.1](https://github.com/autokitteh/web-platform/compare/v2.126.0...v2.126.1) (2025-01-12)
