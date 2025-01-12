@@ -1,3 +1,10 @@
+## [2.126.5](https://github.com/autokitteh/web-platform/compare/v2.126.4...v2.126.5) (2025-01-12)
+
+
+### Bug Fixes
+
+* **UI-1173:** close editor/viewer on fetch error in session and event viewers ([#884](https://github.com/autokitteh/web-platform/issues/884)) ([830f6d4](https://github.com/autokitteh/web-platform/commit/830f6d4cefd06c936b1c4bb0608ff7e723cb99f0))
+
 ## [2.126.4](https://github.com/autokitteh/web-platform/compare/v2.126.3...v2.126.4) (2025-01-12)
 
 ## [2.126.3](https://github.com/autokitteh/web-platform/compare/v2.126.2...v2.126.3) (2025-01-12)
