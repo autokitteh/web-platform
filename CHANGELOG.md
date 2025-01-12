@@ -1,3 +1,10 @@
+## [2.126.1](https://github.com/autokitteh/web-platform/compare/v2.126.0...v2.126.1) (2025-01-12)
+
+
+### Bug Fixes
+
+* **UI-1177:** quick start project creation with files ([#878](https://github.com/autokitteh/web-platform/issues/878)) ([ecc44c4](https://github.com/autokitteh/web-platform/commit/ecc44c4d4d02531244e9150fa48206e077184180))
+
 # [2.126.0](https://github.com/autokitteh/web-platform/compare/v2.125.0...v2.126.0) (2025-01-09)
 
 
