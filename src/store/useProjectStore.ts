@@ -11,7 +11,8 @@ import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
 import { defaultProjectDirectory, defaultProjectFile } from "@src/constants";
 import { fetchFileContent } from "@src/utilities";
-import { useOrganizationStore } from "@store/useOrganizationStore";
+
+import { useOrganizationStore } from "@store";
 
 const defaultState: Omit<
 	ProjectStore,
