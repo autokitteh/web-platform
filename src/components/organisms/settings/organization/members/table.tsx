@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
+import { CreateMemberModalRef } from "@src/interfaces/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 
 import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
@@ -18,11 +19,17 @@ export const OrganizationMembersTable = () => {
 	const { currentOrganizationId, inviteMember, listMembers, membersList, removeMember } = useOrganizationStore();
 	const membersEmails = new Set((membersList || []).map((member) => member.user.email));
 	const addToast = useToastStore((state) => state.addToast);
+	const modalRef = useRef<CreateMemberModalRef>(null);
 
 	useEffect(() => {
 		listMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	const openCreateMemberModal = () => {
+		modalRef.current?.resetForm();
+		openModal(ModalName.organizationMemberCreate);
+	};
 
 	const createMember = async (email: string) => {
 		setIsCreating(true);
@@ -73,7 +80,7 @@ export const OrganizationMembersTable = () => {
 			</Typography>
 			<Button
 				className="ml-auto border-black bg-white px-5 text-base font-medium hover:bg-gray-950 hover:text-white"
-				onClick={() => openModal(ModalName.organizationMemberCreate)}
+				onClick={() => openCreateMemberModal()}
 				variant="outline"
 			>
 				{t("buttons.addMember")}
@@ -117,7 +124,12 @@ export const OrganizationMembersTable = () => {
 					</Tr>
 				</TBody>
 			</Table>
-			<CreateMemberModal createMember={createMember} isCreating={isCreating} membersEmails={membersEmails} />
+			<CreateMemberModal
+				createMember={createMember}
+				isCreating={isCreating}
+				membersEmails={membersEmails}
+				ref={modalRef}
+			/>
 			<RemoveMemberModal isRemoving={isRemoving} onRemove={onRemove} />
 		</div>
 	);

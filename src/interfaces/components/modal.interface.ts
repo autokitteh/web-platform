@@ -49,3 +49,7 @@ export interface CreateMemberModalProps {
 	isCreating: boolean;
 	membersEmails: Set<string>;
 }
+
+export interface CreateMemberModalRef {
+	resetForm: () => void;
+}

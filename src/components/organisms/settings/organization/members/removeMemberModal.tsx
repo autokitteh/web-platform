@@ -13,7 +13,7 @@ import { Modal } from "@components/molecules";
 export const RemoveMemberModal = ({ onRemove }: RemoveMemberModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteOrgMember" });
 	const { closeModal } = useModalStore();
-	const { email, userId } = useModalStore((state) => state.data as { email: string; userId: string });
+	const userData = useModalStore((state) => state.data as { email: string; userId: string });
 
 	return (
 		<Modal name={ModalName.deleteMemberFromOrg}>
@@ -36,7 +36,7 @@ export const RemoveMemberModal = ({ onRemove }: RemoveMemberModalProps) => {
 				<Button
 					ariaLabel={t("deleteButton")}
 					className="w-auto px-4 py-3 font-semibold hover:bg-error"
-					onClick={() => onRemove(userId, email)}
+					onClick={() => onRemove(userData?.userId, userData?.email)}
 					variant="filled"
 				>
 					{t("deleteButton")}
