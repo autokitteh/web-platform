@@ -62,7 +62,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, [location]);
 
 	const handleLogout = useCallback(async () => {
-		await logout();
+		logout();
 		const { cookieDomain, error } = getCookieDomain(window.location.hostname, namespaces.authorizationFlow.logout);
 		if (error) {
 			addToast({
