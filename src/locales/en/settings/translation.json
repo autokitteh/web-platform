@@ -98,6 +98,9 @@
 				"actions": {
 					"resendInvite": "Resend invintation",
 					"delete": "Delete"
+				},
+				"messages":{
+					"memberRemoved": "Member {{email}} removed from the organization"
 				}
 			},
 			"errors":{

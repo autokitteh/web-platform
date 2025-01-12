@@ -11,7 +11,12 @@ import { useUserStore } from "@store/useUserStore";
 
 const defaultState: Omit<
 	OrganizationStore,
-	"createOrganization" | "getOrganizationsList" | "inviteMember" | "setCurrentOrganizationId" | "listMembers"
+	| "createOrganization"
+	| "getOrganizationsList"
+	| "inviteMember"
+	| "setCurrentOrganizationId"
+	| "listMembers"
+	| "removeMember"
 > = {
 	organizationsList: undefined,
 	membersList: undefined,
@@ -99,7 +104,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		const organizationId = get().currentOrganizationId;
 		if (!organizationId) {
-			set((state) => ({ ...state, isLoadingMembers: true }));
+			set((state) => ({ ...state, isLoadingMembers: false }));
 
 			return new Error(
 				i18n.t("organizationIdNotFound", {
@@ -110,15 +115,29 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const { data: members, error } = await OrganizationsService.listMembers(organizationId);
 
 		if (error) {
-			set((state) => ({ ...state, isLoadingMembers: true }));
+			set((state) => ({ ...state, isLoadingMembers: false }));
 
 			return error;
 		}
-		set((state) => ({ ...state, membersList: members, isLoadingMembers: true }));
+		set((state) => ({ ...state, membersList: members, isLoadingMembers: false }));
 	},
 
-	inviteMember: async (organizationId, email) => {
-		const { error } = await OrganizationsService.inviteMember(organizationId, email);
+	inviteMember: async (email) => {
+		const organizationId = get().currentOrganizationId;
+
+		const { error } = await OrganizationsService.inviteMember(organizationId!, email);
+
+		if (error) {
+			return error;
+		}
+
+		await get().listMembers();
+	},
+
+	removeMember: async (email) => {
+		const organizationId = get().currentOrganizationId;
+
+		const { error } = await OrganizationsService.inviteMember(organizationId!, email);
 
 		if (error) {
 			return error;

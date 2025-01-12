@@ -26,13 +26,14 @@ export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
 export type { MenuProps, NavigationSettingsItem } from "@interfaces/components/menu.interface";
 export type {
 	CreateProjectModalProps,
-	DeleteAccount,
+	RemoveMemberModalProps,
 	DeleteModalProps,
 	ModalDeleteVariableProps,
 	ModalModifyVariableProps,
 	ModalProps,
 	ActiveDeploymentWarningModalProps,
 	CreateMemberModalProps,
+	DeleteAccountModalProps,
 } from "@interfaces/components/modal.interface";
 export type { NotificationProps } from "@interfaces/components/notification.interface";
 export type { PopoverOptions, PopoverTriggerProps } from "@interfaces/components/popover.interface";

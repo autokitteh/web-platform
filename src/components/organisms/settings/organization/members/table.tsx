@@ -6,7 +6,7 @@ import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 
 import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
-import { CreateMemberModal, DeleteMemberModal } from "@components/organisms/settings/organization";
+import { CreateMemberModal, RemoveMemberModal } from "@components/organisms/settings/organization";
 
 import { RotateRightIcon, TrashIcon } from "@assets/image/icons";
 
@@ -14,7 +14,8 @@ export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { closeModal, openModal } = useModalStore();
 	const [isCreating, setIsCreating] = useState(false);
-	const { currentOrganizationId, inviteMember, listMembers, membersList } = useOrganizationStore();
+	const [isRemoving, setIsRemoving] = useState(false);
+	const { currentOrganizationId, inviteMember, listMembers, membersList, removeMember } = useOrganizationStore();
 	const membersEmails = new Set((membersList || []).map((member) => member.user.email));
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -40,6 +41,27 @@ export const OrganizationMembersTable = () => {
 
 		addToast({
 			message: t("form.memberInvited", { email }),
+			type: "success",
+		});
+	};
+
+	const onRemove = async (userId: string, email: string) => {
+		setIsRemoving(true);
+		const error = await removeMember(currentOrganizationId!, userId);
+		setIsRemoving(false);
+		closeModal(ModalName.organizationMemberCreate);
+
+		if (error) {
+			addToast({
+				message: new Error(error as string).message,
+				type: "error",
+			});
+
+			return;
+		}
+
+		addToast({
+			message: t("table.messages.memberRemoved", { email }),
 			type: "success",
 		});
 	};
@@ -83,7 +105,12 @@ export const OrganizationMembersTable = () => {
 									onClick={() => openModal(ModalName.deleteMemberFromOrg)}
 									title={t("table.actions.delete")}
 								>
-									<TrashIcon className="size-4 stroke-white" />
+									<TrashIcon
+										className="size-4 stroke-white"
+										onClick={() =>
+											openModal(ModalName.deleteMember, { userId: "userId", email: "email" })
+										}
+									/>
 								</IconButton>
 							</div>
 						</Td>
@@ -91,7 +118,7 @@ export const OrganizationMembersTable = () => {
 				</TBody>
 			</Table>
 			<CreateMemberModal createMember={createMember} isCreating={isCreating} membersEmails={membersEmails} />
-			<DeleteMemberModal />
+			<RemoveMemberModal isRemoving={isRemoving} onRemove={onRemove} />
 		</div>
 	);
 };

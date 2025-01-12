@@ -9,6 +9,7 @@ export interface OrganizationStore {
 	isLoadingMembers: boolean;
 	getOrganizationsList: () => ServiceResponseError;
 	inviteMember: (organizationId: string, email: string) => ServiceResponseError;
+	removeMember: (organizationId: string, email: string) => ServiceResponseError;
 	setCurrentOrganizationId: (organizationId: string) => void;
 	listMembers: () => ServiceResponseError;
 	membersList?: OrganizationMember[];
