@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
@@ -20,36 +20,7 @@ export const useCreateProjectFromTemplate = () => {
 	const { findTemplateByAssetDirectory, getTemplateStorage } = useTemplatesStore();
 	const [isCreating, setIsCreating] = useState(false);
 
-	const [projectId, setProjectId] = useState<string | null>(null);
-	const [templateFiles, setTemplateFiles] = useState<Record<string, string>>();
-
-	const { saveAllFiles } = useFileOperations(projectId || "");
-
-	useEffect(() => {
-		const getAndSaveFiles = async () => {
-			if (!projectId || !templateFiles) return;
-
-			await saveAllFiles(
-				Object.fromEntries(
-					Object.entries(templateFiles).map(([path, content]) => [
-						path,
-						new Uint8Array(new TextEncoder().encode(content)),
-					])
-				)
-			);
-
-			addToast({
-				message: tActions("projectCreatedSuccessfully"),
-				type: "success",
-			});
-
-			getProjectsList();
-			navigate(`/projects/${projectId}`);
-		};
-
-		getAndSaveFiles();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, templateFiles]);
+	const { saveAllFiles } = useFileOperations("");
 
 	const createProjectFromTemplate = async (template: TemplateMetadata, projectName?: string) => {
 		try {
@@ -100,8 +71,23 @@ export const useCreateProjectFromTemplate = () => {
 				})
 			);
 
-			setProjectId(newProjectId);
-			setTemplateFiles(files);
+			await saveAllFiles(
+				Object.fromEntries(
+					Object.entries(files).map(([path, content]) => [
+						path,
+						new Uint8Array(new TextEncoder().encode(content)),
+					])
+				),
+				newProjectId
+			);
+
+			addToast({
+				message: tActions("projectCreatedSuccessfully"),
+				type: "success",
+			});
+
+			getProjectsList();
+			navigate(`/projects/${newProjectId}`);
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),
