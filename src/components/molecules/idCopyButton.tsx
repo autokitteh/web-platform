@@ -2,9 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { SystemSizes } from "@src/types";
 import { ButtonType } from "@src/types/components";
-import { cn } from "@src/utilities";
 
 import { Button } from "@components/atoms/buttons/button";
 import { CopyButton } from "@components/molecules/copyButton";
@@ -12,16 +10,12 @@ import { CopyButton } from "@components/molecules/copyButton";
 export const IdCopyButton = ({
 	buttonClassName,
 	displayFullLength,
-	iconClassName,
 	id,
-	size = "sm",
 	variant,
 }: {
 	buttonClassName?: string;
 	displayFullLength?: boolean;
-	iconClassName?: string;
 	id: string;
-	size?: Extract<SystemSizes, "xs" | "sm" | "md">;
 	variant?: ButtonType;
 }) => {
 	const { t } = useTranslation("components", { keyPrefix: "buttons" });
@@ -37,13 +31,7 @@ export const IdCopyButton = ({
 			<Button className={buttonClassName} tabIndex={-1} variant={variant}>
 				{displayFullLength ? id : idStr}
 			</Button>
-			<CopyButton
-				className={cn("mb-0.5", iconClassName)}
-				size={size}
-				successMessage={successMessage}
-				tabIndex={0}
-				text={id}
-			/>
+			<CopyButton className="mb-0.5 p-0" size="xs" successMessage={successMessage} tabIndex={0} text={id} />
 		</div>
 	);
 };

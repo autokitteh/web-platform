@@ -213,13 +213,7 @@ export const DeploymentsTableContent = ({
 							<Td className="w-1/12" />
 
 							<Td className="w-1/8 pl-4">
-								<IdCopyButton
-									buttonClassName="pl-0"
-									iconClassName="p-0"
-									id={buildId}
-									size="xs"
-									variant={ButtonVariant.flatText}
-								/>
+								<IdCopyButton buttonClassName="pl-0" id={buildId} variant={ButtonVariant.flatText} />
 							</Td>
 
 							<Td
