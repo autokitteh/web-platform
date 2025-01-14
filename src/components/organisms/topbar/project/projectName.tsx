@@ -132,8 +132,8 @@ export const ProjectTopbarName = () => {
 			</ErrorMessage>
 
 			<span className="flex items-center font-fira-code font-semibold text-gray-500">
-				{t("topbar.id")}
-				<IdCopyButton hideId id={projectId!} wrapperClassName="ml-2 inline pl-0.5" />
+				<div className="mr-2 pr-0.5">{t("topbar.id")}</div>
+				<IdCopyButton hideId id={projectId!} />
 			</span>
 		</div>
 	);

@@ -53,7 +53,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 			},
 			{
 				label: t("connectionId"),
-				value: <IdCopyButton displayFullLength id={triggerConnection!.connectionId} variant="flatText" />,
+				value: <IdCopyButton displayFullLength id={triggerConnection!.connectionId} />,
 			},
 			...baseDetails,
 			{ label: t("eventType"), value: trigger.eventType },

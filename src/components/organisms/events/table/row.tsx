@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 
 import { useEventsDrawer } from "@contexts";
 import { dateTimeFormat } from "@src/constants";
-import { ButtonVariant } from "@src/enums/components";
 import { BaseEvent } from "@src/types/models";
 import { cn } from "@src/utilities";
 
@@ -38,14 +37,10 @@ export const EventRow = memo(
 				{isDrawer ? null : (
 					<>
 						<Td className="mr-2 w-1/5 min-w-32" title={eventId}>
-							<IdCopyButton buttonClassName="pl-0" id={eventId} variant={ButtonVariant.flatText} />
+							<IdCopyButton id={eventId} />
 						</Td>
 						<Td className="mr-2 w-1/5 min-w-32" title={destinationId || ""}>
-							<IdCopyButton
-								buttonClassName="pl-0"
-								id={destinationId || ""}
-								variant={ButtonVariant.flatText}
-							/>
+							<IdCopyButton id={destinationId || ""} />
 						</Td>
 					</>
 				)}
