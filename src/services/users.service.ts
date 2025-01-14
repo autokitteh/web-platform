@@ -4,6 +4,8 @@ import { usersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertUserProtoToModel } from "@models";
 import { LoggerService } from "@services";
+import { UserStatusType } from "@src/enums";
+import { reverseUserStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { User } from "@type/models";
 
@@ -26,7 +28,31 @@ export class UsersService {
 				ns: "services",
 				error: new Error(error).message,
 			});
-			LoggerService.error(namespaces.authService, errorMessage);
+			LoggerService.error(namespaces.usersService, errorMessage);
+
+			return { data: undefined, error };
+		}
+	}
+	static async create(email: string, status: UserStatusType): Promise<ServiceResponse<string>> {
+		try {
+			const { userId } = await usersClient.create({
+				user: { email, status: reverseUserStatusConverter(status) },
+			});
+			if (!userId) {
+				throw new Error(
+					i18n.t("userNotFound", {
+						ns: "services",
+					})
+				);
+			}
+
+			return { data: userId, error: undefined };
+		} catch (error) {
+			const errorMessage = i18n.t("accountFetchErrorExtended", {
+				ns: "services",
+				error: new Error(error).message,
+			});
+			LoggerService.error(namespaces.usersService, errorMessage);
 
 			return { data: undefined, error };
 		}

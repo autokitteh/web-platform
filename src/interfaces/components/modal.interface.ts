@@ -23,8 +23,13 @@ export interface ModalModifyVariableProps {
 	onError: (message: string) => void;
 }
 
-export interface DeleteAccount {
-	onDelete?: () => void;
+export interface RemoveMemberModalProps {
+	onRemove: (userId: string, email: string) => void;
+	isRemoving: boolean;
+}
+
+export interface DeleteAccountModalProps {
+	onDelete: () => void;
 }
 
 export interface CreateProjectModalProps {
@@ -37,4 +42,14 @@ export interface ActiveDeploymentWarningModalProps {
 	goToAdd: () => void;
 	modifiedId: string;
 	action?: "add" | "edit";
+}
+
+export interface CreateMemberModalProps {
+	createMember: (email: string) => void;
+	isCreating: boolean;
+	membersEmails: Set<string>;
+}
+
+export interface CreateMemberModalRef {
+	resetForm: () => void;
 }

@@ -6,5 +6,6 @@ export function convertUserProtoToModel(protoUser: ProtoUser): User {
 		email: protoUser.email,
 		name: protoUser.displayName,
 		id: protoUser.userId,
+		defaultOrganizationId: protoUser.defaultOrgId,
 	};
 }

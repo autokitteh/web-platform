@@ -3,14 +3,14 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { DeleteAccount } from "@interfaces/components";
+import { DeleteAccountModalProps } from "@interfaces/components";
 
 import { useModalStore } from "@store";
 
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteAccountModal = ({ onDelete }: DeleteAccount) => {
+export const DeleteAccountModal = ({ onDelete }: DeleteAccountModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteAccount" });
 	const { closeModal } = useModalStore();
 

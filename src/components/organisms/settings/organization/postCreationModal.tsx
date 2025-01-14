@@ -8,7 +8,7 @@ import { useModalStore } from "@src/store";
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const OrganizationCreatedModal = () => {
+export const OrganizationPostCreationModal = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.modal" });
 	const { closeModal } = useModalStore();
 	const data = useModalStore((state) => state.data) as { name: string };

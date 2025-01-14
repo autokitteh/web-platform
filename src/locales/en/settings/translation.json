@@ -69,9 +69,10 @@
 			"line2": "Warning: you will not be able to recover it.",
 			"deleteOrganization": "Delete {{name}}",
 			"form": {
-				"name":"Name",
 				"email":"Email",
-				"role":"Role"
+				"errors":{
+					"memberWithThisEmailExists": "Member with this email already exists"
+				}
 			},
 			"buttons": {
 				"stay": "Stay in the current organization",
@@ -97,14 +98,23 @@
 				"actions": {
 					"resendInvite": "Resend invintation",
 					"delete": "Delete"
+				},
+				"messages":{
+					"memberRemoved": "Member {{email}} removed from the organization"
 				}
+			},
+			"errors":{
+				"inviteFailed": "Member creation failed"
+			},
+			"form":{
+				"memberInvited": "Member {{email}} invited"
 			}
 		},
 		"store": {
 			"errors": {
-				"createFailed": "Store creation failed -  error: {{error}}",
-				"userNotFound": "User not found",
-				"organizationIdNotFound": "Organization not found, can't fetch members"
+				"organizationIdNotFound": "Organization not found, can't fetch members",
+				"createFailed": "Organization creation failed -  error: {{error}}",
+				"userNotFound": "User not found"
 			}
 		}
 

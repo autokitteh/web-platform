@@ -3,23 +3,24 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@enums/components";
-import { DeleteAccount } from "@interfaces/components";
+import { RemoveMemberModalProps } from "@interfaces/components";
 
 import { useModalStore } from "@store";
 
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteMemberFromOrganizationModal = ({ onDelete }: DeleteAccount) => {
+export const RemoveMemberModal = ({ onRemove }: RemoveMemberModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteOrgMember" });
 	const { closeModal } = useModalStore();
+	const userData = useModalStore((state) => state.data as { email: string; userId: string });
 
 	return (
 		<Modal name={ModalName.deleteMemberFromOrg}>
 			<div className="mx-6">
 				<h3 className="mb-5 font-averta text-xl font-bold">{t("deleteMember")}</h3>
 
-				<p className="font-light">{t("line1", { MemberName: "xxxx" })}</p>
+				<p className="font-light">{t("line1", { memberName: name })}</p>
 				<p className="mt-1 font-light">{t("line2")}</p>
 			</div>
 
@@ -35,7 +36,7 @@ export const DeleteMemberFromOrganizationModal = ({ onDelete }: DeleteAccount) =
 				<Button
 					ariaLabel={t("deleteButton")}
 					className="w-auto px-4 py-3 font-semibold hover:bg-error"
-					onClick={onDelete}
+					onClick={() => onRemove(userData?.userId, userData?.email)}
 					variant="filled"
 				>
 					{t("deleteButton")}

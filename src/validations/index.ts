@@ -24,9 +24,9 @@ export { manualRunSchema } from "@validations/manualRun.schema";
 // eslint-disable-next-line @liferay/sort-exports
 export { selectSchema } from "@validations/shared.schema";
 export {
+	addOrganizationSchema,
 	organizationSchema,
 	addOrganizationMemberSchema,
-	addOrganizationSchema,
 } from "@validations/organization.schema";
 export type { TriggerFormData } from "@validations/trigger.schema";
 export { triggerSchema, triggerResolver } from "@validations/trigger.schema";
