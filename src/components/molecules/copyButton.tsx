@@ -63,7 +63,7 @@ export const CopyButton = ({
 			}}
 			onKeyPressed={() => copyTextToClipboard(text)}
 			tabIndex={tabIndex}
-			title={title}
+			title={t("copyButtonText", { text: title })}
 			type="button"
 		>
 			<CopyIcon className={copyButtonIconStyle} />

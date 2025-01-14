@@ -55,18 +55,13 @@ export const ClientConfiguration = () => {
 					<div className="flex">
 						<Input
 							aria-label={t("getToken.copyInputAriaLabel")}
-							className="h-12 flex-1 rounded-lg border-gray-950"
+							className="mr-2 h-12 flex-1 rounded-lg border-gray-950"
 							disabled
 							label={t("getToken.copyInputAriaLabel")}
 							value={token}
 						/>
 
-						<CopyButton
-							className="ml-2 gap-2 hover:bg-gray-1050"
-							size="md"
-							successMessage={t("getToken.copySuccess")}
-							text={token}
-						/>
+						<CopyButton size="md" successMessage={t("getToken.copySuccess")} text={token} />
 					</div>
 				) : (
 					<Button
@@ -88,18 +83,13 @@ export const ClientConfiguration = () => {
 				<div className="flex">
 					<Input
 						aria-label={t("hostURL.copyInputAriaLabel")}
-						className="h-12 flex-1 rounded-lg border-gray-950"
+						className="mr-2 h-12 flex-1 rounded-lg border-gray-950"
 						disabled
 						label={t("hostURL.copyInputAriaLabel")}
 						value={hostURL}
 					/>
 
-					<CopyButton
-						className="ml-2 gap-2 hover:bg-gray-1050"
-						size="md"
-						successMessage={t("hostURL.copySuccess")}
-						text={hostURL}
-					/>
+					<CopyButton size="md" successMessage={t("hostURL.copySuccess")} text={hostURL} />
 				</div>
 			</div>
 

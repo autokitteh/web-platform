@@ -108,7 +108,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 				<div className="font-semibold">{t("webhookUrl")}:</div>
 				{webhookUrl}
 				<div className="w-8">
-					<CopyButton className="p-0" text={webhookUrl} />
+					<CopyButton text={webhookUrl} />
 				</div>
 			</div>
 			{baseDetails.map(({ label, value }) =>

@@ -9,7 +9,6 @@ import { cn } from "@utilities";
 import { useLoggerStore, useToastStore } from "@store";
 
 import { Button, IconButton } from "@components/atoms";
-import { CopyButton } from "@components/molecules";
 
 import { Close, ExternalLinkIcon } from "@assets/image/icons";
 
@@ -91,9 +90,8 @@ export const Toast = () => {
 	};
 
 	const renderToasts = () =>
-		toasts.map(({ id, message, showCopyButton, type }, index) => {
+		toasts.map(({ id, message, type }, index) => {
 			const title = t(`titles.${type}`);
-			const textCopyButton = typeof message === "string" ? message : "";
 
 			return (
 				<AnimatePresence key={id}>
@@ -126,8 +124,6 @@ export const Toast = () => {
 										<ExternalLinkIcon className="size-3.5 fill-error duration-200" />
 									</Button>
 								) : null}
-
-								{showCopyButton ? <CopyButton className="p-0" text={textCopyButton} /> : null}
 							</div>
 
 							<IconButton

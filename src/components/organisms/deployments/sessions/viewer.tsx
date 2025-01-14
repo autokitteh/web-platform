@@ -22,7 +22,7 @@ import { ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 
 import { Frame, IconSvg, Loader, LogoCatLarge, Tab } from "@components/atoms";
-import { Accordion, CopyButton, RefreshButton } from "@components/molecules";
+import { Accordion, IdCopyButton, RefreshButton } from "@components/molecules";
 import { SessionsTableState } from "@components/organisms/deployments";
 
 import { ArrowRightIcon, CircleMinusIcon, CirclePlusIcon } from "@assets/image/icons";
@@ -188,17 +188,17 @@ export const SessionViewer = () => {
 				<div className="flex flex-col gap-0.5">
 					<div className="flex items-center justify-end gap-4">
 						<div className="leading-6">{t("sessionId")}</div>
-						<CopyButton className="p-0" text={sessionInfo.sessionId} />
+						<IdCopyButton hideId id={sessionInfo.sessionId} />
 					</div>
 					{sessionInfo.eventId ? (
 						<div className="flex items-center justify-end gap-4">
 							<div className="leading-6">{t("eventId")}</div>
-							<CopyButton className="p-0" text={sessionInfo.eventId} />
+							<IdCopyButton hideId id={sessionInfo.eventId} />
 						</div>
 					) : null}
 					<div className="flex items-center justify-end gap-4">
 						<div className="leading-6">{t("buildId")}</div>
-						<CopyButton className="p-0" text={sessionInfo.buildId} />
+						<IdCopyButton hideId id={sessionInfo.buildId} />
 					</div>
 				</div>
 			</div>

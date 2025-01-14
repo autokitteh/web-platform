@@ -13,7 +13,7 @@ import { useToastStore } from "@src/store";
 import { EnrichedEvent } from "@src/types/models";
 
 import { Frame, Loader, Typography } from "@components/atoms";
-import { CopyButton } from "@components/molecules";
+import { IdCopyButton } from "@components/molecules";
 
 export const EventViewer = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -97,11 +97,11 @@ export const EventViewer = () => {
 					<div className="flex flex-col gap-0.5">
 						<div className="flex items-center justify-end gap-4">
 							<div className="leading-6">{t("eventId")}</div>
-							<CopyButton className="p-0" text={eventInfo.type} />
+							<IdCopyButton hideId id={eventInfo.id} />
 						</div>
 						<div className="flex items-center justify-end gap-4">
 							<div className="leading-6">{t("sourceId")}</div>
-							<CopyButton className="p-0" text={eventInfo.destinationId || ""} />
+							<IdCopyButton hideId id={eventInfo.destinationId || ""} />
 						</div>
 					</div>
 				</div>
