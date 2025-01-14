@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 import { SystemLogLayout } from "./systemLogLayout";
 import { userMenuItems, userMenuOrganizationItems } from "@constants";
@@ -14,11 +14,9 @@ import { SettingsMenu } from "@components/organisms/settings";
 
 export const SettingsLayout = () => {
 	const { t: tSettings } = useTranslation("settings", { keyPrefix: "topbar" });
-	const { t: tErrors } = useTranslation("error");
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { pathname } = useLocation();
-	const navigate = useNavigate();
 	const { currentOrganization } = useOrganizationStore();
 
 	const topbarTitle = pathname.startsWith("/settings")
@@ -28,9 +26,6 @@ export const SettingsLayout = () => {
 	const menuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;
 
 	useEffect(() => {
-		if (!currentOrganization) {
-			navigate("error", { state: { error: tErrors("smgWentWrong") } });
-		}
 		setPageTitle(t("template", { page: t("settings") }));
 
 		return () => setPageTitle(t("base"));

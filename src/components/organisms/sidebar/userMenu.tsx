@@ -115,7 +115,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 						))
 					) : (
 						<Typography className="text-center text-base font-semibold text-black">
-							{t("menu.organizationsList.newOrganizationFound")}
+							{t("menu.organizationsList.noOrganizationFound")}
 						</Typography>
 					)}
 				</div>
