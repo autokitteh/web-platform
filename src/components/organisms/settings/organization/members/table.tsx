@@ -10,7 +10,7 @@ import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
 import { CreateMemberModal, RemoveMemberModal } from "@components/organisms/settings/organization";
 
-import { RotateRightIcon, TrashIcon } from "@assets/image/icons";
+import { TrashIcon } from "@assets/image/icons";
 
 export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
@@ -101,27 +101,22 @@ export const OrganizationMembersTable = () => {
 							<Td className="w-2/6 min-w-16">{member.user.email}</Td>
 							<Td className="w-1/5 min-w-16 capitalize">{MemberStatus[member.status]}</Td>
 							<Td className="w-1/6 min-w-16 capitalize">{member.role}</Td>
-							<Td className="w-1/8 min-w-16 gap-1">
-								<div className="flex">
-									<IconButton className="ml-auto mr-1" title={t("table.actions.resendInvite")}>
-										<RotateRightIcon className="size-4 fill-white" />
-									</IconButton>
-									<IconButton
-										className="mr-1"
-										onClick={() => openModal(ModalName.deleteMemberFromOrg)}
-										title={t("table.actions.delete")}
-									>
-										<TrashIcon
-											className="size-4 stroke-white"
-											onClick={() =>
-												openModal(ModalName.deleteMember, {
-													userId: member.user.id,
-													email: member.user.email,
-												})
-											}
-										/>
-									</IconButton>
-								</div>
+							<Td className="w-1/8 min-w-16" innerDivClassName="justify-end">
+								<IconButton
+									className="mr-1"
+									onClick={() => openModal(ModalName.deleteMemberFromOrg)}
+									title={t("table.actions.delete")}
+								>
+									<TrashIcon
+										className="size-4 stroke-white"
+										onClick={() =>
+											openModal(ModalName.deleteMember, {
+												userId: member.user.id,
+												email: member.user.email,
+											})
+										}
+									/>
+								</IconButton>
 							</Td>
 						</Tr>
 					))}

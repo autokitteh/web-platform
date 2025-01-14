@@ -5,7 +5,7 @@ import { cn } from "@utilities";
 
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
-export const Td = ({ children, className, onClick, title }: TableProps) => {
+export const Td = ({ children, className, onClick, title, innerDivClassName }: TableProps) => {
 	const tdStyle = cn("flex h-9.5 w-full items-center overflow-hidden", className);
 
 	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -15,12 +15,14 @@ export const Td = ({ children, className, onClick, title }: TableProps) => {
 		}
 	};
 
+	const innerDivStyle = cn("w-full flex truncate pr-2", innerDivClassName);
+
 	const cellTitle = title ? title : typeof children === "string" ? children : "";
 
 	return (
 		<div aria-label={cellTitle} className={tdStyle} role="cell" title={cellTitle}>
 			<div className="flex w-full items-center" onClick={onClick} onKeyDown={handleKeyDown}>
-				<div className="w-full truncate pr-2">{children}</div>
+				<div className={innerDivStyle}>{children}</div>
 			</div>
 		</div>
 	);
