@@ -111,7 +111,7 @@ export const OrganizationMembersTable = () => {
 											email: member.user.email,
 										})
 									}
-									title={t("table.actions.delete")}
+									title={t("table.actions.delete", { name: member.user.name })}
 								>
 									<TrashIcon className="size-4 stroke-white" />
 								</IconButton>
