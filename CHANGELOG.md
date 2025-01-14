@@ -1,3 +1,10 @@
+# [2.127.0](https://github.com/autokitteh/web-platform/compare/v2.126.5...v2.127.0) (2025-01-14)
+
+
+### Features
+
+* **UI-1107:** invite user to organization ([#875](https://github.com/autokitteh/web-platform/issues/875)) ([e348bfa](https://github.com/autokitteh/web-platform/commit/e348bfa1a8f35152cb729b2c291e3a866fdadef0))
+
 ## [2.126.5](https://github.com/autokitteh/web-platform/compare/v2.126.4...v2.126.5) (2025-01-12)
 
 
