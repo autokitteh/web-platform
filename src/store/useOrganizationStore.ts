@@ -17,6 +17,7 @@ const defaultState: Omit<
 	| "setCurrentOrganizationId"
 	| "listMembers"
 	| "removeMember"
+	| "reset"
 > = {
 	organizationsList: undefined,
 	membersList: undefined,
@@ -35,6 +36,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return state;
 		});
 	},
+	reset: () => set(defaultState),
 
 	createOrganization: async (name: string) => {
 		const { data: organizationId, error } = await OrganizationsService.create(name);

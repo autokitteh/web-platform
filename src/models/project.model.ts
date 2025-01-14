@@ -12,5 +12,6 @@ export const convertProjectProtoToModel = (protoProject: ProtoProject): Project 
 	return {
 		id: protoProject.projectId,
 		name: protoProject.name,
+		organizationId: protoProject.orgId,
 	};
 };
