@@ -1,3 +1,10 @@
+# [2.128.0](https://github.com/autokitteh/web-platform/compare/v2.127.0...v2.128.0) (2025-01-14)
+
+
+### Features
+
+* **UI-1178:** filter all relevant requests by organization id ([#879](https://github.com/autokitteh/web-platform/issues/879)) ([df68a0c](https://github.com/autokitteh/web-platform/commit/df68a0c03743fca0606224abf3a6cc4d04784d67))
+
 # [2.127.0](https://github.com/autokitteh/web-platform/compare/v2.126.5...v2.127.0) (2025-01-14)
 
 
