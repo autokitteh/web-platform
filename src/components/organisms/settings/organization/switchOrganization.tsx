@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useOrganizationStore, useProjectStore } from "@src/store";
 
@@ -10,35 +10,26 @@ import { Loader } from "@components/atoms";
 export const SwitchOrganization = () => {
 	const { t } = useTranslation("errors");
 	const { organizationId } = useParams();
-	const [isProcessing, setIsProcessing] = useState(true);
-	const { organizationsList, setCurrentOrganization } = useOrganizationStore();
+	const { getOrganizationsList, setCurrentOrganization } = useOrganizationStore();
 	const { getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
 
-	const currentOrganization = useMemo(
-		() => organizationsList?.find((organization) => organization.id === organizationId),
-		[organizationId, organizationsList]
-	);
+	useEffect(() => {
+		const switchOrganization = async () => {
+			const { data: organizationsList } = await getOrganizationsList();
+			const organization = organizationsList?.find((organization) => organization.id === organizationId);
+			if (!organization) {
+				navigate("/error", { state: { error: t("organizationNotFound") } });
 
-	const switchProjectList = useCallback(async () => {
-		await getProjectsList();
-		setIsProcessing(false);
+				return;
+			}
+			await setCurrentOrganization(organization);
+			await getProjectsList();
+			navigate("/");
+		};
+		switchOrganization();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [organizationId]);
 
-	useEffect(() => {
-		if (organizationId && currentOrganization) {
-			setCurrentOrganization(currentOrganization);
-			switchProjectList();
-		} else if (!currentOrganization) {
-			navigate("/error", { state: { error: t("organizationNotFound") } });
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [organizationId, currentOrganization]);
-
-	if (isProcessing) {
-		return <Loader isCenter size="lg" />;
-	}
-
-	return <Navigate state={{ organizationId }} to="/" />;
+	return <Loader isCenter size="lg" />;
 };

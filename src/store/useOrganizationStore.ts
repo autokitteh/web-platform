@@ -68,11 +68,14 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!userId) {
 			set((state) => ({ ...state, isLoadingOrganizationsList: false, organizationsList: [] }));
 
-			return new Error(
-				i18n.t("userNotFound", {
-					ns: "settings.organization.store.errors",
-				})
-			);
+			return {
+				data: undefined,
+				error: new Error(
+					i18n.t("userNotFound", {
+						ns: "settings.organization.store.errors",
+					})
+				),
+			};
 		}
 
 		const { data: organizations, error } = await OrganizationsService.list(userId);
@@ -80,18 +83,18 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (error) {
 			set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: [] }));
 
-			return error;
+			return { data: undefined, error };
 		}
 
 		if (isEqual(organizations, organizationsList)) {
 			set((state) => ({ ...state, isLoadingOrganizations: false }));
 
-			return undefined;
+			return { data: organizations, error: undefined };
 		}
 
 		set((state) => ({ ...state, organizationsList: organizations, isLoadingOrganizations: false }));
 
-		return undefined;
+		return { data: organizations, error: undefined };
 	},
 
 	listMembers: async () => {
