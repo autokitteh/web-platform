@@ -18,7 +18,6 @@ const defaultState: Omit<
 	| "listMembers"
 	| "removeMember"
 	| "reset"
-	| "getCurrentOrganizationId"
 > = {
 	organizationsList: undefined,
 	membersList: undefined,
@@ -30,13 +29,6 @@ const defaultState: Omit<
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
 
-	setCurrentOrganizationId: (organizationId: string) => {
-		set((state) => {
-			state.currentOrganizationId = organizationId;
-
-			return state;
-		});
-	},
 	reset: () => set(defaultState),
 
 	createOrganization: async (name: string) => {
@@ -86,18 +78,18 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const { data: organizations, error } = await OrganizationsService.list(userId);
 
 		if (error) {
-			set((state) => ({ ...state, isLoadingOrganizationsList: false, organizationsList: [] }));
+			set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: [] }));
 
 			return error;
 		}
 
 		if (isEqual(organizations, organizationsList)) {
-			set((state) => ({ ...state, isLoadingOrganizationsList: false }));
+			set((state) => ({ ...state, isLoadingOrganizations: false }));
 
 			return undefined;
 		}
 
-		set((state) => ({ ...state, organizationsList: organizations, isLoadingOrganizationsList: false }));
+		set((state) => ({ ...state, organizationsList: organizations, isLoadingOrganizations: false }));
 
 		return undefined;
 	},
@@ -149,7 +141,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		await get().listMembers();
 	},
 
-	getCurrentOrganizationId: async (currentOrganizationId) => {
+	setCurrentOrganizationId: async (currentOrganizationId) => {
 		set((state) => ({ ...state, currentOrganizationId }));
 	},
 });

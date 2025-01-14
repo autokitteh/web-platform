@@ -15,7 +15,7 @@ export const OrganizationPostCreationModal = () => {
 	const data = useModalStore((state) => state.data) as { name: string };
 	const navigate = useNavigate();
 	const { organizationsList } = useOrganizationStore();
-	const orgId = useMemo(
+	const organizationId = useMemo(
 		() => organizationsList?.find((org) => org.displayName === data?.name)?.orgId,
 		[organizationsList, data?.name]
 	);
@@ -41,7 +41,7 @@ export const OrganizationPostCreationModal = () => {
 				<Button
 					ariaLabel={t("buttons.open")}
 					className="bg-gray-1100 px-4 py-3 font-semibold"
-					onClick={() => navigate(`/organization-settings/switch/${orgId}`)}
+					onClick={() => navigate(`/organization-settings/switch/${organizationId}`)}
 					variant="filled"
 				>
 					{t("buttons.open", { name: data.name })}

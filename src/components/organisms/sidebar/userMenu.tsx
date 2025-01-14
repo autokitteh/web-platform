@@ -9,7 +9,7 @@ import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/consta
 import { useOrganizationStore, useUserStore } from "@src/store";
 import { cn } from "@src/utilities";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Button, IconSvg, Loader, Typography } from "@components/atoms";
 
 import { PlusIcon } from "@assets/image/icons";
 import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
@@ -18,7 +18,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const { t } = useTranslation("sidebar");
 	const { logoutFunction, user } = useUserStore();
 	const { close } = usePopoverContext();
-	const { getOrganizationsList, organizationsList } = useOrganizationStore();
+	const { getOrganizationsList, isLoadingOrganizations, organizationsList } = useOrganizationStore();
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -99,15 +99,25 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 				</Button>
 
 				<div className="scrollbar max-h-40 overflow-y-auto">
-					{organizationsList?.map(({ displayName, orgId }) => (
-						<Button
-							className="mb-1 w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
-							key={orgId}
-							onClick={() => navigate(`/organization-settings/switch/${orgId}`)}
-						>
-							{displayName}
-						</Button>
-					))}
+					{isLoadingOrganizations ? (
+						<div className="relative h-10">
+							<Loader isCenter />
+						</div>
+					) : organizationsList ? (
+						organizationsList.map(({ displayName, orgId }) => (
+							<Button
+								className="mb-1 w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
+								key={orgId}
+								onClick={() => navigate(`/organization-settings/switch/${orgId}`)}
+							>
+								{displayName}
+							</Button>
+						))
+					) : (
+						<Typography className="text-center text-base font-semibold text-black">
+							{t("menu.organizationsList.newOrganizationFound")}
+						</Typography>
+					)}
 				</div>
 			</div>
 		</div>

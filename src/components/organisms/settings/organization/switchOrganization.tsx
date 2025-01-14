@@ -6,14 +6,14 @@ import { useOrganizationStore } from "@src/store";
 
 export const SwitchOrganization = () => {
 	const { organizationId } = useParams();
-	const { getCurrentOrganizationId } = useOrganizationStore();
+	const { setCurrentOrganizationId } = useOrganizationStore();
 
 	useEffect(() => {
 		if (organizationId) {
-			getCurrentOrganizationId(organizationId);
+			setCurrentOrganizationId(organizationId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [organizationId]);
+	}, []);
 
 	return <Navigate state={{ organizationId }} to="/" />;
 };
