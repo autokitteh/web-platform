@@ -46,6 +46,8 @@ export const OrganizationMembersTable = () => {
 			message: t("form.memberInvited", { email }),
 			type: "success",
 		});
+
+		listMembers();
 	};
 
 	const onRemove = async (userId: string, email: string) => {
@@ -95,11 +97,11 @@ export const OrganizationMembersTable = () => {
 				<TBody>
 					{membersList?.map((member) => (
 						<Tr className="hover:bg-gray-1300" key={member.user.id}>
-							<Td className="w-1/5 min-w-16 cursor-pointer pl-4">{member.user.name}</Td>
-							<Td className="w-2/6 min-w-16 cursor-pointer">{member.user.email}</Td>
-							<Td className="w-1/5 min-w-16 cursor-pointer capitalize">{MemberStatus[member.status]}</Td>
-							<Td className="w-1/6 min-w-16 cursor-pointer">Admin</Td>
-							<Td className="w-1/8 min-w-16 cursor-pointer gap-1">
+							<Td className="w-1/5 min-w-16 pl-4">{member.user.name}</Td>
+							<Td className="w-2/6 min-w-16">{member.user.email}</Td>
+							<Td className="w-1/5 min-w-16 capitalize">{MemberStatus[member.status]}</Td>
+							<Td className="w-1/6 min-w-16 capitalize">{member.role}</Td>
+							<Td className="w-1/8 min-w-16 gap-1">
 								<div className="flex">
 									<IconButton className="ml-auto mr-1" title={t("table.actions.resendInvite")}>
 										<RotateRightIcon className="size-4 fill-white" />
