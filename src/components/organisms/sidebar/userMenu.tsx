@@ -89,7 +89,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 			</div>
 
 			<div className="flex w-48 flex-col">
-				<h3 className="mb-3 text-right font-semibold text-black">{t("menu.organizationsList.title")}</h3>
+				<h3 className="mb-3 font-semibold text-black">{t("menu.organizationsList.title")}</h3>
 				<Button
 					className="mb-2 flex w-full items-center gap-2 rounded-md bg-green-800 px-2.5 py-1.5 text-sm text-black hover:bg-green-200"
 					href="/organization-settings/add"
@@ -100,7 +100,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 
 				<div className="scrollbar max-h-40 overflow-y-auto">
 					{isLoadingOrganizations ? (
-						<div className="relative h-10">
+						<div className="relative mt-8 h-10">
 							<Loader isCenter />
 						</div>
 					) : organizationsList ? (

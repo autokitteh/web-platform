@@ -97,5 +97,6 @@
 	"errorSendingFeedback": "Error sending feedback",
 	"errorSendingFeedbackExtended": "Error sending feedback, error: {{error}}",
 	"errorCreateNewOrganization": "Error creating a new organization",
-	"organizationNotFound": "Organization not found"
+	"organizationNotFound": "Organization not found",
+	"organizationNotFoundExtended": "Organization not found, organization ID: {{organizationId}}"
 }

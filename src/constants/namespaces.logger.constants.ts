@@ -20,6 +20,7 @@ export const namespaces = {
 	eventsService: "Events Service",
 	organizationsService: "Organizations Service",
 	templatesUtility: "Templates Utility",
+	switchOrganization: "Switch Organization",
 	ui: {
 		loginPage: "Login Page",
 		connectionsTable: "Connections Table",
