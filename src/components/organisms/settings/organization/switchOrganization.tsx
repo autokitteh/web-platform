@@ -5,10 +5,11 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useOrganizationStore, useProjectStore } from "@src/store";
 
-import { Loader } from "@components/atoms";
+import { Loader, Typography } from "@components/atoms";
 
 export const SwitchOrganization = () => {
 	const { t } = useTranslation("errors");
+	const { t: tOrganization } = useTranslation("settings", { keyPrefix: "organization" });
 	const { organizationId } = useParams();
 	const { getOrganizationsList, setCurrentOrganization } = useOrganizationStore();
 	const { getProjectsList } = useProjectStore();
@@ -25,11 +26,22 @@ export const SwitchOrganization = () => {
 			}
 			await setCurrentOrganization(organization);
 			await getProjectsList();
-			navigate("/");
+
+			setTimeout(() => {
+				navigate("/");
+			}, 3000);
 		};
+
 		switchOrganization();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [organizationId]);
 
-	return <Loader isCenter size="lg" />;
+	return (
+		<div className="relative flex h-full flex-col items-center justify-center">
+			<Loader size="lg" />
+			<Typography className="mt-5 font-semibold text-black" size="large">
+				{tOrganization("youRedirectToOrganization")}
+			</Typography>
+		</div>
+	);
 };

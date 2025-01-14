@@ -45,6 +45,7 @@
 		"seats": "Seats",
 		"monthlySpending": "Monthly Spending",
 		"organizationSettings": "Organization Settings",
+		"youRedirectToOrganization": "You are being redirected to the organization...",
 		"form": {
 			"organizationName": "Organization Name",
 			"errorNotification": "Error notification",

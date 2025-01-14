@@ -108,7 +108,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 							<Button
 								className="mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250"
 								key={id}
-								onClick={() => navigate(`/organization-settings/switch/${id}`)}
+								onClick={() => navigate(`/switch-organization/${id}`)}
 							>
 								{displayName}
 							</Button>

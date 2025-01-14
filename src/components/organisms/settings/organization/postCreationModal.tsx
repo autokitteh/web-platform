@@ -36,7 +36,7 @@ export const OrganizationPostCreationModal = () => {
 				<Button
 					ariaLabel={t("buttons.open")}
 					className="bg-gray-1100 px-4 py-3 font-semibold"
-					onClick={() => navigate(`/organization-settings/switch/${data.organizationId}`)}
+					onClick={() => navigate(`/switch-organization/${data.organizationId}`)}
 					variant="filled"
 				>
 					{t("buttons.open", { name: data.name })}

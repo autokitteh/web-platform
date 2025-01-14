@@ -257,7 +257,6 @@ export const App = () => {
 				<Route element={<OrganizationSettings />} index />
 				<Route element={<AddOrganization />} path="add" />
 				<Route element={<OrganizationMembersTable />} path="members" />
-				<Route element={<SwitchOrganization />} path="switch/:organizationId" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
@@ -271,6 +270,10 @@ export const App = () => {
 			</Route>
 
 			<Route element={<Navigate replace to="/404" />} path="*" />
+
+			<Route element={<AppLayout hideTopbar />} path="switch-organization/:organizationId">
+				<Route element={<SwitchOrganization />} index />
+			</Route>
 
 			<Route element={<AppLayout hideTopbar />} path="error">
 				<Route element={<CustomError />} index />
