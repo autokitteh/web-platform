@@ -89,7 +89,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 			</div>
 
 			<div className="flex w-48 flex-col">
-				<h3 className="mb-3 font-semibold text-black">{t("menu.organizationsList.title")}</h3>
+				<h3 className="mb-3 text-right font-semibold text-black">{t("menu.organizationsList.title")}</h3>
 				<Button
 					className="mb-2 flex w-full items-center gap-2 rounded-md bg-green-800 px-2.5 py-1.5 text-sm text-black hover:bg-green-200"
 					href="/organization-settings/add"
@@ -104,11 +104,11 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 							<Loader isCenter />
 						</div>
 					) : organizationsList ? (
-						organizationsList.map(({ displayName, orgId }) => (
+						organizationsList.map(({ displayName, id }) => (
 							<Button
-								className="mb-1 w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
-								key={orgId}
-								onClick={() => navigate(`/organization-settings/switch/${orgId}`)}
+								className="mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250"
+								key={id}
+								onClick={() => navigate(`/organization-settings/switch/${id}`)}
 							>
 								{displayName}
 							</Button>

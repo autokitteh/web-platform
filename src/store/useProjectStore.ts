@@ -84,7 +84,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	createProject: async (name: string, isDefault?: boolean) => {
-		const organizationId = useOrganizationStore.getState().currentOrganizationId;
+		const organizationId = useOrganizationStore.getState().currentOrganization?.id;
 
 		const { data: projectId, error } = await ProjectsService.create({ id: "", name, organizationId });
 
@@ -150,7 +150,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	createProjectFromManifest: async (projectManifest: string) => {
-		const organizationId = useOrganizationStore.getState().currentOrganizationId;
+		const organizationId = useOrganizationStore.getState().currentOrganization?.id;
 
 		const { data: newProjectId, error } = await ProjectsService.createFromManifest(projectManifest, organizationId);
 
@@ -224,7 +224,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (project) {
 			return { data: project, error: undefined };
 		}
-		const currentOrganizationId = useOrganizationStore.getState().currentOrganizationId;
+		const currentOrganizationId = useOrganizationStore.getState().currentOrganization?.id;
 		const { data: responseProject, error } = await ProjectsService.get(projectId, currentOrganizationId);
 
 		if (error) {
@@ -242,7 +242,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (!projectsList.length) {
 			set((state) => ({ ...state, isLoadingProjectsList: true }));
 		}
-		const currentOrganizationId = useOrganizationStore.getState().currentOrganizationId;
+		const currentOrganizationId = useOrganizationStore.getState().currentOrganization?.id;
 
 		const { data: projects, error } = await ProjectsService.list(currentOrganizationId);
 

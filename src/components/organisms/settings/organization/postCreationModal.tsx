@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -14,11 +14,7 @@ export const OrganizationPostCreationModal = () => {
 	const { closeModal } = useModalStore();
 	const data = useModalStore((state) => state.data) as { name: string };
 	const navigate = useNavigate();
-	const { organizationsList } = useOrganizationStore();
-	const organizationId = useMemo(
-		() => organizationsList?.find((org) => org.displayName === data?.name)?.orgId,
-		[organizationsList, data?.name]
-	);
+	const { currentOrganization } = useOrganizationStore();
 
 	if (!data) return null;
 
@@ -41,7 +37,7 @@ export const OrganizationPostCreationModal = () => {
 				<Button
 					ariaLabel={t("buttons.open")}
 					className="bg-gray-1100 px-4 py-3 font-semibold"
-					onClick={() => navigate(`/organization-settings/switch/${organizationId}`)}
+					onClick={() => navigate(`/organization-settings/switch/${currentOrganization?.id}`)}
 					variant="filled"
 				>
 					{t("buttons.open", { name: data.name })}

@@ -11,12 +11,12 @@ export const SwitchOrganization = () => {
 	const { t } = useTranslation("errors");
 	const { organizationId } = useParams();
 	const [isProcessing, setIsProcessing] = useState(true);
-	const { organizationsList, setCurrentOrganizationId } = useOrganizationStore();
+	const { organizationsList, setCurrentOrganization } = useOrganizationStore();
 	const { getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
 
 	const currentOrganization = useMemo(
-		() => organizationsList?.find((organization) => organization.orgId === organizationId),
+		() => organizationsList?.find((organization) => organization.id === organizationId),
 		[organizationId, organizationsList]
 	);
 
@@ -28,7 +28,7 @@ export const SwitchOrganization = () => {
 
 	useEffect(() => {
 		if (organizationId && currentOrganization) {
-			setCurrentOrganizationId(organizationId);
+			setCurrentOrganization(currentOrganization);
 			switchProjectList();
 		} else if (!currentOrganization) {
 			navigate("/error", { state: { error: t("organizationNotFound") } });

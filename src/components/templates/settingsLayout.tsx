@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-max-depth */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { SystemLogLayout } from "./systemLogLayout";
 import { userMenuItems, userMenuOrganizationItems } from "@constants";
@@ -14,23 +14,23 @@ import { SettingsMenu } from "@components/organisms/settings";
 
 export const SettingsLayout = () => {
 	const { t: tSettings } = useTranslation("settings", { keyPrefix: "topbar" });
+	const { t: tErrors } = useTranslation("error");
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { pathname } = useLocation();
-	const { currentOrganizationId, organizationsList } = useOrganizationStore();
-
-	const currentOrganizationName = useMemo(
-		() => organizationsList?.find((organization) => organization.orgId === currentOrganizationId),
-		[currentOrganizationId, organizationsList]
-	);
+	const navigate = useNavigate();
+	const { currentOrganization } = useOrganizationStore();
 
 	const topbarTitle = pathname.startsWith("/settings")
 		? tSettings("personalSettings")
-		: tSettings("organizationSettings", { name: currentOrganizationName?.displayName });
+		: tSettings("organizationSettings", { name: currentOrganization?.displayName });
 
 	const menuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;
 
 	useEffect(() => {
+		if (!currentOrganization) {
+			navigate("error", { state: { error: tErrors("smgWentWrong") } });
+		}
 		setPageTitle(t("template", { page: t("settings") }));
 
 		return () => setPageTitle(t("base"));

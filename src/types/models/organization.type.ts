@@ -3,7 +3,7 @@ import { User } from "@src/types/models";
 
 export type Organization = {
 	displayName: string;
-	orgId: string;
+	id: string;
 };
 export type OrganizationMember = {
 	organizationId: string;

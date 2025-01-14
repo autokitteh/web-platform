@@ -14,14 +14,14 @@ const defaultState: Omit<
 	| "createOrganization"
 	| "getOrganizationsList"
 	| "inviteMember"
-	| "setCurrentOrganizationId"
+	| "setCurrentOrganization"
 	| "listMembers"
 	| "removeMember"
 	| "reset"
 > = {
 	organizationsList: undefined,
 	membersList: undefined,
-	currentOrganizationId: undefined,
+	currentOrganization: undefined,
 	isLoadingOrganizations: false,
 	isLoadingMembers: false,
 };
@@ -44,7 +44,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		const menuItem = {
-			orgId: organizationId,
+			id: organizationId,
 			displayName: name,
 		};
 
@@ -96,8 +96,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	listMembers: async () => {
 		set((state) => ({ ...state, isLoadingMembers: true }));
+		const organizationId = get().currentOrganization?.id;
 
-		const organizationId = get().currentOrganizationId;
 		if (!organizationId) {
 			set((state) => ({ ...state, isLoadingMembers: false }));
 
@@ -118,7 +118,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	inviteMember: async (email) => {
-		const organizationId = get().currentOrganizationId;
+		const organizationId = get().currentOrganization?.id;
 
 		const { error } = await OrganizationsService.inviteMember(organizationId!, email);
 
@@ -130,7 +130,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	removeMember: async (email) => {
-		const organizationId = get().currentOrganizationId;
+		const organizationId = get().currentOrganization?.id;
 
 		const { error } = await OrganizationsService.inviteMember(organizationId!, email);
 
@@ -141,8 +141,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		await get().listMembers();
 	},
 
-	setCurrentOrganizationId: async (currentOrganizationId) => {
-		set((state) => ({ ...state, currentOrganizationId }));
+	setCurrentOrganization: async (organization) => {
+		set((state) => ({ ...state, currentOrganization: organization }));
 	},
 });
 
