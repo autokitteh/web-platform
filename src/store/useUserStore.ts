@@ -42,6 +42,7 @@ const store: StateCreator<UserStore> = (set) => ({
 			logoutFunction: logoutFn,
 		}));
 	},
+	reset: () => set(defaultState),
 });
 
 export const useUserStore = create(persist(immer(store), { name: StoreName.user }));

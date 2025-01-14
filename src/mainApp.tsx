@@ -7,10 +7,19 @@ import { BrowserRouter } from "react-router-dom";
 import { App } from "./app";
 import { descopeProjectId } from "@constants";
 
+import { useOrganizationStore, useUserStore } from "@store";
+
 import { Toast } from "@components/molecules";
 import { DescopeWrapper } from "@components/templates";
 
 export const MainApp = () => {
+	const { reset: resetUser, user } = useUserStore();
+	const { currentOrganizationId, reset: resetOrganization } = useOrganizationStore();
+	if (!descopeProjectId && (currentOrganizationId || user)) {
+		resetUser();
+		resetOrganization();
+	}
+
 	return (
 		<BrowserRouter>
 			{descopeProjectId ? (

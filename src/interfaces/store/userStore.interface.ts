@@ -6,4 +6,5 @@ export interface UserStore {
 	logoutFunction: () => void;
 	setLogoutFunction: (logoutFn: () => void) => void;
 	user?: User;
+	reset: () => void;
 }
