@@ -35,12 +35,16 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const { data: organizationId, error } = await OrganizationsService.create(name);
 
 		if (error) {
-			return error;
+			return { data: undefined, error };
 		}
+
 		if (!organizationId) {
-			return i18n.t("createFailed", {
-				ns: "settings.organization.store.errors",
-			});
+			return {
+				data: undefined,
+				error: i18n.t("createFailed", {
+					ns: "settings.organization.store.errors",
+				}),
+			};
 		}
 
 		const menuItem = {
@@ -56,7 +60,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return state;
 		});
 
-		return undefined;
+		return { data: organizationId, error: undefined };
 	},
 
 	getOrganizationsList: async () => {

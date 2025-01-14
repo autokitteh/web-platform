@@ -19,7 +19,7 @@ export const AddOrganization = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
 	const addToast = useToastStore((state) => state.addToast);
 	const [creatingOrganization, setCreatingOrganization] = useState(false);
-	const { createOrganization, getOrganizationsList, organizationsList } = useOrganizationStore();
+	const { createOrganization, organizationsList } = useOrganizationStore();
 	const organizationsNamesSet = useMemo(
 		() => new Set((organizationsList || []).map((organization) => organization.displayName)),
 		[organizationsList]
@@ -47,7 +47,7 @@ export const AddOrganization = () => {
 
 	const onSubmit = async (values: FormValues) => {
 		setCreatingOrganization(true);
-		const error = await createOrganization(values.name);
+		const { data: organizationId, error } = await createOrganization(values.name);
 		if (error) {
 			addToast({
 				message: tErrors("errorCreateNewOrganization"),
@@ -57,9 +57,8 @@ export const AddOrganization = () => {
 
 			return;
 		}
-		openModal(ModalName.organizationCreated, { name: values.name });
+		openModal(ModalName.organizationCreated, { name: values.name, organizationId });
 		setCreatingOrganization(false);
-		getOrganizationsList();
 	};
 
 	return (
