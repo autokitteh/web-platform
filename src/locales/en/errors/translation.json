@@ -96,5 +96,6 @@
 	"errorFetchingIntegrations": "Error fetching integrations",
 	"errorSendingFeedback": "Error sending feedback",
 	"errorSendingFeedbackExtended": "Error sending feedback, error: {{error}}",
-	"errorCreateNewOrganization": "Error creating a new organization"
+	"errorCreateNewOrganization": "Error creating a new organization",
+	"organizationNotFound": "Organization not found"
 }
