@@ -15,14 +15,14 @@ export const Td = ({ children, className, onClick, title, innerDivClassName }: T
 		}
 	};
 
-	const innerDivStyle = cn("w-full flex truncate pr-2", innerDivClassName);
+	const innerDivClass = cn("w-full flex truncate pr-2", innerDivClassName);
 
 	const cellTitle = title ? title : typeof children === "string" ? children : "";
 
 	return (
 		<div aria-label={cellTitle} className={tdStyle} role="cell" title={cellTitle}>
 			<div className="flex w-full items-center" onClick={onClick} onKeyDown={handleKeyDown}>
-				<div className={innerDivStyle}>{children}</div>
+				<div className={innerDivClass}>{children}</div>
 			</div>
 		</div>
 	);
