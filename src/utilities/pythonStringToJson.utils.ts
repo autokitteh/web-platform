@@ -1,6 +1,6 @@
 import i18n from "i18next";
 
-import { LoggerService } from "@services/logger.service";
+import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 
 export const convertPythonStringToJSON = (input: string): { data?: { key: string; value: any }; error?: Error } => {

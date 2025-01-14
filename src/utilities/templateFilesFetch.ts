@@ -1,7 +1,6 @@
 import i18n from "i18next";
 
-import { LocalDomainHttpService } from "@services/http.service";
-import { LoggerService } from "@services/logger.service";
+import { LocalDomainHttpService, LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 
 export const fetchFileContent = async (fileUrl: string): Promise<{ data?: string; error?: Error }> => {
