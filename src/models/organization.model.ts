@@ -3,6 +3,7 @@ import i18n from "i18next";
 import { Org as ProtoOrganization, OrgMember as ProtoOrganizationMember } from "@ak-proto-ts/orgs/v1/org_pb";
 import { memberStatusConverter } from "@models/utils";
 import { UsersService } from "@services";
+import { MemberRole } from "@src/enums";
 import { Organization, OrganizationMember } from "@type/models";
 
 export const convertOrganizationProtoToModel = (protoOrganization: ProtoOrganization): Organization => {
@@ -27,9 +28,12 @@ export const convertMemberProtoToModel = async (
 		);
 	}
 
+	const role = protoOrganizationMember.roles.includes("admin") ? MemberRole.admin : MemberRole.user;
+
 	return {
 		user,
 		organizationId: protoOrganizationMember.orgId,
 		status: memberStatusConverter(protoOrganizationMember.status),
+		role,
 	};
 };

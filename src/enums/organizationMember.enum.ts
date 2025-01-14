@@ -10,3 +10,7 @@ export enum MemberStatusType {
 	invited = "invited",
 	unspecified = "unspecified",
 }
+export enum MemberRole {
+	"admin" = "admin",
+	"user" = "user",
+}

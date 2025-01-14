@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { MemberStatus } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { CreateMemberModalRef } from "@src/interfaces/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
@@ -92,31 +93,36 @@ export const OrganizationMembersTable = () => {
 				</THead>
 
 				<TBody>
-					<Tr className="hover:bg-gray-1300">
-						<Td className="w-1/5 min-w-16 cursor-pointer pl-4">xxxx</Td>
-						<Td className="w-2/6 min-w-16 cursor-pointer">@mail</Td>
-						<Td className="w-1/5 min-w-16 cursor-pointer">Invite sent / active</Td>
-						<Td className="w-1/6 min-w-16 cursor-pointer">Admin</Td>
-						<Td className="w-1/8 min-w-16 cursor-pointer gap-1">
-							<div className="flex">
-								<IconButton className="ml-auto mr-1" title={t("table.actions.resendInvite")}>
-									<RotateRightIcon className="size-4 fill-white" />
-								</IconButton>
-								<IconButton
-									className="mr-1"
-									onClick={() => openModal(ModalName.deleteMemberFromOrg)}
-									title={t("table.actions.delete")}
-								>
-									<TrashIcon
-										className="size-4 stroke-white"
-										onClick={() =>
-											openModal(ModalName.deleteMember, { userId: "userId", email: "email" })
-										}
-									/>
-								</IconButton>
-							</div>
-						</Td>
-					</Tr>
+					{membersList?.map((member) => (
+						<Tr className="hover:bg-gray-1300" key={member.user.id}>
+							<Td className="w-1/5 min-w-16 cursor-pointer pl-4">{member.user.name}</Td>
+							<Td className="w-2/6 min-w-16 cursor-pointer">{member.user.email}</Td>
+							<Td className="w-1/5 min-w-16 cursor-pointer capitalize">{MemberStatus[member.status]}</Td>
+							<Td className="w-1/6 min-w-16 cursor-pointer">Admin</Td>
+							<Td className="w-1/8 min-w-16 cursor-pointer gap-1">
+								<div className="flex">
+									<IconButton className="ml-auto mr-1" title={t("table.actions.resendInvite")}>
+										<RotateRightIcon className="size-4 fill-white" />
+									</IconButton>
+									<IconButton
+										className="mr-1"
+										onClick={() => openModal(ModalName.deleteMemberFromOrg)}
+										title={t("table.actions.delete")}
+									>
+										<TrashIcon
+											className="size-4 stroke-white"
+											onClick={() =>
+												openModal(ModalName.deleteMember, {
+													userId: member.user.id,
+													email: member.user.email,
+												})
+											}
+										/>
+									</IconButton>
+								</div>
+							</Td>
+						</Tr>
+					))}
 				</TBody>
 			</Table>
 			<CreateMemberModal
