@@ -81,9 +81,9 @@ export class ProjectsService {
 		return { data: deploymentId, error: undefined };
 	}
 
-	static async get(projectId: string): Promise<ServiceResponse<Project>> {
+	static async get(projectId: string, orgId?: string): Promise<ServiceResponse<Project>> {
 		try {
-			const { project } = await projectsClient.get({ projectId });
+			const { project } = await projectsClient.get({ projectId, orgId });
 			if (!project) {
 				LoggerService.error(namespaces.projectService, i18n.t("projectNotFound", { ns: "services" }));
 

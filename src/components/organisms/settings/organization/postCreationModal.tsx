@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
-import { useModalStore } from "@src/store";
+import { useModalStore, useOrganizationStore } from "@src/store";
 
 import { Button } from "@components/atoms";
 import { Modal } from "@components/molecules";
@@ -12,6 +13,12 @@ export const OrganizationPostCreationModal = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.modal" });
 	const { closeModal } = useModalStore();
 	const data = useModalStore((state) => state.data) as { name: string };
+	const navigate = useNavigate();
+	const { organizationsList } = useOrganizationStore();
+	const orgId = useMemo(
+		() => organizationsList?.find((org) => org.displayName === data?.name)?.orgId,
+		[organizationsList, data?.name]
+	);
 
 	if (!data) return null;
 
@@ -31,7 +38,12 @@ export const OrganizationPostCreationModal = () => {
 					{t("buttons.stay")}
 				</Button>
 
-				<Button ariaLabel={t("buttons.open")} className="bg-gray-1100 px-4 py-3 font-semibold" variant="filled">
+				<Button
+					ariaLabel={t("buttons.open")}
+					className="bg-gray-1100 px-4 py-3 font-semibold"
+					onClick={() => navigate(`/organization-settings/switch/${orgId}`)}
+					variant="filled"
+				>
 					{t("buttons.open", { name: data.name })}
 				</Button>
 			</div>

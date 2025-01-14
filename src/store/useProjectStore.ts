@@ -224,7 +224,8 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (project) {
 			return { data: project, error: undefined };
 		}
-		const { data: responseProject, error } = await ProjectsService.get(projectId);
+		const currentOrganizationId = useOrganizationStore.getState().currentOrganizationId;
+		const { data: responseProject, error } = await ProjectsService.get(projectId, currentOrganizationId);
 
 		if (error) {
 			return { data: undefined, error };
