@@ -127,7 +127,7 @@ export const WebhookFields = ({
 					value={webhookUrl}
 				/>
 
-				<CopyButton text={webhookUrl} />
+				<CopyButton size="md" text={webhookUrl} />
 			</div>
 		</>
 	);

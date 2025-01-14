@@ -13,7 +13,7 @@ import { CopyIcon } from "@assets/image/icons";
 
 export const CopyButton = ({
 	className,
-	size = "md",
+	size = "xs",
 	successMessage,
 	tabIndex = 0,
 	text,

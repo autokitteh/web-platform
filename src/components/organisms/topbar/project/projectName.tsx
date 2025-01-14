@@ -133,7 +133,7 @@ export const ProjectTopbarName = () => {
 
 			<span className="flex items-center font-fira-code font-semibold text-gray-500">
 				{t("topbar.id")}
-				<CopyButton className="ml-2 inline p-1 pl-1.5" size="xs" text={project?.id || ""} />
+				<CopyButton className="ml-2 inline p-1 pl-1.5" text={project?.id || ""} />
 			</span>
 		</div>
 	);

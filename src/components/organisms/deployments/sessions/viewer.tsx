@@ -188,17 +188,17 @@ export const SessionViewer = () => {
 				<div className="flex flex-col gap-0.5">
 					<div className="flex items-center justify-end gap-4">
 						<div className="leading-6">{t("sessionId")}</div>
-						<CopyButton className="p-0" size="xs" text={sessionInfo.sessionId} />
+						<CopyButton className="p-0" text={sessionInfo.sessionId} />
 					</div>
 					{sessionInfo.eventId ? (
 						<div className="flex items-center justify-end gap-4">
 							<div className="leading-6">{t("eventId")}</div>
-							<CopyButton className="p-0" size="xs" text={sessionInfo.eventId} />
+							<CopyButton className="p-0" text={sessionInfo.eventId} />
 						</div>
 					) : null}
 					<div className="flex items-center justify-end gap-4">
 						<div className="leading-6">{t("buildId")}</div>
-						<CopyButton className="p-0" size="xs" text={sessionInfo.buildId} />
+						<CopyButton className="p-0" text={sessionInfo.buildId} />
 					</div>
 				</div>
 			</div>

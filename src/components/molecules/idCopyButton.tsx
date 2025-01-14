@@ -31,7 +31,7 @@ export const IdCopyButton = ({
 			<Button className={buttonClassName} tabIndex={-1} variant={variant}>
 				{displayFullLength ? id : idStr}
 			</Button>
-			<CopyButton className="mb-0.5 p-0" size="xs" successMessage={successMessage} tabIndex={0} text={id} />
+			<CopyButton className="mb-0.5 p-0" successMessage={successMessage} tabIndex={0} text={id} />
 		</div>
 	);
 };

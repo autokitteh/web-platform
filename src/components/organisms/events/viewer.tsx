@@ -97,11 +97,11 @@ export const EventViewer = () => {
 					<div className="flex flex-col gap-0.5">
 						<div className="flex items-center justify-end gap-4">
 							<div className="leading-6">{t("eventId")}</div>
-							<CopyButton className="p-0" size="xs" text={eventInfo.type} />
+							<CopyButton className="p-0" text={eventInfo.type} />
 						</div>
 						<div className="flex items-center justify-end gap-4">
 							<div className="leading-6">{t("sourceId")}</div>
-							<CopyButton className="p-0" size="xs" text={eventInfo.destinationId || ""} />
+							<CopyButton className="p-0" text={eventInfo.destinationId || ""} />
 						</div>
 					</div>
 				</div>

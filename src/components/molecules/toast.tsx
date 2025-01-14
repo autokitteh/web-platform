@@ -127,7 +127,7 @@ export const Toast = () => {
 									</Button>
 								) : null}
 
-								{showCopyButton ? <CopyButton text={textCopyButton} /> : null}
+								{showCopyButton ? <CopyButton className="p-0" text={textCopyButton} /> : null}
 							</div>
 
 							<IconButton
