@@ -237,18 +237,14 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { data: responseProject, error };
 	},
 
-	getProjectsList: async (orgId) => {
+	getProjectsList: async () => {
 		const projectsList = get().projectsList;
 		if (!projectsList.length) {
 			set((state) => ({ ...state, isLoadingProjectsList: true }));
 		}
 		const currentOrganizationId = useOrganizationStore.getState().currentOrganizationId;
 
-		if (orgId) {
-			set((state) => ({ ...state, defaultState }));
-		}
-
-		const { data: projects, error } = await ProjectsService.list(orgId || currentOrganizationId);
+		const { data: projects, error } = await ProjectsService.list(currentOrganizationId);
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingProjectsList: false, projectsList: [] }));

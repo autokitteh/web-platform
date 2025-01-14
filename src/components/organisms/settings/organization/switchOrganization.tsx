@@ -21,14 +21,10 @@ export const SwitchOrganization = () => {
 	);
 
 	const switchProjectList = useCallback(async () => {
-		try {
-			if (organizationId) {
-				await getProjectsList(organizationId);
-			}
-		} finally {
-			setIsProcessing(false);
-		}
-	}, [organizationId, getProjectsList]);
+		await getProjectsList();
+		setIsProcessing(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [organizationId]);
 
 	useEffect(() => {
 		if (organizationId && currentOrganization) {

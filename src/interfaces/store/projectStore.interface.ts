@@ -12,7 +12,7 @@ export interface ProjectStore {
 	deleteProject: (projectId: string) => ServiceResponse<undefined>;
 	getProject: (projectId: string) => ServiceResponse<Project>;
 	exportProject: (projectId: string) => ServiceResponse<Uint8Array>;
-	getProjectsList: (orgId?: string) => ServiceResponse<Project[]>;
+	getProjectsList: () => ServiceResponse<Project[]>;
 	createProjectFromManifest: (manifest: string) => ServiceResponse<string>;
 	projectsList: Project[];
 	currentProjectId?: string;
