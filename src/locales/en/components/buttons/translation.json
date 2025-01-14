@@ -1,5 +1,6 @@
 {
 	"copy": "Copy",
 	"copyButtonText": "Copy {{text}}",
-	"copied": "Successfully copied to the clipboard"
+	"copied": "Successfully copied to the clipboard",
+	"idCopyButtonNoId": "No ID to copy"
 }
