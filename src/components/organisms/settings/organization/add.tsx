@@ -19,7 +19,7 @@ export const AddOrganization = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
 	const addToast = useToastStore((state) => state.addToast);
 	const [creatingOrganization, setCreatingOrganization] = useState(false);
-	const { createOrganization, organizationsList } = useOrganizationStore();
+	const { createOrganization, getOrganizationsList, organizationsList } = useOrganizationStore();
 	const organizationsNamesSet = useMemo(
 		() => new Set((organizationsList || []).map((organization) => organization.displayName)),
 		[organizationsList]
@@ -59,6 +59,7 @@ export const AddOrganization = () => {
 		}
 		openModal(ModalName.organizationCreated, { name: values.name });
 		setCreatingOrganization(false);
+		getOrganizationsList();
 	};
 
 	return (

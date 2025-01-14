@@ -14,4 +14,5 @@ export interface OrganizationStore {
 	listMembers: () => ServiceResponseError;
 	membersList?: OrganizationMember[];
 	reset: () => void;
+	getCurrentOrganizationId: (id: string) => ServiceResponseError;
 }

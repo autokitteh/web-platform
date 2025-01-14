@@ -8,7 +8,7 @@ import { Organization, OrganizationMember } from "@type/models";
 export const convertOrganizationProtoToModel = (protoOrganization: ProtoOrganization): Organization => {
 	return {
 		displayName: protoOrganization.displayName,
-		id: protoOrganization.orgId,
+		orgId: protoOrganization.orgId,
 	};
 };
 

@@ -1,5 +1,7 @@
 import React, { useEffect, useId, useMemo } from "react";
 
+import { useLocation } from "react-router-dom";
+
 import { useResize, useWindowDimensions } from "@src/hooks";
 import { useProjectStore } from "@src/store";
 
@@ -13,10 +15,12 @@ export const Dashboard = () => {
 	const [leftSideWidth] = useResize({ direction: "horizontal", initial: 70, max: 70, min: 30, id: resizeId });
 	const { isMobile } = useWindowDimensions();
 	const { getProjectsList, isLoadingProjectsList, projectsList } = useProjectStore();
+	const location = useLocation();
+	const state = location.state as { organizationId?: string };
 
 	useEffect(() => {
-		if (!projectsList.length && isMobile) {
-			getProjectsList();
+		if ((!projectsList.length && isMobile) || state?.organizationId) {
+			getProjectsList(state?.organizationId);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

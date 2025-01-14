@@ -18,6 +18,7 @@ const defaultState: Omit<
 	| "listMembers"
 	| "removeMember"
 	| "reset"
+	| "getCurrentOrganizationId"
 > = {
 	organizationsList: undefined,
 	membersList: undefined,
@@ -51,7 +52,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		const menuItem = {
-			id: organizationId,
+			orgId: organizationId,
 			displayName: name,
 		};
 
@@ -146,6 +147,10 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		await get().listMembers();
+	},
+
+	getCurrentOrganizationId: async (currentOrganizationId) => {
+		set((state) => ({ ...state, currentOrganizationId }));
 	},
 });
 

@@ -26,6 +26,7 @@ import {
 	AddOrganization,
 	OrganizationMembersTable,
 	OrganizationSettings,
+	SwitchOrganization,
 } from "@components/organisms/settings/organization";
 import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
@@ -247,6 +248,7 @@ export const App = () => {
 				<Route element={<OrganizationSettings />} index />
 				<Route element={<AddOrganization />} path="add" />
 				<Route element={<OrganizationMembersTable />} path="members" />
+				<Route element={<SwitchOrganization />} path="switch/:organizationId" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>

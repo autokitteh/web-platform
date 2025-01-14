@@ -10,9 +10,8 @@ import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
 import { defaultProjectDirectory, defaultProjectFile } from "@src/constants";
+import { useOrganizationStore } from "@src/store";
 import { fetchFileContent } from "@src/utilities";
-
-import { useOrganizationStore } from "@store";
 
 const defaultState: Omit<
 	ProjectStore,
@@ -237,14 +236,18 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		return { data: responseProject, error };
 	},
 
-	getProjectsList: async () => {
+	getProjectsList: async (orgId) => {
 		const projectsList = get().projectsList;
 		if (!projectsList.length) {
 			set((state) => ({ ...state, isLoadingProjectsList: true }));
 		}
-		const organizationId = useOrganizationStore.getState().currentOrganizationId;
+		const currentOrganizationId = useOrganizationStore.getState().currentOrganizationId;
 
-		const { data: projects, error } = await ProjectsService.list(organizationId);
+		if (orgId) {
+			set((state) => ({ ...state, defaultState }));
+		}
+
+		const { data: projects, error } = await ProjectsService.list(orgId || currentOrganizationId);
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingProjectsList: false, projectsList: [] }));
