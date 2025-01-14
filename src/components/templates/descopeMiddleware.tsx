@@ -2,7 +2,6 @@ import React, { ReactNode, Suspense, lazy, useCallback, useEffect, useState } fr
 
 import { useDescope } from "@descope/react-sdk";
 import Cookies from "js-cookie";
-import psl from "psl";
 import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
@@ -40,6 +39,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const [apiToken, setApiToken] = useState<string>();
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_searchParams, setSearchParams] = useSearchParams();
 	const { setCurrentOrganizationId } = useOrganizationStore();
 
@@ -62,19 +62,28 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	}, [location]);
 
 	const handleLogout = useCallback(async () => {
-		await logout();
-		const rootDomain = psl.parse(window.location.hostname);
-		if (rootDomain.error) {
+		logout();
+		const { cookieDomain, error } = getCookieDomain(window.location.hostname, namespaces.authorizationFlow.logout);
+		if (error) {
 			addToast({
-				message: t("errors.logoutFailed", { error: rootDomain.error.message }),
+				message: t("errors.logoutFailedExtended", { error }),
 				type: "error",
 			});
-			LoggerService.error(namespaces.ui.loginPage, t("errors.logoutFailed", { error: rootDomain.error.message }));
 
 			return;
 		}
+
+		if (!cookieDomain || cookieDomain === ".") {
+			addToast({
+				message: t("errors.logoutFailed"),
+				type: "error",
+			});
+
+			return;
+		}
+
 		revokeCookieConsent();
-		Cookies.remove(isLoggedInCookie, { domain: getCookieDomain(rootDomain) });
+		Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
 		window.localStorage.clear();
 		window.location.href = "/";
 		setLocalStorageValue(LocalStorageKeys.apiToken, "");

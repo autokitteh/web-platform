@@ -21,7 +21,7 @@ export {
 } from "@validations/connection.schema";
 export { codeAssetsSchema } from "@validations/coseAndAssets.schema";
 export { manualRunSchema } from "@validations/manualRun.schema";
-// eslint-disable-next-line @liferay/sort-exports
+
 export { selectSchema } from "@validations/shared.schema";
 export {
 	addOrganizationSchema,

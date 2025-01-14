@@ -1,4 +1,3 @@
-// eslint-disable-next-line @liferay/sort-exports
 export { sortIntegrationsMapByLabel } from "@utilities/sortIntegrationsMap.utils";
 export {
 	getPreference,

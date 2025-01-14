@@ -10,5 +10,8 @@
 		"fetchedFromGithub": "Fetched from Github",
 		"templatesArchiveFetchFailedExtended": "Templates archive fetch failed, error: {{error}}",
 		"uknownErrorUnpackingZip": "Unknown error occurred unpacking the zip archive: {{zipName}}"
+	},
+	"getCookieDomain": {
+		"parsingError":  "Error getting cookie domain, error: {{error}}"
 	}
 }

@@ -24,7 +24,10 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 			if (currentActivity) {
 				activities.push(currentActivity);
 			}
-			const kwargs = convertPythonStringToJSON(callSpec?.kwargs?.params?.string?.v || "{}");
+
+			const { data: kwargs, error } = convertPythonStringToJSON(callSpec?.kwargs?.params?.string?.v || "{}");
+
+			if (error) throw error;
 
 			const args = callSpec.args
 				.map((arg) => (arg.string ? arg.string.v : null))
@@ -59,14 +62,14 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 					try {
 						const byteArray = convertedValue.bytes;
 						if (!byteArray) {
-							throw new Error("Invalid or missing byte array");
+							throw new Error(i18n.t("sessions.viewer.invalidByteArray", { ns: "deployments" }));
 						}
 						const uint8Array = new Uint8Array(byteArray);
 						const decoder = new TextDecoder("utf-8");
 						const decodedString = decoder.decode(uint8Array);
 						currentActivity.returnBytesValue = decodedString;
 					} catch (error) {
-						console.error("Error decoding text:", error);
+						throw new Error(i18n.t("sessions.viewer.errorDecodingText", { ns: "deployments", error }));
 					}
 				}
 
@@ -83,6 +86,8 @@ export function convertSessionLogRecordsProtoToActivitiesModel(
 					namespaces.models.activity,
 					i18n.t("sessionLogRecordActivtyErrorConvert", { ns: "services", error: error.message })
 				);
+
+				throw error;
 			}
 		}
 

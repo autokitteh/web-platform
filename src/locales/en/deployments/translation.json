@@ -123,7 +123,12 @@
 			"status": "Status",
 			"connectionName": "Connection Name",
 			"sessionNotFound": "Session details not found",
-			"sessionNotFoundExtended": "Session details not found, session ID: {{sessionId}}"		},
+			"sessionNotFoundExtended": "Session details not found, session ID: {{sessionId}}",
+			"couldnotConvertArguments": "Error converting Python dictionary to JSON",
+			"couldnotConvertArgumentsExtended": "Error converting Python dictionary to JSON, error: {{error}}",
+			"invalidByteArray": "Invalid or missing byte array",
+			"errorDecodingText": "Error decoding text, {{error}}"
+		},
 		"actions":{
 			"sessionStoppedSuccessfully": "Session request successfully sent",
 			"sessionStoppedSuccessfullyExtended": "Session request successfully sent, session ID: {{sessionId}}",

@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef, @typescript-eslint/no-require-imports
+// eslint-disable-next-line no-undef, @typescript-eslint/no-require-imports
 const plugin = require('tailwindcss/plugin');
 
 // eslint-disable-next-line no-undef

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @liferay/sort-exports
 export { IndexedDBService } from "@services/indexedDb.service";
 export { TemplateStorageService } from "@services/templatesIndexedDb.service";
 export { AuthService } from "@services/auth.service";
