@@ -14,8 +14,8 @@ import { DescopeWrapper } from "@components/templates";
 
 export const MainApp = () => {
 	const { reset: resetUser, user } = useUserStore();
-	const { currentOrganizationId, reset: resetOrganization } = useOrganizationStore();
-	if (!descopeProjectId && (currentOrganizationId || user)) {
+	const { currentOrganization, reset: resetOrganization } = useOrganizationStore();
+	if (!descopeProjectId && (currentOrganization?.id || user)) {
 		resetUser();
 		resetOrganization();
 	}

@@ -12,7 +12,7 @@ import { useHubspot } from "@src/hooks";
 import { gTagEvent, getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
-import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
+import { useLoggerStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { External404 } from "@components/pages";
@@ -41,7 +41,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [apiToken, setApiToken] = useState<string>();
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_searchParams, setSearchParams] = useSearchParams();
-	const { setCurrentOrganizationId } = useOrganizationStore();
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
@@ -117,7 +116,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					return;
 				}
 				clearLogs();
-				setCurrentOrganizationId(user.defaultOrganizationId);
 
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user.email);

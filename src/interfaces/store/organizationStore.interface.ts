@@ -1,6 +1,5 @@
+import { ServiceResponse, ServiceResponseError } from "@src/types";
 import { Organization, OrganizationMember } from "@type/models";
-import { ServiceResponse } from "@src/types";
-import { ServiceResponseError } from "@type/services.types";
 
 export interface OrganizationStore {
 	organizationsList?: Organization[];
@@ -10,7 +9,7 @@ export interface OrganizationStore {
 	membersList?: OrganizationMember[];
 	reset: () => void;
 	getOrganizationsList: () => ServiceResponse<Organization[]>;
-	createOrganization: (name: string) => ServiceResponseError;
+	createOrganization: (name: string) => ServiceResponse<string>;
 	setCurrentOrganization: (organization: Organization) => ServiceResponseError;
 	inviteMember: (organizationId: string, email: string) => ServiceResponseError;
 	removeMember: (organizationId: string, email: string) => ServiceResponseError;
