@@ -8,7 +8,7 @@ import { CreateMemberModalRef } from "@src/interfaces/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 
 import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
-import { CreateMemberModal, RemoveMemberModal } from "@components/organisms/settings/organization";
+import { CreateMemberModal, DeleteMemberModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";
 
@@ -16,8 +16,8 @@ export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { closeModal, openModal } = useModalStore();
 	const [isCreating, setIsCreating] = useState(false);
-	const [isRemoving, setIsRemoving] = useState(false);
-	const { currentOrganization, inviteMember, listMembers, membersList, removeMember } = useOrganizationStore();
+	const [isDeleting, setIsDeleting] = useState(false);
+	const { inviteMember, listMembers, membersList, deleteMember } = useOrganizationStore();
 	const membersEmails = new Set((membersList || []).map((member) => member.user.email));
 	const addToast = useToastStore((state) => state.addToast);
 	const modalRef = useRef<CreateMemberModalRef>(null);
@@ -50,11 +50,11 @@ export const OrganizationMembersTable = () => {
 		listMembers();
 	};
 
-	const onRemove = async (userId: string, email: string) => {
-		setIsRemoving(true);
-		const error = await removeMember(currentOrganization!.id, userId);
-		setIsRemoving(false);
-		closeModal(ModalName.organizationMemberCreate);
+	const onDelete = async (userId: string, email: string) => {
+		setIsDeleting(true);
+		const error = await deleteMember(userId);
+		setIsDeleting(false);
+		closeModal(ModalName.deleteMemberFromOrg);
 
 		if (error) {
 			addToast({
@@ -66,7 +66,7 @@ export const OrganizationMembersTable = () => {
 		}
 
 		addToast({
-			message: t("table.messages.memberRemoved", { email }),
+			message: t("table.messages.memberDeleted", { email }),
 			type: "success",
 		});
 	};
@@ -104,18 +104,16 @@ export const OrganizationMembersTable = () => {
 							<Td className="w-1/8 min-w-16" innerDivClassName="justify-end">
 								<IconButton
 									className="mr-1"
-									onClick={() => openModal(ModalName.deleteMemberFromOrg)}
+									onClick={() =>
+										openModal(ModalName.deleteMemberFromOrg, {
+											name: member.user.name,
+											id: member.user.id,
+											email: member.user.email,
+										})
+									}
 									title={t("table.actions.delete")}
 								>
-									<TrashIcon
-										className="size-4 stroke-white"
-										onClick={() =>
-											openModal(ModalName.deleteMember, {
-												userId: member.user.id,
-												email: member.user.email,
-											})
-										}
-									/>
+									<TrashIcon className="size-4 stroke-white" />
 								</IconButton>
 							</Td>
 						</Tr>
@@ -128,7 +126,7 @@ export const OrganizationMembersTable = () => {
 				membersEmails={membersEmails}
 				ref={modalRef}
 			/>
-			<RemoveMemberModal isRemoving={isRemoving} onRemove={onRemove} />
+			<DeleteMemberModal isDeleting={isDeleting} onDelete={onDelete} />
 		</div>
 	);
 };

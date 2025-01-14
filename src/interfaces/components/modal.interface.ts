@@ -23,9 +23,9 @@ export interface ModalModifyVariableProps {
 	onError: (message: string) => void;
 }
 
-export interface RemoveMemberModalProps {
-	onRemove: (userId: string, email: string) => void;
-	isRemoving: boolean;
+export interface DeleteMemberModalProps {
+	onDelete: (userId: string, email: string) => void;
+	isDeleting: boolean;
 }
 
 export interface DeleteAccountModalProps {

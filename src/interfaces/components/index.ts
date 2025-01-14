@@ -26,7 +26,7 @@ export type { LogoCatLargeProps } from "@interfaces/components/logo.interface";
 export type { MenuProps, NavigationSettingsItem } from "@interfaces/components/menu.interface";
 export type {
 	CreateProjectModalProps,
-	RemoveMemberModalProps,
+	DeleteMemberModalProps,
 	DeleteModalProps,
 	ModalDeleteVariableProps,
 	ModalModifyVariableProps,

@@ -106,6 +106,7 @@
 	"errorConvertingMemberExtended": "Error converting member, member ID: {{memberId}}, error: {{error}}",
 	"errorConvertingMembers": "Error converting members",
 	"errorInvitingUserToOrganizationExtended": "Inviting user to organization failed, organization ID: {{organizationId}}, error: {{error}}",
+	"errorRemovingUserToOrganization": "Removing user from organization failed",
 	"errorRemovingUserToOrganizationExtended": "Removing user from organization failed, organization ID: {{organizationId}}, error: {{error}}"
 
 }

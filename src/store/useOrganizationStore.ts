@@ -17,7 +17,7 @@ const defaultState: Omit<
 	| "inviteMember"
 	| "setCurrentOrganization"
 	| "listMembers"
-	| "removeMember"
+	| "deleteMember"
 	| "reset"
 > = {
 	organizationsList: undefined,
@@ -161,10 +161,10 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		get().listMembers();
 	},
 
-	removeMember: async (email) => {
+	deleteMember: async (userId) => {
 		const organizationId = get().currentOrganization?.id;
 
-		const { error } = await OrganizationsService.inviteMember(organizationId!, email);
+		const { error } = await OrganizationsService.deleteMember(organizationId!, userId);
 
 		if (error) {
 			return error;

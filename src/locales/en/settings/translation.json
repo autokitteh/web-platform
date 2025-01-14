@@ -102,7 +102,7 @@
 					"delete": "Delete"
 				},
 				"messages":{
-					"memberRemoved": "Member {{email}} removed from the organization"
+					"memberDeleted": "Member {{email}} removed from the organization"
 				}
 			},
 			"errors":{

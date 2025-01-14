@@ -45,7 +45,7 @@
 		"cancelButton": "Cancel",
 		"deleteButton": "Delete",
 		"deleteMember": "Delete Member",
-		"line1": "Are you sure you want to delete - {{memberName}}",
+		"line1": "Are you sure you want to delete {{name}} ({{email}}) from the organization?",
 		"line2": "This action cannot be undone, and all related data will be permanently removed."
 	},
 	"deleteTrigger": {

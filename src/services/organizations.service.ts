@@ -158,7 +158,6 @@ export class OrganizationsService {
 			LoggerService.error(namespaces.organizationsService, logError);
 
 			const toastError = i18n.t("errorRemovingUserToOrganization", {
-				organizationId,
 				error: (error as Error).message,
 				ns: "services",
 			});
