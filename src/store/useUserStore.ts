@@ -5,7 +5,8 @@ import { immer } from "zustand/middleware/immer";
 
 import { StoreName } from "@enums";
 import { UserStore } from "@interfaces/store";
-import { AuthService } from "@services";
+import { AuthService, LoggerService } from "@services";
+import { namespaces } from "@src/constants";
 import { ServiceResponse } from "@src/types";
 import { User } from "@src/types/models";
 
@@ -23,9 +24,12 @@ const store: StateCreator<UserStore> = (set) => ({
 		}
 
 		if (!user) {
-			const errorMsg = i18n.t("userNotFound", { ns: "services" });
+			const errorMessage = i18n.t("user.failedGettingLoggedInUser", {
+				ns: "stores",
+			});
+			LoggerService.error(namespaces.stores.userStore, errorMessage);
 
-			return { error: errorMsg, data: undefined };
+			return { error: errorMessage, data: undefined };
 		}
 
 		set((state) => ({

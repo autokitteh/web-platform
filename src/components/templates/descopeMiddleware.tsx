@@ -84,9 +84,9 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 		revokeCookieConsent();
 		Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
+		setLocalStorageValue(LocalStorageKeys.apiToken, "");
 		window.localStorage.clear();
 		window.location.href = "/";
-		setLocalStorageValue(LocalStorageKeys.apiToken, "");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [logout]);
 
@@ -108,41 +108,41 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				});
 
 				const { data: user, error } = await getLoggedInUser();
-				if (error || !user) {
-					addToast({
-						message: t("errors.loginFailed"),
-						type: "error",
-					});
-
-					return;
-				}
-
-				const { data: userOrganization, error: errorOrganization } = await OrganizationsService.get(
-					user.defaultOrganizationId
-				);
-				if (errorOrganization || !userOrganization) {
+				if (error) {
 					addToast({
 						message: t("errors.loginFailedTryAgainLater"),
 						type: "error",
 					});
 
-					return;
+					return await handleLogout();
+				}
+
+				const { data: userOrganization, error: errorOrganization } = await OrganizationsService.get(
+					user!.defaultOrganizationId
+				);
+				if (errorOrganization || !userOrganization) {
+					addToast({
+						message: t("errors.userOrganizationIsMissing"),
+						type: "error",
+					});
+
+					return await handleLogout();
 				}
 
 				setCurrentOrganization(userOrganization);
 				clearLogs();
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
-				setIdentity(user.email);
+				setIdentity(user!.email);
 			} catch (error) {
 				addToast({
-					message: t("errors.loginFailed"),
+					message: t("errors.loginFailedTryAgainLater"),
 					type: "error",
 				});
 				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-			} finally {
-				setIsLoggingIn(false);
-				setDescopeRenderKey((prevKey) => prevKey + 1);
+				return await handleLogout();
 			}
+			setIsLoggingIn(false);
+			setDescopeRenderKey((prevKey) => prevKey + 1);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getLoggedInUser]

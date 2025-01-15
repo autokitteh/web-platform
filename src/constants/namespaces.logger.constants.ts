@@ -50,6 +50,7 @@ export const namespaces = {
 		activitiesStore: "Activity Logs Store",
 		outputStore: "Output Logs Store",
 		templatesStore: "Templates Store",
+		userStore: "User Store",
 	},
 	utilities: {
 		fetchAndExtract: "Fetch and Extract",
