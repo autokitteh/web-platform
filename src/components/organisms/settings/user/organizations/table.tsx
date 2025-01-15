@@ -44,7 +44,7 @@ export const UserOrganizationsTable = () => {
 
 		if (error) {
 			addToast({
-				message: new Error(error as string).message,
+				message: error as string,
 				type: "error",
 			});
 
