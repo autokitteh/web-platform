@@ -5,7 +5,6 @@ export type Organization = Readonly<{
 	id: string;
 	uniqueName: string;
 }>;
-
 export type OrganizationMember = Readonly<{
 	role: MemberRole;
 	status?: MemberStatusType;
