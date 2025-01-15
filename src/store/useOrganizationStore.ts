@@ -77,6 +77,31 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		};
 	},
 
+	deleteOrganization: async (organizationId: string) => {
+		const response = await OrganizationsService.delete(organizationId);
+
+		if (response.error) {
+			return {
+				data: undefined,
+				error: true,
+			};
+		}
+
+		set((state) => {
+			const newOrganizations = { ...state.organizations };
+			const newMembers = { ...state.members };
+			delete newOrganizations[organizationId];
+			delete newMembers[organizationId];
+			return {
+				...state,
+				members: newMembers,
+				organizations: newOrganizations,
+			};
+		});
+
+		return response;
+	},
+
 	getEnrichedOrganizations: () => {
 		const { organizations, members, user, currentOrganization } = get();
 		if (!user?.id || !currentOrganization || !Object.keys(organizations).length || !Object.keys(members).length) {

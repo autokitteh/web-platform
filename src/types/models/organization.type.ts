@@ -3,6 +3,7 @@ import { MemberRole, MemberStatus } from "@src/enums";
 export type Organization = Readonly<{
 	displayName: string;
 	id: string;
+	uniqueName: string;
 }>;
 
 export type OrganizationMember = Readonly<{

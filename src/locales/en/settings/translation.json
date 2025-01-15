@@ -1,10 +1,10 @@
 {
 	"menu": {
 		"advanced": "Advanced",
-		"billing": "Billing",
 		"myProfile": "My Profile",
 		"notifications": "Notifications",
-		"clientConfiguration": "Client Setup"
+		"clientConfiguration": "Client Setup",
+		"myOrganizations": "My Organizations"
 	},
 	"clientConfiguration": {
 		"copyFailure": "Failed to copy to clipboard",
@@ -23,6 +23,30 @@
 			"copySuccess": "Host URL copied to clipboard"
 		},
 		"vscodeConfigExample": "VSCode Configuration Example"
+	},
+	"userOrganizations": {
+		"buttons":{
+			"addOrganization": "Add Organization"
+		},
+		"title": "Organizations",
+		"errors":{
+			"fetchFailed": "Failed to fetch organizations",
+			"deleteFailed": "Failed to delete the organization: {{name}}, ID: {{organizationId}}"
+		},
+		"table":{
+			"headers":{
+				"id": "ID",
+				"name": "Name",
+				"uniqueName": "Unique Name",
+				"actions": "Actions"
+			},
+			"actions":{
+				"delete": "Delete {{name}}"
+			},
+			"messages":{
+				"organizationDeleted": "Organization {{name}} deleted"
+			}
+		}
 	},
 	"profile": {
 		"title": "My Profile",
@@ -116,14 +140,11 @@
 		},
 		"store": {
 			"errors": {
-				"organizationIdNotFound": "Organization not found, can't fetch members",
-				"organiztionCreationFailed": "Organization creation failed",
-				"organizationDeletionFailed": "Organization deletion failed",
-				"userNotFound": "User not found",
+				"noMembersFound": "No members found, user ID: {{userId}}",
+				"createFailed": "Organization creation failed -  error: {{error}}",
 				"invitingMemberToOrganizationFailed": "Inviting member to organization failed",
-				"deletingMemberFailed": "Deleting member from organization failed",
-				"noOrganizationsFound": "No organizations found, user ID: {{userId}}",
-				"noMembersFound": "No members found, user ID: {{userId}}"
+				"userNotFound": "Fetching organization failed - user not found",
+				"fetchFailed": "Fetching organization failed"
 			}
 		}
 

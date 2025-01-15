@@ -6,12 +6,11 @@ import { useTranslation } from "react-i18next";
 
 import { ModalName } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
-import { useModalStore } from "@src/store";
+import { useModalStore, useOrganizationStore } from "@src/store";
 import { organizationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
 import { Select } from "@components/molecules";
-import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 export const OrganizationSettings = () => {
 	const options: SelectOption[] = [
@@ -32,6 +31,7 @@ export const OrganizationSettings = () => {
 		mode: "onSubmit",
 	});
 	const { openModal } = useModalStore();
+	const { currentOrganization } = useOrganizationStore();
 
 	const onSubmit = async () => {};
 
@@ -111,7 +111,7 @@ export const OrganizationSettings = () => {
 					<div className="flex justify-between gap-2">
 						<Button
 							className="w-fit border-black bg-black px-5 text-base font-medium text-white hover:bg-gray-950"
-							onClick={() => openModal(ModalName.deleteOrganization)}
+							onClick={() => openModal(ModalName.deleteOrganization, currentOrganization?.id)}
 							type="button"
 							variant="outline"
 						>
@@ -126,7 +126,6 @@ export const OrganizationSettings = () => {
 						</Button>
 					</div>
 				</form>
-				<DeleteOrganizationModal />
 			</div>
 		</div>
 	);
