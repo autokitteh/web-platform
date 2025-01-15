@@ -10,4 +10,5 @@ export interface UserStore {
 	reset: () => void;
 	createUser: (email: string, status: UserStatusType) => Promise<ServiceResponse<string>>;
 	getUser: ({ email, userId }: { email?: string; userId?: string }) => Promise<ServiceResponse<User>>;
+	update: (user: User, fieldMask: string[]) => Promise<string | undefined>;
 }

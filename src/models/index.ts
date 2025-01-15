@@ -8,6 +8,6 @@ export { convertProjectProtoToModel } from "@models/project.model";
 export { convertSessionProtoToModel, convertSessionProtoToViewerModel } from "@models/session.model";
 export { SessionLogRecord, convertSessionLogProtoToViewerOutput } from "@models/sessionLogRecord.model";
 export { convertTriggerProtoToModel } from "@models/trigger.model";
-export { convertUserProtoToModel } from "@models/user.model";
+export { convertUserProtoToModel, reverseConvertUserProtoToModel } from "@models/user.model";
 export { convertValue } from "@models/value.model";
 export { convertVariableProtoToModel } from "@models/variable.model";

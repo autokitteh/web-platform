@@ -1,8 +1,9 @@
 import i18n from "i18next";
 
+import { User as ProtoUser } from "@ak-proto-ts/users/v1/user_pb";
 import { usersClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
-import { convertUserProtoToModel } from "@models";
+import { convertUserProtoToModel, reverseConvertUserProtoToModel } from "@models";
 import { LoggerService } from "@services";
 import { UserStatusType } from "@src/enums";
 import { reverseUserStatusConverter } from "@src/models/utils";
@@ -61,9 +62,45 @@ export class UsersService {
 
 			return { data: userId, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("userNotCreatedExtended", {
+			const errorMessage = i18n.t("userCreationFailedExtended", {
 				ns: "services",
 				error: new Error(error).message,
+			});
+			LoggerService.error(namespaces.usersService, errorMessage);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async update(user: User, fieldsToUpdate: string[]): Promise<ServiceResponse<void>> {
+		try {
+			for (const field of fieldsToUpdate) {
+				if (!Object.prototype.hasOwnProperty.call(ProtoUser.fields, field)) {
+					const errorMessage = i18n.t("userUpdateErrorExtended", {
+						ns: "services",
+						user: JSON.stringify(user),
+						fieldMask: fieldsToUpdate.join(", "),
+					});
+					LoggerService.error(namespaces.usersService, errorMessage);
+
+					return {
+						data: undefined,
+						error: i18n.t("userUpdateError", {
+							ns: "services",
+						}),
+					};
+				}
+			}
+			const protoUser = reverseConvertUserProtoToModel(user);
+			await usersClient.update({ user: protoUser, fieldMask: { paths: fieldsToUpdate } });
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			const errorMessage = i18n.t("userUpdateErrorExtendedCatch", {
+				ns: "services",
+				error: new Error(error).message,
+				user: JSON.stringify(user),
+				fieldMask: fieldsToUpdate.join(", "),
 			});
 			LoggerService.error(namespaces.usersService, errorMessage);
 

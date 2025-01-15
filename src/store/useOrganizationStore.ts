@@ -180,6 +180,22 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return error;
 		}
 		const organizationsListForMenu = get().organizationsList;
+
+		const user = useUserStore.getState().user;
+
+		let userSetDefaultOrganizationError;
+		if (user?.defaultOrganizationId === organization.id) {
+			const updatedUser = {
+				...user,
+				defaultOrganizationId: "",
+			};
+
+			const userUpdateError = useUserStore.getState().update(updatedUser, ["defaultOrganizationId"]);
+			if (userUpdateError) {
+				userSetDefaultOrganizationError = userUpdateError;
+			}
+		}
+
 		const newOrganizationsList = organizationsListForMenu?.filter(
 			(organizationMenuItem) => organizationMenuItem.id !== organization.id
 		);
@@ -203,6 +219,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 			return state;
 		});
+		return userSetDefaultOrganizationError;
 	},
 
 	removeMember: async (email) => {
