@@ -43,6 +43,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_searchParams, setSearchParams] = useSearchParams();
 
+	const [loggedInCookie, setLoggedInCookie] = useState<string | undefined>();
+
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
 		const apiTokenFromURL = queryParams.get("apiToken");
@@ -61,34 +63,43 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);
 
-	const handleLogout = useCallback(async () => {
-		logout();
-		const { cookieDomain, error } = getCookieDomain(window.location.hostname, namespaces.authorizationFlow.logout);
-		if (error) {
-			addToast({
-				message: t("errors.logoutFailedExtended", { error }),
-				type: "error",
-			});
+	const handleLogout = useCallback(
+		async (redirectToLogin: boolean = false) => {
+			logout();
+			const { cookieDomain, error } = getCookieDomain(
+				window.location.hostname,
+				namespaces.authorizationFlow.logout
+			);
+			if (error) {
+				addToast({
+					message: t("errors.logoutFailedExtended", { error }),
+					type: "error",
+				});
 
-			return;
-		}
+				return;
+			}
 
-		if (!cookieDomain || cookieDomain === ".") {
-			addToast({
-				message: t("errors.logoutFailed"),
-				type: "error",
-			});
+			if (!cookieDomain || cookieDomain === ".") {
+				addToast({
+					message: t("errors.logoutFailed"),
+					type: "error",
+				});
 
-			return;
-		}
+				return;
+			}
 
-		revokeCookieConsent();
-		Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
-		setLocalStorageValue(LocalStorageKeys.apiToken, "");
-		window.localStorage.clear();
-		window.location.href = "/";
+			revokeCookieConsent();
+			Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
+			setLoggedInCookie(undefined);
+			setLocalStorageValue(LocalStorageKeys.apiToken, "");
+			window.localStorage.clear();
+			if (redirectToLogin) {
+				window.location.href = "/";
+			}
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [logout]);
+		[logout]
+	);
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
@@ -112,9 +123,11 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					addToast({
 						message: t("errors.loginFailedTryAgainLater"),
 						type: "error",
+						hideSystemLogLinkOnError: true,
 					});
+					setIsLoggingIn(false);
 
-					return await handleLogout();
+					return await handleLogout(false);
 				}
 
 				const { data: userOrganization, error: errorOrganization } = await OrganizationsService.get(
@@ -124,12 +137,16 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					addToast({
 						message: t("errors.userOrganizationIsMissing"),
 						type: "error",
+						hideSystemLogLinkOnError: true,
 					});
+					setIsLoggingIn(false);
 
-					return await handleLogout();
+					return await handleLogout(false);
 				}
 
 				setCurrentOrganization(userOrganization);
+				const cookie = Cookies.get(isLoggedInCookie);
+				setLoggedInCookie(cookie);
 				clearLogs();
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user!.email);
@@ -137,9 +154,12 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				addToast({
 					message: t("errors.loginFailedTryAgainLater"),
 					type: "error",
+					hideSystemLogLinkOnError: true,
 				});
+				setIsLoggingIn(false);
+
 				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-				return await handleLogout();
+				return await handleLogout(false);
 			}
 			setIsLoggingIn(false);
 			setDescopeRenderKey((prevKey) => prevKey + 1);
@@ -147,9 +167,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getLoggedInUser]
 	);
-	const isLoggedIn = Cookies.get(isLoggedInCookie);
 
-	if (playwrightTestsAuthBearer || apiToken || isLoggedIn) {
+	if (playwrightTestsAuthBearer || apiToken || loggedInCookie) {
 		return children;
 	}
 

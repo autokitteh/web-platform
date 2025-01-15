@@ -2,6 +2,7 @@ export interface Toast {
 	id: string;
 	message: React.ReactNode;
 	type: ToasterTypes;
+	hideSystemLogLinkOnError?: boolean;
 }
 
 export type ToasterTypes = "error" | "info" | "success";

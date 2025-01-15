@@ -90,7 +90,7 @@ export const Toast = () => {
 	};
 
 	const renderToasts = () =>
-		toasts.map(({ id, message, type }, index) => {
+		toasts.map(({ id, message, type, hideSystemLogLinkOnError }, index) => {
 			const title = t(`titles.${type}`);
 
 			return (
@@ -115,7 +115,7 @@ export const Toast = () => {
 
 								{message}
 
-								{type === "error" ? (
+								{type === "error" && !hideSystemLogLinkOnError ? (
 									<Button
 										className="cursor-pointer gap-1.5 p-0 font-medium text-error underline"
 										onClick={() => setSystemLogHeight(systemLogHeight > 0 ? systemLogHeight : 20)}
