@@ -25,7 +25,6 @@
         "loginFailedTryAgainLater": "Error occurred during the login, please try again later",
 	    "loginFailedExtended": "Error occurred during the login, please try again, error: {{error}}",
         "logoutFailed": "Error occurred during the logout, please try again",
-        "logoutFailedExtended": "Error occurred during the logout, please try again, error: {{error}}",
-        "failedGetOrganization": "Error occurred during the organization fetch"
+        "logoutFailedExtended": "Error occurred during the logout, please try again, error: {{error}}"
     }
 }
