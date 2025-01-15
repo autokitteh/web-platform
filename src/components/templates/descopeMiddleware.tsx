@@ -116,22 +116,23 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 					return;
 				}
-				clearLogs();
-				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
-				setIdentity(user.email);
 
 				const { data: userOrganization, error: errorOrganization } = await OrganizationsService.get(
 					user.defaultOrganizationId
 				);
 				if (errorOrganization || !userOrganization) {
 					addToast({
-						message: (errorOrganization as Error).message,
+						message: t("errors.loginFailedTryAgainLater"),
 						type: "error",
 					});
 
 					return;
 				}
+
 				setCurrentOrganization(userOrganization);
+				clearLogs();
+				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
+				setIdentity(user.email);
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailed"),
