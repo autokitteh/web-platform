@@ -29,6 +29,32 @@ export class OrganizationsService {
 		}
 	}
 
+	static async get(organizationId: string): Promise<ServiceResponse<Organization>> {
+		try {
+			const { org } = await organizationsClient.get({ orgId: organizationId });
+			if (!org) {
+				const errorMessage = i18n.t("organizationCouldntFetch", { organizationId, ns: "services" });
+				LoggerService.error(namespaces.sessionsService, errorMessage);
+
+				return { data: undefined, error: new Error(errorMessage) };
+			}
+
+			const organization = convertOrganizationProtoToModel(org);
+			return { data: organization, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.organizationsService,
+				i18n.t("organizationNotGetExtended", {
+					error: (error as Error).message,
+					organizationId,
+					ns: "services",
+				})
+			);
+
+			return { data: undefined, error };
+		}
+	}
+
 	static async list(userId: string): Promise<ServiceResponse<Organization[]>> {
 		try {
 			const { orgs } = await organizationsClient.getOrgsForUser({ userId, includeOrgs: true });

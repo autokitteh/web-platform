@@ -6,13 +6,13 @@ import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { googleTagManagerEvents, isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
-import { LoggerService } from "@services/index";
+import { LoggerService, OrganizationsService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot } from "@src/hooks";
 import { gTagEvent, getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
 import { useUserStore } from "@store/useUserStore";
 
-import { useLoggerStore, useToastStore } from "@store";
+import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 
 import { Loader } from "@components/atoms";
 import { External404 } from "@components/pages";
@@ -30,6 +30,7 @@ const routes = [
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
+	const { setCurrentOrganization } = useOrganizationStore();
 
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
@@ -116,12 +117,21 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					return;
 				}
 				clearLogs();
-
-				//const userOrganization = useOrganizationStore.getState().get(user.defaultOrganizationId);
-				//setCurrentOrganization(userOrganization);
-
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user.email);
+
+				const { data: userOrganization, error: errorOrganization } = await OrganizationsService.get(
+					user.defaultOrganizationId
+				);
+				if (errorOrganization || !userOrganization) {
+					addToast({
+						message: (errorOrganization as Error).message,
+						type: "error",
+					});
+
+					return;
+				}
+				setCurrentOrganization(userOrganization);
 			} catch (error) {
 				addToast({
 					message: t("errors.loginFailed"),
