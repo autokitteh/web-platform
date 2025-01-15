@@ -7,6 +7,7 @@ import { immer } from "zustand/middleware/immer";
 import { StoreName, UserStatusType } from "@enums";
 import { OrganizationStore } from "@interfaces/store";
 import { OrganizationsService } from "@services";
+import { Organization } from "@src/types/models";
 
 import { useToastStore, useUserStore } from "@store";
 
@@ -19,6 +20,8 @@ const defaultState: Omit<
 	| "listMembers"
 	| "removeMember"
 	| "reset"
+	| "setOrganizationsList"
+	| "deleteOrganization"
 > = {
 	organizationsList: undefined,
 	membersList: undefined,
@@ -29,6 +32,14 @@ const defaultState: Omit<
 
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
+
+	setOrganizationsList: (organizations: Organization[]) => {
+		set((state) => {
+			state.organizationsList = organizations;
+
+			return state;
+		});
+	},
 
 	reset: () => set(defaultState),
 
@@ -62,6 +73,23 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		});
 
 		return { data: organizationId, error: undefined };
+	},
+
+	deleteOrganization: async (organizationId: string) => {
+		const { error } = await OrganizationsService.delete(organizationId);
+
+		if (error) {
+			return error;
+		}
+
+		set((state) => {
+			const newOrganizationsList = state.organizationsList || [];
+			state.organizationsList = newOrganizationsList.filter((organization) => organization.id !== organizationId);
+
+			return state;
+		});
+
+		return undefined;
 	},
 
 	getOrganizationsList: async () => {

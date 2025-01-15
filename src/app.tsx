@@ -21,13 +21,13 @@ import { ConnectionsTable, EditConnection } from "@components/organisms/connecti
 import { AddConnection } from "@components/organisms/connections/add";
 import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
-import { ClientConfiguration, Profile } from "@components/organisms/settings";
 import {
 	AddOrganization,
 	OrganizationMembersTable,
 	OrganizationSettings,
 	SwitchOrganization,
 } from "@components/organisms/settings/organization";
+import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
 import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
@@ -249,6 +249,7 @@ export const App = () => {
 			<Route element={<SettingsLayout />} path="settings">
 				<Route element={<Profile />} index />
 				<Route element={<ClientConfiguration />} path="client-configuration" />
+				<Route element={<UserOrganizationsTable />} path="organizations" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>

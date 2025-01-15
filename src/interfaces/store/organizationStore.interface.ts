@@ -14,4 +14,6 @@ export interface OrganizationStore {
 	inviteMember: (email: string) => ServiceResponseError;
 	removeMember: (organizationId: string, email: string) => ServiceResponseError;
 	listMembers: () => ServiceResponseError;
+	setOrganizationsList: (organizations: Organization[]) => void;
+	deleteOrganization: (organizationId: string) => ServiceResponseError;
 }

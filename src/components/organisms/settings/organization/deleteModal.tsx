@@ -11,13 +11,12 @@ import { Modal } from "@components/molecules";
 export const DeleteOrganizationModal = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
 	const { closeModal } = useModalStore();
+	const organizationName = useModalStore((state) => state.data as string);
 
 	return (
 		<Modal hideCloseButton name={ModalName.deleteOrganization}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">
-					{t("modal.deleteOrganization", { name: "Organization Name" })}?
-				</h3>
+				<h3 className="mb-5 text-xl font-bold">{t("modal.deleteOrganization", { name: organizationName })}?</h3>
 				<p>{t("modal.line1")}</p>
 				<p>{t("modal.line2")}</p>
 			</div>

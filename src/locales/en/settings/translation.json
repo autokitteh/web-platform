@@ -1,10 +1,10 @@
 {
 	"menu": {
 		"advanced": "Advanced",
-		"billing": "Billing",
 		"myProfile": "My Profile",
 		"notifications": "Notifications",
-		"clientConfiguration": "Client Setup"
+		"clientConfiguration": "Client Setup",
+		"myOrganizations": "My Organizations"
 	},
 	"clientConfiguration": {
 		"copyFailure": "Failed to copy to clipboard",
@@ -23,6 +23,26 @@
 			"copySuccess": "Host URL copied to clipboard"
 		},
 		"vscodeConfigExample": "VSCode Configuration Example"
+	},
+	"userOrganizations": {
+		"title": "Organizations",
+		"errors":{
+			"fetchFailed": "Failed to fetch organizations"
+		},
+		"table":{
+			"headers":{
+				"id": "ID",
+				"name": "Name",
+				"uniqueName": "uniqueName",
+				"actions": "Actions"
+			},
+			"actions":{
+				"delete": "Delete {{name}}"
+			},
+			"messages":{
+				"organizationDeleted": "Organization {{name}} deleted"
+			}
+		}
 	},
 	"profile": {
 		"title": "My Profile",

@@ -54,6 +54,24 @@ export class OrganizationsService {
 			return { data: undefined, error };
 		}
 	}
+	static async delete(organizationId: string): Promise<ServiceResponse<string>> {
+		try {
+			await organizationsClient.delete({ orgId: organizationId });
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			LoggerService.error(
+				namespaces.organizationsService,
+				i18n.t("organizationDeleteFailedExtended", {
+					error: (error as Error).message,
+					ns: "services",
+					id: organizationId,
+				})
+			);
+
+			return { data: undefined, error };
+		}
+	}
 
 	static async list(userId: string): Promise<ServiceResponse<Organization[]>> {
 		try {
