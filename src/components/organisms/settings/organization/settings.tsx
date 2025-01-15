@@ -15,6 +15,7 @@ export const OrganizationSettings = () => {
 	const { organizationId } = useParams();
 	const [nameError, setNameError] = useState("");
 	const { currentOrganization, updateOrganization, organizationsList } = useOrganizationStore();
+	const [displaySuccess, setDisplaySuccess] = useState(false);
 	const [organizationDisplayName, setOrganizationDisplayName] = useState<string>(
 		currentOrganization?.displayName || ""
 	);
@@ -34,6 +35,10 @@ export const OrganizationSettings = () => {
 		setNameError("");
 		setOrganizationDisplayName(displayName);
 		updateOrganization({ ...currentOrganization, displayName });
+		setDisplaySuccess(true);
+		setTimeout(() => {
+			setDisplaySuccess(false);
+		}, 3000);
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,9 +58,11 @@ export const OrganizationSettings = () => {
 				/>
 
 				<ErrorMessage>{nameError as string}</ErrorMessage>
-				{organizationDisplayName ? (
-					<SuccessMessage>{t("form.messages.nameUpdatedSuccessfully")}</SuccessMessage>
-				) : null}
+				<div className="h-6">
+					{displaySuccess ? (
+						<SuccessMessage>{t("form.messages.nameUpdatedSuccessfully")}</SuccessMessage>
+					) : null}
+				</div>
 			</div>
 			<div className="relative mb-6">
 				<Input disabled label={t("form.organizationUniqueName")} />{" "}
