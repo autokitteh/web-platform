@@ -28,7 +28,10 @@ export const convertMemberProtoToModel = async (
 		);
 	}
 
-	const role = protoOrganizationMember.roles.includes("admin") ? MemberRole.admin : MemberRole.user;
+	let role: MemberRole;
+	if (protoOrganizationMember.roles.includes("admin")) role = MemberRole.admin;
+	else if (protoOrganizationMember.roles.length === 0) role = MemberRole.user;
+	else role = MemberRole.unspecified;
 
 	return {
 		user,

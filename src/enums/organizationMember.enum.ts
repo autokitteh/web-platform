@@ -13,4 +13,5 @@ export enum MemberStatusType {
 export enum MemberRole {
 	"admin" = "admin",
 	"user" = "user",
+	"unspecified" = "unspecified",
 }
