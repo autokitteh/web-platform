@@ -64,6 +64,7 @@
 		"organizationSettings": "Organization: {{name}}"
 	},
 	"organization": {
+		"title": "{{name}} Settings",
 		"createNewOrganization": "Create new organization",
 		"limits": "Limits",
 		"seats": "Seats",
@@ -72,12 +73,15 @@
 		"youRedirectToOrganization": "You are being redirected to the organization",
 		"youRedirectToOrganizationExtended": "You are being redirected to the organization {{name}}",
 		"form": {
-			"organizationName": "Organization Name",
+			"organizationDisplayName": "Organization Display Name",
+			"organizationUniqueName": "Organization Name",
 			"errorNotification": "Error notification",
 			"buttons": {
 				"create": "Create",
 				"save": "Save",
-				"deleteOrganization": "Delete Organization"
+				"deleteOrganization": "Delete Organization",
+				"deleteOrganizationName": "Delete {{name}}"
+
 			},
 			"placeholder": {
 				"notificationEmail": "Notification email",
@@ -85,7 +89,14 @@
 			},
 			"errors":{
 				"nameTaken": "Organization name is already exist",
-				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore"
+				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore",
+				"nameRequired": "Organization name is required",
+				"defaultOrganizationIdMissing": "Default organization is missing, user ID: {{userId}}",
+				"deleteOrganizationFailed": "Organization deletion failed"
+			},
+			"messages":{
+				"nameUpdatedSuccessfully": "Organization name updated",
+				"organizationDeleted": "Organization {{name}} deleted"
 			}
 		},
 		"modal": {

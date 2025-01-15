@@ -1,5 +1,7 @@
 {
 	"errors": {
-		"organizationFetchingFailed": "Failed to fetch organizations"
+		"organizationFetchingFailed": "Failed to fetch organizations",
+		"organizationNotFound": "Organization not found"
+
 	}
 }

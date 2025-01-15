@@ -7,9 +7,11 @@ export type OrganizationStoreState = Readonly<{
 	currentOrganization?: Organization;
 	isLoading: {
 		deleteMember: boolean;
+		deletingOrganization: boolean;
 		inviteMember: boolean;
 		members: boolean;
 		organizations: boolean;
+		updatingOrganization: boolean;
 	};
 	logoutFunction: () => void;
 	members: Record<string, Record<string, OrganizationMember>>;
@@ -28,7 +30,7 @@ export type OrganizationStoreActions = {
 	createOrganization: (name: string) => ServiceResponse<string>;
 	createUser: (email: string, status: UserStatusType) => ServiceResponse<string>;
 	deleteMember: (userId: string) => ServiceResponse<void>;
-	deleteOrganization: (organizationId: string) => ServiceResponse<void>;
+	deleteOrganization: (organization: Organization) => ServiceResponse<void>;
 	getMembers: () => ServiceResponse<void>;
 	getOrganizations: () => ServiceResponse<void>;
 	inviteMember: (email: string) => ServiceResponse<void>;
@@ -36,6 +38,7 @@ export type OrganizationStoreActions = {
 	reset: () => void;
 	setCurrentOrganization: (organization: Organization) => void;
 	setLogoutFunction: (logoutFn: () => void) => void;
+	updateOrganization: (organization: Organization) => ServiceResponse<void>;
 };
 
 export type OrganizationStore = OrganizationStoreState & OrganizationStoreSelectors & OrganizationStoreActions;

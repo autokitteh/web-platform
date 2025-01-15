@@ -57,7 +57,7 @@ export class UsersService {
 
 			return { data: userId, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("userNotCreatedExtended", {
+			const errorMessage = i18n.t("userCreationFailedExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});
