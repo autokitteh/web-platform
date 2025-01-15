@@ -67,7 +67,8 @@
 				"nameRequired": "Organization name is required"
 			},
 			"messages":{
-				"nameUpdatedSuccessfully": "Organization name updated"
+				"nameUpdatedSuccessfully": "Organization name updated",
+				"organizationDeleted": "Organization {{name}} deleted"
 			}
 		},
 		"modal": {

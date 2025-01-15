@@ -28,6 +28,7 @@ export class OrganizationsService {
 			return { data: undefined, error };
 		}
 	}
+
 	static async update(organization: Organization): Promise<ServiceResponse<void>> {
 		try {
 			await organizationsClient.update({ org: organization });
@@ -42,10 +43,27 @@ export class OrganizationsService {
 			});
 			LoggerService.error(namespaces.organizationsService, logError);
 			const toastErrorr = i18n.t("organizationNotUpdated", {
+				ns: "services",
+			});
+			return { data: undefined, error: toastErrorr };
+		}
+	}
+
+	static async delete(organization: Organization): Promise<ServiceResponse<void>> {
+		try {
+			await organizationsClient.delete({ orgId: organization.id });
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			const logError = i18n.t("organizationDeleteFailedExtended", {
 				error: (error as Error).message,
 				ns: "services",
 				name: organization?.displayName,
 				id: organization?.id,
+			});
+			LoggerService.error(namespaces.organizationsService, logError);
+			const toastErrorr = i18n.t("organizationDeleteFailed", {
+				ns: "services",
 			});
 			return { data: undefined, error: toastErrorr };
 		}

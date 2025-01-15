@@ -20,6 +20,7 @@ const defaultState: Omit<
 	| "removeMember"
 	| "reset"
 	| "updateOrganization"
+	| "deleteOrganization"
 > = {
 	organizationsList: undefined,
 	membersList: undefined,
@@ -164,6 +165,16 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	updateOrganization: async (organization) => {
 		const { error } = await OrganizationsService.update(organization);
+
+		if (error) {
+			return error;
+		}
+
+		await get().getOrganizationsList();
+	},
+
+	deleteOrganization: async (organization) => {
+		const { error } = await OrganizationsService.delete(organization);
 
 		if (error) {
 			return error;

@@ -28,6 +28,11 @@ export interface RemoveMemberModalProps {
 	isRemoving: boolean;
 }
 
+export interface DeleteOrganizationModalProps {
+	onDelete: () => void;
+	isDeleting: boolean;
+}
+
 export interface DeleteAccountModalProps {
 	onDelete: () => void;
 }
