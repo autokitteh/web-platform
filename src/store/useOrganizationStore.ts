@@ -213,7 +213,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			error: undefined,
 		};
 	},
-
 	updateOrganization: async (organization: Organization) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: true } }));
 

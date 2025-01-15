@@ -39,7 +39,10 @@ export type OrganizationStoreActions = {
 	reset: () => void;
 	setCurrentOrganization: (organization: Organization) => void;
 	setLogoutFunction: (logoutFn: () => void) => void;
+<<<<<<< HEAD
 	updateMemberStatus: (organizationId: string, status: MemberStatusType) => ServiceResponse<void>;
+=======
+>>>>>>> 8769c279 (feat(UI-1191): organizations settings - name update)
 	updateOrganization: (organization: Organization) => ServiceResponse<void>;
 };
 
