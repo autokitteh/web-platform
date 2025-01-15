@@ -100,6 +100,8 @@
 	"organizationNotCreatedExtended": "Failed to create organization {{name}}. Error: {{error}}",
 	"organizationNotGetExtended": "Failed to get organization by ID {{organizationId}}. Error: {{error}}",
 	"organizationCouldntFetch": "Organization not found, organization ID: {{organizationId}}",
+	"organizationNotUpdatedExtended": "Failed to update organization {{name}}, id: {{id}}. Error: {{error}}",
+	"organizationNotUpdated": "Failed to update organization, open system log for more details",
 	"someOrganizationRetrievalFailed": "Some organization retrievals failed for user",
 	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}",
 	"errorConvertingMember": "Error converting member",

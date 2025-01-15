@@ -71,7 +71,7 @@ export const AddOrganization = () => {
 					<Input
 						isError={!!errors.name}
 						isRequired
-						label={t("form.organizationName")}
+						label={t("form.organizationDisplayName")}
 						{...register("name", {
 							required: t("nameRequired"),
 							validate: validateOrganizationName,

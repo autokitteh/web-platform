@@ -1,133 +1,67 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import debounce from "lodash/debounce";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
-import { ModalName } from "@src/enums/components";
-import { SelectOption } from "@src/interfaces/components";
-import { useModalStore } from "@src/store";
-import { organizationSchema } from "@validations";
+import { useOrganizationStore } from "@src/store";
+import { validateEntitiesName } from "@src/utilities";
 
-import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
-import { Select } from "@components/molecules";
+import { ErrorMessage, Input, SuccessMessage, Typography } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 export const OrganizationSettings = () => {
-	const options: SelectOption[] = [
-		{ value: "disabled", label: "Disabled" },
-		{ value: "daily", label: "Daily" },
-		{ value: "hourly", label: "Hourly" },
-		{ value: "immediate", label: "Immediate" },
-	];
-
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
-	const {
-		control,
-		formState: { errors },
-		handleSubmit,
-		register,
-	} = useForm({
-		resolver: zodResolver(organizationSchema),
-		mode: "onSubmit",
-	});
-	const { openModal } = useModalStore();
+	const { organizationId } = useParams();
+	const [nameError, setNameError] = useState("");
+	const { currentOrganization, updateOrganization, organizationsList } = useOrganizationStore();
+	const [organizationDisplayName, setOrganizationDisplayName] = useState<string>(
+		currentOrganization?.displayName || ""
+	);
 
-	const onSubmit = async () => {};
+	const renameOrganization = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const displayName = event.target.value;
+		if (!displayName) {
+			setNameError(t("form.errors.nameRequired"));
+			return;
+		}
+		const organizationsNames = new Set((organizationsList || []).map((organization) => organization.displayName));
+		const isNameInvalid = validateEntitiesName(displayName, organizationsNames);
+		if (isNameInvalid) {
+			setNameError(isNameInvalid);
+			return;
+		}
+		setNameError("");
+		setOrganizationDisplayName(displayName);
+		updateOrganization({ ...currentOrganization, displayName });
+	};
 
-	const watchedFrequency = useWatch({ control, name: "frequency" });
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const debouncedRename = useCallback(debounce(renameOrganization, 1500), [organizationId]);
 
 	return (
-		<div>
-			<Typography className="mb-9 font-bold" element="h2" size="xl">
-				{t("organizationSettings")}
+		<div className="w-3/4">
+			<Typography className="mb-4 font-bold" element="h2" size="xl">
+				{t("title", { name: currentOrganization?.displayName })}
 			</Typography>
-			<div className="flex flex-wrap gap-10">
-				<div className="w-1/2">
-					<Typography className="mb-2 font-bold" element="h2" size="medium">
-						{t("limits")}
-					</Typography>
-					<div className="flex gap-3">
-						<div className="w-1/2 rounded bg-gray-950 p-3 text-base shadow-xl">
-							<Typography className="mb-1" element="h3">
-								{t("seats")}
-							</Typography>
-							<Typography className="font-medium" element="p" size="xl">
-								22
-							</Typography>
-						</div>
-						<div className="w-1/2 rounded bg-gray-950 p-3 text-base shadow-xl">
-							<Typography className="mb-1" element="h3">
-								{t("monthlySpending")}
-							</Typography>
-							<Typography className="font-medium" element="p" size="xl">
-								$333
-							</Typography>
-						</div>
-					</div>
-				</div>
-				<form className="w-1/2" onSubmit={handleSubmit(onSubmit)}>
-					<div className="relative mb-6">
-						<Input
-							isError={!!errors.name}
-							isRequired
-							label={t("form.organizationName")}
-							{...register("name")}
-						/>
+			<div className="relative mb-6">
+				<Input
+					isError={!!nameError}
+					label={t("form.organizationDisplayName")}
+					onChange={debouncedRename}
+					value={organizationDisplayName}
+				/>
 
-						<ErrorMessage>{errors?.name?.message as string}</ErrorMessage>
-					</div>
-					<Typography className="mb-4 font-bold" element="h2" size="medium">
-						{t("form.errorNotification")}
-					</Typography>
-					<div className="relative mb-6">
-						<Input
-							isError={!!errors.noteEmail}
-							label={t("form.placeholder.notificationEmail")}
-							{...register("noteEmail")}
-						/>
-
-						<ErrorMessage>{errors?.noteEmail?.message as string}</ErrorMessage>
-					</div>
-					<div className="relative mb-6">
-						<Controller
-							control={control}
-							name="frequency"
-							render={({ field }) => (
-								<Select
-									{...field}
-									aria-label={t("form.placeholder.frequency")}
-									isError={!!errors.frequency}
-									label={t("form.placeholder.frequency")}
-									options={options}
-									placeholder={t("form.placeholder.frequency")}
-									value={watchedFrequency}
-								/>
-							)}
-						/>
-
-						<ErrorMessage>{errors.frequency?.message as string}</ErrorMessage>
-					</div>
-					<div className="flex justify-between gap-2">
-						<Button
-							className="w-fit border-black bg-black px-5 text-base font-medium text-white hover:bg-gray-950"
-							onClick={() => openModal(ModalName.deleteOrganization)}
-							type="button"
-							variant="outline"
-						>
-							{t("form.buttons.deleteOrganization")}
-						</Button>
-						<Button
-							className="w-fit border-black bg-white px-5 text-base font-medium hover:bg-gray-950 hover:text-white"
-							type="submit"
-							variant="outline"
-						>
-							{t("form.buttons.save")}
-						</Button>
-					</div>
-				</form>
-				<DeleteOrganizationModal />
+				<ErrorMessage>{nameError as string}</ErrorMessage>
+				{organizationDisplayName ? (
+					<SuccessMessage>{t("form.messages.nameUpdatedSuccessfully")}</SuccessMessage>
+				) : null}
 			</div>
+			<div className="relative mb-6">
+				<Input disabled label={t("form.organizationUniqueName")} />{" "}
+			</div>
+
+			<DeleteOrganizationModal />
 		</div>
 	);
 };

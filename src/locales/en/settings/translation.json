@@ -40,6 +40,7 @@
 		"organizationSettings": "Organization: {{name}}"
 	},
 	"organization": {
+		"title": "{{name}} Settings",
 		"createNewOrganization": "Create new organization",
 		"limits": "Limits",
 		"seats": "Seats",
@@ -48,7 +49,8 @@
 		"youRedirectToOrganization": "You are being redirected to the organization",
 		"youRedirectToOrganizationExtended": "You are being redirected to the organization {{name}}",
 		"form": {
-			"organizationName": "Organization Name",
+			"organizationDisplayName": "Organization Display Name",
+			"organizationUniqueName": "Organization Name",
 			"errorNotification": "Error notification",
 			"buttons": {
 				"create": "Create",
@@ -61,7 +63,11 @@
 			},
 			"errors":{
 				"nameTaken": "Organization name is already exist",
-				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore"
+				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore",
+				"nameRequired": "Organization name is required"
+			},
+			"messages":{
+				"nameUpdatedSuccessfully": "Organization name updated"
 			}
 		},
 		"modal": {
