@@ -117,6 +117,9 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				}
 				clearLogs();
 
+				//const userOrganization = useOrganizationStore.getState().get(user.defaultOrganizationId);
+				//setCurrentOrganization(userOrganization);
+
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user.email);
 			} catch (error) {

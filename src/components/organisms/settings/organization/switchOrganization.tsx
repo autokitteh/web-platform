@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,9 +13,13 @@ export const SwitchOrganization = () => {
 	const { t } = useTranslation("errors");
 	const { t: tOrganization } = useTranslation("settings", { keyPrefix: "organization" });
 	const { organizationId } = useParams();
-	const { currentOrganization, getOrganizationsList, setCurrentOrganization } = useOrganizationStore();
+	const { currentOrganization, getOrganizationsList, setCurrentOrganization, organizationsList } =
+		useOrganizationStore();
 	const { getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
+	const [organizationName, setOrganizationName] = useState(
+		currentOrganization?.id === organizationId ? currentOrganization?.displayName : ""
+	);
 
 	useEffect(() => {
 		let timeoutId: NodeJS.Timeout;
@@ -28,9 +32,19 @@ export const SwitchOrganization = () => {
 
 				return;
 			}
+			const organizationFromStore = organizationsList?.find((organization) => organization.id === organizationId);
+			if (organizationFromStore) {
+				setCurrentOrganization(organizationFromStore);
+				setOrganizationName(organizationFromStore.displayName);
+				timeoutId = setTimeout(() => {
+					navigate("/");
+				}, 3000);
 
-			const { data: organizationsList } = await getOrganizationsList();
-			const organization = organizationsList?.find((organization) => organization.id === organizationId);
+				return;
+			}
+
+			const { data: fetchedOrganizationsList } = await getOrganizationsList();
+			const organization = fetchedOrganizationsList?.find((organization) => organization.id === organizationId);
 
 			if (!organization) {
 				LoggerService.error(
@@ -43,6 +57,7 @@ export const SwitchOrganization = () => {
 			}
 
 			await setCurrentOrganization(organization);
+			setOrganizationName(organization.displayName);
 			await getProjectsList();
 
 			timeoutId = setTimeout(() => {
@@ -63,8 +78,8 @@ export const SwitchOrganization = () => {
 	return (
 		<div className="relative flex h-full flex-col items-center justify-center">
 			<Typography className="mb-10 font-semibold text-black" size="large">
-				{currentOrganization?.displayName
-					? tOrganization("youRedirectToOrganizationExtended", { name: currentOrganization.displayName })
+				{organizationName
+					? tOrganization("youRedirectToOrganizationExtended", { name: organizationName })
 					: tOrganization("youRedirectToOrganization")}
 			</Typography>
 			<Loader size="lg" />
