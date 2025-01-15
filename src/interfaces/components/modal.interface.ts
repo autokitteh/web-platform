@@ -27,6 +27,10 @@ export interface DeleteMemberModalProps {
 	onDelete: (userId: string, email: string) => void;
 	isDeleting: boolean;
 }
+export interface DeleteOrganizationModalProps {
+	onDelete: (id: string, name: string) => void;
+	isDeleting: boolean;
+}
 
 export interface DeleteAccountModalProps {
 	onDelete: () => void;

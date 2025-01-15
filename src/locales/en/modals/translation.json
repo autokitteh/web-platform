@@ -48,6 +48,13 @@
 		"line1": "Are you sure you want to delete {{name}} ({{email}}) from the organization?",
 		"line2": "This action cannot be undone, and all related data will be permanently removed."
 	},
+	"deleteOrganization": {
+		"cancelButton": "Cancel",
+		"deleteButton": "Delete",
+		"title": "Delete Organization",
+		"line1": "Are you sure you want to delete - {{name}}",
+		"line2": "This action cannot be undone, and all related data will be permanently removed."
+	},
 	"deleteTrigger": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Ok",

@@ -10,7 +10,7 @@ import { getPreference, setPreference } from "@src/utilities";
 import { useModalStore, useOrganizationStore } from "@store";
 
 import { Button, Checkbox, Typography } from "@components/atoms";
-import { DeleteAccountModal } from "@components/organisms/settings/profile";
+import { DeleteAccountModal } from "@components/organisms/settings/user";
 
 import { TrashIcon } from "@assets/image/icons";
 

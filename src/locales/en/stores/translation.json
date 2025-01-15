@@ -3,9 +3,6 @@
 		"failedToFetch": "Failed to fetch templates",
 		"failedToFetchExtended": "Something went wrong fetching the templates, error: {{error}}"
 	},
-	"user":{
-		"failedFetchingUser": "Failed to fetching the user"
-	},
 	"organization": {
 		"noOrganizationFoundCantDeleteMember": "No organization found, can't delete member {{userId}}, reload the page",
 		"noOrganizationFoundCantInviteMember": "No organization found, can't invite member {{email}}, reload the page",
@@ -21,6 +18,6 @@
 		"failedCreatingUser": "Failed to create the user, email {{email}}, status: {{status}}",
 		"failedGettingLoggedInUser": "Failed to get the logged in user",
 		"failedGettingLoggedInUserOrganization": "Failed to get the logged in user organization, user ID: {{userId}}",
-		"noOrganizationFoundCantFetchMembers": "No organization found, can't fetch members"
+		"noOrganizationFoundCantFetchMembers": "No organization found, can't fetch members",
 	}
 }

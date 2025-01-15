@@ -28,6 +28,7 @@ export type OrganizationStoreActions = {
 	createOrganization: (name: string) => ServiceResponse<string>;
 	createUser: (email: string, status: UserStatusType) => ServiceResponse<string>;
 	deleteMember: (userId: string) => ServiceResponse<void>;
+	deleteOrganization: (organizationId: string) => ServiceResponse<void>;
 	getMembers: () => ServiceResponse<void>;
 	getOrganizations: () => ServiceResponse<void>;
 	inviteMember: (email: string) => ServiceResponse<void>;
