@@ -179,8 +179,30 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (error) {
 			return error;
 		}
+		const organizationsListForMenu = get().organizationsList;
+		const newOrganizationsList = organizationsListForMenu?.filter(
+			(organizationMenuItem) => organizationMenuItem.id !== organization.id
+		);
 
-		await get().getOrganizationsList();
+		if (!newOrganizationsList?.length) {
+			set((state) => {
+				state.organizationsList = [];
+				state.currentOrganization = undefined;
+
+				return state;
+			});
+
+			const logout = useUserStore.getState().logoutFunction;
+			logout();
+
+			return undefined;
+		}
+
+		set((state) => {
+			state.organizationsList = newOrganizationsList;
+
+			return state;
+		});
 	},
 
 	removeMember: async (email) => {
