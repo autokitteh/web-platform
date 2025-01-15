@@ -30,4 +30,8 @@ export { ValidateURL, ValidateDomain } from "@utilities/validateUrl.utils";
 export { gTagEvent } from "@utilities/gTag.utils";
 export { calculateDeploymentSessionsStats } from "@utilities/calculateDeploymentSessionsStats.utils";
 export { getSessionStateColor } from "@utilities/getSessionStateColor.utils";
+<<<<<<< HEAD
 export { validateEntitiesName, isNameInvalid, isNameEmpty, isNameExist } from "@utilities/validateEntitiesName.utils";
+=======
+export { validateEntitiesName } from "@utilities/validateEntitiesName.utils";
+>>>>>>> 8769c279 (feat(UI-1191): organizations settings - name update)
