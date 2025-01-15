@@ -20,7 +20,9 @@ import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from
 import { Accordion, Modal } from "@components/molecules";
 
 import { PipeCircleIcon, ReadmeIcon } from "@assets/image/icons";
+
 import "github-markdown-css/github-markdown-light.css";
+import { validateEntitiesName } from "@src/utilities";
 
 export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreateProjectModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectWithTemplate" });
@@ -44,15 +46,6 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 			projectName: "",
 		},
 	});
-
-	const validateProjectName = (value: string) => {
-		if (projectNamesSet.has(value)) {
-			return t("nameTaken");
-		}
-		if (!new RegExp("^[a-zA-Z_][\\w]*$").test(value)) {
-			return t("invalidName");
-		}
-	};
 
 	const fetchManifestData = async () => {
 		if (!assetDirectory) return;
@@ -120,7 +113,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 					variant="light"
 					{...register("projectName", {
 						required: t("nameRequired"),
-						validate: validateProjectName,
+						validate: (value) => validateEntitiesName(value, projectNamesSet),
 					})}
 					isError={!!errors.projectName}
 				/>

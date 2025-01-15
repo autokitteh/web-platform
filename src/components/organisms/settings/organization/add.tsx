@@ -7,6 +7,7 @@ import { z } from "zod";
 
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { validateEntitiesName } from "@src/utilities";
 import { addOrganizationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Loader, Typography } from "@components/atoms";
@@ -33,15 +34,6 @@ export const AddOrganization = () => {
 		resolver: zodResolver(addOrganizationSchema),
 		mode: "onSubmit",
 	});
-
-	const validateOrganizationName = (value: string) => {
-		if (organizationsNamesSet.has(value)) {
-			return t("form.errors.nameTaken");
-		}
-		if (!new RegExp("^[a-zA-Z_][\\w]*$").test(value)) {
-			return t("form.errors.invalidName");
-		}
-	};
 
 	const { openModal } = useModalStore();
 
@@ -74,7 +66,7 @@ export const AddOrganization = () => {
 						label={t("form.organizationDisplayName")}
 						{...register("name", {
 							required: t("nameRequired"),
-							validate: validateOrganizationName,
+							validate: (value) => validateEntitiesName(value, organizationsNamesSet),
 						})}
 					/>
 
