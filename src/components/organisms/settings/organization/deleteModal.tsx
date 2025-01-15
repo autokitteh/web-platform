@@ -11,7 +11,7 @@ import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
 export const DeleteOrganizationModal = ({ onDelete, isDeleting }: DeleteOrganizationModalProps) => {
-	const { t } = useTranslation("setting", { keyPrefix: "organization" });
+	const { t } = useTranslation("settings", { keyPrefix: "organization" });
 	const { closeModal } = useModalStore();
 	const organization = useModalStore((state) => state.data) as { id: string; name: string };
 
@@ -19,10 +19,10 @@ export const DeleteOrganizationModal = ({ onDelete, isDeleting }: DeleteOrganiza
 		<Modal name={ModalName.deleteOrganization}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">
-					{t("modal.deleteOrganization", { name: "Organization Name" })}?
+					{t("modal.deleteOrganization", { name: organization?.name })}?
 				</h3>
-				<p className="font-light">{t("line1", { name: organization?.name })}</p>
-				<p className="mt-1 font-light">{t("line2")}</p>
+				<p className="font-light">{t("modal.line1")}</p>
+				<p className="mt-1 font-light">{t("modal.line2")}</p>
 			</div>
 
 			<div className="mt-14 flex justify-end gap-1">
