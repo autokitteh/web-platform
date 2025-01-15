@@ -16,11 +16,10 @@ export const DeleteOrganizationModal = ({ onDelete, isDeleting }: DeleteOrganiza
 	const organization = useModalStore((state) => state.data) as { id: string; name: string };
 
 	return (
-		<Modal name={ModalName.deleteMemberFromOrg}>
+		<Modal name={ModalName.deleteOrganization}>
 			<div className="mx-6">
-				<h3 className="mb-5 font-averta text-xl font-bold">{t("deleteMember")}</h3>
-
-				<p className="font-light">{t("line1", { name: organization?.name })}</p>
+				<h3 className="mb-5 text-xl font-bold">{t("deleteOrganization", { name: organization?.name })}?</h3>
+				<p className="font-light">{t("line1")}</p>
 				<p className="mt-1 font-light">{t("line2")}</p>
 			</div>
 
@@ -28,7 +27,7 @@ export const DeleteOrganizationModal = ({ onDelete, isDeleting }: DeleteOrganiza
 				<Button
 					ariaLabel={t("cancelButton")}
 					className="w-auto px-4 py-3 font-semibold hover:text-white"
-					onClick={() => closeModal(ModalName.deleteMemberFromOrg)}
+					onClick={() => closeModal(ModalName.deleteOrganization)}
 				>
 					{t("cancelButton")}
 				</Button>
@@ -37,8 +36,7 @@ export const DeleteOrganizationModal = ({ onDelete, isDeleting }: DeleteOrganiza
 					ariaLabel={t("deleteButton")}
 					className="w-auto px-4 py-3 font-semibold hover:bg-error"
 					disabled={isDeleting}
-					onClick={() => onDelete(organization?.id, organization?.name)}
-					variant="filled"
+					onClick={() => onDelete(organization?.name, organization?.id)}
 				>
 					{isDeleting ? <Loader size="sm" /> : null}
 					{t("deleteButton")}

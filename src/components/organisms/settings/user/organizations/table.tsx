@@ -40,7 +40,7 @@ export const UserOrganizationsTable = () => {
 		setIsDeleting(true);
 		const error = await deleteOrganization(organizationId);
 		setIsDeleting(false);
-		closeModal(ModalName.deleteMemberFromOrg);
+		closeModal(ModalName.deleteOrganization);
 
 		if (error) {
 			addToast({
