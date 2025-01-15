@@ -21,10 +21,15 @@ const defaultState: OrganizationStoreState = {
 		members: false,
 		inviteMember: false,
 		deleteMember: false,
+<<<<<<< HEAD
 		updateMember: false,
 		deletingOrganization: false,
 		updatingOrganization: false,
 		updatingUser: false,
+=======
+		deletingOrganization: false,
+		updatingOrganization: false,
+>>>>>>> 8769c279 (feat(UI-1191): organizations settings - name update)
 	},
 	logoutFunction: () => {},
 };
@@ -214,6 +219,18 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			error: undefined,
 		};
 	},
+	updateOrganization: async (organization: Organization) => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: true } }));
+
+		const { error } = await OrganizationsService.update(organization);
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: false } }));
+
+		if (error) {
+			return { error: true, data: undefined };
+		}
+		return { error: undefined, data: undefined };
+	},
+
 	updateOrganization: async (organization: Organization) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: true } }));
 
