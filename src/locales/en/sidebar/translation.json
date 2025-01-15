@@ -2,6 +2,7 @@
 	"menu": {
 		"myProfile": "My Profile",
 		"clientConfiguration": "Client Setup",
+		"myOrganizations": "My Organizations",
 		"userSettings": {
 			"title": "User Settings",
 			"logout": "Log out",

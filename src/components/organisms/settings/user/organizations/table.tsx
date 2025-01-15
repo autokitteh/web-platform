@@ -58,11 +58,8 @@ export const UserOrganizationsTable = () => {
 	};
 
 	return (
-		<>
+		<div className="w-3/4">
 			<Typography className="mb-9 font-averta font-bold" element="h1" size="2xl">
-				{t("title")}
-			</Typography>
-			<Typography className="mb-4 font-bold" element="h2" size="xl">
 				{t("title")}
 			</Typography>
 			<Button
@@ -70,7 +67,7 @@ export const UserOrganizationsTable = () => {
 				onClick={() => navigate("/organization-settings/add")}
 				variant="outline"
 			>
-				{t("buttons.addMember")}
+				{t("buttons.addOrganization")}
 			</Button>
 			<Table className="mt-6">
 				<THead>
@@ -101,6 +98,6 @@ export const UserOrganizationsTable = () => {
 				</TBody>
 			</Table>
 			<DeleteOrganizationModal isDeleting={isDeleting} onDelete={onDelete} />
-		</>
+		</div>
 	);
 };

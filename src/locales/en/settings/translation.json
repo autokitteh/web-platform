@@ -25,6 +25,9 @@
 		"vscodeConfigExample": "VSCode Configuration Example"
 	},
 	"userOrganizations": {
+		"buttons":{
+			"addOrganization": "Add Organization"
+		},
 		"title": "Organizations",
 		"errors":{
 			"fetchFailed": "Failed to fetch organizations"
@@ -33,7 +36,7 @@
 			"headers":{
 				"id": "ID",
 				"name": "Name",
-				"uniqueName": "uniqueName",
+				"uniqueName": "Unique Name",
 				"actions": "Actions"
 			},
 			"actions":{
