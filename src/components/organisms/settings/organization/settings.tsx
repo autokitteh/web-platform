@@ -11,7 +11,6 @@ import { organizationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
 import { Select } from "@components/molecules";
-import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 export const OrganizationSettings = () => {
 	const options: SelectOption[] = [
@@ -127,7 +126,6 @@ export const OrganizationSettings = () => {
 						</Button>
 					</div>
 				</form>
-				<DeleteOrganizationModal />
 			</div>
 		</div>
 	);

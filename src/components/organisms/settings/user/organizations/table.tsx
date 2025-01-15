@@ -7,7 +7,7 @@ import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 
 import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
-import { DeleteOrganizationModal } from "@components/organisms/settings/user/organizations";
+import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";
 
