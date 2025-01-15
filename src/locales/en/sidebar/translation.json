@@ -16,7 +16,8 @@
 		},
 		"organizationsList": {
 			"title": "Organizations",
-			"newOrganization": "New Organization"
+			"newOrganization": "New Organization",
+			"noOrganizationFound": "No organizations found"
 		}
 
 	},

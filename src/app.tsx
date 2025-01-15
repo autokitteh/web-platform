@@ -26,11 +26,21 @@ import {
 	AddOrganization,
 	OrganizationMembersTable,
 	OrganizationSettings,
+	SwitchOrganization,
 } from "@components/organisms/settings/organization";
 import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
-import { Connections, Dashboard, Internal404, Intro, Project, Triggers, Variables } from "@components/pages";
+import {
+	Connections,
+	CustomError,
+	Dashboard,
+	Internal404,
+	Intro,
+	Project,
+	Triggers,
+	Variables,
+} from "@components/pages";
 import { AppLayout, EventsLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
 
@@ -260,6 +270,14 @@ export const App = () => {
 			</Route>
 
 			<Route element={<Navigate replace to="/404" />} path="*" />
+
+			<Route element={<AppLayout hideTopbar />} path="switch-organization/:organizationId">
+				<Route element={<SwitchOrganization />} index />
+			</Route>
+
+			<Route element={<AppLayout hideTopbar />} path="error">
+				<Route element={<CustomError />} index />
+			</Route>
 		</AKRoutes>
 	);
 };

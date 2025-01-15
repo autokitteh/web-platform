@@ -13,7 +13,7 @@ export class AuthService {
 			const { user } = await authClient.whoAmI({});
 			if (!user) {
 				throw new Error(
-					i18n.t("userNotFound", {
+					i18n.t("failedGettingLoggedInUser", {
 						ns: "services",
 					})
 				);

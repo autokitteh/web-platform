@@ -10,9 +10,8 @@ import { SidebarHrefMenu } from "@enums/components";
 import { ProjectStore } from "@interfaces/store";
 import { ProjectsService } from "@services";
 import { defaultProjectDirectory, defaultProjectFile } from "@src/constants";
+import { useOrganizationStore } from "@src/store";
 import { fetchFileContent } from "@src/utilities";
-
-import { useOrganizationStore } from "@store";
 
 const defaultState: Omit<
 	ProjectStore,
@@ -85,7 +84,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	createProject: async (name: string, isDefault?: boolean) => {
-		const organizationId = useOrganizationStore.getState().currentOrganizationId;
+		const organizationId = useOrganizationStore.getState().currentOrganization?.id;
 
 		const { data: projectId, error } = await ProjectsService.create({ id: "", name, organizationId });
 
@@ -151,7 +150,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	createProjectFromManifest: async (projectManifest: string) => {
-		const organizationId = useOrganizationStore.getState().currentOrganizationId;
+		const organizationId = useOrganizationStore.getState().currentOrganization?.id;
 
 		const { data: newProjectId, error } = await ProjectsService.createFromManifest(projectManifest, organizationId);
 
@@ -225,6 +224,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (project) {
 			return { data: project, error: undefined };
 		}
+
 		const { data: responseProject, error } = await ProjectsService.get(projectId);
 
 		if (error) {
@@ -242,9 +242,9 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (!projectsList.length) {
 			set((state) => ({ ...state, isLoadingProjectsList: true }));
 		}
-		const organizationId = useOrganizationStore.getState().currentOrganizationId;
+		const currentOrganizationId = useOrganizationStore.getState().currentOrganization?.id;
 
-		const { data: projects, error } = await ProjectsService.list(organizationId);
+		const { data: projects, error } = await ProjectsService.list(currentOrganizationId);
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingProjectsList: false, projectsList: [] }));

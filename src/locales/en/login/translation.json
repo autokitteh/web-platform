@@ -21,7 +21,8 @@
         }
     },
     "errors": {
-	    "loginFailed": "Error occurred during the login",
+        "loginFailedTryAgainLater": "Error occurred during the login, please try again later",
+        "userOrganizationIsMissing": "User organization is missing",
 	    "loginFailedExtended": "Error occurred during the login, please try again, error: {{error}}",
         "logoutFailed": "Error occurred during the logout, please try again",
         "logoutFailedExtended": "Error occurred during the logout, please try again, error: {{error}}"

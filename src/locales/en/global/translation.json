@@ -29,5 +29,9 @@
 			},
 			"error": "Something went wrong, please try again later"
 		}
+	},
+	"customError": {
+		"goToHomepage": "Back to Homepage",
+		"error": "Error"
 	}	
 }

@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { googleTagManagerEvents, isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
-import { LoggerService } from "@services/index";
+import { LoggerService, OrganizationsService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot } from "@src/hooks";
 import { gTagEvent, getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
@@ -30,6 +30,7 @@ const routes = [
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction } = useUserStore();
+	const { setCurrentOrganization } = useOrganizationStore();
 
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
@@ -41,7 +42,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [apiToken, setApiToken] = useState<string>();
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_searchParams, setSearchParams] = useSearchParams();
-	const { setCurrentOrganizationId } = useOrganizationStore();
+
+	const [loggedInCookie, setLoggedInCookie] = useState<string | undefined>();
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
@@ -61,34 +63,43 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);
 
-	const handleLogout = useCallback(async () => {
-		logout();
-		const { cookieDomain, error } = getCookieDomain(window.location.hostname, namespaces.authorizationFlow.logout);
-		if (error) {
-			addToast({
-				message: t("errors.logoutFailedExtended", { error }),
-				type: "error",
-			});
+	const handleLogout = useCallback(
+		async (redirectToLogin: boolean = false) => {
+			logout();
+			const { cookieDomain, error } = getCookieDomain(
+				window.location.hostname,
+				namespaces.authorizationFlow.logout
+			);
+			if (error) {
+				addToast({
+					message: t("errors.logoutFailedExtended", { error }),
+					type: "error",
+				});
 
-			return;
-		}
+				return;
+			}
 
-		if (!cookieDomain || cookieDomain === ".") {
-			addToast({
-				message: t("errors.logoutFailed"),
-				type: "error",
-			});
+			if (!cookieDomain || cookieDomain === ".") {
+				addToast({
+					message: t("errors.logoutFailed"),
+					type: "error",
+				});
 
-			return;
-		}
+				return;
+			}
 
-		revokeCookieConsent();
-		Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
-		window.localStorage.clear();
-		window.location.href = "/";
-		setLocalStorageValue(LocalStorageKeys.apiToken, "");
+			revokeCookieConsent();
+			Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
+			setLoggedInCookie(undefined);
+			setLocalStorageValue(LocalStorageKeys.apiToken, "");
+			window.localStorage.clear();
+			if (redirectToLogin) {
+				window.location.href = "/";
+			}
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [logout]);
+		[logout]
+	);
 
 	const [descopeRenderKey, setDescopeRenderKey] = useState(0);
 
@@ -108,36 +119,56 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				});
 
 				const { data: user, error } = await getLoggedInUser();
-				if (error || !user) {
+				if (error) {
 					addToast({
-						message: t("errors.loginFailed"),
+						message: t("errors.loginFailedTryAgainLater"),
 						type: "error",
+						hideSystemLogLinkOnError: true,
 					});
+					setIsLoggingIn(false);
 
-					return;
+					return await handleLogout(false);
 				}
-				clearLogs();
-				setCurrentOrganizationId(user.defaultOrganizationId);
 
+				const { data: userOrganization, error: errorOrganization } = await OrganizationsService.get(
+					user!.defaultOrganizationId
+				);
+				if (errorOrganization || !userOrganization) {
+					addToast({
+						message: t("errors.userOrganizationIsMissing"),
+						type: "error",
+						hideSystemLogLinkOnError: true,
+					});
+					setIsLoggingIn(false);
+
+					return await handleLogout(false);
+				}
+
+				setCurrentOrganization(userOrganization);
+				const cookie = Cookies.get(isLoggedInCookie);
+				setLoggedInCookie(cookie);
+				clearLogs();
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
-				setIdentity(user.email);
+				setIdentity(user!.email);
 			} catch (error) {
 				addToast({
-					message: t("errors.loginFailed"),
+					message: t("errors.loginFailedTryAgainLater"),
 					type: "error",
+					hideSystemLogLinkOnError: true,
 				});
-				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
-			} finally {
 				setIsLoggingIn(false);
-				setDescopeRenderKey((prevKey) => prevKey + 1);
+
+				LoggerService.error(namespaces.ui.loginPage, t("errors.loginFailedExtended", { error }), true);
+				return await handleLogout(false);
 			}
+			setIsLoggingIn(false);
+			setDescopeRenderKey((prevKey) => prevKey + 1);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[getLoggedInUser]
 	);
-	const isLoggedIn = Cookies.get(isLoggedInCookie);
 
-	if (playwrightTestsAuthBearer || apiToken || isLoggedIn) {
+	if (playwrightTestsAuthBearer || apiToken || loggedInCookie) {
 		return children;
 	}
 

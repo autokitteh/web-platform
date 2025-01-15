@@ -6,6 +6,7 @@ import { Outlet, useLocation } from "react-router-dom";
 
 import { SystemLogLayout } from "./systemLogLayout";
 import { userMenuItems, userMenuOrganizationItems } from "@constants";
+import { useOrganizationStore } from "@src/store";
 
 import { LogoCatLarge, PageTitle } from "@components/atoms";
 import { Sidebar, TitleTopbar } from "@components/organisms";
@@ -16,10 +17,11 @@ export const SettingsLayout = () => {
 	const { t } = useTranslation("global", { keyPrefix: "pageTitles" });
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { pathname } = useLocation();
+	const { currentOrganization } = useOrganizationStore();
 
 	const topbarTitle = pathname.startsWith("/settings")
 		? tSettings("personalSettings")
-		: tSettings("organizationSettings", { name: "Organization Name" });
+		: tSettings("organizationSettings", { name: currentOrganization?.displayName });
 
 	const menuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;
 

@@ -14,14 +14,14 @@ const defaultState: Omit<
 	| "createOrganization"
 	| "getOrganizationsList"
 	| "inviteMember"
-	| "setCurrentOrganizationId"
+	| "setCurrentOrganization"
 	| "listMembers"
 	| "removeMember"
 	| "reset"
 > = {
 	organizationsList: undefined,
 	membersList: undefined,
-	currentOrganizationId: undefined,
+	currentOrganization: undefined,
 	isLoadingOrganizations: false,
 	isLoadingMembers: false,
 };
@@ -29,25 +29,22 @@ const defaultState: Omit<
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
 
-	setCurrentOrganizationId: (organizationId: string) => {
-		set((state) => {
-			state.currentOrganizationId = organizationId;
-
-			return state;
-		});
-	},
 	reset: () => set(defaultState),
 
 	createOrganization: async (name: string) => {
 		const { data: organizationId, error } = await OrganizationsService.create(name);
 
 		if (error) {
-			return error;
+			return { data: undefined, error };
 		}
+
 		if (!organizationId) {
-			return i18n.t("createFailed", {
-				ns: "settings.organization.store.errors",
-			});
+			return {
+				data: undefined,
+				error: i18n.t("createFailed", {
+					ns: "settings.organization.store.errors",
+				}),
+			};
 		}
 
 		const menuItem = {
@@ -63,7 +60,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return state;
 		});
 
-		return undefined;
+		return { data: organizationId, error: undefined };
 	},
 
 	getOrganizationsList: async () => {
@@ -75,36 +72,39 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!userId) {
 			set((state) => ({ ...state, isLoadingOrganizationsList: false, organizationsList: [] }));
 
-			return new Error(
-				i18n.t("userNotFound", {
-					ns: "settings.organization.store.errors",
-				})
-			);
+			return {
+				data: undefined,
+				error: new Error(
+					i18n.t("userNotFound", {
+						ns: "settings.organization.store.errors",
+					})
+				),
+			};
 		}
 
 		const { data: organizations, error } = await OrganizationsService.list(userId);
 
 		if (error) {
-			set((state) => ({ ...state, isLoadingOrganizationsList: false, organizationsList: [] }));
+			set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: [] }));
 
-			return error;
+			return { data: undefined, error };
 		}
 
 		if (isEqual(organizations, organizationsList)) {
-			set((state) => ({ ...state, isLoadingOrganizationsList: false }));
+			set((state) => ({ ...state, isLoadingOrganizations: false }));
 
-			return undefined;
+			return { data: organizations, error: undefined };
 		}
 
-		set((state) => ({ ...state, organizationsList: organizations, isLoadingOrganizationsList: false }));
+		set((state) => ({ ...state, organizationsList: organizations, isLoadingOrganizations: false }));
 
-		return undefined;
+		return { data: organizations, error: undefined };
 	},
 
 	listMembers: async () => {
 		set((state) => ({ ...state, isLoadingMembers: true }));
+		const organizationId = get().currentOrganization?.id;
 
-		const organizationId = get().currentOrganizationId;
 		if (!organizationId) {
 			set((state) => ({ ...state, isLoadingMembers: false }));
 
@@ -125,7 +125,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	inviteMember: async (email) => {
-		const organizationId = get().currentOrganizationId;
+		const organizationId = get().currentOrganization?.id;
 
 		const { error } = await OrganizationsService.inviteMember(organizationId!, email);
 
@@ -137,7 +137,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	removeMember: async (email) => {
-		const organizationId = get().currentOrganizationId;
+		const organizationId = get().currentOrganization?.id;
 
 		const { error } = await OrganizationsService.inviteMember(organizationId!, email);
 
@@ -146,6 +146,10 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		await get().listMembers();
+	},
+
+	setCurrentOrganization: async (organization) => {
+		set((state) => ({ ...state, currentOrganization: organization }));
 	},
 });
 

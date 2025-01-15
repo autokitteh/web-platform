@@ -20,6 +20,7 @@ export const namespaces = {
 	eventsService: "Events Service",
 	organizationsService: "Organizations Service",
 	templatesUtility: "Templates Utility",
+	switchOrganization: "Switch Organization",
 	ui: {
 		loginPage: "Login Page",
 		connectionsTable: "Connections Table",
@@ -49,6 +50,7 @@ export const namespaces = {
 		activitiesStore: "Activity Logs Store",
 		outputStore: "Output Logs Store",
 		templatesStore: "Templates Store",
+		userStore: "User Store",
 	},
 	utilities: {
 		fetchAndExtract: "Fetch and Extract",

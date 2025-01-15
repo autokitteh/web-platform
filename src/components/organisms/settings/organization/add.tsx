@@ -47,7 +47,7 @@ export const AddOrganization = () => {
 
 	const onSubmit = async (values: FormValues) => {
 		setCreatingOrganization(true);
-		const error = await createOrganization(values.name);
+		const { data: organizationId, error } = await createOrganization(values.name);
 		if (error) {
 			addToast({
 				message: tErrors("errorCreateNewOrganization"),
@@ -57,7 +57,7 @@ export const AddOrganization = () => {
 
 			return;
 		}
-		openModal(ModalName.organizationCreated, { name: values.name });
+		openModal(ModalName.organizationCreated, { name: values.name, organizationId });
 		setCreatingOrganization(false);
 	};
 
