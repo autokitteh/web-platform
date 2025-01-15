@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 
+import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
@@ -15,8 +17,7 @@ import { TrashIcon } from "@assets/image/icons";
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const { closeModal, openModal } = useModalStore();
-	const [isDeleting, setIsDeleting] = useState(false);
-	const { organizations, getOrganizations, getEnrichedOrganizations, user, deleteOrganization } =
+	const { organizations, getOrganizations, getEnrichedOrganizations, user, deleteOrganization, isLoading } =
 		useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
@@ -40,20 +41,20 @@ export const UserOrganizationsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [organizations]);
 
-	const onDelete = async (organizationId: string, organizationName: string) => {
-		setIsDeleting(true);
-		const { error } = await deleteOrganization(organizationId);
-		setIsDeleting(false);
+	const onDelete = async (organization: EnrichedOrganization) => {
+		const { error } = await deleteOrganization(omit(organization, "currentMember"));
 		closeModal(ModalName.deleteOrganization);
 		if (error) {
 			addToast({
-				message: t("errors.deleteFailed", { name: organizationName, organizationId: organizationId }),
+				message: t("errors.deleteFailed", {
+					name: organization?.displayName,
+					organizationId: organization?.id,
+				}),
 				type: "error",
 			});
 		}
-
 		addToast({
-			message: t("table.messages.organizationDeleted", { name: organizationName }),
+			message: t("table.messages.organizationDeleted", { name: organization.displayName }),
 			type: "success",
 		});
 	};
@@ -87,13 +88,11 @@ export const UserOrganizationsTable = () => {
 							<Td className="w-1/5 min-w-16">
 								<IconButton
 									className="mr-1"
-									disabled={user?.defaultOrganizationId === organization.id}
-									onClick={() =>
-										openModal(ModalName.deleteOrganization, {
-											name: organization.displayName,
-											id: organization.id,
-										})
+									disabled={
+										user?.defaultOrganizationId === organization.id ||
+										organization.currentMember?.role === MemberRole.admin
 									}
+									onClick={() => openModal(ModalName.deleteOrganization, organization)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>
 									<TrashIcon className="size-4 stroke-white" />
@@ -103,7 +102,7 @@ export const UserOrganizationsTable = () => {
 					))}
 				</TBody>
 			</Table>
-			<DeleteOrganizationModal isDeleting={isDeleting} onDelete={onDelete} />
+			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
 		</div>
 	);
 };

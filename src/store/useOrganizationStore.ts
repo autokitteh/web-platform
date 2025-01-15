@@ -6,6 +6,7 @@ import { immer } from "zustand/middleware/immer";
 import { StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
 import { namespaces } from "@src/constants";
+import { Organization } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 
 const defaultState: OrganizationStoreState = {
@@ -19,6 +20,8 @@ const defaultState: OrganizationStoreState = {
 		members: false,
 		inviteMember: false,
 		deleteMember: false,
+		deletingOrganization: false,
+		updatingOrganization: false,
 	},
 	logoutFunction: () => {},
 };
@@ -77,21 +80,37 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		};
 	},
 
-	deleteOrganization: async (organizationId: string) => {
-		const response = await OrganizationsService.delete(organizationId);
+	deleteOrganization: async (organization: Organization) => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: true } }));
 
-		if (response.error) {
-			return {
-				data: undefined,
-				error: true,
-			};
+		const { user } = get();
+
+		if (user?.defaultOrganizationId === organization.id) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				i18n.t("userShouldntDeleteDefaultOrganization", {
+					ns: "stores.organization",
+					organizationId: organization.id,
+					userId: user?.id,
+				})
+			);
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: false } }));
+
+			return { error: true, data: undefined };
+		}
+		const { error } = await OrganizationsService.delete(organization.id);
+
+		if (error) {
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: false } }));
+
+			return { error: true, data: undefined };
 		}
 
 		set((state) => {
 			const newOrganizations = { ...state.organizations };
 			const newMembers = { ...state.members };
-			delete newOrganizations[organizationId];
-			delete newMembers[organizationId];
+			delete newOrganizations[organization.id];
+			delete newMembers[organization.id];
 			return {
 				...state,
 				members: newMembers,
@@ -99,7 +118,9 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			};
 		});
 
-		return response;
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: false } }));
+
+		return { data: undefined, error: undefined };
 	},
 
 	getEnrichedOrganizations: () => {
@@ -141,6 +162,18 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		});
 		const filteredOrganizations = enrichedOrganizations.filter((organization) => organization !== undefined);
 		return { data: filteredOrganizations, error: enrichedOrganizations.length !== filteredOrganizations.length };
+	},
+
+	updateOrganization: async (organization: Organization) => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: true } }));
+
+		const { error } = await OrganizationsService.update(organization);
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: false } }));
+
+		if (error) {
+			return { error: true, data: undefined };
+		}
+		return { error: undefined, data: undefined };
 	},
 
 	getEnrichedMembers: () => {

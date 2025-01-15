@@ -1,132 +1,142 @@
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import debounce from "lodash/debounce";
+import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
-import { SelectOption } from "@src/interfaces/components";
-import { useModalStore, useOrganizationStore } from "@src/store";
-import { organizationSchema } from "@validations";
+import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { validateEntitiesName } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
-import { Select } from "@components/molecules";
+import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
+
+import { TrashIcon } from "@assets/image/icons";
 
 export const OrganizationSettings = () => {
-	const options: SelectOption[] = [
-		{ value: "disabled", label: "Disabled" },
-		{ value: "daily", label: "Daily" },
-		{ value: "hourly", label: "Hourly" },
-		{ value: "immediate", label: "Immediate" },
-	];
-
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
+	const { organizationId } = useParams();
+	const [nameError, setNameError] = useState("");
 	const {
-		control,
-		formState: { errors },
-		handleSubmit,
-		register,
-	} = useForm({
-		resolver: zodResolver(organizationSchema),
-		mode: "onSubmit",
-	});
-	const { openModal } = useModalStore();
-	const { currentOrganization } = useOrganizationStore();
+		updateOrganization,
+		organizations,
+		deleteOrganization,
+		user,
+		isLoading,
+		logoutFunction,
+		getCurrentOrganizationEnriched,
+	} = useOrganizationStore();
+	const [displaySuccess, setDisplaySuccess] = useState(false);
+	const { openModal, closeModal } = useModalStore();
+	const { data: organization } = getCurrentOrganizationEnriched();
+	const navigate = useNavigate();
 
-	const onSubmit = async () => {};
+	const addToast = useToastStore((state) => state.addToast);
+	const [organizationDisplayName, setOrganizationDisplayName] = useState(organization?.displayName || "");
 
-	const watchedFrequency = useWatch({ control, name: "frequency" });
+	const organizationsNames = useMemo(
+		() =>
+			new Set(
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				(Object.entries(organizations) || []).map(([_organizationId, organization]) => organization.displayName)
+			),
+		[organizations]
+	);
+	const renameOrganization = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const displayName = event.target.value;
+		if (!displayName) {
+			setNameError(t("form.errors.nameRequired"));
+			return;
+		}
+		const isNameInvalid = validateEntitiesName(displayName, organizationsNames);
+		if (isNameInvalid) {
+			setNameError(isNameInvalid);
+			return;
+		}
+		setNameError("");
+		setOrganizationDisplayName(displayName);
+		updateOrganization({ ...omit(organization, "currentMember"), displayName });
+		setDisplaySuccess(true);
+		setTimeout(() => {
+			setDisplaySuccess(false);
+		}, 3000);
+	};
+	const debouncedRename = useCallback(debounce(renameOrganization, 2000), [organizationId]);
+
+	if (!organization) {
+		return null;
+	}
+
+	const onDelete = async () => {
+		const { error } = await deleteOrganization(omit(organization, "currentMember"));
+		closeModal(ModalName.deleteOrganization);
+
+		if (error) {
+			addToast({
+				message: t("form.errors.deleteOrganizationFailed"),
+				type: "error",
+			});
+
+			return;
+		}
+
+		addToast({
+			message: t("form.messages.organizationDeleted", { name: organization?.displayName }),
+			type: "success",
+		});
+		setTimeout(async () => {
+			if (!user?.defaultOrganizationId) {
+				LoggerService.error(
+					namespaces.ui.organizationSettings,
+					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
+				);
+				logoutFunction();
+				return;
+			}
+			navigate(`/switch-organization/${user.defaultOrganizationId}`);
+		}, 3000);
+	};
 
 	return (
-		<div>
-			<Typography className="mb-9 font-bold" element="h2" size="xl">
-				{t("organizationSettings")}
+		<div className="w-3/4">
+			<Typography className="mb-4 font-bold" element="h2" size="xl">
+				{t("title", { name: organizationDisplayName })}
 			</Typography>
-			<div className="flex flex-wrap gap-10">
-				<div className="w-1/2">
-					<Typography className="mb-2 font-bold" element="h2" size="medium">
-						{t("limits")}
-					</Typography>
-					<div className="flex gap-3">
-						<div className="w-1/2 rounded bg-gray-950 p-3 text-base shadow-xl">
-							<Typography className="mb-1" element="h3">
-								{t("seats")}
-							</Typography>
-							<Typography className="font-medium" element="p" size="xl">
-								22
-							</Typography>
+			<div className="relative mb-6">
+				<Input
+					isError={!!nameError}
+					label={t("form.organizationDisplayName")}
+					onChange={debouncedRename}
+					value={organizationDisplayName}
+				/>
+
+				<ErrorMessage>{nameError as string}</ErrorMessage>
+				<div className="h-6">
+					{displaySuccess ? (
+						<div className="text-green-800 opacity-100 transition-opacity duration-300 ease-in-out">
+							{t("form.messages.nameUpdatedSuccessfully")}
 						</div>
-						<div className="w-1/2 rounded bg-gray-950 p-3 text-base shadow-xl">
-							<Typography className="mb-1" element="h3">
-								{t("monthlySpending")}
-							</Typography>
-							<Typography className="font-medium" element="p" size="xl">
-								$333
-							</Typography>
-						</div>
-					</div>
+					) : null}
 				</div>
-				<form className="w-1/2" onSubmit={handleSubmit(onSubmit)}>
-					<div className="relative mb-6">
-						<Input
-							isError={!!errors.name}
-							isRequired
-							label={t("form.organizationName")}
-							{...register("name")}
-						/>
-
-						<ErrorMessage>{errors?.name?.message as string}</ErrorMessage>
-					</div>
-					<Typography className="mb-4 font-bold" element="h2" size="medium">
-						{t("form.errorNotification")}
-					</Typography>
-					<div className="relative mb-6">
-						<Input
-							isError={!!errors.noteEmail}
-							label={t("form.placeholder.notificationEmail")}
-							{...register("noteEmail")}
-						/>
-
-						<ErrorMessage>{errors?.noteEmail?.message as string}</ErrorMessage>
-					</div>
-					<div className="relative mb-6">
-						<Controller
-							control={control}
-							name="frequency"
-							render={({ field }) => (
-								<Select
-									{...field}
-									aria-label={t("form.placeholder.frequency")}
-									isError={!!errors.frequency}
-									label={t("form.placeholder.frequency")}
-									options={options}
-									placeholder={t("form.placeholder.frequency")}
-									value={watchedFrequency}
-								/>
-							)}
-						/>
-
-						<ErrorMessage>{errors.frequency?.message as string}</ErrorMessage>
-					</div>
-					<div className="flex justify-between gap-2">
-						<Button
-							className="w-fit border-black bg-black px-5 text-base font-medium text-white hover:bg-gray-950"
-							onClick={() => openModal(ModalName.deleteOrganization, currentOrganization?.id)}
-							type="button"
-							variant="outline"
-						>
-							{t("form.buttons.deleteOrganization")}
-						</Button>
-						<Button
-							className="w-fit border-black bg-white px-5 text-base font-medium hover:bg-gray-950 hover:text-white"
-							type="submit"
-							variant="outline"
-						>
-							{t("form.buttons.save")}
-						</Button>
-					</div>
-				</form>
 			</div>
+			<div className="relative mb-6">
+				<Input disabled label={t("form.organizationUniqueName")} value={organization?.uniqueName} />
+			</div>
+
+			<Button
+				className="gap-3 px-4 text-base font-semibold text-white"
+				disabled={organization?.id === user?.defaultOrganizationId}
+				onClick={() => openModal(ModalName.deleteOrganization, organization)}
+				title={t("form.buttons.deleteOrganizationName", { name: organization?.displayName })}
+				variant="outline"
+			>
+				<TrashIcon className="size-4 stroke-white" />
+				{t("form.buttons.deleteOrganization")}
+			</Button>
+			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
 		</div>
 	);
 };

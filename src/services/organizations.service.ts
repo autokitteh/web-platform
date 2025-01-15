@@ -29,6 +29,26 @@ export class OrganizationsService {
 		}
 	}
 
+	static async update(organization: Organization): Promise<ServiceResponse<void>> {
+		try {
+			await organizationsClient.update({ org: organization });
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			const logError = i18n.t("organizationNotUpdatedExtended", {
+				error: (error as Error).message,
+				ns: "services",
+				name: organization?.displayName,
+				id: organization?.id,
+			});
+			LoggerService.error(namespaces.organizationsService, logError);
+			const toastErrorr = i18n.t("organizationNotUpdated", {
+				ns: "services",
+			});
+			return { data: undefined, error: toastErrorr };
+		}
+	}
+
 	static async get(organizationId: string): Promise<ServiceResponse<Organization>> {
 		try {
 			const { org } = await organizationsClient.get({ orgId: organizationId });
