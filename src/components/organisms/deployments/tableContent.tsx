@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { DeploymentStateVariant } from "@enums";
-import { ButtonVariant, ModalName } from "@enums/components";
+import { ModalName } from "@enums/components";
 import { DeploymentsService, LoggerService } from "@services";
 import { dateTimeFormat, namespaces } from "@src/constants";
 import { Deployment } from "@type/models";
@@ -213,7 +213,7 @@ export const DeploymentsTableContent = ({
 							<Td className="w-1/12" />
 
 							<Td className="w-1/8 pl-4">
-								<IdCopyButton buttonClassName="pl-0" id={buildId} variant={ButtonVariant.flatText} />
+								<IdCopyButton id={buildId} />
 							</Td>
 
 							<Td

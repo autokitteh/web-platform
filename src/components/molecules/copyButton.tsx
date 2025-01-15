@@ -13,7 +13,7 @@ import { CopyIcon } from "@assets/image/icons";
 
 export const CopyButton = ({
 	className,
-	size = "md",
+	size = "xs",
 	successMessage,
 	tabIndex = 0,
 	text,
@@ -63,7 +63,7 @@ export const CopyButton = ({
 			}}
 			onKeyPressed={() => copyTextToClipboard(text)}
 			tabIndex={tabIndex}
-			title={title}
+			title={t("copyButtonText", { text: title })}
 			type="button"
 		>
 			<CopyIcon className={copyButtonIconStyle} />

@@ -2,7 +2,6 @@ export interface Toast {
 	id: string;
 	message: React.ReactNode;
 	type: ToasterTypes;
-	showCopyButton?: boolean;
 }
 
 export type ToasterTypes = "error" | "info" | "success";

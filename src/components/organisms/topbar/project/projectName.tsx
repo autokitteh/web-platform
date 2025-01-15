@@ -10,7 +10,7 @@ import { cn } from "@utilities";
 import { useProjectStore, useToastStore } from "@store";
 
 import { ErrorMessage, Input } from "@components/atoms";
-import { CopyButton } from "@components/molecules";
+import { IdCopyButton } from "@components/molecules";
 
 import { EditIcon } from "@assets/image/icons";
 
@@ -132,8 +132,8 @@ export const ProjectTopbarName = () => {
 			</ErrorMessage>
 
 			<span className="flex items-center font-fira-code font-semibold text-gray-500">
-				{t("topbar.id")}
-				<CopyButton className="ml-2 inline p-1 pl-1.5" size="xs" text={project?.id || ""} />
+				<div className="mr-2 pr-0.5">{t("topbar.id")}</div>
+				<IdCopyButton hideId id={projectId!} />
 			</span>
 		</div>
 	);

@@ -53,7 +53,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 			},
 			{
 				label: t("connectionId"),
-				value: <IdCopyButton displayFullLength id={triggerConnection!.connectionId} variant="flatText" />,
+				value: <IdCopyButton displayFullLength id={triggerConnection!.connectionId} />,
 			},
 			...baseDetails,
 			{ label: t("eventType"), value: trigger.eventType },
@@ -108,7 +108,7 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 				<div className="font-semibold">{t("webhookUrl")}:</div>
 				{webhookUrl}
 				<div className="w-8">
-					<CopyButton size="sm" text={webhookUrl} />
+					<CopyButton text={webhookUrl} />
 				</div>
 			</div>
 			{baseDetails.map(({ label, value }) =>

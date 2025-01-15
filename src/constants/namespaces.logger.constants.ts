@@ -37,6 +37,7 @@ export const namespaces = {
 		sessions: "Sessions UI",
 		manualRun: "Manual Run UI",
 		menu: "Menu UI",
+		idCopyButton: "ID Copy Button",
 	},
 	hooks: {
 		connectionForm: "Connection Form",
