@@ -72,19 +72,18 @@ export const UserOrganizationsTable = () => {
 			<Table className="mt-6">
 				<THead>
 					<Tr>
-						<Th className="w-1/5 min-w-16 pl-4">{t("table.headers.id")}</Th>
-						<Th className="w-2/6 min-w-16">{t("table.headers.name")}</Th>
-						<Th className="w-1/5 min-w-16">{t("table.headers.uniqueName")}</Th>
-						<Th className="w-1/8 min-w-16 justify-end pr-4">{t("table.headers.actions")}</Th>
+						<Th className="w-2/5 min-w-32 pl-4">{t("table.headers.name")}</Th>
+						<Th className="w-2/5 min-w-32">{t("table.headers.uniqueName")}</Th>
+						<Th className="w-1/5 min-w-16 pr-4">{t("table.headers.actions")}</Th>
 					</Tr>
 				</THead>
 
 				<TBody>
 					{organizationsList?.map((organization) => (
 						<Tr className="hover:bg-gray-1300" key={organization.id}>
-							<Td className="w-1/5 min-w-16 pl-4">{organization.displayName}</Td>
-							<Td className="w-2/6 min-w-16">{organization.displayName}</Td>
-							<Td className="w-1/8 min-w-16" innerDivClassName="justify-end">
+							<Td className="w-2/5 min-w-32 pl-4">{organization.displayName}</Td>
+							<Td className="w-2/5 min-w-32">{organization.uniqueName}</Td>
+							<Td className="w-1/5 min-w-16">
 								<IconButton
 									className="mr-1"
 									onClick={() => openModal(ModalName.deleteOrganization, organization.displayName)}
