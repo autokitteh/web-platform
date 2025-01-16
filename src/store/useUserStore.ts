@@ -5,15 +5,15 @@ import { immer } from "zustand/middleware/immer";
 
 import { StoreName, UserStatusType } from "@enums";
 import { UserStore } from "@interfaces/store";
-import { AuthService, LoggerService, UsersService } from "@services";
-import { namespaces } from "@src/constants";
+import { AuthService, UsersService } from "@services";
 import { ServiceResponse } from "@src/types";
 import { User } from "@src/types/models";
 
-import { useToastStore } from "@store";
+import { useToastStore, useOrganizationStore } from "@store";
 
 const defaultState = {
 	user: undefined,
+	role: undefined,
 };
 
 const store: StateCreator<UserStore> = (set) => ({
@@ -43,15 +43,30 @@ const store: StateCreator<UserStore> = (set) => ({
 	getLoggedInUser: async (): ServiceResponse<User> => {
 		const { data: user, error } = await AuthService.whoAmI();
 
-		if (error) {
-			return { error, data: undefined };
-		}
-
-		if (!user) {
+		if (!user || error) {
 			const errorMessage = i18n.t("user.failedGettingLoggedInUser", {
 				ns: "stores",
 			});
-			LoggerService.error(namespaces.stores.userStore, errorMessage);
+
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
+
+			return { error: errorMessage, data: undefined };
+		}
+
+		const { data: userMember, error: memberFetchError } = await useOrganizationStore.getState().getMember(user.id);
+
+		if (memberFetchError || !userMember) {
+			const errorMessage = i18n.t("user.failedGettingLoggedInUserRole", {
+				ns: "stores",
+			});
+
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
 
 			return { error: errorMessage, data: undefined };
 		}
@@ -59,6 +74,7 @@ const store: StateCreator<UserStore> = (set) => ({
 		set((state) => ({
 			...state,
 			user,
+			role: userMember.role,
 		}));
 
 		return { data: user, error: undefined };

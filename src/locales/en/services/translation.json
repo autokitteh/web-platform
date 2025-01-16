@@ -101,6 +101,8 @@
 	"organizationNotGetExtended": "Failed to get organization by ID {{organizationId}}. Error: {{error}}",
 	"organizationCouldntFetch": "Organization not found, organization ID: {{organizationId}}",
 	"organizationDeleteFailedExtended": "Failed to delete organization {{id}}. Error: {{error}}",
+	"memberNotFoundInOrganization": "Member not found in organization, organization ID: {{organizationId}}, user ID: {{userId}}",
+	"memberNotFoundInOrganizationExtended": "Member not found in organization, organization ID: {{organizationId}}, user ID: {{userId}}, error: {{error}}",
 	"someOrganizationRetrievalFailed": "Some organization retrievals failed for user",
 	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}",
 	"errorConvertingMember": "Error converting member",
@@ -108,5 +110,4 @@
 	"errorConvertingMembers": "Error converting members",
 	"errorInvitingUserToOrganizationExtended": "Inviting user to organization failed, organization ID: {{organizationId}}, error: {{error}}",
 	"errorRemovingUserToOrganizationExtended": "Removing user from organization failed, organization ID: {{organizationId}}, error: {{error}}"
-
 }

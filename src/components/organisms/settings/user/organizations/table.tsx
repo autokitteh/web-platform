@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore, useUserStore } from "@src/store";
 
@@ -15,24 +16,34 @@ export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const { closeModal, openModal } = useModalStore();
 	const [isDeleting, setIsDeleting] = useState(false);
-	const { organizationsList, getOrganizationsList, deleteOrganization, membersList, listMembers } =
+	const { currentOrganization, organizationsList, getOrganizationsList, deleteOrganization, getMember } =
 		useOrganizationStore();
 	const { user } = useUserStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
-	const [currentUserOrganizationId, setCurrentUserOrganizationId] = useState<string | undefined>();
+	const [organizationsWhereTheUserIsAdmin, setOrganizationsWhereTheUserIsAdmin] = useState<string[]>([]);
+
+	const checkWhichOrganizationsUserIsAdmin = async () => {
+		const organizationsWhereIsAdmin = organizationsList!
+			.filter(async (organization) => {
+				const { data: usersMember } = await getMember(user!.id, organization.id);
+				return usersMember?.role === MemberRole.admin;
+			})
+			.map((organization) => organization.id);
+
+		setOrganizationsWhereTheUserIsAdmin(organizationsWhereIsAdmin);
+	};
 
 	useEffect(() => {
-		if (!user || !membersList) {
+		if (!user || !organizationsList) {
 			return;
 		}
-		const loggedInUserOrganizationId = membersList.find((member) => member.user.id === user.id)?.organizationId;
-		setCurrentUserOrganizationId(loggedInUserOrganizationId);
-	}, [user, membersList]);
+		checkWhichOrganizationsUserIsAdmin();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user, organizationsList]);
 
 	useEffect(() => {
 		getOrganizationsList();
-		listMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -86,7 +97,10 @@ export const UserOrganizationsTable = () => {
 							<Td className="w-1/5 min-w-16">
 								<IconButton
 									className="mr-1"
-									disabled={currentUserOrganizationId === organization.id}
+									disabled={
+										currentOrganization?.id === organization.id ||
+										organizationsWhereTheUserIsAdmin.includes(organization.id)
+									}
 									onClick={() => openModal(ModalName.deleteOrganization, organization.displayName)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>

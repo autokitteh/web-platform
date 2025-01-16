@@ -6,6 +6,7 @@
 	"user":{
 		"failedGettingLoggedInUser": "Failed to get the logged in user",
 		"failedCreatingUser": "Failed to create the user",
-		"failedFetchingUser": "Failed to fetching the user"
+		"failedFetchingUser": "Failed to fetching the user",
+		"failedGettingLoggedInUserRole": "Failed to get the logged in member role"
 	}
 }

@@ -184,4 +184,36 @@ export class OrganizationsService {
 			return { data: undefined, error: toastError };
 		}
 	}
+	static async getMember(organizationId: string, userId: string): Promise<ServiceResponse<OrganizationMember>> {
+		try {
+			const { member } = await organizationsClient.getMember({
+				orgId: organizationId,
+				userId,
+			});
+
+			if (!member) {
+				const error = i18n.t("memberNotFoundInOrganization", {
+					organizationId,
+					userId,
+					ns: "services",
+				});
+				LoggerService.error(namespaces.organizationsService, error);
+				return { data: undefined, error };
+			}
+
+			const processedMember = await convertMemberProtoToModel(member);
+
+			return { data: processedMember, error: undefined };
+		} catch (error) {
+			const logError = i18n.t("memberNotFoundInOrganizationExtended", {
+				organizationId,
+				userId,
+				error: (error as Error).message,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.organizationsService, logError);
+
+			return { data: undefined, error: logError };
+		}
+	}
 }

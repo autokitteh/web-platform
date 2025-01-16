@@ -141,7 +141,9 @@
 				"createFailed": "Organization creation failed -  error: {{error}}",
 				"invitingMemberToOrganizationFailed": "Inviting member to organization failed",
 				"userNotFound": "Fetching organization failed - user not found",
-				"fetchFailed": "Fetching organization failed"
+				"fetchFailed": "Fetching organization failed",
+				"memberNotFoundInOrganization": "Member not found in organization, organization ID: {{organizationId}}, user ID: {{userId}}",
+				"currentUserNotFound": "Current user not found"
 			}
 		}
 
