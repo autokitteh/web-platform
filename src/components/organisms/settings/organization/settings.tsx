@@ -41,7 +41,7 @@ export const OrganizationSettings = () => {
 		}
 		setNameError("");
 		setOrganizationDisplayName(displayName);
-		updateOrganization({ ...currentOrganization, displayName });
+		updateOrganization({ ...currentOrganization!, displayName });
 		setDisplaySuccess(true);
 		setTimeout(() => {
 			setDisplaySuccess(false);
@@ -50,7 +50,7 @@ export const OrganizationSettings = () => {
 
 	const onDelete = async () => {
 		setIsDeleting(true);
-		const error = await deleteOrganization(currentOrganization);
+		const error = await deleteOrganization(currentOrganization!);
 		setIsDeleting(false);
 		closeModal(ModalName.deleteOrganization);
 
@@ -70,7 +70,7 @@ export const OrganizationSettings = () => {
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const debouncedRename = useCallback(debounce(renameOrganization, 1500), [organizationId]);
+	const debouncedRename = useCallback(debounce(renameOrganization, 2000), [organizationId]);
 
 	return (
 		<div className="w-3/4">

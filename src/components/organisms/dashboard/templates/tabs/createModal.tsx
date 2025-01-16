@@ -15,6 +15,7 @@ import {
 } from "@src/enums/components/connection.enum";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useProjectStore, useTemplatesStore } from "@src/store";
+import { validateEntitiesName } from "@src/utilities";
 
 import { Button, ErrorMessage, IconSvg, Input, Loader, Status, Typography } from "@components/atoms";
 import { Accordion, Modal } from "@components/molecules";
@@ -22,7 +23,6 @@ import { Accordion, Modal } from "@components/molecules";
 import { PipeCircleIcon, ReadmeIcon } from "@assets/image/icons";
 
 import "github-markdown-css/github-markdown-light.css";
-import { validateEntitiesName } from "@src/utilities";
 
 export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreateProjectModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectWithTemplate" });

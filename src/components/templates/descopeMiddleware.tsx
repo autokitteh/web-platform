@@ -86,7 +86,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				return;
 			}
 
-<<<<<<< HEAD
 			revokeCookieConsent();
 			Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
 			setLocalStorageValue(LocalStorageKeys.apiToken, "");
@@ -95,13 +94,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				window.location.href = "/";
 			}
 		},
-=======
-		revokeCookieConsent();
-		Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
-		window.localStorage.clear();
-		setLocalStorageValue(LocalStorageKeys.apiToken, "");
-		window.location.href = "/";
->>>>>>> 9d03a9ca (feat(UI-1191): organizations settings - optimization)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[logout]
 	);
