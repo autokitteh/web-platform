@@ -4,6 +4,8 @@
 		"failedToFetchExtended": "Something went wrong fetching the templates, error: {{error}}"
 	},
 	"user":{
-		"failedGettingLoggedInUser": "Failed to get the logged in user"
+		"failedGettingLoggedInUser": "Failed to get the logged in user",
+		"failedCreatingUser": "Failed to create the user",
+		"failedFetchingUser": "Failed to fetching the user"
 	}
 }

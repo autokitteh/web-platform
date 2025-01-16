@@ -33,16 +33,11 @@ export const OrganizationMembersTable = () => {
 
 	const createMember = async (email: string) => {
 		setIsCreating(true);
-		const error = await inviteMember(currentOrganization!.id, email);
+		const error = await inviteMember(email);
 		setIsCreating(false);
 		closeModal(ModalName.organizationMemberCreate);
 
 		if (error) {
-			addToast({
-				message: t("errors.inviteFailed"),
-				type: "error",
-			});
-
 			return;
 		}
 

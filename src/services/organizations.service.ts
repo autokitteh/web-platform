@@ -3,8 +3,8 @@ import i18n from "i18next";
 import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertMemberProtoToModel, convertOrganizationProtoToModel } from "@models";
-import { LoggerService, UsersService } from "@services";
-import { MemberStatusType, UserStatusType } from "@src/enums";
+import { LoggerService } from "@services";
+import { MemberStatusType } from "@src/enums";
 import { reverseMemberStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { Organization, OrganizationMember } from "@type/models";
@@ -118,12 +118,8 @@ export class OrganizationsService {
 		}
 	}
 
-	static async inviteMember(organizationId: string, email: string): Promise<ServiceResponse<void>> {
+	static async inviteMember(organizationId: string, userId: string): Promise<ServiceResponse<void>> {
 		try {
-			const { data: userId, error } = await UsersService.create(email, UserStatusType.invited);
-			if (error) {
-				return { data: undefined, error };
-			}
 			await organizationsClient.addMember({
 				member: {
 					orgId: organizationId,
@@ -141,13 +137,7 @@ export class OrganizationsService {
 			});
 			LoggerService.error(namespaces.organizationsService, logError);
 
-			const toastError = i18n.t("errorInvitingUserToOrganization", {
-				organizationId,
-				error: (error as Error).message,
-				ns: "services",
-			});
-
-			return { data: undefined, error: toastError };
+			return { data: undefined, error: logError };
 		}
 	}
 
