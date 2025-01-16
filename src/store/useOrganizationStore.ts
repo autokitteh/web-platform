@@ -50,18 +50,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			};
 		}
 
-		const menuItem = {
-			id: organizationId,
-			displayName: name,
-		};
-
-		set((state) => {
-			const newOrganizationsList = state.organizationsList || [];
-			newOrganizationsList.push(menuItem);
-			state.organizationsList = newOrganizationsList;
-
-			return state;
-		});
+		get().getOrganizationsList();
 
 		return { data: organizationId, error: undefined };
 	},

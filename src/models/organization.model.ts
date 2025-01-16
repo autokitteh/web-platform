@@ -9,6 +9,7 @@ export const convertOrganizationProtoToModel = (protoOrganization: ProtoOrganiza
 	return {
 		displayName: protoOrganization.displayName,
 		id: protoOrganization.orgId,
+		uniqueName: protoOrganization.name,
 	};
 };
 

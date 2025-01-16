@@ -4,6 +4,7 @@ import { User } from "@src/types/models";
 export type Organization = {
 	displayName: string;
 	id: string;
+	uniqueName: string;
 };
 export type OrganizationMember = {
 	organizationId: string;

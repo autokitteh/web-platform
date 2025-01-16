@@ -98,7 +98,7 @@ export const OrganizationSettings = () => {
 				</div>
 			</div>
 			<div className="relative mb-6">
-				<Input disabled label={t("form.organizationUniqueName")} />{" "}
+				<Input disabled label={t("form.organizationUniqueName")} value={currentOrganization?.uniqueName} />
 			</div>
 
 			<Button
