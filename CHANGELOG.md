@@ -1,3 +1,10 @@
+## [2.129.2](https://github.com/autokitteh/web-platform/compare/v2.129.1...v2.129.2) (2025-01-16)
+
+
+### Bug Fixes
+
+* **UI-1200:** fix user invite - if exist, dont try to create ([#892](https://github.com/autokitteh/web-platform/issues/892)) ([bfeddd5](https://github.com/autokitteh/web-platform/commit/bfeddd554aed731c05f83302efda53faf7d47d71))
+
 ## [2.129.1](https://github.com/autokitteh/web-platform/compare/v2.129.0...v2.129.1) (2025-01-16)
 
 
