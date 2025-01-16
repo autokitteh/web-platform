@@ -29,7 +29,7 @@ const routes = [
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
-	const { getLoggedInUser, setLogoutFunction } = useUserStore();
+	const { getLoggedInUser, setLogoutFunction, user } = useUserStore();
 	const { setCurrentOrganization } = useOrganizationStore();
 
 	const { logout } = useDescope();
@@ -42,8 +42,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const [apiToken, setApiToken] = useState<string>();
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_searchParams, setSearchParams] = useSearchParams();
-
-	const [loggedInCookie, setLoggedInCookie] = useState<string | undefined>();
 
 	useEffect(() => {
 		const queryParams = new URLSearchParams(window.location.search);
@@ -90,7 +88,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 
 			revokeCookieConsent();
 			Cookies.remove(isLoggedInCookie, { domain: cookieDomain });
-			setLoggedInCookie(undefined);
 			setLocalStorageValue(LocalStorageKeys.apiToken, "");
 			window.localStorage.clear();
 			if (redirectToLogin) {
@@ -145,8 +142,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				}
 
 				setCurrentOrganization(userOrganization);
-				const cookie = Cookies.get(isLoggedInCookie);
-				setLoggedInCookie(cookie);
 				clearLogs();
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user!.email);
@@ -168,7 +163,9 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		[getLoggedInUser]
 	);
 
-	if (playwrightTestsAuthBearer || apiToken || loggedInCookie) {
+	const isLoggedIn = user && Cookies.get(isLoggedInCookie);
+
+	if (playwrightTestsAuthBearer || apiToken || isLoggedIn) {
 		return children;
 	}
 
