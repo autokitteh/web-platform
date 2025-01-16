@@ -22,7 +22,6 @@ const defaultState: Omit<
 	| "reset"
 	| "setOrganizationsList"
 	| "deleteOrganization"
-	| "getMember"
 > = {
 	organizationsList: undefined,
 	membersList: undefined,
@@ -136,24 +135,22 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!organizationId) {
 			set((state) => ({ ...state, isLoadingMembers: false }));
 
-			const organizationError = i18n.t("organizationIdNotFound", {
-				ns: "settings.organization.store.errors",
-			});
 			useToastStore.getState().addToast({
-				message: organizationError,
+				message: i18n.t("organizationIdNotFound", {
+					ns: "settings.organization.store.errors",
+				}),
 				type: "error",
 			});
-			return { data: undefined, error: organizationError };
+			return;
 		}
 		const { data: members, error } = await OrganizationsService.listMembers(organizationId);
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingMembers: false }));
 
-			return { data: undefined, error };
+			return error;
 		}
 		set((state) => ({ ...state, membersList: members, isLoadingMembers: false }));
-		return { data: members, error: undefined };
 	},
 
 	inviteMember: async (email) => {
@@ -202,27 +199,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		}
 
 		await get().listMembers();
-	},
-
-	getMember: async (userId, organizationId) => {
-		const currentOrganizationId = get().currentOrganization?.id;
-		const { data: member, error } = await OrganizationsService.getMember(
-			organizationId || currentOrganizationId!,
-			userId
-		);
-
-		if (error) {
-			const fetchError = i18n.t("memberNotFoundInOrganization", {
-				ns: "settings.organization.store.errors",
-			});
-			useToastStore.getState().addToast({
-				message: fetchError,
-				type: "error",
-			});
-			return { data: undefined, error: fetchError };
-		}
-
-		return { data: member, error: undefined };
 	},
 
 	setCurrentOrganization: async (organization) => {

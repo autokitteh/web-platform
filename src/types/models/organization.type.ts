@@ -1,4 +1,4 @@
-import { MemberRole, MemberStatus } from "@src/enums";
+import { MemberStatus } from "@src/enums";
 import { User } from "@src/types/models";
 
 export type Organization = {
@@ -8,7 +8,6 @@ export type Organization = {
 };
 export type OrganizationMember = {
 	organizationId: string;
-	role: MemberRole;
 	status: MemberStatus;
 	user: User;
 };
