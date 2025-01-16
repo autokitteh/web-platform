@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { MemberStatus } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { CreateMemberModalRef } from "@src/interfaces/components";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { useModalStore, useOrganizationStore, useToastStore, useUserStore } from "@src/store";
 
 import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
 import { CreateMemberModal, DeleteMemberModal } from "@components/organisms/settings/organization";
@@ -21,6 +21,7 @@ export const OrganizationMembersTable = () => {
 	const membersEmails = new Set((membersList || []).map((member) => member.user.email));
 	const addToast = useToastStore((state) => state.addToast);
 	const modalRef = useRef<CreateMemberModalRef>(null);
+	const { user } = useUserStore();
 
 	useEffect(() => {
 		listMembers();
@@ -104,6 +105,7 @@ export const OrganizationMembersTable = () => {
 							<Td className="w-1/8 min-w-16" innerDivClassName="justify-end">
 								<IconButton
 									className="mr-1"
+									disabled={user?.id === member.user.id}
 									onClick={() =>
 										openModal(ModalName.deleteMemberFromOrg, {
 											name: member.user.name,
