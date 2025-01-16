@@ -18,8 +18,8 @@ export const DeleteOrganizationModal = ({ onDelete, isDeleting }: DeleteOrganiza
 	return (
 		<Modal name={ModalName.deleteOrganization}>
 			<div className="mx-6">
-				<h3 className="mb-5 text-xl font-bold">{t("deleteOrganization", { name: organization?.name })}?</h3>
-				<p className="font-light">{t("line1")}</p>
+				<h3 className="mb-5 text-xl font-bold">{t("title")}?</h3>
+				<p className="font-light">{t("line1", { name: organization?.name })}</p>
 				<p className="mt-1 font-light">{t("line2")}</p>
 			</div>
 
@@ -36,7 +36,7 @@ export const DeleteOrganizationModal = ({ onDelete, isDeleting }: DeleteOrganiza
 					ariaLabel={t("deleteButton")}
 					className="w-auto px-4 py-3 font-semibold hover:bg-error"
 					disabled={isDeleting}
-					onClick={() => onDelete(organization?.name, organization?.id)}
+					onClick={() => onDelete(organization?.id, organization?.name)}
 				>
 					{isDeleting ? <Loader size="sm" /> : null}
 					{t("deleteButton")}

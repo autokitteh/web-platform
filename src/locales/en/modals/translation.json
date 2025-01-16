@@ -51,7 +51,7 @@
 	"deleteOrganization": {
 		"cancelButton": "Cancel",
 		"deleteButton": "Delete",
-		"deleteOrganization": "Delete Organization",
+		"title": "Delete Organization",
 		"line1": "Are you sure you want to delete - {{name}}",
 		"line2": "This action cannot be undone, and all related data will be permanently removed."
 	},

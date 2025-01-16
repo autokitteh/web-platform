@@ -87,7 +87,12 @@ export const UserOrganizationsTable = () => {
 								<IconButton
 									className="mr-1"
 									disabled={currentUserOrganizationId === organization.id}
-									onClick={() => openModal(ModalName.deleteOrganization, organization.displayName)}
+									onClick={() =>
+										openModal(ModalName.deleteOrganization, {
+											name: organization.displayName,
+											id: organization.id,
+										})
+									}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>
 									<TrashIcon className="size-4 stroke-white" />
