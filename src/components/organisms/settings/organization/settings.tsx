@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import debounce from "lodash/debounce";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { validateEntitiesName } from "@src/utilities";
 
-import { Button, ErrorMessage, Input, SuccessMessage, Typography } from "@components/atoms";
+import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";
@@ -24,6 +24,10 @@ export const OrganizationSettings = () => {
 	const [organizationDisplayName, setOrganizationDisplayName] = useState<string>(
 		currentOrganization?.displayName || ""
 	);
+	const organizationsNames = useMemo(
+		() => new Set((organizationsList || []).map((organization) => organization.displayName)),
+		[organizationsList]
+	);
 
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -33,7 +37,6 @@ export const OrganizationSettings = () => {
 			setNameError(t("form.errors.nameRequired"));
 			return;
 		}
-		const organizationsNames = new Set((organizationsList || []).map((organization) => organization.displayName));
 		const isNameInvalid = validateEntitiesName(displayName, organizationsNames);
 		if (isNameInvalid) {
 			setNameError(isNameInvalid);
@@ -88,7 +91,9 @@ export const OrganizationSettings = () => {
 				<ErrorMessage>{nameError as string}</ErrorMessage>
 				<div className="h-6">
 					{displaySuccess ? (
-						<SuccessMessage>{t("form.messages.nameUpdatedSuccessfully")}</SuccessMessage>
+						<div className="text-green-800 opacity-100 transition-opacity duration-300 ease-in-out">
+							{t("form.messages.nameUpdatedSuccessfully")}
+						</div>
 					) : null}
 				</div>
 			</div>
