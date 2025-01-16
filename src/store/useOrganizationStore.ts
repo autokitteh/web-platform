@@ -9,7 +9,7 @@ import { OrganizationStore } from "@interfaces/store";
 import { OrganizationsService } from "@services";
 import { Organization } from "@src/types/models";
 
-import { useToastStore, useUserStore } from "@store";
+import { useUserStore, useToastStore } from "@store";
 
 const defaultState: Omit<
 	OrganizationStore,
@@ -89,15 +89,16 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		if (!userId) {
 			set((state) => ({ ...state, isLoadingOrganizationsList: false, organizationsList: [] }));
+			const errorMessage = i18n.t("userNotFound", {
+				ns: "settings.organization.store.errors",
+			});
 
-			return {
-				data: undefined,
-				error: new Error(
-					i18n.t("userNotFound", {
-						ns: "settings.organization.store.errors",
-					})
-				),
-			};
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
+			set((state) => ({ ...state, organizationsList: [], isLoadingMembers: false }));
+			return;
 		}
 
 		const { data: organizations, error } = await OrganizationsService.list(userId);
@@ -105,18 +106,26 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (error) {
 			set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: [] }));
 
-			return { data: undefined, error };
+			const errorMessage = i18n.t("fetchFailed", {
+				ns: "settings.organization.store.errors",
+			});
+
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
+			set((state) => ({ ...state, organizationsList: [], isLoadingMembers: false }));
+
+			return;
 		}
 
 		if (isEqual(organizations, organizationsList)) {
 			set((state) => ({ ...state, isLoadingOrganizations: false }));
 
-			return { data: organizations, error: undefined };
+			return;
 		}
 
 		set((state) => ({ ...state, organizationsList: organizations, isLoadingOrganizations: false }));
-
-		return { data: organizations, error: undefined };
 	},
 
 	listMembers: async () => {
@@ -126,11 +135,13 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!organizationId) {
 			set((state) => ({ ...state, isLoadingMembers: false }));
 
-			return new Error(
-				i18n.t("organizationIdNotFound", {
+			useToastStore.getState().addToast({
+				message: i18n.t("organizationIdNotFound", {
 					ns: "settings.organization.store.errors",
-				})
-			);
+				}),
+				type: "error",
+			});
+			return;
 		}
 		const { data: members, error } = await OrganizationsService.listMembers(organizationId);
 

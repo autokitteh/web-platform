@@ -139,8 +139,9 @@
 			"errors": {
 				"organizationIdNotFound": "Organization not found, can't fetch members",
 				"createFailed": "Organization creation failed -  error: {{error}}",
-				"userNotFound": "User not found",
-				"invitingMemberToOrganizationFailed": "Inviting member to organization failed"
+				"invitingMemberToOrganizationFailed": "Inviting member to organization failed",
+				"userNotFound": "Fetching organization failed - user not found",
+				"fetchFailed": "Fetching organization failed"
 			}
 		}
 

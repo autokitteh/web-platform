@@ -8,12 +8,12 @@ export interface OrganizationStore {
 	isLoadingMembers: boolean;
 	membersList?: OrganizationMember[];
 	reset: () => void;
-	getOrganizationsList: () => ServiceResponse<Organization[]>;
+	getOrganizationsList: () => Promise<undefined>;
 	createOrganization: (name: string) => ServiceResponse<string>;
 	setCurrentOrganization: (organization: Organization) => ServiceResponseError;
 	inviteMember: (email: string) => ServiceResponseError;
 	removeMember: (organizationId: string, email: string) => ServiceResponseError;
-	listMembers: () => ServiceResponseError;
+	listMembers: () => void;
 	setOrganizationsList: (organizations: Organization[]) => void;
 	deleteOrganization: (organizationId: string) => ServiceResponseError;
 }

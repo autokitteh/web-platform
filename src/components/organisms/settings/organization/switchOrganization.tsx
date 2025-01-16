@@ -43,8 +43,8 @@ export const SwitchOrganization = () => {
 				return;
 			}
 
-			const { data: fetchedOrganizationsList } = await getOrganizationsList();
-			const organization = fetchedOrganizationsList?.find((organization) => organization.id === organizationId);
+			await getOrganizationsList();
+			const organization = organizationsList?.find((organization) => organization.id === organizationId);
 
 			if (!organization) {
 				LoggerService.error(

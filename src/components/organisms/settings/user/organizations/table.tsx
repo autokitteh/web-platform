@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ModalName } from "@src/enums/components";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { useModalStore, useOrganizationStore, useToastStore, useUserStore } from "@src/store";
 
 import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
@@ -15,24 +15,24 @@ export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const { closeModal, openModal } = useModalStore();
 	const [isDeleting, setIsDeleting] = useState(false);
-	const { organizationsList, getOrganizationsList, setOrganizationsList, deleteOrganization } =
+	const { organizationsList, getOrganizationsList, deleteOrganization, membersList, listMembers } =
 		useOrganizationStore();
+	const { user } = useUserStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
-
-	const fetchOrganizations = async () => {
-		const organizationFetchError = await getOrganizationsList();
-		if (organizationFetchError) {
-			addToast({
-				message: t("errors.fetchError"),
-				type: "error",
-			});
-			setOrganizationsList([]);
-		}
-	};
+	const [currentUserOrganizationId, setCurrentUserOrganizationId] = useState<string | undefined>();
 
 	useEffect(() => {
-		fetchOrganizations();
+		if (!user || !membersList) {
+			return;
+		}
+		const loggedInUserOrganizationId = membersList.find((member) => member.user.id === user.id)?.organizationId;
+		setCurrentUserOrganizationId(loggedInUserOrganizationId);
+	}, [user, membersList]);
+
+	useEffect(() => {
+		getOrganizationsList();
+		listMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -86,6 +86,7 @@ export const UserOrganizationsTable = () => {
 							<Td className="w-1/5 min-w-16">
 								<IconButton
 									className="mr-1"
+									disabled={currentUserOrganizationId === organization.id}
 									onClick={() => openModal(ModalName.deleteOrganization, organization.displayName)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>
