@@ -30,7 +30,7 @@ const routes = [
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction, user } = useUserStore();
-	const { setCurrentOrganization, currentOrganization } = useOrganizationStore();
+	const { setCurrentOrganization } = useOrganizationStore();
 
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
@@ -163,7 +163,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 		[getLoggedInUser]
 	);
 
-	const isLoggedIn = user && currentOrganization && Cookies.get(isLoggedInCookie);
+	const isLoggedIn = user && Cookies.get(isLoggedInCookie);
 
 	if (playwrightTestsAuthBearer || apiToken || isLoggedIn) {
 		return children;
