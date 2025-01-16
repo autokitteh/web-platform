@@ -1,3 +1,10 @@
+## [2.129.1](https://github.com/autokitteh/web-platform/compare/v2.129.0...v2.129.1) (2025-01-16)
+
+
+### Bug Fixes
+
+* **UI-1199:** fix login ([#890](https://github.com/autokitteh/web-platform/issues/890)) ([5e4faf2](https://github.com/autokitteh/web-platform/commit/5e4faf2d5da036f0e3dcc4aedcfe2d25e740a061))
+
 # [2.129.0](https://github.com/autokitteh/web-platform/compare/v2.128.1...v2.129.0) (2025-01-15)
 
 
