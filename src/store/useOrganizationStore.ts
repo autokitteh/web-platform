@@ -129,10 +129,10 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const organizationId = get().currentOrganization?.id;
 		let userId;
 
-		const { data: existingUser, error: userCheckError } = await useUserStore.getState().getUser({ email });
+		const { data: existingUser } = await useUserStore.getState().getUser({ email });
 
-		if (!userCheckError) {
-			userId = existingUser!.id;
+		if (existingUser) {
+			userId = existingUser.id;
 		} else {
 			const { data: createUserId, error: userCreationError } = await useUserStore
 				.getState()

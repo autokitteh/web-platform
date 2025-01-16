@@ -26,11 +26,7 @@ export class UsersService {
 			});
 
 			if (!user) {
-				throw new Error(
-					i18n.t("userNotFound", {
-						ns: "services",
-					})
-				);
+				return { data: undefined, error: undefined };
 			}
 			const convertedUser = convertUserProtoToModel(user);
 
