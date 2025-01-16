@@ -10,9 +10,21 @@ import { ServiceResponse } from "@type";
 import { User } from "@type/models";
 
 export class UsersService {
-	static async get(userId: string): Promise<ServiceResponse<User>> {
+	static async get({ email, userId }: { email?: string; userId?: string }): Promise<ServiceResponse<User>> {
 		try {
-			const { user } = await usersClient.get({ userId });
+			if (!userId && !email) {
+				throw new Error(
+					i18n.t("userIdentifierRequired", {
+						ns: "services",
+					})
+				);
+			}
+
+			const { user } = await usersClient.get({
+				userId,
+				email,
+			});
+
 			if (!user) {
 				throw new Error(
 					i18n.t("userNotFound", {
@@ -33,6 +45,7 @@ export class UsersService {
 			return { data: undefined, error };
 		}
 	}
+
 	static async create(email: string, status: UserStatusType): Promise<ServiceResponse<string>> {
 		try {
 			const { userId } = await usersClient.create({
@@ -40,7 +53,7 @@ export class UsersService {
 			});
 			if (!userId) {
 				throw new Error(
-					i18n.t("userNotFound", {
+					i18n.t("userNotCreated", {
 						ns: "services",
 					})
 				);
@@ -48,7 +61,7 @@ export class UsersService {
 
 			return { data: userId, error: undefined };
 		} catch (error) {
-			const errorMessage = i18n.t("accountFetchErrorExtended", {
+			const errorMessage = i18n.t("userNotCreatedExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});
