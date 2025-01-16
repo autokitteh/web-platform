@@ -16,7 +16,7 @@ export const OrganizationMembersTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const [isCreating, setIsCreating] = useState(false);
 	const [isRemoving, setIsRemoving] = useState(false);
-	const { currentOrganization, inviteMember, listMembers, membersList, removeMember } = useOrganizationStore();
+	const { inviteMember, listMembers, membersList, removeMember } = useOrganizationStore();
 	const membersEmails = new Set((membersList || []).map((member) => member.user.email));
 	const addToast = useToastStore((state) => state.addToast);
 	const modalRef = useRef<CreateMemberModalRef>(null);
@@ -49,16 +49,11 @@ export const OrganizationMembersTable = () => {
 
 	const onRemove = async (userId: string, email: string) => {
 		setIsRemoving(true);
-		const error = await removeMember(currentOrganization!.id, userId);
+		const error = await removeMember(userId);
 		setIsRemoving(false);
 		closeModal(ModalName.organizationMemberCreate);
 
 		if (error) {
-			addToast({
-				message: new Error(error as string).message,
-				type: "error",
-			});
-
 			return;
 		}
 

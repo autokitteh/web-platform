@@ -10,8 +10,8 @@ export interface OrganizationStore {
 	reset: () => void;
 	getOrganizationsList: () => ServiceResponse<Organization[]>;
 	createOrganization: (name: string) => ServiceResponse<string>;
-	setCurrentOrganization: (organization: Organization) => ServiceResponseError;
+	setCurrentOrganization: (organization: Organization) => void;
 	inviteMember: (email: string) => ServiceResponseError;
-	removeMember: (organizationId: string, email: string) => ServiceResponseError;
-	listMembers: () => ServiceResponseError;
+	removeMember: (userId: string) => ServiceResponseError;
+	listMembers: () => void;
 }

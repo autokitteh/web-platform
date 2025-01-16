@@ -101,7 +101,7 @@
 	"organizationNotGetExtended": "Failed to get organization by ID {{organizationId}}. Error: {{error}}",
 	"organizationCouldntFetch": "Organization not found, organization ID: {{organizationId}}",
 	"someOrganizationRetrievalFailed": "Some organization retrievals failed for user",
-	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}",
+	"errorFetchingOrganizationExtended": "Error fetching organizations list, user ID: {{userId}}, error: {{error}}",
 	"errorConvertingMember": "Error converting member",
 	"errorConvertingMemberExtended": "Error converting member, member ID: {{memberId}}, error: {{error}}",
 	"errorConvertingMembers": "Error converting members",

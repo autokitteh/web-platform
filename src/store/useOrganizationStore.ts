@@ -72,14 +72,17 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		if (!userId) {
 			set((state) => ({ ...state, isLoadingOrganizationsList: false, organizationsList: [] }));
+			const errorMessage = i18n.t("userNotFound", {
+				ns: "settings.organization.store.errors",
+			});
 
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
 			return {
 				data: undefined,
-				error: new Error(
-					i18n.t("userNotFound", {
-						ns: "settings.organization.store.errors",
-					})
-				),
+				error: new Error(errorMessage),
 			};
 		}
 
@@ -87,7 +90,14 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: [] }));
+			const errorMessage = i18n.t("fetchingOrganizationFailed", {
+				ns: "settings.organization.store.errors",
+			});
 
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
 			return { data: undefined, error };
 		}
 
@@ -109,18 +119,34 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!organizationId) {
 			set((state) => ({ ...state, isLoadingMembers: false }));
 
-			return new Error(
-				i18n.t("organizationIdNotFound", {
-					ns: "settings.organization.store.errors",
-				})
-			);
+			const errorMessage = i18n.t("organizationIdNotFound", {
+				ns: "settings.organization.store.errors",
+			});
+
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
+			set((state) => ({ ...state, organizationsList: [], isLoadingMembers: false }));
+
+			return;
 		}
 		const { data: members, error } = await OrganizationsService.listMembers(organizationId);
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingMembers: false }));
 
-			return error;
+			const errorMessage = i18n.t("fetchingOrganizationMembersFailed", {
+				ns: "settings.organization.store.errors",
+			});
+
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
+			set((state) => ({ ...state, organizationsList: [], isLoadingMembers: false }));
+
+			return;
 		}
 		set((state) => ({ ...state, membersList: members, isLoadingMembers: false }));
 	},
@@ -161,16 +187,25 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		get().listMembers();
 	},
 
-	removeMember: async (email) => {
+	removeMember: async (userId) => {
 		const organizationId = get().currentOrganization?.id;
 
-		const { error } = await OrganizationsService.inviteMember(organizationId!, email);
+		const { error } = await OrganizationsService.deleteMember(organizationId!, userId);
 
 		if (error) {
-			return error;
+			const errorMessage = i18n.t("removingMemberFromOrganizationFailed", {
+				ns: "settings.organization.store.errors",
+			});
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
+
+			return errorMessage;
 		}
 
-		await get().listMembers();
+		const membersListWithoutDeleteUser = get().membersList?.filter((member) => member.user.id !== userId) || [];
+		set((state) => ({ ...state, membersList: membersListWithoutDeleteUser }));
 	},
 
 	setCurrentOrganization: async (organization) => {
