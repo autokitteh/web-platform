@@ -86,7 +86,7 @@ export const UserOrganizationsTable = () => {
 							<Td className="w-1/5 min-w-16">
 								<IconButton
 									className="mr-1"
-									disabled={currentUserOrganizationId === organization.id}
+									disabled={user?.defaultOrganizationId === organization.id}
 									onClick={() =>
 										openModal(ModalName.deleteOrganization, {
 											name: organization.displayName,
