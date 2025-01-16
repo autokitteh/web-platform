@@ -15,24 +15,13 @@ export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const { closeModal, openModal } = useModalStore();
 	const [isDeleting, setIsDeleting] = useState(false);
-	const { organizationsList, getOrganizationsList, deleteOrganization, membersList, listMembers } =
-		useOrganizationStore();
+	const { organizationsList, getOrganizationsList, deleteOrganization } = useOrganizationStore();
 	const { user } = useUserStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
-	const [currentUserOrganizationId, setCurrentUserOrganizationId] = useState<string | undefined>();
-
-	useEffect(() => {
-		if (!user || !membersList) {
-			return;
-		}
-		const loggedInUserOrganizationId = membersList.find((member) => member.user.id === user.id)?.organizationId;
-		setCurrentUserOrganizationId(loggedInUserOrganizationId);
-	}, [user, membersList]);
 
 	useEffect(() => {
 		getOrganizationsList();
-		listMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
