@@ -15,7 +15,7 @@ export const convertOrganizationProtoToModel = (protoOrganization: ProtoOrganiza
 export const convertMemberProtoToModel = async (
 	protoOrganizationMember: ProtoOrganizationMember
 ): Promise<OrganizationMember> => {
-	const { data: user, error } = await UsersService.get(protoOrganizationMember.userId);
+	const { data: user, error } = await UsersService.get({ userId: protoOrganizationMember.userId });
 	if (error) {
 		throw error;
 	}

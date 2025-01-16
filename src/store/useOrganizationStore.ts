@@ -4,10 +4,11 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { StoreName } from "@enums";
+import { StoreName, UserStatusType } from "@enums";
 import { OrganizationStore } from "@interfaces/store";
 import { OrganizationsService } from "@services";
-import { useUserStore } from "@store/useUserStore";
+
+import { useToastStore, useUserStore } from "@store";
 
 const defaultState: Omit<
 	OrganizationStore,
@@ -126,14 +127,38 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	inviteMember: async (email) => {
 		const organizationId = get().currentOrganization?.id;
+		let userId;
 
-		const { error } = await OrganizationsService.inviteMember(organizationId!, email);
+		const { data: existingUser, error: userCheckError } = await useUserStore.getState().getUser({ email });
 
-		if (error) {
-			return error;
+		if (!userCheckError) {
+			userId = existingUser!.id;
+		} else {
+			const { data: createUserId, error: userCreationError } = await useUserStore
+				.getState()
+				.createUser(email, UserStatusType.invited);
+
+			if (userCreationError) {
+				return userCreationError;
+			}
+			userId = createUserId;
 		}
 
-		await get().listMembers();
+		const { error } = await OrganizationsService.inviteMember(organizationId!, userId!);
+
+		if (error) {
+			const errorMessage = i18n.t("invitingMemberToOrganizationFailed", {
+				ns: "settings.organization.store.errors",
+			});
+
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
+			return errorMessage;
+		}
+
+		get().listMembers();
 	},
 
 	removeMember: async (email) => {
