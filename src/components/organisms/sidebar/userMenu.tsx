@@ -6,25 +6,60 @@ import { useNavigate } from "react-router-dom";
 
 import { usePopoverContext } from "@contexts";
 import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
-import { useOrganizationStore, useToastStore } from "@src/store";
-import { EnrichedOrganization } from "@src/types/models";
+import { MemberStatusType } from "@src/enums";
+import { ModalName } from "@src/enums/components";
+import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Typography } from "@components/atoms";
+import { InvitedUserModal } from "@components/organisms/modals";
 
 import { PlusIcon } from "@assets/image/icons";
 import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void }) => {
 	const { t } = useTranslation("sidebar.userMenu");
-	const { logoutFunction, user } = useOrganizationStore();
 	const { close } = usePopoverContext();
-	const { getEnrichedOrganizations, isLoading } = useOrganizationStore();
+	const {
+		logoutFunction,
+		user,
+		getEnrichedOrganizations,
+		isLoading,
+		getOrganizations,
+		organizations,
+		currentOrganization,
+		updateMember,
+	} = useOrganizationStore();
 	const navigate = useNavigate();
-	const [organizations, setOrganizations] = useState<EnrichedOrganization[]>();
+	const [organizationsMenuItems, setOrganizationsMenuItems] =
+		useState<{ displayName: string; id: string; status?: MemberStatusType }[]>();
 	const addToast = useToastStore((state) => state.addToast);
+	useOrganizationStore();
+	const { openModal } = useModalStore();
+
+	const loadOrganizations = async () => {
+		const { error } = await getOrganizations();
+		if (error) {
+			addToast({
+				message: t("errors.organizationFetchingFailed"),
+				type: "error",
+			});
+			return;
+		}
+	};
 
 	useEffect(() => {
+		if (!organizations && !Object.keys(organizations).length) {
+			loadOrganizations();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		if (!organizations && !Object.keys(organizations).length) {
+			return;
+		}
+
 		const { data, error } = getEnrichedOrganizations();
 		if (error || !data) {
 			addToast({
@@ -33,13 +68,43 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 			});
 			return;
 		}
-		setOrganizations(data);
+
+		const newMenuItems = data.map((organization) => ({
+			id: organization.id,
+			displayName: organization.displayName,
+			status: organization.currentMember?.status,
+		}));
+		setOrganizationsMenuItems(newMenuItems);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [organizations]);
 
 	const openFeedbackFormClick = () => {
 		openFeedbackForm();
 		close();
+	};
+
+	const getStatusIndicatorClasses = (status?: MemberStatusType) =>
+		cn("absolute right-1 top-1/2 size-2.5 -translate-y-1/2 rounded-full hidden", {
+			"bg-error-200 block": status === MemberStatusType.invited,
+		});
+
+	const handleOrganizationClick = (status?: MemberStatusType, id?: string, displayName?: string) => {
+		close();
+		if (status === MemberStatusType.invited) {
+			openModal(ModalName.invitedUser, {
+				organizationName: displayName,
+				organizationId: id,
+			});
+			return;
+		}
+		navigate(`/switch-organization/${id}`);
+	};
+
+	const updateMemberStatus = async (organizationId: string, status: MemberStatusType) => {
+		updateMember(status);
+		if (status === MemberStatusType.active) {
+			navigate(`/switch-organization/${organizationId}`);
+		}
 	};
 
 	return (
@@ -114,14 +179,20 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 						<div className="relative mt-8 h-10">
 							<Loader isCenter />
 						</div>
-					) : organizations ? (
-						organizations.map(({ id, displayName }) => (
+					) : organizationsMenuItems ? (
+						organizationsMenuItems.map(({ displayName, id, status }) => (
 							<Button
-								className="mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250"
+								className={cn(
+									"relative mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250",
+									{
+										"font-bold": currentOrganization?.id === id,
+									}
+								)}
 								key={id}
-								onClick={() => navigate(`/switch-organization/${id}`)}
+								onClick={() => handleOrganizationClick(status, id, displayName)}
 							>
 								{displayName}
+								<div className={getStatusIndicatorClasses(status)} />
 							</Button>
 						))
 					) : (
@@ -131,6 +202,8 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 					)}
 				</div>
 			</div>
+
+			<InvitedUserModal handleUpdateMemberStatus={updateMemberStatus} />
 		</div>
 	);
 };

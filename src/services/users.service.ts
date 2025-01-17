@@ -42,10 +42,10 @@ export class UsersService {
 		}
 	}
 
-	static async create(email: string, status: UserStatusType): Promise<ServiceResponse<string>> {
+	static async create(email: string): Promise<ServiceResponse<string>> {
 		try {
 			const { userId } = await usersClient.create({
-				user: { email, status: reverseUserStatusConverter(status) },
+				user: { email, status: reverseUserStatusConverter(UserStatusType.invited) },
 			});
 			if (!userId) {
 				throw new Error(

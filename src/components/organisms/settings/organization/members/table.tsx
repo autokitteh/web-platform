@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { MemberStatus } from "@src/enums";
+// import { MemberStatus, MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { CreateMemberModalRef } from "@src/interfaces/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
@@ -117,7 +117,7 @@ export const OrganizationMembersTable = () => {
 							<Tr className="hover:bg-gray-1300" key={member.id}>
 								<Td className="w-1/5 min-w-16 pl-4">{member.name}</Td>
 								<Td className="w-2/6 min-w-16">{member.email}</Td>
-								<Td className="w-1/5 min-w-16 capitalize">{MemberStatus[member.status]}</Td>
+								{/* <Td className="w-1/5 min-w-16 capitalize">{MemberStatusType[member.status]}</Td> */}
 								<Td className="w-1/6 min-w-16 capitalize">{member.role}</Td>
 								<Td className="w-1/8 min-w-16" innerDivClassName="justify-end">
 									<IconButton

@@ -111,5 +111,11 @@
 		"nameTaken": "Name is already taken",
 		"errorCreatingProject": "Failed to create project",
 		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
+	},
+	"invitedUser": {
+		"acceptButton": "Accept",
+		"declineButton": "Decline",
+		"title": "You have been invited",
+		"content": "Would you like to join {{name}} organization?"
 	}
 }

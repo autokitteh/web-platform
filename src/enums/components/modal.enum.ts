@@ -18,4 +18,5 @@ export enum ModalName {
 	organizationCreated = "organizationCreated",
 	organizationMemberCreate = "organizationMemberCreate",
 	deleteOrganization = "deleteOrganization",
+	invitedUser = "invitedUser",
 }

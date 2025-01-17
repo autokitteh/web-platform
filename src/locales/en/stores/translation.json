@@ -10,6 +10,8 @@
 		"noOrganizationFoundCantGetMembers": "No organization found, can't get members, reload the page",
 		"noUserFound": "No user found, reload the page",
 		"organizationsAndMembersNotFound": "No organizations and members found, reload the page, organizations: {{organizations}}, members: {{members}}",
+		"organizationsListReturnedEmpty": "No organizations and members fetched, reload the page, organizations: {{organizations}}, members: {{members}}",
+		"noMemberFound": "No member found, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}",
 		"noMemberFound": "No member found, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}",
 		"currentOrganizationInformationMissing": "Current organization information missing, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}",
 		"organizationNotFound": "Organization not found, reload the page, organization ID: {{organizationId}}",
