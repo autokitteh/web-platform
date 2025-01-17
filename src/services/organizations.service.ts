@@ -65,7 +65,7 @@ export class OrganizationsService {
 				const status = members.find((m) => m.orgId === organization.id)?.status;
 				return {
 					...organization,
-					status: memberStatusConverter(status ? status : ProtoOrgMemberStatus.UNSPECIFIED),
+					status: memberStatusConverter(status || ProtoOrgMemberStatus.UNSPECIFIED),
 				};
 			};
 
