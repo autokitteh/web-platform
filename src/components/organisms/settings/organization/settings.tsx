@@ -2,10 +2,10 @@ import React, { useCallback, useMemo, useState } from "react";
 
 import debounce from "lodash/debounce";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { ModalName } from "@src/enums/components";
-import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { useModalStore, useOrganizationStore, useToastStore, useUserStore } from "@src/store";
 import { validateEntitiesName } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
@@ -18,6 +18,7 @@ export const OrganizationSettings = () => {
 	const { organizationId } = useParams();
 	const [nameError, setNameError] = useState("");
 	const { currentOrganization, updateOrganization, organizationsList, deleteOrganization } = useOrganizationStore();
+	const { user } = useUserStore();
 	const [displaySuccess, setDisplaySuccess] = useState(false);
 	const { openModal, closeModal } = useModalStore();
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -28,6 +29,7 @@ export const OrganizationSettings = () => {
 		() => new Set((organizationsList || []).map((organization) => organization.displayName)),
 		[organizationsList]
 	);
+	const navigate = useNavigate();
 
 	const addToast = useToastStore((state) => state.addToast);
 
@@ -69,6 +71,10 @@ export const OrganizationSettings = () => {
 		addToast({
 			message: t("form.messages.organizationDeleted", { name: currentOrganization?.displayName }),
 			type: "success",
+		});
+		setTimeout(() => {
+			if (!user?.defaultOrganizationId) return;
+			navigate(`/organization-settings/switch-organization/${user.defaultOrganizationId}`);
 		});
 	};
 
