@@ -31,6 +31,10 @@ export const InvitedUserModal = () => {
 			return;
 		}
 		if (status === MemberStatusType.active) {
+			addToast({
+				message: t("yourResponse"),
+				type: "success",
+			});
 			navigate(`/switch-organization/${data.organizationId}`);
 		}
 	};

@@ -39,10 +39,10 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const getStatusIndicatorClasses = (status?: MemberStatus) =>
 		cn("absolute right-1 top-1/2 size-2.5 -translate-y-1/2 rounded-full hidden", {
 			"bg-error-200 block": status === MemberStatus.invited,
-			"bg-gray-600 block": status === MemberStatus.declined,
 		});
 
 	const handleOrganizationClick = (status?: MemberStatus, id?: string, displayName?: string) => {
+		close();
 		if (status === MemberStatus.invited) {
 			openModal(ModalName.invitedUser, {
 				organizationId: id,
@@ -50,7 +50,6 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 			});
 			return;
 		}
-
 		navigate(`/switch-organization/${id}`);
 	};
 

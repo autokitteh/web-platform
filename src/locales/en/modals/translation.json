@@ -110,6 +110,7 @@
 		"declineButton": "Decline",
 		"title": "You have been invited",
 		"content": "Would you like to join {{name}} organization?",
-		"failedUpdateOrganizationStatus": "Failed to update organization status"
+		"failedUpdateOrganizationStatus": "Failed to update organization status",
+		"yourResponse": "Your response has been recorded"
 	}
 }
