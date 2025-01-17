@@ -4,6 +4,8 @@ import debounce from "lodash/debounce";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore, useUserStore } from "@src/store";
 import { validateEntitiesName } from "@src/utilities";
@@ -73,9 +75,16 @@ export const OrganizationSettings = () => {
 			type: "success",
 		});
 		setTimeout(() => {
-			if (!user?.defaultOrganizationId) return;
-			navigate(`/organization-settings/switch-organization/${user.defaultOrganizationId}`);
-		});
+			if (!user?.defaultOrganizationId) {
+				LoggerService.error(
+					namespaces.ui.organizationSettings,
+					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
+				);
+				navigate(`/`);
+				return;
+			}
+			navigate(`/switch-organization/${user.defaultOrganizationId}`);
+		}, 3000);
 	};
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps

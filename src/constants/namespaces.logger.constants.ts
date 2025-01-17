@@ -39,6 +39,7 @@ export const namespaces = {
 		manualRun: "Manual Run UI",
 		menu: "Menu UI",
 		idCopyButton: "ID Copy Button",
+		organizationSettings: "Organization Settings",
 	},
 	hooks: {
 		connectionForm: "Connection Form",
