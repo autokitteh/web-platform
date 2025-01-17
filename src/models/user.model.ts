@@ -9,12 +9,3 @@ export function convertUserProtoToModel(protoUser: ProtoUser): User {
 		defaultOrganizationId: protoUser.defaultOrgId,
 	};
 }
-
-export function reverseConvertUserProtoToModel(user: User): Partial<ProtoUser> {
-	return {
-		email: user.email,
-		displayName: user.name,
-		userId: user.id,
-		defaultOrgId: user.defaultOrganizationId,
-	};
-}

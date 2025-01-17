@@ -90,8 +90,6 @@
 	"convertWrappedJsonError": "Error parsing JSON for key '{{key}}': {{error}} in parseNestedJson function",
 	"accountFetchErrorExtended": "Failed to get the logged in user, error: {{error}}",
 	"userCreationFailedExtended": "Error occurred during the user create, error: {{error}}",
-	"userUpdateErrorExtended": "Error occurred during the account update one or more of the fields is missing in the user prototype. User: {{user}}, fieldMask: {{fieldMask}}",
-	"userUpdateErrorExtendedCatch": "Error occurred during the account update one or more of the fields is missing in the user prototype. User: {{user}}, fieldMask: {{fieldMask}}, error: {{error}}",
 	"userUpdateError": "Error occurred during the account update",
 	"usersFetchErrorExtended": "Error occurred during the user fetch, error: {{error}}",
 	"userIdentifierRequired": "User identifier is required",

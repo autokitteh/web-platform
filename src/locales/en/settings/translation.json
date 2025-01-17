@@ -55,7 +55,9 @@
 			"buttons": {
 				"create": "Create",
 				"save": "Save",
-				"deleteOrganization": "Delete Organization"
+				"deleteOrganization": "Delete Organization",
+				"deleteOrganizationName": "Delete {{name}}"
+
 			},
 			"placeholder": {
 				"notificationEmail": "Notification email",
@@ -124,7 +126,8 @@
 				"organizationIdNotFound": "Organization not found, can't fetch members",
 				"createFailed": "Organization creation failed -  error: {{error}}",
 				"userNotFound": "User not found",
-				"invitingMemberToOrganizationFailed": "Inviting member to organization failed"
+				"invitingMemberToOrganizationFailed": "Inviting member to organization failed",
+				"userShouldntDeleteDefaultOrganization": "Deleting default organization is not allowed"
 			}
 		}
 

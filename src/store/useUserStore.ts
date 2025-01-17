@@ -71,20 +71,6 @@ const store: StateCreator<UserStore> = (set) => ({
 		}));
 	},
 	reset: () => set(defaultState),
-	update: async (user: User, fieldMask: string[]) => {
-		const { error } = await UsersService.update(user, fieldMask);
-
-		if (error) {
-			return error as string;
-		}
-
-		set((state) => ({
-			...state,
-			user,
-		}));
-
-		return undefined;
-	},
 });
 
 export const useUserStore = create(persist(immer(store), { name: StoreName.user }));

@@ -109,12 +109,14 @@ export const OrganizationSettings = () => {
 
 			<Button
 				className="gap-3 px-4 text-base font-semibold text-white"
+				disabled={currentOrganization?.id === user?.defaultOrganizationId}
 				onClick={() =>
 					openModal(ModalName.deleteOrganization, {
 						id: currentOrganization?.id,
 						name: currentOrganization?.displayName,
 					})
 				}
+				title={t("form.buttons.deleteOrganizationName", { name: currentOrganization?.displayName })}
 				variant="outline"
 			>
 				<TrashIcon className="size-4 stroke-white" />

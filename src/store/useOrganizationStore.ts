@@ -163,27 +163,25 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	deleteOrganization: async (organization) => {
+		const user = useUserStore.getState().user;
+
+		if (user?.defaultOrganizationId === organization.id) {
+			const errorMessage = i18n.t("userShouldntDeleteDefaultOrganization", {
+				ns: "settings.organization.store.errors",
+			});
+
+			useToastStore.getState().addToast({
+				message: errorMessage,
+				type: "error",
+			});
+			return errorMessage;
+		}
 		const { error } = await OrganizationsService.delete(organization);
 
 		if (error) {
 			return error;
 		}
 		const organizationsListForMenu = get().organizationsList;
-
-		const user = useUserStore.getState().user;
-
-		let userSetDefaultOrganizationError;
-		if (user?.defaultOrganizationId === organization.id) {
-			const updatedUser = {
-				...user,
-				defaultOrganizationId: "",
-			};
-
-			const userUpdateError = useUserStore.getState().update(updatedUser, ["defaultOrganizationId"]);
-			if (userUpdateError) {
-				userSetDefaultOrganizationError = userUpdateError;
-			}
-		}
 
 		const newOrganizationsList = organizationsListForMenu?.filter(
 			(organizationMenuItem) => organizationMenuItem.id !== organization.id
@@ -208,7 +206,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 			return state;
 		});
-		return userSetDefaultOrganizationError;
 	},
 
 	removeMember: async (email) => {
