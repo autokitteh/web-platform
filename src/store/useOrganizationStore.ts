@@ -6,7 +6,7 @@ import { immer } from "zustand/middleware/immer";
 import { StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
 import { namespaces } from "@src/constants";
-import { Organization } from "@src/types/models";
+import { EnrichedOrganization, Organization } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 
 const defaultState: OrganizationStoreState = {
@@ -75,7 +75,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 					role: member.role,
 					status: member.status,
 				},
-			},
+			} as EnrichedOrganization,
 			error: false,
 		};
 	},
@@ -139,29 +139,32 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
-		const enrichedOrganizations = Object.values(organizations).map((organization) => {
-			const currentMember = members[organization.id]?.[user?.id];
-			if (!currentMember) {
-				LoggerService.error(
-					namespaces.stores.organizationStore,
-					i18n.t("noMemberFound", {
-						ns: "stores.organization",
-						organizationId: organization.id,
-						userId: user?.id,
-					})
-				);
-				return undefined;
-			}
-			return {
-				...organization,
-				currentMember: {
-					role: currentMember.role,
-					status: currentMember.status,
-				},
-			};
-		});
-		const filteredOrganizations = enrichedOrganizations.filter((organization) => organization !== undefined);
-		return { data: filteredOrganizations, error: enrichedOrganizations.length !== filteredOrganizations.length };
+		return {
+			data: Object.values(organizations)
+				.map((organization) => {
+					const currentMember = members[organization.id]?.[user?.id];
+					if (!currentMember) {
+						LoggerService.error(
+							namespaces.stores.organizationStore,
+							i18n.t("noMemberFound", {
+								ns: "stores.organization",
+								organizationId: organization.id,
+								userId: user?.id,
+							})
+						);
+						return undefined;
+					}
+					return {
+						...organization,
+						currentMember: {
+							role: currentMember.role,
+							status: currentMember.status,
+						},
+					};
+				})
+				.filter((organization) => organization !== undefined) as EnrichedOrganization[],
+			error: undefined,
+		};
 	},
 
 	updateOrganization: async (organization: Organization) => {

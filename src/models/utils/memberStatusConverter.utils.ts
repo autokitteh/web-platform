@@ -1,18 +1,20 @@
 import { OrgMemberStatus as ProtoOrgMemberStatus } from "@ak-proto-ts/orgs/v1/org_pb";
-import { MemberStatus } from "@enums";
+import { MemberStatusType } from "@enums";
 import { MemberStatusKeyType } from "@src/interfaces/models";
 
-export const memberStatusConverter = (protoMemberStatus: ProtoOrgMemberStatus): MemberStatus => {
-	const memberStatus = ProtoOrgMemberStatus[protoMemberStatus].toLowerCase();
+export const memberStatusConverter = (protoMemberStatus?: ProtoOrgMemberStatus): MemberStatusType => {
+	if (!protoMemberStatus) return MemberStatusType.unspecified;
 
-	return MemberStatus[memberStatus as MemberStatusKeyType];
+	const memberStatusType = ProtoOrgMemberStatus[protoMemberStatus].toLowerCase();
+
+	return MemberStatusType[memberStatusType as MemberStatusKeyType];
 };
 
-export const reverseMemberStatusConverter = (memberStatus?: MemberStatusKeyType): number | undefined => {
+export const reverseMemberStatusConverter = (memberStatus?: MemberStatusType): number | undefined => {
 	if (!memberStatus) {
 		return;
 	}
-	if (!(memberStatus in MemberStatus)) {
+	if (!(memberStatus in MemberStatusType)) {
 		return;
 	}
 	const protoMemberStatus = ProtoOrgMemberStatus[memberStatus.toUpperCase() as keyof typeof ProtoOrgMemberStatus];

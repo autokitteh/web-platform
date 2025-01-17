@@ -203,6 +203,33 @@ export class OrganizationsService {
 		}
 	}
 
+	static async updateMemberStatus(
+		organizationId: string,
+		userId: string,
+		status: MemberStatusType
+	): Promise<ServiceResponse<void>> {
+		try {
+			await organizationsClient.updateMember({
+				member: {
+					orgId: organizationId,
+					userId,
+					status: reverseMemberStatusConverter(status),
+				},
+			});
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			const logError = i18n.t("errorUpdatingUserToOrganizationExtended", {
+				organizationId,
+				error: (error as Error).message,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.organizationsService, logError);
+
+			return { data: undefined, error: new Error(logError) };
+		}
+	}
+
 	static async deleteMember(organizationId: string, userId: string): Promise<ServiceResponse<void>> {
 		try {
 			await organizationsClient.removeMember({
