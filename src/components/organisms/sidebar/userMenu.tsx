@@ -5,12 +5,16 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { usePopoverContext } from "@contexts";
+import { OrganizationsService } from "@services";
 import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
-import { useOrganizationStore, useToastStore } from "@src/store";
+import {  MemberStatusType } from "@src/enums";
+import { ModalName } from "@src/enums/components";
+import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Typography } from "@components/atoms";
+import { InvitedUserModal } from "@components/organisms/modals";
 
 import { PlusIcon } from "@assets/image/icons";
 import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
@@ -19,10 +23,11 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const { t } = useTranslation("sidebar");
 	const { logoutFunction, user } = useOrganizationStore();
 	const { close } = usePopoverContext();
-	const { getEnrichedOrganizations, isLoading } = useOrganizationStore();
+	const { getEnrichedOrganizations, isLoading, currentOrganization } = useOrganizationStore();
 	const navigate = useNavigate();
 	const [organizations, setOrganizations] = useState<EnrichedOrganization[]>();
 	const addToast = useToastStore((state) => state.addToast);
+	const { openModal } = useModalStore();
 
 	useEffect(() => {
 		const { data, error } = getEnrichedOrganizations();
@@ -40,6 +45,44 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const openFeedbackFormClick = () => {
 		openFeedbackForm();
 		close();
+	};
+
+	const getStatusIndicatorClasses = (status?: MemberStatusType) =>
+		cn("absolute right-1 top-1/2 size-2.5 -translate-y-1/2 rounded-full hidden", {
+			"bg-error-200 block": status === MemberStatusType.invited,
+		});
+
+	const handleOrganizationClick = (status?: MemberStatusType, id?: string, displayName?: string) => {
+		close();
+		if (status === MemberStatusType.invited) {
+			openModal(ModalName.invitedUser, {
+				organizationId: id,
+				organizationName: displayName,
+			});
+			return;
+		}
+		navigate(`/switch-organization/${id}`);
+	};
+
+	const onUserInvintaionAction = async (status: MemberStatusType, organizationId: string) => {
+		if (!organizationId || !user?.id) return;
+
+		const { error } = await OrganizationsService.updateMemberStatus(organizationId, user.id, status);
+		if (error) {
+			addToast({
+				message: t("failedUpdateOrganizationStatus"),
+				type: "error",
+			});
+
+			return;
+		}
+		if (status === MemberStatusType.active) {
+			addToast({
+				message: t("yourResponse"),
+				type: "success",
+			});
+			navigate(`/switch-organization/${organizationId}`);
+		}
 	};
 
 	return (
@@ -115,13 +158,19 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 							<Loader isCenter />
 						</div>
 					) : organizations ? (
-						organizations.map(({ id, displayName }) => (
+						organizations.map(({ displayName, id, currentMember }) => (
 							<Button
-								className="mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250"
+								className={cn(
+									"relative mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250",
+									{
+										"font-bold": currentOrganization?.id === id,
+									}
+								)}
 								key={id}
-								onClick={() => navigate(`/switch-organization/${id}`)}
+								onClick={() => handleOrganizationClick(currentMember?.status, id, displayName)}
 							>
 								{displayName}
+								<div className={getStatusIndicatorClasses(currentMember?.status)} />
 							</Button>
 						))
 					) : (
@@ -131,6 +180,8 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 					)}
 				</div>
 			</div>
+
+			<InvitedUserModal onUserInvintaionAction={onUserInvintaionAction} />
 		</div>
 	);
 };
