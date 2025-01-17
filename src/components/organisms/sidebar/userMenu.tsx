@@ -6,10 +6,13 @@ import { useNavigate } from "react-router-dom";
 
 import { usePopoverContext } from "@contexts";
 import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
-import { useOrganizationStore, useUserStore } from "@src/store";
+import { MemberStatus } from "@src/enums";
+import { ModalName } from "@src/enums/components";
+import { useModalStore, useOrganizationStore, useUserStore } from "@src/store";
 import { cn } from "@src/utilities";
 
 import { Button, IconSvg, Loader, Typography } from "@components/atoms";
+import { InvitedUserModal } from "@components/organisms/modals";
 
 import { PlusIcon } from "@assets/image/icons";
 import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
@@ -18,8 +21,10 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const { t } = useTranslation("sidebar");
 	const { logoutFunction, user } = useUserStore();
 	const { close } = usePopoverContext();
-	const { getOrganizationsList, isLoadingOrganizations, organizationsList } = useOrganizationStore();
+	const { getOrganizationsList, isLoadingOrganizations, organizationsList, currentOrganization } =
+		useOrganizationStore();
 	const navigate = useNavigate();
+	const { openModal } = useModalStore();
 
 	useEffect(() => {
 		getOrganizationsList();
@@ -29,6 +34,24 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const openFeedbackFormClick = () => {
 		openFeedbackForm();
 		close();
+	};
+
+	const getStatusIndicatorClasses = (status?: MemberStatus) =>
+		cn("absolute right-1 top-1/2 size-2.5 -translate-y-1/2 rounded-full hidden", {
+			"bg-error-200 block": status === MemberStatus.invited,
+			"bg-gray-600 block": status === MemberStatus.declined,
+		});
+
+	const handleOrganizationClick = (status?: MemberStatus, id?: string, displayName?: string) => {
+		if (status === MemberStatus.invited) {
+			openModal(ModalName.invitedUser, {
+				organizationId: id,
+				organizationName: displayName,
+			});
+			return;
+		}
+
+		navigate(`/switch-organization/${id}`);
 	};
 
 	return (
@@ -104,13 +127,19 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 							<Loader isCenter />
 						</div>
 					) : organizationsList ? (
-						organizationsList.map(({ displayName, id }) => (
+						organizationsList.map(({ displayName, id, status }) => (
 							<Button
-								className="mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250"
+								className={cn(
+									"relative mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250",
+									{
+										"font-bold": currentOrganization?.id === id,
+									}
+								)}
 								key={id}
-								onClick={() => navigate(`/switch-organization/${id}`)}
+								onClick={() => handleOrganizationClick(status, id, displayName)}
 							>
 								{displayName}
+								<div className={getStatusIndicatorClasses(status)} />
 							</Button>
 						))
 					) : (
@@ -120,6 +149,8 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 					)}
 				</div>
 			</div>
+
+			<InvitedUserModal />
 		</div>
 	);
 };

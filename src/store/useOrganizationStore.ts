@@ -4,7 +4,7 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { StoreName, UserStatusType } from "@enums";
+import { StoreName, UserStatusType, MemberStatus } from "@enums";
 import { OrganizationStore } from "@interfaces/store";
 import { OrganizationsService } from "@services";
 
@@ -51,6 +51,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const menuItem = {
 			id: organizationId,
 			displayName: name,
+			status: MemberStatus.active,
 		};
 
 		set((state) => {

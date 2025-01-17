@@ -5,7 +5,7 @@ import { namespaces } from "@constants";
 import { convertMemberProtoToModel, convertOrganizationProtoToModel } from "@models";
 import { LoggerService } from "@services";
 import { MemberStatusType } from "@src/enums";
-import { reverseMemberStatusConverter } from "@src/models/utils";
+import { memberStatusConverter, reverseMemberStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { Organization, OrganizationMember } from "@type/models";
 
@@ -57,9 +57,15 @@ export class OrganizationsService {
 
 	static async list(userId: string): Promise<ServiceResponse<Organization[]>> {
 		try {
-			const { orgs } = await organizationsClient.getOrgsForUser({ userId, includeOrgs: true });
+			const { orgs, members } = await organizationsClient.getOrgsForUser({ userId, includeOrgs: true });
 
-			const processedOrganizations = Object.values(orgs).map(convertOrganizationProtoToModel);
+			const processOrganization = (org: any) => {
+				const organization = convertOrganizationProtoToModel(org);
+				const status = members.find((m) => m.orgId === organization.id)?.status;
+				return { ...organization, status: status ? memberStatusConverter(status) : undefined };
+			};
+
+			const processedOrganizations = Object.values(orgs).map(processOrganization);
 
 			return { data: processedOrganizations, error: undefined };
 		} catch (error) {
@@ -138,6 +144,33 @@ export class OrganizationsService {
 			LoggerService.error(namespaces.organizationsService, logError);
 
 			return { data: undefined, error: logError };
+		}
+	}
+
+	static async updateMember(
+		organizationId: string,
+		userId: string,
+		status: MemberStatusType
+	): Promise<ServiceResponse<void>> {
+		try {
+			await organizationsClient.updateMember({
+				member: {
+					orgId: organizationId,
+					userId,
+					status: reverseMemberStatusConverter(status),
+				},
+			});
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			const logError = i18n.t("errorUpdatingUserToOrganizationExtended", {
+				organizationId,
+				error: (error as Error).message,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.organizationsService, logError);
+
+			return { data: undefined, error: new Error(logError) };
 		}
 	}
 
