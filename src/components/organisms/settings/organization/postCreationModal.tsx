@@ -17,6 +17,11 @@ export const OrganizationPostCreationModal = () => {
 
 	if (!data) return null;
 
+	const handleStay = () => {
+		closeModal(ModalName.organizationCreated);
+		navigate("/settings/organizations");
+	};
+
 	return (
 		<Modal hideCloseButton name={ModalName.organizationCreated}>
 			<div className="mx-6">
@@ -27,7 +32,7 @@ export const OrganizationPostCreationModal = () => {
 				<Button
 					ariaLabel={t("buttons.stay")}
 					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-					onClick={() => closeModal(ModalName.organizationCreated)}
+					onClick={handleStay}
 					variant="outline"
 				>
 					{t("buttons.stay")}
