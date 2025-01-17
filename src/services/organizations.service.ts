@@ -1,5 +1,6 @@
 import i18n from "i18next";
 
+import { OrgMemberStatus as ProtoOrgMemberStatus } from "@ak-proto-ts/orgs/v1/org_pb";
 import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
 import { convertMemberProtoToModel, convertOrganizationProtoToModel } from "@models";
@@ -62,7 +63,10 @@ export class OrganizationsService {
 			const processOrganization = (org: any) => {
 				const organization = convertOrganizationProtoToModel(org);
 				const status = members.find((m) => m.orgId === organization.id)?.status;
-				return { ...organization, status: status ? memberStatusConverter(status) : undefined };
+				return {
+					...organization,
+					status: memberStatusConverter(status ? status : ProtoOrgMemberStatus.UNSPECIFIED),
+				};
 			};
 
 			const processedOrganizations = Object.values(orgs).map(processOrganization);
