@@ -6,7 +6,8 @@ import { immer } from "zustand/middleware/immer";
 
 import { StoreName, UserStatusType } from "@enums";
 import { OrganizationStore } from "@interfaces/store";
-import { OrganizationsService } from "@services";
+import { LoggerService, OrganizationsService, UsersService } from "@services";
+import { namespaces } from "@src/constants";
 
 import { useToastStore, useUserStore } from "@store";
 
@@ -20,8 +21,10 @@ const defaultState: Omit<
 	| "deleteMember"
 	| "reset"
 > = {
-	organizationsList: undefined,
-	membersList: undefined,
+	organizationsList: {},
+	membersListWithUsers: {},
+	organizationsStatuses: {},
+	usersList: undefined,
 	currentOrganization: undefined,
 	isLoadingOrganizations: false,
 	isLoadingMembers: false,
@@ -48,14 +51,15 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			};
 		}
 
-		const menuItem = {
-			id: organizationId,
-			displayName: name,
+		const newOrganizationsList = {
+			...get().organizationsList,
+			[organizationId]: {
+				id: organizationId,
+				displayName: name,
+			},
 		};
 
 		set((state) => {
-			const newOrganizationsList = state.organizationsList || [];
-			newOrganizationsList.push(menuItem);
 			state.organizationsList = newOrganizationsList;
 
 			return state;
@@ -66,12 +70,13 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	getOrganizationsList: async () => {
 		const organizationsList = get().organizationsList;
+		const organizationsStatuses = get().organizationsStatuses;
 		set((state) => ({ ...state, isLoadingOrganizations: true }));
 
 		const userId = useUserStore.getState().user?.id;
 
 		if (!userId) {
-			set((state) => ({ ...state, isLoadingOrganizationsList: false, organizationsList: [] }));
+			set((state) => ({ ...state, isLoadingOrganizationsList: false, organizationsList: {} }));
 
 			return {
 				data: undefined,
@@ -83,23 +88,57 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			};
 		}
 
-		const { data: organizations, error } = await OrganizationsService.list(userId);
+		const { data, error } = await OrganizationsService.list(userId);
 
-		if (error) {
-			set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: [] }));
+		if (error || !data?.membershipStatuses || !data?.organizations) {
+			let noDataError;
+			if (!data?.organizations.length) {
+				set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: {} }));
 
-			return { data: undefined, error };
+				noDataError = i18n.t("noOrganizationsFound", {
+					userId,
+					ns: "services",
+				});
+			}
+
+			if (!data?.membershipStatuses.length) {
+				set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: {} }));
+
+				noDataError = i18n.t("noMembersFound", {
+					userId,
+					error: (error as Error).message,
+					ns: "services",
+				});
+			}
+			if (error || noDataError) {
+				set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: {} }));
+				LoggerService.error(namespaces.stores.organizationStore, (error as string) || (noDataError as string));
+
+				return { data: undefined, error };
+			}
 		}
 
-		if (isEqual(organizations, organizationsList)) {
-			set((state) => ({ ...state, isLoadingOrganizations: false }));
+		const { organizations, membershipStatuses } = data!;
 
-			return { data: organizations, error: undefined };
+		if (!isEqual(organizations, organizationsList)) {
+			set((state) => ({ ...state, isLoadingOrganizations: false, organizationsList: organizations }));
 		}
 
-		set((state) => ({ ...state, organizationsList: organizations, isLoadingOrganizations: false }));
+		if (!isEqual(organizationsStatuses, membershipStatuses)) {
+			set((state) => ({ ...state, isLoadingOrganizations: false, organizationsStatuses: membershipStatuses }));
+		}
 
-		return { data: organizations, error: undefined };
+		return { data, error: undefined };
+	},
+
+	getOrganizationWithStatus: (orgId: string) => {
+		const org = get().organizationsList[orgId];
+		const status = get().organizationsStatuses[orgId];
+		return org ? { ...org, status } : null;
+	},
+
+	getOrganizationMembersWithUserData: (orgId: string) => {
+		return get().membersList.map((member) => {...member, ...get().membersListWithUsers[member.userId]});
 	},
 
 	listMembers: async () => {
@@ -115,21 +154,36 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				})
 			);
 		}
-		const { data: members, error } = await OrganizationsService.listMembers(organizationId);
+		const { data, error } = await OrganizationsService.listMembers(organizationId);
 
 		if (error) {
 			set((state) => ({ ...state, isLoadingMembers: false }));
 
 			return error;
 		}
-		set((state) => ({ ...state, membersList: members, isLoadingMembers: false }));
+
+		if (!data?.members || !data?.users) {
+			set((state) => ({ ...state, isLoadingMembers: false }));
+
+			return new Error(
+				i18n.t("membersNotFound", {
+					ns: "settings.organization.store.errors",
+				})
+			);
+		}
+		set((state) => ({
+			...state,
+			membersList: data.members,
+			membersListWithUsers: data.users,
+			isLoadingMembers: false,
+		}));
 	},
 
 	inviteMember: async (email) => {
 		const organizationId = get().currentOrganization?.id;
 		let userId;
 
-		const { data: existingUser } = await useUserStore.getState().getUser({ email });
+		const { data: existingUser } = await UsersService.get({ email });
 
 		if (existingUser) {
 			userId = existingUser.id;

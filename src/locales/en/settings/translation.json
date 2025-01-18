@@ -116,7 +116,9 @@
 				"organizationIdNotFound": "Organization not found, can't fetch members",
 				"createFailed": "Organization creation failed -  error: {{error}}",
 				"userNotFound": "User not found",
-				"invitingMemberToOrganizationFailed": "Inviting member to organization failed"
+				"invitingMemberToOrganizationFailed": "Inviting member to organization failed",
+				"noOrganizationsFound": "No organizations found, user ID: {{userId}}",
+				"noMembersFound": "No members found, user ID: {{userId}}"
 			}
 		}
 

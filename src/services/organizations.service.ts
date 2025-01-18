@@ -2,12 +2,17 @@ import i18n from "i18next";
 
 import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
-import { convertMemberProtoToModel, convertOrganizationProtoToModel } from "@models";
-import { LoggerService } from "@services";
-import { MemberStatusType } from "@src/enums";
-import { reverseMemberStatusConverter } from "@src/models/utils";
+import {
+	convertMemberProtoToModel,
+	convertMemberProtoToModelWithUser,
+	convertOrganizationProtoToModel,
+	convertUserProtoToModel,
+} from "@models";
+import { LoggerService, UsersService } from "@services";
+import { MemberStatus, MemberStatusType } from "@src/enums";
+import { memberStatusConverter, reverseMemberStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
-import { Organization, OrganizationMember } from "@type/models";
+import { Organization, OrganizationMember, OrganizationMemberWithUser } from "@type/models";
 
 export class OrganizationsService {
 	static async create(displayName: string): Promise<ServiceResponse<string>> {
@@ -55,13 +60,32 @@ export class OrganizationsService {
 		}
 	}
 
-	static async list(userId: string): Promise<ServiceResponse<Organization[]>> {
+	static async list(userId: string): Promise<
+		ServiceResponse<{
+			membershipStatuses: Record<string, MemberStatus>;
+			organizations: Record<string, Organization>;
+		}>
+	> {
 		try {
-			const { orgs } = await organizationsClient.getOrgsForUser({ userId, includeOrgs: true });
+			const { orgs, members } = await organizationsClient.getOrgsForUser({ userId });
 
-			const processedOrganizations = Object.values(orgs).map(convertOrganizationProtoToModel);
+			const organizations = Object.values(orgs).reduce(
+				(acc, org) => {
+					acc[org.orgId] = convertOrganizationProtoToModel(org);
+					return acc;
+				},
+				{} as Record<string, Organization>
+			);
 
-			return { data: processedOrganizations, error: undefined };
+			const statuses = members.reduce(
+				(acc, member) => {
+					acc[member.orgId] = memberStatusConverter(member.status);
+					return acc;
+				},
+				{} as Record<string, MemberStatus>
+			);
+
+			return { data: { organizations, membershipStatuses: statuses }, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
@@ -72,38 +96,33 @@ export class OrganizationsService {
 		}
 	}
 
-	static async listMembers(organizationId: string): Promise<ServiceResponse<OrganizationMember[]>> {
+	static async listMembers(organizationId: string): Promise<
+		ServiceResponse<{
+			members: Record<string, OrganizationMember>;
+			users: Record<string, OrganizationMemberWithUser>;
+		}>
+	> {
 		try {
 			const { members } = await organizationsClient.listMembers({ orgId: organizationId });
+			const processedMembersArray = members.map(convertMemberProtoToModel);
+			const processedMembers = processedMembersArray.reduce(
+				(acc, member) => {
+					acc[member.userId] = member;
+					return acc;
+				},
+				{} as Record<string, OrganizationMember>
+			);
 
-			let convertErrors = 0;
-
-			const processedMembers = await Promise.all(
-				members.map(async (member) => {
-					try {
-						return await convertMemberProtoToModel(member);
-					} catch (error) {
-						LoggerService.error(
-							namespaces.organizationsService,
-							i18n.t("errorConvertingMemberExtended", {
-								memberId: member.userId,
-								error: (error as Error).message,
-								ns: "services",
-							})
-						);
-
-						convertErrors++;
-
-						return null;
-					}
+			const processedMembersWithUsers: Record<string, OrganizationMemberWithUser> = {};
+			await Promise.all(
+				Object.values(processedMembers).map(async (member) => {
+					const { data: user } = await UsersService.get({ userId: member.userId });
+					if (!user) throw new Error("User not found");
+					processedMembersWithUsers[member.userId] = convertMemberProtoToModelWithUser(member, user);
 				})
-			).then((results) => results.filter((result) => result !== null));
+			);
 
-			if (convertErrors) {
-				return { data: undefined, error: new Error(i18n.t("errorConvertingMembers", { ns: "services" })) };
-			}
-
-			return { data: processedMembers, error: undefined };
+			return { data: { members: processedMembers, users: processedMembersWithUsers }, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,

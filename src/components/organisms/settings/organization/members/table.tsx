@@ -17,7 +17,7 @@ export const OrganizationMembersTable = () => {
 	const { closeModal, openModal } = useModalStore();
 	const [isCreating, setIsCreating] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
-	const { inviteMember, listMembers, membersList, deleteMember } = useOrganizationStore();
+	const { inviteMember, listMembers, membersList, usersList, deleteMember } = useOrganizationStore();
 	const membersEmails = new Set((membersList || []).map((member) => member.user.email));
 	const addToast = useToastStore((state) => state.addToast);
 	const modalRef = useRef<CreateMemberModalRef>(null);

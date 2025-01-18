@@ -11,3 +11,4 @@ export { convertTriggerProtoToModel } from "@models/trigger.model";
 export { convertUserProtoToModel } from "@models/user.model";
 export { convertValue } from "@models/value.model";
 export { convertVariableProtoToModel } from "@models/variable.model";
+export { convertMemberProtoToModelWithUser } from "@models/organization.model";

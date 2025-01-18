@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { googleTagManagerEvents, isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
-import { LoggerService, OrganizationsService } from "@services";
+import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot } from "@src/hooks";
 import { gTagEvent, getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
@@ -30,7 +30,7 @@ const routes = [
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 	const { getLoggedInUser, setLogoutFunction, user } = useUserStore();
-	const { setCurrentOrganization } = useOrganizationStore();
+	const { getOrganizationsList, setCurrentOrganization } = useOrganizationStore();
 
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
@@ -116,7 +116,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 				});
 
 				const { data: user, error } = await getLoggedInUser();
-				if (error) {
+				if (error || !user) {
 					addToast({
 						message: t("errors.loginFailedTryAgainLater"),
 						type: "error",
@@ -127,9 +127,12 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					return await handleLogout(false);
 				}
 
-				const { data: userOrganization, error: errorOrganization } = await OrganizationsService.get(
-					user!.defaultOrganizationId
+				const { data: userOrganizations, error: errorOrganization } = await getOrganizationsList();
+
+				const userOrganization = userOrganizations?.organizations?.find(
+					(org) => org.id === user.defaultOrganizationId
 				);
+
 				if (errorOrganization || !userOrganization) {
 					addToast({
 						message: t("errors.userOrganizationIsMissing"),
