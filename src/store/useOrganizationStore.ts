@@ -500,7 +500,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		return { data: user, error: undefined };
 	},
-	logoutFunction: () => {},
 	setLogoutFunction: (logoutFn) => {
 		set((state) => ({
 			...state,

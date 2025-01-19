@@ -89,7 +89,7 @@ export const OrganizationSettings = () => {
 					namespaces.ui.organizationSettings,
 					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
 				);
-				logoutFunction();
+				logoutFunction(true);
 				return;
 			}
 			navigate(`/switch-organization/${user.defaultOrganizationId}`);

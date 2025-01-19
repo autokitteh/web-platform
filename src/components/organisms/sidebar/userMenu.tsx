@@ -157,7 +157,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 
 					<Button
 						className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
-						onClick={() => logoutFunction()}
+						onClick={() => logoutFunction(true)}
 					>
 						<LogoutIcon className="size-4" fill="black" />
 						{t("menu.userSettings.logout")}

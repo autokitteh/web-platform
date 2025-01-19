@@ -14,7 +14,7 @@ export type OrganizationStoreState = Readonly<{
 		updateMember: boolean;
 		updatingOrganization: boolean;
 	};
-	logoutFunction: () => void;
+	logoutFunction: (redirectToLogin: boolean) => void;
 	members: Record<string, Record<string, OrganizationMember>>;
 	organizations: Record<string, Organization>;
 	user?: User;
@@ -38,7 +38,7 @@ export type OrganizationStoreActions = {
 	login: () => ServiceResponse<User>;
 	reset: () => void;
 	setCurrentOrganization: (organization: Organization) => void;
-	setLogoutFunction: (logoutFn: () => void) => void;
+	setLogoutFunction: (logoutFn: (redirectToLogin: boolean) => void) => void;
 	updateMemberStatus: (organizationId: string, status: MemberStatusType) => ServiceResponse<void>;
 	updateOrganization: (organization: Organization) => ServiceResponse<void>;
 };
