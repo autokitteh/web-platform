@@ -16,6 +16,7 @@
 	},
 	"validateEntityName":{
 		"nameIsTaken": "The name is already taken",
-		"invalidName": "The name can only use letters, numbers, and underscores, and must start with a letter or underscore"
+		"invalidName": "The name can only use letters, numbers, and underscores, and must start with a letter or underscore",
+		"nameRequired": "The name is required"
 	}
 }

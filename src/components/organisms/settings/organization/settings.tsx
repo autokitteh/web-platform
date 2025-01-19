@@ -1,15 +1,15 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import debounce from "lodash/debounce";
 import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
-import { validateEntitiesName } from "@src/utilities";
+import { isNameEmpty, isNameExist } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
@@ -18,7 +18,6 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const OrganizationSettings = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
-	const { organizationId } = useParams();
 	const [nameError, setNameError] = useState("");
 	const {
 		updateOrganization,
@@ -47,13 +46,9 @@ export const OrganizationSettings = () => {
 	);
 	const renameOrganization = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const displayName = event.target.value;
-		if (!displayName) {
-			setNameError(t("form.errors.nameRequired"));
-			return;
-		}
-		const isNameInvalid = validateEntitiesName(displayName, organizationsNames);
-		if (isNameInvalid) {
-			setNameError(isNameInvalid);
+		const nameValidationError = isNameExist(displayName, organizationsNames) || isNameEmpty(displayName);
+		if (nameValidationError) {
+			setNameError(nameValidationError);
 			return;
 		}
 		setNameError("");
@@ -64,7 +59,7 @@ export const OrganizationSettings = () => {
 			setDisplaySuccess(false);
 		}, 3000);
 	};
-	const debouncedRename = useCallback(debounce(renameOrganization, 2000), [organizationId]);
+	const debouncedRename = debounce(renameOrganization, 2000);
 
 	if (!organization) {
 		return null;
