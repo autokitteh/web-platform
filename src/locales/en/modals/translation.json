@@ -109,7 +109,6 @@
 		"acceptButton": "Accept",
 		"declineButton": "Decline",
 		"title": "You have been invited",
-		"content": "Would you like to join {{name}} organization?",
-		"yourResponse": "Your response has been recorded"
+		"content": "Would you like to join {{name}} organization?"
 	}
 }

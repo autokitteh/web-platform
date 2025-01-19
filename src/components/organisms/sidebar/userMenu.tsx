@@ -26,7 +26,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const navigate = useNavigate();
 	const [organizations, setOrganizations] = useState<EnrichedOrganization[]>();
 	const addToast = useToastStore((state) => state.addToast);
-	const { openModal } = useModalStore();
+	const { openModal, closeModal } = useModalStore();
 
 	useEffect(() => {
 		const { data, error } = getEnrichedOrganizations();
@@ -75,14 +75,28 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 
 			return;
 		}
+
 		if (status === MemberStatusType.active) {
-			addToast({
-				message: t("yourResponse"),
-				type: "success",
-			});
+			closeModal(ModalName.invitedUser);
+			close();
+
 			navigate(`/switch-organization/${organizationId}`);
 			return;
 		}
+		if (status === MemberStatusType.declined) {
+			addToast({
+				message: t("menu.organizationsList.userInvitintations.yourDeclineResponseRecoreded"),
+				type: "success",
+			});
+			closeModal(ModalName.invitedUser);
+			close();
+			return;
+		}
+	};
+
+	const createNewOrganization = () => {
+		close();
+		navigate("/organization-settings/add");
 	};
 
 	return (
@@ -146,7 +160,8 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 				<h3 className="mb-3 font-semibold text-black">{t("menu.organizationsList.title")}</h3>
 				<Button
 					className="mb-2 flex w-full items-center gap-2 rounded-md bg-green-800 px-2.5 py-1.5 text-sm text-black hover:bg-green-200"
-					href="/organization-settings/add"
+					onClick={() => createNewOrganization()}
+					title={t("menu.organizationsList.newOrganization")}
 				>
 					<PlusIcon className="size-4" fill="white" />
 					{t("menu.organizationsList.newOrganization")}
