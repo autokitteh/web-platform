@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { usePopoverContext } from "@contexts";
 import { OrganizationsService } from "@services";
 import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
-import {  MemberStatusType } from "@src/enums";
+import { MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
