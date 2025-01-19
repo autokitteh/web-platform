@@ -112,6 +112,8 @@ export const UserOrganizationsTable = () => {
 					{organizationsList?.map((organization) => (
 						<Tr className="hover:bg-gray-1300" key={organization.id}>
 							<Td className="w-2/5 min-w-32 pl-4">{organization.displayName}</Td>
+							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.role}</Td>
+							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.status}</Td>
 							<Td className="w-2/5 min-w-32">{organization.uniqueName}</Td>
 							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.role}</Td>
 							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.status}</Td>
