@@ -17,6 +17,6 @@ export const isNameInvalid = (value: string): string =>
 			})
 		: "";
 
-export const validateEntitiesName = (value: string, existingValuesSet: Set<string>): string | undefined => {
+export const validateEntitiesName = (value: string, existingValuesSet: Set<string>): string => {
 	return isNameEmpty(value) || isNameExist(value, existingValuesSet) || isNameInvalid(value);
 };
