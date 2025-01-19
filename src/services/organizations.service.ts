@@ -75,7 +75,7 @@ export class OrganizationsService {
 
 	static async list(userId: string): Promise<ServiceResponse<Organization[]>> {
 		try {
-			const { orgs } = await organizationsClient.getOrgsForUser({ userId, includeOrgs: true });
+			const { orgs } = await organizationsClient.getOrgsForUser({ userId });
 
 			const processedOrganizations = Object.values(orgs).map(convertOrganizationProtoToModel);
 
