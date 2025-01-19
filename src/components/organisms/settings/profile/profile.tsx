@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -7,7 +7,7 @@ import { ModalName } from "@enums/components";
 import { LocalStorageKeys } from "@src/enums";
 import { getPreference, setPreference } from "@src/utilities";
 
-import { useModalStore, useToastStore, useUserStore } from "@store";
+import { useModalStore, useOrganizationStore } from "@store";
 
 import { Button, Checkbox, Typography } from "@components/atoms";
 import { DeleteAccountModal } from "@components/organisms/settings/profile";
@@ -16,28 +16,10 @@ import { TrashIcon } from "@assets/image/icons";
 
 export const Profile = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "profile" });
-	const { getLoggedInUser, user } = useUserStore();
+	const { user } = useOrganizationStore();
 	const { closeModal, openModal } = useModalStore();
-	const addToast = useToastStore((state) => state.addToast);
 	const codeAutoSave = getPreference(LocalStorageKeys.autoSave);
 	const [codeAutoSaveChecked, setCodeAutoSaveChecked] = useState(!!codeAutoSave);
-
-	const loadUser = async () => {
-		const error = await getLoggedInUser();
-		if (error) {
-			addToast({
-				message: t("accountFetchError", { error }),
-				type: "error",
-			});
-		}
-	};
-
-	useEffect(() => {
-		if (!user) {
-			loadUser();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const onDeleteAccount = () => {
 		closeModal(ModalName.deleteAccount);

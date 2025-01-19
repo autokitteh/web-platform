@@ -2,17 +2,12 @@ import i18n from "i18next";
 
 import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
-import {
-	convertMemberProtoToModel,
-	convertMemberProtoToModelWithUser,
-	convertOrganizationProtoToModel,
-	convertUserProtoToModel,
-} from "@models";
-import { LoggerService, UsersService } from "@services";
-import { MemberStatus, MemberStatusType } from "@src/enums";
-import { memberStatusConverter, reverseMemberStatusConverter } from "@src/models/utils";
+import { convertMemberProtoToModel, convertOrganizationProtoToModel, convertUserProtoToModel } from "@models";
+import { LoggerService } from "@services";
+import { MemberStatusType } from "@src/enums";
+import { reverseMemberStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
-import { Organization, OrganizationMember, OrganizationMemberWithUser } from "@type/models";
+import { Organization, OrganizationMember, EnrichedMember } from "@type/models";
 
 export class OrganizationsService {
 	static async create(displayName: string): Promise<ServiceResponse<string>> {
@@ -62,30 +57,32 @@ export class OrganizationsService {
 
 	static async list(userId: string): Promise<
 		ServiceResponse<{
-			membershipStatuses: Record<string, MemberStatus>;
+			members: Record<string, Record<string, OrganizationMember>>;
 			organizations: Record<string, Organization>;
 		}>
 	> {
 		try {
 			const { orgs, members } = await organizationsClient.getOrgsForUser({ userId });
 
-			const organizations = Object.values(orgs).reduce(
+			const normalizedOrganizations = Object.values(orgs).reduce(
 				(acc, org) => {
 					acc[org.orgId] = convertOrganizationProtoToModel(org);
 					return acc;
 				},
 				{} as Record<string, Organization>
 			);
-
-			const statuses = members.reduce(
+			const normalizedMembers = members.reduce(
 				(acc, member) => {
-					acc[member.orgId] = memberStatusConverter(member.status);
+					if (!acc[member.orgId]) {
+						acc[member.orgId] = {};
+					}
+					acc[member.orgId][member.userId] = convertMemberProtoToModel(member);
 					return acc;
 				},
-				{} as Record<string, MemberStatus>
+				{} as Record<string, Record<string, OrganizationMember>>
 			);
 
-			return { data: { organizations, membershipStatuses: statuses }, error: undefined };
+			return { data: { organizations: normalizedOrganizations, members: normalizedMembers }, error: undefined };
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,
@@ -98,31 +95,39 @@ export class OrganizationsService {
 
 	static async listMembers(organizationId: string): Promise<
 		ServiceResponse<{
-			members: Record<string, OrganizationMember>;
-			users: Record<string, OrganizationMemberWithUser>;
+			members: Record<string, Record<string, OrganizationMember>>;
+			users: Record<string, EnrichedMember>;
 		}>
 	> {
 		try {
-			const { members } = await organizationsClient.listMembers({ orgId: organizationId });
-			const processedMembersArray = members.map(convertMemberProtoToModel);
-			const processedMembers = processedMembersArray.reduce(
+			const { users, members } = await organizationsClient.listMembers({ orgId: organizationId });
+
+			const normalizedMembers = members.reduce(
 				(acc, member) => {
-					acc[member.userId] = member;
+					if (!acc[member.orgId]) {
+						acc[member.orgId] = {};
+					}
+					acc[member.orgId][member.userId] = convertMemberProtoToModel(member);
 					return acc;
 				},
-				{} as Record<string, OrganizationMember>
+				{} as Record<string, Record<string, OrganizationMember>>
 			);
 
-			const processedMembersWithUsers: Record<string, OrganizationMemberWithUser> = {};
-			await Promise.all(
-				Object.values(processedMembers).map(async (member) => {
-					const { data: user } = await UsersService.get({ userId: member.userId });
-					if (!user) throw new Error("User not found");
-					processedMembersWithUsers[member.userId] = convertMemberProtoToModelWithUser(member, user);
-				})
+			const normalizedUsers = users.reduce(
+				(acc, user) => ({
+					...acc,
+					[user.userId]: convertUserProtoToModel(user),
+				}),
+				{}
 			);
 
-			return { data: { members: processedMembers, users: processedMembersWithUsers }, error: undefined };
+			return {
+				data: {
+					members: normalizedMembers,
+					users: normalizedUsers,
+				},
+				error: undefined,
+			};
 		} catch (error) {
 			LoggerService.error(
 				namespaces.organizationsService,

@@ -36,7 +36,7 @@
 		"codeAutoSaveLabel": "Code editing auto-save"
 	},
 	"topbar": {
-		"personalSettings": "Personal Settings",
+		"personalSettings": "Personal Settings: {{name}}",
 		"organizationSettings": "Organization: {{name}}"
 	},
 	"organization": {
@@ -105,18 +105,23 @@
 				}
 			},
 			"errors":{
-				"inviteFailed": "Member creation failed"
+				"inviteFailed": "Member creation failed - {{email}}",
+				"deleteFailed": "Member deletion failed - {{email}}",
+				"getMembersFailed": "Failed to fetch members"
 			},
 			"form":{
-				"memberInvited": "Member {{email}} invited"
+				"inviteSucceed": "Member {{email}} invited",
+				"deleteSucceed": "Member {{email}} deleted"
 			}
 		},
 		"store": {
 			"errors": {
 				"organizationIdNotFound": "Organization not found, can't fetch members",
-				"createFailed": "Organization creation failed -  error: {{error}}",
+				"organiztionCreationFailed": "Organization creation failed",
+				"organizationDeletionFailed": "Organization deletion failed",
 				"userNotFound": "User not found",
 				"invitingMemberToOrganizationFailed": "Inviting member to organization failed",
+				"deletingMemberFailed": "Deleting member from organization failed",
 				"noOrganizationsFound": "No organizations found, user ID: {{userId}}",
 				"noMembersFound": "No members found, user ID: {{userId}}"
 			}

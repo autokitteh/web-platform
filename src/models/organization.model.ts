@@ -1,7 +1,7 @@
 import { Org as ProtoOrganization, OrgMember as ProtoOrganizationMember } from "@ak-proto-ts/orgs/v1/org_pb";
 import { memberStatusConverter } from "@models/utils";
 import { MemberRole } from "@src/enums";
-import { Organization, OrganizationMember, OrganizationMemberWithUser, User } from "@type/models";
+import { Organization, OrganizationMember, EnrichedMember, User } from "@type/models";
 
 export const convertOrganizationProtoToModel = (protoOrganization: ProtoOrganization): Organization => {
 	return {
@@ -17,17 +17,13 @@ export const convertMemberProtoToModel = (protoOrganizationMember: ProtoOrganiza
 	else role = MemberRole.unspecified;
 
 	return {
-		organizationId: protoOrganizationMember.orgId,
 		status: memberStatusConverter(protoOrganizationMember.status),
 		role,
 		userId: protoOrganizationMember.userId,
 	};
 };
 
-export const convertMemberProtoToModelWithUser = (
-	member: OrganizationMember,
-	user: User
-): OrganizationMemberWithUser => {
+export const convertMemberProtoToModelWithUser = (member: OrganizationMember, user: User): EnrichedMember => {
 	return {
 		...member,
 		...user,

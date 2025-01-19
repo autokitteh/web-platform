@@ -18,9 +18,10 @@ export const SettingsLayout = () => {
 	const [pageTitle, setPageTitle] = useState<string>(t("base"));
 	const { pathname } = useLocation();
 	const { currentOrganization } = useOrganizationStore();
+	const { user } = useOrganizationStore();
 
 	const topbarTitle = pathname.startsWith("/settings")
-		? tSettings("personalSettings")
+		? tSettings("personalSettings", { name: user?.name })
 		: tSettings("organizationSettings", { name: currentOrganization?.displayName });
 
 	const menuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;

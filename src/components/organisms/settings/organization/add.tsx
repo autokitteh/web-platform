@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -18,11 +18,10 @@ export const AddOrganization = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
 	const addToast = useToastStore((state) => state.addToast);
-	const [creatingOrganization, setCreatingOrganization] = useState(false);
-	const { createOrganization, organizationsList } = useOrganizationStore();
+	const { createOrganization, isLoading, organizations } = useOrganizationStore();
 	const organizationsNamesSet = useMemo(
-		() => new Set((organizationsList || []).map((organization) => organization.displayName)),
-		[organizationsList]
+		() => new Set((Object.values(organizations) || []).map((organization) => organization.displayName)),
+		[organizations]
 	);
 
 	const {
@@ -46,19 +45,16 @@ export const AddOrganization = () => {
 	const { openModal } = useModalStore();
 
 	const onSubmit = async (values: FormValues) => {
-		setCreatingOrganization(true);
 		const { data: organizationId, error } = await createOrganization(values.name);
 		if (error) {
 			addToast({
 				message: tErrors("errorCreateNewOrganization"),
 				type: "error",
 			});
-			setCreatingOrganization(false);
 
 			return;
 		}
 		openModal(ModalName.organizationCreated, { name: values.name, organizationId });
-		setCreatingOrganization(false);
 	};
 
 	return (
@@ -82,11 +78,11 @@ export const AddOrganization = () => {
 				</div>
 				<Button
 					className="ml-auto w-fit border-black bg-white px-5 text-base font-medium hover:bg-gray-950 hover:text-white"
-					disabled={creatingOrganization}
+					disabled={isLoading.organizations}
 					type="submit"
 					variant="outline"
 				>
-					{creatingOrganization ? <Loader size="sm" /> : null}
+					{isLoading.organizations ? <Loader size="sm" /> : null}
 					{t("form.buttons.create")}
 				</Button>
 			</form>
