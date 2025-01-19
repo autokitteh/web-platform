@@ -214,9 +214,13 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			);
 			return { data: undefined, error: true };
 		}
+		let userId = user?.id;
 		if (!user) {
-			const { data: userId, error: userCreateError } = await UsersService.create(email, UserStatusType.invited);
-			if (userCreateError || !userId) {
+			const { data: userIdCreatedUser, error: userCreateError } = await UsersService.create(
+				email,
+				UserStatusType.invited
+			);
+			if (userCreateError || !userIdCreatedUser) {
 				LoggerService.error(
 					namespaces.stores.organizationStore,
 					i18n.t("userNotCreatedCantInviteMember", {
@@ -226,8 +230,20 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				);
 				return { data: undefined, error };
 			}
+			userId = userIdCreatedUser;
 		}
-		const response = await OrganizationsService.inviteMember(organization.id, email);
+		if (!userId) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				i18n.t("noUserIdCantInviteMember", {
+					ns: "stores.organization",
+					email,
+				})
+			);
+			return { data: undefined, error: true };
+		}
+
+		const response = await OrganizationsService.inviteMember(organization.id, userId);
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: false } }));
 
 		return response;

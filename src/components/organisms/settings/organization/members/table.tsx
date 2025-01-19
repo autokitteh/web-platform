@@ -54,7 +54,7 @@ export const OrganizationMembersTable = () => {
 		if (error) {
 			addToast({
 				message: t("errors.inviteFailed", { email }),
-				type: "success",
+				type: "error",
 			});
 			return;
 		}

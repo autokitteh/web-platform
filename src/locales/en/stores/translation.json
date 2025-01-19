@@ -10,6 +10,7 @@
 		"noOrganizationFoundCantDeleteMember": "No organization found, can't delete member {{userId}}, reload the page",
 		"noOrganizationFoundCantInviteMember": "No organization found, can't invite member {{email}}, reload the page",
 		"userNotCreatedCantInviteMember": "User creation failed, can't invite member {{email}}, reload the page",
+		"noUserIdCantInviteMember": "No user ID, can't invite member {{email}}, reload the page",
 		"noOrganizationFoundCantGetMembers": "No organization found, can't get members, reload the page",
 		"noUserFound": "No user found, reload the page",
 		"organizationsAndMembersNotFound": "No organizations and members found, reload the page, organizations: {{organizations}}, members: {{members}}",
