@@ -341,7 +341,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		const response = await OrganizationsService.inviteMember(organization.id, userId);
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: false } }));
-
+		const { getMembers } = get();
+		await getMembers();
 		return response;
 	},
 
@@ -419,13 +420,18 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 		const membersResponse = await OrganizationsService.listMembers(organization.id);
+		const organizationsResponse = await OrganizationsService.list(user.id);
 
-		if (membersResponse.data) {
-			const { users, members } = membersResponse.data;
+		if (membersResponse.data && organizationsResponse.data) {
+			const { users, members: membersCurrentOrganization } = membersResponse.data;
+			const { members } = organizationsResponse.data;
 			set((state) => ({
 				...state,
 				users,
-				members,
+				members: {
+					...members,
+					...membersCurrentOrganization,
+				},
 			}));
 		}
 

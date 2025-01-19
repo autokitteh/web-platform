@@ -69,7 +69,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		const { error } = await updateMemberStatus(organizationId, status);
 		if (error) {
 			addToast({
-				message: t("failedUpdateOrganizationStatus"),
+				message: t("menu.errors.failedUpdateOrganizationStatus"),
 				type: "error",
 			});
 
