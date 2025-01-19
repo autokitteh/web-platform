@@ -113,7 +113,7 @@ export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreatePro
 					variant="light"
 					{...register("projectName", {
 						required: t("nameRequired"),
-						validate: (value) => validateEntitiesName(value, projectNamesSet),
+						validate: (value) => validateEntitiesName(value, projectNamesSet) || true,
 					})}
 					isError={!!errors.projectName}
 				/>

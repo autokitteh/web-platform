@@ -62,7 +62,7 @@ export const AddOrganization = () => {
 						label={t("form.organizationDisplayName")}
 						{...register("name", {
 							required: t("nameRequired"),
-							validate: (value) => validateEntitiesName(value, organizationsNamesSet),
+							validate: (value) => validateEntitiesName(value, organizationsNamesSet) || true,
 						})}
 					/>
 
