@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { usePopoverContext } from "@contexts";
 import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
-import { MemberStatusType } from "@src/enums";
+import { MemberRole, MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
@@ -22,9 +22,16 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const { t } = useTranslation("sidebar");
 	const { logoutFunction, user } = useOrganizationStore();
 	const { close } = usePopoverContext();
-	const { getEnrichedOrganizations, isLoading, currentOrganization, updateMemberStatus } = useOrganizationStore();
+	const {
+		getEnrichedOrganizations,
+		isLoading,
+		currentOrganization,
+		updateMemberStatus,
+		getCurrentOrganizationEnriched,
+	} = useOrganizationStore();
 	const navigate = useNavigate();
 	const [organizations, setOrganizations] = useState<EnrichedOrganization[]>();
+	const [currentOrganizationEnriched, setCurrentOrganizationEnriched] = useState<EnrichedOrganization>();
 	const addToast = useToastStore((state) => state.addToast);
 	const { openModal, closeModal } = useModalStore();
 
@@ -38,6 +45,18 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 			return;
 		}
 		setOrganizations(data);
+
+		const { data: currengOrganizationData, error: currengOrganizationError } = getCurrentOrganizationEnriched();
+		if (currengOrganizationError || !currengOrganizationData) {
+			addToast({
+				message: t("menu.errors.currentOrganizationFetchingFailed"),
+				type: "error",
+			});
+			return;
+		}
+
+		setCurrentOrganizationEnriched(currengOrganizationData);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -146,15 +165,17 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 				</div>
 			</div>
 
-			<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
-				<h3 className="mb-3 font-semibold text-black">{t("menu.organizationSettings.title")}</h3>
-				{userMenuOrganizationItems.map(({ href, icon: Icon, label }) => (
-					<Button className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250" href={href} key={href}>
-						<Icon className="size-4" fill="black" />
-						{label}
-					</Button>
-				))}
-			</div>
+			{currentOrganizationEnriched?.currentMember?.role === MemberRole.admin ? (
+				<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
+					<h3 className="mb-3 font-semibold text-black">{t("menu.organizationSettings.title")}</h3>
+					{userMenuOrganizationItems.map(({ href, icon: Icon, label }) => (
+						<Button className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250" href={href} key={href}>
+							<Icon className="size-4" fill="black" />
+							{label}
+						</Button>
+					))}
+				</div>
+			) : null}
 
 			<div className="flex w-48 flex-col">
 				<h3 className="mb-3 font-semibold text-black">{t("menu.organizationsList.title")}</h3>

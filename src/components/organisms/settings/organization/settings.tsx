@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
+import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { isNameEmpty, isNameExist } from "@src/utilities";
@@ -102,6 +103,7 @@ export const OrganizationSettings = () => {
 			</Typography>
 			<div className="relative mb-6">
 				<Input
+					disabled={organization?.currentMember?.role !== MemberRole.admin}
 					isError={!!nameError}
 					label={t("form.organizationDisplayName")}
 					onChange={debouncedRename}
