@@ -17,40 +17,66 @@ export const SwitchOrganization = () => {
 	const [organizationName, setOrganizationName] = useState(currentOrganization?.displayName);
 	const addToast = useToastStore((state) => state.addToast);
 
-	const loadProjects = async () => {
-		await getProjectsList();
-		setTimeout(() => {
-			navigate("/");
-		}, 3000);
-	};
-
-	const loadOrganizations = async () => {
-		const { error } = await getOrganizations();
-		if (error) {
-			addToast({
-				message: t("errors.organizationFetchingFailed"),
-				type: "error",
-			});
-			return;
-		}
-		setCurrentOrganization(organizations[organizationId!]);
-		setOrganizationName(organizations[organizationId!].displayName);
-		await getProjectsList();
-		setTimeout(() => {
-			navigate("/");
-		}, 3000);
-	};
-
 	useEffect(() => {
-		const organizationFromStore = Object.keys(organizations)?.find(
-			(organizationFromStoreId) => organizationFromStoreId === organizationId
-		);
-		if (organizationFromStore) {
-			setCurrentOrganization(organizations[organizationFromStore]);
-			loadProjects();
-			return;
+		let timeoutId: NodeJS.Timeout;
+
+		const loadProjects = async () => {
+			await getProjectsList();
+			timeoutId = setTimeout(() => {
+				navigate("/");
+			}, 3000);
+		};
+
+		const reloadOrganizations = async () => {
+			const { error } = await getOrganizations();
+			if (error) {
+				addToast({
+					message: t("errors.organizationFetchingFailed"),
+					type: "error",
+				});
+				return;
+			}
+
+			const organizationLoadedFromStore = getOrganizationFromStore(organizationId!);
+			if (!organizationLoadedFromStore) {
+				if (error) {
+					addToast({
+						message: t("errors.organizationFetchingFailed"),
+						type: "error",
+					});
+					return;
+				}
+			}
+		};
+		const getOrganizationFromStore = (organizationId: string): boolean => {
+			const organizationFromStore = Object.values(organizations)?.find(
+				(organizationFromStore) => organizationFromStore.id === organizationId
+			);
+			if (organizationFromStore) {
+				setCurrentOrganization(organizationFromStore);
+				setOrganizationName(organizationFromStore.displayName);
+				loadProjects();
+				return true;
+			}
+			return false;
+		};
+
+		if (organizationId === currentOrganization?.id) {
+			timeoutId = setTimeout(() => {
+				navigate("/");
+			}, 3000);
 		}
-		loadOrganizations();
+
+		const organizationLoadedFromStore = getOrganizationFromStore(organizationId!);
+		if (!organizationLoadedFromStore) {
+			reloadOrganizations();
+		}
+
+		return () => {
+			if (timeoutId) {
+				clearTimeout(timeoutId);
+			}
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [organizationId]);
 
