@@ -30,4 +30,4 @@ export { ValidateURL, ValidateDomain } from "@utilities/validateUrl.utils";
 export { gTagEvent } from "@utilities/gTag.utils";
 export { calculateDeploymentSessionsStats } from "@utilities/calculateDeploymentSessionsStats.utils";
 export { getSessionStateColor } from "@utilities/getSessionStateColor.utils";
-export { validateEntitiesName } from "@utilities/validateEntitiesName.utils";
+export { validateEntitiesName, isNameInvalid, isNameEmpty, isNameExist } from "@utilities/validateEntitiesName.utils";
