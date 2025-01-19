@@ -38,7 +38,9 @@
 				"id": "ID",
 				"name": "Name",
 				"uniqueName": "Unique Name",
-				"actions": "Actions"
+				"actions": "Actions",
+				"role": "My Role",
+				"status": "My Status"
 			},
 			"actions":{
 				"delete": "Delete {{name}}"
