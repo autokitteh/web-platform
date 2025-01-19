@@ -1,3 +1,4 @@
+import { ConnectError } from "@connectrpc/connect";
 import i18n from "i18next";
 
 import { usersClient } from "@api/grpc/clients.grpc.api";
@@ -32,13 +33,16 @@ export class UsersService {
 
 			return { data: convertedUser, error: undefined };
 		} catch (error) {
+			if (error instanceof ConnectError && error.code === 5) {
+				return { data: undefined, error: undefined };
+			}
 			const errorMessage = i18n.t("usersFetchErrorExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});
 			LoggerService.error(namespaces.usersService, errorMessage);
 
-			return { data: undefined, error };
+			return { data: undefined, error: new Error(errorMessage) };
 		}
 	}
 
