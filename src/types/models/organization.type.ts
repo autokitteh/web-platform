@@ -1,4 +1,4 @@
-import { MemberRole, MemberStatusType } from "@src/enums";
+import { MemberRole, MemberStatusType, UserStatusType } from "@src/enums";
 
 export type Organization = Readonly<{
 	displayName: string;
@@ -16,9 +16,10 @@ export type User = Readonly<{
 	email: string;
 	id: string;
 	name: string;
+	status: UserStatusType;
 }>;
 
-export type EnrichedMember = Readonly<Omit<OrganizationMember, "userId"> & User>;
+export type EnrichedMember = Readonly<Omit<OrganizationMember, "userId"> & Omit<User, "status">>;
 
 export type CurrentMemberInfo = Readonly<{
 	role: MemberRole;

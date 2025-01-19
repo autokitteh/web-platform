@@ -7,7 +7,7 @@ import { LoggerService } from "@services";
 import { MemberStatusType } from "@src/enums";
 import { reverseMemberStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
-import { Organization, OrganizationMember, EnrichedMember } from "@type/models";
+import { Organization, OrganizationMember, User } from "@type/models";
 
 export class OrganizationsService {
 	static async create(displayName: string): Promise<ServiceResponse<string>> {
@@ -134,7 +134,7 @@ export class OrganizationsService {
 	static async listMembers(organizationId: string): Promise<
 		ServiceResponse<{
 			members: Record<string, Record<string, OrganizationMember>>;
-			users: Record<string, EnrichedMember>;
+			users: Record<string, User>;
 		}>
 	> {
 		try {

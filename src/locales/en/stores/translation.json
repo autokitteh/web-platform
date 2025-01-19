@@ -18,6 +18,7 @@
 		"currentDataMissing": "Couldn't find authentication information, reload the page, current user ID: {{userId}}, current organization ID: {{organizationId}}",
 		"noMembersFound": "No members found, reload the page, organization ID: {{organizationId}}",
 		"failedCreatingUser": "Failed to create the user, email {{email}}, status: {{status}}",
+		"failedUpdatingUserName": "Failed to updating the user name, user details: {{userDetails}}",
 		"failedGettingLoggedInUser": "Failed to get the logged in user",
 		"failedGettingLoggedInUserOrganization": "Failed to get the logged in user organization, user ID: {{userId}}",
 		"noOrganizationFoundCantFetchMembers": "No organization found, can't fetch members",
