@@ -1,4 +1,4 @@
-import { UserStatusType } from "@src/enums";
+import { MemberStatusType, UserStatusType } from "@src/enums";
 import { ServiceResponse } from "@src/types";
 import { EnrichedOrganization, Organization, OrganizationMember, EnrichedMember, User } from "@type/models";
 import { StoreResponse } from "@type/stores";
@@ -11,6 +11,7 @@ export type OrganizationStoreState = Readonly<{
 		inviteMember: boolean;
 		members: boolean;
 		organizations: boolean;
+		updateMember: boolean;
 		updatingOrganization: boolean;
 	};
 	logoutFunction: () => void;
@@ -38,6 +39,7 @@ export type OrganizationStoreActions = {
 	reset: () => void;
 	setCurrentOrganization: (organization: Organization) => void;
 	setLogoutFunction: (logoutFn: () => void) => void;
+	updateMemberStatus: (organizationId: string, status: MemberStatusType) => ServiceResponse<void>;
 	updateOrganization: (organization: Organization) => ServiceResponse<void>;
 };
 

@@ -15,14 +15,21 @@ import { TrashIcon } from "@assets/image/icons";
 export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { closeModal, openModal } = useModalStore();
-	const { inviteMember, deleteMember, getMembers, isLoading, getEnrichedMembers, user } = useOrganizationStore();
+	const {
+		inviteMember,
+		deleteMember,
+		getMembers,
+		isLoading,
+		getEnrichedMembers,
+		user,
+		members: membersFromStore,
+	} = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const modalRef = useRef<CreateMemberModalRef>(null);
 	const [members, setMembers] = useState<EnrichedMember[]>();
 	const membersEmails = new Set((members || []).map((member) => member.email));
 
 	const loadMembers = async () => {
-		await getMembers();
 		const { data, error } = getEnrichedMembers();
 
 		if (error || !data) {
@@ -38,6 +45,11 @@ export const OrganizationMembersTable = () => {
 
 	useEffect(() => {
 		loadMembers();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [membersFromStore]);
+
+	useEffect(() => {
+		getMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -63,7 +75,7 @@ export const OrganizationMembersTable = () => {
 			type: "success",
 		});
 
-		getMembers();
+		await getMembers();
 	};
 
 	const onDelete = async (userId: string, email: string) => {

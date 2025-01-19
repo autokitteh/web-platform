@@ -249,7 +249,7 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 		if (!projectsList.length) {
 			set((state) => ({ ...state, isLoadingProjectsList: true }));
 		}
-		const currentOrganization = useOrganizationStore.getState().currentOrganization;
+		const { currentOrganization } = useOrganizationStore.getState();
 
 		const { data: projects, error } = await ProjectsService.list(currentOrganization?.id);
 
