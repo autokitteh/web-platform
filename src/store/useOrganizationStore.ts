@@ -1,4 +1,5 @@
 import i18n from "i18next";
+import { produce } from "immer";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -41,18 +42,27 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			);
 			return { data: undefined, error: true };
 		}
-		set((state) => ({ ...state, isLoading: { ...state.isLoading, updateMember: true } }));
-
+		set((state) => ({
+			...state,
+			isLoading: {
+				...state.isLoading,
+				updateMember: true,
+			},
+		}));
 		const response = await OrganizationsService.updateMemberStatus(organizationId, user.id, status);
 
 		if (response.error) {
 			set((state) => ({ ...state, isLoading: { ...state.isLoading, updateMember: false } }));
 			return response;
 		}
+		const newMembers = produce(get().members, (draft) => {
+			if (!draft[organizationId]) {
+				draft[organizationId] = {};
+			}
+			draft[organizationId][user.id] = { ...draft[organizationId][user.id], status };
+		});
 
 		set((state) => {
-			const newMembers = { ...state.members };
-			newMembers[organizationId][user.id] = { ...newMembers[organizationId][user.id], status };
 			return {
 				...state,
 				members: newMembers,
@@ -298,7 +308,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	inviteMember: async (email: string) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: true } }));
-		const { data: user, error } = await UsersService.get({ email });
+		const { data: user } = await UsersService.get({ email });
 		const organization = get().currentOrganization;
 		if (!organization) {
 			LoggerService.error(
@@ -324,7 +334,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 						email,
 					})
 				);
-				return { data: undefined, error };
+				return { data: undefined, error: userCreateError };
 			}
 			userId = userIdCreatedUser;
 		}

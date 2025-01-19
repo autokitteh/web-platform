@@ -18,7 +18,10 @@
 		"organizationsList": {
 			"title": "Organizations",
 			"newOrganization": "New Organization",
-			"noOrganizationFound": "No organizations found"
+			"noOrganizationFound": "No organizations found",
+			"userInvitintations": {
+				"yourDeclineResponseRecoreded": "Your response has been recorded"
+			}
 		},
 		"errors": {
 			"organizationFetchingFailed": "Failed to fetch organizations",
