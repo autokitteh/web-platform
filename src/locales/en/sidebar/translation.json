@@ -18,6 +18,9 @@
 			"title": "Organizations",
 			"newOrganization": "New Organization",
 			"noOrganizationFound": "No organizations found"
+		},
+		"errors": {
+			"organizationFetchingFailed": "Failed to fetch organizations"
 		}
 
 	},
@@ -26,10 +29,5 @@
 	"intro": "Introduction",
 	"events": "Events",
 	"logToReview": "Unread system logs",
-	"systemLog": "System Log",
-	"userMenu": {
-		"errors": {
-			"organizationFetchingFailed": "Failed to fetch organizations"
-		}
-	}
+	"systemLog": "System Log"
 }

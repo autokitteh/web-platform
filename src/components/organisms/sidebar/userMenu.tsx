@@ -16,7 +16,7 @@ import { PlusIcon } from "@assets/image/icons";
 import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void }) => {
-	const { t } = useTranslation("sidebar.userMenu");
+	const { t } = useTranslation("sidebar");
 	const { logoutFunction, user } = useOrganizationStore();
 	const { close } = usePopoverContext();
 	const { getEnrichedOrganizations, isLoading } = useOrganizationStore();
@@ -28,7 +28,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		const { data, error } = getEnrichedOrganizations();
 		if (error || !data) {
 			addToast({
-				message: t("errors.organizationFetchingFailed"),
+				message: t("menu.errors.organizationFetchingFailed"),
 				type: "error",
 			});
 			return;

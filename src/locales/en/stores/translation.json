@@ -14,7 +14,7 @@
 		"noUserFound": "No user found, reload the page",
 		"organizationsAndMembersNotFound": "No organizations and members found, reload the page, organizations: {{organizations}}, members: {{members}}",
 		"noMemberFound": "No member found, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}",
-		"currentOrganizationInformationMissing": "Current organization information missing, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}",
+		"currentOrganizationInformationMissing": "Current organization information missing, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}, organizations: {{organizations}}, members: {{members}}",
 		"organizationNotFound": "Organization not found, reload the page, organization ID: {{organizationId}}",
 		"currentDataMissing": "Couldn't find authentication information, reload the page, current user ID: {{userId}}, current organization ID: {{organizationId}}",
 		"noMembersFound": "No members found, reload the page, organization ID: {{organizationId}}",

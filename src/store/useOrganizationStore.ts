@@ -79,13 +79,15 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	getEnrichedOrganizations: () => {
 		const { organizations, members, user, currentOrganization } = get();
-		if (!user?.id || !currentOrganization) {
+		if (!user?.id || !currentOrganization || !Object.keys(organizations).length || !Object.keys(members).length) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
 				i18n.t("currentOrganizationInformationMissing", {
 					ns: "stores.organization",
 					organizationId: currentOrganization?.id,
 					userId: user?.id,
+					organizations: JSON.stringify(organizations),
+					members: JSON.stringify(members),
 				})
 			);
 			return { data: undefined, error: true };
@@ -311,7 +313,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	},
 
 	setCurrentOrganization: (organization) => {
-		set((state) => ({ ...state, currentOrganizationId: organization.id }));
+		set((state) => ({ ...state, currentOrganization: organization }));
 	},
 
 	reset: () => set(defaultState),
