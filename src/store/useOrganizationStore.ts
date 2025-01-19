@@ -3,7 +3,7 @@ import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { StoreName, UserStatusType } from "@enums";
+import { MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
 import { namespaces } from "@src/constants";
 import { EnrichedOrganization, Organization } from "@src/types/models";
@@ -20,6 +20,7 @@ const defaultState: OrganizationStoreState = {
 		members: false,
 		inviteMember: false,
 		deleteMember: false,
+		updateMember: false,
 		deletingOrganization: false,
 		updatingOrganization: false,
 	},
@@ -27,6 +28,40 @@ const defaultState: OrganizationStoreState = {
 };
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
+
+	updateMemberStatus: async (organizationId: string, status: MemberStatusType) => {
+		const { user } = get();
+		if (!user) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				i18n.t("currentUserNotFoundCantUpdateMember", {
+					ns: "stores.organization",
+					organizationId,
+				})
+			);
+			return { data: undefined, error: true };
+		}
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updateMember: true } }));
+
+		const response = await OrganizationsService.updateMemberStatus(organizationId, user.id, status);
+
+		if (response.error) {
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, updateMember: false } }));
+			return response;
+		}
+
+		set((state) => {
+			const newMembers = { ...state.members };
+			newMembers[organizationId][user.id] = { ...newMembers[organizationId][user.id], status };
+			return {
+				...state,
+				members: newMembers,
+				isLoading: { ...state.isLoading, updateMember: false },
+			};
+		});
+
+		return response;
+	},
 
 	getCurrentOrganizationEnriched: () => {
 		const { currentOrganization, user } = get();
@@ -364,7 +399,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	getMembers: async () => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, members: true } }));
-		const organization = get().currentOrganization;
+		const { currentOrganization: organization, user } = get();
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
@@ -374,10 +409,19 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			);
 			return { data: undefined, error: true };
 		}
-		const response = await OrganizationsService.listMembers(organization.id);
+		if (!user) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				i18n.t("noUserFoundCantFetchMembers", {
+					ns: "stores.organization",
+				})
+			);
+			return { data: undefined, error: true };
+		}
+		const membersResponse = await OrganizationsService.listMembers(organization.id);
 
-		if (response.data) {
-			const { users, members } = response.data;
+		if (membersResponse.data) {
+			const { users, members } = membersResponse.data;
 			set((state) => ({
 				...state,
 				users,

@@ -5,6 +5,7 @@
 	},
 	"organization": {
 		"noOrganizationFoundCantDeleteMember": "No organization found, can't delete member {{userId}}, reload the page",
+		"currentUserNotFoundCantUpdateMember": "No user found, can't update member, reload the page, organization ID: {{organizationId}}",
 		"noOrganizationFoundCantInviteMember": "No organization found, can't invite member {{email}}, reload the page",
 		"userNotCreatedCantInviteMember": "User creation failed, can't invite member {{email}}, reload the page",
 		"noUserIdCantInviteMember": "No user ID, can't invite member {{email}}, reload the page",
@@ -20,6 +21,7 @@
 		"failedGettingLoggedInUser": "Failed to get the logged in user",
 		"failedGettingLoggedInUserOrganization": "Failed to get the logged in user organization, user ID: {{userId}}",
 		"noOrganizationFoundCantFetchMembers": "No organization found, can't fetch members",
+		"noUserFoundCantFetchMembers": "No user found, can't fetch members",
 		"userShouldntDeleteDefaultOrganization": "Deleting default organization is not allowed"
 	}
 }

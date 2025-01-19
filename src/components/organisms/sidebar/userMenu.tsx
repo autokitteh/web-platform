@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { usePopoverContext } from "@contexts";
-import { OrganizationsService } from "@services";
 import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
 import { MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
@@ -23,7 +22,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	const { t } = useTranslation("sidebar");
 	const { logoutFunction, user } = useOrganizationStore();
 	const { close } = usePopoverContext();
-	const { getEnrichedOrganizations, isLoading, currentOrganization } = useOrganizationStore();
+	const { getEnrichedOrganizations, isLoading, currentOrganization, updateMemberStatus } = useOrganizationStore();
 	const navigate = useNavigate();
 	const [organizations, setOrganizations] = useState<EnrichedOrganization[]>();
 	const addToast = useToastStore((state) => state.addToast);
@@ -53,7 +52,6 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		});
 
 	const handleOrganizationClick = (status?: MemberStatusType, id?: string, displayName?: string) => {
-		close();
 		if (status === MemberStatusType.invited) {
 			openModal(ModalName.invitedUser, {
 				organizationId: id,
@@ -61,13 +59,14 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 			});
 			return;
 		}
+		close();
 		navigate(`/switch-organization/${id}`);
 	};
 
-	const onUserInvintaionAction = async (status: MemberStatusType, organizationId: string) => {
+	const onUserInvintationAction = async (status: MemberStatusType, organizationId: string) => {
 		if (!organizationId || !user?.id) return;
 
-		const { error } = await OrganizationsService.updateMemberStatus(organizationId, user.id, status);
+		const { error } = await updateMemberStatus(organizationId, status);
 		if (error) {
 			addToast({
 				message: t("failedUpdateOrganizationStatus"),
@@ -82,6 +81,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 				type: "success",
 			});
 			navigate(`/switch-organization/${organizationId}`);
+			return;
 		}
 	};
 
@@ -158,21 +158,24 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 							<Loader isCenter />
 						</div>
 					) : organizations ? (
-						organizations.map(({ displayName, id, currentMember }) => (
-							<Button
-								className={cn(
-									"relative mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250",
-									{
-										"font-bold": currentOrganization?.id === id,
-									}
-								)}
-								key={id}
-								onClick={() => handleOrganizationClick(currentMember?.status, id, displayName)}
-							>
-								{displayName}
-								<div className={getStatusIndicatorClasses(currentMember?.status)} />
-							</Button>
-						))
+						organizations.map(({ displayName, id, currentMember }) =>
+							currentMember?.status === MemberStatusType.declined ? null : (
+								<Button
+									className={cn(
+										"relative mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250 disabled:opacity-100",
+										{
+											"font-bold": currentOrganization?.id === id,
+										}
+									)}
+									disabled={id === currentOrganization?.id}
+									key={id}
+									onClick={() => handleOrganizationClick(currentMember?.status, id, displayName)}
+								>
+									{displayName}
+									<div className={getStatusIndicatorClasses(currentMember?.status)} />
+								</Button>
+							)
+						)
 					) : (
 						<Typography className="text-center text-base font-semibold text-black">
 							{t("menu.organizationsList.noOrganizationFound")}
@@ -181,7 +184,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 				</div>
 			</div>
 
-			<InvitedUserModal onUserInvintaionAction={onUserInvintaionAction} />
+			<InvitedUserModal onUserInvintaionAction={onUserInvintationAction} />
 		</div>
 	);
 };

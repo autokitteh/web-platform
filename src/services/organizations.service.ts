@@ -215,6 +215,7 @@ export class OrganizationsService {
 					userId,
 					status: reverseMemberStatusConverter(status),
 				},
+				fieldMask: { paths: ["status"] },
 			});
 
 			return { data: undefined, error: undefined };

@@ -21,7 +21,8 @@
 			"noOrganizationFound": "No organizations found"
 		},
 		"errors": {
-			"organizationFetchingFailed": "Failed to fetch organizations"
+			"organizationFetchingFailed": "Failed to fetch organizations",
+			"failedUpdateOrganizationStatus": "Failed to update organization status"
 		}
 
 	},
