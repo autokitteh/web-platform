@@ -115,7 +115,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 
 	const createNewOrganization = () => {
 		close();
-		navigate("/organization-settings/add");
+		navigate("/settings/add-organization");
 	};
 
 	const menuItemClick = (href: string) => {

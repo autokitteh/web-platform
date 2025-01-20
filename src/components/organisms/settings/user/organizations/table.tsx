@@ -76,7 +76,7 @@ export const UserOrganizationsTable = () => {
 			</Typography>
 			<Button
 				className="ml-auto border-black bg-white px-5 text-base font-medium hover:bg-gray-950 hover:text-white"
-				onClick={() => navigate("/organization-settings/add")}
+				onClick={() => navigate("/settings/add-organization")}
 				variant="outline"
 			>
 				{t("buttons.addOrganization")}

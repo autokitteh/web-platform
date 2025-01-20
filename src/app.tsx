@@ -258,6 +258,7 @@ export const App = () => {
 				<Route element={<Profile />} index />
 				<Route element={<ClientConfiguration />} path="client-configuration" />
 				<Route element={<UserOrganizationsTable />} path="organizations" />
+				<Route element={<AddOrganization />} path="add-organization" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
@@ -271,7 +272,6 @@ export const App = () => {
 				path="organization-settings"
 			>
 				<Route element={<OrganizationSettings />} index />
-				<Route element={<AddOrganization />} path="add" />
 				<Route element={<OrganizationMembersTable />} path="members" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
