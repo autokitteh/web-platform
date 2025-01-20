@@ -4,6 +4,8 @@ import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { LoggerService } from "@services/logger.service";
+import { namespaces } from "@src/constants";
 import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
@@ -17,8 +19,16 @@ import { TrashIcon } from "@assets/image/icons";
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const { closeModal, openModal } = useModalStore();
-	const { organizations, getOrganizations, getEnrichedOrganizations, user, deleteOrganization, isLoading } =
-		useOrganizationStore();
+	const {
+		organizations,
+		getOrganizations,
+		getEnrichedOrganizations,
+		currentOrganization,
+		user,
+		deleteOrganization,
+		isLoading,
+		logoutFunction,
+	} = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
 	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
@@ -42,6 +52,8 @@ export const UserOrganizationsTable = () => {
 	}, [organizations]);
 
 	const onDelete = async (organization: EnrichedOrganization) => {
+		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
+
 		const { error } = await deleteOrganization(omit(organization, "currentMember"));
 		closeModal(ModalName.deleteOrganization);
 		if (error) {
@@ -53,10 +65,24 @@ export const UserOrganizationsTable = () => {
 				type: "error",
 			});
 		}
+
 		addToast({
 			message: t("table.messages.organizationDeleted", { name: organization.displayName }),
 			type: "success",
 		});
+
+		if (!deletingCurrentOrganization) return;
+		setTimeout(async () => {
+			if (!user?.defaultOrganizationId) {
+				LoggerService.error(
+					namespaces.ui.organizationTableUserSettings,
+					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
+				);
+				logoutFunction(true);
+				return;
+			}
+			navigate(`/switch-organization/${user.defaultOrganizationId}`);
+		}, 3000);
 	};
 
 	return (

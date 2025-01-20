@@ -31,7 +31,8 @@
 		"title": "Organizations",
 		"errors":{
 			"fetchFailed": "Failed to fetch organizations",
-			"deleteFailed": "Failed to delete the organization: {{name}}, ID: {{organizationId}}"
+			"deleteFailed": "Failed to delete the organization: {{name}}, ID: {{organizationId}}",
+			"defaultOrganizationIdMissing": "Default organization is missing, user ID: {{userId}}"
 		},
 		"table":{
 			"headers":{

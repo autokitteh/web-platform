@@ -155,12 +155,14 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		set((state) => {
 			const newOrganizations = { ...state.organizations };
 			const newMembers = { ...state.members };
+			const defaultOrganization = state.organizations[user?.defaultOrganizationId || ""];
 			delete newOrganizations[organization.id];
 			delete newMembers[organization.id];
 			return {
 				...state,
 				members: newMembers,
 				organizations: newOrganizations,
+				currentOrganization: defaultOrganization,
 			};
 		});
 
