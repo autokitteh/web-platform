@@ -82,9 +82,9 @@ export class OrganizationsService {
 			return { data: undefined, error };
 		}
 	}
-	static async delete(organizationId: string): Promise<ServiceResponse<void>> {
+	static async delete(organization: Organization): Promise<ServiceResponse<void>> {
 		try {
-			await organizationsClient.delete({ orgId: organizationId });
+			await organizationsClient.delete({ orgId: organization.id });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
@@ -93,7 +93,8 @@ export class OrganizationsService {
 				i18n.t("organizationDeleteFailedExtended", {
 					error: (error as Error).message,
 					ns: "services",
-					id: organizationId,
+					id: organization.id,
+					name: organization.displayName,
 				})
 			);
 

@@ -33,17 +33,17 @@ export const DeleteOrganizationModal = ({ onDelete, isDeleting }: DeleteOrganiza
 					className="w-auto px-4 py-3 font-semibold hover:text-white"
 					onClick={() => closeModal(ModalName.deleteOrganization)}
 				>
-					{t("cancelButton")}
+					{t("modal.buttons.cancel")}
 				</Button>
 
 				<Button
-					ariaLabel={t("deleteButton")}
+					ariaLabel={t("modal.delete")}
 					className="w-auto px-4 py-3 font-semibold hover:bg-error"
 					disabled={isDeleting}
 					onClick={() => onDelete(organization)}
 				>
 					{isDeleting ? <Loader size="sm" /> : null}
-					{t("deleteButton")}
+					{t("modal.buttons.delete")}
 				</Button>
 			</div>
 		</Modal>

@@ -144,7 +144,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 			return { error: true, data: undefined };
 		}
-		const { error } = await OrganizationsService.delete(organization.id);
+		const { error } = await OrganizationsService.delete(organization);
 
 		if (error) {
 			set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: false } }));
