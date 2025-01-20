@@ -29,27 +29,34 @@ export const OrganizationMembersTable = () => {
 	const [members, setMembers] = useState<EnrichedMember[]>();
 	const membersEmails = new Set((members || []).map((member) => member.email));
 
-	const loadMembers = async () => {
+	useEffect(() => {
 		const { data, error } = getEnrichedMembers();
 
 		if (error || !data) {
 			addToast({
-				message: t("errors.getMembersFailed"),
+				message: t("errors.getEnrichedMembersFailed"),
 				type: "error",
 			});
 			return;
 		}
 
 		setMembers(data);
-	};
-
-	useEffect(() => {
-		loadMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [membersFromStore]);
 
+	const fetchMembers = async () => {
+		const { error } = await getMembers();
+		if (error) {
+			addToast({
+				message: t("errors.getMembersFailed"),
+				type: "error",
+			});
+			return;
+		}
+	};
+
 	useEffect(() => {
-		getMembers();
+		fetchMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -116,7 +123,7 @@ export const OrganizationMembersTable = () => {
 						<Th className="w-2/6 min-w-16">{t("table.headers.email")}</Th>
 						<Th className="w-1/5 min-w-16">{t("table.headers.status")}</Th>
 						<Th className="w-1/6 min-w-16">{t("table.headers.role")}</Th>
-						<Th className="w-1/8 min-w-16 justify-end pr-4">{t("table.headers.actions")}</Th>
+						<Th className="w-1/8 min-w-16">{t("table.headers.actions")}</Th>
 					</Tr>
 				</THead>
 
