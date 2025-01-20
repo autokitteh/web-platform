@@ -295,17 +295,19 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const response = await OrganizationsService.deleteMember(organization.id, userId);
 
 		set((state) => {
-			const newMembers = { ...state.members };
-			const newUsers = { ...state.users };
-			delete newMembers[organization.id][userId];
-			delete newUsers[userId];
+			const newMembers = produce(state.members, (draft) => {
+				delete draft[organization.id][userId];
+			});
+			const newUsers = produce(state.users, (draft) => {
+				delete draft[userId];
+			});
 			return {
 				...state,
 				members: newMembers,
 				users: newUsers,
+				isLoading: { ...state.isLoading, deleteMember: false },
 			};
 		});
-		set((state) => ({ ...state, isLoading: { ...state.isLoading, deleteMember: false } }));
 
 		return response;
 	},
