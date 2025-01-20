@@ -122,12 +122,6 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		close();
 		navigate(href);
 	};
-
-	const menuItemClick = (href: string) => {
-		close();
-		navigate(href);
-	};
-
 	return (
 		<div className="flex gap-4">
 			<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
