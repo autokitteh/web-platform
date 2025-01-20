@@ -226,15 +226,27 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		return { error: undefined, data: undefined };
 	},
 
-	updateOrganization: async (organization: Organization) => {
+	updateOrganization: async (organization: Organization, fieldMask: string[]) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: true } }));
 
-		const { error } = await OrganizationsService.update(organization);
+		const { error } = await OrganizationsService.update(organization, fieldMask);
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: false } }));
 
 		if (error) {
 			return { error: true, data: undefined };
 		}
+
+		set((state) => {
+			const newOrganizations = produce(state.organizations, (draft) => {
+				draft[organization.id] = organization;
+			});
+			return {
+				...state,
+				organizations: newOrganizations,
+				currentOrganization: organization,
+			};
+		});
+
 		return { error: undefined, data: undefined };
 	},
 

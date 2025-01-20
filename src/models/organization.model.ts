@@ -10,6 +10,13 @@ export const convertOrganizationProtoToModel = (protoOrganization: ProtoOrganiza
 		uniqueName: protoOrganization.name,
 	};
 };
+export const convertOrganizationModelToProto = (organization: Organization): Partial<ProtoOrganization> => {
+	return {
+		displayName: organization.displayName,
+		orgId: organization.id,
+		name: organization.displayName,
+	};
+};
 
 export const convertMemberProtoToModel = (protoOrganizationMember: ProtoOrganizationMember): OrganizationMember => {
 	let role: MemberRole;

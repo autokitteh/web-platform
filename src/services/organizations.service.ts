@@ -2,7 +2,12 @@ import i18n from "i18next";
 
 import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
-import { convertMemberProtoToModel, convertOrganizationProtoToModel, convertUserProtoToModel } from "@models";
+import {
+	convertMemberProtoToModel,
+	convertOrganizationModelToProto,
+	convertOrganizationProtoToModel,
+	convertUserProtoToModel,
+} from "@models";
 import { LoggerService } from "@services";
 import { MemberStatusType } from "@src/enums";
 import { reverseMemberStatusConverter } from "@src/models/utils";
@@ -29,9 +34,12 @@ export class OrganizationsService {
 		}
 	}
 
-	static async update(organization: Organization): Promise<ServiceResponse<void>> {
+	static async update(organization: Organization, fieldMask: string[]): Promise<ServiceResponse<void>> {
 		try {
-			await organizationsClient.update({ org: organization });
+			await organizationsClient.update({
+				org: convertOrganizationModelToProto(organization),
+				fieldMask: { paths: fieldMask },
+			});
 
 			return { data: undefined, error: undefined };
 		} catch (error) {

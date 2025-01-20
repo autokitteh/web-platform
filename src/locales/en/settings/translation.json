@@ -97,7 +97,8 @@
 				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore",
 				"nameRequired": "Organization name is required",
 				"defaultOrganizationIdMissing": "Default organization is missing, user ID: {{userId}}",
-				"deleteOrganizationFailed": "Organization deletion failed"
+				"deleteOrganizationFailed": "Organization deletion failed",
+				"updateOrganizationFailed": "Organization update failed"
 			},
 			"messages":{
 				"nameUpdatedSuccessfully": "Organization name updated",

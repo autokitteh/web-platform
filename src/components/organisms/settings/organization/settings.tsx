@@ -45,7 +45,7 @@ export const OrganizationSettings = () => {
 			),
 		[organizations]
 	);
-	const renameOrganization = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const renameOrganization = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const displayName = event.target.value;
 		const nameValidationError = isNameExist(displayName, organizationsNames) || isNameEmpty(displayName);
 		if (nameValidationError) {
@@ -54,7 +54,14 @@ export const OrganizationSettings = () => {
 		}
 		setNameError("");
 		setOrganizationDisplayName(displayName);
-		updateOrganization({ ...omit(organization, "currentMember"), displayName });
+		const { error } = await updateOrganization({ ...omit(organization, "currentMember"), displayName }, ["name"]);
+		if (error) {
+			addToast({
+				message: t("form.errors.updateOrganizationFailed"),
+				type: "error",
+			});
+			return;
+		}
 		setDisplaySuccess(true);
 		setTimeout(() => {
 			setDisplaySuccess(false);
@@ -96,6 +103,9 @@ export const OrganizationSettings = () => {
 		}, 3000);
 	};
 
+	const isNameInputDisabled =
+		isLoading.updatingOrganization || organization?.currentMember?.role !== MemberRole.admin;
+
 	return (
 		<div className="w-3/4">
 			<Typography className="mb-4 font-bold" element="h2" size="xl">
@@ -103,7 +113,7 @@ export const OrganizationSettings = () => {
 			</Typography>
 			<div className="relative mb-6">
 				<Input
-					disabled={organization?.currentMember?.role !== MemberRole.admin}
+					disabled={isNameInputDisabled}
 					isError={!!nameError}
 					label={t("form.organizationDisplayName")}
 					onChange={debouncedRename}
