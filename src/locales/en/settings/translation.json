@@ -63,6 +63,9 @@
 		"codeAutoSaveLabel": "Code editing auto-save",
 		"messages":{
 			"nameUpdatedSuccessfully": "User name updated"
+		},
+		"errors":{
+			"updateNameFailed": "User name update failed"
 		}
 	},
 	"topbar": {

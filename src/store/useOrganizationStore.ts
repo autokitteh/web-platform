@@ -474,7 +474,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	updateUserName: async (user: User) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: true } }));
 
-		const { error } = await UsersService.update(user, ["displayName"]);
+		const { error } = await UsersService.update(user, ["display_name"]);
 		if (error) {
 			set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
 
@@ -486,7 +486,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				}),
 			};
 		}
-		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false }, user }));
 		return { data: undefined, error: undefined };
 	},
 

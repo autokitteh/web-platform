@@ -39,21 +39,25 @@ export const Profile = () => {
 		setCodeAutoSaveChecked(checked);
 	};
 
-	const renameOrganization = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const renameUser = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		setNameError("");
 		const displayName = event.target.value;
 		const nameValidationError = isNameEmpty(displayName);
 		if (nameValidationError) {
 			setNameError(nameValidationError);
 			return;
 		}
-		setNameError("");
-		updateUserName({ ...user, name: displayName } as User);
+		const { error } = await updateUserName({ ...user, name: displayName } as User);
+		if (error) {
+			setNameError(t("errors.updateNameFailed"));
+			return;
+		}
 		setDisplaySuccess(true);
 		setTimeout(() => {
 			setDisplaySuccess(false);
 		}, 3000);
 	};
-	const debouncedRename = debounce(renameOrganization, 2000);
+	const debouncedRename = debounce(renameUser, 2000);
 
 	return (
 		<div className="flex h-full w-3/4 flex-col font-averta">
