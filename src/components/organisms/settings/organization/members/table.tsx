@@ -123,7 +123,7 @@ export const OrganizationMembersTable = () => {
 						<Th className="w-2/6 min-w-16">{t("table.headers.email")}</Th>
 						<Th className="w-1/5 min-w-16">{t("table.headers.status")}</Th>
 						<Th className="w-1/6 min-w-16">{t("table.headers.role")}</Th>
-						<Th className="w-1/8 min-w-16 justify-end pr-4">{t("table.headers.actions")}</Th>
+						<Th className="w-1/8 min-w-16">{t("table.headers.actions")}</Th>
 					</Tr>
 				</THead>
 
