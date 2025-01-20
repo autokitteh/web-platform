@@ -27,6 +27,7 @@ export const OrganizationSettings = () => {
 		user,
 		isLoading,
 		logoutFunction,
+		currentOrganization,
 		getCurrentOrganizationEnriched,
 	} = useOrganizationStore();
 	const [displaySuccess, setDisplaySuccess] = useState(false);
@@ -45,7 +46,7 @@ export const OrganizationSettings = () => {
 			),
 		[organizations]
 	);
-	const renameOrganization = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const renameOrganization = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const displayName = event.target.value;
 		const nameValidationError = isNameExist(displayName, organizationsNames) || isNameEmpty(displayName);
 		if (nameValidationError) {
@@ -54,7 +55,16 @@ export const OrganizationSettings = () => {
 		}
 		setNameError("");
 		setOrganizationDisplayName(displayName);
-		updateOrganization({ ...omit(organization, "currentMember"), displayName });
+		const { error } = await updateOrganization({ ...omit(organization, "currentMember"), displayName }, [
+			"display_name",
+		]);
+		if (error) {
+			addToast({
+				message: t("form.errors.updateOrganizationFailed"),
+				type: "error",
+			});
+			return;
+		}
 		setDisplaySuccess(true);
 		setTimeout(() => {
 			setDisplaySuccess(false);
@@ -67,6 +77,8 @@ export const OrganizationSettings = () => {
 	}
 
 	const onDelete = async () => {
+		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
+
 		const { error } = await deleteOrganization(omit(organization, "currentMember"));
 		closeModal(ModalName.deleteOrganization);
 
@@ -84,6 +96,8 @@ export const OrganizationSettings = () => {
 			type: "success",
 		});
 		setTimeout(() => {
+			if (!deletingCurrentOrganization) return;
+
 			if (!user?.defaultOrganizationId) {
 				LoggerService.error(
 					namespaces.ui.organizationSettings,
@@ -96,6 +110,9 @@ export const OrganizationSettings = () => {
 		}, 3000);
 	};
 
+	const isNameInputDisabled =
+		isLoading.updatingOrganization || organization?.currentMember?.role !== MemberRole.admin;
+
 	return (
 		<div className="w-3/4">
 			<Typography className="mb-4 font-bold" element="h2" size="xl">
@@ -103,7 +120,7 @@ export const OrganizationSettings = () => {
 			</Typography>
 			<div className="relative mb-6">
 				<Input
-					disabled={organization?.currentMember?.role !== MemberRole.admin}
+					disabled={isNameInputDisabled}
 					isError={!!nameError}
 					label={t("form.organizationDisplayName")}
 					onChange={debouncedRename}
