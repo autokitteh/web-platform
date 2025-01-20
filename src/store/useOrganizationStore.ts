@@ -76,13 +76,22 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	getCurrentOrganizationEnriched: () => {
 		const { currentOrganization, user } = get();
-		if (!currentOrganization || !user) {
+		if (!user) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noMemberFound", {
+				i18n.t("organization.noUserFound", {
 					ns: "stores",
 					organizationId: currentOrganization?.id,
-					userId: user?.id,
+				})
+			);
+			return { error: true, data: undefined };
+		}
+		if (!currentOrganization) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				i18n.t("organization.noCurrentOrganization", {
+					ns: "stores",
+					userId: user.id,
 				})
 			);
 			return { error: true, data: undefined };
@@ -193,8 +202,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				if (!currentMember) {
 					LoggerService.error(
 						namespaces.stores.organizationStore,
-						i18n.t("stores.noMemberFound", {
-							ns: "organization",
+						i18n.t("organization.noMemberFound", {
+							ns: "stores",
 							organizationId: organization.id,
 							userId: user?.id,
 						})
@@ -340,6 +349,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 					email,
 				})
 			);
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: false } }));
 			return { data: undefined, error: true };
 		}
 		let userId = user?.id;
@@ -356,6 +366,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 						email,
 					})
 				);
+				set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: false } }));
+
 				return { data: undefined, error: userCreateError };
 			}
 			userId = userIdCreatedUser;
@@ -368,6 +380,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 					email,
 				})
 			);
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: false } }));
+
 			return { data: undefined, error: true };
 		}
 
@@ -380,11 +394,11 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	getOrganizations: async () => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, organizations: true } }));
-		const { user } = get();
+		const { user, currentOrganization } = get();
 		if (!user) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organization.noUserFound", { ns: "stores" })
+				i18n.t("organization.noUserFound", { ns: "stores", organizationId: currentOrganization?.id })
 			);
 			set((state) => ({
 				...state,
@@ -474,10 +488,9 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 	updateUserName: async (user: User) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: true } }));
 
-		const { error } = await UsersService.update(user, ["displayName"]);
+		const { error } = await UsersService.update(user, ["display_name"]);
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
 		if (error) {
-			set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
-
 			return {
 				data: undefined,
 				error: i18n.t("organization.failedUpdatingUserName", {
@@ -486,7 +499,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				}),
 			};
 		}
-		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
+		set((state) => ({ ...state, user }));
 		return { data: undefined, error: undefined };
 	},
 
