@@ -193,8 +193,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				if (!currentMember) {
 					LoggerService.error(
 						namespaces.stores.organizationStore,
-						i18n.t("noMemberFound", {
-							ns: "stores.organization",
+						i18n.t("stores.noMemberFound", {
+							ns: "organization",
 							organizationId: organization.id,
 							userId: user?.id,
 						})
