@@ -62,7 +62,7 @@ export const Profile = () => {
 			</Typography>
 			<div className="mb-6">
 				<Input
-					inputLabelTextSize="text-1.5xl"
+					inputLabelTextSize="text-base"
 					isError={!!nameError}
 					label={t("name")}
 					onChange={debouncedRename}
@@ -75,7 +75,7 @@ export const Profile = () => {
 				</div>
 			</div>
 			<div>
-				<Input disabled inputLabelTextSize="text-1.5xl" label={t("email")} value={user?.email} />
+				<Input disabled inputLabelTextSize="text-base" label={t("email")} value={user?.email} />
 			</div>
 			<Typography className="mt-9" element="p">
 				{t("retentionPolicyTitle")}
