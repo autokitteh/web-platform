@@ -1,4 +1,4 @@
 export type StoreResponse<ResponseType> = {
-	data: ResponseType | undefined;
-	error: boolean | undefined;
+	data?: ResponseType;
+	error?: boolean;
 };

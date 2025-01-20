@@ -1,25 +1,29 @@
 import React, { useState } from "react";
 
+import debounce from "lodash/debounce";
 import { useTranslation } from "react-i18next";
 
 import { version } from "@constants";
 import { ModalName } from "@enums/components";
 import { LocalStorageKeys } from "@src/enums";
-import { getPreference, setPreference } from "@src/utilities";
+import { User } from "@src/types/models";
+import { getPreference, isNameEmpty, setPreference } from "@src/utilities";
 
 import { useModalStore, useOrganizationStore } from "@store";
 
-import { Button, Checkbox, Typography } from "@components/atoms";
-import { DeleteAccountModal } from "@components/organisms/settings/profile";
+import { Button, Checkbox, ErrorMessage, Input, SuccessMessage, Typography } from "@components/atoms";
+import { DeleteAccountModal } from "@components/organisms/settings/user";
 
 import { TrashIcon } from "@assets/image/icons";
 
 export const Profile = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "profile" });
-	const { user } = useOrganizationStore();
+	const { user, updateUserName } = useOrganizationStore();
 	const { closeModal, openModal } = useModalStore();
 	const codeAutoSave = getPreference(LocalStorageKeys.autoSave);
 	const [codeAutoSaveChecked, setCodeAutoSaveChecked] = useState(!!codeAutoSave);
+	const [nameError, setNameError] = useState("");
+	const [displaySuccess, setDisplaySuccess] = useState(false);
 
 	const onDeleteAccount = () => {
 		closeModal(ModalName.deleteAccount);
@@ -35,23 +39,48 @@ export const Profile = () => {
 		setCodeAutoSaveChecked(checked);
 	};
 
+	const renameUser = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		setNameError("");
+		const displayName = event.target.value;
+		const nameValidationError = isNameEmpty(displayName);
+		if (nameValidationError) {
+			setNameError(nameValidationError);
+			return;
+		}
+		const { error } = await updateUserName({ ...user, name: displayName } as User);
+		if (error) {
+			setNameError(t("errors.updateNameFailed"));
+			return;
+		}
+		setDisplaySuccess(true);
+		setTimeout(() => {
+			setDisplaySuccess(false);
+		}, 3000);
+	};
+	const debouncedRename = debounce(renameUser, 2000);
+
 	return (
-		<div className="flex h-full flex-col font-averta">
-			<Typography className="mb-9 font-bold" element="h1" size="2xl">
+		<div className="flex h-full w-3/4 flex-col font-averta">
+			<Typography className="mb-6 font-bold" element="h1" size="2xl">
 				{t("title")}
 			</Typography>
-			<Typography className="mb-1.5 font-fira-sans opacity-90" element="p">
-				{t("name")}
-			</Typography>
-			<Typography className="mb-9" element="p" size="1.5xl">
-				{user?.name}
-			</Typography>
-			<Typography className="mb-1.5 font-fira-sans opacity-90" element="p">
-				{t("email")}
-			</Typography>
-			<Typography element="p" size="1.5xl">
-				{user?.email}
-			</Typography>
+			<div className="mb-6">
+				<Input
+					inputLabelTextSize="text-base"
+					isError={!!nameError}
+					label={t("name")}
+					onChange={debouncedRename}
+					value={user?.name}
+				/>
+
+				<div className="h-6">
+					<ErrorMessage>{nameError as string}</ErrorMessage>
+					{displaySuccess ? <SuccessMessage>{t("messages.nameUpdatedSuccessfully")}</SuccessMessage> : null}
+				</div>
+			</div>
+			<div>
+				<Input disabled inputLabelTextSize="text-base" label={t("email")} value={user?.email} />
+			</div>
 			<Typography className="mt-9" element="p">
 				{t("retentionPolicyTitle")}
 			</Typography>

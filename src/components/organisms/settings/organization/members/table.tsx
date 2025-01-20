@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { MemberStatus } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { CreateMemberModalRef } from "@src/interfaces/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
@@ -16,29 +15,48 @@ import { TrashIcon } from "@assets/image/icons";
 export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { closeModal, openModal } = useModalStore();
-	const { inviteMember, deleteMember, getMembers, isLoading, getEnrichedMembers, user } = useOrganizationStore();
+	const {
+		inviteMember,
+		deleteMember,
+		getMembers,
+		isLoading,
+		getEnrichedMembers,
+		user,
+		members: membersFromStore,
+	} = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const modalRef = useRef<CreateMemberModalRef>(null);
 	const [members, setMembers] = useState<EnrichedMember[]>();
 	const membersEmails = new Set((members || []).map((member) => member.email));
 
-	const loadMembers = async () => {
-		await getMembers();
+	useEffect(() => {
 		const { data, error } = getEnrichedMembers();
 
 		if (error || !data) {
 			addToast({
-				message: t("errors.getMembersFailed"),
+				message: t("errors.getEnrichedMembersFailed"),
 				type: "error",
 			});
 			return;
 		}
 
 		setMembers(data);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [membersFromStore]);
+
+	const fetchMembers = async () => {
+		const { error } = await getMembers();
+		if (error) {
+			addToast({
+				message: t("errors.getMembersFailed"),
+				type: "error",
+			});
+			return;
+		}
 	};
 
 	useEffect(() => {
-		loadMembers();
+		fetchMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -64,7 +82,7 @@ export const OrganizationMembersTable = () => {
 			type: "success",
 		});
 
-		getMembers();
+		await getMembers();
 	};
 
 	const onDelete = async (userId: string, email: string) => {
@@ -105,7 +123,7 @@ export const OrganizationMembersTable = () => {
 						<Th className="w-2/6 min-w-16">{t("table.headers.email")}</Th>
 						<Th className="w-1/5 min-w-16">{t("table.headers.status")}</Th>
 						<Th className="w-1/6 min-w-16">{t("table.headers.role")}</Th>
-						<Th className="w-1/8 min-w-16 justify-end pr-4">{t("table.headers.actions")}</Th>
+						<Th className="w-1/8 min-w-16">{t("table.headers.actions")}</Th>
 					</Tr>
 				</THead>
 
@@ -117,7 +135,7 @@ export const OrganizationMembersTable = () => {
 							<Tr className="hover:bg-gray-1300" key={member.id}>
 								<Td className="w-1/5 min-w-16 pl-4">{member.name}</Td>
 								<Td className="w-2/6 min-w-16">{member.email}</Td>
-								<Td className="w-1/5 min-w-16 capitalize">{MemberStatus[member.status]}</Td>
+								<Td className="w-1/5 min-w-16 capitalize">{member.status}</Td>
 								<Td className="w-1/6 min-w-16 capitalize">{member.role}</Td>
 								<Td className="w-1/8 min-w-16" innerDivClassName="justify-end">
 									<IconButton

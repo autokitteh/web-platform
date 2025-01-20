@@ -2,25 +2,31 @@
 	"menu": {
 		"myProfile": "My Profile",
 		"clientConfiguration": "Client Setup",
+		"myOrganizations": "My Organizations",
 		"userSettings": {
 			"title": "User Settings",
 			"logout": "Log out",
 			"settings": "Settings",
-			"feedback": "Feedback"	
+			"feedback": "Feedback",
+			"myOrganiazations": "My Organizations"
 		},
 		"organizationSettings": {
 			"title": "Organization Settings",
 			"settings": "Settings",
-			"members": "Members",
-			"billing": "Billing"
+			"members": "Members"
 		},
 		"organizationsList": {
 			"title": "Organizations",
 			"newOrganization": "New Organization",
-			"noOrganizationFound": "No organizations found"
+			"noOrganizationFound": "No organizations found",
+			"userInvitintations": {
+				"yourDeclineResponseRecoreded": "Your response has been recorded"
+			}
 		},
 		"errors": {
-			"organizationFetchingFailed": "Failed to fetch organizations"
+			"organizationFetchingFailed": "Failed to fetch organizations",
+			"currentOrganizationFetchingFailed": "Failed to fetch current organization",
+			"failedUpdateOrganizationStatus": "Failed to update organization status"
 		}
 
 	},

@@ -17,6 +17,16 @@ export const OrganizationPostCreationModal = () => {
 
 	if (!data) return null;
 
+	const switchOrganization = () => {
+		closeModal(ModalName.organizationCreated);
+		navigate(`/switch-organization/${data.organizationId}`);
+	};
+
+	const handleStay = () => {
+		closeModal(ModalName.organizationCreated);
+		navigate("/settings/organizations");
+	};
+
 	return (
 		<Modal hideCloseButton name={ModalName.organizationCreated}>
 			<div className="mx-6">
@@ -27,7 +37,7 @@ export const OrganizationPostCreationModal = () => {
 				<Button
 					ariaLabel={t("buttons.stay")}
 					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-					onClick={() => closeModal(ModalName.organizationCreated)}
+					onClick={() => handleStay()}
 					variant="outline"
 				>
 					{t("buttons.stay")}
@@ -36,7 +46,7 @@ export const OrganizationPostCreationModal = () => {
 				<Button
 					ariaLabel={t("buttons.open")}
 					className="bg-gray-1100 px-4 py-3 font-semibold"
-					onClick={() => navigate(`/switch-organization/${data.organizationId}`)}
+					onClick={() => switchOrganization()}
 					variant="filled"
 				>
 					{t("buttons.open", { name: data.name })}

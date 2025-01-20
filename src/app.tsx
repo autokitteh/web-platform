@@ -13,21 +13,22 @@ import {
 } from "react-router-dom";
 
 import { AKRoutes, googleAnalyticsId, isProduction, sentryDsn } from "@constants";
+import { MemberRole } from "@enums";
 
 import { PageTitle } from "@components/atoms";
-import { DeploymentsTable, EventViewer, SessionsTable } from "@components/organisms";
+import { DeploymentsTable, EventViewer, ProtectedRoute, SessionsTable } from "@components/organisms";
 import { CodeTable } from "@components/organisms/code";
 import { ConnectionsTable, EditConnection } from "@components/organisms/connections";
 import { AddConnection } from "@components/organisms/connections/add";
 import { SessionViewer } from "@components/organisms/deployments";
 import { ActivityList, SessionOutputs } from "@components/organisms/deployments/sessions/tabs";
-import { ClientConfiguration, Profile } from "@components/organisms/settings";
 import {
 	AddOrganization,
 	OrganizationMembersTable,
 	OrganizationSettings,
 	SwitchOrganization,
 } from "@components/organisms/settings/organization";
+import { ClientConfiguration, Profile, UserOrganizationsTable } from "@components/organisms/settings/user";
 import { EventsList } from "@components/organisms/shared";
 import { AddTrigger, EditTrigger, TriggersTable } from "@components/organisms/triggers";
 import { AddVariable, EditVariable, VariablesTable } from "@components/organisms/variables";
@@ -246,16 +247,31 @@ export const App = () => {
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 
-			<Route element={<SettingsLayout />} path="settings">
+			<Route
+				element={
+					<ProtectedRoute allowedRole={[MemberRole.admin, MemberRole.user]}>
+						<SettingsLayout />
+					</ProtectedRoute>
+				}
+				path="settings"
+			>
 				<Route element={<Profile />} index />
 				<Route element={<ClientConfiguration />} path="client-configuration" />
+				<Route element={<UserOrganizationsTable />} path="organizations" />
+				<Route element={<AddOrganization />} path="add-organization" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 
-			<Route element={<SettingsLayout />} path="organization-settings">
+			<Route
+				element={
+					<ProtectedRoute allowedRole={[MemberRole.admin]}>
+						<SettingsLayout />
+					</ProtectedRoute>
+				}
+				path="organization-settings"
+			>
 				<Route element={<OrganizationSettings />} index />
-				<Route element={<AddOrganization />} path="add" />
 				<Route element={<OrganizationMembersTable />} path="members" />
 
 				<Route element={<Navigate replace to="/404" />} path="*" />
