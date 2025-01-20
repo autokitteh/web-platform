@@ -4,6 +4,8 @@ import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { LoggerService } from "@services";
+import { namespaces } from "@src/constants";
 import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
@@ -17,8 +19,16 @@ import { TrashIcon } from "@assets/image/icons";
 export const UserOrganizationsTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "userOrganizations" });
 	const { closeModal, openModal } = useModalStore();
-	const { organizations, getOrganizations, getEnrichedOrganizations, user, deleteOrganization, isLoading } =
-		useOrganizationStore();
+	const {
+		organizations,
+		getOrganizations,
+		getEnrichedOrganizations,
+		currentOrganization,
+		user,
+		deleteOrganization,
+		isLoading,
+		logoutFunction,
+	} = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
 	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
@@ -42,6 +52,8 @@ export const UserOrganizationsTable = () => {
 	}, [organizations]);
 
 	const onDelete = async (organization: EnrichedOrganization) => {
+		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
+
 		const { error } = await deleteOrganization(omit(organization, "currentMember"));
 		closeModal(ModalName.deleteOrganization);
 		if (error) {
@@ -53,11 +65,32 @@ export const UserOrganizationsTable = () => {
 				type: "error",
 			});
 		}
+
 		addToast({
 			message: t("table.messages.organizationDeleted", { name: organization.displayName }),
 			type: "success",
 		});
+
+		if (!deletingCurrentOrganization) return;
+		setTimeout(async () => {
+			if (!user?.defaultOrganizationId) {
+				LoggerService.error(
+					namespaces.ui.organizationTableUserSettings,
+					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
+				);
+				logoutFunction(true);
+				return;
+			}
+			navigate(`/switch-organization/${user.defaultOrganizationId}`);
+		}, 3000);
 	};
+
+	const isNameInputDisabled = (organizationId: string, organizationRole?: MemberRole): boolean =>
+		!!(
+			isLoading.updatingOrganization ||
+			user?.defaultOrganizationId === organizationId ||
+			organizationRole !== MemberRole.admin
+		);
 
 	return (
 		<div className="w-3/4">
@@ -74,28 +107,25 @@ export const UserOrganizationsTable = () => {
 			<Table className="mt-6">
 				<THead>
 					<Tr>
-						<Th className="w-2/5 min-w-32 pl-4">{t("table.headers.name")}</Th>
-						<Th className="w-2/5 min-w-32">{t("table.headers.uniqueName")}</Th>
-						<Th className="w-2/5 min-w-32">{t("table.headers.role")}</Th>
-						<Th className="w-2/5 min-w-32">{t("table.headers.status")}</Th>
-						<Th className="w-1/5 min-w-16 pr-4">{t("table.headers.actions")}</Th>
+						<Th className="w-2/6 min-w-32 pl-4">{t("table.headers.name")}</Th>
+						<Th className="w-2/6 min-w-32">{t("table.headers.uniqueName")}</Th>
+						<Th className="w-1/6 min-w-32">{t("table.headers.role")}</Th>
+						<Th className="w-1/6 min-w-32">{t("table.headers.status")}</Th>
+						<Th className="w-1/6 min-w-16">{t("table.headers.actions")}</Th>
 					</Tr>
 				</THead>
 
 				<TBody>
 					{organizationsList?.map((organization) => (
 						<Tr className="hover:bg-gray-1300" key={organization.id}>
-							<Td className="w-2/5 min-w-32 pl-4">{organization.displayName}</Td>
-							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.role}</Td>
-							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.status}</Td>
-							<Td className="w-2/5 min-w-32">{organization.uniqueName}</Td>
-							<Td className="w-1/5 min-w-16">
+							<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
+							<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
+							<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.role}</Td>
+							<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.status}</Td>
+							<Td className="w-1/6 min-w-16">
 								<IconButton
 									className="mr-1"
-									disabled={
-										user?.defaultOrganizationId === organization.id ||
-										organization.currentMember?.role !== MemberRole.admin
-									}
+									disabled={isNameInputDisabled(organization.id, organization.currentMember?.role)}
 									onClick={() => openModal(ModalName.deleteOrganization, organization)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>

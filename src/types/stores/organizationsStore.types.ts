@@ -41,7 +41,7 @@ export type OrganizationStoreActions = {
 	setCurrentOrganization: (organization: Organization) => void;
 	setLogoutFunction: (logoutFn: (redirectToLogin: boolean) => void) => void;
 	updateMemberStatus: (organizationId: string, status: MemberStatusType) => ServiceResponse<void>;
-	updateOrganization: (organization: Organization) => ServiceResponse<void>;
+	updateOrganization: (organization: Organization, fieldMask: string[]) => ServiceResponse<void>;
 	updateUserName: (user: User) => ServiceResponse<void>;
 };
 

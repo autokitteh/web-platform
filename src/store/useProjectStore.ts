@@ -84,12 +84,12 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	createProject: async (name: string, isDefault?: boolean) => {
-		const organization = useOrganizationStore.getState().currentOrganization;
+		const currentOrganization = useOrganizationStore.getState().currentOrganization;
 
 		const { data: projectId, error } = await ProjectsService.create({
 			id: "",
 			name,
-			organizationId: organization?.id,
+			organizationId: currentOrganization?.id,
 		});
 
 		if (error) {
@@ -154,11 +154,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 	},
 
 	createProjectFromManifest: async (projectManifest: string) => {
-		const organization = useOrganizationStore.getState().currentOrganization;
+		const currentOrganization = useOrganizationStore.getState().currentOrganization;
 
 		const { data: newProjectId, error } = await ProjectsService.createFromManifest(
 			projectManifest,
-			organization?.id
+			currentOrganization?.id
 		);
 
 		if (error) {
