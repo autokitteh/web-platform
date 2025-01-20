@@ -184,30 +184,32 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
+		const enrichedOrganizations = Object.values(organizations)
+			.map((organization) => {
+				const currentMember = members[organization.id]?.[user?.id];
+				if (!currentMember) {
+					LoggerService.error(
+						namespaces.stores.organizationStore,
+						i18n.t("noMemberFound", {
+							ns: "stores.organization",
+							organizationId: organization.id,
+							userId: user?.id,
+						})
+					);
+					return undefined;
+				}
+				return {
+					...organization,
+					currentMember: {
+						role: currentMember.role,
+						status: currentMember.status,
+					},
+				};
+			})
+			.filter((organization) => organization !== undefined) as EnrichedOrganization[];
+
 		return {
-			data: Object.values(organizations)
-				.map((organization) => {
-					const currentMember = members[organization.id]?.[user?.id];
-					if (!currentMember) {
-						LoggerService.error(
-							namespaces.stores.organizationStore,
-							i18n.t("noMemberFound", {
-								ns: "stores.organization",
-								organizationId: organization.id,
-								userId: user?.id,
-							})
-						);
-						return undefined;
-					}
-					return {
-						...organization,
-						currentMember: {
-							role: currentMember.role,
-							status: currentMember.status,
-						},
-					};
-				})
-				.filter((organization) => organization !== undefined) as EnrichedOrganization[],
+			data: enrichedOrganizations,
 			error: undefined,
 		};
 	},
