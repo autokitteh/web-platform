@@ -107,24 +107,22 @@ export const UserOrganizationsTable = () => {
 			<Table className="mt-6">
 				<THead>
 					<Tr>
-						<Th className="w-2/5 min-w-32 pl-4">{t("table.headers.name")}</Th>
-						<Th className="w-2/5 min-w-32">{t("table.headers.uniqueName")}</Th>
-						<Th className="w-2/5 min-w-32">{t("table.headers.role")}</Th>
-						<Th className="w-2/5 min-w-32">{t("table.headers.status")}</Th>
-						<Th className="w-1/5 min-w-16 pr-4">{t("table.headers.actions")}</Th>
+						<Th className="w-2/6 min-w-32 pl-4">{t("table.headers.name")}</Th>
+						<Th className="w-2/6 min-w-32">{t("table.headers.uniqueName")}</Th>
+						<Th className="w-1/6 min-w-32">{t("table.headers.role")}</Th>
+						<Th className="w-1/6 min-w-32">{t("table.headers.status")}</Th>
+						<Th className="w-1/6 min-w-16">{t("table.headers.actions")}</Th>
 					</Tr>
 				</THead>
 
 				<TBody>
 					{organizationsList?.map((organization) => (
 						<Tr className="hover:bg-gray-1300" key={organization.id}>
-							<Td className="w-2/5 min-w-32 pl-4">{organization.displayName}</Td>
-							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.role}</Td>
-							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.status}</Td>
-							<Td className="w-2/5 min-w-32">{organization.uniqueName}</Td>
-							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.role}</Td>
-							<Td className="w-2/5 min-w-32 capitalize">{organization.currentMember?.status}</Td>
-							<Td className="w-1/5 min-w-16">
+							<Td className="w-2/6 min-w-32 pl-4">{organization.displayName}</Td>
+							<Td className="w-2/6 min-w-32">{organization.uniqueName}</Td>
+							<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.role}</Td>
+							<Td className="w-1/6 min-w-32 capitalize">{organization.currentMember?.status}</Td>
+							<Td className="w-1/6 min-w-16">
 								<IconButton
 									className="mr-1"
 									disabled={isNameInputDisabled(organization.id, organization.currentMember?.role)}
