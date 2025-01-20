@@ -240,7 +240,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		return { error: undefined, data: undefined };
 	},
-	
+
 	getEnrichedMembers: () => {
 		const { currentOrganization } = get();
 		if (!currentOrganization) {
