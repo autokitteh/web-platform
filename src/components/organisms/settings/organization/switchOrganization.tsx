@@ -44,9 +44,7 @@ export const SwitchOrganization = () => {
 			}
 		};
 		const getOrganizationFromStore = (organizationId: string): boolean => {
-			const organizationFromStore = Object.values(organizations)?.find(
-				(organizationFromStore) => organizationFromStore.id === organizationId
-			);
+			const organizationFromStore = Object.values(organizations)?.find(({ id }) => id === organizationId);
 			if (organizationFromStore) {
 				setCurrentOrganization(organizationFromStore);
 				setOrganizationName(organizationFromStore.displayName);
