@@ -8,7 +8,7 @@ import { useOrganizationStore, useProjectStore } from "@src/store";
 import { Loader, Typography } from "@components/atoms";
 
 export const SwitchOrganization = () => {
-	const { t } = useTranslation("components.switchOrganization");
+	const { t } = useTranslation("components", { keyPrefix: "switchOrganization" });
 	const { t: tOrganization } = useTranslation("settings", { keyPrefix: "organization" });
 	const { organizationId } = useParams();
 	const { organizations, setCurrentOrganization, currentOrganization, getOrganizations } = useOrganizationStore();
