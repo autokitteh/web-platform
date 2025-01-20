@@ -4,7 +4,7 @@ import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { LoggerService } from "@services/logger.service";
+import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
