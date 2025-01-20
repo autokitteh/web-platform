@@ -90,7 +90,7 @@ export const UserOrganizationsTable = () => {
 									className="mr-1"
 									disabled={
 										user?.defaultOrganizationId === organization.id ||
-										organization.currentMember?.role === MemberRole.admin
+										organization.currentMember?.role !== MemberRole.admin
 									}
 									onClick={() => openModal(ModalName.deleteOrganization, organization)}
 									title={t("table.actions.delete", { name: organization.displayName })}

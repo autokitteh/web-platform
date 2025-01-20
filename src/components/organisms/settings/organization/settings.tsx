@@ -82,7 +82,7 @@ export const OrganizationSettings = () => {
 			message: t("form.messages.organizationDeleted", { name: organization?.displayName }),
 			type: "success",
 		});
-		setTimeout(async () => {
+		setTimeout(() => {
 			if (!user?.defaultOrganizationId) {
 				LoggerService.error(
 					namespaces.ui.organizationSettings,
