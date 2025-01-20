@@ -18,15 +18,16 @@ export const convertOrganizationModelToProto = (organization: Organization): Par
 	};
 };
 
-export const convertMemberProtoToModel = (protoOrganizationMember: ProtoOrganizationMember): OrganizationMember => {
-	let role: MemberRole;
-	if (protoOrganizationMember.roles.includes("admin")) role = MemberRole.admin;
-	else if (protoOrganizationMember.roles.length === 0) role = MemberRole.user;
-	else role = MemberRole.unspecified;
+const determineRole = (roles: string[]): MemberRole => {
+	if (roles.includes("admin")) return MemberRole.admin;
+	if (roles.length === 0) return MemberRole.user;
+	return MemberRole.unspecified;
+};
 
+export const convertMemberProtoToModel = (protoOrganizationMember: ProtoOrganizationMember): OrganizationMember => {
 	return {
 		status: memberStatusConverter(protoOrganizationMember.status),
-		role,
+		role: determineRole(protoOrganizationMember.roles),
 		userId: protoOrganizationMember.userId,
 	};
 };
