@@ -15,9 +15,12 @@ export type OrganizationStoreState = Readonly<{
 		updateMember: boolean;
 		updatingOrganization: boolean;
 		updatingUser: boolean;
+<<<<<<< HEAD
 =======
 		updatingOrganization: boolean;
 >>>>>>> 8769c279 (feat(UI-1191): organizations settings - name update)
+=======
+>>>>>>> 003df3f2 (feat(UI-1208): allow users rename their display-name)
 	};
 	logoutFunction: (redirectToLogin: boolean) => void;
 	members: Record<string, Record<string, OrganizationMember>>;
