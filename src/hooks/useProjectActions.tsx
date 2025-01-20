@@ -249,7 +249,7 @@ export const useProjectActions = () => {
 				type: "error",
 			});
 
-			return;
+			return { error };
 		}
 
 		resetChecker();

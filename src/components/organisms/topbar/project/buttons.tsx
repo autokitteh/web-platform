@@ -33,8 +33,10 @@ export const ProjectTopbarButtons = () => {
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 
 	const onProjectDelete = useCallback(async () => {
-		await deleteProject(projectId!);
-		navigate("/");
+		const response = await deleteProject(projectId!);
+		if (!response?.error) {
+			navigate("/");
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId]);
 
