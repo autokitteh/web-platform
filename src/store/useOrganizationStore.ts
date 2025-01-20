@@ -214,6 +214,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			error: undefined,
 		};
 	},
+
 	updateOrganization: async (organization: Organization, fieldMask: string[]) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: true } }));
 
