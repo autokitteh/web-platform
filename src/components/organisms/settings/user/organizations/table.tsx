@@ -85,6 +85,13 @@ export const UserOrganizationsTable = () => {
 		}, 3000);
 	};
 
+	const isNameInputDisabled = (organizationId: string, organizationRole?: MemberRole): boolean =>
+		!!(
+			isLoading.updatingOrganization ||
+			user?.defaultOrganizationId === organizationId ||
+			organizationRole !== MemberRole.admin
+		);
+
 	return (
 		<div className="w-3/4">
 			<Typography className="mb-9 font-averta font-bold" element="h1" size="2xl">
@@ -120,10 +127,7 @@ export const UserOrganizationsTable = () => {
 							<Td className="w-1/5 min-w-16">
 								<IconButton
 									className="mr-1"
-									disabled={
-										user?.defaultOrganizationId === organization.id ||
-										organization.currentMember?.role !== MemberRole.admin
-									}
+									disabled={isNameInputDisabled(organization.id, organization.currentMember?.role)}
 									onClick={() => openModal(ModalName.deleteOrganization, organization)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>
