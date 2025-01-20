@@ -55,7 +55,9 @@ export const OrganizationSettings = () => {
 		}
 		setNameError("");
 		setOrganizationDisplayName(displayName);
-		const { error } = await updateOrganization({ ...omit(organization, "currentMember"), displayName }, ["name"]);
+		const { error } = await updateOrganization({ ...omit(organization, "currentMember"), displayName }, [
+			"display_name",
+		]);
 		if (error) {
 			addToast({
 				message: t("form.errors.updateOrganizationFailed"),
