@@ -7,7 +7,7 @@ import { immer } from "zustand/middleware/immer";
 import { MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
 import { namespaces } from "@src/constants";
-import { EnrichedOrganization, Organization } from "@src/types/models";
+import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 
 const defaultState: OrganizationStoreState = {
@@ -24,6 +24,7 @@ const defaultState: OrganizationStoreState = {
 		updateMember: false,
 		deletingOrganization: false,
 		updatingOrganization: false,
+		updatingUser: false,
 	},
 	logoutFunction: () => {},
 };
@@ -247,10 +248,13 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 		return {
-			data: Object.entries(members).map(([userId, member]) => ({
-				...member,
-				...get().users[userId],
-			})),
+			data: Object.entries(members).map(
+				([userId, member]) =>
+					({
+						...get().users[userId],
+						...member,
+					}) as EnrichedMember
+			),
 			error: false,
 		};
 	},
@@ -447,6 +451,25 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, members: false } }));
 		return { error: false, data: undefined };
+	},
+
+	updateUserName: async (user: User) => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: true } }));
+
+		const { error } = await UsersService.update(user, ["displayName"]);
+		if (error) {
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
+
+			return {
+				data: undefined,
+				error: i18n.t("organization.failedUpdatingUserName", {
+					ns: "stores",
+					userDetails: JSON.stringify(user),
+				}),
+			};
+		}
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
+		return { data: undefined, error: undefined };
 	},
 
 	setCurrentOrganization: (organization) => {

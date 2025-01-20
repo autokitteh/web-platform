@@ -6,6 +6,7 @@ import { namespaces } from "@constants";
 import { convertUserProtoToModel } from "@models";
 import { LoggerService } from "@services";
 import { UserStatusType } from "@src/enums";
+import { reverseConvertUserModelToProto } from "@src/models/user.model";
 import { reverseUserStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
 import { User } from "@type/models";
@@ -62,6 +63,25 @@ export class UsersService {
 			return { data: userId, error: undefined };
 		} catch (error) {
 			const errorMessage = i18n.t("userCreationFailedExtended", {
+				ns: "services",
+				error: new Error(error).message,
+			});
+			LoggerService.error(namespaces.usersService, errorMessage);
+
+			return { data: undefined, error };
+		}
+	}
+
+	static async update(user: User, fieldMaskPathsArray: string[]): Promise<ServiceResponse<string>> {
+		try {
+			await usersClient.update({
+				user: reverseConvertUserModelToProto(user),
+				fieldMask: { paths: fieldMaskPathsArray },
+			});
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			const errorMessage = i18n.t("userUpdatingFailedExtended", {
 				ns: "services",
 				error: new Error(error).message,
 			});

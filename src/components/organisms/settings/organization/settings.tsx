@@ -12,7 +12,7 @@ import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { isNameEmpty, isNameExist } from "@src/utilities";
 
-import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
+import { Button, ErrorMessage, Input, SuccessMessage, Typography } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";
@@ -109,13 +109,10 @@ export const OrganizationSettings = () => {
 					onChange={debouncedRename}
 					value={organizationDisplayName}
 				/>
-
-				<ErrorMessage>{nameError as string}</ErrorMessage>
 				<div className="h-6">
+					<ErrorMessage>{nameError as string}</ErrorMessage>
 					{displaySuccess ? (
-						<div className="text-green-800 opacity-100 transition-opacity duration-300 ease-in-out">
-							{t("form.messages.nameUpdatedSuccessfully")}
-						</div>
+						<SuccessMessage>{t("form.messages.nameUpdatedSuccessfully")}</SuccessMessage>
 					) : null}
 				</div>
 			</div>

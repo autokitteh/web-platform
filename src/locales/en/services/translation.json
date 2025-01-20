@@ -90,6 +90,7 @@
 	"convertWrappedJsonError": "Error parsing JSON for key '{{key}}': {{error}} in parseNestedJson function",
 	"accountFetchErrorExtended": "Failed to get the logged in user, error: {{error}}",
 	"userCreationFailedExtended": "Error occurred during the user create, error: {{error}}",
+	"userUpdatingFailedExtended": "Error occurred during the user update, error: {{error}}",
 	"userUpdateError": "Error occurred during the account update",
 	"usersFetchErrorExtended": "Error occurred during the user fetch, error: {{error}}",
 	"userIdentifierRequired": "User identifier is required",

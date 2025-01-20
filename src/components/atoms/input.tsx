@@ -8,6 +8,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 	(
 		{
 			classInput,
+			inputLabelTextSize,
 			className,
 			defaultValue = "",
 			disabled = false,
@@ -82,13 +83,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			classInput
 		);
 
-		const labelClass = cn("pointer-events-none absolute left-4 opacity-0 transition-all", {
+		const inputLabelTextClass = inputLabelTextSize || "text-xs";
+
+		const inputLabelClass = cn("pointer-events-none absolute left-4 opacity-0 transition-all", {
 			"top-1/2 -translate-y-1/2 text-gray-600 opacity-100": !isFocused && !hasValue && !placeholder,
-			"-top-2 left-3 px-1 text-xs text-white opacity-100 before:bg-gray-950": isFocused || hasValue,
+			"-top-2 left-3 px-1 text-white opacity-100 before:bg-gray-950": isFocused || hasValue,
 			"text-gray-900": variant === InputVariant.light,
-			"-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light,
-			"-top-2 left-3 translate-y-0 px-1 text-xs text-white opacity-100": placeholder,
+			"-top-2 left-3 px-1 before:bg-white": (isFocused || hasValue) && variant === InputVariant.light,
+			"-top-2 left-3 translate-y-0 px-1 text-white opacity-100": placeholder,
 			"text-black": variant === InputVariant.light,
+			"-top-3": inputLabelTextSize === "text-1.5xl",
+			inputLabelTextClass,
 		});
 
 		const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
@@ -112,7 +117,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 					value={inputValue}
 				/>
 				{label ? (
-					<label className={labelClass} htmlFor={id}>
+					<label className={inputLabelClass} htmlFor={id}>
 						<span className="relative z-10">{isRequired ? `${label} *` : label}</span>
 						<span className={borderOverlayLabelClass} />
 					</label>

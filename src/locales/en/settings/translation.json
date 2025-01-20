@@ -59,7 +59,10 @@
 		"retentionPolicyTitle": "Retention Policy",
 		"retentionPolicyDescription": "We will keep your data for 3 days",
 		"codeAutoSaveTitle": "File Editor",
-		"codeAutoSaveLabel": "Code editing auto-save"
+		"codeAutoSaveLabel": "Code editing auto-save",
+		"messages":{
+			"nameUpdatedSuccessfully": "User name updated"
+		}
 	},
 	"topbar": {
 		"personalSettings": "Personal Settings: {{name}}",
