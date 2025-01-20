@@ -118,6 +118,11 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		navigate("/organization-settings/add");
 	};
 
+	const menuItemClick = (href: string) => {
+		close();
+		navigate(href);
+	};
+
 	return (
 		<div className="flex gap-4">
 			<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
@@ -169,7 +174,12 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 				<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
 					<h3 className="mb-3 font-semibold text-black">{t("menu.organizationSettings.title")}</h3>
 					{userMenuOrganizationItems.map(({ href, icon: Icon, label }) => (
-						<Button className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250" href={href} key={href}>
+						<Button
+							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
+							key={href}
+							onClick={() => menuItemClick(href)}
+							title={label}
+						>
 							<Icon className="size-4" fill="black" />
 							{label}
 						</Button>
