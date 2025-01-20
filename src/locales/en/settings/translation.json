@@ -152,6 +152,7 @@
 			"errors":{
 				"inviteFailed": "Member creation failed - {{email}}",
 				"deleteFailed": "Member deletion failed - {{email}}",
+				"getEnrichedMembersFailed": "Failed to fetch enriched members",
 				"getMembersFailed": "Failed to fetch members"
 			},
 			"form":{

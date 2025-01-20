@@ -29,27 +29,34 @@ export const OrganizationMembersTable = () => {
 	const [members, setMembers] = useState<EnrichedMember[]>();
 	const membersEmails = new Set((members || []).map((member) => member.email));
 
-	const loadMembers = async () => {
+	useEffect(() => {
 		const { data, error } = getEnrichedMembers();
 
 		if (error || !data) {
 			addToast({
-				message: t("errors.getMembersFailed"),
+				message: t("errors.getEnrichedMembersFailed"),
 				type: "error",
 			});
 			return;
 		}
 
 		setMembers(data);
-	};
-
-	useEffect(() => {
-		loadMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [membersFromStore]);
 
+	const fetchMembers = async () => {
+		const { error } = await getMembers();
+		if (error) {
+			addToast({
+				message: t("errors.getMembersFailed"),
+				type: "error",
+			});
+			return;
+		}
+	};
+
 	useEffect(() => {
-		getMembers();
+		fetchMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
