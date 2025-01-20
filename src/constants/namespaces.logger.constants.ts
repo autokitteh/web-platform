@@ -40,6 +40,8 @@ export const namespaces = {
 		menu: "Menu UI",
 		idCopyButton: "ID Copy Button",
 		switchOrganization: "Switch Organization UI",
+		organizationSettings: "Organization Settings",
+		organizationTableUserSettings: "Organization List in User Settings",
 	},
 	hooks: {
 		connectionForm: "Connection Form",

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 
+import { TextSizes } from "@src/types";
 import { InputType } from "@type/components";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -12,4 +13,5 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 	isRequired?: boolean;
 	placeholder?: string;
 	variant?: InputType;
+	inputLabelTextSize?: TextSizes;
 }

@@ -1,5 +1,5 @@
 import { TemplateMetadata } from "@interfaces/store";
-import { Variable } from "@type/models";
+import { EnrichedOrganization, Variable } from "@type/models";
 
 export interface ModalProps {
 	children: React.ReactNode;
@@ -28,7 +28,7 @@ export interface DeleteMemberModalProps {
 	isDeleting: boolean;
 }
 export interface DeleteOrganizationModalProps {
-	onDelete: (id: string, name: string) => void;
+	onDelete: (organization: EnrichedOrganization) => void;
 	isDeleting: boolean;
 }
 

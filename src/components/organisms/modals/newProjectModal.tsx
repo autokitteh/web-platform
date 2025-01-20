@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ModalName } from "@enums/components";
 import { useProjectActions } from "@src/hooks";
 import { useModalStore, useProjectStore, useToastStore } from "@src/store";
+import { validateEntitiesName } from "@src/utilities";
 
 import { Button, ErrorMessage, Input, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
@@ -30,15 +31,6 @@ export const NewProjectModal = () => {
 			projectName: "",
 		},
 	});
-
-	const validateProjectName = (value: string) => {
-		if (projectNamesSet.has(value)) {
-			return t("nameTaken");
-		}
-		if (!new RegExp("^[a-zA-Z_][\\w]*$").test(value)) {
-			return t("invalidName");
-		}
-	};
 
 	const onSubmit = async (data: { projectName: string }) => {
 		const { projectName } = data;
@@ -70,7 +62,7 @@ export const NewProjectModal = () => {
 					variant="light"
 					{...register("projectName", {
 						required: t("nameRequired"),
-						validate: validateProjectName,
+						validate: (value) => validateEntitiesName(value, projectNamesSet) || true,
 					})}
 					isError={!!errors.projectName}
 				/>

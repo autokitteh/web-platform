@@ -20,9 +20,17 @@ export const SettingsLayout = () => {
 	const { currentOrganization } = useOrganizationStore();
 	const { user } = useOrganizationStore();
 
-	const topbarTitle = pathname.startsWith("/settings")
-		? tSettings("personalSettings", { name: user?.name })
-		: tSettings("organizationSettings", { name: currentOrganization?.displayName });
+	const getTopbarTitle = () =>
+		pathname.startsWith("/settings")
+			? tSettings("personalSettings", { name: user?.name })
+			: tSettings("organizationSettings", { name: currentOrganization?.displayName });
+
+	const [settingsTitle, setSettingsTitle] = useState<string>(getTopbarTitle());
+
+	useEffect(() => {
+		setSettingsTitle(getTopbarTitle());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user]);
 
 	const menuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;
 
@@ -42,7 +50,7 @@ export const SettingsLayout = () => {
 					<Sidebar />
 					<SystemLogLayout>
 						<div className="flex flex-1 flex-col">
-							<TitleTopbar title={topbarTitle} />
+							<TitleTopbar title={settingsTitle} />
 
 							<div className="relative flex size-full overflow-hidden pt-2">
 								<SettingsMenu menu={menuItems} />

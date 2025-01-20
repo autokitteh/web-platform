@@ -1,11 +1,13 @@
 import i18n from "i18next";
+import { produce } from "immer";
 import { StateCreator, create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { StoreName, UserStatusType } from "@enums";
+import { MemberStatusType, StoreName, UserStatusType } from "@enums";
 import { AuthService, LoggerService, OrganizationsService, UsersService } from "@services";
 import { namespaces } from "@src/constants";
+import { EnrichedMember, EnrichedOrganization, Organization, User } from "@src/types/models";
 import { OrganizationStore, OrganizationStoreState } from "@src/types/stores";
 
 const defaultState: OrganizationStoreState = {
@@ -19,21 +21,77 @@ const defaultState: OrganizationStoreState = {
 		members: false,
 		inviteMember: false,
 		deleteMember: false,
+		updateMember: false,
+		deletingOrganization: false,
+		updatingOrganization: false,
+		updatingUser: false,
 	},
 	logoutFunction: () => {},
 };
 const store: StateCreator<OrganizationStore> = (set, get) => ({
 	...defaultState,
 
-	getCurrentOrganizationEnriched: () => {
-		const { currentOrganization, user } = get();
-		if (!currentOrganization || !user) {
+	updateMemberStatus: async (organizationId: string, status: MemberStatusType) => {
+		const { user } = get();
+		if (!user) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("noMemberFound", {
-					ns: "stores.organization",
+				i18n.t("organization.currentUserNotFoundCantUpdateMember", {
+					ns: "stores",
+					organizationId,
+				})
+			);
+			return { data: undefined, error: true };
+		}
+		set((state) => ({
+			...state,
+			isLoading: {
+				...state.isLoading,
+				updateMember: true,
+			},
+		}));
+		const response = await OrganizationsService.updateMemberStatus(organizationId, user.id, status);
+
+		if (response.error) {
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, updateMember: false } }));
+			return response;
+		}
+		const newMembers = produce(get().members, (draft) => {
+			if (!draft[organizationId]) {
+				draft[organizationId] = {};
+			}
+			draft[organizationId][user.id] = { ...draft[organizationId][user.id], status };
+		});
+
+		set((state) => {
+			return {
+				...state,
+				members: newMembers,
+				isLoading: { ...state.isLoading, updateMember: false },
+			};
+		});
+
+		return response;
+	},
+
+	getCurrentOrganizationEnriched: () => {
+		const { currentOrganization, user } = get();
+		if (!user) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				i18n.t("organization.noUserFound", {
+					ns: "stores",
 					organizationId: currentOrganization?.id,
-					userId: user?.id,
+				})
+			);
+			return { error: true, data: undefined };
+		}
+		if (!currentOrganization) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				i18n.t("organization.noCurrentOrganization", {
+					ns: "stores",
+					userId: user.id,
 				})
 			);
 			return { error: true, data: undefined };
@@ -43,8 +101,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organizationNotFound", {
-					ns: "stores.organization",
+				i18n.t("organization.organizationNotFound", {
+					ns: "stores",
 					organizationId: currentOrganization?.id,
 				})
 			);
@@ -56,8 +114,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!member) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("noMemberFound", {
-					ns: "stores.organization",
+				i18n.t("organization.noMemberFound", {
+					ns: "stores",
 					organizationId: organization.id,
 					userId: user?.id,
 				})
@@ -72,34 +130,54 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 					role: member.role,
 					status: member.status,
 				},
-			},
+			} as EnrichedOrganization,
 			error: false,
 		};
 	},
 
-	deleteOrganization: async (organizationId: string) => {
-		const response = await OrganizationsService.delete(organizationId);
+	deleteOrganization: async (organization: Organization) => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: true } }));
 
-		if (response.error) {
-			return {
-				data: undefined,
-				error: true,
-			};
+		const { user } = get();
+
+		if (user?.defaultOrganizationId === organization.id) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				i18n.t("organization.userShouldntDeleteDefaultOrganization", {
+					ns: "stores",
+					organizationId: organization.id,
+					userId: user?.id,
+				})
+			);
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: false } }));
+
+			return { error: true, data: undefined };
+		}
+		const { error } = await OrganizationsService.delete(organization);
+
+		if (error) {
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: false } }));
+
+			return { error: true, data: undefined };
 		}
 
 		set((state) => {
 			const newOrganizations = { ...state.organizations };
 			const newMembers = { ...state.members };
-			delete newOrganizations[organizationId];
-			delete newMembers[organizationId];
+			const defaultOrganization = state.organizations[user?.defaultOrganizationId || ""];
+			delete newOrganizations[organization.id];
+			delete newMembers[organization.id];
 			return {
 				...state,
 				members: newMembers,
 				organizations: newOrganizations,
+				currentOrganization: defaultOrganization,
 			};
 		});
 
-		return response;
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, deletingOrganization: false } }));
+
+		return { data: undefined, error: undefined };
 	},
 
 	getEnrichedOrganizations: () => {
@@ -107,8 +185,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!user?.id || !currentOrganization || !Object.keys(organizations).length || !Object.keys(members).length) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("currentOrganizationInformationMissing", {
-					ns: "stores.organization",
+				i18n.t("organization.currentOrganizationInformationMissing", {
+					ns: "stores",
 					organizationId: currentOrganization?.id,
 					userId: user?.id,
 					organizations: JSON.stringify(organizations),
@@ -118,29 +196,58 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			return { data: undefined, error: true };
 		}
 
-		const enrichedOrganizations = Object.values(organizations).map((organization) => {
-			const currentMember = members[organization.id]?.[user?.id];
-			if (!currentMember) {
-				LoggerService.error(
-					namespaces.stores.organizationStore,
-					i18n.t("noMemberFound", {
-						ns: "stores.organization",
-						organizationId: organization.id,
-						userId: user?.id,
-					})
-				);
-				return undefined;
-			}
+		const enrichedOrganizations = Object.values(organizations)
+			.map((organization) => {
+				const currentMember = members[organization.id]?.[user?.id];
+				if (!currentMember) {
+					LoggerService.error(
+						namespaces.stores.organizationStore,
+						i18n.t("organization.noMemberFound", {
+							ns: "stores",
+							organizationId: organization.id,
+							userId: user?.id,
+						})
+					);
+					return undefined;
+				}
+				return {
+					...organization,
+					currentMember: {
+						role: currentMember.role,
+						status: currentMember.status,
+					},
+				};
+			})
+			.filter((organization) => organization !== undefined) as EnrichedOrganization[];
+
+		return {
+			data: enrichedOrganizations,
+			error: undefined,
+		};
+	},
+
+	updateOrganization: async (organization: Organization, fieldMask: string[]) => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: true } }));
+
+		const { error } = await OrganizationsService.update(organization, fieldMask);
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingOrganization: false } }));
+
+		if (error) {
+			return { error: true, data: undefined };
+		}
+
+		set((state) => {
+			const newOrganizations = produce(state.organizations, (draft) => {
+				draft[organization.id] = organization;
+			});
 			return {
-				...organization,
-				currentMember: {
-					role: currentMember.role,
-					status: currentMember.status,
-				},
+				...state,
+				organizations: newOrganizations,
+				currentOrganization: organization,
 			};
 		});
-		const filteredOrganizations = enrichedOrganizations.filter((organization) => organization !== undefined);
-		return { data: filteredOrganizations, error: enrichedOrganizations.length !== filteredOrganizations.length };
+
+		return { error: undefined, data: undefined };
 	},
 
 	getEnrichedMembers: () => {
@@ -148,8 +255,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!currentOrganization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("noOrganizationFoundCantGetMembers", {
-					ns: "stores.organization",
+				i18n.t("organization.noOrganizationFoundCantGetMembers", {
+					ns: "stores",
 				})
 			);
 			return { data: undefined, error: true };
@@ -158,18 +265,21 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!members || !Object.keys(members).length) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("noMembersFound", {
-					ns: "stores.organization",
+				i18n.t("organization.noMembersFound", {
+					ns: "stores",
 					organizationId: currentOrganization.id,
 				})
 			);
 			return { data: undefined, error: true };
 		}
 		return {
-			data: Object.entries(members).map(([userId, member]) => ({
-				...member,
-				...get().users[userId],
-			})),
+			data: Object.entries(members).map(
+				([userId, member]) =>
+					({
+						...get().users[userId],
+						...member,
+					}) as EnrichedMember
+			),
 			error: false,
 		};
 	},
@@ -198,8 +308,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("noOrganizationFoundCantDeleteMember", {
-					ns: "stores.organization",
+				i18n.t("organization.noOrganizationFoundCantDeleteMember", {
+					ns: "stores",
 					userId,
 				})
 			);
@@ -210,33 +320,36 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		const response = await OrganizationsService.deleteMember(organization.id, userId);
 
 		set((state) => {
-			const newMembers = { ...state.members };
-			const newUsers = { ...state.users };
-			delete newMembers[organization.id][userId];
-			delete newUsers[userId];
+			const newMembers = produce(state.members, (draft) => {
+				delete draft[organization.id][userId];
+			});
+			const newUsers = produce(state.users, (draft) => {
+				delete draft[userId];
+			});
 			return {
 				...state,
 				members: newMembers,
 				users: newUsers,
+				isLoading: { ...state.isLoading, deleteMember: false },
 			};
 		});
-		set((state) => ({ ...state, isLoading: { ...state.isLoading, deleteMember: false } }));
 
 		return response;
 	},
 
 	inviteMember: async (email: string) => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: true } }));
-		const { data: user, error } = await UsersService.get({ email });
+		const { data: user } = await UsersService.get({ email });
 		const organization = get().currentOrganization;
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("noOrganizationFoundCantInviteMember", {
-					ns: "stores.organization",
+				i18n.t("organization.noOrganizationFoundCantInviteMember", {
+					ns: "stores",
 					email,
 				})
 			);
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: false } }));
 			return { data: undefined, error: true };
 		}
 		let userId = user?.id;
@@ -248,39 +361,44 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 			if (userCreateError || !userIdCreatedUser) {
 				LoggerService.error(
 					namespaces.stores.organizationStore,
-					i18n.t("userNotCreatedCantInviteMember", {
-						ns: "stores.organization",
+					i18n.t("organization.userNotCreatedCantInviteMember", {
+						ns: "stores",
 						email,
 					})
 				);
-				return { data: undefined, error };
+				set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: false } }));
+
+				return { data: undefined, error: userCreateError };
 			}
 			userId = userIdCreatedUser;
 		}
 		if (!userId) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("noUserIdCantInviteMember", {
-					ns: "stores.organization",
+				i18n.t("organization.noUserIdCantInviteMember", {
+					ns: "stores",
 					email,
 				})
 			);
+			set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: false } }));
+
 			return { data: undefined, error: true };
 		}
 
 		const response = await OrganizationsService.inviteMember(organization.id, userId);
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, inviteMember: false } }));
-
+		const { getMembers } = get();
+		await getMembers();
 		return response;
 	},
 
 	getOrganizations: async () => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, organizations: true } }));
-		const { user } = get();
+		const { user, currentOrganization } = get();
 		if (!user) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("noUserFound", { ns: "stores.organization" })
+				i18n.t("organization.noUserFound", { ns: "stores", organizationId: currentOrganization?.id })
 			);
 			set((state) => ({
 				...state,
@@ -298,8 +416,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("organizationsAndMembersNotFound", {
-					ns: "stores.organization",
+				i18n.t("organization.organizationsAndMembersNotFound", {
+					ns: "stores",
 					organizations: JSON.stringify(response.data?.organizations || {}),
 					members: JSON.stringify(response.data?.members || {}),
 				})
@@ -328,29 +446,61 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 	getMembers: async () => {
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, members: true } }));
-		const organization = get().currentOrganization;
+		const { currentOrganization: organization, user } = get();
 		if (!organization) {
 			LoggerService.error(
 				namespaces.stores.organizationStore,
-				i18n.t("noOrganizationFoundCantFetchMembers", {
-					ns: "stores.organization",
+				i18n.t("organization.noOrganizationFoundCantFetchMembers", {
+					ns: "stores",
 				})
 			);
 			return { data: undefined, error: true };
 		}
-		const response = await OrganizationsService.listMembers(organization.id);
+		if (!user) {
+			LoggerService.error(
+				namespaces.stores.organizationStore,
+				i18n.t("organization.noUserFoundCantFetchMembers", {
+					ns: "stores",
+				})
+			);
+			return { data: undefined, error: true };
+		}
+		const membersResponse = await OrganizationsService.listMembers(organization.id);
+		const organizationsResponse = await OrganizationsService.list(user.id);
 
-		if (response.data) {
-			const { users, members } = response.data;
+		if (membersResponse.data && organizationsResponse.data) {
+			const { users, members: membersCurrentOrganization } = membersResponse.data;
+			const { members } = organizationsResponse.data;
 			set((state) => ({
 				...state,
 				users,
-				members,
+				members: {
+					...members,
+					...membersCurrentOrganization,
+				},
 			}));
 		}
 
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, members: false } }));
 		return { error: false, data: undefined };
+	},
+
+	updateUserName: async (user: User) => {
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: true } }));
+
+		const { error } = await UsersService.update(user, ["display_name"]);
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
+		if (error) {
+			return {
+				data: undefined,
+				error: i18n.t("organization.failedUpdatingUserName", {
+					ns: "stores",
+					userDetails: JSON.stringify(user),
+				}),
+			};
+		}
+		set((state) => ({ ...state, user }));
+		return { data: undefined, error: undefined };
 	},
 
 	setCurrentOrganization: (organization) => {
@@ -404,7 +554,6 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 
 		return { data: user, error: undefined };
 	},
-	logoutFunction: () => {},
 	setLogoutFunction: (logoutFn) => {
 		set((state) => ({
 			...state,
