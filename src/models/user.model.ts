@@ -1,9 +1,5 @@
 import { User as ProtoUser } from "@ak-proto-ts/users/v1/user_pb";
-<<<<<<< HEAD
 import { userStatusConverter, reverseUserStatusConverter } from "@models/utils";
-=======
-import { userStatusConverter, reverseUserStatusConverter } from "@models/utils/userStatusConverter.utils";
->>>>>>> 003df3f2 (feat(UI-1208): allow users rename their display-name)
 import { User } from "@type/models";
 
 export function convertUserProtoToModel(protoUser: ProtoUser): User {
