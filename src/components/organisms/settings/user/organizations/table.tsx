@@ -43,18 +43,6 @@ export const UserOrganizationsTable = () => {
 
 	const onDelete = async (organization: EnrichedOrganization) => {
 		const { error } = await deleteOrganization(omit(organization, "currentMember"));
-<<<<<<< HEAD
-=======
-		if (error) {
-			addToast({
-				message: t("errors.deleteFailed", {
-					name: organization?.displayName,
-					organizationId: organization?.id,
-				}),
-				type: "error",
-			});
-		}
->>>>>>> 8769c279 (feat(UI-1191): organizations settings - name update)
 		closeModal(ModalName.deleteOrganization);
 		if (error) {
 			addToast({

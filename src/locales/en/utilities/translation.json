@@ -16,11 +16,7 @@
 	},
 	"validateEntityName":{
 		"nameIsTaken": "The name is already taken",
-<<<<<<< HEAD
 		"invalidName": "The name can only use letters, numbers, and underscores, and must start with a letter or underscore",
 		"nameRequired": "The name is required"
-=======
-		"invalidName": "The name can only use letters, numbers, and underscores, and must start with a letter or underscore"
->>>>>>> 8769c279 (feat(UI-1191): organizations settings - name update)
 	}
 }
