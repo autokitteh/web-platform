@@ -3,69 +3,67 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { LoggerService } from "@services";
-import { namespaces } from "@src/constants";
 import { useOrganizationStore, useProjectStore } from "@src/store";
 
 import { Loader, Typography } from "@components/atoms";
 
 export const SwitchOrganization = () => {
-	const { t } = useTranslation("errors");
+	const { t } = useTranslation("components", { keyPrefix: "switchOrganization" });
 	const { t: tOrganization } = useTranslation("settings", { keyPrefix: "organization" });
 	const { organizationId } = useParams();
-	const { currentOrganization, getOrganizationsList, setCurrentOrganization, organizationsList } =
-		useOrganizationStore();
+	const { organizations, setCurrentOrganization, currentOrganization, getOrganizations } = useOrganizationStore();
 	const { getProjectsList } = useProjectStore();
 	const navigate = useNavigate();
-	const [organizationName, setOrganizationName] = useState(
-		currentOrganization?.id === organizationId ? currentOrganization?.displayName : ""
-	);
+	const [organizationName, setOrganizationName] = useState(currentOrganization?.displayName);
 
 	useEffect(() => {
 		let timeoutId: NodeJS.Timeout;
 
-		const switchOrganization = async () => {
-			if (currentOrganization?.id === organizationId) {
-				timeoutId = setTimeout(() => {
-					navigate("/");
-				}, 3000);
-
-				return;
-			}
-			const organizationFromStore = organizationsList?.find((organization) => organization.id === organizationId);
-			if (organizationFromStore) {
-				setCurrentOrganization(organizationFromStore);
-				setOrganizationName(organizationFromStore.displayName);
-				timeoutId = setTimeout(() => {
-					navigate("/");
-				}, 3000);
-
-				return;
-			}
-
-			const { data: fetchedOrganizationsList } = await getOrganizationsList();
-			const organization = fetchedOrganizationsList?.find((organization) => organization.id === organizationId);
-
-			if (!organization) {
-				LoggerService.error(
-					namespaces.switchOrganization,
-					t("organizationNotFoundExtended", { organizationId })
-				);
-				navigate("/error", { state: { error: t("organizationNotFound") } });
-
-				return;
-			}
-
-			await setCurrentOrganization(organization);
-			setOrganizationName(organization.displayName);
+		const loadProjects = async () => {
 			await getProjectsList();
-
 			timeoutId = setTimeout(() => {
 				navigate("/");
 			}, 3000);
 		};
 
-		switchOrganization();
+		const reloadOrganizations = async () => {
+			const { error } = await getOrganizations();
+			if (error) {
+				navigate("/error", { state: { error: t("errors.organizationFetchingFailed") } });
+
+				return;
+			}
+
+			const organizationLoadedFromStore = getOrganizationFromStore(organizationId!);
+			if (!organizationLoadedFromStore) {
+				if (error) {
+					navigate("/error", { state: { error: t("errors.organizationFetchingFailed") } });
+
+					return;
+				}
+			}
+		};
+		const getOrganizationFromStore = (organizationId: string): boolean => {
+			const organizationFromStore = Object.values(organizations)?.find(({ id }) => id === organizationId);
+			if (organizationFromStore) {
+				setCurrentOrganization(organizationFromStore);
+				setOrganizationName(organizationFromStore.displayName);
+				loadProjects();
+				return true;
+			}
+			return false;
+		};
+
+		if (organizationId === currentOrganization?.id) {
+			timeoutId = setTimeout(() => {
+				navigate("/");
+			}, 3000);
+		}
+
+		const organizationLoadedFromStore = getOrganizationFromStore(organizationId!);
+		if (!organizationLoadedFromStore) {
+			reloadOrganizations();
+		}
 
 		return () => {
 			if (timeoutId) {

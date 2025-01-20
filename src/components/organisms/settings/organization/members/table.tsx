@@ -5,24 +5,58 @@ import { useTranslation } from "react-i18next";
 import { ModalName } from "@src/enums/components";
 import { CreateMemberModalRef } from "@src/interfaces/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { EnrichedMember } from "@src/types/models";
 
-import { Button, IconButton, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
-import { CreateMemberModal, RemoveMemberModal } from "@components/organisms/settings/organization";
+import { Button, IconButton, Loader, TBody, THead, Table, Td, Th, Tr, Typography } from "@components/atoms";
+import { CreateMemberModal, DeleteMemberModal } from "@components/organisms/settings/organization";
 
-import { RotateRightIcon, TrashIcon } from "@assets/image/icons";
+import { TrashIcon } from "@assets/image/icons";
 
 export const OrganizationMembersTable = () => {
 	const { t } = useTranslation("settings", { keyPrefix: "organization.members" });
 	const { closeModal, openModal } = useModalStore();
-	const [isCreating, setIsCreating] = useState(false);
-	const [isRemoving, setIsRemoving] = useState(false);
-	const { currentOrganization, inviteMember, listMembers, membersList, removeMember } = useOrganizationStore();
-	const membersEmails = new Set((membersList || []).map((member) => member.user.email));
+	const {
+		inviteMember,
+		deleteMember,
+		getMembers,
+		isLoading,
+		getEnrichedMembers,
+		user,
+		members: membersFromStore,
+	} = useOrganizationStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const modalRef = useRef<CreateMemberModalRef>(null);
+	const [members, setMembers] = useState<EnrichedMember[]>();
+	const membersEmails = new Set((members || []).map((member) => member.email));
 
 	useEffect(() => {
-		listMembers();
+		const { data, error } = getEnrichedMembers();
+
+		if (error || !data) {
+			addToast({
+				message: t("errors.getEnrichedMembersFailed"),
+				type: "error",
+			});
+			return;
+		}
+
+		setMembers(data);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [membersFromStore]);
+
+	const fetchMembers = async () => {
+		const { error } = await getMembers();
+		if (error) {
+			addToast({
+				message: t("errors.getMembersFailed"),
+				type: "error",
+			});
+			return;
+		}
+	};
+
+	useEffect(() => {
+		fetchMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -32,38 +66,40 @@ export const OrganizationMembersTable = () => {
 	};
 
 	const createMember = async (email: string) => {
-		setIsCreating(true);
-		const error = await inviteMember(email);
-		setIsCreating(false);
-		closeModal(ModalName.organizationMemberCreate);
-
-		if (error) {
-			return;
-		}
-
-		addToast({
-			message: t("form.memberInvited", { email }),
-			type: "success",
-		});
-	};
-
-	const onRemove = async (userId: string, email: string) => {
-		setIsRemoving(true);
-		const error = await removeMember(currentOrganization!.id, userId);
-		setIsRemoving(false);
+		const { error } = await inviteMember(email);
 		closeModal(ModalName.organizationMemberCreate);
 
 		if (error) {
 			addToast({
-				message: new Error(error as string).message,
+				message: t("errors.inviteFailed", { email }),
 				type: "error",
+			});
+			return;
+		}
+
+		addToast({
+			message: t("form.inviteSucceed", { email }),
+			type: "success",
+		});
+
+		await getMembers();
+	};
+
+	const onDelete = async (userId: string, email: string) => {
+		const { error } = await deleteMember(userId);
+		closeModal(ModalName.deleteMemberFromOrg);
+
+		if (error) {
+			addToast({
+				message: t("errors.deleteFailed", { email }),
+				type: "success",
 			});
 
 			return;
 		}
 
 		addToast({
-			message: t("table.messages.memberRemoved", { email }),
+			message: t("form.deleteSucceed", { email }),
 			type: "success",
 		});
 	};
@@ -87,45 +123,48 @@ export const OrganizationMembersTable = () => {
 						<Th className="w-2/6 min-w-16">{t("table.headers.email")}</Th>
 						<Th className="w-1/5 min-w-16">{t("table.headers.status")}</Th>
 						<Th className="w-1/6 min-w-16">{t("table.headers.role")}</Th>
-						<Th className="w-1/8 min-w-16 justify-end pr-4">{t("table.headers.actions")}</Th>
+						<Th className="w-1/8 min-w-16">{t("table.headers.actions")}</Th>
 					</Tr>
 				</THead>
 
-				<TBody>
-					<Tr className="hover:bg-gray-1300">
-						<Td className="w-1/5 min-w-16 cursor-pointer pl-4">xxxx</Td>
-						<Td className="w-2/6 min-w-16 cursor-pointer">@mail</Td>
-						<Td className="w-1/5 min-w-16 cursor-pointer">Invite sent / active</Td>
-						<Td className="w-1/6 min-w-16 cursor-pointer">Admin</Td>
-						<Td className="w-1/8 min-w-16 cursor-pointer gap-1">
-							<div className="flex">
-								<IconButton className="ml-auto mr-1" title={t("table.actions.resendInvite")}>
-									<RotateRightIcon className="size-4 fill-white" />
-								</IconButton>
-								<IconButton
-									className="mr-1"
-									onClick={() => openModal(ModalName.deleteMemberFromOrg)}
-									title={t("table.actions.delete")}
-								>
-									<TrashIcon
-										className="size-4 stroke-white"
+				{isLoading.members ? (
+					<Loader />
+				) : (
+					<TBody>
+						{members?.map((member) => (
+							<Tr className="hover:bg-gray-1300" key={member.id}>
+								<Td className="w-1/5 min-w-16 pl-4">{member.name}</Td>
+								<Td className="w-2/6 min-w-16">{member.email}</Td>
+								<Td className="w-1/5 min-w-16 capitalize">{member.status}</Td>
+								<Td className="w-1/6 min-w-16 capitalize">{member.role}</Td>
+								<Td className="w-1/8 min-w-16" innerDivClassName="justify-end">
+									<IconButton
+										className="mr-1"
+										disabled={user?.id === member.id}
 										onClick={() =>
-											openModal(ModalName.deleteMember, { userId: "userId", email: "email" })
+											openModal(ModalName.deleteMemberFromOrg, {
+												name: member.name,
+												id: member.id,
+												email: member.email,
+											})
 										}
-									/>
-								</IconButton>
-							</div>
-						</Td>
-					</Tr>
-				</TBody>
+										title={t("table.actions.delete", { name: member.name })}
+									>
+										<TrashIcon className="size-4 stroke-white" />
+									</IconButton>
+								</Td>
+							</Tr>
+						))}
+					</TBody>
+				)}
 			</Table>
 			<CreateMemberModal
 				createMember={createMember}
-				isCreating={isCreating}
+				isCreating={isLoading.inviteMember}
 				membersEmails={membersEmails}
 				ref={modalRef}
 			/>
-			<RemoveMemberModal isRemoving={isRemoving} onRemove={onRemove} />
+			<DeleteMemberModal isDeleting={isLoading.deleteMember} onDelete={onDelete} />
 		</div>
 	);
 };

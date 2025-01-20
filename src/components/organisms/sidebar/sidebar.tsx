@@ -8,7 +8,7 @@ import { Link, useLocation } from "react-router-dom";
 import { descopeProjectId, featureFlags, sentryDsn, userMenuItems } from "@constants";
 import { cn } from "@src/utilities";
 
-import { useLoggerStore, useUserStore } from "@store";
+import { useLoggerStore, useOrganizationStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
@@ -25,7 +25,7 @@ import { AnnouncementIcon, CircleQuestionIcon, FileIcon, LogoutIcon } from "@ass
 export const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-	const { logoutFunction, user } = useUserStore();
+	const { logoutFunction, user } = useOrganizationStore();
 	const { isNewLogs, setSystemLogHeight, systemLogHeight } = useLoggerStore();
 	const location = useLocation();
 	const { t } = useTranslation("sidebar");
@@ -229,7 +229,7 @@ export const Sidebar = () => {
 												))}
 												<Button
 													className="w-full rounded-md px-2.5 text-lg hover:bg-gray-250"
-													onClick={() => logoutFunction()}
+													onClick={() => logoutFunction(true)}
 												>
 													<LogoutIcon className="size-5" fill="black" />
 													{t("menu.userSettings.logout")}

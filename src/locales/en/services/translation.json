@@ -89,6 +89,9 @@
 	},
 	"convertWrappedJsonError": "Error parsing JSON for key '{{key}}': {{error}} in parseNestedJson function",
 	"accountFetchErrorExtended": "Failed to get the logged in user, error: {{error}}",
+	"userCreationFailedExtended": "Error occurred during the user create, error: {{error}}",
+	"userUpdatingFailedExtended": "Error occurred during the user update, error: {{error}}",
+	"userUpdateError": "Error occurred during the account update",
 	"usersFetchErrorExtended": "Error occurred during the user fetch, error: {{error}}",
 	"userIdentifierRequired": "User identifier is required",
 	"tokenCreationErrorExtended": "Error occurred during the token creation, error: {{error}}",
@@ -100,12 +103,18 @@
 	"organizationNotCreatedExtended": "Failed to create organization {{name}}. Error: {{error}}",
 	"organizationNotGetExtended": "Failed to get organization by ID {{organizationId}}. Error: {{error}}",
 	"organizationCouldntFetch": "Organization not found, organization ID: {{organizationId}}",
+	"organizationNotUpdatedExtended": "Failed to update organization {{name}}, id: {{id}}. Error: {{error}}",
+	"organizationNotUpdated": "Failed to update organization, open system log for more details",
+	"organizationDeleteFailedExtended": "Failed to delete organization {{name}}, id: {{id}}. Error: {{error}}",
+	"organizationDeleteFailed": "Failed to delete organization, open system log for more details",
 	"someOrganizationRetrievalFailed": "Some organization retrievals failed for user",
 	"errorFetchingOrganizationExtended": "Error fetching organization, user ID: {{userId}}, error: {{error}}",
 	"errorConvertingMember": "Error converting member",
 	"errorConvertingMemberExtended": "Error converting member, member ID: {{memberId}}, error: {{error}}",
 	"errorConvertingMembers": "Error converting members",
 	"errorInvitingUserToOrganizationExtended": "Inviting user to organization failed, organization ID: {{organizationId}}, error: {{error}}",
-	"errorRemovingUserToOrganizationExtended": "Removing user from organization failed, organization ID: {{organizationId}}, error: {{error}}"
+	"errorRemovingUserToOrganization": "Removing user from organization failed",
+	"errorRemovingUserToOrganizationExtended": "Removing user from organization failed, organization ID: {{organizationId}}, error: {{error}}",
+	"errorUpdatingUserToOrganizationExtended": "Updating user to organization failed, organization ID: {{organizationId}}, error: {{error}}"
 
 }

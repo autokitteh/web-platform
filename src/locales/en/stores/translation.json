@@ -3,9 +3,27 @@
 		"failedToFetch": "Failed to fetch templates",
 		"failedToFetchExtended": "Something went wrong fetching the templates, error: {{error}}"
 	},
-	"user":{
+	"organization": {
+		"noOrganizationFoundCantDeleteMember": "No organization found, can't delete member {{userId}}, reload the page",
+		"currentUserNotFoundCantUpdateMember": "No user found, can't update member, reload the page, organization ID: {{organizationId}}",
+		"noOrganizationFoundCantInviteMember": "No organization found, can't invite member {{email}}, reload the page",
+		"userNotCreatedCantInviteMember": "User creation failed, can't invite member {{email}}, reload the page",
+		"noUserIdCantInviteMember": "No user ID, can't invite member {{email}}, reload the page",
+		"noOrganizationFoundCantGetMembers": "No organization found, can't get members, reload the page",
+		"noUserFound": "No user found, reload the page, organization ID: {{organizationId}}",
+		"organizationsAndMembersNotFound": "No organizations and members found, reload the page, organizations: {{organizations}}, members: {{members}}",
+		"noMemberFound": "No member found, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}",
+		"currentOrganizationInformationMissing": "Current organization information missing, reload the page, organization ID: {{organizationId}}, user ID: {{userId}}, organizations: {{organizations}}, members: {{members}}",
+		"organizationNotFound": "Organization not found, reload the page, organization ID: {{organizationId}}",
+		"noCurrentOrganization": "User organization not found, reload the page, user ID: {{userId}}",
+		"currentDataMissing": "Couldn't find authentication information, reload the page, current user ID: {{userId}}, current organization ID: {{organizationId}}",
+		"noMembersFound": "No members found, reload the page, organization ID: {{organizationId}}",
+		"failedCreatingUser": "Failed to create the user, email {{email}}, status: {{status}}",
+		"failedUpdatingUserName": "Failed to updating the user name, user details: {{userDetails}}",
 		"failedGettingLoggedInUser": "Failed to get the logged in user",
-		"failedCreatingUser": "Failed to create the user",
-		"failedFetchingUser": "Failed to fetching the user"
+		"failedGettingLoggedInUserOrganization": "Failed to get the logged in user organization, user ID: {{userId}}",
+		"noOrganizationFoundCantFetchMembers": "No organization found, can't fetch members",
+		"noUserFoundCantFetchMembers": "No user found, can't fetch members",
+		"userShouldntDeleteDefaultOrganization": "Deleting default organization is not allowed"
 	}
 }

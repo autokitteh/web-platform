@@ -12,7 +12,6 @@ export type { FileStore } from "@interfaces/store/fileStore.interface";
 export type { LoggerStore } from "@interfaces/store/loggerStore.interface";
 export type { ManualRunStore, ManualProjectData } from "@interfaces/store/manualRunStore.interface";
 export type { ModalStore } from "@interfaces/store/modalStore.interface";
-export type { OrganizationStore } from "@interfaces/store/organizationStore.interface";
 export type { ProjectStore } from "@interfaces/store/projectStore.interface";
 export type { SharedBetweenProjectsStore } from "@interfaces/store/sharedBetweenProjectsStore.interface";
 export type {
@@ -25,4 +24,3 @@ export type {
 	TemplateCardWithFiles,
 	ProcessedRemoteCategory,
 } from "@interfaces/store/templates.interface";
-export type { UserStore } from "@interfaces/store/userStore.interface";

@@ -1,0 +1,6 @@
+{
+	"errors":{
+		"couldntGetUserOrganization": "Couldn't get user organization to access it role, to learn more open the system log",
+		"accessForbidden": "The access to the requested page is forbidden"
+	}
+}

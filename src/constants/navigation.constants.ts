@@ -4,7 +4,7 @@ import {
 	AssetsIcon,
 	DeploymentsIcon,
 	GearIcon,
-	ReceiptIcon,
+	MyOrganizationsIcon,
 	SecurityIcon,
 	SessionsIcon,
 	UserIcon,
@@ -19,6 +19,11 @@ export const mainNavigationItems = [
 export const userMenuItems: NavigationSettingsItem[] = [
 	{ icon: UserIcon, label: "menu.myProfile", href: "/settings" },
 	{ icon: SecurityIcon, label: "menu.clientConfiguration", href: "/settings/client-configuration", stroke: true },
+	{
+		icon: MyOrganizationsIcon,
+		label: "menu.myOrganizations",
+		href: "/settings/organizations",
+	},
 ];
 
 export const userMenuOrganizationItems: NavigationSettingsItem[] = [
@@ -32,10 +37,5 @@ export const userMenuOrganizationItems: NavigationSettingsItem[] = [
 		icon: UserIcon,
 		href: "/organization-settings/members",
 		label: "Members",
-	},
-	{
-		icon: ReceiptIcon,
-		href: "/organization-settings/billing",
-		label: "Billing",
 	},
 ];

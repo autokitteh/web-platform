@@ -56,7 +56,6 @@ export { default as PlusIcon } from "@assets/image/icons/Plus.svg?react";
 export { default as PlusAccordionIcon } from "@assets/image/icons/PlusAccordion.svg?react";
 export { default as PlusCircle } from "@assets/image/icons/PlusCircle.svg?react";
 export { default as ReadmeIcon } from "@assets/image/icons/Readme.svg?react";
-export { default as ReceiptIcon } from "@assets/image/icons/Receipt.svg?react";
 export { default as RedditIntroIcon } from "@assets/image/icons/Reddit.svg?react";
 export { default as RocketIcon } from "@assets/image/icons/Rocket.svg?react";
 export { default as RotateIcon } from "@assets/image/icons/Rotate.svg?react";
@@ -81,3 +80,5 @@ export { default as UserIcon } from "@assets/image/icons/User.svg?react";
 export { default as WarningTriangleIcon } from "@assets/image/icons/WarningTriangle.svg?react";
 // Taken from: https://tabler.io/icons/icon/webhook
 export { default as WebhookIcon } from "@assets/image/icons/Webhook.svg?react";
+// Taken from: https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=4022-135045&t=c15yiQtKgR0uBisI-4
+export { default as MyOrganizationsIcon } from "@assets/image/icons/myOrganizations.svg?react";

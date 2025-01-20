@@ -6,11 +6,10 @@ import { useTranslation } from "react-i18next";
 import { matchRoutes, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { googleTagManagerEvents, isLoggedInCookie, namespaces, playwrightTestsAuthBearer } from "@constants";
-import { LoggerService, OrganizationsService } from "@services";
+import { LoggerService } from "@services";
 import { LocalStorageKeys } from "@src/enums";
 import { useHubspot } from "@src/hooks";
 import { gTagEvent, getApiBaseUrl, getCookieDomain, setLocalStorageValue } from "@src/utilities";
-import { useUserStore } from "@store/useUserStore";
 
 import { useLoggerStore, useOrganizationStore, useToastStore } from "@store";
 
@@ -29,8 +28,7 @@ const routes = [
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
-	const { getLoggedInUser, setLogoutFunction, user } = useUserStore();
-	const { setCurrentOrganization } = useOrganizationStore();
+	const { login, setLogoutFunction, user } = useOrganizationStore();
 
 	const { logout } = useDescope();
 	const { t } = useTranslation("login");
@@ -115,7 +113,8 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					redirect: "manual",
 				});
 
-				const { data: user, error } = await getLoggedInUser();
+				const { data: user, error } = await login();
+
 				if (error) {
 					addToast({
 						message: t("errors.loginFailedTryAgainLater"),
@@ -127,21 +126,6 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 					return await handleLogout(false);
 				}
 
-				const { data: userOrganization, error: errorOrganization } = await OrganizationsService.get(
-					user!.defaultOrganizationId
-				);
-				if (errorOrganization || !userOrganization) {
-					addToast({
-						message: t("errors.userOrganizationIsMissing"),
-						type: "error",
-						hideSystemLogLinkOnError: true,
-					});
-					setIsLoggingIn(false);
-
-					return await handleLogout(false);
-				}
-
-				setCurrentOrganization(userOrganization);
 				clearLogs();
 				gTagEvent(googleTagManagerEvents.login, { method: "descope", ...user });
 				setIdentity(user!.email);
@@ -160,7 +144,7 @@ export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
 			setDescopeRenderKey((prevKey) => prevKey + 1);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[getLoggedInUser]
+		[login]
 	);
 
 	const isLoggedIn = user && Cookies.get(isLoggedInCookie);

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import { z } from "zod";
 
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
+import { validateEntitiesName } from "@src/utilities";
 import { addOrganizationSchema } from "@validations";
 
 import { Button, ErrorMessage, Input, Loader, Typography } from "@components/atoms";
@@ -18,11 +19,10 @@ export const AddOrganization = () => {
 	const { t: tErrors } = useTranslation("errors");
 	const { t } = useTranslation("settings", { keyPrefix: "organization" });
 	const addToast = useToastStore((state) => state.addToast);
-	const [creatingOrganization, setCreatingOrganization] = useState(false);
-	const { createOrganization, organizationsList } = useOrganizationStore();
+	const { createOrganization, isLoading, organizations } = useOrganizationStore();
 	const organizationsNamesSet = useMemo(
-		() => new Set((organizationsList || []).map((organization) => organization.displayName)),
-		[organizationsList]
+		() => new Set((Object.values(organizations) || []).map((organization) => organization.displayName)),
+		[organizations]
 	);
 
 	const {
@@ -34,31 +34,19 @@ export const AddOrganization = () => {
 		mode: "onSubmit",
 	});
 
-	const validateOrganizationName = (value: string) => {
-		if (organizationsNamesSet.has(value)) {
-			return t("form.errors.nameTaken");
-		}
-		if (!new RegExp("^[a-zA-Z_][\\w]*$").test(value)) {
-			return t("form.errors.invalidName");
-		}
-	};
-
 	const { openModal } = useModalStore();
 
 	const onSubmit = async (values: FormValues) => {
-		setCreatingOrganization(true);
 		const { data: organizationId, error } = await createOrganization(values.name);
 		if (error) {
 			addToast({
 				message: tErrors("errorCreateNewOrganization"),
 				type: "error",
 			});
-			setCreatingOrganization(false);
 
 			return;
 		}
 		openModal(ModalName.organizationCreated, { name: values.name, organizationId });
-		setCreatingOrganization(false);
 	};
 
 	return (
@@ -71,10 +59,10 @@ export const AddOrganization = () => {
 					<Input
 						isError={!!errors.name}
 						isRequired
-						label={t("form.organizationName")}
+						label={t("form.organizationDisplayName")}
 						{...register("name", {
 							required: t("nameRequired"),
-							validate: validateOrganizationName,
+							validate: (value) => validateEntitiesName(value, organizationsNamesSet) || true,
 						})}
 					/>
 
@@ -82,11 +70,11 @@ export const AddOrganization = () => {
 				</div>
 				<Button
 					className="ml-auto w-fit border-black bg-white px-5 text-base font-medium hover:bg-gray-950 hover:text-white"
-					disabled={creatingOrganization}
+					disabled={isLoading.organizations}
 					type="submit"
 					variant="outline"
 				>
-					{creatingOrganization ? <Loader size="sm" /> : null}
+					{isLoading.organizations ? <Loader size="sm" /> : null}
 					{t("form.buttons.create")}
 				</Button>
 			</form>

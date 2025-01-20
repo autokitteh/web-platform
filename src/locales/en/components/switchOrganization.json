@@ -1,0 +1,6 @@
+{
+	"errors": {
+		"organizationFetchingFailed": "Failed to fetch organizations",
+		"organizationNotFound": "Organization not found"
+	}
+}

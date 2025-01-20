@@ -39,6 +39,9 @@ export const namespaces = {
 		manualRun: "Manual Run UI",
 		menu: "Menu UI",
 		idCopyButton: "ID Copy Button",
+		switchOrganization: "Switch Organization UI",
+		organizationSettings: "Organization Settings",
+		organizationTableUserSettings: "Organization List in User Settings",
 	},
 	hooks: {
 		connectionForm: "Connection Form",
@@ -51,6 +54,7 @@ export const namespaces = {
 		outputStore: "Output Logs Store",
 		templatesStore: "Templates Store",
 		userStore: "User Store",
+		organizationStore: "Organization Store",
 	},
 	utilities: {
 		fetchAndExtract: "Fetch and Extract",

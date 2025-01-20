@@ -45,7 +45,7 @@
 		"cancelButton": "Cancel",
 		"deleteButton": "Delete",
 		"deleteMember": "Delete Member",
-		"line1": "Are you sure you want to delete - {{memberName}}",
+		"line1": "Are you sure you want to delete {{name}} ({{email}}) from the organization?",
 		"line2": "This action cannot be undone, and all related data will be permanently removed."
 	},
 	"deleteTrigger": {
@@ -104,5 +104,11 @@
 		"nameTaken": "Name is already taken",
 		"errorCreatingProject": "Failed to create project",
 		"invalidName": "Project name can only use letters, numbers, and underscores, and must start with a letter or underscore"
+	},
+	"invitedUser": {
+		"acceptButton": "Accept",
+		"declineButton": "Decline",
+		"title": "You have been invited",
+		"content": "Would you like to join {{name}} organization?"
 	}
 }
