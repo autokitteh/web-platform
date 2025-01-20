@@ -489,9 +489,8 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: true } }));
 
 		const { error } = await UsersService.update(user, ["display_name"]);
+		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
 		if (error) {
-			set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false } }));
-
 			return {
 				data: undefined,
 				error: i18n.t("organization.failedUpdatingUserName", {
@@ -500,7 +499,7 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 				}),
 			};
 		}
-		set((state) => ({ ...state, isLoading: { ...state.isLoading, updatingUser: false }, user }));
+		set((state) => ({ ...state, user }));
 		return { data: undefined, error: undefined };
 	},
 
