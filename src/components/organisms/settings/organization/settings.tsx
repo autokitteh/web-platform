@@ -27,6 +27,7 @@ export const OrganizationSettings = () => {
 		user,
 		isLoading,
 		logoutFunction,
+		currentOrganization,
 		getCurrentOrganizationEnriched,
 	} = useOrganizationStore();
 	const [displaySuccess, setDisplaySuccess] = useState(false);
@@ -54,7 +55,9 @@ export const OrganizationSettings = () => {
 		}
 		setNameError("");
 		setOrganizationDisplayName(displayName);
-		const { error } = await updateOrganization({ ...omit(organization, "currentMember"), displayName }, ["name"]);
+		const { error } = await updateOrganization({ ...omit(organization, "currentMember"), displayName }, [
+			"display_name",
+		]);
 		if (error) {
 			addToast({
 				message: t("form.errors.updateOrganizationFailed"),
@@ -74,6 +77,8 @@ export const OrganizationSettings = () => {
 	}
 
 	const onDelete = async () => {
+		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
+
 		const { error } = await deleteOrganization(omit(organization, "currentMember"));
 		closeModal(ModalName.deleteOrganization);
 
@@ -91,6 +96,8 @@ export const OrganizationSettings = () => {
 			type: "success",
 		});
 		setTimeout(() => {
+			if (!deletingCurrentOrganization) return;
+
 			if (!user?.defaultOrganizationId) {
 				LoggerService.error(
 					namespaces.ui.organizationSettings,

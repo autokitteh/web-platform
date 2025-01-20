@@ -204,7 +204,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 							<Loader isCenter />
 						</div>
 					) : organizations ? (
-						organizations.map(({ displayName, id, currentMember }) =>
+						organizations.map(({ displayName, id, currentMember, uniqueName }) =>
 							currentMember?.status === MemberStatusType.declined ? null : (
 								<Button
 									className={cn(
@@ -216,6 +216,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 									disabled={id === currentOrganization?.id}
 									key={id}
 									onClick={() => handleOrganizationClick(currentMember?.status, id, displayName)}
+									title={uniqueName}
 								>
 									{displayName}
 									<div className={getStatusIndicatorClasses(currentMember?.status)} />
