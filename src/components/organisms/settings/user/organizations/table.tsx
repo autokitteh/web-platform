@@ -43,22 +43,13 @@ export const UserOrganizationsTable = () => {
 	const onDelete = async (organizationId: string, organizationName: string) => {
 		setIsDeleting(true);
 		const { error } = await deleteOrganization(organizationId);
+		setIsDeleting(false);
+		closeModal(ModalName.deleteOrganization);
 		if (error) {
 			addToast({
 				message: t("errors.deleteFailed", { name: organizationName, organizationId: organizationId }),
 				type: "error",
 			});
-		}
-		setIsDeleting(false);
-		closeModal(ModalName.deleteOrganization);
-
-		if (error) {
-			addToast({
-				message: error as string,
-				type: "error",
-			});
-
-			return;
 		}
 
 		addToast({
