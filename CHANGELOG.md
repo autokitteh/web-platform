@@ -1,3 +1,15 @@
+# [2.130.0](https://github.com/autokitteh/web-platform/compare/v2.129.2...v2.130.0) (2025-01-20)
+
+
+### Bug Fixes
+
+* **UI-1202:** when we invite user, we shouldnt display error if he is not exist ([#896](https://github.com/autokitteh/web-platform/issues/896)) ([841d8f7](https://github.com/autokitteh/web-platform/commit/841d8f741b6848b50843d995b3ba8ed83b6ddec1))
+
+
+### Features
+
+* **UI-1160:** Organizations & Users ([#887](https://github.com/autokitteh/web-platform/issues/887)) ([b0d793b](https://github.com/autokitteh/web-platform/commit/b0d793b828c2a801ed2f967395e84bf4b4a9575c))
+
 ## [2.129.2](https://github.com/autokitteh/web-platform/compare/v2.129.1...v2.129.2) (2025-01-16)
 
 
