@@ -14,7 +14,7 @@ export const convertOrganizationModelToProto = (organization: Organization): Par
 	return {
 		displayName: organization.displayName,
 		orgId: organization.id,
-		name: organization.displayName,
+		name: organization.uniqueName,
 	};
 };
 
