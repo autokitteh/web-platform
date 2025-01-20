@@ -11,6 +11,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			className,
 			defaultValue = "",
 			disabled = false,
+			inputLabelTextSize,
 			icon,
 			isError = false,
 			isRequired = false,
@@ -82,14 +83,22 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			classInput
 		);
 
-		const labelClass = cn("pointer-events-none absolute left-4 opacity-0 transition-all", {
-			"top-1/2 -translate-y-1/2 text-gray-600 opacity-100": !isFocused && !hasValue && !placeholder,
-			"-top-2 left-3 px-1 text-xs text-white opacity-100 before:bg-gray-950": isFocused || hasValue,
-			"text-gray-900": variant === InputVariant.light,
-			"-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light,
-			"-top-2 left-3 translate-y-0 px-1 text-xs text-white opacity-100": placeholder,
-			"text-black": variant === InputVariant.light,
-		});
+		const labelClass = cn(
+			"pointer-events-none absolute left-4 opacity-0 transition-all",
+			{
+				"top-1/2 -translate-y-1/2 text-gray-600 text-base opacity-100": !isFocused && !hasValue && !placeholder,
+				"-top-2 left-3 px-1 text-white text-xs opacity-100 before:bg-gray-950":
+					(isFocused || hasValue) && !inputLabelTextSize,
+				"-top-2 left-3 px-1 text-white opacity-100 before:bg-gray-950":
+					(isFocused || hasValue) && inputLabelTextSize,
+				"text-gray-900": variant === InputVariant.light,
+				"-top-2 left-3 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light,
+				"-top-2 left-3 translate-y-0 px-1 text-xs text-white opacity-100": placeholder,
+				"text-black": variant === InputVariant.light,
+				"-top-3": inputLabelTextSize === "text-base",
+			},
+			inputLabelTextSize
+		);
 
 		const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
 			"bg-white": variant === InputVariant.light,

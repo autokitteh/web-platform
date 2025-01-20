@@ -31,14 +31,17 @@
 		"title": "Organizations",
 		"errors":{
 			"fetchFailed": "Failed to fetch organizations",
-			"deleteFailed": "Failed to delete the organization: {{name}}, ID: {{organizationId}}"
+			"deleteFailed": "Failed to delete the organization: {{name}}, ID: {{organizationId}}",
+			"defaultOrganizationIdMissing": "Default organization is missing, user ID: {{userId}}"
 		},
 		"table":{
 			"headers":{
 				"id": "ID",
 				"name": "Name",
 				"uniqueName": "Unique Name",
-				"actions": "Actions"
+				"actions": "Actions",
+				"role": "My Role",
+				"status": "My Status"
 			},
 			"actions":{
 				"delete": "Delete {{name}}"
@@ -57,7 +60,13 @@
 		"retentionPolicyTitle": "Retention Policy",
 		"retentionPolicyDescription": "We will keep your data for 3 days",
 		"codeAutoSaveTitle": "File Editor",
-		"codeAutoSaveLabel": "Code editing auto-save"
+		"codeAutoSaveLabel": "Code editing auto-save",
+		"messages":{
+			"nameUpdatedSuccessfully": "User name updated"
+		},
+		"errors":{
+			"updateNameFailed": "User name update failed"
+		}
 	},
 	"topbar": {
 		"personalSettings": "Personal Settings: {{name}}",
@@ -92,7 +101,8 @@
 				"invalidName": "Organization name can only use letters, numbers, and underscores, and must start with a letter or underscore",
 				"nameRequired": "Organization name is required",
 				"defaultOrganizationIdMissing": "Default organization is missing, user ID: {{userId}}",
-				"deleteOrganizationFailed": "Organization deletion failed"
+				"deleteOrganizationFailed": "Organization deletion failed",
+				"updateOrganizationFailed": "Organization update failed"
 			},
 			"messages":{
 				"nameUpdatedSuccessfully": "Organization name updated",
@@ -142,6 +152,7 @@
 			"errors":{
 				"inviteFailed": "Member creation failed - {{email}}",
 				"deleteFailed": "Member deletion failed - {{email}}",
+				"getEnrichedMembersFailed": "Failed to fetch enriched members",
 				"getMembersFailed": "Failed to fetch members"
 			},
 			"form":{

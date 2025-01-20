@@ -7,11 +7,12 @@ import { useNavigate } from "react-router-dom";
 
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
+import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { isNameEmpty, isNameExist } from "@src/utilities";
 
-import { Button, ErrorMessage, Input, Typography } from "@components/atoms";
+import { Button, ErrorMessage, Input, SuccessMessage, Typography } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
 
 import { TrashIcon } from "@assets/image/icons";
@@ -26,6 +27,7 @@ export const OrganizationSettings = () => {
 		user,
 		isLoading,
 		logoutFunction,
+		currentOrganization,
 		getCurrentOrganizationEnriched,
 	} = useOrganizationStore();
 	const [displaySuccess, setDisplaySuccess] = useState(false);
@@ -44,7 +46,7 @@ export const OrganizationSettings = () => {
 			),
 		[organizations]
 	);
-	const renameOrganization = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const renameOrganization = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const displayName = event.target.value;
 		const nameValidationError = isNameExist(displayName, organizationsNames) || isNameEmpty(displayName);
 		if (nameValidationError) {
@@ -53,7 +55,16 @@ export const OrganizationSettings = () => {
 		}
 		setNameError("");
 		setOrganizationDisplayName(displayName);
-		updateOrganization({ ...omit(organization, "currentMember"), displayName });
+		const { error } = await updateOrganization({ ...omit(organization, "currentMember"), displayName }, [
+			"display_name",
+		]);
+		if (error) {
+			addToast({
+				message: t("form.errors.updateOrganizationFailed"),
+				type: "error",
+			});
+			return;
+		}
 		setDisplaySuccess(true);
 		setTimeout(() => {
 			setDisplaySuccess(false);
@@ -66,6 +77,8 @@ export const OrganizationSettings = () => {
 	}
 
 	const onDelete = async () => {
+		const deletingCurrentOrganization = organization.id === currentOrganization?.id;
+
 		const { error } = await deleteOrganization(omit(organization, "currentMember"));
 		closeModal(ModalName.deleteOrganization);
 
@@ -83,17 +96,22 @@ export const OrganizationSettings = () => {
 			type: "success",
 		});
 		setTimeout(() => {
+			if (!deletingCurrentOrganization) return;
+
 			if (!user?.defaultOrganizationId) {
 				LoggerService.error(
 					namespaces.ui.organizationSettings,
 					t("errors.defaultOrganizationIdMissing", { userId: user?.id })
 				);
-				logoutFunction();
+				logoutFunction(true);
 				return;
 			}
 			navigate(`/switch-organization/${user.defaultOrganizationId}`);
 		}, 3000);
 	};
+
+	const isNameInputDisabled =
+		isLoading.updatingOrganization || organization?.currentMember?.role !== MemberRole.admin;
 
 	return (
 		<div className="w-3/4">
@@ -102,18 +120,16 @@ export const OrganizationSettings = () => {
 			</Typography>
 			<div className="relative mb-6">
 				<Input
+					disabled={isNameInputDisabled}
 					isError={!!nameError}
 					label={t("form.organizationDisplayName")}
 					onChange={debouncedRename}
 					value={organizationDisplayName}
 				/>
-
-				<ErrorMessage>{nameError as string}</ErrorMessage>
 				<div className="h-6">
+					<ErrorMessage>{nameError as string}</ErrorMessage>
 					{displaySuccess ? (
-						<div className="text-green-800 opacity-100 transition-opacity duration-300 ease-in-out">
-							{t("form.messages.nameUpdatedSuccessfully")}
-						</div>
+						<SuccessMessage>{t("form.messages.nameUpdatedSuccessfully")}</SuccessMessage>
 					) : null}
 				</div>
 			</div>

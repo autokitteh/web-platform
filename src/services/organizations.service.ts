@@ -2,12 +2,17 @@ import i18n from "i18next";
 
 import { organizationsClient } from "@api/grpc/clients.grpc.api";
 import { namespaces } from "@constants";
-import { convertMemberProtoToModel, convertOrganizationProtoToModel, convertUserProtoToModel } from "@models";
+import {
+	convertMemberProtoToModel,
+	convertOrganizationModelToProto,
+	convertOrganizationProtoToModel,
+	convertUserProtoToModel,
+} from "@models";
 import { LoggerService } from "@services";
 import { MemberStatusType } from "@src/enums";
 import { reverseMemberStatusConverter } from "@src/models/utils";
 import { ServiceResponse } from "@type";
-import { Organization, OrganizationMember, EnrichedMember } from "@type/models";
+import { Organization, OrganizationMember, User } from "@type/models";
 
 export class OrganizationsService {
 	static async create(displayName: string): Promise<ServiceResponse<string>> {
@@ -29,9 +34,12 @@ export class OrganizationsService {
 		}
 	}
 
-	static async update(organization: Organization): Promise<ServiceResponse<void>> {
+	static async update(organization: Organization, fieldMask: string[]): Promise<ServiceResponse<void>> {
 		try {
-			await organizationsClient.update({ org: organization });
+			await organizationsClient.update({
+				org: convertOrganizationModelToProto(organization),
+				fieldMask: { paths: fieldMask },
+			});
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
@@ -74,9 +82,9 @@ export class OrganizationsService {
 			return { data: undefined, error };
 		}
 	}
-	static async delete(organizationId: string): Promise<ServiceResponse<void>> {
+	static async delete(organization: Organization): Promise<ServiceResponse<void>> {
 		try {
-			await organizationsClient.delete({ orgId: organizationId });
+			await organizationsClient.delete({ orgId: organization.id });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
@@ -85,7 +93,8 @@ export class OrganizationsService {
 				i18n.t("organizationDeleteFailedExtended", {
 					error: (error as Error).message,
 					ns: "services",
-					id: organizationId,
+					id: organization.id,
+					name: organization.displayName,
 				})
 			);
 
@@ -134,7 +143,7 @@ export class OrganizationsService {
 	static async listMembers(organizationId: string): Promise<
 		ServiceResponse<{
 			members: Record<string, Record<string, OrganizationMember>>;
-			users: Record<string, EnrichedMember>;
+			users: Record<string, User>;
 		}>
 	> {
 		try {
@@ -200,6 +209,34 @@ export class OrganizationsService {
 			LoggerService.error(namespaces.organizationsService, logError);
 
 			return { data: undefined, error: logError };
+		}
+	}
+
+	static async updateMemberStatus(
+		organizationId: string,
+		userId: string,
+		status: MemberStatusType
+	): Promise<ServiceResponse<void>> {
+		try {
+			await organizationsClient.updateMember({
+				member: {
+					orgId: organizationId,
+					userId,
+					status: reverseMemberStatusConverter(status),
+				},
+				fieldMask: { paths: ["status"] },
+			});
+
+			return { data: undefined, error: undefined };
+		} catch (error) {
+			const logError = i18n.t("errorUpdatingUserToOrganizationExtended", {
+				organizationId,
+				error: (error as Error).message,
+				ns: "services",
+			});
+			LoggerService.error(namespaces.organizationsService, logError);
+
+			return { data: undefined, error: new Error(logError) };
 		}
 	}
 
