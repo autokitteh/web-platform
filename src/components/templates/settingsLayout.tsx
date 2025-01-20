@@ -30,7 +30,7 @@ export const SettingsLayout = () => {
 	useEffect(() => {
 		setSettingsTitle(getTopbarTitle());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user]);
+	}, [user, pathname]);
 
 	const menuItems = pathname.startsWith("/settings") ? userMenuItems : userMenuOrganizationItems;
 
