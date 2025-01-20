@@ -62,11 +62,7 @@ export const Profile = () => {
 			</Typography>
 			<div className="mb-6">
 				<Input
-<<<<<<< HEAD
 					inputLabelTextSize="text-base"
-=======
-					inputLabelTextSize="text-1.5xl"
->>>>>>> 003df3f2 (feat(UI-1208): allow users rename their display-name)
 					isError={!!nameError}
 					label={t("name")}
 					onChange={debouncedRename}
@@ -79,11 +75,7 @@ export const Profile = () => {
 				</div>
 			</div>
 			<div>
-<<<<<<< HEAD
 				<Input disabled inputLabelTextSize="text-base" label={t("email")} value={user?.email} />
-=======
-				<Input disabled inputLabelTextSize="text-1.5xl" label={t("email")} value={user?.email} />
->>>>>>> 003df3f2 (feat(UI-1208): allow users rename their display-name)
 			</div>
 			<Typography className="mt-9" element="p">
 				{t("retentionPolicyTitle")}

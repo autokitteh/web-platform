@@ -8,7 +8,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 	(
 		{
 			classInput,
-			inputLabelTextSize,
 			className,
 			defaultValue = "",
 			disabled = false,

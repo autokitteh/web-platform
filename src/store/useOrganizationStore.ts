@@ -21,18 +21,10 @@ const defaultState: OrganizationStoreState = {
 		members: false,
 		inviteMember: false,
 		deleteMember: false,
-<<<<<<< HEAD
 		updateMember: false,
 		deletingOrganization: false,
 		updatingOrganization: false,
 		updatingUser: false,
-<<<<<<< HEAD
-=======
-		deletingOrganization: false,
-		updatingOrganization: false,
->>>>>>> 8769c279 (feat(UI-1191): organizations settings - name update)
-=======
->>>>>>> 003df3f2 (feat(UI-1208): allow users rename their display-name)
 	},
 	logoutFunction: () => {},
 };
