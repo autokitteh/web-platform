@@ -149,7 +149,7 @@ export const VariablesTable = () => {
 							<Tr className="group" key={index}>
 								<Td className="w-2/6 pl-4 font-semibold">{name}</Td>
 
-								<Td className="w-3/6">
+								<Td className="w-3/6 max-w-96">
 									{!isSecret ? (
 										value
 									) : (
