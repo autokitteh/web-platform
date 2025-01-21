@@ -1,3 +1,10 @@
+## [2.130.1](https://github.com/autokitteh/web-platform/compare/v2.130.0...v2.130.1) (2025-01-21)
+
+
+### Bug Fixes
+
+* **UI-1216:** project delete with error shouldn't redirect to homepage ([#909](https://github.com/autokitteh/web-platform/issues/909)) ([9b1c442](https://github.com/autokitteh/web-platform/commit/9b1c4423d6c787337803640fc14feef719e964e7))
+
 # [2.130.0](https://github.com/autokitteh/web-platform/compare/v2.129.2...v2.130.0) (2025-01-20)
 
 
