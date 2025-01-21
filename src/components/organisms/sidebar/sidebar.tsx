@@ -42,7 +42,7 @@ export const Sidebar = () => {
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
 			<div className={cn("relative z-30 flex h-full min-w-[65px] items-start", { "z-50": isFeedbackOpen })}>
-				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
+				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6">
 					<div>
 						<div className="flex gap-1.5">
 							<Link className="ml-1 flex justify-start gap-2.5" to="/">
@@ -96,11 +96,11 @@ export const Sidebar = () => {
 					<div className="flex flex-col gap-2">
 						<Button
 							ariaLabel={t("events")}
-							className="p-0 hover:bg-green-200"
+							className={cn("group p-0 hover:bg-white", { "hover:bg-green-200": isOpen })}
 							href="/events"
 							title={t("events")}
 						>
-							<div className="flex size-10 items-center justify-center">
+							<div className="flex size-10 items-center justify-center rounded-full transition group-hover:bg-green-200">
 								<IconSvg className="size-5 transition" src={EventsFlag} />
 							</div>
 
@@ -121,11 +121,11 @@ export const Sidebar = () => {
 
 						<Button
 							ariaLabel={t("systemLog")}
-							className="p-0 hover:bg-green-200"
+							className={cn("group p-0 hover:bg-white", { "hover:bg-green-200": isOpen })}
 							onClick={() => setSystemLogHeight(systemLogHeight < 1 ? 20 : 0)}
 							title={t("systemLog")}
 						>
-							<div className="flex size-10 items-center justify-center">
+							<div className="flex size-10 items-center justify-center rounded-full transition group-hover:bg-green-200">
 								<Badge
 									anchorOrigin={{ vertical: "top", horizontal: "left" }}
 									ariaLabel={t("logToReview")}
@@ -152,8 +152,12 @@ export const Sidebar = () => {
 							</AnimatePresence>
 						</Button>
 
-						<Button className="p-0 hover:bg-green-200" href="/intro" title={t("intro")}>
-							<div className="flex size-10 items-center justify-center">
+						<Button
+							className={cn("group p-0 hover:bg-white", { "hover:bg-green-200": isOpen })}
+							href="/intro"
+							title={t("intro")}
+						>
+							<div className="flex size-10 items-center justify-center rounded-full transition group-hover:bg-green-200">
 								<IconSvg className="size-5.5 transition" src={CircleQuestionIcon} />
 							</div>
 
@@ -175,7 +179,7 @@ export const Sidebar = () => {
 						{descopeProjectId ? (
 							<Popover interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-2 mt-2 flex items-center">
-									<Avatar color="black" name={user?.name} round={true} size="24" />
+									<Avatar color="black" name={user?.name} round={true} size="26" />
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span
