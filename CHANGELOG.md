@@ -1,3 +1,10 @@
+# [2.131.0](https://github.com/autokitteh/web-platform/compare/v2.130.1...v2.131.0) (2025-01-21)
+
+
+### Features
+
+* **UI-1228:** add loader during member creation process ([#916](https://github.com/autokitteh/web-platform/issues/916)) ([61fd360](https://github.com/autokitteh/web-platform/commit/61fd3600e52bae4076c6f7f539fda0eb32c00320))
+
 ## [2.130.1](https://github.com/autokitteh/web-platform/compare/v2.130.0...v2.130.1) (2025-01-21)
 
 
