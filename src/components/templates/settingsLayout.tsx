@@ -45,7 +45,7 @@ export const SettingsLayout = () => {
 		<>
 			<PageTitle title={pageTitle} />
 
-			<div className="h-screen w-screen pr-5">
+			<div className="h-screen">
 				<div className="flex size-full">
 					<Sidebar />
 					<SystemLogLayout>
