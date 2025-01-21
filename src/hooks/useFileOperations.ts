@@ -10,9 +10,9 @@ import { namespaces } from "@src/constants";
 
 import { useCacheStore, useFileStore, useToastStore } from "@store";
 
-const dbService = new IndexedDBService("ProjectDB", "resources");
-
 export function useFileOperations(projectId: string) {
+	const dbService = new IndexedDBService("ProjectDB", "resources");
+
 	const { t: tErrors } = useTranslation("errors");
 	const { closeOpenedFile, fileList, openFileAsActive, openFiles, openProjectId, setFileList, setOpenProjectId } =
 		useFileStore();
@@ -58,6 +58,7 @@ export function useFileOperations(projectId: string) {
 			await dbService.put(affectedProjectId, filesArray);
 			await ProjectsService.setResources(affectedProjectId, files);
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[projectId]
 	);
 
