@@ -9,7 +9,7 @@ import { CreateMemberModalProps, CreateMemberModalRef } from "@src/interfaces/co
 import { useModalStore } from "@src/store";
 import { addOrganizationMemberSchema } from "@validations";
 
-import { Button, ErrorMessage, Input } from "@components/atoms";
+import { Button, ErrorMessage, Loader, Input } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
 export const CreateMemberModal = forwardRef<CreateMemberModalRef, CreateMemberModalProps>(
@@ -54,6 +54,7 @@ export const CreateMemberModal = forwardRef<CreateMemberModalRef, CreateMemberMo
 							variant="light"
 							{...register("email", { validate: validateMemberEmail })}
 							aria-label={t("form.email")}
+							disabled={isCreating}
 							isError={!!errors.email}
 							isRequired
 							label={t("form.email")}
@@ -77,6 +78,7 @@ export const CreateMemberModal = forwardRef<CreateMemberModalRef, CreateMemberMo
 							type="submit"
 							variant="filled"
 						>
+							{isCreating ? <Loader className="mr-1" size="sm" /> : null}
 							{t("buttons.create")}
 						</Button>
 					</div>
