@@ -54,6 +54,7 @@ export const CreateMemberModal = forwardRef<CreateMemberModalRef, CreateMemberMo
 							variant="light"
 							{...register("email", { validate: validateMemberEmail })}
 							aria-label={t("form.email")}
+							disabled={isCreating}
 							isError={!!errors.email}
 							isRequired
 							label={t("form.email")}
