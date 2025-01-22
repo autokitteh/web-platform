@@ -1,3 +1,10 @@
+## [2.131.2](https://github.com/autokitteh/web-platform/compare/v2.131.1...v2.131.2) (2025-01-22)
+
+
+### Bug Fixes
+
+* **UI-1210:** limit maximum width of table cell in variable value ([#919](https://github.com/autokitteh/web-platform/issues/919)) ([e4b9111](https://github.com/autokitteh/web-platform/commit/e4b911150ad6a87bc6c99e2bbc22574c039f378b))
+
 ## [2.131.1](https://github.com/autokitteh/web-platform/compare/v2.131.0...v2.131.1) (2025-01-22)
 
 
