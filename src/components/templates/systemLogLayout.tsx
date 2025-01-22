@@ -1,5 +1,7 @@
 import React, { useId } from "react";
 
+import { useLocation } from "react-router-dom";
+
 import { defaultSystemLogSize } from "@src/constants";
 import { useResize, useWindowDimensions } from "@src/hooks";
 import { useLoggerStore } from "@src/store";
@@ -19,8 +21,8 @@ export const SystemLogLayout = ({
 	sidebar?: React.ReactNode;
 	topbar?: React.ReactNode;
 }) => {
-	const layoutClasses = cn("h-screen w-screen flex flex-1 md:pr-5", className);
-
+	const layoutClasses = cn("h-screen w-screen flex flex-1 md:pr-4", className);
+	const { pathname } = useLocation();
 	const { setSystemLogHeight, systemLogHeight } = useLoggerStore();
 
 	const { isIOS, isMobile } = useWindowDimensions();
@@ -38,7 +40,10 @@ export const SystemLogLayout = ({
 	});
 
 	const buttonResizeClasses = cn("my-0.5", { "my-0": systemLogHeight === 100 });
-	const innerLayoutClasses = cn("flex flex-1 flex-col md:mb-2", { "md:mb-0.5": systemLogHeight === 0 });
+	const innerLayoutClasses = cn("flex flex-1 flex-col md:mb-2", {
+		"md:mb-0.5": systemLogHeight === 0,
+		"w-0": ["/", "/intro"].includes(pathname),
+	});
 
 	return (
 		<div className={layoutClasses}>
