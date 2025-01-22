@@ -50,6 +50,12 @@ export const getStartedWithAutoKitteh = [
 		youtubeLink: "https://www.youtube.com/embed/QWSa0etwTDE?si=gStDV2t4cAVTPtFe",
 		image: "introductionToAutoKitteh.jpg",
 	},
+	{
+		title: "Building Event Driven Workflows",
+		description: "Developer Guide",
+		youtubeLink: "https://youtu.be/wS8bcFCUhMs",
+		image: "eventDrivenWorkflows.png",
+	},
 ];
 
 export const socialLinks = [

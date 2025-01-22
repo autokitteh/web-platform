@@ -99,7 +99,7 @@ export const IntroMainBlock = () => {
 					<Typography className="pr-4 text-3xl font-bold text-green-800" element="h2">
 						{t("getStarted")}
 					</Typography>
-					<div className="scrollbar mt-5 flex max-h-280 flex-col gap-7 overflow-auto md:mt-9">
+					<div className="scrollbar mt-5 flex max-h-350 flex-col gap-7 overflow-auto md:mt-9">
 						{getStartedWithAutoKitteh.map(({ description, image, title, youtubeLink }, index) => (
 							<WelcomeVideoCard
 								description={description}
