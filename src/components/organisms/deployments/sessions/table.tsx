@@ -3,13 +3,14 @@ import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { debounce, isEqual } from "lodash";
 import { useTranslation } from "react-i18next";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ListOnItemsRenderedProps } from "react-window";
 
 import { namespaces, sessionRowHeight } from "@constants";
 import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
+import { SessionStateType } from "@src/enums";
 import { useResize } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
@@ -34,8 +35,6 @@ export const SessionsTable = () => {
 	const { closeModal } = useModalStore();
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
-	const { state } = useLocation();
-	const sessionState = state?.sessionState;
 
 	const addToast = useToastStore((state) => state.addToast);
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -47,40 +46,50 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
-	const [filterValue, setFilterValue] = useState<string>();
+	const [filterValue, setFilterValue] = useState<string>("");
 	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
+	const filteredEntityId = deploymentId || projectId!;
 
-	const sessionStateType = useMemo(() => {
-		return sessionState ? reverseSessionStateConverter(sessionState) : undefined;
-	}, [sessionState]);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const urlSessionStateFilter = useMemo(() => {
+		const sessionState = searchParams.get("sessionState");
+		if (!sessionState || !(sessionState in SessionStateType)) return;
+		return sessionState ? reverseSessionStateConverter(sessionState as SessionStateKeyType) : undefined;
+	}, [searchParams]);
 
-	const handleFilterSessions = useCallback((stateType?: SessionStateKeyType) => {
-		navigate(".", {
-			state: { sessionState: stateType },
-			replace: true,
-		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const getShortId = (id: string, suffixLength: number) => {
+		if (!id?.length) return "";
+		const idPrefix = id.split("_")[0];
+		const idSuffix = id.split("_")[1];
+		const isValidId = idPrefix?.length > 0 && idSuffix?.length >= suffixLength;
+		let shortId = id;
+		if (isValidId) {
+			const idSuffixEnd = idSuffix.substring(idSuffix.length - suffixLength, idSuffix.length);
+			shortId = `${idPrefix}...${idSuffixEnd}`;
+		}
+		return shortId;
+	};
 
-	// Modify fetchDeployments to save deployments in state
+	const filterSessionsByState = (stateType?: SessionStateKeyType) =>
+		!stateType
+			? navigate(getURLPathForAllSessionsInEntity(filteredEntityId))
+			: navigate(`${getURLPathForAllSessionsInEntity(filteredEntityId)}?sessionState=${stateType}`);
+
 	const fetchDeployments = useCallback(async () => {
 		if (!projectId) return;
 
 		const fetchedDeployments = await reloadDeploymentsCache(projectId, true);
 
-		// Transform deployments into the format needed for PopoverList
 		const formattedDeployments =
-			fetchedDeployments?.map((deployment) => ({
-				id: deployment.deploymentId,
-				label: deployment.deploymentId,
-				value: deployment.deploymentId,
-			})) || [];
+			fetchedDeployments?.map(({ deploymentId }) => {
+				return {
+					id: deploymentId,
+					label: `Deployment: ${getShortId(deploymentId, 7)}`,
+				};
+			}) || [];
 
-		setPopoverDeploymentItems([
-			{ id: projectId, label: "All Sessions", value: "All Sessions" },
-			...formattedDeployments,
-		]);
+		setPopoverDeploymentItems([{ id: projectId, label: "All Sessions For This Project" }, ...formattedDeployments]);
 
 		if (deploymentId) {
 			setFilterValue(deploymentId);
@@ -90,7 +99,7 @@ export const SessionsTable = () => {
 			setSessionStats(deployment.sessionStats);
 			return fetchedDeployments;
 		}
-		setFilterValue("All sessions");
+		setFilterValue(projectId);
 
 		const { sessionStats: allSessionStats } = calculateDeploymentSessionsStats(fetchedDeployments || []);
 		const aggregatedStats = Object.values(allSessionStats);
@@ -118,7 +127,7 @@ export const SessionsTable = () => {
 
 			const { data, error } = await fetchMethod(
 				{
-					stateType: sessionStateType,
+					stateType: urlSessionStateFilter,
 				},
 				nextPageToken,
 				sessionRowHeight
@@ -157,7 +166,7 @@ export const SessionsTable = () => {
 			setIsInitialLoad(false);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deploymentId, sessionStateType]
+		[deploymentId, urlSessionStateFilter]
 	);
 
 	const debouncedFetchSessions = useMemo(() => debounce(fetchSessions, 100), [fetchSessions]);
@@ -182,19 +191,29 @@ export const SessionsTable = () => {
 		return () => {
 			debouncedFetchSessions.cancel();
 		};
-	}, [sessionStateType, refreshData, debouncedFetchSessions]);
+	}, [urlSessionStateFilter, refreshData, debouncedFetchSessions]);
 
 	const closeSessionLog = useCallback(() => {
-		navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions`);
+		navigate(getURLPathForAllSessionsInEntity(filteredEntityId));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, deploymentId]);
 
 	useEffect(() => {
-		if (sessionState) {
-			handleFilterSessions(sessionState);
+		const sessionState = searchParams.get("sessionState");
+		const validatedState: SessionStateType | undefined =
+			sessionState && Object.values(SessionStateType).includes(sessionState as SessionStateType)
+				? (sessionState as SessionStateType)
+				: undefined;
+		if (!validatedState) {
+			if (searchParams.has("sessionState")) {
+				searchParams.delete("sessionState");
+				setSearchParams(searchParams);
+			}
 		}
+		filterSessionsByState(validatedState);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sessionState]);
+	}, [searchParams]);
 
 	const handleItemsRendered = useCallback(
 		({ visibleStopIndex }: ListOnItemsRenderedProps) => {
@@ -236,13 +255,22 @@ export const SessionsTable = () => {
 		fetchDeployments();
 	};
 
-	const filterSessions = (filterEntityId: string) => {
-		let filteredURLPath = `/projects/${projectId}/deployments/${filterEntityId}/sessions`;
+	const getURLPathForAllSessionsInEntity = (entityId: string) =>
+		entityId === projectId
+			? `/projects/${projectId}/sessions`
+			: `/projects/${projectId}/deployments/${entityId}/sessions`;
+
+	const filterSessionsByEntity = (filterEntityId: string) => {
+		setFilterValue(filterEntityId);
 		if (filterEntityId === projectId) {
-			filteredURLPath = `/projects/${projectId}/sessions`;
-			setFilterValue("All Sessions");
+			setFilterValue(projectId);
 		}
-		navigate(filteredURLPath);
+
+		if (searchParams.has("sessionState")) {
+			searchParams.delete("sessionState");
+			setSearchParams(searchParams);
+		}
+		navigate(getURLPathForAllSessionsInEntity(filterEntityId));
 	};
 
 	return (
@@ -257,23 +285,27 @@ export const SessionsTable = () => {
 										<div className="mr-1 mt-0.5">
 											<IconSvg className="text-white" size="md" src={FilterIcon} />
 										</div>
-										<div className="text-base">{filterValue}</div>
+										<div className="text-base">
+											{deploymentId
+												? `Deployment ID: ${getShortId(filterValue, 7)}`
+												: "All Sessions For This Project"}
+										</div>
 									</div>
-									{/* <div className="cursor-pointer text-base hover:text-gray-750">{filterValue}</div> */}
 								</PopoverListTrigger>
 								<PopoverListContent
-									className="z-30 flex flex-col rounded-lg border-x border-gray-500 bg-gray-250 px-2"
+									activeId={filteredEntityId}
+									className="z-30 flex flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
 									emptyListMessage="No deployments found"
 									itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
 									items={popoverDeploymentItems}
-									onItemSelect={({ id }: { id: string }) => filterSessions(id)}
+									onItemSelect={({ id }: { id: string }) => filterSessionsByEntity(id)}
 								/>
 							</PopoverList>
 						</div>
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter
-								defaultValue={sessionState}
-								onChange={handleFilterSessions}
+								onChange={(sessionState) => filterSessionsByState(sessionState)}
+								selectedState={searchParams.get("sessionState") as SessionStateType}
 								sessionStats={sessionStats}
 							/>
 							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />

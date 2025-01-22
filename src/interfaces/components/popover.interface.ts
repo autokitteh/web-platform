@@ -19,7 +19,6 @@ export interface PopoverTriggerProps {
 export interface PopoverListItem {
 	id: string;
 	label: string;
-	value: any;
 }
 
 export interface PopoverListOptions extends PopoverOptions {
