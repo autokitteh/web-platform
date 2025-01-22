@@ -1,3 +1,10 @@
+## [2.131.1](https://github.com/autokitteh/web-platform/compare/v2.131.0...v2.131.1) (2025-01-22)
+
+
+### Bug Fixes
+
+* **UI-1233:** design issues ([#921](https://github.com/autokitteh/web-platform/issues/921)) ([57a45f0](https://github.com/autokitteh/web-platform/commit/57a45f044e41d4305d0410e010f59109f9b21d44))
+
 # [2.131.0](https://github.com/autokitteh/web-platform/compare/v2.130.1...v2.131.0) (2025-01-21)
 
 
