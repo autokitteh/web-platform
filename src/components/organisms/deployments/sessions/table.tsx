@@ -89,7 +89,7 @@ export const SessionsTable = () => {
 				};
 			}) || [];
 
-		setPopoverDeploymentItems([{ id: projectId, label: "All Sessions For This Project" }, ...formattedDeployments]);
+		setPopoverDeploymentItems([{ id: projectId, label: "All sessions" }, ...formattedDeployments]);
 
 		if (deploymentId) {
 			setFilterValue(deploymentId);
@@ -288,7 +288,7 @@ export const SessionsTable = () => {
 										<div className="text-base">
 											{deploymentId
 												? `Deployment ID: ${getShortId(filterValue, 7)}`
-												: "All Sessions For This Project"}
+												: "All sessions"}
 										</div>
 									</div>
 								</PopoverListTrigger>
