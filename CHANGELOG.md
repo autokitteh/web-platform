@@ -1,3 +1,10 @@
+## [2.132.1](https://github.com/autokitteh/web-platform/compare/v2.132.0...v2.132.1) (2025-01-22)
+
+
+### Bug Fixes
+
+* **UI-1234:** adjust button hover styles menu ([#918](https://github.com/autokitteh/web-platform/issues/918)) ([d460940](https://github.com/autokitteh/web-platform/commit/d460940cb1cfa59bfca686a4df8dc1ec4e3aa8ec))
+
 # [2.132.0](https://github.com/autokitteh/web-platform/compare/v2.131.2...v2.132.0) (2025-01-22)
 
 
