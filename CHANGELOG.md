@@ -1,3 +1,10 @@
+# [2.132.0](https://github.com/autokitteh/web-platform/compare/v2.131.2...v2.132.0) (2025-01-22)
+
+
+### Features
+
+* **UI-1235:** add event-driven-workflows video to the intro page ([#923](https://github.com/autokitteh/web-platform/issues/923)) ([dca574b](https://github.com/autokitteh/web-platform/commit/dca574b911de277d1a25624a196cfa1e00788463))
+
 ## [2.131.2](https://github.com/autokitteh/web-platform/compare/v2.131.1...v2.131.2) (2025-01-22)
 
 
