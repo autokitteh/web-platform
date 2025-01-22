@@ -129,7 +129,10 @@ export const VariablesTable = () => {
 								/>
 							</Th>
 
-							<Th className="group w-3/6 cursor-pointer font-normal" onClick={() => requestSort("value")}>
+							<Th
+								className="group w-3/6 max-w-96 cursor-pointer font-normal"
+								onClick={() => requestSort("value")}
+							>
 								{t("table.columns.value")}
 
 								<SortButton
@@ -140,7 +143,9 @@ export const VariablesTable = () => {
 								/>
 							</Th>
 
-							<Th className="w-1/6 max-w-20 text-right font-normal">{t("table.columns.actions")}</Th>
+							<Th className="ml-auto w-1/6 max-w-20 text-right font-normal">
+								{t("table.columns.actions")}
+							</Th>
 						</Tr>
 					</THead>
 
@@ -149,7 +154,7 @@ export const VariablesTable = () => {
 							<Tr className="group" key={index}>
 								<Td className="w-2/6 pl-4 font-semibold">{name}</Td>
 
-								<Td className="w-3/6">
+								<Td className="w-3/6 max-w-96">
 									{!isSecret ? (
 										value
 									) : (
@@ -161,7 +166,7 @@ export const VariablesTable = () => {
 									)}
 								</Td>
 
-								<Td className="w-1/6 max-w-20 pr-0">
+								<Td className="ml-auto w-1/6 max-w-20 pr-0">
 									<div className="flex size-8 space-x-1">
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyVariable", { name })}

@@ -50,7 +50,8 @@ export const SystemLog = () => {
 						<span className="text-gray-250">{timestamp}</span>
 
 						<div className="ml-2 inline">
-							<span className={cn(ouputTextStyle[status])}>{status}</span>: {message}
+							<span className={cn(ouputTextStyle[status])}>{status}</span>:
+							<span className="break-all">{message}</span>
 						</div>
 					</div>
 				))}
