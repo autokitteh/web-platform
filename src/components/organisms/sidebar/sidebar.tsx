@@ -41,8 +41,8 @@ export const Sidebar = () => {
 
 	return (
 		<Suspense fallback={<Loader isCenter size="lg" />}>
-			<div className={cn("relative z-30 flex h-full min-w-[65px] items-start", { "z-50": isFeedbackOpen })}>
-				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-10 pt-6">
+			<div className={cn("relative z-30 flex h-full items-start", { "z-50": isFeedbackOpen })}>
+				<div className="z-10 flex h-full flex-col justify-between bg-white p-2.5 pb-3 pt-6">
 					<div>
 						<div className="flex gap-1.5">
 							<Link className="ml-1 flex justify-start gap-2.5" to="/">
@@ -100,7 +100,7 @@ export const Sidebar = () => {
 							href="/events"
 							title={t("events")}
 						>
-							<div className="flex size-10 items-center justify-center">
+							<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
 								<IconSvg className="size-5 transition" src={EventsFlag} />
 							</div>
 
@@ -125,7 +125,7 @@ export const Sidebar = () => {
 							onClick={() => setSystemLogHeight(systemLogHeight < 1 ? 20 : 0)}
 							title={t("systemLog")}
 						>
-							<div className="flex size-10 items-center justify-center">
+							<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
 								<Badge
 									anchorOrigin={{ vertical: "top", horizontal: "left" }}
 									ariaLabel={t("logToReview")}
@@ -153,7 +153,7 @@ export const Sidebar = () => {
 						</Button>
 
 						<Button className="p-0 hover:bg-green-200" href="/intro" title={t("intro")}>
-							<div className="flex size-10 items-center justify-center">
+							<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
 								<IconSvg className="size-5.5 transition" src={CircleQuestionIcon} />
 							</div>
 
@@ -175,7 +175,7 @@ export const Sidebar = () => {
 						{descopeProjectId ? (
 							<Popover interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-2 mt-2 flex items-center">
-									<Avatar color="black" name={user?.name} round={true} size="24" />
+									<Avatar color="black" name={user?.name} round={true} size="25" />
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span
