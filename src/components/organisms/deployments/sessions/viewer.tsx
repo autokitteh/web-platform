@@ -94,9 +94,9 @@ export const SessionViewer = () => {
 	}, [sessionInfo, fetchSessionInfo, reloadOutputs, reloadActivities]);
 
 	useEffect(() => {
-		const activeTabIndex = location.pathname.split("/").filter(Boolean)[6] || defaultSessionTab;
+		const activeTabIndex = location.pathname.split("/").filter(Boolean)[deploymentId ? 6 : 4] || defaultSessionTab;
 		setActiveTab(activeTabIndex);
-	}, [location]);
+	}, [location, deploymentId]);
 
 	const goTo = useCallback(
 		(path: string) => {
