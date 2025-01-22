@@ -1,3 +1,10 @@
+## [2.132.2](https://github.com/autokitteh/web-platform/compare/v2.132.1...v2.132.2) (2025-01-22)
+
+
+### Bug Fixes
+
+* **UI-1233:** fix horizontal scroll for home and intro page ([#924](https://github.com/autokitteh/web-platform/issues/924)) ([403d906](https://github.com/autokitteh/web-platform/commit/403d906ef2b222b76f8c3f5fe07a2e10844bb20e))
+
 ## [2.132.1](https://github.com/autokitteh/web-platform/compare/v2.132.0...v2.132.1) (2025-01-22)
 
 
