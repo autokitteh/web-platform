@@ -174,8 +174,8 @@ export const Sidebar = () => {
 
 						{descopeProjectId ? (
 							<Popover interactionType="click" placement="right-start">
-								<PopoverTrigger className="ml-2.5 mt-2 flex items-center">
-									<Avatar color="black" name={user?.name} round={true} size="24" />
+								<PopoverTrigger className="ml-2 mt-2 flex items-center">
+									<Avatar color="black" name={user?.name} round={true} size="25" />
 									<AnimatePresence>
 										{isOpen ? (
 											<motion.span
