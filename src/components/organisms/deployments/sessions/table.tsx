@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-max-depth */
 import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { debounce, isEqual } from "lodash";
@@ -10,17 +11,20 @@ import { ModalName } from "@enums/components";
 import { reverseSessionStateConverter } from "@models/utils";
 import { LoggerService, SessionsService } from "@services";
 import { useResize } from "@src/hooks";
+import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
 import { calculateDeploymentSessionsStats } from "@src/utilities";
 import { DeploymentSession } from "@type/models";
 
-import { Frame, Loader, ResizeButton, THead, Table, Th, Tr, Typography } from "@components/atoms";
+import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
+import { PopoverList, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 
 import { CatImage } from "@assets/image";
+import { FilterIcon } from "@assets/image/icons";
 
 export const SessionsTable = () => {
 	const resizeId = useId();
@@ -43,7 +47,8 @@ export const SessionsTable = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
-
+	const [filterValue, setFilterValue] = useState<string>();
+	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 
 	const sessionStateType = useMemo(() => {
@@ -58,32 +63,40 @@ export const SessionsTable = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	// Modify fetchDeployments to save deployments in state
 	const fetchDeployments = useCallback(async () => {
 		if (!projectId) return;
 
-		const deployments = await reloadDeploymentsCache(projectId, true);
+		const fetchedDeployments = await reloadDeploymentsCache(projectId, true);
+
+		// Transform deployments into the format needed for PopoverList
+		const formattedDeployments =
+			fetchedDeployments?.map((deployment) => ({
+				id: deployment.deploymentId,
+				label: deployment.deploymentId,
+				value: deployment.deploymentId,
+			})) || [];
+
+		setPopoverDeploymentItems([
+			{ id: projectId, label: "All Sessions", value: "All Sessions" },
+			...formattedDeployments,
+		]);
 
 		if (deploymentId) {
-			const deployment = deployments?.find((deployment) => deployment.deploymentId === deploymentId);
-
+			setFilterValue(deploymentId);
+			const deployment = fetchedDeployments?.find((d) => d.deploymentId === deploymentId);
 			if (!deployment?.sessionStats) return;
-
 			if (isEqual(deployment.sessionStats, sessionStats)) return;
-
 			setSessionStats(deployment.sessionStats);
-
-			return deployments;
+			return fetchedDeployments;
 		}
+		setFilterValue("All sessions");
 
-		const { sessionStats: allSessionStats } = calculateDeploymentSessionsStats(deployments || []);
-
+		const { sessionStats: allSessionStats } = calculateDeploymentSessionsStats(fetchedDeployments || []);
 		const aggregatedStats = Object.values(allSessionStats);
-
 		if (!aggregatedStats.length || isEqual(aggregatedStats, sessionStats)) return;
-
 		setSessionStats(aggregatedStats as DeploymentSession[]);
-
-		return deployments;
+		return fetchedDeployments;
 	}, [projectId, deploymentId, reloadDeploymentsCache, sessionStats]);
 
 	const fetchSessions = useCallback(
@@ -223,14 +236,40 @@ export const SessionsTable = () => {
 		fetchDeployments();
 	};
 
+	const filterSessions = (filterEntityId: string) => {
+		let filteredURLPath = `/projects/${projectId}/deployments/${filterEntityId}/sessions`;
+		if (filterEntityId === projectId) {
+			filteredURLPath = `/projects/${projectId}/sessions`;
+			setFilterValue("All Sessions");
+		}
+		navigate(filteredURLPath);
+	};
+
 	return (
 		<div className="mt-1.5 flex w-full flex-1 overflow-y-auto">
 			<div style={{ width: `${leftSideWidth}%` }}>
 				<Frame className={frameClass}>
 					<div className="flex items-center">
-						<Typography className="text-base" element="h2">
-							{t("tableTitle")}
-						</Typography>
+						<div className="flex items-end">
+							<PopoverList animation="slideFromBottom" interactionType="click">
+								<PopoverListTrigger>
+									<div className="flex flex-row whitespace-nowrap border-0 pr-4 align-baseline text-white hover:bg-transparent">
+										<div className="mr-1 mt-0.5">
+											<IconSvg className="text-white" size="md" src={FilterIcon} />
+										</div>
+										<div className="text-base">{filterValue}</div>
+									</div>
+									{/* <div className="cursor-pointer text-base hover:text-gray-750">{filterValue}</div> */}
+								</PopoverListTrigger>
+								<PopoverListContent
+									className="z-30 flex flex-col rounded-lg border-x border-gray-500 bg-gray-250 px-2"
+									emptyListMessage="No deployments found"
+									itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
+									items={popoverDeploymentItems}
+									onItemSelect={({ id }: { id: string }) => filterSessions(id)}
+								/>
+							</PopoverList>
+						</div>
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter
 								defaultValue={sessionState}
