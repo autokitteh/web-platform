@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { ManualRunJsonObject, ManualRunParam } from "@src/interfaces/components/forms";
 import { useManualRunStore } from "@src/store";
 import { ManualFormParamsErrors } from "@src/types/components";
+import { safeJsonParse } from "@src/utilities";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Toggle } from "@components/atoms";
 
@@ -32,14 +33,6 @@ export const ManualRunParamsForm = () => {
 
 	const { isJson } = projectManualRun || {};
 	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
-
-	const safeJsonParse = (value: string) => {
-		try {
-			return JSON.parse(value);
-		} catch {
-			return null;
-		}
-	};
 
 	const convertParamsToJson = (currentParams: ManualRunParam[]) => {
 		const jsonObject = Object.fromEntries(
@@ -140,8 +133,7 @@ export const ManualRunParamsForm = () => {
 		setValue("jsonParams", value, { shouldValidate: true });
 
 		if (!value) {
-			setValue("params", [], { shouldValidate: false });
-
+			setValue("params", [], { shouldValidate: true });
 			return;
 		}
 
