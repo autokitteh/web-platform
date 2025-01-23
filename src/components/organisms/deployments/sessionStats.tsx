@@ -22,8 +22,8 @@ export const DeploymentSessionStats = ({
 	const { t } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 	const countStyle = (state?: SessionStateType) =>
 		cn(
-			"2xl:w-22 inline-block w-1/4 text-center border-0 p-0 text-sm font-medium",
-			"hover:bg-gray-1100 rounded-3xl inline-flex justify-center items-center min-w-12 h-7",
+			"min-w-12 max-w-12 sm:max-w-12 2xl:max-w-18 3xl:max-w-24 inline-block text-center border-0 p-0 text-sm font-medium",
+			"hover:bg-gray-1100 rounded-3xl inline-flex justify-center items-center h-7",
 			getSessionStateColor(state),
 			className
 		);

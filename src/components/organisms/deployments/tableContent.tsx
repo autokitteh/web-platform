@@ -157,7 +157,7 @@ export const DeploymentsTableContent = ({
 								</div>
 								<div
 									aria-label={tSessionsStats("error")}
-									className="w-1/4 truncate"
+									className="w-1/4 truncate pr-4"
 									title={tSessionsStats("error")}
 								>
 									{t("table.columns.error")}
@@ -208,7 +208,9 @@ export const DeploymentsTableContent = ({
 							<Td className="w-1/12" />
 
 							<Td className="w-1/3 cursor-pointer" onClick={() => goToDeploymentSessions(deploymentId)}>
-								<DeploymentSessionStats deploymentId={deploymentId} sessionStats={sessionStats} />
+								<div className="flex justify-around truncate">
+									<DeploymentSessionStats deploymentId={deploymentId} sessionStats={sessionStats} />
+								</div>
 							</Td>
 							<Td className="w-1/12" />
 
