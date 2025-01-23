@@ -104,6 +104,10 @@
 				"stopped": "Stopped",
 				"unspecified": "Unspecified"
 			},
+			"filters": {
+				"all": "All sessions",
+				"byDeploymentId": "Deployment ID: {{deploymentId}}"
+			},
 			"stopSession": "Stop session"
 		},
 		"totalSessions": "Total {{total}}",

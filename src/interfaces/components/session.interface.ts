@@ -2,11 +2,11 @@ import { ListOnItemsRenderedProps } from "react-window";
 
 import { SessionStateType } from "@src/enums";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
-import { DeploymentSession } from "@type/models";
+import { SessionStatsFilterType } from "@src/types/components";
 
 export interface SessionTableFilterProps {
 	onChange: (sessionState?: SessionStateKeyType) => void;
-	sessionStats: DeploymentSession[];
+	filtersData: SessionStatsFilterType;
 	defaultValue?: SessionStateKeyType;
 	selectedState?: SessionStateType;
 }

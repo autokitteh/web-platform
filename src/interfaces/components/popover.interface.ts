@@ -18,7 +18,7 @@ export interface PopoverTriggerProps {
 
 export interface PopoverListItem {
 	id: string;
-	label: string;
+	label: string | React.ReactNode;
 }
 
 export interface PopoverListOptions extends PopoverOptions {

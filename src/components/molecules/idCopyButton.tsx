@@ -6,6 +6,7 @@ import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
 import { ButtonVariant } from "@src/enums/components";
 import { useToastStore } from "@src/store";
+import { getShortId } from "@src/utilities";
 
 import { Button } from "@components/atoms";
 import { CopyButton } from "@components/molecules/copyButton";
@@ -38,16 +39,11 @@ export const IdCopyButton = ({
 		);
 	}
 
-	const idPrefix = id.split("_")[0];
-	const idSuffix = id.split("_")[1];
-	const idSuffixEnd = idSuffix.substring(idSuffix.length - 3, idSuffix.length);
-	const idStr = `${idPrefix}...${idSuffixEnd}`;
-
 	return (
 		<div className="flex flex-row items-center">
 			{hideId ? null : (
 				<div className="mr-1 flex cursor-pointer items-center gap-2.5 text-center text-white">
-					{displayFullLength ? id : idStr}
+					{displayFullLength ? id : getShortId(id, 3)}
 				</div>
 			)}
 			<CopyButton className="mb-0.5 p-0" successMessage={successMessage} tabIndex={0} text={id} title={id} />

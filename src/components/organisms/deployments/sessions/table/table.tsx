@@ -15,14 +15,15 @@ import { useResize } from "@src/hooks";
 import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { useCacheStore, useModalStore, useToastStore } from "@src/store";
-import { calculateDeploymentSessionsStats } from "@src/utilities";
-import { DeploymentSession } from "@type/models";
+import { SessionStatsFilterType } from "@src/types/components";
+import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } from "@src/utilities";
 
 import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
 import { PopoverList, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
+import { FilterSessionsByEntityPopoverItem } from "@components/organisms/deployments/sessions/table/filters";
 
 import { CatImage } from "@assets/image";
 import { FilterIcon } from "@assets/image/icons";
@@ -42,11 +43,14 @@ export const SessionsTable = () => {
 	const [sessions, setSessions] = useState<Session[]>([]);
 	const [selectedSessionId, setSelectedSessionId] = useState<string>();
 	const [sessionsNextPageToken, setSessionsNextPageToken] = useState<string>();
-	const [sessionStats, setSessionStats] = useState<DeploymentSession[]>([]);
+	const [sessionStats, setSessionStats] = useState<SessionStatsFilterType>({
+		sessionStats: initialSessionCounts,
+		totalDeployments: 0,
+		totalSessionsCount: 0,
+	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
-	const [filterValue, setFilterValue] = useState<string>("");
 	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 	const filteredEntityId = deploymentId || projectId!;
@@ -57,19 +61,6 @@ export const SessionsTable = () => {
 		if (!sessionState || !(sessionState in SessionStateType)) return;
 		return sessionState ? reverseSessionStateConverter(sessionState as SessionStateKeyType) : undefined;
 	}, [searchParams]);
-
-	const getShortId = (id: string, suffixLength: number) => {
-		if (!id?.length) return "";
-		const idPrefix = id.split("_")[0];
-		const idSuffix = id.split("_")[1];
-		const isValidId = idPrefix?.length > 0 && idSuffix?.length >= suffixLength;
-		let shortId = id;
-		if (isValidId) {
-			const idSuffixEnd = idSuffix.substring(idSuffix.length - suffixLength, idSuffix.length);
-			shortId = `${idPrefix}...${idSuffixEnd}`;
-		}
-		return shortId;
-	};
 
 	const filterSessionsByState = (stateType?: SessionStateKeyType) =>
 		!stateType
@@ -82,31 +73,57 @@ export const SessionsTable = () => {
 		const fetchedDeployments = await reloadDeploymentsCache(projectId, true);
 
 		const formattedDeployments =
-			fetchedDeployments?.map(({ deploymentId }) => {
+			fetchedDeployments?.map(({ deploymentId, sessionStats }) => {
+				const totalSessions = sessionStats?.reduce((acc, curr) => acc + (curr.count || 0), 0) || 0;
 				return {
 					id: deploymentId,
-					label: `Deployment: ${getShortId(deploymentId, 7)}`,
+					label: () => (
+						<FilterSessionsByEntityPopoverItem
+							entityId={deploymentId}
+							totalSessions={totalSessions}
+							translationKey="table.filters.byDeploymentId"
+						/>
+					),
 				};
 			}) || [];
 
-		setPopoverDeploymentItems([{ id: projectId, label: "All sessions" }, ...formattedDeployments]);
+		const {
+			sessionStats: sessionsCountByState,
+			totalDeployments,
+			totalSessionsCount,
+		} = calculateDeploymentSessionsStats(fetchedDeployments || []);
+
+		const allSessionsInProject = () => (
+			<FilterSessionsByEntityPopoverItem
+				entityId={projectId}
+				totalSessions={totalDeployments}
+				translationKey="table.filters.all"
+			/>
+		);
+
+		setPopoverDeploymentItems([
+			{ id: projectId, label: allSessionsInProject() },
+			...formattedDeployments.map((deployment) => ({ ...deployment, label: deployment.label() })),
+		]);
 
 		if (deploymentId) {
-			setFilterValue(deploymentId);
 			const deployment = fetchedDeployments?.find((d) => d.deploymentId === deploymentId);
-			if (!deployment?.sessionStats) return;
-			if (isEqual(deployment.sessionStats, sessionStats)) return;
-			setSessionStats(deployment.sessionStats);
+			if (!deployment) return;
+			const deploymentStats = calculateDeploymentSessionsStats([deployment]);
+			if (isEqual(deploymentStats.sessionStats, sessionStats.sessionStats)) return;
+			setSessionStats(deploymentStats);
 			return fetchedDeployments;
 		}
-		setFilterValue(projectId);
 
-		const { sessionStats: allSessionStats } = calculateDeploymentSessionsStats(fetchedDeployments || []);
-		const aggregatedStats = Object.values(allSessionStats);
-		if (!aggregatedStats.length || isEqual(aggregatedStats, sessionStats)) return;
-		setSessionStats(aggregatedStats as DeploymentSession[]);
+		if (isEqual(sessionsCountByState, sessionStats)) return;
+		setSessionStats({
+			sessionStats: sessionsCountByState,
+			totalDeployments,
+			totalSessionsCount,
+		});
 		return fetchedDeployments;
-	}, [projectId, deploymentId, reloadDeploymentsCache, sessionStats]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [projectId, deploymentId, reloadDeploymentsCache]);
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string, forceRefresh = false) => {
@@ -261,11 +278,6 @@ export const SessionsTable = () => {
 			: `/projects/${projectId}/deployments/${entityId}/sessions`;
 
 	const filterSessionsByEntity = (filterEntityId: string) => {
-		setFilterValue(filterEntityId);
-		if (filterEntityId === projectId) {
-			setFilterValue(projectId);
-		}
-
 		if (searchParams.has("sessionState")) {
 			searchParams.delete("sessionState");
 			setSearchParams(searchParams);
@@ -287,8 +299,10 @@ export const SessionsTable = () => {
 										</div>
 										<div className="text-base">
 											{deploymentId
-												? `Deployment ID: ${getShortId(filterValue, 7)}`
-												: "All sessions"}
+												? t("table.filters.byDeploymentId", {
+														deploymentId: getShortId(deploymentId, 7),
+													})
+												: t("table.filters.all")}
 										</div>
 									</div>
 								</PopoverListTrigger>
@@ -304,9 +318,9 @@ export const SessionsTable = () => {
 						</div>
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter
+								filtersData={sessionStats}
 								onChange={(sessionState) => filterSessionsByState(sessionState)}
 								selectedState={searchParams.get("sessionState") as SessionStateType}
-								sessionStats={sessionStats}
 							/>
 							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
 						</div>

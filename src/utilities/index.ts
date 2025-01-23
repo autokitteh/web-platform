@@ -27,6 +27,10 @@ export { sortArray } from "@utilities/sortArray.utils";
 export { fetchFileContent } from "@utilities/templateFilesFetch";
 export { ValidateURL, ValidateDomain } from "@utilities/validateUrl.utils";
 export { gTagEvent } from "@utilities/gTag.utils";
-export { calculateDeploymentSessionsStats } from "@utilities/calculateDeploymentSessionsStats.utils";
+export {
+	calculateDeploymentSessionsStats,
+	initialSessionCounts,
+} from "@utilities/calculateDeploymentSessionsStats.utils";
 export { getSessionStateColor } from "@utilities/getSessionStateColor.utils";
 export { validateEntitiesName, isNameInvalid, isNameEmpty, isNameExist } from "@utilities/validateEntitiesName.utils";
+export { getShortId } from "@utilities/shortId.utils";
