@@ -1,3 +1,10 @@
+## [2.132.4](https://github.com/autokitteh/web-platform/compare/v2.132.3...v2.132.4) (2025-01-23)
+
+
+### Bug Fixes
+
+* **UI-1196:** adjust active tab in sessions page ([#927](https://github.com/autokitteh/web-platform/issues/927)) ([53c5239](https://github.com/autokitteh/web-platform/commit/53c52392ebf2b00b5229140b9f78e46578538ca8))
+
 ## [2.132.3](https://github.com/autokitteh/web-platform/compare/v2.132.2...v2.132.3) (2025-01-23)
 
 ## [2.132.2](https://github.com/autokitteh/web-platform/compare/v2.132.1...v2.132.2) (2025-01-22)
