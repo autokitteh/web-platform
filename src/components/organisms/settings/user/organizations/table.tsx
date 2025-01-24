@@ -4,15 +4,16 @@ import omit from "lodash/omit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { LoggerService } from "@services";
+import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
 import { MemberRole } from "@src/enums";
 import { ModalName } from "@src/enums/components";
 import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
-import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
+import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Spinner } from "@components/atoms";
 import { DeleteOrganizationModal } from "@components/organisms/settings/organization";
+import { WarningDeleteOrganizationModal } from "@components/organisms/settings/user/organizations/warningDeleteModal";
 
 import { TrashIcon } from "@assets/image/icons";
 
@@ -32,6 +33,10 @@ export const UserOrganizationsTable = () => {
 	const addToast = useToastStore((state) => state.addToast);
 	const navigate = useNavigate();
 	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
+	const [openDeleteOrganizaton, setOpenDeleteOrganizaton] = useState({
+		organizationId: "",
+		isLoading: false,
+	});
 
 	useEffect(() => {
 		getOrganizations();
@@ -89,8 +94,33 @@ export const UserOrganizationsTable = () => {
 		!!(
 			isLoading.updatingOrganization ||
 			user?.defaultOrganizationId === organizationId ||
-			organizationRole !== MemberRole.admin
+			organizationRole !== MemberRole.admin ||
+			openDeleteOrganizaton.isLoading
 		);
+
+	const handleDeleteOrganization = async (organization: EnrichedOrganization) => {
+		setOpenDeleteOrganizaton({ organizationId: organization.id, isLoading: true });
+		const { data: orgProjectList, error } = await ProjectsService.list(organization.id);
+		if (error || !orgProjectList) {
+			addToast({
+				message: t("errors.deleteFailed", {
+					name: organization?.displayName,
+					organizationId: organization?.id,
+				}),
+				type: "error",
+			});
+			return;
+		}
+		const hasProjects = orgProjectList?.length > 0;
+		setOpenDeleteOrganizaton({ organizationId: organization.id, isLoading: false });
+
+		if (!hasProjects) {
+			openModal(ModalName.deleteOrganization, organization);
+			return;
+		}
+
+		openModal(ModalName.warningDeleteOrganization, { name: organization.displayName });
+	};
 
 	return (
 		<div className="w-3/4">
@@ -126,10 +156,15 @@ export const UserOrganizationsTable = () => {
 								<IconButton
 									className="mr-1"
 									disabled={isNameInputDisabled(organization.id, organization.currentMember?.role)}
-									onClick={() => openModal(ModalName.deleteOrganization, organization)}
+									onClick={async () => handleDeleteOrganization(organization)}
 									title={t("table.actions.delete", { name: organization.displayName })}
 								>
-									<TrashIcon className="size-4 stroke-white" />
+									{openDeleteOrganizaton.isLoading &&
+									openDeleteOrganizaton.organizationId === organization.id ? (
+										<Spinner className="size-4" />
+									) : (
+										<TrashIcon className="size-4 stroke-white" />
+									)}
 								</IconButton>
 							</Td>
 						</Tr>
@@ -137,6 +172,7 @@ export const UserOrganizationsTable = () => {
 				</TBody>
 			</Table>
 			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
+			<WarningDeleteOrganizationModal />
 		</div>
 	);
 };
