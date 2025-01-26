@@ -56,7 +56,7 @@ export const SessionsTable = () => {
 	const filteredEntityId = deploymentId || projectId!;
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	const processStateFilter = (stateFilter: string) => {
+	const processStateFilter = (stateFilter?: string | null) => {
 		if (!stateFilter) return "";
 		if (!(stateFilter in SessionStateType)) {
 			searchParams.delete("sessionState");
@@ -66,14 +66,15 @@ export const SessionsTable = () => {
 		return stateFilter ? stateFilter : "";
 	};
 
-	const urlSessionStateFilter = useMemo(
-		() => processStateFilter(searchParams.get("sessionState") || ""),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[searchParams]
-	);
+	const urlSessionStateFilter = processStateFilter(searchParams.get("sessionState") || undefined) as SessionStateType;
 
-	const navigateInSessions = (enitityFilter: string, stateFilter: string, sessionId: string) => {
-		const filterByState = stateFilter || urlSessionStateFilter;
+	const navigateInSessions = (enitityFilter: string, sessionId: string, stateFilterChanged?: string | null) => {
+		let filterByState;
+		if (stateFilterChanged !== undefined) {
+			filterByState = processStateFilter(stateFilterChanged);
+		} else {
+			filterByState = urlSessionStateFilter;
+		}
 		const filterByEntity = enitityFilter || filteredEntityId;
 
 		const entityURL =
@@ -227,10 +228,10 @@ export const SessionsTable = () => {
 		return () => {
 			debouncedFetchSessions.cancel();
 		};
-	}, [urlSessionStateFilter, refreshData, debouncedFetchSessions]);
+	}, [refreshData, debouncedFetchSessions]);
 
 	const closeSessionLog = useCallback(() => {
-		navigateInSessions(filteredEntityId, urlSessionStateFilter, "");
+		navigateInSessions(filteredEntityId, "");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, deploymentId]);
 
@@ -279,7 +280,7 @@ export const SessionsTable = () => {
 			searchParams.delete("sessionState");
 			setSearchParams(searchParams);
 		}
-		navigateInSessions(filterEntityId, "", "");
+		navigateInSessions(filterEntityId, "");
 	};
 
 	return (
@@ -316,8 +317,8 @@ export const SessionsTable = () => {
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter
 								filtersData={sessionStats}
-								onChange={(sessionState) => navigateInSessions("", sessionState || "", "")}
-								selectedState={searchParams.get("sessionState") as SessionStateType}
+								onChange={(sessionState) => navigateInSessions("", "", sessionState)}
+								selectedState={urlSessionStateFilter}
 							/>
 							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
 						</div>
@@ -343,7 +344,7 @@ export const SessionsTable = () => {
 									onItemsRendered={handleItemsRendered}
 									onSelectedSessionId={setSelectedSessionId}
 									onSessionRemoved={fetchDeployments}
-									openSession={(sessionId) => navigateInSessions("", "", sessionId)}
+									openSession={(sessionId) => navigateInSessions("", sessionId)}
 									sessions={sessions}
 								/>
 							</Table>

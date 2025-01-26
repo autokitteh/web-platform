@@ -5,7 +5,7 @@ import { Session, SessionStateKeyType } from "@src/interfaces/models";
 import { SessionStatsFilterType } from "@src/types/components";
 
 export interface SessionTableFilterProps {
-	onChange: (sessionState?: SessionStateKeyType) => void;
+	onChange: (sessionState?: SessionStateKeyType | null) => void;
 	filtersData: SessionStatsFilterType;
 	defaultValue?: SessionStateKeyType;
 	selectedState?: SessionStateType;

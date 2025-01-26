@@ -34,7 +34,7 @@ export const SessionsTableFilter = ({ onChange, filtersData, selectedState }: Se
 			<DropdownButton
 				contentMenu={
 					<div className="flex flex-col gap-y-2">
-						<Button className={buttonClass()} onClick={() => onChange()}>
+						<Button className={buttonClass()} onClick={() => onChange(null)}>
 							{t("all")} ({filtersData.totalSessionsCount})
 						</Button>
 
