@@ -36,7 +36,6 @@ export const SessionsTable = () => {
 	const { closeModal } = useModalStore();
 	const { deploymentId, projectId, sessionId } = useParams();
 	const navigate = useNavigate();
-
 	const addToast = useToastStore((state) => state.addToast);
 	const [isDeleting, setIsDeleting] = useState(false);
 
@@ -50,7 +49,7 @@ export const SessionsTable = () => {
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
-	const { fetchDeployments: reloadDeploymentsCache } = useCacheStore();
+	const { fetchDeployments: reloadDeploymentsCache, deployments } = useCacheStore();
 	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 	const filteredEntityId = deploymentId || projectId!;
@@ -87,63 +86,71 @@ export const SessionsTable = () => {
 		navigate(`${entityURL}${sessionURL}${stateFilterURL}`);
 	};
 
-	const fetchDeployments = useCallback(async () => {
-		if (!projectId) return;
+	const fetchDeployments = useCallback(
+		async (force: boolean = true) => {
+			if (!projectId) return;
 
-		const fetchedDeployments = await reloadDeploymentsCache(projectId, true);
+			const fetchedDeployments = await reloadDeploymentsCache(projectId, force);
 
-		const formattedDeployments =
-			fetchedDeployments?.map(({ deploymentId, sessionStats }) => {
-				const totalSessions = sessionStats?.reduce((acc, curr) => acc + (curr.count || 0), 0) || 0;
-				return {
-					id: deploymentId,
-					label: () => (
-						<FilterSessionsByEntityPopoverItem
-							entityId={deploymentId}
-							totalSessions={totalSessions}
-							translationKey="table.filters.byDeploymentId"
-						/>
-					),
-				};
-			}) || [];
+			const formattedDeployments =
+				fetchedDeployments?.map(({ deploymentId, sessionStats }) => {
+					const totalSessions = sessionStats?.reduce((acc, curr) => acc + (curr.count || 0), 0) || 0;
+					return {
+						id: deploymentId,
+						label: () => (
+							<FilterSessionsByEntityPopoverItem
+								entityId={deploymentId}
+								totalSessions={totalSessions}
+								translationKey="table.filters.byDeploymentId"
+							/>
+						),
+					};
+				}) || [];
 
-		const {
-			sessionStats: sessionsCountByState,
-			totalDeployments,
-			totalSessionsCount,
-		} = calculateDeploymentSessionsStats(fetchedDeployments || []);
+			const {
+				sessionStats: sessionsCountByState,
+				totalDeployments,
+				totalSessionsCount,
+			} = calculateDeploymentSessionsStats(fetchedDeployments || []);
 
-		const allSessionsInProject = () => (
-			<FilterSessionsByEntityPopoverItem
-				entityId={projectId}
-				totalSessions={totalSessionsCount}
-				translationKey="table.filters.all"
-			/>
-		);
+			const allSessionsInProject = () => (
+				<FilterSessionsByEntityPopoverItem
+					entityId={projectId}
+					totalSessions={totalSessionsCount}
+					translationKey="table.filters.all"
+				/>
+			);
 
-		setPopoverDeploymentItems([
-			{ id: projectId, label: allSessionsInProject() },
-			...formattedDeployments.map((deployment) => ({ ...deployment, label: deployment.label() })),
-		]);
+			setPopoverDeploymentItems([
+				{ id: projectId, label: allSessionsInProject() },
+				...formattedDeployments.map((deployment) => ({ ...deployment, label: deployment.label() })),
+			]);
 
-		if (deploymentId) {
-			const deployment = fetchedDeployments?.find((d) => d.deploymentId === deploymentId);
-			if (!deployment) return;
-			const deploymentStats = calculateDeploymentSessionsStats([deployment]);
-			if (isEqual(deploymentStats.sessionStats, sessionStats.sessionStats)) return;
-			setSessionStats(deploymentStats);
+			if (deploymentId) {
+				const deployment = fetchedDeployments?.find((d) => d.deploymentId === deploymentId);
+				if (!deployment) return;
+				const deploymentStats = calculateDeploymentSessionsStats([deployment]);
+				if (isEqual(deploymentStats.sessionStats, sessionStats.sessionStats)) return;
+				setSessionStats(deploymentStats);
+				return fetchedDeployments;
+			}
+
+			if (isEqual(sessionsCountByState, sessionStats)) return;
+			setSessionStats({
+				sessionStats: sessionsCountByState,
+				totalDeployments,
+				totalSessionsCount,
+			});
 			return fetchedDeployments;
-		}
-
-		if (isEqual(sessionsCountByState, sessionStats)) return;
-		setSessionStats({
-			sessionStats: sessionsCountByState,
-			totalDeployments,
-			totalSessionsCount,
-		});
-		return fetchedDeployments;
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId, deploymentId, reloadDeploymentsCache]);
+		[projectId, deploymentId, reloadDeploymentsCache]
+	);
+
+	useEffect(() => {
+		fetchDeployments(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [deployments]);
 
 	const fetchSessions = useCallback(
 		async (nextPageToken?: string, forceRefresh = false) => {
@@ -307,7 +314,7 @@ export const SessionsTable = () => {
 								<PopoverListContent
 									activeId={filteredEntityId}
 									className="z-30 flex flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
-									displaySearch
+									displaySearch={popoverDeploymentItems.length > 5}
 									emptyListMessage={t("filters.noDeploymentsFound")}
 									itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
 									items={popoverDeploymentItems}
