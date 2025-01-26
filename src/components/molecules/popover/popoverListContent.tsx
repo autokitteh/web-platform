@@ -93,13 +93,15 @@ export const PopoverListContent = React.forwardRef<
 			initialFocusElement={firstItemRef}
 			ref={ref}
 		>
-			<SearchInput
-				className="mb-2"
-				labelOverlayClassName="bg-gray-250"
-				onChange={filterItemsBySearchTerm}
-				type="text"
-				value={searchTerm}
-			/>
+			{displaySearch ? (
+				<SearchInput
+					className="mb-2"
+					labelOverlayClassName="bg-gray-250"
+					onChange={filterItemsBySearchTerm}
+					type="text"
+					value={searchTerm}
+				/>
+			) : null}
 			{popoverItems.length ? (
 				popoverItems.map((item, index) => (
 					<div
