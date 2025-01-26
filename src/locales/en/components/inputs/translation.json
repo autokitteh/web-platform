@@ -2,5 +2,8 @@
 	"secretInput": {
 		"lock": "Make Secret",
 		"unlock": "Reveal Secret"
+	},
+	"searchInput": {
+		"placeholder": "Search..."
 	}
 }

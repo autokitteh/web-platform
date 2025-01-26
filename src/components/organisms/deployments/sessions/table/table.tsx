@@ -307,9 +307,11 @@ export const SessionsTable = () => {
 								<PopoverListContent
 									activeId={filteredEntityId}
 									className="z-30 flex flex-col rounded-lg border-x border-gray-500 bg-gray-250 p-2"
+									displaySearch
 									emptyListMessage="No deployments found"
 									itemClassName="flex cursor-pointer items-center gap-2.5 rounded-3xl p-2 transition hover:bg-green-200 whitespace-nowrap px-4 text-gray-1100"
 									items={popoverDeploymentItems}
+									maxItemsToShow={5}
 									onItemSelect={({ id }: { id: string }) => filterSessionsByEntity(id)}
 								/>
 							</PopoverList>

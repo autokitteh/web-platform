@@ -14,4 +14,5 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 	placeholder?: string;
 	variant?: InputType;
 	inputLabelTextSize?: TextSizes;
+	labelOverlayClassName?: string;
 }

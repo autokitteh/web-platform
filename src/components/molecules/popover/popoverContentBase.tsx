@@ -1,18 +1,27 @@
-import React from "react";
+import React, { Ref } from "react";
 
 import { FloatingFocusManager, FloatingPortal } from "@floating-ui/react";
 
 import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 
-export const PopoverContentBase = React.forwardRef<HTMLDivElement, any>(function PopoverContentBase(
-	{ context, floatingContext, style, ...props },
+interface PopoverContentBaseProps {
+	[key: string]: any;
+	context: any;
+	floatingContext: any;
+	style?: React.CSSProperties;
+	skipInitialFocus?: boolean;
+	initialFocusElement?: Ref<any>;
+}
+
+export const PopoverContentBase = React.forwardRef<HTMLDivElement, PopoverContentBaseProps>(function PopoverContentBase(
+	{ context, floatingContext, style, initialFocusElement, ...props },
 	propRef
 ) {
 	const ref = useMergeRefsCustom(context.refs.setFloating, propRef);
 
 	return (
 		<FloatingPortal>
-			<FloatingFocusManager context={floatingContext} initialFocus={0}>
+			<FloatingFocusManager context={floatingContext} initialFocus={initialFocusElement || 0}>
 				{context.isMounted ? (
 					<div
 						ref={ref}
