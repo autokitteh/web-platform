@@ -116,7 +116,7 @@ export const SessionsTable = () => {
 		const allSessionsInProject = () => (
 			<FilterSessionsByEntityPopoverItem
 				entityId={projectId}
-				totalSessions={totalDeployments}
+				totalSessions={totalSessionsCount}
 				translationKey="table.filters.all"
 			/>
 		);
