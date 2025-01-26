@@ -55,7 +55,7 @@ export const DeploymentSessionStats = ({
 	) => {
 		event.stopPropagation();
 		const stateFilter = sessionState ? `?sessionState=${sessionState}` : "";
-		navigate(`/${SidebarHrefMenu.projects}/${projectId}/deployments/${deploymentId}/session${stateFilter}`);
+		navigate(`/${SidebarHrefMenu.projects}/${projectId}/deployments/${deploymentId}/sessions${stateFilter}`);
 	};
 
 	return sessionStatsOrdered.map(({ count, state }) => (
