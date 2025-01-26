@@ -68,7 +68,7 @@ export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref)
 	);
 
 	const labelClass = cn(
-		"pointer-events-none absolute left-12 font-semibold text-gray-850 transition-all",
+		"pointer-events-none absolute left-12 text-gray-850 transition-all",
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
 		{ "-top-2 left-6 px-1 text-xs before:bg-gray-950": isFocused || hasValue }
 	);

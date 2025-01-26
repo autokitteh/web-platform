@@ -79,10 +79,12 @@ export const PopoverListContent = React.forwardRef<
 	if (maxItemsToShow) {
 		let maxHeight = 36 * maxItemsToShow;
 		if (displaySearch) {
-			maxHeight += 69;
+			maxHeight += 32;
 		}
 		popoverBaseStyle = { ...style, maxHeight, overflowY: "scroll" };
 	}
+
+	const showSearchBox = displaySearch && items.length > (maxItemsToShow || 0);
 
 	return (
 		<PopoverContentBase
@@ -93,7 +95,7 @@ export const PopoverListContent = React.forwardRef<
 			initialFocusElement={firstItemRef}
 			ref={ref}
 		>
-			{displaySearch ? (
+			{showSearchBox ? (
 				<SearchInput
 					className="mb-2"
 					labelOverlayClassName="bg-gray-250"
