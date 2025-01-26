@@ -8,7 +8,7 @@ export { default as DashboardIcon } from "@assets/image/icons/sidebar/Dashboard.
 export { default as EventListIcon } from "@assets/image/icons/sidebar/EventList.svg?react";
 // Taken from https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=3803-130729&t=7Ia4ZjBoflbDQyIb-4
 export { default as FileIcon } from "@assets/image/icons/sidebar/File.svg?react";
-// Taken from https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=3803-130738&t=7Ia4ZjBoflbDQyIb-4
+// Taken from https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=4063-135422&t=s4wrkjCj9odtR66V-4
 export { default as LogoutIcon } from "@assets/image/icons/sidebar/Logout.svg?react";
 export { default as NewProject } from "@assets/image/icons/sidebar/NewProject.svg?react";
 export { default as NotificationIcon } from "@assets/image/icons/sidebar/Notification.svg?react";

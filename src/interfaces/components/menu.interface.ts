@@ -10,4 +10,5 @@ export interface NavigationSettingsItem {
 	label: string;
 	href: string;
 	stroke?: boolean;
+	isMembers?: boolean;
 }

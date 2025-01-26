@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { SingleValue } from "react-select";
 
 import { usePopoverContext } from "@contexts";
-import { sentryDsn, userMenuItems, userMenuOrganizationItems } from "@src/constants";
+import { sentryDsn, userMenuOrganizationItems } from "@src/constants";
 import { MemberRole, MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
+import { SelectOption } from "@src/interfaces/components";
 import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 import { cn } from "@src/utilities";
 
-import { Button, IconSvg, Loader, Typography } from "@components/atoms";
+import { Button, Loader, Typography } from "@components/atoms";
+import { Select } from "@components/molecules";
 import { InvitedUserModal } from "@components/organisms/modals";
 
-import { PlusIcon } from "@assets/image/icons";
+import { PlusIcon, GearIcon } from "@assets/image/icons";
 import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void }) => {
@@ -26,6 +29,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		getEnrichedOrganizations,
 		isLoading,
 		currentOrganization,
+		members,
 		updateMemberStatus,
 		getCurrentOrganizationEnriched,
 	} = useOrganizationStore();
@@ -65,11 +69,6 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		close();
 	};
 
-	const getStatusIndicatorClasses = (status?: MemberStatusType) =>
-		cn("absolute right-1 top-1/2 size-2.5 -translate-y-1/2 rounded-full hidden", {
-			"bg-error-200 block": status === MemberStatusType.invited,
-		});
-
 	const handleOrganizationClick = (status?: MemberStatusType, id?: string, displayName?: string) => {
 		if (status === MemberStatusType.invited) {
 			openModal(ModalName.invitedUser, {
@@ -80,6 +79,27 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		}
 		close();
 		navigate(`/switch-organization/${id}`);
+	};
+
+	const selectOrganizations = useMemo(
+		() =>
+			organizations?.map(({ id, displayName }) => ({
+				value: id,
+				label: displayName,
+			})) || [],
+		[organizations]
+	);
+
+	const membersLength = useMemo(
+		() => (currentOrganization?.id ? Object.keys(members[currentOrganization.id])?.length : 0),
+		[currentOrganization, members]
+	);
+
+	const handleOrganizationChange = (selected: SingleValue<SelectOption>) => {
+		const selectedOrg = organizations?.find((org) => org.id === selected?.value);
+		if (selectedOrg) {
+			handleOrganizationClick(selectedOrg.currentMember?.status, selectedOrg.id, selectedOrg.displayName);
+		}
 	};
 
 	const onUserInvintationAction = async (status: MemberStatusType, organizationId: string) => {
@@ -124,114 +144,93 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 	};
 
 	return (
-		<div className="flex gap-4">
-			<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
-				<h3 className="mb-3 font-semibold text-black">{t("menu.userSettings.title")}</h3>
-				<div className="flex items-center gap-2 border-b border-gray-950 pb-2">
-					<Avatar color="black" name={`${user?.name}`} round={true} size="28" />
-					<span className="font-medium text-black">{user?.email}</span>
+		<>
+			<div className="flex items-center gap-2">
+				<div
+					className="group relative size-16 shrink-0 cursor-pointer"
+					onClick={() => menuItemClick("/settings")}
+					onKeyDown={(e) => {
+						if (e.key === "Enter" || e.key === " ") {
+							menuItemClick("/settings");
+						}
+					}}
+					role="button"
+					tabIndex={0}
+				>
+					<Avatar color="black" name={user?.name} round={true} size="100%" />
+					<span className="absolute bottom-0 right-0 flex size-6 items-center justify-center rounded-full bg-black transition group-hover:scale-110">
+						<GearIcon className="size-4 transition group-hover:rotate-180" fill="white" />
+					</span>
 				</div>
-				<div className="mt-2 flex flex-col gap-1">
-					{sentryDsn ? (
-						<Button
-							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
-							onClick={() => openFeedbackFormClick()}
-						>
-							<AnnouncementIcon className="size-4" fill="black" />
-							{t("menu.userSettings.feedback")}
-						</Button>
-					) : null}
-					{userMenuItems.map(({ href, icon, label, stroke }, index) => (
-						<Button
-							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
-							key={index}
-							onClick={() => menuItemClick(href)}
-							title={`${t("menu.userSettings.settings")} - ${t(label)}`}
-						>
-							<IconSvg
-								className={cn({
-									"fill-black": !stroke,
-									"stroke-black": stroke,
-								})}
-								size="md"
-								src={icon}
-							/>
-							{t(label)}
-						</Button>
-					))}
 
-					<Button
-						className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
-						onClick={() => logoutFunction(true)}
-					>
-						<LogoutIcon className="size-4" fill="black" />
-						{t("menu.userSettings.logout")}
-					</Button>
+				<div className="leading-none text-gray-1100">
+					<Typography className="font-bold leading-none" element="p">
+						{user?.name}
+					</Typography>
+					<Typography className="mt-2 leading-none" element="p">
+						{user?.email}
+					</Typography>
 				</div>
 			</div>
-
+			<div className="my-3.5 h-px bg-gray-500" />
+			<h3 className="mb-2 font-bold text-gray-1100">
+				{t("menu.organizationsList.title")} ({organizations?.length || 0})
+			</h3>
+			<div className="mb-2.5 w-72">
+				{isLoading.organizations ? (
+					<div className="relative h-10">
+						<Loader isCenter />
+					</div>
+				) : (
+					<Select
+						defaultValue={selectOrganizations.find((option) => option.value === currentOrganization?.id)}
+						noOptionsLabel={t("menu.organizationsList.noOrganizationFound")}
+						onChange={handleOrganizationChange}
+						options={selectOrganizations}
+						variant="light"
+					/>
+				)}
+			</div>
 			{currentOrganizationEnriched?.currentMember?.role === MemberRole.admin ? (
-				<div className="flex w-48 flex-col border-r border-gray-950 pr-4">
-					<h3 className="mb-3 font-semibold text-black">{t("menu.organizationSettings.title")}</h3>
-					{userMenuOrganizationItems.map(({ href, icon: Icon, label }) => (
+				<div className="flex flex-col gap-1">
+					{userMenuOrganizationItems.map(({ href, icon: Icon, label, stroke, isMembers }) => (
 						<Button
 							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
 							key={href}
 							onClick={() => menuItemClick(href)}
 							title={label}
 						>
-							<Icon className="size-4" fill="black" />
+							<Icon className={cn("size-4", { "stroke-gray-1100": stroke, "fill-gray-1100": !stroke })} />
 							{label}
+							{isMembers ? ` (${membersLength})` : null}
 						</Button>
 					))}
 				</div>
 			) : null}
-
-			<div className="flex w-48 flex-col">
-				<h3 className="mb-3 font-semibold text-black">{t("menu.organizationsList.title")}</h3>
+			<Button
+				className="mt-1 flex w-full items-center gap-2 rounded-md bg-green-800 px-2.5 py-1.5 text-sm text-black hover:bg-green-200"
+				onClick={() => createNewOrganization()}
+				title={t("menu.organizationsList.newOrganization")}
+			>
+				<PlusIcon className="size-4" fill="white" />
+				{t("menu.organizationsList.newOrganization")}
+			</Button>
+			<div className="my-3.5 h-px bg-gray-500" />
+			{sentryDsn ? (
 				<Button
-					className="mb-2 flex w-full items-center gap-2 rounded-md bg-green-800 px-2.5 py-1.5 text-sm text-black hover:bg-green-200"
-					onClick={() => createNewOrganization()}
-					title={t("menu.organizationsList.newOrganization")}
+					className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
+					onClick={() => openFeedbackFormClick()}
 				>
-					<PlusIcon className="size-4" fill="white" />
-					{t("menu.organizationsList.newOrganization")}
+					<AnnouncementIcon className="size-4" fill="black" />
+					{t("menu.userSettings.feedback")}
 				</Button>
+			) : null}
 
-				<div className="scrollbar max-h-40 overflow-y-auto">
-					{isLoading.organizations ? (
-						<div className="relative mt-8 h-10">
-							<Loader isCenter />
-						</div>
-					) : organizations ? (
-						organizations.map(({ displayName, id, currentMember, uniqueName }) =>
-							currentMember?.status === MemberStatusType.declined ? null : (
-								<Button
-									className={cn(
-										"relative mb-1 block w-full truncate rounded-md px-2.5 text-left text-sm hover:bg-gray-250 disabled:opacity-100",
-										{
-											"font-bold": currentOrganization?.id === id,
-										}
-									)}
-									disabled={id === currentOrganization?.id}
-									key={id}
-									onClick={() => handleOrganizationClick(currentMember?.status, id, displayName)}
-									title={uniqueName}
-								>
-									{displayName}
-									<div className={getStatusIndicatorClasses(currentMember?.status)} />
-								</Button>
-							)
-						)
-					) : (
-						<Typography className="text-center text-base font-semibold text-black">
-							{t("menu.organizationsList.noOrganizationFound")}
-						</Typography>
-					)}
-				</div>
-			</div>
-
+			<Button className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250" onClick={() => logoutFunction(true)}>
+				<LogoutIcon className="h-5 w-4 fill-gray-1100" />
+				{t("menu.userSettings.logout")}
+			</Button>
 			<InvitedUserModal onUserInvintaionAction={onUserInvintationAction} />
-		</div>
+		</>
 	);
 };

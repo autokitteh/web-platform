@@ -4,19 +4,17 @@
 		"clientConfiguration": "Client Setup",
 		"myOrganizations": "My Organizations",
 		"userSettings": {
-			"title": "User Settings",
 			"logout": "Log out",
 			"settings": "Settings",
 			"feedback": "Feedback",
 			"myOrganiazations": "My Organizations"
 		},
 		"organizationSettings": {
-			"title": "Organization Settings",
 			"settings": "Settings",
 			"members": "Members"
 		},
 		"organizationsList": {
-			"title": "Organizations",
+			"title": "Organization",
 			"newOrganization": "New Organization",
 			"noOrganizationFound": "No organizations found",
 			"userInvitintations": {
