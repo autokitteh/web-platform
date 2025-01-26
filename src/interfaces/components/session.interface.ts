@@ -12,7 +12,7 @@ export interface SessionTableFilterProps {
 }
 
 export interface SessionsTableRowProps {
-	openSessionLog: (sessionId: string) => void;
+	openSession: (sessionId: string) => void;
 	selectedSessionId?: string;
 	sessions: Session[];
 	showDeleteModal: (id: string) => void;
@@ -24,4 +24,5 @@ export interface SessionsTableListProps {
 	onSelectedSessionId: (id: string) => void;
 	onSessionRemoved: () => void;
 	sessions: Session[];
+	openSession: (sessionId: string) => void;
 }

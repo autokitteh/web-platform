@@ -97,9 +97,8 @@ export const DashboardProjectsTable = () => {
 		sessionState: keyof typeof SessionStateType
 	) => {
 		event.stopPropagation();
-		navigate(`/${SidebarHrefMenu.projects}/${id}/sessions`, {
-			state: { sessionState },
-		});
+		const stateFilter = sessionState ? `?sessionState=${sessionState}` : "";
+		navigate(`/${SidebarHrefMenu.projects}/${id}/sessions${stateFilter}`);
 	};
 
 	return isLoading ? (

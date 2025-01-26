@@ -54,18 +54,37 @@ export const SessionsTable = () => {
 	const [popoverDeploymentItems, setPopoverDeploymentItems] = useState<Array<PopoverListItem>>([]);
 	const frameClass = "size-full bg-gray-1100 pb-3 pl-7 transition-all rounded-r-none";
 	const filteredEntityId = deploymentId || projectId!;
-
 	const [searchParams, setSearchParams] = useSearchParams();
-	const urlSessionStateFilter = useMemo(() => {
-		const sessionState = searchParams.get("sessionState");
-		if (!sessionState || !(sessionState in SessionStateType)) return;
-		return sessionState ? reverseSessionStateConverter(sessionState as SessionStateKeyType) : undefined;
-	}, [searchParams]);
 
-	const filterSessionsByState = (stateType?: SessionStateKeyType) =>
-		!stateType
-			? navigate(getURLPathForAllSessionsInEntity(filteredEntityId))
-			: navigate(`${getURLPathForAllSessionsInEntity(filteredEntityId)}?sessionState=${stateType}`);
+	const processStateFilter = (stateFilter: string) => {
+		if (!stateFilter) return "";
+		if (!(stateFilter in SessionStateType)) {
+			searchParams.delete("sessionState");
+			setSearchParams(searchParams);
+			return "";
+		}
+		return stateFilter ? stateFilter : "";
+	};
+
+	const urlSessionStateFilter = useMemo(
+		() => processStateFilter(searchParams.get("sessionState") || ""),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[searchParams]
+	);
+
+	const navigateInSessions = (enitityFilter: string, stateFilter: string, sessionId: string) => {
+		const filterByState = stateFilter || urlSessionStateFilter;
+		const filterByEntity = enitityFilter || filteredEntityId;
+
+		const entityURL =
+			filterByEntity === projectId
+				? `/projects/${projectId}/sessions`
+				: `/projects/${projectId}/deployments/${filterByEntity}/sessions`;
+		const sessionURL = sessionId ? `/${sessionId}` : "";
+		const stateFilterURL = filterByState ? `?sessionState=${filterByState}` : "";
+
+		navigate(`${entityURL}${sessionURL}${stateFilterURL}`);
+	};
 
 	const fetchDeployments = useCallback(async () => {
 		if (!projectId) return;
@@ -144,7 +163,7 @@ export const SessionsTable = () => {
 
 			const { data, error } = await fetchMethod(
 				{
-					stateType: urlSessionStateFilter,
+					stateType: reverseSessionStateConverter(urlSessionStateFilter as SessionStateKeyType),
 				},
 				nextPageToken,
 				sessionRowHeight
@@ -211,26 +230,9 @@ export const SessionsTable = () => {
 	}, [urlSessionStateFilter, refreshData, debouncedFetchSessions]);
 
 	const closeSessionLog = useCallback(() => {
-		navigate(getURLPathForAllSessionsInEntity(filteredEntityId));
+		navigateInSessions(filteredEntityId, urlSessionStateFilter, "");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [projectId, deploymentId]);
-
-	useEffect(() => {
-		const sessionState = searchParams.get("sessionState");
-		const validatedState: SessionStateType | undefined =
-			sessionState && Object.values(SessionStateType).includes(sessionState as SessionStateType)
-				? (sessionState as SessionStateType)
-				: undefined;
-		if (!validatedState) {
-			if (searchParams.has("sessionState")) {
-				searchParams.delete("sessionState");
-				setSearchParams(searchParams);
-			}
-		}
-		filterSessionsByState(validatedState);
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [searchParams]);
 
 	const handleItemsRendered = useCallback(
 		({ visibleStopIndex }: ListOnItemsRenderedProps) => {
@@ -272,17 +274,12 @@ export const SessionsTable = () => {
 		fetchDeployments();
 	};
 
-	const getURLPathForAllSessionsInEntity = (entityId: string) =>
-		entityId === projectId
-			? `/projects/${projectId}/sessions`
-			: `/projects/${projectId}/deployments/${entityId}/sessions`;
-
 	const filterSessionsByEntity = (filterEntityId: string) => {
 		if (searchParams.has("sessionState")) {
 			searchParams.delete("sessionState");
 			setSearchParams(searchParams);
 		}
-		navigate(getURLPathForAllSessionsInEntity(filterEntityId));
+		navigateInSessions(filterEntityId, "", "");
 	};
 
 	return (
@@ -319,7 +316,7 @@ export const SessionsTable = () => {
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter
 								filtersData={sessionStats}
-								onChange={(sessionState) => filterSessionsByState(sessionState)}
+								onChange={(sessionState) => navigateInSessions("", sessionState || "", "")}
 								selectedState={searchParams.get("sessionState") as SessionStateType}
 							/>
 							<RefreshButton isLoading={isLoading} onRefresh={() => refreshData()} />
@@ -346,6 +343,7 @@ export const SessionsTable = () => {
 									onItemsRendered={handleItemsRendered}
 									onSelectedSessionId={setSelectedSessionId}
 									onSessionRemoved={fetchDeployments}
+									openSession={(sessionId) => navigateInSessions("", "", sessionId)}
 									sessions={sessions}
 								/>
 							</Table>
