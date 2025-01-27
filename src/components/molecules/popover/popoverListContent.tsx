@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { PopoverContentBase } from "./popoverContentBase";
 import { usePopoverListContext } from "@contexts/usePopover";
-import { PopoverListItem, PopoverTriggerProps } from "@src/interfaces/components/popover.interface";
+import { PopoverListItem } from "@src/interfaces/components/popover.interface";
 import { cn } from "@src/utilities";
 
 import { SearchInput } from "@components/atoms";
@@ -78,7 +78,8 @@ export const PopoverListContent = React.forwardRef<
 		? {
 				...style,
 				maxHeight: 36 * maxItemsToShow + (displaySearch ? 32 : 0),
-				overflowY: "scroll",
+				overflowY: "auto",
+				marginBottom: "8px",
 			}
 		: style;
 
@@ -102,61 +103,35 @@ export const PopoverListContent = React.forwardRef<
 				value={searchTerm}
 			/>
 			{popoverItems.length ? (
-				popoverItems.map((item, index) => (
-					<div
-						aria-selected={context.activeIndex === index}
-						className={cn(itemClassName, {
-							"bg-gray-1100 text-white hover:bg-gray-1100 cursor-pointer": item.id === activeId,
-						})}
-						key={item.id}
-						onClick={() => handleItemClick(item, index)}
-						onKeyDown={(event) => onKeyDown(event, item, index)}
-						ref={(node) => {
-							if (!node) return;
-							listRef.current[index] = node;
-							if (index === 0) {
-								firstItemRef.current = node;
-							}
-						}}
-						role="option"
-						tabIndex={context.activeIndex === index ? 0 : -1}
-					>
-						{item.label}
-					</div>
-				))
+				<div style={{ overflowY: "auto", maxHeight: "100%" }}>
+					{popoverItems.map((item, index) => (
+						<div
+							aria-selected={context.activeIndex === index}
+							className={cn(itemClassName, {
+								"bg-gray-1100 text-white hover:bg-gray-1100 cursor-pointer": item.id === activeId,
+							})}
+							key={item.id}
+							onClick={() => handleItemClick(item, index)}
+							onKeyDown={(event) => onKeyDown(event, item, index)}
+							ref={(node) => {
+								if (!node) return;
+								listRef.current[index] = node;
+								if (index === 0) {
+									firstItemRef.current = node;
+								}
+							}}
+							role="option"
+							tabIndex={context.activeIndex === index ? 0 : -1}
+						>
+							{item.label}
+						</div>
+					))}
+				</div>
 			) : (
 				<div aria-label={emptyListMessage} className={itemClassName}>
 					{emptyListMessage}
 				</div>
 			)}
-			<div className="h-20 w-full bg-black" />
 		</PopoverContentBase>
 	);
 });
-
-export const PopoverListTrigger = React.forwardRef<HTMLElement, React.HTMLProps<HTMLElement> & PopoverTriggerProps>(
-	function PopoverListTrigger({ children, ...props }, propRef) {
-		const context = usePopoverListContext();
-		const childrenRef = React.isValidElement(children) ? (children as any).ref : null;
-		const ref = useMergeRefsCustom(context.refs.setReference, propRef, childrenRef);
-		const onKeyDown = (event: React.KeyboardEvent) => {
-			if (event.key === "Enter" || event.key === " ") {
-				context.setOpen(!context.open);
-				event.stopPropagation();
-				event.preventDefault();
-			}
-		};
-
-		return (
-			<button
-				data-state={context.open ? "open" : "closed"}
-				ref={ref}
-				type="button"
-				{...context.getReferenceProps(props)}
-				onKeyDown={onKeyDown}
-			>
-				{children}
-			</button>
-		);
-	}
-);
