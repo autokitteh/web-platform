@@ -1,4 +1,4 @@
-export { Popover } from "@components/molecules/popover/popover";
+export { PopoverWrapper } from "@components/molecules/popover/popover";
 export { PopoverCloseButton } from "@components/molecules/popover/popoverCloseButton";
 export { PopoverContent, PopoverClose, PopoverTrigger } from "@components/molecules/popover/popoverContent";
 export { PopoverContentBase } from "@components/molecules/popover/popoverContentBase";

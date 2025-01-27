@@ -1,3 +1,5 @@
+import { CSSProperties, Ref } from "react";
+
 import { Placement } from "@floating-ui/react";
 
 export interface PopoverOptions {
@@ -24,4 +26,13 @@ export interface PopoverListItem {
 export interface PopoverListOptions extends PopoverOptions {
 	items: PopoverListItem[];
 	onItemSelect?: (item: PopoverListItem) => void;
+}
+
+export interface PopoverContentBaseProps {
+	[key: string]: any;
+	context: any;
+	floatingContext: any;
+	style?: CSSProperties;
+	skipInitialFocus?: boolean;
+	initialFocusElement?: Ref<any>;
 }

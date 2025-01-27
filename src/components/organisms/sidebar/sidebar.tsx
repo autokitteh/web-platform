@@ -12,9 +12,8 @@ import { useLoggerStore, useOrganizationStore } from "@store";
 
 import { Badge, Button, IconSvg, Loader } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
-import { PopoverTrigger } from "@components/molecules";
 import { Menu } from "@components/molecules/menu";
-import { Popover, PopoverContent } from "@components/molecules/popover/index";
+import { PopoverWrapper, PopoverContent, PopoverTrigger } from "@components/molecules/popover";
 import { NewProjectModal, UserFeedbackForm } from "@components/organisms";
 import { UserMenu } from "@components/organisms/sidebar";
 
@@ -173,7 +172,7 @@ export const Sidebar = () => {
 						</Button>
 
 						{descopeProjectId ? (
-							<Popover interactionType="click" placement="right-start">
+							<PopoverWrapper interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-2 mt-2 flex items-center">
 									<Avatar color="black" name={user?.name} round={true} size="25" />
 									<AnimatePresence>
@@ -193,7 +192,7 @@ export const Sidebar = () => {
 								<PopoverContent className="z-40 min-w-56 rounded-2xl border border-gray-950 bg-white px-3.5 py-2.5 font-averta shadow-2xl">
 									<UserMenu openFeedbackForm={() => setIsFeedbackOpen(true)} />
 								</PopoverContent>
-							</Popover>
+							</PopoverWrapper>
 						) : null}
 					</div>
 					<UserFeedbackForm

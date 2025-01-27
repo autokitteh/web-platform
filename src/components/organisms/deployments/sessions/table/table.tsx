@@ -65,15 +65,12 @@ export const SessionsTable = () => {
 		return stateFilter ? stateFilter : "";
 	};
 
-	const urlSessionStateFilter = processStateFilter(searchParams.get("sessionState") || undefined) as SessionStateType;
+	const urlSessionStateFilter = processStateFilter(searchParams.get("sessionState")) as SessionStateType;
 
 	const navigateInSessions = (enitityFilter: string, sessionId: string, stateFilterChanged?: string | null) => {
-		let filterByState;
-		if (stateFilterChanged !== undefined) {
-			filterByState = processStateFilter(stateFilterChanged);
-		} else {
-			filterByState = urlSessionStateFilter;
-		}
+		const filterByState =
+			stateFilterChanged !== undefined ? processStateFilter(stateFilterChanged) : urlSessionStateFilter;
+
 		const filterByEntity = enitityFilter || filteredEntityId;
 
 		const entityURL =
@@ -144,7 +141,7 @@ export const SessionsTable = () => {
 			return fetchedDeployments;
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[projectId, deploymentId, reloadDeploymentsCache]
+		[projectId, deploymentId]
 	);
 
 	useEffect(() => {
@@ -298,17 +295,13 @@ export const SessionsTable = () => {
 						<div className="flex items-end">
 							<PopoverList animation="slideFromBottom" interactionType="click">
 								<PopoverListTrigger>
-									<div className="flex flex-row whitespace-nowrap border-0 pr-4 align-baseline text-white hover:bg-transparent">
-										<div className="mr-1 mt-0.5">
-											<IconSvg className="text-white" size="md" src={FilterIcon} />
-										</div>
-										<div className="text-base">
-											{deploymentId
-												? t("table.filters.byDeploymentId", {
-														deploymentId: getShortId(deploymentId, 7),
-													})
-												: t("table.filters.all")}
-										</div>
+									<div className="flex items-center gap-1 whitespace-nowrap border-0 pr-4 text-base text-white hover:bg-transparent">
+										<IconSvg className="text-white" size="md" src={FilterIcon} />
+										{deploymentId
+											? t("table.filters.byDeploymentId", {
+													deploymentId: getShortId(deploymentId, 7),
+												})
+											: t("table.filters.all")}
 									</div>
 								</PopoverListTrigger>
 								<PopoverListContent

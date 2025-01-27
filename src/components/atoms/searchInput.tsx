@@ -19,6 +19,7 @@ export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref)
 		onChange,
 		type = "text",
 		value,
+		hidden,
 		labelOverlayClassName,
 		...rest
 	} = props;
@@ -62,7 +63,7 @@ export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref)
 	);
 
 	const inputClass = cn(
-		"h-8 w-full bg-transparent px-4 py-2.5 outline-none",
+		"h-8 w-full bg-transparent px-4 py-2.5 outline-none text-black text-xs text-black",
 		{ "text-gray-750": disabled },
 		classInput
 	);
@@ -82,22 +83,18 @@ export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref)
 
 	const reset = useCallback(() => {
 		setHasValue(false);
-		if (onChange) {
-			const event = new Event("input", { bubbles: true });
-			const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-				window.HTMLInputElement.prototype,
-				"value"
-			)?.set;
-			const input = document.getElementById(id) as HTMLInputElement;
-			if (nativeInputValueSetter && input) {
-				nativeInputValueSetter.call(input, "");
-				input.dispatchEvent(event);
-			}
-			onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
+		if (!onChange) return;
+		const input = document.getElementById(id) as HTMLInputElement;
+		if (input) {
+			Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(input, "");
+			input.dispatchEvent(new Event("input", { bubbles: true }));
 		}
+		onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
 	}, [onChange, id]);
 
+	if (hidden) return null;
 	const placeholderText = t("searchInput.placeholder");
+
 	return (
 		<div className={baseClass}>
 			<IconSvg className="ml-4" size="lg" src={SearchIcon} />

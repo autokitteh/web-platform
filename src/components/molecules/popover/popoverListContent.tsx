@@ -75,14 +75,13 @@ export const PopoverListContent = React.forwardRef<
 		setPopoverItems(filteredItems);
 	};
 
-	let popoverBaseStyle = style;
-	if (maxItemsToShow) {
-		let maxHeight = 36 * maxItemsToShow;
-		if (displaySearch) {
-			maxHeight += 32;
-		}
-		popoverBaseStyle = { ...style, maxHeight, overflowY: "scroll" };
-	}
+	const popoverBaseStyle = maxItemsToShow
+		? {
+				...style,
+				maxHeight: 36 * maxItemsToShow + (displaySearch ? 32 : 0),
+				overflowY: "scroll",
+			}
+		: style;
 
 	const showSearchBox = displaySearch && items.length > (maxItemsToShow || 0);
 
@@ -95,15 +94,14 @@ export const PopoverListContent = React.forwardRef<
 			initialFocusElement={firstItemRef}
 			ref={ref}
 		>
-			{showSearchBox ? (
-				<SearchInput
-					className="mb-2"
-					labelOverlayClassName="bg-gray-250"
-					onChange={filterItemsBySearchTerm}
-					type="text"
-					value={searchTerm}
-				/>
-			) : null}
+			<SearchInput
+				className="mb-2"
+				hidden={!showSearchBox}
+				labelOverlayClassName="bg-gray-250"
+				onChange={filterItemsBySearchTerm}
+				type="text"
+				value={searchTerm}
+			/>
 			{popoverItems.length ? (
 				popoverItems.map((item, index) => (
 					<div
@@ -115,11 +113,10 @@ export const PopoverListContent = React.forwardRef<
 						onClick={() => handleItemClick(item, index)}
 						onKeyDown={(event) => onKeyDown(event, item, index)}
 						ref={(node) => {
-							if (node) {
-								listRef.current[index] = node;
-								if (index === 0) {
-									firstItemRef.current = node;
-								}
+							if (!node) return;
+							listRef.current[index] = node;
+							if (index === 0) {
+								firstItemRef.current = node;
 							}
 						}}
 						role="option"
@@ -133,6 +130,7 @@ export const PopoverListContent = React.forwardRef<
 					{emptyListMessage}
 				</div>
 			)}
+			<div className="h-20 w-full bg-black" />
 		</PopoverContentBase>
 	);
 });

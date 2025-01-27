@@ -1,19 +1,12 @@
-import React, { Ref } from "react";
+import React, { forwardRef } from "react";
 
 import { FloatingFocusManager, FloatingPortal } from "@floating-ui/react";
 
+import { PopoverContentBaseProps } from "@src/interfaces/components";
+
 import { useMergeRefsCustom } from "@components/molecules/popover/utilities";
 
-interface PopoverContentBaseProps {
-	[key: string]: any;
-	context: any;
-	floatingContext: any;
-	style?: React.CSSProperties;
-	skipInitialFocus?: boolean;
-	initialFocusElement?: Ref<any>;
-}
-
-export const PopoverContentBase = React.forwardRef<HTMLDivElement, PopoverContentBaseProps>(function PopoverContentBase(
+export const PopoverContentBase = forwardRef<HTMLDivElement, PopoverContentBaseProps>(function PopoverContentBase(
 	{ context, floatingContext, style, initialFocusElement, ...props },
 	propRef
 ) {
