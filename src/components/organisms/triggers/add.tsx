@@ -8,6 +8,7 @@ import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { SelectOption } from "@interfaces/components";
 import { LoggerService, TriggersService } from "@services";
 import { namespaces } from "@src/constants";
+import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { TriggerFormData, triggerResolver } from "@validations";
@@ -44,11 +45,11 @@ export const AddTrigger = () => {
 	const methods = useForm<TriggerFormData>({
 		defaultValues: {
 			name: "",
-			connection: { label: "", value: "" },
-			filePath: { label: "", value: "" },
+			connection: emptySelectItem,
+			filePath: emptySelectItem,
 			entryFunction: "",
 			cron: "",
-			eventTypeSelect: { label: "", value: "" },
+			eventTypeSelect: emptySelectItem,
 			filter: "",
 		},
 		resolver: triggerResolver,

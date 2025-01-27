@@ -9,6 +9,7 @@ import { z } from "zod";
 import { TriggerSpecificFields } from "./formParts/fileAndFunction";
 import { TriggersService } from "@services";
 import { extraTriggerTypes } from "@src/constants";
+import { emptySelectItem } from "@src/constants/forms";
 import { TriggerTypes } from "@src/enums";
 import { TriggerFormIds } from "@src/enums/components";
 import { SelectOption } from "@src/interfaces/components";
@@ -55,11 +56,11 @@ export const EditTrigger = () => {
 	const methods = useForm<TriggerFormData>({
 		defaultValues: {
 			name: "",
-			connection: { label: "", value: "" },
-			filePath: { label: "", value: "" },
+			connection: emptySelectItem,
+			filePath: emptySelectItem,
 			entryFunction: "",
 			cron: "",
-			eventTypeSelect: { label: "", value: "" },
+			eventTypeSelect: emptySelectItem,
 			filter: "",
 		},
 		resolver: zodResolver(triggerSchema),
@@ -110,7 +111,7 @@ export const EditTrigger = () => {
 
 		reset({
 			name: trigger?.name,
-			connection: selectedConnection || { label: "", value: "" },
+			connection: selectedConnection || emptySelectItem,
 			filePath: { label: trigger?.path, value: trigger?.path },
 			entryFunction: trigger?.entryFunction,
 			cron: trigger?.schedule,

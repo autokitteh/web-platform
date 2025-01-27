@@ -170,3 +170,5 @@ const getSelectLightStyles = (
 ): StylesConfig<SelectOption, false, GroupBase<SelectOption>> => getSelectStyles(isError, "light", isDisable);
 
 export { getSelectDarkStyles, getSelectLightStyles };
+
+export const emptySelectItem = { label: "", value: "" };

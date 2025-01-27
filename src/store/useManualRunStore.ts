@@ -7,6 +7,7 @@ import { createWithEqualityFn as create } from "zustand/traditional";
 
 import { DeploymentStateVariant, StoreName } from "@enums";
 import { BuildsService, SessionsService } from "@services";
+import { emptySelectItem } from "@src/constants/forms";
 import { ManualRunStore } from "@src/interfaces/store";
 import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
 
@@ -15,8 +16,8 @@ import { useCacheStore, useToastStore } from "@store";
 const defaultManualRunState = {
 	files: [],
 	fileOptions: [],
-	filePath: { label: "", value: "" },
-	entrypointFunction: { label: "", value: "" },
+	filePath: emptySelectItem,
+	entrypointFunction: emptySelectItem,
 	params: [],
 	isManualRunEnabled: false,
 	isJson: false,
@@ -82,7 +83,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				projectData.fileOptions = fileOptions;
 
 				if (!files[currentFile?.value]?.includes(currentEntrypoint?.value)) {
-					Object.assign(projectData, { filePath: fileOptions[0], entrypointFunction: null });
+					Object.assign(projectData, { filePath: fileOptions[0], entrypointFunction: emptySelectItem });
 				}
 			}
 
@@ -115,7 +116,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const jsonInputs = actualParams.reduce(
 			(acc, { key, value }) => ({
 				...acc,
-				[key]: `"${value}"`,
+				[key]: JSON.stringify(value),
 			}),
 			{}
 		);
