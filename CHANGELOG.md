@@ -1,3 +1,10 @@
+## [2.132.5](https://github.com/autokitteh/web-platform/compare/v2.132.4...v2.132.5) (2025-01-27)
+
+
+### Bug Fixes
+
+* **UI-1258:** save the manual run configuration on deploy action ([#933](https://github.com/autokitteh/web-platform/issues/933)) ([e9ef265](https://github.com/autokitteh/web-platform/commit/e9ef265d870483d51383e1db306a0f7b0888e242))
+
 ## [2.132.4](https://github.com/autokitteh/web-platform/compare/v2.132.3...v2.132.4) (2025-01-23)
 
 
