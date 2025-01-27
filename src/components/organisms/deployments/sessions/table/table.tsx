@@ -20,7 +20,7 @@ import { calculateDeploymentSessionsStats, getShortId, initialSessionCounts } fr
 
 import { Frame, IconSvg, Loader, ResizeButton, THead, Table, Th, Tr } from "@components/atoms";
 import { RefreshButton } from "@components/molecules";
-import { PopoverList, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
+import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
 import { SessionsTableFilter } from "@components/organisms/deployments";
 import { DeleteSessionModal, SessionsTableList } from "@components/organisms/deployments/sessions";
 import { FilterSessionsByEntityPopoverItem } from "@components/organisms/deployments/sessions/table/filters";
@@ -293,7 +293,7 @@ export const SessionsTable = () => {
 				<Frame className={frameClass}>
 					<div className="flex items-center">
 						<div className="flex items-end">
-							<PopoverList animation="slideFromBottom" interactionType="click">
+							<PopoverListWrapper animation="slideFromBottom" interactionType="click">
 								<PopoverListTrigger>
 									<div className="flex items-center gap-1 whitespace-nowrap border-0 pr-4 text-base text-white hover:bg-transparent">
 										<IconSvg className="text-white" size="md" src={FilterIcon} />
@@ -314,7 +314,7 @@ export const SessionsTable = () => {
 									maxItemsToShow={5}
 									onItemSelect={({ id }: { id: string }) => filterSessionsByEntity(id)}
 								/>
-							</PopoverList>
+							</PopoverListWrapper>
 						</div>
 						<div className="ml-auto flex items-center">
 							<SessionsTableFilter

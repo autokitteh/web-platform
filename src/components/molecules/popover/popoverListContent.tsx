@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { PopoverCloseButton } from "./popoverCloseButton";
 import { PopoverContentBase } from "./popoverContentBase";
 import { usePopoverListContext } from "@contexts/usePopover";
 import { PopoverListItem, PopoverTriggerProps } from "@src/interfaces/components/popover.interface";
@@ -161,5 +160,3 @@ export const PopoverListTrigger = React.forwardRef<HTMLElement, React.HTMLProps<
 		);
 	}
 );
-
-export const PopoverListClose = PopoverCloseButton;

@@ -4,7 +4,7 @@ import { PopoverListContext } from "@contexts";
 import { usePopoverList } from "@src/hooks";
 import { PopoverOptions } from "@src/interfaces/components";
 
-export const PopoverList = ({
+export const PopoverListWrapper = ({
 	children,
 	...restOptions
 }: {

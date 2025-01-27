@@ -10,7 +10,7 @@ export { ImageMotion } from "@components/molecules/imageMotion";
 export { MapMenu } from "@components/molecules/mapMenu";
 export { Menu } from "@components/molecules/menu";
 export { Modal } from "@components/molecules/modal";
-export { PopoverCloseButton, PopoverTrigger } from "@components/molecules/popover";
+export { PopoverTrigger } from "@components/molecules/popover";
 export { RefreshButton } from "@components/molecules/refreshButton";
 export { Select } from "@components/molecules/select";
 export { SortButton } from "@components/molecules/sortButton";
