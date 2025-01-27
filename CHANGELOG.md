@@ -1,3 +1,10 @@
+## [2.132.6](https://github.com/autokitteh/web-platform/compare/v2.132.5...v2.132.6) (2025-01-27)
+
+
+### Bug Fixes
+
+* **UI-1259:** refactor manual run json inputs ([#930](https://github.com/autokitteh/web-platform/issues/930)) ([645a950](https://github.com/autokitteh/web-platform/commit/645a950f94d3ba7be5d20c32f60d09943fd453de))
+
 ## [2.132.5](https://github.com/autokitteh/web-platform/compare/v2.132.4...v2.132.5) (2025-01-27)
 
 
