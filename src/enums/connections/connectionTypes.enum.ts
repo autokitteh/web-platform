@@ -1,5 +1,6 @@
 export enum ConnectionAuthType {
 	Oauth = "oauth",
+	CustomOAuth = "customOAuth",
 	Pat = "pat",
 	ServiceAccount = "serviceAccount",
 	Mode = "mode",

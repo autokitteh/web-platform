@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants";
-import { githubIntegrationSchema, oauthSchema } from "@validations";
+import { githubIntegrationSchema, githubCustomAuthIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -28,6 +28,7 @@ export const GithubIntegrationAddForm = ({
 		createConnection,
 		errors,
 		handleOAuth,
+		handleCustomOauth,
 		handleSubmit,
 		isLoading,
 		register,
@@ -45,6 +46,9 @@ export const GithubIntegrationAddForm = ({
 			case ConnectionAuthType.Oauth:
 				await handleOAuth(connectionId, Integrations.github);
 				break;
+			case ConnectionAuthType.CustomOAuth:
+				await handleCustomOauth(connectionId, Integrations.github);
+				break;
 			default:
 				break;
 		}
@@ -56,6 +60,11 @@ export const GithubIntegrationAddForm = ({
 		}
 		if (connectionType.value === ConnectionAuthType.Oauth) {
 			setValidationSchema(oauthSchema);
+
+			return;
+		}
+		if (connectionType.value === ConnectionAuthType.CustomOAuth) {
+			setValidationSchema(githubCustomAuthIntegrationSchema);
 
 			return;
 		}

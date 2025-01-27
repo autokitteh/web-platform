@@ -2,7 +2,7 @@ export interface TextArea extends React.TextareaHTMLAttributes<HTMLTextAreaEleme
 	className?: string;
 	disabled?: boolean;
 	isError: boolean;
-	placeholder: string;
+	placeholder?: string;
 	isRequired?: boolean;
 	label?: string;
 }

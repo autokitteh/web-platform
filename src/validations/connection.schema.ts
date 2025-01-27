@@ -8,6 +8,14 @@ export const githubIntegrationSchema = z.object({
 	secret: z.string(),
 });
 
+export const githubCustomAuthIntegrationSchema = z.object({
+	client_id: z.string().min(1, "Client ID is required"),
+	client_secret: z.string().min(1, "Client Secret is required"),
+	app_id: z.string().min(1, "App ID is required"),
+	webhook_secret: z.string().min(1, "Webhook Secret is required"),
+	private_key: z.string().min(1, "Private Key is required"),
+});
+
 export const googleIntegrationSchema = z.object({
 	json: z.string().min(1, "Json Key is required"),
 	auth_type: z.string(),
