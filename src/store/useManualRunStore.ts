@@ -67,7 +67,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		projectId,
 		{ activeDeployment, entrypointFunction, filePath, files, isJson, isManualRunEnabled, params }
 	) => {
-		const { entrypointFunction: currentEntrypoint, filePath: currentFile } = get().projectManualRun[projectId];
+		const previousProjectManualRunState = get().projectManualRun[projectId];
 		set((state) => {
 			const projectData = {
 				...defaultManualRunState,
@@ -82,7 +82,12 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				projectData.files = files;
 				projectData.fileOptions = fileOptions;
 
-				if (!files[currentFile?.value]?.includes(currentEntrypoint?.value)) {
+				const previousFilePath = previousProjectManualRunState?.filePath?.value;
+				const previousEntrypointFunction = previousProjectManualRunState?.entrypointFunction?.value;
+				const fileExists = files[previousFilePath];
+				const entrypointExists = fileExists?.includes(previousEntrypointFunction);
+
+				if (!entrypointExists) {
 					Object.assign(projectData, { filePath: fileOptions[0], entrypointFunction: emptySelectItem });
 				}
 			}
