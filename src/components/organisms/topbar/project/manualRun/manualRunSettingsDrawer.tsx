@@ -92,7 +92,7 @@ export const ManualRunSettingsDrawer = () => {
 
 		setSendingManualRun(true);
 		const { params: formParams } = getValues();
-		updateManualRunConfiguration(projectId, { formParams });
+		updateManualRunConfiguration(projectId, { params: formParams });
 		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, formParams);
 		setSendingManualRun(false);
 		handleManualRun();
