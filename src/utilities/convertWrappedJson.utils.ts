@@ -41,3 +41,11 @@ export const parseNestedJson = (object: Value): Record<string, any> => {
 
 	return result;
 };
+
+export const safeJsonParse = (value: string) => {
+	try {
+		return JSON.parse(value);
+	} catch {
+		return null;
+	}
+};

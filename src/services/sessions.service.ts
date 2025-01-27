@@ -14,7 +14,6 @@ import { LoggerService } from "@services";
 import { SessionLogType } from "@src/enums";
 import { Session, SessionFilter, ViewerSession } from "@src/interfaces/models";
 import { ServiceResponse, StartSessionArgsType } from "@type";
-import { transformAndStringifyValues } from "@utilities";
 
 export class SessionsService {
 	static async deleteSession(sessionId: string): Promise<ServiceResponse<void>> {
@@ -160,7 +159,7 @@ export class SessionsService {
 			const sessionToStart = { ...omit(startSessionArgs, "jsonInputs"), projectId };
 			const sessionAsStartRequest = {
 				session: sessionToStart,
-				jsonInputs: transformAndStringifyValues(startSessionArgs?.jsonInputs || {}),
+				jsonInputs: startSessionArgs.jsonInputs,
 			} as unknown as StartRequest;
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
 
