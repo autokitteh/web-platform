@@ -66,25 +66,24 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		projectId,
 		{ activeDeployment, entrypointFunction, filePath, files, isJson, isManualRunEnabled, params }
 	) => {
+		const { entrypointFunction: currentEntrypoint, filePath: currentFile } = get().projectManualRun[projectId];
 		set((state) => {
 			const projectData = {
 				...defaultManualRunState,
 				...state.projectManualRun[projectId],
 			};
-
 			if (files) {
 				const fileOptions = Object.keys(files).map((file) => ({
 					label: file,
 					value: file,
 				}));
 
-				Object.assign(projectData, {
-					files,
-					fileOptions,
-					filePath: fileOptions[0],
-					entrypointFunction: null,
-					params: [],
-				});
+				projectData.files = files;
+				projectData.fileOptions = fileOptions;
+
+				if (!files[currentFile?.value]?.includes(currentEntrypoint?.value)) {
+					Object.assign(projectData, { filePath: fileOptions[0], entrypointFunction: null });
+				}
 			}
 
 			Object.assign(projectData, {

@@ -67,7 +67,7 @@ export const ManualRunSettingsDrawer = () => {
 			})) || [];
 		setFileFunctions(processedFileFunctions);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [filePath]);
+	}, [filePath, files]);
 
 	useEffect(() => {
 		setValue("entrypointFunction", entrypointFunction);
@@ -92,7 +92,7 @@ export const ManualRunSettingsDrawer = () => {
 
 		setSendingManualRun(true);
 		const { params } = getValues();
-
+		updateManualRunConfiguration(projectId, { params });
 		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, params);
 		setSendingManualRun(false);
 		handleManualRun();
