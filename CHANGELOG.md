@@ -1,3 +1,10 @@
+# [2.133.0](https://github.com/autokitteh/web-platform/compare/v2.132.6...v2.133.0) (2025-01-27)
+
+
+### Features
+
+* **UI-1239:** display indication of sessions filter - project or deployment ([#925](https://github.com/autokitteh/web-platform/issues/925)) ([064a0e3](https://github.com/autokitteh/web-platform/commit/064a0e3060088443f665ef7d18d535ef71cfe0a1))
+
 ## [2.132.6](https://github.com/autokitteh/web-platform/compare/v2.132.5...v2.132.6) (2025-01-27)
 
 
