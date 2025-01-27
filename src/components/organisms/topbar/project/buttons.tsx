@@ -8,6 +8,7 @@ import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
 import { useProjectActions } from "@src/hooks";
+import { convertLintViolationToSystemLog } from "@src/models/lintViolation.model";
 import { useCacheStore, useManualRunStore, useModalStore, useToastStore } from "@src/store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
@@ -59,7 +60,8 @@ export const ProjectTopbarButtons = () => {
 			}
 
 			if (lintViolations?.length) {
-				LoggerService.error(namespaces.projectUI, t("projectBuildFailedExtended", { lintViolations }));
+				const violationsConvertedToLogs = lintViolations.map(convertLintViolationToSystemLog);
+				LoggerService.lint(namespaces.ui.projectBuild, violationsConvertedToLogs);
 			}
 
 			const { data: buildId, error } = await ProjectsService.build(projectId!, resources);
