@@ -12,3 +12,5 @@ export type DeploymentSession = {
 	count: number;
 	state?: SessionStateType;
 };
+
+export type SessionStatsCountByState = Record<SessionStateType, number>;

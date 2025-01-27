@@ -14,7 +14,7 @@ import { cn } from "@utilities";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg } from "@components/atoms";
-import { PopoverList, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
+import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
 
@@ -88,7 +88,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						</AnimatePresence>
 					</Button>
 				</li>
-				<PopoverList animation="slideFromLeft" interactionType="hover">
+				<PopoverListWrapper animation="slideFromLeft" interactionType="hover">
 					<PopoverListTrigger>
 						<li className="group">
 							<div className="z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 text-gray-1100 group-hover:bg-green-200">
@@ -134,7 +134,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 							navigate(`/${SidebarHrefMenu.projects}/${projectId}/code`)
 						}
 					/>
-				</PopoverList>
+				</PopoverListWrapper>
 			</ul>
 		</nav>
 	);

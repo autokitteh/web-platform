@@ -1,12 +1,14 @@
 import React, { forwardRef, useCallback, useEffect, useId, useState } from "react";
 
-import { InputVariant } from "@enums/components";
+import { useTranslation } from "react-i18next";
+
 import { InputProps } from "@interfaces/components";
 import { cn } from "@utilities";
 
+import { IconButton } from "@components/atoms";
 import { IconSvg } from "@components/atoms/icons";
 
-import { SearchIcon } from "@assets/image/icons";
+import { Close, SearchIcon } from "@assets/image/icons";
 
 export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 	const {
@@ -14,18 +16,17 @@ export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref)
 		className,
 		defaultValue,
 		disabled,
-		isError,
-		isRequired,
 		onChange,
-		placeholder,
 		type = "text",
 		value,
-		variant,
+		hidden,
+		labelOverlayClassName,
 		...rest
 	} = props;
 
 	const [isFocused, setIsFocused] = useState(false);
 	const [hasValue, setHasValue] = useState<boolean>();
+	const { t } = useTranslation("components", { keyPrefix: "inputs" });
 
 	useEffect(() => {
 		setHasValue(!!value || !!defaultValue);
@@ -54,41 +55,45 @@ export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref)
 		[hasValue, onChange]
 	);
 
-	const placeholderText = isRequired ? `${placeholder} *` : placeholder;
-
 	const baseClass = cn(
-		"relative flex items-center border border-gray-950 bg-black pr-2.5 text-base",
-		"rounded-lg transition focus-within:border-white hover:border-white",
-		{
-			"border-gray-650 bg-white text-black focus-within:border-gray-1250 hover:border-gray-1250":
-				variant === InputVariant.light,
-		},
-		{ "border-white": hasValue && variant !== InputVariant.light },
+		"relative flex items-center border border-gray-950 pr-2.5 text-base text-black",
+		"rounded-lg transition",
 		{ "pointer-events-none select-none border-gray-950": disabled },
-		className,
-		{ "border-error": isError }
+		className
 	);
 
 	const inputClass = cn(
-		"h-12 w-full bg-transparent px-4 py-2.5 outline-none",
+		"h-8 w-full bg-transparent px-4 py-2.5 outline-none text-black text-xs text-black",
 		{ "text-gray-750": disabled },
-		{ "autofill-black": variant === InputVariant.light && !disabled },
-		{ "autofill-gray-1100": variant === InputVariant.light && disabled },
 		classInput
 	);
 
 	const labelClass = cn(
-		"pointer-events-none absolute left-12 font-semibold text-gray-850 transition-all",
+		"pointer-events-none absolute left-12 text-gray-850 transition-all",
 		{ "top-1/2 -translate-y-1/2": !isFocused && !hasValue },
-		{ "-top-2 left-6 px-1 text-xs before:bg-gray-950": isFocused || hasValue },
-		{ "-top-2 left-6 px-1 text-xs before:bg-white": (isFocused || hasValue) && variant === InputVariant.light }
+		{ "-top-2 left-6 px-1 text-xs before:bg-gray-950": isFocused || hasValue }
 	);
 
-	const borderOverlayLabelClass = cn("absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2 bg-black", {
-		"bg-white": variant === InputVariant.light,
-	});
+	const borderOverlayLabelClass = cn(
+		"absolute left-0 top-1/2 z-0 h-0.5 w-full -translate-y-1/2",
+		labelOverlayClassName
+	);
 
 	const id = useId();
+
+	const reset = useCallback(() => {
+		setHasValue(false);
+		if (!onChange) return;
+		const input = document.getElementById(id) as HTMLInputElement;
+		if (input) {
+			Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(input, "");
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+		}
+		onChange({ target: { value: "" } } as React.ChangeEvent<HTMLInputElement>);
+	}, [onChange, id]);
+
+	if (hidden) return null;
+	const placeholderText = t("searchInput.placeholder");
 
 	return (
 		<div className={baseClass}>
@@ -110,9 +115,13 @@ export const SearchInput = forwardRef<HTMLInputElement, InputProps>((props, ref)
 
 			<label className={labelClass} htmlFor={id}>
 				<span className="relative z-10">{placeholderText}</span>
-
 				<span className={borderOverlayLabelClass} />
 			</label>
+			{value ? (
+				<IconButton ariaLabel={t("clear")} className="absolute right-0" onClick={reset} variant="flatText">
+					<Close className="fill-black" />
+				</IconButton>
+			) : null}
 		</div>
 	);
 });

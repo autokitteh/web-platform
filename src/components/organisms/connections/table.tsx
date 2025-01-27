@@ -25,7 +25,7 @@ import {
 	PopoverTrigger,
 	SortButton,
 } from "@components/molecules";
-import { Popover, PopoverContent } from "@components/molecules/popover/index";
+import { PopoverWrapper, PopoverContent } from "@components/molecules/popover/index";
 import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteConnectionModal } from "@components/organisms/connections";
 
@@ -223,7 +223,7 @@ export const ConnectionsTable = () => {
 
 									<Td className="w-3/12">
 										<div className="flex space-x-1">
-											<Popover animation="slideFromBottom" interactionType="hover">
+											<PopoverWrapper animation="slideFromBottom" interactionType="hover">
 												<PopoverTrigger>
 													<IconButton>
 														<IconSvg className="size-4" src={InfoIcon} />
@@ -240,7 +240,7 @@ export const ConnectionsTable = () => {
 														</div>
 													</div>
 												</PopoverContent>
-											</Popover>
+											</PopoverWrapper>
 											<IconButton
 												ariaLabel={t("table.buttons.titleEditConnection")}
 												className="size-8 p-1.5"

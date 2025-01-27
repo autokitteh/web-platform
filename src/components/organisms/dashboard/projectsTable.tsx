@@ -57,20 +57,11 @@ export const DashboardProjectsTable = () => {
 				}
 			});
 
-			const stats = {
-				totalDeployments,
-				sessionCounts: {
-					running: sessionStats[SessionStateType.running]?.count || 0,
-					stopped: sessionStats[SessionStateType.stopped]?.count || 0,
-					completed: sessionStats[SessionStateType.completed]?.count || 0,
-					error: sessionStats[SessionStateType.error]?.count || 0,
-				},
-			};
 			projectsStats[project.id] = {
 				id: project.id,
 				name: project.name,
-				totalDeployments: stats.totalDeployments,
-				...stats.sessionCounts,
+				totalDeployments,
+				...sessionStats,
 				status: projectStatus,
 				lastDeployed,
 			};
@@ -106,9 +97,8 @@ export const DashboardProjectsTable = () => {
 		sessionState: keyof typeof SessionStateType
 	) => {
 		event.stopPropagation();
-		navigate(`/${SidebarHrefMenu.projects}/${id}/sessions`, {
-			state: { sessionState },
-		});
+		const stateFilter = sessionState ? `?sessionState=${sessionState}` : "";
+		navigate(`/${SidebarHrefMenu.projects}/${id}/sessions${stateFilter}`);
 	};
 
 	return isLoading ? (

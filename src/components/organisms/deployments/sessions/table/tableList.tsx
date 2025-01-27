@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AutoSizer, List, ListRowRenderer } from "react-virtualized";
 
 import { ModalName } from "@enums/components";
@@ -16,24 +16,11 @@ export const SessionsTableList = ({
 	onSelectedSessionId,
 	onSessionRemoved,
 	sessions,
+	openSession,
 }: SessionsTableListProps) => {
-	const { deploymentId, projectId, sessionId } = useParams();
-	const navigate = useNavigate();
+	const { sessionId } = useParams();
 	const { openModal } = useModalStore();
 	const [resizeHeight, setResizeHeight] = useState(0);
-
-	const openSessionLog = useCallback(
-		(sessionId: string) => {
-			if (deploymentId) {
-				navigate(`/projects/${projectId}/deployments/${deploymentId}/sessions/${sessionId}`);
-
-				return;
-			}
-			navigate(`/projects/${projectId}/sessions/${sessionId}`);
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[deploymentId]
-	);
 
 	const showDeleteModal = useCallback((id: string) => {
 		onSelectedSessionId(id);
@@ -44,12 +31,12 @@ export const SessionsTableList = ({
 	const itemData = useMemo(
 		() => ({
 			onSessionRemoved,
-			openSessionLog,
+			openSession,
 			selectedSessionId: sessionId,
 			sessions,
 			showDeleteModal,
 		}),
-		[sessions, sessionId, openSessionLog, showDeleteModal, onSessionRemoved]
+		[sessions, sessionId, openSession, showDeleteModal, onSessionRemoved]
 	);
 
 	const rowRenderer: ListRowRenderer = ({ index, key, style }) => (

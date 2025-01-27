@@ -8,3 +8,4 @@ export type { InputType } from "@type/components/input.type";
 export type { SortDirection } from "@type/components/table.type";
 export type { SortableColumns } from "@type/components/tables";
 export type { ToastType } from "@type/components/toast.type";
+export type { SessionStatsFilterType } from "@type/components/sessionStatsFilter.type";

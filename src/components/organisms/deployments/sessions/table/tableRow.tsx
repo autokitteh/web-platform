@@ -35,7 +35,7 @@ export const SessionsTableRow = memo(
 		const { t: tErrors } = useTranslation("errors");
 		const { t } = useTranslation("deployments", { keyPrefix: "sessions" });
 		const addToast = useToastStore((state) => state.addToast);
-		const { onSessionRemoved, openSessionLog, selectedSessionId, sessions, showDeleteModal } = data;
+		const { onSessionRemoved, openSession, selectedSessionId, sessions, showDeleteModal } = data;
 		const session = sessions[index];
 		const [isStopping, setIsStopping] = useState(false);
 
@@ -86,7 +86,7 @@ export const SessionsTableRow = memo(
 		return (
 			<Tr
 				className={sessionRowClass(session.sessionId)}
-				onClick={() => openSessionLog(session.sessionId)}
+				onClick={() => openSession(session.sessionId)}
 				style={{ ...style }}
 			>
 				<Td className="w-1/5 min-w-36 pl-4">{moment(session.createdAt).local().format(dateTimeFormat)}</Td>

@@ -19,7 +19,7 @@ export const usePopoverListContext = () => {
 	const context = useContext(PopoverListContext);
 
 	if (context === null) {
-		throw new Error("Popover list components must be wrapped in <PopoverList />");
+		throw new Error("Popover list components must be wrapped in <PopoverListWrapper />");
 	}
 
 	return context;

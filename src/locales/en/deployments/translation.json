@@ -82,6 +82,9 @@
 			"back": "Back",
 			"scrollToTop": "Scroll to Top"
 		},
+		"filters":{
+			"noDeploymentsFound": "No deployments found"
+		},
 		"noSelectedSession": "No session selected",
 		"noSessions": "No sessions found",
 		"output": "Output",
@@ -103,6 +106,10 @@
 				"running": "Running",
 				"stopped": "Stopped",
 				"unspecified": "Unspecified"
+			},
+			"filters": {
+				"all": "All sessions",
+				"byDeploymentId": "Deployment ID: {{deploymentId}}"
 			},
 			"stopSession": "Stop session"
 		},

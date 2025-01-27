@@ -25,10 +25,9 @@ export const IconButton = ({
 		{
 			"bg-black": variant === ButtonVariant.filled,
 			"border border-gray-750 hover:border-transparent": variant === ButtonVariant.outline,
-		},
-		{
 			"cursor-not-allowed opacity-40": disabled,
 			"hover:border-gray-750": disabled && variant === ButtonVariant.outline,
+			"hover:bg-transparen border hover:border-black/50": variant === ButtonVariant.flatText,
 		},
 		className
 	);

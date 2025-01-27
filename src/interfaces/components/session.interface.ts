@@ -1,16 +1,18 @@
 import { ListOnItemsRenderedProps } from "react-window";
 
+import { SessionStateType } from "@src/enums";
 import { Session, SessionStateKeyType } from "@src/interfaces/models";
-import { DeploymentSession } from "@type/models";
+import { SessionStatsFilterType } from "@src/types/components";
 
 export interface SessionTableFilterProps {
-	onChange: (sessionState?: SessionStateKeyType) => void;
-	sessionStats: DeploymentSession[];
+	onChange: (sessionState?: SessionStateKeyType | null) => void;
+	filtersData: SessionStatsFilterType;
 	defaultValue?: SessionStateKeyType;
+	selectedState?: SessionStateType;
 }
 
 export interface SessionsTableRowProps {
-	openSessionLog: (sessionId: string) => void;
+	openSession: (sessionId: string) => void;
 	selectedSessionId?: string;
 	sessions: Session[];
 	showDeleteModal: (id: string) => void;
@@ -22,4 +24,5 @@ export interface SessionsTableListProps {
 	onSelectedSessionId: (id: string) => void;
 	onSessionRemoved: () => void;
 	sessions: Session[];
+	openSession: (sessionId: string) => void;
 }

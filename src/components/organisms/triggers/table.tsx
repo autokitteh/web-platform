@@ -16,7 +16,7 @@ import { useCacheStore, useHasActiveDeployments, useModalStore, useToastStore } 
 
 import { Button, IconButton, IconSvg, Loader, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { EmptyTableAddButton, PopoverTrigger, SortButton } from "@components/molecules";
-import { Popover } from "@components/molecules/popover/index";
+import { PopoverWrapper } from "@components/molecules/popover/index";
 import { PopoverContent } from "@components/molecules/popover/popoverContent";
 import { ActiveDeploymentWarningModal } from "@components/organisms";
 import { DeleteTriggerModal } from "@components/organisms/triggers";
@@ -193,7 +193,7 @@ export const TriggersTable = () => {
 								<Td className="w-4/12">{trigger.entrypoint}</Td>
 								<Td className="w-3/12">
 									<div className="scrollbar flex overflow-auto">
-										<Popover animation="slideFromBottom" interactionType="hover">
+										<PopoverWrapper animation="slideFromBottom" interactionType="hover">
 											<PopoverTrigger>
 												<IconButton>
 													<IconSvg className="size-4" src={InfoIcon} />
@@ -202,7 +202,7 @@ export const TriggersTable = () => {
 											<PopoverContent className="z-40 rounded-lg border-0.5 border-white bg-black p-4">
 												<InformationPopoverContent trigger={trigger} />
 											</PopoverContent>
-										</Popover>
+										</PopoverWrapper>
 										<IconButton
 											ariaLabel={t("table.buttons.ariaModifyTrigger", {
 												name: trigger.name,
