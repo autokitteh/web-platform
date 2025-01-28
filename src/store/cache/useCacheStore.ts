@@ -212,6 +212,11 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				});
 			}
 
+			set((state) => ({
+				...state,
+				loading: { ...state.loading, deployments: false },
+			}));
+
 			if (isEqual(deployments, incomingDeployments)) {
 				return deployments;
 			}
@@ -219,7 +224,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			set((state) => ({
 				...state,
 				deployments: incomingDeployments,
-				loading: { ...state.loading, deployments: false },
 			}));
 
 			return incomingDeployments;
@@ -260,6 +264,10 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				return;
 			}
 
+			set((state) => ({
+				...state,
+				loading: { ...state.loading, triggers: false },
+			}));
 			if (isEqual(triggers, incomingTriggers)) {
 				return triggers;
 			}
@@ -267,7 +275,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			set((state) => ({
 				...state,
 				triggers: incomingTriggers,
-				loading: { ...state.loading, triggers: false },
 			}));
 
 			get().checkState(projectId!, { triggers: incomingTriggers });
@@ -368,6 +375,11 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				LoggerService.error(namespaces.stores.cache, errorLog);
 			}
 
+			set((state) => ({
+				...state,
+				loading: { ...state.loading, variables: false },
+			}));
+
 			if (isEqual(variables, vars)) {
 				return variables;
 			}
@@ -375,7 +387,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 			set((state) => ({
 				...state,
 				variables: vars,
-				loading: { ...state.loading, variables: false },
 			}));
 
 			get().checkState(projectId!, { variables: vars });
