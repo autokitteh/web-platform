@@ -1,3 +1,10 @@
+## [2.133.3](https://github.com/autokitteh/web-platform/compare/v2.133.2...v2.133.3) (2025-01-28)
+
+
+### Bug Fixes
+
+* **UI-1265:** fix re-fetch deployments list loop in the sessions screen ([#945](https://github.com/autokitteh/web-platform/issues/945)) ([36683ff](https://github.com/autokitteh/web-platform/commit/36683ff55841c6fc9592b1e6c35eb23735206495))
+
 ## [2.133.2](https://github.com/autokitteh/web-platform/compare/v2.133.1...v2.133.2) (2025-01-28)
 
 
