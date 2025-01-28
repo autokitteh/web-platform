@@ -1,3 +1,10 @@
+## [2.133.1](https://github.com/autokitteh/web-platform/compare/v2.133.0...v2.133.1) (2025-01-28)
+
+
+### Bug Fixes
+
+* **UI-1263:** fix json inputs format on session start ([#938](https://github.com/autokitteh/web-platform/issues/938)) ([6ccf568](https://github.com/autokitteh/web-platform/commit/6ccf568f0fed64355ff0a7437d84e3911f6971f3))
+
 # [2.133.0](https://github.com/autokitteh/web-platform/compare/v2.132.6...v2.133.0) (2025-01-27)
 
 
