@@ -67,8 +67,9 @@ export const DashboardProjectsTable = () => {
 
 	return (
 		<div className="flex h-screen w-screen items-center justify-center text-4xl text-black">
-			Processing... {j} out of {projectsList.length}
-			Processing... {i} out of {projectsList.length}
+			Deactivating... {j} out of {projectsList.length}
+			<br />
+			Deleting... {i} out of {projectsList.length}
 		</div>
 	);
 };
