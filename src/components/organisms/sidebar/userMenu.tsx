@@ -143,6 +143,12 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		navigate(href);
 	};
 
+	const hasPendingOrganizationInvite =
+		useMemo(
+			() => organizations?.some((org) => org.currentMember?.status === MemberStatusType.invited),
+			[organizations]
+		) || false;
+
 	return (
 		<>
 			<div className="flex items-center gap-2">
@@ -173,9 +179,12 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 				</div>
 			</div>
 			<div className="my-3.5 h-px bg-gray-500" />
-			<h3 className="mb-2 font-bold text-gray-1100">
-				{t("menu.organizationsList.title")} ({organizations?.length || 0})
-			</h3>
+			<div className="mb-2 flex items-center gap-2">
+				<h3 className="font-bold text-gray-1100">
+					{t("menu.organizationsList.title")} ({organizations?.length || 0})
+				</h3>
+				{hasPendingOrganizationInvite ? <div className="mt-0.5 size-3 rounded-full bg-green-800" /> : null}
+			</div>
 			<div className="mb-2.5 w-72">
 				{isLoading.organizations ? (
 					<div className="relative h-10">
