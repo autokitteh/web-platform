@@ -362,12 +362,16 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		}
 	};
 
-	const handleCustomOauth = async (oauthConnectionId: string, integrationName: string) => {
+	const handleCustomOauth = async (
+		oauthConnectionId: string,
+		integrationName: keyof typeof Integrations | typeof defaultGoogleConnectionName,
+		authType?: ConnectionAuthType.CustomOAuth | ConnectionAuthType.Oauth
+	) => {
 		setIsLoading(true);
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
-				value: ConnectionAuthType.Oauth,
+				value: authType || ConnectionAuthType.Oauth,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
@@ -377,9 +381,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				connectionData,
 				integrationDataKeys[integrationName.toString() as keyof typeof integrationDataKeys]
 			);
+			const intCustomOAuthUrl: Partial<Record<Integrations | typeof defaultGoogleConnectionName, string>> = {
+				[Integrations.github]: "custom-oauth",
+				[Integrations.auth0]: "save",
+			};
 
 			openPopup(
-				`${apiBaseUrl}/${integrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
+				`${apiBaseUrl}/${integrationName}/${intCustomOAuthUrl[integrationName]}?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);

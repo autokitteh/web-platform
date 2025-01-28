@@ -47,7 +47,7 @@ export const GithubIntegrationAddForm = ({
 				await handleOAuth(connectionId, Integrations.github);
 				break;
 			case ConnectionAuthType.CustomOAuth:
-				await handleCustomOauth(connectionId, Integrations.github);
+				await handleCustomOauth(connectionId, Integrations.github, ConnectionAuthType.CustomOAuth);
 				break;
 			default:
 				break;
