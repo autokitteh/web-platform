@@ -8,7 +8,7 @@ import { Project } from "@type/models";
 import { useProjectStore } from "@store";
 
 export const DashboardProjectsTable = () => {
-	const { projectsList } = useProjectStore();
+	const { projectsList, getProjectsList } = useProjectStore();
 
 	const [i, setI] = React.useState(0);
 
@@ -51,6 +51,7 @@ export const DashboardProjectsTable = () => {
 	};
 
 	const deactivateAndDelete = async (projectsList: Project[]) => {
+		await getProjectsList();
 		await eraseProjects(projectsList);
 	};
 
