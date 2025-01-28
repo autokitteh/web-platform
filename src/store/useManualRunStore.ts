@@ -82,11 +82,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				projectData.files = files;
 				projectData.fileOptions = fileOptions;
 
-				const previousFilePath = previousProjectManualRunState?.filePath?.value;
-				const previousEntrypointFunction = previousProjectManualRunState?.entrypointFunction?.value;
-				const fileExists = previousFilePath && files?.[previousFilePath];
-				const entrypointExists =
-					fileExists && previousEntrypointFunction && fileExists.includes(previousEntrypointFunction);
+				const { filePath: prevFilePath, entrypointFunction: prevEntrypointFunction } =
+					previousProjectManualRunState || {};
+				const fileExists = prevFilePath?.value && files?.[prevFilePath.value];
+				const entrypointExists = fileExists?.includes(prevEntrypointFunction?.value);
 
 				if (!entrypointExists) {
 					Object.assign(projectData, { filePath: fileOptions[0], entrypointFunction: emptySelectItem });
