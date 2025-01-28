@@ -3,22 +3,20 @@ import React, { useEffect, useMemo, useState } from "react";
 import Avatar from "react-avatar";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { SingleValue } from "react-select";
 
 import { usePopoverContext } from "@contexts";
 import { sentryDsn, userMenuOrganizationItems } from "@src/constants";
 import { MemberRole, MemberStatusType } from "@src/enums";
 import { ModalName } from "@src/enums/components";
-import { SelectOption } from "@src/interfaces/components";
 import { useOrganizationStore, useToastStore, useModalStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 import { cn } from "@src/utilities";
 
 import { Button, Loader, Typography } from "@components/atoms";
-import { Select } from "@components/molecules";
+import { PopoverListContent, PopoverListTrigger, PopoverListWrapper } from "@components/molecules/popover";
 import { InvitedUserModal } from "@components/organisms/modals";
 
-import { PlusIcon, GearIcon } from "@assets/image/icons";
+import { PlusIcon, GearIcon, ChevronDownIcon } from "@assets/image/icons";
 import { AnnouncementIcon, LogoutIcon } from "@assets/image/icons/sidebar";
 
 export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void }) => {
@@ -81,22 +79,13 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		navigate(`/switch-organization/${id}`);
 	};
 
-	const selectOrganizations = useMemo(
-		() =>
-			organizations?.map(({ id, displayName }) => ({
-				value: id,
-				label: displayName,
-			})) || [],
-		[organizations]
-	);
-
 	const membersLength = useMemo(
 		() => (currentOrganization?.id ? Object.keys(members[currentOrganization.id])?.length : 0),
 		[currentOrganization, members]
 	);
 
-	const handleOrganizationChange = (selected: SingleValue<SelectOption>) => {
-		const selectedOrg = organizations?.find((org) => org.id === selected?.value);
+	const handleOrganizationChange = (id: string) => {
+		const selectedOrg = organizations?.find((org) => org.id === id);
 		if (selectedOrg) {
 			handleOrganizationClick(selectedOrg.currentMember?.status, selectedOrg.id, selectedOrg.displayName);
 		}
@@ -143,11 +132,32 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 		navigate(href);
 	};
 
+	const popoverOrganizationItems = useMemo(
+		() =>
+			organizations?.map(({ id, displayName, currentMember }) => ({
+				id,
+				label: displayName,
+				itemClassName: cn(
+					"flex cursor-pointer items-center rounded-lg transition whitespace-nowrap p-2 text-black hover:bg-gray-1050 hover:text-white mt-0.5",
+					{
+						"bg-green-200": currentMember?.status === MemberStatusType.invited,
+						"pointer-events-none select-none": id === currentOrganization?.id,
+					}
+				),
+			})) || [],
+		[organizations, currentOrganization]
+	);
+
 	const hasPendingOrganizationInvite =
 		useMemo(
 			() => organizations?.some((org) => org.currentMember?.status === MemberStatusType.invited),
 			[organizations]
 		) || false;
+
+	const userCurrentOrganization = useMemo(
+		() => popoverOrganizationItems.find((org) => org.id === currentOrganization?.id),
+		[popoverOrganizationItems, currentOrganization]
+	);
 
 	return (
 		<>
@@ -180,9 +190,9 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 			</div>
 			<div className="my-3.5 h-px bg-gray-500" />
 			<div className="mb-2 flex items-center gap-2">
-				<h3 className="font-bold text-gray-1100">
+				<Typography className="font-bold text-gray-1100" element="h3">
 					{t("menu.organizationsList.title")} ({organizations?.length || 0})
-				</h3>
+				</Typography>
 				{hasPendingOrganizationInvite ? <div className="mt-0.5 size-3 rounded-full bg-green-800" /> : null}
 			</div>
 			<div className="mb-2.5 w-72">
@@ -191,13 +201,21 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 						<Loader isCenter />
 					</div>
 				) : (
-					<Select
-						defaultValue={selectOrganizations.find((option) => option.value === currentOrganization?.id)}
-						noOptionsLabel={t("menu.organizationsList.noOrganizationFound")}
-						onChange={handleOrganizationChange}
-						options={selectOrganizations}
-						variant="light"
-					/>
+					<PopoverListWrapper animation="slideFromBottom" interactionType="click">
+						<PopoverListTrigger className="flex w-full items-center justify-between rounded-lg border border-gray-750 px-2.5 py-2">
+							<div className="text-black">{userCurrentOrganization?.label}</div>
+							<ChevronDownIcon className="size-4" fill="black" />
+						</PopoverListTrigger>
+						<PopoverListContent
+							activeId={userCurrentOrganization?.id}
+							className="z-40 flex w-72 flex-col gap-0.5 rounded-lg border border-gray-750 bg-white px-2.5 pb-1 pt-0.5"
+							displaySearch={popoverOrganizationItems.length > 5}
+							emptyListMessage={t("menu.organizationsList.noOrganizationFound")}
+							items={popoverOrganizationItems}
+							maxItemsToShow={5}
+							onItemSelect={({ id }: { id: string }) => handleOrganizationChange(id)}
+						/>
+					</PopoverListWrapper>
 				)}
 			</div>
 			{currentOrganizationEnriched?.currentMember?.role === MemberRole.admin ? (

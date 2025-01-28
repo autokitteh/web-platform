@@ -107,7 +107,7 @@ export const PopoverListContent = React.forwardRef<
 					{popoverItems.map((item, index) => (
 						<div
 							aria-selected={context.activeIndex === index}
-							className={cn(itemClassName, {
+							className={cn(itemClassName, item.itemClassName, {
 								"bg-gray-1100 text-white hover:bg-gray-1100 cursor-pointer": item.id === activeId,
 							})}
 							key={item.id}
