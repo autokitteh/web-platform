@@ -28,7 +28,6 @@ export const ProjectTopbarButtons = () => {
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
 	const { deleteProject, downloadProjectExport, isDeleting, isExporting } = useProjectActions();
 	const navigate = useNavigate();
-
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
 

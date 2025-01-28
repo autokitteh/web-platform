@@ -1,4 +1,5 @@
 import i18n from "i18next";
+import isEqual from "lodash/isEqual";
 import { createSelector } from "reselect";
 import { StateCreator, create } from "zustand";
 
@@ -74,6 +75,7 @@ const initialState: Omit<
 const store: StateCreator<CacheStore> = (set, get) => ({
 	...initialState,
 	initCache: async (projectId, force = false) => {
+		set((state) => ({ ...state, currentProjectId: projectId }));
 		await Promise.all([
 			get().fetchResources(projectId, force),
 			get().fetchDeployments(projectId, force),
@@ -90,7 +92,7 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 		}
 
 		try {
-			const { data, error } = await IntegrationsService.list();
+			const { data: incomingIntegrations, error } = await IntegrationsService.list();
 
 			if (error) {
 				useToastStore.getState().addToast({
@@ -101,12 +103,15 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				return;
 			}
 
+			if (isEqual(incomingIntegrations, integrations)) {
+				return integrations;
+			}
 			set((state) => ({
 				...state,
-				integrations: data,
+				integrations: incomingIntegrations,
 			}));
 
-			return data;
+			return incomingIntegrations;
 		} catch (error) {
 			LoggerService.error(
 				namespaces.stores.cache,
@@ -207,6 +212,10 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				});
 			}
 
+			if (isEqual(deployments, incomingDeployments)) {
+				return deployments;
+			}
+
 			set((state) => ({
 				...state,
 				deployments: incomingDeployments,
@@ -238,27 +247,30 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		set((state) => ({
 			...state,
-			currentProjectId: projectId,
 			loading: { ...state.loading, triggers: true },
 		}));
 
 		try {
-			const { data: triggers, error } = await TriggersService.list(projectId!);
+			const { data: incomingTriggers, error } = await TriggersService.list(projectId!);
 
 			if (error) {
 				throw error;
 			}
-			if (!triggers) {
+			if (!incomingTriggers) {
 				return;
+			}
+
+			if (isEqual(triggers, incomingTriggers)) {
+				return triggers;
 			}
 
 			set((state) => ({
 				...state,
-				triggers,
+				triggers: incomingTriggers,
 				loading: { ...state.loading, triggers: false },
 			}));
 
-			get().checkState(projectId!, { triggers });
+			get().checkState(projectId!, { triggers: incomingTriggers });
 
 			return triggers;
 		} catch (error) {
@@ -337,7 +349,6 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 
 		set((state) => ({
 			...state,
-			currentProjectId: projectId,
 			loading: { ...state.loading, variables: true },
 		}));
 
@@ -356,6 +367,11 @@ const store: StateCreator<CacheStore> = (set, get) => ({
 				});
 				LoggerService.error(namespaces.stores.cache, errorLog);
 			}
+
+			if (isEqual(variables, vars)) {
+				return variables;
+			}
+
 			set((state) => ({
 				...state,
 				variables: vars,
