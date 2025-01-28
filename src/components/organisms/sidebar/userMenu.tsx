@@ -208,7 +208,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 						</PopoverListTrigger>
 						<PopoverListContent
 							activeId={userCurrentOrganization?.id}
-							className="z-40 flex w-72 flex-col gap-0.5 rounded-lg border border-gray-750 bg-white px-2.5 pb-1 pt-0.5"
+							className="z-40 flex w-72 flex-col gap-0.5 rounded-lg border border-gray-750 bg-white px-1 pb-1 pt-0.5"
 							displaySearch={popoverOrganizationItems.length > 5}
 							emptyListMessage={t("menu.organizationsList.noOrganizationFound")}
 							items={popoverOrganizationItems}
