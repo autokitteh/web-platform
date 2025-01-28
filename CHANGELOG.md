@@ -1,3 +1,10 @@
+## [2.133.2](https://github.com/autokitteh/web-platform/compare/v2.133.1...v2.133.2) (2025-01-28)
+
+
+### Bug Fixes
+
+* **UI-1262:** fix entrypoint deconstruction for manual run ([#937](https://github.com/autokitteh/web-platform/issues/937)) ([053f108](https://github.com/autokitteh/web-platform/commit/053f10882428fa3ab6d0098ab59f6fb9f3755cd0))
+
 ## [2.133.1](https://github.com/autokitteh/web-platform/compare/v2.133.0...v2.133.1) (2025-01-28)
 
 
