@@ -110,7 +110,7 @@ export const DashboardProjectsTable = () => {
 					<THead className="mr-0">
 						<Tr className="border-none pl-4">
 							<Th
-								className="group h-11 w-2/3 cursor-pointer font-normal sm:w-1/5"
+								className="group h-11 w-5/12 cursor-pointer font-normal"
 								onClick={() => requestSort("name")}
 							>
 								{t("table.columns.projectName")}
@@ -183,7 +183,7 @@ export const DashboardProjectsTable = () => {
 							}) => (
 								<Tr className="cursor-pointer pl-4 hover:bg-black" key={id}>
 									<Td
-										className="w-2/3 pr-4 hover:font-bold sm:w-1/5"
+										className="w-5/12 pr-4 hover:font-bold"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 										title={name}
 									>
@@ -193,7 +193,7 @@ export const DashboardProjectsTable = () => {
 										className="hidden w-1/6 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
-										<div className="max-w-16 pr-4 md:max-w-28">
+										<div className="pr-4">
 											<StatusBadge deploymentStatus={status} />
 										</div>
 									</Td>
