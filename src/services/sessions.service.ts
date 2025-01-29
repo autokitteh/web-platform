@@ -178,7 +178,7 @@ export class SessionsService {
 
 	static async stop(sessionId: string): Promise<ServiceResponse<undefined>> {
 		try {
-			await sessionsClient.stop({ sessionId });
+			await sessionsClient.stop({ sessionId, terminate: true, terminationDelay: { seconds: 2n } });
 
 			return { data: undefined, error: undefined };
 		} catch (error) {
