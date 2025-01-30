@@ -1,21 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, ErrorMessage, Input, Spinner, Textarea } from "@components/atoms";
+import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
 
 export const CustomOauthForm = ({
 	control,
 	errors,
 	isLoading,
+	mode,
 	register,
+	setValue,
 }: {
 	control: any;
 	errors: FieldErrors<any>;
 	isLoading: boolean;
+	mode: "create" | "edit";
 	register: UseFormRegister<{ [x: string]: any }>;
+	setValue: any;
 }) => {
+	const [lockState, setLockState] = useState<{ clientSecret: boolean; privateKey: boolean; webhookSecret: boolean }>({
+		clientSecret: true,
+		webhookSecret: true,
+		privateKey: true,
+	});
 	const { t } = useTranslation("integrations");
 
 	const clientId = useWatch({ control, name: "client_id" });
@@ -24,6 +33,8 @@ export const CustomOauthForm = ({
 	const webhookSecret = useWatch({ control, name: "webhook_secret" });
 	const enterpriseUrl = useWatch({ control, name: "enterprise_url" });
 	const privateKey = useWatch({ control, name: "private_key" });
+
+	const isEditMode = mode === "edit";
 
 	return (
 		<>
@@ -39,14 +50,31 @@ export const CustomOauthForm = ({
 				<ErrorMessage>{errors.client_id?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
-				<Input
-					{...register("client_secret")}
-					aria-label={t("github.placeholders.clientSecret")}
-					isError={!!errors.client_secret}
-					isRequired
-					label={t("github.placeholders.clientSecret")}
-					value={clientSecret}
-				/>
+				{isEditMode ? (
+					<SecretInput
+						type="password"
+						{...register("client_secret")}
+						aria-label={t("github.placeholders.clientSecret")}
+						handleInputChange={(newValue) => setValue("client_secret", newValue)}
+						handleLockAction={(newLockState) =>
+							setLockState((prevState) => ({ ...prevState, clientSecret: newLockState }))
+						}
+						isError={!!errors.client_secret}
+						isLocked={lockState.clientSecret}
+						isRequired
+						label={t("github.placeholders.clientSecret")}
+						value={clientSecret}
+					/>
+				) : (
+					<Input
+						{...register("client_secret")}
+						aria-label={t("github.placeholders.clientSecret")}
+						isError={!!errors.client_secret}
+						isRequired
+						label={t("github.placeholders.clientSecret")}
+						value={clientSecret}
+					/>
+				)}
 				<ErrorMessage>{errors.client_secret?.message as string}</ErrorMessage>
 			</div>
 			<div className="relative">
@@ -60,12 +88,28 @@ export const CustomOauthForm = ({
 				/>
 				<ErrorMessage>{errors.app_id?.message as string}</ErrorMessage>
 			</div>
-			<Input
-				{...register("webhook_secret")}
-				aria-label={t("github.placeholders.webhookSercet")}
-				label={t("github.placeholders.webhookSercet")}
-				value={webhookSecret}
-			/>
+			{isEditMode ? (
+				<SecretInput
+					type="password"
+					{...register("webhook_secret")}
+					aria-label={t("github.placeholders.webhookSercet")}
+					handleInputChange={(newValue) => setValue("webhook_secret", newValue)}
+					handleLockAction={(newLockState) =>
+						setLockState((prevState) => ({ ...prevState, webhookSecret: newLockState }))
+					}
+					isLocked={lockState.webhookSecret}
+					label={t("github.placeholders.webhookSercet")}
+					value={webhookSecret}
+				/>
+			) : (
+				<Input
+					{...register("webhook_secret")}
+					aria-label={t("github.placeholders.webhookSercet")}
+					label={t("github.placeholders.webhookSercet")}
+					value={webhookSecret}
+				/>
+			)}
+
 			<Input
 				{...register("enterprise_url")}
 				aria-label={t("github.placeholders.enterpriseUrl")}
@@ -73,16 +117,31 @@ export const CustomOauthForm = ({
 				value={enterpriseUrl}
 			/>
 			<div className="relative">
-				<Textarea
-					rows={5}
-					{...register("private_key")}
-					aria-label={t("github.placeholders.privateKey")}
-					isError={!!errors.private_key}
-					isRequired
-					label={t("github.placeholders.privateKey")}
-					value={privateKey}
-				/>
-
+				{isEditMode ? (
+					<SecretInput
+						type="password"
+						{...register("private_key")}
+						aria-label={t("github.placeholders.privateKey")}
+						handleInputChange={(newValue) => setValue("private_key", newValue)}
+						handleLockAction={(newLockState) =>
+							setLockState((prevState) => ({ ...prevState, privateKey: newLockState }))
+						}
+						isError={!!errors.private_key}
+						isLocked={lockState.privateKey}
+						isRequired
+						label={t("github.placeholders.privateKey")}
+						value={privateKey}
+					/>
+				) : (
+					<Input
+						{...register("private_key")}
+						aria-label={t("github.placeholders.privateKey")}
+						isError={!!errors.private_key}
+						isRequired
+						label={t("github.placeholders.privateKey")}
+						value={privateKey}
+					/>
+				)}
 				<ErrorMessage>{errors.private_key?.message as string}</ErrorMessage>
 			</div>
 
