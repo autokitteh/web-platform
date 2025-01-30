@@ -108,7 +108,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const getSpecificParams = (connectionData: Record<string, string>, specificKeys: string[]) => {
 		return specificKeys
-			.map((key) => (connectionData[key] ? `${key}=${connectionData[key]}` : ""))
+			.map((key) => (connectionData[key] ? `${key}=${encodeURIComponent(connectionData[key])}` : ""))
 			.filter((param) => param !== "")
 			.join("&");
 	};
