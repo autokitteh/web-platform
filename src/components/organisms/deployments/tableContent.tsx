@@ -133,7 +133,7 @@ export const DeploymentsTableContent = ({
 						<Th className="w-1/12" />
 
 						<Th className="group w-1/3 cursor-pointer font-normal">
-							<div className="flex w-full flex-row text-center">
+							<div className="flex w-full gap-1 text-center">
 								<div
 									aria-label={tSessionsStats("running")}
 									className="w-1/4 truncate"
@@ -208,7 +208,7 @@ export const DeploymentsTableContent = ({
 							<Td className="w-1/12" />
 
 							<Td className="w-1/3 cursor-pointer" onClick={() => goToDeploymentSessions(deploymentId)}>
-								<div className="flex justify-around truncate">
+								<div className="flex gap-1">
 									<DeploymentSessionStats deploymentId={deploymentId} sessionStats={sessionStats} />
 								</div>
 							</Td>

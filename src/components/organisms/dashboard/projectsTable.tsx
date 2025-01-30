@@ -76,7 +76,7 @@ export const DashboardProjectsTable = () => {
 
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
-			"inline-block border-0 px-1 text-sm font-medium min-w-10 max-w-12 py-2 truncate sm:max-w-12 2xl:max-w-18 3xl:max-w-24",
+			"inline-block border-0 text-sm font-medium min-w-10 max-w-12 py-2 px-2.5 truncate sm:max-w-12 2xl:max-w-18 3xl:max-w-24",
 			"hover:bg-gray-1100 rounded-3xl inline-flex justify-center items-center min-w-12 h-7",
 			getSessionStateColor(state),
 			className
