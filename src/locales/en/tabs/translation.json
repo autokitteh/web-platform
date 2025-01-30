@@ -87,7 +87,8 @@
 			"eventType": "Event type",
 			"filter": "Filter",
 			"connection": "Connection",
-			"connectionId": "Connection ID"
+			"connectionId": "Connection ID",
+			"connectionNotFound": "Connection not found"
 		},
 		"form": {
 			"createdSuccessfully": "Trigger created successfully",
