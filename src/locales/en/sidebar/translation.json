@@ -14,7 +14,7 @@
 			"members": "Members"
 		},
 		"organizationsList": {
-			"title": "Organization",
+			"title": "Organization ({{organizationsCount}})",
 			"newOrganization": "New Organization",
 			"noOrganizationFound": "No organizations found",
 			"userInvitintations": {
