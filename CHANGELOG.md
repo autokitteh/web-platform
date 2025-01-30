@@ -1,3 +1,10 @@
+## [2.133.4](https://github.com/autokitteh/web-platform/compare/v2.133.3...v2.133.4) (2025-01-30)
+
+
+### Bug Fixes
+
+* **UI-1267:** add termination options to stop session method ([#947](https://github.com/autokitteh/web-platform/issues/947)) ([d319936](https://github.com/autokitteh/web-platform/commit/d319936b369f519dba133856ca1af15f3209e04c))
+
 ## [2.133.3](https://github.com/autokitteh/web-platform/compare/v2.133.2...v2.133.3) (2025-01-28)
 
 
