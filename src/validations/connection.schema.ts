@@ -12,7 +12,7 @@ export const githubCustomAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client Secret is required"),
 	app_id: z.string().min(1, "App ID is required"),
-	webhook_secret: z.string().min(1, "Webhook Secret is required"),
+	webhook_secret: z.string(),
 	private_key: z.string().min(1, "Private Key is required"),
 });
 

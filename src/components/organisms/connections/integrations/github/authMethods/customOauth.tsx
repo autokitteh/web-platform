@@ -60,17 +60,12 @@ export const CustomOauthForm = ({
 				/>
 				<ErrorMessage>{errors.app_id?.message as string}</ErrorMessage>
 			</div>
-			<div className="relative">
-				<Input
-					{...register("webhook_secret")}
-					aria-label={t("github.placeholders.webhookSercet")}
-					isError={!!errors.webhook_secret}
-					isRequired
-					label={t("github.placeholders.webhookSercet")}
-					value={webhookSecret}
-				/>
-				<ErrorMessage>{errors.webhook_secret?.message as string}</ErrorMessage>
-			</div>
+			<Input
+				{...register("webhook_secret")}
+				aria-label={t("github.placeholders.webhookSercet")}
+				label={t("github.placeholders.webhookSercet")}
+				value={webhookSecret}
+			/>
 			<Input
 				{...register("enterprise_url")}
 				aria-label={t("github.placeholders.enterpriseUrl")}

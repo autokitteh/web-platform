@@ -15,8 +15,8 @@ export const integrationIcons: Record<string, React.ComponentType<React.SVGProps
 );
 
 export const githubIntegrationAuthMethods: SelectOption[] = [
-	{ label: "Default app", value: ConnectionAuthType.Oauth },
-	{ label: "Custom App", value: ConnectionAuthType.CustomOAuth },
+	{ label: "OAuth v2 - Default app", value: ConnectionAuthType.Oauth },
+	{ label: "OAuth v2 - Custom app", value: ConnectionAuthType.CustomOAuth },
 	{ label: "PAT + Webhook", value: ConnectionAuthType.Pat },
 ];
 
