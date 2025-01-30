@@ -110,7 +110,7 @@ export const DashboardProjectsTable = () => {
 					<THead className="mr-0">
 						<Tr className="border-none pl-4">
 							<Th
-								className="group h-11 w-5/12 cursor-pointer font-normal"
+								className="group h-11 w-[30%] cursor-pointer font-normal"
 								onClick={() => requestSort("name")}
 							>
 								{t("table.columns.projectName")}
@@ -122,7 +122,7 @@ export const DashboardProjectsTable = () => {
 								/>
 							</Th>
 							<Th
-								className="group hidden h-11 w-1/6 cursor-pointer font-normal sm:flex"
+								className="group hidden h-11 w-[12%] cursor-pointer font-normal sm:flex"
 								onClick={() => requestSort("status")}
 							>
 								<div className="w-full">
@@ -136,7 +136,7 @@ export const DashboardProjectsTable = () => {
 								</div>
 							</Th>
 							<Th
-								className="group hidden h-11 w-1/6 cursor-pointer font-normal sm:flex"
+								className="group hidden h-11 w-[10%] cursor-pointer font-normal sm:flex"
 								onClick={() => requestSort("totalDeployments")}
 							>
 								<div className="w-full text-center">
@@ -149,11 +149,11 @@ export const DashboardProjectsTable = () => {
 									/>
 								</div>
 							</Th>
-							<Th className="group hidden h-11 w-2/6 font-normal sm:flex">
+							<Th className="group hidden h-11 w-1/4 font-normal sm:flex">
 								{t("table.columns.sessions")}
 							</Th>
 							<Th
-								className="group hidden h-11 w-2/6 cursor-pointer font-normal sm:flex"
+								className="group hidden h-11 w-[15%] cursor-pointer font-normal sm:flex"
 								onClick={() => requestSort("lastDeployed")}
 							>
 								{t("table.columns.lastDeployed")}
@@ -164,7 +164,7 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group h-11 w-1/3 font-normal sm:w-1/6">{t("table.columns.actions")}</Th>
+							<Th className="group h-11 w-[8%] font-normal">{t("table.columns.actions")}</Th>
 						</Tr>
 					</THead>
 
@@ -183,14 +183,14 @@ export const DashboardProjectsTable = () => {
 							}) => (
 								<Tr className="cursor-pointer pl-4 hover:bg-black" key={id}>
 									<Td
-										className="w-5/12 pr-4 hover:font-bold"
+										className="w-[30%] pr-4 hover:font-bold"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 										title={name}
 									>
 										<div className="truncate">{name}</div>
 									</Td>
 									<Td
-										className="hidden w-1/6 sm:flex"
+										className="hidden w-[12%] sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div className="pr-4">
@@ -198,14 +198,14 @@ export const DashboardProjectsTable = () => {
 										</div>
 									</Td>
 									<Td
-										className="hidden w-1/6 sm:flex"
+										className="hidden w-[10%] sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 										title={`${totalDeployments} ${t("table.columns.totalDeployments")}`}
 									>
 										<div className="w-full pr-6 text-center">{totalDeployments}</div>
 									</Td>
 									<Td
-										className="-ml-1 hidden w-2/6 pr-2 sm:flex"
+										className="-ml-1 hidden w-1/4 pr-2 sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										<div
@@ -279,7 +279,7 @@ export const DashboardProjectsTable = () => {
 									</Td>
 
 									<Td
-										className="hidden w-2/6 sm:flex"
+										className="hidden w-[15%] sm:flex"
 										onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 									>
 										{lastDeployed
@@ -287,7 +287,7 @@ export const DashboardProjectsTable = () => {
 											: t("never")}
 									</Td>
 
-									<Td className="w-1/3 sm:w-1/6">
+									<Td className="w-[8%]">
 										<div className="flex">
 											<IconButton className="group" onClick={() => downloadProjectExport(id)}>
 												<IconSvg
