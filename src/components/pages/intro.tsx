@@ -12,7 +12,7 @@ export const Intro = () => {
 	const { isIOS, isMobile } = useWindowDimensions();
 
 	return (
-		<div className="my-0 flex w-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
+		<div className="flex size-full overflow-hidden rounded-none md:mt-1.5 md:rounded-2xl">
 			<div
 				className="relative flex w-2/3 flex-col"
 				style={{ width: `${!(isIOS || isMobile) ? leftSideWidth : 100}%` }}
