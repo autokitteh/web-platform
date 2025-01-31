@@ -4,8 +4,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { MemberRole } from "@src/enums";
+import { ModalName } from "@src/enums/components";
 import { useDeleteOrganization } from "@src/hooks";
-import { useOrganizationStore, useToastStore } from "@src/store";
+import { useModalStore, useOrganizationStore, useToastStore } from "@src/store";
 import { EnrichedOrganization } from "@src/types/models";
 
 import { Button, Typography, IconButton, TBody, THead, Table, Td, Th, Tr, Spinner } from "@components/atoms";
@@ -21,6 +22,7 @@ export const UserOrganizationsTable = () => {
 	const navigate = useNavigate();
 	const [organizationsList, setOrganizationsList] = useState<EnrichedOrganization[]>();
 	const { onDelete, organizationIdInDeletion, handleDeleteOrganization } = useDeleteOrganization();
+	const { closeModal } = useModalStore();
 
 	useEffect(() => {
 		getOrganizations();
@@ -47,6 +49,17 @@ export const UserOrganizationsTable = () => {
 			organizationRole !== MemberRole.admin ||
 			organizationIdInDeletion
 		);
+
+	const deleteOrganization = async (organization: EnrichedOrganization) => {
+		const { error } = await onDelete(organization);
+		if (!error) {
+			addToast({
+				message: t("table.messages.organizationDeleted", { name: organization.displayName }),
+				type: "success",
+			});
+		}
+		closeModal(ModalName.deleteOrganization);
+	};
 
 	return (
 		<div className="w-3/4">
@@ -96,7 +109,10 @@ export const UserOrganizationsTable = () => {
 					))}
 				</TBody>
 			</Table>
-			<DeleteOrganizationModal isDeleting={isLoading.deletingOrganization} onDelete={onDelete} />
+			<DeleteOrganizationModal
+				isDeleting={isLoading.deletingOrganization}
+				onDelete={(organization) => deleteOrganization(organization)}
+			/>
 			<WarningDeleteOrganizationModal />
 		</div>
 	);
