@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, ErrorMessage, Input, SecretInput, Spinner } from "@components/atoms";
+import { Button, ErrorMessage, Input, SecretInput, Spinner, Textarea } from "@components/atoms";
 
 export const CustomOauthForm = ({
 	control,
@@ -133,7 +133,8 @@ export const CustomOauthForm = ({
 						value={privateKey}
 					/>
 				) : (
-					<Input
+					<Textarea
+						rows={5}
 						{...register("private_key")}
 						aria-label={t("github.placeholders.privateKey")}
 						isError={!!errors.private_key}
