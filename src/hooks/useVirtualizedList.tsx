@@ -24,8 +24,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const outputsCacheStore = useOutputsCacheStore();
 	const activitiesCacheStore = useActivitiesCacheStore();
 
-	const { loadLogs, loading, reload, sessions } =
-		type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
+	const { loadLogs, loading, sessions } = type === SessionLogType.Output ? outputsCacheStore : activitiesCacheStore;
 
 	const [session, setSession] = useState<SessionOutputData | SessionActivityData>();
 
@@ -73,7 +72,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	useEffect(() => {
 		if (!sessionId) return;
 
-		reload(sessionId, pageSize);
+		loadLogs(sessionId, pageSize, true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 

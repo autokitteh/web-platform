@@ -13,21 +13,14 @@ import { useToastStore } from "@store";
 const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
-	isReloading: false,
-
-	reload: async (sessionId, pageSize) => {
-		set({ isReloading: true });
-		await get().loadLogs(sessionId, pageSize, true);
-		set({ isReloading: false });
-	},
-
 	loadLogs: async (sessionId, pageSize, force) => {
 		set({ loading: true });
-		const currentSession = get().sessions[sessionId] || { outputs: [], nextPageToken: null, fullyLoaded: false };
+
+		const initialSessionState = { outputs: [], nextPageToken: null, fullyLoaded: false };
+		const currentSession = force ? initialSessionState : get().sessions[sessionId] || initialSessionState;
 
 		if (currentSession.fullyLoaded && !force) {
 			set({ loading: false });
-
 			return;
 		}
 
@@ -39,33 +32,39 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				SessionLogType.Output
 			);
 
+			const addToast = useToastStore.getState().addToast;
 			if (error) {
-				useToastStore
-					.getState()
-					.addToast({ message: i18n.t("outputLogsFetchError", { ns: "errors" }), type: "error" });
+				addToast({
+					message: i18n.t("outputLogsFetchError", { ns: "errors" }),
+					type: "error",
+				});
+				return;
 			}
 
-			if (data) {
-				set((state) => ({
-					sessions: {
-						...state.sessions,
-						[sessionId]: {
-							outputs: get().isReloading
-								? convertSessionLogProtoToViewerOutput(data.records)
-								: [...currentSession.outputs, ...convertSessionLogProtoToViewerOutput(data.records)],
-							nextPageToken: data.nextPageToken,
-							fullyLoaded: !data.nextPageToken,
-						},
+			if (!data) return;
+
+			const convertedOutputs = convertSessionLogProtoToViewerOutput(data.records);
+			const outputs = force ? convertedOutputs : [...currentSession.outputs, ...convertedOutputs];
+
+			set((state) => ({
+				sessions: {
+					...state.sessions,
+					[sessionId]: {
+						outputs,
+						nextPageToken: data.nextPageToken,
+						fullyLoaded: !data.nextPageToken,
 					},
-				}));
-			}
+				},
+			}));
 		} catch (error) {
-			useToastStore
-				.getState()
-				.addToast({ message: i18n.t("outputLogsFetchError", { ns: "errors" }), type: "error" });
+			const errorMessage = (error as Error).message;
+			useToastStore.getState().addToast({
+				message: i18n.t("outputLogsFetchError", { ns: "errors" }),
+				type: "error",
+			});
 			LoggerService.error(
 				namespaces.stores.outputStore,
-				i18n.t("outputLogsFetchErrorExtended", { ns: "errors", error: (error as Error).message })
+				i18n.t("outputLogsFetchErrorExtended", { ns: "errors", error: errorMessage })
 			);
 		} finally {
 			set({ loading: false });

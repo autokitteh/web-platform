@@ -16,3 +16,4 @@ export { SortOrder } from "@enums/sortOrder.enum";
 export { StoreName } from "@enums/storeName.enum";
 export { TriggerType, TriggerTypes } from "@enums/trigger.enum";
 export { UserStatus, UserStatusType } from "@enums/userStatus.enum";
+export { EventListenerName } from "@enums/eventListenerNames.enum";

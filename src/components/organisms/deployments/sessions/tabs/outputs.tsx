@@ -3,7 +3,8 @@ import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { AutoSizer, CellMeasurer, CellMeasurerCache, InfiniteLoader, List, ListRowProps } from "react-virtualized";
 
 import { useVirtualizedList } from "@hooks/useVirtualizedList";
-import { SessionLogType } from "@src/enums";
+import { EventListenerName, SessionLogType } from "@src/enums";
+import { useEventListener } from "@src/hooks";
 import { SessionOutput } from "@src/interfaces/models";
 
 const OutputRow = memo(({ log, measure }: { log: SessionOutput; measure: () => void }) => {
@@ -89,6 +90,7 @@ export const SessionOutputs = () => {
 		},
 		[listRef]
 	);
+	useEventListener(EventListenerName.sessionLogViewerScrollToTop, () => listRef.current?.scrollToRow(0));
 
 	return (
 		<div className="scrollbar size-full">

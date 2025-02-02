@@ -17,7 +17,8 @@ import {
 } from "@constants";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
-import { SessionState } from "@src/enums";
+import { EventListenerName, SessionState } from "@src/enums";
+import { triggerEvent } from "@src/hooks";
 import { ViewerSession } from "@src/interfaces/models/session.interface";
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@src/store";
 
@@ -44,8 +45,8 @@ export const SessionViewer = () => {
 	const [isInitialLoad, setIsInitialLoad] = useState(true);
 	const addToast = useToastStore((state) => state.addToast);
 
-	const { loading: loadingOutputs, reload: reloadOutputs } = useOutputsCacheStore();
-	const { loading: loadingActivities, reload: reloadActivities } = useActivitiesCacheStore();
+	const { loading: loadingOutputs, loadLogs: loadOutputs } = useOutputsCacheStore();
+	const { loading: loadingActivities, loadLogs: loadActivities } = useActivitiesCacheStore();
 
 	const closeEditor = useCallback(() => {
 		if (deploymentId) {
@@ -88,10 +89,11 @@ export const SessionViewer = () => {
 		if (!sessionInfo) return;
 		setIsLoading(true);
 		await fetchSessionInfo();
-		await reloadOutputs(sessionInfo.sessionId, sessionLogRowHeight);
-		await reloadActivities(sessionInfo.sessionId, sessionLogRowHeight);
+		await loadOutputs(sessionInfo.sessionId, sessionLogRowHeight, true);
+		await loadActivities(sessionInfo.sessionId, sessionLogRowHeight, true);
 		setIsLoading(false);
-	}, [sessionInfo, fetchSessionInfo, reloadOutputs, reloadActivities]);
+		triggerEvent(EventListenerName.sessionLogViewerScrollToTop);
+	}, [sessionInfo, fetchSessionInfo, loadOutputs, loadActivities]);
 
 	useEffect(() => {
 		const pathSegments = location.pathname.split("/");

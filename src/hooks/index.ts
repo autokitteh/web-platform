@@ -12,3 +12,4 @@ export { useVirtualizedList } from "@hooks/useVirtualizedList";
 export { useWindowDimensions } from "@hooks/useWindowDimensions";
 export { usePopover, usePopoverList } from "@src/hooks/usePopover";
 export { useProjectActions } from "@src/hooks/useProjectActions";
+export { useEventListener, triggerEvent } from "@src/hooks/useEventListener";
