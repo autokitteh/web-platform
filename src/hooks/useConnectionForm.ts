@@ -387,7 +387,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			};
 
 			openPopup(
-				`${apiBaseUrl}/${integrationName}/${intCustomOAuthUrl[integrationName]}?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
+				`${apiBaseUrl}/${integrationName}/${intCustomOAuthUrl[integrationName]}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);
