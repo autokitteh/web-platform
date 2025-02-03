@@ -52,8 +52,16 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 				value: triggerConnection?.name,
 			},
 			{
-				label: t("connectionId"),
-				value: <IdCopyButton displayFullLength id={triggerConnection!.connectionId} />,
+				label: triggerConnection?.connectionId ? (
+					t("connectionId")
+				) : (
+					<div className="text-error">{t("connectionNotFound")}</div>
+				),
+				value: triggerConnection?.connectionId ? (
+					<IdCopyButton displayFullLength id={triggerConnection.connectionId} />
+				) : (
+					" "
+				),
 			},
 			...baseDetails,
 			{ label: t("eventType"), value: trigger.eventType },
@@ -87,10 +95,13 @@ export const InformationPopoverContent = ({ trigger }: { trigger: Trigger }) => 
 				<div className="w-full" />
 			</div>
 			{details.map(
-				({ label, value }) =>
+				({ label, value }, index) =>
 					value && (
-						<div className="flex items-center gap-x-1" key={label}>
-							<div className="font-semibold">{label}:</div>
+						<div className="flex items-center gap-x-1" key={index}>
+							<div className="font-semibold">
+								{label}
+								{value.toString().trim() ? ":" : null}
+							</div>
 							{value}
 						</div>
 					)

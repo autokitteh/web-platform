@@ -4,6 +4,6 @@ export type SortableColumns = keyof Pick<Trigger, "name" | "sourceType" | "entry
 
 export type TriggerPopoverInformation = {
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	label: string;
+	label: string | React.ReactNode;
 	value?: string | React.ReactNode;
 };
