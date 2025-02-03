@@ -207,8 +207,8 @@ export const DeploymentsTableContent = ({
 							</Td>
 							<Td className="w-1/12" />
 
-							<Td className="w-1/3 cursor-pointer" onClick={() => goToDeploymentSessions(deploymentId)}>
-								<div className="flex gap-1">
+							<Td className="w-1/3 cursor-pointer">
+								<div className="flex gap-1 pl-2">
 									<DeploymentSessionStats deploymentId={deploymentId} sessionStats={sessionStats} />
 								</div>
 							</Td>

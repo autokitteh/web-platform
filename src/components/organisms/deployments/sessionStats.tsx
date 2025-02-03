@@ -22,7 +22,7 @@ export const DeploymentSessionStats = ({
 	const { t } = useTranslation("deployments", { keyPrefix: "sessionStats" });
 	const countStyle = (state?: SessionStateType) =>
 		cn(
-			"w-1/4 text-sm font-medium truncate rounded-3xl flex justify-center",
+			"w-1/3 text-sm font-medium truncate rounded-3xl flex justify-center pl-1",
 			getSessionStateColor(state),
 			className
 		);
@@ -72,7 +72,7 @@ export const DeploymentSessionStats = ({
 			tabIndex={0}
 			title={`${count} ${t(state?.toString() || "")}`}
 		>
-			<div className="inline-block min-w-12 rounded-3xl px-2.5 py-1 text-center hover:bg-gray-1100">{count}</div>
+			<div className="inline-block min-w-12 truncate rounded-3xl px-2.5 py-1 hover:bg-gray-1100">{count}</div>
 		</div>
 	));
 };
