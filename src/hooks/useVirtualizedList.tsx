@@ -18,7 +18,7 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	customRowRenderer?: (props: ListRowProps, item: T) => React.ReactNode
 ): VirtualizedListHookResult<T> {
 	const { sessionId } = useParams<{ sessionId: string }>();
-	const { t } = useTranslation("deployments", { keyPrefix: "viewer" });
+	const { t } = useTranslation("deployments", { keyPrefix: "sessions.viewer" });
 	const frameRef = useRef<HTMLDivElement>(null);
 	const addToast = useToastStore((state) => state.addToast);
 
