@@ -17,6 +17,7 @@ export const DeleteOrganizationModal = ({ onDelete, isDeleting }: DeleteOrganiza
 	const organization = useModalStore((state) => state.data) as EnrichedOrganization;
 
 	if (!organization) return null;
+
 	return (
 		<Modal name={ModalName.deleteOrganization}>
 			<div className="mx-6">

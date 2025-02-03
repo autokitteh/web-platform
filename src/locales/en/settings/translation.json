@@ -110,6 +110,8 @@
 			}
 		},
 		"modal": {
+			"warning": "Warning",
+			"organizationDeleteWarning": "To delete the organization {{name}}, you have to delete all projects in it first",
 			"organizationCreated": "Organization {{name}} created",
 			"addMember": "Add new member to organization",
 			"line1": "The action is irreversible.",
@@ -126,6 +128,7 @@
 				"open": "Open {{name}}",
 				"create": "Create",
 				"cancel": "Cancel",
+				"close": "Close",
 				"delete": "Delete"
 			}
 		},
