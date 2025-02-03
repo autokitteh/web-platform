@@ -221,7 +221,7 @@ export const DashboardProjectsTable = () => {
 											tabIndex={0}
 											title={`${running} ${t("table.sessionTypes.running")}`}
 										>
-											<div className="truncate">{running}</div>
+											<div className="w-full truncate text-center">{running}</div>
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.stopped")}
@@ -236,7 +236,7 @@ export const DashboardProjectsTable = () => {
 											tabIndex={0}
 											title={`${stopped} ${t("table.sessionTypes.stopped")}`}
 										>
-											<div className="truncate">{stopped}</div>
+											<div className="w-full truncate text-center">{stopped}</div>
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.completed")}
@@ -259,7 +259,7 @@ export const DashboardProjectsTable = () => {
 											tabIndex={0}
 											title={`${completed} ${t("table.sessionTypes.completed")}`}
 										>
-											<div className="truncate">{completed}</div>
+											<div className="w-full truncate text-center">{completed}</div>
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.error")}
@@ -274,7 +274,7 @@ export const DashboardProjectsTable = () => {
 											tabIndex={0}
 											title={`${error} ${t("table.sessionTypes.error")}`}
 										>
-											<div className="truncate"> {error}</div>
+											<div className="w-full truncate text-center"> {error}</div>
 										</div>
 									</Td>
 
