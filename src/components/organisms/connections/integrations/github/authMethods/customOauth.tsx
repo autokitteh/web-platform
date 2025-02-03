@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, ErrorMessage, Input, SecretInput, Spinner, Textarea } from "@components/atoms";
+import { Button, Checkbox, ErrorMessage, Input, SecretInput, Spinner, Textarea } from "@components/atoms";
 
 export const CustomOauthForm = ({
 	control,
@@ -25,6 +25,7 @@ export const CustomOauthForm = ({
 		webhookSecret: true,
 		privateKey: true,
 	});
+	const [updatePrivateKey, setUpdatePrivateKey] = useState(false);
 	const { t } = useTranslation("integrations");
 
 	const clientId = useWatch({ control, name: "client_id" });
@@ -118,21 +119,16 @@ export const CustomOauthForm = ({
 			/>
 			<div className="relative">
 				{isEditMode ? (
-					<SecretInput
-						type="password"
-						{...register("private_key")}
-						aria-label={t("github.placeholders.privateKey")}
-						handleInputChange={(newValue) => setValue("private_key", newValue)}
-						handleLockAction={(newLockState) =>
-							setLockState((prevState) => ({ ...prevState, privateKey: newLockState }))
-						}
-						isError={!!errors.private_key}
-						isLocked={lockState.privateKey}
-						isRequired
-						label={t("github.placeholders.privateKey")}
-						value={privateKey}
+					<Checkbox
+						checked={updatePrivateKey}
+						isLoading={false}
+						label={t("github.updatePrivateKey")}
+						labelClassName="text-md"
+						onChange={(value) => setUpdatePrivateKey(value)}
 					/>
-				) : (
+				) : null}
+
+				{!isEditMode || updatePrivateKey ? (
 					<Textarea
 						rows={5}
 						{...register("private_key")}
@@ -142,7 +138,7 @@ export const CustomOauthForm = ({
 						label={t("github.placeholders.privateKey")}
 						value={privateKey}
 					/>
-				)}
+				) : null}
 				<ErrorMessage>{errors.private_key?.message as string}</ErrorMessage>
 			</div>
 

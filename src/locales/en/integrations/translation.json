@@ -50,6 +50,7 @@
 			"initConnection": "AutoKitteh guide: initializing a connection with a PAT and/or a webhook",
 			"setting": "Setting a PAT policy for your organization"
 		},
+		"updatePrivateKey": "Update the private key",
 		"placeholders": {
 			"name": "Name",
 			"pat": "Personal Access Token (PAT) - fine-grained or classic",

@@ -55,6 +55,13 @@ export const IntegrationEditForm = ({
 
 			return;
 		}
+
+		if (connectionType === ConnectionAuthType.OauthDefault) {
+			setValue("auth_type", ConnectionAuthType.OauthDefault);
+			setValue("auth_scopes", integrationType);
+
+			return;
+		}
 		setValue("auth_type", ConnectionAuthType.Json);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,7 +90,7 @@ export const IntegrationEditForm = ({
 	);
 
 	const onSubmit = () => {
-		if (connectionId && connectionType === ConnectionAuthType.Oauth) {
+		if (connectionId && (connectionType === ConnectionAuthType.Oauth || ConnectionAuthType.OauthDefault)) {
 			if (isGoogleIntegration(integrationType)) {
 				handleCustomOauth(connectionId, defaultGoogleConnectionName);
 
