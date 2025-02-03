@@ -14,12 +14,13 @@ export const SystemLog = () => {
 	const { clearLogs, logs, setSystemLogHeight } = useLoggerStore();
 	const { t } = useTranslation("projects", { keyPrefix: "outputLog" });
 
-	const ouputTextStyle = {
+	const outputTextStyle = {
 		[LoggerLevel.debug]: "",
 		[LoggerLevel.error]: "text-error-200",
 		[LoggerLevel.info]: "text-blue-500",
 		[LoggerLevel.log]: "",
 		[LoggerLevel.warn]: "text-yellow-500",
+		[LoggerLevel.unspecified]: "",
 	} as const;
 
 	return (
@@ -50,7 +51,7 @@ export const SystemLog = () => {
 						<span className="text-gray-250">{timestamp}</span>
 
 						<div className="ml-2 inline">
-							<span className={cn(ouputTextStyle[status])}>{status}</span>:
+							<span className={cn(outputTextStyle[status])}>{status}</span>:
 							<span className="break-all">{message}</span>
 						</div>
 					</div>
