@@ -15,11 +15,11 @@ export interface SessionOutputData {
 export interface ActivitiesStore {
 	sessions: Record<string, SessionActivityData>;
 	loading: boolean;
-	loadLogs: (sessionId: string, pageSize?: number, force?: boolean) => Promise<void>;
+	loadLogs: (sessionId: string, pageSize?: number, force?: boolean) => Promise<{ error?: boolean }>;
 }
 
 export interface OutputsStore {
 	sessions: Record<string, SessionOutputData>;
 	loading: boolean;
-	loadLogs: (sessionId: string, pageSize?: number, force?: boolean) => Promise<void>;
+	loadLogs: (sessionId: string, pageSize?: number, force?: boolean) => Promise<{ error?: boolean }>;
 }

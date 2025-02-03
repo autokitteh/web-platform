@@ -10,7 +10,7 @@ import { VirtualizedListHookResult } from "@src/interfaces/hooks";
 import { SessionActivity, SessionOutput } from "@src/interfaces/models";
 import { SessionActivityData, SessionOutputData } from "@src/interfaces/store";
 
-import { useActivitiesCacheStore, useOutputsCacheStore } from "@store";
+import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@store";
 
 export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	type: SessionLogType,
@@ -18,8 +18,9 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	customRowRenderer?: (props: ListRowProps, item: T) => React.ReactNode
 ): VirtualizedListHookResult<T> {
 	const { sessionId } = useParams<{ sessionId: string }>();
-	const { t } = useTranslation("deployments", { keyPrefix: "sessionAndActivities" });
+	const { t } = useTranslation("deployments", { keyPrefix: "viewer" });
 	const frameRef = useRef<HTMLDivElement>(null);
+	const addToast = useToastStore((state) => state.addToast);
 
 	const outputsCacheStore = useOutputsCacheStore();
 	const activitiesCacheStore = useActivitiesCacheStore();
@@ -61,18 +62,28 @@ export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
 	const frameHeight = frameRef?.current?.offsetHeight || standardScreenHeightFallback;
 	const pageSize = Math.ceil((frameHeight / itemHeight) * 1.5);
 
-	const loadMoreRows = async (): Promise<void> => {
+	const fetchLogs = async (sessionId: string, pageSize: number, force?: boolean) => {
+		const { error } = await loadLogs(sessionId, pageSize, force);
+
+		if (error) {
+			addToast({
+				message: type === SessionLogType.Output ? t("outputLogsFetchError") : t("activityLogsFetchError"),
+				type: "error",
+			});
+		}
+	};
+
+	const loadMoreRows = async () => {
 		if (!sessionId || !shouldLoadMore) {
 			return;
 		}
 
-		await loadLogs(sessionId, pageSize);
+		fetchLogs(sessionId, pageSize);
 	};
 
 	useEffect(() => {
 		if (!sessionId) return;
-
-		loadLogs(sessionId, pageSize, true);
+		fetchLogs(sessionId, pageSize, true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionId]);
 

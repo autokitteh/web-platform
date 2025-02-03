@@ -8,8 +8,6 @@ import { SessionLogType } from "@src/enums";
 import { OutputsStore } from "@src/interfaces/store";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
 
-import { useToastStore } from "@store";
-
 const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
@@ -21,7 +19,7 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 
 		if (currentSession.fullyLoaded && !force) {
 			set({ loading: false });
-			return;
+			return { error: false };
 		}
 
 		try {
@@ -32,16 +30,26 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				SessionLogType.Output
 			);
 
-			const addToast = useToastStore.getState().addToast;
 			if (error) {
-				addToast({
-					message: i18n.t("outputLogsFetchError", { ns: "errors" }),
-					type: "error",
-				});
-				return;
+				set({ loading: false });
+
+				return { error: true };
 			}
 
-			if (!data) return;
+			if (!data) {
+				set((state) => ({
+					sessions: {
+						...state.sessions,
+						[sessionId]: {
+							outputs: [],
+							nextPageToken: "",
+							fullyLoaded: false,
+						},
+					},
+					loading: false,
+				}));
+				return { error: true };
+			}
 
 			const convertedOutputs = convertSessionLogProtoToViewerOutput(data.records);
 			const outputs = force ? convertedOutputs : [...currentSession.outputs, ...convertedOutputs];
@@ -58,17 +66,17 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 			}));
 		} catch (error) {
 			const errorMessage = (error as Error).message;
-			useToastStore.getState().addToast({
-				message: i18n.t("outputLogsFetchError", { ns: "errors" }),
-				type: "error",
-			});
 			LoggerService.error(
 				namespaces.stores.outputStore,
 				i18n.t("outputLogsFetchErrorExtended", { ns: "errors", error: errorMessage })
 			);
-		} finally {
 			set({ loading: false });
+
+			return { error: true };
 		}
+		set({ loading: false });
+
+		return { error: false };
 	},
 });
 

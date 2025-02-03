@@ -89,10 +89,17 @@ export const SessionViewer = () => {
 		if (!sessionInfo) return;
 		setIsLoading(true);
 		await fetchSessionInfo();
-		await loadOutputs(sessionInfo.sessionId, sessionLogRowHeight, true);
-		await loadActivities(sessionInfo.sessionId, sessionLogRowHeight, true);
+		const { error: outputsError } = await loadOutputs(sessionInfo.sessionId, sessionLogRowHeight, true);
+		if (outputsError) {
+			addToast({ message: t("outputLogsFetchError"), type: "error" });
+		}
+		const { error: activitiesError } = await loadActivities(sessionInfo.sessionId, sessionLogRowHeight, true);
+		if (activitiesError) {
+			addToast({ message: t("activityLogsFetchError"), type: "error" });
+		}
 		setIsLoading(false);
 		triggerEvent(EventListenerName.sessionLogViewerScrollToTop);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sessionInfo, fetchSessionInfo, loadOutputs, loadActivities]);
 
 	useEffect(() => {

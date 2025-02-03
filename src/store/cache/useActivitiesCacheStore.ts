@@ -7,8 +7,6 @@ import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 
-import { useToastStore } from "@store";
-
 const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
@@ -26,7 +24,7 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 			if (currentSession.fullyLoaded && !force) {
 				set({ loading: false });
 
-				return;
+				return { error: false };
 			}
 
 			const { data, error } = await SessionsService.getLogRecordsBySessionId(
@@ -37,41 +35,51 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 			);
 
 			if (error) {
-				useToastStore.getState().addToast({
-					message: i18n.t("activityLogsFetchError", { ns: "errors" }),
-					type: "error",
-				});
+				set({ loading: false });
+
+				return { error: true };
 			}
 
-			if (data) {
+			if (!data) {
 				set((state) => ({
 					sessions: {
 						...state.sessions,
 						[sessionId]: {
-							activities: force
-								? convertSessionLogRecordsProtoToActivitiesModel(data.records)
-								: [
-										...currentSession.activities,
-										...convertSessionLogRecordsProtoToActivitiesModel(data.records),
-									],
-							nextPageToken: data.nextPageToken,
-							fullyLoaded: !data.nextPageToken,
+							activities: [],
+							nextPageToken: "",
+							fullyLoaded: false,
 						},
 					},
+					loading: false,
 				}));
+				return { error: true };
 			}
+
+			set((state) => ({
+				sessions: {
+					...state.sessions,
+					[sessionId]: {
+						activities: force
+							? convertSessionLogRecordsProtoToActivitiesModel(data.records)
+							: [
+									...currentSession.activities,
+									...convertSessionLogRecordsProtoToActivitiesModel(data.records),
+								],
+						nextPageToken: data.nextPageToken,
+						fullyLoaded: !data.nextPageToken,
+					},
+				},
+			}));
 		} catch (error) {
-			useToastStore.getState().addToast({
-				message: i18n.t("activityLogsFetchError", { ns: "errors" }),
-				type: "error",
-			});
 			LoggerService.error(
 				namespaces.stores.activitiesStore,
 				i18n.t("activityLogsFetchErrorExtended", { ns: "errors", error: (error as Error).message })
 			);
-		} finally {
 			set({ loading: false });
+			return { error: true };
 		}
+		set({ loading: false });
+		return { error: false };
 	},
 });
 

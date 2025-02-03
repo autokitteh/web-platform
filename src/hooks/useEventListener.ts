@@ -4,13 +4,8 @@ import { EventListenerName } from "@src/enums";
 
 export const useEventListener = (eventName: EventListenerName, handler: () => void) => {
 	useEffect(() => {
-		const eventHandler = () => {
-			handler();
-		};
-
-		window.addEventListener(eventName, eventHandler as EventListener);
-
-		return () => window.removeEventListener(eventName, eventHandler as EventListener);
+		window.addEventListener(eventName, handler as EventListener);
+		return () => window.removeEventListener(eventName, handler as EventListener);
 	}, [eventName, handler]);
 };
 
