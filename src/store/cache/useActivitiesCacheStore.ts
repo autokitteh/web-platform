@@ -7,23 +7,18 @@ import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 
+const initialSessionState = { activities: [], nextPageToken: "", fullyLoaded: false };
+
 const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
-
 	loadLogs: async (sessionId, pageSize, force) => {
-		set({ loading: true });
-
 		try {
-			const currentSession = get().sessions[sessionId] || {
-				activities: [],
-				nextPageToken: null,
-				fullyLoaded: false,
-			};
+			set({ loading: true });
+
+			const currentSession = force ? initialSessionState : (get().sessions[sessionId] ?? initialSessionState);
 
 			if (currentSession.fullyLoaded && !force) {
-				set({ loading: false });
-
 				return { error: false };
 			}
 
@@ -34,52 +29,44 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 				SessionLogType.Activity
 			);
 
-			if (error) {
-				set({ loading: false });
-
-				return { error: true };
-			}
-
-			if (!data) {
+			if (error || !data) {
 				set((state) => ({
 					sessions: {
 						...state.sessions,
-						[sessionId]: {
-							activities: [],
-							nextPageToken: "",
-							fullyLoaded: false,
-						},
+						[sessionId]: initialSessionState,
 					},
 					loading: false,
 				}));
 				return { error: true };
 			}
 
+			const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(data.records);
+			const activities = force ? convertedActivities : [...currentSession.activities, ...convertedActivities];
+
 			set((state) => ({
 				sessions: {
 					...state.sessions,
 					[sessionId]: {
-						activities: force
-							? convertSessionLogRecordsProtoToActivitiesModel(data.records)
-							: [
-									...currentSession.activities,
-									...convertSessionLogRecordsProtoToActivitiesModel(data.records),
-								],
+						activities,
 						nextPageToken: data.nextPageToken,
 						fullyLoaded: !data.nextPageToken,
 					},
 				},
 			}));
-		} catch (error) {
+
+			return { error: false };
+		} catch (error: unknown) {
 			LoggerService.error(
 				namespaces.stores.activitiesStore,
-				i18n.t("activityLogsFetchErrorExtended", { ns: "errors", error: (error as Error).message })
+				i18n.t("activityLogsFetchErrorExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				})
 			);
-			set({ loading: false });
 			return { error: true };
+		} finally {
+			set({ loading: false });
 		}
-		set({ loading: false });
-		return { error: false };
 	},
 });
 
