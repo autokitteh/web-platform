@@ -18,6 +18,7 @@ import {
 	TwilioIntegrationEditForm,
 	HeightIntegrationEditForm,
 	ZoomIntegrationEditForm,
+	LinearIntegrationEditForm,
 } from "@components/organisms/connections/integrations";
 
 export const integrationToEditComponent: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
@@ -40,4 +41,5 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.hubspot]: HubspotIntegrationEditForm,
 	[Integrations.height]: HeightIntegrationEditForm,
 	[Integrations.zoom]: ZoomIntegrationEditForm,
+	[Integrations.linear]: LinearIntegrationEditForm,
 };

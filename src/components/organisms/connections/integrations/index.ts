@@ -44,3 +44,7 @@ export {
 	HeightIntegrationEditForm,
 } from "@components/organisms/connections/integrations/height";
 export { ZoomIntegrationAddForm, ZoomIntegrationEditForm } from "@components/organisms/connections/integrations/zoom";
+export {
+	LinearIntegrationAddForm,
+	LinearIntegrationEditForm,
+} from "@components/organisms/connections/integrations/linear";

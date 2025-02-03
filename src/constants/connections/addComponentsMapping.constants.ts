@@ -13,6 +13,7 @@ import {
 	GoogleIntegrationAddForm,
 	HubspotIntegrationAddForm,
 	JiraIntegrationAddForm,
+	LinearIntegrationAddForm,
 	OpenAiIntegrationAddForm,
 	SlackIntegrationAddForm,
 	TwilioIntegrationAddForm,
@@ -40,4 +41,5 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	hubspot: HubspotIntegrationAddForm,
 	height: HeightIntegrationAddForm,
 	zoom: ZoomIntegrationAddForm,
+	linear: LinearIntegrationAddForm,
 };
