@@ -1,3 +1,10 @@
+## [2.133.5](https://github.com/autokitteh/web-platform/compare/v2.133.4...v2.133.5) (2025-02-03)
+
+
+### Bug Fixes
+
+* **UI-1277:** update height dashboard and intro components ([#949](https://github.com/autokitteh/web-platform/issues/949)) ([12c2351](https://github.com/autokitteh/web-platform/commit/12c23511443f51a68944c10303126983f729623d))
+
 ## [2.133.4](https://github.com/autokitteh/web-platform/compare/v2.133.3...v2.133.4) (2025-01-30)
 
 
