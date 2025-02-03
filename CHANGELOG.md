@@ -1,3 +1,10 @@
+## [2.133.6](https://github.com/autokitteh/web-platform/compare/v2.133.5...v2.133.6) (2025-02-03)
+
+
+### Bug Fixes
+
+* **UI-1268:** enhance connection ID display in popover ([#948](https://github.com/autokitteh/web-platform/issues/948)) ([b556ec3](https://github.com/autokitteh/web-platform/commit/b556ec35fff2b35bb2a5e12975252fba3b900ebe))
+
 ## [2.133.5](https://github.com/autokitteh/web-platform/compare/v2.133.4...v2.133.5) (2025-02-03)
 
 
