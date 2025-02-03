@@ -21,6 +21,7 @@ export interface SelectProps {
 
 export interface SelectOption {
 	disabled?: boolean;
+	hidden?: boolean;
 	label: string;
 	value: string;
 	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;

@@ -365,10 +365,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const handleCustomOauth = async (
 		oauthConnectionId: string,
 		integrationName: keyof typeof Integrations | typeof defaultGoogleConnectionName,
+
 		authType:
 			| ConnectionAuthType.OauthPrivate
+			// TODO: remove ConnectionAuthType.Oauth after removing the old ConnectionAuthType.Oauth
 			| ConnectionAuthType.Oauth
-			| ConnectionAuthType.OauthDefault = ConnectionAuthType.OauthDefault
+			// TODO: move all to ConnectionAuthType.OauthDefault after removing ConnectionAuthType.Oauth
+			| ConnectionAuthType.OauthDefault = ConnectionAuthType.Oauth
 	) => {
 		setIsLoading(true);
 		try {
