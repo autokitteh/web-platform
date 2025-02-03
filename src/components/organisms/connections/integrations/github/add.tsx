@@ -43,11 +43,11 @@ export const GithubIntegrationAddForm = ({
 			case ConnectionAuthType.Pat:
 				await createConnection(connectionId, ConnectionAuthType.Pat, Integrations.github);
 				break;
-			case ConnectionAuthType.Oauth:
+			case ConnectionAuthType.OauthDefault:
 				await handleOAuth(connectionId, Integrations.github);
 				break;
-			case ConnectionAuthType.CustomOAuth:
-				await handleCustomOauth(connectionId, Integrations.github, ConnectionAuthType.CustomOAuth);
+			case ConnectionAuthType.OauthPrivate:
+				await handleCustomOauth(connectionId, Integrations.github, ConnectionAuthType.OauthPrivate);
 				break;
 			default:
 				break;
@@ -58,12 +58,12 @@ export const GithubIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.Oauth) {
+		if (connectionType.value === ConnectionAuthType.OauthDefault) {
 			setValidationSchema(oauthSchema);
 
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.CustomOAuth) {
+		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
 			setValidationSchema(githubCustomAuthIntegrationSchema);
 
 			return;

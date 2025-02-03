@@ -337,7 +337,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
-				value: ConnectionAuthType.Oauth,
+				value: ConnectionAuthType.OauthDefault,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
@@ -365,7 +365,10 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	const handleCustomOauth = async (
 		oauthConnectionId: string,
 		integrationName: keyof typeof Integrations | typeof defaultGoogleConnectionName,
-		authType: ConnectionAuthType.CustomOAuth | ConnectionAuthType.Oauth = ConnectionAuthType.Oauth
+		authType:
+			| ConnectionAuthType.OauthPrivate
+			| ConnectionAuthType.Oauth
+			| ConnectionAuthType.OauthDefault = ConnectionAuthType.OauthDefault
 	) => {
 		setIsLoading(true);
 		try {

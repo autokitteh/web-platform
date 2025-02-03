@@ -30,8 +30,8 @@ export const formsPerIntegrationsMapping: Partial<
 > = {
 	[Integrations.github]: {
 		[ConnectionAuthType.Pat]: PatForm,
-		[ConnectionAuthType.Oauth]: OauthForm,
-		[ConnectionAuthType.CustomOAuth]: CustomOauthForm,
+		[ConnectionAuthType.OauthDefault]: OauthForm,
+		[ConnectionAuthType.OauthPrivate]: CustomOauthForm,
 	},
 	[Integrations.slack]: {
 		[ConnectionAuthType.Socket]: SocketForm,
