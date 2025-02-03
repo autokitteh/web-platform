@@ -124,7 +124,7 @@ export const BaseSelect = forwardRef<HTMLDivElement, BaseSelectProps>(
 					onChange={handleChange}
 					onCreateOption={onCreateOption}
 					onFocus={handleFocus}
-					options={options.filter((option) => !option.hidden)}
+					options={options}
 					placeholder={placeholder}
 					styles={selectStyles}
 					value={selectedOption || defaultValue}

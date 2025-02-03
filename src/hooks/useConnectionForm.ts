@@ -368,16 +368,14 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 		authType:
 			| ConnectionAuthType.OauthPrivate
-			// TODO: remove ConnectionAuthType.Oauth after removing the old ConnectionAuthType.Oauth
-			| ConnectionAuthType.Oauth
-			// TODO: move all to ConnectionAuthType.OauthDefault after removing ConnectionAuthType.Oauth
-			| ConnectionAuthType.OauthDefault = ConnectionAuthType.Oauth
+			// TODO: remove ConnectionAuthType.Oauth and move to move all to ConnectionAuthType.OauthDefault
+			| ConnectionAuthType.Oauth = ConnectionAuthType.Oauth
 	) => {
 		setIsLoading(true);
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
-				value: authType,
+				value: integrationName === Integrations.github ? ConnectionAuthType.OauthDefault : authType,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
