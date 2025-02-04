@@ -76,8 +76,8 @@ export const DashboardProjectsTable = () => {
 
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
-			"inline-block border-0 px-1 text-sm font-medium min-w-10 max-w-12 py-2 truncate sm:max-w-12 2xl:max-w-18 3xl:max-w-24",
-			"hover:bg-gray-1100 rounded-3xl inline-flex justify-center items-center min-w-12 h-7",
+			"border-0 text-sm font-medium max-w-12 py-2 px-2.5 sm:max-w-12 2xl:max-w-18 3xl:max-w-16",
+			"hover:bg-gray-1100 rounded-3xl inline-flex min-w-12 h-7 items-center truncate",
 			getSessionStateColor(state),
 			className
 		);
@@ -221,11 +221,11 @@ export const DashboardProjectsTable = () => {
 											tabIndex={0}
 											title={`${running} ${t("table.sessionTypes.running")}`}
 										>
-											{running}
+											<div className="w-full truncate text-center">{running}</div>
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.stopped")}
-											className={countStyle(SessionStateType.stopped, "justify-center")}
+											className={countStyle(SessionStateType.stopped)}
 											onClick={(event) =>
 												handleOpenProjectFilteredSessions(event, id, SessionStateType.stopped)
 											}
@@ -236,7 +236,7 @@ export const DashboardProjectsTable = () => {
 											tabIndex={0}
 											title={`${stopped} ${t("table.sessionTypes.stopped")}`}
 										>
-											{stopped}
+											<div className="w-full truncate text-center">{stopped}</div>
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.completed")}
@@ -259,7 +259,7 @@ export const DashboardProjectsTable = () => {
 											tabIndex={0}
 											title={`${completed} ${t("table.sessionTypes.completed")}`}
 										>
-											{completed}
+											<div className="w-full truncate text-center">{completed}</div>
 										</div>
 										<div
 											aria-label={t("table.sessionTypes.error")}
@@ -274,7 +274,7 @@ export const DashboardProjectsTable = () => {
 											tabIndex={0}
 											title={`${error} ${t("table.sessionTypes.error")}`}
 										>
-											{error}
+											<div className="w-full truncate text-center"> {error}</div>
 										</div>
 									</Td>
 
