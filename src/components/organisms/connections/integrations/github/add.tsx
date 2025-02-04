@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants";
-import { githubIntegrationSchema, githubCustomAuthIntegrationSchema, oauthSchema } from "@validations";
+import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -64,7 +64,7 @@ export const GithubIntegrationAddForm = ({
 			return;
 		}
 		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
-			setValidationSchema(githubCustomAuthIntegrationSchema);
+			setValidationSchema(githubPrivateAuthIntegrationSchema);
 
 			return;
 		}

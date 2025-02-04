@@ -375,7 +375,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
-				value: integrationName === Integrations.github ? ConnectionAuthType.OauthDefault : authType,
+				value: authType,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});

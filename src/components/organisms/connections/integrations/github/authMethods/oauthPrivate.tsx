@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { Button, Checkbox, ErrorMessage, Input, SecretInput, Spinner, Textarea } from "@components/atoms";
 
-export const CustomOauthForm = ({
+export const OauthPrivateForm = ({
 	control,
 	errors,
 	isLoading,
@@ -143,13 +143,13 @@ export const CustomOauthForm = ({
 			</div>
 
 			<Button
-				aria-label={t("buttons.startCustomOAuthFlow")}
+				aria-label={t("buttons.startPrivateOAuthFlow")}
 				className="ml-auto w-fit border-black bg-white px-3 font-medium hover:bg-gray-950 hover:text-white"
 				type="submit"
 				variant="outline"
 			>
 				{isLoading ? <Spinner /> : null}
-				{t("buttons.startCustomOAuthFlow")}
+				{t("buttons.startPrivateOAuthFlow")}
 			</Button>
 		</>
 	);

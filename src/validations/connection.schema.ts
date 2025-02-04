@@ -8,7 +8,7 @@ export const githubIntegrationSchema = z.object({
 	secret: z.string(),
 });
 
-export const githubCustomAuthIntegrationSchema = z.object({
+export const githubPrivateAuthIntegrationSchema = z.object({
 	client_id: z.string().min(1, "Client ID is required"),
 	client_secret: z.string().min(1, "Client Secret is required"),
 	app_id: z.string().min(1, "App ID is required"),
