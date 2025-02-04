@@ -4,6 +4,9 @@ export const integrationVariablesMapping = {
 	[Integrations.github]: {
 		pat: "pat",
 		secret: "pat_secret",
+		webhook_secret: "webhook_secret",
+		client_id: "client_id",
+		client_secret: "client_secret",
 	},
 	[Integrations.auth0]: {
 		client_id: "client_id",
