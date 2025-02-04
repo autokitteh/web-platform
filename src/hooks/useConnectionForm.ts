@@ -334,10 +334,14 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
+		const migratedAuthIntegrations = new Set([Integrations.github]);
+
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
-				value: ConnectionAuthType.OauthDefault,
+				value: migratedAuthIntegrations.has(integrationName as Integrations)
+					? ConnectionAuthType.OauthDefault
+					: ConnectionAuthType.Oauth,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
