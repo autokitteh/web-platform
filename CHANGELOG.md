@@ -1,3 +1,10 @@
+## [2.133.8](https://github.com/autokitteh/web-platform/compare/v2.133.7...v2.133.8) (2025-02-04)
+
+
+### Bug Fixes
+
+* **UI-1281:** reset when reload session log ([#951](https://github.com/autokitteh/web-platform/issues/951)) ([a05a165](https://github.com/autokitteh/web-platform/commit/a05a1657ab539cb7239beae6e85cbb912dc34424))
+
 ## [2.133.7](https://github.com/autokitteh/web-platform/compare/v2.133.6...v2.133.7) (2025-02-04)
 
 ## [2.133.6](https://github.com/autokitteh/web-platform/compare/v2.133.5...v2.133.6) (2025-02-03)
