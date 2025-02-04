@@ -7,33 +7,19 @@ import { SessionLogType } from "@src/enums";
 import { ActivitiesStore } from "@src/interfaces/store";
 import { convertSessionLogRecordsProtoToActivitiesModel } from "@src/models";
 
-import { useToastStore } from "@store";
+const initialSessionState = { activities: [], nextPageToken: "", fullyLoaded: false };
 
 const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
-	isReloading: false,
-
-	reload: async (sessionId, pageSize) => {
-		set({ isReloading: true });
-		await get().loadLogs(sessionId, pageSize, true);
-		set({ isReloading: false });
-	},
-
 	loadLogs: async (sessionId, pageSize, force) => {
-		set({ loading: true });
-
 		try {
-			const currentSession = get().sessions[sessionId] || {
-				activities: [],
-				nextPageToken: null,
-				fullyLoaded: false,
-			};
+			set({ loading: true });
+
+			const currentSession = force ? initialSessionState : (get().sessions[sessionId] ?? initialSessionState);
 
 			if (currentSession.fullyLoaded && !force) {
-				set({ loading: false });
-
-				return;
+				return { error: false };
 			}
 
 			const { data, error } = await SessionsService.getLogRecordsBySessionId(
@@ -43,39 +29,41 @@ const createActivitiesStore: StateCreator<ActivitiesStore> = (set, get) => ({
 				SessionLogType.Activity
 			);
 
-			if (error) {
-				useToastStore.getState().addToast({
-					message: i18n.t("activityLogsFetchError", { ns: "errors" }),
-					type: "error",
-				});
-			}
-
-			if (data) {
+			if (error || !data) {
 				set((state) => ({
 					sessions: {
 						...state.sessions,
-						[sessionId]: {
-							activities: get().isReloading
-								? convertSessionLogRecordsProtoToActivitiesModel(data.records)
-								: [
-										...currentSession.activities,
-										...convertSessionLogRecordsProtoToActivitiesModel(data.records),
-									],
-							nextPageToken: data.nextPageToken,
-							fullyLoaded: !data.nextPageToken,
-						},
+						[sessionId]: initialSessionState,
 					},
+					loading: false,
 				}));
+				return { error: true };
 			}
-		} catch (error) {
-			useToastStore.getState().addToast({
-				message: i18n.t("activityLogsFetchError", { ns: "errors" }),
-				type: "error",
-			});
+
+			const convertedActivities = convertSessionLogRecordsProtoToActivitiesModel(data.records);
+			const activities = force ? convertedActivities : [...currentSession.activities, ...convertedActivities];
+
+			set((state) => ({
+				sessions: {
+					...state.sessions,
+					[sessionId]: {
+						activities,
+						nextPageToken: data.nextPageToken,
+						fullyLoaded: !data.nextPageToken,
+					},
+				},
+			}));
+
+			return { error: false };
+		} catch (error: unknown) {
 			LoggerService.error(
 				namespaces.stores.activitiesStore,
-				i18n.t("activityLogsFetchErrorExtended", { ns: "errors", error: (error as Error).message })
+				i18n.t("activityLogsFetchErrorExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				})
 			);
+			return { error: true };
 		} finally {
 			set({ loading: false });
 		}

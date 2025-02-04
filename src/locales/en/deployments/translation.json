@@ -134,7 +134,9 @@
 			"couldnotConvertArguments": "Error converting Python dictionary to JSON",
 			"couldnotConvertArgumentsExtended": "Error converting Python dictionary to JSON, error: {{error}}",
 			"invalidByteArray": "Invalid or missing byte array",
-			"errorDecodingText": "Error decoding text, {{error}}"
+			"errorDecodingText": "Error decoding text, {{error}}",
+			"activityLogsFetchError": "Couldn't fetch the activity logs",
+			"outputLogsFetchError": "Couldn't fetch the output logs"
 		},
 		"actions":{
 			"sessionStoppedSuccessfully": "Session request successfully sent",

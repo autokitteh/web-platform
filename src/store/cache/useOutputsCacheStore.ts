@@ -5,33 +5,24 @@ import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { namespaces } from "@src/constants";
 import { SessionLogType } from "@src/enums";
-import { OutputsStore } from "@src/interfaces/store";
+import { OutputsStore, SessionOutputData } from "@src/interfaces/store";
 import { convertSessionLogProtoToViewerOutput } from "@src/models";
 
-import { useToastStore } from "@store";
+const initialSessionState = { outputs: [], nextPageToken: "", fullyLoaded: false } as SessionOutputData;
 
 const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 	sessions: {},
 	loading: false,
-	isReloading: false,
-
-	reload: async (sessionId, pageSize) => {
-		set({ isReloading: true });
-		await get().loadLogs(sessionId, pageSize, true);
-		set({ isReloading: false });
-	},
-
 	loadLogs: async (sessionId, pageSize, force) => {
-		set({ loading: true });
-		const currentSession = get().sessions[sessionId] || { outputs: [], nextPageToken: null, fullyLoaded: false };
-
-		if (currentSession.fullyLoaded && !force) {
-			set({ loading: false });
-
-			return;
-		}
-
 		try {
+			set({ loading: true });
+
+			const currentSession = force ? initialSessionState : (get().sessions[sessionId] ?? initialSessionState);
+
+			if (currentSession.fullyLoaded && !force) {
+				return { error: false };
+			}
+
 			const { data, error } = await SessionsService.getLogRecordsBySessionId(
 				sessionId,
 				currentSession.nextPageToken || undefined,
@@ -39,34 +30,41 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				SessionLogType.Output
 			);
 
-			if (error) {
-				useToastStore
-					.getState()
-					.addToast({ message: i18n.t("outputLogsFetchError", { ns: "errors" }), type: "error" });
-			}
-
-			if (data) {
+			if (error || !data) {
 				set((state) => ({
 					sessions: {
 						...state.sessions,
-						[sessionId]: {
-							outputs: get().isReloading
-								? convertSessionLogProtoToViewerOutput(data.records)
-								: [...currentSession.outputs, ...convertSessionLogProtoToViewerOutput(data.records)],
-							nextPageToken: data.nextPageToken,
-							fullyLoaded: !data.nextPageToken,
-						},
+						[sessionId]: initialSessionState,
 					},
+					loading: false,
 				}));
+				return { error: true };
 			}
-		} catch (error) {
-			useToastStore
-				.getState()
-				.addToast({ message: i18n.t("outputLogsFetchError", { ns: "errors" }), type: "error" });
+
+			const convertedOutputs = convertSessionLogProtoToViewerOutput(data.records);
+			const outputs = force ? convertedOutputs : [...currentSession.outputs, ...convertedOutputs];
+
+			set((state) => ({
+				sessions: {
+					...state.sessions,
+					[sessionId]: {
+						outputs,
+						nextPageToken: data.nextPageToken,
+						fullyLoaded: !data.nextPageToken,
+					},
+				},
+			}));
+
+			return { error: false };
+		} catch (error: unknown) {
 			LoggerService.error(
 				namespaces.stores.outputStore,
-				i18n.t("outputLogsFetchErrorExtended", { ns: "errors", error: (error as Error).message })
+				i18n.t("outputLogsFetchErrorExtended", {
+					ns: "errors",
+					error: (error as Error).message,
+				})
 			);
+			return { error: true };
 		} finally {
 			set({ loading: false });
 		}
