@@ -58,21 +58,22 @@ export const DeploymentSessionStats = ({
 	};
 
 	return sessionStatsOrdered.map(({ count, state }) => (
-		<div
-			aria-label={`${count} ${t(state?.toString() || "")}`}
-			className={countStyle(state)}
-			key={state}
-			onClick={(event) => {
-				handleOpenProjectFilteredSessions(event, state);
-			}}
-			onKeyDown={(event) => {
-				handleOpenProjectFilteredSessions(event, state);
-			}}
-			role="button"
-			tabIndex={0}
-			title={`${count} ${t(state?.toString() || "")}`}
-		>
-			<div className="inline-block min-w-12 truncate rounded-3xl px-2.5 py-1 hover:bg-gray-1100">{count}</div>
+		<div className={countStyle(state)} key={state}>
+			<div
+				aria-label={`${count} ${t(state?.toString() || "")}`}
+				className="inline-block min-w-12 truncate rounded-3xl px-2.5 py-1 hover:bg-gray-1100"
+				onClick={(event) => {
+					handleOpenProjectFilteredSessions(event, state);
+				}}
+				onKeyDown={(event) => {
+					handleOpenProjectFilteredSessions(event, state);
+				}}
+				role="button"
+				tabIndex={0}
+				title={`${count} ${t(state?.toString() || "")}`}
+			>
+				{count}
+			</div>
 		</div>
 	));
 };
