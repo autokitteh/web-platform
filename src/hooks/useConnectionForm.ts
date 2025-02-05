@@ -335,7 +335,12 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
-		const migratedAuthIntegrations = new Set([Integrations.github]);
+		const migratedAuthIntegrations = new Set([
+			Integrations.github,
+			Integrations.zoom,
+			Integrations.height,
+			Integrations.slack,
+		]);
 
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {

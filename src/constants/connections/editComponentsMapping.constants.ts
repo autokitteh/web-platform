@@ -16,6 +16,8 @@ import {
 	OpenAiIntegrationEditForm,
 	SlackIntegrationEditForm,
 	TwilioIntegrationEditForm,
+	HeightIntegrationEditForm,
+	ZoomIntegrationEditForm,
 } from "@components/organisms/connections/integrations";
 
 export const integrationToEditComponent: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
@@ -36,4 +38,6 @@ export const integrationToEditComponent: Partial<Record<keyof typeof Integration
 	[Integrations.drive]: GoogleIntegrationEditForm,
 	[Integrations.forms]: GoogleFormsIntegrationEditForm,
 	[Integrations.hubspot]: HubspotIntegrationEditForm,
+	[Integrations.height]: HeightIntegrationEditForm,
+	[Integrations.zoom]: ZoomIntegrationEditForm,
 };

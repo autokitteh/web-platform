@@ -16,6 +16,8 @@ import {
 	OpenAiIntegrationAddForm,
 	SlackIntegrationAddForm,
 	TwilioIntegrationAddForm,
+	HeightIntegrationAddForm,
+	ZoomIntegrationAddForm,
 } from "@components/organisms/connections/integrations";
 
 export const integrationAddFormComponents: Partial<Record<keyof typeof Integrations, React.ComponentType<any>>> = {
@@ -36,4 +38,6 @@ export const integrationAddFormComponents: Partial<Record<keyof typeof Integrati
 	confluence: ConfluenceIntegrationAddForm,
 	discord: DiscordIntegrationAddForm,
 	hubspot: HubspotIntegrationAddForm,
+	height: HeightIntegrationAddForm,
+	zoom: ZoomIntegrationAddForm,
 };
