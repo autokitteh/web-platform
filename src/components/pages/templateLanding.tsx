@@ -48,16 +48,16 @@ export const TemplateLanding = () => {
 					</div>
 				</div>
 				<div className="flex flex-col font-averta">
-					<Typography className="text-center text-2xl font-bold md:text-left" element="h2">
-						{t("cards.main.reliableAutomation")}
+					<Typography className="text-center text-xl font-bold" element="h2">
+						Slack notify on Confluence page created
 					</Typography>
 
-					<Typography className="text-center text-2xl font-bold text-green-800 md:text-left" element="h2">
-						{t("cards.main.inAFewLinesOfCode")}
+					<Typography className="text-center text-base font-bold text-green-800" element="h3">
+						When Confluence page is created the user will be notified on Slack
 					</Typography>
 					<Button
 						ariaLabel={t("cards.main.meowWorld")}
-						className="mt-2 w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
+						className="mx-auto mt-2 w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
 						onClick={() => createProjectFromAsset(meowWorldProjectName)}
 					>
 						<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
