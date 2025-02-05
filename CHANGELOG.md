@@ -1,3 +1,10 @@
+# [2.134.0](https://github.com/autokitteh/web-platform/compare/v2.133.9...v2.134.0) (2025-02-05)
+
+
+### Features
+
+* **UI-1260:** add Private OAuth GitHub connection ([#936](https://github.com/autokitteh/web-platform/issues/936)) ([4c688d7](https://github.com/autokitteh/web-platform/commit/4c688d7db6a57184604b30eeaf81a4a92e623c56))
+
 ## [2.133.9](https://github.com/autokitteh/web-platform/compare/v2.133.8...v2.133.9) (2025-02-05)
 
 
