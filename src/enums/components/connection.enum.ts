@@ -25,6 +25,8 @@ import {
 	SlackIcon,
 	SqliteIcon,
 	TwilioIcon,
+	ZoomIcon,
+	EmptyCircleIcon,
 } from "@assets/image/icons/connections";
 
 export enum ConnectionStatus {
@@ -52,6 +54,8 @@ export enum Integrations {
 	chatgpt = "chatgpt",
 	confluence = "confluence",
 	hubspot = "hubspot",
+	height = "height",
+	zoom = "zoom",
 }
 
 export type GoogleIntegrationType = Extract<
@@ -166,6 +170,16 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 		icon: HubspotIcon,
 		label: "HubSpot",
 		value: Integrations.hubspot,
+	},
+	height: {
+		icon: EmptyCircleIcon,
+		label: "Height",
+		value: Integrations.height,
+	},
+	zoom: {
+		icon: ZoomIcon,
+		label: "Zoom",
+		value: Integrations.zoom,
 	},
 };
 
