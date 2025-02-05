@@ -25,7 +25,8 @@
 	"buttons": {
 		"copy": "Copy",
 		"saveConnection": "Save Connection",
-		"startOAuthFlow": "Start OAuth Flow"
+		"startOAuthFlow": "Start OAuth Flow",
+		"startPrivateOAuthFlow": "Start Private OAuth Flow"
 	},
 	"auth0": {
 		"configurationGuide": "AutoKitteh guide: configuring the Auth0 integration",
@@ -49,11 +50,18 @@
 			"initConnection": "AutoKitteh guide: initializing a connection with a PAT and/or a webhook",
 			"setting": "Setting a PAT policy for your organization"
 		},
+		"updatePrivateKey": "Update the private key",
 		"placeholders": {
 			"name": "Name",
 			"pat": "Personal Access Token (PAT) - fine-grained or classic",
 			"secret": "Webhook Secret",
-			"webhookUrl": "Webhook URL"
+			"webhookUrl": "Webhook URL",
+			"clientId": "Client ID",
+			"clientSecret": "Client Secret",
+			"appId": "App ID",
+			"webhookSercet": "Webhook Secret",
+			"enterpriseUrl": "Enterprise URL",
+			"privateKey": "Private Key"
 		}
 	},
 	"google": {

@@ -108,7 +108,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 
 	const getSpecificParams = (connectionData: Record<string, string>, specificKeys: string[]) => {
 		return specificKeys
-			.map((key) => (connectionData[key] ? `${key}=${connectionData[key]}` : ""))
+			.map((key) => (connectionData[key] ? `${key}=${encodeURIComponent(connectionData[key])}` : ""))
 			.filter((param) => param !== "")
 			.join("&");
 	};
@@ -334,10 +334,14 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 	};
 
 	const handleOAuth = async (oauthConnectionId: string, integrationName: keyof typeof Integrations) => {
+		const migratedAuthIntegrations = new Set([Integrations.github]);
+
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId!, {
 				name: "auth_type",
-				value: ConnectionAuthType.Oauth,
+				value: migratedAuthIntegrations.has(integrationName as Integrations)
+					? ConnectionAuthType.OauthDefault
+					: ConnectionAuthType.Oauth,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
@@ -362,12 +366,20 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 		}
 	};
 
-	const handleCustomOauth = async (oauthConnectionId: string, integrationName: string) => {
+	const handleCustomOauth = async (
+		oauthConnectionId: string,
+		integrationName: keyof typeof Integrations | typeof defaultGoogleConnectionName,
+
+		authType:
+			| ConnectionAuthType.OauthPrivate
+			// TODO: remove ConnectionAuthType.Oauth and move to move all to ConnectionAuthType.OauthDefault
+			| ConnectionAuthType.Oauth = ConnectionAuthType.Oauth
+	) => {
 		setIsLoading(true);
 		try {
 			await VariablesService.setByConnectiontId(oauthConnectionId, {
 				name: "auth_type",
-				value: ConnectionAuthType.Oauth,
+				value: authType,
 				isSecret: false,
 				scopeId: oauthConnectionId,
 			});
@@ -377,9 +389,13 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				connectionData,
 				integrationDataKeys[integrationName.toString() as keyof typeof integrationDataKeys]
 			);
+			const intCustomOAuthUrl: Partial<Record<Integrations | typeof defaultGoogleConnectionName, string>> = {
+				[Integrations.github]: "custom-oauth",
+				[Integrations.auth0]: "save",
+			};
 
 			openPopup(
-				`${apiBaseUrl}/${integrationName}/save?cid=${oauthConnectionId}&origin=web&auth_type=oauth&${urlParams}`,
+				`${apiBaseUrl}/${integrationName}/${intCustomOAuthUrl[integrationName]}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);

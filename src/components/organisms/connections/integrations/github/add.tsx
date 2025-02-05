@@ -9,7 +9,7 @@ import { ConnectionAuthType } from "@enums/connections";
 import { useConnectionForm } from "@hooks/useConnectionForm";
 import { SelectOption } from "@interfaces/components";
 import { formsPerIntegrationsMapping } from "@src/constants";
-import { githubIntegrationSchema, oauthSchema } from "@validations";
+import { githubIntegrationSchema, githubPrivateAuthIntegrationSchema, oauthSchema } from "@validations";
 
 import { Select } from "@components/molecules";
 
@@ -28,6 +28,7 @@ export const GithubIntegrationAddForm = ({
 		createConnection,
 		errors,
 		handleOAuth,
+		handleCustomOauth,
 		handleSubmit,
 		isLoading,
 		register,
@@ -42,8 +43,11 @@ export const GithubIntegrationAddForm = ({
 			case ConnectionAuthType.Pat:
 				await createConnection(connectionId, ConnectionAuthType.Pat, Integrations.github);
 				break;
-			case ConnectionAuthType.Oauth:
+			case ConnectionAuthType.OauthDefault:
 				await handleOAuth(connectionId, Integrations.github);
+				break;
+			case ConnectionAuthType.OauthPrivate:
+				await handleCustomOauth(connectionId, Integrations.github, ConnectionAuthType.OauthPrivate);
 				break;
 			default:
 				break;
@@ -54,8 +58,13 @@ export const GithubIntegrationAddForm = ({
 		if (!connectionType?.value) {
 			return;
 		}
-		if (connectionType.value === ConnectionAuthType.Oauth) {
+		if (connectionType.value === ConnectionAuthType.OauthDefault) {
 			setValidationSchema(oauthSchema);
+
+			return;
+		}
+		if (connectionType.value === ConnectionAuthType.OauthPrivate) {
+			setValidationSchema(githubPrivateAuthIntegrationSchema);
 
 			return;
 		}
