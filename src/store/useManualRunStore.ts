@@ -121,7 +121,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		const jsonInputs = actualParams.reduce(
 			(acc, { key, value }) => ({
 				...acc,
-				[key]: JSON.stringify(value),
+				[key]: value,
 			}),
 			{}
 		);
