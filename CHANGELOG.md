@@ -1,3 +1,10 @@
+## [2.134.1](https://github.com/autokitteh/web-platform/compare/v2.134.0...v2.134.1) (2025-02-05)
+
+
+### Bug Fixes
+
+* **UI-1297:** fix custom oauth connections ([#962](https://github.com/autokitteh/web-platform/issues/962)) ([12a357d](https://github.com/autokitteh/web-platform/commit/12a357d8b8eda7a194a1ebe9255b248f540bcd66))
+
 # [2.134.0](https://github.com/autokitteh/web-platform/compare/v2.133.9...v2.134.0) (2025-02-05)
 
 
