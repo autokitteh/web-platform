@@ -1,3 +1,10 @@
+## [2.133.9](https://github.com/autokitteh/web-platform/compare/v2.133.8...v2.133.9) (2025-02-05)
+
+
+### Bug Fixes
+
+* **UI-1296:** session manual run fix ([#958](https://github.com/autokitteh/web-platform/issues/958)) ([d03befc](https://github.com/autokitteh/web-platform/commit/d03befc7c1f635160b2960fc09f4567850c03e4c))
+
 ## [2.133.8](https://github.com/autokitteh/web-platform/compare/v2.133.7...v2.133.8) (2025-02-04)
 
 
