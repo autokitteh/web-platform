@@ -10,6 +10,7 @@ import { ZodObject, ZodRawShape } from "zod";
 
 import { ConnectionService, HttpService, LoggerService, VariablesService } from "@services";
 import { namespaces } from "@src/constants";
+import { integrationsCustomOAuthPaths } from "@src/constants/connections/integrationsCustomOAuthPaths";
 import { integrationDataKeys } from "@src/constants/connections/integrationsDataKeys.constants";
 import { ConnectionAuthType } from "@src/enums";
 import { Integrations, ModalName, defaultGoogleConnectionName, isGoogleIntegration } from "@src/enums/components";
@@ -389,13 +390,11 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 				connectionData,
 				integrationDataKeys[integrationName.toString() as keyof typeof integrationDataKeys]
 			);
-			const intCustomOAuthUrl: Partial<Record<Integrations | typeof defaultGoogleConnectionName, string>> = {
-				[Integrations.github]: "custom-oauth",
-				[Integrations.auth0]: "save",
-			};
+
+			const customURLPath = integrationsCustomOAuthPaths[integrationName as keyof typeof Integrations] || "save";
 
 			openPopup(
-				`${apiBaseUrl}/${integrationName}/${intCustomOAuthUrl[integrationName]}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
+				`${apiBaseUrl}/${integrationName}/${customURLPath}?cid=${oauthConnectionId}&origin=web&auth_type=${authType}&${urlParams}`,
 				"Authorize"
 			);
 			startCheckingStatus(oauthConnectionId);
