@@ -14,8 +14,8 @@ export const AppLayout = ({
 	hideSystemLog,
 }: {
 	className?: string;
-	hideTopbar?: boolean;
 	hideSystemLog?: boolean;
+	hideTopbar?: boolean;
 }) => {
 	const { isIOS, isMobile } = useWindowDimensions();
 	const { projectsList } = useProjectStore();
@@ -24,8 +24,8 @@ export const AppLayout = ({
 
 	return (
 		<SystemLogLayout
-			hideSystemLog={hideSystemLog}
 			className={className}
+			hideSystemLog={hideSystemLog}
 			sidebar={hideSidebar ? null : <Sidebar />}
 			topbar={hideTopbar ? null : <ProjectConfigTopbar />}
 		>
