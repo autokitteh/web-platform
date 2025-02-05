@@ -1,3 +1,10 @@
+# [2.135.0](https://github.com/autokitteh/web-platform/compare/v2.134.1...v2.135.0) (2025-02-05)
+
+
+### Features
+
+* **UI-1288:** zoom and height.app oauth integrations ([#961](https://github.com/autokitteh/web-platform/issues/961)) ([5e1ff1b](https://github.com/autokitteh/web-platform/commit/5e1ff1ba6def840543f419c14bf9681c5fcd763f))
+
 ## [2.134.1](https://github.com/autokitteh/web-platform/compare/v2.134.0...v2.134.1) (2025-02-05)
 
 
