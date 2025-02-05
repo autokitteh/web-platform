@@ -8,7 +8,15 @@ import { useProjectStore } from "@src/store";
 
 import { ProjectConfigTopbar, Sidebar } from "@components/organisms";
 
-export const AppLayout = ({ className, hideTopbar }: { className?: string; hideTopbar?: boolean }) => {
+export const AppLayout = ({
+	className,
+	hideTopbar,
+	hideSystemLog,
+}: {
+	className?: string;
+	hideTopbar?: boolean;
+	hideSystemLog?: boolean;
+}) => {
 	const { isIOS, isMobile } = useWindowDimensions();
 	const { projectsList } = useProjectStore();
 
@@ -16,6 +24,7 @@ export const AppLayout = ({ className, hideTopbar }: { className?: string; hideT
 
 	return (
 		<SystemLogLayout
+			hideSystemLog={hideSystemLog}
 			className={className}
 			sidebar={hideSidebar ? null : <Sidebar />}
 			topbar={hideTopbar ? null : <ProjectConfigTopbar />}

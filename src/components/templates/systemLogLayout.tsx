@@ -15,9 +15,11 @@ export const SystemLogLayout = ({
 	className,
 	sidebar,
 	topbar,
+	hideSystemLog,
 }: {
 	children: React.ReactNode;
 	className?: string;
+	hideSystemLog?: boolean;
 	sidebar?: React.ReactNode;
 	topbar?: React.ReactNode;
 }) => {
@@ -54,13 +56,14 @@ export const SystemLogLayout = ({
 					{children}
 				</div>
 
-				{isIOS || isMobile ? null : (
+				{isIOS || isMobile || hideSystemLog ? null : (
 					<ResizeButton className={buttonResizeClasses} direction="vertical" resizeId={resizeId} />
 				)}
-
-				<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
-					<SystemLog />
-				</div>
+				{hideSystemLog ? null : (
+					<div className="z-20 overflow-hidden" style={{ height: `${systemLogHeight}%` }}>
+						<SystemLog />
+					</div>
+				)}
 			</div>
 		</div>
 	);
