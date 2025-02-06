@@ -20,6 +20,7 @@ import {
 	HttpIcon,
 	HubspotIcon,
 	JiraIcon,
+	LinearIcon,
 	OpenAiIcon,
 	SchedulerIcon,
 	SlackIcon,
@@ -56,6 +57,7 @@ export enum Integrations {
 	hubspot = "hubspot",
 	height = "height",
 	zoom = "zoom",
+	linear = "linear",
 }
 
 export type GoogleIntegrationType = Extract<
@@ -86,6 +88,11 @@ export enum IntegrationForTemplates {
 }
 
 export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
+	linear: {
+		icon: LinearIcon,
+		label: "Linear",
+		value: Integrations.linear,
+	},
 	auth0: {
 		icon: Auth0Icon,
 		label: "Auth0",

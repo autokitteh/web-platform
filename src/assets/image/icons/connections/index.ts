@@ -28,3 +28,5 @@ export { default as TwilioIcon } from "@assets/image/icons/connections/Twilio.sv
 export { default as ZoomIcon } from "@assets/image/icons/connections/Zoom.svg?react";
 // Taken from: https://www.svgrepo.com/svg/501547/empty
 export { default as EmptyCircleIcon } from "@assets/image/icons/connections/EmptyCircle.svg?react";
+// Taken from https://www.svgrepo.com/svg/333141/linear
+export { default as LinearIcon } from "@assets/image/icons/connections/linear.svg?react";
