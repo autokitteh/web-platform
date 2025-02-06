@@ -82,3 +82,5 @@ export { default as WarningTriangleIcon } from "@assets/image/icons/WarningTrian
 export { default as WebhookIcon } from "@assets/image/icons/Webhook.svg?react";
 // Taken from: https://www.figma.com/design/klCZL68fUd6pw0DEu0Sj7f/Autokitteh%3A-Look-%26-Feel-design-versions?node-id=4022-135045&t=c15yiQtKgR0uBisI-4
 export { default as MyOrganizationsIcon } from "@assets/image/icons/myOrganizations.svg?react";
+// Taken from: https://fontawesome.com/icons/angle-right?f=classic&s=solid
+export { default as AngleRightIcon } from "@assets/image/icons/AngleRight.svg?react";

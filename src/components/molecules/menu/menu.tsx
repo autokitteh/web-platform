@@ -14,18 +14,20 @@ import { cn } from "@utilities";
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg } from "@components/atoms";
-import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover/index";
+import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
+import { AngleRightIcon } from "@assets/image/icons";
 
 export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
 	const { getProjectsList, projectsList } = useProjectStore();
 	const navigate = useNavigate();
-	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
+	const { projectId } = useParams();
 	const { openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
-	const { projectId } = useParams();
+	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
+	const [isOpenSubMenu, setIsOpenSubMenu] = useState(false);
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -88,10 +90,10 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						</AnimatePresence>
 					</Button>
 				</li>
-				<PopoverListWrapper animation="slideFromLeft" interactionType="hover">
+				<PopoverListWrapper animation="slideFromLeft" interactionType="click" onOpenChange={setIsOpenSubMenu}>
 					<PopoverListTrigger>
 						<li className="group">
-							<div className="z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 text-gray-1100 group-hover:bg-green-200">
+							<div className="relative z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 text-gray-1100 group-hover:bg-green-200">
 								<div className="flex size-9 items-center justify-center">
 									<IconSvg
 										alt={t("myProjects")}
@@ -100,6 +102,12 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 										src={ProjectsIcon}
 									/>
 								</div>
+								<AngleRightIcon
+									className={cn("absolute -right-2 size-4 rounded-full group-hover:bg-green-200", {
+										"rotate-180": isOpenSubMenu,
+									})}
+									stroke="black"
+								/>
 
 								<AnimatePresence>
 									{isOpen ? (
@@ -120,7 +128,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 					<PopoverListContent
 						activeId={projectId}
 						className={cn(
-							"scrollbar z-30 flex h-screen flex-col overflow-scroll rounded-lg pb-16 pt-[212px] text-black",
+							"scrollbar z-20 flex h-screen flex-col overflow-scroll pb-16 pt-[212px] text-black",
 							"mr-2.5 w-auto border-x border-gray-500 bg-gray-250 px-2"
 						)}
 						emptyListMessage={t("noProjectsFound")}
