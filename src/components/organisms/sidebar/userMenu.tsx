@@ -105,7 +105,7 @@ export const UserMenu = ({ openFeedbackForm }: { openFeedbackForm: () => void })
 					<span className="font-medium text-black">{user?.email}</span>
 				</div>
 				<div className="mt-2 flex flex-col gap-1">
-					{!sentryDsn ? (
+					{sentryDsn ? (
 						<Button
 							className="w-full rounded-md px-2.5 text-sm hover:bg-gray-250"
 							onClick={() => openFeedbackFormClick()}
