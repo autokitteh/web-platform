@@ -1,3 +1,10 @@
+# [2.136.0](https://github.com/autokitteh/web-platform/compare/v2.135.0...v2.136.0) (2025-02-06)
+
+
+### Features
+
+* **UI-1285:** linear integration ([#953](https://github.com/autokitteh/web-platform/issues/953)) ([d1d02fb](https://github.com/autokitteh/web-platform/commit/d1d02fb8648e249d0ba31b93e88b3dbf18607437))
+
 # [2.135.0](https://github.com/autokitteh/web-platform/compare/v2.134.1...v2.135.0) (2025-02-05)
 
 
