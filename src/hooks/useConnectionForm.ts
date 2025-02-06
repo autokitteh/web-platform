@@ -340,6 +340,7 @@ export const useConnectionForm = (validationSchema: ZodObject<ZodRawShape>, mode
 			Integrations.zoom,
 			Integrations.height,
 			Integrations.slack,
+			Integrations.linear,
 		]);
 
 		try {
