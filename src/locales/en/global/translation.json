@@ -14,6 +14,7 @@
 	"userFeedback": {
 		"title": "Feedback",
 		"thankYou": "Thank you!",
+		"sendAnonymously": "Send anonymously",
 		"form": {
 			"email": "Email",
 			"name": "Name",

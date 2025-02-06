@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Sentry from "@sentry/react";
+import html2canvas from "html2canvas-pro";
 import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -9,11 +10,11 @@ import { useTranslation } from "react-i18next";
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
 import { UserFeedbackFormProps } from "@src/interfaces/components";
-import { useToastStore } from "@src/store";
+import { useToastStore, useOrganizationStore } from "@src/store";
 import { cn } from "@src/utilities";
 import { userFeedbackSchema } from "@validations";
 
-import { Button, ErrorMessage, IconButton, Input, Loader, Textarea, Typography } from "@components/atoms";
+import { Button, Checkbox, ErrorMessage, IconButton, Input, Loader, Textarea, Typography } from "@components/atoms";
 
 import { Close } from "@assets/image/icons";
 
@@ -21,8 +22,11 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	const { t } = useTranslation("global", { keyPrefix: "userFeedback" });
 	const { t: tErrors } = useTranslation("errors");
 	const addToast = useToastStore((state) => state.addToast);
+	const { user } = useOrganizationStore();
 	const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 	const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
+	const [shownScreen, setShownScreen] = useState(true);
+	const [anonymous, setAnonymous] = useState(false);
 
 	const {
 		formState: { errors },
@@ -32,19 +36,25 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	} = useForm({
 		mode: "onChange",
 		defaultValues: {
-			name: "",
-			email: "",
 			message: "",
 		},
 		resolver: zodResolver(userFeedbackSchema),
 	});
 
-	const onSubmit = async (data: { email: string; message: string; name: string }) => {
-		const { email, message, name } = data;
+	const onSubmit = async (data: { message: string }) => {
+		const { message } = data;
+		const userName = anonymous ? "" : user?.name;
+		const userEmail = anonymous ? "" : user?.email;
+
 		try {
 			setIsSendingFeedback(true);
 			const sentryId = Sentry.captureMessage("User Feedback");
-			const userFeedback = { event_id: sentryId, name, email, message };
+			const userFeedback = {
+				event_id: sentryId,
+				name: userName,
+				email: userEmail,
+				message,
+			};
 
 			Sentry.captureFeedback(userFeedback);
 
@@ -54,7 +64,12 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 				onClose();
 			}, 4000);
 		} catch (error) {
-			Sentry.captureException({ error, email, name, message });
+			Sentry.captureException({
+				error,
+				name: userName,
+				email: userEmail,
+				message,
+			});
 			addToast({
 				message: tErrors("errorSendingFeedback"),
 				type: "error",
@@ -63,6 +78,13 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		} finally {
 			setIsSendingFeedback(false);
 		}
+	};
+
+	const takeScreenshot = async () => {
+		const screenshotSmall = await html2canvas(document.body);
+		screenshotSmall.style.width = "100%";
+		screenshotSmall.style.height = "100%";
+		document.getElementById("screenshot")!.appendChild(screenshotSmall);
 	};
 
 	useEffect(() => {
@@ -78,7 +100,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 				<motion.div
 					animate={{ x: 0 }}
 					className={cn(
-						"h-500 w-96 rounded-t-3xl border border-gray-750 bg-gray-1100 p-6 z-[500]",
+						"min-h-550 w-96 rounded-t-3xl border border-gray-750 bg-gray-1100 p-6 z-[500]",
 						className
 					)}
 					exit={{ x: -500 }}
@@ -97,29 +119,21 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 						</IconButton>
 					</div>
 					<form className="mt-5 flex h-350 flex-col justify-between" onSubmit={handleSubmit(onSubmit)}>
-						<div>
-							<Input
-								label={t("form.name")}
-								placeholder={t("form.placeholder.name")}
-								{...register("name")}
-								disabled={isFeedbackSubmitted || isSendingFeedback}
-								isError={!!errors.name}
-								isRequired
-							/>
-							{errors.name ? <ErrorMessage>{errors.name.message}</ErrorMessage> : null}
-						</div>
-						<div>
-							<Input
-								className="mt-6"
-								disabled={isFeedbackSubmitted || isSendingFeedback}
-								isRequired
-								label={t("form.email")}
-								placeholder={t("form.placeholder.email")}
-								{...register("email")}
-								isError={!!errors.email}
-							/>
-							{errors.email ? <ErrorMessage>{errors.email.message}</ErrorMessage> : null}
-						</div>
+						<Input
+							disabled
+							label={t("form.name")}
+							placeholder={t("form.placeholder.name")}
+							type={anonymous ? "password" : "text"}
+							value={user?.name}
+						/>
+						<Input
+							className="mt-6"
+							disabled
+							label={t("form.email")}
+							placeholder={t("form.placeholder.email")}
+							type={anonymous ? "password" : "email"}
+							value={user?.email}
+						/>
 						<div>
 							<Textarea
 								rows={5}
@@ -133,14 +147,35 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 							/>
 							{errors.message ? <ErrorMessage>{errors.message.message}</ErrorMessage> : null}
 						</div>
+						<Checkbox
+							checked={anonymous}
+							className="mt-1 justify-start"
+							isLoading={false}
+							label={t("sendAnonymously")}
+							labelClassName="text-base"
+							onChange={() => setAnonymous(!anonymous)}
+						/>
+						<Button
+							className="mt-5 justify-center"
+							onClick={() => {
+								takeScreenshot();
+								setShownScreen(true);
+							}}
+							variant="filled"
+						>
+							Take screenshot
+						</Button>
+						<div className={cn({ hidden: !shownScreen })}>
+							<div id="screenshot" />
+						</div>
 
 						{isFeedbackSubmitted ? (
-							<Typography className="mt-6 text-center font-averta font-bold" size="xl">
+							<Typography className="mt-5 text-center font-averta font-bold" size="xl">
 								{t("thankYou")}
 							</Typography>
 						) : (
 							<Button
-								className={cn("mt-6 w-full justify-center p-1.5 px-7 text-lg font-bold text-white", {
+								className={cn("mt-5 w-full justify-center p-1.5 px-7 text-lg font-bold text-white", {
 									"justify-between": isFeedbackSubmitted,
 								})}
 								disabled={isSendingFeedback}
