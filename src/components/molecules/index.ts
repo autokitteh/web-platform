@@ -16,3 +16,4 @@ export { Select } from "@components/molecules/select";
 export { SortButton } from "@components/molecules/sortButton";
 export { TabFormHeader } from "@components/molecules/tabFormHeader";
 export { Toast } from "@components/molecules/toast";
+export { TemplateIntegrationsIcons } from "@components/molecules/templateIntegrationsIcons";
