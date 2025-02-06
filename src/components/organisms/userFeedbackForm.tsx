@@ -16,7 +16,7 @@ import { userFeedbackSchema } from "@validations";
 
 import { Button, Checkbox, ErrorMessage, IconButton, Input, Loader, Textarea, Typography } from "@components/atoms";
 
-import { Close } from "@assets/image/icons";
+import { Close, TrashIcon } from "@assets/image/icons";
 
 export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFormProps) => {
 	const { t } = useTranslation("global", { keyPrefix: "userFeedback" });
@@ -25,8 +25,9 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	const { user } = useOrganizationStore();
 	const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 	const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
-	const [shownScreen, setShownScreen] = useState(true);
+	const [isLoadingScreenshot, setIsLoadingScreenshot] = useState(false);
 	const [anonymous, setAnonymous] = useState(false);
+	const [screenshot, setScreenshot] = useState<string | null>();
 
 	const {
 		formState: { errors },
@@ -54,6 +55,14 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 				name: userName,
 				email: userEmail,
 				message,
+				attachments: screenshot
+					? [
+							{
+								filename: "screenshot.png",
+								data: screenshot.split(",")[1],
+							},
+						]
+					: [],
 			};
 
 			Sentry.captureFeedback(userFeedback);
@@ -81,16 +90,19 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	};
 
 	const takeScreenshot = async () => {
-		const screenshotSmall = await html2canvas(document.body);
-		screenshotSmall.style.width = "100%";
-		screenshotSmall.style.height = "100%";
-		document.getElementById("screenshot")!.appendChild(screenshotSmall);
+		setIsLoadingScreenshot(true);
+		const screenshotCanvas = await html2canvas(document.body);
+		const screenshotData = screenshotCanvas.toDataURL("image/png");
+		setScreenshot(screenshotData);
+		setIsLoadingScreenshot(false);
 	};
 
 	useEffect(() => {
 		if (!isOpen) {
-			setIsFeedbackSubmitted(false);
 			reset();
+			setIsFeedbackSubmitted(false);
+			setScreenshot(null);
+			setAnonymous(false);
 		}
 	}, [isOpen, reset]);
 
@@ -118,7 +130,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 							<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
 						</IconButton>
 					</div>
-					<form className="mt-5 flex h-350 flex-col justify-between" onSubmit={handleSubmit(onSubmit)}>
+					<form className="mt-5 flex flex-col justify-between" onSubmit={handleSubmit(onSubmit)}>
 						<Input
 							disabled
 							label={t("form.name")}
@@ -145,7 +157,9 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 								label={t("form.message")}
 								placeholder={t("form.placeholder.message")}
 							/>
-							{errors.message ? <ErrorMessage>{errors.message.message}</ErrorMessage> : null}
+							{errors.message ? (
+								<ErrorMessage className="relative">{errors.message.message}</ErrorMessage>
+							) : null}
 						</div>
 						<Checkbox
 							checked={anonymous}
@@ -155,19 +169,34 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 							labelClassName="text-base"
 							onChange={() => setAnonymous(!anonymous)}
 						/>
-						<Button
-							className="mt-5 justify-center"
-							onClick={() => {
-								takeScreenshot();
-								setShownScreen(true);
-							}}
-							variant="filled"
-						>
-							Take screenshot
-						</Button>
-						<div className={cn({ hidden: !shownScreen })}>
-							<div id="screenshot" />
-						</div>
+						{screenshot ? (
+							<div className="mt-4 flex items-end gap-4">
+								<div className="h-32 w-full overflow-hidden rounded-md border-2 border-gray-950">
+									<img
+										alt={t("altScrenshot")}
+										className="size-full rounded-md border"
+										src={screenshot}
+									/>
+								</div>
+								<IconButton
+									className="items-center gap-1 font-light"
+									onClick={() => setScreenshot(null)}
+								>
+									<TrashIcon className="size-4 stroke-white" />
+									<span className="mt-0.5">{t("form.buttons.remove")}</span>
+								</IconButton>
+							</div>
+						) : (
+							<Button
+								className="mt-5 justify-center"
+								disabled={isLoadingScreenshot}
+								onClick={takeScreenshot}
+								variant="filled"
+							>
+								{isLoadingScreenshot ? <Loader className="m-0" size="sm" /> : null}
+								{t("form.buttons.takeScreenshot")}
+							</Button>
+						)}
 
 						{isFeedbackSubmitted ? (
 							<Typography className="mt-5 text-center font-averta font-bold" size="xl">

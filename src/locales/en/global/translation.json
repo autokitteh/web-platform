@@ -15,6 +15,7 @@
 		"title": "Feedback",
 		"thankYou": "Thank you!",
 		"sendAnonymously": "Send anonymously",
+		"altScrenshot": "Screenshot",
 		"form": {
 			"email": "Email",
 			"name": "Name",
@@ -26,7 +27,9 @@
 				"message": "Enter your message"  
 			},
 			"buttons": {
-				"send": "Send"
+				"send": "Send",
+				"takeScreenshot": "Take Screenshot",
+				"remove": "Remove"
 			},
 			"error": "Something went wrong, please try again later"
 		}
