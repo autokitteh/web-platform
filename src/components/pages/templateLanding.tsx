@@ -1,33 +1,64 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback, useMemo } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
-import { howToBuildAutomation, meowWorldProjectName, whatIsAutoKitteh } from "@src/constants";
+import { howToBuildAutomation, whatIsAutoKitteh } from "@src/constants";
 import { ModalName } from "@src/enums/components";
+import {
+	HiddenIntegrationsForTemplates,
+	IntegrationForTemplates,
+	Integrations,
+	IntegrationsMap,
+} from "@src/enums/components/connection.enum";
 import { useCreateProjectFromTemplate } from "@src/hooks";
-import { useModalStore, useTemplatesStore } from "@src/store";
+import { TemplateMetadata } from "@src/interfaces/store";
+import { useModalStore, useTemplatesStore, useProjectStore } from "@src/store";
 
-import { Button, IconButton, IconSvg, Spinner, Typography, Frame } from "@components/atoms";
+import { Button, IconButton, IconSvg, Spinner, Typography, Frame, Loader } from "@components/atoms";
 import { WelcomeVideoModal } from "@components/organisms/dashboard";
+import { ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
 
 import { ProjectsIcon } from "@assets/image";
-import { CirclePlayIcon } from "@assets/image/icons";
+import { CirclePlayIcon, PipeCircleDarkIcon } from "@assets/image/icons";
 
 export const TemplateLanding = () => {
 	const { t: tWelcome } = useTranslation("dashboard", { keyPrefix: "topbar" });
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { openModal } = useModalStore();
 	const { createProjectFromAsset, isCreating } = useCreateProjectFromTemplate();
-	const { fetchTemplates } = useTemplatesStore();
+	const { fetchTemplates, sortedCategories, isLoading } = useTemplatesStore();
+	const { projectsList } = useProjectStore();
+	const [searchParams] = useSearchParams();
+	const assetDir = searchParams.get("assetDirectory");
+
+	const projectNamesSet = useMemo(() => new Set(projectsList.map((project) => project.name)), [projectsList]);
+	const selectedTemplate = useMemo(() => {
+		return sortedCategories?.reduce<TemplateMetadata | undefined>((found, category) => {
+			return found || category.templates.find((template) => template.assetDirectory === assetDir);
+		}, undefined);
+	}, [sortedCategories, assetDir]);
 
 	useEffect(() => {
 		fetchTemplates();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const handleCreateClick = useCallback(() => {
+		if (!selectedTemplate?.assetDirectory) return;
+
+		if (projectNamesSet.has(selectedTemplate.assetDirectory)) {
+			openModal(ModalName.templateCreateProject);
+			return;
+		}
+		createProjectFromAsset(selectedTemplate.assetDirectory);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [selectedTemplate?.assetDirectory]);
+
 	const handleOpenModal = (video: string) => {
 		openModal(ModalName.welcomePage, { video });
 	};
+
 	return (
 		<Frame className="mt-1.5 h-full bg-gray-1100">
 			<Typography
@@ -47,22 +78,53 @@ export const TemplateLanding = () => {
 						</IconButton>
 					</div>
 				</div>
-				<div className="flex flex-col font-averta">
-					<Typography className="text-center text-xl font-bold" element="h2">
-						Slack notify on Confluence page created
-					</Typography>
+				<div className="flex min-h-14 flex-col justify-center font-averta">
+					{isLoading || !assetDir ? (
+						<Loader />
+					) : (
+						<>
+							<div className="mx-auto flex gap-3">
+								{selectedTemplate?.integrations.map((integration, index) => {
+									const enrichedIntegration =
+										IntegrationsMap[integration as keyof typeof Integrations] ||
+										HiddenIntegrationsForTemplates[
+											integration as keyof typeof IntegrationForTemplates
+										] ||
+										{};
 
-					<Typography className="text-center text-base font-bold text-green-800" element="h3">
-						When Confluence page is created the user will be notified on Slack
-					</Typography>
-					<Button
-						ariaLabel={t("cards.main.meowWorld")}
-						className="mx-auto mt-2 w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
-						onClick={() => createProjectFromAsset(meowWorldProjectName)}
-					>
-						<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
-						{t("cards.main.meowWorld")}
-					</Button>
+									const { icon, label } = enrichedIntegration;
+
+									return (
+										<div
+											className="relative flex size-8 items-center justify-center rounded-full bg-gray-1400 p-1"
+											key={index}
+											title={label}
+										>
+											<IconSvg className="z-10 rounded-full p-1" size="xl" src={icon} />
+											{index < selectedTemplate.integrations.length - 1 ? (
+												<PipeCircleDarkIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-500" />
+											) : null}
+										</div>
+									);
+								})}
+							</div>
+							<Typography className="text-center text-xl font-bold" element="h2">
+								{selectedTemplate?.title}
+							</Typography>
+
+							<Typography className="text-center text-base font-bold text-green-800" element="h3">
+								{selectedTemplate?.description}
+							</Typography>
+							<Button
+								ariaLabel={t("cards.main.meowWorld")}
+								className="mx-auto mt-2 w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
+								onClick={handleCreateClick}
+							>
+								<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
+								{t("cards.main.meowWorld")}
+							</Button>
+						</>
+					)}
 				</div>
 			</div>
 			<div className="mt-8 flex flex-wrap justify-center gap-5 font-averta">
@@ -100,6 +162,9 @@ export const TemplateLanding = () => {
 			</div>
 
 			<WelcomeVideoModal />
+			{selectedTemplate ? (
+				<ProjectTemplateCreateModal cardTemplate={selectedTemplate} category={selectedTemplate.category} />
+			) : null}
 		</Frame>
 	);
 };
