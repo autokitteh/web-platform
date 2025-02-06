@@ -15,31 +15,23 @@ i18n.on("initialized", () => {
 			message: i18n.t("functionNameIsRequired", { ns: "validations" }),
 		}),
 		params: z
-			.array(
-				z.object({
-					key: z.string().min(1, i18n.t("manualRun.keyIsRequired", { ns: "validations" })),
-					value: z.string().min(1, i18n.t("manualRun.valueIsRequired", { ns: "validations" })),
-				})
-			)
+			.string()
 			.optional()
-			.superRefine((items, ctx) => {
-				if (items && !!items.length) {
-					const keys = new Set<string>();
-					items.forEach((item, index) => {
-						if (keys.has(item.key)) {
-							ctx.addIssue({
-								code: z.ZodIssueCode.custom,
-								message: i18n.t("duplicateKeyError", { ns: "validations" }),
-								path: [`${index}.key`],
-							});
+			.refine(
+				(value) => {
+					if (!value) return true;
+					try {
+						JSON.parse(value);
 
-							return;
-						}
-
-						keys.add(item.key);
-					});
+						return true;
+					} catch {
+						return false;
+					}
+				},
+				{
+					message: i18n.t("manualRun.invalidJsonFormat", { ns: "validations" }),
 				}
-			}),
+			),
 		jsonParams: z
 			.string()
 			.optional()

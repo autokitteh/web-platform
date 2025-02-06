@@ -24,6 +24,22 @@ export const ManualRunParamsForm = () => {
 		name: "params",
 	});
 
+	const triggerFormValidation = async () => {
+		console.log(formState);
+
+		const isValidForm = await trigger();
+		if (isValidForm) {
+			// This will update the form's overall validity state
+			await trigger(["filePath", "entrypointFunction", "params"]);
+			setValue("jsonParams", JSON.stringify(JSON.parse(getValues("params")), null, 2), { shouldValidate: true });
+		}
+	};
+
+	// Add this useEffect at the component level, after your existing useEffect
+	useEffect(() => {
+		triggerFormValidation();
+	}, []); // Empty dependency array means this runs once on mount
+
 	const { projectId } = useParams();
 
 	const { projectManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
@@ -35,11 +51,7 @@ export const ManualRunParamsForm = () => {
 	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
 
 	const convertParamsToJson = (currentParams: ManualRunParam[]) => {
-		const jsonObject = Object.fromEntries(
-			currentParams.map(({ key, value }) => [key, safeJsonParse(value) ?? value])
-		);
-
-		setValue("jsonParams", JSON.stringify(jsonObject, null, 2), { shouldValidate: true });
+		setValue("jsonParams", JSON.stringify(currentParams, null, 2), { shouldValidate: true });
 	};
 
 	useEffect(() => {
@@ -94,12 +106,7 @@ export const ManualRunParamsForm = () => {
 		const parsedJson = safeJsonParse(jsonValue);
 		if (!parsedJson) return;
 
-		const newParams: ManualRunParam[] = Object.entries(parsedJson).map(([key, value]) => ({
-			key,
-			value: typeof value === "string" ? value : JSON.stringify(value),
-		}));
-
-		setValue("params", newParams, { shouldValidate: true });
+		setValue("params", JSON.stringify(parsedJson, null, 2), { shouldValidate: true });
 		clearErrors("jsonParams");
 	};
 
@@ -130,22 +137,29 @@ export const ManualRunParamsForm = () => {
 	};
 
 	const handleJsonChange = (value?: string) => {
-		setValue("jsonParams", value, { shouldValidate: true });
+		try {
+			if (!value) {
+				return;
+			}
+			if (!safeJsonParse(value)) {
+				setValue("jsonParams", value, { shouldValidate: true });
+				return;
+			}
+			// Parse the string value from editor to object
+			const jsonObject = value ? JSON.parse(value) : {};
+			// Set the actual JSON object, not string
+			setValue("jsonParams", JSON.stringify(jsonObject, null, 2), { shouldValidate: true });
 
-		if (!value) {
-			setValue("params", [], { shouldValidate: true });
-			return;
+			if (!value) {
+				setValue("params", "", { shouldValidate: true });
+				return;
+			}
+
+			setValue("params", JSON.stringify(jsonObject, null, 2), { shouldValidate: true });
+		} catch (error) {
+			// Handle invalid JSON
+			console.error("Invalid JSON:", error);
 		}
-
-		const parsedJson = safeJsonParse(value);
-		if (!parsedJson) return;
-
-		const newParams = Object.entries(parsedJson).map(([key, value]) => ({
-			key,
-			value: typeof value === "object" ? JSON.stringify(value) : String(value),
-		}));
-
-		setValue("params", newParams, { shouldValidate: false });
 	};
 
 	return (
@@ -166,6 +180,11 @@ export const ManualRunParamsForm = () => {
 								defaultLanguage="json"
 								loading={<Loader isCenter size="lg" />}
 								onChange={(value) => handleJsonChange(value)}
+								onMount={(editor) => {
+									editor.onDidPaste(() => {
+										handleJsonChange(editor.getValue());
+									});
+								}}
 								options={{
 									fontFamily: "monospace, sans-serif",
 									fontSize: 14,

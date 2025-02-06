@@ -7,7 +7,7 @@ export interface ManualProjectData {
 	fileOptions: { label: string; value: string }[];
 	filePath: { label: string; value: string };
 	entrypointFunction: { label: string; value: string };
-	params: { key: string; value: string }[];
+	params: string;
 	isJson: boolean;
 	activeDeployment?: Deployment;
 	selectedEntrypoint?: SessionEntrypoint;
@@ -19,6 +19,6 @@ export interface ManualRunStore {
 		[projectId: string]: ManualProjectData;
 	};
 	updateManualRunConfiguration: (projectId: string, updates: Partial<ManualProjectData>) => void;
-	saveAndExecuteManualRun: (projectId: string, params?: { key: string; value: string }[]) => ServiceResponse<string>;
+	saveAndExecuteManualRun: (projectId: string, params?: string) => ServiceResponse<string>;
 	fetchManualRunConfiguration: (projectId: string) => void;
 }

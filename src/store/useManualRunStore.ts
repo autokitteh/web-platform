@@ -117,14 +117,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			};
 		}
 
-		const actualParams = params || project.params || [];
-		const jsonInputs = actualParams.reduce(
-			(acc, { key, value }) => ({
-				...acc,
-				[key]: value,
-			}),
-			{}
-		);
+		const actualParams = params || project.params;
 
 		const sessionArgs = {
 			buildId: project.activeDeployment.buildId,
@@ -135,7 +128,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 				path: project.filePath.value,
 				name: project.entrypointFunction.value,
 			},
-			jsonInputs,
+			jsonInputs: actualParams,
 		};
 
 		const { data: sessionId, error } = await SessionsService.startSession(sessionArgs, projectId);
@@ -148,7 +141,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			set((state) => {
 				state.projectManualRun[projectId] = {
 					...project,
-					params: [...params],
+					params: params,
 				};
 
 				return state;
