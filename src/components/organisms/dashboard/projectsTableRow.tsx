@@ -2,12 +2,11 @@ import React, { MouseEvent, KeyboardEvent } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { NavigateFunction } from "react-router-dom";
 
 import { dateTimeFormat } from "@src/constants";
 import { DeploymentStateVariant, SessionStateType } from "@src/enums";
 import { SidebarHrefMenu } from "@src/enums/components";
-import { DashboardProjectWithStats } from "@src/types/models";
+import { DashboardProjectsTableRowProps } from "@src/interfaces/components";
 import { cn, getSessionStateColor } from "@src/utilities";
 
 import { IconButton, IconSvg, StatusBadge, Td, Tr } from "@components/atoms";
@@ -29,17 +28,7 @@ export const DashboardProjectsTableRow = ({
 	downloadProjectExport,
 	displayDeleteModal,
 	navigate,
-}: DashboardProjectWithStats & {
-	displayDeleteModal: (
-		status: DeploymentStateVariant,
-		deploymentId: string,
-		projectId: string,
-		projectName: string
-	) => void;
-	downloadProjectExport: (projectId: string) => void;
-	handelDeactivateDeployment: (deploymentId: string) => Promise<void>;
-	navigate: NavigateFunction;
-}) => {
+}: DashboardProjectsTableRowProps) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
 
 	const countStyle = (state?: SessionStateType, className?: string) =>
@@ -60,6 +49,20 @@ export const DashboardProjectsTableRow = ({
 			state: { sessionState },
 		});
 	};
+
+	const renderSessionCount = (count: number, type: SessionStateType, label: string) => (
+		<div
+			aria-label={t(`table.sessionTypes.${type}`)}
+			className={countStyle(type)}
+			onClick={(e) => handleOpenProjectFilteredSessions(e, id, type)}
+			onKeyDown={(e) => handleOpenProjectFilteredSessions(e, id, type)}
+			role="button"
+			tabIndex={0}
+			title={`${count} ${label}`}
+		>
+			{count}
+		</div>
+	);
 
 	return (
 		<Tr className="cursor-pointer pl-4 hover:bg-black" key={id}>
@@ -86,60 +89,10 @@ export const DashboardProjectsTableRow = ({
 				className="-ml-1 hidden w-2/6 pr-2 sm:flex"
 				onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
 			>
-				<div
-					aria-label={t("table.sessionTypes.running")}
-					className={countStyle(SessionStateType.running)}
-					onClick={(event) => handleOpenProjectFilteredSessions(event, id, SessionStateType.running)}
-					onKeyDown={(event) => {
-						handleOpenProjectFilteredSessions(event, id, SessionStateType.running);
-					}}
-					role="button"
-					tabIndex={0}
-					title={`${running} ${t("table.sessionTypes.running")}`}
-				>
-					{running}
-				</div>
-				<div
-					aria-label={t("table.sessionTypes.stopped")}
-					className={countStyle(SessionStateType.stopped, "justify-center")}
-					onClick={(event) => handleOpenProjectFilteredSessions(event, id, SessionStateType.stopped)}
-					onKeyDown={(event) => handleOpenProjectFilteredSessions(event, id, SessionStateType.stopped)}
-					role="button"
-					tabIndex={0}
-					title={`${stopped} ${t("table.sessionTypes.stopped")}`}
-				>
-					{stopped}
-				</div>
-				<div
-					aria-label={t("table.sessionTypes.completed")}
-					className={countStyle(SessionStateType.completed)}
-					onClick={(event) => {
-						handleOpenProjectFilteredSessions(event, id, SessionStateType.completed);
-					}}
-					onKeyDown={(event) => {
-						handleOpenProjectFilteredSessions(event, id, SessionStateType.completed);
-					}}
-					role="button"
-					tabIndex={0}
-					title={`${completed} ${t("table.sessionTypes.completed")}`}
-				>
-					{completed}
-				</div>
-				<div
-					aria-label={t("table.sessionTypes.error")}
-					className={countStyle(SessionStateType.error)}
-					onClick={(event) => {
-						handleOpenProjectFilteredSessions(event, id, SessionStateType.error);
-					}}
-					onKeyDown={(event) => {
-						handleOpenProjectFilteredSessions(event, id, SessionStateType.error);
-					}}
-					role="button"
-					tabIndex={0}
-					title={`${error} ${t("table.sessionTypes.error")}`}
-				>
-					{error}
-				</div>
+				{renderSessionCount(running, SessionStateType.running, t("table.sessionTypes.running"))}
+				{renderSessionCount(stopped, SessionStateType.stopped, t("table.sessionTypes.stopped"))}
+				{renderSessionCount(completed, SessionStateType.completed, t("table.sessionTypes.completed"))}
+				{renderSessionCount(error, SessionStateType.error, t("table.sessionTypes.error"))}
 			</Td>
 
 			<Td className="hidden w-2/6 sm:flex" onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}>
