@@ -1,31 +1,34 @@
-import React, { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
+import React, { KeyboardEvent, MouseEvent, useCallback, useEffect, useState } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { LoggerService } from "@services";
 import { DeploymentsService } from "@services/deployments.service";
-import { dateTimeFormat } from "@src/constants";
+import { dateTimeFormat, namespaces } from "@src/constants";
 import { DeploymentStateVariant, SessionStateType } from "@src/enums";
 import { ModalName, SidebarHrefMenu } from "@src/enums/components";
 import { calculateDeploymentSessionsStats, cn, getSessionStateColor } from "@src/utilities";
 import { DashboardProjectWithStats, Project } from "@type/models";
 
 import { useProjectActions, useSort } from "@hooks";
-import { useModalStore, useProjectStore } from "@store";
+import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { IconButton, IconSvg, Loader, StatusBadge, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
 import { DeleteProjectModal } from "@components/organisms/modals";
 
-import { ExportIcon, TrashIcon } from "@assets/image/icons";
+import { ActionStoppedIcon, ExportIcon, TrashIcon } from "@assets/image/icons";
 
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
+	const { t: tDeployments } = useTranslation("deployments", { keyPrefix: "history" });
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const [projectsStats, setProjectsStats] = useState<DashboardProjectWithStats[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const addToast = useToastStore((state) => state.addToast);
 
 	const {
 		items: sortedProjectsStats,
@@ -43,12 +46,14 @@ export const DashboardProjectsTable = () => {
 		for (const project of projectsList) {
 			const { data: deployments } = await DeploymentsService.list(project.id);
 			let projectStatus = DeploymentStateVariant.inactive;
+			let deploymentId = "";
 			const lastDeployed = deployments?.[deployments?.length - 1]?.createdAt;
 			const { sessionStats, totalDeployments } = calculateDeploymentSessionsStats(deployments || []);
 
 			deployments?.forEach((deployment) => {
 				if (deployment.state === DeploymentStateVariant.active) {
 					projectStatus = DeploymentStateVariant.active;
+					deploymentId = deployment.deploymentId;
 				} else if (
 					deployment.state === DeploymentStateVariant.draining &&
 					projectStatus !== DeploymentStateVariant.active
@@ -64,11 +69,40 @@ export const DashboardProjectsTable = () => {
 				...sessionStats,
 				status: projectStatus,
 				lastDeployed,
+				deploymentId,
 			};
 		}
 		setProjectsStats(Object.values(projectsStats));
 		setIsLoading(false);
 	};
+
+	const handleDeploymentStop = useCallback(
+		async (deploymentId: string) => {
+			const { error } = await DeploymentsService.deactivate(deploymentId);
+
+			if (error) {
+				addToast({
+					message: (error as Error).message,
+					type: "error",
+				});
+
+				return;
+			}
+
+			addToast({
+				message: tDeployments("actions.deploymentDeactivatedSuccessfully"),
+				type: "success",
+			});
+			LoggerService.info(
+				namespaces.ui.deployments,
+				tDeployments("actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
+			);
+
+			await loadProjectsData(projectsList);
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[]
+	);
 
 	useEffect(() => {
 		loadProjectsData(projectsList);
@@ -164,7 +198,9 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group h-11 w-1/3 font-normal sm:w-1/6">{t("table.columns.actions")}</Th>
+							<Th className="group h-11 w-1/3 justify-center font-normal sm:w-1/6">
+								{t("table.columns.actions")}
+							</Th>
 						</Tr>
 					</THead>
 
@@ -180,6 +216,7 @@ export const DashboardProjectsTable = () => {
 								status,
 								stopped,
 								totalDeployments,
+								deploymentId,
 							}) => (
 								<Tr className="cursor-pointer pl-4 hover:bg-black" key={id}>
 									<Td
@@ -288,7 +325,14 @@ export const DashboardProjectsTable = () => {
 									</Td>
 
 									<Td className="w-1/3 sm:w-1/6">
-										<div className="flex">
+										<div className="flex justify-center">
+											<IconButton
+												className="size-8 p-1"
+												disabled={status !== DeploymentStateVariant.active}
+												onClick={() => handleDeploymentStop(deploymentId)}
+											>
+												<ActionStoppedIcon className="size-4 transition hover:fill-white" />
+											</IconButton>
 											<IconButton className="group" onClick={() => downloadProjectExport(id)}>
 												<IconSvg
 													className="stroke-gray-750 transition group-hover:stroke-green-200 group-active:stroke-green-800"

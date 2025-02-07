@@ -7,6 +7,7 @@ export type Project = {
 };
 export type DashboardProjectWithStats = {
 	completed: number;
+	deploymentId: string;
 	error: number;
 	id: string;
 	lastDeployed?: Date | string;
