@@ -35,7 +35,6 @@ export const DashboardProjectsTable = () => {
 		requestSort,
 		sortConfig,
 	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
-
 	const { openModal } = useModalStore();
 	const { deleteProject, downloadProjectExport, isDeleting } = useProjectActions();
 	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<string>();
@@ -89,6 +88,13 @@ export const DashboardProjectsTable = () => {
 				return;
 			}
 
+			const updatedProjectStatus = sortedProjectsStats.map((project) =>
+				project.deploymentId === deploymentId
+					? { ...project, status: DeploymentStateVariant.inactive }
+					: project
+			);
+			setProjectsStats(updatedProjectStatus);
+
 			addToast({
 				message: tDeployments("actions.deploymentDeactivatedSuccessfully"),
 				type: "success",
@@ -97,8 +103,6 @@ export const DashboardProjectsTable = () => {
 				namespaces.ui.deployments,
 				tDeployments("actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
 			);
-
-			await loadProjectsData(projectsList);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[]
