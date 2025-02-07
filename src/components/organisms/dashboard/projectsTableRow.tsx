@@ -65,37 +65,30 @@ export const DashboardProjectsTableRow = ({
 	);
 
 	return (
-		<Tr className="cursor-pointer pl-4 hover:bg-black" key={id}>
-			<Td
-				className="w-2/3 pr-4 hover:font-bold sm:w-1/5"
-				onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-				title={name}
-			>
+		<Tr
+			className="cursor-pointer pl-4 hover:bg-black"
+			key={id}
+			onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
+		>
+			<Td className="w-2/3 pr-4 hover:font-bold sm:w-1/5" title={name}>
 				<div className="truncate">{name}</div>
 			</Td>
-			<Td className="hidden w-1/6 sm:flex" onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}>
+			<Td className="hidden w-1/6 sm:flex">
 				<div className="max-w-16 pr-4 md:max-w-28">
 					<StatusBadge deploymentStatus={status} />
 				</div>
 			</Td>
-			<Td
-				className="hidden w-1/6 sm:flex"
-				onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-				title={`${totalDeployments} ${t("table.columns.totalDeployments")}`}
-			>
+			<Td className="hidden w-1/6 sm:flex" title={`${totalDeployments} ${t("table.columns.totalDeployments")}`}>
 				<div className="w-full pr-6 text-center">{totalDeployments}</div>
 			</Td>
-			<Td
-				className="-ml-1 hidden w-2/6 pr-2 sm:flex"
-				onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}
-			>
+			<Td className="-ml-1 hidden w-2/6 pr-2 sm:flex">
 				{renderSessionCount(running, SessionStateType.running, t("table.sessionTypes.running"))}
 				{renderSessionCount(stopped, SessionStateType.stopped, t("table.sessionTypes.stopped"))}
 				{renderSessionCount(completed, SessionStateType.completed, t("table.sessionTypes.completed"))}
 				{renderSessionCount(error, SessionStateType.error, t("table.sessionTypes.error"))}
 			</Td>
 
-			<Td className="hidden w-2/6 sm:flex" onClick={() => navigate(`/${SidebarHrefMenu.projects}/${id}`)}>
+			<Td className="hidden w-2/6 sm:flex">
 				{lastDeployed ? moment(lastDeployed).local().format(dateTimeFormat) : t("never")}
 			</Td>
 
@@ -105,7 +98,10 @@ export const DashboardProjectsTableRow = ({
 						<IconButton
 							aria-label={t("buttons.stopDeployment")}
 							className="group size-8 p-1"
-							onClick={() => handelDeactivateDeployment(deploymentId)}
+							onClick={(event) => {
+								event.stopPropagation();
+								handelDeactivateDeployment(deploymentId);
+							}}
 							title={t("buttons.stopDeployment")}
 						>
 							<ActionStoppedIcon className="size-4 fill-white transition group-hover:fill-green-200 group-active:fill-green-800" />
@@ -117,7 +113,10 @@ export const DashboardProjectsTableRow = ({
 					<IconButton
 						aria-label={t("buttons.exportProject")}
 						className="group"
-						onClick={() => downloadProjectExport(id)}
+						onClick={(event) => {
+							event.stopPropagation();
+							downloadProjectExport(id);
+						}}
 						title={t("buttons.exportProject")}
 					>
 						<IconSvg
@@ -129,7 +128,10 @@ export const DashboardProjectsTableRow = ({
 					<IconButton
 						aria-label={t("buttons.deleteProject")}
 						className="group"
-						onClick={() => displayDeleteModal(status, deploymentId, id, name)}
+						onClick={(event) => {
+							event.stopPropagation();
+							displayDeleteModal(status, deploymentId, id, name);
+						}}
 						title={t("buttons.deleteProject")}
 					>
 						<IconSvg
