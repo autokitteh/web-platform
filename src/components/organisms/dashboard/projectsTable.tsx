@@ -76,7 +76,7 @@ export const DashboardProjectsTable = () => {
 		setIsLoading(false);
 	};
 
-	const handleDeploymentStop = useCallback(
+	const deactivateDeployment = useCallback(
 		async (deploymentId: string) => {
 			const { error } = await DeploymentsService.deactivate(deploymentId);
 
@@ -330,7 +330,7 @@ export const DashboardProjectsTable = () => {
 												<IconButton
 													className="size-8 p-1"
 													disabled={status !== DeploymentStateVariant.active}
-													onClick={() => handleDeploymentStop(deploymentId)}
+													onClick={() => deactivateDeployment(deploymentId)}
 												>
 													<ActionStoppedIcon className="size-4 transition hover:fill-white" />
 												</IconButton>
