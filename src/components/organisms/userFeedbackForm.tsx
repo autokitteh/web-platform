@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Sentry from "@sentry/react";
+import html2canvas from "html2canvas-pro";
 import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useScreenshot } from "use-react-screenshot";
 
 import { LoggerService } from "@services/logger.service";
 import { namespaces } from "@src/constants";
@@ -27,11 +27,8 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 	const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
 	const [anonymous, setAnonymous] = useState(false);
-	const [image, takeScreenShot] = useScreenshot({
-		type: "image/png",
-		quality: 1.0,
-	});
 	const [isLoadingScreenshot, setIsLoadingScreenshot] = useState(false);
+	const [screenshot, setScreenshot] = useState<string | null>();
 
 	const {
 		formState: { errors },
@@ -46,46 +43,14 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		resolver: zodResolver(userFeedbackSchema),
 	});
 
-	const getImage = async () => {
-		setIsLoadingScreenshot(true);
-		const image = await takeScreenShot(document.body);
-		const blob = await new Promise<Blob>((resolve) => {
-			const img = new Image();
-			img.src = image;
-			img.onload = () => {
-				const canvas = document.createElement("canvas");
-				canvas.width = img.width;
-				canvas.height = img.height;
-				const ctx = canvas.getContext("2d");
-				if (!ctx) return resolve(new Blob([]));
-				ctx.drawImage(img, 0, 0);
-				canvas.toBlob((blob) => {
-					if (blob) resolve(blob);
-					else resolve(new Blob([]));
-				}, "image/png");
-			};
-		});
-		setIsLoadingScreenshot(false);
-		if (blob) {
-			const data = new Uint8Array(await blob.arrayBuffer());
-			const attachment = {
-				data,
-				filename: "screenshot.png",
-				contentType: "application/png",
-			};
-			return attachment;
-		}
-		return undefined;
-	};
-
 	const onSubmit = async (data: { message: string }) => {
 		const { message } = data;
 		const userName = anonymous ? "" : user?.name;
 		const userEmail = anonymous ? "" : user?.email;
-
 		try {
 			setIsSendingFeedback(true);
 
+			const attachment = screenshot ? await (await fetch(screenshot)).blob() : null;
 			const sentryId = Sentry.captureMessage("User Feedback");
 			const userFeedback = {
 				event_id: sentryId,
@@ -94,18 +59,18 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 				message,
 			};
 
-			const attachment = await getImage();
 			if (attachment) {
-				Sentry.getCurrentScope().addAttachment(attachment);
+				const dataScreen = new Uint8Array(await attachment.arrayBuffer());
+				Sentry.getCurrentScope().addAttachment({
+					data: dataScreen,
+					filename: "screenshot.jpg",
+					contentType: "image/jpg",
+				});
 			}
 
 			Sentry.captureFeedback(userFeedback);
-
 			setIsFeedbackSubmitted(true);
-
-			setTimeout(() => {
-				onClose();
-			}, 4000);
+			setTimeout(onClose, 4000);
 		} catch (error) {
 			Sentry.captureException({
 				error,
@@ -121,6 +86,14 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		} finally {
 			setIsSendingFeedback(false);
 		}
+	};
+
+	const takeScreenshot = async () => {
+		setIsLoadingScreenshot(true);
+		const screenshotCanvas = await html2canvas(document.body);
+		const screenshotData = screenshotCanvas.toDataURL("image/jpg");
+		setScreenshot(screenshotData);
+		setIsLoadingScreenshot(false);
 	};
 
 	useEffect(() => {
@@ -195,12 +168,15 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 							labelClassName="text-base"
 							onChange={() => setAnonymous(!anonymous)}
 						/>
-						{image ? (
+						{screenshot ? (
 							<div className="mt-4 flex items-end gap-4">
 								<div className="h-32 w-full overflow-hidden rounded-md border-2 border-gray-950">
-									<ImageMotion alt={t("altScrenshot")} src={image} />
+									<ImageMotion alt={t("altScrenshot")} src={screenshot} />
 								</div>
-								<IconButton className="items-center gap-1 font-light">
+								<IconButton
+									className="items-center gap-1 font-light"
+									onClick={() => setScreenshot(null)}
+								>
 									<TrashIcon className="size-4 stroke-white" />
 									<span className="mt-0.5">{t("form.buttons.remove")}</span>
 								</IconButton>
@@ -209,7 +185,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 							<Button
 								className="mt-5 justify-center"
 								disabled={isLoadingScreenshot}
-								onClick={getImage}
+								onClick={takeScreenshot}
 								variant="filled"
 							>
 								{isLoadingScreenshot ? <Loader className="m-0" size="sm" /> : null}
