@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Sentry from "@sentry/react";
@@ -15,8 +15,9 @@ import { cn } from "@src/utilities";
 import { userFeedbackSchema } from "@validations";
 
 import { Button, Checkbox, ErrorMessage, IconButton, Input, Loader, Textarea, Typography } from "@components/atoms";
+import { ImageMotion } from "@components/molecules";
 
-import { Close } from "@assets/image/icons";
+import { Close, TrashIcon } from "@assets/image/icons";
 
 export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFormProps) => {
 	const { t } = useTranslation("global", { keyPrefix: "userFeedback" });
@@ -30,7 +31,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 		type: "image/png",
 		quality: 1.0,
 	});
-	const ref = useRef(null);
+	const [isLoadingScreenshot, setIsLoadingScreenshot] = useState(false);
 
 	const {
 		formState: { errors },
@@ -46,6 +47,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 	});
 
 	const getImage = async () => {
+		setIsLoadingScreenshot(true);
 		const image = await takeScreenShot(document.body);
 		const blob = await new Promise<Blob>((resolve) => {
 			const img = new Image();
@@ -63,6 +65,7 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 				}, "image/png");
 			};
 		});
+		setIsLoadingScreenshot(false);
 		if (blob) {
 			const data = new Uint8Array(await blob.arrayBuffer());
 			const attachment = {
@@ -137,89 +140,101 @@ export const UserFeedbackForm = ({ className, isOpen, onClose }: UserFeedbackFor
 						"min-h-550 w-96 rounded-t-3xl border border-gray-750 bg-gray-1100 p-6 z-[500]",
 						className
 					)}
+					data-html2canvas-ignore
 					exit={{ x: -500 }}
 					initial={{ x: -500 }}
 					transition={{ type: "spring", stiffness: 100, damping: 15 }}
 				>
-					<div ref={ref}>
-						<img alt="Screenshot" src={image} width={200} />
-
-						<button className="text-white" onClick={getImage}>
-							Add screenshot
-						</button>
-						<div className="flex items-center justify-between gap-1">
-							<Typography className="font-averta font-bold" size="2xl">
-								{t("title")}
-							</Typography>
-							<IconButton
-								className="group ml-auto h-default-icon w-default-icon bg-gray-1250 p-0"
-								onClick={onClose}
-							>
-								<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
-							</IconButton>
-						</div>
-						<form className="mt-5 flex flex-col justify-between" onSubmit={handleSubmit(onSubmit)}>
-							<Input
-								disabled
-								label={t("form.name")}
-								placeholder={t("form.placeholder.name")}
-								type={anonymous ? "password" : "text"}
-								value={user?.name}
-							/>
-							<Input
-								className="mt-6"
-								disabled
-								label={t("form.email")}
-								placeholder={t("form.placeholder.email")}
-								type={anonymous ? "password" : "email"}
-								value={user?.email}
-							/>
-							<div>
-								<Textarea
-									rows={5}
-									{...register("message")}
-									className="mt-6"
-									disabled={isFeedbackSubmitted || isSendingFeedback}
-									isError={!!errors.message}
-									isRequired
-									label={t("form.message")}
-									placeholder={t("form.placeholder.message")}
-								/>
-								{errors.message ? (
-									<ErrorMessage className="relative">{errors.message.message}</ErrorMessage>
-								) : null}
-							</div>
-							<Checkbox
-								checked={anonymous}
-								className="mt-1 justify-start"
-								isLoading={false}
-								label={t("sendAnonymously")}
-								labelClassName="text-base"
-								onChange={() => setAnonymous(!anonymous)}
-							/>
-
-							{isFeedbackSubmitted ? (
-								<Typography className="mt-5 text-center font-averta font-bold" size="xl">
-									{t("thankYou")}
-								</Typography>
-							) : (
-								<Button
-									className={cn(
-										"mt-5 w-full justify-center p-1.5 px-7 text-lg font-bold text-white",
-										{
-											"justify-between": isFeedbackSubmitted,
-										}
-									)}
-									disabled={isSendingFeedback}
-									type="submit"
-									variant="outline"
-								>
-									{isSendingFeedback ? <Loader className="m-0" /> : null}
-									{t("form.buttons.send")}
-								</Button>
-							)}
-						</form>
+					<div className="flex items-center justify-between gap-1">
+						<Typography className="font-averta font-bold" size="2xl">
+							{t("title")}
+						</Typography>
+						<IconButton
+							className="group ml-auto h-default-icon w-default-icon bg-gray-1250 p-0"
+							onClick={onClose}
+						>
+							<Close className="size-3 fill-gray-750 transition group-hover:fill-white" />
+						</IconButton>
 					</div>
+					<form className="mt-5 flex flex-col justify-between" onSubmit={handleSubmit(onSubmit)}>
+						<Input
+							disabled
+							label={t("form.name")}
+							placeholder={t("form.placeholder.name")}
+							type={anonymous ? "password" : "text"}
+							value={user?.name}
+						/>
+						<Input
+							className="mt-6"
+							disabled
+							label={t("form.email")}
+							placeholder={t("form.placeholder.email")}
+							type={anonymous ? "password" : "email"}
+							value={user?.email}
+						/>
+						<div>
+							<Textarea
+								rows={5}
+								{...register("message")}
+								className="mt-6"
+								disabled={isFeedbackSubmitted || isSendingFeedback}
+								isError={!!errors.message}
+								isRequired
+								label={t("form.message")}
+								placeholder={t("form.placeholder.message")}
+							/>
+							{errors.message ? (
+								<ErrorMessage className="relative">{errors.message.message}</ErrorMessage>
+							) : null}
+						</div>
+						<Checkbox
+							checked={anonymous}
+							className="mt-1 justify-start"
+							isLoading={false}
+							label={t("sendAnonymously")}
+							labelClassName="text-base"
+							onChange={() => setAnonymous(!anonymous)}
+						/>
+						{image ? (
+							<div className="mt-4 flex items-end gap-4">
+								<div className="h-32 w-full overflow-hidden rounded-md border-2 border-gray-950">
+									<ImageMotion alt={t("altScrenshot")} src={image} />
+								</div>
+								<IconButton className="items-center gap-1 font-light">
+									<TrashIcon className="size-4 stroke-white" />
+									<span className="mt-0.5">{t("form.buttons.remove")}</span>
+								</IconButton>
+							</div>
+						) : (
+							<Button
+								className="mt-5 justify-center"
+								disabled={isLoadingScreenshot}
+								onClick={getImage}
+								variant="filled"
+							>
+								{isLoadingScreenshot ? <Loader className="m-0" size="sm" /> : null}
+								{t("form.buttons.takeScreenshot")}
+							</Button>
+						)}
+
+						{isFeedbackSubmitted ? (
+							<Typography className="mt-5 text-center font-averta font-bold" size="xl">
+								{t("thankYou")}
+							</Typography>
+						) : (
+							<Button
+								className={cn("mt-5 w-full justify-center p-1.5 px-7 text-lg font-bold text-white", {
+									"justify-between": isFeedbackSubmitted,
+								})}
+								disabled={isSendingFeedback}
+								type="submit"
+								variant="outline"
+							>
+								{isSendingFeedback ? <Loader className="m-0" /> : null}
+								{t("form.buttons.send")}
+							</Button>
+						)}
+					</form>
 				</motion.div>
 			) : null}
 		</AnimatePresence>

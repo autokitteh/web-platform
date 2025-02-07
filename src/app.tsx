@@ -66,7 +66,7 @@ export const App = () => {
 		});
 	}, [location]);
 
-	if (isProduction) {
+	if (!isProduction) {
 		Sentry.init({
 			dsn: sentryDsn,
 			integrations: [
