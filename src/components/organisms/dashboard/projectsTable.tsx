@@ -198,7 +198,7 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group h-11 w-1/3 justify-center font-normal sm:w-1/6">
+							<Th className="group h-11 w-1/3 justify-start font-normal sm:w-1/6">
 								{t("table.columns.actions")}
 							</Th>
 						</Tr>
@@ -325,14 +325,17 @@ export const DashboardProjectsTable = () => {
 									</Td>
 
 									<Td className="w-1/3 sm:w-1/6">
-										<div className="flex justify-center">
-											<IconButton
-												className="size-8 p-1"
-												disabled={status !== DeploymentStateVariant.active}
-												onClick={() => handleDeploymentStop(deploymentId)}
-											>
-												<ActionStoppedIcon className="size-4 transition hover:fill-white" />
-											</IconButton>
+										<div className="flex justify-start">
+											{status === DeploymentStateVariant.active ? (
+												<IconButton
+													className="size-8 p-1"
+													disabled={status !== DeploymentStateVariant.active}
+													onClick={() => handleDeploymentStop(deploymentId)}
+												>
+													<ActionStoppedIcon className="size-4 transition hover:fill-white" />
+												</IconButton>
+											) : null}
+
 											<IconButton className="group" onClick={() => downloadProjectExport(id)}>
 												<IconSvg
 													className="stroke-gray-750 transition group-hover:stroke-green-200 group-active:stroke-green-800"
