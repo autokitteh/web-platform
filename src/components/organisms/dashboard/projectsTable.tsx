@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { LoggerService } from "@services";
 import { DeploymentsService } from "@services/deployments.service";
@@ -27,6 +28,7 @@ export const DashboardProjectsTable = () => {
 	const { t: tDeployments } = useTranslation("deployments");
 	const { t: tProjects } = useTranslation("projects");
 	const { projectsList } = useProjectStore();
+	const navigate = useNavigate();
 	const [projectsStats, setProjectsStats] = useState<DashboardProjectWithStats[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
@@ -194,6 +196,7 @@ export const DashboardProjectsTable = () => {
 								displayDeleteModal={displayDeleteModal}
 								downloadProjectExport={downloadProjectExport}
 								handelDeactivateDeployment={handelDeactivateDeployment}
+								navigate={navigate}
 							/>
 						))}
 					</TBody>

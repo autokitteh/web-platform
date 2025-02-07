@@ -2,7 +2,7 @@ import React, { MouseEvent, KeyboardEvent } from "react";
 
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction } from "react-router-dom";
 
 import { dateTimeFormat } from "@src/constants";
 import { DeploymentStateVariant, SessionStateType } from "@src/enums";
@@ -28,6 +28,7 @@ export const DashboardProjectsTableRow = ({
 	handelDeactivateDeployment,
 	downloadProjectExport,
 	displayDeleteModal,
+	navigate,
 }: DashboardProjectWithStats & {
 	displayDeleteModal: (
 		status: DeploymentStateVariant,
@@ -37,9 +38,9 @@ export const DashboardProjectsTableRow = ({
 	) => void;
 	downloadProjectExport: (projectId: string) => void;
 	handelDeactivateDeployment: (deploymentId: string) => Promise<void>;
+	navigate: NavigateFunction;
 }) => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
-	const navigate = useNavigate();
 
 	const countStyle = (state?: SessionStateType, className?: string) =>
 		cn(
