@@ -11,6 +11,7 @@
 		"manual": "Run",
 		"ariaSettingsRun": "Settings manual run",
 		"buildInformationForSingleshotNotLoaded": "Couldn't load build information for manual run",
+		"deploymentFetchError": "Couldn't fetch the deployment details",
 		"table": {
 			"columns": {
 				"buildId": "Build ID",
@@ -58,7 +59,6 @@
 			"showMore": "Show more",
 			"missingactiveDeployment": "Missing last deployment",
 			"useJsonEditor": "Use JSON editor"
-
 		},
 		"actions":{
 			"deploymentRemovedSuccessfully": "Deployment removed successfully",

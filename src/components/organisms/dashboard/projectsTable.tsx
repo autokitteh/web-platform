@@ -88,9 +88,20 @@ export const DashboardProjectsTable = () => {
 				return;
 			}
 
+			const { error: errorDeploymentById, data: deploymentById } = await DeploymentsService.getById(deploymentId);
+
+			if (errorDeploymentById) {
+				addToast({
+					message: t("deploymentFetchError"),
+					type: "error",
+				});
+
+				return;
+			}
+
 			const updatedProjectStatus = sortedProjectsStats.map((project) =>
 				project.deploymentId === deploymentId
-					? { ...project, status: DeploymentStateVariant.inactive }
+					? { ...project, status: deploymentById?.state || DeploymentStateVariant.unspecified }
 					: project
 			);
 			setProjectsStats(updatedProjectStatus);
@@ -105,7 +116,7 @@ export const DashboardProjectsTable = () => {
 			);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
+		[sortedProjectsStats]
 	);
 
 	useEffect(() => {
