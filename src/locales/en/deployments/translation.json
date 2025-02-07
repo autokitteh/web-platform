@@ -1,6 +1,7 @@
 {
 	"deploymentsNotDefinedForProject": "Deployments not defined for this project",
 	"deploymentsNotDefinedForProjectExtended": "Deployments not defined for this project: {{projectId}}",
+	"deploymentDeactivatedFailed": "Deployment deactivation failed",
 	"history": {
 		"ariaActivateDeploy": "Activate deployment",
 		"ariaDeactivateDeploy": "Deactivate deployment",
@@ -11,7 +12,6 @@
 		"manual": "Run",
 		"ariaSettingsRun": "Settings manual run",
 		"buildInformationForSingleshotNotLoaded": "Couldn't load build information for manual run",
-		"deploymentFetchError": "Couldn't fetch the deployment details",
 		"table": {
 			"columns": {
 				"buildId": "Build ID",

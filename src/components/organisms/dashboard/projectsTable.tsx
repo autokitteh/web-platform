@@ -27,7 +27,8 @@ import { ActionStoppedIcon, ExportIcon, TrashIcon } from "@assets/image/icons";
 
 export const DashboardProjectsTable = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "projects" });
-	const { t: tDeployments } = useTranslation("deployments", { keyPrefix: "history" });
+	const { t: tDeployments } = useTranslation("deployments");
+	const { t: tProjects } = useTranslation("projects");
 	const { projectsList } = useProjectStore();
 	const navigate = useNavigate();
 	const [projectsStats, setProjectsStats] = useState<DashboardProjectWithStats[]>([]);
@@ -40,7 +41,7 @@ export const DashboardProjectsTable = () => {
 		requestSort,
 		sortConfig,
 	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
-	const { deleteProject, downloadProjectExport, isDeleting } = useProjectActions();
+	const { deleteProject, downloadProjectExport, isDeleting, deactivateDeployment } = useProjectActions();
 	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<{
 		deploymentId?: string;
 		projectId?: string;
@@ -85,24 +86,13 @@ export const DashboardProjectsTable = () => {
 		setIsLoading(false);
 	};
 
-	const deactivateDeployment = useCallback(
+	const handelDeactivateDeployment = useCallback(
 		async (deploymentId: string) => {
-			const { error } = await DeploymentsService.deactivate(deploymentId);
+			const { error, deploymentById } = await deactivateDeployment(deploymentId);
 
 			if (error) {
 				addToast({
-					message: (error as Error).message,
-					type: "error",
-				});
-
-				return;
-			}
-
-			const { error: errorDeploymentById, data: deploymentById } = await DeploymentsService.getById(deploymentId);
-
-			if (errorDeploymentById) {
-				addToast({
-					message: tDeployments("deploymentFetchError"),
+					message: tDeployments("deploymentDeactivatedFailed"),
 					type: "error",
 				});
 
@@ -143,11 +133,37 @@ export const DashboardProjectsTable = () => {
 
 	const handleProjectDelete = async () => {
 		try {
-			await deactivateDeployment(selectedProjectForDeletion.deploymentId!);
-			await deleteProject(selectedProjectForDeletion.projectId!);
+			if (selectedProjectForDeletion.deploymentId) {
+				const { error: errorDeactivateProject } = await deactivateDeployment(
+					selectedProjectForDeletion.deploymentId
+				);
+
+				if (errorDeactivateProject) {
+					addToast({
+						message: tDeployments("deploymentDeactivatedFailed"),
+						type: "error",
+					});
+
+					return;
+				}
+			}
+
+			const { error: errorDeleteProject } = await deleteProject(selectedProjectForDeletion.projectId!);
+			if (errorDeleteProject) {
+				addToast({
+					message: tProjects("errorDeletingProject"),
+					type: "error",
+				});
+				return;
+			}
+
+			addToast({
+				message: tProjects("deleteProjectSuccess"),
+				type: "success",
+			});
 		} finally {
-			closeModal(ModalName.deleteProject);
 			closeModal(ModalName.deleteWithActiveDeploymentProject);
+			closeModal(ModalName.deleteProject);
 			setSelectedProjectForDeletion({ deploymentId: undefined, projectId: undefined });
 		}
 	};
@@ -373,7 +389,7 @@ export const DashboardProjectsTable = () => {
 													aria-label={t("buttons.stopDeployment")}
 													className="group size-8 p-1"
 													disabled={status !== DeploymentStateVariant.active}
-													onClick={() => deactivateDeployment(deploymentId)}
+													onClick={() => handelDeactivateDeployment(deploymentId)}
 													title={t("buttons.stopDeployment")}
 												>
 													<ActionStoppedIcon className="size-4 fill-white transition group-hover:fill-green-200 group-active:fill-green-800" />

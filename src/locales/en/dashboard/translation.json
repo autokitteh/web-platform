@@ -26,8 +26,6 @@
 		"projectManifestNotFoundInArchiveExtended": "Project manifest not found in the archive: {{archiveName}}",
 		"projectManifestExtractionFailedExtended": "Project manifest extraction failed, error: {{error}}",
 		"errorExportingProject": "Failed to export project",
-		"errorDeletingProject": "Failed to delete project",
-        "deleteProjectSuccess": "Project deletion completed successfully",
         "deleteProjectSuccessExtended": "Project deletion completed successfully, project name: {{projectName}}, project ID: {{projectId}}"
 	},
 	"templates":{
