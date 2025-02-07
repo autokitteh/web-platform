@@ -37,7 +37,7 @@ export const DeleteProjectModal = ({ isDeleting, onDelete }: DeleteModalProps) =
 				</Button>
 
 				<Button
-					ariaLabel={t("deleteButton")}
+					ariaLabel={t("okButton")}
 					className="bg-gray-1100 px-4 py-3 font-semibold hover:text-error"
 					disabled={isDeleting}
 					onClick={onDelete}
@@ -46,10 +46,10 @@ export const DeleteProjectModal = ({ isDeleting, onDelete }: DeleteModalProps) =
 					{isDeleting ? (
 						<div className="flex flex-row gap-2">
 							<Loader size="sm" />
-							{t("deleteButton")}
+							{t("okButton")}
 						</div>
 					) : (
-						t("deleteButton")
+						t("okButton")
 					)}
 				</Button>
 			</div>
