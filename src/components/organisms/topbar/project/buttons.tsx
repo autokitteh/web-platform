@@ -21,7 +21,7 @@ import { EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/ico
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
 	const { projectId } = useParams();
-	const { openModal } = useModalStore();
+	const { closeModal, openModal } = useModalStore();
 	const { fetchDeployments, fetchResources, isValid, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
@@ -34,6 +34,7 @@ export const ProjectTopbarButtons = () => {
 	const onProjectDelete = useCallback(async () => {
 		const response = await deleteProject(projectId!);
 		if (!response?.error) {
+			closeModal(ModalName.deleteProject);
 			navigate("/");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
