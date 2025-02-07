@@ -56,7 +56,7 @@
 		"buttons":{
 			"startNewProject": "Start New Project",
 			"start": "Start",
-			"stopDeployment": "Stop deployment",
+			"stopDeployment": "Deactivate deployment",
 			"deleteProject": "Delete project",
 			"exportProject": "Export project"
 		},

@@ -43,11 +43,11 @@ export const DashboardProjectsTable = () => {
 	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
 	const { deleteProject, downloadProjectExport, isDeleting, deactivateDeployment } = useProjectActions();
 	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<{
-		deploymentId?: string;
+		activeDeploymentId?: string;
 		projectId?: string;
 	}>({
 		projectId: undefined,
-		deploymentId: undefined,
+		activeDeploymentId: undefined,
 	});
 
 	const loadProjectsData = async (projectsList: Project[]) => {
@@ -99,20 +99,21 @@ export const DashboardProjectsTable = () => {
 				return;
 			}
 
-			const updatedProjectStatus = sortedProjectsStats.map((project) =>
-				project.deploymentId === deploymentId
-					? { ...project, status: deploymentById?.state || DeploymentStateVariant.unspecified }
-					: project
+			setProjectsStats((prevStats) =>
+				prevStats.map((project) =>
+					project.deploymentId === deploymentId
+						? { ...project, status: deploymentById?.state || DeploymentStateVariant.unspecified }
+						: project
+				)
 			);
-			setProjectsStats(updatedProjectStatus);
 
 			addToast({
-				message: tDeployments("actions.deploymentDeactivatedSuccessfully"),
+				message: tDeployments("history.actions.deploymentDeactivatedSuccessfully"),
 				type: "success",
 			});
 			LoggerService.info(
 				namespaces.ui.deployments,
-				tDeployments("actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
+				tDeployments("history.actions.deploymentDeactivatedSuccessfullyExtended", { deploymentId })
 			);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -133,22 +134,18 @@ export const DashboardProjectsTable = () => {
 
 	const handleProjectDelete = async () => {
 		try {
-			if (selectedProjectForDeletion.deploymentId) {
-				const { error: errorDeactivateProject } = await deactivateDeployment(
-					selectedProjectForDeletion.deploymentId
-				);
-
+			const { activeDeploymentId, projectId } = selectedProjectForDeletion;
+			if (activeDeploymentId) {
+				const { error: errorDeactivateProject } = await deactivateDeployment(activeDeploymentId);
 				if (errorDeactivateProject) {
 					addToast({
 						message: tDeployments("deploymentDeactivatedFailed"),
 						type: "error",
 					});
-
 					return;
 				}
 			}
-
-			const { error: errorDeleteProject } = await deleteProject(selectedProjectForDeletion.projectId!);
+			const { error: errorDeleteProject } = await deleteProject(projectId!);
 			if (errorDeleteProject) {
 				addToast({
 					message: tProjects("errorDeletingProject"),
@@ -161,16 +158,26 @@ export const DashboardProjectsTable = () => {
 				message: tProjects("deleteProjectSuccess"),
 				type: "success",
 			});
+		} catch {
+			addToast({
+				message: t("errorDeletingProject"),
+				type: "error",
+			});
 		} finally {
 			closeModal(ModalName.deleteWithActiveDeploymentProject);
 			closeModal(ModalName.deleteProject);
-			setSelectedProjectForDeletion({ deploymentId: undefined, projectId: undefined });
+			setSelectedProjectForDeletion({ activeDeploymentId: undefined, projectId: undefined });
 		}
 	};
 
-	const displayDeleteModal = async (status: DeploymentStateVariant, deploymentId: string, projectId: string) => {
+	const displayDeleteModal = async (
+		status: DeploymentStateVariant,
+		deploymentId: string,
+		projectId: string,
+		name: string
+	) => {
 		if (status === DeploymentStateVariant.active) {
-			setSelectedProjectForDeletion({ deploymentId, projectId });
+			setSelectedProjectForDeletion({ activeDeploymentId: deploymentId, projectId });
 			openModal(ModalName.deleteWithActiveDeploymentProject);
 			return;
 		}
@@ -180,7 +187,7 @@ export const DashboardProjectsTable = () => {
 		}
 
 		setSelectedProjectForDeletion({ projectId });
-		openModal(ModalName.deleteProject);
+		openModal(ModalName.deleteProject, name);
 	};
 
 	const handleOpenProjectFilteredSessions = (
@@ -256,7 +263,7 @@ export const DashboardProjectsTable = () => {
 									sortDirection={sortConfig.direction}
 								/>
 							</Th>
-							<Th className="group h-11 w-1/3 justify-start font-normal sm:w-1/6">
+							<Th className="group h-11 w-1/3 justify-end pr-4 font-normal sm:w-1/6">
 								{t("table.columns.actions")}
 							</Th>
 						</Tr>
@@ -383,18 +390,19 @@ export const DashboardProjectsTable = () => {
 									</Td>
 
 									<Td className="w-1/3 sm:w-1/6">
-										<div className="flex justify-start">
+										<div className="flex justify-end">
 											{status === DeploymentStateVariant.active ? (
 												<IconButton
 													aria-label={t("buttons.stopDeployment")}
 													className="group size-8 p-1"
-													disabled={status !== DeploymentStateVariant.active}
 													onClick={() => handelDeactivateDeployment(deploymentId)}
 													title={t("buttons.stopDeployment")}
 												>
 													<ActionStoppedIcon className="size-4 fill-white transition group-hover:fill-green-200 group-active:fill-green-800" />
 												</IconButton>
-											) : null}
+											) : (
+												<div className="size-8 p-1" />
+											)}
 
 											<IconButton
 												aria-label={t("buttons.exportProject")}
@@ -411,7 +419,7 @@ export const DashboardProjectsTable = () => {
 											<IconButton
 												aria-label={t("buttons.deleteProject")}
 												className="group"
-												onClick={() => displayDeleteModal(status, deploymentId, id)}
+												onClick={() => displayDeleteModal(status, deploymentId, id, name)}
 												title={t("buttons.deleteProject")}
 											>
 												<IconSvg

@@ -65,6 +65,11 @@ export const ProjectTopbarButtons = () => {
 				type: "success",
 			});
 			navigate("/");
+		} catch {
+			addToast({
+				message: t("errorDeletingProject"),
+				type: "error",
+			});
 		} finally {
 			closeModal(ModalName.deleteWithActiveDeploymentProject);
 			closeModal(ModalName.deleteProject);

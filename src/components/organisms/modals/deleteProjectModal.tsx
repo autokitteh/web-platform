@@ -17,12 +17,13 @@ export const DeleteProjectModal = ({ isDeleting, onDelete }: DeleteModalProps) =
 	const { closeModal } = useModalStore();
 	const { projectsList } = useProjectStore();
 	const projectName = projectsList.find(({ id }) => id === projectId)?.name;
+	const projectNameFromStore = useModalStore((state) => state.data as string);
 
 	return (
 		<Modal hideCloseButton name={ModalName.deleteProject}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
-				<p>{t("content", { name: projectName || "this project" })}</p>
+				<p>{t("content", { name: projectName || projectNameFromStore })}</p>
 				<p>{t("deleteWarning")}</p>
 			</div>
 
