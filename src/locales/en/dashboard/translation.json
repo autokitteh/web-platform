@@ -57,7 +57,10 @@
 		},
 		"buttons":{
 			"startNewProject": "Start New Project",
-			"start": "Start"
+			"start": "Start",
+			"stopDeployment": "Stop deployment",
+			"deleteProject": "Delete project",
+			"exportProject": "Export project"
 		},
 		"cards":{
 			"community": {

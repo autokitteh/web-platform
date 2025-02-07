@@ -64,10 +64,13 @@
 	},
 	"deleteProject": {
 		"cancelButton": "Cancel",
-		"deleteButton": "Ok",
+		"deleteButton": "Delete",
+		"okButton": "Ok",
 		"content": "Are you sure you want to delete {{name}}?",
 		"deleteWarning": "This action cannot be undone, and all related data will be permanently removed.",
-		"title": "Delete Project"
+		"title": "Delete Project",
+		"descriptionDeleteWithActiveDeployment": "The project has active deployment. Project deletion will cause a deactivation of the active deployments and removal of all running workflows",
+		"tryDeleteProjectAfterChangeStatus": "Please try to delete the project again later once the deployment status changes from Draining to Deactivated"
 	},
 	"createProjectWithTemplate": {
 		"title": "Create from template - {{name}}",

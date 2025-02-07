@@ -17,7 +17,11 @@ import { useModalStore, useProjectStore, useToastStore } from "@store";
 
 import { IconButton, IconSvg, Loader, StatusBadge, TBody, THead, Table, Td, Th, Tr } from "@components/atoms";
 import { SortButton } from "@components/molecules";
-import { DeleteProjectModal } from "@components/organisms/modals";
+import {
+	DeleteProjectModal,
+	DeleteActiveDeploymentProjectModal,
+	DeleteDrainingDeploymentProjectModal,
+} from "@components/organisms/modals";
 
 import { ActionStoppedIcon, ExportIcon, TrashIcon } from "@assets/image/icons";
 
@@ -29,15 +33,21 @@ export const DashboardProjectsTable = () => {
 	const [projectsStats, setProjectsStats] = useState<DashboardProjectWithStats[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const addToast = useToastStore((state) => state.addToast);
+	const { closeModal, openModal } = useModalStore();
 
 	const {
 		items: sortedProjectsStats,
 		requestSort,
 		sortConfig,
 	} = useSort<DashboardProjectWithStats>(projectsStats, "name");
-	const { openModal } = useModalStore();
 	const { deleteProject, downloadProjectExport, isDeleting } = useProjectActions();
-	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<string>();
+	const [selectedProjectForDeletion, setSelectedProjectForDeletion] = useState<{
+		deploymentId?: string;
+		projectId?: string;
+	}>({
+		projectId: undefined,
+		deploymentId: undefined,
+	});
 
 	const loadProjectsData = async (projectsList: Project[]) => {
 		const projectsStats = {} as Record<string, DashboardProjectWithStats>;
@@ -92,7 +102,7 @@ export const DashboardProjectsTable = () => {
 
 			if (errorDeploymentById) {
 				addToast({
-					message: t("deploymentFetchError"),
+					message: tDeployments("deploymentFetchError"),
 					type: "error",
 				});
 
@@ -132,11 +142,28 @@ export const DashboardProjectsTable = () => {
 		);
 
 	const handleProjectDelete = async () => {
-		deleteProject(selectedProjectForDeletion!);
+		try {
+			await deactivateDeployment(selectedProjectForDeletion.deploymentId!);
+			await deleteProject(selectedProjectForDeletion.projectId!);
+		} finally {
+			closeModal(ModalName.deleteProject);
+			closeModal(ModalName.deleteWithActiveDeploymentProject);
+			setSelectedProjectForDeletion({ deploymentId: undefined, projectId: undefined });
+		}
 	};
 
-	const displayDeleteModal = (id: string) => {
-		setSelectedProjectForDeletion(id);
+	const displayDeleteModal = async (status: DeploymentStateVariant, deploymentId: string, projectId: string) => {
+		if (status === DeploymentStateVariant.active) {
+			setSelectedProjectForDeletion({ deploymentId, projectId });
+			openModal(ModalName.deleteWithActiveDeploymentProject);
+			return;
+		}
+		if (status === DeploymentStateVariant.draining) {
+			openModal(ModalName.deleteWithDrainingDeploymentProject);
+			return;
+		}
+
+		setSelectedProjectForDeletion({ projectId });
 		openModal(ModalName.deleteProject);
 	};
 
@@ -343,24 +370,36 @@ export const DashboardProjectsTable = () => {
 										<div className="flex justify-start">
 											{status === DeploymentStateVariant.active ? (
 												<IconButton
-													className="size-8 p-1"
+													aria-label={t("buttons.stopDeployment")}
+													className="group size-8 p-1"
 													disabled={status !== DeploymentStateVariant.active}
 													onClick={() => deactivateDeployment(deploymentId)}
+													title={t("buttons.stopDeployment")}
 												>
-													<ActionStoppedIcon className="size-4 transition hover:fill-white" />
+													<ActionStoppedIcon className="size-4 fill-white transition group-hover:fill-green-200 group-active:fill-green-800" />
 												</IconButton>
 											) : null}
 
-											<IconButton className="group" onClick={() => downloadProjectExport(id)}>
+											<IconButton
+												aria-label={t("buttons.exportProject")}
+												className="group"
+												onClick={() => downloadProjectExport(id)}
+												title={t("buttons.exportProject")}
+											>
 												<IconSvg
-													className="stroke-gray-750 transition group-hover:stroke-green-200 group-active:stroke-green-800"
+													className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 													size="md"
 													src={ExportIcon}
 												/>
 											</IconButton>
-											<IconButton className="group" onClick={() => displayDeleteModal(id)}>
+											<IconButton
+												aria-label={t("buttons.deleteProject")}
+												className="group"
+												onClick={() => displayDeleteModal(status, deploymentId, id)}
+												title={t("buttons.deleteProject")}
+											>
 												<IconSvg
-													className="stroke-gray-750 transition group-hover:stroke-green-200 group-active:stroke-green-800"
+													className="stroke-white transition group-hover:stroke-green-200 group-active:stroke-green-800"
 													size="md"
 													src={TrashIcon}
 												/>
@@ -376,6 +415,8 @@ export const DashboardProjectsTable = () => {
 				<div>{t("table.noProjectsFound")}</div>
 			)}
 
+			<DeleteDrainingDeploymentProjectModal />
+			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 		</div>
 	);

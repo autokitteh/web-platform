@@ -10,6 +10,8 @@ export enum ModalName {
 	deleteVariable = "deleteVariable",
 	getToken = "getToken",
 	deleteProject = "deleteProject",
+	deleteWithActiveDeploymentProject = "deleteWithActiveDeploymentProject",
+	deleteWithDrainingDeploymentProject = "deleteWithDrainingDeploymentProject",
 	welcomePage = "welcomePage",
 	templateCreateProject = "templateCreateProject",
 	newProject = "newProject",

@@ -242,7 +242,6 @@ export const useProjectActions = () => {
 		const { error } = await removeProject(projectId);
 		setIsDeleting(false);
 
-		closeModal(ModalName.deleteProject);
 		if (error) {
 			addToast({
 				message: t("errorDeletingProject"),

@@ -1,36 +1,31 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 import { ModalName } from "@enums/components";
 import { DeleteModalProps } from "@interfaces/components";
 
-import { useModalStore, useProjectStore } from "@store";
+import { useModalStore } from "@store";
 
 import { Button, Loader } from "@components/atoms";
 import { Modal } from "@components/molecules";
 
-export const DeleteProjectModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
+export const DeleteActiveDeploymentProjectModal = ({ isDeleting, onDelete }: DeleteModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "deleteProject" });
-	const { projectId } = useParams();
 	const { closeModal } = useModalStore();
-	const { projectsList } = useProjectStore();
-	const projectName = projectsList.find(({ id }) => id === projectId)?.name;
 
 	return (
-		<Modal hideCloseButton name={ModalName.deleteProject}>
+		<Modal hideCloseButton name={ModalName.deleteWithActiveDeploymentProject}>
 			<div className="mx-6">
 				<h3 className="mb-5 text-xl font-bold">{t("title")}</h3>
-				<p>{t("content", { name: projectName || "this project" })}</p>
-				<p>{t("deleteWarning")}</p>
+				<p>{t("descriptionDeleteWithActiveDeployment")}</p>
 			</div>
 
 			<div className="mt-8 flex w-full justify-end gap-2">
 				<Button
 					ariaLabel={t("cancelButton")}
 					className="px-4 py-3 font-semibold hover:bg-gray-1100 hover:text-white"
-					onClick={() => closeModal(ModalName.deleteProject)}
+					onClick={() => closeModal(ModalName.deleteWithActiveDeploymentProject)}
 					variant="outline"
 				>
 					{t("cancelButton")}
