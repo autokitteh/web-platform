@@ -13,6 +13,17 @@ import { IconSvg } from "@components/atoms";
 
 import { PipeCircleDarkIcon } from "@assets/image/icons";
 
+const ConnectorIcon = ({ show }: { show: boolean }) => {
+	if (!show) return null;
+
+	return (
+		<PipeCircleDarkIcon
+			className="absolute -right-4 top-1/2 -translate-y-1/2 
+				  fill-white"
+		/>
+	);
+};
+
 const TemplateIntegrationsIcon = ({
 	integration,
 	index,
@@ -42,9 +53,7 @@ const TemplateIntegrationsIcon = ({
 	return (
 		<div className={wrapperClass} key={index} title={label}>
 			<IconSvg className={iconClass} size="xl" src={icon} />
-			{index < totalIntegrationsInTemplate - 1 ? (
-				<PipeCircleDarkIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-500" />
-			) : null}
+			<ConnectorIcon show={index < totalIntegrationsInTemplate - 1} />
 		</div>
 	);
 };
