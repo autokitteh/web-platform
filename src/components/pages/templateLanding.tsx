@@ -14,7 +14,7 @@ export const TemplateLanding = () => {
 	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
 	const { fetchTemplates } = useTemplatesStore();
 	const [searchParams] = useSearchParams();
-	const assetDir = searchParams.get("template-name");
+	const assetDir = searchParams.get("name");
 
 	useEffect(() => {
 		fetchTemplates();
