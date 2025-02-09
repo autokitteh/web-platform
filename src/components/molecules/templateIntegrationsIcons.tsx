@@ -13,38 +13,67 @@ import { IconSvg } from "@components/atoms";
 
 import { PipeCircleDarkIcon } from "@assets/image/icons";
 
+const TemplateIntegrationsIcon = ({
+	integration,
+	index,
+	totalIntegrationsInTemplate,
+	iconClassName,
+	wrapperClassName,
+}: {
+	iconClassName?: string;
+	index: number;
+	integration: string;
+	totalIntegrationsInTemplate: number;
+	wrapperClassName?: string;
+}) => {
+	const enrichedIntegration =
+		IntegrationsMap[integration as keyof typeof Integrations] ||
+		HiddenIntegrationsForTemplates[integration as keyof typeof IntegrationForTemplates] ||
+		{};
+
+	const { icon, label } = enrichedIntegration;
+
+	const iconClass = cn("z-10 rounded-full p-1", iconClassName);
+	const wrapperClass = cn(
+		"relative flex size-8 items-center justify-center rounded-full bg-gray-1400",
+		wrapperClassName
+	);
+
+	return (
+		<div className={wrapperClass} key={index} title={label}>
+			<IconSvg className={iconClass} size="xl" src={icon} />
+			{index < totalIntegrationsInTemplate - 1 ? (
+				<PipeCircleDarkIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-500" />
+			) : null}
+		</div>
+	);
+};
+
 export const TemplateIntegrationsIcons = ({
 	template,
 	className,
+	iconClassName,
+	wrapperClassName,
 }: {
 	className?: string;
+	iconClassName?: string;
 	template?: TemplateMetadata;
+	wrapperClassName?: string;
 }) => {
 	if (!template) return null;
 
 	return (
 		<div className={cn("flex gap-3", className)}>
-			{template.integrations.map((integration, index) => {
-				const enrichedIntegration =
-					IntegrationsMap[integration as keyof typeof Integrations] ||
-					HiddenIntegrationsForTemplates[integration as keyof typeof IntegrationForTemplates] ||
-					{};
-
-				const { icon, label } = enrichedIntegration;
-
-				return (
-					<div
-						className="relative flex size-8 items-center justify-center rounded-full bg-gray-1400 p-1"
-						key={index}
-						title={label}
-					>
-						<IconSvg className="z-10 rounded-full p-1" size="xl" src={icon} />
-						{index < template.integrations.length - 1 ? (
-							<PipeCircleDarkIcon className="absolute -right-4 top-1/2 -translate-y-1/2 fill-gray-500" />
-						) : null}
-					</div>
-				);
-			})}
+			{template.integrations.map((integration, index) => (
+				<TemplateIntegrationsIcon
+					iconClassName={iconClassName}
+					index={index}
+					integration={integration}
+					key={index}
+					totalIntegrationsInTemplate={template.integrations.length}
+					wrapperClassName={wrapperClassName}
+				/>
+			))}
 		</div>
 	);
 };

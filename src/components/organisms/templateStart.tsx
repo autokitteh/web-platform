@@ -48,39 +48,70 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 	};
 
 	return (
-		<div className="flex items-center justify-evenly gap-3 border-b border-gray-950 pb-6 font-averta text-white">
-			<div className="flex min-h-14 flex-col justify-center rounded-14 border-2 border-gray-950 bg-gray-950/10 p-3 font-averta">
-				{isLoading ? (
-					<Loader />
-				) : (
-					<>
-						<TemplateIntegrationsIcons className="mx-auto" template={selectedTemplate} />
-						<Typography className="pt-4 text-center text-2xl font-bold" element="h2">
-							{selectedTemplate?.title}
-						</Typography>
+		<div className="mx-auto max-w-7xl pt-4">
+			<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+				{/* Left Column - Template Info */}
+				<div className="flex flex-col space-y-6 rounded-2xl border-2 border-gray-800 bg-gray-900/20 p-8">
+					{isLoading ? (
+						<div className="flex min-h-[400px] items-center justify-center">
+							<Loader />
+						</div>
+					) : (
+						<div className="flex h-full flex-col justify-between">
+							<TemplateIntegrationsIcons
+								iconClassName="bg-white"
+								template={selectedTemplate}
+								wrapperClassName="shadow-[-2px_-1px_13px_-4px_#BCF870]"
+							/>
+							<Typography className="text-3xl font-bold text-white" element="h2">
+								{selectedTemplate?.title}
+							</Typography>
+							<Typography className="text-xl" element="h3">
+								{selectedTemplate?.description}
+							</Typography>
 
-						<Typography className="py-4 text-center text-xl font-bold text-green-800" element="h3">
-							{selectedTemplate?.description}
-						</Typography>
-						<Button
-							ariaLabel={t("buttonStart")}
-							className="mx-auto mb-4 mt-2 w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
-							onClick={handleCreateClick}
-						>
-							<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
-							{t("buttonStart")}
-						</Button>
-					</>
-				)}
-			</div>
-			<div className="flex h-full min-h-60 w-440 flex-col">
-				<div className="flex w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/startingProject.jpg')] bg-cover bg-top bg-no-repeat">
-					<IconButton
-						className="group size-16 overflow-hidden rounded-full bg-black/75 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
-						onClick={() => handleOpenModal("https://www.youtube.com/embed/60DQ9Py4LqU?si=tat7TeACzguZKDSv")}
+							<Button
+								ariaLabel={t("buttonStart")}
+								className="mx-auto mb-4 mt-2 w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight shadow-[0px_0px_14px_-4px_#BCF870] hover:bg-green-200"
+								onClick={handleCreateClick}
+							>
+								<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
+								{t("buttonStart")}
+							</Button>
+						</div>
+					)}
+				</div>
+
+				{/* Right Column - Video Preview */}
+				<div className="flex flex-col space-y-4">
+					<div
+						className="relative aspect-video w-full overflow-hidden rounded-2xl 
+							border-2 border-gray-800 bg-gray-900"
 					>
-						<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-100" />
-					</IconButton>
+						<div
+							className="absolute inset-0 bg-[url('image/pages/intro/startingProject.jpg')] 
+							  bg-cover bg-center bg-no-repeat brightness-75"
+						/>
+						<div className="absolute inset-0 flex items-center justify-center">
+							<IconButton
+								className="group transition-all duration-200 hover:scale-110"
+								onClick={() =>
+									handleOpenModal("https://www.youtube.com/embed/60DQ9Py4LqU?si=tat7TeACzguZKDSv")
+								}
+							>
+								<div className="rounded-full bg-black/75 p-5 group-hover:bg-black">
+									<CirclePlayIcon className="size-12 fill-white opacity-90 group-hover:opacity-100" />
+								</div>
+							</IconButton>
+						</div>
+					</div>
+
+					<div className="rounded-xl border-2 border-gray-800 bg-gray-900/20 p-6">
+						<Typography className="text-lg leading-relaxed text-gray-300">
+							Watch our quick tutorial video to learn how to get started with this template and make the
+							most of its features.
+						</Typography>
+					</div>
 				</div>
 			</div>
 
