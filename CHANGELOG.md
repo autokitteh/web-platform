@@ -1,3 +1,15 @@
+## [2.136.1](https://github.com/autokitteh/web-platform/compare/v2.136.0...v2.136.1) (2025-02-09)
+
+
+### Bug Fixes
+
+* **UI-1289:** fix deployment row click handling in table ([#956](https://github.com/autokitteh/web-platform/issues/956)) ([0d6cdf8](https://github.com/autokitteh/web-platform/commit/0d6cdf8911845178a4d61e62c8c06852870e96ac))
+
+
+### Features
+
+* **UI-1231, UI-1269:** add ability to stop active deployment ([#920](https://github.com/autokitteh/web-platform/issues/920)) ([2ea1923](https://github.com/autokitteh/web-platform/commit/2ea1923177c5950969a53b700252c3a57045499e))
+
 # [2.136.0](https://github.com/autokitteh/web-platform/compare/v2.135.0...v2.136.0) (2025-02-06)
 
 
