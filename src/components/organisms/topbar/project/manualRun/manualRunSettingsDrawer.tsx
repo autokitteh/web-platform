@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
@@ -27,21 +27,30 @@ export const ManualRunSettingsDrawer = () => {
 	const [sendingManualRun, setSendingManualRun] = useState(false);
 	const { fetchDeployments } = useCacheStore();
 
-	const { projectManualRun, saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
-		projectManualRun: state.projectManualRun[projectId!],
-		updateManualRunConfiguration: state.updateManualRunConfiguration,
-		saveAndExecuteManualRun: state.saveAndExecuteManualRun,
-	}));
+	const projectManualRun = useManualRunStore(useCallback((state) => state.projectManualRun[projectId!], [projectId]));
+
+	const { saveAndExecuteManualRun, updateManualRunConfiguration } = useManualRunStore(
+		useCallback(
+			(state) => ({
+				saveAndExecuteManualRun: state.saveAndExecuteManualRun,
+				updateManualRunConfiguration: state.updateManualRunConfiguration,
+			}),
+			[]
+		)
+	);
 
 	const { activeDeployment, entrypointFunction, fileOptions, filePath, files, params } = projectManualRun || {};
 
 	const methods = useForm({
 		resolver: zodResolver(manualRunSchema),
-		defaultValues: {
-			filePath,
-			entrypointFunction,
-			params: params || "{}",
-		},
+		defaultValues: useMemo(
+			() => ({
+				filePath,
+				entrypointFunction,
+				params: params || "{}",
+			}),
+			[filePath, entrypointFunction, params]
+		),
 		mode: "onChange",
 	});
 

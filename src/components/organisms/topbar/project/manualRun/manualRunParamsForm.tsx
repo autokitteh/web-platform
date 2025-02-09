@@ -5,74 +5,56 @@ import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import {
+	convertToJsonString,
+	convertToKeyValuePairs,
+} from "@src/components/organisms/topbar/project/manualRun/utilities";
 import { ManualRunFormData } from "@src/interfaces/components";
 import { useManualRunStore } from "@src/store";
-import { safeJsonParse } from "@src/utilities";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Toggle } from "@components/atoms";
 
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
-const convertToKeyValuePairs = (jsonString: string) => {
-	try {
-		const parsed = JSON.parse(jsonString);
-		return Object.entries(parsed).map(([key, value]) => ({
-			key,
-			value: typeof value === "string" ? value : JSON.stringify(value),
-		}));
-	} catch {
-		return [];
-	}
-};
-
-const convertToJsonString = (pairs: Array<{ key: string; value: string }>) => {
-	const object = pairs.reduce<Record<string, unknown>>((acc, { key, value }) => {
-		if (!key.trim()) return acc;
-		acc[key] = safeJsonParse(value) ?? value;
-		return acc;
-	}, {});
-	return JSON.stringify(object, null, 2);
-};
-
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
 	const { control, formState, setValue } = useFormContext<ManualRunFormData>();
 
 	const { projectId } = useParams();
-	const { projectManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
-		projectManualRun: state.projectManualRun[projectId!],
-		updateManualRunConfiguration: state.updateManualRunConfiguration,
-	}));
 
-	const { isJson } = projectManualRun || {};
+	const errors = formState.errors;
+
+	const { isJson, updateManualRunConfiguration } = useManualRunStore(
+		useCallback(
+			(state) => ({
+				isJson: state.projectManualRun[projectId!]?.isJson,
+				updateManualRunConfiguration: state.updateManualRunConfiguration,
+			}),
+			[projectId]
+		)
+	);
+
 	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
-	const [keyValuePairs, setKeyValuePairs] = useState<Array<{ key: string; value: string }>>(() =>
+
+	const [keyValuePairs, setKeyValuePairs] = useState(() =>
 		convertToKeyValuePairs(control._formValues.params || "{}")
 	);
 
-	const errors = formState.errors;
 	const handleJsonChange = useCallback(
 		(value?: string) => {
 			try {
-				// Always work with a string
 				const newValue = typeof value === "string" ? value : "{}";
-
-				// Try to parse and format the JSON
 				const parsed = JSON.parse(newValue);
 				const formatted = JSON.stringify(parsed, null, 2);
 
-				// Update form value
 				setValue("params", formatted, { shouldValidate: true });
-
-				// Update key-value pairs
 				setKeyValuePairs(convertToKeyValuePairs(formatted));
 			} catch {
-				// If JSON is invalid, just update the raw value
-				setValue("params", typeof value === "string" ? value : "{}", { shouldValidate: true });
+				setValue("params", value || "{}", { shouldValidate: true });
 			}
 		},
-		[setValue, setKeyValuePairs]
+		[setValue]
 	);
 
 	const handleFieldChange = (index: number, field: "key" | "value", value: string) => {
