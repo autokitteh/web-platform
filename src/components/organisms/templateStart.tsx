@@ -6,15 +6,14 @@ import { ModalName } from "@src/enums/components";
 import { useCreateProjectFromTemplate } from "@src/hooks";
 import { useModalStore, useTemplatesStore, useProjectStore } from "@src/store";
 
-import { Button, IconButton, IconSvg, Spinner, Typography, Loader } from "@components/atoms";
+import { Button, IconButton, Typography, Loader } from "@components/atoms";
 import { TemplateIntegrationsIcons } from "@components/molecules";
 import { ProjectTemplateCreateModal } from "@components/organisms/dashboard/templates/tabs";
 
-import { ProjectsIcon } from "@assets/image";
 import { CirclePlayIcon } from "@assets/image/icons";
 
 export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
-	const { t } = useTranslation("dashboard", { keyPrefix: "welcome" });
+	const { t } = useTranslation("templates", { keyPrefix: "landingPage" });
 	const { isCreating, createProjectFromAsset } = useCreateProjectFromTemplate();
 	const { isLoading, sortedCategories } = useTemplatesStore();
 	const { projectsList } = useProjectStore();
@@ -48,39 +47,109 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 	};
 
 	return (
-		<div className="flex items-center justify-evenly gap-3 border-b border-gray-950 pb-6 font-averta text-white">
-			<div className="flex min-h-14 flex-col justify-center rounded-14 border-2 border-gray-950 bg-gray-950/10 p-3 font-averta">
-				{isLoading ? (
-					<Loader />
-				) : (
-					<>
-						<TemplateIntegrationsIcons className="mx-auto" template={selectedTemplate} />
-						<Typography className="pt-4 text-center text-2xl font-bold" element="h2">
-							{selectedTemplate?.title}
-						</Typography>
+		<div className="mx-auto max-w-7xl py-12">
+			<div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+				<div
+					className="relative flex flex-col space-y-8 rounded-3xl border-2 border-gray-800 
+						  bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg"
+				>
+					<div
+						className="absolute -left-1 -top-1 size-20 rounded-tl-3xl border-l-4 border-t-4 border-green-800 
+							opacity-60"
+					/>
 
-						<Typography className="py-4 text-center text-xl font-bold text-green-800" element="h3">
-							{selectedTemplate?.description}
-						</Typography>
-						<Button
-							ariaLabel={t("buttonStart")}
-							className="mx-auto mb-4 mt-2 w-52 justify-center gap-3 rounded-full bg-green-800 py-2 font-averta text-2xl font-bold leading-tight hover:bg-green-200"
-							onClick={handleCreateClick}
-						>
-							<IconSvg size="lg" src={!isCreating ? ProjectsIcon : Spinner} />
-							{t("buttonStart")}
-						</Button>
-					</>
-				)}
-			</div>
-			<div className="flex h-full min-h-60 w-440 flex-col">
-				<div className="flex w-full flex-1 items-center justify-center rounded-2xl border border-gray-750 bg-[url('image/pages/intro/startingProject.jpg')] bg-cover bg-top bg-no-repeat">
-					<IconButton
-						className="group size-16 overflow-hidden rounded-full bg-black/75 shadow-sm shadow-green-800 hover:bg-black hover:shadow-none focus:scale-90"
-						onClick={() => handleOpenModal("https://www.youtube.com/embed/60DQ9Py4LqU?si=tat7TeACzguZKDSv")}
+					{isLoading ? (
+						<div className="flex min-h-[400px] items-center justify-center">
+							<Loader />
+						</div>
+					) : (
+						<>
+							<div className="space-y-8">
+								<TemplateIntegrationsIcons
+									iconClassName="bg-white/90 hover:bg-white transition-colors duration-200"
+									template={selectedTemplate}
+									wrapperClassName="shadow-[0_0_15px_-3px_rgba(188,248,112,0.5)] hover:shadow-[0_0_20px_-3px_rgba(188,248,112,0.7)]
+									  transition-shadow duration-200"
+								/>
+
+								<div className="space-y-4">
+									<Typography
+										className="text-4xl font-bold leading-tight tracking-tight text-white 
+								 shadow-sm backdrop-blur-sm"
+										element="h1"
+									>
+										{selectedTemplate?.title}
+									</Typography>
+
+									<Typography className="text-xl leading-relaxed text-gray-300/90" element="h2">
+										{selectedTemplate?.description}
+									</Typography>
+								</div>
+							</div>
+
+							<div className="pt-6">
+								<Button
+									ariaLabel={t("buttons.start")}
+									className="group flex w-full items-center justify-center gap-4 
+         rounded-full bg-gradient-to-r from-green-800 to-green-800/80 
+         px-10 py-4
+         shadow-[0_0_15px_-5px_rgba(188,248,112,0.2)]
+         transition-all duration-300 ease-in-out
+         hover:translate-y-[-2px] hover:from-green-800/90
+         hover:to-green-800/70
+         hover:shadow-[0_0_20px_-5px_rgba(188,248,112,0.3)]"
+									onClick={handleCreateClick}
+								>
+									<div className="mr-2">{isCreating ? <Loader firstColor="dark-gray" /> : null}</div>
+
+									<span className="text-2xl font-bold text-black group-hover:text-white">
+										{t("buttons.start")}
+									</span>
+								</Button>
+							</div>
+						</>
+					)}
+				</div>
+
+				<div className="flex flex-col space-y-6">
+					<div
+						className="group relative aspect-video w-full overflow-hidden rounded-3xl 
+						   border-2 border-gray-800 bg-gray-900
+						   shadow-[0_0_30px_-10px_rgba(0,0,0,0.5)]"
 					>
-						<CirclePlayIcon className="rounded-full fill-white transition group-hover:opacity-100" />
-					</IconButton>
+						<div
+							className="absolute inset-0 bg-[url('image/pages/intro/startingProject.jpg')] 
+							 bg-cover bg-center bg-no-repeat
+							 transition-all duration-500
+							 group-hover:scale-105 group-hover:brightness-50"
+						/>
+
+						<div className="absolute inset-0 flex items-center justify-center">
+							<IconButton
+								className="transition-all duration-300 hover:scale-110"
+								onClick={() =>
+									handleOpenModal("https://www.youtube.com/embed/60DQ9Py4LqU?si=tat7TeACzguZKDSv")
+								}
+							>
+								<div
+									className="rounded-full bg-black/75 p-6 
+								 backdrop-blur-sm
+								 transition-all duration-300
+								 group-hover:bg-green-800/90"
+								>
+									<CirclePlayIcon className="size-14 fill-white opacity-90 group-hover:opacity-100" />
+								</div>
+							</IconButton>
+						</div>
+					</div>
+					<div className="flex" />
+
+					<div
+						className="rounded-2xl border-2 border-gray-800/50 bg-gray-900/30 
+						   p-8 backdrop-blur-sm"
+					>
+						<Typography className="text-lg leading-relaxed text-gray-400">{t("videoSubtitle")}</Typography>
+					</div>
 				</div>
 			</div>
 
