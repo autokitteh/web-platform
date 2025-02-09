@@ -39,6 +39,7 @@
 			"titleParams": "Parameters",
 			"ariaDeleteParam": "Delete parameter",
 			"configuration": "Configuration",
+			"invalidJsonFormat": "Invalid JSON format. Please fix the JSON before switching modes.",
 			"placeholders": {
 				"selectFile": "Select file",
 				"file": "File",

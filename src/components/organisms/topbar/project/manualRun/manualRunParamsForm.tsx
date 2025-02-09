@@ -13,6 +13,7 @@ import { ManualRunFormData } from "@src/interfaces/components";
 import { useManualRunStore } from "@src/store";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Toggle } from "@components/atoms";
+import { Tooltip } from "@components/atoms/tooltip";
 
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
@@ -36,6 +37,7 @@ export const ManualRunParamsForm = () => {
 	);
 
 	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
+	const [jsonError, setJsonError] = useState(false);
 
 	const [keyValuePairs, setKeyValuePairs] = useState(() =>
 		convertToKeyValuePairs(control._formValues.params || "{}")
@@ -75,16 +77,32 @@ export const ManualRunParamsForm = () => {
 	};
 
 	const toggleEditorMode = () => {
-		const newJsonEditorState = !useJsonEditor;
-		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
-		setUseJsonEditor(newJsonEditorState);
+		if (useJsonEditor) {
+			try {
+				const currentParams = control._formValues.params;
+				JSON.parse(currentParams || "{}");
+				setJsonError(false);
+				const newJsonEditorState = !useJsonEditor;
+				updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
+				setUseJsonEditor(newJsonEditorState);
+			} catch {
+				setJsonError(true);
+				return;
+			}
+		} else {
+			const newJsonEditorState = !useJsonEditor;
+			updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
+			setUseJsonEditor(newJsonEditorState);
+		}
 	};
 
 	return (
 		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
-				<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
+				<Tooltip content={jsonError ? t("invalidJsonFormat") : undefined} variant="error">
+					<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
+				</Tooltip>
 			</div>
 
 			<div className="max-h-[calc(100vh-300px)] overflow-y-auto">

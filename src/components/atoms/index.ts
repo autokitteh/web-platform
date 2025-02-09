@@ -22,3 +22,4 @@ export { Textarea } from "@components/atoms/textarea";
 export { Toggle } from "@components/atoms/toggle";
 export { Typography } from "@components/atoms/typography";
 export { SuccessMessage } from "@components/atoms/successMessage";
+export { Tooltip } from "@components/atoms/tooltip";

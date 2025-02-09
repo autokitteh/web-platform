@@ -63,3 +63,4 @@ export type {
 	DashboardProjectsTableRowProps,
 } from "@src/interfaces/components/dashboard.interface";
 export type { ManualRunFormData } from "@interfaces/components/manualRunForm.interface";
+export type { TooltipProps } from "@interfaces/components/tooltip.interface";
