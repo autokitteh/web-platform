@@ -81,88 +81,100 @@ export const ManualRunParamsForm = () => {
 	};
 
 	return (
-		<div className="mt-9">
+		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
 				<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
 			</div>
 
-			{useJsonEditor ? (
-				<Controller
-					control={control}
-					name="params"
-					render={({ field }) => (
-						<div>
-							<Editor
-								className="min-h-96"
-								defaultLanguage="json"
-								loading={<Loader isCenter size="lg" />}
-								onChange={handleJsonChange}
-								onMount={(editor) => {
-									editor.onDidPaste(() => {
-										handleJsonChange(editor.getValue());
-									});
-								}}
-								options={{
-									fontFamily: "monospace, sans-serif",
-									fontSize: 14,
-									minimap: { enabled: false },
-									renderLineHighlight: "none",
-									scrollBeyondLastLine: false,
-									wordWrap: "on",
-									formatOnPaste: true,
-									formatOnType: true,
-									autoClosingBrackets: "always",
-									autoClosingQuotes: "always",
-								}}
-								theme="vs-dark"
-								value={typeof field.value === "string" ? field.value : "{}"}
-							/>
-							{errors.params ? <ErrorMessage>{errors.params.message}</ErrorMessage> : null}
+			<div className="max-h-[calc(100vh-300px)] overflow-y-auto">
+				{useJsonEditor ? (
+					<Controller
+						control={control}
+						name="params"
+						render={({ field }) => (
+							<div>
+								<Editor
+									className="min-h-96"
+									defaultLanguage="json"
+									loading={<Loader isCenter size="lg" />}
+									onChange={handleJsonChange}
+									onMount={(editor) => {
+										editor.onDidPaste(() => {
+											handleJsonChange(editor.getValue());
+										});
+									}}
+									options={{
+										fontFamily: "monospace, sans-serif",
+										fontSize: 14,
+										minimap: { enabled: false },
+										renderLineHighlight: "none",
+										scrollBeyondLastLine: false,
+										wordWrap: "on",
+										formatOnPaste: true,
+										formatOnType: true,
+										autoClosingBrackets: "always",
+										autoClosingQuotes: "always",
+									}}
+									theme="vs-dark"
+									value={typeof field.value === "string" ? field.value : "{}"}
+								/>
+								{errors.params ? <ErrorMessage>{errors.params.message}</ErrorMessage> : null}
+							</div>
+						)}
+					/>
+				) : (
+					<div className="flex h-full flex-col">
+						<div className="flex-1 overflow-y-auto">
+							<div className="mt-2 space-y-6">
+								{keyValuePairs.map((pair, index) => (
+									<div className="flex items-end gap-3.5" key={index}>
+										<div className="w-1/2">
+											<Input
+												isRequired
+												label={t("placeholders.key")}
+												onChange={(event) =>
+													handleFieldChange(index, "key", event.target.value)
+												}
+												placeholder={t("placeholders.enterKey")}
+												value={pair.key}
+											/>
+										</div>
+										<div className="w-1/2">
+											<Input
+												isRequired
+												label={t("placeholders.value")}
+												onChange={(event) =>
+													handleFieldChange(index, "value", event.target.value)
+												}
+												placeholder={t("placeholders.enterValue")}
+												value={pair.value}
+											/>
+										</div>
+										<IconButton
+											ariaLabel={t("ariaDeleteParam")}
+											className="self-center hover:bg-black"
+											onClick={() => handleRemoveParam(index)}
+										>
+											<TrashIcon className="size-5 stroke-white" />
+										</IconButton>
+									</div>
+								))}
+							</div>
 						</div>
-					)}
-				/>
-			) : (
-				<>
-					{keyValuePairs.map((pair, index) => (
-						<div className="mb-6 flex items-end gap-3.5" key={index}>
-							<div className="w-1/2">
-								<Input
-									isRequired
-									label={t("placeholders.key")}
-									onChange={(event) => handleFieldChange(index, "key", event.target.value)}
-									placeholder={t("placeholders.enterKey")}
-									value={pair.key}
-								/>
-							</div>
-							<div className="w-1/2">
-								<Input
-									isRequired
-									label={t("placeholders.value")}
-									onChange={(event) => handleFieldChange(index, "value", event.target.value)}
-									placeholder={t("placeholders.enterValue")}
-									value={pair.value}
-								/>
-							</div>
-							<IconButton
-								ariaLabel={t("ariaDeleteParam")}
-								className="self-center hover:bg-black"
-								onClick={() => handleRemoveParam(index)}
+						<div className="mt-4">
+							<Button
+								className="group w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
+								onClick={handleAddParam}
+								type="button"
 							>
-								<TrashIcon className="size-5 stroke-white" />
-							</IconButton>
+								<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+								{t("buttons.addNewParameter")}
+							</Button>
 						</div>
-					))}
-					<Button
-						className="group mt-5 w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
-						onClick={handleAddParam}
-						type="button"
-					>
-						<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
-						{t("buttons.addNewParameter")}
-					</Button>
-				</>
-			)}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };
