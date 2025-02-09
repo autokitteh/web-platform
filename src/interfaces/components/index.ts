@@ -62,3 +62,4 @@ export type {
 	WelcomeVideoCardProps,
 	DashboardProjectsTableRowProps,
 } from "@src/interfaces/components/dashboard.interface";
+export type { ManualRunFormData } from "@interfaces/components/manualRunForm.interface";

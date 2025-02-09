@@ -40,11 +40,61 @@ export const ManualRunSettingsDrawer = () => {
 		defaultValues: {
 			filePath,
 			entrypointFunction,
-			params,
+			params: params || "{}",
 		},
 		mode: "onChange",
 	});
 
+	const onSubmit = async () => {
+		if (!projectId) return;
+
+		setSendingManualRun(true);
+		const { params: formParams } = getValues();
+
+		try {
+			const parsedParams = JSON.parse(formParams || "{}");
+			const formattedParams = JSON.stringify(parsedParams, null, 2);
+
+			updateManualRunConfiguration(projectId, {
+				params: formattedParams,
+			});
+
+			const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, formattedParams);
+
+			setSendingManualRun(false);
+			handleManualRun();
+
+			if (error) {
+				addToast({
+					message: t("executionFailed"),
+					type: "error",
+				});
+				LoggerService.error(
+					namespaces.sessionsService,
+					`${t("executionFailedExtended", { projectId, error })}`
+				);
+				return;
+			}
+
+			addToast({
+				message: (
+					<ManualRunSuccessToastMessage
+						deploymentId={activeDeployment?.deploymentId}
+						projectId={projectId}
+						sessionId={sessionId}
+					/>
+				),
+				type: "success",
+			});
+			closeDrawer(DrawerName.projectManualRunSettings);
+		} catch {
+			setSendingManualRun(false);
+			addToast({
+				message: t("invalidJsonFormat"),
+				type: "error",
+			});
+		}
+	};
 	const [fileFunctions, setFileFunctions] = useState<{ label: string; value: string }[]>([]);
 
 	const {
@@ -85,37 +135,6 @@ export const ManualRunSettingsDrawer = () => {
 		setTimeout(() => {
 			fetchDeployments(projectId!, true);
 		}, 100);
-	};
-
-	const onSubmit = async () => {
-		if (!projectId) return;
-
-		setSendingManualRun(true);
-		const { params: formParams } = getValues();
-		updateManualRunConfiguration(projectId, { params: formParams });
-		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, formParams);
-		setSendingManualRun(false);
-		handleManualRun();
-		if (error) {
-			addToast({
-				message: t("executionFailed"),
-				type: "error",
-			});
-			LoggerService.error(namespaces.sessionsService, `${t("executionFailedExtended", { projectId, error })}`);
-
-			return;
-		}
-		addToast({
-			message: (
-				<ManualRunSuccessToastMessage
-					deploymentId={activeDeployment?.deploymentId}
-					projectId={projectId}
-					sessionId={sessionId}
-				/>
-			),
-			type: "success",
-		});
-		closeDrawer(DrawerName.projectManualRunSettings);
 	};
 
 	const entrypointFunctionValue = useWatch({ control, name: "entrypointFunction" });
