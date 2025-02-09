@@ -7,12 +7,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, TopbarButton } from "@enums/components";
 import { LoggerService, ProjectsService } from "@services";
 import { namespaces } from "@src/constants";
+import { DeploymentStateVariant } from "@src/enums";
 import { useProjectActions } from "@src/hooks";
 import { useCacheStore, useManualRunStore, useModalStore, useToastStore } from "@src/store";
 
 import { Button, IconSvg, Loader, Spinner } from "@components/atoms";
 import { DropdownButton } from "@components/molecules";
-import { DeleteProjectModal } from "@components/organisms/modals";
+import {
+	DeleteActiveDeploymentProjectModal,
+	DeleteDrainingDeploymentProjectModal,
+	DeleteProjectModal,
+} from "@components/organisms/modals";
 import { ManualRunButtons } from "@components/organisms/topbar/project";
 
 import { BuildIcon, MoreIcon } from "@assets/image";
@@ -21,23 +26,73 @@ import { EventsFlag, ExportIcon, RocketIcon, TrashIcon } from "@assets/image/ico
 export const ProjectTopbarButtons = () => {
 	const { t } = useTranslation(["projects", "buttons", "errors"]);
 	const { projectId } = useParams();
-	const { openModal } = useModalStore();
-	const { fetchDeployments, fetchResources, isValid, projectValidationState } = useCacheStore();
+	const { closeModal, openModal } = useModalStore();
+	const { fetchDeployments, fetchResources, isValid, deployments, projectValidationState } = useCacheStore();
 	const { fetchManualRunConfiguration } = useManualRunStore();
 	const projectValidationErrors = Object.values(projectValidationState).filter((error) => error.message !== "");
 	const projectErrors = isValid ? "" : Object.values(projectValidationErrors).join(", ");
-	const { deleteProject, downloadProjectExport, isDeleting, isExporting } = useProjectActions();
+	const { deleteProject, downloadProjectExport, deactivateDeployment, isDeleting, isExporting } = useProjectActions();
 	const navigate = useNavigate();
 	const addToast = useToastStore((state) => state.addToast);
 	const [loadingButton, setLoadingButton] = useState<Record<string, boolean>>({});
+	const [selectedActiveDeploymentId, setSelectedActiveDeploymentId] = useState<string>();
+	const handleProjectDelete = useCallback(async () => {
+		try {
+			if (selectedActiveDeploymentId) {
+				const { error: errorDeactivateProject } = await deactivateDeployment(selectedActiveDeploymentId);
 
-	const onProjectDelete = useCallback(async () => {
-		const response = await deleteProject(projectId!);
-		if (!response?.error) {
+				if (errorDeactivateProject) {
+					addToast({
+						message: t("deploymentDeactivatedFailed", { ns: "errors" }),
+						type: "error",
+					});
+
+					return;
+				}
+			}
+
+			const { error: errorDeleteProject } = await deleteProject(projectId!);
+			if (errorDeleteProject) {
+				addToast({
+					message: t("errorDeletingProject"),
+					type: "error",
+				});
+				return;
+			}
+
+			addToast({
+				message: t("deleteProjectSuccess"),
+				type: "success",
+			});
 			navigate("/");
+		} catch {
+			addToast({
+				message: t("errorDeletingProject"),
+				type: "error",
+			});
+		} finally {
+			closeModal(ModalName.deleteWithActiveDeploymentProject);
+			closeModal(ModalName.deleteProject);
+			setSelectedActiveDeploymentId(undefined);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+	}, [projectId, selectedActiveDeploymentId]);
+
+	const displayDeleteModal = useCallback(async () => {
+		const deployment = deployments?.find((deployment) => deployment.state);
+		if (deployment?.state === DeploymentStateVariant.active) {
+			setSelectedActiveDeploymentId(deployment.deploymentId);
+			openModal(ModalName.deleteWithActiveDeploymentProject);
+			return;
+		}
+		if (deployment?.state === DeploymentStateVariant.draining) {
+			openModal(ModalName.deleteWithDrainingDeploymentProject);
+			return;
+		}
+
+		openModal(ModalName.deleteProject);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [deployments]);
 
 	const build = useCallback(async () => {
 		const resources = await fetchResources(projectId!);
@@ -105,11 +160,6 @@ export const ProjectTopbarButtons = () => {
 			debouncedDeploy.cancel();
 		};
 	}, [debouncedBuild, debouncedDeploy]);
-
-	const openModalDeleteProject = useCallback(() => {
-		openModal(ModalName.deleteProject);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const isDeployAndBuildDisabled = loadingButton[TopbarButton.deploy] || loadingButton[TopbarButton.build];
 
@@ -204,7 +254,7 @@ export const ProjectTopbarButtons = () => {
 						<Button
 							ariaLabel={t("topbar.buttons.deleteProject")}
 							className="group mt-2 h-8 px-4 text-white"
-							onClick={openModalDeleteProject}
+							onClick={displayDeleteModal}
 							title={t("topbar.buttons.deleteProject")}
 							variant="outline"
 						>
@@ -235,7 +285,9 @@ export const ProjectTopbarButtons = () => {
 				</Button>
 			</DropdownButton>
 
-			<DeleteProjectModal isDeleting={isDeleting} onDelete={() => onProjectDelete()} />
+			<DeleteDrainingDeploymentProjectModal />
+			<DeleteActiveDeploymentProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
+			<DeleteProjectModal isDeleting={isDeleting} onDelete={handleProjectDelete} />
 		</div>
 	);
 };

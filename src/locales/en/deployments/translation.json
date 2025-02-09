@@ -1,6 +1,7 @@
 {
 	"deploymentsNotDefinedForProject": "Deployments not defined for this project",
 	"deploymentsNotDefinedForProjectExtended": "Deployments not defined for this project: {{projectId}}",
+	"deploymentDeactivatedFailed": "Deployment deactivation failed",
 	"history": {
 		"ariaActivateDeploy": "Activate deployment",
 		"ariaDeactivateDeploy": "Deactivate deployment",
@@ -58,7 +59,6 @@
 			"showMore": "Show more",
 			"missingactiveDeployment": "Missing last deployment",
 			"useJsonEditor": "Use JSON editor"
-
 		},
 		"actions":{
 			"deploymentRemovedSuccessfully": "Deployment removed successfully",

@@ -4,7 +4,7 @@ import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { LoggerService } from "@services";
+import { DeploymentsService, LoggerService } from "@services";
 import { defaultProjectFile, namespaces } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useFileOperations } from "@src/hooks";
@@ -235,33 +235,40 @@ export const useProjectActions = () => {
 
 	const deleteProject = async (projectId: string) => {
 		if (!projectId) {
-			return;
+			return { error: false };
 		}
 
 		setIsDeleting(true);
 		const { error } = await removeProject(projectId);
 		setIsDeleting(false);
 
-		closeModal(ModalName.deleteProject);
 		if (error) {
-			addToast({
-				message: t("errorDeletingProject"),
-				type: "error",
-			});
-
 			return { error };
 		}
 
 		resetChecker();
 
-		addToast({
-			message: t("deleteProjectSuccess"),
-			type: "success",
-		});
-
 		const projectName = projectsList.find(({ id }) => id === projectId)?.name;
 		LoggerService.info(namespaces.projectUI, t("deleteProjectSuccessExtended", { projectId, projectName }));
 		getProjectsList();
+
+		return { error: false };
+	};
+
+	const deactivateDeployment = async (deploymentId: string) => {
+		const { error } = await DeploymentsService.deactivate(deploymentId);
+
+		if (error) {
+			return { error };
+		}
+
+		const { error: errorDeploymentById, data: deploymentById } = await DeploymentsService.getById(deploymentId);
+
+		if (errorDeploymentById) {
+			return { error };
+		}
+
+		return { error: false, deploymentById };
 	};
 
 	return {
@@ -276,6 +283,7 @@ export const useProjectActions = () => {
 		downloadProjectExport,
 		handleCreateProject,
 		handleImportFile,
+		deactivateDeployment,
 		pendingFile,
 	};
 };

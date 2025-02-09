@@ -258,13 +258,11 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
 
 			return { data: undefined, error };
 		}
-
 		if (isEqual(projects, projectsList)) {
 			set((state) => ({ ...state, isLoadingProjectsList: false }));
 
 			return { data: projectsList, error: undefined };
 		}
-
 		set((state) => ({ ...state, projectsList: projects, isLoadingProjectsList: false }));
 
 		return { data: projects, error: undefined };
