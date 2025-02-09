@@ -136,7 +136,9 @@
 			"invalidByteArray": "Invalid or missing byte array",
 			"errorDecodingText": "Error decoding text, {{error}}",
 			"activityLogsFetchError": "Couldn't fetch the activity logs",
-			"outputLogsFetchError": "Couldn't fetch the output logs"
+			"outputLogsFetchError": "Couldn't fetch the output logs",
+			"noActivitiesFound": "No activites found",
+			"noLogsFound": "No logs found"
 		},
 		"actions":{
 			"sessionStoppedSuccessfully": "Session request successfully sent",
@@ -172,9 +174,5 @@
 			"functionName": "Function"
 
 		}
-	},
-	"sessionAndActivities":{
-		"noActivitiesFound": "No activites found",
-		"noLogsFound": "No logs found"
 	}
 }
