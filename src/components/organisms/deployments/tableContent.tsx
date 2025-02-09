@@ -198,11 +198,12 @@ export const DeploymentsTableContent = ({
 
 				<TBody>
 					{sortedDeployments.map(({ buildId, createdAt, deploymentId, sessionStats, state }) => (
-						<Tr className="hover:bg-gray-1300" key={deploymentId}>
-							<Td
-								className="w-1/8 cursor-pointer pl-4"
-								onClick={() => goToDeploymentSessions(deploymentId)}
-							>
+						<Tr
+							className="hover:bg-gray-1300"
+							key={deploymentId}
+							onClick={() => goToDeploymentSessions(deploymentId)}
+						>
+							<Td className="w-1/8 cursor-pointer pl-4">
 								{moment(createdAt).local().format(dateTimeFormat)}
 							</Td>
 							<Td className="w-1/12" />
@@ -218,10 +219,7 @@ export const DeploymentsTableContent = ({
 								<IdCopyButton id={buildId} />
 							</Td>
 
-							<Td
-								className="w-1/8 cursor-pointer border-r-0"
-								onClick={() => goToDeploymentSessions(deploymentId)}
-							>
+							<Td className="w-1/8 cursor-pointer border-r-0">
 								<StatusBadge deploymentStatus={state} />
 							</Td>
 
