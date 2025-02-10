@@ -1,3 +1,10 @@
+# [2.138.0](https://github.com/autokitteh/web-platform/compare/v2.137.0...v2.138.0) (2025-02-10)
+
+
+### Features
+
+* **UI-1306:** update file icon design ([#975](https://github.com/autokitteh/web-platform/issues/975)) ([dd2d5ef](https://github.com/autokitteh/web-platform/commit/dd2d5efad2a354e52923a840401a04cc6a00318b))
+
 # [2.137.0](https://github.com/autokitteh/web-platform/compare/v2.136.2...v2.137.0) (2025-02-10)
 
 
