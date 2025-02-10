@@ -8,4 +8,5 @@ export const projectTabs = [
 ] as { label: string; value: string }[];
 
 export const defaultProjectFile = "program.py";
+export const defaultOpenedProjectFile = "README.md";
 export const defaultProjectDirectory = "new_project_program";

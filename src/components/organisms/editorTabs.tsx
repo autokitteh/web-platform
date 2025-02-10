@@ -5,6 +5,7 @@ import { debounce, last } from "lodash";
 import moment from "moment";
 import * as monaco from "monaco-editor";
 import { useTranslation } from "react-i18next";
+import Markdown from "react-markdown";
 import { useLocation, useParams } from "react-router-dom";
 
 import { dateTimeFormat, monacoLanguages, namespaces } from "@constants";
@@ -93,12 +94,13 @@ export const EditorTabs = ({
 	};
 
 	useEffect(() => {
-		if (!activeEditorFileName) return;
 		if (currentProjectId !== projectId) {
 			loadContent();
 
 			return;
 		}
+		if (!activeEditorFileName) return;
+
 		loadFileResource();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activeEditorFileName, projectId]);
@@ -346,27 +348,33 @@ export const EditorTabs = ({
 					</div>
 
 					{openFiles[projectId]?.length ? (
-						<Editor
-							aria-label={activeEditorFileName}
-							beforeMount={handleEditorWillMount}
-							className="absolute -ml-6 mt-2 h-full pb-5"
-							language={languageEditor}
-							loading={<Loader size="lg" />}
-							onChange={autoSaveMode ? debouncedAutosave : () => {}}
-							onMount={handleEditorDidMount}
-							options={{
-								fontFamily: "monospace, sans-serif",
-								fontSize: 14,
-								minimap: {
-									enabled: false,
-								},
-								renderLineHighlight: "none",
-								scrollBeyondLastLine: false,
-								wordWrap: "on",
-							}}
-							theme="vs-dark"
-							value={content}
-						/>
+						activeEditorFileName === "README.md" ? (
+							<Markdown className="scrollbar markdown-body overflow-hidden overflow-y-auto bg-transparent text-white">
+								{content}
+							</Markdown>
+						) : (
+							<Editor
+								aria-label={activeEditorFileName}
+								beforeMount={handleEditorWillMount}
+								className="absolute -ml-6 mt-2 h-full pb-5"
+								language={languageEditor}
+								loading={<Loader size="lg" />}
+								onChange={autoSaveMode ? debouncedAutosave : () => {}}
+								onMount={handleEditorDidMount}
+								options={{
+									fontFamily: "monospace, sans-serif",
+									fontSize: 14,
+									minimap: {
+										enabled: false,
+									},
+									renderLineHighlight: "none",
+									scrollBeyondLastLine: false,
+									wordWrap: "on",
+								}}
+								theme="vs-dark"
+								value={content}
+							/>
+						)
 					) : (
 						<div className="flex h-full flex-col items-center justify-center pb-24">
 							<IconSvg className="mb-12 fill-gray-800" size="36" src={AKRoundLogo} />
