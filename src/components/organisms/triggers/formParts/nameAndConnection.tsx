@@ -40,6 +40,7 @@ export const NameAndConnectionFields = ({ isEdit }: { isEdit?: boolean }) => {
 					{...register("name")}
 					disabled={isEdit}
 					isError={!!errors.name}
+					isRequired
 					label={t("placeholders.name")}
 					value={watchedName}
 				/>
