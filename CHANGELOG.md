@@ -1,3 +1,10 @@
+## [2.138.1](https://github.com/autokitteh/web-platform/compare/v2.138.0...v2.138.1) (2025-02-10)
+
+
+### Bug Fixes
+
+* **UI-1316:** gtm ([#974](https://github.com/autokitteh/web-platform/issues/974)) ([f952443](https://github.com/autokitteh/web-platform/commit/f9524437251ae551efbba33719745d050d010c57))
+
 # [2.138.0](https://github.com/autokitteh/web-platform/compare/v2.137.0...v2.138.0) (2025-02-10)
 
 
