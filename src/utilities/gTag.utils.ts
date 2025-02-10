@@ -1,3 +1,7 @@
 export const gTagEvent = (eventName: string, eventParams: object) => {
-	if (window.gtag) window.gtag("event", eventName, eventParams);
+	window.dataLayer = window.dataLayer || [];
+	window.dataLayer.push({
+		event: eventName,
+		eventParams,
+	});
 };
