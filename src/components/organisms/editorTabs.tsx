@@ -348,7 +348,7 @@ export const EditorTabs = ({
 					</div>
 
 					{openFiles[projectId]?.length ? (
-						activeEditorFileName === "README.md" ? (
+						activeEditorFileName.endsWith(".md") ? (
 							<Markdown className="scrollbar markdown-body overflow-hidden overflow-y-auto bg-transparent text-white">
 								{content}
 							</Markdown>

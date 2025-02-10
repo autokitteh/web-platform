@@ -24,7 +24,7 @@ export const TemplateLanding = () => {
 	if (!assetDir) return <Navigate replace to="/" />;
 
 	return (
-		<Frame className="min-h-screen bg-gray-1100">
+		<Frame className="my-1.5 h-full bg-gray-1100">
 			<div className="mx-auto max-w-7xl px-6 pb-8">
 				<TemplateStart assetDir={assetDir} />
 

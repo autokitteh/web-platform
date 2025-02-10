@@ -38,7 +38,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 			openModal(ModalName.templateCreateProject);
 			return;
 		}
-		createProjectFromAsset(selectedTemplate.assetDirectory, selectedTemplate.title);
+		createProjectFromAsset(selectedTemplate.assetDirectory);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedTemplate]);
 
