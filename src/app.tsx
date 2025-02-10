@@ -41,6 +41,7 @@ import {
 	Project,
 	Triggers,
 	Variables,
+	TemplateLanding,
 } from "@components/pages";
 import { AppLayout, EventsLayout } from "@components/templates";
 import { SettingsLayout } from "@components/templates/settingsLayout";
@@ -127,6 +128,10 @@ export const App = () => {
 					}
 					path="404"
 				/>
+				<Route element={<Navigate replace to="/404" />} path="*" />
+			</Route>
+			<Route element={<AppLayout hideSystemLog hideTopbar />} path="/template">
+				<Route element={<TemplateLanding />} index />
 				<Route element={<Navigate replace to="/404" />} path="*" />
 			</Route>
 

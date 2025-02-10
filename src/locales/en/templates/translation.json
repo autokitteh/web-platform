@@ -6,5 +6,12 @@
     "errors":{
         "errorFetchingFileExtended": "Error fetching file {{fileUrl}}: {{error}}",
         "errorFetchingFile": "Error fetching file {{fileUrl}}"
+    },
+    "landingPage":{
+        "videoSubtitle": "Watch our quick tutorial video to learn how to get started with this template and make the most of its features.",
+        "buttons": {
+            "start": "Start"
+        }
+
     }
 }

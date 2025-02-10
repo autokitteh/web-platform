@@ -16,6 +16,7 @@ export interface ProcessedRemoteCategory {
 export interface TemplateMetadata {
 	assetDirectory: string;
 	title: string;
+	category: string;
 	description: string;
 	integrations: string[];
 	filesIndex: string[];
