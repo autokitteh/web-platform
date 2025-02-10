@@ -1,3 +1,10 @@
+# [2.137.0](https://github.com/autokitteh/web-platform/compare/v2.136.2...v2.137.0) (2025-02-10)
+
+
+### Features
+
+* **UI-1291:** add template landing page ([#963](https://github.com/autokitteh/web-platform/issues/963)) ([5f51dd5](https://github.com/autokitteh/web-platform/commit/5f51dd58bb3e3d5116d4772a8df14c2994a44332))
+
 ## [2.136.2](https://github.com/autokitteh/web-platform/compare/v2.136.1...v2.136.2) (2025-02-10)
 
 
