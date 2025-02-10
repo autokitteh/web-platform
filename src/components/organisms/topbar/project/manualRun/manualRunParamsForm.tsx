@@ -157,7 +157,7 @@ export const ManualRunParamsForm = () => {
 					/>
 				) : (
 					<div className="flex h-full flex-col">
-						<div className="mt-2 flex-1 space-y-6 overflow-y-auto">
+						<div className="flex-1 space-y-6 overflow-y-auto pt-2">
 							{keyValuePairs.map((pair, index) => (
 								<div className="flex items-end gap-3.5" key={index}>
 									<div className="w-1/2">
