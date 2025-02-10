@@ -46,13 +46,13 @@ const TemplateIntegrationsIcon = ({
 
 	const iconClass = cn("z-10 rounded-full p-1", iconClassName);
 	const wrapperClass = cn(
-		"relative flex size-8 items-center justify-center rounded-full bg-gray-1400",
+		"relative flex size-10 items-center justify-center rounded-full bg-gray-1400",
 		wrapperClassName
 	);
 
 	return (
 		<div className={wrapperClass} key={index} title={label}>
-			<IconSvg className={iconClass} size="xl" src={icon} />
+			<IconSvg className={iconClass} size="2xl" src={icon} />
 			<ConnectorIcon show={index < totalIntegrationsInTemplate - 1} />
 		</div>
 	);

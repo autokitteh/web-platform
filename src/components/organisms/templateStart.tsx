@@ -50,7 +50,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 		<div className="mx-auto max-w-7xl py-12">
 			<div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
 				<div
-					className="relative flex flex-col space-y-8 rounded-3xl border-2 border-gray-800 
+					className="relative flex flex-col rounded-3xl border-2 border-gray-800 
 						  bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg"
 				>
 					<div
@@ -64,7 +64,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 						</div>
 					) : (
 						<>
-							<div className="space-y-8">
+							<div className="space-y-6">
 								<TemplateIntegrationsIcons
 									iconClassName="bg-white/90 hover:bg-white transition-colors duration-200"
 									template={selectedTemplate}
@@ -72,7 +72,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 									  transition-shadow duration-200"
 								/>
 
-								<div className="space-y-4">
+								<div className="space-y-6">
 									<Typography
 										className="text-4xl font-bold leading-tight tracking-tight text-white 
 								 shadow-sm backdrop-blur-sm"
@@ -87,7 +87,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 								</div>
 							</div>
 
-							<div className="pt-6">
+							<div className="mt-auto">
 								<Button
 									ariaLabel={t("buttons.start")}
 									className="group flex w-full items-center justify-center gap-4 
@@ -111,7 +111,7 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 					)}
 				</div>
 
-				<div className="flex flex-col space-y-6">
+				<div className="flex flex-col space-y-4">
 					<div
 						className="group relative aspect-video w-full overflow-hidden rounded-3xl 
 						   border-2 border-gray-800 bg-gray-900
@@ -142,8 +142,6 @@ export const TemplateStart = ({ assetDir }: { assetDir: string }) => {
 							</IconButton>
 						</div>
 					</div>
-					<div className="flex" />
-
 					<div
 						className="rounded-2xl border-2 border-gray-800/50 bg-gray-900/30 
 						   p-8 backdrop-blur-sm"
