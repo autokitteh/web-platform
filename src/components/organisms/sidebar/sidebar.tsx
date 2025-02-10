@@ -132,7 +132,7 @@ export const Sidebar = () => {
 									isVisible={isNewLogs}
 									variant="dot"
 								>
-									<IconSvg className="size-5.5 stroke-gray-1100 transition" src={FileIcon} />
+									<IconSvg className="size-5.5 fill-gray-1100 transition" src={FileIcon} />
 								</Badge>
 							</div>
 
