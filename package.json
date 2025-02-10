@@ -136,7 +136,7 @@
 		"openai": "^4.77.0",
 		"postcss": "^8.4.49",
 		"prettier": "^3.4.2",
-		"rollup": "^4.29.1",
+		"rollup": "^4.34.6",
 		"semantic-release-slack-bot": "^4.0.2",
 		"storybook": "^8.5.0",
 		"tailwind-config-viewer": "^2.0.4",
@@ -158,9 +158,9 @@
 	},
 	"optionalDependencies": {
 		"@esbuild/linux-x64": "0.24.2",
-		"@rollup/rollup-linux-x64-gnu": "^4.31.0",
-		"@rollup/rollup-linux-x64-musl": "^4.29.1",
-		"@rollup/rollup-win32-x64-msvc": "4.29.1"
+		"@rollup/rollup-linux-x64-gnu": "^4.34.6",
+		"@rollup/rollup-linux-x64-musl": "^4.34.6",
+		"@rollup/rollup-win32-x64-msvc": "4.34.6"
 	},
 	"overrides": {
 		"vite": {
