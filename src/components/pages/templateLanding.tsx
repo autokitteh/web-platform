@@ -28,14 +28,11 @@ export const TemplateLanding = () => {
 			<div className="mx-auto max-w-7xl px-6 pb-8">
 				<TemplateStart assetDir={assetDir} />
 
-				{/* Enhanced Information Sections */}
 				<div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-					{/* What is AutoKitteh Section */}
 					<div
 						className="relative flex flex-col space-y-6 rounded-3xl border-2 border-gray-800 
 						   bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg"
 					>
-						{/* Decorative corner accent */}
 						<div
 							className="absolute -left-1 -top-1 size-16 rounded-tl-3xl border-l-4 border-t-4 
 							 border-green-800 opacity-40"
@@ -60,12 +57,10 @@ export const TemplateLanding = () => {
 						</ol>
 					</div>
 
-					{/* How to Build Section */}
 					<div
 						className="relative flex flex-col space-y-6 rounded-3xl border-2 border-gray-800 
 						   bg-gradient-to-b from-gray-900/40 to-gray-900/20 p-10 shadow-lg"
 					>
-						{/* Decorative corner accent */}
 						<div
 							className="absolute -left-1 -top-1 size-16 rounded-tl-3xl border-l-4 border-t-4 
 							 border-green-800 opacity-40"
