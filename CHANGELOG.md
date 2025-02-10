@@ -1,3 +1,10 @@
+## [2.136.2](https://github.com/autokitteh/web-platform/compare/v2.136.1...v2.136.2) (2025-02-10)
+
+
+### Bug Fixes
+
+* **UI-1299:** fix translation keys in session outputs and activities ([#968](https://github.com/autokitteh/web-platform/issues/968)) ([0582b35](https://github.com/autokitteh/web-platform/commit/0582b351188dd5a48068ecd6159d86da761f6704))
+
 ## [2.136.1](https://github.com/autokitteh/web-platform/compare/v2.136.0...v2.136.1) (2025-02-09)
 
 
