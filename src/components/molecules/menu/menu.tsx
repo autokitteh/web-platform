@@ -17,7 +17,6 @@ import { Button, IconSvg } from "@components/atoms";
 import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
-import { AngleRightIcon } from "@assets/image/icons";
 
 export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	const { t } = useTranslation(["menu", "errors"]);
@@ -27,7 +26,6 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	const { openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
-	const [isOpenSubMenu, setIsOpenSubMenu] = useState(false);
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -90,7 +88,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 						</AnimatePresence>
 					</Button>
 				</li>
-				<PopoverListWrapper animation="slideFromLeft" interactionType="click" onOpenChange={setIsOpenSubMenu}>
+				<PopoverListWrapper animation="slideFromLeft" interactionType="click">
 					<PopoverListTrigger>
 						<li className="group">
 							<div className="relative z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 text-gray-1100 group-hover:bg-green-200">
@@ -102,12 +100,6 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 										src={ProjectsIcon}
 									/>
 								</div>
-								<AngleRightIcon
-									className={cn("absolute -right-2 size-4 rounded-full group-hover:bg-green-200", {
-										"rotate-180": isOpenSubMenu,
-									})}
-									stroke="black"
-								/>
 
 								<AnimatePresence>
 									{isOpen ? (
