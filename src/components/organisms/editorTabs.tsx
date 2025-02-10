@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Editor, { Monaco } from "@monaco-editor/react";
 import { debounce, last } from "lodash";
@@ -273,6 +273,9 @@ export const EditorTabs = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [editorRef.current, projectId, currentProjectId]);
 
+	const isMarkdownFile = useMemo(() => activeEditorFileName.endsWith(".md"), [activeEditorFileName]);
+	const readmeContent = useMemo(() => content.replace(/---[\s\S]*?---\n/, ""), [content]);
+
 	return (
 		<div className="relative flex h-full flex-col pt-11">
 			{projectId ? (
@@ -348,9 +351,9 @@ export const EditorTabs = ({
 					</div>
 
 					{openFiles[projectId]?.length ? (
-						activeEditorFileName.endsWith(".md") ? (
+						isMarkdownFile ? (
 							<Markdown className="scrollbar markdown-body overflow-hidden overflow-y-auto bg-transparent text-white">
-								{content}
+								{readmeContent}
 							</Markdown>
 						) : (
 							<Editor
