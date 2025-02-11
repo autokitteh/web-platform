@@ -22,8 +22,6 @@ import { Accordion, Modal } from "@components/molecules";
 
 import { PipeCircleIcon, ReadmeIcon } from "@assets/image/icons";
 
-import "github-markdown-css/github-markdown-light.css";
-
 export const ProjectTemplateCreateModal = ({ cardTemplate, category }: CreateProjectModalProps) => {
 	const { t } = useTranslation("modals", { keyPrefix: "createProjectWithTemplate" });
 	const [isCreating, setIsCreating] = useState(false);
