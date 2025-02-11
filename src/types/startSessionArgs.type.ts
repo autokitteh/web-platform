@@ -4,6 +4,6 @@ export type StartSessionArgsType = {
 	buildId: string;
 	deploymentId: string;
 	entrypoint: SessionEntrypoint;
-	jsonInputs?: object;
+	jsonInputs?: string;
 	sessionId?: string;
 };

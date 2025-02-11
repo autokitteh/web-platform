@@ -159,7 +159,7 @@ export class SessionsService {
 			const sessionToStart = { ...omit(startSessionArgs, "jsonInputs"), projectId };
 			const sessionAsStartRequest = {
 				session: sessionToStart,
-				jsonInputs: startSessionArgs.jsonInputs,
+				jsonObjectInput: startSessionArgs.jsonInputs,
 			} as unknown as StartRequest;
 			const { sessionId } = await sessionsClient.start(sessionAsStartRequest);
 

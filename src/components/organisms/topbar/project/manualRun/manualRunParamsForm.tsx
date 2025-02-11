@@ -1,252 +1,204 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import Editor from "@monaco-editor/react";
-import { Controller, FieldErrors, FieldValues, useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { ManualRunJsonObject, ManualRunParam } from "@src/interfaces/components/forms";
+import { ManualRunFormData } from "@src/interfaces/components";
 import { useManualRunStore } from "@src/store";
-import { ManualFormParamsErrors } from "@src/types/components";
-import { safeJsonParse } from "@src/utilities";
+import { convertToJsonString, convertToKeyValuePairs } from "@src/utilities";
 
 import { Button, ErrorMessage, IconButton, Input, Loader, Toggle } from "@components/atoms";
+import { Tooltip } from "@components/atoms/tooltip";
 
 import { PlusCircle } from "@assets/image";
 import { TrashIcon } from "@assets/image/icons";
 
 export const ManualRunParamsForm = () => {
 	const { t } = useTranslation("deployments", { keyPrefix: "history.manualRun" });
-	const { t: tValidations } = useTranslation("validations", { keyPrefix: "manualRun" });
-	const { clearErrors, control, formState, getValues, setError, setValue, trigger } = useFormContext();
-	const { append, fields, remove } = useFieldArray({
-		control,
-		name: "params",
-	});
+	const { control, formState, setValue } = useFormContext<ManualRunFormData>();
 
 	const { projectId } = useParams();
 
-	const { projectManualRun, updateManualRunConfiguration } = useManualRunStore((state) => ({
-		projectManualRun: state.projectManualRun[projectId!],
-		updateManualRunConfiguration: state.updateManualRunConfiguration,
-	}));
+	const errors = formState.errors;
 
-	const { isJson } = projectManualRun || {};
+	const { isJson, updateManualRunConfiguration } = useManualRunStore(
+		useCallback(
+			(state) => ({
+				isJson: state.projectManualRun[projectId!]?.isJson,
+				updateManualRunConfiguration: state.updateManualRunConfiguration,
+			}),
+			[projectId]
+		)
+	);
+
 	const [useJsonEditor, setUseJsonEditor] = useState(isJson);
+	const [jsonError, setJsonError] = useState(false);
 
-	const convertParamsToJson = (currentParams: ManualRunParam[]) => {
-		const jsonObject = Object.fromEntries(
-			currentParams.map(({ key, value }) => [key, safeJsonParse(value) ?? value])
-		);
+	const [keyValuePairs, setKeyValuePairs] = useState(() =>
+		convertToKeyValuePairs(control._formValues.params || "{}")
+	);
 
-		setValue("jsonParams", JSON.stringify(jsonObject, null, 2), { shouldValidate: true });
-	};
+	const handleJsonChange = useCallback(
+		(value?: string) => {
+			try {
+				const newValue = typeof value === "string" ? value : "{}";
+				if (newValue === "") {
+					setValue("params", "{}", { shouldValidate: true });
+					setKeyValuePairs([]);
+					setJsonError(false);
+					return;
+				}
+				const parsed = JSON.parse(newValue);
+				const formatted = JSON.stringify(parsed, null, 2);
 
-	useEffect(() => {
-		if (isJson) {
-			const currentParams = getValues("params");
-			convertParamsToJson(currentParams);
-		}
+				setValue("params", newValue, { shouldValidate: true });
+				setKeyValuePairs(convertToKeyValuePairs(formatted));
+				updateManualRunConfiguration(projectId!, { params: newValue });
+
+				setJsonError(false);
+			} catch {
+				setValue("params", value || "{}", { shouldValidate: true });
+				setJsonError(true);
+			}
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [projectId]);
+		[setValue]
+	);
 
-	const errors = formState.errors as FieldErrors<FieldValues> & ManualFormParamsErrors;
-
-	const validateParams = () => {
-		const params = getValues("params");
-		let isValid = true;
-
-		params.forEach((param: { key: string; value: string }, index: number) => {
-			if (!param.key.trim()) {
-				setError(`params.${index}.key`, {
-					type: "manual",
-					message: tValidations("keyIsRequired"),
-				});
-				isValid = false;
-			}
-			if (!param.value.trim()) {
-				setError(`params.${index}.value`, {
-					type: "manual",
-					message: tValidations("valueIsRequired"),
-				});
-				isValid = false;
-			}
-		});
-
-		return isValid;
+	const handleFieldChange = (index: number, field: "key" | "value", value: string) => {
+		const newPairs = [...keyValuePairs];
+		newPairs[index][field] = value;
+		setKeyValuePairs(newPairs);
+		setValue("params", convertToJsonString(newPairs), { shouldValidate: true });
 	};
 
 	const handleAddParam = () => {
-		if (!fields.length || validateParams()) {
-			append({ key: "", value: "" });
-		}
+		setKeyValuePairs([...keyValuePairs, { key: "", value: "" }]);
 	};
 
-	const handleFieldChange = (index: number, field: "key" | "value", value: string) => {
-		setValue(`params.${index}.${field}`, value, { shouldValidate: true });
-		trigger(`params.${index}.${field}`);
-	};
-
-	const handleJsonToParamsConversion = () => {
-		const jsonValue = getValues("jsonParams");
-		if (!jsonValue) return;
-
-		const parsedJson = safeJsonParse(jsonValue);
-		if (!parsedJson) return;
-
-		const newParams: ManualRunParam[] = Object.entries(parsedJson).map(([key, value]) => ({
-			key,
-			value: typeof value === "string" ? value : JSON.stringify(value),
-		}));
-
-		setValue("params", newParams, { shouldValidate: true });
-		clearErrors("jsonParams");
-	};
-
-	const handleParamsToJsonConversion = () => {
-		const currentParams: ManualRunParam[] = getValues("params");
-		const jsonObject = currentParams.reduce<ManualRunJsonObject>((acc, { key, value }) => {
-			acc[key] = safeJsonParse(value) ?? value;
-
-			return acc;
-		}, {});
-
-		const jsonString = JSON.stringify(jsonObject, null, 2);
-		setValue("jsonParams", jsonString, { shouldValidate: true });
+	const handleRemoveParam = (index: number) => {
+		const newPairs = keyValuePairs.filter((_, i) => i !== index);
+		setKeyValuePairs(newPairs);
+		setValue("params", convertToJsonString(newPairs), { shouldValidate: true });
 	};
 
 	const toggleEditorMode = () => {
-		const newJsonEditorState = !useJsonEditor;
-		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
-		setValue("isJson", newJsonEditorState, { shouldValidate: true });
-
-		if (newJsonEditorState) {
-			handleParamsToJsonConversion();
-		} else {
-			handleJsonToParamsConversion();
-		}
-
-		setUseJsonEditor(newJsonEditorState);
-	};
-
-	const handleJsonChange = (value?: string) => {
-		setValue("jsonParams", value, { shouldValidate: true });
-
-		if (!value) {
-			setValue("params", [], { shouldValidate: true });
+		if (useJsonEditor) {
+			try {
+				const currentParams = control._formValues.params;
+				if (currentParams !== "{}") {
+					JSON.parse(currentParams || "{}");
+				}
+				setJsonError(false);
+				const newJsonEditorState = !useJsonEditor;
+				updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
+				setUseJsonEditor(newJsonEditorState);
+			} catch {
+				setJsonError(true);
+				return;
+			}
 			return;
 		}
 
-		const parsedJson = safeJsonParse(value);
-		if (!parsedJson) return;
-
-		const newParams = Object.entries(parsedJson).map(([key, value]) => ({
-			key,
-			value: typeof value === "object" ? JSON.stringify(value) : String(value),
-		}));
-
-		setValue("params", newParams, { shouldValidate: false });
+		const newJsonEditorState = !useJsonEditor;
+		updateManualRunConfiguration(projectId!, { isJson: newJsonEditorState });
+		setUseJsonEditor(newJsonEditorState);
 	};
 
 	return (
-		<div className="mt-9">
+		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
-				<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
+				<Tooltip
+					content={jsonError && control._formValues.params !== "{}" ? t("invalidJsonFormat") : ""}
+					variant="error"
+				>
+					<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
+				</Tooltip>
 			</div>
 
-			{useJsonEditor ? (
-				<Controller
-					control={control}
-					name="jsonParams"
-					render={({ field }) => (
-						<div>
-							<Editor
-								className="min-h-96"
-								defaultLanguage="json"
-								loading={<Loader isCenter size="lg" />}
-								onChange={(value) => handleJsonChange(value)}
-								options={{
-									fontFamily: "monospace, sans-serif",
-									fontSize: 14,
-									minimap: {
-										enabled: false,
-									},
-									renderLineHighlight: "none",
-									scrollBeyondLastLine: false,
-									wordWrap: "on",
-								}}
-								theme="vs-dark"
-								value={field.value}
-							/>
-							{errors.jsonParams ? <ErrorMessage>{errors.jsonParams.message}</ErrorMessage> : null}
-						</div>
-					)}
-				/>
-			) : (
-				<>
-					{fields.map((field, index) => (
-						<div className="mb-6 flex items-end gap-3.5" key={field.id}>
-							<Controller
-								control={control}
-								name={`params.${index}.key`}
-								render={({ field }) => (
+			<div className="max-h-[calc(100vh-300px)] overflow-y-auto">
+				{useJsonEditor ? (
+					<Controller
+						control={control}
+						name="params"
+						render={({ field }) => (
+							<div>
+								<Editor
+									className="min-h-96"
+									defaultLanguage="json"
+									loading={<Loader isCenter size="lg" />}
+									onChange={handleJsonChange}
+									onMount={(editor) => {
+										editor.onDidPaste(() => {
+											handleJsonChange(editor.getValue());
+										});
+									}}
+									options={{
+										fontFamily: "monospace, sans-serif",
+										fontSize: 14,
+										minimap: { enabled: false },
+										renderLineHighlight: "none",
+										scrollBeyondLastLine: false,
+										wordWrap: "on",
+										formatOnPaste: true,
+										formatOnType: true,
+										autoClosingBrackets: "always",
+										autoClosingQuotes: "always",
+									}}
+									theme="vs-dark"
+									value={typeof field.value === "string" ? field.value : "{}"}
+								/>
+								{errors.params ? <ErrorMessage>{errors.params.message}</ErrorMessage> : null}
+							</div>
+						)}
+					/>
+				) : (
+					<div className="flex h-full flex-col">
+						<div className="flex-1 space-y-6 overflow-y-auto pt-2">
+							{keyValuePairs.map((pair, index) => (
+								<div className="flex items-end gap-3.5" key={index}>
 									<div className="w-1/2">
 										<Input
-											{...field}
-											isError={!!errors?.params?.[index]?.key}
 											isRequired
 											label={t("placeholders.key")}
 											onChange={(event) => handleFieldChange(index, "key", event.target.value)}
 											placeholder={t("placeholders.enterKey")}
+											value={pair.key}
 										/>
-										{errors?.params?.[index]?.key ? (
-											<ErrorMessage>{errors.params[index]?.key?.message}</ErrorMessage>
-										) : null}
 									</div>
-								)}
-							/>
-
-							<Controller
-								control={control}
-								name={`params.${index}.value`}
-								render={({ field }) => (
 									<div className="w-1/2">
 										<Input
-											{...field}
-											isError={!!errors?.params?.[index]?.value}
 											isRequired
 											label={t("placeholders.value")}
 											onChange={(event) => handleFieldChange(index, "value", event.target.value)}
 											placeholder={t("placeholders.enterValue")}
+											value={pair.value}
 										/>
-										{errors?.params?.[index]?.value ? (
-											<ErrorMessage>{errors.params[index]?.value?.message}</ErrorMessage>
-										) : null}
 									</div>
-								)}
-							/>
-
-							<IconButton
-								ariaLabel={t("ariaDeleteParam")}
-								className="self-center hover:bg-black"
-								onClick={() => remove(index)}
-							>
-								<TrashIcon className="size-5 stroke-white" />
-							</IconButton>
+									<IconButton
+										ariaLabel={t("ariaDeleteParam")}
+										className="self-center hover:bg-black"
+										onClick={() => handleRemoveParam(index)}
+									>
+										<TrashIcon className="size-5 stroke-white" />
+									</IconButton>
+								</div>
+							))}
 						</div>
-					))}
-
-					<Button
-						className="group mt-5 w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
-						onClick={handleAddParam}
-						type="button"
-					>
-						<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
-						{t("buttons.addNewParameter")}
-					</Button>
-				</>
-			)}
+						<Button
+							className="group mt-4 w-auto gap-1 p-0 font-semibold text-gray-500 hover:text-white"
+							onClick={handleAddParam}
+							type="button"
+						>
+							<PlusCircle className="size-5 stroke-gray-500 duration-300 group-hover:stroke-white" />
+							{t("buttons.addNewParameter")}
+						</Button>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };
