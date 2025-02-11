@@ -93,7 +93,7 @@
 		"@storybook/addon-links": "^8.5.0",
 		"@storybook/addon-onboarding": "^8.5.0",
 		"@storybook/blocks": "^8.5.0",
-		"@storybook/react": "^8.5.0",
+		"@storybook/react": "^8.5.4",
 		"@storybook/react-vite": "^8.5.0",
 		"@types/eslint-plugin-security": "^3.0.0",
 		"@types/js-cookie": "^3.0.6",
