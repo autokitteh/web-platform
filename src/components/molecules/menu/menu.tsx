@@ -7,11 +7,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ModalName, SidebarHrefMenu } from "@enums/components";
 import { MenuProps } from "@interfaces/components";
 import { LoggerService } from "@services/logger.service";
-import { namespaces } from "@src/constants";
+import { descopeProjectId, namespaces } from "@src/constants";
 import { Project } from "@type/models";
 import { cn } from "@utilities";
 
-import { useModalStore, useProjectStore, useToastStore } from "@store";
+import { useModalStore, useOrganizationStore, useProjectStore, useToastStore } from "@store";
 
 import { Button, IconSvg, Tooltip } from "@components/atoms";
 import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover";
@@ -26,6 +26,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	const { openModal } = useModalStore();
 	const addToast = useToastStore((state) => state.addToast);
 	const [sortedProjectsList, setSortedProjectsList] = useState<Project[]>([]);
+	const { user } = useOrganizationStore();
 
 	useEffect(() => {
 		const sortedProjects = projectsList.slice().sort((a, b) => a.name.localeCompare(b.name));
@@ -55,7 +56,13 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 	};
 
 	useEffect(() => {
-		fetchProjects();
+		if (!descopeProjectId) {
+			fetchProjects();
+			return;
+		}
+		if (user) {
+			fetchProjects();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
