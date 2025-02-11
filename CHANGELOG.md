@@ -1,3 +1,10 @@
+# [2.139.0](https://github.com/autokitteh/web-platform/compare/v2.138.1...v2.139.0) (2025-02-11)
+
+
+### Features
+
+* **UI-1291:** add opening README.md with markdown and set default opened project file ([#978](https://github.com/autokitteh/web-platform/issues/978)) ([c55e18a](https://github.com/autokitteh/web-platform/commit/c55e18a8d352f030a6e8c9a30994b4be002d716c))
+
 ## [2.138.1](https://github.com/autokitteh/web-platform/compare/v2.138.0...v2.138.1) (2025-02-10)
 
 
