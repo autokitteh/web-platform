@@ -7,7 +7,7 @@
 @tailwind utilities;
 
 @layer base {
-	.markdown-body pre>code {
+	.markdown-body pre > code {
 		@apply break-all;
 		@apply whitespace-pre-line;
 	}
@@ -168,7 +168,6 @@ ul li::before {
 }
 
 @media screen and (max-width: 1024px) {
-
 	html,
 	body {
 		overflow: scroll;
