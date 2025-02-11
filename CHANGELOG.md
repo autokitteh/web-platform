@@ -1,3 +1,10 @@
+## [2.140.2](https://github.com/autokitteh/web-platform/compare/v2.140.1...v2.140.2) (2025-02-11)
+
+
+### Bug Fixes
+
+* **UI-1300:** add required fields for entry function and file path in trigger form ([#976](https://github.com/autokitteh/web-platform/issues/976)) ([b09e1a2](https://github.com/autokitteh/web-platform/commit/b09e1a2f9a8ff931cc43685b359d6a0247dbdf7b))
+
 ## [2.140.1](https://github.com/autokitteh/web-platform/compare/v2.140.0...v2.140.1) (2025-02-11)
 
 
