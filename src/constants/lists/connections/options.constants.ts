@@ -27,6 +27,7 @@ export const selectIntegrationGoogle: SelectOption[] = [
 
 const slackSocketMode = { label: "Socket Mode", value: ConnectionAuthType.Socket };
 
+// TODO: remove ConnectionAuthType.Oauth and move to ConnectionAuthType.OauthDefault once the migration is ready and done
 const slackLegacyOAuthType = !featureFlags.slackModernOAuthType
 	? ConnectionAuthType.Oauth
 	: ConnectionAuthType.OauthDefault;

@@ -9,6 +9,7 @@ import { oauthSchema, slackIntegrationSchema } from "@validations";
 import { IntegrationEditForm } from "@components/organisms/connections/integrations";
 
 export const SlackIntegrationEditForm = () => {
+	// TODO: remove ConnectionAuthType.Oauth and move to ConnectionAuthType.OauthDefault once the migration is ready and done
 	const slackLegacyOAuthType = !featureFlags.slackModernOAuthType
 		? { [ConnectionAuthType.Oauth]: oauthSchema }
 		: undefined;
