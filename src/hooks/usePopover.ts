@@ -19,7 +19,7 @@ import {
 import { PopoverOptions } from "@src/interfaces/components";
 
 const useBasePopover = (
-	{ animation, initialOpen = false, placement = "bottom" }: PopoverOptions = {
+	{ animation, initialOpen = false, placement = "bottom", onOpenChange }: PopoverOptions = {
 		interactionType: "hover",
 	}
 ) => {
@@ -28,7 +28,10 @@ const useBasePopover = (
 	const data = useFloating({
 		placement,
 		open,
-		onOpenChange: setOpen,
+		onOpenChange: (isOpen) => {
+			onOpenChange?.(isOpen);
+			setOpen(isOpen);
+		},
 		whileElementsMounted: autoUpdate,
 		middleware: [
 			offset(5),

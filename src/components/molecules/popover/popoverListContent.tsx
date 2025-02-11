@@ -103,7 +103,7 @@ export const PopoverListContent = React.forwardRef<
 				value={searchTerm}
 			/>
 			{popoverItems.length ? (
-				<div style={{ overflowY: "auto", maxHeight: "100%" }}>
+				<div className="scrollbar max-h-full overflow-auto">
 					{popoverItems.map((item, index) => (
 						<div
 							aria-selected={context.activeIndex === index}
