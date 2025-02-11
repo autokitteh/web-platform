@@ -118,16 +118,6 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			return { data: undefined, error };
 		}
 
-		if (params?.length) {
-			set((state) => {
-				state.projectManualRun[projectId] = {
-					...project,
-					params,
-				};
-				return state;
-			});
-		}
-
 		return { data: sessionId, error: undefined };
 	},
 });

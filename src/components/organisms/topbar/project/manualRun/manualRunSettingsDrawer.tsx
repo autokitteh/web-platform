@@ -57,13 +57,15 @@ export const ManualRunSettingsDrawer = () => {
 
 		try {
 			const parsedParams = JSON.parse(formParams || "{}");
-			const formattedParams = JSON.stringify({ data: parsedParams }, null, 2);
+			const formattedParams = JSON.stringify(parsedParams, null, 2);
 
 			updateManualRunConfiguration(projectId, {
 				params: formattedParams,
 			});
 
-			const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, formattedParams);
+			const wrappedParamsForExecution = JSON.stringify({ data: { parsedParams } });
+
+			const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, wrappedParamsForExecution);
 
 			setSendingManualRun(false);
 			handleManualRun();
@@ -110,7 +112,25 @@ export const ManualRunSettingsDrawer = () => {
 	} = methods;
 
 	useEffect(() => {
+		const checkAndResetParams = () => {
+			const currentParams = getValues("params");
+			try {
+				if (currentParams) {
+					JSON.parse(currentParams);
+				}
+			} catch {
+				setValue("params", "{}", { shouldValidate: true });
+				updateManualRunConfiguration(projectId!, { params: "{}" });
+			}
+		};
+
+		checkAndResetParams();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
 		if (!filePath) return;
+
 		setValue("filePath", filePath);
 
 		if (!files && filePath.value) return;

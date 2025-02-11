@@ -111,10 +111,7 @@ export const ManualRunParamsForm = () => {
 		<div className="mt-9 flex h-[calc(100vh-300px)] flex-col">
 			<div className="mb-4 flex items-center justify-between">
 				<div className="flex items-center gap-1 text-base text-gray-500">{t("titleParams")}</div>
-				<Tooltip
-					content={jsonError && control._formValues.params !== "{}" ? t("invalidJsonFormat") : ""}
-					variant="error"
-				>
+				<Tooltip content={t("invalidJsonFormat")} hide={!jsonError} variant="error">
 					<Toggle checked={useJsonEditor} label={t("useJsonEditor")} onChange={toggleEditorMode} />
 				</Tooltip>
 			</div>
