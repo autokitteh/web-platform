@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-max-depth */
 import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { debounce, isEqual } from "lodash";
