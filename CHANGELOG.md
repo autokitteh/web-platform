@@ -1,3 +1,15 @@
+# [2.141.0](https://github.com/autokitteh/web-platform/compare/v2.140.5...v2.141.0) (2025-02-11)
+
+
+### Bug Fixes
+
+* **UI-1323:** hide connections with feature flags ([#986](https://github.com/autokitteh/web-platform/issues/986)) ([81eb955](https://github.com/autokitteh/web-platform/commit/81eb955281265788decead22a624cf0a24ab062a))
+
+
+### Features
+
+* **UI-1313:** add tooltip to sidebar menu items ([#987](https://github.com/autokitteh/web-platform/issues/987)) ([2fa38c4](https://github.com/autokitteh/web-platform/commit/2fa38c48ad86c5ad3ae39a5c6e04b2223b292ddc))
+
 ## [2.140.5](https://github.com/autokitteh/web-platform/compare/v2.140.4...v2.140.5) (2025-02-11)
 
 
