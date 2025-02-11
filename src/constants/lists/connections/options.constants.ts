@@ -27,7 +27,10 @@ export const selectIntegrationGoogle: SelectOption[] = [
 
 const slackSocketMode = { label: "Socket Mode", value: ConnectionAuthType.Socket };
 
-const baseSelectIntegrationSlack = [{ label: "OAuth v2 - Default app", value: ConnectionAuthType.Oauth }];
+const slackLegacyOAuthType = !featureFlags.slackModernOAuthType
+	? ConnectionAuthType.Oauth
+	: ConnectionAuthType.OauthDefault;
+const baseSelectIntegrationSlack = [{ label: "OAuth v2 - Default app", value: slackLegacyOAuthType }];
 
 export const selectIntegrationSlack: SelectOption[] = featureFlags.displaySlackSocketIntegration
 	? baseSelectIntegrationSlack.concat(slackSocketMode)

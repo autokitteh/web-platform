@@ -9,9 +9,9 @@ import { oauthSchema, slackIntegrationSchema } from "@validations";
 import { IntegrationEditForm } from "@components/organisms/connections/integrations";
 
 export const SlackIntegrationEditForm = () => {
-	const slackLegacyOAuthType = featureFlags.slackModernOAuthType
-		? undefined
-		: { [ConnectionAuthType.Oauth]: oauthSchema };
+	const slackLegacyOAuthType = !featureFlags.slackModernOAuthType
+		? { [ConnectionAuthType.Oauth]: oauthSchema }
+		: undefined;
 
 	return (
 		<IntegrationEditForm
