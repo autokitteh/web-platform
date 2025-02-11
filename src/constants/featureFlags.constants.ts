@@ -4,4 +4,5 @@ export const featureFlags = {
 	linearConnectionEnabled: import.meta.env.VITE_LINEAR_ENABLED,
 	zoomConnectionEnabled: import.meta.env.VITE_ZOOM_ENABLED,
 	heightConnectionEnabled: import.meta.env.VITE_HEIGHT_ENABLED,
+	slackModernOAuthType: import.meta.env.VITE_SLACK_MODERN_OAUTH_TYPE,
 };
