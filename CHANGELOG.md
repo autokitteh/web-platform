@@ -1,3 +1,10 @@
+## [2.141.2](https://github.com/autokitteh/web-platform/compare/v2.141.1...v2.141.2) (2025-02-11)
+
+
+### Bug Fixes
+
+* **UI-1326:** add templates path to allowed in our router ([#992](https://github.com/autokitteh/web-platform/issues/992)) ([affe68a](https://github.com/autokitteh/web-platform/commit/affe68a64f5290bed456fe92402bc8c0793efb14))
+
 ## [2.141.1](https://github.com/autokitteh/web-platform/compare/v2.141.0...v2.141.1) (2025-02-11)
 
 
