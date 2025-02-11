@@ -57,7 +57,7 @@ export const ManualRunSettingsDrawer = () => {
 
 		try {
 			const parsedParams = JSON.parse(formParams || "{}");
-			const formattedParams = JSON.stringify(parsedParams, null, 2);
+			const formattedParams = JSON.stringify({ data: parsedParams }, null, 2);
 
 			updateManualRunConfiguration(projectId, {
 				params: formattedParams,
