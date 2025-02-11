@@ -1,3 +1,10 @@
+## [2.140.5](https://github.com/autokitteh/web-platform/compare/v2.140.4...v2.140.5) (2025-02-11)
+
+
+### Bug Fixes
+
+* **UI-1324:** fix connection type check on edit submit ([#988](https://github.com/autokitteh/web-platform/issues/988)) ([38a3a80](https://github.com/autokitteh/web-platform/commit/38a3a80abfe257fde232aab5931c159c60f3d29d))
+
 ## [2.140.4](https://github.com/autokitteh/web-platform/compare/v2.140.3...v2.140.4) (2025-02-11)
 
 
