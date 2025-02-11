@@ -4,5 +4,4 @@ export const featureFlags = {
 	linearConnectionEnabled: import.meta.env.VITE_LINEAR_ENABLED,
 	zoomConnectionEnabled: import.meta.env.VITE_ZOOM_ENABLED,
 	heightConnectionEnabled: import.meta.env.VITE_HEIGHT_ENABLED,
-	modernConnOAuthType: import.meta.env.VITE_MODERN_CONN_OAUTH_TYPE,
 };

@@ -45,7 +45,6 @@ export default defineConfig({
 		"import.meta.env.DISPLAY_DISCORD_INTEGRATION": process.env.DISPLAY_DISCORD_INTEGRATION,
 		"import.meta.env.VITE_HEIGHT_ENABLED": process.env.VITE_HEIGHT_ENABLED,
 		"import.meta.env.VITE_LINEAR_ENABLED": process.env.VITE_LINEAR_ENABLED,
-		"import.meta.env.VITE_MODERN_OAUTH_TYPE": process.env.VITE_LEVITE_MODERN_OAUTH_TYPEGACY_CONN_OAUTH_TYPE,
 		"import.meta.env.VITE_ZOOM_ENABLED": process.env.VITE_ZOOM_ENABLED,
 		"import.meta.env.DISPLAY_SLACK_SOCKET_INTEGRATION": process.env.DISPLAY_SLACK_SOCKET_INTEGRATION,
 		"import.meta.env.SENTRY_DSN": JSON.stringify(process.env.SENTRY_DSN),
