@@ -25,6 +25,7 @@ const routes = [
 	{ path: "/projects/*" },
 	{ path: "/settings/*" },
 	{ path: "/events/*" },
+	{ path: "/template/*" },
 ];
 
 export const DescopeMiddleware = ({ children }: { children: ReactNode }) => {
