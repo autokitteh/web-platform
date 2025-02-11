@@ -16,41 +16,20 @@ const cronFormat =
 	")$";
 
 i18n.on("initialized", () => {
-	triggerSchema = z
-		.object({
-			name: z.string().min(1, i18n.t("triggers.form.validations.nameRequired", { ns: "tabs" })),
-			connection: selectSchema.refine((value) => value.label, {
-				message: i18n.t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
-			}),
-			filePath: z
-				.union([selectSchema, z.object({ label: z.string().optional(), value: z.string().optional() })])
-				.optional(),
-			entryFunction: z.string().optional(),
-			eventType: z.string().optional(),
-			eventTypeSelect: selectSchema.optional(),
-			filter: z.string().optional(),
-			cron: z.string().optional(),
-		})
-		.superRefine((data, ctx) => {
-			if (data.entryFunction?.trim() && !data.filePath?.value) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: i18n.t("triggers.form.validations.fileRequired", { ns: "tabs" }),
-					path: ["filePath"],
-				});
-			}
-
-			if (!data.filePath?.value) {
-				return;
-			}
-			if (!data.entryFunction || data.entryFunction.trim() === "") {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" }),
-					path: ["entryFunction"],
-				});
-			}
-		});
+	triggerSchema = z.object({
+		name: z.string().min(1, i18n.t("triggers.form.validations.nameRequired", { ns: "tabs" })),
+		connection: selectSchema.refine((value) => value.label, {
+			message: i18n.t("triggers.form.validations.connectionRequired", { ns: "tabs" }),
+		}),
+		filePath: selectSchema.refine((value) => value.label, {
+			message: i18n.t("triggers.form.validations.fileRequired", { ns: "tabs" }),
+		}),
+		entryFunction: z.string().min(1, i18n.t("triggers.form.validations.functionRequired", { ns: "tabs" })),
+		eventType: z.string().optional(),
+		eventTypeSelect: selectSchema.optional(),
+		filter: z.string().optional(),
+		cron: z.string().optional(),
+	});
 });
 
 export type TriggerFormData = z.infer<typeof triggerSchema>;

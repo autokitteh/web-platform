@@ -110,6 +110,7 @@ export const TriggerSpecificFields = ({
 			<div className="relative">
 				<Input
 					aria-label={t("placeholders.functionName")}
+					isRequired
 					{...register("entryFunction")}
 					isError={!!errors.entryFunction}
 					label={t("placeholders.functionName")}

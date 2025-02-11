@@ -157,8 +157,8 @@
 				"nameRequired": "Name is required",
 				"connectionRequired": "Connection is required",
 				"invalidCron": "Cron expression is required and must be valid for schedule triggers",
-				"functionRequired": "Entry function is required when file path is specified",
-				"fileRequired": "File path is required when entry function is specified"
+				"functionRequired": "Entry function is required",
+				"fileRequired": "File path is required"
 			}
 		},
 		"table": {
