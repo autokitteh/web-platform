@@ -12,6 +12,9 @@ interface ImportMetaEnv {
 	readonly DISPLAY_DISCORD_INTEGRATION: boolean;
 	readonly DISPLAY_SLACK_SOCKET_INTEGRATION: boolean;
 	readonly VITE_GTM_ID: string;
+	readonly VITE_LINEAR_ENABLED: string;
+	readonly VITE_ZOOM_ENABLED: string;
+	readonly VITE_HEIGHT_ENABLED: string;
 }
 
 interface ImportMeta {
