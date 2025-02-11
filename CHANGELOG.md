@@ -1,3 +1,10 @@
+## [2.140.3](https://github.com/autokitteh/web-platform/compare/v2.140.2...v2.140.3) (2025-02-11)
+
+
+### Bug Fixes
+
+* **UI-1321:** fix slack oauth edit ([#984](https://github.com/autokitteh/web-platform/issues/984)) ([ceae242](https://github.com/autokitteh/web-platform/commit/ceae242723a98acf2fba3f8c585d6bdd148f39eb))
+
 ## [2.140.2](https://github.com/autokitteh/web-platform/compare/v2.140.1...v2.140.2) (2025-02-11)
 
 
