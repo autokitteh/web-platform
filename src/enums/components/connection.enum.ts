@@ -198,7 +198,7 @@ const integrationFeatureMap: Partial<Record<Integrations, boolean | string>> = {
 };
 
 export const fitleredIntegrationsMap = Object.fromEntries(
-	Object.entries(IntegrationsMap).filter(([key]) => integrationFeatureMap[key as Integrations] ?? true)
+	Object.entries(IntegrationsMap).filter(([key]) => !!integrationFeatureMap[key as Integrations])
 ) as Record<Integrations, IntegrationSelectOption>;
 
 export const HiddenIntegrationsForTemplates: Record<IntegrationForTemplates, IntegrationSelectOption> = {
