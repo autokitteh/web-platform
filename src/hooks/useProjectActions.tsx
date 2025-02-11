@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { DeploymentsService, LoggerService } from "@services";
-import { defaultProjectFile, namespaces } from "@src/constants";
+import { namespaces, defaultProjectFile, defaultOpenedProjectFile } from "@src/constants";
 import { ModalName } from "@src/enums/components";
 import { useFileOperations } from "@src/hooks";
 import { Manifest } from "@src/interfaces/models";
@@ -56,6 +56,7 @@ export const useProjectActions = () => {
 
 			return { error: true };
 		}
+
 		const projectId = data?.projectId;
 		navigate(`/projects/${projectId}`, {
 			state: { fileToOpen: defaultProjectFile },
@@ -81,7 +82,9 @@ export const useProjectActions = () => {
 			});
 
 			getProjectsList();
-			navigate(`/projects/${projectId}`);
+			navigate(`/projects/${projectId}`, {
+				state: { fileToOpen: defaultOpenedProjectFile },
+			});
 		};
 
 		getAndSaveFiles();

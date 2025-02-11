@@ -4,7 +4,7 @@ import yaml from "js-yaml";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { namespaces } from "@constants";
+import { defaultOpenedProjectFile, namespaces } from "@constants";
 import { LoggerService } from "@services";
 import { useFileOperations } from "@src/hooks";
 import { TemplateMetadata } from "@src/interfaces/store";
@@ -87,7 +87,9 @@ export const useCreateProjectFromTemplate = () => {
 			});
 
 			getProjectsList();
-			navigate(`/projects/${newProjectId}`);
+			navigate(`/projects/${newProjectId}`, {
+				state: { fileToOpen: defaultOpenedProjectFile },
+			});
 		} catch (error) {
 			addToast({
 				message: tActions("projectCreationFailed"),
