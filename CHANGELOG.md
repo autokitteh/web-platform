@@ -1,3 +1,10 @@
+## [2.140.4](https://github.com/autokitteh/web-platform/compare/v2.140.3...v2.140.4) (2025-02-11)
+
+
+### Bug Fixes
+
+* **UI-1322:** manual run json structure ([#985](https://github.com/autokitteh/web-platform/issues/985)) ([47ecb60](https://github.com/autokitteh/web-platform/commit/47ecb609626df18d3d54cc976fd1539c79196e8a))
+
 ## [2.140.3](https://github.com/autokitteh/web-platform/compare/v2.140.2...v2.140.3) (2025-02-11)
 
 
