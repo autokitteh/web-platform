@@ -63,7 +63,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
 			<ul className="ml-0 flex flex-col gap-2">
 				<li>
-					<Tooltip content={t("newProject")} disabled={isOpen} position="right">
+					<Tooltip content={t("newProject")} hide={isOpen} position="right">
 						<Button
 							ariaLabel={t("newProject")}
 							className="w-full gap-1.5 p-0.5 hover:bg-green-200 disabled:opacity-100"
@@ -92,7 +92,7 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 				<PopoverListWrapper animation="slideFromLeft" interactionType="click">
 					<PopoverListTrigger>
 						<li className="group">
-							<Tooltip content={t("myProjects")} disabled={isOpen} position="right">
+							<Tooltip content={t("myProjects")} hide={isOpen} position="right">
 								<div className="relative z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 text-gray-1100 group-hover:bg-green-200">
 									<div className="flex size-9 items-center justify-center">
 										<IconSvg

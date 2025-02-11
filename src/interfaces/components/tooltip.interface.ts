@@ -5,5 +5,5 @@ export interface TooltipProps {
 	children: React.ReactNode;
 	variant?: "default" | "error";
 	position?: Placement;
-	disabled?: boolean;
+	hide?: boolean;
 }

@@ -90,7 +90,7 @@ export const Sidebar = () => {
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<Tooltip content={t("events")} disabled={isOpen} position="right">
+						<Tooltip content={t("events")} hide={isOpen} position="right">
 							<Button ariaLabel={t("events")} className="p-0 hover:bg-green-200" href="/events">
 								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
 									<IconSvg className="size-5 transition" src={EventsFlag} />
@@ -111,7 +111,7 @@ export const Sidebar = () => {
 								</AnimatePresence>
 							</Button>
 						</Tooltip>
-						<Tooltip content={t("systemLog")} disabled={isOpen} position="right">
+						<Tooltip content={t("systemLog")} hide={isOpen} position="right">
 							<Button
 								ariaLabel={t("systemLog")}
 								className="w-full p-0 hover:bg-green-200"
@@ -144,7 +144,7 @@ export const Sidebar = () => {
 								</AnimatePresence>
 							</Button>
 						</Tooltip>
-						<Tooltip content={t("intro")} disabled={isOpen} position="right">
+						<Tooltip content={t("intro")} hide={isOpen} position="right">
 							<Button className="w-full p-0 hover:bg-green-200" href="/intro">
 								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
 									<IconSvg className="size-5.5 transition" src={CircleQuestionIcon} />
