@@ -1,3 +1,10 @@
+# [2.140.0](https://github.com/autokitteh/web-platform/compare/v2.139.0...v2.140.0) (2025-02-11)
+
+
+### Features
+
+* **UI-1290:** add open submenu on click ([#967](https://github.com/autokitteh/web-platform/issues/967)) ([f4e1253](https://github.com/autokitteh/web-platform/commit/f4e1253d17a0cab76f3c833e4f3cd2b44987f99c))
+
 # [2.139.0](https://github.com/autokitteh/web-platform/compare/v2.138.1...v2.139.0) (2025-02-11)
 
 
