@@ -10,7 +10,7 @@ import { cn } from "@src/utilities";
 
 import { useLoggerStore, useOrganizationStore } from "@store";
 
-import { Badge, Button, IconSvg, Loader } from "@components/atoms";
+import { Badge, Button, IconSvg, Loader, Tooltip } from "@components/atoms";
 import { MenuToggle } from "@components/atoms/menuToggle";
 import { Menu } from "@components/molecules/menu";
 import { PopoverWrapper, PopoverContent, PopoverTrigger } from "@components/molecules/popover";
@@ -65,14 +65,11 @@ export const Sidebar = () => {
 						</div>
 						<Button
 							ariaLabel={isOpen ? t("closeSidebar") : t("openSidebar")}
-							className="mt-7 w-full justify-center gap-2.5 p-0.5 pr-2 hover:bg-green-200"
+							className="mt-7 w-full justify-center gap-2 p-0.5 hover:bg-green-200"
 							onClick={() => setIsOpen(!isOpen)}
 							title={isOpen ? t("closeSidebar") : t("openSidebar")}
 						>
-							<MenuToggle
-								className="-mr-2 flex w-9 items-center justify-center pb-1 pt-2"
-								isOpen={isOpen}
-							/>
+							<MenuToggle className="flex w-9 items-center justify-center pb-1 pt-2" isOpen={isOpen} />
 
 							<AnimatePresence>
 								{isOpen ? (
@@ -93,84 +90,81 @@ export const Sidebar = () => {
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<Button
-							ariaLabel={t("events")}
-							className="p-0 hover:bg-green-200"
-							href="/events"
-							title={t("events")}
-						>
-							<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-								<IconSvg className="size-5 transition" src={EventsFlag} />
-							</div>
+						<Tooltip content={t("events")} disabled={isOpen} position="right">
+							<Button ariaLabel={t("events")} className="p-0 hover:bg-green-200" href="/events">
+								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
+									<IconSvg className="size-5 transition" src={EventsFlag} />
+								</div>
 
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="overflow-hidden whitespace-nowrap"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
+								<AnimatePresence>
+									{isOpen ? (
+										<motion.span
+											animate="visible"
+											className="overflow-hidden whitespace-nowrap"
+											exit="hidden"
+											initial="hidden"
+											variants={animateVariant}
+										>
+											{t("events")}
+										</motion.span>
+									) : null}
+								</AnimatePresence>
+							</Button>
+						</Tooltip>
+						<Tooltip content={t("systemLog")} disabled={isOpen} position="right">
+							<Button
+								ariaLabel={t("systemLog")}
+								className="w-full p-0 hover:bg-green-200"
+								onClick={() => setSystemLogHeight(systemLogHeight < 1 ? 20 : 0)}
+							>
+								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
+									<Badge
+										anchorOrigin={{ vertical: "top", horizontal: "left" }}
+										ariaLabel={t("logToReview")}
+										className="absolute"
+										isVisible={isNewLogs}
+										variant="dot"
 									>
-										{t("events")}
-									</motion.span>
-								) : null}
-							</AnimatePresence>
-						</Button>
+										<IconSvg className="size-5.5 fill-gray-1100 transition" src={FileIcon} />
+									</Badge>
+								</div>
 
-						<Button
-							ariaLabel={t("systemLog")}
-							className="p-0 hover:bg-green-200"
-							onClick={() => setSystemLogHeight(systemLogHeight < 1 ? 20 : 0)}
-							title={t("systemLog")}
-						>
-							<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-								<Badge
-									anchorOrigin={{ vertical: "top", horizontal: "left" }}
-									ariaLabel={t("logToReview")}
-									className="absolute"
-									isVisible={isNewLogs}
-									variant="dot"
-								>
-									<IconSvg className="size-5.5 fill-gray-1100 transition" src={FileIcon} />
-								</Badge>
-							</div>
+								<AnimatePresence>
+									{isOpen ? (
+										<motion.span
+											animate="visible"
+											className="overflow-hidden whitespace-nowrap"
+											exit="hidden"
+											initial="hidden"
+											variants={animateVariant}
+										>
+											{t("systemLog")}
+										</motion.span>
+									) : null}
+								</AnimatePresence>
+							</Button>
+						</Tooltip>
+						<Tooltip content={t("intro")} disabled={isOpen} position="right">
+							<Button className="w-full p-0 hover:bg-green-200" href="/intro">
+								<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
+									<IconSvg className="size-5.5 transition" src={CircleQuestionIcon} />
+								</div>
 
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="overflow-hidden whitespace-nowrap"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
-									>
-										{t("systemLog")}
-									</motion.span>
-								) : null}
-							</AnimatePresence>
-						</Button>
-
-						<Button className="p-0 hover:bg-green-200" href="/intro" title={t("intro")}>
-							<div className="flex size-10 items-center justify-center rounded-full pl-0.5">
-								<IconSvg className="size-5.5 transition" src={CircleQuestionIcon} />
-							</div>
-
-							<AnimatePresence>
-								{isOpen ? (
-									<motion.span
-										animate="visible"
-										className="overflow-hidden whitespace-nowrap"
-										exit="hidden"
-										initial="hidden"
-										variants={animateVariant}
-									>
-										{t("intro")}
-									</motion.span>
-								) : null}
-							</AnimatePresence>
-						</Button>
-
+								<AnimatePresence>
+									{isOpen ? (
+										<motion.span
+											animate="visible"
+											className="overflow-hidden whitespace-nowrap"
+											exit="hidden"
+											initial="hidden"
+											variants={animateVariant}
+										>
+											{t("intro")}
+										</motion.span>
+									) : null}
+								</AnimatePresence>
+							</Button>
+						</Tooltip>
 						{descopeProjectId ? (
 							<PopoverWrapper interactionType="click" placement="right-start">
 								<PopoverTrigger className="ml-2 mt-2 flex items-center">

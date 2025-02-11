@@ -13,7 +13,7 @@ import { cn } from "@utilities";
 
 import { useModalStore, useProjectStore, useToastStore } from "@store";
 
-import { Button, IconSvg } from "@components/atoms";
+import { Button, IconSvg, Tooltip } from "@components/atoms";
 import { PopoverListWrapper, PopoverListContent, PopoverListTrigger } from "@components/molecules/popover";
 
 import { NewProject, ProjectsIcon } from "@assets/image";
@@ -63,58 +63,61 @@ export const Menu = ({ className, isOpen = false }: MenuProps) => {
 		<nav aria-label="Main navigation" className={cn(className, "flex flex-col gap-4")}>
 			<ul className="ml-0 flex flex-col gap-2">
 				<li>
-					<Button
-						ariaLabel={t("newProject")}
-						className="w-full gap-1.5 p-0.5 hover:bg-green-200 disabled:opacity-100"
-						onClick={() => openModal(ModalName.newProject)}
-						title={t("newProject")}
-					>
-						<div className="flex size-9 items-center justify-center">
-							<IconSvg alt={t("newProject")} size="xl" src={NewProject} />
-						</div>
+					<Tooltip content={t("newProject")} disabled={isOpen} position="right">
+						<Button
+							ariaLabel={t("newProject")}
+							className="w-full gap-1.5 p-0.5 hover:bg-green-200 disabled:opacity-100"
+							onClick={() => openModal(ModalName.newProject)}
+						>
+							<div className="flex size-9 items-center justify-center">
+								<IconSvg alt={t("newProject")} size="xl" src={NewProject} />
+							</div>
 
-						<AnimatePresence>
-							{isOpen ? (
-								<motion.span
-									animate="visible"
-									className="overflow-hidden whitespace-nowrap"
-									exit="hidden"
-									initial="hidden"
-									variants={animateVariant}
-								>
-									{t("newProject")}
-								</motion.span>
-							) : null}
-						</AnimatePresence>
-					</Button>
+							<AnimatePresence>
+								{isOpen ? (
+									<motion.span
+										animate="visible"
+										className="overflow-hidden whitespace-nowrap"
+										exit="hidden"
+										initial="hidden"
+										variants={animateVariant}
+									>
+										{t("newProject")}
+									</motion.span>
+								) : null}
+							</AnimatePresence>
+						</Button>
+					</Tooltip>
 				</li>
 				<PopoverListWrapper animation="slideFromLeft" interactionType="click">
 					<PopoverListTrigger>
 						<li className="group">
-							<div className="relative z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 text-gray-1100 group-hover:bg-green-200">
-								<div className="flex size-9 items-center justify-center">
-									<IconSvg
-										alt={t("myProjects")}
-										className="fill-gray-1100"
-										size="xl"
-										src={ProjectsIcon}
-									/>
-								</div>
+							<Tooltip content={t("myProjects")} disabled={isOpen} position="right">
+								<div className="relative z-10 flex w-full items-center justify-start gap-1.5 rounded-full p-0.5 text-gray-1100 group-hover:bg-green-200">
+									<div className="flex size-9 items-center justify-center">
+										<IconSvg
+											alt={t("myProjects")}
+											className="fill-gray-1100"
+											size="xl"
+											src={ProjectsIcon}
+										/>
+									</div>
 
-								<AnimatePresence>
-									{isOpen ? (
-										<motion.span
-											animate="visible"
-											className="overflow-hidden whitespace-nowrap"
-											exit="hidden"
-											initial="hidden"
-											variants={animateVariant}
-										>
-											{t("myProjects")}
-										</motion.span>
-									) : null}
-								</AnimatePresence>
-							</div>
+									<AnimatePresence>
+										{isOpen ? (
+											<motion.span
+												animate="visible"
+												className="overflow-hidden whitespace-nowrap"
+												exit="hidden"
+												initial="hidden"
+												variants={animateVariant}
+											>
+												{t("myProjects")}
+											</motion.span>
+										) : null}
+									</AnimatePresence>
+								</div>
+							</Tooltip>
 						</li>
 					</PopoverListTrigger>
 					<PopoverListContent

@@ -218,7 +218,7 @@ export default [
 			"react/jsx-max-depth": [
 				"error",
 				{
-					max: 7,
+					max: 8,
 				},
 			],
 
