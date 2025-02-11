@@ -1,3 +1,10 @@
+## [2.141.1](https://github.com/autokitteh/web-platform/compare/v2.141.0...v2.141.1) (2025-02-11)
+
+
+### Bug Fixes
+
+* **UI-1325:** fix color markdown ([#989](https://github.com/autokitteh/web-platform/issues/989)) ([37dc43b](https://github.com/autokitteh/web-platform/commit/37dc43b2caa3534b2e30c9517fb7af46fbbbfe45))
+
 # [2.141.0](https://github.com/autokitteh/web-platform/compare/v2.140.5...v2.141.0) (2025-02-11)
 
 
