@@ -191,14 +191,14 @@ export const IntegrationsMap: Record<Integrations, IntegrationSelectOption> = {
 };
 
 const integrationFeatureMap: Partial<Record<Integrations, boolean | string>> = {
-	[Integrations.discord]: featureFlags.displayDiscordIntegration,
-	[Integrations.linear]: featureFlags.linearConnectionEnabled,
-	[Integrations.zoom]: featureFlags.zoomConnectionEnabled,
-	[Integrations.height]: featureFlags.heightConnectionEnabled,
+	[Integrations.discord]: !!featureFlags.displayDiscordIntegration,
+	[Integrations.linear]: !!featureFlags.linearConnectionEnabled,
+	[Integrations.zoom]: !!featureFlags.zoomConnectionEnabled,
+	[Integrations.height]: !!featureFlags.heightConnectionEnabled,
 };
 
 export const fitleredIntegrationsMap = Object.fromEntries(
-	Object.entries(IntegrationsMap).filter(([key]) => !!integrationFeatureMap[key as Integrations])
+	Object.entries(IntegrationsMap).filter(([key]) => integrationFeatureMap[key as Integrations] ?? true)
 ) as Record<Integrations, IntegrationSelectOption>;
 
 export const HiddenIntegrationsForTemplates: Record<IntegrationForTemplates, IntegrationSelectOption> = {
