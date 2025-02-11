@@ -1,1 +1,1 @@
-export { ConnectionAuthType } from "@enums/connections/connectionTypes.enum";
+export { ConnectionAuthType } from "@src/constants/connections/connectionTypes.constants";

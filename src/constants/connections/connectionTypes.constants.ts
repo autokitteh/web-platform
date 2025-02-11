@@ -1,10 +1,8 @@
-import { featureFlags } from "@constants";
-
-const oauthDefaultValue = featureFlags.modernConnOAuthType ? "oauthDefault" : "oauth";
+import { featureFlags } from "../featureFlags.constants";
 
 export const ConnectionAuthType = {
 	Oauth: "oauth",
-	OauthDefault: oauthDefaultValue,
+	OauthDefault: featureFlags.modernConnOAuthType ? "oauthDefault" : "oauth",
 	OauthPrivate: "oauthPrivate",
 	Pat: "pat",
 	ServiceAccount: "serviceAccount",
@@ -22,3 +20,5 @@ export const ConnectionAuthType = {
 	Socket: "socket",
 	BotToken: "botToken",
 } as const;
+
+export type ConnectionAuthType = (typeof ConnectionAuthType)[keyof typeof ConnectionAuthType];
