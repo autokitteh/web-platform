@@ -90,7 +90,10 @@ export const IntegrationEditForm = ({
 	);
 
 	const onSubmit = () => {
-		if (connectionId && (connectionType === ConnectionAuthType.Oauth || ConnectionAuthType.OauthDefault)) {
+		if (
+			connectionId &&
+			(connectionType === ConnectionAuthType.Oauth || connectionType === ConnectionAuthType.OauthDefault)
+		) {
 			if (isGoogleIntegration(integrationType)) {
 				handleCustomOauth(connectionId, defaultGoogleConnectionName);
 
