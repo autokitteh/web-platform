@@ -19,6 +19,7 @@ import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/o
 
 import { RunIcon } from "@assets/image/icons";
 
+// TODO after we have the new JSON format in the backend, we can remove this function.
 // The function should check if manual run params are in the new JSON format and convert them into an array of key-value.
 const revertParamsStructure = (params: object | string | Array<{ key: string; value: string }>) => {
 	if (!params) return [];
