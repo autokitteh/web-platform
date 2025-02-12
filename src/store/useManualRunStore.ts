@@ -9,7 +9,7 @@ import { DeploymentStateVariant, StoreName } from "@enums";
 import { BuildsService, SessionsService } from "@services";
 import { emptySelectItem } from "@src/constants/forms";
 import { ManualRunStore } from "@src/interfaces/store";
-import { convertBuildRuntimesToViewTriggers } from "@src/utilities";
+import { convertBuildRuntimesToViewTriggers, safeJsonParse } from "@src/utilities";
 
 import { useCacheStore, useToastStore } from "@store";
 
@@ -117,12 +117,10 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			};
 		}
 
-		const isJSON = project.isJson;
-
 		const paramsFromStore = project.params.reduce(
 			(acc, { key, value }) => ({
 				...acc,
-				[key]: isJSON ? value : JSON.stringify(value),
+				[key]: typeof value === "string" && safeJsonParse(value) ? value : JSON.stringify(value),
 			}),
 			{}
 		);
