@@ -9,6 +9,7 @@ import { LoggerService } from "@services";
 import { namespaces } from "@src/constants";
 import { DrawerName } from "@src/enums/components";
 import { useCacheStore, useDrawerStore, useManualRunStore, useToastStore } from "@src/store";
+import { safeJsonParse } from "@src/utilities";
 import { manualRunSchema } from "@validations";
 
 import { Button, ErrorMessage, IconSvg, Spinner, Typography } from "@components/atoms";
@@ -17,6 +18,15 @@ import { SelectCreatable } from "@components/molecules/select";
 import { ManualRunParamsForm, ManualRunSuccessToastMessage } from "@components/organisms/topbar/project";
 
 import { RunIcon } from "@assets/image/icons";
+
+// The function should check if manual run params are in the new JSON format and convert them into an array of key-value.
+const revertParamsStructure = (params: object | string | Array<{ key: string; value: string }>) => {
+	if (!params) return [];
+	if (Array.isArray(params)) return params;
+	if (typeof params === "string" && safeJsonParse(params as string))
+		return Object.entries(safeJsonParse(params)).map(([key, value]) => ({ key, value }));
+	return Object.entries(params).map(([key, value]) => ({ key, value: JSON.stringify(value) }));
+};
 
 export const ManualRunSettingsDrawer = () => {
 	const { t: tButtons } = useTranslation("buttons");
@@ -40,7 +50,7 @@ export const ManualRunSettingsDrawer = () => {
 		defaultValues: {
 			filePath,
 			entrypointFunction,
-			params,
+			params: revertParamsStructure(params),
 		},
 		mode: "onChange",
 	});
@@ -76,7 +86,7 @@ export const ManualRunSettingsDrawer = () => {
 
 	useEffect(() => {
 		if (params) {
-			setValue("params", params);
+			setValue("params", revertParamsStructure(params));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params]);
@@ -92,9 +102,13 @@ export const ManualRunSettingsDrawer = () => {
 
 		setSendingManualRun(true);
 		const { params: formParams } = getValues();
-		updateManualRunConfiguration(projectId, { params: formParams });
-		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, formParams);
+		const correctedParams = formParams.map(({ key, value }) => ({
+			key,
+			value: typeof value === "string" && safeJsonParse(value) ? value : JSON.stringify(value),
+		}));
+		const { data: sessionId, error } = await saveAndExecuteManualRun(projectId, correctedParams);
 		setSendingManualRun(false);
+		updateManualRunConfiguration(projectId, { params: formParams });
 		handleManualRun();
 		if (error) {
 			addToast({

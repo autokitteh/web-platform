@@ -106,7 +106,7 @@ export const ManualRunParamsForm = () => {
 	const handleParamsToJsonConversion = () => {
 		const currentParams: ManualRunParam[] = getValues("params");
 		const jsonObject = currentParams.reduce<ManualRunJsonObject>((acc, { key, value }) => {
-			acc[key] = safeJsonParse(value) ?? value;
+			acc[key] = safeJsonParse(value) ? JSON.parse(value) : typeof value === "string" ? value : value;
 
 			return acc;
 		}, {});
@@ -142,7 +142,7 @@ export const ManualRunParamsForm = () => {
 
 		const newParams = Object.entries(parsedJson).map(([key, value]) => ({
 			key,
-			value: typeof value === "object" ? JSON.stringify(value) : String(value),
+			value: JSON.stringify(value),
 		}));
 
 		setValue("params", newParams, { shouldValidate: false });
@@ -199,6 +199,7 @@ export const ManualRunParamsForm = () => {
 											label={t("placeholders.key")}
 											onChange={(event) => handleFieldChange(index, "key", event.target.value)}
 											placeholder={t("placeholders.enterKey")}
+											value={field.value}
 										/>
 										{errors?.params?.[index]?.key ? (
 											<ErrorMessage>{errors.params[index]?.key?.message}</ErrorMessage>

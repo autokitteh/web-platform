@@ -107,7 +107,7 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 		});
 	},
 
-	saveAndExecuteManualRun: async (projectId, params) => {
+	saveAndExecuteManualRun: async (projectId, paramsFromForm) => {
 		const project = get().projectManualRun[projectId];
 
 		if (!project?.activeDeployment) {
@@ -117,14 +117,26 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 			};
 		}
 
-		const actualParams = params || project.params || [];
-		const jsonInputs = actualParams.reduce(
+		const isJSON = project.isJson;
+
+		const paramsFromStore = project.params.reduce(
 			(acc, { key, value }) => ({
 				...acc,
-				[key]: JSON.stringify(value),
+				[key]: isJSON ? value : JSON.stringify(value),
 			}),
 			{}
 		);
+
+		const jsonInputs =
+			paramsFromForm?.reduce(
+				(acc, { key, value }) => ({
+					...acc,
+					[key]: value,
+				}),
+				{}
+			) ||
+			paramsFromStore ||
+			[];
 
 		const sessionArgs = {
 			buildId: project.activeDeployment.buildId,
@@ -142,17 +154,6 @@ const store: StateCreator<ManualRunStore> = (set, get) => ({
 
 		if (error) {
 			return { data: undefined, error };
-		}
-
-		if (params?.length) {
-			set((state) => {
-				state.projectManualRun[projectId] = {
-					...project,
-					params: [...params],
-				};
-
-				return state;
-			});
 		}
 
 		return { data: sessionId, error: undefined };
