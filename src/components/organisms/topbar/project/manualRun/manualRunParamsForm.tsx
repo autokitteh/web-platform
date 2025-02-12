@@ -106,7 +106,7 @@ export const ManualRunParamsForm = () => {
 	const handleParamsToJsonConversion = () => {
 		const currentParams: ManualRunParam[] = getValues("params");
 		const jsonObject = currentParams.reduce<ManualRunJsonObject>((acc, { key, value }) => {
-			acc[key] = safeJsonParse(value) ? JSON.parse(value) : typeof value === "string" ? value : value;
+			acc[key] = safeJsonParse(value) ? JSON.parse(value) : typeof value === "string" ? value : "";
 
 			return acc;
 		}, {});
