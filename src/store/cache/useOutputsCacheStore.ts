@@ -41,27 +41,29 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				return { error: true };
 			}
 
-			const { logs } = data;
+			const { logs, nextPageToken } = data;
 			const outputs = force ? logs : [...currentSession.outputs, ...logs];
 
-			const { data: sessionStateRecords, error: sessionStateRequestError } =
-				await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 0, SessionLogType.State);
+			if (!nextPageToken) {
+				const { data: sessionStateRecords, error: sessionStateRequestError } =
+					await SessionsService.getLogRecordsBySessionId(sessionId, undefined, 0, SessionLogType.State);
 
-			if (sessionStateRequestError || !sessionStateRecords) {
-				set((state) => ({
-					sessions: {
-						...state.sessions,
-						[sessionId]: initialSessionState,
-					},
-					loading: false,
-				}));
-				return { error: true };
-			}
+				if (sessionStateRequestError || !sessionStateRecords) {
+					set((state) => ({
+						sessions: {
+							...state.sessions,
+							[sessionId]: initialSessionState,
+						},
+						loading: false,
+					}));
+					return { error: true };
+				}
 
-			const lastSessionState = convertSessionLogProtoToViewerOutput(sessionStateRecords?.records?.[0]);
+				const lastSessionState = convertSessionLogProtoToViewerOutput(sessionStateRecords?.records?.[0]);
 
-			if (lastSessionState && force) {
-				outputs.unshift(lastSessionState);
+				if (lastSessionState) {
+					outputs.push(lastSessionState);
+				}
 			}
 
 			set((state) => ({
@@ -69,8 +71,8 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 					...state.sessions,
 					[sessionId]: {
 						outputs,
-						nextPageToken: data.nextPageToken,
-						fullyLoaded: false,
+						nextPageToken,
+						fullyLoaded: !nextPageToken,
 					},
 				},
 			}));
