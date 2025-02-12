@@ -4,9 +4,7 @@ import { StateCreator, create } from "zustand";
 import { LoggerService } from "@services/index";
 import { SessionsService } from "@services/sessions.service";
 import { namespaces } from "@src/constants";
-import { SessionLogType } from "@src/enums";
 import { OutputsStore, SessionOutputData } from "@src/interfaces/store";
-import { convertSessionLogProtoToViewerOutput } from "@src/models";
 
 const initialSessionState = { outputs: [], nextPageToken: "", fullyLoaded: false } as SessionOutputData;
 
@@ -23,11 +21,10 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				return { error: false };
 			}
 
-			const { data, error } = await SessionsService.getLogRecordsBySessionId(
+			const { data, error } = await SessionsService.getOutputsBySessionId(
 				sessionId,
 				currentSession.nextPageToken || undefined,
-				pageSize,
-				SessionLogType.Output
+				pageSize
 			);
 
 			if (error || !data) {
@@ -41,8 +38,8 @@ const createOutputsStore: StateCreator<OutputsStore> = (set, get) => ({
 				return { error: true };
 			}
 
-			const convertedOutputs = convertSessionLogProtoToViewerOutput(data.records);
-			const outputs = force ? convertedOutputs : [...currentSession.outputs, ...convertedOutputs];
+			const { logs } = data;
+			const outputs = force ? logs : [...currentSession.outputs, ...logs];
 
 			set((state) => ({
 				sessions: {

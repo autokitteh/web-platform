@@ -1,4 +1,4 @@
-import { SessionActivity, SessionOutput } from "@src/interfaces/models";
+import { SessionActivity, SessionOutputLog } from "@src/interfaces/models";
 
 export interface SessionActivityData {
 	activities: SessionActivity[];
@@ -7,7 +7,7 @@ export interface SessionActivityData {
 }
 
 export interface SessionOutputData {
-	outputs: SessionOutput[];
+	outputs: SessionOutputLog[];
 	nextPageToken?: string;
 	fullyLoaded: boolean;
 }

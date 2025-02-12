@@ -7,12 +7,12 @@ import { CellMeasurerCache, List, ListRowProps } from "react-virtualized";
 import { defaultSessionLogRecordsListRowHeight, standardScreenHeightFallback } from "@src/constants";
 import { SessionLogType } from "@src/enums";
 import { VirtualizedListHookResult } from "@src/interfaces/hooks";
-import { SessionActivity, SessionOutput } from "@src/interfaces/models";
+import { SessionActivity, SessionOutputLog } from "@src/interfaces/models";
 import { SessionActivityData, SessionOutputData } from "@src/interfaces/store";
 
 import { useActivitiesCacheStore, useOutputsCacheStore, useToastStore } from "@store";
 
-export function useVirtualizedList<T extends SessionOutput | SessionActivity>(
+export function useVirtualizedList<T extends SessionOutputLog | SessionActivity>(
 	type: SessionLogType,
 	itemHeight = defaultSessionLogRecordsListRowHeight,
 	customRowRenderer?: (props: ListRowProps, item: T) => React.ReactNode

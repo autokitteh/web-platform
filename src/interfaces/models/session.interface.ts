@@ -55,6 +55,11 @@ export interface SessionOutput {
 	time: string;
 }
 
+export interface SessionOutputLog {
+	print: string;
+	time: string;
+}
+
 export interface SessionActivity {
 	args?: string[];
 	endTime?: Date;

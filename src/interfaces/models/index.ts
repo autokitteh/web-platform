@@ -11,5 +11,6 @@ export type {
 	SessionActivity,
 	ViewerSession,
 	BuildRuntimeExport,
+	SessionOutputLog,
 } from "@src/interfaces/models/session.interface";
 export type { UserStatusKeyType } from "@src/interfaces/models/userStatus.interface";
