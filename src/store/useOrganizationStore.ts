@@ -180,7 +180,9 @@ const store: StateCreator<OrganizationStore> = (set, get) => ({
 		return { data: undefined, error: undefined };
 	},
 
-	getEnrichedOrganizations: () => {
+	getEnrichedOrganizations: async () => {
+		await get().getOrganizations();
+
 		const { organizations, members, user, currentOrganization } = get();
 		if (!user?.id || !currentOrganization || !Object.keys(organizations).length || !Object.keys(members).length) {
 			LoggerService.error(
