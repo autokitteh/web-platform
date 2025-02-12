@@ -33,6 +33,10 @@ export class SessionsService {
 		}
 	}
 
+	static async getOutputs(sessionId: string) {
+		const { v, t } = await sessionsClient.getPrints({ sessionId });
+	}
+
 	static async getLogRecordsBySessionId(
 		sessionId: string,
 		pageToken?: string,
