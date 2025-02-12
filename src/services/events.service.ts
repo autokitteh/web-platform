@@ -56,13 +56,15 @@ export class EventsService {
 	static async list(
 		limit?: number,
 		destinationId?: string,
-		projectId?: string
+		projectId?: string,
+		orgId?: string
 	): Promise<ServiceResponse<BaseEvent[]>> {
 		try {
 			const { events } = await eventsClient.list({
 				maxResults: limit,
 				destinationId,
 				projectId,
+				orgId,
 			});
 			const eventsConverted = events.map(convertEventProtoToSimplifiedModel);
 
